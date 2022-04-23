@@ -211,31 +211,23 @@ float Vector2::Dot(const Vector2& v) const
         m_tuple[1] * v.m_tuple[1];
 }
 
-float Vector2::Normalize()
+Vector2 Vector2::Normalize() const
 {
     float length = Length();
-
+    Vector2 v;
     if (length > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        m_tuple[0] /= length;
-        m_tuple[1] /= length;
+        v.m_tuple[0] = m_tuple[0] / length;
+        v.m_tuple[1] = m_tuple[1] / length;
     }
     else
     {
-        length = (float)0.0;
-        m_tuple[0] = (float)0.0;
-        m_tuple[1] = (float)0.0;
+        v.m_tuple[0] = (float)0.0;
+        v.m_tuple[1] = (float)0.0;
     }
 
-    return length;
-}
-
-Vector2 Vector2::NormalizedCopy() const
-{
-    Vector2 ret = *this;
-    ret.Normalize();
-    return ret;
+    return v;
 }
 
 Vector2 Vector2::Perp() const

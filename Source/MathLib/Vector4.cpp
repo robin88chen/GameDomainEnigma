@@ -271,35 +271,28 @@ float Vector4::Dot(const Vector4& v) const
         m_tuple[3] * v.m_tuple[3];
 }
 
-float Vector4::Normalize()
+Vector4 Vector4::Normalize() const
 {
     float length = Length();
 
+    Vector4 v;
     if (length > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        m_tuple[0] /= length;
-        m_tuple[1] /= length;
-        m_tuple[2] /= length;
-        m_tuple[3] /= length;
+        v.m_tuple[0] = m_tuple[0] / length;
+        v.m_tuple[1] = m_tuple[1] / length;
+        v.m_tuple[2] = m_tuple[2] / length;
+        v.m_tuple[3] = m_tuple[3] / length;
     }
     else
     {
-        length = (float)0.0;
-        m_tuple[0] = (float)0.0;
-        m_tuple[1] = (float)0.0;
-        m_tuple[2] = (float)0.0;
-        m_tuple[3] = (float)0.0;
+        v.m_tuple[0] = (float)0.0;
+        v.m_tuple[1] = (float)0.0;
+        v.m_tuple[2] = (float)0.0;
+        v.m_tuple[3] = (float)0.0;
     }
 
-    return length;
-}
-
-Vector4 Vector4::NormalizedCopy() const
-{
-    Vector4 ret = *this;
-    ret.Normalize();
-    return ret;
+    return v;
 }
 
 Vector4 operator* (float scalar, const Vector4& v)

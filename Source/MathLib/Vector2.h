@@ -66,8 +66,7 @@ namespace Enigma
             float Length() const;
             float SquaredLength() const;
             float Dot(const Vector2& v) const;
-            float Normalize();
-            Vector2 NormalizedCopy() const;
+            Vector2 Normalize() const;
 
             /// returns (y,-x)
             Vector2 Perp() const;

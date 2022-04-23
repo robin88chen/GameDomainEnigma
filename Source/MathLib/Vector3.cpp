@@ -247,33 +247,26 @@ float Vector3::Dot(const Vector3& v) const
         m_tuple[2] * v.m_tuple[2];
 }
 
-float Vector3::Normalize()
+Vector3 Vector3::Normalize() const
 {
     float length = Length();
 
+    Vector3 v;
     if (length > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        m_tuple[0] /= length;
-        m_tuple[1] /= length;
-        m_tuple[2] /= length;
+        v.m_tuple[0] = m_tuple[0] / length;
+        v.m_tuple[1] = m_tuple[1] / length;
+        v.m_tuple[2] = m_tuple[2] / length;
     }
     else
     {
-        length = (float)0.0;
-        m_tuple[0] = (float)0.0;
-        m_tuple[1] = (float)0.0;
-        m_tuple[2] = (float)0.0;
+        v.m_tuple[0] = (float)0.0;
+        v.m_tuple[1] = (float)0.0;
+        v.m_tuple[2] = (float)0.0;
     }
 
-    return length;
-}
-
-Vector3 Vector3::NormalizedCopy() const
-{
-    Vector3 ret = *this;
-    ret.Normalize();
-    return ret;
+    return v;
 }
 
 Vector3 Vector3::Cross(const Vector3& v) const

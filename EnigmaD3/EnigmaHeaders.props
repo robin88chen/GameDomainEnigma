@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <EnigmaRoot>$(MSBuildThisFileDirectory)..\</EnigmaRoot>
+    <EnigmaSourceRoot>$(MSBuildThisFileDirectory)</EnigmaSourceRoot>
+    <EnigmaJavaBridge>$(MSBuildThisFileDirectory)PlatformCore\JavaBridge\</EnigmaJavaBridge>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(EnigmaSourceRoot)PlatformCore;$(EnigmaSourceRoot)MathLib;$(EnigmaSourceRoot)ShareLib\zlib\include;$(EnigmaSourceRoot)AssetPackage;$(EnigmaSourceRoot)FileSystem;$(EnigmaSourceRoot)GraphicKernel;$(EnigmaSourceRoot)Framework;$(EnigmaSourceRoot)GraphicAPIDx11;$(EnigmaSourceRoot)GraphicAPIEgl;$(EnigmaSourceRoot)GameEngine;$(EnigmaSourceRoot)ShareLib\rapidjson\include;$(EnigmaSourceRoot)GameCommon;$(EnigmaSourceRoot)ShareLib\freetype\include;$(EnigmaSourceRoot)AdapterLayer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
+      <DisableSpecificWarnings>4201</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <CppLanguageStandard>c++1z</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="EnigmaRoot">
+      <Value>$(EnigmaRoot)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EnigmaSourceRoot">
+      <Value>$(EnigmaSourceRoot)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EnigmaJavaBridge">
+      <Value>$(EnigmaJavaBridge)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

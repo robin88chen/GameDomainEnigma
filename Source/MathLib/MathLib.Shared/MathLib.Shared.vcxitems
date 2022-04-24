@@ -14,12 +14,16 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector3.h" />

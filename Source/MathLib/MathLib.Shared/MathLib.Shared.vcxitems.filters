@@ -4,6 +4,9 @@
     <Filter Include="Vectors">
       <UniqueIdentifier>{174acc7c-c465-4583-9a94-c0de81a53d9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Colors">
+      <UniqueIdentifier>{19615479-6c7b-43f5-a058-69f4b1130a53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -16,6 +19,12 @@
       <Filter>Vectors</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp">
+      <Filter>Colors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp">
+      <Filter>Colors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h">
@@ -28,6 +37,12 @@
       <Filter>Vectors</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h">
+      <Filter>Colors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h">
+      <Filter>Colors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />

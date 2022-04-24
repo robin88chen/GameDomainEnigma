@@ -295,11 +295,14 @@ Vector4 Vector4::Normalize() const
     return v;
 }
 
-Vector4 operator* (float scalar, const Vector4& v)
+namespace Enigma::MathLib
 {
-    return Vector4(
-        scalar * v[0],
-        scalar * v[1],
-        scalar * v[2],
-        scalar * v[3]);
+    Vector4 operator* (float scalar, const Vector4& v)
+    {
+        return Vector4(
+            scalar * v[0],
+            scalar * v[1],
+            scalar * v[2],
+            scalar * v[3]);
+    }
 }

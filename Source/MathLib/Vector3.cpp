@@ -283,14 +283,16 @@ Vector3 Vector3::UnitCross(const Vector3& v) const
         m_tuple[1] * v.m_tuple[2] - m_tuple[2] * v.m_tuple[1],
         m_tuple[2] * v.m_tuple[0] - m_tuple[0] * v.m_tuple[2],
         m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0]);
-    cross.Normalize();
-    return cross;
+    return cross.Normalize();
 }
 
-Vector3 operator* (float scalar, const Vector3& v)
+namespace Enigma::MathLib
 {
-    return Vector3(
-        scalar * v[0],
-        scalar * v[1],
-        scalar * v[2]);
+    Vector3 operator* (float scalar, const Vector3& v)
+    {
+        return Vector3(
+            scalar * v[0],
+            scalar * v[1],
+            scalar * v[2]);
+    }
 }

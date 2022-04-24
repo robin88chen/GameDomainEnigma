@@ -238,8 +238,7 @@ Vector2 Vector2::Perp() const
 Vector2 Vector2::UnitPerp() const
 {
     Vector2 kPerp(m_tuple[1], -m_tuple[0]);
-    kPerp.Normalize();
-    return kPerp;
+    return kPerp.Normalize();
 }
 
 float Vector2::DotPerp(const Vector2& v) const
@@ -247,9 +246,12 @@ float Vector2::DotPerp(const Vector2& v) const
     return m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0];
 }
 
-Vector2 operator* (float scalar, const Vector2& v)
+namespace Enigma::MathLib
 {
-    return Vector2(
-        scalar * v[0],
-        scalar * v[1]);
+    Vector2 operator* (float scalar, const Vector2& v)
+    {
+        return Vector2(
+            scalar * v[0],
+            scalar * v[1]);
+    }
 }

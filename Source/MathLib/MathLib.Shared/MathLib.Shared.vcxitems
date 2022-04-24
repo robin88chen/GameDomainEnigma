@@ -25,4 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector4.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />
+  </ItemGroup>
 </Project>

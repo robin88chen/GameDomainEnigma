@@ -29,4 +29,7 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />
+  </ItemGroup>
 </Project>

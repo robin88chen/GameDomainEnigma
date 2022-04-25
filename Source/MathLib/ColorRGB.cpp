@@ -213,7 +213,7 @@ ColorRGB& ColorRGB::operator*=(float scalar)
 
 ColorRGB ColorRGB::Clamp() const
 {
-    ColorRGB c(m_rgbValue);
+    ColorRGB c(m_tuple[0], m_tuple[1], m_tuple[2]);
     if (c.m_tuple[0] > 1.0f) c.m_tuple[0] = 1.0f;
     else if (c.m_tuple[0] < 0.0f) c.m_tuple[0] = 0.0f;
     if (c.m_tuple[1] > 1.0f) c.m_tuple[1] = 1.0f;
@@ -232,7 +232,7 @@ ColorRGB ColorRGB::ScaleByMax() const
     if (m_tuple[2] > maxCo)
         maxCo = m_tuple[2];
 
-    ColorRGB c(m_rgbValue);
+    ColorRGB c(m_tuple[0], m_tuple[1], m_tuple[2]);
     if (maxCo > 1.0f)
     {
         float invMax = 1.0f / maxCo;

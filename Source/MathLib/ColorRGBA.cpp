@@ -5,7 +5,7 @@ using namespace Enigma::MathLib;
 
 const ColorRGBA ColorRGBA::BLACK(0.0f, 0.0f, 0.0f, 1.0f);
 const ColorRGBA ColorRGBA::WHITE(1.0f, 1.0f, 1.0f, 1.0f);
-const ColorRGBA ColorRGBA::INVALID(-1.0f, -1.0f, -1.0f, 1.0f);
+const ColorRGBA ColorRGBA::INVALID(-1.0f, -1.0f, -1.0f, -1.0f);
 const ColorRGBA ColorRGBA::ZERO(0.0f, 0.0f, 0.0f, 0.0f);
 
 static unsigned int rgba_float_to_int(float r, float g, float b, float a)
@@ -237,7 +237,7 @@ ColorRGBA& ColorRGBA::operator*=(float scalar)
 
 ColorRGBA ColorRGBA::Clamp() const
 {
-    ColorRGBA c(m_rgbaValue);
+    ColorRGBA c(m_tuple[0], m_tuple[1], m_tuple[2], m_tuple[3]);
     if (c.m_tuple[0] > 1.0f) c.m_tuple[0] = 1.0f;
     else if (c.m_tuple[0] < 0.0f) c.m_tuple[0] = 0.0f;
     if (c.m_tuple[1] > 1.0f) c.m_tuple[1] = 1.0f;
@@ -260,7 +260,7 @@ ColorRGBA ColorRGBA::ScaleByMax() const
     if (m_tuple[3] > maxCo)
         maxCo = m_tuple[3];
 
-    ColorRGBA c(m_rgbaValue);
+    ColorRGBA c(m_tuple[0], m_tuple[1], m_tuple[2], m_tuple[3]);
     if (maxCo > 1.0f)
     {
         float invMax = 1.0f / maxCo;

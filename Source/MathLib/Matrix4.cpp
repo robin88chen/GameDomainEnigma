@@ -1,7 +1,4 @@
 ﻿#include "Matrix4.h"
-#include "Matrix4.h"
-#include "Matrix4.h"
-#include "Matrix4.h"
 #include "Matrix3.h"
 #include "MathGlobal.h"
 #include "Quaternion.h"
@@ -956,11 +953,13 @@ std::tuple<Vector3, Quaternion, Vector3> Matrix4::UnMatrixSRT() const
     return { trans, rot, s };
 }
 
-Matrix4 operator*(float scalar, const Matrix4& mx)
+namespace Enigma::MathLib
 {
-    return mx * scalar;
+    Matrix4 operator*(float scalar, const Matrix4& mx)
+    {
+        return mx * scalar;
+    }
 }
-
 float Matrix4::GetMaxScale() const
 {
     Vector3 scale = UnMatrixScale();

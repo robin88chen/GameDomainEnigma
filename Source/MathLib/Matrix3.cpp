@@ -595,7 +595,7 @@ std::tuple<Vector3, float> Matrix3::ToAxisAngle() const
             axis[0] = m_32 - m_23;
             axis[1] = m_13 - m_31;
             axis[2] = m_21 - m_12;
-            axis.Normalize();
+            axis = axis.Normalize();
         }
         else
         {
@@ -1193,9 +1193,12 @@ Matrix3 Matrix3::TimesTranspose(const Matrix3& mx) const
     );
 }
 
-Matrix3 operator*(float scalar, const Matrix3& mx)
+namespace Enigma::MathLib
 {
-    return mx * scalar;
+    Matrix3 operator*(float scalar, const Matrix3& mx)
+    {
+        return mx * scalar;
+    }
 }
 
 Vector2 Matrix3::TransformCoord(const Vector2& v) const

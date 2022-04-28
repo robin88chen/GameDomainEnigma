@@ -31,7 +31,6 @@ namespace Enigma::MathLib
     class Matrix2
     {
     public:
-    public:
         /// If bZero is true, create the zero matrix.  Otherwise, create the identity matrix.
         Matrix2(bool isZero = true);
         /// copy constructor

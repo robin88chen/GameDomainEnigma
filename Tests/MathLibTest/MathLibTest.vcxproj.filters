@@ -24,6 +24,12 @@
     <ClCompile Include="MathColorTests.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="MathMatrixTests.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="MathQuaternionTests.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

@@ -8,7 +8,7 @@
 #ifndef _EN_COLOR_RGB_H
 #define _EN_COLOR_RGB_H
 
-/** @file EnColorRGB.h */
+/** @file ColorRGB.h */
 namespace Enigma::MathLib
 {
     /** Color RGB Class

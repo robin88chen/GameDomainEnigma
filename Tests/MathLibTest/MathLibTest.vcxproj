@@ -159,6 +159,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MathColorTests.cpp" />
+    <ClCompile Include="MathMatrixTests.cpp" />
+    <ClCompile Include="MathQuaternionTests.cpp" />
     <ClCompile Include="MathVectorTests.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -360,11 +360,13 @@ float Matrix2::ToAngle() const
     return atan2(m_21, m_11);
 }
 
-Matrix2 operator*(float scalar, const Matrix2& mx)
+namespace Enigma::MathLib
 {
-    return mx * scalar;
+    Matrix2 operator*(float scalar, const Matrix2& mx)
+    {
+        return mx * scalar;
+    }
 }
-
 EigenDecompose<Matrix2> Matrix2::EigenDecomposition() const
 {
     Matrix2 rot;

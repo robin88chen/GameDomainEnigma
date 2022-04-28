@@ -199,11 +199,14 @@ Vector3 Quaternion::operator*(const Vector3& v) const
     return v + uv + uuv;
 }
 
-Quaternion operator*(float scalar, const Quaternion& quat)
+namespace Enigma::MathLib
 {
-    return Quaternion(
-        scalar * quat.W(), scalar * quat.X(),
-        scalar * quat.Y(), scalar * quat.Z());
+    Quaternion operator*(float scalar, const Quaternion& quat)
+    {
+        return Quaternion(
+            scalar * quat.W(), scalar * quat.X(),
+            scalar * quat.Y(), scalar * quat.Z());
+    }
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& quat)
@@ -614,7 +617,7 @@ Quaternion Quaternion::Align(const Vector3& vec1, const Vector3& vec2)
 
     Quaternion q;
     Vector3 bisector = vec1 + vec2;
-    bisector.Normalize();
+    bisector = bisector.Normalize();
 
     float cosHalfAngle = vec1.Dot(bisector);
     Vector3 cross;

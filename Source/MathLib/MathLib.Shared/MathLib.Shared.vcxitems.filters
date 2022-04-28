@@ -7,6 +7,12 @@
     <Filter Include="Colors">
       <UniqueIdentifier>{19615479-6c7b-43f5-a058-69f4b1130a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Matrix">
+      <UniqueIdentifier>{96dd0b8c-c3e5-4be8-9c6d-1a19d716d238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quaternion">
+      <UniqueIdentifier>{e97151f3-d1d4-432a-93e3-b7f42c2fdda4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -25,6 +31,19 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp">
       <Filter>Colors</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathRandom.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix2.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix3.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix4.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp">
+      <Filter>Quaternion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h">
@@ -42,6 +61,20 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h">
       <Filter>Colors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathRandom.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix2.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AlgebraBasicTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix3.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix4.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h">
+      <Filter>Quaternion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,131 @@
+﻿#include "Box3.h"
+#include "MathGlobal.h"
+
+using namespace Enigma::MathLib;
+
+Box3::Box3()
+{
+    m_axis[0] = Vector3::UNIT_X;
+    m_axis[1] = Vector3::UNIT_Y;
+    m_axis[2] = Vector3::UNIT_Z;
+    m_center = Vector3::ZERO;
+    m_extent[0] = m_extent[1] = m_extent[2] = (float)0.0;
+}
+
+Box3::Box3(const Vector3& center, const Vector3 axis[3], const float extent[3]) :
+    m_center(center)
+{
+    m_axis[0] = axis[0];
+    m_axis[1] = axis[1];
+    m_axis[2] = axis[2];
+    m_extent[0] = extent[0];
+    m_extent[1] = extent[1];
+    m_extent[2] = extent[2];
+}
+
+Box3::Box3(const Vector3& center, const Vector3& axis0, const Vector3& axis1, const Vector3& axis2, float extent0,
+    float extent1, float extent2) :
+    m_center(center)
+{
+    m_axis[0] = axis0;
+    m_axis[1] = axis1;
+    m_axis[2] = axis2;
+    m_extent[0] = extent0;
+    m_extent[1] = extent1;
+    m_extent[2] = extent2;
+}
+
+std::array<Vector3, 8> Box3::ComputeVertices() const
+{
+    Vector3 extent_axis[3] =
+    {
+        m_extent[0] * m_axis[0],
+        m_extent[1] * m_axis[1],
+        m_extent[2] * m_axis[2]
+    };
+
+    std::array<Vector3, 8> vertex;
+    vertex[0] = m_center - extent_axis[0] - extent_axis[1] - extent_axis[2];
+    vertex[1] = m_center + extent_axis[0] - extent_axis[1] - extent_axis[2];
+    vertex[2] = m_center + extent_axis[0] + extent_axis[1] - extent_axis[2];
+    vertex[3] = m_center - extent_axis[0] + extent_axis[1] - extent_axis[2];
+    vertex[4] = m_center - extent_axis[0] - extent_axis[1] + extent_axis[2];
+    vertex[5] = m_center + extent_axis[0] - extent_axis[1] + extent_axis[2];
+    vertex[6] = m_center + extent_axis[0] + extent_axis[1] + extent_axis[2];
+    vertex[7] = m_center - extent_axis[0] + extent_axis[1] + extent_axis[2];
+    return vertex;
+}
+
+bool Box3::operator ==(const Box3& box) const
+{
+    return ((m_center == box.m_center) && (m_axis[0] == box.m_axis[0]) && (m_axis[1] == box.m_axis[1])
+        && (m_axis[2] == box.m_axis[2])
+        && (Math::IsEqual(m_extent[0], box.m_extent[0])) && (Math::IsEqual(m_extent[1], box.m_extent[1]))
+        && (Math::IsEqual(m_extent[2], box.m_extent[2])));
+}
+
+bool Box3::operator !=(const Box3& box) const
+{
+    return ((m_center != box.m_center) || (m_axis[0] != box.m_axis[0]) || (m_axis[1] != box.m_axis[1])
+        || (m_axis[2] != box.m_axis[2])
+        || (!Math::IsEqual(m_extent[0], box.m_extent[0])) || (!Math::IsEqual(m_extent[1], box.m_extent[1]))
+        || (!Math::IsEqual(m_extent[2], box.m_extent[2])));
+}
+
+Box3 Box3::SwapToMajorAxis() const
+{
+    Box3 box(*this);
+    box.ImplicitSwapToMajorAxis();
+    return box;
+}
+
+void Box3::ImplicitSwapToMajorAxis()
+{
+    // 將m_axis 0,1,2調整到主要為x,y,z
+    if (m_axis[1].X() * m_axis[1].X() > m_axis[0].X() * m_axis[0].X())
+    {
+        // y <--> x
+        float extend_save;
+        Vector3 axis_save;
+        extend_save = m_extent[0];
+        m_extent[0] = m_extent[1];
+        m_extent[1] = extend_save;
+        axis_save = m_axis[0];
+        m_axis[0] = m_axis[1];
+        m_axis[1] = axis_save;
+    }
+    if (m_axis[2].X() * m_axis[2].X() > m_axis[0].X() * m_axis[0].X())
+    {
+        // z <--> x
+        float extend_save;
+        Vector3 axis_save;
+        extend_save = m_extent[0];
+        m_extent[0] = m_extent[2];
+        m_extent[2] = extend_save;
+        axis_save = m_axis[0];
+        m_axis[0] = m_axis[2];
+        m_axis[2] = axis_save;
+    }
+    if (m_axis[2].Y() * m_axis[2].Y() > m_axis[1].Y() * m_axis[1].Y())
+    {
+        // z <--> y
+        float extend_save;
+        Vector3 axis_save;
+        extend_save = m_extent[1];
+        m_extent[1] = m_extent[2];
+        m_extent[2] = extend_save;
+        axis_save = m_axis[1];
+        m_axis[1] = m_axis[2];
+        m_axis[2] = axis_save;
+    }
+    // 把軸都調整到正向
+    if (m_axis[0].X() < 0.0f) m_axis[0] = -m_axis[0];
+    if (m_axis[1].Y() < 0.0f) m_axis[1] = -m_axis[1];
+    if (m_axis[2].Z() < 0.0f) m_axis[2] = -m_axis[2];
+    // 調整正交規則
+    Vector3 cross = m_axis[0].Cross(m_axis[1]);
+    if (cross.Dot(m_axis[2]) < 0.0f)
+    {
+        m_axis[0] = -m_axis[0];
+    }
+}

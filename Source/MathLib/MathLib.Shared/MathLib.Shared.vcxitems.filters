@@ -19,6 +19,15 @@
     <Filter Include="Rays">
       <UniqueIdentifier>{88223f29-856c-4bae-8a85-65866dd47107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Box">
+      <UniqueIdentifier>{2424669a-7338-4660-b8e0-bc5a3ae84e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spheres">
+      <UniqueIdentifier>{c9fbb33b-d3ea-4b6e-b2ed-2f1fa4876ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containment">
+      <UniqueIdentifier>{72d9c1de-6ad5-42e7-a6ff-838e33b87f74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -61,6 +70,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp">
       <Filter>Rays</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box2.cpp">
+      <Filter>Box</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box3.cpp">
+      <Filter>Box</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere2.cpp">
+      <Filter>Spheres</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp">
+      <Filter>Spheres</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +126,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h">
       <Filter>Rays</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box2.h">
+      <Filter>Box</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box3.h">
+      <Filter>Box</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere2.h">
+      <Filter>Spheres</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h">
+      <Filter>Spheres</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

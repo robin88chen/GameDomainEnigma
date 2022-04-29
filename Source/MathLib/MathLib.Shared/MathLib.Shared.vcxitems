@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp" />
@@ -26,12 +28,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AlgebraBasicTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h" />
@@ -44,6 +50,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector4.h" />

@@ -114,7 +114,13 @@ namespace MathLibTests
             q11 = q11.Normalize();
             Assert::IsTrue(q11 == Quaternion::IDENTITY);
 
-            // Fix Me : how to test Slerp? 
+            Quaternion q12(0.7f, 0.2f, 0.3f, 0.7f);
+            Quaternion q13(1.0f, 0.0f, 0.0f, 0.0f);
+            Quaternion q14 = Quaternion::Slerp(0.8f, q12, q13);
+            // 用網頁算,
+            // https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
+            // 0.9873734753725321, 0.04436357818165539, 0.06654536727248309, 0.15527252363579386
+            // 不過只有兩位 digit 是對的, 
         }
     };
 }

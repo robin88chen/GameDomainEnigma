@@ -203,9 +203,9 @@ namespace MathLibTests
             //Math::m_epsilonUlp = 1.0f;
             Assert::IsTrue(mx7 == mx5);
 
-            float yaw = half_pi_rand(generator);
+            float yaw = pi_rand(generator);
             float pitch = half_pi_rand(generator);
-            float roll = half_pi_rand(generator);
+            float roll = pi_rand(generator);
             Matrix3 mx20;
             mx20 = Matrix3::FromEulerAnglesXYZ(EulerAngles{ yaw, pitch, roll });
             EulerAngles euler1;
@@ -217,6 +217,9 @@ namespace MathLibTests
                 Assert::IsTrue(Math::IsEqual(pitch, euler1.m_y));
                 Assert::IsTrue(Math::IsEqual(roll, euler1.m_z));
             }
+            yaw = pi_rand(generator);
+            pitch = pi_rand(generator);
+            roll = half_pi_rand(generator);
             mx20 = Matrix3::FromEulerAnglesXZY(EulerAngles{ yaw, pitch, roll });
             std::tie(euler1, unique) = mx20.ToEulerAnglesXZY();
             if (unique == UniqueEulerAngle::True)
@@ -225,6 +228,9 @@ namespace MathLibTests
                 Assert::IsTrue(Math::IsEqual(pitch, euler1.m_y));
                 Assert::IsTrue(Math::IsEqual(roll, euler1.m_z));
             }
+            yaw = half_pi_rand(generator);
+            pitch = pi_rand(generator);
+            roll = pi_rand(generator);
             mx20 = Matrix3::FromEulerAnglesYXZ(EulerAngles{ yaw, pitch, roll });
             std::tie(euler1, unique) = mx20.ToEulerAnglesYXZ();
             if (unique == UniqueEulerAngle::True)
@@ -233,6 +239,9 @@ namespace MathLibTests
                 Assert::IsTrue(Math::IsEqual(pitch, euler1.m_y));
                 Assert::IsTrue(Math::IsEqual(roll, euler1.m_z));
             }
+            yaw = pi_rand(generator);
+            pitch = pi_rand(generator);
+            roll = half_pi_rand(generator);
             mx20 = Matrix3::FromEulerAnglesYZX(EulerAngles{ yaw, pitch, roll });
             std::tie(euler1, unique) = mx20.ToEulerAnglesYZX();
             if (unique == UniqueEulerAngle::True)
@@ -241,6 +250,9 @@ namespace MathLibTests
                 Assert::IsTrue(Math::IsEqual(pitch, euler1.m_y));
                 Assert::IsTrue(Math::IsEqual(roll, euler1.m_z));
             }
+            yaw = half_pi_rand(generator);
+            pitch = pi_rand(generator);
+            roll = pi_rand(generator);
             mx20 = Matrix3::FromEulerAnglesZXY(EulerAngles{ yaw, pitch, roll });
             std::tie(euler1, unique) = mx20.ToEulerAnglesZXY();
             if (unique == UniqueEulerAngle::True)
@@ -249,6 +261,9 @@ namespace MathLibTests
                 Assert::IsTrue(Math::IsEqual(pitch, euler1.m_y));
                 Assert::IsTrue(Math::IsEqual(roll, euler1.m_z));
             }
+            yaw = pi_rand(generator);
+            pitch = half_pi_rand(generator);
+            roll = pi_rand(generator);
             mx20 = Matrix3::FromEulerAnglesZYX(EulerAngles{ yaw, pitch, roll });
             std::tie(euler1, unique) = mx20.ToEulerAnglesZYX();
             if (unique == UniqueEulerAngle::True)

@@ -81,6 +81,15 @@ namespace MathLibTests
             mx_rot2 = q_rot.ToRotationMatrix();
             Assert::IsTrue(mx_rot == mx_rot2);
 
+            Vector3 rot_column[3];
+            rot_column[0] = mx_rot.GetColumn(0); rot_column[1] = mx_rot.GetColumn(1); rot_column[2] = mx_rot.GetColumn(2);
+            Quaternion q_rot2;
+            q_rot2 = Quaternion::FromRotationMatrix(Matrix3::FromColumnVectors(rot_column));
+            Assert::IsTrue(q_rot == q_rot2);
+            Vector3 rot_column2[3];
+            Matrix3 mx_rot3 = q_rot2.ToRotationMatrix();
+            Assert::IsTrue(rot_column[1] == mx_rot3.GetColumn(1));
+
             Quaternion q7 = q5 + q6;
             Assert::IsTrue(q7 == 2.0f * q5);
             Quaternion q8 = q7 - q6;

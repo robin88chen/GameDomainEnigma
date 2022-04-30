@@ -78,6 +78,7 @@ namespace Enigma::MathLib
         static Matrix3 MakeIdentity();
         static Matrix3 MakeDiagonal(float m00, float m11, float m22);
         static Matrix3 FromAxisAngle(const Vector3& axis, float angle);
+        static Matrix3 FromColumnVectors(Vector3 col[3]);
         //@}
 
         /** @name member access */

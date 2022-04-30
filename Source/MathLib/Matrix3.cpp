@@ -185,6 +185,11 @@ Matrix3 Matrix3::FromAxisAngle(const Vector3& axis, float angle)
     return Matrix3(axis, angle);
 }
 
+Matrix3 Matrix3::FromColumnVectors(Vector3 col[3])
+{
+    return Matrix3(col[0], col[1], col[2], true);
+}
+
 Matrix3::operator const float*() const
 {
     return &m_entry[0][0];

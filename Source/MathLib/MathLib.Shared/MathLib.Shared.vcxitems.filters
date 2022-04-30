@@ -83,6 +83,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp">
       <Filter>Spheres</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h">
@@ -138,6 +150,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h">
       <Filter>Spheres</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h">
+      <Filter>Containment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

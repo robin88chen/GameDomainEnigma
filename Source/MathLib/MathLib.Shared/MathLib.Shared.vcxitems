@@ -18,6 +18,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Box3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
@@ -40,6 +44,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Box3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />

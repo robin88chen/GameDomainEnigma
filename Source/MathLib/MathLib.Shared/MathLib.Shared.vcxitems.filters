@@ -34,6 +34,12 @@
     <Filter Include="Algorithm">
       <UniqueIdentifier>{71197b50-5a25-4a42-9e01-85a60609abaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plane">
+      <UniqueIdentifier>{b3e21125-7b36-471b-8eff-7f7b02a9bda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Triangle">
+      <UniqueIdentifier>{27bf543a-0502-4e8f-9911-016e87e4a6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -106,6 +112,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp">
       <Filter>Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Plane3.cpp">
+      <Filter>Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle2.cpp">
+      <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle3.cpp">
+      <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.cpp">
+      <Filter>Triangle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +198,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h">
       <Filter>Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Plane3.h">
+      <Filter>Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle2.h">
+      <Filter>Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle3.h">
+      <Filter>Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.h">
+      <Filter>Triangle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

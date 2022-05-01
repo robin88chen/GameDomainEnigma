@@ -31,6 +31,9 @@
     <Filter Include="Rect">
       <UniqueIdentifier>{c88c3273-11c5-4fe1-a548-f9085e677f69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Algorithm">
+      <UniqueIdentifier>{71197b50-5a25-4a42-9e01-85a60609abaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp">
       <Filter>Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp">
+      <Filter>Algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h">
       <Filter>Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h">
+      <Filter>Algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

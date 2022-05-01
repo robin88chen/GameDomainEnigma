@@ -172,6 +172,18 @@ namespace Enigma::MathLib
         static Matrix4 MakeRotationZTransform(const float radian);
         /** 先對Z軸轉(roll),再對X軸轉(pitch),最後對Y軸轉(yaw) */
         static Matrix4 MakeRotationYawPitchRoll(const float yaw, const float pitch, const float roll);
+        /** matrix from SRT
+        @remark
+        <pre>
+        [ Sx*R[0][0]  Sy*R[0][1]  Sz*R[0][2]  Tx ]
+        | Sx*R[1][0]  Sy*R[1][1]  Sz*R[1][2]  Ty |
+        | Sx*R[2][0]  Sy*R[2][1]  Sz*R[2][2]  Tz |
+        [      0           0           0       1 ]
+        R is Rotate Matrix from Quaternion
+        </pre>
+        */
+        static Matrix4 FromSRT(const Vector3& scale, const Matrix3& rot, const Vector3& trans);
+        static Matrix4 FromSRT(const Vector3& scale, const Quaternion& rot, const Vector3& trans);
         //@}
 
         /** @name Matrix分解 */
@@ -184,6 +196,7 @@ namespace Enigma::MathLib
         Matrix4 UnMatrixRotation() const;
         /** 分解SRT */
         std::tuple<Vector3, Quaternion, Vector3> UnMatrixSRT() const;
+        std::tuple<Vector3, Matrix3, Vector3> UnMatrixSRT_WithRotateMatrix() const;
         //@}
 
         float GetMaxScale() const;

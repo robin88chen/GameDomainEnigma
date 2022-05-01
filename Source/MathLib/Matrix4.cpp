@@ -830,6 +830,64 @@ Matrix4 Matrix4::MakeRotationYawPitchRoll(const float yaw, const float pitch, co
     return mtx4Ry * mtx4Rx * mtx4Rz;
 }
 
+Matrix4 Matrix4::FromSRT(const Vector3& scale, const Matrix3& rot, const Vector3& trans)
+{
+    Matrix4 rm = Matrix4::IDENTITY;
+
+    rm[0][0] = scale.X() * rot[0][0];
+    rm[0][1] = scale.Y() * rot[0][1];
+    rm[0][2] = scale.Z() * rot[0][2];
+    rm[0][3] = trans.X();
+    rm[1][0] = scale.X() * rot[1][0];
+    rm[1][1] = scale.Y() * rot[1][1];
+    rm[1][2] = scale.Z() * rot[1][2];
+    rm[1][3] = trans.Y();
+    rm[2][0] = scale.X() * rot[2][0];
+    rm[2][1] = scale.Y() * rot[2][1];
+    rm[2][2] = scale.Z() * rot[2][2];
+    rm[2][3] = trans.Z();
+
+    return rm;
+}
+
+Matrix4 Matrix4::FromSRT(const Vector3& scale, const Quaternion& rot, const Vector3& trans)
+{
+    Matrix4 rm = Matrix4::IDENTITY;
+    float x, y, z, w;
+    x = rot.X();
+    y = rot.Y();
+    z = rot.Z();
+    w = rot.W();
+
+    float tx = (float)2.0 * x;
+    float ty = (float)2.0 * y;
+    float tz = (float)2.0 * z;
+    float twx = tx * w;
+    float twy = ty * w;
+    float twz = tz * w;
+    float txx = tx * x;
+    float txy = ty * x;
+    float txz = tz * x;
+    float tyy = ty * y;
+    float tyz = tz * y;
+    float tzz = tz * z;
+
+    rm[0][0] = scale.X() * ((float)1.0 - (tyy + tzz));
+    rm[0][1] = scale.Y() * (txy - twz);
+    rm[0][2] = scale.Z() * (txz + twy);
+    rm[0][3] = trans.X();
+    rm[1][0] = scale.X() * (txy + twz);
+    rm[1][1] = scale.Y() * ((float)1.0 - (txx + tzz));
+    rm[1][2] = scale.Z() * (tyz - twx);
+    rm[1][3] = trans.Y();
+    rm[2][0] = scale.X() * (txz - twy);
+    rm[2][1] = scale.Y() * (tyz + twx);
+    rm[2][2] = scale.Z() * ((float)1.0 - (txx + tyy));
+    rm[2][3] = trans.Z();
+
+    return rm;
+}
+
 Vector3 Matrix4::UnMatrixTranslate() const
 {
     Vector3 v;
@@ -901,6 +959,13 @@ Matrix4 Matrix4::UnMatrixRotation() const
 
 std::tuple<Vector3, Quaternion, Vector3> Matrix4::UnMatrixSRT() const
 {
+    auto [s, r, t] = UnMatrixSRT_WithRotateMatrix();
+    Quaternion rot = Quaternion::FromRotationMatrix(r);
+    return { s, rot, t };
+}
+
+std::tuple<Vector3, Matrix3, Vector3> Matrix4::UnMatrixSRT_WithRotateMatrix() const
+{
     Vector3 trans;
     trans.X() = m_14;
     trans.Y() = m_24;
@@ -949,8 +1014,7 @@ std::tuple<Vector3, Quaternion, Vector3> Matrix4::UnMatrixSRT() const
     r[0][2] = m_13 / s.Z();
     r[1][2] = m_23 / s.Z();
     r[2][2] = m_33 / s.Z();
-    Quaternion rot = Quaternion::FromRotationMatrix(r);
-    return { trans, rot, s };
+    return { s, r, trans };
 }
 
 namespace Enigma::MathLib

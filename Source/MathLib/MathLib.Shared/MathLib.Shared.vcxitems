@@ -24,6 +24,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathRandom.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix2.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathRandom.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix2.h" />

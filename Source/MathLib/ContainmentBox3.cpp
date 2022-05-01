@@ -117,11 +117,11 @@ Box3 ContainmentBox3::MergeBoxes(const Box3& box0, const Box3& box1)
 Box3 ContainmentBox3::MergeAlignedBoxes(const Box3& box0, const Box3& box1)
 {
     // 取兩個box的最大最小位置
-    Vector3 vecMax = box0.Center() + Vector3((float*)box0.Extent());
-    Vector3 vecMin = box0.Center() - Vector3((float*)box0.Extent());
+    Vector3 vecMax = box0.Center() + Vector3(box0.Extent());
+    Vector3 vecMin = box0.Center() - Vector3(box0.Extent());
 
-    Vector3 vecMax1 = box1.Center() + Vector3((float*)box1.Extent());
-    Vector3 vecMin1 = box1.Center() - Vector3((float*)box1.Extent());
+    Vector3 vecMax1 = box1.Center() + Vector3(box1.Extent());
+    Vector3 vecMin1 = box1.Center() - Vector3(box1.Extent());
 
     if (vecMax.X() < vecMax1.X())
     {

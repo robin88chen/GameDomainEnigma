@@ -528,8 +528,8 @@ Quaternion Quaternion::Slerp(float t, const Quaternion& p, const Quaternion& q, 
     if (fabs(angle) >= Math::ZERO_TOLERANCE)
     {
         float sn = sin(angle);
-        float invSn = (float)1.0 / sn;
-        float coeff0 = sin(((float)1.0 - t) * angle) * invSn;
+        float invSn = 1.0f / sn;
+        float coeff0 = sin((1.0f - t) * angle) * invSn;
         float coeff1 = sin(t * angle) * invSn;
         // Do we need to invert rotation?
         if (cs < (float)0.0 && shortestPath)
@@ -560,9 +560,9 @@ Quaternion Quaternion::SlerpExtraSpins(float t, const Quaternion& p, const Quate
     if (fabs(angle) >= Math::ZERO_TOLERANCE)
     {
         float sn = sin(angle);
-        float phase = Math::PI * extraSpins * t;
-        float invSn = (float)1.0 / sn;
-        float coeff0 = sin(((float)1.0 - t) * angle - phase) * invSn;
+        float phase = Math::PI * (float)extraSpins * t;
+        float invSn = 1.0f / sn;
+        float coeff0 = sin((1.0f - t) * angle - phase) * invSn;
         float coeff1 = sin(t * angle + phase) * invSn;
         return coeff0 * p + coeff1 * q;
     }
@@ -578,13 +578,13 @@ Quaternion Quaternion::Intermediate(const Quaternion& q0, const Quaternion& q1, 
     Quaternion q1Inv = q1.Conjugate();
     Quaternion p0 = q1Inv * q0;
     Quaternion p2 = q1Inv * q2;
-    Quaternion arg = (float)-0.25 * (p0.Log() + p2.Log());
+    Quaternion arg = -0.25f * (p0.Log() + p2.Log());
     return q1 * arg.Exp();
 }
 
 Quaternion Quaternion::Squad(float t, const Quaternion& q0, const Quaternion& a0, const Quaternion& a1, const Quaternion& q1, bool shortestPath)
 {
-    float slerpT = (float)2.0 * t * ((float)1.0 - t);
+    float slerpT = 2.0f * t * (1.0f - t);
     Quaternion slerpP = Slerp(t, q0, q1, shortestPath);
     Quaternion slerpQ = Slerp(t, a0, a1);
     return Slerp(slerpT, slerpP, slerpQ);

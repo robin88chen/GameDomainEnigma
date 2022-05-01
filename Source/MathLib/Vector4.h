@@ -21,7 +21,7 @@ namespace Enigma::MathLib
         Vector4(const Vector3& vec, float w);
         Vector4(const Vector4&) = default;
         Vector4(Vector4&&) = default;
-        Vector4(float* f);
+        Vector4(const float* f);
 
         /** @name coordinate access */
         //@{

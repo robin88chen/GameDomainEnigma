@@ -19,7 +19,7 @@ namespace Enigma::MathLib
         // construction
         Vector3();  // uninitialized
         Vector3(float x, float y, float z);
-        Vector3(float* f);
+        Vector3(const float* f);
 
         /** @name coordinate access */
         //@{

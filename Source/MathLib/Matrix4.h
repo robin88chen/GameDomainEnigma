@@ -66,6 +66,7 @@ namespace Enigma::MathLib
         Matrix4(const Vector3* vec, bool isColumns);
         /** Create from Matrix 3x3 */
         Matrix4(const Matrix3& mx);
+        ~Matrix4() = default;
 
         /** @name create various matrices */
         //@{

@@ -46,6 +46,7 @@ namespace Enigma::MathLib
         Matrix2(float m00, float m11);
         /// create a rotation matrix (positive angle - clockwise)
         Matrix2(float angle);
+        ~Matrix2() = default;
 
         /** @name create various matrices */
         //@{

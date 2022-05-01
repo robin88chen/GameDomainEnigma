@@ -22,7 +22,7 @@ Vector2::Vector2(float x, float y)
     m_tuple[1] = y;
 }
 
-Vector2::Vector2(float* f)
+Vector2::Vector2(const float* f)
 {
     assert(f);
     memcpy(m_tuple, f, 2 * sizeof(float));

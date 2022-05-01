@@ -31,6 +31,7 @@ namespace Enigma::MathLib
         ColorRGB(ColorRGB&&) = default;
         /// rgb = 0x00rrggbb
         ColorRGB(unsigned int rgb);
+        ~ColorRGB() = default;
 
         /** @name member access */
         //@{

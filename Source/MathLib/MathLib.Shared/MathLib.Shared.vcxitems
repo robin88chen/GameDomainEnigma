@@ -32,6 +32,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h" />

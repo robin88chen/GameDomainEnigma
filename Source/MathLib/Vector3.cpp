@@ -24,7 +24,7 @@ Vector3::Vector3(float x, float y, float z)
     m_tuple[2] = z;
 }
 
-Vector3::Vector3(float* f)
+Vector3::Vector3(const float* f)
 {
     assert(f);
     memcpy(m_tuple, f, 3 * sizeof(float));

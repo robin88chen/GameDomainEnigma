@@ -33,7 +33,7 @@ Vector4::Vector4(const Vector3& vec, float w)
     m_tuple[3] = w;
 }
 
-Vector4::Vector4(float* f)
+Vector4::Vector4(const float* f)
 {
     assert(f);
     memcpy(m_tuple, f, 4 * sizeof(float));

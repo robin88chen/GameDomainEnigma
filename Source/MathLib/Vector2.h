@@ -17,7 +17,7 @@ namespace Enigma::MathLib
         // construction
         Vector2();  // uninitialized
         Vector2(float x, float y);
-        Vector2(float* f);
+        Vector2(const float* f);
 
         /** @name coordinate access */
         //@{

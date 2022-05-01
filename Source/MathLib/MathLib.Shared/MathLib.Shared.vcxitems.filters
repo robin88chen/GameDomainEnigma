@@ -28,6 +28,9 @@
     <Filter Include="Containment">
       <UniqueIdentifier>{72d9c1de-6ad5-42e7-a6ff-838e33b87f74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rect">
+      <UniqueIdentifier>{c88c3273-11c5-4fe1-a548-f9085e677f69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp">
       <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp">
+      <Filter>Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h">
       <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h">
+      <Filter>Rect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

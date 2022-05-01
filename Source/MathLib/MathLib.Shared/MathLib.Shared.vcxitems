@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{2af3ca53-3295-43c2-9861-559709c3a2f5}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Intersector.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Line3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathRandom.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix4.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Plane3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AlgebraBasicTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Intersector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectorCache.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Line3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathLib.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathRandom.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Plane3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector4.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />
+  </ItemGroup>
+</Project>

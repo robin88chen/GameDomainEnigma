@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Vectors">
+      <UniqueIdentifier>{174acc7c-c465-4583-9a94-c0de81a53d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Colors">
+      <UniqueIdentifier>{19615479-6c7b-43f5-a058-69f4b1130a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Matrix">
+      <UniqueIdentifier>{96dd0b8c-c3e5-4be8-9c6d-1a19d716d238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quaternion">
+      <UniqueIdentifier>{e97151f3-d1d4-432a-93e3-b7f42c2fdda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lines">
+      <UniqueIdentifier>{0b1ba98b-666d-48d6-9027-ce383ece9968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rays">
+      <UniqueIdentifier>{88223f29-856c-4bae-8a85-65866dd47107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Box">
+      <UniqueIdentifier>{2424669a-7338-4660-b8e0-bc5a3ae84e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spheres">
+      <UniqueIdentifier>{c9fbb33b-d3ea-4b6e-b2ed-2f1fa4876ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containment">
+      <UniqueIdentifier>{72d9c1de-6ad5-42e7-a6ff-838e33b87f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rect">
+      <UniqueIdentifier>{c88c3273-11c5-4fe1-a548-f9085e677f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algorithm">
+      <UniqueIdentifier>{71197b50-5a25-4a42-9e01-85a60609abaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plane">
+      <UniqueIdentifier>{b3e21125-7b36-471b-8eff-7f7b02a9bda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Triangle">
+      <UniqueIdentifier>{27bf543a-0502-4e8f-9911-016e87e4a6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersector">
+      <UniqueIdentifier>{10aea23e-415b-4023-a845-8b7880ffec3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
+      <Filter>Vectors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector3.cpp">
+      <Filter>Vectors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector4.cpp">
+      <Filter>Vectors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathGlobal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGB.cpp">
+      <Filter>Colors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ColorRGBA.cpp">
+      <Filter>Colors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathRandom.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix2.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix3.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix4.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp">
+      <Filter>Quaternion</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp">
+      <Filter>Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Line3.cpp">
+      <Filter>Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray2.cpp">
+      <Filter>Rays</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp">
+      <Filter>Rays</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box2.cpp">
+      <Filter>Box</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Box3.cpp">
+      <Filter>Box</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere2.cpp">
+      <Filter>Spheres</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Sphere3.cpp">
+      <Filter>Spheres</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp">
+      <Filter>Containment</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp">
+      <Filter>Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp">
+      <Filter>Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Plane3.cpp">
+      <Filter>Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle2.cpp">
+      <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Triangle3.cpp">
+      <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.cpp">
+      <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Intersector.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h">
+      <Filter>Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector3.h">
+      <Filter>Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector4.h">
+      <Filter>Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathGlobal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGB.h">
+      <Filter>Colors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ColorRGBA.h">
+      <Filter>Colors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathRandom.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix2.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AlgebraBasicTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix3.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix4.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h">
+      <Filter>Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h">
+      <Filter>Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Line3.h">
+      <Filter>Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray2.h">
+      <Filter>Rays</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h">
+      <Filter>Rays</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box2.h">
+      <Filter>Box</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Box3.h">
+      <Filter>Box</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere2.h">
+      <Filter>Spheres</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Sphere3.h">
+      <Filter>Spheres</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox2.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h">
+      <Filter>Containment</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h">
+      <Filter>Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h">
+      <Filter>Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Plane3.h">
+      <Filter>Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle2.h">
+      <Filter>Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Triangle3.h">
+      <Filter>Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.h">
+      <Filter>Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Intersector.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectorCache.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathLib.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />
+  </ItemGroup>
+</Project>

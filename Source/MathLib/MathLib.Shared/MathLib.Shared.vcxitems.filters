@@ -40,6 +40,9 @@
     <Filter Include="Triangle">
       <UniqueIdentifier>{27bf543a-0502-4e8f-9911-016e87e4a6e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Intersector">
+      <UniqueIdentifier>{10aea23e-415b-4023-a845-8b7880ffec3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -124,6 +127,39 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.cpp">
       <Filter>Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Intersector.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.cpp">
+      <Filter>Intersector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +247,43 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TrianglePlaneClipper.h">
       <Filter>Triangle</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Intersector.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectorCache.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Plane3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrLine3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MathLib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />

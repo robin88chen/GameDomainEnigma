@@ -1,0 +1,10 @@
+本次版本 1.2.11
+
+Git 下載
+從 contrib/vstudio目錄裡找 solution編譯
+Release 模式會需要幾個MASM 編譯的obj
+在 contrib/masmx64 & contrib/masmx86 目錄
+從 Developer Prompt 進目錄，執行bld_ml32.bat & bld_ml64.bat 即可
+(x64 版本會需要 x64版的 prompt)
+
+跟著 libpng 編譯，要把 Z_SOLO拿掉

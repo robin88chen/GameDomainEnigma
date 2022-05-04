@@ -1,5 +1,6 @@
 ﻿#include "AssetHeaderDataMap.h"
 #include <cassert>
+#include <vector>
 
 using namespace Enigma::AssetPackage;
 
@@ -67,6 +68,7 @@ std::vector<char> AssetHeaderDataMap::ExportToByteBuffer()
         memcpy(&buff[index], &(kv.second.m_crc), sizeof(unsigned int));
         index += sizeof(unsigned int);
     }
+    return buff;
 }
 
 void AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)

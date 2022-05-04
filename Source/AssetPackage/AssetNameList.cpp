@@ -1,11 +1,11 @@
 ﻿#include "AssetNameList.h"
-#include <cstring>
+#include <string>
 #include <cassert>
+#include <vector>
 
 using namespace Enigma::AssetPackage;
 
 using string = std::string;
-constexpr int BUFFER_GROW_SIZE = 2048;
 const string empty_string = { "" };
 
 AssetNameList::AssetNameList()
@@ -71,6 +71,7 @@ std::vector<char> AssetNameList::ExportToByteBuffer()
         memcpy(&buff[index], name.c_str(), name.length());
         index += (name.length() + 1);
     }
+    return buff;
 }
 
 void AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)

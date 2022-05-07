@@ -339,13 +339,19 @@ void AssetPackageFile::SaveHeaderFile()
     std::vector<char> name_buff = m_nameList->ExportToByteBuffer();
     unsigned int name_list_byte_size = (unsigned int)name_buff.size();
     m_headerFile.write((const char*)&name_list_byte_size, sizeof(name_list_byte_size));
-    m_headerFile.write(&name_buff[0], name_list_byte_size);
+    if (name_list_byte_size > 0)
+    {
+        m_headerFile.write(&name_buff[0], name_list_byte_size);
+    }
 
     assert(m_headerDataMap);
     std::vector<char> header_buff = m_headerDataMap->ExportToByteBuffer();
     unsigned int header_byte_size = (unsigned int)header_buff.size();
     m_headerFile.write((const char*)&header_byte_size, sizeof(header_byte_size));
-    m_headerFile.write(&header_buff[0], header_byte_size);
+    if (header_byte_size > 0)
+    {
+        m_headerFile.write(&header_buff[0], header_byte_size);
+    }
 
     m_headerFile.flush();
 }
@@ -364,16 +370,22 @@ void AssetPackageFile::ReadHeaderFile()
     unsigned int name_list_byte_size;
     m_headerFile.read((char*)&name_list_byte_size, sizeof(name_list_byte_size));
     std::vector<char> name_buff;
-    name_buff.resize(name_list_byte_size, 0);
-    m_headerFile.read(&name_buff[0], name_list_byte_size);
+    if (name_list_byte_size > 0)
+    {
+        name_buff.resize(name_list_byte_size, 0);
+        m_headerFile.read(&name_buff[0], name_list_byte_size);
+    }
     m_nameList = std::make_unique<AssetNameList>();
     m_nameList->ImportFromByteBuffer(name_buff);
 
     unsigned int header_byte_size;
     m_headerFile.read((char*)&header_byte_size, sizeof(header_byte_size));
     std::vector<char> header_buff;
-    header_buff.resize(header_byte_size, 0);
-    m_headerFile.read(&header_buff[0], header_byte_size);
+    if (header_byte_size > 0)
+    {
+        header_buff.resize(header_byte_size, 0);
+        m_headerFile.read(&header_buff[0], header_byte_size);
+    }
     m_headerDataMap = std::make_unique<AssetHeaderDataMap>();
     m_headerDataMap->ImportFromByteBuffer(header_buff);
 }

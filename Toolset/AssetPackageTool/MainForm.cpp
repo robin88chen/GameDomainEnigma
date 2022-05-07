@@ -3,6 +3,7 @@
 #include "AssetPackagePanel.h"
 #include "nana/gui/filebox.hpp"
 #include "AssetPackageFile.h"
+#include "SchemeColorDef.h"
 
 using namespace AssetPackageTool;
 using namespace Enigma::AssetPackage;
@@ -29,10 +30,12 @@ MainForm::~MainForm()
 
 void MainForm::Initialize()
 {
+    UISchemeColors::ApplySchemaColors(scheme());
     m_place = new nana::place{ *this };
     m_place->div("vert<menubar weight=28><tabbar weight=28><tabframe>");
     InitMenu();
     m_tabbar = new nana::tabbar<int>{ *this };
+    UISchemeColors::ApplySchemaColors(m_tabbar->scheme());
     m_place->field("tabbar") << *m_tabbar;
 
     m_place->collocate();
@@ -41,6 +44,10 @@ void MainForm::Initialize()
 void MainForm::InitMenu()
 {
     m_menubar = new nana::menubar{ *this };
+    m_menubar->scheme().background = UISchemeColors::BACKGROUND;
+    m_menubar->scheme().body_selected = UISchemeColors::SELECT_BG;
+    m_menubar->scheme().body_highlight = UISchemeColors::HIGHLIGHT_BG;
+    m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     m_menubar->push_back("&FILE");
     m_menubar->at(0).append("Create Package", [=] (auto item) { OnCreatePackage(item); });
     m_menubar->at(0).append("Open Package", [=] (auto item) { OnOpenPackage(item); });

@@ -24,6 +24,7 @@ namespace AssetPackageTool
         void OnAddFilesButton(const nana::arg_click& ev);
         void OnAddDirectoryButton(const nana::arg_click& ev);
         void OnExtractSelectedAsset(nana::menu::item_proxy& menu_item);
+        void OnDeleteSelectedAsset(nana::menu::item_proxy& menu_item);
 
         void AddPackageFile(const std::string& filepath);
         std::string SplitAssetKeyName(const std::string& filepath);

@@ -2,6 +2,7 @@
 #include "nana/gui/filebox.hpp"
 #include "AssetNameList.h"
 #include <filesystem>
+#include "SchemeColorDef.h"
 
 using namespace Enigma::AssetPackage;
 
@@ -66,19 +67,29 @@ void AssetPackageTool::AssetPackagePanel::Initialize()
     m_place->div("<leftpart vert< row_one weight=28 arrange=[80,variable,80] > < row_two weight=28 > >"
         "|<rightpart weight=70%>");
     m_rootDirPrompt = new nana::label { *this, "Root Dir" };
+    UISchemeColors::ApplySchemaColors(m_rootDirPrompt->scheme());
     m_rootDirLabel = new nana::label{ *this, "Test" };
+    UISchemeColors::ApplySchemaColors(m_rootDirLabel->scheme());
     m_browseButton = new nana::button{ *this, "Browse" };
+    UISchemeColors::ApplySchemaColors(m_browseButton->scheme());
     m_browseButton->events().click([=] (const nana::arg_click& a)
         { this->OnBrowseRootButton(a); });  // a 的 type 用 auto 會編譯失敗， why??
     (*m_place)["row_one"] << *m_rootDirPrompt << *m_rootDirLabel << *m_browseButton;
     m_addFilesButton = new nana::button{ *this, "Add Files" };
+    UISchemeColors::ApplySchemaColors(m_addFilesButton->scheme());
     m_addFilesButton->events().click([=] (const nana::arg_click& a)
         { this->OnAddFilesButton(a); });  // a 的 type 用 auto 會編譯失敗， why??
     m_addDirButton = new nana::button{ *this, "Add Dir" };
+    UISchemeColors::ApplySchemaColors(m_addDirButton->scheme());
     m_addDirButton->events().click([=] (const nana::arg_click& a)
         { this->OnAddDirectoryButton(a); });  // a 的 type 用 auto 會編譯失敗， why??
     (*m_place)["row_two"] << *m_addDirButton << *m_addFilesButton;
     m_assetListbox = new nana::listbox{ *this };
+    UISchemeColors::ApplySchemaColors(m_assetListbox->scheme());
+    m_assetListbox->scheme().header_bgcolor = UISchemeColors::BACKGROUND;
+    m_assetListbox->scheme().header_fgcolor = UISchemeColors::FOREGROUND;
+    m_assetListbox->scheme().item_highlighted = UISchemeColors::HIGHLIGHT_BG;
+    m_assetListbox->scheme().item_selected = UISchemeColors::SELECT_BG;
     m_assetListbox->append_header("Name");
     m_assetListbox->append_header("Offset");
     m_assetListbox->append_header("Size");
@@ -90,6 +101,7 @@ void AssetPackageTool::AssetPackagePanel::Initialize()
 
     m_assetSelectedMenu = new nana::menu{};
     m_assetSelectedMenu->append("Extract", [=] (auto item) { this->OnExtractSelectedAsset(item); });
+    m_assetSelectedMenu->append("Remove", [=](auto item) { this->OnDeleteSelectedAsset(item); });
     m_assetListbox->events().mouse_down(menu_popuper(*m_assetSelectedMenu));
 
     RefreshAssetsList();
@@ -148,6 +160,16 @@ void AssetPackageTool::AssetPackagePanel::OnExtractSelectedAsset(nana::menu::ite
     auto paths = save_dlg.init_file(asset_key).title("Extract Asset to File").show();
     if (paths.empty()) return;
     m_packageFile->TryRetrieveAssetToFile(paths[0].generic_string(), asset_key);
+}
+
+void AssetPackageTool::AssetPackagePanel::OnDeleteSelectedAsset(nana::menu::item_proxy& menu_item)
+{
+    if (!m_assetListbox) return;
+    auto selected_item = m_assetListbox->selected();
+    if (selected_item.empty()) return;
+    std::string asset_key = m_assetListbox->at(selected_item[0].cat).at(selected_item[0].item).text(0);
+    if (!m_packageFile) return;
+    
 }
 
 void AssetPackageTool::AssetPackagePanel::AddPackageFile(const std::string& filepath)

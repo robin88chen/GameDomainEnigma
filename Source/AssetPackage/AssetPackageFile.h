@@ -20,6 +20,7 @@ namespace Enigma::AssetPackage
     class AssetNameList;
     class AssetHashTable;
 
+    using error = std::error_code;
     class AssetPackageFile
     {
     public:
@@ -33,16 +34,17 @@ namespace Enigma::AssetPackage
         AssetPackageFile& operator=(AssetPackageFile&&) = delete;
 
         const std::string& GetBaseFilename() { return m_baseFilename; };
-        /** return true if create ok, false if create fail */
-        bool CreateNewPackage(const std::string& basefilename);
-        bool OpenPackage(const std::string& basefilename);
+        error CreateNewPackage(const std::string& basefilename);
+        error OpenPackage(const std::string& basefilename);
 
-        bool AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version);
-        bool AddAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version);
-        bool TryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key);
+        error AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version);
+        error AddAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version);
+        error TryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key);
         std::optional<std::vector<char>> TryRetrieveAssetToMemory(const std::string& asset_key);
         unsigned int GetAssetOriginalSize(const std::string& asset_key);
         time_t GetAssetTimeStamp(const std::string& asset_key);
+
+        error RemoveAsset(const std::string& asset_key);
 
         const std::unique_ptr<AssetNameList>& GetAssetNameList() { return m_nameList; };
         std::optional<AssetHeaderDataMap::AssetHeaderData> TryGetAssetHeaderData(const std::string& asset_key);

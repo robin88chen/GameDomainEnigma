@@ -14,11 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AssetErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AssetHeaderDataMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AssetNameList.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AssetPackageFile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetHeaderDataMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetNameList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetPackageFile.h" />

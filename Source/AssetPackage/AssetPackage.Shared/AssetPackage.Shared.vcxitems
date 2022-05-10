@@ -25,4 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetNameList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AssetPackageFile.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />
+  </ItemGroup>
 </Project>

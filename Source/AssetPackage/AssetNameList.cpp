@@ -1,4 +1,5 @@
 ﻿#include "AssetNameList.h"
+#include "AssetErrors.h"
 #include <string>
 #include <cassert>
 #include <vector>
@@ -18,32 +19,26 @@ AssetNameList::~AssetNameList()
     m_assetNames.clear();
 }
 
-const string& AssetNameList::GetAssetName(unsigned int name_idx)
+bool AssetNameList::HasAssetName(const string& name)
 {
-    if (name_idx >= m_assetNames.size()) return empty_string;
-    return m_assetNames[name_idx];
+    if (name.empty()) return false;
+    return m_assetNames.find(name) != m_assetNames.end();
 }
 
-unsigned int AssetNameList::SearchAssetName(const string& name)
+error AssetNameList::AppendAssetName(const string& name)
 {
-    if (name.empty()) return INVALID_NAME_IDX;
-    for (unsigned int i = 0; i < m_assetNames.size(); i++)
-    {
-        if (m_assetNames[i] == name) return i;
-    }
-    return INVALID_NAME_IDX;
+    if (name.empty()) return make_error_code(ErrorCode::EmptyKey);
+    if (HasAssetName(name)) return make_error_code(ErrorCode::DuplicatedKey);
+    m_assetNames.emplace(name);
+    return make_error_code(ErrorCode::OK);
 }
 
-unsigned int AssetNameList::AppendAssetName(const string& name)
+error AssetNameList::RemoveAssetName(const std::string& name)
 {
-    if (name.empty()) return INVALID_NAME_IDX;
-    m_assetNames.emplace_back(name);
-    return (unsigned int)m_assetNames.size() - 1;
-}
-
-const std::vector<string>& AssetNameList::GetAssetNameArray()
-{
-    return m_assetNames;
+    if (name.empty()) return make_error_code(ErrorCode::EmptyKey);
+    if (!HasAssetName(name)) return make_error_code(ErrorCode::NotExistedKey);
+    m_assetNames.erase(name);
+    return make_error_code(ErrorCode::OK);
 }
 
 size_t AssetNameList::CalcNameListDataBytes() const
@@ -74,15 +69,17 @@ std::vector<char> AssetNameList::ExportToByteBuffer()
     return buff;
 }
 
-void AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
+error AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
 {
-    if (buff.empty()) return;
+    if (buff.empty()) return make_error_code(ErrorCode::EmptyBuffer);
     m_assetNames.clear();
     size_t index = 0;
-    while (index < buff.size())
+    error er;
+    while ((index < buff.size()) && (!er))
     {
         string name{ &buff[index] };
         index += (name.length() + 1);
-        m_assetNames.emplace_back(name);
+        er = AppendAssetName(name);
     }
+    return er;
 }

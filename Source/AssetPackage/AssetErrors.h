@@ -26,6 +26,10 @@ namespace Enigma::AssetPackage
         CompressFail,
         DecompressFail,
         ZeroSizeAsset,
+        InvalidHeaderData,
+        InvalidNameList,
+        DuplicatedKey,
+        NotExistedKey,
     };
     class ErrorCategory : public std::error_category
     {
@@ -40,10 +44,7 @@ namespace Enigma::AssetPackage
         const static ErrorCategory ms_category;
     };
 
-    std::error_code make_error_code(ErrorCode ec)
-    {
-        return std::error_code(static_cast<int>(ec), ErrorCategory::get());
-    }
+    std::error_code make_error_code(ErrorCode ec);
 }
 
 namespace std

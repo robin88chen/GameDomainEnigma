@@ -18,6 +18,10 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::CompressFail: return "Compress fail";
     case ErrorCode::DecompressFail: return "Decompress fail";
     case ErrorCode::ZeroSizeAsset: return "Zero size asset error";
+    case ErrorCode::InvalidHeaderData: return "Invalid header data";
+    case ErrorCode::InvalidNameList: return "Invalid name list";
+    case ErrorCode::DuplicatedKey: return "Duplicated asset key";
+    case ErrorCode::NotExistedKey: return "Not existed asset key";
     }
     return "Unknown";
 }
@@ -25,4 +29,11 @@ std::string ErrorCategory::message(int err) const
 const char* ErrorCategory::name() const noexcept
 {
     return "AssetPacket Error Category";
+}
+namespace Enigma::AssetPackage
+{
+    std::error_code make_error_code(ErrorCode ec)
+    {
+        return std::error_code(static_cast<int>(ec), ErrorCategory::get());
+    }
 }

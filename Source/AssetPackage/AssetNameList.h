@@ -9,15 +9,14 @@
 #define _ASSET_NAME_LIST_H
 
 #include <string>
-#include <vector>
+#include <unordered_set>
+#include <system_error>
 
 namespace Enigma::AssetPackage
 {
+    using error = std::error_code;
     class AssetNameList
     {
-    public:
-        constexpr static unsigned int INVALID_NAME_IDX = 0xffffffff;
-
     public:
         AssetNameList();
         AssetNameList(const AssetNameList&) = delete;
@@ -27,20 +26,19 @@ namespace Enigma::AssetPackage
         AssetNameList& operator=(const AssetNameList&) = delete;
         AssetNameList& operator=(AssetNameList&&) = delete;
 
-        const std::string& GetAssetName(unsigned int name_idx);
-        unsigned int SearchAssetName(const std::string& name);  // note : very slow
-        unsigned int AppendAssetName(const std::string& name);  // return : name_id
+        bool HasAssetName(const std::string& name);
+        error AppendAssetName(const std::string& name);
+        error RemoveAssetName(const std::string& name);
 
         size_t GetNameCount() const { return m_assetNames.size(); };
-        const std::vector<std::string>& GetAssetNameArray();
 
         size_t CalcNameListDataBytes() const;
 
         std::vector<char> ExportToByteBuffer();
-        void ImportFromByteBuffer(const std::vector<char>& buff);
+        error ImportFromByteBuffer(const std::vector<char>& buff);
 
     private:
-        std::vector<std::string> m_assetNames;
+        std::unordered_set<std::string> m_assetNames;
     };
 };
 

@@ -6,6 +6,7 @@
 #include "zlib.h"
 #include <cassert>
 #include <ctime>
+#include <vector>
 #include "sys/stat.h"
 
 using namespace Enigma::AssetPackage;
@@ -78,7 +79,15 @@ AssetPackageFile::~AssetPackageFile()
     }
 }
 
-error AssetPackageFile::CreateNewPackage(const std::string& basefilename)
+AssetPackageFile* AssetPackageFile::CreateNewPackage(const std::string& basefilename)
+{
+    AssetPackageFile* package = new AssetPackageFile();
+    const error er = package->CreateNewPackageImp(basefilename);
+    assert(!er);
+    return package;
+}
+
+error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
 {
     if (basefilename.empty())
     {
@@ -107,7 +116,15 @@ error AssetPackageFile::CreateNewPackage(const std::string& basefilename)
     return make_error_code(ErrorCode::OK);
 }
 
-error AssetPackageFile::OpenPackage(const std::string& basefilename)
+AssetPackageFile* AssetPackageFile::OpenPackage(const std::string& basefilename)
+{
+    AssetPackageFile* package = new AssetPackageFile();
+    const error er = package->OpenPackageImp(basefilename);
+    assert(!er);
+    return package;
+}
+
+error AssetPackageFile::OpenPackageImp(const std::string& basefilename)
 {
     if (basefilename.empty())
     {
@@ -308,10 +325,27 @@ time_t AssetPackageFile::GetAssetTimeStamp(const std::string& asset_key)
     unsigned int ver = header_data->m_version;
     return GetTimeStampFromFileVersion(ver);
 }
+
 error AssetPackageFile::RemoveAsset(const std::string& asset_key)
 {
+    if (asset_key.empty()) return make_error_code(ErrorCode::EmptyKey);
+    if (!m_headerDataMap) return make_error_code(ErrorCode::InvalidHeaderData);
+    if (!m_nameList) return make_error_code(ErrorCode::InvalidNameList);
+    auto header_data = TryGetAssetHeaderData(asset_key);
+    if (!header_data) return make_error_code(ErrorCode::InvalidHeaderData);
+    unsigned int content_size = header_data->m_size;
+    unsigned int content_offset = header_data->m_offset;
+
+    RepackBundleContent(content_size, content_offset);
+
+    m_nameList->RemoveAssetName(asset_key);
+    m_headerDataMap->RepackContentOffsets(content_size, content_offset);
+    m_headerDataMap->RemoveHeaderData(asset_key);
+    SaveHeaderFile();
+    
     return make_error_code(ErrorCode::OK);
 }
+
 std::optional<AssetHeaderDataMap::AssetHeaderData> AssetPackageFile::TryGetAssetHeaderData(
     const std::string& asset_key)
 {
@@ -412,6 +446,23 @@ std::tuple<std::vector<char>, unsigned int> AssetPackageFile::ReadBundleContent(
     m_bundleFile.read(&out_buff[0], content_size);
     if (!m_bundleFile) return { out_buff, 0 };
     return { out_buff, (unsigned int)m_bundleFile.tellg() - offset };
+}
+
+void AssetPackageFile::RepackBundleContent(const unsigned content_size, const unsigned base_offset)
+{
+    std::lock_guard<std::mutex> locker{ m_bundleFileLocker };
+
+    m_bundleFile.seekp(0, std::fstream::end);
+    unsigned int bundle_org_size = (unsigned int)m_bundleFile.tellp();
+    std::vector<char> file_buff;
+    file_buff.resize(bundle_org_size, 0);
+    m_bundleFile.seekg(0);
+    m_bundleFile.read(&file_buff[0], bundle_org_size);
+
+    file_buff.erase(file_buff.begin() + base_offset, file_buff.begin() + base_offset + content_size);
+    m_bundleFile.seekp(0);
+    m_bundleFile.write(&file_buff[0], file_buff.size());
+    m_bundleFile.flush();
 }
 
 #undef _CRT_SECURE_NO_WARNINGS

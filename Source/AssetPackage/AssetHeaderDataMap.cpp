@@ -25,6 +25,17 @@ void AssetHeaderDataMap::RemoveHeaderData(const std::string& name)
     m_headerDataMap.erase(name);
 }
 
+void AssetHeaderDataMap::RepackContentOffsets(const unsigned content_size, const unsigned base_offset)
+{
+    for (auto& kv : m_headerDataMap)
+    {
+        if (kv.second.m_offset >= base_offset)
+        {
+            kv.second.m_offset -= content_size;
+        }
+    }
+}
+
 std::optional<AssetHeaderDataMap::AssetHeaderData> AssetHeaderDataMap::TryGetHeaderData(const std::string& name)
 {
     auto find_iter = m_headerDataMap.find(name);
@@ -71,9 +82,9 @@ std::vector<char> AssetHeaderDataMap::ExportToByteBuffer()
     return buff;
 }
 
-void AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)
+std::error_code AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)
 {
-    if (buff.empty()) return;
+    if (buff.empty()) return make_error_code(ErrorCode::EmptyBuffer);
     m_headerDataMap.clear();
     const size_t size = buff.size();
     size_t index = 0;
@@ -95,4 +106,5 @@ void AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)
 
         InsertHeaderData(header);
     }
+    return make_error_code(ErrorCode::OK);
 }

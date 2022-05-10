@@ -8,6 +8,7 @@
 #ifndef _ASSET_HEADER_DATA_MAP_H
 #define _ASSET_HEADER_DATA_MAP_H
 
+#include "AssetErrors.h"
 #include <string>
 #include <unordered_map>
 #include <optional>
@@ -39,6 +40,7 @@ namespace Enigma::AssetPackage
 
         void InsertHeaderData(const AssetHeaderData& header);
         void RemoveHeaderData(const std::string& name);
+        void RepackContentOffsets(const unsigned int content_size, const unsigned int base_offset);
 
         std::optional<AssetHeaderData> TryGetHeaderData(const std::string& name);
 
@@ -47,7 +49,7 @@ namespace Enigma::AssetPackage
         size_t GetTotalDataCount() const { return m_headerDataMap.size(); };
 
         std::vector<char> ExportToByteBuffer();
-        void ImportFromByteBuffer(const std::vector<char>& buff);
+        std::error_code ImportFromByteBuffer(const std::vector<char>& buff);
 
     private:
         std::unordered_map<std::string, AssetHeaderData> m_headerDataMap;

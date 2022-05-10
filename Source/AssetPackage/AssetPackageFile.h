@@ -26,7 +26,6 @@ namespace Enigma::AssetPackage
     public:
         constexpr static unsigned int VERSION_USE_FILE_TIME = 0;
     public:
-        AssetPackageFile();
         AssetPackageFile(const AssetPackageFile&) = delete;
         AssetPackageFile(AssetPackageFile&&) = delete;
         ~AssetPackageFile();
@@ -34,8 +33,8 @@ namespace Enigma::AssetPackage
         AssetPackageFile& operator=(AssetPackageFile&&) = delete;
 
         const std::string& GetBaseFilename() { return m_baseFilename; };
-        error CreateNewPackage(const std::string& basefilename);
-        error OpenPackage(const std::string& basefilename);
+        static AssetPackageFile* CreateNewPackage(const std::string& basefilename);
+        static AssetPackageFile* OpenPackage(const std::string& basefilename);
 
         error AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version);
         error AddAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version);
@@ -49,12 +48,16 @@ namespace Enigma::AssetPackage
         const std::unique_ptr<AssetNameList>& GetAssetNameList() { return m_nameList; };
         std::optional<AssetHeaderDataMap::AssetHeaderData> TryGetAssetHeaderData(const std::string& asset_key);
     private:
+        AssetPackageFile();
+        error CreateNewPackageImp(const std::string& basefilename);
+        error OpenPackageImp(const std::string& basefilename);
         void ResetPackage();
 
         void SaveHeaderFile();
         void ReadHeaderFile();
 
         std::tuple<std::vector<char>, unsigned int> ReadBundleContent(unsigned int offset, unsigned int content_size);
+        void RepackBundleContent(const unsigned int content_size, const unsigned int base_offset);
 
     private:
         unsigned int m_formatTag;

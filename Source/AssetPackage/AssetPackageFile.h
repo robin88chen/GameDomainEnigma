@@ -57,7 +57,7 @@ namespace Enigma::AssetPackage
         void ReadHeaderFile();
 
         std::tuple<std::vector<char>, unsigned int> ReadBundleContent(unsigned int offset, unsigned int content_size);
-        void RepackBundleContent(const unsigned int content_size, const unsigned int base_offset);
+        error RepackBundleContent(const unsigned int content_size, const unsigned int base_offset);
 
     private:
         unsigned int m_formatTag;

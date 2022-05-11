@@ -336,7 +336,8 @@ error AssetPackageFile::RemoveAsset(const std::string& asset_key)
     unsigned int content_size = header_data->m_size;
     unsigned int content_offset = header_data->m_offset;
 
-    RepackBundleContent(content_size, content_offset);
+    error er = RepackBundleContent(content_size, content_offset);
+    if (er) return er;
 
     m_nameList->RemoveAssetName(asset_key);
     m_headerDataMap->RepackContentOffsets(content_size, content_offset);
@@ -448,21 +449,27 @@ std::tuple<std::vector<char>, unsigned int> AssetPackageFile::ReadBundleContent(
     return { out_buff, (unsigned int)m_bundleFile.tellg() - offset };
 }
 
-void AssetPackageFile::RepackBundleContent(const unsigned content_size, const unsigned base_offset)
+error AssetPackageFile::RepackBundleContent(const unsigned int content_size, const unsigned int base_offset)
 {
+    assert(m_bundleFile);
+
     std::lock_guard<std::mutex> locker{ m_bundleFileLocker };
 
     m_bundleFile.seekp(0, std::fstream::end);
     unsigned int bundle_org_size = (unsigned int)m_bundleFile.tellp();
+    if (bundle_org_size == 0) return make_error_code(ErrorCode::FileSizeError);
     std::vector<char> file_buff;
     file_buff.resize(bundle_org_size, 0);
     m_bundleFile.seekg(0);
     m_bundleFile.read(&file_buff[0], bundle_org_size);
+    unsigned int read_bytes = m_bundleFile.tellg();
+    if (read_bytes != bundle_org_size) return make_error_code(ErrorCode::ReadSizeCheck);
 
     file_buff.erase(file_buff.begin() + base_offset, file_buff.begin() + base_offset + content_size);
     m_bundleFile.seekp(0);
     m_bundleFile.write(&file_buff[0], file_buff.size());
     m_bundleFile.flush();
+    return make_error_code(ErrorCode::OK);
 }
 
 #undef _CRT_SECURE_NO_WARNINGS

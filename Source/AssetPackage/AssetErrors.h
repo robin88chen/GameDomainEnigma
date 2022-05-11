@@ -19,6 +19,7 @@ namespace Enigma::AssetPackage
         FileOpenFail,
         FileReadFail,
         FileWriteFail,
+        FileSizeError,
         ReadSizeCheck,
         WriteSizeCheck,
         EmptyBuffer,

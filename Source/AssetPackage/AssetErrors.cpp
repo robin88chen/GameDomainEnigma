@@ -11,6 +11,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::FileOpenFail: return "File open fail";
     case ErrorCode::FileReadFail: return "File read fail";
     case ErrorCode::FileWriteFail: return "File write fail";
+    case ErrorCode::FileSizeError: return "File size error";
     case ErrorCode::ReadSizeCheck: return "Read size check fail";
     case ErrorCode::WriteSizeCheck: return "Write size check fail";
     case ErrorCode::EmptyBuffer: return "Empty buffer";

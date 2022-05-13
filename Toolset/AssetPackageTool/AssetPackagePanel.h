@@ -29,6 +29,8 @@ namespace AssetPackageTool
         void AddPackageFile(const std::string& filepath);
         std::string SplitAssetKeyName(const std::string& filepath);
         void RefreshAssetsList();
+
+        void PopupErrorMessage(const std::error_code& er);
     private:
         nana::place* m_place;
         nana::label* m_rootDirLabel;

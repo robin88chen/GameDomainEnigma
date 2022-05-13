@@ -195,15 +195,16 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
         return make_error_code(ErrorCode::EmptyKey);
     }
     unsigned long comp_length = compressBound((uLong)buff.size());
-    unsigned char* comp_buff = new unsigned char[comp_length];
-    int comp_result = compress(comp_buff, &comp_length, (const unsigned char*)&buff[0], (uLong)buff.size());
+    std::vector<unsigned char> comp_buff;
+    comp_buff.resize(comp_length, 0);
+    int comp_result = compress((unsigned char*)&comp_buff[0], &comp_length, (const unsigned char*)&buff[0], (uLong)buff.size());
     if (comp_result != Z_OK)
     {
-        delete[] comp_buff;
         return make_error_code(ErrorCode::CompressFail);
     }
 
-    m_bundleFileLocker.lock();
+    std::lock_guard<std::mutex> locker{ m_bundleFileLocker };
+
     m_bundleFile.seekp(0, std::fstream::end);
     unsigned int bundle_offset = (unsigned int)m_bundleFile.tellp();
     AssetHeaderData header_data;
@@ -214,18 +215,22 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
     header_data.m_version = version;
     header_data.m_crc = 0;
 
-    m_nameList->AppendAssetName(asset_key);
-    m_headerDataMap->InsertHeaderData(header_data);
+    error er = m_nameList->AppendAssetName(asset_key);
+    if (er) return er;
+    er = m_headerDataMap->InsertHeaderData(header_data);
+    if (er)
+    {
+        // header add 失敗, 要再把 name list 改回
+        m_nameList->RemoveAssetName(asset_key);
+        return er;
+    }
 
-    m_bundleFile.write((const char*)comp_buff, comp_length);
+    m_bundleFile.write((const char*)&comp_buff[0], comp_length);
     m_bundleFile.flush();
 
     m_assetCount++;
-    m_bundleFileLocker.unlock();
 
     SaveHeaderFile();
-
-    delete[] comp_buff;
 
     return make_error_code(ErrorCode::OK);
 }

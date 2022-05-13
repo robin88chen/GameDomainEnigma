@@ -14,15 +14,25 @@ AssetHeaderDataMap::~AssetHeaderDataMap()
     m_headerDataMap.clear();
 }
 
-void AssetHeaderDataMap::InsertHeaderData(const AssetHeaderData& header)
+error AssetHeaderDataMap::InsertHeaderData(const AssetHeaderData& header)
 {
+    if (HasAssetKey(header.m_name)) return make_error_code(ErrorCode::DuplicatedKey);
     auto result = m_headerDataMap.emplace(header.m_name, header);
     assert(result.second);
+    return make_error_code(ErrorCode::OK);
 }
 
-void AssetHeaderDataMap::RemoveHeaderData(const std::string& name)
+error AssetHeaderDataMap::RemoveHeaderData(const std::string& name)
 {
+    if (!HasAssetKey(name)) return make_error_code(ErrorCode::NotExistedKey);
     m_headerDataMap.erase(name);
+    return make_error_code(ErrorCode::OK);
+}
+
+bool AssetHeaderDataMap::HasAssetKey(const std::string& name) const
+{
+    auto find_iter = m_headerDataMap.find(name);
+    return (find_iter != m_headerDataMap.end());
 }
 
 void AssetHeaderDataMap::RepackContentOffsets(const unsigned content_size, const unsigned base_offset)

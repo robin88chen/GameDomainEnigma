@@ -2,6 +2,8 @@
 
 using namespace Enigma::AssetPackage;
 
+const ErrorCategory ErrorCategory::ms_category;
+
 std::string ErrorCategory::message(int err) const
 {
     switch (static_cast<ErrorCode>(err))

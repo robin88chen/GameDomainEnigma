@@ -15,6 +15,7 @@
 
 namespace Enigma::AssetPackage
 {
+    using error = std::error_code;
     class AssetHeaderDataMap
     {
     public:
@@ -38,8 +39,11 @@ namespace Enigma::AssetPackage
         AssetHeaderDataMap& operator=(const AssetHeaderDataMap&) = delete;
         AssetHeaderDataMap& operator=(AssetHeaderDataMap&&) = delete;
 
-        void InsertHeaderData(const AssetHeaderData& header);
-        void RemoveHeaderData(const std::string& name);
+        error InsertHeaderData(const AssetHeaderData& header);
+        error RemoveHeaderData(const std::string& name);
+
+        bool HasAssetKey(const std::string& name) const;
+
         void RepackContentOffsets(const unsigned int content_size, const unsigned int base_offset);
 
         std::optional<AssetHeaderData> TryGetHeaderData(const std::string& name);

@@ -34,6 +34,8 @@ namespace Enigma::AssetPackage
 
         size_t CalcNameListDataBytes() const;
 
+        std::unordered_set<std::string> GetAssetNames() const { return m_assetNames; }
+
         std::vector<char> ExportToByteBuffer();
         error ImportFromByteBuffer(const std::vector<char>& buff);
 

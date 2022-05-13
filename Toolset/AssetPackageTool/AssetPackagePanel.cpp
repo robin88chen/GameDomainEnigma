@@ -3,6 +3,7 @@
 #include "AssetNameList.h"
 #include <filesystem>
 #include "SchemeColorDef.h"
+#include <nana/gui.hpp>
 
 using namespace Enigma::AssetPackage;
 
@@ -169,14 +170,23 @@ void AssetPackageTool::AssetPackagePanel::OnDeleteSelectedAsset(nana::menu::item
     if (selected_item.empty()) return;
     std::string asset_key = m_assetListbox->at(selected_item[0].cat).at(selected_item[0].item).text(0);
     if (!m_packageFile) return;
-    
+    error er = m_packageFile->RemoveAsset(asset_key);
+    if (er)
+    {
+        PopupErrorMessage(er);
+    }
+    RefreshAssetsList();
 }
 
 void AssetPackageTool::AssetPackagePanel::AddPackageFile(const std::string& filepath)
 {
     if (filepath.empty()) return;
     std::string asset_key = SplitAssetKeyName(filepath);
-    m_packageFile->AddAssetFile(filepath, asset_key, AssetPackageFile::VERSION_USE_FILE_TIME);
+    error er = m_packageFile->AddAssetFile(filepath, asset_key, AssetPackageFile::VERSION_USE_FILE_TIME);
+    if (er)
+    {
+        PopupErrorMessage(er);
+    }
 }
 
 std::string AssetPackageTool::AssetPackagePanel::SplitAssetKeyName(const std::string& filepath)
@@ -212,8 +222,7 @@ void AssetPackageTool::AssetPackagePanel::RefreshAssetsList()
 
     const std::unique_ptr<AssetNameList>& nameList = m_packageFile->GetAssetNameList();
     if (!nameList) return;
-    auto nameArray = nameList->GetAssetNameArray();
-    for (std::string key : nameArray)
+    for (std::string key : nameList->GetAssetNames())
     {
         auto header_data = m_packageFile->TryGetAssetHeaderData(key);
         if (!header_data) continue;
@@ -235,4 +244,11 @@ void AssetPackageTool::AssetPackagePanel::RefreshAssetsList()
         auto categ = m_assetListbox->at(0);
         categ.append({ key, offsetToken, sizeToken, verToken, timeToken, crcToken });
     }
+}
+
+void AssetPackageTool::AssetPackagePanel::PopupErrorMessage(const std::error_code& er)
+{
+    auto msgbox = nana::msgbox("Error");
+    msgbox << er.message();
+    msgbox.show();
 }

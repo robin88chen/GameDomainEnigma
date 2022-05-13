@@ -69,8 +69,7 @@ void MainForm::OnCreatePackage(nana::menu::item_proxy& menu_item)
     std::string baseFilename = paths[0].generic_string();
     size_t pos = baseFilename.find_last_of('.');
     baseFilename = baseFilename.substr(0, pos);
-    AssetPackageFile* package = new AssetPackageFile{};
-    package->CreateNewPackage(baseFilename);
+    AssetPackageFile* package = AssetPackageFile::CreateNewPackage(baseFilename);
     AssetPackagePanel* p = new AssetPackagePanel{ *this, package };
     p->Initialize();
     m_place->field("tabframe").fasten(*p);
@@ -89,8 +88,7 @@ void MainForm::OnOpenPackage(nana::menu::item_proxy& menu_item)
     size_t pos = baseFilename.find_last_of('.');
     baseFilename = baseFilename.substr(0, pos);
 
-    AssetPackageFile* package = new AssetPackageFile{};
-    package->OpenPackage(baseFilename);
+    AssetPackageFile* package = AssetPackageFile::OpenPackage(baseFilename);
     AssetPackagePanel* p = new AssetPackagePanel{ *this, package };
     p->Initialize();
     m_place->field("tabframe").fasten(*p);

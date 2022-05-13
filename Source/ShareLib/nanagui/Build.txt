@@ -1,0 +1,5 @@
+本次版本 Git hotfix-1.7.4 分支最新, 2021.6.19
+用 forked nana. 之後再更新 upstream
+
+//Git 下載
+//C++14, 需要define NANA_FILESYSTEM_FORCE, 用 nana 的 filesystem

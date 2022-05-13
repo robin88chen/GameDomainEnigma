@@ -15,11 +15,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TargetAndroid", "TargetAndr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathLib.Android", "MathLib\MathLib.Android\MathLib.Android.vcxproj", "{037415ED-AE0F-4FDF-A93B-8432D15C2A3B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetPackage.Shared", "AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems", "{F25FE410-0680-4285-A5E5-ECFF264F9782}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetPackage.Win32", "AssetPackage\AssetPackage.Win32\AssetPackage.Win32.vcxproj", "{F29934FC-4C46-4F0A-B85D-A79B282066A0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetPackage.Android", "AssetPackage\AssetPackage.Android\AssetPackage.Android.vcxproj", "{756AFB01-5A73-4A8A-B344-27AA022B8373}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{037415ed-ae0f-4fdf-a93b-8432d15c2a3b}*SharedItemsImports = 4
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{2af3ca53-3295-43c2-9861-559709c3a2f5}*SharedItemsImports = 9
+		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{756afb01-5a73-4a8a-b344-27aa022b8373}*SharedItemsImports = 4
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{aaaace27-bb78-4633-b24e-e01578595f9a}*SharedItemsImports = 4
+		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f25fe410-0680-4285-a5e5-ecff264f9782}*SharedItemsImports = 9
+		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f29934fc-4c46-4f0a-b85d-a79b282066a0}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -62,6 +71,38 @@ Global
 		{037415ED-AE0F-4FDF-A93B-8432D15C2A3B}.Release|x64.Build.0 = Release|x64
 		{037415ED-AE0F-4FDF-A93B-8432D15C2A3B}.Release|x86.ActiveCfg = Release|x86
 		{037415ED-AE0F-4FDF-A93B-8432D15C2A3B}.Release|x86.Build.0 = Release|x86
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|ARM.ActiveCfg = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|ARM.Build.0 = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|ARM64.ActiveCfg = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|ARM64.Build.0 = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|x64.ActiveCfg = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|x64.Build.0 = Debug|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|x86.ActiveCfg = Debug|Win32
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Debug|x86.Build.0 = Debug|Win32
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|ARM.ActiveCfg = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|ARM.Build.0 = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|ARM64.ActiveCfg = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|ARM64.Build.0 = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|x64.ActiveCfg = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|x64.Build.0 = Release|x64
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|x86.ActiveCfg = Release|Win32
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0}.Release|x86.Build.0 = Release|Win32
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|ARM.ActiveCfg = Debug|ARM
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|ARM.Build.0 = Debug|ARM
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|ARM64.Build.0 = Debug|ARM64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|x64.ActiveCfg = Debug|x64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|x64.Build.0 = Debug|x64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|x86.ActiveCfg = Debug|x86
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Debug|x86.Build.0 = Debug|x86
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|ARM.ActiveCfg = Release|ARM
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|ARM.Build.0 = Release|ARM
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|ARM64.ActiveCfg = Release|ARM64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|ARM64.Build.0 = Release|ARM64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|x64.ActiveCfg = Release|x64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|x64.Build.0 = Release|x64
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|x86.ActiveCfg = Release|x86
+		{756AFB01-5A73-4A8A-B344-27AA022B8373}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +111,9 @@ Global
 		{2AF3CA53-3295-43C2-9861-559709C3A2F5} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
 		{AAAACE27-BB78-4633-B24E-E01578595F9A} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
 		{037415ED-AE0F-4FDF-A93B-8432D15C2A3B} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
+		{F25FE410-0680-4285-A5E5-ECFF264F9782} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
+		{F29934FC-4C46-4F0A-B85D-A79B282066A0} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
+		{756AFB01-5A73-4A8A-B344-27AA022B8373} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB30DE-8D69-441D-A1DA-A2C3B6962EDF}

@@ -12,6 +12,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp">
       <Filter>Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdioFile.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h">
@@ -19,6 +25,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h">
       <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h">
+      <Filter>Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

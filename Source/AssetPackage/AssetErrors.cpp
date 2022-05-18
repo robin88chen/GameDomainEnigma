@@ -3,6 +3,7 @@
 using namespace Enigma::AssetPackage;
 
 const ErrorCategory ErrorCategory::ms_category;
+std::error_code ErrorCategory::ms_last_error = ErrorCode::OK;
 
 std::string ErrorCategory::message(int err) const
 {
@@ -35,8 +36,15 @@ const char* ErrorCategory::name() const noexcept
 }
 namespace Enigma::AssetPackage
 {
-    std::error_code make_error_code(ErrorCode ec)
+    inline std::error_code make_error_code(ErrorCode ec)
     {
-        return std::error_code(static_cast<int>(ec), ErrorCategory::get());
+        std::error_code er = std::error_code(static_cast<int>(ec), ErrorCategory::get());
+        ErrorCategory::last_error(er);
+        return er;
     }
+    inline const std::error_code& last_error()
+    {
+        return ErrorCategory::last_error();
+    }
+
 }

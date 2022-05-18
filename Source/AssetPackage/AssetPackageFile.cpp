@@ -91,7 +91,7 @@ error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
 {
     if (basefilename.empty())
     {
-        return make_error_code(ErrorCode::EmptyFileName);
+        return ErrorCode::EmptyFileName;
     }
 
     ResetPackage();
@@ -109,11 +109,11 @@ error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
         | std::fstream::binary | std::fstream::trunc);
     if ((!m_headerFile) || (!m_bundleFile))
     {
-        return make_error_code(ErrorCode::FileOpenFail);
+        return ErrorCode::FileOpenFail;
     }
     SaveHeaderFile();
 
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 AssetPackageFile* AssetPackageFile::OpenPackage(const std::string& basefilename)
@@ -142,12 +142,12 @@ error AssetPackageFile::OpenPackageImp(const std::string& basefilename)
     m_bundleFile.open(bundle_filename.c_str(), std::fstream::in | std::fstream::out | std::fstream::binary);
     if ((!m_headerFile) || (!m_bundleFile))
     {
-        return make_error_code(ErrorCode::FileOpenFail);
+        return ErrorCode::FileOpenFail;
     }
 
     ReadHeaderFile();
 
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 error AssetPackageFile::AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version)
@@ -156,7 +156,7 @@ error AssetPackageFile::AddAssetFile(const std::string& file_path, const std::st
     assert(m_bundleFile);
     if ((file_path.empty()) || (asset_key.empty()))
     {
-        return make_error_code(ErrorCode::EmptyFileName);
+        return ErrorCode::EmptyFileName;
     }
     unsigned int asset_ver = version;
     if (version == VERSION_USE_FILE_TIME)
@@ -174,7 +174,7 @@ error AssetPackageFile::AddAssetFile(const std::string& file_path, const std::st
     if (!asset_file)
     {
         asset_file.close();
-        return make_error_code(ErrorCode::FileReadFail);
+        return ErrorCode::FileReadFail;
     }
     error add_result = AddAssetMemory(buff, asset_key, asset_ver);
 
@@ -188,11 +188,11 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
     assert(m_bundleFile);
     if (buff.empty())
     {
-        return make_error_code(ErrorCode::EmptyBuffer);
+        return ErrorCode::EmptyBuffer;
     }
     if (asset_key.empty())
     {
-        return make_error_code(ErrorCode::EmptyKey);
+        return ErrorCode::EmptyKey;
     }
     unsigned long comp_length = compressBound((uLong)buff.size());
     std::vector<unsigned char> comp_buff;
@@ -200,7 +200,7 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
     int comp_result = compress((unsigned char*)&comp_buff[0], &comp_length, (const unsigned char*)&buff[0], (uLong)buff.size());
     if (comp_result != Z_OK)
     {
-        return make_error_code(ErrorCode::CompressFail);
+        return ErrorCode::CompressFail;
     }
 
     std::lock_guard<std::mutex> locker{ m_bundleFileLocker };
@@ -232,39 +232,39 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
 
     SaveHeaderFile();
 
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 error AssetPackageFile::TryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key)
 {
     if (file_path.empty())
     {
-        return make_error_code(ErrorCode::EmptyFileName);
+        return ErrorCode::EmptyFileName;
     }
     if (asset_key.empty())
     {
-        return make_error_code(ErrorCode::EmptyKey);
+        return ErrorCode::EmptyKey;
     }
     unsigned int asset_orig_size = GetAssetOriginalSize(asset_key);
     if (asset_orig_size == 0) return make_error_code(ErrorCode::ZeroSizeAsset);
     auto buff = TryRetrieveAssetToMemory(asset_key);
     if (!buff)
     {
-        return make_error_code(ErrorCode::EmptyBuffer);
+        return ErrorCode::EmptyBuffer;
     }
 
     std::ofstream output_file{ file_path, std::fstream::out | std::fstream::binary | std::fstream::trunc };
-    if (!output_file) return make_error_code(ErrorCode::FileOpenFail);
+    if (!output_file) return ErrorCode::FileOpenFail;
 
     output_file.write(&((*buff)[0]), asset_orig_size);
-    if (!output_file) return make_error_code(ErrorCode::FileWriteFail);
+    if (!output_file) return ErrorCode::FileWriteFail;
     unsigned int write_bytes = (unsigned int)output_file.tellp();
 
     output_file.close();
 
-    if (write_bytes != asset_orig_size) return make_error_code(ErrorCode::WriteSizeCheck);
+    if (write_bytes != asset_orig_size) return ErrorCode::WriteSizeCheck;
 
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(const std::string& asset_key)
@@ -273,21 +273,28 @@ std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(cons
 
     if (asset_key.empty())
     {
+        make_error_code(ErrorCode::EmptyKey);
         return std::nullopt;
     }
     unsigned int asset_orig_size = GetAssetOriginalSize(asset_key);
     if (asset_orig_size == 0)
     {
+        make_error_code(ErrorCode::ZeroSizeAsset);
         return std::nullopt;
     }
 
     auto header_data = TryGetAssetHeaderData(asset_key);
-    if (!header_data) return std::nullopt;
+    if (!header_data)
+    {
+        make_error_code(ErrorCode::InvalidHeaderData);
+        return std::nullopt;
+    }
 
     auto [comp_buff, read_bytes] = ReadBundleContent(header_data->m_offset, header_data->m_size);
 
     if (read_bytes != header_data->m_size)
     {
+        make_error_code(ErrorCode::AssetSizeError);
         return std::nullopt;
     }
 
@@ -299,6 +306,7 @@ std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(cons
 
     if (z_result != Z_OK)
     {
+        make_error_code(ErrorCode::DecompressFail);
         return std::nullopt;
     }
     return buff;
@@ -310,10 +318,15 @@ unsigned int AssetPackageFile::GetAssetOriginalSize(const std::string& asset_key
 
     if (asset_key.empty())
     {
+        make_error_code(ErrorCode::ZeroSizeAsset);
         return 0;
     }
     auto header_data = TryGetAssetHeaderData(asset_key);
-    if (!header_data) return 0;
+    if (!header_data)
+    {
+        make_error_code(ErrorCode::InvalidHeaderData);
+        return 0;
+    }
     return header_data->m_orgSize;
 }
 
@@ -323,39 +336,47 @@ time_t AssetPackageFile::GetAssetTimeStamp(const std::string& asset_key)
 
     if (asset_key.empty())
     {
+        make_error_code(ErrorCode::EmptyKey);
         return 0;
     }
     auto header_data = TryGetAssetHeaderData(asset_key);
-    if (!header_data) return 0;
+    if (!header_data)
+    {
+        make_error_code(ErrorCode::InvalidHeaderData);
+        return 0;
+    }
     unsigned int ver = header_data->m_version;
     return GetTimeStampFromFileVersion(ver);
 }
 
 error AssetPackageFile::RemoveAsset(const std::string& asset_key)
 {
-    if (asset_key.empty()) return make_error_code(ErrorCode::EmptyKey);
-    if (!m_headerDataMap) return make_error_code(ErrorCode::InvalidHeaderData);
-    if (!m_nameList) return make_error_code(ErrorCode::InvalidNameList);
+    if (asset_key.empty()) return ErrorCode::EmptyKey;
+    if (!m_headerDataMap) return ErrorCode::InvalidHeaderData;
+    if (!m_nameList) return ErrorCode::InvalidNameList;
     auto header_data = TryGetAssetHeaderData(asset_key);
-    if (!header_data) return make_error_code(ErrorCode::InvalidHeaderData);
+    if (!header_data) return ErrorCode::InvalidHeaderData;
     unsigned int content_size = header_data->m_size;
     unsigned int content_offset = header_data->m_offset;
 
     error er = RepackBundleContent(content_size, content_offset);
     if (er) return er;
 
-    m_nameList->RemoveAssetName(asset_key);
+    // 前面都檢查過可以移除，所以這後面的 error 都做 assert
+    er = m_nameList->RemoveAssetName(asset_key);
+    assert(!er);
     m_headerDataMap->RepackContentOffsets(content_size, content_offset);
-    m_headerDataMap->RemoveHeaderData(asset_key);
+    er = m_headerDataMap->RemoveHeaderData(asset_key);
+    assert(!er);
     SaveHeaderFile();
     
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 std::optional<AssetHeaderDataMap::AssetHeaderData> AssetPackageFile::TryGetAssetHeaderData(
-    const std::string& asset_key)
+    const std::string& asset_key) const
 {
-    if (!m_headerDataMap) return std::nullopt;
+    assert(m_headerDataMap);
     return m_headerDataMap->TryGetHeaderData(asset_key);
 }
 
@@ -474,7 +495,7 @@ error AssetPackageFile::RepackBundleContent(const unsigned int content_size, con
     m_bundleFile.seekp(0);
     m_bundleFile.write(&file_buff[0], file_buff.size());
     m_bundleFile.flush();
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 #undef _CRT_SECURE_NO_WARNINGS

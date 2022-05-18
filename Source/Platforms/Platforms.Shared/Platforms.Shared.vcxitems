@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <ItemsProjectGuid>{a81f49ec-4953-4514-816b-03939ef3159b}</ItemsProjectGuid>
+    <ItemsProjectGuid>{9a027ee0-8f3f-43ad-809f-366a8d3e819e}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,14 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdioFile.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdMountPath.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryAllocMacro.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryMacro.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp" />
   </ItemGroup>
 </Project>

@@ -16,17 +16,17 @@ AssetHeaderDataMap::~AssetHeaderDataMap()
 
 error AssetHeaderDataMap::InsertHeaderData(const AssetHeaderData& header)
 {
-    if (HasAssetKey(header.m_name)) return make_error_code(ErrorCode::DuplicatedKey);
+    if (HasAssetKey(header.m_name)) return ErrorCode::DuplicatedKey;
     auto result = m_headerDataMap.emplace(header.m_name, header);
     assert(result.second);
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 error AssetHeaderDataMap::RemoveHeaderData(const std::string& name)
 {
-    if (!HasAssetKey(name)) return make_error_code(ErrorCode::NotExistedKey);
+    if (!HasAssetKey(name)) return ErrorCode::NotExistedKey;
     m_headerDataMap.erase(name);
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }
 
 bool AssetHeaderDataMap::HasAssetKey(const std::string& name) const
@@ -64,10 +64,14 @@ size_t AssetHeaderDataMap::CalcHeaderDataMapBytes() const
     return sum;
 }
 
-std::vector<char> AssetHeaderDataMap::ExportToByteBuffer()
+std::vector<char> AssetHeaderDataMap::ExportToByteBuffer() const
 {
     size_t size = CalcHeaderDataMapBytes();
-    if (size == 0) return std::vector<char>();
+    if (size == 0)
+    {
+        make_error_code(ErrorCode::EmptyHeader);
+        return std::vector<char>();
+    }
 
     std::vector<char> buff;
     buff.resize(size, 0);
@@ -116,5 +120,5 @@ std::error_code AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>
 
         InsertHeaderData(header);
     }
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::OK;
 }

@@ -27,8 +27,11 @@ namespace Enigma::AssetPackage
         CompressFail,
         DecompressFail,
         ZeroSizeAsset,
+        AssetSizeError,
         InvalidHeaderData,
         InvalidNameList,
+        EmptyHeader,
+        EmptyNameList,
         DuplicatedKey,
         NotExistedKey,
     };
@@ -41,11 +44,21 @@ namespace Enigma::AssetPackage
         {
             return ms_category;
         }
+        static const std::error_code& last_error() 
+        {
+            return ms_last_error;
+        }
+        static void last_error(const std::error_code& er)
+        {
+            ms_last_error = er;
+        }
     private:
         const static ErrorCategory ms_category;
+        static std::error_code ms_last_error;
     };
 
     std::error_code make_error_code(ErrorCode ec);
+    const std::error_code& last_error();
 }
 
 namespace std

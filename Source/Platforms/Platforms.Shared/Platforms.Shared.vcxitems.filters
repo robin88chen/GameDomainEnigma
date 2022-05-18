@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Platform Layer">
+      <UniqueIdentifier>{9e791e9a-1025-4e52-8ee8-7b3ecd4993bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform Layer\Win32">
+      <UniqueIdentifier>{f5c37b8b-1747-42ad-bccd-892d216b7c09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory Macros">
+      <UniqueIdentifier>{7fde4c37-ca51-4668-bd45-6de55a5ccdd1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h">
+      <Filter>Platform Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h">
+      <Filter>Platform Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.h">
+      <Filter>Platform Layer\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryAllocMacro.h">
+      <Filter>Memory Macros</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryMacro.h">
+      <Filter>Memory Macros</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp">
+      <Filter>Platform Layer\Win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

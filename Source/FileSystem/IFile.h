@@ -21,8 +21,10 @@ namespace Enigma::FileSystem
     public:
         IFile();
         IFile(const IFile&) = delete;
+        IFile(IFile&&) = delete;
         virtual ~IFile();
         IFile& operator=(const IFile&) = delete;
+        IFile& operator=(IFile&&) = delete;
 
         virtual std::string GetFullPath() = 0;
 

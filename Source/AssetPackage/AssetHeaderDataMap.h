@@ -52,7 +52,7 @@ namespace Enigma::AssetPackage
 
         size_t GetTotalDataCount() const { return m_headerDataMap.size(); };
 
-        std::vector<char> ExportToByteBuffer();
+        std::vector<char> ExportToByteBuffer() const;
         std::error_code ImportFromByteBuffer(const std::vector<char>& buff);
 
     private:

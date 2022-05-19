@@ -30,8 +30,8 @@ StdMountPath::~StdMountPath()
 
 IFile* StdMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
 {
-    std::string fullpath = FixFullPath(m_filePath, filename);
-    IFile* file = menew StdioFile(fullpath, rw_option);
+    std::string full_path = FixFullPath(m_filePath, filename);
+    IFile* file = menew StdioFile(full_path, rw_option);
 
     return file;
 }

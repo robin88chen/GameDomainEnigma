@@ -3,32 +3,32 @@
 using namespace Enigma::AssetPackage;
 
 const ErrorCategory ErrorCategory::ms_category;
-std::error_code ErrorCategory::ms_last_error = ErrorCode::OK;
+std::error_code ErrorCategory::ms_last_error = ErrorCode::ok;
 
 std::string ErrorCategory::message(int err) const
 {
     switch (static_cast<ErrorCode>(err))
     {
-    case ErrorCode::OK: return "OK";
-    case ErrorCode::EmptyFileName: return "Empty file name";
-    case ErrorCode::FileOpenFail: return "File open fail";
-    case ErrorCode::FileReadFail: return "File read fail";
-    case ErrorCode::FileWriteFail: return "File write fail";
-    case ErrorCode::FileSizeError: return "File size error";
-    case ErrorCode::ReadSizeCheck: return "Read size check fail";
-    case ErrorCode::WriteSizeCheck: return "Write size check fail";
-    case ErrorCode::EmptyBuffer: return "Empty buffer";
-    case ErrorCode::EmptyKey: return "Empty key";
-    case ErrorCode::CompressFail: return "Compress fail";
-    case ErrorCode::DecompressFail: return "Decompress fail";
-    case ErrorCode::ZeroSizeAsset: return "Zero size asset error";
-    case ErrorCode::AssetSizeError: return "Asset size error";
-    case ErrorCode::InvalidHeaderData: return "Invalid header data";
-    case ErrorCode::InvalidNameList: return "Invalid name list";
-    case ErrorCode::EmptyHeader: return "Empty header";
-    case ErrorCode::EmptyNameList: return "Empty name list";
-    case ErrorCode::DuplicatedKey: return "Duplicated asset key";
-    case ErrorCode::NotExistedKey: return "Not existed asset key";
+    case ErrorCode::ok: return "OK";
+    case ErrorCode::emptyFileName: return "Empty file name";
+    case ErrorCode::fileOpenFail: return "File open fail";
+    case ErrorCode::fileReadFail: return "File read fail";
+    case ErrorCode::fileWriteFail: return "File write fail";
+    case ErrorCode::fileSizeError: return "File size error";
+    case ErrorCode::readSizeCheck: return "Read size check fail";
+    case ErrorCode::writeSizeCheck: return "Write size check fail";
+    case ErrorCode::emptyBuffer: return "Empty buffer";
+    case ErrorCode::emptyKey: return "Empty key";
+    case ErrorCode::compressFail: return "Compress fail";
+    case ErrorCode::decompressFail: return "Decompress fail";
+    case ErrorCode::zeroSizeAsset: return "Zero size asset error";
+    case ErrorCode::assetSizeError: return "Asset size error";
+    case ErrorCode::invalidHeaderData: return "Invalid header data";
+    case ErrorCode::invalidNameList: return "Invalid name list";
+    case ErrorCode::emptyHeader: return "Empty header";
+    case ErrorCode::emptyNameList: return "Empty name list";
+    case ErrorCode::duplicatedKey: return "Duplicated asset key";
+    case ErrorCode::notExistedKey: return "Not existed asset key";
     }
     return "Unknown";
 }

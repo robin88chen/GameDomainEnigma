@@ -22,7 +22,7 @@ namespace Enigma::FileSystem
         StdMountPath(const std::string& file_path, const std::string& path_id);
         StdMountPath(const StdMountPath&) = delete;
         StdMountPath(StdMountPath&&) = delete;
-        virtual ~StdMountPath();
+        virtual ~StdMountPath() override;
 
         StdMountPath& operator=(const StdMountPath&) = delete;
         StdMountPath& operator=(StdMountPath&&) = delete;

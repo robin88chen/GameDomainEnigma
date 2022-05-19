@@ -13,6 +13,7 @@
 
 namespace Enigma::FileSystem
 {
+    using error = std::error_code;
     class IFile
     {
     public:
@@ -42,8 +43,8 @@ namespace Enigma::FileSystem
 
     protected:
         friend class FileSystem;
-        virtual bool Open() = 0;
-        virtual bool Close() = 0;
+        virtual error Open() = 0;
+        virtual error Close() = 0;
     };
     using IFilePtr = std::shared_ptr<IFile>;
     using FutureFile = std::future<IFilePtr>;

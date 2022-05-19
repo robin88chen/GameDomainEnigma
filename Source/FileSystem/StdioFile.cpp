@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "StdioFile.h"
 #include "PlatformLayerUtilities.h"
+#include "FileSystemErrors.h"
 #include <cassert>
 #include <iostream>
 #include "sys/stat.h"
@@ -35,19 +36,35 @@ size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
 {
     Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     assert(out_buff);
-    if ((!m_file) || (!m_file.is_open())) return 0;
+    if ((!m_file) || (!m_file.is_open()))
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
 
     m_file.seekg(0, std::fstream::end);
     size_t file_length = (size_t)m_file.tellg();
-    if (offset > file_length) return 0;
+    if (offset > file_length)
+    {
+        make_error_code(ErrorCode::readOffsetError);
+        return 0;
+    }
     size_t size_request = size;
     if (offset + size_request > file_length) size_request = file_length - offset;
 
     m_file.seekg(offset);
-    if (!m_file) return 0;
+    if (!m_file)
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
     m_file.read((char*)out_buff, size_request);
     std::ios::iostate s = m_file.rdstate();
-    if (!m_file) return 0;
+    if (!m_file)
+    {
+        make_error_code(ErrorCode::readFail);
+        return 0;
+    }
     size_t read_bytes = (size_t)m_file.tellg() - offset;
 
     return read_bytes;
@@ -57,7 +74,11 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
 {
     Debug::Printf("Write File in thread %d\n", std::this_thread::get_id());
     assert(in_buff);
-    if ((!m_file) || (!m_file.is_open())) return 0;
+    if ((!m_file) || (!m_file.is_open()))
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
 
     m_file.seekp(0, std::fstream::end);
     size_t file_length = (size_t)m_file.tellp();
@@ -65,10 +86,18 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
     {
         m_file.seekp(offset);
     }
-    if (!m_file) return 0;
+    if (!m_file)
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
 
     m_file.write((const char*)in_buff, size);
-    if (!m_file) return 0;
+    if (!m_file)
+    {
+        make_error_code(ErrorCode::writeFail);
+        return 0;
+    }
     m_file.flush();
     size_t write_bytes = (size_t)m_file.tellp() - offset;
 
@@ -77,9 +106,17 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
 
 size_t StdioFile::Size()
 {
-    if ((!m_file) || (!m_file.is_open())) return 0;
+    if ((!m_file) || (!m_file.is_open()))
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
     m_file.seekg(0, std::fstream::end);
-    if (!m_file) return 0;
+    if (!m_file)
+    {
+        make_error_code(ErrorCode::fileStatusError);
+        return 0;
+    }
     return (size_t)m_file.tellg();
 }
 
@@ -121,9 +158,10 @@ bool StdioFile::IsFileExisted(const std::string& filepath)
 }
 
 
-bool StdioFile::Open()
+error StdioFile::Open()
 {
-    if ((m_fullPath.length() == 0) || (m_rwOption.length() == 0)) return false;
+    if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
+    if (m_rwOption.length() == 0) return ErrorCode::emptyRWOption;
     Debug::Printf("stdio file %s with option %s", m_fullPath.c_str(), m_rwOption.c_str());
 
     std::fstream::openmode mode{};
@@ -148,17 +186,17 @@ bool StdioFile::Open()
     if (!m_file)
     {
         Debug::Printf("stdio file %s open error %s\n", m_fullPath.c_str(), strerror(errno));
-        return false;
+        return ErrorCode::fileOpenError;
     }
 
-    return true;
+    return ErrorCode::ok;
 }
 
-bool StdioFile::Close()
+error StdioFile::Close()
 {
-    if (!m_file) return false;
+    if (!m_file) return ErrorCode::fileStatusError;
     m_file.close();
-    return true;
+    return ErrorCode::ok;
 }
 
 #undef _CRT_SECURE_NO_WARNINGS

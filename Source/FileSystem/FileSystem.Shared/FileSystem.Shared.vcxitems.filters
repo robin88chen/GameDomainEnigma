@@ -7,6 +7,9 @@
     <Filter Include="MountPaths">
       <UniqueIdentifier>{05cd0872-3b93-4e96-b419-ec3aa5c2d213}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{c5498922-0c90-4b84-b119-964d250f78b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp">
@@ -17,6 +20,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\StdioFile.cpp">
       <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp">
+      <Filter>Error Codes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h">
       <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h">
+      <Filter>Error Codes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

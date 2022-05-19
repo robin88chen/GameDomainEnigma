@@ -22,7 +22,7 @@ namespace Enigma::FileSystem
         StdioFile(const StdioFile&) = delete;
         StdioFile(StdioFile&&) = delete;
         StdioFile(const std::string& fullpath, const std::string& rw_option);
-        virtual ~StdioFile();
+        virtual ~StdioFile() override;
         StdioFile& operator=(const StdioFile&) = delete;
         StdioFile& operator=(StdioFile&&) = delete;
 
@@ -41,8 +41,8 @@ namespace Enigma::FileSystem
         static bool IsFileExisted(const std::string& filepath);
 
     protected:
-        virtual bool Open() override;
-        virtual bool Close() override;
+        virtual error Open() override;
+        virtual error Close() override;
 
     private:
         std::fstream m_file;

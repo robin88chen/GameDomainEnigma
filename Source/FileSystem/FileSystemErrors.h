@@ -1,39 +1,27 @@
-﻿/********************************************************************
- * \file   AssetErrors.h
+﻿/*********************************************************************
+ * \file   FileSystemErrors.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
-#ifndef ASSET_PACKAGE_ERRORS_H
-#define ASSET_PACKAGE_ERRORS_H
+#ifndef FILE_SYSTEM_ERRORS_H
+#define FILE_SYSTEM_ERRORS_H
 
 #include <system_error>
 
-namespace Enigma::AssetPackage
+namespace Enigma::FileSystem
 {
     enum class ErrorCode
     {
         ok = 0,
-        emptyFileName,
-        fileOpenFail,
-        fileReadFail,
-        fileWriteFail,
-        fileSizeError,
-        readSizeCheck,
-        writeSizeCheck,
-        emptyBuffer,
-        emptyKey,
-        compressFail,
-        decompressFail,
-        zeroSizeAsset,
-        assetSizeError,
-        invalidHeaderData,
-        invalidNameList,
-        emptyHeader,
-        emptyNameList,
-        duplicatedKey,
-        notExistedKey,
+        emptyFilePath,
+        emptyRWOption,
+        fileOpenError,
+        fileStatusError,
+        readOffsetError,
+        readFail,
+        writeFail,
     };
     class ErrorCategory : public std::error_category
     {
@@ -44,7 +32,7 @@ namespace Enigma::AssetPackage
         {
             return ms_category;
         }
-        static const std::error_code& last_error() 
+        static const std::error_code& last_error()
         {
             return ms_last_error;
         }
@@ -65,7 +53,8 @@ namespace std
 {
     // let compiler know that ErrorCode is compatible with std::error_code
     template <>
-    struct is_error_code_enum<Enigma::AssetPackage::ErrorCode> : true_type {};
+    struct is_error_code_enum<Enigma::FileSystem::ErrorCode> : true_type {};
 }
 
-#endif // ASSET_PACKAGE_ERRORS_H
+
+#endif // FILE_SYSTEM_ERRORS_H

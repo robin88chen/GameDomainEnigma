@@ -22,8 +22,11 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::CompressFail: return "Compress fail";
     case ErrorCode::DecompressFail: return "Decompress fail";
     case ErrorCode::ZeroSizeAsset: return "Zero size asset error";
+    case ErrorCode::AssetSizeError: return "Asset size error";
     case ErrorCode::InvalidHeaderData: return "Invalid header data";
     case ErrorCode::InvalidNameList: return "Invalid name list";
+    case ErrorCode::EmptyHeader: return "Empty header";
+    case ErrorCode::EmptyNameList: return "Empty name list";
     case ErrorCode::DuplicatedKey: return "Duplicated asset key";
     case ErrorCode::NotExistedKey: return "Not existed asset key";
     }

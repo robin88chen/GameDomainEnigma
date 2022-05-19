@@ -58,7 +58,7 @@ namespace Enigma::AssetPackage
     };
 
     std::error_code make_error_code(ErrorCode ec);
-    const std::error_code& last_error();
+    extern const std::error_code& last_error();
 }
 
 namespace std

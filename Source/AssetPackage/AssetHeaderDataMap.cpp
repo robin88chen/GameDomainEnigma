@@ -67,11 +67,7 @@ size_t AssetHeaderDataMap::CalcHeaderDataMapBytes() const
 std::vector<char> AssetHeaderDataMap::ExportToByteBuffer() const
 {
     size_t size = CalcHeaderDataMapBytes();
-    if (size == 0)
-    {
-        make_error_code(ErrorCode::emptyHeader);
-        return std::vector<char>();
-    }
+    if (size == 0) return std::vector<char>();
 
     std::vector<char> buff;
     buff.resize(size, 0);
@@ -98,7 +94,7 @@ std::vector<char> AssetHeaderDataMap::ExportToByteBuffer() const
 
 std::error_code AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)
 {
-    if (buff.empty()) return make_error_code(ErrorCode::emptyBuffer);
+    if (buff.empty()) return ErrorCode::emptyBuffer;
     m_headerDataMap.clear();
     const size_t size = buff.size();
     size_t index = 0;

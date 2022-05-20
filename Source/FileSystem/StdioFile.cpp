@@ -16,7 +16,7 @@ StdioFile::StdioFile() : IFile()
     m_isWritable = false;
 }
 
-StdioFile::StdioFile(const std::string& fullpath, const std::string& rw_option)
+StdioFile::StdioFile(const std::string& fullpath, const std::string& rw_option) : IFile()
 {
     m_fullPath = fullpath;
     m_rwOption = rw_option;
@@ -38,7 +38,7 @@ size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
     assert(out_buff);
     if ((!m_file) || (!m_file.is_open()))
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
 
@@ -46,7 +46,7 @@ size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
     size_t file_length = (size_t)m_file.tellg();
     if (offset > file_length)
     {
-        make_error_code(ErrorCode::readOffsetError);
+        MakeErrorCode(ErrorCode::readOffsetError);
         return 0;
     }
     size_t size_request = size;
@@ -55,14 +55,14 @@ size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
     m_file.seekg(offset);
     if (!m_file)
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
     m_file.read((char*)out_buff, size_request);
     std::ios::iostate s = m_file.rdstate();
     if (!m_file)
     {
-        make_error_code(ErrorCode::readFail);
+        MakeErrorCode(ErrorCode::readFail);
         return 0;
     }
     size_t read_bytes = (size_t)m_file.tellg() - offset;
@@ -76,7 +76,7 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
     assert(in_buff);
     if ((!m_file) || (!m_file.is_open()))
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
 
@@ -88,14 +88,14 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
     }
     if (!m_file)
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
 
     m_file.write((const char*)in_buff, size);
     if (!m_file)
     {
-        make_error_code(ErrorCode::writeFail);
+        MakeErrorCode(ErrorCode::writeFail);
         return 0;
     }
     m_file.flush();
@@ -108,13 +108,13 @@ size_t StdioFile::Size()
 {
     if ((!m_file) || (!m_file.is_open()))
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
     m_file.seekg(0, std::fstream::end);
     if (!m_file)
     {
-        make_error_code(ErrorCode::fileStatusError);
+        MakeErrorCode(ErrorCode::fileStatusError);
         return 0;
     }
     return (size_t)m_file.tellg();

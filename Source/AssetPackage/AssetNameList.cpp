@@ -54,11 +54,7 @@ size_t AssetNameList::CalcNameListDataBytes() const
 std::vector<char> AssetNameList::ExportToByteBuffer() const
 {
     size_t size = CalcNameListDataBytes();
-    if (size == 0)
-    {
-        make_error_code(ErrorCode::emptyNameList);
-        return std::vector<char>();
-    }
+    if (size == 0) return std::vector<char>();
 
     std::vector<char> buff;
     buff.resize(size, 0);
@@ -75,7 +71,7 @@ std::vector<char> AssetNameList::ExportToByteBuffer() const
 
 error AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
 {
-    if (buff.empty()) return make_error_code(ErrorCode::emptyBuffer);
+    if (buff.empty()) return ErrorCode::emptyBuffer;
     m_assetNames.clear();
     size_t index = 0;
     error er;

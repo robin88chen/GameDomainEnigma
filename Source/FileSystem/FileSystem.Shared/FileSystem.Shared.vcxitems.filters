@@ -42,4 +42,7 @@
       <Filter>Error Codes</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />
+  </ItemGroup>
 </Project>

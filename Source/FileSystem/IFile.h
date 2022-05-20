@@ -14,6 +14,7 @@
 namespace Enigma::FileSystem
 {
     using error = std::error_code;
+    enum class ErrorCode;
     class IFile
     {
     public:
@@ -41,10 +42,15 @@ namespace Enigma::FileSystem
         virtual bool IsExisted() = 0;
         virtual bool IsWritable() = 0;
 
+        error LastError() const { return m_lastError; }
     protected:
         friend class FileSystem;
         virtual error Open() = 0;
         virtual error Close() = 0;
+
+        error MakeErrorCode(ErrorCode error_code);
+    protected:
+        error m_lastError;
     };
     using IFilePtr = std::shared_ptr<IFile>;
     using FutureFile = std::future<IFilePtr>;

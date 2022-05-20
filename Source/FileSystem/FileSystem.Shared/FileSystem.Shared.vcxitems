@@ -26,4 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />
+  </ItemGroup>
 </Project>

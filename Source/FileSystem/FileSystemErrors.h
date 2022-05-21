@@ -19,9 +19,13 @@ namespace Enigma::FileSystem
         emptyRWOption,
         fileOpenError,
         fileStatusError,
+        expiredPackage,
+        emptyAssetKey,
+        zeroSizeContent,
         readOffsetError,
         readFail,
         writeFail,
+        retrieveContentFail,
     };
     class ErrorCategory : public std::error_category
     {

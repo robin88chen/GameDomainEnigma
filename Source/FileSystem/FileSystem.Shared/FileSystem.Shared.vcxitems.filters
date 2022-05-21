@@ -24,6 +24,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp">
       <Filter>Error Codes</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h">
@@ -40,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h">
       <Filter>Error Codes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageContent.h">
+      <Filter>Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

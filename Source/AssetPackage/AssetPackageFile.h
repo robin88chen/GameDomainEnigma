@@ -73,6 +73,8 @@ namespace Enigma::AssetPackage
         std::mutex m_headerFileLocker;
         std::mutex m_bundleFileLocker;
     };
+
+    using AssetPackageFilePtr = std::shared_ptr<AssetPackageFile>;
 };
 #undef _CRT_SECURE_NO_WARNINGS
 

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <future>
+#include <optional>
 
 namespace Enigma::FileSystem
 {
@@ -18,7 +19,7 @@ namespace Enigma::FileSystem
     class IFile
     {
     public:
-        using FutureRead = std::future<size_t>;
+        using FutureRead = std::future<std::optional<std::vector<char>>>;
         using FutureWrite = std::future<size_t>;
     public:
         IFile();
@@ -30,8 +31,8 @@ namespace Enigma::FileSystem
 
         virtual std::string GetFullPath() = 0;
 
-        virtual size_t Read(size_t offset, void* out_buff, size_t size) = 0;
-        virtual FutureRead AsyncRead(size_t offset, void* out_buff, size_t size);
+        virtual std::optional<std::vector<char>> Read(size_t offset, size_t size_request) = 0;
+        virtual FutureRead AsyncRead(size_t offset, size_t size_request);
         virtual size_t  Write(size_t offset, void const* in_buff, size_t size) = 0;
         virtual FutureWrite AsyncWrite(size_t offset, void const* in_buff, size_t size);
 
@@ -49,6 +50,8 @@ namespace Enigma::FileSystem
         virtual error Close() = 0;
 
         error MakeErrorCode(ErrorCode error_code);
+        ErrorCode LastErrorCode();
+
     protected:
         error m_lastError;
     };

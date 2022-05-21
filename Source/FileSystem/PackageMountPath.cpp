@@ -6,7 +6,9 @@
 
 #undef CreateFile
 
-Enigma::PackageMountPath::PackageMountPath(AssetPackageFile* package, const std::string& path_id)
+using namespace Enigma::FileSystem;
+
+PackageMountPath::PackageMountPath(const std::shared_ptr<AssetPackage::AssetPackageFile>& package, const std::string& path_id)
     : IMountPath(path_id)
 {
     assert(package);
@@ -14,12 +16,12 @@ Enigma::PackageMountPath::PackageMountPath(AssetPackageFile* package, const std:
     m_packageFilename = m_assetPackage->GetBaseFilename();
 }
 
-Enigma::PackageMountPath::~PackageMountPath()
+PackageMountPath::~PackageMountPath()
 {
     m_assetPackage = nullptr;
 }
 
-Enigma::IFile* Enigma::PackageMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
+IFile* PackageMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
 {
     if ((!m_assetPackage) || (filename.length() == 0)) return nullptr;
     bool readonly = true;
@@ -29,7 +31,7 @@ Enigma::IFile* Enigma::PackageMountPath::CreateFile(const std::string& filename,
     return file;
 }
 
-bool Enigma::PackageMountPath::EqualMountPath(IMountPath* path)
+bool PackageMountPath::EqualMountPath(IMountPath* path)
 {
     assert(path);
     if (!EqualPathID(path->GetPathID())) return false;
@@ -39,12 +41,12 @@ bool Enigma::PackageMountPath::EqualMountPath(IMountPath* path)
     return true;
 }
 
-bool Enigma::PackageMountPath::EqualMountPath(const std::filesystem::path& path)
+bool PackageMountPath::EqualMountPath(const std::filesystem::path& path)
 {
     return EqualMountPath(path.string());
 }
 
-bool Enigma::PackageMountPath::EqualMouthPath(const std::string& path)
+bool PackageMountPath::EqualMouthPath(const std::string& path)
 {
     return m_packageFilename == path;
 }

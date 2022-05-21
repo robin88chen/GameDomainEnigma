@@ -13,9 +13,13 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::emptyRWOption: return "Empty R/W Option";
     case ErrorCode::fileOpenError: return "File open error";
     case ErrorCode::fileStatusError: return "File status error";
+    case ErrorCode::expiredPackage: return "Expired package";
+    case ErrorCode::emptyAssetKey: return "Empty asset key";
+    case ErrorCode::zeroSizeContent: return "Zero size content";
     case ErrorCode::readOffsetError: return "Read offset error";
     case ErrorCode::readFail: return "Read fail";
     case ErrorCode::writeFail: return "Write fail";
+    case ErrorCode::retrieveContentFail: return "Retrieve content fail";
     }
     return "Unknown";
 }

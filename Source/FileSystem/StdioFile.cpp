@@ -32,14 +32,13 @@ StdioFile::~StdioFile()
     }
 }
 
-size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
+std::optional<std::vector<char>> StdioFile::Read(size_t offset, size_t size_request)
 {
     Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
-    assert(out_buff);
     if ((!m_file) || (!m_file.is_open()))
     {
         MakeErrorCode(ErrorCode::fileStatusError);
-        return 0;
+        return std::nullopt;
     }
 
     m_file.seekg(0, std::fstream::end);
@@ -47,27 +46,27 @@ size_t StdioFile::Read(size_t offset, void* out_buff, size_t size)
     if (offset > file_length)
     {
         MakeErrorCode(ErrorCode::readOffsetError);
-        return 0;
+        return std::nullopt;
     }
-    size_t size_request = size;
     if (offset + size_request > file_length) size_request = file_length - offset;
 
     m_file.seekg(offset);
     if (!m_file)
     {
         MakeErrorCode(ErrorCode::fileStatusError);
-        return 0;
+        return std::nullopt;
     }
-    m_file.read((char*)out_buff, size_request);
+    std::vector<char> out_buff;
+    out_buff.resize(size_request, 0);
+    m_file.read((char*)&out_buff[0], size_request);
     std::ios::iostate s = m_file.rdstate();
     if (!m_file)
     {
         MakeErrorCode(ErrorCode::readFail);
-        return 0;
+        return std::nullopt;
     }
-    size_t read_bytes = (size_t)m_file.tellg() - offset;
 
-    return read_bytes;
+    return out_buff;
 }
 
 size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)

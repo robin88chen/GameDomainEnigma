@@ -28,7 +28,7 @@ namespace Enigma::FileSystem
 
         virtual std::string GetFullPath() override { return m_fullPath; };
 
-        virtual size_t Read(size_t offset, void* out_buff, size_t size) override;
+        virtual std::optional<std::vector<char>> Read(size_t offset, size_t size_request) override;
         virtual size_t  Write(size_t offset, void const* in_buff, size_t size) override;
 
         virtual size_t Size() override;

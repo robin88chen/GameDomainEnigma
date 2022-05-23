@@ -1,6 +1,7 @@
-﻿#include "PlatformLayerWin32.h"
+﻿#include "PlatformLayerUtilities.h"
 #if TARGET_PLATFORM == PLATFORM_WIN32
 #include <Windows.h>
+#include <stdio.h>
 
 int _Win32_VDebugPrintf(const char* format, va_list argList)
 {

@@ -1,14 +1,12 @@
 ﻿/*********************************************************************
- * \file   PlatformLayerWin32.h
+ * \file   PlatformLayer.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
-#ifndef _PLATFORM_LAYER_WIN32_H
-#define _PLATFORM_LAYER_WIN32_H
-
-#include <stdio.h>
+#ifndef _PLATFORM_LAYER_H
+#define _PLATFORM_LAYER_H
 
 namespace Enigma::Platforms
 {
@@ -20,4 +18,4 @@ namespace Enigma::Platforms
     };
 }
 
-#endif // !_PLATFORM_LAYER_WIN32_H
+#endif // !_PLATFORM_LAYER_H

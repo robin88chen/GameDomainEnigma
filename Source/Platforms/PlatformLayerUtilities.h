@@ -9,13 +9,6 @@
 #define _PLATFORM_LAYER_UTILITIES_H
 
 #include "PlatformConfig.h"
-
-#if TARGET_PLATFORM == PLATFORM_WIN32
-#include "PlatformLayerWin32.h"
-#endif
-
-#if TARGET_PLATFORM == PLATFORM_ANDROID
-#include "PlatformLayerAndroid.h"
-#endif
+#include "PlatformLayer.h"
 
 #endif // !_PLATFORM_LAYER_UTILITIES_H

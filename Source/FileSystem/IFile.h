@@ -11,6 +11,7 @@
 #include <string>
 #include <future>
 #include <optional>
+#include <vector>
 
 namespace Enigma::FileSystem
 {

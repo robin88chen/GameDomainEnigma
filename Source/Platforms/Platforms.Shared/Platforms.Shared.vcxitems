@@ -18,9 +18,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryMacro.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerAndroid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp" />
   </ItemGroup>
 </Project>

@@ -10,6 +10,9 @@
     <Filter Include="Memory Macros">
       <UniqueIdentifier>{7fde4c37-ca51-4668-bd45-6de55a5ccdd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform Layer\Android">
+      <UniqueIdentifier>{3648bb1f-8e1b-4925-b920-0ad5059c7f3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h">
@@ -18,19 +21,22 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h">
       <Filter>Platform Layer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.h">
-      <Filter>Platform Layer\Win32</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryAllocMacro.h">
       <Filter>Memory Macros</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryMacro.h">
       <Filter>Memory Macros</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h">
+      <Filter>Platform Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp">
       <Filter>Platform Layer\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerAndroid.cpp">
+      <Filter>Platform Layer\Android</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

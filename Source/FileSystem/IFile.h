@@ -33,8 +33,8 @@ namespace Enigma::FileSystem
 
         virtual std::optional<std::vector<char>> Read(size_t offset, size_t size_request) = 0;
         virtual FutureRead AsyncRead(size_t offset, size_t size_request);
-        virtual size_t  Write(size_t offset, void const* in_buff, size_t size) = 0;
-        virtual FutureWrite AsyncWrite(size_t offset, void const* in_buff, size_t size);
+        virtual size_t  Write(size_t offset, const std::vector<char>& in_buff) = 0;
+        virtual FutureWrite AsyncWrite(size_t offset, const std::vector<char>& in_buff);
 
         virtual size_t Size() = 0;
         /** 檔案時間 (最後修改時間) \n 一個長整數，用ctime, localtime函式去取得其他格式的時間表示法 */

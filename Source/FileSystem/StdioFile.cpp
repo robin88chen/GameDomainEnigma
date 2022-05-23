@@ -69,13 +69,17 @@ std::optional<std::vector<char>> StdioFile::Read(size_t offset, size_t size_requ
     return out_buff;
 }
 
-size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
+size_t StdioFile::Write(size_t offset, const std::vector<char>& in_buff)
 {
     Debug::Printf("Write File in thread %d\n", std::this_thread::get_id());
-    assert(in_buff);
     if ((!m_file) || (!m_file.is_open()))
     {
         MakeErrorCode(ErrorCode::fileStatusError);
+        return 0;
+    }
+    if (in_buff.empty())
+    {
+        MakeErrorCode(ErrorCode::emptyWriteBuffer);
         return 0;
     }
 
@@ -91,7 +95,7 @@ size_t StdioFile::Write(size_t offset, void const* in_buff, size_t size)
         return 0;
     }
 
-    m_file.write((const char*)in_buff, size);
+    m_file.write((const char*)&in_buff[0], in_buff.size());
     if (!m_file)
     {
         MakeErrorCode(ErrorCode::writeFail);

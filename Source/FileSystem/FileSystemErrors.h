@@ -21,6 +21,7 @@ namespace Enigma::FileSystem
         fileStatusError,
         expiredPackage,
         emptyAssetKey,
+        emptyWriteBuffer,
         zeroSizeContent,
         readOffsetError,
         readFail,

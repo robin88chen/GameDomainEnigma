@@ -45,7 +45,7 @@ std::optional<std::vector<char>> PackageContent::Read(size_t offset, size_t size
     return std::vector<char>(m_cacheBuffer.cbegin() + offset, m_cacheBuffer.cbegin() + offset + read_bytes);
 }
 
-size_t PackageContent::Write(size_t, void const*, size_t)
+size_t PackageContent::Write(size_t, const std::vector<char>&)
 {
     assert(!"Write not supported on package content");
     return 0;

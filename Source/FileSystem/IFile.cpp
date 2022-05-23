@@ -17,9 +17,9 @@ IFile::FutureRead IFile::AsyncRead(size_t offset, size_t size_request)
     return std::async(std::launch::async, &IFile::Read, this, offset, size_request);
 }
 
-IFile::FutureWrite IFile::AsyncWrite(size_t offset, void const* in_buff, size_t size)
+IFile::FutureWrite IFile::AsyncWrite(size_t offset, const std::vector<char>& in_buff)
 {
-    return std::async(std::launch::async, &IFile::Write, this, offset, in_buff, size);
+    return std::async(std::launch::async, &IFile::Write, this, offset, in_buff);
 }
 
 error IFile::MakeErrorCode(ErrorCode error_code)

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp" />
@@ -26,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidAsset.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h" />

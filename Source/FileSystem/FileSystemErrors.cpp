@@ -11,6 +11,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::ok: return "OK";
     case ErrorCode::emptyFilePath: return "Empty file path";
     case ErrorCode::emptyRWOption: return "Empty R/W Option";
+    case ErrorCode::nullAndroidAsset: return "Null android asset";
+    case ErrorCode::androidAssetManagerError: return "Android asset manager error";
     case ErrorCode::fileOpenError: return "File open error";
     case ErrorCode::fileStatusError: return "File status error";
     case ErrorCode::expiredPackage: return "Expired package";

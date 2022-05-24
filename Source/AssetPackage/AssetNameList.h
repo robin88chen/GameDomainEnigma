@@ -36,7 +36,7 @@ namespace Enigma::AssetPackage
 
         std::unordered_set<std::string> GetAssetNames() const { return m_assetNames; }
 
-        std::vector<char> ExportToByteBuffer();
+        std::vector<char> ExportToByteBuffer() const;
         error ImportFromByteBuffer(const std::vector<char>& buff);
 
     private:

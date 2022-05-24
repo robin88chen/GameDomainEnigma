@@ -16,6 +16,8 @@
 
 先看看這樣的方式合不合用。
 
+Last Error 的方式多緒的時候會出槌。先不用。仍用原本的規劃。
+
 ## 其他
 
 AssetPackageFile 需要用 Factory 建造嗎?? 

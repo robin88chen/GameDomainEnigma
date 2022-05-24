@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Files">
+      <UniqueIdentifier>{4282aa02-186f-4568-9328-84bf3408e317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MountPaths">
+      <UniqueIdentifier>{05cd0872-3b93-4e96-b419-ec3aa5c2d213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{c5498922-0c90-4b84-b119-964d250f78b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{d7e978d1-8c51-45c3-ba63-561233d56e8e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdioFile.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp">
+      <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidAsset.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystem.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h">
+      <Filter>Error Codes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageContent.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidAsset.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.h">
+      <Filter>MountPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystem.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />
+  </ItemGroup>
+</Project>

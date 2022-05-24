@@ -46,7 +46,7 @@ namespace Enigma::AssetPackage
         error RemoveAsset(const std::string& asset_key);
 
         const std::unique_ptr<AssetNameList>& GetAssetNameList() { return m_nameList; };
-        std::optional<AssetHeaderDataMap::AssetHeaderData> TryGetAssetHeaderData(const std::string& asset_key);
+        std::optional<AssetHeaderDataMap::AssetHeaderData> TryGetAssetHeaderData(const std::string& asset_key) const;
     private:
         AssetPackageFile();
         error CreateNewPackageImp(const std::string& basefilename);
@@ -73,6 +73,8 @@ namespace Enigma::AssetPackage
         std::mutex m_headerFileLocker;
         std::mutex m_bundleFileLocker;
     };
+
+    using AssetPackageFilePtr = std::shared_ptr<AssetPackageFile>;
 };
 #undef _CRT_SECURE_NO_WARNINGS
 

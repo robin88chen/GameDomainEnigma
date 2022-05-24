@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{a81f49ec-4953-4514-816b-03939ef3159b}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageMountPath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdioFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StdMountPath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageContent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageMountPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />
+  </ItemGroup>
+</Project>

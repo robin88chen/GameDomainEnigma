@@ -27,18 +27,18 @@ bool AssetNameList::HasAssetName(const string& name)
 
 error AssetNameList::AppendAssetName(const string& name)
 {
-    if (name.empty()) return make_error_code(ErrorCode::EmptyKey);
-    if (HasAssetName(name)) return make_error_code(ErrorCode::DuplicatedKey);
+    if (name.empty()) return ErrorCode::emptyKey;
+    if (HasAssetName(name)) return ErrorCode::duplicatedKey;
     m_assetNames.emplace(name);
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::ok;
 }
 
 error AssetNameList::RemoveAssetName(const std::string& name)
 {
-    if (name.empty()) return make_error_code(ErrorCode::EmptyKey);
-    if (!HasAssetName(name)) return make_error_code(ErrorCode::NotExistedKey);
+    if (name.empty()) return ErrorCode::emptyKey;
+    if (!HasAssetName(name)) return ErrorCode::notExistedKey;
     m_assetNames.erase(name);
-    return make_error_code(ErrorCode::OK);
+    return ErrorCode::ok;
 }
 
 size_t AssetNameList::CalcNameListDataBytes() const
@@ -51,7 +51,7 @@ size_t AssetNameList::CalcNameListDataBytes() const
     return sum;
 }
 
-std::vector<char> AssetNameList::ExportToByteBuffer()
+std::vector<char> AssetNameList::ExportToByteBuffer() const
 {
     size_t size = CalcNameListDataBytes();
     if (size == 0) return std::vector<char>();
@@ -71,7 +71,7 @@ std::vector<char> AssetNameList::ExportToByteBuffer()
 
 error AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
 {
-    if (buff.empty()) return make_error_code(ErrorCode::EmptyBuffer);
+    if (buff.empty()) return ErrorCode::emptyBuffer;
     m_assetNames.clear();
     size_t index = 0;
     error er;

@@ -30,6 +30,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp">
       <Filter>Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidAsset.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.cpp">
+      <Filter>MountPaths</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h">
@@ -52,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageContent.h">
       <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidAsset.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.h">
+      <Filter>MountPaths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,16 @@
-﻿#ifndef _ANDROID_MOUNT_PATH_H
+﻿/*********************************************************************
+ * \file   AndroidMountPath.h
+ * \brief  
+ * 
+ * \author Lancelot 'Robin' Chen
+ * \date   May 2022
+ *********************************************************************/
+#ifndef _ANDROID_MOUNT_PATH_H
 #define _ANDROID_MOUNT_PATH_H
 
 #include "IMountPath.h"
 
-namespace Enigma
+namespace Enigma::FileSystem
 {
     class AndroidMountPath : public IMountPath
     {

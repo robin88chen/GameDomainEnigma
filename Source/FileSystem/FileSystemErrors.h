@@ -17,6 +17,8 @@ namespace Enigma::FileSystem
         ok = 0,
         emptyFilePath,
         emptyRWOption,
+        nullAndroidAsset,
+        androidAssetManagerError,
         fileOpenError,
         fileStatusError,
         expiredPackage,

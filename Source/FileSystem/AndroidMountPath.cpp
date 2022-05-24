@@ -3,7 +3,9 @@
 #include "MemoryMacro.h"
 #include <cassert>
 
-Enigma::AndroidMountPath::AndroidMountPath(const std::string& sub_path, const std::string& path_id)
+using namespace Enigma::FileSystem;
+
+AndroidMountPath::AndroidMountPath(const std::string& sub_path, const std::string& path_id)
     : IMountPath(path_id)
 {
     m_subPath = sub_path;
@@ -16,12 +18,12 @@ Enigma::AndroidMountPath::AndroidMountPath(const std::string& sub_path, const st
     }
 }
 
-Enigma::AndroidMountPath::~AndroidMountPath()
+AndroidMountPath::~AndroidMountPath()
 {
 }
 
 #pragma warning(disable:4100)  // for unused parameter rw_option in VC++
-Enigma::IFile* Enigma::AndroidMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
+IFile* AndroidMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
 {
     if (filename.length() == 0) return nullptr;
     IFile* file = nullptr;
@@ -32,7 +34,7 @@ Enigma::IFile* Enigma::AndroidMountPath::CreateFile(const std::string& filename,
 }
 #pragma warning(default:4100)
 
-bool Enigma::AndroidMountPath::EqualMountPath(IMountPath* path)
+bool AndroidMountPath::EqualMountPath(IMountPath* path)
 {
     assert(path);
     if (!EqualPathID(path->GetPathID())) return false;
@@ -42,12 +44,12 @@ bool Enigma::AndroidMountPath::EqualMountPath(IMountPath* path)
     return true;
 }
 
-bool Enigma::AndroidMountPath::EqualMountPath(const std::filesystem::path& path)
+bool AndroidMountPath::EqualMountPath(const std::filesystem::path& path)
 {
     return EqualMountPath(path.string());
 }
 
-bool Enigma::AndroidMountPath::EqualMouthPath(const std::string& path)
+bool AndroidMountPath::EqualMouthPath(const std::string& path)
 {
     return m_subPath == path;
 }

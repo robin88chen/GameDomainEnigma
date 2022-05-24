@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PackageContent.cpp" />
@@ -22,6 +24,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\StdMountPath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AndroidMountPath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystemErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h" />

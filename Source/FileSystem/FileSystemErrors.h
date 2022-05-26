@@ -43,7 +43,7 @@ namespace Enigma::FileSystem
         const static ErrorCategory ms_category;
     };
 
-    std::error_code make_error_code(ErrorCode ec);
+    extern std::error_code make_error_code(ErrorCode ec);
 }
 
 namespace std

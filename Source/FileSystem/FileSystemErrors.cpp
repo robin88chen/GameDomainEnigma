@@ -33,7 +33,7 @@ const char* ErrorCategory::name() const noexcept
 }
 namespace Enigma::FileSystem
 {
-    inline std::error_code make_error_code(ErrorCode ec)
+    std::error_code make_error_code(ErrorCode ec)
     {
         return std::error_code(static_cast<int>(ec), ErrorCategory::get());
     }

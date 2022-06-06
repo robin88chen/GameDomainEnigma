@@ -31,9 +31,9 @@ const char* ErrorCategory::name() const noexcept
 {
     return "FileSystem Error Category";
 }
-namespace Enigma::AssetPackage
+namespace Enigma::FileSystem
 {
-    inline std::error_code make_error_code(ErrorCode ec)
+    std::error_code make_error_code(ErrorCode ec)
     {
         return std::error_code(static_cast<int>(ec), ErrorCategory::get());
     }

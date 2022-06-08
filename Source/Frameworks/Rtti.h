@@ -12,16 +12,19 @@
 //----------------------------------------------------------------------------
 #define DECLARE_RTTI \
 public: \
-  static const Rtti TYPE_RTTI; \
+  static Rtti TYPE_RTTI; \
   virtual const Rtti& TypeInfo () const override { return TYPE_RTTI; };\
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI \
 public: \
-    static const Enigma::Frameworks::Rtti TYPE_RTTI; \
+    static Enigma::Frameworks::Rtti TYPE_RTTI; \
     virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
 //----------------------------------------------------------------------------
+#define DEFINE_RTTI(modulename, classname) \
+    Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI
+//----------------------------------------------------------------------------
 #define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
-    const Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{ #nsname"."#classname, baseclassname::TYPE_RTTI }
+    TYPE_RTTI = Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
 //----------------------------------------------------------------------------
 #define IMPLEMENT_TEMPLATE_RTTI(nsname, classname, baseclassname) \
   template <> \
@@ -42,6 +45,7 @@ namespace Enigma::Frameworks
     class Rtti
     {
     public:
+        Rtti() {}
         Rtti(const std::string& name);
         Rtti(const std::string& name, const Rtti& base_rtti);
         Rtti(const Rtti& rhs) = default;

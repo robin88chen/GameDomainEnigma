@@ -14,12 +14,22 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ServiceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SystemService.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ServiceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemServiceEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

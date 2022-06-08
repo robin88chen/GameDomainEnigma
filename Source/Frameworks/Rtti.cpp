@@ -1,10 +1,18 @@
 ﻿#include "Rtti.h"
-#include "RttiRepository.h"
+#include "RttiDerivingMap.h"
+#include <cassert>
 
 using namespace Enigma::Frameworks;
 
 Rtti::Rtti(const std::string& name)
 {
+    m_name = name;
+}
+
+Rtti::Rtti(const std::string& name, const Rtti& base_rtti)
+{
+    bool is_mapped = RttiDerivingMap::TryInsertDeriving(name, base_rtti.GetName());
+    assert(is_mapped);
     m_name = name;
 }
 
@@ -20,7 +28,7 @@ bool Rtti::IsExactly(const Rtti& type) const
 
 bool Rtti::IsDerived(const Rtti& type) const
 {
-    return RttiRepository::IsDerivedFrom(m_name, type.m_name);
+    return RttiDerivingMap::IsDerivedFrom(m_name, type.m_name);
 }
 
 const std::string& Rtti::GetName() const

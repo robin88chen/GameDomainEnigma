@@ -15,16 +15,46 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
       <Filter>Rtti</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiRepository.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.cpp">
       <Filter>Rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SystemService.cpp">
+      <Filter>SystemService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ServiceManager.cpp">
+      <Filter>SystemService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp">
+      <Filter>Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h">
       <Filter>Rtti</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiRepository.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h">
       <Filter>Rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemService.h">
+      <Filter>SystemService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ServiceManager.h">
+      <Filter>SystemService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemServiceEvents.h">
+      <Filter>SystemService</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

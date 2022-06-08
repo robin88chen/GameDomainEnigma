@@ -14,16 +14,14 @@
 public: \
   static const Rtti TYPE_RTTI; \
   virtual const Rtti& TypeInfo () const override { return TYPE_RTTI; };\
-  virtual const Rtti* TypeIndex() override { return &TYPE_RTTI; };
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI \
 public: \
     static const Enigma::Frameworks::Rtti TYPE_RTTI; \
     virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
-    virtual const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
-#define IMPLEMENT_RTTI(nsname, classname, baseclassname) \
-    const Enigma::Frameworks::Rtti Enigma::classname::TYPE_RTTI{ #nsname"."#classname, &baseclassname::TYPE_RTTI }
+#define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
+    const Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{ #nsname"."#classname, baseclassname::TYPE_RTTI }
 //----------------------------------------------------------------------------
 #define IMPLEMENT_TEMPLATE_RTTI(nsname, classname, baseclassname) \
   template <> \
@@ -36,8 +34,6 @@ public: \
 
 namespace Enigma::Frameworks
 {
-    class RttiRepository;
-
     /** Rtti class
     @remarks
     The name must be unique among all objects in the system.  In the Enigma
@@ -46,6 +42,8 @@ namespace Enigma::Frameworks
     class Rtti
     {
     public:
+        Rtti(const std::string& name);
+        Rtti(const std::string& name, const Rtti& base_rtti);
         Rtti(const Rtti& rhs) = default;
         Rtti(Rtti&& rhs) = default;
         ~Rtti() = default;
@@ -60,11 +58,15 @@ namespace Enigma::Frameworks
         bool IsDerived(const Rtti& type) const;
 
     private:
-        friend class RttiRepository;
-        Rtti(const std::string& name);
-
-    private:
         std::string m_name;
+    };
+    class RttiHashFunc
+    {
+    public:
+        size_t operator()(const Rtti& rtti) const
+        {
+            return std::hash<std::string>()(rtti.GetName());
+        }
     };
 };
 

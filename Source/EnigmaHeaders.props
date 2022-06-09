@@ -9,7 +9,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(EnigmaSourceRoot)Platforms;$(EnigmaSourceRoot)MathLib;$(EnigmaSourceRoot)ShareLib\zlib\include;$(EnigmaSourceRoot)AssetPackage;$(EnigmaSourceRoot)FileSystem;$(EnigmaSourceRoot)GraphicKernel;$(EnigmaSourceRoot)Framework;$(EnigmaSourceRoot)GraphicAPIDx11;$(EnigmaSourceRoot)GraphicAPIEgl;$(EnigmaSourceRoot)GameEngine;$(EnigmaSourceRoot)ShareLib\rapidjson\include;$(EnigmaSourceRoot)GameCommon;$(EnigmaSourceRoot)ShareLib\freetype\include;$(EnigmaSourceRoot)AdapterLayer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EnigmaSourceRoot)Platforms;$(EnigmaSourceRoot)MathLib;$(EnigmaSourceRoot)ShareLib\zlib\include;$(EnigmaSourceRoot)AssetPackage;$(EnigmaSourceRoot)FileSystem;$(EnigmaSourceRoot)GraphicKernel;$(EnigmaSourceRoot)Frameworks;$(EnigmaSourceRoot)GraphicAPIDx11;$(EnigmaSourceRoot)GraphicAPIEgl;$(EnigmaSourceRoot)GameEngine;$(EnigmaSourceRoot)ShareLib\rapidjson\include;$(EnigmaSourceRoot)GameCommon;$(EnigmaSourceRoot)ShareLib\freetype\include;$(EnigmaSourceRoot)AdapterLayer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>

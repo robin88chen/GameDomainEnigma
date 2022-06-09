@@ -10,6 +10,9 @@
     <Filter Include="Rtti">
       <UniqueIdentifier>{4145e531-e881-4c7b-a6fb-6d3b79f29a36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{80dd3f81-2a6a-4c7c-853c-746ff9391236}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -29,6 +32,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp">
       <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +64,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemServiceEvents.h">
       <Filter>SystemService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Command.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandBus.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

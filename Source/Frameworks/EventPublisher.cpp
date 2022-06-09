@@ -1,5 +1,4 @@
 ﻿#include "EventPublisher.h"
-
 #include <cassert>
 
 using namespace Enigma::Frameworks;

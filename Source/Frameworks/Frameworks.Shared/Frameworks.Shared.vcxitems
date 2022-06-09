@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp" />
@@ -22,6 +24,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SystemService.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Command.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandBus.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />

@@ -45,6 +45,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application.Win32", "Applic
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application.Android", "Application\Application.Android\Application.Android.vcxproj", "{B90D7B70-3157-4A10-9769-00AB732EB52D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine.Shared", "GameEngine\GameEngine.Shared\GameEngine.Shared.vcxitems", "{AE11E023-4C66-4109-9C55-FF8BFDD5C779}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicKernel.Shared", "GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems", "{3310EA9A-6391-4A66-B125-A58024AAE9BF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicKernel.Win32", "GraphicKernel\GraphicKernel.Win32\GraphicKernel.Win32.vcxproj", "{632F3771-3A95-4DE7-985F-5D370971E03F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicKernel.Android", "GraphicKernel\GraphicKernel.Android\GraphicKernel.Android.vcxproj", "{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -241,6 +249,38 @@ Global
 		{B90D7B70-3157-4A10-9769-00AB732EB52D}.Release|x64.Build.0 = Release|x64
 		{B90D7B70-3157-4A10-9769-00AB732EB52D}.Release|x86.ActiveCfg = Release|x86
 		{B90D7B70-3157-4A10-9769-00AB732EB52D}.Release|x86.Build.0 = Release|x86
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|ARM.ActiveCfg = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|ARM.Build.0 = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|ARM64.ActiveCfg = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|ARM64.Build.0 = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|x64.ActiveCfg = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|x64.Build.0 = Debug|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|x86.ActiveCfg = Debug|Win32
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Debug|x86.Build.0 = Debug|Win32
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|ARM.ActiveCfg = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|ARM.Build.0 = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|ARM64.ActiveCfg = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|ARM64.Build.0 = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|x64.ActiveCfg = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|x64.Build.0 = Release|x64
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|x86.ActiveCfg = Release|Win32
+		{632F3771-3A95-4DE7-985F-5D370971E03F}.Release|x86.Build.0 = Release|Win32
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|ARM.Build.0 = Debug|ARM
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|ARM64.Build.0 = Debug|ARM64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|x64.ActiveCfg = Debug|x64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|x64.Build.0 = Debug|x64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|x86.ActiveCfg = Debug|x86
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Debug|x86.Build.0 = Debug|x86
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|ARM.ActiveCfg = Release|ARM
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|ARM.Build.0 = Release|ARM
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|ARM64.ActiveCfg = Release|ARM64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|ARM64.Build.0 = Release|ARM64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|x64.ActiveCfg = Release|x64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|x64.Build.0 = Release|x64
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|x86.ActiveCfg = Release|x86
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,22 +304,30 @@ Global
 		{3311DC92-4374-43B4-80AC-483CDFF00C59} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
 		{B1240AC5-A5FD-4EC7-B3B7-75F4223CDD2F} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
 		{B90D7B70-3157-4A10-9769-00AB732EB52D} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
+		{AE11E023-4C66-4109-9C55-FF8BFDD5C779} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
+		{3310EA9A-6391-4A66-B125-A58024AAE9BF} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
+		{632F3771-3A95-4DE7-985F-5D370971E03F} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
+		{0ADEB60D-8FA3-463D-AEB0-2F883A336B43} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB30DE-8D69-441D-A1DA-A2C3B6962EDF}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{037415ed-ae0f-4fdf-a93b-8432d15c2a3b}*SharedItemsImports = 4
+		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{0adeb60d-8fa3-463d-aeb0-2f883a336b43}*SharedItemsImports = 4
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{2af3ca53-3295-43c2-9861-559709c3a2f5}*SharedItemsImports = 9
+		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{3310ea9a-6391-4a66-b125-a58024aae9bf}*SharedItemsImports = 9
 		Application\Application.Shared\Application.Shared.vcxitems*{3311dc92-4374-43b4-80ac-483cdff00c59}*SharedItemsImports = 9
 		Platforms\Platforms.Shared\Platforms.Shared.vcxitems*{37988168-96c3-4248-af00-e75f90ea3251}*SharedItemsImports = 4
 		FileSystem\FileSystem.Shared\FileSystem.Shared.vcxitems*{498d030b-0c41-40b9-bbce-9c00199a92ac}*SharedItemsImports = 4
 		FileSystem\FileSystem.Shared\FileSystem.Shared.vcxitems*{6187c07d-b630-46ab-b58e-5cbb52726e59}*SharedItemsImports = 4
+		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{632f3771-3a95-4de7-985f-5d370971e03f}*SharedItemsImports = 4
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{756afb01-5a73-4a8a-b344-27aa022b8373}*SharedItemsImports = 4
 		Frameworks\Frameworks.Shared\Frameworks.Shared.vcxitems*{94b70647-bb65-4dec-a94c-a954447adf2c}*SharedItemsImports = 4
 		Platforms\Platforms.Shared\Platforms.Shared.vcxitems*{9a027ee0-8f3f-43ad-809f-366a8d3e819e}*SharedItemsImports = 9
 		FileSystem\FileSystem.Shared\FileSystem.Shared.vcxitems*{a81f49ec-4953-4514-816b-03939ef3159b}*SharedItemsImports = 9
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{aaaace27-bb78-4633-b24e-e01578595f9a}*SharedItemsImports = 4
+		GameEngine\GameEngine.Shared\GameEngine.Shared.vcxitems*{ae11e023-4c66-4109-9c55-ff8bfdd5c779}*SharedItemsImports = 9
 		Platforms\Platforms.Shared\Platforms.Shared.vcxitems*{b0a6f892-17b5-4bd1-88d1-f26d4fbc0dd4}*SharedItemsImports = 4
 		Application\Application.Shared\Application.Shared.vcxitems*{b1240ac5-a5fd-4ec7-b3b7-75f4223cdd2f}*SharedItemsImports = 4
 		Application\Application.Shared\Application.Shared.vcxitems*{b90d7b70-3157-4a10-9769-00ab732eb52d}*SharedItemsImports = 4

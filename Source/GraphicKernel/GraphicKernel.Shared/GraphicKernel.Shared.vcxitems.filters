@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Graphic API">
+      <UniqueIdentifier>{033acc13-b512-447a-adc6-9f13ad9c7f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{9f54316a-9325-4ac5-89d3-a174c4bb8621}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h">
+      <Filter>Error Codes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
+      <Filter>Error Codes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

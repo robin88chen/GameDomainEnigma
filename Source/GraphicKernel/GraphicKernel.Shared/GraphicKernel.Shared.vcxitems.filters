@@ -15,6 +15,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">

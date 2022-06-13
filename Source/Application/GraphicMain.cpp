@@ -9,11 +9,11 @@
 using namespace Enigma::Application;
 GraphicMain* GraphicMain::m_instance = nullptr;
 
-GraphicMain::GraphicMain(AsyncType useAsyncDevice, GraphicCoordSys coordSys)
+GraphicMain::GraphicMain(Graphics::IGraphicAPI::AsyncType useAsyncDevice, GraphicCoordSys coordSys)
 {
     assert(!m_instance);
 #if TARGET_PLATFORM == PLATFORM_ANDROID
-    m_asyncType = AsyncType::NotAsyncDevice;  // android always use sync device
+    m_asyncType = Graphics::IGraphicAPI::AsyncType::NotAsyncDevice;  // android always use sync device
 #else
     m_asyncType = useAsyncDevice;
 #endif

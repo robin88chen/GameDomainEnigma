@@ -10,6 +10,7 @@
 
 #include <system_error>
 #include "ServiceManager.h"
+#include "IGraphicAPI.h"
 
 namespace Enigma::Application
 {
@@ -23,13 +24,8 @@ namespace Enigma::Application
             LeftHand,
             RightHand
         };
-        enum class AsyncType : bool
-        {
-            UseAsyncDevice = true,
-            NotAsyncDevice = false
-        };
     public:
-        GraphicMain(AsyncType useAsyncDevice = AsyncType::UseAsyncDevice, 
+        GraphicMain(Graphics::IGraphicAPI::AsyncType useAsyncDevice = Graphics::IGraphicAPI::AsyncType::UseAsyncDevice, 
             GraphicCoordSys coordSys = GraphicCoordSys::LeftHand);
         GraphicMain(const GraphicMain&) = delete;
         ~GraphicMain();
@@ -50,7 +46,7 @@ namespace Enigma::Application
         static GraphicMain* m_instance;
 
         GraphicCoordSys m_coordSys;
-        AsyncType m_asyncType;
+        Graphics::IGraphicAPI::AsyncType m_asyncType;
 
         Frameworks::ServiceManager* m_serviceManager;
     };

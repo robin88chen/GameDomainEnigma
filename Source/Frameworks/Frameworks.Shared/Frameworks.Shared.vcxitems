@@ -18,6 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ServiceManager.cpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ServiceManager.h" />

@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
   </ItemGroup>

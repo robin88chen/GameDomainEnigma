@@ -15,6 +15,8 @@ namespace Enigma::Graphics
     enum class ErrorCode
     {
         ok = 0,
+
+        ResizeBackSurfaceFail = 1001,
     };
     class ErrorCategory : public std::error_category
     {

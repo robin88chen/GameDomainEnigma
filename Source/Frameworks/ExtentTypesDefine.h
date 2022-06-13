@@ -18,7 +18,7 @@ using byte_buffer = std::vector<unsigned char>;
 using uint_buffer = std::vector<unsigned int>;
 using ushort_buffer = std::vector<unsigned short>;
 using float_buffer = std::vector<float>;
-using future_error = std::future<std::system_error>;
+using future_error = std::future<std::error_code>;
 
 template <class T>
 std::vector<typename std::enable_if<std::is_scalar<T>::value, T>::type> make_data_buffer(T* src, size_t count)
@@ -29,7 +29,7 @@ std::vector<typename std::enable_if<std::is_scalar<T>::value, T>::type> make_dat
     return buffer;
 }
 
-future_error make_future_err(std::system_error er);
+future_error make_future_err(std::error_code er);
 
 template<typename E, class T, std::size_t N>
 class enum_array : public std::array<T, N>

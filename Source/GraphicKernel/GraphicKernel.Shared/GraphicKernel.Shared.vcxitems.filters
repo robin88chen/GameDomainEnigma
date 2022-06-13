@@ -7,6 +7,9 @@
     <Filter Include="Error Codes">
       <UniqueIdentifier>{9f54316a-9325-4ac5-89d3-a174c4bb8621}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphic Thread">
+      <UniqueIdentifier>{cc9d990a-b443-4c5e-8cb7-91dab69a3fb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -21,10 +24,19 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h">
       <Filter>Graphic API</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h">
+      <Filter>Graphic Thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
       <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp">
+      <Filter>Graphic API</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp">
+      <Filter>Graphic Thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

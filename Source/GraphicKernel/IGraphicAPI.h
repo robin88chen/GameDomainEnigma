@@ -14,7 +14,9 @@
 
 namespace Enigma::Graphics
 {
-    using error = std::system_error;
+    using error = std::error_code;
+
+    class GraphicThread;
 
     class IGraphicAPI
     {
@@ -42,9 +44,20 @@ namespace Enigma::Graphics
         //@{
         virtual error CreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) = 0;
         virtual error CleanupDevice() = 0;
-        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb);
+        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd);
         virtual future_error AsyncCleanupDevice();
         //@}
+
+    protected:
+        static IGraphicAPI* m_instance;
+        void* m_wnd;
+        DeviceRequiredBits m_deviceRequiredBits;
+        APIVersion m_apiVersion;
+
+        GraphicFormat m_fmtBackSurface;
+        GraphicFormat m_fmtDepthSurface;
+
+        GraphicThread* m_workerThread;
     };
 }
 

@@ -9,6 +9,7 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
+    case ErrorCode::ResizeBackSurfaceFail: return "Resize back surface fail";
     }
     return "Unknown";
 }

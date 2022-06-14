@@ -1,6 +1,6 @@
-﻿#include "ApplicationErrors.h"
+﻿#include "ControllerErrors.h"
 
-using namespace Enigma::Application;
+using namespace Enigma::Controllers;
 
 const ErrorCategory ErrorCategory::ms_category;
 
@@ -15,9 +15,9 @@ std::string ErrorCategory::message(int err) const
 
 const char* ErrorCategory::name() const noexcept
 {
-    return "Application Error Category";
+    return "Controller Error Category";
 }
-namespace Enigma::Application
+namespace Enigma::Controllers
 {
     std::error_code make_error_code(ErrorCode ec)
     {

@@ -10,7 +10,7 @@
 
 #include "Event.h"
 
-namespace Enigma::Application
+namespace Enigma::Controllers
 {
     class FrameworksInstalled : public Frameworks::IEvent
     {

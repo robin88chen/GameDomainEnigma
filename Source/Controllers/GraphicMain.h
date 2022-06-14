@@ -12,7 +12,7 @@
 #include "ServiceManager.h"
 #include "IGraphicAPI.h"
 
-namespace Enigma::Application
+namespace Enigma::Controllers
 {
     using error = std::error_code;
     /** Graphic Kernel Main class \n singleton */

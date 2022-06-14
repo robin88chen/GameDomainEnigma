@@ -2,11 +2,11 @@
 #include "EventPublisher.h"
 #include "CommandBus.h"
 #include "MemoryAllocMacro.h"
-#include "ApplicationErrors.h"
-#include "ApplicationEvents.h"
+#include "ControllerErrors.h"
+#include "ControllerEvents.h"
 #include <cassert>
 
-using namespace Enigma::Application;
+using namespace Enigma::Controllers;
 GraphicMain* GraphicMain::m_instance = nullptr;
 
 GraphicMain::GraphicMain(Graphics::IGraphicAPI::AsyncType useAsyncDevice, GraphicCoordSys coordSys)

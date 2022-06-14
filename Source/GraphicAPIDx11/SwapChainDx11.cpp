@@ -4,7 +4,8 @@
 #include "MemoryMacro.h"
 #include "GraphicErrors.h"
 
-using namespace Enigma::Graphics;
+using namespace Enigma::Devices;
+using ErrorCode = Enigma::Graphics::ErrorCode;
 
 SwapChainDx11::SwapChainDx11(void)
 {

@@ -13,7 +13,7 @@
 #include <D3D11.h>
 #include "MemoryMacro.h"
 
-namespace Enigma::Graphics
+namespace Enigma::Devices
 {
     class DeviceCreatorDx11;
 

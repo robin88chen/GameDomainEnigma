@@ -11,7 +11,7 @@
 #include <DXGI.h>
 #include <system_error>
 
-namespace Enigma::Graphics
+namespace Enigma::Devices
 {
     using error = std::error_code;
     class DeviceCreatorDx11;

@@ -5,7 +5,7 @@
 #include "MemoryAllocMacro.h"
 #include "MemoryMacro.h"
 
-using namespace Enigma::Graphics;
+using namespace Enigma::Devices;
 
 GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
 {
@@ -23,12 +23,12 @@ GraphicAPIDx11::~GraphicAPIDx11()
     SAFE_DELETE(m_adapter);
 }
 
-error GraphicAPIDx11::CreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd)
+error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd)
 {
-    return ErrorCode::ok;
+    return Graphics::ErrorCode::ok;
 }
 
 error GraphicAPIDx11::CleanupDevice()
 {
-    return ErrorCode::ok;
+    return Graphics::ErrorCode::ok;
 }

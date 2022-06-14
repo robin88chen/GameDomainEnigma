@@ -10,13 +10,15 @@
 
 #include "IGraphicAPI.h"
 
-namespace Enigma::Graphics
+namespace Enigma::Devices
 {
     class DeviceCreatorDx11;
     class SwapChainDx11;
     class AdapterDx11;
 
-    class GraphicAPIDx11 : public IGraphicAPI
+    using error = std::error_code;
+
+    class GraphicAPIDx11 : public Graphics::IGraphicAPI
     {
     public:
         GraphicAPIDx11();
@@ -26,7 +28,7 @@ namespace Enigma::Graphics
 
         /** @name create / cleanup device */
         //@{
-        virtual error CreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) override;
+        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) override;
         virtual error CleanupDevice() override;
 
     protected:

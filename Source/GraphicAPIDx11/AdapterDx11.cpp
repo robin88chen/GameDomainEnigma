@@ -1,7 +1,7 @@
 ﻿#include "AdapterDx11.h"
 #include <cassert>
 
-using namespace Enigma::Graphics;
+using namespace Enigma::Devices;
 
 AdapterDx11::AdapterDx11()
 {

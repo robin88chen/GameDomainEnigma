@@ -11,6 +11,9 @@
     <ClCompile Include="..\AdapterDx11.cpp">
       <Filter>Device Creator</Filter>
     </ClCompile>
+    <ClCompile Include="..\DeviceCreatorDx11.cpp">
+      <Filter>Device Creator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -21,6 +24,9 @@
       <Filter>Device Creator</Filter>
     </ClInclude>
     <ClInclude Include="..\AdapterDx11.h">
+      <Filter>Device Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceCreatorDx11.h">
       <Filter>Device Creator</Filter>
     </ClInclude>
   </ItemGroup>

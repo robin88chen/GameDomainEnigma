@@ -142,12 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\AdapterDx11.h" />
+    <ClInclude Include="..\DeviceCreatorDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AdapterDx11.cpp" />
+    <ClCompile Include="..\DeviceCreatorDx11.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="pch.cpp">

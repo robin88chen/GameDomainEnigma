@@ -8,6 +8,7 @@
 #ifndef GRAPHIC_API_DX11_H
 #define GRAPHIC_API_DX11_H
 
+#include <D3D11.h>
 #include "IGraphicAPI.h"
 
 namespace Enigma::Devices
@@ -31,10 +32,18 @@ namespace Enigma::Devices
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) override;
         virtual error CleanupDevice() override;
 
-    protected:
+    private:
+        void CleanupDeviceObjects();
+
+        void AddDebugInfoFilter();
+
+    private:
         DeviceCreatorDx11* m_creator;
         SwapChainDx11* m_swapChain;
         AdapterDx11* m_adapter;
+        // D3D Device
+        ID3D11Device* m_d3dDevice;
+        ID3D11DeviceContext* m_d3dDeviceContext;
     };
 }
 

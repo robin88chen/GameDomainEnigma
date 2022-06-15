@@ -2,7 +2,9 @@
 #include "AdapterDx11.h"
 #include "SwapChainDx11.h"
 #include "GraphicErrors.h"
+#include "GraphicEvents.h"
 #include "PlatformLayer.h"
+#include "EventPublisher.h"
 #include <cassert>
 #include <comdef.h>
 #include <d3d11_1.h>
@@ -135,6 +137,8 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
         LOG(Error, make_error_code(ErrorCode::CreateDeviceFail).message());
         return ErrorCode::CreateDeviceFail;
     }
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceCreated() });
 
     // Store device description
     std::string deviceStats = "Device Created: ";

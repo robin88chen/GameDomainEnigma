@@ -10,6 +10,9 @@
     <Filter Include="Graphic Thread">
       <UniqueIdentifier>{cc9d990a-b443-4c5e-8cb7-91dab69a3fb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{1aa973bb-bfde-42d2-9e67-600d221772ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h">
       <Filter>Graphic Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

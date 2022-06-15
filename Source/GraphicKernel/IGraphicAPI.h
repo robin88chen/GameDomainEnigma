@@ -48,6 +48,8 @@ namespace Enigma::Graphics
         virtual future_error AsyncCleanupDevice();
         //@}
 
+        virtual void TerminateGraphicThread();
+
     protected:
         static IGraphicAPI* m_instance;
         void* m_wnd;

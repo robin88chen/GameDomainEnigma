@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\AppDelegateWin32.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\AppDelegateWin32.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="AppDelegate">
+      <UniqueIdentifier>{7d12bd4a-e868-4f79-9e96-c79ac9b07c81}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

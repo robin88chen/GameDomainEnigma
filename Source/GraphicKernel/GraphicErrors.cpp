@@ -9,7 +9,12 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
-    case ErrorCode::ResizeBackSurfaceFail: return "Resize back surface fail";
+    case ErrorCode::dxgiInitialize: return "DXGI initialize state fail";
+    case ErrorCode::invalidWindow: return "Invalid window";
+    case ErrorCode::adapterFail: return "Adapter fail";
+    case ErrorCode::enumerateDevicesFail: return "Enumerate devices fail";
+    case ErrorCode::resizeBackSurfaceFail: return "Resize back surface fail";
+    case ErrorCode::createDeviceFail: return "Create device fail";
     }
     return "Unknown";
 }

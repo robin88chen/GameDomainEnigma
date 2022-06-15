@@ -42,9 +42,9 @@ namespace Enigma::Graphics
 
         /** @name create / cleanup device */
         //@{
-        virtual error CreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) = 0;
+        virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
         virtual error CleanupDevice() = 0;
-        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd);
+        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
         virtual future_error AsyncCleanupDevice();
         //@}
 

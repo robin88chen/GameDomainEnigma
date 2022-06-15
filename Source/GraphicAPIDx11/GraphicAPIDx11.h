@@ -29,7 +29,7 @@ namespace Enigma::Devices
 
         /** @name create / cleanup device */
         //@{
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd) override;
+        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual error CleanupDevice() override;
 
     private:

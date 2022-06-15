@@ -15,6 +15,9 @@
 namespace Enigma::Controllers
 {
     using error = std::error_code;
+    class InstallingPolicy;
+    class DeviceCreatingPolicy;
+
     /** Graphic Kernel Main class \n singleton */
     class GraphicMain
     {
@@ -25,8 +28,7 @@ namespace Enigma::Controllers
             RightHand
         };
     public:
-        GraphicMain(Graphics::IGraphicAPI::AsyncType useAsyncDevice = Graphics::IGraphicAPI::AsyncType::UseAsyncDevice, 
-            GraphicCoordSys coordSys = GraphicCoordSys::LeftHand);
+        GraphicMain(GraphicCoordSys coordSys = GraphicCoordSys::LeftHand);
         GraphicMain(const GraphicMain&) = delete;
         ~GraphicMain();
         GraphicMain& operator=(const GraphicMain&) = delete;
@@ -37,10 +39,17 @@ namespace Enigma::Controllers
         error InstallFrameworks();
         error ShutdownFrameworks();
 
+        error InstallRenderEngine(InstallingPolicy* policy);
+        error ShutdownRenderEngine();
+
         /** frame update (service manager call run one to update) */
         void FrameUpdate();
 
         Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
+
+    private:
+        error CreateRenderEngineDevice(DeviceCreatingPolicy* policy);
+        error CleanupRenderEngineDevice();
 
     private:
         static GraphicMain* m_instance;

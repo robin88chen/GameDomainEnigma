@@ -16,13 +16,13 @@ namespace Enigma::Graphics
     {
         ok = 0,
 
-        DxgiInitialize = 101,
-        InvalidWindow,
-        AdapterFail,
-        EnumerateDevicesFail,
+        dxgiInitialize = 101,
+        invalidWindow,
+        adapterFail,
+        enumerateDevicesFail,
 
-        ResizeBackSurfaceFail = 1001,
-        CreateDeviceFail,
+        resizeBackSurfaceFail = 1001,
+        createDeviceFail,
     };
     class ErrorCategory : public std::error_category
     {

@@ -38,7 +38,7 @@ error SwapChainDx11::ResizeBackSurfaces(unsigned int width, unsigned int height)
         m_currentDesc.BufferDesc.Format, m_currentDesc.Flags);
     if (FAILED(hr))
     {
-        return ErrorCode::ResizeBackSurfaceFail;
+        return ErrorCode::resizeBackSurfaceFail;
     }
     return ErrorCode::ok;
 }

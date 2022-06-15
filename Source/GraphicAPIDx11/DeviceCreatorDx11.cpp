@@ -37,7 +37,7 @@ error DeviceCreatorDx11::Initialize(HWND hwnd, const Graphics::DeviceRequiredBit
     HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&m_dxgiFactory));
     if (FAILED(hr))
     {
-        return ErrorCode::DxgiInitialize;
+        return ErrorCode::dxgiInitialize;
     }
     assert(m_dxgiFactory);
     m_dxgiFactory->MakeWindowAssociation(hwnd, 0);
@@ -50,9 +50,9 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     assert(adapter);
     assert(swapChain);
     assert(d3dDevice);
-    if (FATAL_LOG_EXPR(!m_wnd)) return ErrorCode::InvalidWindow;
-    if (FATAL_LOG_EXPR(!m_dxgiFactory)) return ErrorCode::DxgiInitialize;
-    if (FATAL_LOG_EXPR(adapter->GetAdapterCount() <= 0)) return ErrorCode::AdapterFail;
+    if (FATAL_LOG_EXPR(!m_wnd)) return ErrorCode::invalidWindow;
+    if (FATAL_LOG_EXPR(!m_dxgiFactory)) return ErrorCode::dxgiInitialize;
+    if (FATAL_LOG_EXPR(adapter->GetAdapterCount() <= 0)) return ErrorCode::adapterFail;
 
     //adapter->SelectAdapter(0);
 
@@ -134,8 +134,8 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     if (FAILED(hr))
     {
         Platforms::Debug::Printf("Failed HResult = %x\n", hr);
-        LOG(Error, make_error_code(ErrorCode::CreateDeviceFail).message());
-        return ErrorCode::CreateDeviceFail;
+        LOG(Error, make_error_code(ErrorCode::createDeviceFail).message());
+        return ErrorCode::createDeviceFail;
     }
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceCreated() });
@@ -170,7 +170,7 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
 error DeviceCreatorDx11::BuildDeviceList(AdapterDx11* adapter)
 {
     assert(adapter);
-    if (FATAL_LOG_EXPR(!m_dxgiFactory)) return ErrorCode::DxgiInitialize;
+    if (FATAL_LOG_EXPR(!m_dxgiFactory)) return ErrorCode::dxgiInitialize;
 
     IDXGIAdapter1* dxgiAdapter;
     unsigned int i = 0;
@@ -278,7 +278,7 @@ error DeviceCreatorDx11::EnumerateOutputs(AdapterDx11::AdapterInfo* adapterInfo)
         }
         else if (FAILED(hr))
         {
-            return ErrorCode::EnumerateDevicesFail; //Something bad happened.
+            return ErrorCode::enumerateDevicesFail; //Something bad happened.
         }
         else //Success!
         {

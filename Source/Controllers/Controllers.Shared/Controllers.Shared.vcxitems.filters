@@ -18,6 +18,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicMain.cpp">
       <Filter>Graphic Main</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.cpp">
+      <Filter>Graphic Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerErrors.h">
@@ -27,6 +30,9 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicMain.h">
+      <Filter>Graphic Main</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.h">
       <Filter>Graphic Main</Filter>
     </ClInclude>
   </ItemGroup>

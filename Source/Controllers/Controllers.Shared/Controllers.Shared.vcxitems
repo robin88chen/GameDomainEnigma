@@ -16,10 +16,12 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ControllerErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicMain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicMain.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.h" />
   </ItemGroup>
 </Project>

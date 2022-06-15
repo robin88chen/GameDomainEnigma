@@ -25,9 +25,9 @@ IGraphicAPI* IGraphicAPI::Instance()
     return m_instance;
 }
 
-future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd)
+future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
 {
-    return m_workerThread->PushTask(std::bind(&IGraphicAPI::CreateDevice, this, rqb, use_async, hwnd));
+    return m_workerThread->PushTask(std::bind(&IGraphicAPI::CreateDevice, this, rqb, hwnd));
 }
 
 future_error IGraphicAPI::AsyncCleanupDevice()

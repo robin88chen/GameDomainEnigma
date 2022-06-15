@@ -15,6 +15,7 @@ namespace Enigma::Controllers
     enum class ErrorCode
     {
         ok = 0,
+        unknownInstallingPolicy,
     };
     class ErrorCategory : public std::error_category
     {

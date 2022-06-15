@@ -28,7 +28,7 @@ GraphicAPIDx11::~GraphicAPIDx11()
     SAFE_DELETE(m_adapter);
 }
 
-error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, AsyncType use_async, void* hwnd)
+error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     Platforms::Debug::Printf("create dx11 device in thread %d\n", std::this_thread::get_id());
     m_deviceRequiredBits = rqb;

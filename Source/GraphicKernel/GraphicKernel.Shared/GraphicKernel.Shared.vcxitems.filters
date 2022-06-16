@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Graphic API">
+      <UniqueIdentifier>{033acc13-b512-447a-adc6-9f13ad9c7f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{9f54316a-9325-4ac5-89d3-a174c4bb8621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphic Thread">
+      <UniqueIdentifier>{cc9d990a-b443-4c5e-8cb7-91dab69a3fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{1aa973bb-bfde-42d2-9e67-600d221772ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h">
+      <Filter>Error Codes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h">
+      <Filter>Graphic Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
+      <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp">
+      <Filter>Graphic API</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp">
+      <Filter>Graphic Thread</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

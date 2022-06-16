@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{11c4fee8-ca85-4594-a153-8c64e07dfd39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{a108d811-2f10-4568-a454-4e0f66feb1f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphic Main">
+      <UniqueIdentifier>{f0bb7c90-7975-463f-b262-05d4a854a1b6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ControllerErrors.cpp">
+      <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicMain.cpp">
+      <Filter>Graphic Main</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.cpp">
+      <Filter>Graphic Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerErrors.h">
+      <Filter>Error Codes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicMain.h">
+      <Filter>Graphic Main</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.h">
+      <Filter>Graphic Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\GraphicAPIDx11.cpp">
+      <Filter>Graphic API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SwapChainDx11.cpp">
+      <Filter>Device Creator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AdapterDx11.cpp">
+      <Filter>Device Creator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceCreatorDx11.cpp">
+      <Filter>Device Creator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceCreatorDx11Util.cpp">
+      <Filter>Device Creator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\GraphicAPIDx11.h">
+      <Filter>Graphic API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SwapChainDx11.h">
+      <Filter>Device Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AdapterDx11.h">
+      <Filter>Device Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceCreatorDx11.h">
+      <Filter>Device Creator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Graphic API">
+      <UniqueIdentifier>{f71644e3-d7b5-436d-96d5-8aa865eb8134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device Creator">
+      <UniqueIdentifier>{a31d32fb-d69e-4631-819b-e62dbbe0b538}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

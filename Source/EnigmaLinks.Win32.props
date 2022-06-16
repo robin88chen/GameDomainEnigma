@@ -6,7 +6,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalLibraryDirectories>$(EnigmaSourceRoot)$(PlatformTarget)\$(Configuration);$(EnigmaSourceRoot)ShareLib\zlib\prebuilt\$(PlatformTarget)\$(Configuration)Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MathLib.Win32.lib;AssetPackage.Win32.lib;Platforms.Win32.lib;FileSystem.Win32.lib;Frameworks.Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathLib.Win32.lib;AssetPackage.Win32.lib;Platforms.Win32.lib;FileSystem.Win32.lib;Frameworks.Win32.lib;Controllers.Win32.lib;GraphicKernel.Win32.lib;GraphicAPIDx11.Win32.lib;Application.Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>

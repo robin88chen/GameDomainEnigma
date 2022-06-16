@@ -13,6 +13,9 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{80dd3f81-2a6a-4c7c-853c-746ff9391236}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Extend">
+      <UniqueIdentifier>{3e578946-7a77-4e63-9136-00f6b0a7ef93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp">
       <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp">
+      <Filter>Extend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h">
+      <Filter>Extend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

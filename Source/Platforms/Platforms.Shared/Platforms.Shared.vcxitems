@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerAndroid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp" />
   </ItemGroup>

@@ -58,7 +58,7 @@ error GraphicMain::InstallRenderEngine(InstallingPolicy* policy)
 {
     assert(policy);
     error er = ErrorCode::unknownInstallingPolicy;
-    if (typeid(policy) == typeid(DeviceCreatingPolicy*))
+    if (typeid(*policy) == typeid(DeviceCreatingPolicy))
     {
         er = CreateRenderEngineDevice(dynamic_cast<DeviceCreatingPolicy*>(policy));
     }

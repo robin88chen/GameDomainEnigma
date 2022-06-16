@@ -120,6 +120,10 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(EnigmaSourceRoot)ShareLib\DirectXTex\DirectXTex\Bin\Desktop_2015\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -150,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="..\AdapterDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11.cpp" />
+    <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="pch.cpp">

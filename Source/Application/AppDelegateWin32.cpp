@@ -86,6 +86,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     menew Devices::GraphicAPIDx11();
 
     m_graphicMain = menew Controllers::GraphicMain();
+    m_graphicMain->InstallFrameworks();
 
     InstallEngine();
 }
@@ -117,6 +118,7 @@ void AppDelegate::Finalize()
 {
     ShutdownEngine();
 
+    m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup

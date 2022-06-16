@@ -1,4 +1,5 @@
 ﻿#include "GraphicThread.h"
+#include "PlatformLayer.h"
 #include <thread>
 #include <cassert>
 
@@ -12,6 +13,7 @@ GraphicThread::GraphicThread()
     m_self = this;
     m_isExisting = false;
     m_thread = new std::thread{ ThreadProcedure };
+    Platforms::Debug::Printf("graphic thread id %d\n", m_thread->get_id());
 }
 
 GraphicThread::~GraphicThread()

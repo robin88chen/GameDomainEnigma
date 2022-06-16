@@ -35,3 +35,11 @@ future_error IGraphicAPI::AsyncCleanupDevice()
     return m_workerThread->PushTask(std::bind(&IGraphicAPI::CleanupDevice, this));
 }
 
+void IGraphicAPI::TerminateGraphicThread()
+{
+    if (m_workerThread)
+    {
+        m_workerThread->Terminate();
+    }
+}
+

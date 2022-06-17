@@ -43,3 +43,9 @@ void IGraphicAPI::TerminateGraphicThread()
     }
 }
 
+GraphicThread* IGraphicAPI::GetGraphicThread()
+{
+    assert(m_workerThread);
+    return m_workerThread;
+}
+

@@ -8,7 +8,7 @@
 #ifndef APPLICATION_EVENTS_H
 #define APPLICATION_EVENTS_H
 
-#include "Event.h"
+#include "Frameworks/Event.h"
 
 namespace Enigma::Controllers
 {

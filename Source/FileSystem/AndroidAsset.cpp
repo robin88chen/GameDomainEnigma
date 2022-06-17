@@ -3,7 +3,7 @@
 #include "FileSystemErrors.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
-#include "AndroidBridge.h"
+#include "Platforms/AndroidBridge.h"
 #include <cassert>
 
 using namespace Enigma::FileSystem;

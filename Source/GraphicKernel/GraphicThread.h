@@ -8,7 +8,7 @@
 #ifndef GRAPHIC_THREAD_H
 #define GRAPHIC_THREAD_H
 
-#include "ExtentTypesDefine.h"
+#include "Frameworks/ExtentTypesDefine.h"
 #include <thread>
 #include <atomic>
 #include <mutex>

@@ -2,10 +2,10 @@
 #include "SwapChainDx11.h"
 #include "AdapterDx11.h"
 #include "DeviceCreatorDx11.h"
-#include "GraphicErrors.h"
-#include "MemoryAllocMacro.h"
-#include "MemoryMacro.h"
-#include "PlatformLayer.h"
+#include "GraphicKernel/GraphicErrors.h"
+#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Devices;
 

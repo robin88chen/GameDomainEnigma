@@ -8,8 +8,8 @@
 #ifndef _APPLICATION_DELEGATE_WIN32_H
 #define _APPLICATION_DELEGATE_WIN32_H
 
-#include "PlatformLayerUtilities.h"
-#include "GraphicMain.h"
+#include "Platforms/PlatformLayerUtilities.h"
+#include "Controllers/GraphicMain.h"
 
 #if TARGET_PLATFORM == PLATFORM_WIN32
 #include <string>

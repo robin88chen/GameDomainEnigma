@@ -9,7 +9,7 @@
 #define GRAPHIC_API_DX11_H
 
 #include <D3D11.h>
-#include "IGraphicAPI.h"
+#include "GraphicKernel/IGraphicAPI.h"
 
 namespace Enigma::Devices
 {

@@ -1,10 +1,10 @@
 ﻿#include "FileSystem.h"
 #include "IFile.h"
 #include "IMountPath.h"
-#include "MemoryMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "StdioFile.h"
 #include "StdMountPath.h"
-#include "PlatformLayerUtilities.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 #include <iostream>
 

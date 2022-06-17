@@ -1,7 +1,7 @@
 ﻿#include "PackageMountPath.h"
-#include "AssetPackageFile.h"
+#include "AssetPackage/AssetPackageFile.h"
 #include "PackageContent.h"
-#include "MemoryMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 #undef CreateFile

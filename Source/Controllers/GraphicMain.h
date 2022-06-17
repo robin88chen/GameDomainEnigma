@@ -9,8 +9,8 @@
 #define GRAPHIC_MAIN_H
 
 #include <system_error>
-#include "ServiceManager.h"
-#include "IGraphicAPI.h"
+#include "Frameworks/ServiceManager.h"
+#include "GraphicKernel/IGraphicAPI.h"
 
 namespace Enigma::Controllers
 {

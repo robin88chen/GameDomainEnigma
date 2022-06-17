@@ -2,7 +2,7 @@
 #include "SystemService.h"
 #include "SystemServiceEvents.h"
 #include "EventPublisher.h"
-#include "MemoryAllocMacro.h"
+#include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Frameworks;
 

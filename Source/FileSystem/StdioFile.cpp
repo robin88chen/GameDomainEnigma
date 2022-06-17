@@ -1,6 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "StdioFile.h"
-#include "PlatformLayerUtilities.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include "FileSystemErrors.h"
 #include <cassert>
 #include <iostream>

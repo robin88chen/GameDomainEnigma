@@ -11,7 +11,7 @@
 #include <vector>
 #include <DXGI.h>
 #include <D3D11.h>
-#include "MemoryMacro.h"
+#include "Platforms/MemoryMacro.h"
 
 namespace Enigma::Devices
 {

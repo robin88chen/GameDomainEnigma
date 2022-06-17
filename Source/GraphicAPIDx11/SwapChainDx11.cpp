@@ -1,8 +1,8 @@
 ﻿#include "SwapChainDx11.h"
 #include <memory>
 #include <cassert>
-#include "MemoryMacro.h"
-#include "GraphicErrors.h"
+#include "Platforms/MemoryMacro.h"
+#include "GraphicKernel/GraphicErrors.h"
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -31,10 +31,10 @@ error SwapChainDx11::Present()
     return ErrorCode::ok;
 }
 
-error SwapChainDx11::ResizeBackSurfaces(unsigned int width, unsigned int height)
+error SwapChainDx11::ResizeBackSurfaces(const MathLib::Dimension& dimension)
 {
     assert(m_dxgiSwapChain);
-    HRESULT hr = m_dxgiSwapChain->ResizeBuffers(m_currentDesc.BufferCount, width, height,
+    HRESULT hr = m_dxgiSwapChain->ResizeBuffers(m_currentDesc.BufferCount, dimension.m_width, dimension.m_height,
         m_currentDesc.BufferDesc.Format, m_currentDesc.Flags);
     if (FAILED(hr))
     {

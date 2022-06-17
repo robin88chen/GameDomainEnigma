@@ -35,6 +35,18 @@ future_error IGraphicAPI::AsyncCleanupDevice()
     return m_workerThread->PushTask(std::bind(&IGraphicAPI::CleanupDevice, this));
 }
 
+future_error IGraphicAPI::AsyncGetPrimaryBackSurface(IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface)
+{
+    return m_workerThread->PushTask(std::bind(&IGraphicAPI::GetPrimaryBackSurface, this,
+        back_surface, depth_surface));
+}
+
+future_error IGraphicAPI::AsyncCreateBackSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt, IBackSurfacePtr* back_surface)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->CreateBackSurface(dimension, fmt, back_surface); });
+}
+
 void IGraphicAPI::TerminateGraphicThread()
 {
     if (m_workerThread)

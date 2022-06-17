@@ -8,6 +8,7 @@
 #ifndef SWAP_CHAIN_DX11_H
 #define SWAP_CHAIN_DX11_H
 
+#include "MathLib/AlgebraBasicTypes.h"
 #include <DXGI.h>
 #include <system_error>
 
@@ -30,7 +31,7 @@ namespace Enigma::Devices
 
         error Present();
 
-        error ResizeBackSurfaces(unsigned int width, unsigned int height);
+        error ResizeBackSurfaces(const MathLib::Dimension& dimension);
 
     protected:
         friend DeviceCreatorDx11;

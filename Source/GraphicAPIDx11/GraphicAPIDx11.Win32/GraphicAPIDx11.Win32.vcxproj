@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\AdapterDx11.h" />
+    <ClInclude Include="..\BackSurfaceDx11.h" />
     <ClInclude Include="..\DeviceCreatorDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AdapterDx11.cpp" />
+    <ClCompile Include="..\BackSurfaceDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />

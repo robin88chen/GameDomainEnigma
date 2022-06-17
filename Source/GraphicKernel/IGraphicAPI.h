@@ -10,6 +10,7 @@
 
 #include "DeviceRequiredBits.h"
 #include "Frameworks/ExtentTypesDefine.h"
+#include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
 
 namespace Enigma::MathLib
@@ -60,11 +61,11 @@ namespace Enigma::Graphics
         /** @name back / depth surface */
         //@{
         virtual error GetPrimaryBackSurface(IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface) = 0;
-        virtual error CreateBackSurface(unsigned int width, unsigned int height, const GraphicFormat& fmt,
+        virtual error CreateBackSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
             IBackSurfacePtr* back_surface) = 0;
-        virtual error CreateBackSurface(unsigned int width, unsigned int height, unsigned int buff_count,
+        virtual error CreateBackSurface(const MathLib::Dimension& dimension, unsigned int buff_count,
             const std::vector<GraphicFormat>& fmts, IBackSurfacePtr* back_surface) = 0;
-        virtual error CreateDepthStencilSurface(unsigned int width, unsigned int height, const GraphicFormat& fmt,
+        virtual error CreateDepthStencilSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
             IDepthStencilSurfacePtr* depth_surface) = 0;
         virtual error ShareDepthStencilSurface(const IDepthStencilSurfacePtr& from_depth,
             IDepthStencilSurfacePtr* depth_surface) = 0;
@@ -72,11 +73,11 @@ namespace Enigma::Graphics
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
         virtual future_error AsyncGetPrimaryBackSurface(
             IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface);
-        virtual future_error AsyncCreateBackSurface(unsigned int width, unsigned int height, const GraphicFormat& fmt,
+        virtual future_error AsyncCreateBackSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
             IBackSurfacePtr* back_surface);
-        virtual future_error AsyncCreateBackSurface(unsigned int width, unsigned int height, unsigned int buff_count,
+        virtual future_error AsyncCreateBackSurface(const MathLib::Dimension& dimension, unsigned int buff_count,
             const std::vector<GraphicFormat>& fmts, IBackSurfacePtr* back_surface);
-        virtual future_error AsyncCreateDepthStencilSurface(unsigned int width, unsigned int height, const GraphicFormat& fmt,
+        virtual future_error AsyncCreateDepthStencilSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
             IDepthStencilSurfacePtr* depth_surface);
         virtual future_error AsyncShareDepthStencilSurface(const IDepthStencilSurfacePtr& from_depth,
             IDepthStencilSurfacePtr* depth_surface);

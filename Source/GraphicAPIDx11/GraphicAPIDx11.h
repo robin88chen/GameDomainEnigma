@@ -11,6 +11,13 @@
 #include <D3D11.h>
 #include "GraphicKernel/IGraphicAPI.h"
 
+namespace Enigma::Graphics
+{
+    class IBackSurface;
+    using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
+    class IDepthStencilSurface;
+    using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
+}
 namespace Enigma::Devices
 {
     class DeviceCreatorDx11;
@@ -27,10 +34,18 @@ namespace Enigma::Devices
         virtual ~GraphicAPIDx11() override;
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
 
-        /** @name create / cleanup device */
-        //@{
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual error CleanupDevice() override;
+
+        virtual error GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surface, Graphics::IDepthStencilSurfacePtr* depth_surface) override;
+        virtual error CreateBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt,
+            Graphics::IBackSurfacePtr* back_surface) override;
+
+        ID3D11Texture2D* GetPrimaryD3DBackbuffer();
+
+        ID3D11Device* GetD3DDevice() { return m_d3dDevice; };
+        ID3D11DeviceContext* GetD3DDeviceContext() { return m_d3dDeviceContext; }
+        SwapChainDx11* GetSwapChain() { return m_swapChain; }
 
     private:
         void CleanupDeviceObjects();

@@ -1,13 +1,16 @@
 ﻿#include "GraphicAPIDx11.h"
 #include "SwapChainDx11.h"
 #include "AdapterDx11.h"
+#include "BackSurfaceDx11.h"
 #include "DeviceCreatorDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Devices;
+using ErrorCode = Enigma::Graphics::ErrorCode;
 
 GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
 {
@@ -57,6 +60,44 @@ error GraphicAPIDx11::CleanupDevice()
     return Graphics::ErrorCode::ok;
 }
 
+error GraphicAPIDx11::GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surface, Graphics::IDepthStencilSurfacePtr* depth_surface)
+{
+    Platforms::Debug::Printf("get primary back surface in thread %d\n", std::this_thread::get_id());
+    assert(back_surface);
+    if (FATAL_LOG_EXPR(!m_d3dDevice)) return ErrorCode::d3dDeviceNullPointer;
+
+    ID3D11Texture2D* d3dbackTex = GetPrimaryD3DBackbuffer();
+    if (!d3dbackTex)
+    {
+        return ErrorCode::createBackSurfaceFail;
+    }
+    Graphics::IBackSurface* back = menew BackSurfaceDx11{ m_d3dDevice, d3dbackTex, true };
+    back_surface->reset(back); // std::make_shared<IBackSurface>(back);
+    //*back_surface = menew BackSurfaceDx11(m_graphicApi->GetD3DDevice(), d3dbackTex, true);
+    SetPrimaryBackSurfaceFormat((*back_surface)->GetFormat());
+    //if (depth_surface) *depth_surface = 0;
+
+    if ((m_deviceRequiredBits.m_usesDepthBuffer) && (depth_surface))
+    {
+        auto [w, h] = (*back_surface)->GetDimension();
+        depth_surface->reset(
+            menew DepthStencilSurfaceDx11{ m_d3dDevice, w, h, Graphics::GraphicFormat { Graphics::GraphicFormat::FMT_D24S8} });
+        //*depth_surface = CreateDepthStencilSurface(w, h, GraphicFormat(GraphicFormat::FMT_D24S8));
+        SetDepthSurfaceFormat((*depth_surface)->GetFormat());
+    }
+    if (d3dbackTex) d3dbackTex->Release();
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::CreateBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt, Graphics::IBackSurfacePtr* back_surface)
+{
+    Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
+    assert(back_surface);
+    back_surface->reset(menew BackSurfaceDx11{ GetD3DDevice(), dimension, fmt });
+    return ErrorCode::ok;
+}
+
 void GraphicAPIDx11::CleanupDeviceObjects()
 {
 }
@@ -86,4 +127,16 @@ void GraphicAPIDx11::AddDebugInfoFilter()
         }
         d3dDebug->Release();
     }
+}
+
+ID3D11Texture2D* GraphicAPIDx11::GetPrimaryD3DBackbuffer()
+{
+    if (FATAL_LOG_EXPR((!m_swapChain) || (!m_swapChain->GetDXGIObject()))) return nullptr;
+    ID3D11Texture2D* back_surface;
+    HRESULT hr = m_swapChain->GetDXGIObject()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&back_surface);
+    if (FAILED(hr))
+    {
+        return nullptr;
+    }
+    return back_surface;
 }

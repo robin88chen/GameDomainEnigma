@@ -23,6 +23,10 @@ namespace Enigma::Graphics
 
         resizeBackSurfaceFail = 1001,
         createDeviceFail,
+
+        d3dDeviceNullPointer = 1101,
+        swapChain,
+        createBackSurfaceFail,
     };
     class ErrorCategory : public std::error_category
     {

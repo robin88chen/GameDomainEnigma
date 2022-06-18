@@ -45,6 +45,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h">
       <Filter>Depth Surface</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp">
       <Filter>Depth Surface</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp">
+      <Filter>BackSurfaces</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

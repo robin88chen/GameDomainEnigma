@@ -150,6 +150,7 @@
     <ClInclude Include="..\DepthStencilSurfaceDx11.h" />
     <ClInclude Include="..\DeviceCreatorDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
+    <ClInclude Include="..\MultiBackSurfaceDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClCompile Include="..\DeviceCreatorDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
+    <ClCompile Include="..\MultiBackSurfaceDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

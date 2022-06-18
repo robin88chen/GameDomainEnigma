@@ -19,6 +19,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::swapChain: return "Swap Chain fail";
     case ErrorCode::createBackSurfaceFail: return "Create back surface fail";
     case ErrorCode::createDepthSurfaceFail: return "Create depth surface fail";
+    case ErrorCode::dynamicCastSurface: return "Dynamic cast to device surface fail";
     }
     return "Unknown";
 }

@@ -28,6 +28,7 @@ namespace Enigma::Graphics
         swapChain,
         createBackSurfaceFail,
         createDepthSurfaceFail,
+        dynamicCastSurface,
     };
     class ErrorCategory : public std::error_category
     {

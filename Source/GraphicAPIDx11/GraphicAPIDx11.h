@@ -58,6 +58,11 @@ namespace Enigma::Devices
     private:
         void CleanupDeviceObjects();
 
+        error ClearSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color);
+        error ClearMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color);
+        error ClearDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& depth_surface,
+            float depth_value, unsigned int stencil_value);
+
         void AddDebugInfoFilter();
 
     private:

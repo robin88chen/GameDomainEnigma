@@ -3,11 +3,13 @@
 #include "AdapterDx11.h"
 #include "DeviceCreatorDx11.h"
 #include "BackSurfaceDx11.h"
+#include "MultiBackSurfaceDx11.h"
 #include "DepthStencilSurfaceDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "MathLib/ColorRGBA.h"
 #include <cassert>
 
 using namespace Enigma::Devices;
@@ -99,6 +101,15 @@ error GraphicAPIDx11::CreateBackSurface(const MathLib::Dimension& dimension, con
     return ErrorCode::ok;
 }
 
+error GraphicAPIDx11::CreateBackSurface(const MathLib::Dimension& dimension,
+    unsigned buff_count, const std::vector<Graphics::GraphicFormat>& fmts, Graphics::IBackSurfacePtr* back_surface)
+{
+    Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
+    assert(back_surface);
+    back_surface->reset(menew MultiBackSurfaceDx11{ GetD3DDevice(), dimension, buff_count, fmts });
+    return ErrorCode::ok;
+}
+
 error GraphicAPIDx11::CreateDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt, Graphics::IDepthStencilSurfacePtr* depth_surface)
 {
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
@@ -117,8 +128,78 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const Graphics::IDepthStencilSurf
     return ErrorCode::ok;
 }
 
+error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface, 
+    const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value)
+{
+    error er = ErrorCode::ok;
+    if (back_surface)
+    {
+        if (!back_surface->IsMultiSurface())
+        {
+            er = ClearSingleBackSurface(back_surface, color);
+        }
+        else
+        {
+            er = ClearMultiBackSurface(back_surface, color);
+        }
+        if (er) return er;
+    }
+    if (depth_surface)
+    {
+        er = ClearDepthStencilSurface(depth_surface, depth_value, stencil_value);
+        if (er) return er;
+    }
+    return er;
+}
+
 void GraphicAPIDx11::CleanupDeviceObjects()
 {
+}
+
+error GraphicAPIDx11::ClearSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color)
+{
+    if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
+    if (back_surface)
+    {
+        BackSurfaceDx11* back_dx11 = dynamic_cast<BackSurfaceDx11*>(back_surface.get());
+        if (!back_dx11) return ErrorCode::dynamicCastSurface;
+
+        m_d3dDeviceContext->ClearRenderTargetView(back_dx11->GetD3DRenderTarget(), (const float*)color);
+    }
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::ClearMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color)
+{
+    if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
+    if (back_surface)
+    {
+        MultiBackSurfaceDx11* back_dx11 = dynamic_cast<MultiBackSurfaceDx11*>(back_surface.get());
+        if (!back_dx11) return ErrorCode::dynamicCastSurface;
+
+        for (unsigned int i = 0; i < back_surface->GetSurfaceCount(); i++)
+        {
+            m_d3dDeviceContext->ClearRenderTargetView(back_dx11->GetD3DRenderTarget(i), (const float*)color);
+        }
+    }
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& depth_surface,
+    float depth_value, unsigned int stencil_value)
+{
+    if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
+    if (depth_surface)
+    {
+        unsigned int flag = 0;
+        if (depth_surface->GetFormat().DepthBits()) flag |= D3D11_CLEAR_DEPTH;
+        if (depth_surface->GetFormat().StencilBits()) flag |= D3D11_CLEAR_STENCIL;
+        DepthStencilSurfaceDx11* depth_dx11 = dynamic_cast<DepthStencilSurfaceDx11*>(depth_surface.get());
+        if (!depth_dx11) return ErrorCode::dynamicCastSurface;
+        m_d3dDeviceContext->ClearDepthStencilView(
+            depth_dx11->GetD3DDepthView(), (D3D11_CLEAR_FLAG)flag, depth_value, (UINT8)stencil_value);
+    }
+    return ErrorCode::ok;
 }
 
 void GraphicAPIDx11::AddDebugInfoFilter()
@@ -158,4 +239,71 @@ ID3D11Texture2D* GraphicAPIDx11::GetPrimaryD3DBackbuffer()
         return nullptr;
     }
     return back_surface;
+}
+
+//----------------------------------------------------------------------------
+DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& format)
+{
+    switch (format.fmt)
+    {
+    case Enigma::Graphics::GraphicFormat::FMT_UNKNOWN:        return DXGI_FORMAT_UNKNOWN;
+    case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+    case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+    case Enigma::Graphics::GraphicFormat::FMT_X8R8G8B8:       return DXGI_FORMAT_B8G8R8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_R5G6B5:         return DXGI_FORMAT_B5G6R5_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_X1R5G5B5:
+    case Enigma::Graphics::GraphicFormat::FMT_A1R5G5B5:       return DXGI_FORMAT_B5G5R5A1_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A4R4G4B4:       return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_R3G3B2:         return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A8:             return DXGI_FORMAT_A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A8R3G3B2:       return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_X4R4G4B4:       return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A2B10G10R10:    return DXGI_FORMAT_R10G10B10A2_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+    case Enigma::Graphics::GraphicFormat::FMT_X8B8G8R8:       return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_G16R16:         return DXGI_FORMAT_R16G16_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A2R10G10B10:    return DXGI_FORMAT_R10G10B10A2_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16:   return DXGI_FORMAT_R16G16B16A16_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_R16F:           return DXGI_FORMAT_R16_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_G16R16F:        return DXGI_FORMAT_R16G16_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:  return DXGI_FORMAT_R16G16B16A16_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_R32F:           return DXGI_FORMAT_R32_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_G32R32F:        return DXGI_FORMAT_R32G32_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_A32B32G32R32F:  return DXGI_FORMAT_R32G32B32A32_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_D16_LOCKABLE:
+    case Enigma::Graphics::GraphicFormat::FMT_D16:            return DXGI_FORMAT_D16_UNORM;
+    case Enigma::Graphics::GraphicFormat::FMT_D32F_LOCKABLE:
+    case Enigma::Graphics::GraphicFormat::FMT_D32:            return DXGI_FORMAT_D32_FLOAT;
+    case Enigma::Graphics::GraphicFormat::FMT_D24X8:
+    case Enigma::Graphics::GraphicFormat::FMT_D24X4S4:
+    case Enigma::Graphics::GraphicFormat::FMT_D24FS8:
+    case Enigma::Graphics::GraphicFormat::FMT_D24S8:           return DXGI_FORMAT_D24_UNORM_S8_UINT;
+    }
+    return DXGI_FORMAT_UNKNOWN;
+}
+
+unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt)
+{
+    switch (fmt)
+    {
+    case DXGI_FORMAT_UNKNOWN:               return Enigma::Graphics::GraphicFormat::FMT_UNKNOWN;
+    case DXGI_FORMAT_R8G8B8A8_UNORM:        return Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8;
+    case DXGI_FORMAT_B5G6R5_UNORM:          return Enigma::Graphics::GraphicFormat::FMT_R5G6B5;
+    case DXGI_FORMAT_B5G5R5A1_UNORM:        return Enigma::Graphics::GraphicFormat::FMT_A1R5G5B5;
+    case DXGI_FORMAT_A8_UNORM:              return Enigma::Graphics::GraphicFormat::FMT_A8;
+    case DXGI_FORMAT_R10G10B10A2_UNORM:     return Enigma::Graphics::GraphicFormat::FMT_A2B10G10R10;
+    case DXGI_FORMAT_B8G8R8A8_UNORM:        return Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
+    case DXGI_FORMAT_R16G16_UNORM:          return Enigma::Graphics::GraphicFormat::FMT_G16R16;
+    case DXGI_FORMAT_R16G16B16A16_UNORM:    return Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16;
+    case DXGI_FORMAT_R16_FLOAT:             return Enigma::Graphics::GraphicFormat::FMT_R16F;
+    case DXGI_FORMAT_R16G16_FLOAT:          return Enigma::Graphics::GraphicFormat::FMT_G16R16F;
+    case DXGI_FORMAT_R16G16B16A16_FLOAT:    return Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F;
+    case DXGI_FORMAT_R32_FLOAT:             return Enigma::Graphics::GraphicFormat::FMT_R32F;
+    case DXGI_FORMAT_R32G32_FLOAT:          return Enigma::Graphics::GraphicFormat::FMT_G32R32F;
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:    return Enigma::Graphics::GraphicFormat::FMT_A32B32G32R32F;
+    case DXGI_FORMAT_D16_UNORM:             return Enigma::Graphics::GraphicFormat::FMT_D16;
+    case DXGI_FORMAT_D32_FLOAT:             return Enigma::Graphics::GraphicFormat::FMT_D32;
+    case DXGI_FORMAT_D24_UNORM_S8_UINT:     return Enigma::Graphics::GraphicFormat::FMT_D24S8;
+    default: return Enigma::Graphics::GraphicFormat::FMT_UNKNOWN;
+    }
 }

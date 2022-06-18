@@ -23,6 +23,9 @@
     <ClCompile Include="..\DepthStencilSurfaceDx11.cpp">
       <Filter>Depth Surface</Filter>
     </ClCompile>
+    <ClCompile Include="..\MultiBackSurfaceDx11.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="..\DepthStencilSurfaceDx11.h">
       <Filter>Depth Surface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MultiBackSurfaceDx11.h">
+      <Filter>BackSurfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

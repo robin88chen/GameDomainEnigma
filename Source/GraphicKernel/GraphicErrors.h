@@ -27,6 +27,7 @@ namespace Enigma::Graphics
         d3dDeviceNullPointer = 1101,
         swapChain,
         createBackSurfaceFail,
+        createDepthSurfaceFail,
     };
     class ErrorCategory : public std::error_category
     {

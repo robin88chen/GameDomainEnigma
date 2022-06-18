@@ -86,8 +86,16 @@ namespace Enigma::Graphics
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
+
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
+
+    protected:
+        /** @name surface format */
+        //@{
+        void SetPrimaryBackSurfaceFormat(const GraphicFormat& fmt) { m_fmtBackSurface = fmt; };
+        void SetDepthSurfaceFormat(const GraphicFormat& fmt) { m_fmtDepthSurface = fmt; };
+        //@}
 
     protected:
         static IGraphicAPI* m_instance;

@@ -15,6 +15,10 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::enumerateDevicesFail: return "Enumerate devices fail";
     case ErrorCode::resizeBackSurfaceFail: return "Resize back surface fail";
     case ErrorCode::createDeviceFail: return "Create device fail";
+    case ErrorCode::d3dDeviceNullPointer: return "D3D Device null pointer";
+    case ErrorCode::swapChain: return "Swap Chain fail";
+    case ErrorCode::createBackSurfaceFail: return "Create back surface fail";
+    case ErrorCode::createDepthSurfaceFail: return "Create depth surface fail";
     }
     return "Unknown";
 }

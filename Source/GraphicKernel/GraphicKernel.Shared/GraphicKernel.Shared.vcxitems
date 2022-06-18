@@ -20,12 +20,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IBackSurface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp" />
   </ItemGroup>
 </Project>

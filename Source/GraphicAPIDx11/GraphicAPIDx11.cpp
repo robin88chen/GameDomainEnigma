@@ -1,8 +1,9 @@
 ﻿#include "GraphicAPIDx11.h"
 #include "SwapChainDx11.h"
 #include "AdapterDx11.h"
-#include "BackSurfaceDx11.h"
 #include "DeviceCreatorDx11.h"
+#include "BackSurfaceDx11.h"
+#include "DepthStencilSurfaceDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
@@ -79,9 +80,9 @@ error GraphicAPIDx11::GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surf
 
     if ((m_deviceRequiredBits.m_usesDepthBuffer) && (depth_surface))
     {
-        auto [w, h] = (*back_surface)->GetDimension();
+        auto dimension = (*back_surface)->GetDimension();
         depth_surface->reset(
-            menew DepthStencilSurfaceDx11{ m_d3dDevice, w, h, Graphics::GraphicFormat { Graphics::GraphicFormat::FMT_D24S8} });
+            menew DepthStencilSurfaceDx11{ m_d3dDevice, dimension, Graphics::GraphicFormat { Graphics::GraphicFormat::FMT_D24S8} });
         //*depth_surface = CreateDepthStencilSurface(w, h, GraphicFormat(GraphicFormat::FMT_D24S8));
         SetDepthSurfaceFormat((*depth_surface)->GetFormat());
     }
@@ -95,6 +96,24 @@ error GraphicAPIDx11::CreateBackSurface(const MathLib::Dimension& dimension, con
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     assert(back_surface);
     back_surface->reset(menew BackSurfaceDx11{ GetD3DDevice(), dimension, fmt });
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::CreateDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt, Graphics::IDepthStencilSurfacePtr* depth_surface)
+{
+    Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
+    assert(depth_surface);
+    depth_surface->reset(menew DepthStencilSurfaceDx11{ GetD3DDevice(), dimension, fmt });
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::ShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& from_depth, Graphics::IDepthStencilSurfacePtr* depth_surface)
+{
+    Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
+    assert(depth_surface);
+    DepthStencilSurfaceDx11* depth_dx11 = dynamic_cast<DepthStencilSurfaceDx11*>(from_depth.get());
+    assert(depth_dx11);
+    depth_surface->reset(menew DepthStencilSurfaceDx11{ depth_dx11 });
     return ErrorCode::ok;
 }
 

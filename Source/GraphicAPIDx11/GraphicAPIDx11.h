@@ -40,6 +40,14 @@ namespace Enigma::Devices
         virtual error GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surface, Graphics::IDepthStencilSurfacePtr* depth_surface) override;
         virtual error CreateBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt,
             Graphics::IBackSurfacePtr* back_surface) override;
+        virtual error CreateBackSurface(const MathLib::Dimension& dimension, unsigned int buff_count,
+            const std::vector<Graphics::GraphicFormat>& fmts, Graphics::IBackSurfacePtr* back_surface) override;
+        virtual error CreateDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt,
+                                                Graphics::IDepthStencilSurfacePtr* depth_surface) override;
+        virtual error ShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& from_depth,
+                                               Graphics::IDepthStencilSurfacePtr* depth_surface) override;
+        virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
 
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 

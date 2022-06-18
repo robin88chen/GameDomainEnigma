@@ -16,6 +16,9 @@
     <Filter Include="BackSurfaces">
       <UniqueIdentifier>{ffb5f33c-3d3b-4e67-8e6e-0296a0a8071b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Depth Surface">
+      <UniqueIdentifier>{05747d44-a5d6-4122-837f-374bd619887d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -39,6 +42,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IBackSurface.h">
       <Filter>BackSurfaces</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h">
+      <Filter>Depth Surface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -52,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp">
       <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp">
+      <Filter>Depth Surface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

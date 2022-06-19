@@ -23,6 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TragetViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp" />
@@ -31,5 +32,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TragetViewPort.cpp" />
   </ItemGroup>
 </Project>

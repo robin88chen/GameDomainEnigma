@@ -13,4 +13,13 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
+  </ItemGroup>
 </Project>

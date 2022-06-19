@@ -57,6 +57,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Controllers.Android", "Cont
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application.Win32", "Application\Application.Win32\Application.Win32.vcxproj", "{00E8AC71-C96A-4C06-BE5C-F349499E3DB3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine.Win32", "GameEngine\GameEngine.Win32\GameEngine.Win32.vcxproj", "{966D9FCE-0E62-421F-8B2A-5BDB786D1179}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine.Android", "GameEngine\GameEngine.Android\GameEngine.Android.vcxproj", "{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -307,6 +311,38 @@ Global
 		{00E8AC71-C96A-4C06-BE5C-F349499E3DB3}.Release|x64.Build.0 = Release|x64
 		{00E8AC71-C96A-4C06-BE5C-F349499E3DB3}.Release|x86.ActiveCfg = Release|Win32
 		{00E8AC71-C96A-4C06-BE5C-F349499E3DB3}.Release|x86.Build.0 = Release|Win32
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|ARM.ActiveCfg = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|ARM.Build.0 = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|ARM64.ActiveCfg = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|ARM64.Build.0 = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|x64.ActiveCfg = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|x64.Build.0 = Debug|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|x86.ActiveCfg = Debug|Win32
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Debug|x86.Build.0 = Debug|Win32
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|ARM.ActiveCfg = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|ARM.Build.0 = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|ARM64.ActiveCfg = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|ARM64.Build.0 = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|x64.ActiveCfg = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|x64.Build.0 = Release|x64
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|x86.ActiveCfg = Release|Win32
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179}.Release|x86.Build.0 = Release|Win32
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|ARM.Build.0 = Debug|ARM
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|ARM64.Build.0 = Debug|ARM64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|x64.ActiveCfg = Debug|x64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|x64.Build.0 = Debug|x64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|x86.ActiveCfg = Debug|x86
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Debug|x86.Build.0 = Debug|x86
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|ARM.ActiveCfg = Release|ARM
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|ARM.Build.0 = Release|ARM
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|ARM64.ActiveCfg = Release|ARM64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|ARM64.Build.0 = Release|ARM64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|x64.ActiveCfg = Release|x64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|x64.Build.0 = Release|x64
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|x86.ActiveCfg = Release|x86
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -336,6 +372,8 @@ Global
 		{BB839E19-9C61-4847-A4E3-6629FFC141D9} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
 		{E7495913-DD0C-4473-B0EA-C49436C78086} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 		{00E8AC71-C96A-4C06-BE5C-F349499E3DB3} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
+		{966D9FCE-0E62-421F-8B2A-5BDB786D1179} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
+		{FE76BB3C-DB78-4FC0-8132-5A144F6A20F5} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB30DE-8D69-441D-A1DA-A2C3B6962EDF}
@@ -351,6 +389,7 @@ Global
 		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{632f3771-3a95-4de7-985f-5d370971e03f}*SharedItemsImports = 4
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{756afb01-5a73-4a8a-b344-27aa022b8373}*SharedItemsImports = 4
 		Frameworks\Frameworks.Shared\Frameworks.Shared.vcxitems*{94b70647-bb65-4dec-a94c-a954447adf2c}*SharedItemsImports = 4
+		GameEngine\GameEngine.Shared\GameEngine.Shared.vcxitems*{966d9fce-0e62-421f-8b2a-5bdb786d1179}*SharedItemsImports = 4
 		Platforms\Platforms.Shared\Platforms.Shared.vcxitems*{9a027ee0-8f3f-43ad-809f-366a8d3e819e}*SharedItemsImports = 9
 		FileSystem\FileSystem.Shared\FileSystem.Shared.vcxitems*{a81f49ec-4953-4514-816b-03939ef3159b}*SharedItemsImports = 9
 		Controllers\Controllers.Shared\Controllers.Shared.vcxitems*{aa91c76d-7a42-4e1e-8a1d-36ad98f4cb95}*SharedItemsImports = 9
@@ -363,5 +402,6 @@ Global
 		Controllers\Controllers.Shared\Controllers.Shared.vcxitems*{e7495913-dd0c-4473-b0ea-c49436c78086}*SharedItemsImports = 4
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f25fe410-0680-4285-a5e5-ecff264f9782}*SharedItemsImports = 9
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f29934fc-4c46-4f0a-b85d-a79b282066a0}*SharedItemsImports = 4
+		GameEngine\GameEngine.Shared\GameEngine.Shared.vcxitems*{fe76bb3c-db78-4fc0-8132-5a144f6a20f5}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

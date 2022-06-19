@@ -8,7 +8,7 @@
 #ifndef GRAPHIC_EVENTS_H
 #define GRAPHIC_EVENTS_H
 
-#include "Event.h"
+#include "Frameworks/Event.h"
 
 namespace Enigma::Graphics
 {

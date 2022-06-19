@@ -1,10 +1,10 @@
 ﻿#include "DeviceCreatorDx11.h"
 #include "AdapterDx11.h"
 #include "SwapChainDx11.h"
-#include "GraphicErrors.h"
-#include "GraphicEvents.h"
-#include "PlatformLayer.h"
-#include "EventPublisher.h"
+#include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicEvents.h"
+#include "Platforms/PlatformLayer.h"
+#include "Frameworks/EventPublisher.h"
 #include <cassert>
 #include <comdef.h>
 #include <d3d11_1.h>

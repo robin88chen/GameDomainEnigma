@@ -13,7 +13,7 @@
 #include <system_error>
 #include <vector>
 #include "AdapterDx11.h"
-#include "DeviceRequiredBits.h"
+#include "GraphicKernel/DeviceRequiredBits.h"
 
 namespace Enigma::Devices
 {

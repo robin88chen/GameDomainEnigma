@@ -1,5 +1,5 @@
-﻿#include "PlatformLayerUtilities.h"
-#include "MemoryMacro.h"
+﻿#include "Platforms/PlatformLayerUtilities.h"
+#include "Platforms/MemoryMacro.h"
 #include "StdMountPath.h"
 #include "StdioFile.h"
 #include <cassert>

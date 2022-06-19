@@ -8,7 +8,7 @@
 #ifndef INSTALLING_POLICIES_H
 #define INSTALLING_POLICIES_H
 
-#include "IGraphicAPI.h"
+#include "GraphicKernel/IGraphicAPI.h"
 
 namespace Enigma::Controllers
 {

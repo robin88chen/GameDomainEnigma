@@ -13,6 +13,12 @@
     <Filter Include="Events">
       <UniqueIdentifier>{1aa973bb-bfde-42d2-9e67-600d221772ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BackSurfaces">
+      <UniqueIdentifier>{ffb5f33c-3d3b-4e67-8e6e-0296a0a8071b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth Surface">
+      <UniqueIdentifier>{05747d44-a5d6-4122-837f-374bd619887d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -33,6 +39,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IBackSurface.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h">
+      <Filter>Depth Surface</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -43,6 +58,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp">
       <Filter>Graphic Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp">
+      <Filter>Depth Surface</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp">
+      <Filter>BackSurfaces</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

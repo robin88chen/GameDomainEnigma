@@ -1,6 +1,6 @@
 ﻿#include "PackageContent.h"
-#include "AssetPackageFile.h"
-#include "PlatformLayerUtilities.h"
+#include "AssetPackage/AssetPackageFile.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include "FileSystemErrors.h"
 #include <cassert>
 

@@ -17,6 +17,15 @@
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp">
       <Filter>Device Creator</Filter>
     </ClCompile>
+    <ClCompile Include="..\BackSurfaceDx11.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DepthStencilSurfaceDx11.cpp">
+      <Filter>Depth Surface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MultiBackSurfaceDx11.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -32,6 +41,15 @@
     <ClInclude Include="..\DeviceCreatorDx11.h">
       <Filter>Device Creator</Filter>
     </ClInclude>
+    <ClInclude Include="..\BackSurfaceDx11.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DepthStencilSurfaceDx11.h">
+      <Filter>Depth Surface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MultiBackSurfaceDx11.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -39,6 +57,12 @@
     </Filter>
     <Filter Include="Device Creator">
       <UniqueIdentifier>{a31d32fb-d69e-4631-819b-e62dbbe0b538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BackSurfaces">
+      <UniqueIdentifier>{48d8ac33-cd8b-4632-8919-f903981df040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth Surface">
+      <UniqueIdentifier>{65a71831-6dae-498b-8355-e0c5cf7e5b9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

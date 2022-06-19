@@ -1,5 +1,5 @@
 ﻿#include "GraphicThread.h"
-#include "PlatformLayer.h"
+#include "Platforms/PlatformLayer.h"
 #include <thread>
 #include <cassert>
 

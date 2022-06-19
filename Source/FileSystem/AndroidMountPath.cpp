@@ -1,6 +1,6 @@
 ﻿#include "AndroidMountPath.h"
 #include "AndroidAsset.h"
-#include "MemoryMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 using namespace Enigma::FileSystem;

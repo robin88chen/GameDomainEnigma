@@ -8,7 +8,7 @@
 #ifndef _ANDROID_ASSET_H
 #define _ANDROID_ASSET_H
 
-#include "PlatformLayerUtilities.h"
+#include "Platforms/PlatformLayerUtilities.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "IFile.h"

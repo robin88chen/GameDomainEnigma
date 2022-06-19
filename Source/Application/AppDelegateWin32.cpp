@@ -1,11 +1,11 @@
 ﻿#include "AppDelegateWin32.h"
-#include "MemoryAllocMacro.h"
-#include "MemoryMacro.h"
+#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #if TARGET_PLATFORM == PLATFORM_WIN32
 #include "../GraphicAPIDx11/GraphicAPIDx11.h"
-#include "GraphicMain.h"
-#include "FileSystem.h"
-#include "StdMountPath.h"
+#include "Controllers/GraphicMain.h"
+#include "FileSystem/FileSystem.h"
+#include "FileSystem/StdMountPath.h"
 #include <memory>
 
 #define WM_MOUSEWHEEL_LEGACY 0x020A

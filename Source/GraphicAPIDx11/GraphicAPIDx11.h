@@ -37,6 +37,8 @@ namespace Enigma::Devices
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual error CleanupDevice() override;
 
+        virtual error Flip() override;
+
         virtual error GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surface, Graphics::IDepthStencilSurfacePtr* depth_surface) override;
         virtual error CreateBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt,
             Graphics::IBackSurfacePtr* back_surface) override;
@@ -48,6 +50,10 @@ namespace Enigma::Devices
                                                Graphics::IDepthStencilSurfacePtr* depth_surface) override;
         virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
+
+        virtual error BindBackSurface(
+            const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
+        virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
 
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
@@ -62,6 +68,11 @@ namespace Enigma::Devices
         error ClearMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color);
         error ClearDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& depth_surface,
             float depth_value, unsigned int stencil_value);
+
+        error BindSingleBackSurface(
+            const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface);
+        error BindMultiBackSurface(
+            const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface);
 
         void AddDebugInfoFilter();
 

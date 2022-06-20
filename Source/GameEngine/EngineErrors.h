@@ -15,6 +15,9 @@ namespace Enigma::Engine
     enum class ErrorCode
     {
         ok = 0,
+
+        flipNotPrimary = 101,
+        nullBackSurface,
     };
     class ErrorCategory : public std::error_category
     {

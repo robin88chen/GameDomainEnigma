@@ -9,7 +9,7 @@
 #define RENDER_TARGET_H
 
 #include "Frameworks/ExtentTypesDefine.h"
-#include "GraphicKernel/TragetViewPort.h"
+#include "GraphicKernel/TargetViewPort.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -59,19 +59,19 @@ namespace Enigma::Engine
         future_error AsyncInitialize();
 
         /** init Back-Buffer */
-        error InitBackSurface(unsigned int width, unsigned int height, const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitBackSurface(unsigned int width, unsigned int height, const Graphics::GraphicFormat& fmt);
-        error InitMultiBackSurface(unsigned int width, unsigned int height, unsigned int surface_count,
+        error InitBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        future_error AsyncInitBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        error InitMultiBackSurface(const MathLib::Dimension& dimension, unsigned int surface_count,
             const std::vector<Graphics::GraphicFormat>& fmts);
-        future_error AsyncInitMultiBackSurface(unsigned int width, unsigned int height, unsigned int surface_count,
+        future_error AsyncInitMultiBackSurface(const MathLib::Dimension& dimension, unsigned int surface_count,
             const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
         Graphics::IBackSurfacePtr GetBackSurface() { return m_backSurface; };
 
         /** init DepthStencil Buffer */
-        error InitDepthStencilSurface(unsigned int width, unsigned int height, const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitDepthStencilSurface(unsigned int width, unsigned int height, const Graphics::GraphicFormat& fmt);
+        error InitDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        future_error AsyncInitDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
         error ShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& surface);
         future_error AsyncShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& surface);
@@ -105,14 +105,14 @@ namespace Enigma::Engine
         const std::string& GetName() { return m_name; };
 
         /** get dimension. */
-        MathLib::Dimension GetDimension() const;
+        const MathLib::Dimension& GetDimension() const { return m_dimension; };
 
         /** get render target texture */
         TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
 
         /** resize target */
-        error Resize(unsigned int width, unsigned int height);
-        future_error AsyncResize(unsigned int width, unsigned int height);
+        error Resize(const MathLib::Dimension& dimension);
+        future_error AsyncResize(const MathLib::Dimension& dimension);
 
         /** @name depth map info */
         //@{
@@ -129,6 +129,7 @@ namespace Enigma::Engine
         bool m_isPrimary;
 
         std::string m_name;
+        MathLib::Dimension m_dimension;
 
         Graphics::IBackSurfacePtr m_backSurface;
         Graphics::IDepthStencilSurfacePtr m_depthStencilSurface;

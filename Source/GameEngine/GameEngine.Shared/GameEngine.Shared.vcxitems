@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
   </ItemGroup>

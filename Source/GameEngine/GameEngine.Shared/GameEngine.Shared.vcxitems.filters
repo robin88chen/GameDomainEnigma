@@ -10,6 +10,9 @@
     <Filter Include="Renderer\Render Target">
       <UniqueIdentifier>{f86001d1-e05b-40f6-92f5-935a45857a95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -20,6 +23,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h">
       <Filter>Renderer\Render Target</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

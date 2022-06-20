@@ -9,6 +9,7 @@
 #define GRAPHIC_API_INTERFACE_H
 
 #include "DeviceRequiredBits.h"
+#include "TargetViewPort.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
@@ -27,6 +28,7 @@ namespace Enigma::Graphics
     using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
     class IDepthStencilSurface;
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
+    class TargetViewPort;
 
     class IGraphicAPI
     {
@@ -58,6 +60,9 @@ namespace Enigma::Graphics
         virtual future_error AsyncCleanupDevice();
         //@}
 
+        virtual error Flip() = 0;
+        virtual future_error AsyncFlip();
+
         /** @name back / depth surface */
         //@{
         virtual error GetPrimaryBackSurface(IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface) = 0;
@@ -86,6 +91,15 @@ namespace Enigma::Graphics
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
+        virtual error BindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
+        virtual future_error AsyncBindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface; }
+        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface; }
+        virtual error BindViewPort(const TargetViewPort& vp) = 0;
+        virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
+
 
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
@@ -107,6 +121,10 @@ namespace Enigma::Graphics
         GraphicFormat m_fmtDepthSurface;
 
         GraphicThread* m_workerThread;
+
+        IBackSurfacePtr m_boundBackSurface;
+        IDepthStencilSurfacePtr m_boundDepthSurface;
+        TargetViewPort m_boundViewPort;
     };
 }
 

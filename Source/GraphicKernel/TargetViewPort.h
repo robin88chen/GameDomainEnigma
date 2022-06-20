@@ -5,8 +5,8 @@
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
-#ifndef TRAGET_VIEWPORT_H
-#define TRAGET_VIEWPORT_H
+#ifndef TARGET_VIEWPORT_H
+#define TARGET_VIEWPORT_H
 
 namespace Enigma::Graphics
 {
@@ -50,4 +50,4 @@ namespace Enigma::Graphics
 };
 
 
-#endif // TRAGET_VIEWPORT_H
+#endif // TARGET_VIEWPORT_H

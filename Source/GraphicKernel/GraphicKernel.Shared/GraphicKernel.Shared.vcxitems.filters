@@ -51,7 +51,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h">
       <Filter>BackSurfaces</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TragetViewPort.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h">
       <Filter>Target ViewPort</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp">
       <Filter>BackSurfaces</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TragetViewPort.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp">
       <Filter>Target ViewPort</Filter>
     </ClCompile>
   </ItemGroup>

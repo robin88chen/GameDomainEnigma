@@ -25,6 +25,9 @@ GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
 
     m_d3dDevice = nullptr;
     m_d3dDeviceContext = nullptr;
+
+    m_boundBackSurface = nullptr;
+    m_boundDepthSurface = nullptr;
 }
 
 GraphicAPIDx11::~GraphicAPIDx11()
@@ -61,6 +64,21 @@ error GraphicAPIDx11::CleanupDevice()
     SAFE_RELEASE(m_d3dDevice);
     SAFE_RELEASE(m_d3dDeviceContext);
     return Graphics::ErrorCode::ok;
+}
+
+error GraphicAPIDx11::Flip()
+{
+    assert(m_swapChain);
+    //DebugPrintf("flip in thread %d\n", std::this_thread::get_id());
+    error er = m_swapChain->Present();
+    //! 這是要處理同一個 Resource View 被綁在 Render Target & PS 上的 Warning,
+    //! 設定後會清掉 Warning, 也會增加些效能,
+    //! 但目前的效能差異還看不出來, 同時, 狀態紀錄錯誤的狀況也還看不出來
+    //! 所以先這樣做了, 日後有問題再處理
+    //! 有問題!!! 狀態被清光，連續畫同一個 vertex buffer or shader時, 就不會重設了
+    //! 解決方式 : 從 D3D Info Queue 將警告關掉
+    //m_d3dDeviceContext->ClearState();
+    return er;
 }
 
 error GraphicAPIDx11::GetPrimaryBackSurface(Graphics::IBackSurfacePtr* back_surface, Graphics::IDepthStencilSurfacePtr* depth_surface)
@@ -152,8 +170,48 @@ error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface
     return er;
 }
 
+error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
+{
+    bool isMultiSurface = false;
+    if (back_surface)
+    {
+        isMultiSurface = back_surface->IsMultiSurface();
+    }
+    else if (m_boundBackSurface)
+    {
+        isMultiSurface = m_boundBackSurface->IsMultiSurface();
+    }
+    if (!isMultiSurface)
+    {
+        return BindSingleBackSurface(back_surface, depth_surface);
+    }
+    else
+    {
+        return BindMultiBackSurface(back_surface, depth_surface);
+    }
+}
+
+error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
+{
+    assert(m_d3dDeviceContext);
+    //if (m_kCurrentViewPort==vp) return;
+    m_boundViewPort = vp;
+
+    D3D11_VIEWPORT d3dvp;
+    d3dvp.Width = (FLOAT)m_boundViewPort.Width();
+    d3dvp.Height = (FLOAT)m_boundViewPort.Height();
+    d3dvp.MinDepth = m_boundViewPort.MinZ();
+    d3dvp.MaxDepth = m_boundViewPort.MaxZ();
+    d3dvp.TopLeftX = (FLOAT)m_boundViewPort.X();
+    d3dvp.TopLeftY = (FLOAT)m_boundViewPort.Y();
+    m_d3dDeviceContext->RSSetViewports(1, &d3dvp);
+    return ErrorCode::ok;
+}
+
 void GraphicAPIDx11::CleanupDeviceObjects()
 {
+    m_boundBackSurface = nullptr;
+    m_boundDepthSurface = nullptr;
 }
 
 error GraphicAPIDx11::ClearSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color)
@@ -199,6 +257,62 @@ error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurf
         m_d3dDeviceContext->ClearDepthStencilView(
             depth_dx11->GetD3DDepthView(), (D3D11_CLEAR_FLAG)flag, depth_value, (UINT8)stencil_value);
     }
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
+{
+    assert(m_d3dDeviceContext);
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
+    m_boundBackSurface = back_surface;
+    m_boundDepthSurface = depth_surface;
+    if (m_boundBackSurface == nullptr)
+    {
+        ID3D11RenderTargetView* target = nullptr;
+        m_d3dDeviceContext->OMSetRenderTargets(1, &target, nullptr);
+        return ErrorCode::ok;
+    }
+
+    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.get());
+    if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
+    ID3D11RenderTargetView* render_target_view = bbDx11->GetD3DRenderTarget();
+    ID3D11DepthStencilView* depth_view = nullptr;
+    if (m_boundDepthSurface)
+    {
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
+        if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
+    }
+    m_d3dDeviceContext->OMSetRenderTargets(1, &render_target_view, depth_view);
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
+{
+    assert(m_d3dDeviceContext);
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
+    unsigned int bound_sourface_count = 1;
+    if (m_boundBackSurface) bound_sourface_count = m_boundBackSurface->GetSurfaceCount();
+    m_boundBackSurface = back_surface;
+    m_boundDepthSurface = depth_surface;
+    if (m_boundBackSurface == nullptr)
+    {
+        ID3D11RenderTargetView* target = nullptr;
+        m_d3dDeviceContext->OMSetRenderTargets(bound_sourface_count, &target, nullptr);
+        return ErrorCode::ok;
+    }
+
+    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.get());
+    if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
+    ID3D11RenderTargetView** render_target_view = bbDx11->GetD3DRenderTargetArray();
+    ID3D11DepthStencilView* depth_view = nullptr;
+    if (m_boundDepthSurface)
+    {
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
+        if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
+    }
+    m_d3dDeviceContext->OMSetRenderTargets(back_surface->GetSurfaceCount(), render_target_view, depth_view);
+
     return ErrorCode::ok;
 }
 

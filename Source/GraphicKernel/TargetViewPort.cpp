@@ -1,4 +1,4 @@
-﻿#include "TragetViewPort.h"
+﻿#include "TargetViewPort.h"
 #include "MathLib/MathGlobal.h"
 
 using namespace Enigma::Graphics;

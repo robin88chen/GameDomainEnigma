@@ -36,6 +36,11 @@ future_error IGraphicAPI::AsyncCleanupDevice()
     return m_workerThread->PushTask(std::bind(&IGraphicAPI::CleanupDevice, this));
 }
 
+future_error IGraphicAPI::AsyncFlip()
+{
+    return m_workerThread->PushTask([=]() -> error { return this->Flip(); });
+}
+
 future_error IGraphicAPI::AsyncGetPrimaryBackSurface(IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface)
 {
     return m_workerThread->PushTask(std::bind(&IGraphicAPI::GetPrimaryBackSurface, this,
@@ -68,6 +73,19 @@ future_error IGraphicAPI::AsyncClearSurface(const IBackSurfacePtr& back_surface,
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->ClearSurface(back_surface, depth_surface, color, depth_value, stencil_value); });
+}
+
+future_error IGraphicAPI::AsyncBindBackSurface(const IBackSurfacePtr& back_surface,
+    const IDepthStencilSurfacePtr& depth_surface)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->BindBackSurface(back_surface, depth_surface); });
+}
+
+future_error IGraphicAPI::AsyncBindViewPort(const TargetViewPort& vp)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->BindViewPort(vp); });
 }
 
 void IGraphicAPI::TerminateGraphicThread()

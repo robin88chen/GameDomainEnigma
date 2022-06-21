@@ -18,6 +18,8 @@ namespace Enigma::Engine
 
         flipNotPrimary = 101,
         nullBackSurface,
+        renderTargetAlreadyExisted,
+        renderTargetNotExist,
     };
     class ErrorCategory : public std::error_category
     {

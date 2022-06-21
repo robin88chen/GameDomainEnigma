@@ -24,7 +24,7 @@ public: \
     Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI
 //----------------------------------------------------------------------------
 #define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
-    TYPE_RTTI = Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
+    TYPE_RTTI = Enigma::Frameworks::Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
 //----------------------------------------------------------------------------
 #define IMPLEMENT_TEMPLATE_RTTI(nsname, classname, baseclassname) \
   template <> \

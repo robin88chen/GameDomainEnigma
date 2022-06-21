@@ -25,6 +25,16 @@ namespace Enigma::Engine
         std::string m_name;
         MathLib::Dimension m_dimension;
     };
+    class PrimaryRenderTargetCreated : public Frameworks::IEvent
+    {
+    public:
+        PrimaryRenderTargetCreated(const std::string& name) :
+            m_name{ name } {};
+        const std::string& GetRenderTargetName() { return m_name; }
+
+    private:
+        std::string m_name;
+    };
 }
 
 

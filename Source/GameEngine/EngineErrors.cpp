@@ -10,6 +10,9 @@ std::string ErrorCategory::message(int err) const
     {
     case ErrorCode::ok: return "OK";
     case ErrorCode::flipNotPrimary: return "Flip not primary";
+    case ErrorCode::nullBackSurface: return "Null back surface";
+    case ErrorCode::renderTargetAlreadyExisted: return "Render target already existed";
+    case ErrorCode::renderTargetNotExist: return "Render target not exist";
     }
     return "Unknown";
 }

@@ -8,6 +8,7 @@
 #ifndef RENDERER_MANAGER_H
 #define RENDERER_MANAGER_H
 
+#include "RenderTarget.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
 #include <system_error>
@@ -15,24 +16,10 @@
 #include <unordered_map>
 #include <functional>
 
-namespace Enigma::Graphics
-{
-    class IGraphicAPI
-    {
-    public:
-        enum class AsyncType;
-    };
-}
 namespace Enigma::Engine
 {
     using error = std::error_code;
 
-    class RenderTarget
-    {
-    public:
-        enum class PrimaryType;
-    };
-    using RenderTargetPtr = std::shared_ptr<RenderTarget>;
     class Renderer;
     using RendererPtr = std::shared_ptr<Renderer>;
     using  CustomRendererFactoryFunc = std::function<RendererPtr(const std::string&)>;
@@ -42,7 +29,7 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        RendererManager();
+        RendererManager(Frameworks::ServiceManager* srv_mngr);
         RendererManager(const RendererManager&) = delete;
         virtual ~RendererManager();
         RendererManager& operator=(const RendererManager&) = delete;
@@ -75,12 +62,10 @@ namespace Enigma::Engine
 
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);
-        /** destroy render target by object : remove from map, & destroy */
-        error DestroyRenderTarget(const RenderTargetPtr& target);
         /** get render target */
-        RenderTargetPtr GetRenderTarget(const std::string& name) const;
+        std::weak_ptr<RenderTarget> GetRenderTarget(const std::string& name) const;
         /** get primary render target */
-        RenderTargetPtr GetPrimaryRenderTarget() const;
+        std::weak_ptr<RenderTarget> GetPrimaryRenderTarget() const;
 
     protected:
         void ClearAllRenderer();

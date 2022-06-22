@@ -34,6 +34,21 @@ namespace Enigma::Controllers
         Graphics::IGraphicAPI::AsyncType m_async;
         void* m_hwnd;
     };
+    class InstallingDefaultRendererPolicy : public InstallingPolicy
+    {
+    public:
+        InstallingDefaultRendererPolicy(DeviceCreatingPolicy* creating_policy, const std::string& renderer_name,
+            const std::string& primary_target_name);
+
+        DeviceCreatingPolicy* GetDeviceCreatingPolicy() { return m_creatingPolicy; }
+        const std::string& GetRendererName() { return m_rendererName; }
+        const std::string& GetPrimaryTargetName() { return m_primaryTargetName; }
+
+    protected:
+        DeviceCreatingPolicy* m_creatingPolicy;
+        std::string m_rendererName;
+        std::string m_primaryTargetName;
+    };
 }
 
 #endif // INSTALLING_POLICIES_H

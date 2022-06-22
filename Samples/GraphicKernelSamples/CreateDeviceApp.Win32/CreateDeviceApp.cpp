@@ -1,7 +1,7 @@
 ﻿#include "CreateDeviceApp.h"
-#include "InstallingPolicies.h"
+#include "Controllers/InstallingPolicies.h"
 #include <cassert>
-#include <MemoryAllocMacro.h>
+#include <Platforms/MemoryAllocMacro.h>
 
 using namespace Enigma::Controllers;
 using namespace Enigma::Graphics;
@@ -15,8 +15,8 @@ void CreateDeviceApp::InstallEngine()
 {
     assert(m_graphicMain);
     DeviceCreatingPolicy* policy = menew DeviceCreatingPolicy(IGraphicAPI::Instance(), DeviceRequiredBits(), m_asyncType, m_hwnd);
-    m_graphicMain->InstallRenderEngine(policy);
-    medelete policy;
+    m_graphicMain->InstallRenderEngine(std::unique_ptr<InstallingPolicy>(policy));
+    //medelete policy;
 }
 
 void CreateDeviceApp::ShutdownEngine()

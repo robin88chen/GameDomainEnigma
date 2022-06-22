@@ -77,5 +77,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp">
       <Filter>Target ViewPort</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp">
+      <Filter>Graphic API</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

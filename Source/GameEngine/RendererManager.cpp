@@ -38,8 +38,20 @@ Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
+error RendererManager::CreateRenderer(const std::string& name)
+{
+    //todo: renderers
+    return ErrorCode::ok;
+}
+
+error RendererManager::DestroyRenderer(const std::string& name)
+{
+    //todo: renderers
+    return ErrorCode::ok;
+}
+
 error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
-    Graphics::IGraphicAPI::AsyncType async)
+                                          Graphics::IGraphicAPI::AsyncType async)
 {
     const std::weak_ptr<RenderTarget> target_check = GetRenderTarget(name);
     if (!target_check.expired())

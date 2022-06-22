@@ -49,8 +49,6 @@ namespace Enigma::Engine
 
         /** destroy renderer by name : remove from map, & destroy  */
         error DestroyRenderer(const std::string& name);
-        /** destroy renderer by object : remove from map, & destroy */
-        error DestroyRenderer(const RendererPtr& render);
         /** get renderer */
         RendererPtr GetRenderer(const std::string& name) const;
 

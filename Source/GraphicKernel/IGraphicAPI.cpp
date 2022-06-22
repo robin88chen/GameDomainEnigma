@@ -53,8 +53,15 @@ future_error IGraphicAPI::AsyncCreateBackSurface(const MathLib::Dimension& dimen
         { return this->CreateBackSurface(dimension, fmt, back_surface); });
 }
 
+future_error IGraphicAPI::AsyncCreateBackSurface(const MathLib::Dimension& dimension, unsigned buff_count,
+    const std::vector<GraphicFormat>& fmts, IBackSurfacePtr* back_surface)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->CreateBackSurface(dimension, buff_count, fmts, back_surface); });
+}
+
 future_error IGraphicAPI::AsyncCreateDepthStencilSurface(const MathLib::Dimension& dimension,
-    const GraphicFormat& fmt, IDepthStencilSurfacePtr* depth_surface)
+                                                         const GraphicFormat& fmt, IDepthStencilSurfacePtr* depth_surface)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->CreateDepthStencilSurface(dimension, fmt, depth_surface); });

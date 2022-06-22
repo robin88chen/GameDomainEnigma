@@ -8,7 +8,7 @@
 #ifndef _CREATE_DEVICE_APP_H
 #define _CREATE_DEVICE_APP_H
 
-#include "AppDelegateWin32.h"
+#include "Application/AppDelegateWin32.h"
 
 class CreateDeviceApp : public Enigma::Application::AppDelegate
 {

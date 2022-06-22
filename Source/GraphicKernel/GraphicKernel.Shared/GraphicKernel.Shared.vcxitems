@@ -26,6 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp" />

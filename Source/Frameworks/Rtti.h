@@ -18,7 +18,7 @@ public: \
 #define DECLARE_EN_RTTI \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
-    virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti& TypeInfo () const override { return TYPE_RTTI; } \
 //----------------------------------------------------------------------------
 #define DEFINE_RTTI(modulename, classname) \
     Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI

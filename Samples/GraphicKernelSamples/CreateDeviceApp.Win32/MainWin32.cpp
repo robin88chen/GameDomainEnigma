@@ -1,5 +1,5 @@
 ﻿#include "CreateDeviceApp.h"
-#include "MemoryAllocMacro.h"
+#include "Platforms/MemoryAllocMacro.h"
 #include <windows.h>
 #include <tchar.h>
 #include <assert.h>

@@ -9,6 +9,7 @@
 #define INSTALLING_POLICIES_H
 
 #include "GraphicKernel/IGraphicAPI.h"
+#include <memory>
 
 namespace Enigma::Controllers
 {
@@ -37,15 +38,15 @@ namespace Enigma::Controllers
     class InstallingDefaultRendererPolicy : public InstallingPolicy
     {
     public:
-        InstallingDefaultRendererPolicy(DeviceCreatingPolicy* creating_policy, const std::string& renderer_name,
+        InstallingDefaultRendererPolicy(std::unique_ptr<DeviceCreatingPolicy> creating_policy, const std::string& renderer_name,
             const std::string& primary_target_name);
 
-        DeviceCreatingPolicy* GetDeviceCreatingPolicy() { return m_creatingPolicy; }
+        DeviceCreatingPolicy* GetDeviceCreatingPolicy() { return m_creatingPolicy.get(); }
         const std::string& GetRendererName() { return m_rendererName; }
         const std::string& GetPrimaryTargetName() { return m_primaryTargetName; }
 
     protected:
-        DeviceCreatingPolicy* m_creatingPolicy;
+        std::unique_ptr<DeviceCreatingPolicy> m_creatingPolicy;
         std::string m_rendererName;
         std::string m_primaryTargetName;
     };

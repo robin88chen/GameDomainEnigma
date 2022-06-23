@@ -9,6 +9,7 @@
 #define RENDER_TARGET_H
 
 #include "Frameworks/ExtentTypesDefine.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
@@ -16,6 +17,7 @@
 #include <string>
 #include <memory>
 #include <system_error>
+
 
 namespace Enigma::Graphics
 {
@@ -45,6 +47,13 @@ namespace Enigma::Engine
         {
             IsPrimary = true,
             NotPrimary = false
+        };
+        struct ClearingProperty
+        {
+            MathLib::ColorRGBA m_color;
+            float m_depth;
+            unsigned int m_stencil;
+            BufferClearFlag m_flag;
         };
     public:
         RenderTarget(const std::string& name, PrimaryType primary, Graphics::IGraphicAPI::AsyncType async);
@@ -79,8 +88,6 @@ namespace Enigma::Engine
         /** get depth stencil buffer */
         Graphics::IDepthStencilSurfacePtr GetDepthStencilSurface() { return m_depthStencilSurface; };
 
-        /** set viewport */
-        void SetViewPort(const Graphics::TargetViewPort& vp);
         /** get viewport */
         const Graphics::TargetViewPort& GetViewPort();
 
@@ -93,10 +100,8 @@ namespace Enigma::Engine
         error BindViewPort();
         future_error AsyncBindViewPort();
         /** clear render target */
-        error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            BufferClearFlag flag = BufferClearFlag::BothBuffer);
-        future_error AsyncClear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            BufferClearFlag flag = BufferClearFlag::BothBuffer);
+        error Clear();
+        future_error AsyncClear();
         /** flip, only primary render target can flip */
         error Flip();
         future_error AsyncFlip();
@@ -125,6 +130,18 @@ namespace Enigma::Engine
         void CreateRenderTargetTexture();
         void InitViewPortSize();
 
+        error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
+            BufferClearFlag flag = BufferClearFlag::BothBuffer);
+
+        void SetViewPort(const Graphics::TargetViewPort& vp);
+        void SetClearingProperty(const ClearingProperty& prop);
+
+        /** @name command handler */
+        //@{
+        void HandleChangingViewPort(const Frameworks::ICommandPtr& c);
+        void HandleChangingClearingProperty(const Frameworks::ICommandPtr& c);
+        //@}
+
     protected:
         bool m_isPrimary;
 
@@ -136,8 +153,12 @@ namespace Enigma::Engine
         TexturePtr m_renderTargetTexture;
 
         Graphics::TargetViewPort m_viewPort;
+        ClearingProperty m_clearingProperty;
 
         unsigned int m_gbufferDepthMapIndex;
+
+        Frameworks::CommandSubscriberPtr m_handleChangingViewPort;
+        Frameworks::CommandSubscriberPtr m_handleChangingClearingProperty;
     };
     using RenderTargetPtr = std::shared_ptr<RenderTarget>;
 };

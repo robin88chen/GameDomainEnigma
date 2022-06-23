@@ -62,12 +62,12 @@ error GraphicMain::InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy)
     assert(policy);
     m_policy = std::move(policy);
     error er = ErrorCode::unknownInstallingPolicy;
-    auto& p = *m_policy.get();
+    auto& p = *m_policy;
     if (typeid(p) == typeid(DeviceCreatingPolicy))
     {
         er = CreateRenderEngineDevice(dynamic_cast<DeviceCreatingPolicy*>(m_policy.get()));
     }
-    else if (typeid(*m_policy) == typeid(InstallingDefaultRendererPolicy))
+    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
     {
         er = InstallDefaultRenderer(dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get()));
     }
@@ -77,11 +77,12 @@ error GraphicMain::InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy)
 error GraphicMain::ShutdownRenderEngine()
 {
     error er;
-    if (typeid(*m_policy) == typeid(DeviceCreatingPolicy))
+    auto& p = *m_policy;
+    if (typeid(p) == typeid(DeviceCreatingPolicy))
     {
         er = CleanupRenderEngineDevice();
     }
-    else if (typeid(*m_policy) == typeid(InstallingDefaultRendererPolicy))
+    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
     {
         er = ShutdownDefaultRenderer();
     }

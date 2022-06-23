@@ -11,10 +11,10 @@ Enigma::Controllers::DeviceCreatingPolicy::DeviceCreatingPolicy(
 }
 
 Enigma::Controllers::InstallingDefaultRendererPolicy::InstallingDefaultRendererPolicy(
-    DeviceCreatingPolicy* creating_policy, const std::string& renderer_name,
+    std::unique_ptr<DeviceCreatingPolicy> creating_policy, const std::string& renderer_name,
     const std::string& primary_target_name) : InstallingPolicy()
 {
-    m_creatingPolicy = creating_policy;
+    m_creatingPolicy = std::move(creating_policy);
     m_rendererName = renderer_name;
     m_primaryTargetName = primary_target_name;
 }

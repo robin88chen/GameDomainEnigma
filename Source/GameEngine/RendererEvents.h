@@ -35,7 +35,42 @@ namespace Enigma::Engine
     private:
         std::string m_name;
     };
-}
+    class TargetViewPortInitialized : public Frameworks::IEvent
+    {
+    public:
+        TargetViewPortInitialized(const std::string& name, const Graphics::TargetViewPort& vp) :
+            m_name{ name }, m_view_port(vp) {}
+        const std::string& GetRenderTargetName() { return m_name; }
+        const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
 
+    private:
+        std::string m_name;
+        Graphics::TargetViewPort m_view_port;
+    };
+    class TargetViewPortChanged : public Frameworks::IEvent
+    {
+    public:
+        TargetViewPortChanged(const std::string& name, const Graphics::TargetViewPort& vp) :
+            m_name{ name }, m_view_port(vp) {}
+        const std::string& GetRenderTargetName() { return m_name; }
+        const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
+
+    private:
+        std::string m_name;
+        Graphics::TargetViewPort m_view_port;
+    };
+    class TargetClearingPropertyChanged : public Frameworks::IEvent
+    {
+    public:
+        TargetClearingPropertyChanged(const std::string& name, const RenderTarget::ClearingProperty& prop) :
+            m_name{ name }, m_clearing(prop) {}
+        const std::string& GetRenderTargetName() { return m_name; }
+        const RenderTarget::ClearingProperty& GetClearingProperty() { return m_clearing; }
+
+    private:
+        std::string m_name;
+        RenderTarget::ClearingProperty m_clearing;
+    };
+}
 
 #endif // RENDERER_EVENTS_H

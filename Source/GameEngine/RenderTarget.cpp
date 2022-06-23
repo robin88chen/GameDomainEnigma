@@ -1,11 +1,13 @@
 ﻿#include "RenderTarget.h"
 #include "EngineErrors.h"
 #include "RendererEvents.h"
+#include "RendererCommands.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/IDepthStencilSurface.h"
 #include "GraphicKernel/IBackSurface.h"
 #include "GraphicKernel/GraphicThread.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include <cassert>
 
 #include "Platforms/MemoryAllocMacro.h"
@@ -23,6 +25,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphic
     m_depthStencilSurface = nullptr;
 
     m_gbufferDepthMapIndex = 0;
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
 
     if (m_isPrimary)
     {
@@ -38,6 +41,13 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphic
         }
         m_dimension = m_backSurface->GetDimension();
     }
+
+    m_handleChangingViewPort = 
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingViewPort(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
+    m_handleChangingClearingProperty =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingClearingProperty(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
 }
 
 RenderTarget::RenderTarget(const std::string& name, const Graphics::IBackSurfacePtr& back_surface, 
@@ -53,10 +63,16 @@ RenderTarget::RenderTarget(const std::string& name, const Graphics::IBackSurface
     m_dimension = m_backSurface->GetDimension();
 
     m_gbufferDepthMapIndex = 0;
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
 }
 
 RenderTarget::~RenderTarget()
 {
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
+    m_handleChangingViewPort = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
+    m_handleChangingClearingProperty = nullptr;
+
     m_renderTargetTexture = nullptr;
 
     m_backSurface = nullptr;
@@ -149,11 +165,6 @@ future_error RenderTarget::AsyncShareDepthStencilSurface(const Graphics::IDepthS
         ->PushTask([=]() -> error { return shared_from_this()->ShareDepthStencilSurface(surface); });
 }
 
-void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
-{
-    m_viewPort = vp;
-}
-
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 {
     return m_viewPort;
@@ -196,10 +207,16 @@ error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, un
     return er;
 }
 
-future_error RenderTarget::AsyncClear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
+error RenderTarget::Clear()
+{
+    return Clear(m_clearingProperty.m_color, m_clearingProperty.m_depth, 
+        m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
+}
+
+future_error RenderTarget::AsyncClear()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Clear(color, depth_value, stencil_value, flag); });
+        ->PushTask([=]() -> error { return shared_from_this()->Clear(); });
 }
 
 error RenderTarget::Flip()
@@ -286,4 +303,37 @@ void RenderTarget::InitViewPortSize()
 {
     m_viewPort.Width() = m_dimension.m_width;
     m_viewPort.Height() = m_dimension.m_height;
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortInitialized{ m_name, m_viewPort } });
+}
+
+void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
+{
+    m_viewPort = vp;
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortChanged{ m_name, m_viewPort } });
+}
+
+void RenderTarget::SetClearingProperty(const ClearingProperty& prop)
+{
+    m_clearingProperty = prop;
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ 
+        menew TargetClearingPropertyChanged{ m_name, m_clearingProperty } });
+}
+
+void RenderTarget::HandleChangingViewPort(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    ChangeTargetViewPort* cmd = dynamic_cast<ChangeTargetViewPort*>(c.get());
+    if (!cmd) return;
+    if (cmd->GetRenderTargetName() != m_name) return;
+    SetViewPort(cmd->GetViewPort());
+}
+
+void RenderTarget::HandleChangingClearingProperty(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    ChangeTargetClearingProperty* cmd = dynamic_cast<ChangeTargetClearingProperty*>(c.get());
+    if (!cmd) return;
+    if (cmd->GetRenderTargetName() != m_name) return;
+    SetClearingProperty(cmd->GetClearingProperty());
 }

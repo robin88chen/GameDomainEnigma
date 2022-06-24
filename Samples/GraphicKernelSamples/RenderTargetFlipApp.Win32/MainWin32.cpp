@@ -1,4 +1,4 @@
-﻿#include "CreateDeviceApp.h"
+﻿#include "RenderTargetFlipApp.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <windows.h>
 #include <tchar.h>
@@ -10,7 +10,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     meInitMemoryCheck();
-    CreateDeviceApp* app = menew CreateDeviceApp("create device test");
+    RenderTargetFlipApp* app = menew RenderTargetFlipApp("render target flip test");
     app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
     RECT rc;
     GetClientRect(app->GetWnd(), &rc);

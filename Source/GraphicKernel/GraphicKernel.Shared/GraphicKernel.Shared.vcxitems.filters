@@ -19,6 +19,9 @@
     <Filter Include="Depth Surface">
       <UniqueIdentifier>{05747d44-a5d6-4122-837f-374bd619887d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Target ViewPort">
+      <UniqueIdentifier>{2cc0a5dd-da02-4aba-b779-2356e7bd86da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h">
       <Filter>BackSurfaces</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h">
+      <Filter>Target ViewPort</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -67,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp">
       <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp">
+      <Filter>Target ViewPort</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp">
+      <Filter>Graphic API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

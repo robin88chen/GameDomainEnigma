@@ -15,6 +15,9 @@ namespace Enigma::Controllers
     class FrameworksInstalled : public Frameworks::IEvent
     {
     };
+    class DefaultRendererInstalled : public Frameworks::IEvent
+    {
+    };
 }
 
 

@@ -2,6 +2,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "GameEngine/RendererManager.h"
+#include "GameEngine/RenderTarget.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -21,6 +23,7 @@ GraphicMain::GraphicMain(GraphicCoordSys coordSys)
     m_coordSys = coordSys;
     m_instance = this;
     m_serviceManager = menew Frameworks::ServiceManager();
+    m_renderer = nullptr;
 }
 
 GraphicMain::~GraphicMain()
@@ -54,13 +57,19 @@ error GraphicMain::ShutdownFrameworks()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallRenderEngine(InstallingPolicy* policy)
+error GraphicMain::InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy)
 {
     assert(policy);
+    m_policy = std::move(policy);
     error er = ErrorCode::unknownInstallingPolicy;
-    if (typeid(*policy) == typeid(DeviceCreatingPolicy))
+    auto& p = *m_policy;
+    if (typeid(p) == typeid(DeviceCreatingPolicy))
     {
-        er = CreateRenderEngineDevice(dynamic_cast<DeviceCreatingPolicy*>(policy));
+        er = CreateRenderEngineDevice(dynamic_cast<DeviceCreatingPolicy*>(m_policy.get()));
+    }
+    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
+    {
+        er = InstallDefaultRenderer(dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get()));
     }
     return er;
 }
@@ -68,7 +77,15 @@ error GraphicMain::InstallRenderEngine(InstallingPolicy* policy)
 error GraphicMain::ShutdownRenderEngine()
 {
     error er;
-    er = CleanupRenderEngineDevice();
+    auto& p = *m_policy;
+    if (typeid(p) == typeid(DeviceCreatingPolicy))
+    {
+        er = CleanupRenderEngineDevice();
+    }
+    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
+    {
+        er = ShutdownDefaultRenderer();
+    }
     return er;
 }
 
@@ -110,3 +127,60 @@ error GraphicMain::CleanupRenderEngineDevice()
         return Graphics::IGraphicAPI::Instance()->CleanupDevice();
     }
 }
+
+error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy)
+{
+    error er;
+    if (policy->GetDeviceCreatingPolicy())
+    {
+        er = CreateRenderEngineDevice(policy->GetDeviceCreatingPolicy());
+        if (er) return er;
+    }
+    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
+    return er;
+}
+
+error GraphicMain::ShutdownDefaultRenderer()
+{
+    error er;
+    InstallingDefaultRendererPolicy* policy = dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get());
+    assert(policy);
+    if (policy->GetDeviceCreatingPolicy())
+    {
+        er = CleanupRenderEngineDevice();
+        if (er) return er;
+    }
+    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
+    return er;
+}
+
+error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
+{
+    m_renderer = menew Engine::RendererManager(m_serviceManager);
+    m_serviceManager->RegisterSystemService(m_renderer);
+    error er = m_renderer->CreateRenderer(renderer_name);
+    if (er) return er;
+    er = m_renderer->CreateRenderTarget(render_target_name,
+        is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary,
+        m_asyncType);
+    if (er) return er;
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew DefaultRendererInstalled });
+
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name)
+{
+    if (m_renderer)
+    {
+        error er = m_renderer->DestroyRenderer(renderer_name);
+        if (er) return er;
+        er = m_renderer->DestroyRenderTarget(render_target_name);
+        if (er) return er;
+    }
+    m_serviceManager->ShutdownSystemService(Engine::RendererManager::TYPE_RTTI);
+
+    return ErrorCode::ok;
+}
+

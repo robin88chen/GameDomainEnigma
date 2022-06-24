@@ -9,14 +9,21 @@
 #define GRAPHIC_MAIN_H
 
 #include <system_error>
+#include <memory>
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
+
+namespace Enigma::Engine
+{
+    class RendererManager;
+};
 
 namespace Enigma::Controllers
 {
     using error = std::error_code;
     class InstallingPolicy;
     class DeviceCreatingPolicy;
+    class InstallingDefaultRendererPolicy;
 
     /** Graphic Kernel Main class \n singleton */
     class GraphicMain
@@ -39,7 +46,7 @@ namespace Enigma::Controllers
         error InstallFrameworks();
         error ShutdownFrameworks();
 
-        error InstallRenderEngine(InstallingPolicy* policy);
+        error InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy);
         error ShutdownRenderEngine();
 
         /** frame update (service manager call run one to update) */
@@ -51,6 +58,12 @@ namespace Enigma::Controllers
         error CreateRenderEngineDevice(DeviceCreatingPolicy* policy);
         error CleanupRenderEngineDevice();
 
+        error InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy);
+        error ShutdownDefaultRenderer();
+
+        error InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary);
+        error ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name);
+
     private:
         static GraphicMain* m_instance;
 
@@ -58,6 +71,10 @@ namespace Enigma::Controllers
         Graphics::IGraphicAPI::AsyncType m_asyncType;
 
         Frameworks::ServiceManager* m_serviceManager;
+
+        std::unique_ptr<InstallingPolicy> m_policy;
+
+        Engine::RendererManager* m_renderer;
     };
 
 };

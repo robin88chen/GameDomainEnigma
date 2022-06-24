@@ -18,13 +18,13 @@ public: \
 #define DECLARE_EN_RTTI \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
-    virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti& TypeInfo () const override { return TYPE_RTTI; } \
 //----------------------------------------------------------------------------
 #define DEFINE_RTTI(modulename, classname) \
     Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI
 //----------------------------------------------------------------------------
 #define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
-    TYPE_RTTI = Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
+    TYPE_RTTI = Enigma::Frameworks::Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
 //----------------------------------------------------------------------------
 #define IMPLEMENT_TEMPLATE_RTTI(nsname, classname, baseclassname) \
   template <> \

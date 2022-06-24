@@ -22,6 +22,9 @@
     <Filter Include="Target ViewPort">
       <UniqueIdentifier>{2cc0a5dd-da02-4aba-b779-2356e7bd86da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{246ba29a-0aef-41bf-930d-960667a55c4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -54,6 +57,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h">
       <Filter>Target ViewPort</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -79,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp">
       <Filter>Graphic API</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp">
+      <Filter>Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

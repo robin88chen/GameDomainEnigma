@@ -313,13 +313,6 @@ void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortChanged{ m_name, m_viewPort } });
 }
 
-void RenderTarget::SetClearingProperty(const ClearingProperty& prop)
-{
-    m_clearingProperty = prop;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ 
-        menew TargetClearingPropertyChanged{ m_name, m_clearingProperty } });
-}
-
 void RenderTarget::HandleChangingViewPort(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -335,5 +328,22 @@ void RenderTarget::HandleChangingClearingProperty(const Frameworks::ICommandPtr&
     ChangeTargetClearingProperty* cmd = dynamic_cast<ChangeTargetClearingProperty*>(c.get());
     if (!cmd) return;
     if (cmd->GetRenderTargetName() != m_name) return;
-    SetClearingProperty(cmd->GetClearingProperty());
+    if (cmd->GetClearingColor())
+    {
+        m_clearingProperty.m_color = cmd->GetClearingColor().value();
+    }
+    if (cmd->GetClearingDepth())
+    {
+        m_clearingProperty.m_depth = cmd->GetClearingDepth().value();
+    }
+    if (cmd->GetClearingStencil())
+    {
+        m_clearingProperty.m_stencil = cmd->GetClearingStencil().value();
+    }
+    if (cmd->GetClearingFlag())
+    {
+        m_clearingProperty.m_flag = cmd->GetClearingFlag().value();
+    }
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
+        menew TargetClearingPropertyChanged{ m_name, m_clearingProperty } });
 }

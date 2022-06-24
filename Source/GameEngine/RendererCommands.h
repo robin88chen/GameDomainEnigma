@@ -11,6 +11,7 @@
 #include "Frameworks/Command.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "RenderTarget.h"
+#include <optional>
 
 namespace Enigma::Engine
 {
@@ -29,14 +30,22 @@ namespace Enigma::Engine
     class ChangeTargetClearingProperty : public Frameworks::ICommand
     {
     public:
-        ChangeTargetClearingProperty(const std::string& name, const RenderTarget::ClearingProperty& prop) :
-            m_name(name), m_clearing(prop) {}
+        ChangeTargetClearingProperty(const std::string& name, const std::optional<MathLib::ColorRGBA>& color,
+            const std::optional<float>& depth, const std::optional<unsigned int>& stencil,
+            const std::optional<RenderTarget::BufferClearFlag>& flag) :
+            m_name(name), m_color(color), m_depth(depth), m_stencil(stencil), m_flag(flag) {}
         const std::string& GetRenderTargetName() { return m_name; }
-        const RenderTarget::ClearingProperty& GetClearingProperty() { return m_clearing; }
+        const std::optional<MathLib::ColorRGBA>& GetClearingColor() const { return m_color; }
+        const std::optional<float>& GetClearingDepth() const { return m_depth; }
+        const std::optional<unsigned int>& GetClearingStencil() const { return m_stencil; }
+        const std::optional<RenderTarget::BufferClearFlag>& GetClearingFlag() const { return m_flag; }
 
     private:
         std::string m_name;
-        RenderTarget::ClearingProperty m_clearing;
+        std::optional<MathLib::ColorRGBA> m_color;
+        std::optional<float> m_depth;
+        std::optional<unsigned int> m_stencil;
+        std::optional<RenderTarget::BufferClearFlag> m_flag;
     };
 }
 

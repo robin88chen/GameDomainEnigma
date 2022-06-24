@@ -134,7 +134,6 @@ namespace Enigma::Engine
             BufferClearFlag flag = BufferClearFlag::BothBuffer);
 
         void SetViewPort(const Graphics::TargetViewPort& vp);
-        void SetClearingProperty(const ClearingProperty& prop);
 
         /** @name command handler */
         //@{

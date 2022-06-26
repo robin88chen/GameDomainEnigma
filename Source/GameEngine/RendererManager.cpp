@@ -60,14 +60,6 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
         return ErrorCode::renderTargetAlreadyExisted;
     }
     RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary, async) };
-    if (async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
-    {
-        target->AsyncInitialize().wait();
-    }
-    else
-    {
-        target->Initialize();
-    }
     m_mapRenderTarget.emplace(name, target);
 
     if (primary == RenderTarget::PrimaryType::IsPrimary)

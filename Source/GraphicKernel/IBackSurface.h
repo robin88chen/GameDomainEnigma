@@ -46,6 +46,7 @@ namespace Enigma::Graphics
         GraphicFormat m_format;
     };
     using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
+    using IBackSurfaceWeak = std::weak_ptr<IBackSurface>;
 }
 
 #endif // BACK_SURFACE_INTERFACE_H

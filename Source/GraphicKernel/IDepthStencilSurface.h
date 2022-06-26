@@ -48,6 +48,7 @@ namespace Enigma::Graphics
         GraphicFormat m_format;
     };
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
+    using IDepthStencilSurfaceWeak = std::weak_ptr<IDepthStencilSurface>;
 };
 
 

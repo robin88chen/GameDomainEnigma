@@ -32,6 +32,7 @@ namespace Enigma::Graphics
         std::vector<GraphicFormat> m_formatArray;
     };
     using IMultiBackSurfacePtr = std::shared_ptr<IMultiBackSurface>;
+    using IMultiBackSurfaceWeak = std::weak_ptr<IMultiBackSurface>;
 }
 
 

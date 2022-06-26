@@ -25,6 +25,9 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{246ba29a-0aef-41bf-930d-960667a55c4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset Repository">
+      <UniqueIdentifier>{c4aa4384-404a-4f75-861b-f181b69feb23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -60,6 +63,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h">
       <Filter>Texture</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.h">
+      <Filter>Asset Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -88,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp">
       <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.cpp">
+      <Filter>Asset Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

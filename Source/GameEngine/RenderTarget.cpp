@@ -6,6 +6,7 @@
 #include "GraphicKernel/IDepthStencilSurface.h"
 #include "GraphicKernel/IBackSurface.h"
 #include "GraphicKernel/GraphicThread.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include <cassert>
@@ -15,154 +16,130 @@
 
 using namespace Enigma::Engine;
 
+const std::string primary_back_surface_name = "primary_back_surface";
+const std::string primary_depth_surface_name = "primary_depth_surface";
+
 RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphics::IGraphicAPI::AsyncType async)
 {
+    m_async = async;
     m_isPrimary = primary == PrimaryType::IsPrimary;
     m_name = name;
     m_renderTargetTexture = nullptr;
 
-    m_backSurface = nullptr;
-    m_depthStencilSurface = nullptr;
-
     m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
+
+    SubscribeHandler();
 
     if (m_isPrimary)
     {
         if (async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
         {
-            Graphics::IGraphicAPI::Instance()->AsyncGetPrimaryBackSurface(&m_backSurface, &m_depthStencilSurface).wait();
-            assert(m_backSurface);
+            Graphics::IGraphicAPI::Instance()->AsyncCreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
         }
         else
         {
-            Graphics::IGraphicAPI::Instance()->GetPrimaryBackSurface(&m_backSurface, &m_depthStencilSurface);
-            assert(m_backSurface);
+            Graphics::IGraphicAPI::Instance()->CreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
         }
-        m_dimension = m_backSurface->GetDimension();
     }
 
-    m_handleChangingViewPort = 
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingViewPort(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
-    m_handleChangingClearingProperty =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingClearingProperty(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
 }
 
-RenderTarget::RenderTarget(const std::string& name, const Graphics::IBackSurfacePtr& back_surface, 
-    Graphics::IDepthStencilSurfacePtr& depth_surface, bool primary)
+RenderTarget::RenderTarget(const std::string& name, Graphics::IGraphicAPI::AsyncType async)
 {
-    m_isPrimary = primary;
+    m_async = async;
+    m_isPrimary = false;
     m_name = name;
     m_renderTargetTexture = nullptr;
 
-    m_backSurface = back_surface;
-    m_depthStencilSurface = depth_surface;
-
-    m_dimension = m_backSurface->GetDimension();
-
     m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
+
+    SubscribeHandler();
 }
 
 RenderTarget::~RenderTarget()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
-    m_handleChangingViewPort = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
-    m_handleChangingClearingProperty = nullptr;
-
+    UnsubscribeHandler();
     m_renderTargetTexture = nullptr;
-
-    m_backSurface = nullptr;
-    m_depthStencilSurface = nullptr;
 }
 
 error RenderTarget::Initialize()
 {
-    if ((m_backSurface) && (m_depthStencilSurface))
+    if ((!m_backSurface.expired()) && (!m_depthStencilSurface.expired()))
     {
-        m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
+        m_depthStencilSurface.lock()->MakeBackSurfaceRelated(m_backSurface.lock());
     }
-    m_dimension = m_backSurface->GetDimension();
+    m_dimension = m_backSurface.lock()->GetDimension();
     CreateRenderTargetTexture();
     InitViewPortSize();
     return ErrorCode::ok;
 }
 
-future_error Enigma::Engine::RenderTarget::AsyncInitialize()
+future_error RenderTarget::AsyncInitialize()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
         ->PushTask([=]() -> error { return shared_from_this()->Initialize(); });
 }
 
-error RenderTarget::InitBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
+error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+    const Graphics::GraphicFormat& fmt)
 {
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(dimension, fmt, &m_backSurface);
-    if (er) return er;
-    m_dimension = m_backSurface->GetDimension();
-    CreateRenderTargetTexture();
-    InitViewPortSize();
+    m_backSurfaceName = back_name;
+    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, fmt);
 
     return er;
 }
 
-future_error RenderTarget::AsyncInitBackSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
+future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+    const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitBackSurface(dimension, fmt); });
+        ->PushTask([=]() -> error { return shared_from_this()->InitBackSurface(back_name, dimension, fmt); });
 }
 
-error RenderTarget::InitMultiBackSurface(const MathLib::Dimension& dimension, unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
+error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+    unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(dimension, surface_count, fmts, &m_backSurface);
-    if (er) return er;
-    m_dimension = m_backSurface->GetDimension();
-    CreateRenderTargetTexture();
-    InitViewPortSize();
+    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, surface_count, fmts);
 
     return er;
 }
 
-future_error RenderTarget::AsyncInitMultiBackSurface(const MathLib::Dimension& dimension, unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
+future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+    unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitMultiBackSurface(dimension, surface_count, fmts); });
+        ->PushTask([=]() -> error { return shared_from_this()->InitMultiBackSurface(
+            back_name, dimension, surface_count, fmts); });
 }
 
-error RenderTarget::InitDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
+error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+    const Graphics::GraphicFormat& fmt)
 {
-    error er = Graphics::IGraphicAPI::Instance()->CreateDepthStencilSurface(dimension, fmt, &m_depthStencilSurface);
-    if (er) return er;
-    if (m_backSurface)
-    {
-        m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
-    }
+    error er = Graphics::IGraphicAPI::Instance()->CreateDepthStencilSurface(depth_name, dimension, fmt);
     return er;
 }
 
-future_error RenderTarget::AsyncInitDepthStencilSurface(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
+future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth_name, 
+    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitDepthStencilSurface(dimension, fmt); });
+        ->PushTask([=]() -> error { return shared_from_this()->InitDepthStencilSurface(depth_name, dimension, fmt); });
 }
 
-error RenderTarget::ShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& surface)
+error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
+    const Graphics::IDepthStencilSurfacePtr& surface)
 {
-    error er = Graphics::IGraphicAPI::Instance()->ShareDepthStencilSurface(surface, &m_depthStencilSurface);
-    if (er) return er;
-    if (m_backSurface)
-    {
-        m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
-    }
+    error er = Graphics::IGraphicAPI::Instance()->ShareDepthStencilSurface(depth_name, surface);
     return er;
 }
 
-future_error RenderTarget::AsyncShareDepthStencilSurface(const Graphics::IDepthStencilSurfacePtr& surface)
+future_error RenderTarget::AsyncShareDepthStencilSurface(const std::string& depth_name, 
+    const Graphics::IDepthStencilSurfacePtr& surface)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->ShareDepthStencilSurface(surface); });
+        ->PushTask([=]() -> error { return shared_from_this()->ShareDepthStencilSurface(depth_name, surface); });
 }
 
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
@@ -173,7 +150,7 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 error RenderTarget::Bind()
 {
     assert(Graphics::IGraphicAPI::Instance());
-    return Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
+    return Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface.lock(), m_depthStencilSurface.lock());
 }
 
 future_error RenderTarget::AsyncBind()
@@ -201,8 +178,8 @@ future_error RenderTarget::AsyncBindViewPort()
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
     error er = Graphics::IGraphicAPI::Instance()->ClearSurface(
-        ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
-        ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
+        ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface.lock() : nullptr,
+        ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface.lock() : nullptr,
         color, depth_value, stencil_value);
     return er;
 }
@@ -234,16 +211,16 @@ future_error RenderTarget::AsyncFlip()
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)
 {
-    if (FATAL_LOG_EXPR(!m_backSurface)) return ErrorCode::nullBackSurface;
+    if (FATAL_LOG_EXPR(!m_backSurface.lock())) return ErrorCode::nullBackSurface;
     bool isCurrentBound = false;
-    if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface)
+    if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface.lock())
     {
         isCurrentBound = true;
         Graphics::IGraphicAPI::Instance()->BindBackSurface(nullptr, nullptr);
     }
-    error er = m_backSurface->Resize(dimension);
+    error er = m_backSurface.lock()->Resize(dimension);
     if (er) return er;
-    m_dimension = m_backSurface->GetDimension();
+    m_dimension = m_backSurface.lock()->GetDimension();
 
     // 好...來...因為back buffer surface實際上已經重新create了,
     // 所以這裡頭的shader resource view要重新綁定
@@ -252,14 +229,14 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     {
         m_renderTargetTexture->GetDeviceTexture()->UseAsBackSurface(m_backSurface);
     }*/
-    if (m_depthStencilSurface)
+    if (m_depthStencilSurface.lock())
     {
-        er = m_depthStencilSurface->Resize(dimension);
+        er = m_depthStencilSurface.lock()->Resize(dimension);
         if (er) return er;
     }
     if (isCurrentBound)
     {
-        Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
+        Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface.lock(), m_depthStencilSurface.lock());
     }
     InitViewPortSize();
 
@@ -276,8 +253,8 @@ future_error RenderTarget::AsyncResize(const MathLib::Dimension& dimension)
 
 bool RenderTarget::HasGBufferDepthMap()
 {
-    if (!m_backSurface) return false;
-    if (!m_backSurface->IsMultiSurface()) return false;
+    if (!m_backSurface.lock()) return false;
+    if (!m_backSurface.lock()->IsMultiSurface()) return false;
     if (m_gbufferDepthMapIndex == 0) return false;
     return true;
 }
@@ -289,9 +266,38 @@ unsigned RenderTarget::GetGBufferDepthMapIndex()
 
 void RenderTarget::SetGBufferDepthMapIndex(unsigned index)
 {
-    if (!m_backSurface) return;
-    if (!m_backSurface->IsMultiSurface()) return;
+    if (!m_backSurface.lock()) return;
+    if (!m_backSurface.lock()->IsMultiSurface()) return;
     m_gbufferDepthMapIndex = index;
+}
+
+void RenderTarget::SubscribeHandler()
+{
+    m_onPrimarySurfaceCreated = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnPrimarySurfaceCreated(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::PrimarySurfaceCreated), m_onPrimarySurfaceCreated);
+    m_onBackSurfaceCreated = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnBackSurfaceCreated(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::BackSurfaceCreated), m_onBackSurfaceCreated);
+
+    m_handleChangingViewPort =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingViewPort(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
+    m_handleChangingClearingProperty =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingClearingProperty(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
+}
+
+void RenderTarget::UnsubscribeHandler()
+{
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::PrimarySurfaceCreated), m_onPrimarySurfaceCreated);
+    m_onPrimarySurfaceCreated = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::BackSurfaceCreated), m_onBackSurfaceCreated);
+    m_onBackSurfaceCreated = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
+    m_handleChangingViewPort = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
+    m_handleChangingClearingProperty = nullptr;
 }
 
 void RenderTarget::CreateRenderTargetTexture()
@@ -311,6 +317,82 @@ void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortChanged{ m_name, m_viewPort } });
+}
+
+void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
+{
+    if (!m_isPrimary) return;
+    if (!e) return;
+    Graphics::PrimarySurfaceCreated* ev = dynamic_cast<Graphics::PrimarySurfaceCreated*>(e.get());
+    if (!ev) return;
+    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
+    if (back) m_backSurface = back.value();
+    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
+    if (depth) m_depthStencilSurface = depth.value();
+    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    {
+        AsyncInitialize();
+    }
+    else
+    {
+        Initialize();
+    }
+}
+
+void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
+{
+    if (m_isPrimary) return;
+    if (!e) return;
+    auto& ev = *e.get();
+    if (typeid(ev) == typeid(Graphics::BackSurfaceCreated))
+    {
+        Graphics::BackSurfaceCreated* evb = dynamic_cast<Graphics::BackSurfaceCreated*>(e.get());
+        if (!evb) return;
+        if (evb->GetBackSurfaceName() != m_backSurfaceName) return;
+    }
+    else if (typeid(ev) == typeid(Graphics::MultiBackSurfaceCreated))
+    {
+        Graphics::MultiBackSurfaceCreated* evb = dynamic_cast<Graphics::MultiBackSurfaceCreated*>(e.get());
+        if (!evb) return;
+        if (evb->GetBackSurfaceName() != m_backSurfaceName) return;
+    }
+
+    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
+    if (back) m_backSurface = back.value();
+    if (m_backSurface.expired()) return;
+    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    {
+        AsyncInitialize();
+    }
+    else
+    {
+        Initialize();
+    }
+}
+
+void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto& ev = *e.get();
+    if (typeid(ev) == typeid(Graphics::DepthSurfaceCreated))
+    {
+        Graphics::DepthSurfaceCreated* evd = dynamic_cast<Graphics::DepthSurfaceCreated*>(e.get());
+        if (!evd) return;
+        if (evd->GetDepthSurfaceName() != m_depthSurfaceName) return;
+    }
+    else if (typeid(ev) == typeid(Graphics::DepthSurfaceShared))
+    {
+        Graphics::DepthSurfaceShared* evd = dynamic_cast<Graphics::DepthSurfaceShared*>(e.get());
+        if (!evd) return;
+        if (evd->GetDepthSurfaceName() != m_depthSurfaceName) return;
+    }
+    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
+    if (depth) m_depthStencilSurface = depth.value();
+    if (m_depthStencilSurface.expired()) return;
+    if (m_backSurface.lock())
+    {
+        m_depthStencilSurface.lock()->MakeBackSurfaceRelated(m_backSurface.lock());
+    }
 }
 
 void RenderTarget::HandleChangingViewPort(const Frameworks::ICommandPtr& c)

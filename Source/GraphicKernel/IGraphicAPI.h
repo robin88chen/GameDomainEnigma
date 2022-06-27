@@ -118,6 +118,9 @@ namespace Enigma::Graphics
             return m_repository->TryGetValue<T>(asset_key);
         }
 
+        /** Remove graphic asset */
+        void RemoveGraphicAsset(const std::string& asset_key) { m_repository->Remove(asset_key); }
+
     protected:
         /** @name surface format */
         //@{
@@ -137,7 +140,7 @@ namespace Enigma::Graphics
         GraphicThread* m_workerThread;
         AssetRepository* m_repository;
 
-            IBackSurfacePtr m_boundBackSurface;
+        IBackSurfacePtr m_boundBackSurface;
         IDepthStencilSurfacePtr m_boundDepthSurface;
         TargetViewPort m_boundViewPort;
     };

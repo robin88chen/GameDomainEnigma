@@ -61,6 +61,19 @@ RenderTarget::RenderTarget(const std::string& name, Graphics::IGraphicAPI::Async
 RenderTarget::~RenderTarget()
 {
     UnsubscribeHandler();
+    if (Graphics::IGraphicAPI::Instance())
+    {
+        if (m_isPrimary)
+        {
+            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_back_surface_name);
+            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_depth_surface_name);
+        }
+        else
+        {
+            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_backSurfaceName);
+            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_depthSurfaceName);
+        }
+    }
     m_renderTargetTexture = nullptr;
 }
 
@@ -101,6 +114,7 @@ future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, co
 error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
+    m_backSurfaceName = back_name;
     error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, surface_count, fmts);
 
     return er;
@@ -117,6 +131,7 @@ future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_nam
 error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
     const Graphics::GraphicFormat& fmt)
 {
+    m_depthSurfaceName = depth_name;
     error er = Graphics::IGraphicAPI::Instance()->CreateDepthStencilSurface(depth_name, dimension, fmt);
     return er;
 }
@@ -131,6 +146,7 @@ future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth
 error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
+    m_depthSurfaceName = depth_name;
     error er = Graphics::IGraphicAPI::Instance()->ShareDepthStencilSurface(depth_name, surface);
     return er;
 }
@@ -279,6 +295,11 @@ void RenderTarget::SubscribeHandler()
     m_onBackSurfaceCreated = std::make_shared<Frameworks::EventSubscriber>(
         [=](auto e) { this->OnBackSurfaceCreated(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::BackSurfaceCreated), m_onBackSurfaceCreated);
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::MultiBackSurfaceCreated), m_onBackSurfaceCreated);
+    m_onDepthSurfaceCreated = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnDepthSurfaceCreated(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceCreated), m_onDepthSurfaceCreated);
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceShared), m_onDepthSurfaceCreated);
 
     m_handleChangingViewPort =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingViewPort(c); });
@@ -293,7 +314,11 @@ void RenderTarget::UnsubscribeHandler()
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::PrimarySurfaceCreated), m_onPrimarySurfaceCreated);
     m_onPrimarySurfaceCreated = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::BackSurfaceCreated), m_onBackSurfaceCreated);
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::MultiBackSurfaceCreated), m_onBackSurfaceCreated);
     m_onBackSurfaceCreated = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceCreated), m_onDepthSurfaceCreated);
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceShared), m_onDepthSurfaceCreated);
+    m_onDepthSurfaceCreated = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
     m_handleChangingViewPort = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);

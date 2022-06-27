@@ -10,6 +10,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     meInitMemoryCheck();
+    //_CrtSetBreakAlloc(477);
     RenderTargetFlipApp* app = menew RenderTargetFlipApp("render target flip test");
     app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
     RECT rc;

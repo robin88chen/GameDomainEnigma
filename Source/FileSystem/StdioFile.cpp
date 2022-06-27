@@ -32,7 +32,7 @@ StdioFile::~StdioFile()
     }
 }
 
-std::optional<std::vector<char>> StdioFile::Read(size_t offset, size_t size_request)
+std::optional<std::vector<unsigned char>> StdioFile::Read(size_t offset, size_t size_request)
 {
     Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     if ((!m_file) || (!m_file.is_open()))
@@ -56,7 +56,7 @@ std::optional<std::vector<char>> StdioFile::Read(size_t offset, size_t size_requ
         MakeErrorCode(ErrorCode::fileStatusError);
         return std::nullopt;
     }
-    std::vector<char> out_buff;
+    std::vector<unsigned char> out_buff;
     out_buff.resize(size_request, 0);
     m_file.read((char*)&out_buff[0], size_request);
     std::ios::iostate s = m_file.rdstate();
@@ -69,7 +69,7 @@ std::optional<std::vector<char>> StdioFile::Read(size_t offset, size_t size_requ
     return out_buff;
 }
 
-size_t StdioFile::Write(size_t offset, const std::vector<char>& in_buff)
+size_t StdioFile::Write(size_t offset, const std::vector<unsigned char>& in_buff)
 {
     Debug::Printf("Write File in thread %d\n", std::this_thread::get_id());
     if ((!m_file) || (!m_file.is_open()))

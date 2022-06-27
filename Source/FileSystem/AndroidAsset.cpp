@@ -33,7 +33,7 @@ AndroidAsset::~AndroidAsset()
     Close();
 }
 
-std::optional<std::vector<char>> AndroidAsset::Read(size_t offset, size_t size_request)
+std::optional<std::vector<unsigned char>> AndroidAsset::Read(size_t offset, size_t size_request)
 {
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset,  std::this_thread::get_id());
@@ -56,7 +56,7 @@ std::optional<std::vector<char>> AndroidAsset::Read(size_t offset, size_t size_r
         MakeErrorCode(ErrorCode::readOffsetError);
         return std::nullopt;
     }
-    std::vector<char> out_buff;
+    std::vector<unsigned char> out_buff;
     out_buff.resize(size_request, 0);
     int read_bytes = AAsset_read(m_aasset, &out_buff[0], size_request);
     if (read_bytes < 0)
@@ -68,7 +68,7 @@ std::optional<std::vector<char>> AndroidAsset::Read(size_t offset, size_t size_r
     return out_buff;
 }
 
-size_t AndroidAsset::Write(size_t offset, const std::vector<char>& in_buff)
+size_t AndroidAsset::Write(size_t offset, const std::vector<unsigned char>& in_buff)
 {
     assert(!"Write not supported on android asset");
     return 0;

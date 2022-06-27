@@ -15,6 +15,7 @@ namespace Enigma::Graphics
     enum class ErrorCode
     {
         ok = 0,
+        fileIO,
 
         dxgiInitialize = 101,
         invalidWindow,

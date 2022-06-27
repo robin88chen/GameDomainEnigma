@@ -27,7 +27,7 @@ PackageContent::~PackageContent()
 {
 }
 
-std::optional<std::vector<char>> PackageContent::Read(size_t offset, size_t size_request)
+std::optional<std::vector<unsigned char>> PackageContent::Read(size_t offset, size_t size_request)
 {
     Platforms::Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     if (!IsValidContent()) return std::nullopt;
@@ -42,10 +42,10 @@ std::optional<std::vector<char>> PackageContent::Read(size_t offset, size_t size
     }
     size_t read_bytes = size_request;
     if (offset + size_request > m_size) read_bytes = m_size - offset;
-    return std::vector<char>(m_cacheBuffer.cbegin() + offset, m_cacheBuffer.cbegin() + offset + read_bytes);
+    return std::vector<unsigned char>(m_cacheBuffer.cbegin() + offset, m_cacheBuffer.cbegin() + offset + read_bytes);
 }
 
-size_t PackageContent::Write(size_t, const std::vector<char>&)
+size_t PackageContent::Write(size_t, const std::vector<unsigned char>&)
 {
     assert(!"Write not supported on package content");
     return 0;

@@ -47,8 +47,8 @@ namespace Enigma::Graphics
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
         virtual future_error AsyncSaveTextureImage(const FileSystem::IFilePtr& file);
 
-        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc, byte_buffer* target_buff) = 0;
-        virtual future_error AsyncRetrieveTextureImage(const MathLib::Rect& rcSrc, byte_buffer* target_buff);
+        virtual error RetrieveTextureImage(const std::string& buff_asset_key, const MathLib::Rect& rcSrc) = 0;
+        virtual future_error AsyncRetrieveTextureImage(const std::string& buff_asset_key, const MathLib::Rect& rcSrc);
 
         virtual error LoadTextureImage(const std::string& filename, const std::string& pathid);
         virtual future_error AsyncLoadTextureImage(const std::string& filename, const std::string& pathid);
@@ -74,7 +74,7 @@ namespace Enigma::Graphics
         GraphicFormat m_format;
     };
     using ITexturePtr = std::shared_ptr<ITexture>;
-
+    using ITextureWeak = std::weak_ptr<ITexture>;
 }
 
 #endif // TEXTURE_INTERFACE_H

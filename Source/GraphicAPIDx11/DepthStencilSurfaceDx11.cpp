@@ -11,8 +11,8 @@ using ErrorCode  = Enigma::Graphics::ErrorCode;
 extern DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& format);
 extern unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt);
 
-DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(ID3D11Device* device,
-    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt) : IDepthStencilSurface()
+DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device,
+    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt) : IDepthStencilSurface(name)
 {
     assert(device);
     m_d3dSurface = nullptr;
@@ -22,8 +22,8 @@ DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(ID3D11Device* device,
     if (m_d3dSurface) CreateD3DDepthView(device);
 }
 
-DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(ID3D11Device* device, ID3D11Texture2D* buff)
-    : IDepthStencilSurface()
+DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* buff)
+    : IDepthStencilSurface(name)
 {
     m_d3dSurface = buff;
     m_d3dDepthView = nullptr;
@@ -39,8 +39,8 @@ DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(ID3D11Device* device, ID3D11Tex
     if (m_d3dSurface) CreateD3DDepthView(device);
 }
 
-DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(DepthStencilSurfaceDx11* depthDx11)
-    : IDepthStencilSurface()
+DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, DepthStencilSurfaceDx11* depthDx11)
+    : IDepthStencilSurface(name)
 {
     m_dimension = depthDx11->m_dimension;
     m_format = depthDx11->m_format;

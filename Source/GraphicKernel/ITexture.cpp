@@ -7,8 +7,9 @@
 
 using namespace Enigma::Graphics;
 
-ITexture::ITexture()
+ITexture::ITexture(const std::string& name)
 {
+    m_name = name;
     m_dimension = MathLib::Dimension{ 1, 1 };
     m_format = GraphicFormat::FMT_UNKNOWN;
     m_isCubeTexture = false;
@@ -36,10 +37,10 @@ future_error ITexture::AsyncSaveTextureImage(const FileSystem::IFilePtr& file)
         PushTask([=]() -> error { return shared_from_this()->SaveTextureImage(file); });
 }
 
-future_error ITexture::AsyncRetrieveTextureImage(const std::string& buff_asset_key, const MathLib::Rect& rcSrc)
+future_error ITexture::AsyncRetrieveTextureImage(const MathLib::Rect& rcSrc)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->RetrieveTextureImage(buff_asset_key, rcSrc); });
+        PushTask([=]() -> error { return shared_from_this()->RetrieveTextureImage(rcSrc); });
 }
 
 error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)

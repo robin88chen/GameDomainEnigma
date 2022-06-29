@@ -2,7 +2,7 @@
 
 using namespace Enigma::Graphics;
 
-IMultiBackSurface::IMultiBackSurface() : IBackSurface(false)
+IMultiBackSurface::IMultiBackSurface(const std::string& name) : IBackSurface(name, false)
 {
     m_surfaceCount = 0;
 }

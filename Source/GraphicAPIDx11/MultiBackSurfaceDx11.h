@@ -18,8 +18,8 @@ namespace Enigma::Devices
     class MultiBackSurfaceDx11 : public Graphics::IMultiBackSurface
     {
     public:
-        MultiBackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D** tex, unsigned int buffer_count);  // not support for primary BB
-        MultiBackSurfaceDx11(ID3D11Device* device, const MathLib::Dimension& dimension,
+        MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D** tex, unsigned int buffer_count);  // not support for primary BB
+        MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
             unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt);
         MultiBackSurfaceDx11(const MultiBackSurfaceDx11&) = delete;
         virtual ~MultiBackSurfaceDx11();

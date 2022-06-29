@@ -24,7 +24,7 @@ namespace Enigma::Graphics
     class IDepthStencilSurface : public std::enable_shared_from_this<IDepthStencilSurface>
     {
     public:
-        IDepthStencilSurface() : m_dimension{ 0, 0 } {};
+        IDepthStencilSurface(const std::string& name) : m_name(name), m_dimension{ 0, 0 } {};
         IDepthStencilSurface(const IDepthStencilSurface&) = delete;
         IDepthStencilSurface(IDepthStencilSurface&&) = delete;
         virtual ~IDepthStencilSurface() = default;
@@ -43,6 +43,7 @@ namespace Enigma::Graphics
         virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};
 
     protected:
+        std::string m_name;
         MathLib::Dimension m_dimension;
 
         GraphicFormat m_format;

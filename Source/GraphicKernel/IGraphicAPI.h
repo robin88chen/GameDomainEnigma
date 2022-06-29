@@ -100,6 +100,15 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name Textures */
+        //@{
+        /** create texture */
+        virtual error CreateTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateTexture(const std::string& tex_name);
+        /** create multi-texture */
+        virtual error CreateMultiTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
+        //@}
 
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();

@@ -23,13 +23,14 @@ namespace Enigma::Graphics
     class IBackSurface : public std::enable_shared_from_this<IBackSurface>
     {
     public:
-        IBackSurface(bool primary) : m_dimension{ 0, 0 } { m_isPrimary = primary; };
+        IBackSurface(const std::string& name, bool primary) : m_name(name), m_dimension{ 0, 0 } { m_isPrimary = primary; };
         IBackSurface(const IBackSurface&) = delete;
         IBackSurface(IBackSurface&&) = delete;
         virtual ~IBackSurface() = default;
         IBackSurface& operator=(const IBackSurface&) = delete;
         IBackSurface& operator=(IBackSurface&&) = delete;
 
+        const std::string& GetName() { return m_name; }
         virtual const GraphicFormat& GetFormat() { return m_format; };
         virtual const MathLib::Dimension& GetDimension() { return m_dimension; };
 
@@ -41,6 +42,7 @@ namespace Enigma::Graphics
         virtual bool IsMultiSurface() { return false; }
         virtual unsigned int GetSurfaceCount() { return 1; };
     protected:
+        std::string m_name;
         bool m_isPrimary;
         MathLib::Dimension m_dimension;
         GraphicFormat m_format;

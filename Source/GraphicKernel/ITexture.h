@@ -35,10 +35,12 @@ namespace Enigma::Graphics
     class ITexture : public std::enable_shared_from_this<ITexture>
     {
     public:
-        ITexture();
+        ITexture(const std::string& name);
         ITexture(const ITexture&) = delete;
         virtual ~ITexture();
         ITexture& operator=(const ITexture&) = delete;
+
+        const std::string& GetName() { return m_name; }
 
         virtual error CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff) = 0;
         virtual future_error AsyncCreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff);
@@ -47,8 +49,8 @@ namespace Enigma::Graphics
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
         virtual future_error AsyncSaveTextureImage(const FileSystem::IFilePtr& file);
 
-        virtual error RetrieveTextureImage(const std::string& buff_asset_key, const MathLib::Rect& rcSrc) = 0;
-        virtual future_error AsyncRetrieveTextureImage(const std::string& buff_asset_key, const MathLib::Rect& rcSrc);
+        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
+        virtual future_error AsyncRetrieveTextureImage(const MathLib::Rect& rcSrc);
 
         virtual error LoadTextureImage(const std::string& filename, const std::string& pathid);
         virtual future_error AsyncLoadTextureImage(const std::string& filename, const std::string& pathid);
@@ -63,15 +65,19 @@ namespace Enigma::Graphics
 
         virtual const GraphicFormat& GetFormat() { return m_format; };
         virtual const MathLib::Dimension& GetDimension() { return m_dimension; };
+        const byte_buffer& GetRetrievedBuffer() { return m_retrievedBuff; }
         virtual bool IsCubeTexture() { return m_isCubeTexture; }
 
         virtual bool IsMultiTexture() { return false; }
 
     protected:
+        std::string m_name;
         bool m_isCubeTexture;
         MathLib::Dimension m_dimension;
 
         GraphicFormat m_format;
+
+        byte_buffer m_retrievedBuff;
     };
     using ITexturePtr = std::shared_ptr<ITexture>;
     using ITextureWeak = std::weak_ptr<ITexture>;

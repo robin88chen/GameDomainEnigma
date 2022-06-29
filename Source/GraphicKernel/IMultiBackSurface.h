@@ -15,7 +15,7 @@ namespace Enigma::Graphics
     class IMultiBackSurface : public IBackSurface
     {
     public:
-        IMultiBackSurface();
+        IMultiBackSurface(const std::string& name);
         IMultiBackSurface(const IMultiBackSurface&) = delete;
         virtual ~IMultiBackSurface();
         IMultiBackSurface& operator=(const IMultiBackSurface&) = delete;

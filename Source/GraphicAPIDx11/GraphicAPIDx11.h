@@ -55,6 +55,9 @@ namespace Enigma::Devices
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
 
+        virtual error CreateTexture(const std::string& tex_name) override;
+        virtual error CreateMultiTexture(const std::string& tex_name) override;
+
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
         ID3D11Device* GetD3DDevice() { return m_d3dDevice; };

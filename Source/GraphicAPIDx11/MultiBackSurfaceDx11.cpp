@@ -14,7 +14,8 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 extern unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt);
 extern DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& format);
 
-MultiBackSurfaceDx11::MultiBackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D** tex, unsigned int buffer_count)
+MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D** tex, unsigned int buffer_count)
+    : IMultiBackSurface(name)
 {
     assert(device);
     assert(tex);
@@ -42,8 +43,8 @@ MultiBackSurfaceDx11::MultiBackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D
     CreateD3DRenderTarget(device, tex, buffer_count);
 }
 
-MultiBackSurfaceDx11::MultiBackSurfaceDx11(ID3D11Device* device, const MathLib::Dimension& dimension,
-    unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt)
+MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+    unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt) : IMultiBackSurface(name)
 {
     assert(device);
     assert(buffer_count > 1);

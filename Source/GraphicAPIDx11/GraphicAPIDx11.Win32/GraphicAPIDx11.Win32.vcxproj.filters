@@ -26,6 +26,9 @@
     <ClCompile Include="..\MultiBackSurfaceDx11.cpp">
       <Filter>BackSurfaces</Filter>
     </ClCompile>
+    <ClCompile Include="..\TextureDx11.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -50,6 +53,9 @@
     <ClInclude Include="..\MultiBackSurfaceDx11.h">
       <Filter>BackSurfaces</Filter>
     </ClInclude>
+    <ClInclude Include="..\TextureDx11.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -63,6 +69,9 @@
     </Filter>
     <Filter Include="Depth Surface">
       <UniqueIdentifier>{65a71831-6dae-498b-8355-e0c5cf7e5b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{dc73754f-23a0-4eff-8fdd-29a7c360449c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

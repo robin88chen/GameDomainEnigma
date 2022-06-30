@@ -21,8 +21,10 @@ namespace Enigma::Devices
     public:
         MultiTextureDx11(const std::string& name);
         MultiTextureDx11(const MultiTextureDx11&) = delete;
+        MultiTextureDx11(MultiTextureDx11&&) = delete;
         virtual ~MultiTextureDx11();
         MultiTextureDx11& operator=(const MultiTextureDx11&) = delete;
+        MultiTextureDx11& operator=(MultiTextureDx11&&) = delete;
 
         virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
         virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
@@ -31,9 +33,9 @@ namespace Enigma::Devices
 
         //virtual void LoadImageDimension(const std::string& filename, const std::string& path_id) override;
 
-        ID3D11ShaderResourceView* GetD3DResourceView(unsigned int idx);
-        ID3D11ShaderResourceView** GetD3DResourceViewArray();
-        unsigned int GetResourceViewCount();
+        ID3D11ShaderResourceView* GetD3DResourceView(unsigned int idx) const;
+        ID3D11ShaderResourceView** GetD3DResourceViewArray() const;
+        unsigned int GetResourceViewCount() const;
 
     protected:
         error CreateFromScratchImage(unsigned int index, DirectX::ScratchImage& scratchImage);

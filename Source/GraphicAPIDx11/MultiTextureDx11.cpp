@@ -171,18 +171,18 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
     return ErrorCode::ok;
 }
 
-ID3D11ShaderResourceView* MultiTextureDx11::GetD3DResourceView(unsigned idx)
+ID3D11ShaderResourceView* MultiTextureDx11::GetD3DResourceView(unsigned idx) const
 {
     if ((m_d3dTextureResources) && (idx < m_resourceViewCount)) return m_d3dTextureResources[idx];
     return nullptr;
 }
 
-ID3D11ShaderResourceView** MultiTextureDx11::GetD3DResourceViewArray()
+ID3D11ShaderResourceView** MultiTextureDx11::GetD3DResourceViewArray() const
 {
     return m_d3dTextureResources;
 }
 
-unsigned MultiTextureDx11::GetResourceViewCount()
+unsigned int MultiTextureDx11::GetResourceViewCount() const
 {
     return m_resourceViewCount;
 }

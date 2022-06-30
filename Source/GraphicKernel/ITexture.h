@@ -14,7 +14,6 @@
 #include <memory>
 #include <system_error>
 
-
 namespace Enigma::MathLib
 {
     class Rect;
@@ -37,8 +36,10 @@ namespace Enigma::Graphics
     public:
         ITexture(const std::string& name);
         ITexture(const ITexture&) = delete;
+        ITexture(ITexture&&) = delete;
         virtual ~ITexture();
         ITexture& operator=(const ITexture&) = delete;
+        ITexture& operator=(ITexture&&) = delete;
 
         const std::string& GetName() { return m_name; }
 

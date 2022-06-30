@@ -20,8 +20,10 @@ namespace Enigma::Graphics
     public:
         IMultiTexture(const std::string& name);
         IMultiTexture(const IMultiTexture&) = delete;
+        IMultiTexture(IMultiTexture&&) = delete;
         virtual ~IMultiTexture();
         IMultiTexture& operator=(const IMultiTexture&) = delete;
+        IMultiTexture& operator=(IMultiTexture&&) = delete;
 
         virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) = 0;
         virtual future_error AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs);

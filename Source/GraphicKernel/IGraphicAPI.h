@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   IGraphicAPI.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -10,6 +10,7 @@
 
 #include "DeviceRequiredBits.h"
 #include "TargetViewPort.h"
+#include "GraphicAssetRepository.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
@@ -29,6 +30,7 @@ namespace Enigma::Graphics
     class IDepthStencilSurface;
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
     class TargetViewPort;
+    class AssetRepository;
 
     class IGraphicAPI
     {
@@ -65,27 +67,25 @@ namespace Enigma::Graphics
 
         /** @name back / depth surface */
         //@{
-        virtual error GetPrimaryBackSurface(IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface) = 0;
-        virtual error CreateBackSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
-            IBackSurfacePtr* back_surface) = 0;
-        virtual error CreateBackSurface(const MathLib::Dimension& dimension, unsigned int buff_count,
-            const std::vector<GraphicFormat>& fmts, IBackSurfacePtr* back_surface) = 0;
-        virtual error CreateDepthStencilSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
-            IDepthStencilSurfacePtr* depth_surface) = 0;
-        virtual error ShareDepthStencilSurface(const IDepthStencilSurfacePtr& from_depth,
-            IDepthStencilSurfacePtr* depth_surface) = 0;
+        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+            const GraphicFormat& fmt) = 0;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+            unsigned int buff_count, const std::vector<GraphicFormat>& fmts) = 0;
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+            const GraphicFormat& fmt) = 0;
+        virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
         virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
-        virtual future_error AsyncGetPrimaryBackSurface(
-            IBackSurfacePtr* back_surface, IDepthStencilSurfacePtr* depth_surface);
-        virtual future_error AsyncCreateBackSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
-            IBackSurfacePtr* back_surface);
-        virtual future_error AsyncCreateBackSurface(const MathLib::Dimension& dimension, unsigned int buff_count,
-            const std::vector<GraphicFormat>& fmts, IBackSurfacePtr* back_surface);
-        virtual future_error AsyncCreateDepthStencilSurface(const MathLib::Dimension& dimension, const GraphicFormat& fmt,
-            IDepthStencilSurfacePtr* depth_surface);
-        virtual future_error AsyncShareDepthStencilSurface(const IDepthStencilSurfacePtr& from_depth,
-            IDepthStencilSurfacePtr* depth_surface);
+        virtual future_error AsyncCreatePrimaryBackSurface(
+            const std::string& back_name, const std::string& depth_name);
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            const GraphicFormat& fmt);
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+            unsigned int buff_count, const std::vector<GraphicFormat>& fmts);
+        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+            const GraphicFormat& fmt);
+        virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
         virtual future_error AsyncClearSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
@@ -100,9 +100,35 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name Textures */
+        //@{
+        /** create texture */
+        virtual error CreateTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateTexture(const std::string& tex_name);
+        /** create multi-texture */
+        virtual error CreateMultiTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
+        //@}
 
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
+
+        /** Get graphic asset, assert if key not found */
+        template <class T> T GetGraphicAsset(const std::string& asset_key)
+        {
+            return m_repository->Get<T>(asset_key);
+        }
+
+        /** Try get asset, return nullopt if key not found.
+         *  return value is the copy.
+         **/
+        template <class T> std::optional<T> TryGetGraphicAsset(const std::string& asset_key)
+        {
+            return m_repository->TryGetValue<T>(asset_key);
+        }
+
+        /** Remove graphic asset */
+        void RemoveGraphicAsset(const std::string& asset_key) { m_repository->Remove(asset_key); }
 
     protected:
         /** @name surface format */
@@ -121,6 +147,7 @@ namespace Enigma::Graphics
         GraphicFormat m_fmtDepthSurface;
 
         GraphicThread* m_workerThread;
+        AssetRepository* m_repository;
 
         IBackSurfacePtr m_boundBackSurface;
         IDepthStencilSurfacePtr m_boundDepthSurface;

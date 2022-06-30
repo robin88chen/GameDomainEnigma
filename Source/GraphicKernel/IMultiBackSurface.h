@@ -15,7 +15,7 @@ namespace Enigma::Graphics
     class IMultiBackSurface : public IBackSurface
     {
     public:
-        IMultiBackSurface();
+        IMultiBackSurface(const std::string& name);
         IMultiBackSurface(const IMultiBackSurface&) = delete;
         virtual ~IMultiBackSurface();
         IMultiBackSurface& operator=(const IMultiBackSurface&) = delete;
@@ -32,6 +32,7 @@ namespace Enigma::Graphics
         std::vector<GraphicFormat> m_formatArray;
     };
     using IMultiBackSurfacePtr = std::shared_ptr<IMultiBackSurface>;
+    using IMultiBackSurfaceWeak = std::weak_ptr<IMultiBackSurface>;
 }
 
 

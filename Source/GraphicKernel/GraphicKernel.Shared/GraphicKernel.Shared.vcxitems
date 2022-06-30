@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h" />
@@ -23,9 +24,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />
@@ -33,6 +37,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp" />
   </ItemGroup>
 </Project>

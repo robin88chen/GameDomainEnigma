@@ -15,6 +15,10 @@ namespace Enigma::Graphics
     enum class ErrorCode
     {
         ok = 0,
+        fileIO,
+        notImplement,
+        nullMemoryBuffer,
+        invalidParameter,
 
         dxgiInitialize = 101,
         invalidWindow,
@@ -29,6 +33,16 @@ namespace Enigma::Graphics
         createBackSurfaceFail,
         createDepthSurfaceFail,
         dynamicCastSurface,
+        nullBackSurface,
+
+        deviceCreateTexture = 1201,
+        dxLoadTexture,
+        dxCreateTexture,
+        dxTextureMapping,
+        nullDxTexture,
+        dxSaveTexture,
+        saveTextureFile,
+        dxCreateShaderResource,
     };
     class ErrorCategory : public std::error_category
     {

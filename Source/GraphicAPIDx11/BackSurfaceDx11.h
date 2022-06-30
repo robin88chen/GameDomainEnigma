@@ -18,8 +18,9 @@ namespace Enigma::Devices
     class BackSurfaceDx11 : public Graphics::IBackSurface
     {
     public:
-        BackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D* tex, bool primary);
-        BackSurfaceDx11(ID3D11Device* device, const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        BackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* tex, bool primary);
+        BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+            const Graphics::GraphicFormat& fmt);
         BackSurfaceDx11(const BackSurfaceDx11&) = delete;
         virtual ~BackSurfaceDx11();
         BackSurfaceDx11& operator=(const BackSurfaceDx11&) = delete;

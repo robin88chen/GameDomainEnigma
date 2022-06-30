@@ -13,8 +13,8 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 extern unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt);
 extern DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& format);
 
-BackSurfaceDx11::BackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D* tex, bool primary)
-    : IBackSurface(primary)
+BackSurfaceDx11::BackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* tex, bool primary)
+    : IBackSurface(name, primary)
 {
     assert(device);
     m_dimension = MathLib::Dimension{ 0, 0 };
@@ -35,8 +35,8 @@ BackSurfaceDx11::BackSurfaceDx11(ID3D11Device* device, ID3D11Texture2D* tex, boo
     if (tex) CreateD3DRenderTarget(device, tex);
 }
 
-BackSurfaceDx11::BackSurfaceDx11(ID3D11Device* device, const MathLib::Dimension& dimension,
-     const Enigma::Graphics::GraphicFormat& fmt) : IBackSurface(false)
+BackSurfaceDx11::BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+     const Enigma::Graphics::GraphicFormat& fmt) : IBackSurface(name, false)
 {
     assert(device);
     m_dimension = MathLib::Dimension{ 0, 0 };

@@ -180,6 +180,39 @@ namespace Enigma::Graphics
         std::string m_backSurfaceName;
     };
 
+    //---------------- Vertex Buffers -----------------------//
+    class VertexBufferResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        VertexBufferResourceCreated(const std::string& vb_name) :
+            m_vertexBufferName(vb_name) {};
+        const std::string& GetVertexBufferName() { return m_vertexBufferName; }
+    private:
+        std::string m_vertexBufferName;
+    };
+    class VertexBufferResourceUpdated : public Frameworks::IEvent
+    {
+    public:
+        VertexBufferResourceUpdated(const std::string& vb_name) :
+            m_vertexBufferName(vb_name) {};
+        const std::string& GetVertexBufferName() { return m_vertexBufferName; }
+    private:
+        std::string m_vertexBufferName;
+    };
+    class VertexBufferResourceRangedUpdated : public Frameworks::IEvent
+    {
+    public:
+        VertexBufferResourceRangedUpdated(const std::string& vb_name, unsigned int offset, unsigned int count) :
+            m_vertexBufferName(vb_name), m_offset(offset), m_count(count) {};
+        const std::string& GetVertexBufferName() { return m_vertexBufferName; }
+        unsigned int GetVertexOffset() { return m_offset; }
+        unsigned int GetVertexCount() { return m_count; }
+    private:
+        std::string m_vertexBufferName;
+        unsigned int m_offset;
+        unsigned int m_count;
+    };
+
 }
 
 #endif // GRAPHIC_EVENTS_H

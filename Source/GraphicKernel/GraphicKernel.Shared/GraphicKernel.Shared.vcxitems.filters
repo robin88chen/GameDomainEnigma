@@ -28,6 +28,9 @@
     <Filter Include="Asset Repository">
       <UniqueIdentifier>{c4aa4384-404a-4f75-861b-f181b69feb23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vertex Index Buffer">
+      <UniqueIdentifier>{eae40abf-9f0a-46de-a913-cbce67168e1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h">
       <Filter>Texture</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.h">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -103,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp">
       <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.cpp">
+      <Filter>Vertex Index Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

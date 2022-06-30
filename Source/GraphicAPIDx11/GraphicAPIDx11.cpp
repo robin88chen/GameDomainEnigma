@@ -6,6 +6,7 @@
 #include "MultiBackSurfaceDx11.h"
 #include "DepthStencilSurfaceDx11.h"
 #include "TextureDx11.h"
+#include "MultiTextureDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
@@ -14,6 +15,7 @@
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include <cassert>
+
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -235,6 +237,16 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
     m_repository->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
+{
+    Platforms::Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
+    Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureDx11{ tex_name } };
+    m_repository->Add(tex_name, tex);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceMultiTextureCreated{ tex_name } });
     return ErrorCode::ok;
 }
 

@@ -1,5 +1,4 @@
 ﻿#include "TextureDx11.h"
-
 #include "BackSurfaceDx11.h"
 #include "GraphicAPIDx11.h"
 #include "Platforms/MemoryMacro.h"

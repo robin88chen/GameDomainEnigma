@@ -152,6 +152,7 @@
     <ClInclude Include="..\DeviceCreatorDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
     <ClInclude Include="..\MultiBackSurfaceDx11.h" />
+    <ClInclude Include="..\MultiTextureDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
     <ClInclude Include="..\TextureDx11.h" />
     <ClInclude Include="pch.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
     <ClCompile Include="..\MultiBackSurfaceDx11.cpp" />
+    <ClCompile Include="..\MultiTextureDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="..\TextureDx11.cpp" />
     <ClCompile Include="pch.cpp">

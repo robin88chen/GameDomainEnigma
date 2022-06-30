@@ -67,7 +67,7 @@ namespace Enigma::Graphics
         };
 
     protected:
-        virtual error CreateOneFromSystemMemory(unsigned int index, size_t, size_t, const byte_buffer&) = 0;
+        virtual error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension&, const byte_buffer&) = 0;
     };
     using IMultiTexturePtr = std::shared_ptr<IMultiTexture>;
     using IMultiTextureWeak = std::weak_ptr<IMultiTexture>;

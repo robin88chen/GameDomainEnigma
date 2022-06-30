@@ -77,6 +77,15 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
     };
+    class DeviceMultiTextureCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceMultiTextureCreated(const std::string& texture_name) :
+            m_textureName(texture_name) {};
+        const std::string& GetTextureName() { return m_textureName; }
+    private:
+        std::string m_textureName;
+    };
     class TextureResourceFromMemoryCreated : public Frameworks::IEvent
     {
     public:
@@ -95,6 +104,15 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
     };
+    class MultiTextureResourceImagesLoaded : public Frameworks::IEvent
+    {
+    public:
+        MultiTextureResourceImagesLoaded(const std::string& texture_name) :
+            m_textureName(texture_name) {};
+        const std::string& GetTextureName() { return m_textureName; }
+    private:
+        std::string m_textureName;
+    };
     class TextureResourceImageSaved : public Frameworks::IEvent
     {
     public:
@@ -105,6 +123,17 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
         std::string m_fullFilename;
+    };
+    class MultiTextureResourceImagesSaved : public Frameworks::IEvent
+    {
+    public:
+        MultiTextureResourceImagesSaved(const std::string& texture_name, const std::vector<std::string>& full_filenames) :
+            m_textureName(texture_name), m_fullFilenames(full_filenames) {};
+        const std::string& GetTextureName() { return m_textureName; }
+        const std::vector<std::string>& GetFullFilenames() { return m_fullFilenames; }
+    private:
+        std::string m_textureName;
+        std::vector<std::string>m_fullFilenames;
     };
     class TextureResourceImageRetrieved : public Frameworks::IEvent
     {
@@ -132,6 +161,17 @@ namespace Enigma::Graphics
     {
     public:
         TextureResourceAsBackSurfaceUsed(const std::string& texture_name, const std::string& backsurface_name) :
+            m_textureName(texture_name), m_backSurfaceName(backsurface_name) {};
+        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& GetBackSurfaceName() { return m_backSurfaceName; }
+    private:
+        std::string m_textureName;
+        std::string m_backSurfaceName;
+    };
+    class MultiTextureResourcesAsBackSurfaceUsed : public Frameworks::IEvent
+    {
+    public:
+        MultiTextureResourcesAsBackSurfaceUsed(const std::string& texture_name, const std::string& backsurface_name) :
             m_textureName(texture_name), m_backSurfaceName(backsurface_name) {};
         const std::string& GetTextureName() { return m_textureName; }
         const std::string& GetBackSurfaceName() { return m_backSurfaceName; }

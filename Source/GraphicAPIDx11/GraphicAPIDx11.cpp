@@ -98,7 +98,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceDx11{back_name, m_d3dDevice, d3dbackTex, true} };
     SetPrimaryBackSurfaceFormat(back_surface->GetFormat());
-    m_repository->AddOrUpdate(back_name, back_surface);
+    m_repository->Add(back_name, back_surface);
 
     if ((m_deviceRequiredBits.m_usesDepthBuffer) && (!depth_name.empty()))
     {
@@ -106,7 +106,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
         Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
             menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, Graphics::GraphicFormat::FMT_D24S8 } };
         SetDepthSurfaceFormat(depth_surface->GetFormat());
-        m_repository->AddOrUpdate(depth_name, depth_surface);
+        m_repository->Add(depth_name, depth_surface);
     }
     if (d3dbackTex) d3dbackTex->Release();
 
@@ -120,7 +120,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceDx11{ back_name, GetD3DDevice(), dimension, fmt } };
-    m_repository->AddOrUpdate(back_name, back_surface);
+    m_repository->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -132,7 +132,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew MultiBackSurfaceDx11{ back_name, GetD3DDevice(), dimension, buff_count, fmts } };
-    m_repository->AddOrUpdate(back_name, back_surface);
+    m_repository->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiBackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -144,7 +144,7 @@ error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, c
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceDx11{ depth_name, GetD3DDevice(), dimension, fmt } };
-    m_repository->AddOrUpdate(depth_name, depth_surface);
+    m_repository->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
     return ErrorCode::ok;
@@ -158,7 +158,7 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
     assert(depth_dx11);
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceDx11{ depth_name, depth_dx11 } };
-    m_repository->AddOrUpdate(depth_name, depth_surface);
+    m_repository->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceShared{ depth_name } });
     return ErrorCode::ok;
@@ -232,7 +232,7 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureDx11{ tex_name } };
-    m_repository->AddOrUpdate(tex_name, tex);
+    m_repository->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
     return ErrorCode::ok;

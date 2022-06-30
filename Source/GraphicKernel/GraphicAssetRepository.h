@@ -26,10 +26,11 @@ namespace Enigma::Graphics
 
         void Clear();
 
-        /** Add or Update key value data */
-        template <class T> void AddOrUpdate(const std::string& key, const T& value)
+        /** Add key value data */
+        template <class T> void Add(const std::string& key, const T& value)
         {
-            m_dataValues.insert_or_assign(key, value);
+            assert(!HasData(key));
+            m_dataValues.emplace(key, value);
         }
 
         /** Remove key value data */

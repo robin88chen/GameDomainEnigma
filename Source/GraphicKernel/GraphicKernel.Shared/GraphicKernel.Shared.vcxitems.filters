@@ -66,6 +66,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.h">
       <Filter>Asset Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.cpp">
       <Filter>Asset Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp">
+      <Filter>Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -35,6 +35,9 @@
     <ClCompile Include="..\VertexBufferDx11.cpp">
       <Filter>Vertex Index Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="..\IndexBufferDx11.cpp">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -66,6 +69,9 @@
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\VertexBufferDx11.h">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IndexBufferDx11.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
   </ItemGroup>

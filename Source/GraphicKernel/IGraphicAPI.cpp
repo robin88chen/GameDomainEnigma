@@ -99,6 +99,16 @@ future_error IGraphicAPI::AsyncBindViewPort(const TargetViewPort& vp)
         { return this->BindViewPort(vp); });
 }
 
+future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateVertexBuffer(buff_name); });
+}
+
+future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name); });
+}
+
 future_error IGraphicAPI::AsyncCreateTexture(const std::string& tex_name)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateTexture(tex_name); });

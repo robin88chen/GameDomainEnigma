@@ -180,7 +180,25 @@ namespace Enigma::Graphics
         std::string m_backSurfaceName;
     };
 
-    //---------------- Vertex Buffers -----------------------//
+    //---------------- Vertex/Index Buffers -----------------------//
+    class DeviceVertexBufferCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceVertexBufferCreated(const std::string& buff_name) :
+            m_bufferName(buff_name) {};
+        const std::string& GetBufferName() { return m_bufferName; }
+    private:
+        std::string m_bufferName;
+    };
+    class DeviceIndexBufferCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceIndexBufferCreated(const std::string& buff_name) :
+            m_bufferName(buff_name) {};
+        const std::string& GetBufferName() { return m_bufferName; }
+    private:
+        std::string m_bufferName;
+    };
     class VertexBufferResourceCreated : public Frameworks::IEvent
     {
     public:
@@ -209,6 +227,37 @@ namespace Enigma::Graphics
         unsigned int GetVertexCount() { return m_count; }
     private:
         std::string m_vertexBufferName;
+        unsigned int m_offset;
+        unsigned int m_count;
+    };
+    class IndexBufferResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        IndexBufferResourceCreated(const std::string& ib_name) :
+            m_indexBufferName(ib_name) {};
+        const std::string& GetIndexBufferName() { return m_indexBufferName; }
+    private:
+        std::string m_indexBufferName;
+    };
+    class IndexBufferResourceUpdated : public Frameworks::IEvent
+    {
+    public:
+        IndexBufferResourceUpdated(const std::string& ib_name) :
+            m_indexBufferName(ib_name) {};
+        const std::string& GetIndexBufferName() { return m_indexBufferName; }
+    private:
+        std::string m_indexBufferName;
+    };
+    class IndexBufferResourceRangedUpdated : public Frameworks::IEvent
+    {
+    public:
+        IndexBufferResourceRangedUpdated(const std::string& ib_name, unsigned int offset, unsigned int count) :
+            m_indexBufferName(ib_name), m_offset(offset), m_count(count) {};
+        const std::string& GetIndexBufferName() { return m_indexBufferName; }
+        unsigned int GetIndexOffset() { return m_offset; }
+        unsigned int GetIndexCount() { return m_count; }
+    private:
+        std::string m_indexBufferName;
         unsigned int m_offset;
         unsigned int m_count;
     };

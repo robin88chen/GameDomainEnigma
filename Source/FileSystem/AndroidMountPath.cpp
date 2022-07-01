@@ -46,7 +46,7 @@ bool AndroidMountPath::EqualMountPath(IMountPath* path)
 
 bool AndroidMountPath::EqualMountPath(const std::filesystem::path& path)
 {
-    return EqualMountPath(path.string());
+    return m_subPath == path.string();
 }
 
 bool AndroidMountPath::EqualMouthPath(const std::string& path)

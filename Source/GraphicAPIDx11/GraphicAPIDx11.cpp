@@ -7,6 +7,8 @@
 #include "DepthStencilSurfaceDx11.h"
 #include "TextureDx11.h"
 #include "MultiTextureDx11.h"
+#include "VertexBufferDx11.h"
+#include "IndexBufferDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
@@ -227,6 +229,26 @@ error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
     d3dvp.TopLeftX = (FLOAT)m_boundViewPort.X();
     d3dvp.TopLeftY = (FLOAT)m_boundViewPort.Y();
     m_d3dDeviceContext->RSSetViewports(1, &d3dvp);
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name)
+{
+    Platforms::Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
+    Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
+    m_repository->Add(buff_name, buff);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexBufferCreated{ buff_name } });
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name)
+{
+    Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
+    Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
+    m_repository->Add(buff_name, buff);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceIndexBufferCreated{ buff_name } });
     return ErrorCode::ok;
 }
 

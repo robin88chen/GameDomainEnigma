@@ -34,6 +34,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::saveTextureFile: return "save texture file fail";
     case ErrorCode::dxCreateShaderResource: return "Dx create shader resource";
     case ErrorCode::deviceCreateVertexBuffer: return "Device create vertex buffer fail";
+    case ErrorCode::deviceCreateIndexBuffer: return "Device create index buffer fail";
     case ErrorCode::bufferSize: return "buffer size error";
     }
     return "Unknown";

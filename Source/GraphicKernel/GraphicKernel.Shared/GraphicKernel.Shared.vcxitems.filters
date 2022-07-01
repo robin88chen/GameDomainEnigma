@@ -75,6 +75,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.h">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -111,6 +114,9 @@
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.cpp">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.cpp">
       <Filter>Vertex Index Buffer</Filter>
     </ClCompile>
   </ItemGroup>

@@ -45,6 +45,7 @@ namespace Enigma::Graphics
         dxCreateShaderResource,
 
         deviceCreateVertexBuffer = 1301,
+        deviceCreateIndexBuffer,
         bufferSize,
     };
     class ErrorCategory : public std::error_category

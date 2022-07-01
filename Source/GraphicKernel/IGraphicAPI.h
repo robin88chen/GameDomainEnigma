@@ -100,6 +100,16 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name Vertex/Index buffer */
+        //@{
+        /** create vertex buffer */
+        virtual error CreateVertexBuffer(const std::string& buff_name) = 0;
+        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name);
+        /** create index buffer */
+        virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
+        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
+        //@}
+
         /** @name Textures */
         //@{
         /** create texture */

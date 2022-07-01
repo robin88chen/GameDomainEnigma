@@ -43,7 +43,7 @@ bool PackageMountPath::EqualMountPath(IMountPath* path)
 
 bool PackageMountPath::EqualMountPath(const std::filesystem::path& path)
 {
-    return EqualMountPath(path.string());
+    return m_packageFilename == path.string();
 }
 
 bool PackageMountPath::EqualMouthPath(const std::string& path)

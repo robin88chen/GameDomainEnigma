@@ -43,6 +43,10 @@ namespace Enigma::Graphics
         dxSaveTexture,
         saveTextureFile,
         dxCreateShaderResource,
+
+        deviceCreateVertexBuffer = 1301,
+        deviceCreateIndexBuffer,
+        bufferSize,
     };
     class ErrorCategory : public std::error_category
     {

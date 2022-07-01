@@ -151,10 +151,12 @@
     <ClInclude Include="..\DepthStencilSurfaceDx11.h" />
     <ClInclude Include="..\DeviceCreatorDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
+    <ClInclude Include="..\IndexBufferDx11.h" />
     <ClInclude Include="..\MultiBackSurfaceDx11.h" />
     <ClInclude Include="..\MultiTextureDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
     <ClInclude Include="..\TextureDx11.h" />
+    <ClInclude Include="..\VertexBufferDx11.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -164,10 +166,12 @@
     <ClCompile Include="..\DeviceCreatorDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
+    <ClCompile Include="..\IndexBufferDx11.cpp" />
     <ClCompile Include="..\MultiBackSurfaceDx11.cpp" />
     <ClCompile Include="..\MultiTextureDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="..\TextureDx11.cpp" />
+    <ClCompile Include="..\VertexBufferDx11.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -32,6 +32,12 @@
     <ClCompile Include="..\MultiTextureDx11.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
+    <ClCompile Include="..\VertexBufferDx11.cpp">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IndexBufferDx11.cpp">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -62,6 +68,12 @@
     <ClInclude Include="..\MultiTextureDx11.h">
       <Filter>Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\VertexBufferDx11.h">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IndexBufferDx11.h">
+      <Filter>Vertex Index Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -78,6 +90,9 @@
     </Filter>
     <Filter Include="Texture">
       <UniqueIdentifier>{dc73754f-23a0-4eff-8fdd-29a7c360449c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vertex Index Buffer">
+      <UniqueIdentifier>{5cca2045-81be-4bfc-80e7-55e69f761915}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

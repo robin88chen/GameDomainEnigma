@@ -31,6 +31,12 @@
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{eae40abf-9f0a-46de-a913-cbce67168e1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{80deb0bb-8a69-4603-aaf9-cd67c1333d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Variable">
+      <UniqueIdentifier>{cb078c89-57d4-4878-85e0-2b47ad0dc4d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -78,6 +84,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IPixelShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h">
+      <Filter>Shaders\Variable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -118,6 +133,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.cpp">
       <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IPixelShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp">
+      <Filter>Shaders\Variable</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

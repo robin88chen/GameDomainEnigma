@@ -27,9 +27,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IPixelShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderProgram.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
   </ItemGroup>
@@ -45,9 +47,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IPixelShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderProgram.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp" />
   </ItemGroup>

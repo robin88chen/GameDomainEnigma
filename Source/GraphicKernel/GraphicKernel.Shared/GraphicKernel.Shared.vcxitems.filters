@@ -37,6 +37,9 @@
     <Filter Include="Shaders\Variable">
       <UniqueIdentifier>{cb078c89-57d4-4878-85e0-2b47ad0dc4d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Vertex Declaration">
+      <UniqueIdentifier>{0ca387d0-cbde-4be7-8d26-84116a8d40d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -93,6 +96,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h">
       <Filter>Shaders\Variable</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderProgram.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -142,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp">
       <Filter>Shaders\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderProgram.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -157,6 +157,8 @@
     <ClInclude Include="..\SwapChainDx11.h" />
     <ClInclude Include="..\TextureDx11.h" />
     <ClInclude Include="..\VertexBufferDx11.h" />
+    <ClInclude Include="..\VertexDeclarationDx11.h" />
+    <ClInclude Include="..\VertexShaderDx11.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +174,8 @@
     <ClCompile Include="..\SwapChainDx11.cpp" />
     <ClCompile Include="..\TextureDx11.cpp" />
     <ClCompile Include="..\VertexBufferDx11.cpp" />
+    <ClCompile Include="..\VertexDeclarationDx11.cpp" />
+    <ClCompile Include="..\VertexShaderDx11.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

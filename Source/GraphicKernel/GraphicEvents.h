@@ -261,6 +261,25 @@ namespace Enigma::Graphics
         unsigned int m_offset;
         unsigned int m_count;
     };
+    //---------------- Shaders -----------------------//
+    class VertexShaderCompiled : public Frameworks::IEvent
+    {
+    public:
+        VertexShaderCompiled(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetShaderName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceInputLayoutCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceInputLayoutCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetVertexDeclarationrame() { return m_name; }
+    private:
+        std::string m_name;
+    };
 
 }
 

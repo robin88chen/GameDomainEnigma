@@ -6,8 +6,9 @@
 
 using namespace Enigma::Graphics;
 
-IVertexDeclaration::IVertexDeclaration(const std::string& vertex_format)
+IVertexDeclaration::IVertexDeclaration(const std::string& name, const std::string& vertex_format)
 {
+    m_name = name;
     m_formatString = vertex_format;
     m_dataVertexFormatCode.FromString(vertex_format);
     m_dataVertexFormatCode.CalculateVertexSize(&m_dataVertexFormatDesc);

@@ -38,6 +38,12 @@
     <ClCompile Include="..\IndexBufferDx11.cpp">
       <Filter>Vertex Index Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="..\VertexShaderDx11.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VertexDeclarationDx11.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -74,6 +80,12 @@
     <ClInclude Include="..\IndexBufferDx11.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\VertexShaderDx11.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VertexDeclarationDx11.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -93,6 +105,12 @@
     </Filter>
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{5cca2045-81be-4bfc-80e7-55e69f761915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{7434f10d-37f4-42c0-853e-183962b66a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex Declaration">
+      <UniqueIdentifier>{c83ca7f9-68b4-48c2-b017-807e097cce77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

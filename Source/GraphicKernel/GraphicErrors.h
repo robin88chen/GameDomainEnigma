@@ -58,6 +58,7 @@ namespace Enigma::Graphics
         nullSamplerState,
         dynamicCastState,
         applyTextureVariable,
+        duplicatedVertexDeclaration,
 
         dxCreateBuffer = 1501,
         dxBufferMapping,

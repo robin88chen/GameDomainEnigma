@@ -1,7 +1,10 @@
 ﻿#include "IGraphicAPI.h"
 #include "GraphicThread.h"
 #include "GraphicAssetRepository.h"
+#include "IVertexShader.h"
+#include "IVertexDeclaration.h"
 #include "MathLib/ColorRGBA.h"
+#include "Platforms/PlatformLayer.h"
 #include <cassert>
 
 using namespace Enigma::Graphics;
@@ -97,6 +100,40 @@ future_error IGraphicAPI::AsyncBindViewPort(const TargetViewPort& vp)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->BindViewPort(vp); });
+}
+
+future_error IGraphicAPI::AsyncCreateVertexShader(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateVertexShader(name); });
+}
+
+future_error IGraphicAPI::AsyncCreatePixelShader(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreatePixelShader(name); });
+}
+
+future_error IGraphicAPI::AsyncCreateShaderProgram(const std::string& name,
+    const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateShaderProgram(name, vtx_shader, pix_shader); });
+}
+
+future_error IGraphicAPI::AsyncCreateVertexDeclaration(const std::string& name,
+    const std::string& data_vertex_format, const IVertexShaderPtr& shader)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateVertexDeclaration(name, data_vertex_format, shader); });
+}
+
+std::string IGraphicAPI::QueryVertexDeclarationName(const std::string& data_vertex_format, const IVertexShaderPtr& shader)
+{
+    assert(shader);
+
+    Platforms::Debug::Printf("query vertex declaration name in thread %d\n", std::this_thread::get_id());
+
+    std::lock_guard locker{ m_declMapLock };
+    auto iter = m_vertexDeclMap.find({ data_vertex_format, shader->GetName() });
+    if (iter == m_vertexDeclMap.end()) return std::string();
+    return iter->second;
 }
 
 future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name)

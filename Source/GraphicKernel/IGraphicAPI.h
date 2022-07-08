@@ -27,8 +27,14 @@ namespace Enigma::Graphics
     class GraphicThread;
     class IBackSurface;
     using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
+    using IBackSurfaceWeak = std::weak_ptr<IBackSurface>;
     class IDepthStencilSurface;
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
+    using IDepthStencilSurfaceWeak = std::weak_ptr<IDepthStencilSurface>;
+    class IVertexShader;
+    using IVertexShaderPtr = std::shared_ptr<IVertexShader>;
+    class IPixelShader;
+    using IPixelShaderPtr = std::shared_ptr<IPixelShader>;
     class TargetViewPort;
     class AssetRepository;
 
@@ -49,8 +55,10 @@ namespace Enigma::Graphics
     public:
         IGraphicAPI();
         IGraphicAPI(const IGraphicAPI&) = delete;
+        IGraphicAPI(IGraphicAPI&&) = delete;
         virtual ~IGraphicAPI();
         IGraphicAPI& operator=(const IGraphicAPI&) = delete;
+        IGraphicAPI& operator=(IGraphicAPI&&) = delete;
 
         static IGraphicAPI* Instance();
 
@@ -68,11 +76,11 @@ namespace Enigma::Graphics
         /** @name back / depth surface */
         //@{
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts) = 0;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt) = 0;
         virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
         virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
@@ -81,9 +89,9 @@ namespace Enigma::Graphics
             const std::string& back_name, const std::string& depth_name);
         virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt);
-        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts);
-        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt);
         virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
         virtual future_error AsyncClearSurface(
@@ -95,10 +103,44 @@ namespace Enigma::Graphics
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface; }
-        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface; }
+        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface.lock(); }
+        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface.lock(); }
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
+
+        /** @name Shader */
+        //@{ 
+        /** create vertex shader
+        @param name shader name
+        @param shader out shader interface
+        */
+        virtual error CreateVertexShader(const std::string& name) = 0;
+        virtual future_error AsyncCreateVertexShader(const std::string& name);
+        /** create pixel shader
+        @param name shader name
+        @param shader out shader interface
+        */
+        virtual error CreatePixelShader(const std::string& name) = 0;
+        virtual future_error AsyncCreatePixelShader(const std::string& name);
+
+        /** create shader program
+        @param vtx_shader vertex shader
+        @param pix_shader pixel shader
+        @param program out shader program interface
+        */
+        virtual error CreateShaderProgram(const std::string& name,
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader) = 0;
+        virtual future_error AsyncCreateShaderProgram(const std::string& name,
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader);
+
+        /** create vertex declaration with data vertex format & effect */
+        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader) = 0;
+        virtual future_error AsyncCreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader);
+        /** query vertex declaration by data vertex format & effect */
+        virtual std::string QueryVertexDeclarationName(const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader);
 
         /** @name Vertex/Index buffer */
         //@{
@@ -159,8 +201,12 @@ namespace Enigma::Graphics
         GraphicThread* m_workerThread;
         AssetRepository* m_repository;
 
-        IBackSurfacePtr m_boundBackSurface;
-        IDepthStencilSurfacePtr m_boundDepthSurface;
+        using VertexDeclMap = std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash>;
+        VertexDeclMap m_vertexDeclMap;
+        std::mutex m_declMapLock;
+
+        IBackSurfaceWeak m_boundBackSurface;
+        IDepthStencilSurfaceWeak m_boundDepthSurface;
         TargetViewPort m_boundViewPort;
     };
 }

@@ -262,6 +262,42 @@ namespace Enigma::Graphics
         unsigned int m_count;
     };
     //---------------- Shaders -----------------------//
+    class DeviceVertexShaderCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceVertexShaderCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DevicePixelShaderCreated : public Frameworks::IEvent
+    {
+    public:
+        DevicePixelShaderCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceShaderProgramCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceShaderProgramCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceVertexDeclarationCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceVertexDeclarationCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
     class VertexShaderCompiled : public Frameworks::IEvent
     {
     public:

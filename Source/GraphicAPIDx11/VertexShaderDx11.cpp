@@ -25,15 +25,14 @@ VertexShaderDx11::VertexShaderDx11(const std::string& name) : IVertexShader(name
 {
     m_d3dShader = nullptr;
     m_d3dShaderReflect = nullptr;
-
-    m_semanticTable = nullptr;
+    m_semanticTable.clear();
 }
 
 VertexShaderDx11::~VertexShaderDx11()
 {
     SAFE_RELEASE(m_d3dShader);
     SAFE_RELEASE(m_d3dShaderReflect);
-    SAFE_DELETE(m_semanticTable);
+    m_semanticTable.clear();
 }
 
 error VertexShaderDx11::CompileCode(const std::string& code, const std::string& profile, const std::string& entry)
@@ -70,7 +69,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
         (void**)&m_d3dShaderReflect);
     SAFE_RELEASE(outBuf);
 
-    m_semanticTable = ParseSemanticTable(code);
+    ParseSemanticTable(code);
     //RetrieveShaderVariables(graphic->GetD3DDevice(), semantic_table, IShaderVariable::VarOfVertexShader);
     //if (semantic_table) delete semantic_table;
 
@@ -212,7 +211,8 @@ void VertexShaderDx11::MakeVertexFormatCode()
 }
 
 
-Enigma::Graphics::IShaderVariable::SemanticNameTable* VertexShaderDx11::ParseSemanticTable(const std::string& code)
+void VertexShaderDx11::ParseSemanticTable(const std::string& code)
 {
+    m_semanticTable.clear();
 #include "ParseSemanticTable.inl"
 }

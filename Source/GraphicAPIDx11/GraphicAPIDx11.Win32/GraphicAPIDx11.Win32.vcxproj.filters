@@ -44,6 +44,21 @@
     <ClCompile Include="..\VertexDeclarationDx11.cpp">
       <Filter>Shaders\Vertex Declaration</Filter>
     </ClCompile>
+    <ClCompile Include="..\PixelShaderDx11.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderProgramDx11.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderVariablesDx11.cpp">
+      <Filter>Shaders\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceConstBufferDx11.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceSamplerStateDx11.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -86,6 +101,21 @@
     <ClInclude Include="..\VertexDeclarationDx11.h">
       <Filter>Shaders\Vertex Declaration</Filter>
     </ClInclude>
+    <ClInclude Include="..\PixelShaderDx11.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ShaderProgramDx11.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ShaderVariablesDx11.h">
+      <Filter>Shaders\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceConstBufferDx11.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceSamplerStateDx11.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -111,6 +141,12 @@
     </Filter>
     <Filter Include="Shaders\Vertex Declaration">
       <UniqueIdentifier>{c83ca7f9-68b4-48c2-b017-807e097cce77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Variable">
+      <UniqueIdentifier>{ca384372-47f8-4410-a5f7-bf3f4f5b26e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device States">
+      <UniqueIdentifier>{df33b2be-4d46-4407-a5d3-3388e0a119aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

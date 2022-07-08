@@ -22,6 +22,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IBackSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
@@ -42,6 +44,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />

@@ -9,6 +9,7 @@
 #define SHADER_VARIABLE_INTERFACE_H
 
 #include "Frameworks/ExtentTypesDefine.h"
+#include "ITexture.h"
 #include <any>
 #include <unordered_map>
 #include <functional>
@@ -16,6 +17,7 @@
 #include <memory>
 #include <system_error>
 #include <future>
+#include <optional>
 
 namespace Enigma::Graphics
 {
@@ -33,6 +35,8 @@ namespace Enigma::Graphics
     public:
         using VariableCommitFunc = std::function<void(IShaderVariable*)>;
         using SemanticNameTable = std::unordered_map<std::string, std::string>;
+        using TextureVarTuple = std::tuple<ITexturePtr, std::optional<unsigned int>>;
+
     public:
         IShaderVariable(const std::string& name, const std::string& semantic);
         IShaderVariable(const IShaderVariable&) = delete;

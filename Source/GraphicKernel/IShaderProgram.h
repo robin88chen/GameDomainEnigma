@@ -35,13 +35,13 @@ namespace Enigma::Graphics
         IShaderProgram& operator=(IShaderProgram&&) = delete;
 
         const std::string& GetName() { return m_name; }
-        IVertexShaderPtr GetVertexShader() { return m_vtxShader; }
-        IPixelShaderPtr GetPixelShader() { return m_pixShader; }
+        const IVertexShaderPtr& GetVertexShader() { return m_vtxShader; }
+        const IPixelShaderPtr& GetPixelShader() { return m_pixShader; }
 
         virtual IShaderVariablePtr GetVariableByName(const std::string& name) = 0;
         virtual IShaderVariablePtr GetVariableBySemantic(const std::string& semantic) = 0;
         virtual unsigned int GetVariableCount() = 0;
-        virtual IShaderVariablePtr GetVaribaleByIndex(unsigned int index) = 0;
+        virtual IShaderVariablePtr GetVariableByIndex(unsigned int index) = 0;
 
         virtual error CommitVariables() = 0;
 

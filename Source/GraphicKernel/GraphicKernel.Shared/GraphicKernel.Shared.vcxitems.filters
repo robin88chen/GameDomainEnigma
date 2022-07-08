@@ -40,6 +40,9 @@
     <Filter Include="Shaders\Vertex Declaration">
       <UniqueIdentifier>{0ca387d0-cbde-4be7-8d26-84116a8d40d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Device States">
+      <UniqueIdentifier>{570216e9-8169-4527-bc06-cfd4d465396c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -102,6 +105,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h">
       <Filter>Shaders\Vertex Declaration</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -157,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.cpp">
       <Filter>Shaders\Vertex Declaration</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.cpp">
+      <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -55,6 +55,13 @@ namespace Enigma::Graphics
         shaderSignature,
         vertexLayout,
         dxCreateInputLayout,
+        nullSamplerState,
+        dynamicCastState,
+        applyTextureVariable,
+
+        dxCreateBuffer = 1501,
+        dxBufferMapping,
+        dxCreateSamplerState,
     };
     class ErrorCategory : public std::error_category
     {

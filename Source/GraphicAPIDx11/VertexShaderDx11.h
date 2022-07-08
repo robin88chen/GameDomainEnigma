@@ -37,7 +37,7 @@ namespace Enigma::Devices
         const Graphics::IVertexDeclaration::VertexFormatCode& GetShaderVertexFormat() const { return m_shaderVertexFormat; };
         const byte_buffer& GetShaderSignatureBytes() const { return m_shaderByteCode; };
 
-        const Graphics::IShaderVariable::SemanticNameTable* GetSemanticTable() const { return m_semanticTable; }
+        const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:
         "//semantic var_name VAR_SEMANTIC"
@@ -45,7 +45,7 @@ namespace Enigma::Devices
         例如 :
         "//semantic anim_time ANIM_TIMER"
         "//semantic mxWorld WORLD_TRANSFORM */
-        Graphics::IShaderVariable::SemanticNameTable* ParseSemanticTable(const std::string& code);
+        void ParseSemanticTable(const std::string& code);
 
         void VertexFormatSemanticMapping(const std::string& semantic_name, const unsigned int semantic_index, const unsigned char mask);
         void MakeVertexFormatCode();
@@ -57,7 +57,7 @@ namespace Enigma::Devices
         Graphics::IVertexDeclaration::VertexFormatCode m_shaderVertexFormat;
         byte_buffer m_shaderByteCode;
 
-        Graphics::IShaderVariable::SemanticNameTable* m_semanticTable;
+        Graphics::IShaderVariable::SemanticNameTable m_semanticTable;
     };
 }
 

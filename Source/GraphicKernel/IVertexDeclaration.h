@@ -17,7 +17,7 @@ namespace Enigma::Graphics
     using IVertexShaderPtr = std::shared_ptr<IVertexShader>;
 
     /** vertex format declaration class */
-    class IVertexDeclaration
+    class IVertexDeclaration : public std::enable_shared_from_this<IVertexDeclaration>
     {
     public:
         struct VertexDesc;

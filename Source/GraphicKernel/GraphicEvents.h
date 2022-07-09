@@ -261,6 +261,124 @@ namespace Enigma::Graphics
         unsigned int m_offset;
         unsigned int m_count;
     };
+    //---------------- Shaders -----------------------//
+    class DeviceVertexShaderCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceVertexShaderCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DevicePixelShaderCreated : public Frameworks::IEvent
+    {
+    public:
+        DevicePixelShaderCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceShaderProgramCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceShaderProgramCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceVertexDeclarationCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceVertexDeclarationCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class VertexShaderCompiled : public Frameworks::IEvent
+    {
+    public:
+        VertexShaderCompiled(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetShaderName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class PixelShaderCompiled : public Frameworks::IEvent
+    {
+    public:
+        PixelShaderCompiled(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetShaderName() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class DeviceInputLayoutCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceInputLayoutCreated(const std::string& name) :
+            m_name(name) {};
+        const std::string& GetVertexDeclarationrame() { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class ShaderVariableCreated : public Frameworks::IEvent
+    {
+    public:
+        enum class VarType
+        {
+            constBuffer,
+            floatValue,
+            intValue,
+            booleanValue,
+            matrixValue,
+            vectorValue,
+            textureObject,
+            samplerState
+        };
+    public:
+        ShaderVariableCreated(const std::string& name, const std::string& semantic, VarType type) :
+            m_name(name), m_semantic(semantic), m_type(type) {};
+        const std::string& GetVariableName() { return m_name; }
+        const std::string& GetVariableSemantic() { return m_semantic; }
+        VarType GetVariableType() const { return m_type; }
+    private:
+        std::string m_name;
+        std::string m_semantic;
+        VarType m_type;
+    };
+
+    //---------------- Device States -----------------------//
+    class ConstBufferResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        ConstBufferResourceCreated(const std::string& name) :
+            m_bufferName(name) {};
+        const std::string& GetBufferName() { return m_bufferName; }
+    private:
+        std::string m_bufferName;
+    };
+    class ConstBufferResourceApplied : public Frameworks::IEvent
+    {
+    public:
+        ConstBufferResourceApplied(const std::string& name) :
+            m_bufferName(name) {};
+        const std::string& GetBufferName() { return m_bufferName; }
+    private:
+        std::string m_bufferName;
+    };
+    class SamplerStateResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        SamplerStateResourceCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
 
 }
 

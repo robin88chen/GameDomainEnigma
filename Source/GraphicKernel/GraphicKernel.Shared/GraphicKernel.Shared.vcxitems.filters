@@ -31,6 +31,18 @@
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{eae40abf-9f0a-46de-a913-cbce67168e1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{80deb0bb-8a69-4603-aaf9-cd67c1333d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Variable">
+      <UniqueIdentifier>{cb078c89-57d4-4878-85e0-2b47ad0dc4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex Declaration">
+      <UniqueIdentifier>{0ca387d0-cbde-4be7-8d26-84116a8d40d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device States">
+      <UniqueIdentifier>{570216e9-8169-4527-bc06-cfd4d465396c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -78,6 +90,27 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IPixelShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h">
+      <Filter>Shaders\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderProgram.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -118,6 +151,27 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.cpp">
       <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IPixelShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp">
+      <Filter>Shaders\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderProgram.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.cpp">
+      <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

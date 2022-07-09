@@ -16,6 +16,9 @@
     <Filter Include="Extend">
       <UniqueIdentifier>{3e578946-7a77-4e63-9136-00f6b0a7ef93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{5ad244b1-47de-410a-8ad2-94a6d625e335}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp">
       <Filter>Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TokenVector.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h">
       <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TokenVector.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StringFormat.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

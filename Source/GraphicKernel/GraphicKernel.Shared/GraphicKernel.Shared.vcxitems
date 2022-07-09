@@ -22,12 +22,19 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IBackSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IPixelShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderProgram.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
   </ItemGroup>
   <ItemGroup>
@@ -37,12 +44,19 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IBackSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDepthStencilSurface.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceConstBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IIndexBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IPixelShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderProgram.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp" />
   </ItemGroup>
 </Project>

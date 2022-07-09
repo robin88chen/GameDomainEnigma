@@ -36,6 +36,19 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::deviceCreateVertexBuffer: return "Device create vertex buffer fail";
     case ErrorCode::deviceCreateIndexBuffer: return "Device create index buffer fail";
     case ErrorCode::bufferSize: return "buffer size error";
+    case ErrorCode::deviceCreateVertexShader: return "device create vertex shader fail";
+    case ErrorCode::deviceCreatePixelShader: return "device create pixel shader fail";
+    case ErrorCode::compileShader: return "compile shader fail";
+    case ErrorCode::dxCreateShader: return "Dx create shader fail";
+    case ErrorCode::shaderSignature: return "Shader signature error";
+    case ErrorCode::vertexLayout: return "vertex layout error";
+    case ErrorCode::dxCreateInputLayout: return "Dx create input layout fail";
+    case ErrorCode::nullSamplerState: return "null sampler state";
+    case ErrorCode::dynamicCastState: return "dynamic cast state fail";
+    case ErrorCode::applyTextureVariable: return "apply texture variable fail";
+    case ErrorCode::dxCreateBuffer: return "Dx create buffer fail";
+    case ErrorCode::dxBufferMapping: return "Dx buffer mapping fail";
+    case ErrorCode::dxCreateSamplerState: return "Dx create sampler state fail";
     }
     return "Unknown";
 }

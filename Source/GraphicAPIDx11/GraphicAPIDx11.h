@@ -66,6 +66,11 @@ namespace Enigma::Devices
         virtual error CreateVertexBuffer(const std::string& buff_name) override;
         virtual error CreateIndexBuffer(const std::string& buff_name) override;
 
+        virtual error CreateSamplerState(const std::string& name) override;
+        virtual error CreateRasterizerState(const std::string& name) override;
+        virtual error CreateAlphaBlendState(const std::string& name) override;
+        virtual error CreateDepthStencilState(const std::string& name) override;
+
         virtual error CreateTexture(const std::string& tex_name) override;
         virtual error CreateMultiTexture(const std::string& tex_name) override;
 

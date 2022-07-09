@@ -59,6 +59,15 @@
     <ClCompile Include="..\DeviceSamplerStateDx11.cpp">
       <Filter>Device States</Filter>
     </ClCompile>
+    <ClCompile Include="..\DeviceAlphaBlendStateDx11.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceDepthStencilStateDx11.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceRasterizerStateDx11.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -114,6 +123,15 @@
       <Filter>Device States</Filter>
     </ClInclude>
     <ClInclude Include="..\DeviceSamplerStateDx11.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceAlphaBlendStateDx11.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceDepthStencilStateDx11.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceRasterizerStateDx11.h">
       <Filter>Device States</Filter>
     </ClInclude>
   </ItemGroup>

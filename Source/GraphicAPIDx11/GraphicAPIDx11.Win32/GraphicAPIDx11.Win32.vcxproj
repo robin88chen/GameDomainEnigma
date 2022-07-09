@@ -149,8 +149,11 @@
     <ClInclude Include="..\AdapterDx11.h" />
     <ClInclude Include="..\BackSurfaceDx11.h" />
     <ClInclude Include="..\DepthStencilSurfaceDx11.h" />
+    <ClInclude Include="..\DeviceAlphaBlendStateDx11.h" />
     <ClInclude Include="..\DeviceConstBufferDx11.h" />
     <ClInclude Include="..\DeviceCreatorDx11.h" />
+    <ClInclude Include="..\DeviceDepthStencilStateDx11.h" />
+    <ClInclude Include="..\DeviceRasterizerStateDx11.h" />
     <ClInclude Include="..\DeviceSamplerStateDx11.h" />
     <ClInclude Include="..\GraphicAPIDx11.h" />
     <ClInclude Include="..\IndexBufferDx11.h" />
@@ -170,9 +173,12 @@
     <ClCompile Include="..\AdapterDx11.cpp" />
     <ClCompile Include="..\BackSurfaceDx11.cpp" />
     <ClCompile Include="..\DepthStencilSurfaceDx11.cpp" />
+    <ClCompile Include="..\DeviceAlphaBlendStateDx11.cpp" />
     <ClCompile Include="..\DeviceConstBufferDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11.cpp" />
     <ClCompile Include="..\DeviceCreatorDx11Util.cpp" />
+    <ClCompile Include="..\DeviceDepthStencilStateDx11.cpp" />
+    <ClCompile Include="..\DeviceRasterizerStateDx11.cpp" />
     <ClCompile Include="..\DeviceSamplerStateDx11.cpp" />
     <ClCompile Include="..\GraphicAPIDx11.cpp" />
     <ClCompile Include="..\IndexBufferDx11.cpp" />

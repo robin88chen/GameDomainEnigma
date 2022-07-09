@@ -108,6 +108,12 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name surface format */
+        //@{
+        const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
+        const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
+        //@}
+
         /** @name Shader */
         //@{ 
         /** create vertex shader
@@ -150,6 +156,23 @@ namespace Enigma::Graphics
         /** create index buffer */
         virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
         virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
+        //@}
+
+        /** @name Device States */
+        //@{
+        /** create sampler state */
+        virtual error CreateSamplerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateSamplerState(const std::string& name);
+        /** create rasterizer state */
+        virtual error CreateRasterizerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateRasterizerState(const std::string& name);
+        /** create alpha blend state */
+        virtual error CreateAlphaBlendState(const std::string& name) = 0;
+        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
+        /** create depth stencil state */
+        virtual error CreateDepthStencilState(const std::string& name) = 0;
+        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
+
         //@}
 
         /** @name Textures */

@@ -46,9 +46,13 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullSamplerState: return "null sampler state";
     case ErrorCode::dynamicCastState: return "dynamic cast state fail";
     case ErrorCode::applyTextureVariable: return "apply texture variable fail";
+    case ErrorCode::duplicatedVertexDeclaration: return "duplicated vertex declaration name";
     case ErrorCode::dxCreateBuffer: return "Dx create buffer fail";
     case ErrorCode::dxBufferMapping: return "Dx buffer mapping fail";
     case ErrorCode::dxCreateSamplerState: return "Dx create sampler state fail";
+    case ErrorCode::dxCreateBlendState: return "Dx create alpha blend state fail";
+    case ErrorCode::dxCreateRasterizerState: return "Dx create rasterizer state fail";
+    case ErrorCode::dxCreateDepthState: return "Dx create depth stencil state fail";
     }
     return "Unknown";
 }

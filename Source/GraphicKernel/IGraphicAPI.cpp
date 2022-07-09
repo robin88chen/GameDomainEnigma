@@ -146,6 +146,26 @@ future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name)
     return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name); });
 }
 
+future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateSamplerState(name); });
+}
+
+future_error IGraphicAPI::AsyncCreateRasterizerState(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateRasterizerState(name); });
+}
+
+future_error IGraphicAPI::AsyncCreateAlphaBlendState(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+}
+
+future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+}
+
 future_error IGraphicAPI::AsyncCreateTexture(const std::string& tex_name)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateTexture(tex_name); });

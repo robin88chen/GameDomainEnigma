@@ -27,5 +27,5 @@ error IDeviceConstBuffer::CreateDataBuffer(unsigned int cb_size)
 future_error IDeviceConstBuffer::AsyncCreateDataBuffer(unsigned cb_size)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask(std::bind(&IDeviceConstBuffer::CreateDataBuffer, this, cb_size));
+        PushTask([=]() -> error { return shared_from_this()->CreateDataBuffer(cb_size); });
 }

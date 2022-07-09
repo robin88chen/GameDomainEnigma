@@ -152,6 +152,23 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
         //@}
 
+        /** @name Device States */
+        //@{
+        /** create sampler state */
+        virtual error CreateSamplerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateSamplerState(const std::string& name);
+        /** create rasterizer state */
+        virtual error CreateRasterizerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateRasterizerState(const std::string& name);
+        /** create alpha blend state */
+        virtual error CreateAlphaBlendState(const std::string& name) = 0;
+        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
+        /** create depth stencil state */
+        virtual error CreateDepthStencilState(const std::string& name) = 0;
+        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
+
+        //@}
+
         /** @name Textures */
         //@{
         /** create texture */

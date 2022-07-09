@@ -352,6 +352,42 @@ namespace Enigma::Graphics
     };
 
     //---------------- Device States -----------------------//
+    class DeviceSamplerStateCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceSamplerStateCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
+    class DeviceAlphaBlendStateCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceAlphaBlendStateCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
+    class DeviceDepthStencilStateCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceDepthStencilStateCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
+    class DeviceRasterizerStateCreated : public Frameworks::IEvent
+    {
+    public:
+        DeviceRasterizerStateCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
     class ConstBufferResourceCreated : public Frameworks::IEvent
     {
     public:

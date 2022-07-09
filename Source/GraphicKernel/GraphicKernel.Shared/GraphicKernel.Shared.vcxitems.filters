@@ -111,6 +111,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.h">
       <Filter>Device States</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceAlphaBlendState.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceDepthStencilState.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceRasterizerState.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -171,6 +180,15 @@
       <Filter>Device States</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceSamplerState.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceAlphaBlendState.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceDepthStencilState.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceRasterizerState.cpp">
       <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>

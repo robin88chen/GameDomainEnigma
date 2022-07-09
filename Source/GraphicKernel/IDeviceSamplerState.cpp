@@ -22,5 +22,5 @@ error IDeviceSamplerState::CreateFromData(const SamplerStateData& data)
 future_error IDeviceSamplerState::AsyncCreateFromData(const SamplerStateData& data)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask(std::bind(&IDeviceSamplerState::CreateFromData, this, data));
+        PushTask([=]() -> error { return shared_from_this()->CreateFromData(data); });
 }

@@ -61,8 +61,8 @@ namespace Enigma::Graphics
             SamplerStateData() : m_minFilter(Filter::Linear), m_magFilter(Filter::Linear), m_mipFilter(Filter::Linear),
                 m_cmpFunc(CompareFunc::Never),
                 m_addressModeU(AddressMode::Clamp), m_addressModeV(AddressMode::Clamp), m_addressModeW(AddressMode::Clamp),
-                m_mipmapLODBias(0.0f), m_borderColor(1.0f, 1.0f, 1.0f, 1.0f),
-                m_minLOD(-MathLib::Math::MAX_FLOAT), m_maxLOD(MathLib::Math::MAX_FLOAT), m_levelAnisotropic(0) {};
+                m_levelAnisotropic(0), m_mipmapLODBias(0.0f), m_borderColor(1.0f, 1.0f, 1.0f, 1.0f),
+                m_minLOD(-MathLib::Math::MAX_FLOAT), m_maxLOD(MathLib::Math::MAX_FLOAT) {};
         };
     public:
         IDeviceSamplerState(const std::string& name);

@@ -108,6 +108,12 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name surface format */
+        //@{
+        const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
+        const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
+        //@}
+
         /** @name Shader */
         //@{ 
         /** create vertex shader

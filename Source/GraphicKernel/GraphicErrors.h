@@ -63,6 +63,9 @@ namespace Enigma::Graphics
         dxCreateBuffer = 1501,
         dxBufferMapping,
         dxCreateSamplerState,
+        dxCreateBlendState,
+        dxCreateRasterizerState,
+        dxCreateDepthState,
     };
     class ErrorCategory : public std::error_category
     {

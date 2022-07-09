@@ -415,6 +415,33 @@ namespace Enigma::Graphics
     private:
         std::string m_stateName;
     };
+    class AlphaBlendStateResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        AlphaBlendStateResourceCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
+    class RasterizerStateResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        RasterizerStateResourceCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
+    class DepthStencilStateResourceCreated : public Frameworks::IEvent
+    {
+    public:
+        DepthStencilStateResourceCreated(const std::string& name) :
+            m_stateName(name) {};
+        const std::string& GetStateName() { return m_stateName; }
+    private:
+        std::string m_stateName;
+    };
 
 }
 

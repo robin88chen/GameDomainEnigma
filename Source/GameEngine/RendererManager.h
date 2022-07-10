@@ -61,9 +61,9 @@ namespace Enigma::Engine
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);
         /** get render target */
-        std::weak_ptr<RenderTarget> GetRenderTarget(const std::string& name) const;
+        RenderTargetPtr GetRenderTarget(const std::string& name) const;
         /** get primary render target */
-        std::weak_ptr<RenderTarget> GetPrimaryRenderTarget() const;
+        RenderTargetPtr GetPrimaryRenderTarget() const;
 
     protected:
         void ClearAllRenderer();

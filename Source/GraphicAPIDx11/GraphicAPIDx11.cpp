@@ -206,9 +206,9 @@ error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surf
     {
         isMultiSurface = back_surface->IsMultiSurface();
     }
-    else if (!m_boundBackSurface.expired())
+    else if (m_boundBackSurface)
     {
-        isMultiSurface = m_boundBackSurface.lock()->IsMultiSurface();
+        isMultiSurface = m_boundBackSurface->IsMultiSurface();
     }
     if (!isMultiSurface)
     {
@@ -437,23 +437,23 @@ error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurf
 error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
     assert(m_d3dDeviceContext);
-    if ((m_boundBackSurface.lock() == back_surface) && (m_boundDepthSurface.lock() == depth_surface)) return ErrorCode::ok;
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
-    if (m_boundBackSurface.lock() == nullptr)
+    if (m_boundBackSurface == nullptr)
     {
         ID3D11RenderTargetView* target = nullptr;
         m_d3dDeviceContext->OMSetRenderTargets(1, &target, nullptr);
         return ErrorCode::ok;
     }
 
-    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.lock().get());
+    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.get());
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView* render_target_view = bbDx11->GetD3DRenderTarget();
     ID3D11DepthStencilView* depth_view = nullptr;
-    if (!m_boundDepthSurface.expired())
+    if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.lock().get());
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(1, &render_target_view, depth_view);
@@ -464,25 +464,25 @@ error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& bac
 error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
     assert(m_d3dDeviceContext);
-    if ((m_boundBackSurface.lock() == back_surface) && (m_boundDepthSurface.lock() == depth_surface)) return ErrorCode::ok;
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     unsigned int bound_sourface_count = 1;
-    if (!m_boundBackSurface.expired()) bound_sourface_count = m_boundBackSurface.lock()->GetSurfaceCount();
+    if (m_boundBackSurface) bound_sourface_count = m_boundBackSurface->GetSurfaceCount();
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
-    if (m_boundBackSurface.lock() == nullptr)
+    if (m_boundBackSurface == nullptr)
     {
         ID3D11RenderTargetView* target = nullptr;
         m_d3dDeviceContext->OMSetRenderTargets(bound_sourface_count, &target, nullptr);
         return ErrorCode::ok;
     }
 
-    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.lock().get());
+    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.get());
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView** render_target_view = bbDx11->GetD3DRenderTargetArray();
     ID3D11DepthStencilView* depth_view = nullptr;
-    if (!m_boundDepthSurface.expired())
+    if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.lock().get());
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(back_surface->GetSurfaceCount(), render_target_view, depth_view);

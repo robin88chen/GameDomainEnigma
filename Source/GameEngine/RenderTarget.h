@@ -24,9 +24,9 @@ namespace Enigma::Graphics
 {
     struct GraphicFormat;
     class IBackSurface;
-    using IBackSurfaceWeak = std::weak_ptr<IBackSurface>;
+    using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
     class IDepthStencilSurface;
-    using IDepthStencilSurfaceWeak = std::weak_ptr<IDepthStencilSurface>;
+    using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
 }
 
 namespace Enigma::Engine
@@ -74,7 +74,7 @@ namespace Enigma::Engine
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
-        Graphics::IBackSurfaceWeak GetBackSurface() { return m_backSurface; };
+        Graphics::IBackSurfacePtr GetBackSurface() { return m_backSurface; };
 
         /** init DepthStencil Buffer */
         error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
@@ -88,7 +88,7 @@ namespace Enigma::Engine
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
-        Graphics::IDepthStencilSurfaceWeak GetDepthStencilSurface() { return m_depthStencilSurface; };
+        Graphics::IDepthStencilSurfacePtr GetDepthStencilSurface() { return m_depthStencilSurface; };
 
         /** get viewport */
         const Graphics::TargetViewPort& GetViewPort();
@@ -162,9 +162,9 @@ namespace Enigma::Engine
         std::string m_name;
         MathLib::Dimension m_dimension;
 
-        Graphics::IBackSurfaceWeak m_backSurface;
+        Graphics::IBackSurfacePtr m_backSurface;
         std::string m_backSurfaceName;
-        Graphics::IDepthStencilSurfaceWeak m_depthStencilSurface;
+        Graphics::IDepthStencilSurfacePtr m_depthStencilSurface;
         std::string m_depthSurfaceName;
         TexturePtr m_renderTargetTexture;
 

@@ -103,8 +103,8 @@ namespace Enigma::Graphics
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface.lock(); }
-        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface.lock(); }
+        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface; }
+        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface; }
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
@@ -228,8 +228,8 @@ namespace Enigma::Graphics
         VertexDeclMap m_vertexDeclMap;
         std::mutex m_declMapLock;
 
-        IBackSurfaceWeak m_boundBackSurface;
-        IDepthStencilSurfaceWeak m_boundDepthSurface;
+        IBackSurfacePtr m_boundBackSurface;
+        IDepthStencilSurfacePtr m_boundDepthSurface;
         TargetViewPort m_boundViewPort;
     };
 }

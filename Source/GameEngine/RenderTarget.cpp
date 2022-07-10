@@ -79,11 +79,11 @@ RenderTarget::~RenderTarget()
 
 error RenderTarget::Initialize()
 {
-    if ((!m_backSurface.expired()) && (!m_depthStencilSurface.expired()))
+    if ((m_backSurface) && (m_depthStencilSurface))
     {
-        m_depthStencilSurface.lock()->MakeBackSurfaceRelated(m_backSurface.lock());
+        m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
     }
-    m_dimension = m_backSurface.lock()->GetDimension();
+    m_dimension = m_backSurface->GetDimension();
     CreateRenderTargetTexture();
     InitViewPortSize();
     return ErrorCode::ok;
@@ -166,7 +166,7 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 error RenderTarget::Bind()
 {
     assert(Graphics::IGraphicAPI::Instance());
-    return Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface.lock(), m_depthStencilSurface.lock());
+    return Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
 }
 
 future_error RenderTarget::AsyncBind()
@@ -194,8 +194,8 @@ future_error RenderTarget::AsyncBindViewPort()
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
     error er = Graphics::IGraphicAPI::Instance()->ClearSurface(
-        ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface.lock() : nullptr,
-        ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface.lock() : nullptr,
+        ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
+        ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
         color, depth_value, stencil_value);
     return er;
 }
@@ -227,16 +227,16 @@ future_error RenderTarget::AsyncFlip()
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)
 {
-    if (FATAL_LOG_EXPR(!m_backSurface.lock())) return ErrorCode::nullBackSurface;
+    if (FATAL_LOG_EXPR(!m_backSurface)) return ErrorCode::nullBackSurface;
     bool isCurrentBound = false;
-    if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface.lock())
+    if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface)
     {
         isCurrentBound = true;
         Graphics::IGraphicAPI::Instance()->BindBackSurface(nullptr, nullptr);
     }
-    error er = m_backSurface.lock()->Resize(dimension);
+    error er = m_backSurface->Resize(dimension);
     if (er) return er;
-    m_dimension = m_backSurface.lock()->GetDimension();
+    m_dimension = m_backSurface->GetDimension();
 
     // 好...來...因為back buffer surface實際上已經重新create了,
     // 所以這裡頭的shader resource view要重新綁定
@@ -245,14 +245,14 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     {
         m_renderTargetTexture->GetDeviceTexture()->UseAsBackSurface(m_backSurface);
     }*/
-    if (m_depthStencilSurface.lock())
+    if (m_depthStencilSurface)
     {
-        er = m_depthStencilSurface.lock()->Resize(dimension);
+        er = m_depthStencilSurface->Resize(dimension);
         if (er) return er;
     }
     if (isCurrentBound)
     {
-        Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface.lock(), m_depthStencilSurface.lock());
+        Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
     }
     InitViewPortSize();
 
@@ -269,8 +269,8 @@ future_error RenderTarget::AsyncResize(const MathLib::Dimension& dimension)
 
 bool RenderTarget::HasGBufferDepthMap()
 {
-    if (!m_backSurface.lock()) return false;
-    if (!m_backSurface.lock()->IsMultiSurface()) return false;
+    if (!m_backSurface) return false;
+    if (!m_backSurface->IsMultiSurface()) return false;
     if (m_gbufferDepthMapIndex == 0) return false;
     return true;
 }
@@ -282,8 +282,8 @@ unsigned RenderTarget::GetGBufferDepthMapIndex()
 
 void RenderTarget::SetGBufferDepthMapIndex(unsigned index)
 {
-    if (!m_backSurface.lock()) return;
-    if (!m_backSurface.lock()->IsMultiSurface()) return;
+    if (!m_backSurface) return;
+    if (!m_backSurface->IsMultiSurface()) return;
     m_gbufferDepthMapIndex = index;
 }
 
@@ -384,7 +384,7 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
 
     auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
     if (back) m_backSurface = back.value();
-    if (m_backSurface.expired()) return;
+    if (!m_backSurface) return;
     if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
     {
         AsyncInitialize();
@@ -413,10 +413,10 @@ void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
     }
     auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
     if (depth) m_depthStencilSurface = depth.value();
-    if (m_depthStencilSurface.expired()) return;
-    if (m_backSurface.lock())
+    if (!m_depthStencilSurface) return;
+    if (m_backSurface)
     {
-        m_depthStencilSurface.lock()->MakeBackSurfaceRelated(m_backSurface.lock());
+        m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
     }
 }
 

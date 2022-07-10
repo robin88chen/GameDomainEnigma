@@ -35,6 +35,14 @@ namespace Enigma::Graphics
     using IVertexShaderPtr = std::shared_ptr<IVertexShader>;
     class IPixelShader;
     using IPixelShaderPtr = std::shared_ptr<IPixelShader>;
+    class IVertexDeclaration;
+    using IVertexDeclarationPtr = std::shared_ptr<IVertexDeclaration>;
+    class IShaderProgram;
+    using IShaderProgramPtr = std::shared_ptr<IShaderProgram>;
+    class IVertexBuffer;
+    using IVertexBufferPtr = std::shared_ptr<IVertexBuffer>;
+    class IIndexBuffer;
+    using IIndexBufferPtr = std::shared_ptr<IIndexBuffer>;
     class TargetViewPort;
     class AssetRepository;
 
@@ -103,8 +111,8 @@ namespace Enigma::Graphics
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual IBackSurfacePtr CurrentBoundBackSurface() { return m_boundBackSurface; }
-        virtual IDepthStencilSurfacePtr CurrentBoundDepthSurface() { return m_boundDepthSurface; }
+        virtual const IBackSurfacePtr& CurrentBoundBackSurface() const { return m_boundBackSurface; }
+        virtual const IDepthStencilSurfacePtr& CurrentBoundDepthSurface() const { return m_boundDepthSurface; }
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
@@ -185,6 +193,35 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
         //@}
 
+        /** @name bind vertex declaration */
+        //@{
+        virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
+        virtual future_error AsyncBindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl);
+        virtual IVertexDeclarationPtr CurrentBoundVertexDeclaration() { return m_boundVertexDecl; };
+        //@}
+        /** @name bind shader */
+        //@{
+        virtual error BindVertexShader(const IVertexShaderPtr& shader) = 0;
+        virtual future_error AsyncBindVertexShader(const IVertexShaderPtr& shader);
+        virtual const IVertexShaderPtr& CurrentBoundVertexShader() const { return m_boundVertexShader; };
+        virtual error BindPixelShader(const IPixelShaderPtr& shader) = 0;
+        virtual future_error AsyncBindPixelShader(const IPixelShaderPtr& shader);
+        virtual const IPixelShaderPtr& CurrentBoundPixelShader() const { return m_boundPixelShader; };
+        virtual error BindShaderProgram(const IShaderProgramPtr& shader) = 0;
+        virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader) = 0;
+        virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
+        //@}
+        /** @name bind vertex / index buffer */
+        //@{
+        virtual error BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) = 0;
+        virtual future_error AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
+        virtual const IVertexBufferPtr& CurrentBoundVertexBuffer() const { return m_boundVertexBuffer; };
+        virtual PrimitiveTopology CurrentBoundTopology() { return m_boundTopology; }
+        virtual error BindIndexBuffer(const IIndexBufferPtr& buffer) = 0;
+        virtual future_error AsyncBindIndexBuffer(const IIndexBufferPtr& buffer);
+        virtual const IIndexBufferPtr& CurrentBoundIndexBuffer() const { return m_boundIndexBuffer; };
+        //@}
+
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
 
@@ -230,6 +267,13 @@ namespace Enigma::Graphics
 
         IBackSurfacePtr m_boundBackSurface;
         IDepthStencilSurfacePtr m_boundDepthSurface;
+        IVertexDeclarationPtr m_boundVertexDecl;
+        IVertexShaderPtr m_boundVertexShader;
+        IPixelShaderPtr m_boundPixelShader;
+        IShaderProgramPtr m_boundShaderProgram;
+        IVertexBufferPtr m_boundVertexBuffer;
+        PrimitiveTopology m_boundTopology;
+        IIndexBufferPtr m_boundIndexBuffer;
         TargetViewPort m_boundViewPort;
     };
 }

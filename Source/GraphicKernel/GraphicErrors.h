@@ -47,6 +47,9 @@ namespace Enigma::Graphics
         deviceCreateVertexBuffer = 1301,
         deviceCreateIndexBuffer,
         bufferSize,
+        dynamicCastBuffer,
+        nullVertexBuffer,
+        nullIndexBuffer,
 
         deviceCreateVertexShader = 1401,
         deviceCreatePixelShader,
@@ -59,6 +62,10 @@ namespace Enigma::Graphics
         dynamicCastState,
         applyTextureVariable,
         duplicatedVertexDeclaration,
+        dynamicCastVertexLayout,
+        nullVertexLayout,
+        dynamicCastShader,
+        nullShader,
 
         dxCreateBuffer = 1501,
         dxBufferMapping,

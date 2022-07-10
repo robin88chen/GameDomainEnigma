@@ -176,6 +176,31 @@ future_error IGraphicAPI::AsyncCreateMultiTexture(const std::string& tex_name)
     return m_workerThread->PushTask([=]() -> error { return this->CreateMultiTexture(tex_name); });
 }
 
+future_error IGraphicAPI::AsyncBindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindVertexDeclaration(vertexDecl); });
+}
+
+future_error IGraphicAPI::AsyncBindVertexShader(const IVertexShaderPtr& shader)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindVertexShader(shader); });
+}
+
+future_error IGraphicAPI::AsyncBindPixelShader(const IPixelShaderPtr& shader)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindPixelShader(shader); });
+}
+
+future_error IGraphicAPI::AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindVertexBuffer(buffer, pt); });
+}
+
+future_error IGraphicAPI::AsyncBindIndexBuffer(const IIndexBufferPtr& buffer)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindIndexBuffer(buffer); });
+}
+
 void IGraphicAPI::TerminateGraphicThread()
 {
     if (m_workerThread)

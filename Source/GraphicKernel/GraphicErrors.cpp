@@ -1,4 +1,6 @@
 ﻿#include "GraphicErrors.h"
+#include <string>
+#include <system_error>
 
 using namespace Enigma::Graphics;
 
@@ -13,18 +15,22 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::notImplement: return "not implement yet";
     case ErrorCode::nullMemoryBuffer: return "null memory buffer";
     case ErrorCode::invalidParameter: return "invalid parameter";
+
     case ErrorCode::dxgiInitialize: return "DXGI initialize state fail";
     case ErrorCode::invalidWindow: return "Invalid window";
     case ErrorCode::adapterFail: return "Adapter fail";
     case ErrorCode::enumerateDevicesFail: return "Enumerate devices fail";
+
     case ErrorCode::resizeBackSurfaceFail: return "Resize back surface fail";
     case ErrorCode::createDeviceFail: return "Create device fail";
+
     case ErrorCode::d3dDeviceNullPointer: return "D3D Device null pointer";
     case ErrorCode::swapChain: return "Swap Chain fail";
     case ErrorCode::createBackSurfaceFail: return "Create back surface fail";
     case ErrorCode::createDepthSurfaceFail: return "Create depth surface fail";
     case ErrorCode::dynamicCastSurface: return "Dynamic cast to device surface fail";
     case ErrorCode::nullBackSurface: return "null back surface";
+
     case ErrorCode::deviceCreateTexture: return "Device create texture fail";
     case ErrorCode::dxLoadTexture: return "Dx Load Texture fail";
     case ErrorCode::dxCreateTexture: return "Dx Create texture fail";
@@ -33,9 +39,14 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dxSaveTexture: return "Dx Save texture fail";
     case ErrorCode::saveTextureFile: return "save texture file fail";
     case ErrorCode::dxCreateShaderResource: return "Dx create shader resource";
+
     case ErrorCode::deviceCreateVertexBuffer: return "Device create vertex buffer fail";
     case ErrorCode::deviceCreateIndexBuffer: return "Device create index buffer fail";
     case ErrorCode::bufferSize: return "buffer size error";
+    case ErrorCode::dynamicCastBuffer: return "dynamic cast vertex/index buffer fail";
+    case ErrorCode::nullVertexBuffer: return "null vertex buffer";
+    case ErrorCode::nullIndexBuffer: return "null index buffer";
+
     case ErrorCode::deviceCreateVertexShader: return "device create vertex shader fail";
     case ErrorCode::deviceCreatePixelShader: return "device create pixel shader fail";
     case ErrorCode::compileShader: return "compile shader fail";
@@ -46,7 +57,12 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullSamplerState: return "null sampler state";
     case ErrorCode::dynamicCastState: return "dynamic cast state fail";
     case ErrorCode::applyTextureVariable: return "apply texture variable fail";
-    case ErrorCode::duplicatedVertexDeclaration: return "duplicated vertex declaration name";
+    case ErrorCode::duplicatedVertexDeclaration: return "duplicated vertex layout name";
+    case ErrorCode::dynamicCastVertexLayout: return "dynamic cast vertex layout fail";
+    case ErrorCode::nullVertexLayout: return "null vertex layout";
+    case ErrorCode::dynamicCastShader: return "dynamic cast shader fail";
+    case ErrorCode::nullShader: return "null shader";
+
     case ErrorCode::dxCreateBuffer: return "Dx create buffer fail";
     case ErrorCode::dxBufferMapping: return "Dx buffer mapping fail";
     case ErrorCode::dxCreateSamplerState: return "Dx create sampler state fail";

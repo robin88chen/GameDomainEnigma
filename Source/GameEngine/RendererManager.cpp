@@ -53,8 +53,8 @@ error RendererManager::DestroyRenderer(const std::string& name)
 error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
                                           Graphics::IGraphicAPI::AsyncType async)
 {
-    const std::weak_ptr<RenderTarget> target_check = GetRenderTarget(name);
-    if (!target_check.expired())
+    auto target_check = GetRenderTarget(name);
+    if (target_check)
     {
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
@@ -73,20 +73,20 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
 
 error RendererManager::DestroyRenderTarget(const std::string& name)
 {
-    std::weak_ptr<RenderTarget> target = GetRenderTarget(name);
-    if (target.expired()) return ErrorCode::renderTargetNotExist;
+    auto target = GetRenderTarget(name);
+    if (!target) return ErrorCode::renderTargetNotExist;
     m_mapRenderTarget.erase(name);
     return ErrorCode::ok;
 }
 
-std::weak_ptr<RenderTarget> RendererManager::GetRenderTarget(const std::string& name) const
+RenderTargetPtr RendererManager::GetRenderTarget(const std::string& name) const
 {
     RenderTargetMap::const_iterator iter = m_mapRenderTarget.find(name);
-    if (iter == m_mapRenderTarget.end()) return std::weak_ptr<RenderTarget>();
+    if (iter == m_mapRenderTarget.end()) return nullptr;
     return iter->second;
 }
 
-std::weak_ptr<RenderTarget> RendererManager::GetPrimaryRenderTarget() const
+RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
 {
     return GetRenderTarget(m_primaryRenderTargetName);
 }

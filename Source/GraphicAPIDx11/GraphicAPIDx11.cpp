@@ -30,6 +30,11 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
+static D3D11_PRIMITIVE_TOPOLOGY ConvertTopologyD3D11(Enigma::Graphics::PrimitiveTopology pt)
+{
+    return (D3D11_PRIMITIVE_TOPOLOGY)pt;
+}
+
 GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
 {
     m_apiVersion = IGraphicAPI::APIVersion::API_Dx11;
@@ -206,9 +211,9 @@ error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surf
     {
         isMultiSurface = back_surface->IsMultiSurface();
     }
-    else if (!m_boundBackSurface.expired())
+    else if (m_boundBackSurface)
     {
-        isMultiSurface = m_boundBackSurface.lock()->IsMultiSurface();
+        isMultiSurface = m_boundBackSurface->IsMultiSurface();
     }
     if (!isMultiSurface)
     {
@@ -384,8 +389,137 @@ error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
     return ErrorCode::ok;
 }
 
+error GraphicAPIDx11::BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl)
+{
+    Platforms::Debug::Printf("bind vertex declaration in thread %d\n", std::this_thread::get_id());
+    assert(m_d3dDeviceContext);
+    if (m_boundVertexDecl == vertexDecl) return ErrorCode::ok;
+    if ((vertexDecl == nullptr) && (m_boundVertexDecl != nullptr))
+    {
+        m_d3dDeviceContext->IASetInputLayout(nullptr);
+        m_boundVertexDecl = nullptr;
+        return ErrorCode::ok;
+    }
+    VertexDeclarationDx11* vtxDx11 = dynamic_cast<VertexDeclarationDx11*>(vertexDecl.get());
+    if (FATAL_LOG_EXPR(!vtxDx11)) return ErrorCode::dynamicCastVertexLayout;
+    if (FATAL_LOG_EXPR(!vtxDx11->GetD3DInputLayout())) return ErrorCode::nullVertexLayout;
+    m_d3dDeviceContext->IASetInputLayout(vtxDx11->GetD3DInputLayout());
+    m_boundVertexDecl = vertexDecl;
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindVertexShader(const Graphics::IVertexShaderPtr& shader)
+{
+    Platforms::Debug::Printf("bind vertex shader in thread %d\n", std::this_thread::get_id());
+    assert(m_d3dDeviceContext);
+    if (m_boundVertexShader == shader) return ErrorCode::ok;
+    if ((shader == nullptr) && (m_boundVertexShader != nullptr))
+    {
+        m_d3dDeviceContext->VSSetShader(nullptr, nullptr, 0);
+        m_boundVertexShader = nullptr;
+        return ErrorCode::ok;
+    }
+    VertexShaderDx11* shaderDx11 = dynamic_cast<VertexShaderDx11*>(shader.get());
+    if (FATAL_LOG_EXPR(!shaderDx11)) return ErrorCode::dynamicCastShader;
+    if (FATAL_LOG_EXPR(!shaderDx11->GetD3DShader())) return ErrorCode::nullShader;
+    m_d3dDeviceContext->VSSetShader(shaderDx11->GetD3DShader(), NULL, 0);
+    m_boundVertexShader = shader;
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
+{
+    Platforms::Debug::Printf("bind pixel shader in thread %d\n", std::this_thread::get_id());
+    assert(m_d3dDeviceContext);
+    if (m_boundPixelShader == shader) return ErrorCode::ok;
+    if ((shader == nullptr) && (m_boundPixelShader != nullptr))
+    {
+        m_d3dDeviceContext->PSSetShader(nullptr, nullptr, 0);
+        m_boundPixelShader = nullptr;
+        return ErrorCode::ok;
+    }
+    PixelShaderDx11* shaderDx11 = dynamic_cast<PixelShaderDx11*>(shader.get());
+    if (FATAL_LOG_EXPR(!shaderDx11)) return ErrorCode::dynamicCastShader;
+    if (FATAL_LOG_EXPR(!shaderDx11->GetD3DShader())) return ErrorCode::nullShader;
+    m_d3dDeviceContext->PSSetShader(shaderDx11->GetD3DShader(), NULL, 0);
+    m_boundPixelShader = shader;
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindShaderProgram(const Graphics::IShaderProgramPtr& shader)
+{
+    if (m_boundShaderProgram == shader) return ErrorCode::ok;
+    error er = BindVertexShader(shader->GetVertexShader());
+    if (er) return er;
+    er = BindPixelShader(shader->GetPixelShader());
+    return er;
+}
+
+future_error GraphicAPIDx11::AsyncBindShaderProgram(const Graphics::IShaderProgramPtr& shader)
+{
+    future_error er = make_future_err(ErrorCode::ok);
+    if (m_boundShaderProgram == shader) return er;
+    er = AsyncBindVertexShader(shader->GetVertexShader());
+    er = AsyncBindPixelShader(shader->GetPixelShader());
+    return er;
+}
+
+error GraphicAPIDx11::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt)
+{
+    Platforms::Debug::Printf("bind vertex buffer in thread %d\n", std::this_thread::get_id());
+    assert(m_d3dDeviceContext);
+    if ((m_boundVertexBuffer == buffer) && (m_boundTopology == pt)) return ErrorCode::ok;
+    if (buffer == nullptr)
+    {
+        m_boundVertexBuffer = nullptr;
+        return ErrorCode::ok;
+    }
+    VertexBufferDx11* buffDx11 = dynamic_cast<VertexBufferDx11*>(buffer.get());
+    if (FATAL_LOG_EXPR(!buffDx11)) return ErrorCode::dynamicCastBuffer;
+    if (FATAL_LOG_EXPR(!buffDx11->GetD3DBuffer())) return ErrorCode::nullVertexBuffer;
+    ID3D11Buffer* d3dBuffer = buffDx11->GetD3DBuffer();
+    unsigned int offset = 0;
+    unsigned int sizeVertex = buffer->SizeofVertex();
+    m_d3dDeviceContext->IASetVertexBuffers(0, 1, &d3dBuffer, &sizeVertex, &offset);
+    m_d3dDeviceContext->IASetPrimitiveTopology(ConvertTopologyD3D11(pt));
+    m_boundVertexBuffer = buffer;
+    m_boundTopology = pt;
+
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer)
+{
+    Platforms::Debug::Printf("bind index buffer in thread %d\n", std::this_thread::get_id());
+    assert(m_d3dDeviceContext);
+    if (m_boundIndexBuffer == buffer) return ErrorCode::ok;
+    if (buffer == nullptr)
+    {
+        m_boundIndexBuffer = nullptr;
+        return ErrorCode::ok;
+    }
+    IndexBufferDx11* buffDx11 = dynamic_cast<IndexBufferDx11*>(buffer.get());
+    if (FATAL_LOG_EXPR(!buffDx11)) return ErrorCode::dynamicCastBuffer;
+    if (FATAL_LOG_EXPR(!buffDx11->GetD3DBuffer())) return ErrorCode::nullIndexBuffer;
+    m_d3dDeviceContext->IASetIndexBuffer(buffDx11->GetD3DBuffer(), DXGI_FORMAT_R32_UINT, 0);
+    m_boundIndexBuffer = buffer;
+
+    return ErrorCode::ok;
+}
+
 void GraphicAPIDx11::CleanupDeviceObjects()
 {
+    m_boundVertexDecl = nullptr;
+    m_boundVertexShader = nullptr;
+    m_boundPixelShader = nullptr;
+    m_boundShaderProgram = nullptr;
+    m_boundVertexBuffer = nullptr;
+    m_boundIndexBuffer = nullptr;
+    m_boundBackSurface = nullptr;
+    m_boundDepthSurface = nullptr;
 }
 
 error GraphicAPIDx11::ClearSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color)
@@ -437,23 +571,23 @@ error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurf
 error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
     assert(m_d3dDeviceContext);
-    if ((m_boundBackSurface.lock() == back_surface) && (m_boundDepthSurface.lock() == depth_surface)) return ErrorCode::ok;
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
-    if (m_boundBackSurface.lock() == nullptr)
+    if (m_boundBackSurface == nullptr)
     {
         ID3D11RenderTargetView* target = nullptr;
         m_d3dDeviceContext->OMSetRenderTargets(1, &target, nullptr);
         return ErrorCode::ok;
     }
 
-    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.lock().get());
+    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.get());
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView* render_target_view = bbDx11->GetD3DRenderTarget();
     ID3D11DepthStencilView* depth_view = nullptr;
-    if (!m_boundDepthSurface.expired())
+    if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.lock().get());
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(1, &render_target_view, depth_view);
@@ -464,25 +598,25 @@ error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& bac
 error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
     assert(m_d3dDeviceContext);
-    if ((m_boundBackSurface.lock() == back_surface) && (m_boundDepthSurface.lock() == depth_surface)) return ErrorCode::ok;
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     unsigned int bound_sourface_count = 1;
-    if (!m_boundBackSurface.expired()) bound_sourface_count = m_boundBackSurface.lock()->GetSurfaceCount();
+    if (m_boundBackSurface) bound_sourface_count = m_boundBackSurface->GetSurfaceCount();
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
-    if (m_boundBackSurface.lock() == nullptr)
+    if (m_boundBackSurface == nullptr)
     {
         ID3D11RenderTargetView* target = nullptr;
         m_d3dDeviceContext->OMSetRenderTargets(bound_sourface_count, &target, nullptr);
         return ErrorCode::ok;
     }
 
-    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.lock().get());
+    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.get());
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView** render_target_view = bbDx11->GetD3DRenderTargetArray();
     ID3D11DepthStencilView* depth_view = nullptr;
-    if (!m_boundDepthSurface.expired())
+    if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.lock().get());
+        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(back_surface->GetSurfaceCount(), render_target_view, depth_view);

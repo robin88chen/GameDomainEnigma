@@ -78,6 +78,26 @@ namespace Enigma::Graphics
         virtual future_error AsyncCleanupDevice();
         //@}
 
+         /** @name scene begin/end  */
+        //@{
+        virtual error BeginScene() = 0;
+        virtual error EndScene() = 0;
+        virtual future_error AsyncBeginScene();
+        virtual future_error AsyncEndScene();
+        //@}
+
+        /** @name draw call */
+        //@{
+        /** draw primitive */
+        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) = 0;
+        virtual future_error AsyncDrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset);
+        /** draw indexed primitive */
+        virtual error DrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset) = 0;
+        virtual future_error AsyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset);
+        //@}
+
         virtual error Flip() = 0;
         virtual future_error AsyncFlip();
 

@@ -34,12 +34,35 @@ IGraphicAPI* IGraphicAPI::Instance()
 
 future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
 {
-    return m_workerThread->PushTask(std::bind(&IGraphicAPI::CreateDevice, this, rqb, hwnd));
+    return m_workerThread->PushTask([=]() -> error { return this->CreateDevice(rqb, hwnd); });
 }
 
 future_error IGraphicAPI::AsyncCleanupDevice()
 {
-    return m_workerThread->PushTask(std::bind(&IGraphicAPI::CleanupDevice, this));
+    return m_workerThread->PushTask([=]() -> error { return this->CleanupDevice(); });
+}
+
+future_error IGraphicAPI::AsyncBeginScene()
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BeginScene(); });
+}
+
+future_error IGraphicAPI::AsyncEndScene()
+{
+    return m_workerThread->PushTask([=]() -> error { return this->EndScene(); });
+}
+
+future_error IGraphicAPI::AsyncDrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->DrawPrimitive(vertexCount, vertexOffset); });
+}
+
+future_error IGraphicAPI::AsyncDrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
+    int baseVertexOffset)
+{
+    return m_workerThread->PushTask([=]() -> error
+        { return this->DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset); });
 }
 
 future_error IGraphicAPI::AsyncFlip()
@@ -49,8 +72,7 @@ future_error IGraphicAPI::AsyncFlip()
 
 future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
 {
-    return m_workerThread->PushTask(std::bind(&IGraphicAPI::CreatePrimaryBackSurface, this,
-        back_name, depth_name));
+    return m_workerThread->PushTask([=]() -> error { return this->CreatePrimaryBackSurface(back_name, depth_name); });
 }
 
 future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 

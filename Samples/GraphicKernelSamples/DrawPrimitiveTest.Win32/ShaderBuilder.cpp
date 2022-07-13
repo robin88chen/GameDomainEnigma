@@ -176,7 +176,7 @@ void ShaderBuilder::OnPixelShaderCreated(const IEventPtr& e)
     }
     else
     {
-        shader->CompileCode(m_vtxShaderCode, "ps_4_0", "ps_main");
+        shader->CompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
     }
 }
 
@@ -185,7 +185,7 @@ void ShaderBuilder::OnPixelShaderCompiled(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PixelShaderCompiled, IEvent>(e);
     if (!ev) return;
-    if (ev->GetShaderName() != m_vtxShaderName)
+    if (ev->GetShaderName() != m_pixShaderName)
     {
         Debug::Printf("compiled pixel shader name not match %s", ev->GetShaderName().c_str());
         return;

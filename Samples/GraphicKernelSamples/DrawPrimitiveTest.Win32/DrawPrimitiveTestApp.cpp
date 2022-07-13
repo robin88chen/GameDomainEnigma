@@ -106,7 +106,7 @@ void DrawPrimitiveTestApp::InstallEngine()
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
 
     m_shaderBuilder = menew ShaderBuilder(m_asyncType);
-    m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, "pix_shader", ps_code_11 });
+    m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, "vtx_layout", "pix_shader", ps_code_11 });
 }
 
 void DrawPrimitiveTestApp::ShutdownEngine()

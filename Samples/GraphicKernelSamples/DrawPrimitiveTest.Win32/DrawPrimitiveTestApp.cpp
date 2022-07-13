@@ -2,11 +2,13 @@
 #include "MathLib/Vector3.h"
 #include "Controllers/InstallingPolicies.h"
 #include <cassert>
+#include <GraphicKernel/GraphicEvents.h>
 #include <Platforms/MemoryAllocMacro.h>
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/ServiceManager.h"
 #include "GameEngine/RendererEvents.h"
 #include "Frameworks/CommandBus.h"
+#include "ShaderBuilder.h"
 #include "GameEngine/RendererCommands.h"
 
 using namespace Enigma::Controllers;
@@ -18,6 +20,7 @@ using namespace Enigma::MathLib;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
+std::string ShaderProgramName = "shader_program";
 
 struct VtxData
 {
@@ -92,19 +95,34 @@ void DrawPrimitiveTestApp::InstallEngine()
 {
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    m_onShaderProgramCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramCreated(e); });
+    EventPublisher::Subscribe(typeid(DeviceShaderProgramCreated), m_onShaderProgramCreated);
+
     assert(m_graphicMain);
-    DeviceCreatingPolicy* creating_policy = menew DeviceCreatingPolicy(IGraphicAPI::Instance(), DeviceRequiredBits(), m_asyncType, m_hwnd);
-    InstallingDefaultRendererPolicy* policy = menew InstallingDefaultRendererPolicy(std::unique_ptr<DeviceCreatingPolicy>(creating_policy),
-        DefaultRendererName, PrimaryTargetName);
-    m_graphicMain->InstallRenderEngine(std::unique_ptr<InstallingPolicy>(policy));
+
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_asyncType, m_hwnd);
+    auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
+    m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
+
+    m_shaderBuilder = menew ShaderBuilder(m_asyncType);
+    m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, "pix_shader", ps_code_11 });
 }
 
 void DrawPrimitiveTestApp::ShutdownEngine()
 {
-    m_graphicMain->ShutdownRenderEngine();
+    delete m_shaderBuilder;
+    m_shaderBuilder = nullptr;
+
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(DeviceShaderProgramCreated), m_onShaderProgramCreated);
+    m_onShaderProgramCreated = nullptr;
+
+    m_renderTarget = nullptr;
+    m_program = nullptr;
+
+    m_graphicMain->ShutdownRenderEngine();
 }
 
 void DrawPrimitiveTestApp::FrameUpdate()
@@ -120,7 +138,16 @@ void DrawPrimitiveTestApp::RenderFrame()
 void DrawPrimitiveTestApp::OnRenderTargetCreated(const IEventPtr& e)
 {
     if (!e) return;
-    PrimaryRenderTargetCreated* ev = dynamic_cast<PrimaryRenderTargetCreated*>(e.get());
+    std::shared_ptr<PrimaryRenderTargetCreated> ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
     m_renderTarget = m_rendererManager->GetRenderTarget(ev->GetRenderTargetName());
+}
+
+void DrawPrimitiveTestApp::OnShaderProgramCreated(const IEventPtr& e)
+{
+    if (!e) return;
+    std::shared_ptr<DeviceShaderProgramCreated> ev = std::dynamic_pointer_cast<DeviceShaderProgramCreated, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetName() != ShaderProgramName) return;
+    m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
 }

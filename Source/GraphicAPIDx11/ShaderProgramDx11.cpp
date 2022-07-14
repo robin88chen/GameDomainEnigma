@@ -5,8 +5,6 @@
 #include "VertexDeclarationDx11.h"
 #include "ShaderVariablesDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
-#include "GraphicKernel/GraphicEvents.h"
-#include "GraphicKernel/IVertexDeclaration.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/StringFormat.h"
 #include "Frameworks/TokenVector.h"
@@ -188,25 +186,25 @@ void ShaderProgramDx11::RetrieveShaderVariables(ID3D11ShaderReflection* shaderRe
             if (!reflect_cb) continue;
             D3D11_SHADER_BUFFER_DESC cb_desc;
             reflect_cb->GetDesc(&cb_desc);  // for global variables, cb name = "$Globals"
-            ShaderVariableDx11_ConstBuffer* var_cb = menew ShaderVariableDx11_ConstBuffer(var_of, res_desc.Name, res_semantic.c_str(),
-                res_desc.BindPoint, res_desc.BindPoint);
+            auto var_cb = std::shared_ptr<ShaderVariableDx11_ConstBuffer>{
+                menew ShaderVariableDx11_ConstBuffer(var_of, res_desc.Name, res_semantic.c_str(),
+                res_desc.BindPoint, res_desc.BindPoint) };
             var_cb->Create(cb_desc, shader_name);
             if (cb_desc.Variables == 0) continue;
             var_cb->CreateChildVariables(reflect_cb, cb_desc.Variables, semantic_table);
-            m_variables.push_back(std::shared_ptr<ShaderVariableDx11_Resource>{var_cb});
+            m_variables.push_back(std::dynamic_pointer_cast<ShaderVariableDx11_Resource, ShaderVariableDx11_ConstBuffer>(var_cb));
         }
         else if (res_desc.Type == D3D_SIT_TEXTURE)
         {
-            ShaderVariableDx11_Texture* var_tex = menew ShaderVariableDx11_Texture(var_of, res_desc.Name,
-                res_semantic.c_str(), res_desc.BindPoint, res_desc.BindCount);
-            m_variables.push_back(std::shared_ptr<ShaderVariableDx11_Resource>{var_tex});
+            auto var_tex = std::shared_ptr<ShaderVariableDx11_Texture>{ menew ShaderVariableDx11_Texture(var_of, res_desc.Name,
+                res_semantic.c_str(), res_desc.BindPoint, res_desc.BindCount) };
+            m_variables.push_back(std::dynamic_pointer_cast<ShaderVariableDx11_Resource, ShaderVariableDx11_Texture>(var_tex));
         }
         else if (res_desc.Type == D3D_SIT_SAMPLER)
         {
-            ShaderVariableDx11_Sampler* var_samp = menew ShaderVariableDx11_Sampler(var_of, res_desc.Name,
-                res_semantic.c_str(), res_desc.BindPoint, res_desc.BindCount);
-            m_variables.push_back(std::shared_ptr<ShaderVariableDx11_Resource>{var_samp});
+            auto var_samp = std::shared_ptr<ShaderVariableDx11_Sampler>{ menew ShaderVariableDx11_Sampler(var_of, res_desc.Name,
+                res_semantic.c_str(), res_desc.BindPoint, res_desc.BindCount) };
+            m_variables.push_back(std::dynamic_pointer_cast<ShaderVariableDx11_Resource, ShaderVariableDx11_Sampler>(var_samp));
         }
     }
 }
-

@@ -9,6 +9,7 @@
 #include "GameEngine/RendererEvents.h"
 #include "Frameworks/CommandBus.h"
 #include "ShaderBuilder.h"
+#include "BufferBuilder.h"
 #include "GameEngine/RendererCommands.h"
 
 using namespace Enigma::Controllers;
@@ -21,6 +22,9 @@ using namespace Enigma::MathLib;
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
 std::string ShaderProgramName = "shader_program";
+std::string VertexDeclName = "vtx_layout";
+std::string VertexBufferName = "vtx_buffer";
+std::string IndexBufferName = "idx_buffer";
 
 struct VtxData
 {
@@ -97,6 +101,10 @@ void DrawPrimitiveTestApp::InstallEngine()
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onShaderProgramCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramCreated(e); });
     EventPublisher::Subscribe(typeid(DeviceShaderProgramCreated), m_onShaderProgramCreated);
+    m_onVertexBufferBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnVertexBufferBuilt(e); });
+    EventPublisher::Subscribe(typeid(VertexBufferBuilt), m_onVertexBufferBuilt);
+    m_onIndexBufferBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnIndexBufferBuilt(e); });
+    EventPublisher::Subscribe(typeid(IndexBufferBuilt), m_onIndexBufferBuilt);
 
     assert(m_graphicMain);
 
@@ -106,21 +114,36 @@ void DrawPrimitiveTestApp::InstallEngine()
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
 
     m_shaderBuilder = menew ShaderBuilder(m_asyncType);
-    m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, "vtx_layout", "pix_shader", ps_code_11 });
+    m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, VertexDeclName, "pix_shader", ps_code_11 });
+
+    byte_buffer points = make_data_buffer((unsigned char*)vtx_pos, sizeof(vtx_pos));
+    uint_buffer indices = make_data_buffer(vtx_idx, 6);
+    m_bufferBuilder = menew BufferBuilder(m_asyncType);
+    m_bufferBuilder->BuildVertexBuffer(VertexBufferName, sizeof(VtxData), points);
+    m_bufferBuilder->BuildIndexBuffer(IndexBufferName, indices);
 }
 
 void DrawPrimitiveTestApp::ShutdownEngine()
 {
     delete m_shaderBuilder;
     m_shaderBuilder = nullptr;
+    delete m_bufferBuilder;
+    m_bufferBuilder = nullptr;
 
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(DeviceShaderProgramCreated), m_onShaderProgramCreated);
     m_onShaderProgramCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(VertexBufferBuilt), m_onVertexBufferBuilt);
+    m_onVertexBufferBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(IndexBufferBuilt), m_onIndexBufferBuilt);
+    m_onIndexBufferBuilt = nullptr;
 
     m_renderTarget = nullptr;
     m_program = nullptr;
+    m_vtxDecl = nullptr;
+    m_vtxBuffer = nullptr;
+    m_idxBuffer = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -132,7 +155,18 @@ void DrawPrimitiveTestApp::FrameUpdate()
 
 void DrawPrimitiveTestApp::RenderFrame()
 {
-    AppDelegate::RenderFrame();
+    if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
+    m_renderTarget->AsyncBind();
+    m_renderTarget->AsyncBindViewPort();
+    IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
+    IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
+    IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
+    IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
+    m_renderTarget->AsyncClear();
+    IGraphicAPI::Instance()->AsyncBeginScene();
+    IGraphicAPI::Instance()->AsyncDrawIndexedPrimitive(6, 4, 0, 0);
+    IGraphicAPI::Instance()->AsyncEndScene();
+    m_renderTarget->AsyncFlip();
 }
 
 void DrawPrimitiveTestApp::OnRenderTargetCreated(const IEventPtr& e)
@@ -150,4 +184,23 @@ void DrawPrimitiveTestApp::OnShaderProgramCreated(const IEventPtr& e)
     if (!ev) return;
     if (ev->GetName() != ShaderProgramName) return;
     m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
+    m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
+}
+
+void DrawPrimitiveTestApp::OnVertexBufferBuilt(const IEventPtr& e)
+{
+    if (!e) return;
+    std::shared_ptr<VertexBufferBuilt> ev = std::dynamic_pointer_cast<VertexBufferBuilt, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetBufferName() != VertexBufferName) return;
+    m_vtxBuffer = IGraphicAPI::Instance()->GetGraphicAsset<IVertexBufferPtr>(ev->GetBufferName());
+}
+
+void DrawPrimitiveTestApp::OnIndexBufferBuilt(const IEventPtr& e)
+{
+    if (!e) return;
+    std::shared_ptr<IndexBufferBuilt> ev = std::dynamic_pointer_cast<IndexBufferBuilt, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetBufferName() != IndexBufferName) return;
+    m_idxBuffer = IGraphicAPI::Instance()->GetGraphicAsset<IIndexBufferPtr>(ev->GetBufferName());
 }

@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BufferBuilder.cpp" />
     <ClCompile Include="DrawPrimitiveTestApp.cpp" />
     <ClCompile Include="MainWin32.cpp" />
     <ClCompile Include="pch.cpp">
@@ -137,6 +138,7 @@
     <ClCompile Include="ShaderBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BufferBuilder.h" />
     <ClInclude Include="DrawPrimitiveTestApp.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ShaderBuilder.h" />

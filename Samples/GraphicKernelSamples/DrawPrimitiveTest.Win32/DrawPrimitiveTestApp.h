@@ -15,6 +15,7 @@
 #include "GameEngine/RendererManager.h"
 
 class ShaderBuilder;
+class BufferBuilder;
 
 class DrawPrimitiveTestApp : public Enigma::Application::AppDelegate
 {
@@ -30,16 +31,24 @@ public:
 private:
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnShaderProgramCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnVertexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnIndexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     Enigma::Engine::RendererManager* m_rendererManager;
     Enigma::Engine::RenderTargetPtr m_renderTarget;
     Enigma::Graphics::IShaderProgramPtr m_program;
+    Enigma::Graphics::IVertexBufferPtr m_vtxBuffer;
+    Enigma::Graphics::IIndexBufferPtr m_idxBuffer;
+    Enigma::Graphics::IVertexDeclarationPtr m_vtxDecl;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
 
     ShaderBuilder* m_shaderBuilder;
+    BufferBuilder* m_bufferBuilder;
 };
 
 #endif // DRAW_PRIMITIVE_TEST_APP_H

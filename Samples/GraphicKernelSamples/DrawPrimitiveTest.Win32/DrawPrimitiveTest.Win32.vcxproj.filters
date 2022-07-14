@@ -5,10 +5,12 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="DrawPrimitiveTestApp.cpp" />
     <ClCompile Include="ShaderBuilder.cpp" />
+    <ClCompile Include="BufferBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="DrawPrimitiveTestApp.h" />
     <ClInclude Include="ShaderBuilder.h" />
+    <ClInclude Include="BufferBuilder.h" />
   </ItemGroup>
 </Project>

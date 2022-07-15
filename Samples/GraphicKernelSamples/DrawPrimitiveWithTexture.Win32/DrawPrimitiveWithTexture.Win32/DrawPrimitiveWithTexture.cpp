@@ -138,6 +138,10 @@ void DrawPrimitiveWithTextureApp::InstallEngine()
     samp_data.m_addressModeU = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
     samp_data.m_addressModeV = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
     m_textureBuilder->BuildSampler(SamplerName, samp_data);
+
+    m_timer = menew Timer;
+    m_timer->Reset();
+    m_tick = 0.0f;
 }
 
 void DrawPrimitiveWithTextureApp::ShutdownEngine()
@@ -148,6 +152,8 @@ void DrawPrimitiveWithTextureApp::ShutdownEngine()
     m_bufferBuilder = nullptr;
     delete m_textureBuilder;
     m_textureBuilder = nullptr;
+    delete m_timer;
+    m_timer = nullptr;
 
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
@@ -177,6 +183,16 @@ void DrawPrimitiveWithTextureApp::ShutdownEngine()
 void DrawPrimitiveWithTextureApp::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+    if (m_timer)
+    {
+        m_timer->Update();
+        m_tick += m_timer->GetElapseTime();
+    }
+    if (m_program)
+    {
+        IShaderVariablePtr ps_var = m_program->GetVariableBySemantic("ANIM_TIMER");
+        ps_var->SetValue(m_tick);
+    }
 }
 
 void DrawPrimitiveWithTextureApp::RenderFrame()

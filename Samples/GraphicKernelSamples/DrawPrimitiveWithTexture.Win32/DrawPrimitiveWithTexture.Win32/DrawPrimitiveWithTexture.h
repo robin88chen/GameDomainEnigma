@@ -14,6 +14,7 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/RenderTarget.h"
+#include "Frameworks/Timer.h"
 #include "GameEngine/RendererManager.h"
 
 class ShaderBuilder;
@@ -50,6 +51,8 @@ private:
     Enigma::Graphics::IVertexDeclarationPtr m_vtxDecl;
     Enigma::Graphics::ITexturePtr m_texture;
     Enigma::Graphics::IDeviceSamplerStatePtr m_sampler;
+    Enigma::Frameworks::Timer* m_timer;
+    float m_tick;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramCreated;

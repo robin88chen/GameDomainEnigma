@@ -13,6 +13,8 @@
 #include "BufferBuilder.h"
 #include "GameEngine/RendererCommands.h"
 #include "TextureSamplerBuilder.h"
+#include "GraphicKernel/IShaderProgram.h"
+#include "GraphicKernel/IShaderVariable.h"
 
 using namespace Enigma::Controllers;
 using namespace Enigma::Graphics;
@@ -28,6 +30,7 @@ std::string VertexDeclName = "vtx_layout";
 std::string VertexBufferName = "vtx_buffer";
 std::string IndexBufferName = "idx_buffer";
 std::string TextureName = "earth";
+std::string SamplerName = "sampler";
 
 struct VtxData
 {
@@ -110,6 +113,8 @@ void DrawPrimitiveWithTextureApp::InstallEngine()
 
     m_onTextureLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureLoaded(e); });
     EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    m_onSamplerBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSamplerBuilt(e); });
+    EventPublisher::Subscribe(typeid(SamplerStateBuilt), m_onSamplerBuilt);
 
     assert(m_graphicMain);
 
@@ -129,6 +134,10 @@ void DrawPrimitiveWithTextureApp::InstallEngine()
 
     m_textureBuilder = menew TextureSamplerBuilder(m_asyncType);
     m_textureBuilder->BuildTexture(TextureName, "earth.bmp", "");
+    IDeviceSamplerState::SamplerStateData samp_data;
+    samp_data.m_addressModeU = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
+    samp_data.m_addressModeV = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
+    m_textureBuilder->BuildSampler(SamplerName, samp_data);
 }
 
 void DrawPrimitiveWithTextureApp::ShutdownEngine()
@@ -151,12 +160,16 @@ void DrawPrimitiveWithTextureApp::ShutdownEngine()
 
     EventPublisher::Unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;
+    EventPublisher::Unsubscribe(typeid(SamplerStateBuilt), m_onSamplerBuilt);
+    m_onSamplerBuilt = nullptr;
 
     m_renderTarget = nullptr;
     m_program = nullptr;
     m_vtxDecl = nullptr;
     m_vtxBuffer = nullptr;
     m_idxBuffer = nullptr;
+    m_texture = nullptr;
+    m_sampler = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -173,6 +186,7 @@ void DrawPrimitiveWithTextureApp::RenderFrame()
     m_renderTarget->AsyncBindViewPort();
     IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
     IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
+    m_program->AsyncApplyVariables();
     IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
     IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
     m_renderTarget->AsyncClear();
@@ -198,6 +212,7 @@ void DrawPrimitiveWithTextureApp::OnShaderProgramCreated(const IEventPtr& e)
     if (ev->GetName() != ShaderProgramName) return;
     m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
     m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
+    BuildVariables();
 }
 
 void DrawPrimitiveWithTextureApp::OnVertexBufferBuilt(const IEventPtr& e)
@@ -225,4 +240,28 @@ void DrawPrimitiveWithTextureApp::OnTextureLoaded(const Enigma::Frameworks::IEve
     if (!ev) return;
     if (ev->GetTextureName() != TextureName) return;
     m_texture = IGraphicAPI::Instance()->GetGraphicAsset<ITexturePtr>(ev->GetTextureName());
+    BuildVariables();
+}
+
+void DrawPrimitiveWithTextureApp::OnSamplerBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    std::shared_ptr<SamplerStateBuilt> ev = std::dynamic_pointer_cast<SamplerStateBuilt, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetSamplerName() != SamplerName) return;
+    m_sampler = IGraphicAPI::Instance()->GetGraphicAsset<IDeviceSamplerStatePtr>(ev->GetSamplerName());
+    BuildVariables();
+}
+
+void DrawPrimitiveWithTextureApp::BuildVariables()
+{
+    if ((!m_program) || (!m_texture) || (!m_sampler)) return;
+
+    IShaderVariablePtr ps_var = m_program->GetVariableByName("DiffuseTexture");
+    ps_var->SetValue(IShaderVariable::TextureVarTuple{ m_texture, std::nullopt });
+    IShaderVariablePtr samp_var = m_program->GetVariableByName("samLinear");
+    if (samp_var)
+    {
+        samp_var->SetValue(m_sampler);
+    }
 }

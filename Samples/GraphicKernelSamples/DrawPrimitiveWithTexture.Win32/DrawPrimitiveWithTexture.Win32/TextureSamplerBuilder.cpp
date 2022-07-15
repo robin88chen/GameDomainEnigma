@@ -2,6 +2,7 @@
 
 #include <Frameworks/EventPublisher.h>
 #include <GraphicKernel/GraphicEvents.h>
+#include <GraphicKernel/IDeviceSamplerState.h>
 #include <Platforms/MemoryAllocMacro.h>
 
 #include "GraphicKernel/ITexture.h"
@@ -19,6 +20,11 @@ TextureSamplerBuilder::TextureSamplerBuilder(IGraphicAPI::AsyncType asyncType)
     EventPublisher::Subscribe(typeid(DeviceTextureCreated), m_onTextureCreated);
     m_onTextureImageLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureImageLoaded(e); });
     EventPublisher::Subscribe(typeid(TextureResourceImageLoaded), m_onTextureImageLoaded);
+
+    m_onSamplerCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSamplerCreated(e); });
+    EventPublisher::Subscribe(typeid(DeviceSamplerStateCreated), m_onSamplerCreated);
+    m_onSamplerResourceCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSamplerResourceCreated(e); });
+    EventPublisher::Subscribe(typeid(SamplerStateResourceCreated), m_onSamplerResourceCreated);
 }
 
 TextureSamplerBuilder::~TextureSamplerBuilder()
@@ -27,6 +33,11 @@ TextureSamplerBuilder::~TextureSamplerBuilder()
     m_onTextureCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(TextureResourceImageLoaded), m_onTextureImageLoaded);
     m_onTextureImageLoaded = nullptr;
+
+    EventPublisher::Unsubscribe(typeid(DeviceSamplerStateCreated), m_onSamplerCreated);
+    m_onSamplerCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(SamplerStateResourceCreated), m_onSamplerResourceCreated);
+    m_onSamplerResourceCreated = nullptr;
 }
 
 void TextureSamplerBuilder::BuildTexture(const std::string& name, const std::string& filename,
@@ -42,6 +53,20 @@ void TextureSamplerBuilder::BuildTexture(const std::string& name, const std::str
     else
     {
         IGraphicAPI::Instance()->CreateTexture(m_textureName);
+    }
+}
+
+void TextureSamplerBuilder::BuildSampler(const std::string& name, const IDeviceSamplerState::SamplerStateData data)
+{
+    m_samplerName = name;
+    m_samplerData = data;
+    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    {
+        IGraphicAPI::Instance()->AsyncCreateSamplerState(m_samplerName);
+    }
+    else
+    {
+        IGraphicAPI::Instance()->CreateSamplerState(m_samplerName);
     }
 }
 
@@ -77,4 +102,38 @@ void TextureSamplerBuilder::OnTextureImageLoaded(const IEventPtr& e)
         return;
     }
     EventPublisher::Post(IEventPtr{ menew TextureLoaded{ m_textureName } });
+}
+
+void TextureSamplerBuilder::OnSamplerCreated(const IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<DeviceSamplerStateCreated, IEvent>(e);
+    if (!ev) return;
+    IDeviceSamplerStatePtr sampler = IGraphicAPI::Instance()->GetGraphicAsset<IDeviceSamplerStatePtr>(ev->GetStateName());
+    if (!sampler)
+    {
+        Debug::Printf("can't get sampler asset %s", ev->GetStateName().c_str());
+        return;
+    }
+    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    {
+        sampler->AsyncCreateFromData(m_samplerData);
+    }
+    else
+    {
+        sampler->CreateFromData(m_samplerData);
+    }
+}
+
+void TextureSamplerBuilder::OnSamplerResourceCreated(const IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<SamplerStateResourceCreated, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetStateName() != m_samplerName)
+    {
+        Debug::Printf("created sampler name not match %s", ev->GetStateName().c_str());
+        return;
+    }
+    EventPublisher::Post(IEventPtr{ menew SamplerStateBuilt{ m_samplerName } });
 }

@@ -9,6 +9,7 @@
 #define DRAW_PRIMITIVE_WITH_TEXTURE_H
 
 #include "GraphicKernel/ITexture.h"
+#include "GraphicKernel/IDeviceSamplerState.h"
 #include "Application/AppDelegateWin32.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
@@ -36,6 +37,9 @@ private:
     void OnVertexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
     void OnIndexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
     void OnTextureLoaded(const Enigma::Frameworks::IEventPtr& e);
+    void OnSamplerBuilt(const Enigma::Frameworks::IEventPtr& e);
+
+    void BuildVariables();
 
 private:
     Enigma::Engine::RendererManager* m_rendererManager;
@@ -45,12 +49,14 @@ private:
     Enigma::Graphics::IIndexBufferPtr m_idxBuffer;
     Enigma::Graphics::IVertexDeclarationPtr m_vtxDecl;
     Enigma::Graphics::ITexturePtr m_texture;
+    Enigma::Graphics::IDeviceSamplerStatePtr m_sampler;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onTextureLoaded;
+    Enigma::Frameworks::EventSubscriberPtr m_onSamplerBuilt;
 
     ShaderBuilder* m_shaderBuilder;
     BufferBuilder* m_bufferBuilder;

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="BufferBuilder.cpp" />
+    <ClCompile Include="DrawPrimitiveWithTexture.cpp" />
+    <ClCompile Include="MainWin32.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="ShaderBuilder.cpp" />
+    <ClCompile Include="TextureSamplerBuilder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BufferBuilder.h" />
+    <ClInclude Include="DrawPrimitiveWithTexture.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ShaderBuilder.h" />
+    <ClInclude Include="TextureSamplerBuilder.h" />
+  </ItemGroup>
+</Project>

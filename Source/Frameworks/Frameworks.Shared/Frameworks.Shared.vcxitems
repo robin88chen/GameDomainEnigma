@@ -23,6 +23,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ServiceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SystemService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TokenVector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StringFormat.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemServiceEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TokenVector.h" />
   </ItemGroup>
   <ItemGroup>

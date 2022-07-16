@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="MainWin32.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="DrawPrimitiveTestApp.cpp" />
+    <ClCompile Include="ShaderBuilder.cpp" />
+    <ClCompile Include="BufferBuilder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="DrawPrimitiveTestApp.h" />
+    <ClInclude Include="ShaderBuilder.h" />
+    <ClInclude Include="BufferBuilder.h" />
+  </ItemGroup>
+</Project>

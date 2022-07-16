@@ -84,6 +84,33 @@ error GraphicAPIDx11::CleanupDevice()
     return Graphics::ErrorCode::ok;
 }
 
+error GraphicAPIDx11::BeginScene()
+{
+    Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::EndScene()
+{
+    Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+{
+    if (FATAL_LOG_EXPR(m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
+    m_d3dDeviceContext->Draw(vertexCount, vertexOffset);
+    return ErrorCode::ok;
+}
+
+error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
+    int baseVertexOffset)
+{
+    if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
+    m_d3dDeviceContext->DrawIndexed(indexCount, indexOffset, baseVertexOffset);
+    return ErrorCode::ok;
+}
+
 error GraphicAPIDx11::Flip()
 {
     assert(m_swapChain);

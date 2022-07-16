@@ -82,36 +82,35 @@ error ShaderVariableDx11_ConstBuffer::CreateChildVariables(ID3D11ShaderReflectio
         {
             if (type_desc.Type == D3D_SVT_FLOAT)
             {
-                ShaderVariableDx11_Float* child_var = menew ShaderVariableDx11_Float(var_desc.Name, var_semantic, 
-                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements);
-                m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
+                auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Float(var_desc.Name, var_semantic,
+                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements) };
+                m_childVariables.emplace_back(child_var);
             }
             else if (type_desc.Type == D3D_SVT_INT)
             {
-                ShaderVariableDx11_Int* child_var = menew ShaderVariableDx11_Int(var_desc.Name, var_semantic, 
-                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements);
-                m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
+                auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Int(var_desc.Name, var_semantic,
+                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements) };
+                m_childVariables.emplace_back(child_var);
 
             }
             else if (type_desc.Type == D3D_SVT_BOOL)
             {
-                ShaderVariableDx11_Boolean* child_var = menew ShaderVariableDx11_Boolean(var_desc.Name, var_semantic, 
-                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements);
-                m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
-
+                auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Boolean(var_desc.Name, var_semantic,
+                    ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements) };
+                m_childVariables.emplace_back(child_var);
             }
         }
         else if (type_desc.Class == D3D_SVC_MATRIX_COLUMNS)
         {
-            ShaderVariableDx11_Matrix* child_var = menew ShaderVariableDx11_Matrix(var_desc.Name, var_semantic, 
-                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements, true);
-            m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
+            auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Matrix(var_desc.Name, var_semantic,
+                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements, true) };
+            m_childVariables.emplace_back(child_var);
         }
         else if (type_desc.Class == D3D_SVC_MATRIX_ROWS)
         {
-            ShaderVariableDx11_Matrix* child_var = menew ShaderVariableDx11_Matrix(var_desc.Name, var_semantic, 
-                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements, false);
-            m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
+            auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Matrix(var_desc.Name, var_semantic,
+                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements, false) };
+            m_childVariables.emplace_back(child_var);
         }
         else if (type_desc.Class == D3D_SVC_VECTOR)
         {
@@ -120,9 +119,9 @@ error ShaderVariableDx11_ConstBuffer::CreateChildVariables(ID3D11ShaderReflectio
             {
                 Platforms::Debug::ErrorPrintf("Vector Variable Must be float4!!");
             }
-            ShaderVariableDx11_Vector* child_var = menew ShaderVariableDx11_Vector(var_desc.Name, var_semantic, 
-                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements);
-            m_childVariables.emplace_back(std::shared_ptr<ShaderVariableDx11_Base>{child_var});
+            auto child_var = std::shared_ptr<ShaderVariableDx11_Base>{ menew ShaderVariableDx11_Vector(var_desc.Name, var_semantic,
+                ThisSharedPtr(), var_desc.StartOffset, type_desc.Elements) };
+            m_childVariables.emplace_back(child_var);
         }
     }
 

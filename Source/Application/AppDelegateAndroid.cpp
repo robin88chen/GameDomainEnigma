@@ -76,8 +76,8 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void AppDelegate::InitBridgeCallback()
 {
-    ApplicationBridge::m_onBridgeCreate = []() { Instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
-    ApplicationBridge::m_onBridgeDestroy = []() { Instance()->Finalize(); };
+    ApplicationBridge::m_initializeGraphicDevice = []() { Instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
+    ApplicationBridge::m_finalizeGraphicDevice = []() { Instance()->Finalize(); };
 }
 
 #endif

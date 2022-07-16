@@ -12,21 +12,21 @@ CreateDeviceApp* g_app = new CreateDeviceApp("Create Device App");
 */
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_DrawPrimitiveTestApp_DrawPrimitiveTestApp_particleprimitivetestNative(JNIEnv * env, jobject thiz)
+Java_com_CreateDeviceApp_CreateDeviceApp_particleprimitivetestNative(JNIEnv * env, jobject thiz)
 {
 	// Enter code here
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_DrawPrimitiveTestApp_DrawPrimitiveTestApp_initBridgeCallback(JNIEnv * env, jobject thiz)
+Java_com_CreateDeviceApp_CreateDeviceApp_initBridgeCallback(JNIEnv * env, jobject thiz)
 {
 	g_app->InitBridgeCallback();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_DrawPrimitiveTestApp_DrawPrimitiveTestApp_initAdditionalMountPath(JNIEnv * env, jobject thiz)
+Java_com_CreateDeviceApp_CreateDeviceApp_initAdditionalMountPath(JNIEnv * env, jobject thiz)
 {
 	/*if (Enigma::FileSystem::Instance())
 	{

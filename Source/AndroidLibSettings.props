@@ -13,7 +13,7 @@
       <AdditionalOptions>-Werror=return-type %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(EnigmaSourceRoot)$(PlatformTarget)\$(Configuration);$(EnigmaSourceRoot)ShareLib\freetype\prebuilt\$(PlatformTarget)\$(Configuration)Lib;$(EnigmaSourceRoot)ShareLib\png\prebuilt\android\$(TargetArchAbi);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(EnigmaSourceRoot)$(PlatformName)\$(Configuration);$(EnigmaSourceRoot)ShareLib\freetype\prebuilt\$(PlatformTarget)\$(Configuration)Lib;$(EnigmaSourceRoot)ShareLib\png\prebuilt\android\$(TargetArchAbi);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LibraryDependencies>GLESv3;m;%(LibraryDependencies)</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>

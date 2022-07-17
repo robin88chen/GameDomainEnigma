@@ -1,6 +1,13 @@
 ﻿#include "GraphicAPIEgl.h"
+#include "BackSurfaceEgl.h"
+#include "DepthStencilSurfaceEgl.h"
+#include "MultiBackSurfaceEgl.h"
+#include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicEvents.h"
+#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "MathLib/ColorRGBA.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include <GLES3/gl3.h>
 #include <GLES3/gl3ext.h>
@@ -50,7 +57,14 @@ error GraphicAPIEgl::EndScene()
 
 void GraphicAPIEgl::CleanupDeviceObjects()
 {
-    
+    m_boundVertexDecl = nullptr;
+    m_boundVertexShader = nullptr;
+    m_boundPixelShader = nullptr;
+    m_boundShaderProgram = nullptr;
+    m_boundVertexBuffer = nullptr;
+    m_boundIndexBuffer = nullptr;
+    m_boundBackSurface = nullptr;
+    m_boundDepthSurface = nullptr;
 }
 
 error GraphicAPIEgl::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
@@ -70,30 +84,70 @@ error GraphicAPIEgl::Flip()
 
 error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
 {
+    Debug::Printf("create primary back surface in thread %d\n", std::this_thread::get_id());
+    Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
+        menew BackSurfaceEgl{ back_name, m_surfaceDimension, GetPrimaryBackSurfaceFormat(), true } };
+    m_repository->Add(back_name, back_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
+
+    Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
+    Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
+        menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, GetDepthSurfaceFormat() } };
+    m_repository->Add(depth_name, depth_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
+
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     const Graphics::GraphicFormat& fmt)
 {
+    Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
+    Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
+        menew BackSurfaceEgl{ back_name, dimension, fmt, false} };
+    m_repository->Add(back_name, back_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     unsigned buff_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
+    Debug::Printf("create multi back surface in thread %d\n", std::this_thread::get_id());
+    Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
+        menew MultiBackSurfaceEgl{ back_name, dimension, buff_count, fmts } };
+    m_repository->Add(back_name, back_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiBackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
     const Graphics::GraphicFormat& fmt)
 {
+    Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
+    Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
+        menew DepthStencilSurfaceEgl{ depth_name, dimension, fmt } };
+    m_repository->Add(depth_name, depth_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& from_depth)
 {
+    Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
+    DepthStencilSurfaceEgl* depth_egl = dynamic_cast<DepthStencilSurfaceEgl*>(from_depth.get());
+    assert(depth_egl);
+    Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
+        menew DepthStencilSurfaceEgl{ depth_name, depth_egl } };
+    m_repository->Add(depth_name, depth_surface);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceShared{ depth_name } });
     return ErrorCode::ok;
 }
 
@@ -101,17 +155,59 @@ error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value,
     unsigned stencil_value)
 {
+    assert(back_surface);
+    GLbitfield mask = GL_COLOR_BUFFER_BIT;
+    // clear 之前，要先把 mask 設好，不然不會清 (很大的 trick)
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glClearColor(color.R(), color.G(), color.B(), color.A());
+    if (depth_surface)
+    {
+        mask |= (GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        glDepthMask(GL_TRUE);
+        glClearDepthf(depth_value);
+        glStencilMask(0xff);
+        glClearStencil(stencil_value);
+    }
+    glClear(mask);
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
+    if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
+    assert(back_surface);
+    m_boundBackSurface = back_surface;
+    m_boundDepthSurface = depth_surface;
+    if (back_surface->IsPrimary())
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    else if (!back_surface->IsMultiSurface())
+    {
+        BackSurfaceEgl* surface_egl = dynamic_cast<BackSurfaceEgl*>(back_surface.get());
+        assert(surface_egl);
+        if (surface_egl->GetFrameBufferHandle() != 0) glBindFramebuffer(GL_FRAMEBUFFER, surface_egl->GetFrameBufferHandle());
+    }
+    else
+    {
+        MultiBackSurfaceEgl* surface_egl = dynamic_cast<MultiBackSurfaceEgl*>(back_surface.get());
+        assert(surface_egl);
+        if (surface_egl->GetFrameBufferHandle() != 0) glBindFramebuffer(GL_FRAMEBUFFER, surface_egl->GetFrameBufferHandle());
+    }
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
 {
+    if (m_boundViewPort == vp) return ErrorCode::ok;
+    m_boundViewPort = vp;
+
+    glViewport(m_boundViewPort.X(), m_boundViewPort.Y(),
+        m_boundViewPort.Width(), m_boundViewPort.Height());
+    glDepthRangef(m_boundViewPort.MinZ(), m_boundViewPort.MaxZ());
+
     return ErrorCode::ok;
 }
 

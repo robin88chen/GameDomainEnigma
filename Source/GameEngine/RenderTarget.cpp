@@ -84,7 +84,14 @@ error RenderTarget::Initialize()
         m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
     }
     m_dimension = m_backSurface->GetDimension();
-    CreateRenderTargetTexture();
+    if (!m_isPrimary)
+    {
+        CreateRenderTargetTexture();
+    }
+    else
+    {
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew PrimaryRenderTargetCreated(m_name) });
+    }
     InitViewPortSize();
     return ErrorCode::ok;
 }

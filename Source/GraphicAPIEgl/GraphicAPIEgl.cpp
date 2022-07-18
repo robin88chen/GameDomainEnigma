@@ -89,14 +89,12 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
         menew BackSurfaceEgl{ back_name, m_surfaceDimension, GetPrimaryBackSurfaceFormat(), true } };
     m_repository->Add(back_name, back_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
-
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, GetDepthSurfaceFormat() } };
     m_repository->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PrimarySurfaceCreated{ back_name, depth_name} });
 
     return ErrorCode::ok;
 }

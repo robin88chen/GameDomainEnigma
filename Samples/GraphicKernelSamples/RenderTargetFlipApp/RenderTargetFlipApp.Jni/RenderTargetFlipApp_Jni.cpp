@@ -68,8 +68,8 @@ void RenderTargetFlipApp::RenderFrame()
 {
     if (!m_renderTarget.expired())
     {
-        m_renderTarget.lock()->AsyncClear();
-        m_renderTarget.lock()->AsyncFlip();
+        m_renderTarget.lock()->Clear();
+        m_renderTarget.lock()->Flip();
     }
 }
 

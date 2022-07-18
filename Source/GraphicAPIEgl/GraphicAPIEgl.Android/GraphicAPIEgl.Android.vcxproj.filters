@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GraphicAPI">
+      <UniqueIdentifier>{3d4ab2c9-20bc-4f6f-90a4-a8323da1c403}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BackSurfaces">
+      <UniqueIdentifier>{f835aa8a-765e-44dd-97b3-8713e35ef6ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth Surface">
+      <UniqueIdentifier>{8761ea61-83f8-441e-9f31-4faf6ab5716f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GraphicAPIEgl.h">
+      <Filter>GraphicAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\BackSurfaceEgl.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DepthStencilSurfaceEgl.h">
+      <Filter>Depth Surface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MultiBackSurfaceEgl.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\GraphicAPIEgl.cpp">
+      <Filter>GraphicAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BackSurfaceEgl.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DepthStencilSurfaceEgl.cpp">
+      <Filter>Depth Surface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MultiBackSurfaceEgl.cpp">
+      <Filter>BackSurfaces</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

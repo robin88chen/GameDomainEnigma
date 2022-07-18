@@ -77,6 +77,7 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
         virtual future_error AsyncCleanupDevice();
         //@}
+        virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
          /** @name scene begin/end  */
         //@{

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\AppDelegateAndroid.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ApplicationBridge.h">
+      <Filter>ApplicationBridge</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="AppDelegate">
+      <UniqueIdentifier>{9327a185-e003-4085-ada1-1efe43a16d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApplicationBridge">
+      <UniqueIdentifier>{650e3dd1-f987-4ef5-9143-b9f3e811d1a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\AppDelegateAndroid.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ApplicationBridge.cpp">
+      <Filter>ApplicationBridge</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

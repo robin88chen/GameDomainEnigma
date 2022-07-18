@@ -65,7 +65,6 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
     if (primary == RenderTarget::PrimaryType::IsPrimary)
     {
         m_primaryRenderTargetName = name;
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew PrimaryRenderTargetCreated(name) });
     }
 
     return ErrorCode::ok;

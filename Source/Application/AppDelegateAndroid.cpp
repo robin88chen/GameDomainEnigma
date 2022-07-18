@@ -66,7 +66,7 @@ void AppDelegate::Run()
 
 void AppDelegate::FrameUpdate()
 {
-    
+    if (m_graphicMain) m_graphicMain->FrameUpdate();
 }
 
 void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
@@ -78,6 +78,10 @@ void AppDelegate::InitBridgeCallback()
 {
     ApplicationBridge::m_initializeGraphicDevice = []() { Instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
     ApplicationBridge::m_finalizeGraphicDevice = []() { Instance()->Finalize(); };
+    ApplicationBridge::m_onFrameUpdate = []() { Instance()->FrameUpdate(); };
+    ApplicationBridge::m_onPrepareFrame = []() { Instance()->PrepareRender(); };
+    ApplicationBridge::m_onDrawFrame = []() { Instance()->RenderFrame(); };
+    ApplicationBridge::m_onRendererSurfaceSizeChanged = [](int w, int h) { Instance()->OnFrameSizeChanged(w, h); };
 }
 
 #endif

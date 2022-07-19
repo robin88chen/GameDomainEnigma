@@ -43,6 +43,9 @@ namespace Enigma::Graphics
         dxSaveTexture,
         saveTextureFile,
         dxCreateShaderResource,
+        eglLoadTexture,
+        pngFileFormat,
+        nullEglTexture,
 
         deviceCreateVertexBuffer = 1301,
         deviceCreateIndexBuffer,

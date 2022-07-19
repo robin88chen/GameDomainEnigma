@@ -9,7 +9,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(EnigmaSourceRoot);$(EnigmaSourceRoot)ShareLib\zlib\include;$(EnigmaSourceRoot)ShareLib\rapidjson\include;$(EnigmaSourceRoot)ShareLib\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EnigmaSourceRoot);$(EnigmaSourceRoot)ShareLib\zlib\include;$(EnigmaSourceRoot)ShareLib\rapidjson\include;$(EnigmaSourceRoot)ShareLib\freetype\include;$(EnigmaSourceRoot)ShareLib\png\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>

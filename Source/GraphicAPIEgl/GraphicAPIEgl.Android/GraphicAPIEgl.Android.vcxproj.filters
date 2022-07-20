@@ -10,6 +10,9 @@
     <Filter Include="Depth Surface">
       <UniqueIdentifier>{8761ea61-83f8-441e-9f31-4faf6ab5716f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Textures">
+      <UniqueIdentifier>{f43cd6b6-f9dc-4d6f-a705-d6d0759d939f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GraphicAPIEgl.h">
@@ -25,6 +28,12 @@
     <ClInclude Include="..\MultiBackSurfaceEgl.h">
       <Filter>BackSurfaces</Filter>
     </ClInclude>
+    <ClInclude Include="..\TextureEgl.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MultiTextureEgl.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -38,6 +47,12 @@
     </ClCompile>
     <ClCompile Include="..\MultiBackSurfaceEgl.cpp">
       <Filter>BackSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\TextureEgl.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MultiTextureEgl.cpp">
+      <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

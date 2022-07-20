@@ -39,6 +39,8 @@
     <ClInclude Include="..\DepthStencilSurfaceEgl.h" />
     <ClInclude Include="..\GraphicAPIEgl.h" />
     <ClInclude Include="..\MultiBackSurfaceEgl.h" />
+    <ClInclude Include="..\MultiTextureEgl.h" />
+    <ClInclude Include="..\TextureEgl.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +48,8 @@
     <ClCompile Include="..\DepthStencilSurfaceEgl.cpp" />
     <ClCompile Include="..\GraphicAPIEgl.cpp" />
     <ClCompile Include="..\MultiBackSurfaceEgl.cpp" />
+    <ClCompile Include="..\MultiTextureEgl.cpp" />
+    <ClCompile Include="..\TextureEgl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{85fede3b-728a-4eb7-a243-c4b4fb59d28a}</ProjectGuid>

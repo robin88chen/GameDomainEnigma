@@ -39,6 +39,9 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dxSaveTexture: return "Dx Save texture fail";
     case ErrorCode::saveTextureFile: return "save texture file fail";
     case ErrorCode::dxCreateShaderResource: return "Dx create shader resource";
+    case ErrorCode::eglLoadTexture: return "Egl Load Texture fail";
+    case ErrorCode::nullEglTexture: return "null egl texture error";
+    case ErrorCode::pngFileFormat: return "png file format error";
 
     case ErrorCode::deviceCreateVertexBuffer: return "Device create vertex buffer fail";
     case ErrorCode::deviceCreateIndexBuffer: return "Device create index buffer fail";

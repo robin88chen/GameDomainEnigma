@@ -2,6 +2,8 @@
 #include "BackSurfaceEgl.h"
 #include "DepthStencilSurfaceEgl.h"
 #include "MultiBackSurfaceEgl.h"
+#include "TextureEgl.h"
+#include "MultiTextureEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -263,11 +265,21 @@ error GraphicAPIEgl::CreateDepthStencilState(const std::string& name)
 
 error GraphicAPIEgl::CreateTexture(const std::string& tex_name)
 {
+    Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
+    Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureEgl{ tex_name } };
+    m_repository->Add(tex_name, tex);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateMultiTexture(const std::string& tex_name)
 {
+    Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
+    Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureEgl{ tex_name } };
+    m_repository->Add(tex_name, tex);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceMultiTextureCreated{ tex_name } });
     return ErrorCode::ok;
 }
 

@@ -6,7 +6,6 @@
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "MathLib/Rect.h"
-#include "FileSystem/IFile.h"
 #include <cassert>
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "png.h"

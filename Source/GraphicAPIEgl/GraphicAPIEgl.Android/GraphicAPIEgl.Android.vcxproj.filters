@@ -31,6 +31,9 @@
     <ClInclude Include="..\TextureEgl.h">
       <Filter>Textures</Filter>
     </ClInclude>
+    <ClInclude Include="..\MultiTextureEgl.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -46,6 +49,9 @@
       <Filter>BackSurfaces</Filter>
     </ClCompile>
     <ClCompile Include="..\TextureEgl.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MultiTextureEgl.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>

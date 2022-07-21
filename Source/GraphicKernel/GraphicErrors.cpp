@@ -49,6 +49,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dynamicCastBuffer: return "dynamic cast vertex/index buffer fail";
     case ErrorCode::nullVertexBuffer: return "null vertex buffer";
     case ErrorCode::nullIndexBuffer: return "null index buffer";
+    case ErrorCode::eglBufferMapping: return "egl vertex / index buffer mapping fail";
 
     case ErrorCode::deviceCreateVertexShader: return "device create vertex shader fail";
     case ErrorCode::deviceCreatePixelShader: return "device create pixel shader fail";

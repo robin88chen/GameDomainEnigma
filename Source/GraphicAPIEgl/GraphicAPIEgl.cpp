@@ -4,6 +4,8 @@
 #include "MultiBackSurfaceEgl.h"
 #include "TextureEgl.h"
 #include "MultiTextureEgl.h"
+#include "VertexBufferEgl.h"
+#include "IndexBufferEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -235,11 +237,21 @@ error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std:
 
 error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name)
 {
+    Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
+    Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferEgl{ buff_name } };
+    m_repository->Add(buff_name, buff);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexBufferCreated{ buff_name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name)
 {
+    Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
+    Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name } };
+    m_repository->Add(buff_name, buff);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceIndexBufferCreated{ buff_name } });
     return ErrorCode::ok;
 }
 
@@ -310,11 +322,37 @@ future_error GraphicAPIEgl::AsyncBindShaderProgram(const Graphics::IShaderProgra
 
 error GraphicAPIEgl::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt)
 {
+    if ((m_boundVertexBuffer == buffer) && (m_boundTopology == pt)) return ErrorCode::ok;
+    if (buffer == nullptr)
+    {
+        m_boundVertexBuffer = nullptr;
+        m_boundTopology = pt;
+        return ErrorCode::ok;
+    }
+    m_boundVertexBuffer = buffer;
+    m_boundTopology = pt;
+    auto buffEgl = std::dynamic_pointer_cast<VertexBufferEgl, Graphics::IVertexBuffer>(buffer);
+    if (FATAL_LOG_EXPR(!buffEgl)) return ErrorCode::dynamicCastBuffer;
+    if (FATAL_LOG_EXPR(buffEgl->GetBufferHandle() == 0)) return ErrorCode::nullVertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffEgl->GetBufferHandle());
+
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer)
 {
+    if (m_boundIndexBuffer == buffer) return ErrorCode::ok;
+    if (buffer == nullptr)
+    {
+        m_boundIndexBuffer = nullptr;
+        return ErrorCode::ok;
+    }
+    m_boundIndexBuffer = buffer;
+    auto buffEgl = std::dynamic_pointer_cast<IndexBufferEgl, Graphics::IIndexBuffer>(buffer);
+    if (FATAL_LOG_EXPR(!buffEgl)) return ErrorCode::dynamicCastBuffer;
+    if (FATAL_LOG_EXPR(buffEgl->GetBufferHandle() == 0)) return ErrorCode::nullIndexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffEgl->GetBufferHandle());
+
     return ErrorCode::ok;
 }
 

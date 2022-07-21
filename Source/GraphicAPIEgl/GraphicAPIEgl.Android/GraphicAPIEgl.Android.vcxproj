@@ -43,6 +43,7 @@
     <ClInclude Include="..\MultiTextureEgl.h" />
     <ClInclude Include="..\TextureEgl.h" />
     <ClInclude Include="..\VertexBufferEgl.h" />
+    <ClInclude Include="..\VertexShaderEgl.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +55,7 @@
     <ClCompile Include="..\MultiTextureEgl.cpp" />
     <ClCompile Include="..\TextureEgl.cpp" />
     <ClCompile Include="..\VertexBufferEgl.cpp" />
+    <ClCompile Include="..\VertexShaderEgl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{85fede3b-728a-4eb7-a243-c4b4fb59d28a}</ProjectGuid>

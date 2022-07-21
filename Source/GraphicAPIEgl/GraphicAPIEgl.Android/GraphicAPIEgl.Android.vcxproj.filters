@@ -16,6 +16,9 @@
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{3f39b132-e89d-4ef8-8eba-fd7c881a2ec0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4f39e0e6-9673-4f98-9beb-f25de02935e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GraphicAPIEgl.h">
@@ -43,6 +46,9 @@
     <ClInclude Include="..\IndexBufferEgl.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\VertexShaderEgl.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -68,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="..\IndexBufferEgl.cpp">
       <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VertexShaderEgl.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

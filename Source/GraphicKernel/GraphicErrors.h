@@ -53,6 +53,7 @@ namespace Enigma::Graphics
         dynamicCastBuffer,
         nullVertexBuffer,
         nullIndexBuffer,
+        eglBufferMapping,
 
         deviceCreateVertexShader = 1401,
         deviceCreatePixelShader,

@@ -41,6 +41,7 @@
     <ClInclude Include="..\IndexBufferEgl.h" />
     <ClInclude Include="..\MultiBackSurfaceEgl.h" />
     <ClInclude Include="..\MultiTextureEgl.h" />
+    <ClInclude Include="..\PixelShaderEgl.h" />
     <ClInclude Include="..\TextureEgl.h" />
     <ClInclude Include="..\VertexBufferEgl.h" />
     <ClInclude Include="..\VertexShaderEgl.h" />
@@ -53,6 +54,7 @@
     <ClCompile Include="..\IndexBufferEgl.cpp" />
     <ClCompile Include="..\MultiBackSurfaceEgl.cpp" />
     <ClCompile Include="..\MultiTextureEgl.cpp" />
+    <ClCompile Include="..\PixelShaderEgl.cpp" />
     <ClCompile Include="..\TextureEgl.cpp" />
     <ClCompile Include="..\VertexBufferEgl.cpp" />
     <ClCompile Include="..\VertexShaderEgl.cpp" />

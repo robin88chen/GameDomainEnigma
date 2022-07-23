@@ -4,9 +4,8 @@
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
-#include <cassert>
-
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;

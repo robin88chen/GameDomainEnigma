@@ -19,6 +19,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{4f39e0e6-9673-4f98-9beb-f25de02935e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Vertex Declaration">
+      <UniqueIdentifier>{0e36c20a-2578-4755-9fcc-072be08451eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GraphicAPIEgl.h">
@@ -52,6 +55,9 @@
     <ClInclude Include="..\PixelShaderEgl.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\VertexDeclarationEgl.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -83,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="..\PixelShaderEgl.cpp">
       <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VertexDeclarationEgl.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

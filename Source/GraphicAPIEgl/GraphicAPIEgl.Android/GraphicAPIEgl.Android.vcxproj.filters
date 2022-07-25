@@ -25,6 +25,9 @@
     <Filter Include="Shaders\Variable">
       <UniqueIdentifier>{86441a64-5786-43de-b453-9b1b9ab36fc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Device States">
+      <UniqueIdentifier>{3b725e13-68c7-45d0-9f2b-4c596887367a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GraphicAPIEgl.h">
@@ -64,6 +67,12 @@
     <ClInclude Include="..\ShaderProgramEgl.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\ShaderVariableEgl.h">
+      <Filter>Shaders\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceSamplerStateEgl.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -101,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="..\ShaderProgramEgl.cpp">
       <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderVariableEgl.cpp">
+      <Filter>Shaders\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceSamplerStateEgl.cpp">
+      <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

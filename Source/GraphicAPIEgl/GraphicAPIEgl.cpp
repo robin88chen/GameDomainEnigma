@@ -6,6 +6,10 @@
 #include "MultiTextureEgl.h"
 #include "VertexBufferEgl.h"
 #include "IndexBufferEgl.h"
+#include "VertexShaderEgl.h"
+#include "PixelShaderEgl.h"
+#include "ShaderProgramEgl.h"
+#include "VertexDeclarationEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -215,23 +219,57 @@ error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
 
 error GraphicAPIEgl::CreateVertexShader(const std::string& name)
 {
+    Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
+    Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderEgl{ name } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexShaderCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreatePixelShader(const std::string& name)
 {
+    Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
+    Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderEgl{ name } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DevicePixelShaderCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
                                          const Graphics::IPixelShaderPtr& pix_shader)
 {
+    Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
+    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
     const Graphics::IVertexShaderPtr& shader)
 {
+    assert(shader);
+
+    Debug::Printf("create vertex declaration in thread %d\n", std::this_thread::get_id());
+
+    std::string decl_name = QueryVertexDeclarationName(data_vertex_format, shader);
+    if (!decl_name.empty())
+    {
+        if (decl_name != name) return ErrorCode::duplicatedVertexDeclaration;
+        return ErrorCode::ok;
+    }
+
+    std::lock_guard locker{ m_declMapLock };
+
+    Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ menew
+        VertexDeclarationEgl(name, data_vertex_format) };
+    m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
+    m_repository->Add(name, vtxDecl);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });
     return ErrorCode::ok;
 }
 

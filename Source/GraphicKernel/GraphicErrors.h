@@ -70,6 +70,7 @@ namespace Enigma::Graphics
         nullVertexLayout,
         dynamicCastShader,
         nullShader,
+        shaderVarLocation,
 
         dxCreateBuffer = 1501,
         dxBufferMapping,

@@ -9,8 +9,7 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-VertexDeclarationEgl::VertexDeclarationEgl(const std::string& name, 
-    const std::string& data_vertex_format, const VertexFormatCode& shader_fmt_code)
+VertexDeclarationEgl::VertexDeclarationEgl(const std::string& name, const std::string& data_vertex_format)
         : IVertexDeclaration(name, data_vertex_format)
 {
     m_layouts.clear();

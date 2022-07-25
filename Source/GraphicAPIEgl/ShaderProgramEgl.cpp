@@ -3,6 +3,7 @@
 #include "VertexShaderEgl.h"
 #include "PixelShaderEgl.h"
 #include "VertexDeclarationEgl.h"
+#include "ShaderVariableEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/EventPublisher.h"
@@ -204,54 +205,54 @@ void ShaderProgramEgl::ClearVariableArray()
 void ShaderProgramEgl::AppendShaderVariable(const std::string& name, const std::string& semantic,
     GLenum type, int elements)
 {
-    /*if (type == GL_FLOAT)
+    if (type == GL_FLOAT)
     {
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Float(
-            m_program, var_name.c_str(), semantic.c_str(), elements) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Float(
+            m_program, name, semantic, elements) };
         m_variableArray.push_back(shader_var);
     }
     else if (type == GL_INT)
     {
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Int(
-            m_program, var_name.c_str(), semantic.c_str(), elements) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Int(
+            m_program, name, semantic, elements) };
         m_variableArray.push_back(shader_var);
     }
     else if (type == GL_BOOL)
     {
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Boolean(
-            m_program, var_name.c_str(), semantic.c_str(), elements) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Boolean(
+            m_program, name, semantic, elements) };
         m_variableArray.push_back(shader_var);
     }
     else if ((type == GL_FLOAT_VEC2) || (type == GL_FLOAT_VEC3) || (type == GL_FLOAT_VEC4))
     {
         int dimension = (unsigned int)type - (unsigned int)GL_FLOAT_VEC2 + 2;
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Vector(
-            m_program, var_name.c_str(), semantic.c_str(), dimension, elements) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Vector(
+            m_program, name, semantic, dimension, elements) };
         m_variableArray.push_back(shader_var);
     }
     else if ((type == GL_FLOAT_MAT2) || (type == GL_FLOAT_MAT3) || (type == GL_FLOAT_MAT4))
     {
         int dimension = (unsigned int)type - (unsigned int)GL_FLOAT_MAT2 + 2;
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Matrix(
-            m_program, var_name.c_str(), semantic.c_str(), dimension, elements) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Matrix(
+            m_program, name, semantic, dimension, elements) };
         m_variableArray.push_back(shader_var);
-    }*/
+    }
 }
 
 void ShaderProgramEgl::AppendShaderSamplerVariable(const std::string& name, const std::string& semantic,
     const std::string& samp_name, const std::string& samp_semantic, unsigned int& slot_index, GLenum type, int elements)
 {
-    /*if ((type == GL_SAMPLER_2D) || (type == GL_SAMPLER_CUBE))
+    if ((type == GL_SAMPLER_2D) || (type == GL_SAMPLER_CUBE))
     {
-        IShaderVariablePtr shader_var = IShaderVariablePtr{ menew ShaderVariableEgl_Texture(
-            m_program, var_name.c_str(), semantic.c_str(), slot_index) };
+        Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Texture(
+            m_program, name, semantic, slot_index) };
         m_variableArray.push_back(shader_var);
         if (samp_name.length() != 0)
         {
-            IShaderVariablePtr samp_var = IShaderVariablePtr{ menew ShaderVariableEgl_Sampler(
-                m_program, samp_name.c_str(), samp_semantic.c_str(), slot_index) };
+            Graphics::IShaderVariablePtr samp_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Sampler(
+                m_program, samp_name, samp_semantic, slot_index) };
             m_variableArray.push_back(samp_var);
         }
         slot_index++;
-    }*/
+    }
 }

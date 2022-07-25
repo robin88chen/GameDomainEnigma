@@ -28,8 +28,7 @@ namespace Enigma::Devices
             GLint m_position;
         };
     public:
-        VertexDeclarationEgl(const std::string& name, const std::string& data_vertex_format,
-            const VertexFormatCode& shader_fmt_code);
+        VertexDeclarationEgl(const std::string& name, const std::string& data_vertex_format);
         VertexDeclarationEgl(const VertexDeclarationEgl&) = delete;
         VertexDeclarationEgl(VertexDeclarationEgl&&) = delete;
         virtual ~VertexDeclarationEgl();

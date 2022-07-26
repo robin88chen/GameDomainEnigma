@@ -13,6 +13,7 @@
 namespace Enigma::Devices
 {
     using error = std::error_code;
+    class VertexDeclarationEgl;
 
     class GraphicAPIEgl : public Graphics::IGraphicAPI
     {
@@ -86,6 +87,9 @@ namespace Enigma::Devices
 
     protected:
         void CleanupDeviceObjects();
+    private:
+        error BindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl);
+        error UnBindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl);
     protected:
         MathLib::Dimension m_surfaceDimension;
     };

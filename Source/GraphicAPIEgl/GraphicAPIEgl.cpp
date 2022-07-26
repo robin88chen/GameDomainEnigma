@@ -1,14 +1,20 @@
 ﻿#include "GraphicAPIEgl.h"
 #include "BackSurfaceEgl.h"
 #include "DepthStencilSurfaceEgl.h"
+#include "DeviceSamplerStateEgl.h"
 #include "MultiBackSurfaceEgl.h"
 #include "TextureEgl.h"
 #include "MultiTextureEgl.h"
 #include "VertexBufferEgl.h"
 #include "IndexBufferEgl.h"
+#include "VertexShaderEgl.h"
+#include "PixelShaderEgl.h"
+#include "ShaderProgramEgl.h"
+#include "VertexDeclarationEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
+#include "GraphicKernel/GraphicThread.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "MathLib/ColorRGBA.h"
@@ -215,23 +221,57 @@ error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
 
 error GraphicAPIEgl::CreateVertexShader(const std::string& name)
 {
+    Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
+    Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderEgl{ name } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexShaderCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreatePixelShader(const std::string& name)
 {
+    Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
+    Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderEgl{ name } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DevicePixelShaderCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
                                          const Graphics::IPixelShaderPtr& pix_shader)
 {
+    Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
+    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader } };
+    m_repository->Add(name, shader);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
     const Graphics::IVertexShaderPtr& shader)
 {
+    assert(shader);
+
+    Debug::Printf("create vertex declaration in thread %d\n", std::this_thread::get_id());
+
+    std::string decl_name = QueryVertexDeclarationName(data_vertex_format, shader);
+    if (!decl_name.empty())
+    {
+        if (decl_name != name) return ErrorCode::duplicatedVertexDeclaration;
+        return ErrorCode::ok;
+    }
+
+    std::lock_guard locker{ m_declMapLock };
+
+    Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ menew
+        VertexDeclarationEgl(name, data_vertex_format) };
+    m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
+    m_repository->Add(name, vtxDecl);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });
     return ErrorCode::ok;
 }
 
@@ -257,6 +297,11 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name)
 
 error GraphicAPIEgl::CreateSamplerState(const std::string& name)
 {
+    Platforms::Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateEgl{ name } };
+    m_repository->Add(name, state);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceSamplerStateCreated{ name } });
     return ErrorCode::ok;
 }
 
@@ -297,27 +342,58 @@ error GraphicAPIEgl::CreateMultiTexture(const std::string& tex_name)
 
 error GraphicAPIEgl::BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl)
 {
-    return ErrorCode::ok;
+    // Each generic vertex attribute array is initially disabled and isn't accessed 
+    // when glDrawElements, glDrawRangeElements, glDrawArrays, glMultiDrawArrays, or glMultiDrawElements is called.
+    // 呼叫 glDraw之後，就會失效，所以，每次Draw之前都要Bind, 不能 cache
+    if ((m_boundVertexDecl == vertexDecl) && (m_boundVertexDecl != nullptr))
+    {
+        return BindVertexDeclarationEgl(std::dynamic_pointer_cast<VertexDeclarationEgl, Graphics::IVertexDeclaration>
+            (m_boundVertexDecl));
+    }
+
+    if (m_boundVertexDecl)
+    {
+        UnBindVertexDeclarationEgl(std::dynamic_pointer_cast<VertexDeclarationEgl, Graphics::IVertexDeclaration>
+            (m_boundVertexDecl));
+    }
+    if (vertexDecl == nullptr)
+    {
+        m_boundVertexDecl = nullptr;
+        return ErrorCode::ok;
+    }
+    m_boundVertexDecl = vertexDecl;
+    return BindVertexDeclarationEgl(std::dynamic_pointer_cast<VertexDeclarationEgl, Graphics::IVertexDeclaration>
+        (m_boundVertexDecl));
 }
 
 error GraphicAPIEgl::BindVertexShader(const Graphics::IVertexShaderPtr& shader)
 {
+    if (m_boundVertexShader == shader) return ErrorCode::ok;
+    m_boundVertexShader = shader;
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
 {
+    if (m_boundPixelShader == shader) return ErrorCode::ok;
+    m_boundPixelShader = shader;
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindShaderProgram(const Graphics::IShaderProgramPtr& shader)
 {
+    if (m_boundShaderProgram == shader) return ErrorCode::ok;
+    auto program_egl = std::dynamic_pointer_cast<ShaderProgramEgl, Graphics::IShaderProgram>(shader);
+    assert(program_egl);
+    glUseProgram(program_egl->GetProgram());
+    BindVertexShader(shader->GetVertexShader());
+    BindPixelShader(shader->GetPixelShader());
     return ErrorCode::ok;
 }
 
 future_error GraphicAPIEgl::AsyncBindShaderProgram(const Graphics::IShaderProgramPtr& shader)
 {
-    return make_future_err(ErrorCode::ok);
+    return m_workerThread->PushTask([=]() -> error { return this->BindShaderProgram(shader); });
 }
 
 error GraphicAPIEgl::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt)
@@ -370,4 +446,38 @@ void GraphicAPIEgl::SetFormat(int* attrb)
 void GraphicAPIEgl::SetDimension(const MathLib::Dimension& dim)
 {
     m_surfaceDimension = dim;
+}
+error GraphicAPIEgl::BindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl)
+{
+    assert(vtxDecl);
+    auto layouts = vtxDecl->GetLayoutElements();
+    unsigned int num_elements = vtxDecl->GetElementCount();
+    GLsizei vertex_size = vtxDecl->GetVertexSize();
+    if (FATAL_LOG_EXPR((layouts.empty()) || (num_elements == 0))) return ErrorCode::vertexLayout;
+    for (unsigned int i = 0; i < num_elements; i++)
+    {
+        glEnableVertexAttribArray(i);
+        if (layouts[i].m_type == GL_FLOAT)
+        {
+            glVertexAttribPointer(i, layouts[i].m_size, layouts[i].m_type, GL_FALSE, vertex_size, (const GLvoid*)layouts[i].m_position);
+        }
+        else if (layouts[i].m_type == GL_UNSIGNED_INT)
+        {
+            glVertexAttribIPointer(i, layouts[i].m_size, layouts[i].m_type, vertex_size, (const GLvoid*)layouts[i].m_position);
+        }
+    }
+    return ErrorCode::ok;
+}
+
+error GraphicAPIEgl::UnBindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl)
+{
+    assert(vtxDecl);
+    auto layouts = vtxDecl->GetLayoutElements();
+    unsigned int num_elements = vtxDecl->GetElementCount();
+    if (FATAL_LOG_EXPR((layouts.empty()) || (num_elements == 0))) return ErrorCode::vertexLayout;
+    for (unsigned int i = 0; i < num_elements; i++)
+    {
+        glDisableVertexAttribArray(i);
+    }
+    return ErrorCode::ok;
 }

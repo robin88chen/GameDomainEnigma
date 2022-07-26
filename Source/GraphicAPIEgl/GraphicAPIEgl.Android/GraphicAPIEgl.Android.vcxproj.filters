@@ -16,6 +16,18 @@
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{3f39b132-e89d-4ef8-8eba-fd7c881a2ec0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4f39e0e6-9673-4f98-9beb-f25de02935e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex Declaration">
+      <UniqueIdentifier>{0e36c20a-2578-4755-9fcc-072be08451eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Variable">
+      <UniqueIdentifier>{86441a64-5786-43de-b453-9b1b9ab36fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device States">
+      <UniqueIdentifier>{3b725e13-68c7-45d0-9f2b-4c596887367a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GraphicAPIEgl.h">
@@ -43,6 +55,24 @@
     <ClInclude Include="..\IndexBufferEgl.h">
       <Filter>Vertex Index Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\VertexShaderEgl.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PixelShaderEgl.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VertexDeclarationEgl.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ShaderProgramEgl.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ShaderVariableEgl.h">
+      <Filter>Shaders\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceSamplerStateEgl.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -68,6 +98,24 @@
     </ClCompile>
     <ClCompile Include="..\IndexBufferEgl.cpp">
       <Filter>Vertex Index Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VertexShaderEgl.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PixelShaderEgl.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VertexDeclarationEgl.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderProgramEgl.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderVariableEgl.cpp">
+      <Filter>Shaders\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceSamplerStateEgl.cpp">
+      <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

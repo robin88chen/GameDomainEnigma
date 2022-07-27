@@ -11,6 +11,9 @@
 #include "PixelShaderEgl.h"
 #include "ShaderProgramEgl.h"
 #include "VertexDeclarationEgl.h"
+#include "DeviceAlphaBlendStateEgl.h"
+#include "DeviceDepthStencilStateEgl.h"
+#include "DeviceRasterizerStateEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -26,6 +29,8 @@
 using namespace Enigma::Devices;
 using namespace Enigma::Platforms;
 using ErrorCode = Enigma::Graphics::ErrorCode;
+
+GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt);
 
 GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI()
 {
@@ -79,11 +84,15 @@ void GraphicAPIEgl::CleanupDeviceObjects()
 
 error GraphicAPIEgl::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
+    glDrawArrays(PrimitiveTopologyToGL(m_boundTopology), vertexOffset, vertexCount);
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
 {
+    // GLES 3.0 才有
+    glDrawRangeElements(PrimitiveTopologyToGL(m_boundTopology), baseVertexOffset, baseVertexOffset + vertexCount - 1,
+        indexCount, GL_UNSIGNED_INT, 0);
     return ErrorCode::ok;
 }
 
@@ -307,16 +316,31 @@ error GraphicAPIEgl::CreateSamplerState(const std::string& name)
 
 error GraphicAPIEgl::CreateRasterizerState(const std::string& name)
 {
+    Platforms::Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateEgl{ name } };
+    m_repository->Add(name, state);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceRasterizerStateCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name)
 {
+    Platforms::Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateEgl{ name } };
+    m_repository->Add(name, state);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceAlphaBlendStateCreated{ name } });
     return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateDepthStencilState(const std::string& name)
 {
+    Platforms::Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateEgl{ name } };
+    m_repository->Add(name, state);
+
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceDepthStencilStateCreated{ name } });
     return ErrorCode::ok;
 }
 
@@ -480,4 +504,40 @@ error GraphicAPIEgl::UnBindVertexDeclarationEgl(const std::shared_ptr<VertexDecl
         glDisableVertexAttribArray(i);
     }
     return ErrorCode::ok;
+}
+
+GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt)
+{
+    assert(pt != Enigma::Graphics::PrimitiveTopology::Topology_Undefine);
+    switch (pt)
+    {
+    case Enigma::Graphics::PrimitiveTopology::Topology_LineList:
+    {
+        return GL_LINES;
+    }
+    break;
+    case Enigma::Graphics::PrimitiveTopology::Topology_LineStrip:
+    {
+        return GL_LINE_STRIP;
+    }
+    break;
+    case Enigma::Graphics::PrimitiveTopology::Topology_PointList:
+    {
+        return GL_POINTS;
+    }
+    break;
+    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleList:
+    {
+        return GL_TRIANGLES;
+    }
+    break;
+    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleStrip:
+    {
+        return GL_TRIANGLE_STRIP;
+    }
+    break;
+    default:
+        break;
+    }
+    return GL_TRIANGLES;
 }

@@ -37,6 +37,9 @@
   <ItemGroup>
     <ClInclude Include="..\BackSurfaceEgl.h" />
     <ClInclude Include="..\DepthStencilSurfaceEgl.h" />
+    <ClInclude Include="..\DeviceAlphaBlendStateEgl.h" />
+    <ClInclude Include="..\DeviceDepthStencilStateEgl.h" />
+    <ClInclude Include="..\DeviceRasterizerStateEgl.h" />
     <ClInclude Include="..\DeviceSamplerStateEgl.h" />
     <ClInclude Include="..\GraphicAPIEgl.h" />
     <ClInclude Include="..\IndexBufferEgl.h" />
@@ -54,6 +57,9 @@
   <ItemGroup>
     <ClCompile Include="..\BackSurfaceEgl.cpp" />
     <ClCompile Include="..\DepthStencilSurfaceEgl.cpp" />
+    <ClCompile Include="..\DeviceAlphaBlendStateEgl.cpp" />
+    <ClCompile Include="..\DeviceDepthStencilStateEgl.cpp" />
+    <ClCompile Include="..\DeviceRasterizerStateEgl.cpp" />
     <ClCompile Include="..\DeviceSamplerStateEgl.cpp" />
     <ClCompile Include="..\GraphicAPIEgl.cpp" />
     <ClCompile Include="..\IndexBufferEgl.cpp" />

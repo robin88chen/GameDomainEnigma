@@ -296,7 +296,7 @@ error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name)
 
 error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name)
 {
-    Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
+    Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name } };
     m_repository->Add(buff_name, buff);
 
@@ -306,7 +306,7 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name)
 
 error GraphicAPIEgl::CreateSamplerState(const std::string& name)
 {
-    Platforms::Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateEgl{ name } };
     m_repository->Add(name, state);
 
@@ -316,7 +316,7 @@ error GraphicAPIEgl::CreateSamplerState(const std::string& name)
 
 error GraphicAPIEgl::CreateRasterizerState(const std::string& name)
 {
-    Platforms::Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateEgl{ name } };
     m_repository->Add(name, state);
 
@@ -326,7 +326,7 @@ error GraphicAPIEgl::CreateRasterizerState(const std::string& name)
 
 error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name)
 {
-    Platforms::Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateEgl{ name } };
     m_repository->Add(name, state);
 
@@ -336,7 +336,7 @@ error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name)
 
 error GraphicAPIEgl::CreateDepthStencilState(const std::string& name)
 {
-    Platforms::Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
+    Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateEgl{ name } };
     m_repository->Add(name, state);
 

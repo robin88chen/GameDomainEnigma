@@ -73,6 +73,15 @@
     <ClInclude Include="..\DeviceSamplerStateEgl.h">
       <Filter>Device States</Filter>
     </ClInclude>
+    <ClInclude Include="..\DeviceAlphaBlendStateEgl.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceDepthStencilStateEgl.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DeviceRasterizerStateEgl.h">
+      <Filter>Device States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -115,6 +124,15 @@
       <Filter>Shaders\Variable</Filter>
     </ClCompile>
     <ClCompile Include="..\DeviceSamplerStateEgl.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceAlphaBlendStateEgl.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceDepthStencilStateEgl.cpp">
+      <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeviceRasterizerStateEgl.cpp">
       <Filter>Device States</Filter>
     </ClCompile>
   </ItemGroup>

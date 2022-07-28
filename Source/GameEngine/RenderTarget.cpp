@@ -359,7 +359,7 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     if (back) m_backSurface = back.value();
     auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
     if (depth) m_depthStencilSurface = depth.value();
-    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
     }
@@ -390,7 +390,7 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
     auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
     if (back) m_backSurface = back.value();
     if (!m_backSurface) return;
-    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
     }

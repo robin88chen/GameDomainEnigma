@@ -5,7 +5,8 @@
 #include "../GraphicAPIDx11/GraphicAPIDx11.h"
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
-#include "FileSystem/StdMountPath.h"
+#include "GameEngine/RendererCommands.h"
+#include "Frameworks/CommandBus.h"
 #include <memory>
 
 #define WM_MOUSEWHEEL_LEGACY 0x020A
@@ -158,6 +159,12 @@ void AppDelegate::Run()
             //RenderFrame();
         }
     }  // end while
+}
+
+void AppDelegate::OnFrameSizeChanged(int w, int h)
+{
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
+        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
 }
 
 LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

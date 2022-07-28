@@ -65,6 +65,11 @@ namespace Enigma::Engine
         /** get primary render target */
         RenderTargetPtr GetPrimaryRenderTarget() const;
 
+        /** @name command handler */
+        //@{
+        void HandleResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+        //@}
+
     protected:
         void ClearAllRenderer();
         void ClearAllRenderTarget();
@@ -81,6 +86,8 @@ namespace Enigma::Engine
 
         using CustomRendererFactoryTable = std::unordered_map<std::string, CustomRendererFactoryFunc>;
         static CustomRendererFactoryTable m_customRendererFactoryTable;
+
+        Frameworks::CommandSubscriberPtr m_handleResizingPrimaryTarget;
     };
 };
 

@@ -4,6 +4,8 @@
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
 #include "Platforms/MemoryMacro.h"
+#include "GameEngine/RendererCommands.h"
+#include "Frameworks/CommandBus.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "../GraphicAPIEgl/GraphicAPIEgl.h"
 
@@ -71,6 +73,12 @@ void AppDelegate::FrameUpdate()
 void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 {
     
+}
+
+void AppDelegate::OnFrameSizeChanged(int w, int h)
+{
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
+        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
 }
 
 void AppDelegate::InitBridgeCallback()

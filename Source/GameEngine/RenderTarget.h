@@ -156,7 +156,6 @@ namespace Enigma::Engine
         //@}
 
     protected:
-        Graphics::IGraphicAPI::AsyncType m_async;
         bool m_isPrimary;
 
         std::string m_name;

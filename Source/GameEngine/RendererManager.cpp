@@ -50,8 +50,7 @@ error RendererManager::DestroyRenderer(const std::string& name)
     return ErrorCode::ok;
 }
 
-error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
-                                          Graphics::IGraphicAPI::AsyncType async)
+error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary)
 {
     auto target_check = GetRenderTarget(name);
     if (target_check)
@@ -59,7 +58,7 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
     }
-    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary, async) };
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary) };
     m_mapRenderTarget.emplace(name, target);
 
     if (primary == RenderTarget::PrimaryType::IsPrimary)

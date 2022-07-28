@@ -57,8 +57,8 @@ namespace Enigma::Engine
             BufferClearFlag m_flag;
         };
     public:
-        RenderTarget(const std::string& name, PrimaryType primary, Graphics::IGraphicAPI::AsyncType async);
-        RenderTarget(const std::string& name, Graphics::IGraphicAPI::AsyncType async);
+        RenderTarget(const std::string& name, PrimaryType primary);
+        RenderTarget(const std::string& name);
         RenderTarget(const RenderTarget&) = delete;
         virtual ~RenderTarget();
         RenderTarget& operator=(const RenderTarget&) = delete;

@@ -8,6 +8,7 @@
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
 #include <cassert>
+#include <memory>
 
 using namespace Enigma::Controllers;
 GraphicMain* GraphicMain::m_instance = nullptr;
@@ -15,11 +16,6 @@ GraphicMain* GraphicMain::m_instance = nullptr;
 GraphicMain::GraphicMain(GraphicCoordSys coordSys)
 {
     assert(!m_instance);
-#if TARGET_PLATFORM == PLATFORM_ANDROID
-    m_asyncType = Graphics::IGraphicAPI::AsyncType::NotAsyncDevice;  // android always use sync device
-#else
-    m_asyncType = Graphics::IGraphicAPI::AsyncType::UseAsyncDevice;
-#endif
     m_coordSys = coordSys;
     m_instance = this;
     m_serviceManager = menew Frameworks::ServiceManager();
@@ -101,11 +97,7 @@ error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
 {
     assert(policy);
 
-#if TARGET_PLATFORM != PLATFORM_ANDROID
-    m_asyncType = policy->AsyncType();
-#endif
-    
-    if (m_asyncType == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (policy->GraphicAPI()->UseAsync())
     {
         return policy->GraphicAPI()->AsyncCreateDevice(policy->RequiredBits(), policy->Hwnd()).get();
     }
@@ -118,7 +110,7 @@ error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
 error GraphicMain::CleanupRenderEngineDevice()
 {
     assert(Graphics::IGraphicAPI::Instance());
-    if (m_asyncType == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         return Graphics::IGraphicAPI::Instance()->AsyncCleanupDevice().get();
     }
@@ -161,8 +153,7 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;
     er = m_renderer->CreateRenderTarget(render_target_name,
-        is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary,
-        m_asyncType);
+        is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew DefaultRendererInstalled });

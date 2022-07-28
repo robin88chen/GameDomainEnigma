@@ -82,8 +82,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     Create();
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
-    m_asyncType = useAsyncDevice;
-    menew Devices::GraphicAPIDx11();
+    menew Devices::GraphicAPIDx11(useAsyncDevice);
 
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();

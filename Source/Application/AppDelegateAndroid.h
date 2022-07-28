@@ -48,7 +48,6 @@ namespace Enigma::Application
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;
-        Graphics::IGraphicAPI::AsyncType m_asyncType;
     };
 }
 #endif

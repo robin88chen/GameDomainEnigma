@@ -22,17 +22,14 @@ namespace Enigma::Controllers
     class DeviceCreatingPolicy : public InstallingPolicy
     {
     public:
-        DeviceCreatingPolicy(Graphics::IGraphicAPI* api, const Graphics::DeviceRequiredBits& rqb,
-            Graphics::IGraphicAPI::AsyncType async, void* hwnd);
+        DeviceCreatingPolicy(Graphics::IGraphicAPI* api, const Graphics::DeviceRequiredBits& rqb, void* hwnd);
 
         Graphics::IGraphicAPI* GraphicAPI() { return m_api; }
         const Graphics::DeviceRequiredBits& RequiredBits() { return m_rqb; }
-        Graphics::IGraphicAPI::AsyncType AsyncType() { return m_async; }
         void* Hwnd() { return m_hwnd; }
     protected:
         Graphics::IGraphicAPI* m_api;
         Graphics::DeviceRequiredBits m_rqb;
-        Graphics::IGraphicAPI::AsyncType m_async;
         void* m_hwnd;
     };
     class InstallingDefaultRendererPolicy : public InstallingPolicy

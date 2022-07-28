@@ -68,7 +68,6 @@ namespace Enigma::Controllers
         static GraphicMain* m_instance;
 
         GraphicCoordSys m_coordSys;
-        Graphics::IGraphicAPI::AsyncType m_asyncType;
 
         Frameworks::ServiceManager* m_serviceManager;
 

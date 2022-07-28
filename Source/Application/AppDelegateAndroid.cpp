@@ -33,7 +33,6 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics
 
     FileSystem::FileSystem::Create();
 
-    m_asyncType = Graphics::IGraphicAPI::AsyncType::NotAsyncDevice;
     menew Devices::GraphicAPIEgl();
 
     m_graphicMain = menew Controllers::GraphicMain();

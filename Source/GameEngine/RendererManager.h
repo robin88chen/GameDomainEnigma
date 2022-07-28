@@ -56,7 +56,7 @@ namespace Enigma::Engine
         void SelectRendererTechnique(const std::string& renderer_name, const std::string& technique_name);
 
         /** create render target */
-        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, Graphics::IGraphicAPI::AsyncType async);
+        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary);
 
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);

@@ -80,8 +80,6 @@ namespace Enigma::Application
         std::string m_mediaRootPath;
 
         Controllers::GraphicMain* m_graphicMain;
-
-        Graphics::IGraphicAPI::AsyncType m_asyncType;
     };
 }
 #endif

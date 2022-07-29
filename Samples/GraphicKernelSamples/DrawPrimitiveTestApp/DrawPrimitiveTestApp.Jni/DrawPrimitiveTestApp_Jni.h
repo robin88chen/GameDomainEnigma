@@ -13,6 +13,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/RenderTarget.h"
 #include "GameEngine/RendererManager.h"
+#include "Frameworks/Timer.h"
 
 class ShaderBuilder;
 class BufferBuilder;
@@ -49,6 +50,8 @@ private:
 
     ShaderBuilder* m_shaderBuilder;
     BufferBuilder* m_bufferBuilder;
+    Enigma::Frameworks::Timer* m_timer;
+    float m_tick;
 };
 
 #endif // DRAW_PRIMITIVE_TESTAPP_JNI_H

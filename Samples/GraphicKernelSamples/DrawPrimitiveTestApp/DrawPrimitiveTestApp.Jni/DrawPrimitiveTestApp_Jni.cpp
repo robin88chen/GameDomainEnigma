@@ -11,6 +11,8 @@
 #include "ShaderBuilder.h"
 #include "BufferBuilder.h"
 #include "GameEngine/RendererCommands.h"
+#include "GraphicKernel/IShaderProgram.h"
+#include "GraphicKernel/IShaderVariable.h"
 
 using namespace Enigma::Controllers;
 using namespace Enigma::Graphics;
@@ -53,12 +55,12 @@ static Vector4 vtx_offset[4] =
 
 static const std::string VERTEX_SHADER =
 "#version 300 es\n"
-"//uniform vec4 offset[4];\n"
+"uniform vec4 offset[4];\n"
 "layout(location = 0) in vec3 pos;\n"
 "layout(location = 1) in uint idx;\n"
 "out vec4 vColor;\n"
 "void main() {\n"
-"    gl_Position = vec4(pos, 1.0);\n"
+"    gl_Position = vec4(pos, 1.0) + offset[idx];\n"
 "   vColor = vec4(0.5f + pos.x + pos.y, 0.5f + pos.x - pos.y, 0.5f + pos.y - pos.x, 1.0f);\n"
 "}\n";
 
@@ -67,12 +69,12 @@ static const std::string FRAGMENT_SHADER =
 "//semantic anim_time ANIM_TIMER\n"
 "//semantic anim_scale ANIM_SCALE\n"
 "precision mediump float;\n"
-"//uniform float anim_time;\n"
-"//uniform float anim_scale;\n"
+"uniform float anim_time;\n"
+"uniform float anim_scale;\n"
 "in vec4 vColor;\n"
 "out vec4 outColor;\n"
 "void main() {\n"
-"    outColor = vColor;\n"
+"    outColor = (0.5f + cos(anim_time * anim_scale)/2.0f) * vColor;\n"
 "}\n";
 
 DrawPrimitiveTestApp::DrawPrimitiveTestApp(const std::string app_name) : AppDelegate(app_name)
@@ -109,6 +111,9 @@ void DrawPrimitiveTestApp::InstallEngine()
     m_bufferBuilder = menew BufferBuilder();
     m_bufferBuilder->BuildVertexBuffer(VertexBufferName, sizeof(VtxData), points);
     m_bufferBuilder->BuildIndexBuffer(IndexBufferName, indices);
+    m_timer = menew Timer;
+    m_timer->Reset();
+    m_tick = 0.0f;
 }
 
 void DrawPrimitiveTestApp::ShutdownEngine()
@@ -117,6 +122,8 @@ void DrawPrimitiveTestApp::ShutdownEngine()
     m_shaderBuilder = nullptr;
     delete m_bufferBuilder;
     m_bufferBuilder = nullptr;
+    delete m_timer;
+    m_timer = nullptr;
 
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
@@ -139,6 +146,18 @@ void DrawPrimitiveTestApp::ShutdownEngine()
 void DrawPrimitiveTestApp::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+    if (m_timer)
+    {
+        m_timer->Update();
+        m_tick += m_timer->GetElapseTime();
+    }
+    if (m_program)
+    {
+        IShaderVariablePtr ps_var = m_program->GetVariableBySemantic("ANIM_TIMER");
+        ps_var->SetValue(m_tick);
+        IShaderVariablePtr ps_var1 = m_program->GetVariableBySemantic("ANIM_SCALE");
+        ps_var1->SetValue(3.0f);
+    }
 }
 
 void DrawPrimitiveTestApp::RenderFrame()
@@ -148,6 +167,7 @@ void DrawPrimitiveTestApp::RenderFrame()
     m_renderTarget->BindViewPort();
     IGraphicAPI::Instance()->BindVertexDeclaration(m_vtxDecl);
     IGraphicAPI::Instance()->BindShaderProgram(m_program);
+    m_program->ApplyVariables();
     IGraphicAPI::Instance()->BindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
     IGraphicAPI::Instance()->BindIndexBuffer(m_idxBuffer);
     m_renderTarget->Clear();
@@ -173,6 +193,9 @@ void DrawPrimitiveTestApp::OnShaderProgramCreated(const IEventPtr& e)
     if (ev->GetName() != ShaderProgramName) return;
     m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
     m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
+
+    auto shader_var = m_program->GetVariableByName("offset[0]");
+    shader_var->SetValues(vtx_offset, 4);
 }
 
 void DrawPrimitiveTestApp::OnVertexBufferBuilt(const IEventPtr& e)

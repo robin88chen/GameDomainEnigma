@@ -76,6 +76,10 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     }
 
     FileSystem::FileSystem::Create();
+    menew Devices::GraphicAPIDx11(useAsyncDevice);
+
+    m_graphicMain = menew Controllers::GraphicMain();
+    m_graphicMain->InstallFrameworks();
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
@@ -83,10 +87,6 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     Create();
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
-    menew Devices::GraphicAPIDx11(useAsyncDevice);
-
-    m_graphicMain = menew Controllers::GraphicMain();
-    m_graphicMain->InstallFrameworks();
 
     InstallEngine();
 }

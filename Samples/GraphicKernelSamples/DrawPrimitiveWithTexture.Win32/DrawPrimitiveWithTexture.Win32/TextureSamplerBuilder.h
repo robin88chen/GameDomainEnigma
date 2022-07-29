@@ -15,7 +15,7 @@
 class TextureSamplerBuilder
 {
 public:
-    TextureSamplerBuilder(Enigma::Graphics::IGraphicAPI::AsyncType asyncType);
+    TextureSamplerBuilder();
     TextureSamplerBuilder(const TextureSamplerBuilder&) = delete;
     TextureSamplerBuilder(TextureSamplerBuilder&&) = delete;
     ~TextureSamplerBuilder();
@@ -33,7 +33,6 @@ private:
     void OnSamplerResourceCreated(const Enigma::Frameworks::IEventPtr& e);
 
 private:
-    Enigma::Graphics::IGraphicAPI::AsyncType m_async;
     Enigma::Frameworks::EventSubscriberPtr m_onTextureCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onTextureImageLoaded;
 

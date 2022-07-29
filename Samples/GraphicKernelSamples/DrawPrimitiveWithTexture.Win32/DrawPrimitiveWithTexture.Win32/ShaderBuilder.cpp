@@ -11,12 +11,10 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 using namespace Enigma::Platforms;
 
-ShaderBuilder::ShaderBuilder(IGraphicAPI::AsyncType asyncType)
+ShaderBuilder::ShaderBuilder()
 {
     m_hasVtxShaderBuilt = false;
     m_hasPixShaderBuilt = false;
-
-    m_async = asyncType;
 
     m_onVertexShaderCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnVertexShaderCreated(e); });
     EventPublisher::Subscribe(typeid(DeviceVertexShaderCreated), m_onVertexShaderCreated);
@@ -70,7 +68,7 @@ void ShaderBuilder::BuildVertexShader(const std::string& shader_name, const std:
     m_vtxFormatCode = vtx_format_code;
     m_vtxShaderCode = shader_code;
     m_vtxLayoutName = layout_name;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreateVertexShader(m_vtxShaderName);
     }
@@ -84,7 +82,7 @@ void ShaderBuilder::BuildPixelShader(const std::string& shader_name, const std::
 {
     m_pixShaderName = shader_name;
     m_pixShaderCode = shader_code;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreatePixelShader(m_pixShaderName);
     }
@@ -105,7 +103,7 @@ void ShaderBuilder::OnVertexShaderCreated(const IEventPtr& e)
         Debug::Printf("can't get vertex shader asset %s", ev->GetName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         shader->AsyncCompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
     }
@@ -134,7 +132,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const IEventPtr& e)
     }
     else
     {
-        if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+        if (IGraphicAPI::Instance()->UseAsync())
         {
             IGraphicAPI::Instance()->AsyncCreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader);
         }
@@ -170,7 +168,7 @@ void ShaderBuilder::OnPixelShaderCreated(const IEventPtr& e)
         Debug::Printf("can't get pixel shader asset %s", ev->GetName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         shader->AsyncCompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
     }
@@ -217,7 +215,7 @@ void ShaderBuilder::OnShaderBuilt(const IEventPtr& e)
             Debug::Printf("can't get vertex or pixel shader asset to create shader program");
             return;
         }
-        if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+        if (IGraphicAPI::Instance()->UseAsync())
         {
             IGraphicAPI::Instance()->AsyncCreateShaderProgram(m_programName, vtx_shader, pix_shader);
         }

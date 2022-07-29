@@ -12,10 +12,8 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 using namespace Enigma::Platforms;
 
-TextureSamplerBuilder::TextureSamplerBuilder(IGraphicAPI::AsyncType asyncType)
+TextureSamplerBuilder::TextureSamplerBuilder()
 {
-    m_async = asyncType;
-
     m_onTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureCreated(e); });
     EventPublisher::Subscribe(typeid(DeviceTextureCreated), m_onTextureCreated);
     m_onTextureImageLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureImageLoaded(e); });
@@ -46,7 +44,7 @@ void TextureSamplerBuilder::BuildTexture(const std::string& name, const std::str
     m_textureName = name;
     m_textureFilename = filename;
     m_texturePathId = path_id;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreateTexture(m_textureName);
     }
@@ -60,7 +58,7 @@ void TextureSamplerBuilder::BuildSampler(const std::string& name, const IDeviceS
 {
     m_samplerName = name;
     m_samplerData = data;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreateSamplerState(m_samplerName);
     }
@@ -81,7 +79,7 @@ void TextureSamplerBuilder::OnTextureCreated(const IEventPtr& e)
         Debug::Printf("can't get texture asset %s", ev->GetTextureName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         texture->AsyncLoadTextureImage(m_textureFilename, m_texturePathId);
     }
@@ -115,7 +113,7 @@ void TextureSamplerBuilder::OnSamplerCreated(const IEventPtr& e)
         Debug::Printf("can't get sampler asset %s", ev->GetStateName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         sampler->AsyncCreateFromData(m_samplerData);
     }

@@ -14,7 +14,7 @@
 class BufferBuilder
 {
 public:
-    BufferBuilder(Enigma::Graphics::IGraphicAPI::AsyncType asyncType);
+    BufferBuilder();
     BufferBuilder(const BufferBuilder&) = delete;
     BufferBuilder(BufferBuilder&&) = delete;
     ~BufferBuilder();
@@ -34,8 +34,6 @@ private:
     void OnIndexBufferUpdated(const Enigma::Frameworks::IEventPtr& e);
 
 private:
-    Enigma::Graphics::IGraphicAPI::AsyncType m_async;
-
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferResourceCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferUpdated;

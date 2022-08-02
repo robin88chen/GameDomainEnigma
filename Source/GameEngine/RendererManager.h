@@ -56,7 +56,7 @@ namespace Enigma::Engine
         void SelectRendererTechnique(const std::string& renderer_name, const std::string& technique_name);
 
         /** create render target */
-        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, Graphics::IGraphicAPI::AsyncType async);
+        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary);
 
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);
@@ -64,6 +64,11 @@ namespace Enigma::Engine
         RenderTargetPtr GetRenderTarget(const std::string& name) const;
         /** get primary render target */
         RenderTargetPtr GetPrimaryRenderTarget() const;
+
+        /** @name command handler */
+        //@{
+        void HandleResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+        //@}
 
     protected:
         void ClearAllRenderer();
@@ -81,6 +86,8 @@ namespace Enigma::Engine
 
         using CustomRendererFactoryTable = std::unordered_map<std::string, CustomRendererFactoryFunc>;
         static CustomRendererFactoryTable m_customRendererFactoryTable;
+
+        Frameworks::CommandSubscriberPtr m_handleResizingPrimaryTarget;
     };
 };
 

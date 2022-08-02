@@ -52,21 +52,21 @@ static unsigned int vtx_idx[] =
 static std::string vs_code_11 =
 "struct VS_INPUT \n"
 "{\n"
-"	float3 Pos : POSITION;\n"
-"	float2 Coord : TEXCOORD0;\n"
+"   float3 Pos : POSITION;\n"
+"   float2 Coord : TEXCOORD0;\n"
 "};\n"
 "struct VS_OUTPUT\n"
 "{\n"
-"	float4 Pos : SV_POSITION;\n"
-"	float2 Coord : TEXCOORD0;\n"
+"   float4 Pos : SV_POSITION;\n"
+"   float2 Coord : TEXCOORD0;\n"
 "};\n"
 "VS_OUTPUT vs_main(const VS_INPUT v)\n"
 "{\n"
-"	VS_OUTPUT o = (VS_OUTPUT)0;"
-"	o.Pos.xyz = v.Pos;\n"
+"   VS_OUTPUT o = (VS_OUTPUT)0;"
+"   o.Pos.xyz = v.Pos;\n"
 " o.Pos.w = 1.0f;\n"
-"	o.Coord = v.Coord;\n"
-"	return o;\n"
+"   o.Coord = v.Coord;\n"
+"   return o;\n"
 "};\n"
 "";
 static std::string ps_code_11 =
@@ -74,22 +74,22 @@ static std::string ps_code_11 =
 "Texture2D DiffuseTexture : DiffuseMap;\n"
 "SamplerState samLinear\n"
 "{\n"
-"	Filter = MIN_MAG_MIP_LINEAR;\n"
-"	AddressU = Wrap;\n"
-"	AddressV = Wrap;\n"
+"   Filter = MIN_MAG_MIP_LINEAR;\n"
+"   AddressU = Wrap;\n"
+"   AddressV = Wrap;\n"
 "};\n"
 "float anim_time : ANIM_TIMER;\n"
 "struct PS_INPUT\n"
 "{\n"
-"	float4 Pos : SV_POSITION;\n"
-"	float2 Coord : TEXCOORD0;\n"
+"   float4 Pos : SV_POSITION;\n"
+"   float2 Coord : TEXCOORD0;\n"
 "};\n"
 "float4 ps_main(PS_INPUT input) : SV_TARGET\n"
 "{\n"
 " float2 co = float2(input.Coord.x + anim_time, input.Coord.y);\n"
-"	float4 outputColor = DiffuseTexture.Sample(samLinear, co);\n"
+"   float4 outputColor = DiffuseTexture.Sample(samLinear, co);\n"
 " outputColor.a = 1;\n"
-"	return outputColor;\n"
+"   return outputColor;\n"
 "};\n";
 
 DrawPrimitiveWithTextureApp::DrawPrimitiveWithTextureApp(const std::string app_name) : AppDelegate(app_name)
@@ -118,21 +118,21 @@ void DrawPrimitiveWithTextureApp::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_asyncType, m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
 
-    m_shaderBuilder = menew ShaderBuilder(m_asyncType);
+    m_shaderBuilder = menew ShaderBuilder();
     m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyz_tex1(2)", vs_code_11, VertexDeclName, "pix_shader", ps_code_11 });
 
     byte_buffer points = make_data_buffer((unsigned char*)vtx_pos, sizeof(vtx_pos));
     uint_buffer indices = make_data_buffer(vtx_idx, 6);
-    m_bufferBuilder = menew BufferBuilder(m_asyncType);
+    m_bufferBuilder = menew BufferBuilder();
     m_bufferBuilder->BuildVertexBuffer(VertexBufferName, sizeof(VtxData), points);
     m_bufferBuilder->BuildIndexBuffer(IndexBufferName, indices);
 
-    m_textureBuilder = menew TextureSamplerBuilder(m_asyncType);
+    m_textureBuilder = menew TextureSamplerBuilder();
     m_textureBuilder->BuildTexture(TextureName, "earth.bmp", "");
     IDeviceSamplerState::SamplerStateData samp_data;
     samp_data.m_addressModeU = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;

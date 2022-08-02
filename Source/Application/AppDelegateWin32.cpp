@@ -5,7 +5,8 @@
 #include "../GraphicAPIDx11/GraphicAPIDx11.h"
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
-#include "FileSystem/StdMountPath.h"
+#include "GameEngine/RendererCommands.h"
+#include "Frameworks/CommandBus.h"
 #include <memory>
 
 #define WM_MOUSEWHEEL_LEGACY 0x020A
@@ -75,6 +76,10 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     }
 
     FileSystem::FileSystem::Create();
+    menew Devices::GraphicAPIDx11(useAsyncDevice);
+
+    m_graphicMain = menew Controllers::GraphicMain();
+    m_graphicMain->InstallFrameworks();
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
@@ -82,11 +87,6 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     Create();
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
-    m_asyncType = useAsyncDevice;
-    menew Devices::GraphicAPIDx11();
-
-    m_graphicMain = menew Controllers::GraphicMain();
-    m_graphicMain->InstallFrameworks();
 
     InstallEngine();
 }
@@ -159,6 +159,12 @@ void AppDelegate::Run()
             //RenderFrame();
         }
     }  // end while
+}
+
+void AppDelegate::OnFrameSizeChanged(int w, int h)
+{
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
+        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
 }
 
 LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

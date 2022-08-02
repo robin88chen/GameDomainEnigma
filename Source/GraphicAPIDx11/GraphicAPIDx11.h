@@ -29,7 +29,7 @@ namespace Enigma::Devices
     class GraphicAPIDx11 : public Graphics::IGraphicAPI
     {
     public:
-        GraphicAPIDx11();
+        GraphicAPIDx11(AsyncType async);
         GraphicAPIDx11(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11(GraphicAPIDx11&&) = delete;
         virtual ~GraphicAPIDx11() override;

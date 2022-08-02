@@ -108,17 +108,17 @@ void DrawPrimitiveTestApp::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_asyncType, m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
 
-    m_shaderBuilder = menew ShaderBuilder(m_asyncType);
+    m_shaderBuilder = menew ShaderBuilder();
     m_shaderBuilder->BuildShaderProgram(ShaderBuilder::ShaderProgramBuildParameter{ ShaderProgramName, "vtx_shader", "xyzb1_betabyte", vs_code_11, VertexDeclName, "pix_shader", ps_code_11 });
 
     byte_buffer points = make_data_buffer((unsigned char*)vtx_pos, sizeof(vtx_pos));
     uint_buffer indices = make_data_buffer(vtx_idx, 6);
-    m_bufferBuilder = menew BufferBuilder(m_asyncType);
+    m_bufferBuilder = menew BufferBuilder();
     m_bufferBuilder->BuildVertexBuffer(VertexBufferName, sizeof(VtxData), points);
     m_bufferBuilder->BuildIndexBuffer(IndexBufferName, indices);
 }

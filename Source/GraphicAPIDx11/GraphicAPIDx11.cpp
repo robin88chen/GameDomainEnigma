@@ -35,7 +35,7 @@ static D3D11_PRIMITIVE_TOPOLOGY ConvertTopologyD3D11(Enigma::Graphics::Primitive
     return (D3D11_PRIMITIVE_TOPOLOGY)pt;
 }
 
-GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
+GraphicAPIDx11::GraphicAPIDx11(AsyncType async) : IGraphicAPI(async)
 {
     m_apiVersion = IGraphicAPI::APIVersion::API_Dx11;
     m_wnd = nullptr;

@@ -11,10 +11,11 @@ using namespace Enigma::Graphics;
 
 IGraphicAPI* IGraphicAPI::m_instance = nullptr;
 
-IGraphicAPI::IGraphicAPI()
+IGraphicAPI::IGraphicAPI(AsyncType async)
 {
     assert(!m_instance);
     m_instance = this;
+    m_async = async;
     m_workerThread = new GraphicThread{};
     m_repository = new AssetRepository{};
 }

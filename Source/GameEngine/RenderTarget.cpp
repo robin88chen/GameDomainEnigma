@@ -19,9 +19,8 @@ using namespace Enigma::Engine;
 const std::string primary_back_surface_name = "primary_back_surface";
 const std::string primary_depth_surface_name = "primary_depth_surface";
 
-RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphics::IGraphicAPI::AsyncType async)
+RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
 {
-    m_async = async;
     m_isPrimary = primary == PrimaryType::IsPrimary;
     m_name = name;
     m_renderTargetTexture = nullptr;
@@ -33,7 +32,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphic
 
     if (m_isPrimary)
     {
-        if (async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+        if (Graphics::IGraphicAPI::Instance()->UseAsync())
         {
             Graphics::IGraphicAPI::Instance()->AsyncCreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
         }
@@ -45,9 +44,8 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, Graphic
 
 }
 
-RenderTarget::RenderTarget(const std::string& name, Graphics::IGraphicAPI::AsyncType async)
+RenderTarget::RenderTarget(const std::string& name)
 {
-    m_async = async;
     m_isPrimary = false;
     m_name = name;
     m_renderTargetTexture = nullptr;
@@ -361,7 +359,7 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     if (back) m_backSurface = back.value();
     auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
     if (depth) m_depthStencilSurface = depth.value();
-    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
     }
@@ -392,7 +390,7 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
     auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
     if (back) m_backSurface = back.value();
     if (!m_backSurface) return;
-    if (m_async == Graphics::IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
     }

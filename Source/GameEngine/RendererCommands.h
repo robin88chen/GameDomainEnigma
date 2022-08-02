@@ -47,6 +47,15 @@ namespace Enigma::Engine
         std::optional<unsigned int> m_stencil;
         std::optional<RenderTarget::BufferClearFlag> m_flag;
     };
+    class ResizePrimaryRenderTarget : public Frameworks::ICommand
+    {
+    public:
+        ResizePrimaryRenderTarget(const MathLib::Dimension& dimension) : m_dimension(dimension) {}
+        const MathLib::Dimension& GetDimension() { return m_dimension; }
+
+    private:
+        MathLib::Dimension m_dimension;
+    };
 }
 
 #endif // RENDERER_COMMANDS_H

@@ -1,11 +1,14 @@
 ﻿#include "RendererManager.h"
 #include "EngineErrors.h"
 #include "RendererEvents.h"
+#include "RendererCommands.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
+
 
 using namespace Enigma::Engine;
 
@@ -26,11 +29,16 @@ RendererManager::~RendererManager()
 Enigma::Frameworks::ServiceResult RendererManager::OnInit()
 {
     m_accumulateRendererStamp = 0;
+    m_handleResizingPrimaryTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleResizingPrimaryTarget(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_handleResizingPrimaryTarget);
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
 {
+    Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_handleResizingPrimaryTarget);
+    m_handleResizingPrimaryTarget = nullptr;
     //todo : renderers
     //ClearAllRenderer();
     ClearAllRenderTarget();
@@ -50,8 +58,7 @@ error RendererManager::DestroyRenderer(const std::string& name)
     return ErrorCode::ok;
 }
 
-error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
-                                          Graphics::IGraphicAPI::AsyncType async)
+error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary)
 {
     auto target_check = GetRenderTarget(name);
     if (target_check)
@@ -59,7 +66,7 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
     }
-    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary, async) };
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary) };
     m_mapRenderTarget.emplace(name, target);
 
     if (primary == RenderTarget::PrimaryType::IsPrimary)
@@ -88,6 +95,23 @@ RenderTargetPtr RendererManager::GetRenderTarget(const std::string& name) const
 RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
 {
     return GetRenderTarget(m_primaryRenderTargetName);
+}
+
+void RendererManager::HandleResizingPrimaryTarget(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<ResizePrimaryRenderTarget, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    auto target = GetPrimaryRenderTarget();
+    if (!target) return;
+    if (Graphics::IGraphicAPI::Instance()->UseAsync())
+    {
+        target->AsyncResize(cmd->GetDimension());
+    }
+    else
+    {
+        target->Resize(cmd->GetDimension());
+    }
 }
 
 void RendererManager::ClearAllRenderTarget()

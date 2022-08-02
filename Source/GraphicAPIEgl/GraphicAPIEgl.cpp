@@ -32,7 +32,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt);
 
-GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI()
+GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI(AsyncType::NotAsyncDevice)
 {
     m_apiVersion = APIVersion::API_EGL;
     m_fmtBackSurface = m_fmtDepthSurface = Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_UNKNOWN);

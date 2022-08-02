@@ -26,7 +26,7 @@ public:
         std::string m_pixShaderCode;
     };
 public:
-    ShaderBuilder(Enigma::Graphics::IGraphicAPI::AsyncType asyncType);
+    ShaderBuilder();
     ShaderBuilder(const ShaderBuilder&) = delete;
     ShaderBuilder(ShaderBuilder&&) = delete;
     ~ShaderBuilder();
@@ -50,7 +50,6 @@ private:
     void OnShaderBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 private:
-    Enigma::Graphics::IGraphicAPI::AsyncType m_async;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexShaderCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexShaderCompiled;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexLayoutCreated;

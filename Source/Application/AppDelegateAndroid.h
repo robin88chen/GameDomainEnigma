@@ -35,7 +35,7 @@ namespace Enigma::Application
         virtual void PrepareRender() {};
         virtual void RenderFrame() {};
 
-        virtual void OnFrameSizeChanged(int, int) {};
+        virtual void OnFrameSizeChanged(int, int);
 
         /** for android graphic bridge callback */
         void InitBridgeCallback();
@@ -48,7 +48,6 @@ namespace Enigma::Application
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;
-        Graphics::IGraphicAPI::AsyncType m_asyncType;
     };
 }
 #endif

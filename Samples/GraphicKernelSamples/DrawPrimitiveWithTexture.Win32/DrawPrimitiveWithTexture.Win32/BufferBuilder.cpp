@@ -10,10 +10,8 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 using namespace Enigma::Platforms;
 
-BufferBuilder::BufferBuilder(IGraphicAPI::AsyncType asyncType)
+BufferBuilder::BufferBuilder()
 {
-    m_async = asyncType;
-
     m_onVertexBufferCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnVertexBufferCreated(e); });
     EventPublisher::Subscribe(typeid(DeviceVertexBufferCreated), m_onVertexBufferCreated);
     m_onVertexBufferResourceCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnVertexBufferResourceCreated(e); });
@@ -51,7 +49,7 @@ void BufferBuilder::BuildVertexBuffer(const std::string& name, size_t vertex_siz
     m_vtxBufferName = name;
     m_vtxSize = vertex_size;
     m_vtxDataBuffer = data_buffer;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreateVertexBuffer(m_vtxBufferName);
     }
@@ -65,7 +63,7 @@ void BufferBuilder::BuildIndexBuffer(const std::string& name, const uint_buffer&
 {
     m_idxBufferName = name;
     m_idxDataBuffer = data_buffer;
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->AsyncCreateIndexBuffer(m_idxBufferName);
     }
@@ -86,7 +84,7 @@ void BufferBuilder::OnVertexBufferCreated(const IEventPtr& e)
         Debug::Printf("can't get vertex buffer asset %s", ev->GetBufferName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         buffer->AsyncCreate(m_vtxSize, m_vtxDataBuffer.size());
     }
@@ -112,7 +110,7 @@ void BufferBuilder::OnVertexBufferResourceCreated(const IEventPtr& e)
         Debug::Printf("can't get vertex buffer asset %s", ev->GetVertexBufferName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         buffer->AsyncUpdate(m_vtxDataBuffer);
     }
@@ -145,7 +143,7 @@ void BufferBuilder::OnIndexBufferCreated(const IEventPtr& e)
         Debug::Printf("can't get index buffer asset %s", ev->GetBufferName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         buffer->AsyncCreate(m_idxDataBuffer.size() * sizeof(unsigned int));
     }
@@ -171,7 +169,7 @@ void BufferBuilder::OnIndexBufferResourceCreated(const IEventPtr& e)
         Debug::Printf("can't get index buffer asset %s", ev->GetIndexBufferName().c_str());
         return;
     }
-    if (m_async == IGraphicAPI::AsyncType::UseAsyncDevice)
+    if (IGraphicAPI::Instance()->UseAsync())
     {
         buffer->AsyncUpdate(m_idxDataBuffer);
     }

@@ -14,6 +14,8 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
+#include <mutex>
+#include <memory>
 
 namespace Enigma::MathLib
 {
@@ -61,7 +63,7 @@ namespace Enigma::Graphics
             NotAsyncDevice = false
         };
     public:
-        IGraphicAPI();
+        IGraphicAPI(AsyncType async);
         IGraphicAPI(const IGraphicAPI&) = delete;
         IGraphicAPI(IGraphicAPI&&) = delete;
         virtual ~IGraphicAPI();
@@ -70,6 +72,7 @@ namespace Enigma::Graphics
 
         static IGraphicAPI* Instance();
 
+        bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         /** @name create / cleanup device */
         //@{
         virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
@@ -272,6 +275,7 @@ namespace Enigma::Graphics
 
     protected:
         static IGraphicAPI* m_instance;
+        AsyncType m_async;
         void* m_wnd;
         DeviceRequiredBits m_deviceRequiredBits;
         APIVersion m_apiVersion;

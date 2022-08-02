@@ -37,7 +37,7 @@ namespace Enigma::Application
         virtual void PrepareRender() {};
         virtual void RenderFrame() {};
 
-        virtual void OnFrameSizeChanged(int , int ) {};
+        virtual void OnFrameSizeChanged(int , int );
 
         HWND GetWnd() { return m_hwnd; };
     private:
@@ -80,8 +80,6 @@ namespace Enigma::Application
         std::string m_mediaRootPath;
 
         Controllers::GraphicMain* m_graphicMain;
-
-        Graphics::IGraphicAPI::AsyncType m_asyncType;
     };
 }
 #endif

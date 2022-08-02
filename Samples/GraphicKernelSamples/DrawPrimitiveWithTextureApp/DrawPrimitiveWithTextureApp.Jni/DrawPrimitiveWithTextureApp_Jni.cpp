@@ -189,6 +189,8 @@ void DrawPrimitiveWithTextureApp::FrameUpdate()
     {
         IShaderVariablePtr ps_var = m_program->GetVariableBySemantic("ANIM_TIMER");
         ps_var->SetValue(m_tick);
+        IShaderVariablePtr ps_var1 = m_program->GetVariableBySemantic("ANIM_SCALE");
+        ps_var1->SetValue(3.0f);
     }
 }
 

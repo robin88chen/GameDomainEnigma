@@ -255,6 +255,14 @@ namespace Enigma::Graphics
             return m_stash->Get<T>(asset_key);
         }
 
+        /** Try find graphic asset, return nullopt if key not found.
+         *  return value is the copy.
+         **/
+        template <class T> std::optional<T> TryFindGraphicAsset(const std::string& key)
+        {
+            return m_stash->TryFindValue<T>(key);
+        }
+
         bool HasGraphicAsset(const std::string& asset_key)
         {
             return m_stash->HasData(asset_key);

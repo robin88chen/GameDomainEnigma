@@ -52,10 +52,10 @@ namespace Enigma::Graphics
             return value;
         }
 
-        /** Try get data, return nullopt if key not found.
+        /** Try find data, return nullopt if key not found.
          *  return value is the copy.
          **/
-        template <class T> std::optional<T> TryGetValue(const std::string& key)
+        template <class T> std::optional<T> TryFindValue(const std::string& key)
         {
             std::lock_guard locker{ m_lock };
             if (!HasData(key)) return std::nullopt;

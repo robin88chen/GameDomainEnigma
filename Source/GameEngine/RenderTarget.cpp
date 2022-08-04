@@ -59,20 +59,9 @@ RenderTarget::RenderTarget(const std::string& name)
 RenderTarget::~RenderTarget()
 {
     UnsubscribeHandler();
-    if (Graphics::IGraphicAPI::Instance())
-    {
-        if (m_isPrimary)
-        {
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_back_surface_name);
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_depth_surface_name);
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_backSurfaceName);
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_depthSurfaceName);
-        }
-    }
     m_renderTargetTexture = nullptr;
+    m_backSurface = nullptr;
+    m_depthStencilSurface = nullptr;
 }
 
 error RenderTarget::Initialize()
@@ -355,10 +344,14 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     Graphics::PrimarySurfaceCreated* ev = dynamic_cast<Graphics::PrimarySurfaceCreated*>(e.get());
     if (!ev) return;
-    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
-    if (back) m_backSurface = back.value();
-    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
-    if (depth) m_depthStencilSurface = depth.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetBackSurfaceName()))
+    {
+        m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
+    }
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetDepthSurfaceName()))
+    {
+        m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
+    }
     if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
@@ -387,8 +380,10 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
         if (evb->GetBackSurfaceName() != m_backSurfaceName) return;
     }
 
-    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
-    if (back) m_backSurface = back.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(m_backSurfaceName))
+    {
+        m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
+    }
     if (!m_backSurface) return;
     if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
@@ -416,8 +411,10 @@ void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
         if (!evd) return;
         if (evd->GetDepthSurfaceName() != m_depthSurfaceName) return;
     }
-    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
-    if (depth) m_depthStencilSurface = depth.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(m_depthSurfaceName))
+    {
+        m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
+    }
     if (!m_depthStencilSurface) return;
     if (m_backSurface)
     {

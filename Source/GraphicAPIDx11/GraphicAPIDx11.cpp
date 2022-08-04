@@ -26,7 +26,6 @@
 #include "Frameworks/EventPublisher.h"
 #include <cassert>
 
-
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
@@ -76,7 +75,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
 error GraphicAPIDx11::CleanupDevice()
 {
     Platforms::Debug::Printf("cleanup device in thread %d\n", std::this_thread::get_id());
-    m_repository->Clear();
+    m_stash->Clear();
     CleanupDeviceObjects();
 
     SAFE_RELEASE(m_d3dDevice);
@@ -139,7 +138,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceDx11{back_name, m_d3dDevice, d3dbackTex, true} };
     SetPrimaryBackSurfaceFormat(back_surface->GetFormat());
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     if ((m_deviceRequiredBits.m_usesDepthBuffer) && (!depth_name.empty()))
     {
@@ -147,7 +146,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
         Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
             menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, Graphics::GraphicFormat::FMT_D24S8 } };
         SetDepthSurfaceFormat(depth_surface->GetFormat());
-        m_repository->Add(depth_name, depth_surface);
+        m_stash->Add(depth_name, depth_surface);
     }
     if (d3dbackTex) d3dbackTex->Release();
 
@@ -161,7 +160,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceDx11{ back_name, GetD3DDevice(), dimension, fmt } };
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -173,7 +172,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew MultiBackSurfaceDx11{ back_name, GetD3DDevice(), dimension, buff_count, fmts } };
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiBackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -185,7 +184,7 @@ error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, c
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceDx11{ depth_name, GetD3DDevice(), dimension, fmt } };
-    m_repository->Add(depth_name, depth_surface);
+    m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
     return ErrorCode::ok;
@@ -195,11 +194,11 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& from_depth)
 {
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
-    DepthStencilSurfaceDx11* depth_dx11 = dynamic_cast<DepthStencilSurfaceDx11*>(from_depth.get());
+    auto depth_dx11 = std::dynamic_pointer_cast<DepthStencilSurfaceDx11, Graphics::IDepthStencilSurface>(from_depth);
     assert(depth_dx11);
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceDx11{ depth_name, depth_dx11 } };
-    m_repository->Add(depth_name, depth_surface);
+    m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceShared{ depth_name } });
     return ErrorCode::ok;
@@ -273,7 +272,7 @@ error GraphicAPIDx11::CreateVertexShader(const std::string& name)
 {
     Platforms::Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderDx11{ name } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexShaderCreated{ name } });
     return ErrorCode::ok;
@@ -283,7 +282,7 @@ error GraphicAPIDx11::CreatePixelShader(const std::string& name)
 {
     Platforms::Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderDx11{ name } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DevicePixelShaderCreated{ name } });
     return ErrorCode::ok;
@@ -294,7 +293,7 @@ error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphic
 {
     Platforms::Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
     Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramDx11{ name, vtx_shader, pix_shader } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
     return ErrorCode::ok;
@@ -315,7 +314,7 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
     }
 
     std::lock_guard locker{ m_declMapLock };
-    VertexShaderDx11* shader_dx11 = dynamic_cast<VertexShaderDx11*>(shader.get());
+    auto shader_dx11 = std::dynamic_pointer_cast<VertexShaderDx11, Graphics::IVertexShader>(shader);
     assert(shader_dx11);
     VertexDeclarationDx11* vtx_decl_dx11 = menew
         VertexDeclarationDx11(name, data_vertex_format, shader_dx11->GetShaderVertexFormat());
@@ -330,7 +329,7 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
 
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ vtx_decl_dx11 };
     m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
-    m_repository->Add(name, vtxDecl);
+    m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });
     return ErrorCode::ok;
@@ -340,7 +339,7 @@ error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name)
 {
     Platforms::Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
-    m_repository->Add(buff_name, buff);
+    m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexBufferCreated{ buff_name } });
     return ErrorCode::ok;
@@ -350,7 +349,7 @@ error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name)
 {
     Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
-    m_repository->Add(buff_name, buff);
+    m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceIndexBufferCreated{ buff_name } });
     return ErrorCode::ok;
@@ -360,7 +359,7 @@ error GraphicAPIDx11::CreateSamplerState(const std::string& name)
 {
     Platforms::Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateDx11{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceSamplerStateCreated{ name } });
     return ErrorCode::ok;
@@ -370,7 +369,7 @@ error GraphicAPIDx11::CreateRasterizerState(const std::string& name)
 {
     Platforms::Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateDx11{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceRasterizerStateCreated{ name } });
     return ErrorCode::ok;
@@ -380,7 +379,7 @@ error GraphicAPIDx11::CreateAlphaBlendState(const std::string& name)
 {
     Platforms::Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateDx11{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceAlphaBlendStateCreated{ name } });
     return ErrorCode::ok;
@@ -390,7 +389,7 @@ error GraphicAPIDx11::CreateDepthStencilState(const std::string& name)
 {
     Platforms::Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateDx11{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceDepthStencilStateCreated{ name } });
     return ErrorCode::ok;
@@ -400,7 +399,7 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureDx11{ tex_name } };
-    m_repository->Add(tex_name, tex);
+    m_stash->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
     return ErrorCode::ok;
@@ -410,7 +409,7 @@ error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureDx11{ tex_name } };
-    m_repository->Add(tex_name, tex);
+    m_stash->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceMultiTextureCreated{ tex_name } });
     return ErrorCode::ok;
@@ -427,7 +426,7 @@ error GraphicAPIDx11::BindVertexDeclaration(const Graphics::IVertexDeclarationPt
         m_boundVertexDecl = nullptr;
         return ErrorCode::ok;
     }
-    VertexDeclarationDx11* vtxDx11 = dynamic_cast<VertexDeclarationDx11*>(vertexDecl.get());
+    auto vtxDx11 = std::dynamic_pointer_cast<VertexDeclarationDx11, Graphics::IVertexDeclaration>(vertexDecl);
     if (FATAL_LOG_EXPR(!vtxDx11)) return ErrorCode::dynamicCastVertexLayout;
     if (FATAL_LOG_EXPR(!vtxDx11->GetD3DInputLayout())) return ErrorCode::nullVertexLayout;
     m_d3dDeviceContext->IASetInputLayout(vtxDx11->GetD3DInputLayout());
@@ -447,7 +446,7 @@ error GraphicAPIDx11::BindVertexShader(const Graphics::IVertexShaderPtr& shader)
         m_boundVertexShader = nullptr;
         return ErrorCode::ok;
     }
-    VertexShaderDx11* shaderDx11 = dynamic_cast<VertexShaderDx11*>(shader.get());
+    auto shaderDx11 = std::dynamic_pointer_cast<VertexShaderDx11, Graphics::IVertexShader>(shader);
     if (FATAL_LOG_EXPR(!shaderDx11)) return ErrorCode::dynamicCastShader;
     if (FATAL_LOG_EXPR(!shaderDx11->GetD3DShader())) return ErrorCode::nullShader;
     m_d3dDeviceContext->VSSetShader(shaderDx11->GetD3DShader(), NULL, 0);
@@ -467,7 +466,7 @@ error GraphicAPIDx11::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
         m_boundPixelShader = nullptr;
         return ErrorCode::ok;
     }
-    PixelShaderDx11* shaderDx11 = dynamic_cast<PixelShaderDx11*>(shader.get());
+    auto shaderDx11 = std::dynamic_pointer_cast<PixelShaderDx11, Graphics::IPixelShader>(shader);
     if (FATAL_LOG_EXPR(!shaderDx11)) return ErrorCode::dynamicCastShader;
     if (FATAL_LOG_EXPR(!shaderDx11->GetD3DShader())) return ErrorCode::nullShader;
     m_d3dDeviceContext->PSSetShader(shaderDx11->GetD3DShader(), NULL, 0);
@@ -504,7 +503,7 @@ error GraphicAPIDx11::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer,
         m_boundVertexBuffer = nullptr;
         return ErrorCode::ok;
     }
-    VertexBufferDx11* buffDx11 = dynamic_cast<VertexBufferDx11*>(buffer.get());
+    auto buffDx11 = std::dynamic_pointer_cast<VertexBufferDx11, Graphics::IVertexBuffer>(buffer);
     if (FATAL_LOG_EXPR(!buffDx11)) return ErrorCode::dynamicCastBuffer;
     if (FATAL_LOG_EXPR(!buffDx11->GetD3DBuffer())) return ErrorCode::nullVertexBuffer;
     ID3D11Buffer* d3dBuffer = buffDx11->GetD3DBuffer();
@@ -528,7 +527,7 @@ error GraphicAPIDx11::BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer)
         m_boundIndexBuffer = nullptr;
         return ErrorCode::ok;
     }
-    IndexBufferDx11* buffDx11 = dynamic_cast<IndexBufferDx11*>(buffer.get());
+    auto buffDx11 = std::dynamic_pointer_cast<IndexBufferDx11, Graphics::IIndexBuffer>(buffer);
     if (FATAL_LOG_EXPR(!buffDx11)) return ErrorCode::dynamicCastBuffer;
     if (FATAL_LOG_EXPR(!buffDx11->GetD3DBuffer())) return ErrorCode::nullIndexBuffer;
     m_d3dDeviceContext->IASetIndexBuffer(buffDx11->GetD3DBuffer(), DXGI_FORMAT_R32_UINT, 0);
@@ -554,7 +553,7 @@ error GraphicAPIDx11::ClearSingleBackSurface(const Graphics::IBackSurfacePtr& ba
     if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
     if (back_surface)
     {
-        BackSurfaceDx11* back_dx11 = dynamic_cast<BackSurfaceDx11*>(back_surface.get());
+        auto back_dx11 = std::dynamic_pointer_cast<BackSurfaceDx11, Graphics::IBackSurface>(back_surface);
         if (!back_dx11) return ErrorCode::dynamicCastSurface;
 
         m_d3dDeviceContext->ClearRenderTargetView(back_dx11->GetD3DRenderTarget(), (const float*)color);
@@ -567,7 +566,7 @@ error GraphicAPIDx11::ClearMultiBackSurface(const Graphics::IBackSurfacePtr& bac
     if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
     if (back_surface)
     {
-        MultiBackSurfaceDx11* back_dx11 = dynamic_cast<MultiBackSurfaceDx11*>(back_surface.get());
+        auto back_dx11 = std::dynamic_pointer_cast<MultiBackSurfaceDx11, Graphics::IBackSurface>(back_surface);
         if (!back_dx11) return ErrorCode::dynamicCastSurface;
 
         for (unsigned int i = 0; i < back_surface->GetSurfaceCount(); i++)
@@ -587,7 +586,7 @@ error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurf
         unsigned int flag = 0;
         if (depth_surface->GetFormat().DepthBits()) flag |= D3D11_CLEAR_DEPTH;
         if (depth_surface->GetFormat().StencilBits()) flag |= D3D11_CLEAR_STENCIL;
-        DepthStencilSurfaceDx11* depth_dx11 = dynamic_cast<DepthStencilSurfaceDx11*>(depth_surface.get());
+        auto depth_dx11 = std::dynamic_pointer_cast<DepthStencilSurfaceDx11, Graphics::IDepthStencilSurface>(depth_surface);
         if (!depth_dx11) return ErrorCode::dynamicCastSurface;
         m_d3dDeviceContext->ClearDepthStencilView(
             depth_dx11->GetD3DDepthView(), (D3D11_CLEAR_FLAG)flag, depth_value, (UINT8)stencil_value);
@@ -608,13 +607,13 @@ error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& bac
         return ErrorCode::ok;
     }
 
-    BackSurfaceDx11* bbDx11 = dynamic_cast<BackSurfaceDx11*>(m_boundBackSurface.get());
+    auto bbDx11 = std::dynamic_pointer_cast<BackSurfaceDx11, Graphics::IBackSurface>(m_boundBackSurface);
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView* render_target_view = bbDx11->GetD3DRenderTarget();
     ID3D11DepthStencilView* depth_view = nullptr;
     if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
+        auto dsbDx11 = std::dynamic_pointer_cast<DepthStencilSurfaceDx11, Graphics::IDepthStencilSurface>(m_boundDepthSurface);
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(1, &render_target_view, depth_view);
@@ -637,13 +636,13 @@ error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back
         return ErrorCode::ok;
     }
 
-    MultiBackSurfaceDx11* bbDx11 = dynamic_cast<MultiBackSurfaceDx11*>(m_boundBackSurface.get());
+    auto bbDx11 = std::dynamic_pointer_cast<MultiBackSurfaceDx11, Graphics::IBackSurface>(m_boundBackSurface);
     if (FATAL_LOG_EXPR(!bbDx11)) return ErrorCode::dynamicCastSurface;
     ID3D11RenderTargetView** render_target_view = bbDx11->GetD3DRenderTargetArray();
     ID3D11DepthStencilView* depth_view = nullptr;
     if (m_boundDepthSurface)
     {
-        DepthStencilSurfaceDx11* dsbDx11 = dynamic_cast<DepthStencilSurfaceDx11*>(m_boundDepthSurface.get());
+        auto dsbDx11 = std::dynamic_pointer_cast<DepthStencilSurfaceDx11, Graphics::IDepthStencilSurface>(m_boundDepthSurface);
         if (dsbDx11) depth_view = dsbDx11->GetD3DDepthView();
     }
     m_d3dDeviceContext->OMSetRenderTargets(back_surface->GetSurfaceCount(), render_target_view, depth_view);

@@ -25,9 +25,6 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{246ba29a-0aef-41bf-930d-960667a55c4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Asset Repository">
-      <UniqueIdentifier>{c4aa4384-404a-4f75-861b-f181b69feb23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Vertex Index Buffer">
       <UniqueIdentifier>{eae40abf-9f0a-46de-a913-cbce67168e1d}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,9 @@
     </Filter>
     <Filter Include="Device States">
       <UniqueIdentifier>{570216e9-8169-4527-bc06-cfd4d465396c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset Stash">
+      <UniqueIdentifier>{c4aa4384-404a-4f75-861b-f181b69feb23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,8 +78,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.h">
-      <Filter>Asset Repository</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.h">
+      <Filter>Asset Stash</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h">
       <Filter>Texture</Filter>
@@ -149,8 +149,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.cpp">
-      <Filter>Asset Repository</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.cpp">
+      <Filter>Asset Stash</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp">
       <Filter>Texture</Filter>

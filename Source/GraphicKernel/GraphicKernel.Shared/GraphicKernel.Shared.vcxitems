@@ -14,7 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h" />
@@ -41,7 +41,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicThread.cpp" />

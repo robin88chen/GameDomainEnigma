@@ -19,7 +19,7 @@ namespace Enigma::Devices
     public:
         DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
         DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* buff);
-        DepthStencilSurfaceDx11(const std::string& name, DepthStencilSurfaceDx11* depthDx11);
+        DepthStencilSurfaceDx11(const std::string& name, const std::shared_ptr<DepthStencilSurfaceDx11>& depthDx11);
         DepthStencilSurfaceDx11(const DepthStencilSurfaceDx11&) = delete;
         virtual ~DepthStencilSurfaceDx11();
         DepthStencilSurfaceDx11& operator=(const DepthStencilSurfaceDx11&) = delete;

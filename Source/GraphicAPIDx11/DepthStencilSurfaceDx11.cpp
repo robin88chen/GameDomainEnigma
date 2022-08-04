@@ -39,7 +39,7 @@ DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11
     if (m_d3dSurface) CreateD3DDepthView(device);
 }
 
-DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, DepthStencilSurfaceDx11* depthDx11)
+DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, const std::shared_ptr<DepthStencilSurfaceDx11>& depthDx11)
     : IDepthStencilSurface(name)
 {
     m_dimension = depthDx11->m_dimension;

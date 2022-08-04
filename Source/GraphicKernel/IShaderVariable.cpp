@@ -29,5 +29,5 @@ void IShaderVariable::SetCommitFunction(VariableCommitFunc fn)
 future_error IShaderVariable::AsyncApply()
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->Apply(); });
+        PushTask([lifetime = shared_from_this(), this]() -> error { return Apply(); });
 }

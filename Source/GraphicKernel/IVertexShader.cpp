@@ -17,5 +17,5 @@ future_error IVertexShader::AsyncCompileCode(const std::string& code, const std:
     const std::string& entry)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->CompileCode(code, profile, entry); });
+        PushTask([lifetime = shared_from_this(), code, profile, entry, this]() -> error { return CompileCode(code, profile, entry); });
 }

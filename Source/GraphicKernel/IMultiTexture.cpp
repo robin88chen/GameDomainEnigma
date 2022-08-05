@@ -16,16 +16,14 @@ IMultiTexture::~IMultiTexture()
 future_error IMultiTexture::AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return std::dynamic_pointer_cast<IMultiTexture, ITexture>
-            (shared_from_this())->LoadTextureImages(img_buffs); });
+        PushTask([lifetime = shared_from_this(), img_buffs, this]() -> error { return LoadTextureImages(img_buffs); });
 }
 
 
 future_error IMultiTexture::AsyncSaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return std::dynamic_pointer_cast<IMultiTexture, ITexture>
-            (shared_from_this())->SaveTextureImages(files); });
+        PushTask([lifetime = shared_from_this(), files, this]() -> error { return SaveTextureImages(files); });
 }
 
 error IMultiTexture::LoadTextureImages(const std::vector<std::string>& filenames,
@@ -58,8 +56,7 @@ future_error IMultiTexture::AsyncLoadTextureImages(const std::vector<std::string
                                                    const std::vector<std::string>& pathids)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return std::dynamic_pointer_cast<IMultiTexture, ITexture>
-            (shared_from_this())->LoadTextureImages(filenames, pathids); });
+        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return LoadTextureImages(filenames, pathids); });
 }
 
 error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames,
@@ -87,6 +84,5 @@ future_error IMultiTexture::AsyncSaveTextureImages(const std::vector<std::string
     const std::vector<std::string>& pathids)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return std::dynamic_pointer_cast<IMultiTexture, ITexture>
-            (shared_from_this())->SaveTextureImages(filenames, pathids); });
+        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return SaveTextureImages(filenames, pathids); });
 }

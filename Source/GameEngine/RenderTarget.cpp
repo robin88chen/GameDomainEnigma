@@ -86,7 +86,7 @@ error RenderTarget::Initialize()
 future_error RenderTarget::AsyncInitialize()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Initialize(); });
+        ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
 }
 
 error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
@@ -102,7 +102,8 @@ future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, co
     const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitBackSurface(back_name, dimension, fmt); });
+        ->PushTask([lifetime = shared_from_this(), back_name, dimension, fmt, this]() 
+            -> error { return InitBackSurface(back_name, dimension, fmt); });
 }
 
 error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -118,8 +119,8 @@ future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_nam
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitMultiBackSurface(
-            back_name, dimension, surface_count, fmts); });
+        ->PushTask([lifetime = shared_from_this(), back_name, dimension, surface_count, fmts, this]() 
+            -> error { return InitMultiBackSurface(back_name, dimension, surface_count, fmts); });
 }
 
 error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
@@ -134,7 +135,8 @@ future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth
     const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitDepthStencilSurface(depth_name, dimension, fmt); });
+        ->PushTask([lifetime = shared_from_this(), depth_name, dimension, fmt, this]() 
+            -> error { return InitDepthStencilSurface(depth_name, dimension, fmt); });
 }
 
 error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
@@ -149,7 +151,8 @@ future_error RenderTarget::AsyncShareDepthStencilSurface(const std::string& dept
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->ShareDepthStencilSurface(depth_name, surface); });
+        ->PushTask([lifetime = shared_from_this(), depth_name, surface, this]() 
+            -> error { return ShareDepthStencilSurface(depth_name, surface); });
 }
 
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
@@ -168,7 +171,7 @@ future_error RenderTarget::AsyncBind()
     assert(Graphics::IGraphicAPI::Instance());
     assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Bind(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Bind(); });
 }
 
 error RenderTarget::BindViewPort()
@@ -182,7 +185,7 @@ future_error RenderTarget::AsyncBindViewPort()
     assert(Graphics::IGraphicAPI::Instance());
     assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->BindViewPort(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return BindViewPort(); });
 }
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
@@ -203,7 +206,7 @@ error RenderTarget::Clear()
 future_error RenderTarget::AsyncClear()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Clear(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Clear(); });
 }
 
 error RenderTarget::Flip()
@@ -216,7 +219,7 @@ error RenderTarget::Flip()
 future_error RenderTarget::AsyncFlip()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Flip(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Flip(); });
 }
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)
@@ -258,7 +261,8 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
 future_error RenderTarget::AsyncResize(const MathLib::Dimension& dimension)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Resize(dimension); });
+        ->PushTask([lifetime = shared_from_this(), dimension, this]() 
+            -> error { return Resize(dimension); });
 }
 
 bool RenderTarget::HasGBufferDepthMap()

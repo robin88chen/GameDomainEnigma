@@ -22,25 +22,25 @@ ITexture::~ITexture()
 future_error ITexture::AsyncCreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->CreateFromSystemMemory(dimension, buff); });
+        PushTask([lifetime = shared_from_this(), dimension, buff, this]() -> error { return CreateFromSystemMemory(dimension, buff); });
 }
 
 future_error ITexture::AsyncLoadTextureImage(const byte_buffer& img_buff)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->LoadTextureImage(img_buff); });
+        PushTask([lifetime = shared_from_this(), img_buff, this]() -> error { return LoadTextureImage(img_buff); });
 }
 
 future_error ITexture::AsyncSaveTextureImage(const FileSystem::IFilePtr& file)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->SaveTextureImage(file); });
+        PushTask([lifetime = shared_from_this(), file, this]() -> error { return SaveTextureImage(file); });
 }
 
 future_error ITexture::AsyncRetrieveTextureImage(const MathLib::Rect& rcSrc)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->RetrieveTextureImage(rcSrc); });
+        PushTask([lifetime = shared_from_this(), rcSrc, this]() -> error { return RetrieveTextureImage(rcSrc); });
 }
 
 error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)
@@ -63,13 +63,13 @@ error ITexture::LoadTextureImage(const std::string& filename, const std::string&
 future_error ITexture::AsyncLoadTextureImage(const std::string& filename, const std::string& pathid)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->LoadTextureImage(filename, pathid); });
+        PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return LoadTextureImage(filename, pathid); });
 }
 
 future_error ITexture::AsyncUpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->UpdateTextureImage(rcDest, img_buff); });
+        PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]() -> error { return UpdateTextureImage(rcDest, img_buff); });
 }
 
 error ITexture::SaveTextureImage(const std::string& filename, const std::string& pathid)
@@ -85,11 +85,11 @@ error ITexture::SaveTextureImage(const std::string& filename, const std::string&
 future_error ITexture::AsyncSaveTextureImage(const std::string& filename, const std::string& pathid)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->SaveTextureImage(filename, pathid); });
+        PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return SaveTextureImage(filename, pathid); });
 }
 
 future_error ITexture::AsyncUseAsBackSurface(const IBackSurfacePtr& back_surf)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->UseAsBackSurface(back_surf); });
+        PushTask([lifetime = shared_from_this(), back_surf, this]() -> error { return UseAsBackSurface(back_surf); });
 }

@@ -27,5 +27,5 @@ error IDeviceConstBuffer::CreateDataBuffer(unsigned int cb_size)
 future_error IDeviceConstBuffer::AsyncCreateDataBuffer(unsigned cb_size)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->CreateDataBuffer(cb_size); });
+        PushTask([lifetime = shared_from_this(), cb_size, this]() -> error { return CreateDataBuffer(cb_size); });
 }

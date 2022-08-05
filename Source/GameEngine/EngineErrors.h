@@ -20,6 +20,8 @@ namespace Enigma::Engine
         nullBackSurface,
         renderTargetAlreadyExisted,
         renderTargetNotExist,
+
+        findStashedAssetFail = 201,
     };
     class ErrorCategory : public std::error_category
     {

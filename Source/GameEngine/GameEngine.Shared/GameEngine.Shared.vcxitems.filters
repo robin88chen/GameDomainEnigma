@@ -16,6 +16,9 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{1ea8e655-aa8f-4eb5-b7f5-3f64f2b362b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -33,6 +36,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -43,6 +55,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp">
+      <Filter>Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullBackSurface: return "Null back surface";
     case ErrorCode::renderTargetAlreadyExisted: return "Render target already existed";
     case ErrorCode::renderTargetNotExist: return "Render target not exist";
+    case ErrorCode::findStashedAssetFail: return "Find stashed asset fail";
     }
     return "Unknown";
 }

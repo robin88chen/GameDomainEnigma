@@ -76,9 +76,9 @@ future_error DeviceConstBufferDx11::AsyncApply()
 {
     //! lambda 從 this 抓 member data 並不是 by value, 要複製; c++17 可以用 *this; 因為這個物件不能複製, 所以 *this 沒法使用, 還是複製成員, 做物件複製更不划算
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([data = this->m_data, size = this->m_size, this]() -> error
+        PushTask([lifetime = shared_from_this(), data = this->m_data, size = this->m_size, this]() -> error
         {
-            return std::dynamic_pointer_cast<DeviceConstBufferDx11, IDeviceConstBuffer>(shared_from_this())->Apply(data, size);
+            return Apply(data, size);
         }); // 資料 copy 到 functor 裡
     //return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
       //  PushTask([=, *this]() -> error { return Apply(m_data, m_size); }); // 資料 copy 到 functor 裡
@@ -110,9 +110,9 @@ error DeviceConstBufferDx11::BindToShader(Graphics::IShaderVariable::VarOwner va
 future_error DeviceConstBufferDx11::AsyncBindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]()->error
+        PushTask([lifetime = shared_from_this(), this, var_of, bindPoint]()->error
         {
-            return std::dynamic_pointer_cast<DeviceConstBufferDx11, IDeviceConstBuffer>(shared_from_this())->BindToShader(var_of, bindPoint);
+            return BindToShader(var_of, bindPoint);
         });
 }
 

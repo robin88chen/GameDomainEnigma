@@ -78,7 +78,7 @@ void BufferBuilder::OnVertexBufferCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceVertexBufferCreated, IEvent>(e);
     if (!ev) return;
-    IVertexBufferPtr buffer = IGraphicAPI::Instance()->GetGraphicAsset<IVertexBufferPtr>(ev->GetBufferName());
+    auto buffer = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexBufferPtr>(ev->GetBufferName());
     if (!buffer)
     {
         Debug::Printf("can't get vertex buffer asset %s", ev->GetBufferName().c_str());
@@ -86,11 +86,11 @@ void BufferBuilder::OnVertexBufferCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        buffer->AsyncCreate(m_vtxSize, m_vtxDataBuffer.size());
+        buffer.value()->AsyncCreate(m_vtxSize, m_vtxDataBuffer.size());
     }
     else
     {
-        buffer->Create(m_vtxSize, m_vtxDataBuffer.size());
+        buffer.value()->Create(m_vtxSize, m_vtxDataBuffer.size());
     }
 }
 
@@ -104,7 +104,7 @@ void BufferBuilder::OnVertexBufferResourceCreated(const IEventPtr& e)
         Debug::Printf("resource vertex buffer name not match %s", ev->GetVertexBufferName().c_str());
         return;
     }
-    IVertexBufferPtr buffer = IGraphicAPI::Instance()->GetGraphicAsset<IVertexBufferPtr>(ev->GetVertexBufferName());
+    auto buffer = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexBufferPtr>(ev->GetVertexBufferName());
     if (!buffer)
     {
         Debug::Printf("can't get vertex buffer asset %s", ev->GetVertexBufferName().c_str());
@@ -112,11 +112,11 @@ void BufferBuilder::OnVertexBufferResourceCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        buffer->AsyncUpdate(m_vtxDataBuffer);
+        buffer.value()->AsyncUpdate(m_vtxDataBuffer);
     }
     else
     {
-        buffer->Update(m_vtxDataBuffer);
+        buffer.value()->Update(m_vtxDataBuffer);
     }
 }
 
@@ -137,7 +137,7 @@ void BufferBuilder::OnIndexBufferCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceIndexBufferCreated, IEvent>(e);
     if (!ev) return;
-    IIndexBufferPtr buffer = IGraphicAPI::Instance()->GetGraphicAsset<IIndexBufferPtr>(ev->GetBufferName());
+    auto buffer = IGraphicAPI::Instance()->TryFindGraphicAsset<IIndexBufferPtr>(ev->GetBufferName());
     if (!buffer)
     {
         Debug::Printf("can't get index buffer asset %s", ev->GetBufferName().c_str());
@@ -145,11 +145,11 @@ void BufferBuilder::OnIndexBufferCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        buffer->AsyncCreate(m_idxDataBuffer.size() * sizeof(unsigned int));
+        buffer.value()->AsyncCreate(m_idxDataBuffer.size() * sizeof(unsigned int));
     }
     else
     {
-        buffer->Create(m_idxDataBuffer.size() * sizeof(unsigned int));
+        buffer.value()->Create(m_idxDataBuffer.size() * sizeof(unsigned int));
     }
 }
 
@@ -163,7 +163,7 @@ void BufferBuilder::OnIndexBufferResourceCreated(const IEventPtr& e)
         Debug::Printf("resource index buffer name not match %s", ev->GetIndexBufferName().c_str());
         return;
     }
-    IIndexBufferPtr buffer = IGraphicAPI::Instance()->GetGraphicAsset<IIndexBufferPtr>(ev->GetIndexBufferName());
+    auto buffer = IGraphicAPI::Instance()->TryFindGraphicAsset<IIndexBufferPtr>(ev->GetIndexBufferName());
     if (!buffer)
     {
         Debug::Printf("can't get index buffer asset %s", ev->GetIndexBufferName().c_str());
@@ -171,11 +171,11 @@ void BufferBuilder::OnIndexBufferResourceCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        buffer->AsyncUpdate(m_idxDataBuffer);
+        buffer.value()->AsyncUpdate(m_idxDataBuffer);
     }
     else
     {
-        buffer->Update(m_idxDataBuffer);
+        buffer.value()->Update(m_idxDataBuffer);
     }
 }
 

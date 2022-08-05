@@ -23,7 +23,7 @@ namespace Enigma::Devices
     public:
         DepthStencilSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        DepthStencilSurfaceEgl(const std::string& name, DepthStencilSurfaceEgl* shared_depth);
+        DepthStencilSurfaceEgl(const std::string& name, const std::shared_ptr<DepthStencilSurfaceEgl>& shared_depth);
         DepthStencilSurfaceEgl(const DepthStencilSurfaceEgl&) = delete;
         DepthStencilSurfaceEgl(DepthStencilSurfaceEgl&&) = delete;
         virtual ~DepthStencilSurfaceEgl();

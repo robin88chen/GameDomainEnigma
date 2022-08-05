@@ -10,7 +10,7 @@
 
 #include "DeviceRequiredBits.h"
 #include "TargetViewPort.h"
-#include "GraphicAssetRepository.h"
+#include "GraphicAssetStash.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
@@ -252,19 +252,21 @@ namespace Enigma::Graphics
         /** Get graphic asset, assert if key not found */
         template <class T> T GetGraphicAsset(const std::string& asset_key)
         {
-            return m_repository->Get<T>(asset_key);
+            return m_stash->Get<T>(asset_key);
         }
 
-        /** Try get asset, return nullopt if key not found.
+        /** Try find graphic asset, return nullopt if key not found.
          *  return value is the copy.
          **/
-        template <class T> std::optional<T> TryGetGraphicAsset(const std::string& asset_key)
+        template <class T> std::optional<T> TryFindGraphicAsset(const std::string& key)
         {
-            return m_repository->TryGetValue<T>(asset_key);
+            return m_stash->TryFindValue<T>(key);
         }
 
-        /** Remove graphic asset */
-        void RemoveGraphicAsset(const std::string& asset_key) { m_repository->Remove(asset_key); }
+        bool HasGraphicAsset(const std::string& asset_key)
+        {
+            return m_stash->HasData(asset_key);
+        }
 
     protected:
         /** @name surface format */
@@ -284,7 +286,7 @@ namespace Enigma::Graphics
         GraphicFormat m_fmtDepthSurface;
 
         GraphicThread* m_workerThread;
-        AssetRepository* m_repository;
+        AssetStash* m_stash;
 
         using VertexDeclMap = std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash>;
         VertexDeclMap m_vertexDeclMap;

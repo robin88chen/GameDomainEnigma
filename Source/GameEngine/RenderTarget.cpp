@@ -59,20 +59,9 @@ RenderTarget::RenderTarget(const std::string& name)
 RenderTarget::~RenderTarget()
 {
     UnsubscribeHandler();
-    if (Graphics::IGraphicAPI::Instance())
-    {
-        if (m_isPrimary)
-        {
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_back_surface_name);
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(primary_depth_surface_name);
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_backSurfaceName);
-            Graphics::IGraphicAPI::Instance()->RemoveGraphicAsset(m_depthSurfaceName);
-        }
-    }
     m_renderTargetTexture = nullptr;
+    m_backSurface = nullptr;
+    m_depthStencilSurface = nullptr;
 }
 
 error RenderTarget::Initialize()
@@ -97,7 +86,7 @@ error RenderTarget::Initialize()
 future_error RenderTarget::AsyncInitialize()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Initialize(); });
+        ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
 }
 
 error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
@@ -113,7 +102,8 @@ future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, co
     const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitBackSurface(back_name, dimension, fmt); });
+        ->PushTask([lifetime = shared_from_this(), back_name, dimension, fmt, this]() 
+            -> error { return InitBackSurface(back_name, dimension, fmt); });
 }
 
 error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -129,8 +119,8 @@ future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_nam
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitMultiBackSurface(
-            back_name, dimension, surface_count, fmts); });
+        ->PushTask([lifetime = shared_from_this(), back_name, dimension, surface_count, fmts, this]() 
+            -> error { return InitMultiBackSurface(back_name, dimension, surface_count, fmts); });
 }
 
 error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
@@ -145,7 +135,8 @@ future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth
     const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->InitDepthStencilSurface(depth_name, dimension, fmt); });
+        ->PushTask([lifetime = shared_from_this(), depth_name, dimension, fmt, this]() 
+            -> error { return InitDepthStencilSurface(depth_name, dimension, fmt); });
 }
 
 error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
@@ -160,7 +151,8 @@ future_error RenderTarget::AsyncShareDepthStencilSurface(const std::string& dept
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->ShareDepthStencilSurface(depth_name, surface); });
+        ->PushTask([lifetime = shared_from_this(), depth_name, surface, this]() 
+            -> error { return ShareDepthStencilSurface(depth_name, surface); });
 }
 
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
@@ -179,7 +171,7 @@ future_error RenderTarget::AsyncBind()
     assert(Graphics::IGraphicAPI::Instance());
     assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Bind(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Bind(); });
 }
 
 error RenderTarget::BindViewPort()
@@ -193,7 +185,7 @@ future_error RenderTarget::AsyncBindViewPort()
     assert(Graphics::IGraphicAPI::Instance());
     assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->BindViewPort(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return BindViewPort(); });
 }
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
@@ -214,7 +206,7 @@ error RenderTarget::Clear()
 future_error RenderTarget::AsyncClear()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Clear(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Clear(); });
 }
 
 error RenderTarget::Flip()
@@ -227,7 +219,7 @@ error RenderTarget::Flip()
 future_error RenderTarget::AsyncFlip()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Flip(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Flip(); });
 }
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)
@@ -269,7 +261,8 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
 future_error RenderTarget::AsyncResize(const MathLib::Dimension& dimension)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([=]() -> error { return shared_from_this()->Resize(dimension); });
+        ->PushTask([lifetime = shared_from_this(), dimension, this]() 
+            -> error { return Resize(dimension); });
 }
 
 bool RenderTarget::HasGBufferDepthMap()
@@ -355,10 +348,14 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     Graphics::PrimarySurfaceCreated* ev = dynamic_cast<Graphics::PrimarySurfaceCreated*>(e.get());
     if (!ev) return;
-    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
-    if (back) m_backSurface = back.value();
-    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
-    if (depth) m_depthStencilSurface = depth.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetBackSurfaceName()))
+    {
+        m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
+    }
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetDepthSurfaceName()))
+    {
+        m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
+    }
     if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
         AsyncInitialize();
@@ -387,8 +384,10 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
         if (evb->GetBackSurfaceName() != m_backSurfaceName) return;
     }
 
-    auto back = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
-    if (back) m_backSurface = back.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(m_backSurfaceName))
+    {
+        m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
+    }
     if (!m_backSurface) return;
     if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
@@ -416,8 +415,10 @@ void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
         if (!evd) return;
         if (evd->GetDepthSurfaceName() != m_depthSurfaceName) return;
     }
-    auto depth = Graphics::IGraphicAPI::Instance()->TryGetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
-    if (depth) m_depthStencilSurface = depth.value();
+    if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(m_depthSurfaceName))
+    {
+        m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(m_depthSurfaceName);
+    }
     if (!m_depthStencilSurface) return;
     if (m_backSurface)
     {

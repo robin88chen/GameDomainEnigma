@@ -23,11 +23,11 @@ error IDeviceAlphaBlendState::CreateFromData(const BlendStateData& data)
 future_error IDeviceAlphaBlendState::AsyncCreateFromData(const BlendStateData& data)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->CreateFromData(data); });
+        PushTask([lifetime = shared_from_this(), data, this]() -> error { return CreateFromData(data); });
 }
 
 future_error IDeviceAlphaBlendState::AsyncBindToDevice()
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->BindToDevice(); });
+        PushTask([lifetime = shared_from_this(), this]() -> error { return BindToDevice(); });
 }

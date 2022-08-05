@@ -57,9 +57,9 @@ error DeviceSamplerStateEgl::BindToShader(unsigned bindPoint)
 future_error DeviceSamplerStateEgl::AsyncBindToShader(unsigned bindPoint)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]()->error
+        PushTask([lifetime = shared_from_this(), bindPoint, this]()->error
             {
-                return std::dynamic_pointer_cast<DeviceSamplerStateEgl, IDeviceSamplerState>(shared_from_this())->BindToShader(bindPoint);
+                return BindToShader(bindPoint);
             });
 }
 

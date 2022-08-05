@@ -79,9 +79,9 @@ error DeviceSamplerStateDx11::BindToShader(Graphics::IShaderVariable::VarOwner v
 future_error DeviceSamplerStateDx11::AsyncBindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]()->error
+        PushTask([lifetime = shared_from_this(), this, var_of, bindPoint]()->error
             {
-                return std::dynamic_pointer_cast<DeviceSamplerStateDx11, IDeviceSamplerState>(shared_from_this())->BindToShader(var_of, bindPoint);
+                return BindToShader(var_of, bindPoint);
             });
 }
 

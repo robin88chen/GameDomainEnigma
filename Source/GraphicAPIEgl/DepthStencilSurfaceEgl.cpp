@@ -17,7 +17,7 @@ DepthStencilSurfaceEgl::DepthStencilSurfaceEgl(const std::string& name, const Ma
     m_frameBufferHandle = 0;
 }
 
-DepthStencilSurfaceEgl::DepthStencilSurfaceEgl(const std::string& name, DepthStencilSurfaceEgl* shared_depth)
+DepthStencilSurfaceEgl::DepthStencilSurfaceEgl(const std::string& name, const std::shared_ptr<DepthStencilSurfaceEgl>& shared_depth)
     : IDepthStencilSurface(name)
 {
     assert(shared_depth);

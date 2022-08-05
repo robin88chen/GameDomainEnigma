@@ -1,6 +1,6 @@
 ﻿#include "IGraphicAPI.h"
 #include "GraphicThread.h"
-#include "GraphicAssetRepository.h"
+#include "GraphicAssetStash.h"
 #include "IVertexShader.h"
 #include "IVertexDeclaration.h"
 #include "MathLib/ColorRGBA.h"
@@ -17,14 +17,14 @@ IGraphicAPI::IGraphicAPI(AsyncType async)
     m_instance = this;
     m_async = async;
     m_workerThread = new GraphicThread{};
-    m_repository = new AssetRepository{};
+    m_stash = new AssetStash{};
 }
 
 IGraphicAPI::~IGraphicAPI()
 {
     m_instance = nullptr;
     if (m_workerThread) delete m_workerThread;
-    if (m_repository) delete m_repository;
+    if (m_stash) delete m_stash;
 }
 
 IGraphicAPI* IGraphicAPI::Instance()

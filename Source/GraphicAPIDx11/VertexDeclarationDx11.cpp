@@ -65,7 +65,7 @@ error VertexDeclarationDx11::CreateD3DInputLayout(ID3D11Device* device)
     return ErrorCode::ok;
 }
 
-void VertexDeclarationDx11::FillShaderVertexFormat(VertexShaderDx11* shader)
+void VertexDeclarationDx11::FillShaderVertexFormat(const std::shared_ptr<VertexShaderDx11>& shader)
 {
     assert(shader);
     m_shaderVertexFormat = shader->GetShaderVertexFormat();

@@ -18,17 +18,17 @@ IVertexBuffer::~IVertexBuffer()
 future_error IVertexBuffer::AsyncCreate(unsigned sizeofVertex, unsigned sizeBuffer)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->Create(sizeofVertex, sizeBuffer); });
+        PushTask([lifetime = shared_from_this(), sizeofVertex, sizeBuffer, this]() -> error { return Create(sizeofVertex, sizeBuffer); });
 }
 
 future_error IVertexBuffer::AsyncUpdate(const byte_buffer& dataVertex)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->Update(dataVertex); });
+        PushTask([lifetime = shared_from_this(), dataVertex, this]() -> error { return Update(dataVertex); });
 }
 
 future_error IVertexBuffer::AsyncRangedUpdate(const ranged_buffer& buffer)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->RangedUpdate(buffer); });
+        PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdate(buffer); });
 }

@@ -17,17 +17,17 @@ IIndexBuffer::~IIndexBuffer()
 future_error IIndexBuffer::AsyncCreate(unsigned sizeBuffer)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->Create(sizeBuffer); });
+        PushTask([lifetime = shared_from_this(), sizeBuffer, this]() -> error { return Create(sizeBuffer); });
 }
 
 future_error IIndexBuffer::AsyncUpdate(const uint_buffer& dataIndex)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->Update(dataIndex); });
+        PushTask([lifetime = shared_from_this(), dataIndex, this]() -> error { return Update(dataIndex); });
 }
 
 future_error IIndexBuffer::AsyncRangedUpdate(const ranged_buffer& buffer)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([=]() -> error { return shared_from_this()->RangedUpdate(buffer); });
+        PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdate(buffer); });
 }

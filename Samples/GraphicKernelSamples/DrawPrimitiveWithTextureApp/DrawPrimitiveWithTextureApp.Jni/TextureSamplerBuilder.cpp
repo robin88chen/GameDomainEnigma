@@ -73,7 +73,7 @@ void TextureSamplerBuilder::OnTextureCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceTextureCreated, IEvent>(e);
     if (!ev) return;
-    ITexturePtr texture = IGraphicAPI::Instance()->GetGraphicAsset<ITexturePtr>(ev->GetTextureName());
+    auto texture = IGraphicAPI::Instance()->TryFindGraphicAsset<ITexturePtr>(ev->GetTextureName());
     if (!texture)
     {
         Debug::Printf("can't get texture asset %s", ev->GetTextureName().c_str());
@@ -81,11 +81,11 @@ void TextureSamplerBuilder::OnTextureCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        texture->AsyncLoadTextureImage(m_textureFilename, m_texturePathId);
+        texture.value()->AsyncLoadTextureImage(m_textureFilename, m_texturePathId);
     }
     else
     {
-        texture->LoadTextureImage(m_textureFilename, m_texturePathId);
+        texture.value()->LoadTextureImage(m_textureFilename, m_texturePathId);
     }
 }
 
@@ -107,7 +107,7 @@ void TextureSamplerBuilder::OnSamplerCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceSamplerStateCreated, IEvent>(e);
     if (!ev) return;
-    IDeviceSamplerStatePtr sampler = IGraphicAPI::Instance()->GetGraphicAsset<IDeviceSamplerStatePtr>(ev->GetStateName());
+    auto sampler = IGraphicAPI::Instance()->TryFindGraphicAsset<IDeviceSamplerStatePtr>(ev->GetStateName());
     if (!sampler)
     {
         Debug::Printf("can't get sampler asset %s", ev->GetStateName().c_str());
@@ -115,11 +115,11 @@ void TextureSamplerBuilder::OnSamplerCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        sampler->AsyncCreateFromData(m_samplerData);
+        sampler.value()->AsyncCreateFromData(m_samplerData);
     }
     else
     {
-        sampler->CreateFromData(m_samplerData);
+        sampler.value()->CreateFromData(m_samplerData);
     }
 }
 

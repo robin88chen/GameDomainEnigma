@@ -34,7 +34,7 @@ namespace Enigma::Devices
         error CreateD3DInputLayout(ID3D11Device* device);
         ID3D11InputLayout* GetD3DInputLayout() const { return m_d3dInputLayout; };
 
-        void FillShaderVertexFormat(VertexShaderDx11* shader);
+        void FillShaderVertexFormat(const std::shared_ptr<VertexShaderDx11>& shader);
 
     protected:
         std::tuple<D3D11_INPUT_ELEMENT_DESC* , unsigned int> CreateVertexLayout(const VertexDesc& vertex_desc);

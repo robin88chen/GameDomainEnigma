@@ -106,12 +106,12 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
     Debug::Printf("create primary back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceEgl{ back_name, m_surfaceDimension, GetPrimaryBackSurfaceFormat(), true } };
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, GetDepthSurfaceFormat() } };
-    m_repository->Add(depth_name, depth_surface);
+    m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PrimarySurfaceCreated{ back_name, depth_name} });
 
@@ -124,7 +124,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
     Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceEgl{ back_name, dimension, fmt, false} };
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -136,7 +136,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
     Debug::Printf("create multi back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew MultiBackSurfaceEgl{ back_name, dimension, buff_count, fmts } };
-    m_repository->Add(back_name, back_surface);
+    m_stash->Add(back_name, back_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiBackSurfaceCreated{ back_name } });
     return ErrorCode::ok;
@@ -148,7 +148,7 @@ error GraphicAPIEgl::CreateDepthStencilSurface(const std::string& depth_name, co
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceEgl{ depth_name, dimension, fmt } };
-    m_repository->Add(depth_name, depth_surface);
+    m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
     return ErrorCode::ok;
@@ -158,11 +158,11 @@ error GraphicAPIEgl::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& from_depth)
 {
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
-    DepthStencilSurfaceEgl* depth_egl = dynamic_cast<DepthStencilSurfaceEgl*>(from_depth.get());
+    auto depth_egl = std::dynamic_pointer_cast<DepthStencilSurfaceEgl, Graphics::IDepthStencilSurface>(from_depth);
     assert(depth_egl);
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
         menew DepthStencilSurfaceEgl{ depth_name, depth_egl } };
-    m_repository->Add(depth_name, depth_surface);
+    m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceShared{ depth_name } });
     return ErrorCode::ok;
@@ -203,13 +203,13 @@ error GraphicAPIEgl::BindBackSurface(const Graphics::IBackSurfacePtr& back_surfa
     }
     else if (!back_surface->IsMultiSurface())
     {
-        BackSurfaceEgl* surface_egl = dynamic_cast<BackSurfaceEgl*>(back_surface.get());
+        auto surface_egl = std::dynamic_pointer_cast<BackSurfaceEgl, Graphics::IBackSurface>(back_surface);
         assert(surface_egl);
         if (surface_egl->GetFrameBufferHandle() != 0) glBindFramebuffer(GL_FRAMEBUFFER, surface_egl->GetFrameBufferHandle());
     }
     else
     {
-        MultiBackSurfaceEgl* surface_egl = dynamic_cast<MultiBackSurfaceEgl*>(back_surface.get());
+        auto surface_egl = std::dynamic_pointer_cast<MultiBackSurfaceEgl, Graphics::IBackSurface>(back_surface);
         assert(surface_egl);
         if (surface_egl->GetFrameBufferHandle() != 0) glBindFramebuffer(GL_FRAMEBUFFER, surface_egl->GetFrameBufferHandle());
     }
@@ -232,7 +232,7 @@ error GraphicAPIEgl::CreateVertexShader(const std::string& name)
 {
     Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderEgl{ name } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexShaderCreated{ name } });
     return ErrorCode::ok;
@@ -242,7 +242,7 @@ error GraphicAPIEgl::CreatePixelShader(const std::string& name)
 {
     Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderEgl{ name } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DevicePixelShaderCreated{ name } });
     return ErrorCode::ok;
@@ -253,7 +253,7 @@ error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics
 {
     Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
     Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader } };
-    m_repository->Add(name, shader);
+    m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
     return ErrorCode::ok;
@@ -278,7 +278,7 @@ error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std:
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ menew
         VertexDeclarationEgl(name, data_vertex_format) };
     m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
-    m_repository->Add(name, vtxDecl);
+    m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });
     return ErrorCode::ok;
@@ -288,7 +288,7 @@ error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name)
 {
     Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferEgl{ buff_name } };
-    m_repository->Add(buff_name, buff);
+    m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexBufferCreated{ buff_name } });
     return ErrorCode::ok;
@@ -298,7 +298,7 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name)
 {
     Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name } };
-    m_repository->Add(buff_name, buff);
+    m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceIndexBufferCreated{ buff_name } });
     return ErrorCode::ok;
@@ -308,7 +308,7 @@ error GraphicAPIEgl::CreateSamplerState(const std::string& name)
 {
     Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateEgl{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceSamplerStateCreated{ name } });
     return ErrorCode::ok;
@@ -318,7 +318,7 @@ error GraphicAPIEgl::CreateRasterizerState(const std::string& name)
 {
     Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateEgl{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceRasterizerStateCreated{ name } });
     return ErrorCode::ok;
@@ -328,7 +328,7 @@ error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name)
 {
     Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateEgl{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceAlphaBlendStateCreated{ name } });
     return ErrorCode::ok;
@@ -338,7 +338,7 @@ error GraphicAPIEgl::CreateDepthStencilState(const std::string& name)
 {
     Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateEgl{ name } };
-    m_repository->Add(name, state);
+    m_stash->Add(name, state);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceDepthStencilStateCreated{ name } });
     return ErrorCode::ok;
@@ -348,7 +348,7 @@ error GraphicAPIEgl::CreateTexture(const std::string& tex_name)
 {
     Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureEgl{ tex_name } };
-    m_repository->Add(tex_name, tex);
+    m_stash->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
     return ErrorCode::ok;
@@ -358,7 +358,7 @@ error GraphicAPIEgl::CreateMultiTexture(const std::string& tex_name)
 {
     Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureEgl{ tex_name } };
-    m_repository->Add(tex_name, tex);
+    m_stash->Add(tex_name, tex);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceMultiTextureCreated{ tex_name } });
     return ErrorCode::ok;

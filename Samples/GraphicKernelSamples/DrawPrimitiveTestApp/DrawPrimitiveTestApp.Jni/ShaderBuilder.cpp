@@ -97,7 +97,7 @@ void ShaderBuilder::OnVertexShaderCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceVertexShaderCreated, IEvent>(e);
     if (!ev) return;
-    IVertexShaderPtr shader = IGraphicAPI::Instance()->GetGraphicAsset<IVertexShaderPtr>(ev->GetName());
+    auto shader = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexShaderPtr>(ev->GetName());
     if (!shader)
     {
         Debug::Printf("can't get vertex shader asset %s", ev->GetName().c_str());
@@ -105,11 +105,11 @@ void ShaderBuilder::OnVertexShaderCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        shader->AsyncCompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
+        shader.value()->AsyncCompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
     }
     else
     {
-        shader->CompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
+        shader.value()->CompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
     }
 }
 
@@ -123,22 +123,22 @@ void ShaderBuilder::OnVertexShaderCompiled(const IEventPtr& e)
         Debug::Printf("compiled vertex shader name not match %s", ev->GetShaderName().c_str());
         return;
     }
-    IVertexShaderPtr shader = IGraphicAPI::Instance()->GetGraphicAsset<IVertexShaderPtr>(ev->GetShaderName());
-    std::string existed_layout = IGraphicAPI::Instance()->QueryVertexDeclarationName(m_vtxFormatCode, shader);
+    auto shader = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexShaderPtr>(ev->GetShaderName());
+    std::string existed_layout = IGraphicAPI::Instance()->QueryVertexDeclarationName(m_vtxFormatCode, shader.value());
     if (!existed_layout.empty())
     {
         m_vtxLayoutName = existed_layout;
-        EventPublisher::Post(IEventPtr{ menew VertexShaderBuilt{ shader->GetName() } });
+        EventPublisher::Post(IEventPtr{ menew VertexShaderBuilt{ shader.value()->GetName() } });
     }
     else
     {
         if (IGraphicAPI::Instance()->UseAsync())
         {
-            IGraphicAPI::Instance()->AsyncCreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader);
+            IGraphicAPI::Instance()->AsyncCreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader.value());
         }
         else
         {
-            IGraphicAPI::Instance()->CreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader);
+            IGraphicAPI::Instance()->CreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader.value());
         }
     }
 }
@@ -148,7 +148,7 @@ void ShaderBuilder::OnVertexLayoutCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceVertexDeclarationCreated, IEvent>(e);
     if (!ev) return;
-    IVertexDeclarationPtr layout = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(ev->GetName());
+    auto layout = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexDeclarationPtr>(ev->GetName());
     if (!layout)
     {
         Debug::Printf("can't get vertex layout asset %s", ev->GetName().c_str());
@@ -162,7 +162,7 @@ void ShaderBuilder::OnPixelShaderCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DevicePixelShaderCreated, IEvent>(e);
     if (!ev) return;
-    IPixelShaderPtr shader = IGraphicAPI::Instance()->GetGraphicAsset<IPixelShaderPtr>(ev->GetName());
+    auto shader = IGraphicAPI::Instance()->TryFindGraphicAsset<IPixelShaderPtr>(ev->GetName());
     if (!shader)
     {
         Debug::Printf("can't get pixel shader asset %s", ev->GetName().c_str());
@@ -170,11 +170,11 @@ void ShaderBuilder::OnPixelShaderCreated(const IEventPtr& e)
     }
     if (IGraphicAPI::Instance()->UseAsync())
     {
-        shader->AsyncCompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
+        shader.value()->AsyncCompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
     }
     else
     {
-        shader->CompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
+        shader.value()->CompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
     }
 }
 

@@ -38,6 +38,38 @@ namespace Enigma::Engine
 
     class ShaderBuilder
     {
+    private:
+        /** inner events */
+        class VertexShaderBuilt : public Frameworks::IEvent
+        {
+        public:
+            VertexShaderBuilt(const std::string& name) :
+                m_name(name) {};
+            const std::string& GetShaderName() { return m_name; }
+        private:
+            std::string m_name;
+        };
+        class PixelShaderBuilt : public Frameworks::IEvent
+        {
+        public:
+            PixelShaderBuilt(const std::string& name) :
+                m_name(name) {};
+            const std::string& GetShaderName() { return m_name; }
+        private:
+            std::string m_name;
+        };
+
+    public:
+        class ShaderProgramBuilt : public Frameworks::IEvent
+        {
+        public:
+            ShaderProgramBuilt(const std::string& name) :
+                m_name(name) {};
+            const std::string& GetShaderName() { return m_name; }
+        private:
+            std::string m_name;
+        };
+
     public:
         ShaderBuilder(ShaderManager* host);
         ShaderBuilder(const ShaderBuilder&) = delete;

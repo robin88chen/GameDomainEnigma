@@ -15,6 +15,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Frameworks/EventSubscriber.h"
+
 namespace Enigma::Graphics
 {
     class IVertexShader;
@@ -60,6 +62,11 @@ namespace Enigma::Engine
         static const std::string& GetShaderCodePathID();
 
     protected:
+        void OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e);
+
+    protected:
+        Frameworks::EventSubscriberPtr m_onBuilderShaderProgramBuilt;
+
         VertexShaderTable m_vtxShaderTable;
         PixelShaderTable m_pixShaderTable;
 

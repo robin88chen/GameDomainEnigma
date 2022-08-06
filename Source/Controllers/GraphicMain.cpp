@@ -4,6 +4,7 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "GameEngine/RendererManager.h"
 #include "GameEngine/RenderTarget.h"
+#include "GameEngine/ShaderManager.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -129,20 +130,26 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
         if (er) return er;
     }
     er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
+    if (er) return er;
+    er = InstallShaderManagers();
     return er;
 }
 
 error GraphicMain::ShutdownDefaultRenderer()
 {
-    error er;
     InstallingDefaultRendererPolicy* policy = dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get());
     assert(policy);
+
+    error er;
+    er = ShutdownShaderManagers();
+    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
+    if (er) return er;
+
     if (policy->GetDeviceCreatingPolicy())
     {
         er = CleanupRenderEngineDevice();
         if (er) return er;
     }
-    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     return er;
 }
 
@@ -172,6 +179,18 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
     }
     m_serviceManager->ShutdownSystemService(Engine::RendererManager::TYPE_RTTI);
 
+    return ErrorCode::ok;
+}
+
+error GraphicMain::InstallShaderManagers()
+{
+    m_serviceManager->RegisterSystemService(menew Engine::ShaderManager(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownShaderManagers()
+{
+    m_serviceManager->ShutdownSystemService(Engine::ShaderManager::TYPE_RTTI);
     return ErrorCode::ok;
 }
 

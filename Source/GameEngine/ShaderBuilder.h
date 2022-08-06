@@ -81,6 +81,8 @@ namespace Enigma::Engine
 
         void BuildShaderProgram(const ShaderProgramPolicy& policy);
 
+        Graphics::IShaderProgramPtr GetProgram() { return m_program; }
+
     private:
         void BuildVertexShader() const;
         void BuildPixelShader() const;

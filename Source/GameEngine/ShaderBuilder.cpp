@@ -68,6 +68,10 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
 {
     assert(m_hostManager);
 
+    m_vtxShader = nullptr;
+    m_pixShader = nullptr;
+    m_program = nullptr;
+
     m_policy = policy;
     if (m_hostManager->HasVertexShader(m_policy.m_vtxShaderName))
     {

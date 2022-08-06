@@ -10,17 +10,22 @@
 
 #include <system_error>
 #include <Frameworks/Event.h>
+#include "GraphicKernel/IShaderProgram.h"
 
 namespace Enigma::Engine
 {
+    /** shader program events */
     class ShaderProgramBuilt : public Frameworks::IEvent
     {
     public:
-        ShaderProgramBuilt(const std::string& name) :
-            m_name(name) {};
+        //! try rich event
+        ShaderProgramBuilt(const std::string& name, const Graphics::IShaderProgramPtr& program) :
+            m_name(name), m_program(program) {};
         const std::string& GetShaderName() { return m_name; }
+        Graphics::IShaderProgramPtr GetProgram() { return m_program; }
     private:
         std::string m_name;
+        Graphics::IShaderProgramPtr m_program;
     };
     class ShaderProgramBuildFailed : public Frameworks::IEvent
     {

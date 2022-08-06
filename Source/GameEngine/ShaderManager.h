@@ -10,12 +10,16 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
-#include "Frameworks/ExtentTypesDefine.h"
+#include "Frameworks/EventSubscriber.h"
+#include "Frameworks/Command.h"
+#include "ShaderBuilder.h"
 #include <system_error>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
+#include <queue>
 
-#include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 
 namespace Enigma::Graphics
 {
@@ -25,18 +29,24 @@ namespace Enigma::Graphics
 namespace Enigma::Engine
 {
     using error = std::error_code;
-    struct ShaderProgramPolicy;
 
     class ShaderManager : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        ShaderManager();
+        ShaderManager(Frameworks::ServiceManager* srv_mngr);
         ShaderManager(const ShaderManager&) = delete;
         ShaderManager(ShaderManager&&) = delete;
         virtual ~ShaderManager();
         ShaderManager& operator=(const ShaderManager&) = delete;
         ShaderManager& operator=(ShaderManager&&) = delete;
+
+        /// On Init
+        virtual Frameworks::ServiceResult OnInit() override;
+        /// On Tick
+        virtual Frameworks::ServiceResult OnTick() override;
+        /// On Term
+        virtual Frameworks::ServiceResult OnTerm() override;
 
         error BuildShaderProgram(const ShaderProgramPolicy& policy);
 
@@ -46,32 +56,38 @@ namespace Enigma::Engine
         bool HasPixelShader(const std::string& name);
         std::shared_ptr<Graphics::IPixelShader> QueryPixelShader(const std::string& name);
 
-        /** query vertex shader \n if shader already in table, return shader, otherwise create new shader */
-        error QueryVertexShader(const std::string& name, std::shared_ptr<Graphics::IVertexShader>* shader);
-        future_error AsyncQueryVertexShader(const std::string& name, std::shared_ptr<Graphics::IVertexShader>* shader);
+        bool HasShaderProgram(const std::string& name);
+        std::shared_ptr<Graphics::IShaderProgram> QueryShaderProgram(const std::string& name);
 
-        /** query pixel shader \n if shader already in table, return shader, otherwise create new shader */
-        error QueryPixelShader(const std::string& name, std::shared_ptr<Graphics::IPixelShader>* shader);
-        future_error AsyncQueryPixelShader(const std::string& name, std::shared_ptr<Graphics::IPixelShader>* shader);
+        using VertexShaderTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IVertexShader>>;
+        using PixelShaderTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IPixelShader>>;
+        using ShaderProgramTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IShaderProgram>>;
 
-        /** 同樣的名字的 Shader 會複製，所以改放在 multimap 裡 */
-        using VertexShaderTable = std::unordered_multimap<std::string, std::weak_ptr<Graphics::IVertexShader>>;
-        /** 同樣的名字的 Shader 會複製，所以改放在 multimap 裡 */
-        using PixelShaderTable = std::unordered_multimap<std::string, std::weak_ptr<Graphics::IPixelShader>>;
         /** shader code file path ID */
         static const std::string& GetShaderCodePathID();
 
     protected:
         void OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e);
+        void OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e);
+        void HandleBuildingShaderProgram(const Frameworks::ICommandPtr& c);
 
     protected:
         Frameworks::EventSubscriberPtr m_onBuilderShaderProgramBuilt;
+        Frameworks::EventSubscriberPtr m_onShaderProgramBuildFailed;
+        Frameworks::CommandSubscriberPtr m_handleBuildingShaderProgram;
+
+        ShaderBuilder* m_builder;
+        std::queue<ShaderProgramPolicy> m_policies;
+        bool m_isCurrentBuilding;
+        std::mutex m_policiesLock;
 
         VertexShaderTable m_vtxShaderTable;
         PixelShaderTable m_pixShaderTable;
+        ShaderProgramTable m_programTable;
 
-        std::mutex m_vtxShaderTableLock;  ///< thread locker for vtx shader resource table
-        std::mutex m_pixShaderTableLock;  ///< thread locker for pix shader resource table
+        std::recursive_mutex m_vtxShaderTableLock;  ///< thread locker for vtx shader resource table
+        std::recursive_mutex m_pixShaderTableLock;  ///< thread locker for pix shader resource table
+        std::recursive_mutex m_programTableLock;
     };
 }
 

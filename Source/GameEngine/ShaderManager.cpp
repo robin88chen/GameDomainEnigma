@@ -2,14 +2,16 @@
 #include "EngineErrors.h"
 #include "ShaderEvents.h"
 #include "ShaderCommands.h"
+#include "ShaderBuilder.h"
 #include "GraphicKernel/IShaderProgram.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
-#include "Frameworks/CommandBus.h"
+#include "GraphicKernel/IVertexDeclaration.h"
 
 using namespace Enigma::Engine;
 
@@ -97,6 +99,22 @@ Enigma::Graphics::IVertexShaderPtr ShaderManager::QueryVertexShader(const std::s
     return it->second.lock();
 }
 
+bool ShaderManager::HasVertexLayout(const std::string& name)
+{
+    std::lock_guard locker{ m_vtxLayoutTableLock };
+    auto it = m_vtxLayoutTable.find(name);
+    return ((it != m_vtxLayoutTable.end()) && (!it->second.expired()));
+}
+
+Enigma::Graphics::IVertexDeclarationPtr ShaderManager::QueryVertexLayout(const std::string& name)
+{
+    std::lock_guard locker{ m_vtxLayoutTableLock };
+    auto it = m_vtxLayoutTable.find(name);
+    if (it == m_vtxLayoutTable.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
+}
+
 bool ShaderManager::HasPixelShader(const std::string& name)
 {
     std::lock_guard locker{ m_pixShaderTableLock };
@@ -150,6 +168,10 @@ void ShaderManager::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
     {
         std::lock_guard locker{ m_vtxShaderTableLock };
         m_vtxShaderTable.try_emplace(program->GetVertexShader()->GetName(), program->GetVertexShader());
+    }
+    {
+        std::lock_guard locker{ m_vtxLayoutTableLock };
+        m_vtxLayoutTable.try_emplace(program->GetVertexDeclaration()->GetName(), program->GetVertexDeclaration());
     }
     {
         std::lock_guard locker{ m_pixShaderTableLock };

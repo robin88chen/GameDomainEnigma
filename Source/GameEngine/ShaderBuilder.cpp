@@ -156,10 +156,8 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
-    std::string existed_layout = Graphics::IGraphicAPI::Instance()->QueryVertexDeclarationName(m_policy.m_vtxFormatCode, shader.value());
-    if (!existed_layout.empty())
+    if (m_hostManager->HasVertexLayout(m_policy.m_vtxLayoutName))
     {
-        m_policy.m_vtxLayoutName = existed_layout;
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew VertexShaderBuilt{ shader.value()->GetName() } });
     }
     else
@@ -243,23 +241,45 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
     if (ev_vtx)
     {
         if (ev_vtx->GetShaderName() != m_policy.m_vtxShaderName) return;
-        m_vtxShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexShaderPtr>(m_policy.m_vtxShaderName);
+        if (m_hostManager->HasVertexShader(m_policy.m_vtxShaderName))
+        {
+            m_vtxShader = m_hostManager->QueryVertexShader(m_policy.m_vtxShaderName);
+        }
+        else
+        {
+            m_vtxShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexShaderPtr>(m_policy.m_vtxShaderName);
+        }
+        if (m_hostManager->HasVertexLayout(m_policy.m_vtxLayoutName))
+        {
+            m_layout = m_hostManager->QueryVertexLayout(m_policy.m_vtxLayoutName);
+        }
+        else
+        {
+            m_layout = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexDeclarationPtr>(m_policy.m_vtxLayoutName);
+        }
     }
     auto ev_pix = std::dynamic_pointer_cast<PixelShaderBuilt, Frameworks::IEvent>(e);
     if (ev_pix)
     {
         if (ev_pix->GetShaderName() != m_policy.m_pixShaderName) return;
-        m_pixShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IPixelShaderPtr>(m_policy.m_pixShaderName);
+        if (m_hostManager->HasPixelShader(m_policy.m_pixShaderName))
+        {
+            m_pixShader = m_hostManager->QueryPixelShader(m_policy.m_pixShaderName);
+        }
+        else
+        {
+            m_pixShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IPixelShaderPtr>(m_policy.m_pixShaderName);
+        }
     }
     if ((m_vtxShader) && (m_pixShader))
     {
         if (Graphics::IGraphicAPI::Instance()->UseAsync())
         {
-            Graphics::IGraphicAPI::Instance()->AsyncCreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader);
+            Graphics::IGraphicAPI::Instance()->AsyncCreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader, m_layout);
         }
         else
         {
-            Graphics::IGraphicAPI::Instance()->CreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader);
+            Graphics::IGraphicAPI::Instance()->CreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader, m_layout);
         }
     }
 }

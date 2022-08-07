@@ -8,6 +8,7 @@
 #ifndef SHADER_BUILDER_H
 #define SHADER_BUILDER_H
 
+#include "ShaderBuildingPolicies.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GraphicKernel/IVertexShader.h"
@@ -17,23 +18,6 @@
 
 namespace Enigma::Engine
 {
-    struct ShaderCodeProfile
-    {
-        std::string m_code;
-        std::string m_profile;
-        std::string m_entry;
-    };
-    struct ShaderProgramPolicy
-    {
-        std::string m_programName;
-        std::string m_vtxShaderName;
-        std::string m_vtxFormatCode;
-        ShaderCodeProfile m_vtxShaderCode;
-        std::string m_vtxLayoutName;
-        std::string m_pixShaderName;
-        ShaderCodeProfile m_pixShaderCode;
-    };
-
     class ShaderManager;
 
     class ShaderBuilder
@@ -113,6 +97,7 @@ namespace Enigma::Engine
 
         Graphics::IVertexShaderPtr m_vtxShader;
         Graphics::IPixelShaderPtr m_pixShader;
+        Graphics::IVertexDeclarationPtr m_layout;
         Graphics::IShaderProgramPtr m_program;
     };
 }

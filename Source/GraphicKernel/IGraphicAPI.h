@@ -167,9 +167,9 @@ namespace Enigma::Graphics
         @param program out shader program interface
         */
         virtual error CreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader) = 0;
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;
         virtual future_error AsyncCreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader);
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl);
 
         /** create vertex declaration with data vertex format & effect */
         virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,

@@ -20,7 +20,8 @@ namespace Enigma::Devices
     class ShaderProgramEgl : public Graphics::IShaderProgram
     {
     public:
-        ShaderProgramEgl(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader);
+        ShaderProgramEgl(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader, 
+            const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl);
         ShaderProgramEgl(const ShaderProgramEgl&) = delete;
         ShaderProgramEgl(ShaderProgramEgl&&) = delete;
         virtual ~ShaderProgramEgl();

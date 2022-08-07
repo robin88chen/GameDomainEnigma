@@ -24,10 +24,13 @@ namespace Enigma::Graphics
     using IVertexShaderPtr = std::shared_ptr<IVertexShader>;
     class IPixelShader;
     using IPixelShaderPtr = std::shared_ptr<IPixelShader>;
+    class IVertexDeclaration;
+    using IVertexDeclarationPtr = std::shared_ptr<IVertexDeclaration>;
     class IShaderProgram : public std::enable_shared_from_this<IShaderProgram>
     {
     public:
-        IShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader);
+        IShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader,
+            const IVertexDeclarationPtr& vtx_decl);
         IShaderProgram(const IShaderProgram&) = delete;
         IShaderProgram(IShaderProgram&&) = delete;
         virtual ~IShaderProgram();
@@ -37,6 +40,7 @@ namespace Enigma::Graphics
         const std::string& GetName() { return m_name; }
         const IVertexShaderPtr& GetVertexShader() { return m_vtxShader; }
         const IPixelShaderPtr& GetPixelShader() { return m_pixShader; }
+        const IVertexDeclarationPtr& GetVertexDeclaration() { return m_vtxDeclaration; }
 
         virtual IShaderVariablePtr GetVariableByName(const std::string& name) = 0;
         virtual IShaderVariablePtr GetVariableBySemantic(const std::string& semantic) = 0;
@@ -52,6 +56,7 @@ namespace Enigma::Graphics
         std::string m_name;
         IVertexShaderPtr m_vtxShader;
         IPixelShaderPtr m_pixShader;
+        IVertexDeclarationPtr m_vtxDeclaration;
     };
     using IShaderProgramPtr = std::shared_ptr<IShaderProgram>;
     using IShaderProgramWeak = std::weak_ptr<IShaderProgram>;

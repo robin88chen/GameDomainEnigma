@@ -57,7 +57,8 @@ namespace Enigma::Devices
         virtual error CreateVertexShader(const std::string& name) override;
         virtual error CreatePixelShader(const std::string& name) override;
         virtual error CreateShaderProgram(const std::string& name,
-            const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader) override;
+            const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader, 
+            const Graphics::IVertexDeclarationPtr& vtx_decl) override;
 
         virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
             const Graphics::IVertexShaderPtr& shader) override;

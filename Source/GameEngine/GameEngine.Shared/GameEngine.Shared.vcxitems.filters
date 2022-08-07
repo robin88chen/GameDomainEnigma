@@ -48,6 +48,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

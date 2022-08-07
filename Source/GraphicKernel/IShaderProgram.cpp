@@ -3,16 +3,18 @@
 using namespace Enigma::Graphics;
 
 IShaderProgram::IShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader,
-    const IPixelShaderPtr& pix_shader)
+    const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl)
 {
     m_name = name;
     m_vtxShader = vtx_shader;
     m_pixShader = pix_shader;
+    m_vtxDeclaration = vtx_decl;
 }
 
 IShaderProgram::~IShaderProgram()
 {
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
+    m_vtxDeclaration = nullptr;
 }
 

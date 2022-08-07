@@ -13,9 +13,9 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-ShaderProgramEgl::ShaderProgramEgl(const std::string& name,
-    const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader)
-        : IShaderProgram(name, vtx_shader, pix_shader)
+ShaderProgramEgl::ShaderProgramEgl(const std::string& name,const Graphics::IVertexShaderPtr& vtx_shader, 
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
+        : IShaderProgram(name, vtx_shader, pix_shader, vtx_decl)
 {
     assert((m_vtxShader) && (m_pixShader));
 

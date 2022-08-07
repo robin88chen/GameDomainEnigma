@@ -9,7 +9,7 @@
 #define SHADER_COMMANDS_H
 
 #include "Frameworks/Command.h"
-#include "ShaderBuilder.h"
+#include "ShaderBuildingPolicies.h"
 
 namespace Enigma::Engine
 {

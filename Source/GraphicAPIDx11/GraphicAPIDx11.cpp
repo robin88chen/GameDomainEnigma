@@ -289,10 +289,11 @@ error GraphicAPIDx11::CreatePixelShader(const std::string& name)
 }
 
 error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
-    const Graphics::IPixelShaderPtr& pix_shader)
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
 {
     Platforms::Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
-    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramDx11{ name, vtx_shader, pix_shader } };
+    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{
+        menew ShaderProgramDx11{ name, vtx_shader, pix_shader, vtx_decl } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });

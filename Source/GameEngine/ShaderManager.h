@@ -12,23 +12,26 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Command.h"
-#include "ShaderBuilder.h"
+#include "Frameworks/CommandSubscriber.h"
+#include "ShaderBuildingPolicies.h"
 #include <system_error>
 #include <memory>
 #include <mutex>
 #include <unordered_map>
 #include <queue>
 
-#include "Frameworks/CommandSubscriber.h"
-
 namespace Enigma::Graphics
 {
     class IVertexShader;
     class IPixelShader;
+    class IShaderProgram;
+    class IVertexDeclaration;
 }
 namespace Enigma::Engine
 {
     using error = std::error_code;
+
+    class ShaderBuilder;
 
     class ShaderManager : public Frameworks::ISystemService
     {
@@ -53,6 +56,9 @@ namespace Enigma::Engine
         bool HasVertexShader(const std::string& name);
         std::shared_ptr<Graphics::IVertexShader> QueryVertexShader(const std::string& name);
 
+        bool HasVertexLayout(const std::string& name);
+        std::shared_ptr<Graphics::IVertexDeclaration> QueryVertexLayout(const std::string& name);
+
         bool HasPixelShader(const std::string& name);
         std::shared_ptr<Graphics::IPixelShader> QueryPixelShader(const std::string& name);
 
@@ -60,6 +66,7 @@ namespace Enigma::Engine
         std::shared_ptr<Graphics::IShaderProgram> QueryShaderProgram(const std::string& name);
 
         using VertexShaderTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IVertexShader>>;
+        using VertexLayoutTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IVertexDeclaration>>;
         using PixelShaderTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IPixelShader>>;
         using ShaderProgramTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IShaderProgram>>;
 
@@ -82,11 +89,13 @@ namespace Enigma::Engine
         std::mutex m_policiesLock;
 
         VertexShaderTable m_vtxShaderTable;
+        VertexLayoutTable m_vtxLayoutTable;
         PixelShaderTable m_pixShaderTable;
         ShaderProgramTable m_programTable;
 
-        std::recursive_mutex m_vtxShaderTableLock;  ///< thread locker for vtx shader resource table
-        std::recursive_mutex m_pixShaderTableLock;  ///< thread locker for pix shader resource table
+        std::recursive_mutex m_vtxShaderTableLock;
+        std::recursive_mutex m_vtxLayoutTableLock;
+        std::recursive_mutex m_pixShaderTableLock;
         std::recursive_mutex m_programTableLock;
     };
 }

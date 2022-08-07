@@ -136,9 +136,9 @@ future_error IGraphicAPI::AsyncCreatePixelShader(const std::string& name)
 }
 
 future_error IGraphicAPI::AsyncCreateShaderProgram(const std::string& name,
-    const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader)
+    const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateShaderProgram(name, vtx_shader, pix_shader); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateShaderProgram(name, vtx_shader, pix_shader, vtx_decl); });
 }
 
 future_error IGraphicAPI::AsyncCreateVertexDeclaration(const std::string& name,

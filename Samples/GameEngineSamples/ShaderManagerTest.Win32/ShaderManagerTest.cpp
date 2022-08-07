@@ -103,6 +103,8 @@ void ShaderManagerTest::InstallEngine()
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuilt(e); });
     EventPublisher::Subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
+    m_onShaderProgramBuildFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuildFailed(e); });
+    EventPublisher::Subscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
     m_onVertexBufferBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnVertexBufferBuilt(e); });
     EventPublisher::Subscribe(typeid(VertexBufferBuilt), m_onVertexBufferBuilt);
     m_onIndexBufferBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnIndexBufferBuilt(e); });
@@ -133,6 +135,8 @@ void ShaderManagerTest::ShutdownEngine()
     m_onRenderTargetCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onShaderProgramBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
+    m_onShaderProgramBuildFailed = nullptr;
     EventPublisher::Unsubscribe(typeid(VertexBufferBuilt), m_onVertexBufferBuilt);
     m_onVertexBufferBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(IndexBufferBuilt), m_onIndexBufferBuilt);
@@ -184,6 +188,14 @@ void ShaderManagerTest::OnShaderProgramBuilt(const IEventPtr& e)
     if (ev->GetShaderName() != ShaderProgramName) return;
     m_program = ev->GetProgram();
     m_vtxDecl = m_program->GetVertexDeclaration();
+}
+
+void ShaderManagerTest::OnShaderProgramBuildFailed(const IEventPtr& e)
+{
+    if (!e) return;
+    std::shared_ptr<ShaderProgramBuildFailed> ev = std::dynamic_pointer_cast<ShaderProgramBuildFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("shader program %s build failed : %s", ev->GetShaderName(), ev->GetErrorCode().message().c_str());
 }
 
 void ShaderManagerTest::OnVertexBufferBuilt(const IEventPtr& e)

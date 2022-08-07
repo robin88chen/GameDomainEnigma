@@ -147,18 +147,6 @@ future_error IGraphicAPI::AsyncCreateVertexDeclaration(const std::string& name,
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexDeclaration(name, data_vertex_format, shader); });
 }
 
-std::string IGraphicAPI::QueryVertexDeclarationName(const std::string& data_vertex_format, const IVertexShaderPtr& shader)
-{
-    assert(shader);
-
-    Platforms::Debug::Printf("query vertex declaration name in thread %d\n", std::this_thread::get_id());
-
-    std::lock_guard locker{ m_declMapLock };
-    auto iter = m_vertexDeclMap.find({ data_vertex_format, shader->GetName() });
-    if (iter == m_vertexDeclMap.end()) return std::string();
-    return iter->second;
-}
-
 future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexBuffer(buff_name); });

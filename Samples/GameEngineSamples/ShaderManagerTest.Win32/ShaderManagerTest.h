@@ -30,6 +30,7 @@ public:
 private:
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnShaderProgramBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnShaderProgramBuildFailed(const Enigma::Frameworks::IEventPtr& e);
     void OnVertexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
     void OnIndexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
 
@@ -43,6 +44,7 @@ private:
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramBuildFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
 

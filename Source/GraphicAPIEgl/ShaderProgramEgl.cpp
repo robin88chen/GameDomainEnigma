@@ -5,6 +5,7 @@
 #include "VertexDeclarationEgl.h"
 #include "ShaderVariableEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
@@ -19,6 +20,7 @@ ShaderProgramEgl::ShaderProgramEgl(const std::string& name,const Graphics::IVert
 {
     assert((m_vtxShader) && (m_pixShader));
 
+    m_hasLinked = false;
     m_program = glCreateProgram();
     VertexShaderEgl* vs = dynamic_cast<VertexShaderEgl*>(m_vtxShader.get());
     assert(vs);
@@ -142,11 +144,14 @@ void ShaderProgramEgl::LinkShaders()
             {
                 glGetProgramInfoLog(m_program, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not link program:\n%s\n", infoLog);
+                Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderProgramLinkFailed(m_name, infoLog) });
                 free(infoLog);
             }
         }
+        m_hasLinked = false;
         return;
     }
+    m_hasLinked = true;
 }
 
 void ShaderProgramEgl::RetrieveShaderVariables()

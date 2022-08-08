@@ -4,14 +4,13 @@
 #include "ShaderCommands.h"
 #include "ShaderBuilder.h"
 #include "GraphicKernel/IShaderProgram.h"
+#include "GraphicKernel/IVertexDeclaration.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
-
-#include "GraphicKernel/IVertexDeclaration.h"
 
 using namespace Enigma::Engine;
 
@@ -162,7 +161,7 @@ void ShaderManager::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
     Graphics::IShaderProgramPtr program = m_builder->GetProgram();
     if (!program)
     {
-        Platforms::Debug::ErrorPrintf("get null program on builder shader program built!!");
+        Platforms::Debug::ErrorPrintf("get null program on builder shader program built!!\n");
         return;
     }
     {
@@ -190,7 +189,7 @@ void ShaderManager::OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<ShaderProgramBuildFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    Platforms::Debug::ErrorPrintf("shader program %s build failed : %s", 
+    Platforms::Debug::ErrorPrintf("shader program %s build failed : %s\n", 
         ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }

@@ -76,9 +76,11 @@ namespace Enigma::Engine
         void OnVertexLayoutCreated(const Frameworks::IEventPtr& e);
         void OnPixelShaderCreated(const Frameworks::IEventPtr& e);
         void OnPixelShaderCompiled(const Frameworks::IEventPtr& e);
+        void OnShaderCompileFailed(const Frameworks::IEventPtr& e);
 
         void OnShaderBuilt(const Frameworks::IEventPtr& e);
         void OnShaderProgramCreated(const Frameworks::IEventPtr& e);
+        void OnShaderProgramLinkFailed(const Frameworks::IEventPtr& e);
 
     private:
         ShaderManager* m_hostManager;
@@ -89,9 +91,14 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onPixelShaderCreated;
         Frameworks::EventSubscriberPtr m_onPixelShaderCompiled;
 
+        Frameworks::EventSubscriberPtr m_onVertexShaderCompileFailed;
+        Frameworks::EventSubscriberPtr m_onPixelShaderCompileFailed;
+
         Frameworks::EventSubscriberPtr m_onVertexShaderBuilt;
         Frameworks::EventSubscriberPtr m_onPixelShaderBuilt;
         Frameworks::EventSubscriberPtr m_onShaderProgramCreated;
+
+        Frameworks::EventSubscriberPtr m_onShaderProgramLinkFailed;
 
         ShaderProgramPolicy m_policy;
 

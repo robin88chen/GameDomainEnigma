@@ -6,6 +6,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -18,6 +19,8 @@ ShaderBuilder::ShaderBuilder(ShaderManager* host)
 
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
+    m_layout = nullptr;
+    m_program = nullptr;
 
     m_onVertexShaderCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnVertexShaderCreated(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DeviceVertexShaderCreated), m_onVertexShaderCreated);
@@ -31,12 +34,20 @@ ShaderBuilder::ShaderBuilder(ShaderManager* host)
     m_onPixelShaderCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnPixelShaderCompiled(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::PixelShaderCompiled), m_onPixelShaderCompiled);
 
+    m_onVertexShaderCompileFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderCompileFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::VertexShaderCompileFailed), m_onVertexShaderCompileFailed);
+    m_onPixelShaderCompileFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderCompileFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::PixelShaderCompileFailed), m_onPixelShaderCompileFailed);
+
     m_onVertexShaderBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderBuilt(e); });
     Frameworks::EventPublisher::Subscribe(typeid(VertexShaderBuilt), m_onVertexShaderBuilt);
     m_onPixelShaderBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderBuilt(e); });
     Frameworks::EventPublisher::Subscribe(typeid(PixelShaderBuilt), m_onPixelShaderBuilt);
     m_onShaderProgramCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderProgramCreated(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DeviceShaderProgramCreated), m_onShaderProgramCreated);
+
+    m_onShaderProgramLinkFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnShaderProgramLinkFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::ShaderProgramLinkFailed), m_onShaderProgramLinkFailed);
 }
 
 ShaderBuilder::~ShaderBuilder()
@@ -53,6 +64,11 @@ ShaderBuilder::~ShaderBuilder()
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::PixelShaderCompiled), m_onPixelShaderCompiled);
     m_onPixelShaderCompiled = nullptr;
 
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::VertexShaderCompileFailed), m_onVertexShaderCompileFailed);
+    m_onVertexShaderCompileFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::PixelShaderCompileFailed), m_onPixelShaderCompileFailed);
+    m_onPixelShaderCompileFailed = nullptr;
+
     Frameworks::EventPublisher::Unsubscribe(typeid(VertexShaderBuilt), m_onVertexShaderBuilt);
     m_onVertexShaderBuilt = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(PixelShaderBuilt), m_onPixelShaderBuilt);
@@ -60,8 +76,13 @@ ShaderBuilder::~ShaderBuilder()
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DeviceShaderProgramCreated), m_onShaderProgramCreated);
     m_onShaderProgramCreated = nullptr;
 
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::ShaderProgramLinkFailed), m_onShaderProgramLinkFailed);
+    m_onShaderProgramLinkFailed = nullptr;
+
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
+    m_layout = nullptr;
+    m_program = nullptr;
 }
 
 void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
@@ -70,6 +91,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
 
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
+    m_layout = nullptr;
     m_program = nullptr;
 
     m_policy = policy;
@@ -127,7 +149,7 @@ void ShaderBuilder::OnVertexShaderCreated(const Frameworks::IEventPtr& e)
     auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->GetName());
     if (!shader)
     {
-        Platforms::Debug::Printf("can't get vertex shader asset %s", ev->GetName().c_str());
+        Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->GetName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
@@ -152,7 +174,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
     auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->GetShaderName());
     if (!shader)
     {
-        Platforms::Debug::Printf("can't get vertex shader asset %s", ev->GetShaderName().c_str());
+        Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->GetShaderName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
@@ -185,7 +207,7 @@ void ShaderBuilder::OnVertexLayoutCreated(const Frameworks::IEventPtr& e)
     auto layout = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexDeclarationPtr>(ev->GetName());
     if (!layout)
     {
-        Platforms::Debug::Printf("can't get vertex layout asset %s", ev->GetName().c_str());
+        Platforms::Debug::Printf("can't get vertex layout asset %s\n", ev->GetName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
@@ -202,7 +224,7 @@ void ShaderBuilder::OnPixelShaderCreated(const Frameworks::IEventPtr& e)
     auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->GetName());
     if (!shader)
     {
-        Platforms::Debug::Printf("can't get pixel shader asset %s", ev->GetName().c_str());
+        Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->GetName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
@@ -227,11 +249,28 @@ void ShaderBuilder::OnPixelShaderCompiled(const Frameworks::IEventPtr& e)
     auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->GetShaderName());
     if (!shader)
     {
-        Platforms::Debug::Printf("can't get pixel shader asset %s", ev->GetShaderName().c_str());
+        Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->GetShaderName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew PixelShaderBuilt{ m_policy.m_pixShaderName } });
+}
+
+void ShaderBuilder::OnShaderCompileFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev_vtx_fail = std::dynamic_pointer_cast<Graphics::VertexShaderCompileFailed, Frameworks::IEvent>(e);
+    if (ev_vtx_fail)
+    {
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, Graphics::ErrorCode::compileShader } });
+        return;
+    }
+    auto ev_pix_fail = std::dynamic_pointer_cast<Graphics::PixelShaderCompileFailed, Frameworks::IEvent>(e);
+    if (ev_pix_fail)
+    {
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, Graphics::ErrorCode::compileShader } });
+        return;
+    }
 }
 
 void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
@@ -293,11 +332,22 @@ void ShaderBuilder::OnShaderProgramCreated(const Frameworks::IEventPtr& e)
     auto program = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IShaderProgramPtr>(ev->GetName());
     if (!program)
     {
-        Platforms::Debug::Printf("can't get shader program asset %s", ev->GetName().c_str());
+        Platforms::Debug::Printf("can't get shader program asset %s\n", ev->GetName().c_str());
         Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, ErrorCode::findStashedAssetFail } });
         return;
     }
     m_program = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IShaderProgramPtr>(m_policy.m_programName);
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuilt{ m_policy.m_programName } });
+}
+
+void ShaderBuilder::OnShaderProgramLinkFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev_link_fail = std::dynamic_pointer_cast<Graphics::ShaderProgramLinkFailed, Frameworks::IEvent>(e);
+    if (ev_link_fail)
+    {
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuildFailed{ m_policy.m_programName, Graphics::ErrorCode::linkShaderProgram } });
+        return;
+    }
 }
 

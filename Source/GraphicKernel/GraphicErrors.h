@@ -71,6 +71,7 @@ namespace Enigma::Graphics
         dynamicCastShader,
         nullShader,
         shaderVarLocation,
+        linkShaderProgram,
 
         dxCreateBuffer = 1501,
         dxBufferMapping,

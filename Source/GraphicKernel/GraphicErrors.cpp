@@ -67,6 +67,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dynamicCastShader: return "dynamic cast shader fail";
     case ErrorCode::nullShader: return "null shader";
     case ErrorCode::shaderVarLocation: return "shader var location error";
+    case ErrorCode::linkShaderProgram: return "link shader program fail";
 
     case ErrorCode::dxCreateBuffer: return "Dx create buffer fail";
     case ErrorCode::dxBufferMapping: return "Dx buffer mapping fail";

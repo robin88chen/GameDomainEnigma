@@ -195,7 +195,7 @@ void ShaderManagerTest::OnShaderProgramBuildFailed(const IEventPtr& e)
     if (!e) return;
     std::shared_ptr<ShaderProgramBuildFailed> ev = std::dynamic_pointer_cast<ShaderProgramBuildFailed, IEvent>(e);
     if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("shader program %s build failed : %s", ev->GetShaderName(), ev->GetErrorCode().message().c_str());
+    Enigma::Platforms::Debug::ErrorPrintf("shader program %s build failed : %s\n", ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());
 }
 
 void ShaderManagerTest::OnVertexBufferBuilt(const IEventPtr& e)

@@ -253,9 +253,12 @@ error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics
 {
     Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
     Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader, vtx_decl } };
-    m_stash->Add(name, shader);
+    if (std::dynamic_pointer_cast<ShaderProgramEgl, Graphics::IShaderProgram>(shader)->HasLinked())
+    {
+        m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
+    }
     return ErrorCode::ok;
 }
 

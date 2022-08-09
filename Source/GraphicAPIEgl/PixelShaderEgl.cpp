@@ -53,6 +53,7 @@ error PixelShaderEgl::CompileCode(const std::string& code, const std::string& pr
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not compile pixel shader:\n%s\n", infoLog);
+                Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PixelShaderCompileFailed(m_name, infoLog) });
                 free(infoLog);
             }
         }

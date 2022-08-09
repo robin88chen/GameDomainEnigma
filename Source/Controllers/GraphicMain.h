@@ -64,6 +64,9 @@ namespace Enigma::Controllers
         error InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary);
         error ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name);
 
+        error InstallShaderManagers();
+        error ShutdownShaderManagers();
+
     private:
         static GraphicMain* m_instance;
 

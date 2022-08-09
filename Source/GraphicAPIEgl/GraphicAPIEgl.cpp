@@ -249,13 +249,16 @@ error GraphicAPIEgl::CreatePixelShader(const std::string& name)
 }
 
 error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
-                                         const Graphics::IPixelShaderPtr& pix_shader)
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
 {
     Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
-    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader } };
-    m_stash->Add(name, shader);
+    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramEgl{ name, vtx_shader, pix_shader, vtx_decl } };
+    if (std::dynamic_pointer_cast<ShaderProgramEgl, Graphics::IShaderProgram>(shader)->HasLinked())
+    {
+        m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
+    }
     return ErrorCode::ok;
 }
 
@@ -266,18 +269,8 @@ error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std:
 
     Debug::Printf("create vertex declaration in thread %d\n", std::this_thread::get_id());
 
-    std::string decl_name = QueryVertexDeclarationName(data_vertex_format, shader);
-    if (!decl_name.empty())
-    {
-        if (decl_name != name) return ErrorCode::duplicatedVertexDeclaration;
-        return ErrorCode::ok;
-    }
-
-    std::lock_guard locker{ m_declMapLock };
-
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ menew
         VertexDeclarationEgl(name, data_vertex_format) };
-    m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
     m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });

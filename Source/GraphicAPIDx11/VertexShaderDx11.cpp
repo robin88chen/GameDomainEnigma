@@ -57,6 +57,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
         LOG(Error, str);
         SAFE_RELEASE(outBuf);
         SAFE_RELEASE(errorBuf);
+        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexShaderCompileFailed(m_name, str) });
         return ErrorCode::compileShader;
     }
     SAFE_RELEASE(errorBuf);

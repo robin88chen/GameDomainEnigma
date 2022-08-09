@@ -5,6 +5,7 @@
 #include "VertexDeclarationEgl.h"
 #include "ShaderVariableEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
@@ -13,12 +14,13 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-ShaderProgramEgl::ShaderProgramEgl(const std::string& name,
-    const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader)
-        : IShaderProgram(name, vtx_shader, pix_shader)
+ShaderProgramEgl::ShaderProgramEgl(const std::string& name,const Graphics::IVertexShaderPtr& vtx_shader, 
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
+        : IShaderProgram(name, vtx_shader, pix_shader, vtx_decl)
 {
     assert((m_vtxShader) && (m_pixShader));
 
+    m_hasLinked = false;
     m_program = glCreateProgram();
     VertexShaderEgl* vs = dynamic_cast<VertexShaderEgl*>(m_vtxShader.get());
     assert(vs);
@@ -142,11 +144,14 @@ void ShaderProgramEgl::LinkShaders()
             {
                 glGetProgramInfoLog(m_program, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not link program:\n%s\n", infoLog);
+                Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderProgramLinkFailed(m_name, infoLog) });
                 free(infoLog);
             }
         }
+        m_hasLinked = false;
         return;
     }
+    m_hasLinked = true;
 }
 
 void ShaderProgramEgl::RetrieveShaderVariables()

@@ -19,10 +19,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp" />
   </ItemGroup>
 </Project>

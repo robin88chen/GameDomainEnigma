@@ -20,7 +20,8 @@ namespace Enigma::Devices
     class ShaderProgramDx11 : public Graphics::IShaderProgram
     {
     public:
-        ShaderProgramDx11(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader);
+        ShaderProgramDx11(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader, 
+            const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl);
         ShaderProgramDx11(const ShaderProgramDx11&) = delete;
         ShaderProgramDx11(ShaderProgramDx11&&) = delete;
         virtual ~ShaderProgramDx11();

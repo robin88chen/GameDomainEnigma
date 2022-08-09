@@ -316,6 +316,39 @@ namespace Enigma::Graphics
     private:
         std::string m_name;
     };
+    class VertexShaderCompileFailed : public Frameworks::IEvent
+    {
+    public:
+        VertexShaderCompileFailed(const std::string& name, const std::string& err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetShaderName() { return m_name; }
+        const std::string& GetError() { return m_error; }
+    private:
+        std::string m_name;
+        std::string m_error;
+    };
+    class PixelShaderCompileFailed : public Frameworks::IEvent
+    {
+    public:
+        PixelShaderCompileFailed(const std::string& name, const std::string& err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetShaderName() { return m_name; }
+        const std::string& GetError() { return m_error; }
+    private:
+        std::string m_name;
+        std::string m_error;
+    };
+    class ShaderProgramLinkFailed : public Frameworks::IEvent
+    {
+    public:
+        ShaderProgramLinkFailed(const std::string& name, const std::string& err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetShaderName() { return m_name; }
+        const std::string& GetError() { return m_error; }
+    private:
+        std::string m_name;
+        std::string m_error;
+    };
     class DeviceInputLayoutCreated : public Frameworks::IEvent
     {
     public:

@@ -289,10 +289,11 @@ error GraphicAPIDx11::CreatePixelShader(const std::string& name)
 }
 
 error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
-    const Graphics::IPixelShaderPtr& pix_shader)
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
 {
     Platforms::Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
-    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{ menew ShaderProgramDx11{ name, vtx_shader, pix_shader } };
+    Graphics::IShaderProgramPtr shader = Graphics::IShaderProgramPtr{
+        menew ShaderProgramDx11{ name, vtx_shader, pix_shader, vtx_decl } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
@@ -306,14 +307,6 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
 
     Platforms::Debug::Printf("create vertex declaration in thread %d\n", std::this_thread::get_id());
 
-    std::string decl_name = QueryVertexDeclarationName(data_vertex_format, shader);
-    if (!decl_name.empty())
-    {
-        if (decl_name != name) return ErrorCode::duplicatedVertexDeclaration;
-        return ErrorCode::ok;
-    }
-
-    std::lock_guard locker{ m_declMapLock };
     auto shader_dx11 = std::dynamic_pointer_cast<VertexShaderDx11, Graphics::IVertexShader>(shader);
     assert(shader_dx11);
     VertexDeclarationDx11* vtx_decl_dx11 = menew
@@ -328,7 +321,6 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
     }
 
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ vtx_decl_dx11 };
-    m_vertexDeclMap.emplace(std::make_pair(data_vertex_format, shader->GetName()), name);
     m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });

@@ -44,7 +44,8 @@ namespace Enigma::Application
         static AppDelegate* m_instance;
     protected:
         std::string m_appName;
-
+        /** for compatibility with win32 only */
+        void* m_hwnd;
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;

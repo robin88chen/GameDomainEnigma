@@ -18,7 +18,8 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 
 ShaderProgramDx11::ShaderProgramDx11(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
-    const Graphics::IPixelShaderPtr& pix_shader) : IShaderProgram(name, vtx_shader, pix_shader)
+    const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
+    : IShaderProgram(name, vtx_shader, pix_shader, vtx_decl)
 {
     VertexShaderDx11* vtx_dx11 = dynamic_cast<VertexShaderDx11*>(m_vtxShader.get());
     PixelShaderDx11* pix_dx11 = dynamic_cast<PixelShaderDx11*>(m_pixShader.get());

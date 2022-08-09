@@ -16,6 +16,7 @@ AppDelegate::AppDelegate(const std::string& app_name) : m_appName(app_name)
 {
     m_instance = this;
     m_hasLogFile = false;
+    m_hwnd = nullptr;
     m_graphicMain = nullptr;
 }
 

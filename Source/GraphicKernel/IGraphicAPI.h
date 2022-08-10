@@ -77,26 +77,6 @@ namespace Enigma::Graphics
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
-         /** @name scene begin/end  */
-        //@{
-        virtual error BeginScene() = 0;
-        virtual error EndScene() = 0;
-        virtual future_error AsyncBeginScene();
-        virtual future_error AsyncEndScene();
-        //@}
-
-        /** @name draw call */
-        //@{
-        /** draw primitive */
-        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) = 0;
-        virtual future_error AsyncDrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset);
-        /** draw indexed primitive */
-        virtual error DrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
-            int baseVertexOffset) = 0;
-        virtual future_error AsyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
-            int baseVertexOffset);
-        //@}
-
         virtual error Flip() = 0;
         virtual future_error AsyncFlip();
 
@@ -267,6 +247,10 @@ namespace Enigma::Graphics
         /** command handlers */
         void DoCreatingDevice(const Frameworks::ICommandPtr& c);
         void DoCleaningDevice(const Frameworks::ICommandPtr& c);
+        void DoBeginningScene(const Frameworks::ICommandPtr& c);
+        void DoEndingScene(const Frameworks::ICommandPtr& c);
+        void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
+        void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
 
         /** @name create / cleanup device */
         //@{
@@ -274,6 +258,26 @@ namespace Enigma::Graphics
         virtual error CleanupDevice() = 0;
         virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
         virtual future_error AsyncCleanupDevice();
+
+        /** @name scene begin/end  */
+        //@{
+        virtual error BeginScene() = 0;
+        virtual error EndScene() = 0;
+        virtual future_error AsyncBeginScene();
+        virtual future_error AsyncEndScene();
+        //@}
+
+        /** @name draw call */
+        //@{
+        /** draw primitive */
+        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) = 0;
+        virtual future_error AsyncDrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset);
+        /** draw indexed primitive */
+        virtual error DrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset) = 0;
+        virtual future_error AsyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset);
+        //@}
 
         //@}
         /** @name surface format */
@@ -308,6 +312,10 @@ namespace Enigma::Graphics
 
         Frameworks::CommandSubscriberPtr m_doCreatingDevice;
         Frameworks::CommandSubscriberPtr m_doCleaningDevice;
+        Frameworks::CommandSubscriberPtr m_doBeginningScene;
+        Frameworks::CommandSubscriberPtr m_doEndingScene;
+        Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
+        Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
     };
 }
 

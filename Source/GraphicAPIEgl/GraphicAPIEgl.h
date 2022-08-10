@@ -25,14 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
 
-        virtual error BeginScene() override;
-        virtual error EndScene() override;
-
-        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
-        virtual error DrawIndexedPrimitive(
-            unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
-            int baseVertexOffset) override;
-
         virtual error Flip() override;
 
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
@@ -86,6 +78,12 @@ namespace Enigma::Devices
     protected:
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual error CleanupDevice() override;
+        virtual error BeginScene() override;
+        virtual error EndScene() override;
+        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
+        virtual error DrawIndexedPrimitive(
+            unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset) override;
 
         void CleanupDeviceObjects();
     private:

@@ -44,6 +44,20 @@ void IGraphicAPI::SubscribeHandlers()
     m_doCleaningDevice =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCleaningDevice(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+
+    m_doBeginningScene =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBeginningScene(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
+    m_doEndingScene =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoEndingScene(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::EndScene), m_doEndingScene);
+
+    m_doDrawingPrimitive =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingPrimitive(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
+    m_doDrawingIndexedPrimitive =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -52,6 +66,16 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingDevice = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
     m_doCleaningDevice = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
+    m_doBeginningScene = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::EndScene), m_doEndingScene);
+    m_doEndingScene = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
+    m_doDrawingPrimitive = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
+    m_doDrawingIndexedPrimitive = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -81,6 +105,66 @@ void IGraphicAPI::DoCleaningDevice(const Frameworks::ICommandPtr& c)
     else
     {
         CleanupDevice();
+    }
+}
+
+void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BeginScene, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBeginScene();
+    }
+    else
+    {
+        BeginScene();
+    }
+}
+
+void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::EndScene, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncEndScene();
+    }
+    else
+    {
+        EndScene();
+    }
+}
+
+void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::DrawPrimitive, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncDrawPrimitive(cmd->GetVertexCount(), cmd->GetVertexOffset());
+    }
+    else
+    {
+        DrawPrimitive(cmd->GetVertexCount(), cmd->GetVertexOffset());
+    }
+}
+
+void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::DrawIndexedPrimitive, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncDrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
+    }
+    else
+    {
+        DrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
     }
 }
 

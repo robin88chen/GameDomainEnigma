@@ -43,6 +43,9 @@
     <Filter Include="Asset Stash">
       <UniqueIdentifier>{c4aa4384-404a-4f75-861b-f181b69feb23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{735df90f-3a48-4c05-994d-434a9c748de2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IGraphicAPI.h">
@@ -119,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IDeviceRasterizerState.h">
       <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicCommands.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

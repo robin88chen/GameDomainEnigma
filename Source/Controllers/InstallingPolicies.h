@@ -22,13 +22,11 @@ namespace Enigma::Controllers
     class DeviceCreatingPolicy : public InstallingPolicy
     {
     public:
-        DeviceCreatingPolicy(Graphics::IGraphicAPI* api, const Graphics::DeviceRequiredBits& rqb, void* hwnd);
+        DeviceCreatingPolicy(const Graphics::DeviceRequiredBits& rqb, void* hwnd);
 
-        Graphics::IGraphicAPI* GraphicAPI() { return m_api; }
         const Graphics::DeviceRequiredBits& RequiredBits() { return m_rqb; }
         void* Hwnd() { return m_hwnd; }
     protected:
-        Graphics::IGraphicAPI* m_api;
         Graphics::DeviceRequiredBits m_rqb;
         void* m_hwnd;
     };

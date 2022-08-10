@@ -1,4 +1,5 @@
 ﻿#include "GraphicMain.h"
+#include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -98,27 +99,14 @@ error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
 {
     assert(policy);
 
-    if (policy->GraphicAPI()->UseAsync())
-    {
-        return policy->GraphicAPI()->AsyncCreateDevice(policy->RequiredBits(), policy->Hwnd()).get();
-    }
-    else
-    {
-        return policy->GraphicAPI()->CreateDevice(policy->RequiredBits(), policy->Hwnd());
-    }
+    Frameworks::CommandBus::Send(Frameworks::ICommandPtr{ menew Graphics::CreateDevice{policy->RequiredBits(), policy->Hwnd()} });
+    return ErrorCode::ok;
 }
 
 error GraphicMain::CleanupRenderEngineDevice()
 {
-    assert(Graphics::IGraphicAPI::Instance());
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        return Graphics::IGraphicAPI::Instance()->AsyncCleanupDevice().get();
-    }
-    else
-    {
-        return Graphics::IGraphicAPI::Instance()->CleanupDevice();
-    }
+    Frameworks::CommandBus::Send(Frameworks::ICommandPtr{ menew Graphics::CleanupDevice{} });
+    return ErrorCode::ok;
 }
 
 error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy)

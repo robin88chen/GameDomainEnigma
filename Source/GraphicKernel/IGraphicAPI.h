@@ -12,10 +12,12 @@
 #include "TargetViewPort.h"
 #include "GraphicAssetStash.h"
 #include "Frameworks/ExtentTypesDefine.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
 #include <mutex>
 #include <memory>
+
 
 namespace Enigma::MathLib
 {
@@ -73,13 +75,6 @@ namespace Enigma::Graphics
         static IGraphicAPI* Instance();
 
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
-        /** @name create / cleanup device */
-        //@{
-        virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
-        virtual error CleanupDevice() = 0;
-        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
-        virtual future_error AsyncCleanupDevice();
-        //@}
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
          /** @name scene begin/end  */
@@ -266,6 +261,21 @@ namespace Enigma::Graphics
         }
 
     protected:
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
+
+        /** command handlers */
+        void DoCreatingDevice(const Frameworks::ICommandPtr& c);
+        void DoCleaningDevice(const Frameworks::ICommandPtr& c);
+
+        /** @name create / cleanup device */
+        //@{
+        virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
+        virtual error CleanupDevice() = 0;
+        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
+        virtual future_error AsyncCleanupDevice();
+
+        //@}
         /** @name surface format */
         //@{
         void SetPrimaryBackSurfaceFormat(const GraphicFormat& fmt) { m_fmtBackSurface = fmt; };
@@ -295,6 +305,9 @@ namespace Enigma::Graphics
         PrimitiveTopology m_boundTopology;
         IIndexBufferPtr m_boundIndexBuffer;
         TargetViewPort m_boundViewPort;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingDevice;
+        Frameworks::CommandSubscriberPtr m_doCleaningDevice;
     };
 }
 

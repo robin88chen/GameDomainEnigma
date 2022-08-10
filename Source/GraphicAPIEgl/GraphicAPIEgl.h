@@ -25,9 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
 
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
-        virtual error CleanupDevice() override;
-
         virtual error BeginScene() override;
         virtual error EndScene() override;
 
@@ -87,6 +84,9 @@ namespace Enigma::Devices
         void SetDimension(const MathLib::Dimension& dim);
 
     protected:
+        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
+        virtual error CleanupDevice() override;
+
         void CleanupDeviceObjects();
     private:
         error BindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl);

@@ -17,6 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceRequiredBits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicAPITypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicThread.h" />

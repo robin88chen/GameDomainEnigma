@@ -36,9 +36,6 @@ namespace Enigma::Devices
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
 
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
-        virtual error CleanupDevice() override;
-
         virtual error BeginScene() override;
         virtual error EndScene() override;
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
@@ -99,6 +96,9 @@ namespace Enigma::Devices
         SwapChainDx11* GetSwapChain() { return m_swapChain; }
 
     private:
+        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
+        virtual error CleanupDevice() override;
+
         void CleanupDeviceObjects();
 
         error ClearSingleBackSurface(const Graphics::IBackSurfacePtr& back_surface, const MathLib::ColorRGBA& color);

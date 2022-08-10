@@ -3,9 +3,12 @@
 #include "GraphicAssetStash.h"
 #include "IVertexShader.h"
 #include "IVertexDeclaration.h"
+#include "GraphicCommands.h"
 #include "MathLib/ColorRGBA.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
+#include <memory>
 
 using namespace Enigma::Graphics;
 
@@ -31,6 +34,54 @@ IGraphicAPI* IGraphicAPI::Instance()
 {
     assert(m_instance);
     return m_instance;
+}
+
+void IGraphicAPI::SubscribeHandlers()
+{
+    m_doCreatingDevice =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDevice(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
+    m_doCleaningDevice =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCleaningDevice(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+}
+
+void IGraphicAPI::UnsubscribeHandlers()
+{
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
+    m_doCreatingDevice = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+    m_doCleaningDevice = nullptr;
+}
+
+void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateDevice, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
+    }
+    else
+    {
+        CreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
+    }
+}
+
+void IGraphicAPI::DoCleaningDevice(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CleanupDevice, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCleanupDevice();
+    }
+    else
+    {
+        CleanupDevice();
+    }
 }
 
 future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)

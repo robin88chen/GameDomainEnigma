@@ -14,7 +14,7 @@ CreateDeviceApp::CreateDeviceApp(const std::string app_name) : AppDelegate(app_n
 void CreateDeviceApp::InstallEngine()
 {
     assert(m_graphicMain);
-    DeviceCreatingPolicy* policy = menew DeviceCreatingPolicy(IGraphicAPI::Instance(), DeviceRequiredBits(), nullptr);
+    DeviceCreatingPolicy* policy = menew DeviceCreatingPolicy(DeviceRequiredBits(), nullptr);
     m_graphicMain->InstallRenderEngine(std::unique_ptr<InstallingPolicy>(policy));
     //medelete policy;
 }

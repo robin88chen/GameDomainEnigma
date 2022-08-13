@@ -251,6 +251,8 @@ namespace Enigma::Graphics
         void DoEndingScene(const Frameworks::ICommandPtr& c);
         void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
         void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
+        void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
 
         /** @name create / cleanup device */
         //@{
@@ -316,6 +318,8 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doEndingScene;
         Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
         Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
+        Frameworks::CommandSubscriberPtr m_doCreatingPrimarySurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingBackSurface;
     };
 }
 

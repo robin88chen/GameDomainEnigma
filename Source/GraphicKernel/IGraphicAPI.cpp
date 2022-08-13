@@ -58,6 +58,13 @@ void IGraphicAPI::SubscribeHandlers()
     m_doDrawingIndexedPrimitive =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
+
+	m_doCreatingPrimarySurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPrimarySurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
+    m_doCreatingBackSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBackSurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -76,6 +83,11 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doDrawingPrimitive = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
     m_doDrawingIndexedPrimitive = nullptr;
+
+	Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
+    m_doCreatingPrimarySurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
+    m_doCreatingBackSurface = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -165,6 +177,36 @@ void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
     else
     {
         DrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
+    }
+}
+
+void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreatePrimarySurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreatePrimaryBackSurface(cmd->GetBacksurfaceName(), cmd->GetDepthsurfaceName());
+    }
+    else
+    {
+        CreatePrimaryBackSurface(cmd->GetBacksurfaceName(), cmd->GetDepthsurfaceName());
+    }
+}
+
+void IGraphicAPI::DoCreatingBackSurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateBacksurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+    }
+    else
+    {
+        CreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetFormat());
     }
 }
 

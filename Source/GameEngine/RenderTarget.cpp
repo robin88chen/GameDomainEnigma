@@ -7,12 +7,12 @@
 #include "GraphicKernel/IBackSurface.h"
 #include "GraphicKernel/GraphicThread.h"
 #include "GraphicKernel/GraphicEvents.h"
+#include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include <cassert>
-
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
@@ -32,16 +32,9 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
 
     if (m_isPrimary)
     {
-        if (Graphics::IGraphicAPI::Instance()->UseAsync())
-        {
-            Graphics::IGraphicAPI::Instance()->AsyncCreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->CreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
-        }
+        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ 
+            menew Graphics::CreatePrimarySurface{ primary_back_surface_name, primary_depth_surface_name} });
     }
-
 }
 
 RenderTarget::RenderTarget(const std::string& name)
@@ -93,66 +86,40 @@ error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib:
     const Graphics::GraphicFormat& fmt)
 {
     m_backSurfaceName = back_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, fmt);
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
+        menew Graphics::CreateBacksurface{ back_name, dimension, fmt } });
 
-    return er;
-}
-
-future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-    const Graphics::GraphicFormat& fmt)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), back_name, dimension, fmt, this]() 
-            -> error { return InitBackSurface(back_name, dimension, fmt); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     m_backSurfaceName = back_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, surface_count, fmts);
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
+        menew Graphics::CreateMultiBacksurface{ back_name, dimension, surface_count, fmts } });
 
-    return er;
-}
-
-future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-    unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), back_name, dimension, surface_count, fmts, this]() 
-            -> error { return InitMultiBackSurface(back_name, dimension, surface_count, fmts); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
     const Graphics::GraphicFormat& fmt)
 {
     m_depthSurfaceName = depth_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateDepthStencilSurface(depth_name, dimension, fmt);
-    return er;
-}
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
+        menew Graphics::CreateDepthStencilSurface{ depth_name, dimension, fmt } });
 
-future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth_name, 
-    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), depth_name, dimension, fmt, this]() 
-            -> error { return InitDepthStencilSurface(depth_name, dimension, fmt); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     m_depthSurfaceName = depth_name;
-    error er = Graphics::IGraphicAPI::Instance()->ShareDepthStencilSurface(depth_name, surface);
-    return er;
-}
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
+        menew Graphics::ShareDepthStencilSurface{ depth_name, surface } });
 
-future_error RenderTarget::AsyncShareDepthStencilSurface(const std::string& depth_name, 
-    const Graphics::IDepthStencilSurfacePtr& surface)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), depth_name, surface, this]() 
-            -> error { return ShareDepthStencilSurface(depth_name, surface); });
+    return ErrorCode::ok;
 }
 
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
@@ -190,11 +157,12 @@ future_error RenderTarget::AsyncBindViewPort()
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
-    error er = Graphics::IGraphicAPI::Instance()->ClearSurface(
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
+        menew Graphics::ClearSurface{
         ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
         ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
-        color, depth_value, stencil_value);
-    return er;
+        color, depth_value, stencil_value} });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::Clear()
@@ -203,23 +171,12 @@ error RenderTarget::Clear()
         m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
 }
 
-future_error RenderTarget::AsyncClear()
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Clear(); });
-}
-
 error RenderTarget::Flip()
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
 
-    return Graphics::IGraphicAPI::Instance()->Flip();
-}
-
-future_error RenderTarget::AsyncFlip()
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Flip(); });
+    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::FlipBackSurface });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)

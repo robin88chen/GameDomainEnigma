@@ -21,10 +21,12 @@ IGraphicAPI::IGraphicAPI(AsyncType async)
     m_async = async;
     m_workerThread = new GraphicThread{};
     m_stash = new AssetStash{};
+    SubscribeHandlers();
 }
 
 IGraphicAPI::~IGraphicAPI()
 {
+    UnsubscribeHandlers();
     m_instance = nullptr;
     if (m_workerThread) delete m_workerThread;
     if (m_stash) delete m_stash;
@@ -59,12 +61,28 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
 
+	m_doClearing =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoClearing(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::ClearSurface), m_doClearing);
+    m_doFlipping =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoFlipping(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
+
 	m_doCreatingPrimarySurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPrimarySurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBackSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
+    m_doCreatingMultiBackSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiBackSurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
+    m_doCreatingDepthSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDepthSurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
+    m_doSharingDepthSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoSharingDepthSurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -84,10 +102,21 @@ void IGraphicAPI::UnsubscribeHandlers()
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
     m_doDrawingIndexedPrimitive = nullptr;
 
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ClearSurface), m_doClearing);
+    m_doClearing = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
+    m_doFlipping = nullptr;
+
 	Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingPrimarySurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
     m_doCreatingBackSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
+    m_doCreatingMultiBackSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
+    m_doCreatingDepthSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
+    m_doSharingDepthSurface = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -179,6 +208,37 @@ void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
         DrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
     }
 }
+void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::ClearSurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(), 
+            cmd->GetDepthValue(), cmd->GetStencilValue());
+    }
+    else
+    {
+        AsyncClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
+            cmd->GetDepthValue(), cmd->GetStencilValue());
+    }
+}
+
+void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::FlipBackSurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncFlip();
+    }
+    else
+    {
+        Flip();
+    }
+}
 
 void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
 {
@@ -207,6 +267,51 @@ void IGraphicAPI::DoCreatingBackSurface(const Frameworks::ICommandPtr& c)
     else
     {
         CreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+    }
+}
+
+void IGraphicAPI::DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateMultiBacksurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetSurfaceCount(), cmd->GetFormats());
+    }
+    else
+    {
+        CreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetSurfaceCount(), cmd->GetFormats());
+    }
+}
+
+void IGraphicAPI::DoCreatingDepthSurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateDepthStencilSurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+    }
+    else
+    {
+        CreateDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+    }
+}
+
+void IGraphicAPI::DoSharingDepthSurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::ShareDepthStencilSurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncShareDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetSourceDepth());
+    }
+    else
+    {
+        ShareDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetSourceDepth());
     }
 }
 

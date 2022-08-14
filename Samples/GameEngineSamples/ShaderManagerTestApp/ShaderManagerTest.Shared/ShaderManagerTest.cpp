@@ -3,6 +3,7 @@
 #include "Controllers/InstallingPolicies.h"
 #include <cassert>
 #include <GraphicKernel/GraphicEvents.h>
+#include <GraphicKernel/GraphicCommands.h>
 #include <Platforms/MemoryAllocMacro.h>
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/ServiceManager.h"
@@ -136,7 +137,7 @@ void ShaderManagerTest::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
@@ -193,11 +194,11 @@ void ShaderManagerTest::RenderFrame()
     IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
     IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
     IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
-    m_renderTarget->AsyncClear();
-    IGraphicAPI::Instance()->AsyncBeginScene();
-    IGraphicAPI::Instance()->AsyncDrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->AsyncEndScene();
-    m_renderTarget->AsyncFlip();
+    m_renderTarget->Clear();
+    CommandBus::Post(ICommandPtr{ menew BeginScene });
+    CommandBus::Post(ICommandPtr{ menew DrawIndexedPrimitive{6, 4, 0, 0} });
+    CommandBus::Post(ICommandPtr{ menew EndScene });
+    m_renderTarget->Flip();
 #else
     m_renderTarget->Bind();
     m_renderTarget->BindViewPort();
@@ -206,9 +207,9 @@ void ShaderManagerTest::RenderFrame()
     IGraphicAPI::Instance()->BindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
     IGraphicAPI::Instance()->BindIndexBuffer(m_idxBuffer);
     m_renderTarget->Clear();
-    IGraphicAPI::Instance()->BeginScene();
-    IGraphicAPI::Instance()->DrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->EndScene();
+    CommandBus::Post(ICommandPtr{ menew BeginScene });
+    CommandBus::Post(ICommandPtr{ menew DrawIndexedPrimitive{6, 4, 0, 0} });
+    CommandBus::Post(ICommandPtr{ menew EndScene });
     m_renderTarget->Flip();
 #endif
 }

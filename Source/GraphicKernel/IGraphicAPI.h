@@ -77,35 +77,6 @@ namespace Enigma::Graphics
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
-        virtual error Flip() = 0;
-        virtual future_error AsyncFlip();
-
-        /** @name back / depth surface */
-        //@{
-        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-            const GraphicFormat& fmt) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-            unsigned int buff_count, const std::vector<GraphicFormat>& fmts) = 0;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
-            const GraphicFormat& fmt) = 0;
-        virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
-        virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
-        virtual future_error AsyncCreatePrimaryBackSurface(
-            const std::string& back_name, const std::string& depth_name);
-        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-            const GraphicFormat& fmt);
-        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-            unsigned int buff_count, const std::vector<GraphicFormat>& fmts);
-        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
-            const GraphicFormat& fmt);
-        virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
-        virtual future_error AsyncClearSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
-        //@}
-
         virtual error BindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
@@ -251,8 +222,13 @@ namespace Enigma::Graphics
         void DoEndingScene(const Frameworks::ICommandPtr& c);
         void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
         void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
+        void DoClearing(const Frameworks::ICommandPtr& c);
+        void DoFlipping(const Frameworks::ICommandPtr& c);
         void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
         void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
+        void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
 
         /** @name create / cleanup device */
         //@{
@@ -279,6 +255,35 @@ namespace Enigma::Graphics
             int baseVertexOffset) = 0;
         virtual future_error AsyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
+        //@}
+
+    	virtual error Flip() = 0;
+        virtual future_error AsyncFlip();
+
+    	/** @name back / depth surface */
+        //@{
+        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            const GraphicFormat& fmt) = 0;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            unsigned int buff_count, const std::vector<GraphicFormat>& fmts) = 0;
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+            const GraphicFormat& fmt) = 0;
+        virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
+        virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
+        virtual future_error AsyncCreatePrimaryBackSurface(
+            const std::string& back_name, const std::string& depth_name);
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            const GraphicFormat& fmt);
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            unsigned int buff_count, const std::vector<GraphicFormat>& fmts);
+        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+            const GraphicFormat& fmt);
+        virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
+        virtual future_error AsyncClearSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
         //@}
@@ -318,8 +323,13 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doEndingScene;
         Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
         Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
+        Frameworks::CommandSubscriberPtr m_doClearing;
+        Frameworks::CommandSubscriberPtr m_doFlipping;
         Frameworks::CommandSubscriberPtr m_doCreatingPrimarySurface;
         Frameworks::CommandSubscriberPtr m_doCreatingBackSurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
+        Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;
     };
 }
 

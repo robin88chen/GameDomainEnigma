@@ -25,20 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
 
-        virtual error Flip() override;
-
-        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-            const Graphics::GraphicFormat& fmt) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, unsigned int buff_count,
-            const std::vector<Graphics::GraphicFormat>& fmts) override;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
-            const Graphics::GraphicFormat& fmt) override;
-        virtual error ShareDepthStencilSurface(const std::string& depth_name,
-            const Graphics::IDepthStencilSurfacePtr& from_depth) override;
-        virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
-
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
@@ -84,6 +70,18 @@ namespace Enigma::Devices
         virtual error DrawIndexedPrimitive(
             unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset) override;
+        virtual error Flip() override;
+        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+            const Graphics::GraphicFormat& fmt) override;
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, unsigned int buff_count,
+            const std::vector<Graphics::GraphicFormat>& fmts) override;
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+            const Graphics::GraphicFormat& fmt) override;
+        virtual error ShareDepthStencilSurface(const std::string& depth_name,
+            const Graphics::IDepthStencilSurfacePtr& from_depth) override;
+        virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
 
         void CleanupDeviceObjects();
     private:

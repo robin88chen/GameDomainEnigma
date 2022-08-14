@@ -66,11 +66,7 @@ namespace Enigma::Engine
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-            const Graphics::GraphicFormat& fmt);
         error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-            unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
-        future_error AsyncInitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
@@ -79,12 +75,8 @@ namespace Enigma::Engine
         /** init DepthStencil Buffer */
         error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
-            const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
         error ShareDepthStencilSurface(const std::string& depth_name, 
-            const Graphics::IDepthStencilSurfacePtr& surface);
-        future_error AsyncShareDepthStencilSurface(const std::string& depth_name, 
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
@@ -103,10 +95,8 @@ namespace Enigma::Engine
         future_error AsyncBindViewPort();
         /** clear render target */
         error Clear();
-        future_error AsyncClear();
         /** flip, only primary render target can flip */
         error Flip();
-        future_error AsyncFlip();
 
         /** get name */
         const std::string& GetName() { return m_name; };

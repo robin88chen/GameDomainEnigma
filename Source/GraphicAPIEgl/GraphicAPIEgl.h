@@ -25,10 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
 
-        virtual error BindBackSurface(
-            const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
-        virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
-
         virtual error CreateVertexShader(const std::string& name) override;
         virtual error CreatePixelShader(const std::string& name) override;
         virtual error CreateShaderProgram(const std::string& name,
@@ -82,6 +78,9 @@ namespace Enigma::Devices
             const Graphics::IDepthStencilSurfacePtr& from_depth) override;
         virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
+        virtual error BindBackSurface(
+            const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
+        virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
 
         void CleanupDeviceObjects();
     private:

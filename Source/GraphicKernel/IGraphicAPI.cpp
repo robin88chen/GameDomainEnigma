@@ -83,6 +83,13 @@ void IGraphicAPI::SubscribeHandlers()
     m_doSharingDepthSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoSharingDepthSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
+
+    m_doBindingBackSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
+    m_doBindingViewPort =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingViewPort(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -113,6 +120,11 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingBackSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingMultiBackSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
+    m_doCreatingDepthSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
+    m_doSharingDepthSurface = nullptr;
+
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
     m_doCreatingDepthSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
@@ -312,6 +324,36 @@ void IGraphicAPI::DoSharingDepthSurface(const Frameworks::ICommandPtr& c)
     else
     {
         ShareDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetSourceDepth());
+    }
+}
+
+void IGraphicAPI::DoBindingBackSurface(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BindBackSurface, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBindBackSurface(cmd->GetBackSurface(), cmd->GetDepthSurface());
+    }
+    else
+    {
+        BindBackSurface(cmd->GetBackSurface(), cmd->GetDepthSurface());
+    }
+}
+
+void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BindViewPort, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBindViewPort(cmd->GetViewPort());
+    }
+    else
+    {
+        BindViewPort(cmd->GetViewPort());
     }
 }
 

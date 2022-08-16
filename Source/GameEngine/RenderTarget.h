@@ -8,6 +8,8 @@
 #ifndef RENDER_TARGET_H
 #define RENDER_TARGET_H
 
+#include <bitset>
+
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -56,6 +58,13 @@ namespace Enigma::Engine
             unsigned int m_stencil;
             BufferClearFlag m_flag;
         };
+    protected:
+        enum class ResizingBitIndex
+        {
+            BackSurface,
+            DepthSurface,
+            Count
+        };
     public:
         RenderTarget(const std::string& name, PrimaryType primary);
         RenderTarget(const std::string& name);
@@ -89,10 +98,8 @@ namespace Enigma::Engine
         bool IsPrimary() { return m_isPrimary; };
         /** bind to device */
         error Bind();
-        future_error AsyncBind();
         /** bind viewport */
         error BindViewPort();
-        future_error AsyncBindViewPort();
         /** clear render target */
         error Clear();
         /** flip, only primary render target can flip */
@@ -109,7 +116,6 @@ namespace Enigma::Engine
 
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
-        future_error AsyncResize(const MathLib::Dimension& dimension);
 
         /** @name depth map info */
         //@{
@@ -138,11 +144,13 @@ namespace Enigma::Engine
         void OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e);
         void OnBackSurfaceCreated(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceCreated(const Frameworks::IEventPtr& e);
+        void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
+        void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
         /** @name command handler */
         //@{
-        void HandleChangingViewPort(const Frameworks::ICommandPtr& c);
-        void HandleChangingClearingProperty(const Frameworks::ICommandPtr& c);
+        void DoChangingViewPort(const Frameworks::ICommandPtr& c);
+        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c);
         //@}
 
     protected:
@@ -165,8 +173,16 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onPrimarySurfaceCreated;
         Frameworks::EventSubscriberPtr m_onBackSurfaceCreated;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceCreated;
-        Frameworks::CommandSubscriberPtr m_handleChangingViewPort;
-        Frameworks::CommandSubscriberPtr m_handleChangingClearingProperty;
+        Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
+        Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
+
+        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
+        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
+
+        using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
+        ResizingBits m_resizingBits;
+        const ResizingBits ResizingBackSurfaceBit{ "01" };
+        const ResizingBits ResizingDepthSurfaceBit{ "10" };
     };
     using RenderTargetPtr = std::shared_ptr<RenderTarget>;
 };

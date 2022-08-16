@@ -29,16 +29,16 @@ RendererManager::~RendererManager()
 Enigma::Frameworks::ServiceResult RendererManager::OnInit()
 {
     m_accumulateRendererStamp = 0;
-    m_handleResizingPrimaryTarget =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleResizingPrimaryTarget(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_handleResizingPrimaryTarget);
+    m_doResizingPrimaryTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_handleResizingPrimaryTarget);
-    m_handleResizingPrimaryTarget = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+    m_doResizingPrimaryTarget = nullptr;
     //todo : renderers
     //ClearAllRenderer();
     ClearAllRenderTarget();
@@ -97,21 +97,14 @@ RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
     return GetRenderTarget(m_primaryRenderTargetName);
 }
 
-void RendererManager::HandleResizingPrimaryTarget(const Frameworks::ICommandPtr& c)
+void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<ResizePrimaryRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
     auto target = GetPrimaryRenderTarget();
     if (!target) return;
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        target->AsyncResize(cmd->GetDimension());
-    }
-    else
-    {
-        target->Resize(cmd->GetDimension());
-    }
+    target->Resize(cmd->GetDimension());
 }
 
 void RendererManager::ClearAllRenderTarget()

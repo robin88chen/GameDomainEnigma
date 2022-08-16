@@ -77,14 +77,8 @@ namespace Enigma::Graphics
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
-        virtual error BindBackSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
-        virtual future_error AsyncBindBackSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
         virtual const IBackSurfacePtr& CurrentBoundBackSurface() const { return m_boundBackSurface; }
         virtual const IDepthStencilSurfacePtr& CurrentBoundDepthSurface() const { return m_boundDepthSurface; }
-        virtual error BindViewPort(const TargetViewPort& vp) = 0;
-        virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
         /** @name surface format */
         //@{
@@ -147,7 +141,6 @@ namespace Enigma::Graphics
         /** create depth stencil state */
         virtual error CreateDepthStencilState(const std::string& name) = 0;
         virtual future_error AsyncCreateDepthStencilState(const std::string& name);
-
         //@}
 
         /** @name Textures */
@@ -229,6 +222,8 @@ namespace Enigma::Graphics
         void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
         void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
+        void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
+        void DoBindingViewPort(const Frameworks::ICommandPtr& c);
 
         /** @name create / cleanup device */
         //@{
@@ -286,6 +281,13 @@ namespace Enigma::Graphics
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
+        virtual error BindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
+        virtual future_error AsyncBindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual error BindViewPort(const TargetViewPort& vp) = 0;
+        virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
+
         //@}
         /** @name surface format */
         //@{
@@ -330,6 +332,8 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
         Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;
+        Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
+        Frameworks::CommandSubscriberPtr m_doBindingViewPort;
     };
 }
 

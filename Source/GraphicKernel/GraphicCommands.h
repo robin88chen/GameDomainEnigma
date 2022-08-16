@@ -9,6 +9,7 @@
 #define GRAPHIC_COMMANDS_H
 
 #include "DeviceRequiredBits.h"
+#include "TargetViewPort.h"
 #include "Frameworks/Command.h"
 #include "MathLib/ColorRGBA.h"
 
@@ -67,6 +68,7 @@ namespace Enigma::Graphics
         int m_baseVertexOffset;
     };
 
+    /** clear */
     class ClearSurface : public Frameworks::ICommand
     {
     public:
@@ -86,6 +88,7 @@ namespace Enigma::Graphics
         float m_depthValue;
         unsigned int m_stencilValue;
     };
+    /** flip */
     class FlipBackSurface : public Frameworks::ICommand
     {
     };
@@ -154,6 +157,49 @@ namespace Enigma::Graphics
     private:
         std::string m_depthName;
         IDepthStencilSurfacePtr m_fromDepth;
+    };
+
+    /** resize surface */
+    class ResizeBackSurface : public Frameworks::ICommand
+    {
+    public:
+        ResizeBackSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
+        const std::string& GetName() const { return m_name; }
+        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+    private:
+        std::string m_name;
+        MathLib::Dimension m_dimension;
+    };
+    class ResizeDepthSurface : public Frameworks::ICommand
+    {
+    public:
+        ResizeDepthSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
+        const std::string& GetName() const { return m_name; }
+        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+    private:
+        std::string m_name;
+        MathLib::Dimension m_dimension;
+    };
+
+    /** bind surface / viewport */
+    class BindBackSurface : public Frameworks::ICommand
+    {
+    public:
+        BindBackSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface)
+            : m_backSurface(back_surface), m_depthSurface(depth_surface) {};
+        const IBackSurfacePtr& GetBackSurface() const { return m_backSurface; }
+        const IDepthStencilSurfacePtr& GetDepthSurface() const { return m_depthSurface; }
+    private:
+        IBackSurfacePtr m_backSurface;
+        IDepthStencilSurfacePtr m_depthSurface;
+    };
+    class BindViewPort : public Frameworks::ICommand
+    {
+    public:
+        BindViewPort(const TargetViewPort& vp) : m_vp(vp) {};
+        const TargetViewPort& GetViewPort() const { return m_vp; }
+    private:
+        TargetViewPort m_vp;
     };
 }
 

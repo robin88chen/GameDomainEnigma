@@ -10,6 +10,9 @@
 
 #include "DeviceRequiredBits.h"
 #include "TargetViewPort.h"
+#include "IVertexShader.h"
+#include "IPixelShader.h"
+#include "IShaderProgram.h"
 #include "Frameworks/Command.h"
 #include "MathLib/ColorRGBA.h"
 
@@ -179,6 +182,40 @@ namespace Enigma::Graphics
     private:
         std::string m_name;
         MathLib::Dimension m_dimension;
+    };
+
+    /** create shaders */
+    class CreateVertexShader : public Frameworks::ICommand
+    {
+    public:
+        CreateVertexShader(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreatePixelShader : public Frameworks::ICommand
+    {
+    public:
+        CreatePixelShader(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateShaderProgram : public Frameworks::ICommand
+    {
+    public:
+        CreateShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader, 
+            const IPixelShaderPtr& pixel_shader, const IVertexDeclarationPtr& vtx_decl)
+            : m_name(name), m_vtxShader(vtx_shader), m_pixelShader(pixel_shader), m_vtxDecl(vtx_decl) {};
+        const std::string& GetName() const { return m_name; }
+        const IVertexShaderPtr& GetVertexShader() const { return m_vtxShader; }
+        const IPixelShaderPtr& GetPixelShader() const { return m_pixelShader; }
+        const IVertexDeclarationPtr& GetVertexDeclaration() const { return m_vtxDecl; }
+    private:
+        std::string m_name;
+        IVertexShaderPtr m_vtxShader;
+        IPixelShaderPtr m_pixelShader;
+        IVertexDeclarationPtr m_vtxDecl;
     };
 
     /** bind surface / viewport */

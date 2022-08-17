@@ -86,30 +86,6 @@ namespace Enigma::Graphics
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
 
-        /** @name Shader */
-        //@{ 
-        /** create vertex shader
-        @param name shader name
-        @param shader out shader interface
-        */
-        virtual error CreateVertexShader(const std::string& name) = 0;
-        virtual future_error AsyncCreateVertexShader(const std::string& name);
-        /** create pixel shader
-        @param name shader name
-        @param shader out shader interface
-        */
-        virtual error CreatePixelShader(const std::string& name) = 0;
-        virtual future_error AsyncCreatePixelShader(const std::string& name);
-
-        /** create shader program
-        @param vtx_shader vertex shader
-        @param pix_shader pixel shader
-        @param program out shader program interface
-        */
-        virtual error CreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;
-        virtual future_error AsyncCreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl);
 
         /** create vertex declaration with data vertex format & effect */
         virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
@@ -222,6 +198,9 @@ namespace Enigma::Graphics
         void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
         void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
+        void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
+        void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
 
@@ -281,6 +260,31 @@ namespace Enigma::Graphics
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
+        /** @name Shader */
+        //@{ 
+        /** create vertex shader
+        @param name shader name
+        @param shader out shader interface
+        */
+        virtual error CreateVertexShader(const std::string& name) = 0;
+        virtual future_error AsyncCreateVertexShader(const std::string& name);
+        /** create pixel shader
+        @param name shader name
+        @param shader out shader interface
+        */
+        virtual error CreatePixelShader(const std::string& name) = 0;
+        virtual future_error AsyncCreatePixelShader(const std::string& name);
+
+        /** create shader program
+        @param vtx_shader vertex shader
+        @param pix_shader pixel shader
+        @param program out shader program interface
+        */
+        virtual error CreateShaderProgram(const std::string& name,
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;
+        virtual future_error AsyncCreateShaderProgram(const std::string& name,
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl);
+
         virtual error BindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
@@ -332,6 +336,9 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
         Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexShader;
+        Frameworks::CommandSubscriberPtr m_doCreatingPixelShader;
+        Frameworks::CommandSubscriberPtr m_doCreatingShaderProgram;
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;
     };

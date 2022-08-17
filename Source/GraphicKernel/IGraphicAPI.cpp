@@ -84,6 +84,16 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoSharingDepthSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
 
+    m_doCreatingVertexShader =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexShader(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
+    m_doCreatingPixelShader =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPixelShader(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
+    m_doCreatingShaderProgram =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingShaderProgram(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
+
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
@@ -120,15 +130,23 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingBackSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingMultiBackSurface = nullptr;
+        
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
     m_doCreatingDepthSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
     m_doSharingDepthSurface = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
-    m_doCreatingDepthSurface = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
-    m_doSharingDepthSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
+    m_doCreatingVertexShader = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
+    m_doCreatingPixelShader = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
+    m_doCreatingShaderProgram = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
+    m_doBindingBackSurface = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
+    m_doBindingViewPort = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -324,6 +342,51 @@ void IGraphicAPI::DoSharingDepthSurface(const Frameworks::ICommandPtr& c)
     else
     {
         ShareDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetSourceDepth());
+    }
+}
+
+void IGraphicAPI::DoCreatingVertexShader(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexShader, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateVertexShader(cmd->GetName());
+    }
+    else
+    {
+        CreateVertexShader(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingPixelShader(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreatePixelShader, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreatePixelShader(cmd->GetName());
+    }
+    else
+    {
+        CreatePixelShader(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingShaderProgram(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateShaderProgram, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
+    }
+    else
+    {
+        CreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
     }
 }
 

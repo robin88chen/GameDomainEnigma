@@ -232,7 +232,7 @@ void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
     }
     else
     {
-        AsyncClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
+        ClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
             cmd->GetDepthValue(), cmd->GetStencilValue());
     }
 }

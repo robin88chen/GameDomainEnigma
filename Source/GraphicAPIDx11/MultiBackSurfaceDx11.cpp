@@ -2,11 +2,12 @@
 #include "GraphicAPIDx11.h"
 #include "SwapChainDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
-#include <cassert>
-#include <Platforms/MemoryAllocMacro.h>
-
+#include "Frameworks/EventPublisher.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include <Platforms/MemoryAllocMacro.h>
+#include <cassert>
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -81,6 +82,7 @@ error MultiBackSurfaceDx11::Resize(const MathLib::Dimension& dimension)
     if (er) return er;
 
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurfaceArray, m_surfaceCount);
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceResized{ m_name, m_dimension } });
 
     return ErrorCode::ok;
 }

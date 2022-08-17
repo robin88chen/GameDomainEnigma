@@ -188,8 +188,8 @@ void ShaderManagerTest::RenderFrame()
 {
     if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
 #if TARGET_PLATFORM == PLATFORM_WIN32
-    m_renderTarget->AsyncBind();
-    m_renderTarget->AsyncBindViewPort();
+    m_renderTarget->Bind();
+    m_renderTarget->BindViewPort();
     IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
     IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
     IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);

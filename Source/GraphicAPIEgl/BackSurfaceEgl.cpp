@@ -1,5 +1,8 @@
 ﻿#include "BackSurfaceEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicEvents.h"
+#include "Frameworks/EventPublisher.h"
+#include "Platforms/MemoryAllocMacro.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 
@@ -30,6 +33,7 @@ BackSurfaceEgl::~BackSurfaceEgl()
 error BackSurfaceEgl::Resize(const MathLib::Dimension& dimension)
 {
     m_dimension = dimension;
+    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceResized{ m_name, m_dimension } });
     return ErrorCode::ok;
 }
 

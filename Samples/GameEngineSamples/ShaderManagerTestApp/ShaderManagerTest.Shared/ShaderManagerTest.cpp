@@ -158,7 +158,7 @@ void ShaderManagerTest::ShutdownEngine()
 {
     delete m_bufferBuilder;
     m_bufferBuilder = nullptr;
-
+	
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);

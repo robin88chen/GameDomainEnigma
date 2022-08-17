@@ -4,9 +4,11 @@
 #include "EngineErrors.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/GraphicErrors.h"
+#include "GraphicKernel/GraphicCommands.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -102,7 +104,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     }
     else
     {
-        BuildVertexShader();
+        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::CreateVertexShader{ m_policy.m_vtxShaderName } });
     }
     if (m_hostManager->HasPixelShader(m_policy.m_pixShaderName))
     {
@@ -111,31 +113,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     }
     else
     {
-        BuildPixelShader();
-    }
-}
-
-void ShaderBuilder::BuildVertexShader() const
-{
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        Graphics::IGraphicAPI::Instance()->AsyncCreateVertexShader(m_policy.m_vtxShaderName);
-    }
-    else
-    {
-        Graphics::IGraphicAPI::Instance()->CreateVertexShader(m_policy.m_vtxShaderName);
-    }
-}
-
-void ShaderBuilder::BuildPixelShader() const
-{
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        Graphics::IGraphicAPI::Instance()->AsyncCreatePixelShader(m_policy.m_pixShaderName);
-    }
-    else
-    {
-        Graphics::IGraphicAPI::Instance()->CreatePixelShader(m_policy.m_pixShaderName);
+        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::CreatePixelShader{ m_policy.m_pixShaderName } });
     }
 }
 
@@ -312,14 +290,8 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
     }
     if ((m_vtxShader) && (m_pixShader))
     {
-        if (Graphics::IGraphicAPI::Instance()->UseAsync())
-        {
-            Graphics::IGraphicAPI::Instance()->AsyncCreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader, m_layout);
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->CreateShaderProgram(m_policy.m_programName, m_vtxShader, m_pixShader, m_layout);
-        }
+        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ 
+            menew Graphics::CreateShaderProgram{ m_policy.m_programName, m_vtxShader, m_pixShader, m_layout } });
     }
 }
 

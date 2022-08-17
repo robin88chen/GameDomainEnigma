@@ -68,9 +68,6 @@ namespace Enigma::Engine
         Graphics::IShaderProgramPtr GetProgram() { return m_program; }
 
     private:
-        void BuildVertexShader() const;
-        void BuildPixelShader() const;
-
         void OnVertexShaderCreated(const Frameworks::IEventPtr& e);
         void OnVertexShaderCompiled(const Frameworks::IEventPtr& e);
         void OnVertexLayoutCreated(const Frameworks::IEventPtr& e);

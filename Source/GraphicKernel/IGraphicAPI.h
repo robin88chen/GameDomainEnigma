@@ -86,13 +86,6 @@ namespace Enigma::Graphics
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
 
-
-        /** create vertex declaration with data vertex format & effect */
-        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const IVertexShaderPtr& shader) = 0;
-        virtual future_error AsyncCreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const IVertexShaderPtr& shader);
-
         /** @name Vertex/Index buffer */
         //@{
         /** create vertex buffer */
@@ -201,6 +194,7 @@ namespace Enigma::Graphics
         void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
         void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
         void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
+		void DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c);
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
 
@@ -285,6 +279,12 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateShaderProgram(const std::string& name,
             const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl);
 
+        /** create vertex declaration with data vertex format & effect */
+        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader) = 0;
+        virtual future_error AsyncCreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader);
+
         virtual error BindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
@@ -339,6 +339,7 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doCreatingVertexShader;
         Frameworks::CommandSubscriberPtr m_doCreatingPixelShader;
         Frameworks::CommandSubscriberPtr m_doCreatingShaderProgram;
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexDeclaration;
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;
     };

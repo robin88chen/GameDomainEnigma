@@ -162,16 +162,8 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
     }
     else
     {
-        if (Graphics::IGraphicAPI::Instance()->UseAsync())
-        {
-            Graphics::IGraphicAPI::Instance()->AsyncCreateVertexDeclaration(
-                m_policy.m_vtxLayoutName, m_policy.m_vtxFormatCode, shader.value());
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->CreateVertexDeclaration(
-                m_policy.m_vtxLayoutName, m_policy.m_vtxFormatCode, shader.value());
-        }
+        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::CreateVertexDeclaration{ 
+            m_policy.m_vtxLayoutName, m_policy.m_vtxFormatCode, shader.value() } });
     }
 }
 

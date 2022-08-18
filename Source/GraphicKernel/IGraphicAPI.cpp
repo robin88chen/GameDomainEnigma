@@ -93,6 +93,9 @@ void IGraphicAPI::SubscribeHandlers()
     m_doCreatingShaderProgram =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingShaderProgram(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
+    m_doCreatingVertexDeclaration =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexDeclaration(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
 
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
@@ -142,6 +145,8 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingPixelShader = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
     m_doCreatingShaderProgram = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
+    m_doCreatingVertexDeclaration = nullptr;
 
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingBackSurface = nullptr;
@@ -387,6 +392,21 @@ void IGraphicAPI::DoCreatingShaderProgram(const Frameworks::ICommandPtr& c)
     else
     {
         CreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
+    }
+}
+
+void IGraphicAPI::DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexDeclaration, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
+    }
+    else
+    {
+        CreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
     }
 }
 

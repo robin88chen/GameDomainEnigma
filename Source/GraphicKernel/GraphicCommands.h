@@ -217,6 +217,19 @@ namespace Enigma::Graphics
         IPixelShaderPtr m_pixelShader;
         IVertexDeclarationPtr m_vtxDecl;
     };
+    class CreateVertexDeclaration : public Frameworks::ICommand
+    {
+    public:
+        CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader) : m_name(name), m_dataVertexFormat(data_vertex_format), m_shader(shader) {};
+        const std::string& GetName() const { return m_name; }
+        const std::string& GetDataVertexFormat() const { return m_dataVertexFormat; }
+        const IVertexShaderPtr& GetShader() const { return m_shader; }
+    private:
+        std::string m_name;
+        std::string m_dataVertexFormat;
+        IVertexShaderPtr m_shader;
+    };
 
     /** bind surface / viewport */
     class BindBackSurface : public Frameworks::ICommand

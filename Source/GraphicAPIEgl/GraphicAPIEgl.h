@@ -25,9 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
 
-        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const Graphics::IVertexShaderPtr& shader) override;
-
         virtual error CreateVertexBuffer(const std::string& buff_name) override;
         virtual error CreateIndexBuffer(const std::string& buff_name) override;
 
@@ -77,6 +74,8 @@ namespace Enigma::Devices
         virtual error CreateShaderProgram(const std::string& name,
             const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader,
             const Graphics::IVertexDeclarationPtr& vtx_decl) override;
+        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const Graphics::IVertexShaderPtr& shader) override;
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;

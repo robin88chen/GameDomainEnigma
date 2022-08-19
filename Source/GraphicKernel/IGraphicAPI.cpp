@@ -97,6 +97,13 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexDeclaration(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
 
+    m_doCreatingVertexBuffer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexBuffer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
+    m_doCreatingIndexBuffer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingIndexBuffer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
+
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
@@ -147,6 +154,11 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingShaderProgram = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
     m_doCreatingVertexDeclaration = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
+    m_doCreatingVertexBuffer = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
+    m_doCreatingIndexBuffer = nullptr;
 
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingBackSurface = nullptr;
@@ -407,6 +419,36 @@ void IGraphicAPI::DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c)
     else
     {
         CreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
+    }
+}
+
+void IGraphicAPI::DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexBuffer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateVertexBuffer(cmd->GetName());
+    }
+    else
+    {
+        CreateVertexBuffer(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateIndexBuffer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateIndexBuffer(cmd->GetName());
+    }
+    else
+    {
+        CreateIndexBuffer(cmd->GetName());
     }
 }
 

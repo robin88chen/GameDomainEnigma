@@ -231,6 +231,24 @@ namespace Enigma::Graphics
         IVertexShaderPtr m_shader;
     };
 
+    /** create vertex buffers */
+    class CreateVertexBuffer : public Frameworks::ICommand
+    {
+    public:
+        CreateVertexBuffer(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateIndexBuffer : public Frameworks::ICommand
+    {
+    public:
+        CreateIndexBuffer(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+
     /** bind surface / viewport */
     class BindBackSurface : public Frameworks::ICommand
     {

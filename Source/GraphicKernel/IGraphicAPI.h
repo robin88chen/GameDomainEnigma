@@ -86,16 +86,6 @@ namespace Enigma::Graphics
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
 
-        /** @name Vertex/Index buffer */
-        //@{
-        /** create vertex buffer */
-        virtual error CreateVertexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name);
-        /** create index buffer */
-        virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
-        //@}
-
         /** @name Device States */
         //@{
         /** create sampler state */
@@ -178,25 +168,34 @@ namespace Enigma::Graphics
         void UnsubscribeHandlers();
 
         /** command handlers */
+        //@{
         void DoCreatingDevice(const Frameworks::ICommandPtr& c);
         void DoCleaningDevice(const Frameworks::ICommandPtr& c);
+		
         void DoBeginningScene(const Frameworks::ICommandPtr& c);
         void DoEndingScene(const Frameworks::ICommandPtr& c);
         void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
         void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
         void DoClearing(const Frameworks::ICommandPtr& c);
         void DoFlipping(const Frameworks::ICommandPtr& c);
+        
         void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
         void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
         void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
+        
         void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
         void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
         void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
 		void DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c);
+        void DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c);
+
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
+        //@}
 
         /** @name create / cleanup device */
         //@{
@@ -285,6 +284,16 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
             const IVertexShaderPtr& shader);
 
+        /** @name Vertex/Index buffer */
+        //@{
+        /** create vertex buffer */
+        virtual error CreateVertexBuffer(const std::string& buff_name) = 0;
+        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name);
+        /** create index buffer */
+        virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
+        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
+        //@}
+
         virtual error BindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
@@ -325,21 +334,28 @@ namespace Enigma::Graphics
 
         Frameworks::CommandSubscriberPtr m_doCreatingDevice;
         Frameworks::CommandSubscriberPtr m_doCleaningDevice;
+
         Frameworks::CommandSubscriberPtr m_doBeginningScene;
         Frameworks::CommandSubscriberPtr m_doEndingScene;
         Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
         Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
         Frameworks::CommandSubscriberPtr m_doClearing;
         Frameworks::CommandSubscriberPtr m_doFlipping;
+
         Frameworks::CommandSubscriberPtr m_doCreatingPrimarySurface;
         Frameworks::CommandSubscriberPtr m_doCreatingBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
         Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;
+
         Frameworks::CommandSubscriberPtr m_doCreatingVertexShader;
         Frameworks::CommandSubscriberPtr m_doCreatingPixelShader;
         Frameworks::CommandSubscriberPtr m_doCreatingShaderProgram;
         Frameworks::CommandSubscriberPtr m_doCreatingVertexDeclaration;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexBuffer;
+        Frameworks::CommandSubscriberPtr m_doCreatingIndexBuffer;
+
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;
     };

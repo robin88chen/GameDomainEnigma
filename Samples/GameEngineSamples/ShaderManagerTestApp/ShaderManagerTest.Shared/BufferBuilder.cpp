@@ -2,7 +2,9 @@
 #include "GraphicKernel/IVertexBuffer.h"
 #include "GraphicKernel/IIndexBuffer.h"
 #include <Frameworks/EventPublisher.h>
+#include "Frameworks/CommandBus.h"
 #include <GraphicKernel/GraphicEvents.h>
+#include "GraphicKernel/GraphicCommands.h"
 #include <Platforms/MemoryAllocMacro.h>
 #include <Platforms/PlatformLayer.h>
 
@@ -49,28 +51,14 @@ void BufferBuilder::BuildVertexBuffer(const std::string& name, size_t vertex_siz
     m_vtxBufferName = name;
     m_vtxSize = vertex_size;
     m_vtxDataBuffer = data_buffer;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreateVertexBuffer(m_vtxBufferName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreateVertexBuffer(m_vtxBufferName);
-    }
+    CommandBus::Post(ICommandPtr{ menew CreateVertexBuffer{m_vtxBufferName} });
 }
 
 void BufferBuilder::BuildIndexBuffer(const std::string& name, const uint_buffer& data_buffer)
 {
     m_idxBufferName = name;
     m_idxDataBuffer = data_buffer;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreateIndexBuffer(m_idxBufferName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreateIndexBuffer(m_idxBufferName);
-    }
+	CommandBus::Post(ICommandPtr{ menew CreateIndexBuffer{m_idxBufferName} });
 }
 
 void BufferBuilder::OnVertexBufferCreated(const IEventPtr& e)

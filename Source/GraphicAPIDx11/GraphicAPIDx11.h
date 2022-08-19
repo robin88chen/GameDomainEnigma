@@ -35,10 +35,7 @@ namespace Enigma::Devices
         virtual ~GraphicAPIDx11() override;
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
-
-        virtual error CreateVertexBuffer(const std::string& buff_name) override;
-        virtual error CreateIndexBuffer(const std::string& buff_name) override;
-
+        
         virtual error CreateSamplerState(const std::string& name) override;
         virtual error CreateRasterizerState(const std::string& name) override;
         virtual error CreateAlphaBlendState(const std::string& name) override;
@@ -89,6 +86,8 @@ namespace Enigma::Devices
             const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl) override;
         virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
             const Graphics::IVertexShaderPtr& shader) override;
+        virtual error CreateVertexBuffer(const std::string& buff_name) override;
+        virtual error CreateIndexBuffer(const std::string& buff_name) override;
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;

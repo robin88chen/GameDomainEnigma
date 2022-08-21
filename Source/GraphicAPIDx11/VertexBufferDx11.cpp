@@ -42,7 +42,7 @@ error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
     HRESULT hr = graphic->GetD3DDevice()->CreateBuffer(&bd, NULL, &m_d3dBuffer);
     if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::deviceCreateVertexBuffer;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -58,7 +58,7 @@ error VertexBufferDx11::Update(const byte_buffer& dataVertex)
     D3D11_BOX d3dBox = { 0, 0, 0, (unsigned int)dataVertex.size(), 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataVertex[0], 0, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -78,7 +78,7 @@ error VertexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
     D3D11_BOX d3dBox = { byte_offset, 0, 0, byte_length + byte_offset, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &(buffer.data[0]), 0, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
-        menew Graphics::VertexBufferResourceRangedUpdated(m_name, buffer.vtx_offset, buffer.vtx_count) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
+        m_name, buffer.vtx_offset, buffer.vtx_count));
     return ErrorCode::ok;
 }

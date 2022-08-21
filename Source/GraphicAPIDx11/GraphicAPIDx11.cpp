@@ -150,7 +150,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     }
     if (d3dbackTex) d3dbackTex->Release();
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PrimarySurfaceCreated{ back_name, depth_name} });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));
     return ErrorCode::ok;
 }
 
@@ -162,7 +162,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
         menew BackSurfaceDx11{ back_name, GetD3DDevice(), dimension, fmt } };
     m_stash->Add(back_name, back_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceCreated{ back_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceCreated>(back_name));
     return ErrorCode::ok;
 }
 
@@ -174,7 +174,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
         menew MultiBackSurfaceDx11{ back_name, GetD3DDevice(), dimension, buff_count, fmts } };
     m_stash->Add(back_name, back_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiBackSurfaceCreated{ back_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiBackSurfaceCreated>(back_name));
     return ErrorCode::ok;
 }
 
@@ -186,7 +186,7 @@ error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, c
         menew DepthStencilSurfaceDx11{ depth_name, GetD3DDevice(), dimension, fmt } };
     m_stash->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceCreated{ depth_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceCreated>(depth_name));
     return ErrorCode::ok;
 }
 
@@ -200,7 +200,7 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
         menew DepthStencilSurfaceDx11{ depth_name, depth_dx11 } };
     m_stash->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthSurfaceShared{ depth_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceShared>(depth_name));
     return ErrorCode::ok;
 }
 
@@ -274,7 +274,7 @@ error GraphicAPIDx11::CreateVertexShader(const std::string& name)
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderDx11{ name } };
     m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexShaderCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexShaderCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -284,7 +284,7 @@ error GraphicAPIDx11::CreatePixelShader(const std::string& name)
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderDx11{ name } };
     m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DevicePixelShaderCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DevicePixelShaderCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -296,7 +296,7 @@ error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphic
         menew ShaderProgramDx11{ name, vtx_shader, pix_shader, vtx_decl } };
     m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceShaderProgramCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceShaderProgramCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -323,7 +323,7 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ vtx_decl_dx11 };
     m_stash->Add(name, vtxDecl);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexDeclarationCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexDeclarationCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -333,7 +333,7 @@ error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name)
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
     m_stash->Add(buff_name, buff);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceVertexBufferCreated{ buff_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
     return ErrorCode::ok;
 }
 
@@ -343,7 +343,7 @@ error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name)
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
     m_stash->Add(buff_name, buff);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceIndexBufferCreated{ buff_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));
     return ErrorCode::ok;
 }
 
@@ -353,7 +353,7 @@ error GraphicAPIDx11::CreateSamplerState(const std::string& name)
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateDx11{ name } };
     m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceSamplerStateCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -363,7 +363,7 @@ error GraphicAPIDx11::CreateRasterizerState(const std::string& name)
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateDx11{ name } };
     m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceRasterizerStateCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -373,7 +373,7 @@ error GraphicAPIDx11::CreateAlphaBlendState(const std::string& name)
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateDx11{ name } };
     m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceAlphaBlendStateCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -383,7 +383,7 @@ error GraphicAPIDx11::CreateDepthStencilState(const std::string& name)
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateDx11{ name } };
     m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceDepthStencilStateCreated{ name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -393,7 +393,7 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureDx11{ tex_name } };
     m_stash->Add(tex_name, tex);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceTextureCreated{ tex_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceTextureCreated>(tex_name));
     return ErrorCode::ok;
 }
 
@@ -403,7 +403,7 @@ error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureDx11{ tex_name } };
     m_stash->Add(tex_name, tex);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceMultiTextureCreated{ tex_name } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceMultiTextureCreated>(tex_name));
     return ErrorCode::ok;
 }
 

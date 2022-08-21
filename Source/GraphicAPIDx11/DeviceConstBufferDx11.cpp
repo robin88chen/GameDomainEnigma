@@ -43,7 +43,7 @@ error DeviceConstBufferDx11::CreateDataBuffer(unsigned cb_size)
     HRESULT hr = device->CreateBuffer(&desc, nullptr, &m_d3dBuffer);
     if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateBuffer;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ConstBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ConstBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

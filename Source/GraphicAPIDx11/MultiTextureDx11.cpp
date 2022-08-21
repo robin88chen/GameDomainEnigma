@@ -80,7 +80,7 @@ error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_bu
         if (er) return er;
     }
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiTextureResourceImagesLoaded(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceImagesLoaded>(m_name));
     return ErrorCode::ok;
 }
 
@@ -122,7 +122,7 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
     {
         filenames.emplace_back(files[i]->GetFullPath());
     }
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiTextureResourceImagesSaved(m_name, filenames) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceImagesSaved>(m_name, filenames));
     return ErrorCode::ok;
 }
 
@@ -167,7 +167,8 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
         if (FATAL_LOG_EXPR(S_OK != hr)) return ErrorCode::dxCreateShaderResource;
         m_d3dTextureResources[i] = d3dResource;
     }
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiTextureResourcesAsBackSurfaceUsed(m_name, back_surf->GetName()) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(
+        m_name, back_surf->GetName()));
     return ErrorCode::ok;
 }
 

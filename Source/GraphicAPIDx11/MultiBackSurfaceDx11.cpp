@@ -82,7 +82,7 @@ error MultiBackSurfaceDx11::Resize(const MathLib::Dimension& dimension)
     if (er) return er;
 
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurfaceArray, m_surfaceCount);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceResized{ m_name, m_dimension } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
 
     return ErrorCode::ok;
 }

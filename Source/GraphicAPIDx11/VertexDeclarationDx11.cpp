@@ -61,7 +61,7 @@ error VertexDeclarationDx11::CreateD3DInputLayout(ID3D11Device* device)
         return ErrorCode::dxCreateInputLayout;
     }
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceInputLayoutCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceInputLayoutCreated>(m_name));
     return ErrorCode::ok;
 }
 

@@ -84,7 +84,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension& dimension, c
     m_dimension = dimension;
     m_format = ConvertDXGIFormatToGraphicFormat(SRDesc.Format);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceFromMemoryCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -119,7 +119,7 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
     error er = CreateFromScratchImage(scratchImage);
     if (er) return er;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageLoaded(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
     return ErrorCode::ok;
 }
 
@@ -198,7 +198,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     deviceContext->Unmap(targetTex, 0);
     targetTex->Release();
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageRetrieved(m_name, rcSrc) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(m_name, rcSrc));
     return ErrorCode::ok;
 }
 
@@ -274,7 +274,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     mappingTex->Release();
     d3dResource->Release();
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageUpdated(m_name, rcDest) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
     return ErrorCode::ok;
 }
 
@@ -303,7 +303,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     size_t write_bytes = file->Write(0, write_buff);
     if (write_bytes != write_buff.size()) return ErrorCode::saveTextureFile;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageSaved(m_name, file->GetFullPath()) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageSaved>(m_name, file->GetFullPath()));
     return ErrorCode::ok;
 }
 
@@ -335,7 +335,8 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     if (FATAL_LOG_EXPR(S_OK != hr)) return ErrorCode::dxCreateShaderResource;
     m_d3dTextureResource = d3dResource;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceAsBackSurfaceUsed(m_name, back_surf->GetName()) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(
+        m_name, back_surf->GetName()));
     return ErrorCode::ok;
 }
 

@@ -79,8 +79,8 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
-        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
+    Frameworks::CommandBus::Post(std::make_shared<Engine::ResizePrimaryRenderTarget>(
+        MathLib::Dimension{(unsigned)w, (unsigned)h}));
 }
 
 void AppDelegate::InitBridgeCallback()

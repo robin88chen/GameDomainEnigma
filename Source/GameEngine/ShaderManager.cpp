@@ -180,7 +180,7 @@ void ShaderManager::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
         std::lock_guard locker{ m_programTableLock };
         m_programTable.try_emplace(program->GetName(), program);
     }
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew ShaderProgramBuilt{ program->GetName(), program }});
+    Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuilt>(program->GetName(), program));
     m_isCurrentBuilding = false;
 }
 

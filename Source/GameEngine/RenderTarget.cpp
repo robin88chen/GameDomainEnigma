@@ -34,8 +34,8 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
 
     if (m_isPrimary)
     {
-        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ 
-            menew Graphics::CreatePrimarySurface{ primary_back_surface_name, primary_depth_surface_name} });
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::CreatePrimarySurface>(
+            primary_back_surface_name, primary_depth_surface_name));
     }
 }
 
@@ -72,7 +72,7 @@ error RenderTarget::Initialize()
     }
     else
     {
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew PrimaryRenderTargetCreated(m_name) });
+        Frameworks::EventPublisher::Post(std::make_shared<PrimaryRenderTargetCreated>(m_name));
     }
     InitViewPortSize();
     return ErrorCode::ok;
@@ -88,8 +88,7 @@ error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib:
     const Graphics::GraphicFormat& fmt)
 {
     m_backSurfaceName = back_name;
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::CreateBacksurface{ back_name, dimension, fmt } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateBacksurface>(back_name, dimension, fmt));
 
     return ErrorCode::ok;
 }
@@ -98,8 +97,7 @@ error RenderTarget::InitMultiBackSurface(const std::string& back_name, const Mat
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     m_backSurfaceName = back_name;
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::CreateMultiBacksurface{ back_name, dimension, surface_count, fmts } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateMultiBacksurface>(back_name, dimension, surface_count, fmts));
 
     return ErrorCode::ok;
 }
@@ -108,8 +106,7 @@ error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const
     const Graphics::GraphicFormat& fmt)
 {
     m_depthSurfaceName = depth_name;
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::CreateDepthStencilSurface{ depth_name, dimension, fmt } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateDepthStencilSurface>(depth_name, dimension, fmt));
 
     return ErrorCode::ok;
 }
@@ -118,8 +115,7 @@ error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     m_depthSurfaceName = depth_name;
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::ShareDepthStencilSurface{ depth_name, surface } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ShareDepthStencilSurface>(depth_name, surface));
 
     return ErrorCode::ok;
 }
@@ -131,25 +127,22 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 
 error RenderTarget::Bind()
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::BindBackSurface{ m_backSurface, m_depthStencilSurface } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     return ErrorCode::ok;
 }
 
 error RenderTarget::BindViewPort()
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::BindViewPort{ m_viewPort } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindViewPort>(m_viewPort));
     return ErrorCode::ok;
 }
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{
-        menew Graphics::ClearSurface{
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
         ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
         ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
-        color, depth_value, stencil_value} });
+        color, depth_value, stencil_value));
     return ErrorCode::ok;
 }
 
@@ -163,7 +156,7 @@ error RenderTarget::Flip()
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
 
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::FlipBackSurface });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::FlipBackSurface>());
     return ErrorCode::ok;
 }
 
@@ -177,9 +170,9 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface)
     {
         isCurrentBound = true;
-        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::BindBackSurface{ nullptr, nullptr } });
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(nullptr, nullptr));
     }
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::ResizeBackSurface { m_backSurface->GetName(), dimension } });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeBackSurface>(m_backSurface->GetName(), dimension));
     m_dimension = m_backSurface->GetDimension();
 
     // 好...來...因為back buffer surface實際上已經重新create了,
@@ -191,11 +184,11 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     }*/
     if (m_depthStencilSurface)
     {
-        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::ResizeDepthSurface { m_depthStencilSurface->GetName(), dimension } });
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeDepthSurface>(m_depthStencilSurface->GetName(), dimension));
     }
     if (isCurrentBound)
     {
-        Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Graphics::BindBackSurface{ m_backSurface, m_depthStencilSurface } });
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     }
 
     return ErrorCode::ok;
@@ -282,13 +275,13 @@ void RenderTarget::InitViewPortSize()
     m_viewPort.Width() = m_dimension.m_width;
     m_viewPort.Height() = m_dimension.m_height;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortInitialized{ m_name, m_viewPort } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortInitialized>(m_name, m_viewPort));
 }
 
 void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortChanged{ m_name, m_viewPort } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortChanged>(m_name, m_viewPort));
 }
 
 void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
@@ -385,7 +378,7 @@ void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         InitViewPortSize();
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew RenderTargetResized{ m_name, m_dimension } });
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
     }
 }
 
@@ -399,7 +392,7 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         InitViewPortSize();
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew RenderTargetResized{ m_name, m_dimension } });
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
     }
 }
 
@@ -434,6 +427,5 @@ void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
     {
         m_clearingProperty.m_flag = cmd->GetClearingFlag().value();
     }
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
-        menew TargetClearingPropertyChanged{ m_name, m_clearingProperty } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(m_name, m_clearingProperty));
 }

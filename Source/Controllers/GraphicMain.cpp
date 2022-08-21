@@ -42,7 +42,7 @@ error GraphicMain::InstallFrameworks()
     m_serviceManager->RegisterSystemService(menew Frameworks::EventPublisher(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Frameworks::CommandBus(m_serviceManager));
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew FrameworksInstalled });
+    Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
 
     return ErrorCode::ok;
 }
@@ -99,13 +99,13 @@ error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
 {
     assert(policy);
 
-    Frameworks::CommandBus::Send(Frameworks::ICommandPtr{ menew Graphics::CreateDevice{policy->RequiredBits(), policy->Hwnd()} });
+    Frameworks::CommandBus::Send(std::make_shared<Graphics::CreateDevice>(policy->RequiredBits(), policy->Hwnd()));
     return ErrorCode::ok;
 }
 
 error GraphicMain::CleanupRenderEngineDevice()
 {
-    Frameworks::CommandBus::Send(Frameworks::ICommandPtr{ menew Graphics::CleanupDevice{} });
+    Frameworks::CommandBus::Send(std::make_shared<Graphics::CleanupDevice>());
     return ErrorCode::ok;
 }
 
@@ -151,7 +151,7 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
         is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew DefaultRendererInstalled });
+    Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
 
     return ErrorCode::ok;
 }

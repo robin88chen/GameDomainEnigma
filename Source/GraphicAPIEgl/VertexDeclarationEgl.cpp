@@ -1,8 +1,6 @@
 ﻿#include "VertexDeclarationEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
-#include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 

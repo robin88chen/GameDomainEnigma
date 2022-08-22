@@ -33,7 +33,7 @@ BackSurfaceEgl::~BackSurfaceEgl()
 error BackSurfaceEgl::Resize(const MathLib::Dimension& dimension)
 {
     m_dimension = dimension;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::BackSurfaceResized{ m_name, m_dimension } });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
     return ErrorCode::ok;
 }
 

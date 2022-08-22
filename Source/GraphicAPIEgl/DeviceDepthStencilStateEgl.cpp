@@ -3,7 +3,6 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/GraphicThread.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Devices;
@@ -30,7 +29,7 @@ error DeviceDepthStencilStateEgl::CreateFromData(const DepthStencilData& data)
     m_backFaceZFailOp = ToStencilOp(m_data.m_backFaceOp.m_depthFailOp);
     m_backFacePassOp = ToStencilOp(m_data.m_backFaceOp.m_passOp);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DepthStencilStateResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthStencilStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

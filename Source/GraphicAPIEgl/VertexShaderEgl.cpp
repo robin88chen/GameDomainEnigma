@@ -2,7 +2,6 @@
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/TokenVector.h"
 
@@ -53,7 +52,7 @@ error VertexShaderEgl::CompileCode(const std::string& code, const std::string& p
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not compile vertex shader:\n%s\n", infoLog);
-                Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexShaderCompileFailed(m_name, infoLog) });
+                Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }
@@ -63,7 +62,7 @@ error VertexShaderEgl::CompileCode(const std::string& code, const std::string& p
     ParseSamplerStateTable(code);
 
     m_hasCompiled = true;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexShaderCompiled(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
 
     return ErrorCode::ok;
 }

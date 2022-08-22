@@ -8,7 +8,6 @@
 #include "MathLib/Matrix2.h"
 #include "MathLib/Matrix3.h"
 #include "MathLib/Matrix4.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Devices;
@@ -31,8 +30,8 @@ ShaderVariableEgl_Matrix::ShaderVariableEgl_Matrix(GLuint program, const std::st
     m_numElements = elements;
     m_dimension = dimension;
     m_values.resize(elements * dimension * dimension, 0.0f);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::matrixValue) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::matrixValue));
 }
 
 ShaderVariableEgl_Matrix::~ShaderVariableEgl_Matrix()
@@ -119,8 +118,8 @@ ShaderVariableEgl_Texture::ShaderVariableEgl_Texture(GLuint program, const std::
     const std::string& semantic, unsigned bindSlot) : ShaderVariableEgl_Base(program, name, semantic)
 {
     m_bindSlot = bindSlot;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::textureObject) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::textureObject));
 }
 
 ShaderVariableEgl_Texture::~ShaderVariableEgl_Texture()
@@ -180,8 +179,8 @@ ShaderVariableEgl_Sampler::ShaderVariableEgl_Sampler(GLuint program, const std::
     const std::string& semantic, unsigned bindSlot) : ShaderVariableEgl_Base(program, name, semantic)
 {
     m_bindSlot = bindSlot;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::samplerState) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::samplerState));
 }
 
 ShaderVariableEgl_Sampler::~ShaderVariableEgl_Sampler()
@@ -221,8 +220,8 @@ ShaderVariableEgl_Vector::ShaderVariableEgl_Vector(GLuint program, const std::st
     m_numElements = elements;
     m_dimension = dimension;
     m_values.resize(elements * dimension, 0.0f);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::vectorValue) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::vectorValue));
 }
 
 ShaderVariableEgl_Vector::~ShaderVariableEgl_Vector()
@@ -311,8 +310,8 @@ ShaderVariableEgl_Boolean::ShaderVariableEgl_Boolean(GLuint program, const std::
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::booleanValue) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::booleanValue));
 }
 
 ShaderVariableEgl_Boolean::~ShaderVariableEgl_Boolean()
@@ -372,8 +371,8 @@ ShaderVariableEgl_Float::ShaderVariableEgl_Float(GLuint program, const std::stri
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0.0f);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::floatValue) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::floatValue));
 }
 
 ShaderVariableEgl_Float::~ShaderVariableEgl_Float()
@@ -429,8 +428,8 @@ ShaderVariableEgl_Int::ShaderVariableEgl_Int(GLuint program, const std::string& 
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0);
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ShaderVariableCreated(
-        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::intValue) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+        m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::intValue));
 }
 
 ShaderVariableEgl_Int::~ShaderVariableEgl_Int()

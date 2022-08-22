@@ -3,7 +3,6 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
@@ -41,7 +40,7 @@ error IndexBufferEgl::Create(unsigned sizeBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -60,7 +59,7 @@ error IndexBufferEgl::Update(const uint_buffer& dataIndex)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -79,6 +78,6 @@ error IndexBufferEgl::RangedUpdate(const ranged_buffer& buffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }

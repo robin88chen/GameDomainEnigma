@@ -2,7 +2,6 @@
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/TokenVector.h"
 
@@ -53,7 +52,7 @@ error PixelShaderEgl::CompileCode(const std::string& code, const std::string& pr
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not compile pixel shader:\n%s\n", infoLog);
-                Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PixelShaderCompileFailed(m_name, infoLog) });
+                Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }
@@ -64,7 +63,7 @@ error PixelShaderEgl::CompileCode(const std::string& code, const std::string& pr
 
     m_hasCompiled = true;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::PixelShaderCompiled(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
     return ErrorCode::ok;
 }
 

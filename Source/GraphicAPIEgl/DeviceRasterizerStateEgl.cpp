@@ -2,9 +2,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "GraphicKernel/GraphicThread.h"
 #include "GraphicKernel/IGraphicAPI.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Devices;
@@ -27,7 +25,7 @@ error DeviceRasterizerStateEgl::CreateFromData(const RasterizerStateData& data)
     m_depthBias = PixeledDepthBiasByData(m_data.m_depthBias);
     m_depthSlopeFactor = m_data.m_slopeScaledDepthBias;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::RasterizerStateResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::RasterizerStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

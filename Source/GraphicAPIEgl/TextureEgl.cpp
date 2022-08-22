@@ -46,7 +46,7 @@ error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension& dimension, co
     m_dimension = dimension;
     m_format = Graphics::GraphicFormat::FMT_A8R8G8B8;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceFromMemoryCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
 
     return ErrorCode::ok;
 }
@@ -74,7 +74,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
         CreateFromSystemMemory(MathLib::Dimension{ image.width, image.height }, raw_buffer);
         png_image_free(&image);
 
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageLoaded(m_name) });
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
 
         return ErrorCode::ok;
     }
@@ -97,7 +97,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
         GL_RGBA, GL_UNSIGNED_BYTE, &img_buff[0]);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceImageUpdated(m_name, rcDest) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
 
     return ErrorCode::ok;
 }
@@ -150,7 +150,7 @@ error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     glBindFramebuffer(GL_FRAMEBUFFER, bb->GetFrameBufferHandle());
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::TextureResourceAsBackSurfaceUsed(m_name, back_surf->GetName()) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(m_name, back_surf->GetName()));
 
     return ErrorCode::ok;
 }

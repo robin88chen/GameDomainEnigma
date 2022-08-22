@@ -3,7 +3,6 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/GraphicThread.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Devices;
@@ -53,7 +52,7 @@ error DeviceAlphaBlendStateEgl::CreateFromData(const BlendStateData& data)
         break;
     }
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::AlphaBlendStateResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::AlphaBlendStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

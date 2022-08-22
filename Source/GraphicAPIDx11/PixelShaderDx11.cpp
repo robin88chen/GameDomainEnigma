@@ -3,7 +3,6 @@
 #include "VertexDeclarationDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "GraphicKernel/IVertexDeclaration.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/StringFormat.h"
 #include "Frameworks/TokenVector.h"

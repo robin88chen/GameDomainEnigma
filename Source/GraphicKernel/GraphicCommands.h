@@ -235,15 +235,74 @@ namespace Enigma::Graphics
     class CreateVertexBuffer : public Frameworks::ICommand
     {
     public:
-        CreateVertexBuffer(const std::string& name) : m_name(name) {};
+        CreateVertexBuffer(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+            : m_name(name), m_sizeofVertex(sizeofVertex), m_sizeBuffer(sizeBuffer) {};
         const std::string& GetName() const { return m_name; }
+        unsigned int GetSizeofVertex() const { return m_sizeofVertex; }
+        unsigned int GetSizeBuffer() const { return m_sizeBuffer; }
     private:
         std::string m_name;
+        unsigned int m_sizeofVertex;
+        unsigned int m_sizeBuffer;
     };
     class CreateIndexBuffer : public Frameworks::ICommand
     {
     public:
-        CreateIndexBuffer(const std::string& name) : m_name(name) {};
+        CreateIndexBuffer(const std::string& name, unsigned int sizeBuffer)
+            : m_name(name), m_sizeBuffer(sizeBuffer) {};
+        const std::string& GetName() const { return m_name; }
+        unsigned int GetSizeBuffer() const { return m_sizeBuffer; }
+    private:
+        std::string m_name;
+        unsigned int m_sizeBuffer;
+    };
+    /** create device states */
+    class CreateSamplerState : public Frameworks::ICommand
+    {
+    public:
+        CreateSamplerState(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateRasterizerState : public Frameworks::ICommand
+    {
+    public:
+        CreateRasterizerState(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateDepthStencilState : public Frameworks::ICommand
+    {
+    public:
+        CreateDepthStencilState(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateBlendState : public Frameworks::ICommand
+    {
+    public:
+        CreateBlendState(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+
+    /** create texture */
+    class CreateTexture : public Frameworks::ICommand
+    {
+    public:
+        CreateTexture(const std::string& name) : m_name(name) {};
+        const std::string& GetName() const { return m_name; }
+    private:
+        std::string m_name;
+    };
+    class CreateMultiTexture : public Frameworks::ICommand
+    {
+    public:
+        CreateMultiTexture(const std::string& name) : m_name(name) {};
         const std::string& GetName() const { return m_name; }
     private:
         std::string m_name;

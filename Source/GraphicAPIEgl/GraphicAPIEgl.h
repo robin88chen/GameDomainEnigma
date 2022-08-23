@@ -25,14 +25,6 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
         
-        virtual error CreateSamplerState(const std::string& name) override;
-        virtual error CreateRasterizerState(const std::string& name) override;
-        virtual error CreateAlphaBlendState(const std::string& name) override;
-        virtual error CreateDepthStencilState(const std::string& name) override;
-
-        virtual error CreateTexture(const std::string& tex_name) override;
-        virtual error CreateMultiTexture(const std::string& tex_name) override;
-
         virtual error BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl) override;
         virtual error BindVertexShader(const Graphics::IVertexShaderPtr& shader) override;
         virtual error BindPixelShader(const Graphics::IPixelShaderPtr& shader) override;
@@ -73,8 +65,15 @@ namespace Enigma::Devices
             const Graphics::IVertexDeclarationPtr& vtx_decl) override;
         virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
             const Graphics::IVertexShaderPtr& shader) override;
-        virtual error CreateVertexBuffer(const std::string& buff_name) override;
-        virtual error CreateIndexBuffer(const std::string& buff_name) override;
+        virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) override;
+        virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) override;
+        virtual error CreateSamplerState(const std::string& name) override;
+        virtual error CreateRasterizerState(const std::string& name) override;
+        virtual error CreateAlphaBlendState(const std::string& name) override;
+        virtual error CreateDepthStencilState(const std::string& name) override;
+        virtual error CreateTexture(const std::string& tex_name) override;
+        virtual error CreateMultiTexture(const std::string& tex_name) override;
+
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;

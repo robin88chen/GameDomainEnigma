@@ -86,32 +86,6 @@ namespace Enigma::Graphics
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
 
-        /** @name Device States */
-        //@{
-        /** create sampler state */
-        virtual error CreateSamplerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateSamplerState(const std::string& name);
-        /** create rasterizer state */
-        virtual error CreateRasterizerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateRasterizerState(const std::string& name);
-        /** create alpha blend state */
-        virtual error CreateAlphaBlendState(const std::string& name) = 0;
-        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
-        /** create depth stencil state */
-        virtual error CreateDepthStencilState(const std::string& name) = 0;
-        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
-        //@}
-
-        /** @name Textures */
-        //@{
-        /** create texture */
-        virtual error CreateTexture(const std::string& tex_name) = 0;
-        virtual future_error AsyncCreateTexture(const std::string& tex_name);
-        /** create multi-texture */
-        virtual error CreateMultiTexture(const std::string& tex_name) = 0;
-        virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
-        //@}
-
         /** @name bind vertex declaration */
         //@{
         virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
@@ -192,6 +166,14 @@ namespace Enigma::Graphics
 
         void DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c);
         void DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingSamplerState(const Frameworks::ICommandPtr& c);
+        void DoCreatingRasterizerState(const Frameworks::ICommandPtr& c);
+        void DoCreatingBlendState(const Frameworks::ICommandPtr& c);
+        void DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingTexture(const Frameworks::ICommandPtr& c);
+        void DoCreatingMultiTexture(const Frameworks::ICommandPtr& c);
 
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
@@ -287,11 +269,37 @@ namespace Enigma::Graphics
         /** @name Vertex/Index buffer */
         //@{
         /** create vertex buffer */
-        virtual error CreateVertexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name);
+        virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
+        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer);
         /** create index buffer */
-        virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
+        virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) = 0;
+        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer);
+        //@}
+
+        /** @name Device States */
+        //@{
+        /** create sampler state */
+        virtual error CreateSamplerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateSamplerState(const std::string& name);
+        /** create rasterizer state */
+        virtual error CreateRasterizerState(const std::string& name) = 0;
+        virtual future_error AsyncCreateRasterizerState(const std::string& name);
+        /** create alpha blend state */
+        virtual error CreateAlphaBlendState(const std::string& name) = 0;
+        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
+        /** create depth stencil state */
+        virtual error CreateDepthStencilState(const std::string& name) = 0;
+        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
+        //@}
+
+        /** @name Textures */
+        //@{
+        /** create texture */
+        virtual error CreateTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateTexture(const std::string& tex_name);
+        /** create multi-texture */
+        virtual error CreateMultiTexture(const std::string& tex_name) = 0;
+        virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
         //@}
 
         virtual error BindBackSurface(
@@ -355,6 +363,14 @@ namespace Enigma::Graphics
 
         Frameworks::CommandSubscriberPtr m_doCreatingVertexBuffer;
         Frameworks::CommandSubscriberPtr m_doCreatingIndexBuffer;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingSamplerState;
+        Frameworks::CommandSubscriberPtr m_doCreatingRasterizerState;
+        Frameworks::CommandSubscriberPtr m_doCreatingDepthStencilState;
+        Frameworks::CommandSubscriberPtr m_doCreatingBlendState;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
+        Frameworks::CommandSubscriberPtr m_doCreatingMultiTexture;
 
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;

@@ -104,6 +104,26 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingIndexBuffer(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
 
+    m_doCreatingSamplerState =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingSamplerState(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
+    m_doCreatingRasterizerState =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRasterizerState(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
+    m_doCreatingBlendState =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBlendState(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
+    m_doCreatingDepthStencilState =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDepthStencilState(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
+
+    m_doCreatingTexture =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingTexture(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
+    m_doCreatingMultiTexture =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiTexture(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
+
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
@@ -159,6 +179,20 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingVertexBuffer = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
     m_doCreatingIndexBuffer = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
+    m_doCreatingSamplerState = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
+    m_doCreatingRasterizerState = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
+    m_doCreatingBlendState = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
+    m_doCreatingDepthStencilState = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
+    m_doCreatingTexture = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
+    m_doCreatingMultiTexture = nullptr;
 
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingBackSurface = nullptr;
@@ -429,11 +463,11 @@ void IGraphicAPI::DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateVertexBuffer(cmd->GetName());
+        AsyncCreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
     }
     else
     {
-        CreateVertexBuffer(cmd->GetName());
+        CreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
     }
 }
 
@@ -444,11 +478,101 @@ void IGraphicAPI::DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateIndexBuffer(cmd->GetName());
+        AsyncCreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
     }
     else
     {
-        CreateIndexBuffer(cmd->GetName());
+        CreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
+    }
+}
+
+void IGraphicAPI::DoCreatingSamplerState(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateSamplerState, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateSamplerState(cmd->GetName());
+    }
+    else
+    {
+        CreateSamplerState(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingRasterizerState(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateRasterizerState, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateRasterizerState(cmd->GetName());
+    }
+    else
+    {
+        CreateRasterizerState(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingBlendState(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateBlendState, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateAlphaBlendState(cmd->GetName());
+    }
+    else
+    {
+        CreateAlphaBlendState(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateDepthStencilState, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateDepthStencilState(cmd->GetName());
+    }
+    else
+    {
+        CreateDepthStencilState(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingTexture(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateTexture, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateTexture(cmd->GetName());
+    }
+    else
+    {
+        CreateTexture(cmd->GetName());
+    }
+}
+
+void IGraphicAPI::DoCreatingMultiTexture(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::CreateMultiTexture, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncCreateMultiTexture(cmd->GetName());
+    }
+    else
+    {
+        CreateMultiTexture(cmd->GetName());
     }
 }
 
@@ -596,14 +720,14 @@ future_error IGraphicAPI::AsyncCreateVertexDeclaration(const std::string& name,
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexDeclaration(name, data_vertex_format, shader); });
 }
 
-future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name)
+future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateVertexBuffer(buff_name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateVertexBuffer(buff_name, sizeofVertex, sizeBuffer); });
 }
 
-future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name)
+future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name, sizeBuffer); });
 }
 
 future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name)

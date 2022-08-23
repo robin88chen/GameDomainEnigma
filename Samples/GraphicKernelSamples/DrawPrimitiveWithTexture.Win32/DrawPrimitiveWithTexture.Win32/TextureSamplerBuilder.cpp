@@ -1,10 +1,10 @@
 ﻿#include "TextureSamplerBuilder.h"
-
+#include <Frameworks/CommandBus.h>
 #include <Frameworks/EventPublisher.h>
+#include <GraphicKernel/GraphicCommands.h>
 #include <GraphicKernel/GraphicEvents.h>
 #include <GraphicKernel/IDeviceSamplerState.h>
 #include <Platforms/MemoryAllocMacro.h>
-
 #include "GraphicKernel/ITexture.h"
 #include <Platforms/PlatformLayer.h>
 
@@ -44,28 +44,14 @@ void TextureSamplerBuilder::BuildTexture(const std::string& name, const std::str
     m_textureName = name;
     m_textureFilename = filename;
     m_texturePathId = path_id;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreateTexture(m_textureName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreateTexture(m_textureName);
-    }
+    CommandBus::Post(std::make_shared<CreateTexture>(m_textureName));
 }
 
 void TextureSamplerBuilder::BuildSampler(const std::string& name, const IDeviceSamplerState::SamplerStateData data)
 {
     m_samplerName = name;
     m_samplerData = data;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreateSamplerState(m_samplerName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreateSamplerState(m_samplerName);
-    }
+    CommandBus::Post(std::make_shared<CreateSamplerState>(m_samplerName));
 }
 
 void TextureSamplerBuilder::OnTextureCreated(const IEventPtr& e)

@@ -327,20 +327,22 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name)
+error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     Platforms::Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
+    buff->Create(sizeofVertex, sizeBuffer);
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name)
+error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
+    buff->Create(sizeBuffer);
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));

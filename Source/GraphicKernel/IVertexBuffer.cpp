@@ -15,12 +15,6 @@ IVertexBuffer::~IVertexBuffer()
 {
 }
 
-future_error IVertexBuffer::AsyncCreate(unsigned sizeofVertex, unsigned sizeBuffer)
-{
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), sizeofVertex, sizeBuffer, this]() -> error { return Create(sizeofVertex, sizeBuffer); });
-}
-
 future_error IVertexBuffer::AsyncUpdate(const byte_buffer& dataVertex)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->

@@ -401,18 +401,15 @@ error GraphicAPIEgl::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
 
 error GraphicAPIEgl::BindShaderProgram(const Graphics::IShaderProgramPtr& shader)
 {
-    if (m_boundShaderProgram == shader) return ErrorCode::ok;
+    //if (m_boundShaderProgram == shader) return ErrorCode::ok; // vertex layout 需要每次 bind, 要略過這個檢查
     auto program_egl = std::dynamic_pointer_cast<ShaderProgramEgl, Graphics::IShaderProgram>(shader);
     assert(program_egl);
     glUseProgram(program_egl->GetProgram());
+    m_boundShaderProgram = shader;
+    BindVertexDeclaration(shader->GetVertexDeclaration());
     BindVertexShader(shader->GetVertexShader());
     BindPixelShader(shader->GetPixelShader());
     return ErrorCode::ok;
-}
-
-future_error GraphicAPIEgl::AsyncBindShaderProgram(const Graphics::IShaderProgramPtr& shader)
-{
-    return m_workerThread->PushTask([=]() -> error { return this->BindShaderProgram(shader); });
 }
 
 error GraphicAPIEgl::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt)

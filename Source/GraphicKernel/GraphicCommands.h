@@ -328,6 +328,16 @@ namespace Enigma::Graphics
     private:
         TargetViewPort m_vp;
     };
+
+    /** bind shader */
+    class BindShaderProgram : public Frameworks::ICommand
+    {
+    public:
+        BindShaderProgram(const IShaderProgramPtr& shader) : m_shader(shader) {};
+        const IShaderProgramPtr& GetShader() const { return m_shader; }
+    private:
+        IShaderProgramPtr m_shader;
+    };
 }
 
 

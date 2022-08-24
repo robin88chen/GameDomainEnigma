@@ -472,18 +472,11 @@ error GraphicAPIDx11::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
 error GraphicAPIDx11::BindShaderProgram(const Graphics::IShaderProgramPtr& shader)
 {
     if (m_boundShaderProgram == shader) return ErrorCode::ok;
-    error er = BindVertexShader(shader->GetVertexShader());
+    error er = BindVertexDeclaration(shader->GetVertexDeclaration());
+    if (er) return er;
+    er = BindVertexShader(shader->GetVertexShader());
     if (er) return er;
     er = BindPixelShader(shader->GetPixelShader());
-    return er;
-}
-
-future_error GraphicAPIDx11::AsyncBindShaderProgram(const Graphics::IShaderProgramPtr& shader)
-{
-    future_error er = make_future_err(ErrorCode::ok);
-    if (m_boundShaderProgram == shader) return er;
-    er = AsyncBindVertexShader(shader->GetVertexShader());
-    er = AsyncBindPixelShader(shader->GetPixelShader());
     return er;
 }
 

@@ -130,6 +130,10 @@ void IGraphicAPI::SubscribeHandlers()
     m_doBindingViewPort =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingViewPort(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
+
+    m_doBindingShaderProgram
+        = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingShaderProgram(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -198,6 +202,9 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doBindingBackSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
     m_doBindingViewPort = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
+    m_doBindingShaderProgram = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -606,6 +613,21 @@ void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
     }
 }
 
+void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BindShaderProgram, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBindShaderProgram(cmd->GetShader());
+    }
+    else
+    {
+        BindShaderProgram(cmd->GetShader());
+    }
+}
+
 future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateDevice(rqb, hwnd); });
@@ -760,21 +782,6 @@ future_error IGraphicAPI::AsyncCreateMultiTexture(const std::string& tex_name)
     return m_workerThread->PushTask([=]() -> error { return this->CreateMultiTexture(tex_name); });
 }
 
-future_error IGraphicAPI::AsyncBindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl)
-{
-    return m_workerThread->PushTask([=]() -> error { return this->BindVertexDeclaration(vertexDecl); });
-}
-
-future_error IGraphicAPI::AsyncBindVertexShader(const IVertexShaderPtr& shader)
-{
-    return m_workerThread->PushTask([=]() -> error { return this->BindVertexShader(shader); });
-}
-
-future_error IGraphicAPI::AsyncBindPixelShader(const IPixelShaderPtr& shader)
-{
-    return m_workerThread->PushTask([=]() -> error { return this->BindPixelShader(shader); });
-}
-
 future_error IGraphicAPI::AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
 {
     return m_workerThread->PushTask([=]() -> error { return this->BindVertexBuffer(buffer, pt); });
@@ -783,6 +790,11 @@ future_error IGraphicAPI::AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, 
 future_error IGraphicAPI::AsyncBindIndexBuffer(const IIndexBufferPtr& buffer)
 {
     return m_workerThread->PushTask([=]() -> error { return this->BindIndexBuffer(buffer); });
+}
+
+future_error IGraphicAPI::AsyncBindShaderProgram(const IShaderProgramPtr& shader)
+{
+    return m_workerThread->PushTask([=]() -> error { return this->BindShaderProgram(shader); });
 }
 
 void IGraphicAPI::TerminateGraphicThread()

@@ -85,25 +85,8 @@ namespace Enigma::Graphics
         const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
-
-        /** @name bind vertex declaration */
-        //@{
-        virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
-        virtual future_error AsyncBindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl);
-        virtual IVertexDeclarationPtr CurrentBoundVertexDeclaration() { return m_boundVertexDecl; };
-        //@}
-        /** @name bind shader */
-        //@{
-        virtual error BindVertexShader(const IVertexShaderPtr& shader) = 0;
-        virtual future_error AsyncBindVertexShader(const IVertexShaderPtr& shader);
-        virtual const IVertexShaderPtr& CurrentBoundVertexShader() const { return m_boundVertexShader; };
-        virtual error BindPixelShader(const IPixelShaderPtr& shader) = 0;
-        virtual future_error AsyncBindPixelShader(const IPixelShaderPtr& shader);
-        virtual const IPixelShaderPtr& CurrentBoundPixelShader() const { return m_boundPixelShader; };
-        virtual error BindShaderProgram(const IShaderProgramPtr& shader) = 0;
-        virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader) = 0;
         virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
-        //@}
+
         /** @name bind vertex / index buffer */
         //@{
         virtual error BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) = 0;
@@ -177,6 +160,8 @@ namespace Enigma::Graphics
 
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
+
+        void DoBindingShaderProgram(const Frameworks::ICommandPtr& c);
         //@}
 
         /** @name create / cleanup device */
@@ -309,6 +294,15 @@ namespace Enigma::Graphics
         virtual error BindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
+        /** @name bind shader */
+        //@{
+        virtual error BindVertexShader(const IVertexShaderPtr& shader) = 0;
+        virtual error BindPixelShader(const IPixelShaderPtr& shader) = 0;
+        virtual error BindShaderProgram(const IShaderProgramPtr& shader) = 0;
+        virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
+        virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader);
+        //@}
+
         //@}
         /** @name surface format */
         //@{
@@ -374,6 +368,8 @@ namespace Enigma::Graphics
 
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;
+
+        Frameworks::CommandSubscriberPtr m_doBindingShaderProgram;
     };
 }
 

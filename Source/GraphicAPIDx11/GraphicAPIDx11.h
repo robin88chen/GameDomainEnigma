@@ -35,12 +35,6 @@ namespace Enigma::Devices
         virtual ~GraphicAPIDx11() override;
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
-        
-        virtual error BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl) override;
-        virtual error BindVertexShader(const Graphics::IVertexShaderPtr& shader) override;
-        virtual error BindPixelShader(const Graphics::IPixelShaderPtr& shader) override;
-        virtual error BindShaderProgram(const Graphics::IShaderProgramPtr& shader) override;
-        virtual future_error AsyncBindShaderProgram(const Graphics::IShaderProgramPtr& shader) override;
 
         virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
         virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
@@ -90,6 +84,10 @@ namespace Enigma::Devices
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
         virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
+        virtual error BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl) override;
+        virtual error BindVertexShader(const Graphics::IVertexShaderPtr& shader) override;
+        virtual error BindPixelShader(const Graphics::IPixelShaderPtr& shader) override;
+        virtual error BindShaderProgram(const Graphics::IShaderProgramPtr& shader) override;
 
         void CleanupDeviceObjects();
 

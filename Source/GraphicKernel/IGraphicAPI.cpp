@@ -134,6 +134,13 @@ void IGraphicAPI::SubscribeHandlers()
     m_doBindingShaderProgram
         = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingShaderProgram(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
+
+    m_doBindingVertexBuffer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingVertexBuffer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
+    m_doBindingIndexBuffer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingIndexBuffer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
@@ -205,6 +212,11 @@ void IGraphicAPI::UnsubscribeHandlers()
 
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
     m_doBindingShaderProgram = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
+    m_doBindingVertexBuffer = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
+    m_doBindingIndexBuffer = nullptr;
 }
 
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
@@ -625,6 +637,36 @@ void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
     else
     {
         BindShaderProgram(cmd->GetShader());
+    }
+}
+
+void IGraphicAPI::DoBindingVertexBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BindVertexBuffer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBindVertexBuffer(cmd->GetBuffer(), cmd->GetTopology());
+    }
+    else
+    {
+        BindVertexBuffer(cmd->GetBuffer(), cmd->GetTopology());
+    }
+}
+
+void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Graphics::BindIndexBuffer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    if (UseAsync())
+    {
+        AsyncBindIndexBuffer(cmd->GetBuffer());
+    }
+    else
+    {
+        BindIndexBuffer(cmd->GetBuffer());
     }
 }
 

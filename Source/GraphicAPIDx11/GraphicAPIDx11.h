@@ -36,9 +36,6 @@ namespace Enigma::Devices
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
 
-        virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
-        virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
-
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
         ID3D11Device* GetD3DDevice() { return m_d3dDevice; };
@@ -88,6 +85,8 @@ namespace Enigma::Devices
         virtual error BindVertexShader(const Graphics::IVertexShaderPtr& shader) override;
         virtual error BindPixelShader(const Graphics::IPixelShaderPtr& shader) override;
         virtual error BindShaderProgram(const Graphics::IShaderProgramPtr& shader) override;
+        virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
+        virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
 
         void CleanupDeviceObjects();
 

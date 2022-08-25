@@ -25,11 +25,12 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
         
-        virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
-        virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
-
         void SetFormat(int* attrb);
         void SetDimension(const MathLib::Dimension& dim);
+
+        /** vertex / index buffer egl 需要 call */
+        virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
+        virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
 
     protected:
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;

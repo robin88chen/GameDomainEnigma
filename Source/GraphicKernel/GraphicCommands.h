@@ -13,6 +13,8 @@
 #include "IVertexShader.h"
 #include "IPixelShader.h"
 #include "IShaderProgram.h"
+#include "IVertexBuffer.h"
+#include "IIndexBuffer.h"
 #include "Frameworks/Command.h"
 #include "MathLib/ColorRGBA.h"
 
@@ -337,6 +339,26 @@ namespace Enigma::Graphics
         const IShaderProgramPtr& GetShader() const { return m_shader; }
     private:
         IShaderProgramPtr m_shader;
+    };
+
+    /** bind vertex/index buffer */
+    class BindVertexBuffer : public Frameworks::ICommand
+    {
+    public:
+        BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) : m_buffer(buffer), m_topology(pt) {};
+        const IVertexBufferPtr& GetBuffer() const { return m_buffer; }
+        PrimitiveTopology GetTopology() const { return m_topology; }
+    private:
+        IVertexBufferPtr m_buffer;
+        PrimitiveTopology m_topology;
+    };
+    class BindIndexBuffer : public Frameworks::ICommand
+    {
+    public:
+        BindIndexBuffer(const IIndexBufferPtr& buffer) : m_buffer(buffer) {};
+        const IIndexBufferPtr& GetBuffer() const { return m_buffer; }
+    private:
+        IIndexBufferPtr m_buffer;
     };
 }
 

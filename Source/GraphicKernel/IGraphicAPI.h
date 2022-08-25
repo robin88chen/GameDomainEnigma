@@ -86,17 +86,9 @@ namespace Enigma::Graphics
         const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
         virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
-
-        /** @name bind vertex / index buffer */
-        //@{
-        virtual error BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) = 0;
-        virtual future_error AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
         virtual const IVertexBufferPtr& CurrentBoundVertexBuffer() const { return m_boundVertexBuffer; };
         virtual PrimitiveTopology CurrentBoundTopology() { return m_boundTopology; }
-        virtual error BindIndexBuffer(const IIndexBufferPtr& buffer) = 0;
-        virtual future_error AsyncBindIndexBuffer(const IIndexBufferPtr& buffer);
         virtual const IIndexBufferPtr& CurrentBoundIndexBuffer() const { return m_boundIndexBuffer; };
-        //@}
 
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
@@ -162,6 +154,9 @@ namespace Enigma::Graphics
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
 
         void DoBindingShaderProgram(const Frameworks::ICommandPtr& c);
+
+        void DoBindingVertexBuffer(const Frameworks::ICommandPtr& c);
+        void DoBindingIndexBuffer(const Frameworks::ICommandPtr& c);
         //@}
 
         /** @name create / cleanup device */
@@ -303,6 +298,14 @@ namespace Enigma::Graphics
         virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader);
         //@}
 
+        /** @name bind vertex / index buffer */
+        //@{
+        virtual error BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) = 0;
+        virtual future_error AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
+        virtual error BindIndexBuffer(const IIndexBufferPtr& buffer) = 0;
+        virtual future_error AsyncBindIndexBuffer(const IIndexBufferPtr& buffer);
+        //@}
+
         //@}
         /** @name surface format */
         //@{
@@ -370,6 +373,9 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;
 
         Frameworks::CommandSubscriberPtr m_doBindingShaderProgram;
+
+        Frameworks::CommandSubscriberPtr m_doBindingVertexBuffer;
+        Frameworks::CommandSubscriberPtr m_doBindingIndexBuffer;
     };
 }
 

@@ -27,12 +27,13 @@ namespace Enigma::Devices
         PixelShaderDx11& operator=(const PixelShaderDx11&) = delete;
         PixelShaderDx11& operator=(PixelShaderDx11&&) = delete;
 
-        virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) override;
-
         ID3D11PixelShader* GetD3DShader() const { return m_d3dShader; };
         ID3D11ShaderReflection* GetD3DShaderReflection() const { return m_d3dShaderReflect; }
 
         const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }
+
+    protected:
+        virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) override;
 
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:

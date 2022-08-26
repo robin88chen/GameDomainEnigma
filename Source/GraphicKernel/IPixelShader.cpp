@@ -13,10 +13,16 @@ IPixelShader::~IPixelShader()
 {
 }
 
-future_error IPixelShader::AsyncCompileCode(const std::string& code, const std::string& profile,
-    const std::string& entry)
+void IPixelShader::Compile(const std::string& code, const std::string& profile, const std::string& entry)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), code, profile, entry, this]() 
-            -> error { return CompileCode(code, profile, entry); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), code, profile, entry, this]() 
+                -> error { return CompileCode(code, profile, entry); });
+    }
+    else
+    {
+        CompileCode(code, profile, entry);
+    }
 }

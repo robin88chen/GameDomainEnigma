@@ -131,16 +131,7 @@ void ShaderBuilder::OnVertexShaderCreated(const Frameworks::IEventPtr& e)
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        shader.value()->AsyncCompileCode(m_policy.m_vtxShaderCode.m_code, m_policy.m_vtxShaderCode.m_profile,
-            m_policy.m_vtxShaderCode.m_entry);
-    }
-    else
-    {
-        shader.value()->CompileCode(m_policy.m_vtxShaderCode.m_code, m_policy.m_vtxShaderCode.m_profile,
-            m_policy.m_vtxShaderCode.m_entry);
-    }
+    shader.value()->Compile(m_policy.m_vtxShaderCode.m_code, m_policy.m_vtxShaderCode.m_profile, m_policy.m_vtxShaderCode.m_entry);
 }
 
 void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
@@ -201,16 +192,8 @@ void ShaderBuilder::OnPixelShaderCreated(const Frameworks::IEventPtr& e)
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        shader.value()->AsyncCompileCode(m_policy.m_pixShaderCode.m_code, m_policy.m_pixShaderCode.m_profile,
-            m_policy.m_pixShaderCode.m_entry);
-    }
-    else
-    {
-        shader.value()->CompileCode(m_policy.m_pixShaderCode.m_code, m_policy.m_pixShaderCode.m_profile,
-            m_policy.m_pixShaderCode.m_entry);
-    }
+    shader.value()->Compile(m_policy.m_pixShaderCode.m_code, m_policy.m_pixShaderCode.m_profile,
+        m_policy.m_pixShaderCode.m_entry);
 }
 
 void ShaderBuilder::OnPixelShaderCompiled(const Frameworks::IEventPtr& e)

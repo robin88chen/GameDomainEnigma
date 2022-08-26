@@ -37,7 +37,7 @@ void RenderTargetFlipApp::InstallEngine()
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     assert(m_graphicMain);
-    DeviceCreatingPolicy* creating_policy = menew DeviceCreatingPolicy(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
+    DeviceCreatingPolicy* creating_policy = menew DeviceCreatingPolicy(DeviceRequiredBits(), m_hwnd);
     InstallingDefaultRendererPolicy* policy = menew InstallingDefaultRendererPolicy(std::unique_ptr<DeviceCreatingPolicy>(creating_policy),
         "default_renderer", PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::unique_ptr<InstallingPolicy>(policy));
@@ -68,8 +68,8 @@ void RenderTargetFlipApp::RenderFrame()
 {
     if (!m_renderTarget.expired())
     {
-        m_renderTarget.lock()->AsyncClear();
-        m_renderTarget.lock()->AsyncFlip();
+        m_renderTarget.lock()->Clear();
+        m_renderTarget.lock()->Flip();
     }
 }
 

@@ -12,10 +12,12 @@
 #include "TargetViewPort.h"
 #include "GraphicAssetStash.h"
 #include "Frameworks/ExtentTypesDefine.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
 #include <mutex>
 #include <memory>
+
 
 namespace Enigma::MathLib
 {
@@ -73,16 +75,98 @@ namespace Enigma::Graphics
         static IGraphicAPI* Instance();
 
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
+        virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
+
+        virtual const IBackSurfacePtr& CurrentBoundBackSurface() const { return m_boundBackSurface; }
+        virtual const IDepthStencilSurfacePtr& CurrentBoundDepthSurface() const { return m_boundDepthSurface; }
+
+        /** @name surface format */
+        //@{
+        const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
+        const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
+        //@}
+        virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
+        virtual const IVertexBufferPtr& CurrentBoundVertexBuffer() const { return m_boundVertexBuffer; };
+        virtual PrimitiveTopology CurrentBoundTopology() { return m_boundTopology; }
+        virtual const IIndexBufferPtr& CurrentBoundIndexBuffer() const { return m_boundIndexBuffer; };
+
+        virtual void TerminateGraphicThread();
+        virtual GraphicThread* GetGraphicThread();
+
+        /** Get graphic asset, assert if key not found */
+        template <class T> T GetGraphicAsset(const std::string& asset_key)
+        {
+            return m_stash->Get<T>(asset_key);
+        }
+
+        /** Try find graphic asset, return nullopt if key not found.
+         *  return value is the copy.
+         **/
+        template <class T> std::optional<T> TryFindGraphicAsset(const std::string& key)
+        {
+            return m_stash->TryFindValue<T>(key);
+        }
+
+        bool HasGraphicAsset(const std::string& asset_key)
+        {
+            return m_stash->HasData(asset_key);
+        }
+
+    protected:
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
+
+        /** command handlers */
+        //@{
+        void DoCreatingDevice(const Frameworks::ICommandPtr& c);
+        void DoCleaningDevice(const Frameworks::ICommandPtr& c);
+		
+        void DoBeginningScene(const Frameworks::ICommandPtr& c);
+        void DoEndingScene(const Frameworks::ICommandPtr& c);
+        void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
+        void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
+        void DoClearing(const Frameworks::ICommandPtr& c);
+        void DoFlipping(const Frameworks::ICommandPtr& c);
+        
+        void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
+        void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
+        void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
+        
+        void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
+        void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
+        void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
+		void DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c);
+        void DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingSamplerState(const Frameworks::ICommandPtr& c);
+        void DoCreatingRasterizerState(const Frameworks::ICommandPtr& c);
+        void DoCreatingBlendState(const Frameworks::ICommandPtr& c);
+        void DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c);
+
+        void DoCreatingTexture(const Frameworks::ICommandPtr& c);
+        void DoCreatingMultiTexture(const Frameworks::ICommandPtr& c);
+
+        void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
+        void DoBindingViewPort(const Frameworks::ICommandPtr& c);
+
+        void DoBindingShaderProgram(const Frameworks::ICommandPtr& c);
+
+        void DoBindingVertexBuffer(const Frameworks::ICommandPtr& c);
+        void DoBindingIndexBuffer(const Frameworks::ICommandPtr& c);
+        //@}
+
         /** @name create / cleanup device */
         //@{
         virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
         virtual error CleanupDevice() = 0;
         virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
         virtual future_error AsyncCleanupDevice();
-        //@}
-        virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
-         /** @name scene begin/end  */
+        /** @name scene begin/end  */
         //@{
         virtual error BeginScene() = 0;
         virtual error EndScene() = 0;
@@ -102,10 +186,10 @@ namespace Enigma::Graphics
             int baseVertexOffset);
         //@}
 
-        virtual error Flip() = 0;
+    	virtual error Flip() = 0;
         virtual future_error AsyncFlip();
 
-        /** @name back / depth surface */
+    	/** @name back / depth surface */
         //@{
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -129,21 +213,6 @@ namespace Enigma::Graphics
         virtual future_error AsyncClearSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
-        //@}
-
-        virtual error BindBackSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
-        virtual future_error AsyncBindBackSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual const IBackSurfacePtr& CurrentBoundBackSurface() const { return m_boundBackSurface; }
-        virtual const IDepthStencilSurfacePtr& CurrentBoundDepthSurface() const { return m_boundDepthSurface; }
-        virtual error BindViewPort(const TargetViewPort& vp) = 0;
-        virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
-
-        /** @name surface format */
-        //@{
-        const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
-        const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
 
         /** @name Shader */
@@ -180,11 +249,11 @@ namespace Enigma::Graphics
         /** @name Vertex/Index buffer */
         //@{
         /** create vertex buffer */
-        virtual error CreateVertexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name);
+        virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
+        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer);
         /** create index buffer */
-        virtual error CreateIndexBuffer(const std::string& buff_name) = 0;
-        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name);
+        virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) = 0;
+        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer);
         //@}
 
         /** @name Device States */
@@ -201,7 +270,6 @@ namespace Enigma::Graphics
         /** create depth stencil state */
         virtual error CreateDepthStencilState(const std::string& name) = 0;
         virtual future_error AsyncCreateDepthStencilState(const std::string& name);
-
         //@}
 
         /** @name Textures */
@@ -214,58 +282,31 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
         //@}
 
-        /** @name bind vertex declaration */
-        //@{
-        virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
-        virtual future_error AsyncBindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl);
-        virtual IVertexDeclarationPtr CurrentBoundVertexDeclaration() { return m_boundVertexDecl; };
-        //@}
+        virtual error BindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
+        virtual future_error AsyncBindBackSurface(
+            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual error BindViewPort(const TargetViewPort& vp) = 0;
+        virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
+
         /** @name bind shader */
         //@{
         virtual error BindVertexShader(const IVertexShaderPtr& shader) = 0;
-        virtual future_error AsyncBindVertexShader(const IVertexShaderPtr& shader);
-        virtual const IVertexShaderPtr& CurrentBoundVertexShader() const { return m_boundVertexShader; };
         virtual error BindPixelShader(const IPixelShaderPtr& shader) = 0;
-        virtual future_error AsyncBindPixelShader(const IPixelShaderPtr& shader);
-        virtual const IPixelShaderPtr& CurrentBoundPixelShader() const { return m_boundPixelShader; };
         virtual error BindShaderProgram(const IShaderProgramPtr& shader) = 0;
-        virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader) = 0;
-        virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
+        virtual error BindVertexDeclaration(const IVertexDeclarationPtr& vertexDecl) = 0;
+        virtual future_error AsyncBindShaderProgram(const IShaderProgramPtr& shader);
         //@}
+
         /** @name bind vertex / index buffer */
         //@{
         virtual error BindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt) = 0;
         virtual future_error AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
-        virtual const IVertexBufferPtr& CurrentBoundVertexBuffer() const { return m_boundVertexBuffer; };
-        virtual PrimitiveTopology CurrentBoundTopology() { return m_boundTopology; }
         virtual error BindIndexBuffer(const IIndexBufferPtr& buffer) = 0;
         virtual future_error AsyncBindIndexBuffer(const IIndexBufferPtr& buffer);
-        virtual const IIndexBufferPtr& CurrentBoundIndexBuffer() const { return m_boundIndexBuffer; };
         //@}
 
-        virtual void TerminateGraphicThread();
-        virtual GraphicThread* GetGraphicThread();
-
-        /** Get graphic asset, assert if key not found */
-        template <class T> T GetGraphicAsset(const std::string& asset_key)
-        {
-            return m_stash->Get<T>(asset_key);
-        }
-
-        /** Try find graphic asset, return nullopt if key not found.
-         *  return value is the copy.
-         **/
-        template <class T> std::optional<T> TryFindGraphicAsset(const std::string& key)
-        {
-            return m_stash->TryFindValue<T>(key);
-        }
-
-        bool HasGraphicAsset(const std::string& asset_key)
-        {
-            return m_stash->HasData(asset_key);
-        }
-
-    protected:
+        //@}
         /** @name surface format */
         //@{
         void SetPrimaryBackSurfaceFormat(const GraphicFormat& fmt) { m_fmtBackSurface = fmt; };
@@ -295,6 +336,46 @@ namespace Enigma::Graphics
         PrimitiveTopology m_boundTopology;
         IIndexBufferPtr m_boundIndexBuffer;
         TargetViewPort m_boundViewPort;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingDevice;
+        Frameworks::CommandSubscriberPtr m_doCleaningDevice;
+
+        Frameworks::CommandSubscriberPtr m_doBeginningScene;
+        Frameworks::CommandSubscriberPtr m_doEndingScene;
+        Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
+        Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
+        Frameworks::CommandSubscriberPtr m_doClearing;
+        Frameworks::CommandSubscriberPtr m_doFlipping;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingPrimarySurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingBackSurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
+        Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
+        Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexShader;
+        Frameworks::CommandSubscriberPtr m_doCreatingPixelShader;
+        Frameworks::CommandSubscriberPtr m_doCreatingShaderProgram;
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexDeclaration;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingVertexBuffer;
+        Frameworks::CommandSubscriberPtr m_doCreatingIndexBuffer;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingSamplerState;
+        Frameworks::CommandSubscriberPtr m_doCreatingRasterizerState;
+        Frameworks::CommandSubscriberPtr m_doCreatingDepthStencilState;
+        Frameworks::CommandSubscriberPtr m_doCreatingBlendState;
+
+        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
+        Frameworks::CommandSubscriberPtr m_doCreatingMultiTexture;
+
+        Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
+        Frameworks::CommandSubscriberPtr m_doBindingViewPort;
+
+        Frameworks::CommandSubscriberPtr m_doBindingShaderProgram;
+
+        Frameworks::CommandSubscriberPtr m_doBindingVertexBuffer;
+        Frameworks::CommandSubscriberPtr m_doBindingIndexBuffer;
     };
 }
 

@@ -13,9 +13,16 @@ IVertexShader::~IVertexShader()
 {
 }
 
-future_error IVertexShader::AsyncCompileCode(const std::string& code, const std::string& profile,
-    const std::string& entry)
+void IVertexShader::Compile(const std::string& code, const std::string& profile, const std::string& entry)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), code, profile, entry, this]() -> error { return CompileCode(code, profile, entry); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), code, profile, entry, this]() 
+                -> error { return CompileCode(code, profile, entry); });
+    }
+    else
+    {
+        CompileCode(code, profile, entry);
+    }
 }

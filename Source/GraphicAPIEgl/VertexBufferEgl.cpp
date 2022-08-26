@@ -3,7 +3,6 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
@@ -39,9 +38,10 @@ error VertexBufferEgl::Create(unsigned sizeofVertex, unsigned sizeBuffer)
     glBufferData(GL_ARRAY_BUFFER, m_bufferSize, 0, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -58,9 +58,10 @@ error VertexBufferEgl::Update(const byte_buffer& dataVertex)
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::VertexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -78,9 +79,10 @@ error VertexBufferEgl::RangedUpdate(const ranged_buffer& buffer)
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
-        menew Graphics::VertexBufferResourceRangedUpdated(m_name, buffer.vtx_offset, buffer.vtx_count) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
+        m_name, buffer.vtx_offset, buffer.vtx_count));
     return ErrorCode::ok;
 }

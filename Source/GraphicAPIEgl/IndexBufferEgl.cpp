@@ -3,7 +3,6 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
@@ -39,9 +38,10 @@ error IndexBufferEgl::Create(unsigned sizeBuffer)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_bufferSize, 0, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -58,9 +58,10 @@ error IndexBufferEgl::Update(const uint_buffer& dataIndex)
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -77,8 +78,9 @@ error IndexBufferEgl::RangedUpdate(const ranged_buffer& buffer)
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    Graphics::IGraphicAPI::Instance()->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
+    auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }

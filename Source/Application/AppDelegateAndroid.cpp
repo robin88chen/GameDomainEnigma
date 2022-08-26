@@ -36,10 +36,10 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics
 
     FileSystem::FileSystem::Create();
 
-    menew Devices::GraphicAPIEgl();
-
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();
+
+	menew Devices::GraphicAPIEgl();
 
     InstallEngine();
 }
@@ -48,12 +48,13 @@ void AppDelegate::Finalize()
 {
     ShutdownEngine();
 
+	std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
+    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
+    delete Graphics::IGraphicAPI::Instance();
+
     m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
-    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
-    delete Graphics::IGraphicAPI::Instance();
     if (m_hasLogFile)
     {
         Platforms::Logger::CloseLoggerFile();
@@ -78,8 +79,8 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
-        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
+    Frameworks::CommandBus::Post(std::make_shared<Engine::ResizePrimaryRenderTarget>(
+        MathLib::Dimension{(unsigned)w, (unsigned)h}));
 }
 
 void AppDelegate::InitBridgeCallback()

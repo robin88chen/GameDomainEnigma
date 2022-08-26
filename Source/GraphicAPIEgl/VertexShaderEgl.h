@@ -27,13 +27,14 @@ namespace Enigma::Devices
         VertexShaderEgl& operator=(const VertexShaderEgl&) = delete;
         VertexShaderEgl& operator=(VertexShaderEgl&&) = delete;
 
-        virtual error CompileCode(
-            const std::string& code, const std::string& profile, const std::string& entry) override;
-
         GLuint GetShader() const { return m_shader; };
 
         std::string GetVarSemantic(const std::string& var_name);
         std::string GetSamplerStateName(const std::string& tex_var_name);
+
+    protected:
+        virtual error CompileCode(
+            const std::string& code, const std::string& profile, const std::string& entry) override;
 
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:

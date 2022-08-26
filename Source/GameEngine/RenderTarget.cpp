@@ -7,12 +7,12 @@
 #include "GraphicKernel/IBackSurface.h"
 #include "GraphicKernel/GraphicThread.h"
 #include "GraphicKernel/GraphicEvents.h"
+#include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include <cassert>
-
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
@@ -28,20 +28,15 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
     m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
 
+    m_resizingBits.reset();
+
     SubscribeHandler();
 
     if (m_isPrimary)
     {
-        if (Graphics::IGraphicAPI::Instance()->UseAsync())
-        {
-            Graphics::IGraphicAPI::Instance()->AsyncCreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
-        }
-        else
-        {
-            Graphics::IGraphicAPI::Instance()->CreatePrimaryBackSurface(primary_back_surface_name, primary_depth_surface_name);
-        }
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::CreatePrimarySurface>(
+            primary_back_surface_name, primary_depth_surface_name));
     }
-
 }
 
 RenderTarget::RenderTarget(const std::string& name)
@@ -77,7 +72,7 @@ error RenderTarget::Initialize()
     }
     else
     {
-        Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew PrimaryRenderTargetCreated(m_name) });
+        Frameworks::EventPublisher::Post(std::make_shared<PrimaryRenderTargetCreated>(m_name));
     }
     InitViewPortSize();
     return ErrorCode::ok;
@@ -93,66 +88,36 @@ error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib:
     const Graphics::GraphicFormat& fmt)
 {
     m_backSurfaceName = back_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, fmt);
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateBacksurface>(back_name, dimension, fmt));
 
-    return er;
-}
-
-future_error RenderTarget::AsyncInitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
-    const Graphics::GraphicFormat& fmt)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), back_name, dimension, fmt, this]() 
-            -> error { return InitBackSurface(back_name, dimension, fmt); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     m_backSurfaceName = back_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateBackSurface(back_name, dimension, surface_count, fmts);
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateMultiBacksurface>(back_name, dimension, surface_count, fmts));
 
-    return er;
-}
-
-future_error RenderTarget::AsyncInitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-    unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), back_name, dimension, surface_count, fmts, this]() 
-            -> error { return InitMultiBackSurface(back_name, dimension, surface_count, fmts); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
     const Graphics::GraphicFormat& fmt)
 {
     m_depthSurfaceName = depth_name;
-    error er = Graphics::IGraphicAPI::Instance()->CreateDepthStencilSurface(depth_name, dimension, fmt);
-    return er;
-}
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateDepthStencilSurface>(depth_name, dimension, fmt));
 
-future_error RenderTarget::AsyncInitDepthStencilSurface(const std::string& depth_name, 
-    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), depth_name, dimension, fmt, this]() 
-            -> error { return InitDepthStencilSurface(depth_name, dimension, fmt); });
+    return ErrorCode::ok;
 }
 
 error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     m_depthSurfaceName = depth_name;
-    error er = Graphics::IGraphicAPI::Instance()->ShareDepthStencilSurface(depth_name, surface);
-    return er;
-}
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ShareDepthStencilSurface>(depth_name, surface));
 
-future_error RenderTarget::AsyncShareDepthStencilSurface(const std::string& depth_name, 
-    const Graphics::IDepthStencilSurfacePtr& surface)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), depth_name, surface, this]() 
-            -> error { return ShareDepthStencilSurface(depth_name, surface); });
+    return ErrorCode::ok;
 }
 
 const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
@@ -162,39 +127,23 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 
 error RenderTarget::Bind()
 {
-    assert(Graphics::IGraphicAPI::Instance());
-    return Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
-}
-
-future_error RenderTarget::AsyncBind()
-{
-    assert(Graphics::IGraphicAPI::Instance());
-    assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Bind(); });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
+    return ErrorCode::ok;
 }
 
 error RenderTarget::BindViewPort()
 {
-    assert(Graphics::IGraphicAPI::Instance());
-    return Graphics::IGraphicAPI::Instance()->BindViewPort(m_viewPort);
-}
-
-future_error RenderTarget::AsyncBindViewPort()
-{
-    assert(Graphics::IGraphicAPI::Instance());
-    assert(Graphics::IGraphicAPI::Instance()->GetGraphicThread());
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return BindViewPort(); });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindViewPort>(m_viewPort));
+    return ErrorCode::ok;
 }
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
-    error er = Graphics::IGraphicAPI::Instance()->ClearSurface(
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
         ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
         ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
-        color, depth_value, stencil_value);
-    return er;
+        color, depth_value, stencil_value));
+    return ErrorCode::ok;
 }
 
 error RenderTarget::Clear()
@@ -203,36 +152,27 @@ error RenderTarget::Clear()
         m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
 }
 
-future_error RenderTarget::AsyncClear()
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Clear(); });
-}
-
 error RenderTarget::Flip()
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
 
-    return Graphics::IGraphicAPI::Instance()->Flip();
-}
-
-future_error RenderTarget::AsyncFlip()
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Flip(); });
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::FlipBackSurface>());
+    return ErrorCode::ok;
 }
 
 error RenderTarget::Resize(const MathLib::Dimension& dimension)
 {
     if (FATAL_LOG_EXPR(!m_backSurface)) return ErrorCode::nullBackSurface;
     bool isCurrentBound = false;
+    m_resizingBits.reset();
+    if (m_depthStencilSurface == nullptr) m_resizingBits |= ResizingDepthSurfaceBit;  // 沒有 depth 需要 resize, 設定成完成
+
     if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface)
     {
         isCurrentBound = true;
-        Graphics::IGraphicAPI::Instance()->BindBackSurface(nullptr, nullptr);
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(nullptr, nullptr));
     }
-    error er = m_backSurface->Resize(dimension);
-    if (er) return er;
+    Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeBackSurface>(m_backSurface->GetName(), dimension));
     m_dimension = m_backSurface->GetDimension();
 
     // 好...來...因為back buffer surface實際上已經重新create了,
@@ -244,25 +184,14 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     }*/
     if (m_depthStencilSurface)
     {
-        er = m_depthStencilSurface->Resize(dimension);
-        if (er) return er;
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeDepthSurface>(m_depthStencilSurface->GetName(), dimension));
     }
     if (isCurrentBound)
     {
-        Graphics::IGraphicAPI::Instance()->BindBackSurface(m_backSurface, m_depthStencilSurface);
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     }
-    InitViewPortSize();
-
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew RenderTargetResized{ m_name, m_dimension } });
 
     return ErrorCode::ok;
-}
-
-future_error RenderTarget::AsyncResize(const MathLib::Dimension& dimension)
-{
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), dimension, this]() 
-            -> error { return Resize(dimension); });
 }
 
 bool RenderTarget::HasGBufferDepthMap()
@@ -299,12 +228,19 @@ void RenderTarget::SubscribeHandler()
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceCreated), m_onDepthSurfaceCreated);
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceShared), m_onDepthSurfaceCreated);
 
-    m_handleChangingViewPort =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingViewPort(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
-    m_handleChangingClearingProperty =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleChangingClearingProperty(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
+    m_onBackSurfaceResized = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnBackSurfaceResized(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::BackSurfaceResized), m_onBackSurfaceResized);
+    m_onDepthSurfaceResized = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnDepthSurfaceResized(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
+
+    m_doChangingViewPort =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    m_doChangingClearingProperty =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
 }
 
 void RenderTarget::UnsubscribeHandler()
@@ -317,10 +253,16 @@ void RenderTarget::UnsubscribeHandler()
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceCreated), m_onDepthSurfaceCreated);
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceShared), m_onDepthSurfaceCreated);
     m_onDepthSurfaceCreated = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_handleChangingViewPort);
-    m_handleChangingViewPort = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_handleChangingClearingProperty);
-    m_handleChangingClearingProperty = nullptr;
+
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::BackSurfaceResized), m_onBackSurfaceResized);
+    m_onBackSurfaceResized = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
+    m_onDepthSurfaceResized = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    m_doChangingViewPort = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+    m_doChangingClearingProperty = nullptr;
 }
 
 void RenderTarget::CreateRenderTargetTexture()
@@ -333,13 +275,13 @@ void RenderTarget::InitViewPortSize()
     m_viewPort.Width() = m_dimension.m_width;
     m_viewPort.Height() = m_dimension.m_height;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortInitialized{ m_name, m_viewPort } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortInitialized>(m_name, m_viewPort));
 }
 
 void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew TargetViewPortChanged{ m_name, m_viewPort } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortChanged>(m_name, m_viewPort));
 }
 
 void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
@@ -426,7 +368,35 @@ void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderTarget::HandleChangingViewPort(const Frameworks::ICommandPtr& c)
+void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Graphics::BackSurfaceResized, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetSurfaceName() != m_backSurfaceName) return;
+    m_resizingBits |= ResizingBackSurfaceBit;
+    if (m_resizingBits.all())
+    {
+        InitViewPortSize();
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
+    }
+}
+
+void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Graphics::DepthSurfaceResized, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetSurfaceName() != m_depthSurfaceName) return;
+    m_resizingBits |= ResizingDepthSurfaceBit;
+    if (m_resizingBits.all())
+    {
+        InitViewPortSize();
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
+    }
+}
+
+void RenderTarget::DoChangingViewPort(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     ChangeTargetViewPort* cmd = dynamic_cast<ChangeTargetViewPort*>(c.get());
@@ -435,7 +405,7 @@ void RenderTarget::HandleChangingViewPort(const Frameworks::ICommandPtr& c)
     SetViewPort(cmd->GetViewPort());
 }
 
-void RenderTarget::HandleChangingClearingProperty(const Frameworks::ICommandPtr& c)
+void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     ChangeTargetClearingProperty* cmd = dynamic_cast<ChangeTargetClearingProperty*>(c.get());
@@ -457,6 +427,5 @@ void RenderTarget::HandleChangingClearingProperty(const Frameworks::ICommandPtr&
     {
         m_clearingProperty.m_flag = cmd->GetClearingFlag().value();
     }
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
-        menew TargetClearingPropertyChanged{ m_name, m_clearingProperty } });
+    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(m_name, m_clearingProperty));
 }

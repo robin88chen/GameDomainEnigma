@@ -64,7 +64,7 @@ error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buf
         }
     }
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiTextureResourceImagesLoaded(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceImagesLoaded>(m_name));
     return ErrorCode::ok;
 }
 
@@ -109,7 +109,7 @@ error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     glDrawBuffers(m_textures.size(), drawBuffers);
     SAFE_FREE(drawBuffers);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::MultiTextureResourcesAsBackSurfaceUsed(m_name, back_surf->GetName()) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(m_name, back_surf->GetName()));
     return ErrorCode::ok;
 }
 

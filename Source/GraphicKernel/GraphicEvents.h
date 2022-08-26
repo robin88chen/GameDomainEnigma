@@ -10,6 +10,7 @@
 
 #include "Frameworks/Event.h"
 #include "MathLib/Rect.h"
+#include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Graphics
 {
@@ -39,6 +40,17 @@ namespace Enigma::Graphics
     private:
         std::string m_backSurfaceName;
     };
+    class BackSurfaceResized : public Frameworks::IEvent
+    {
+    public:
+        BackSurfaceResized(const std::string& back_name, const MathLib::Dimension& dimension) :
+            m_backSurfaceName(back_name), m_dimension(dimension) {};
+        const std::string& GetSurfaceName() const { return m_backSurfaceName; }
+        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+    private:
+        std::string m_backSurfaceName;
+        MathLib::Dimension m_dimension;
+    };
     class MultiBackSurfaceCreated : public Frameworks::IEvent
     {
     public:
@@ -56,6 +68,17 @@ namespace Enigma::Graphics
         const std::string& GetDepthSurfaceName() { return m_depthSurfaceName; }
     private:
         std::string m_depthSurfaceName;
+    };
+    class DepthSurfaceResized : public Frameworks::IEvent
+    {
+    public:
+        DepthSurfaceResized(const std::string& depth_name, const MathLib::Dimension& dimension) :
+            m_depthSurfaceName(depth_name), m_dimension(dimension) {};
+        const std::string& GetSurfaceName() const { return m_depthSurfaceName; }
+        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+    private:
+        std::string m_depthSurfaceName;
+        MathLib::Dimension m_dimension;
     };
     class DepthSurfaceShared : public Frameworks::IEvent
     {

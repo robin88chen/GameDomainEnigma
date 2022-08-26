@@ -67,7 +67,7 @@ namespace Enigma::Engine
 
         /** @name command handler */
         //@{
-        void HandleResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
         //@}
 
     protected:
@@ -87,7 +87,7 @@ namespace Enigma::Engine
         using CustomRendererFactoryTable = std::unordered_map<std::string, CustomRendererFactoryFunc>;
         static CustomRendererFactoryTable m_customRendererFactoryTable;
 
-        Frameworks::CommandSubscriberPtr m_handleResizingPrimaryTarget;
+        Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
     };
 };
 

@@ -40,7 +40,7 @@ error IndexBufferDx11::Create(unsigned sizeBuffer)
     HRESULT hr = graphic->GetD3DDevice()->CreateBuffer(&bd, NULL, &m_d3dBuffer);
     if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::deviceCreateIndexBuffer;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceCreated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -56,7 +56,7 @@ error IndexBufferDx11::Update(const uint_buffer& dataIndex)
     D3D11_BOX d3dBox = { 0, 0, 0, dataSize, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataIndex[0], 0, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::IndexBufferResourceUpdated(m_name) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -80,7 +80,7 @@ error IndexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
     D3D11_BOX d3dBox = { byte_offset, 0, 0, byte_offset + byte_length, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &(buffer.data[0]), 0, 0);
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{
-        menew Graphics::IndexBufferResourceRangedUpdated(m_name, buffer.idx_offset, buffer.idx_count) });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferResourceRangedUpdated>(
+        m_name, buffer.idx_offset, buffer.idx_count));
     return ErrorCode::ok;
 }

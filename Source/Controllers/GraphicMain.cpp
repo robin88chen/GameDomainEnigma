@@ -1,4 +1,5 @@
 ﻿#include "GraphicMain.h"
+#include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -41,7 +42,7 @@ error GraphicMain::InstallFrameworks()
     m_serviceManager->RegisterSystemService(menew Frameworks::EventPublisher(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Frameworks::CommandBus(m_serviceManager));
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew FrameworksInstalled });
+    Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
 
     return ErrorCode::ok;
 }
@@ -98,27 +99,14 @@ error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
 {
     assert(policy);
 
-    if (policy->GraphicAPI()->UseAsync())
-    {
-        return policy->GraphicAPI()->AsyncCreateDevice(policy->RequiredBits(), policy->Hwnd()).get();
-    }
-    else
-    {
-        return policy->GraphicAPI()->CreateDevice(policy->RequiredBits(), policy->Hwnd());
-    }
+    Frameworks::CommandBus::Send(std::make_shared<Graphics::CreateDevice>(policy->RequiredBits(), policy->Hwnd()));
+    return ErrorCode::ok;
 }
 
 error GraphicMain::CleanupRenderEngineDevice()
 {
-    assert(Graphics::IGraphicAPI::Instance());
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        return Graphics::IGraphicAPI::Instance()->AsyncCleanupDevice().get();
-    }
-    else
-    {
-        return Graphics::IGraphicAPI::Instance()->CleanupDevice();
-    }
+    Frameworks::CommandBus::Send(std::make_shared<Graphics::CleanupDevice>());
+    return ErrorCode::ok;
 }
 
 error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy)
@@ -163,7 +151,7 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
         is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew DefaultRendererInstalled });
+    Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
 
     return ErrorCode::ok;
 }

@@ -14,12 +14,6 @@ IIndexBuffer::~IIndexBuffer()
 {
 }
 
-future_error IIndexBuffer::AsyncCreate(unsigned sizeBuffer)
-{
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), sizeBuffer, this]() -> error { return Create(sizeBuffer); });
-}
-
 future_error IIndexBuffer::AsyncUpdate(const uint_buffer& dataIndex)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->

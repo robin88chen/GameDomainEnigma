@@ -12,6 +12,7 @@
 #include <system_error>
 #include "GraphicAPITypes.h"
 #include "Frameworks/ExtentTypesDefine.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Graphics
@@ -24,29 +25,35 @@ namespace Enigma::Graphics
     class IDepthStencilSurface : public std::enable_shared_from_this<IDepthStencilSurface>
     {
     public:
-        IDepthStencilSurface(const std::string& name) : m_name(name), m_dimension{ 0, 0 } {};
+        IDepthStencilSurface(const std::string& name);
         IDepthStencilSurface(const IDepthStencilSurface&) = delete;
         IDepthStencilSurface(IDepthStencilSurface&&) = delete;
-        virtual ~IDepthStencilSurface() = default;
+        virtual ~IDepthStencilSurface();
         IDepthStencilSurface& operator=(const IDepthStencilSurface&) = delete;
         IDepthStencilSurface& operator=(IDepthStencilSurface&&) = delete;
+
+        const std::string& GetName() { return m_name; }
 
         /** get buffer format */
         virtual const GraphicFormat& GetFormat() { return m_format; };
         /** get dimension */
         virtual const MathLib::Dimension& GetDimension() { return m_dimension; }
+        
+        /// Graphic API Egl need this to bind surfaces together
+        virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};
+
+    protected:
+        void DoResizing(const Frameworks::ICommandPtr& c);
 
         virtual error Resize(const MathLib::Dimension& dimension) = 0;
         virtual future_error AsyncResize(const MathLib::Dimension& dimension);
-
-        /// Graphic API Egl need this to bind surfaces together
-        virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};
 
     protected:
         std::string m_name;
         MathLib::Dimension m_dimension;
 
         GraphicFormat m_format;
+        Frameworks::CommandSubscriberPtr m_doResizing;
     };
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
     using IDepthStencilSurfaceWeak = std::weak_ptr<IDepthStencilSurface>;

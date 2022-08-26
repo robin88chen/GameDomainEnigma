@@ -76,10 +76,11 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     }
 
     FileSystem::FileSystem::Create();
-    menew Devices::GraphicAPIDx11(useAsyncDevice);
 
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();
+
+	menew Devices::GraphicAPIDx11(useAsyncDevice);
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
@@ -118,12 +119,13 @@ void AppDelegate::Finalize()
 {
     ShutdownEngine();
 
+	std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
+    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
+    delete Graphics::IGraphicAPI::Instance();
+
     m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
-    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
-    delete Graphics::IGraphicAPI::Instance();
     if (m_hasLogFile)
     {
         Platforms::Logger::CloseLoggerFile();
@@ -163,8 +165,8 @@ void AppDelegate::Run()
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(Frameworks::ICommandPtr{ menew Engine::ResizePrimaryRenderTarget
-        { MathLib::Dimension{(unsigned)w, (unsigned)h}} });
+    Frameworks::CommandBus::Post(std::make_shared<Engine::ResizePrimaryRenderTarget>(
+        MathLib::Dimension{(unsigned)w, (unsigned)h}));
 }
 
 LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

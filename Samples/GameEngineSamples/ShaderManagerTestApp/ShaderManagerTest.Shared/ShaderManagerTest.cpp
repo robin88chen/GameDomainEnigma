@@ -3,6 +3,7 @@
 #include "Controllers/InstallingPolicies.h"
 #include <cassert>
 #include <GraphicKernel/GraphicEvents.h>
+#include <GraphicKernel/GraphicCommands.h>
 #include <Platforms/MemoryAllocMacro.h>
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/ServiceManager.h"
@@ -136,7 +137,7 @@ void ShaderManagerTest::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
@@ -157,7 +158,7 @@ void ShaderManagerTest::ShutdownEngine()
 {
     delete m_bufferBuilder;
     m_bufferBuilder = nullptr;
-
+	
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
@@ -186,31 +187,16 @@ void ShaderManagerTest::FrameUpdate()
 void ShaderManagerTest::RenderFrame()
 {
     if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
-#if TARGET_PLATFORM == PLATFORM_WIN32
-    m_renderTarget->AsyncBind();
-    m_renderTarget->AsyncBindViewPort();
-    IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
-    IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
-    IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
-    IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
-    m_renderTarget->AsyncClear();
-    IGraphicAPI::Instance()->AsyncBeginScene();
-    IGraphicAPI::Instance()->AsyncDrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->AsyncEndScene();
-    m_renderTarget->AsyncFlip();
-#else
     m_renderTarget->Bind();
     m_renderTarget->BindViewPort();
-    IGraphicAPI::Instance()->BindVertexDeclaration(m_vtxDecl);
-    IGraphicAPI::Instance()->BindShaderProgram(m_program);
-    IGraphicAPI::Instance()->BindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
-    IGraphicAPI::Instance()->BindIndexBuffer(m_idxBuffer);
+    CommandBus::Post(std::make_shared<BindShaderProgram>(m_program));
+    CommandBus::Post(std::make_shared<BindVertexBuffer>(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList));
+    CommandBus::Post(std::make_shared<BindIndexBuffer>(m_idxBuffer));
     m_renderTarget->Clear();
-    IGraphicAPI::Instance()->BeginScene();
-    IGraphicAPI::Instance()->DrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->EndScene();
+    CommandBus::Post(std::make_shared<BeginScene>());
+    CommandBus::Post(std::make_shared<DrawIndexedPrimitive>( 6, 4, 0, 0 ));
+    CommandBus::Post(std::make_shared<EndScene>());
     m_renderTarget->Flip();
-#endif
 }
 
 void ShaderManagerTest::OnRenderTargetCreated(const IEventPtr& e)

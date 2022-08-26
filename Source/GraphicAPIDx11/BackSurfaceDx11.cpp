@@ -5,6 +5,8 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/PlatformLayer.h"
+#include "Frameworks/EventPublisher.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include <cassert>
 
 using namespace Enigma::Devices;
@@ -73,6 +75,7 @@ error BackSurfaceDx11::Resize(const MathLib::Dimension& dimension)
         if (er) return er;
     }
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurface);
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
 
     return ErrorCode::ok;
 }

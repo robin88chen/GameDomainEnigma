@@ -3,6 +3,7 @@
 #include "MathLib/Vector2.h"
 #include "Controllers/InstallingPolicies.h"
 #include <cassert>
+#include <GraphicKernel/GraphicCommands.h>
 #include <GraphicKernel/GraphicEvents.h>
 #include <Platforms/MemoryAllocMacro.h>
 #include "Frameworks/EventPublisher.h"
@@ -118,7 +119,7 @@ void DrawPrimitiveWithTextureApp::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
@@ -198,18 +199,18 @@ void DrawPrimitiveWithTextureApp::FrameUpdate()
 void DrawPrimitiveWithTextureApp::RenderFrame()
 {
     if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
-    m_renderTarget->AsyncBind();
-    m_renderTarget->AsyncBindViewPort();
+    m_renderTarget->Bind();
+    m_renderTarget->BindViewPort();
     IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
     IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
     m_program->AsyncApplyVariables();
     IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
     IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
-    m_renderTarget->AsyncClear();
-    IGraphicAPI::Instance()->AsyncBeginScene();
-    IGraphicAPI::Instance()->AsyncDrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->AsyncEndScene();
-    m_renderTarget->AsyncFlip();
+    m_renderTarget->Clear();
+    CommandBus::Post(std::make_shared<BeginScene>());
+	CommandBus::Post(std::make_shared<DrawIndexedPrimitive>(6, 4, 0, 0));
+    CommandBus::Post(std::make_shared<EndScene>());
+    m_renderTarget->Flip();
 }
 
 void DrawPrimitiveWithTextureApp::OnRenderTargetCreated(const IEventPtr& e)
@@ -227,7 +228,7 @@ void DrawPrimitiveWithTextureApp::OnShaderProgramCreated(const IEventPtr& e)
     if (!ev) return;
     if (ev->GetName() != ShaderProgramName) return;
     m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
-    m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
+    m_vtxDecl = m_program->GetVertexDeclaration();
     BuildVariables();
 }
 

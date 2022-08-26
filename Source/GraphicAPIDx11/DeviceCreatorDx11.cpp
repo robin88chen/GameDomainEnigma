@@ -138,7 +138,7 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
         return ErrorCode::createDeviceFail;
     }
 
-    Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::DeviceCreated() });
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceCreated>());
 
     // Store device description
     std::string deviceStats = "Device Created: ";

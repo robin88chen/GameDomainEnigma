@@ -8,6 +8,8 @@
 #ifndef RENDER_TARGET_H
 #define RENDER_TARGET_H
 
+#include <bitset>
+
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -56,6 +58,13 @@ namespace Enigma::Engine
             unsigned int m_stencil;
             BufferClearFlag m_flag;
         };
+    protected:
+        enum class ResizingBitIndex
+        {
+            BackSurface,
+            DepthSurface,
+            Count
+        };
     public:
         RenderTarget(const std::string& name, PrimaryType primary);
         RenderTarget(const std::string& name);
@@ -66,11 +75,7 @@ namespace Enigma::Engine
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-            const Graphics::GraphicFormat& fmt);
         error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
-            unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
-        future_error AsyncInitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
@@ -79,12 +84,8 @@ namespace Enigma::Engine
         /** init DepthStencil Buffer */
         error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        future_error AsyncInitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
-            const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
         error ShareDepthStencilSurface(const std::string& depth_name, 
-            const Graphics::IDepthStencilSurfacePtr& surface);
-        future_error AsyncShareDepthStencilSurface(const std::string& depth_name, 
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
@@ -97,16 +98,12 @@ namespace Enigma::Engine
         bool IsPrimary() { return m_isPrimary; };
         /** bind to device */
         error Bind();
-        future_error AsyncBind();
         /** bind viewport */
         error BindViewPort();
-        future_error AsyncBindViewPort();
         /** clear render target */
         error Clear();
-        future_error AsyncClear();
         /** flip, only primary render target can flip */
         error Flip();
-        future_error AsyncFlip();
 
         /** get name */
         const std::string& GetName() { return m_name; };
@@ -119,7 +116,6 @@ namespace Enigma::Engine
 
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
-        future_error AsyncResize(const MathLib::Dimension& dimension);
 
         /** @name depth map info */
         //@{
@@ -148,11 +144,13 @@ namespace Enigma::Engine
         void OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e);
         void OnBackSurfaceCreated(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceCreated(const Frameworks::IEventPtr& e);
+        void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
+        void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
         /** @name command handler */
         //@{
-        void HandleChangingViewPort(const Frameworks::ICommandPtr& c);
-        void HandleChangingClearingProperty(const Frameworks::ICommandPtr& c);
+        void DoChangingViewPort(const Frameworks::ICommandPtr& c);
+        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c);
         //@}
 
     protected:
@@ -175,8 +173,16 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onPrimarySurfaceCreated;
         Frameworks::EventSubscriberPtr m_onBackSurfaceCreated;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceCreated;
-        Frameworks::CommandSubscriberPtr m_handleChangingViewPort;
-        Frameworks::CommandSubscriberPtr m_handleChangingClearingProperty;
+        Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
+        Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
+
+        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
+        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
+
+        using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
+        ResizingBits m_resizingBits;
+        const ResizingBits ResizingBackSurfaceBit{ "01" };
+        const ResizingBits ResizingDepthSurfaceBit{ "10" };
     };
     using RenderTargetPtr = std::shared_ptr<RenderTarget>;
 };

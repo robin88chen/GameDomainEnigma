@@ -2,6 +2,8 @@
 #include "BackSurfaceEgl.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/PlatformLayer.h"
+#include "Frameworks/EventPublisher.h"
+#include "GraphicKernel/GraphicEvents.h"
 #include <cassert>
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
@@ -52,6 +54,7 @@ void DepthStencilSurfaceEgl::MakeBackSurfaceRelated(const Graphics::IBackSurface
 error DepthStencilSurfaceEgl::Resize(const MathLib::Dimension& dimension)
 {
     m_dimension = dimension;
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
     return ErrorCode::ok;
 }
 

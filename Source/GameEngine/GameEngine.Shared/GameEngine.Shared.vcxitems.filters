@@ -19,6 +19,9 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{1ea8e655-aa8f-4eb5-b7f5-3f64f2b362b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderBuffer">
+      <UniqueIdentifier>{83e02320-ffe0-4c8b-a507-91cfb214206b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -51,6 +54,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h">
       <Filter>Shader</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h">
+      <Filter>RenderBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -67,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp">
       <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp">
+      <Filter>RenderBuffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

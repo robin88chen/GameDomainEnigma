@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />

@@ -164,14 +164,14 @@ Enigma::Graphics::IShaderVariablePtr ShaderVariableDx11_ConstBuffer::GetChildVar
     return m_childVariables[index];
 }
 
-void ShaderVariableDx11_ConstBuffer::Commit()
+/*void ShaderVariableDx11_ConstBuffer::Commit()
 {
     if (m_childVariableCount == 0) return;
     for (unsigned int i = 0; i < m_childVariableCount; i++)
     {
         if (m_childVariables[i]) m_childVariables[i]->Commit();
     }
-}
+}*/
 
 error ShaderVariableDx11_ConstBuffer::Apply()
 {

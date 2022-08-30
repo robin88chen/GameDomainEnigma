@@ -79,7 +79,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramEgl::GetVariableByIndex(unsign
     return m_variableArray[index];
 }
 
-error ShaderProgramEgl::CommitVariables()
+/*error ShaderProgramEgl::CommitVariables()
 {
     if (m_variableArray.size() > 0)
     {
@@ -92,7 +92,7 @@ error ShaderProgramEgl::CommitVariables()
         }
     }
     return ErrorCode::ok;
-}
+}*/
 
 error ShaderProgramEgl::ApplyVariables()
 {

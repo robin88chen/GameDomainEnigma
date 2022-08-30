@@ -13,19 +13,6 @@ IShaderVariable::~IShaderVariable()
 {
 }
 
-void IShaderVariable::Commit()
-{
-    if (m_commit)
-    {
-        m_commit(this);
-    }
-}
-
-void IShaderVariable::SetCommitFunction(VariableCommitFunc fn)
-{
-    m_commit = fn;
-}
-
 future_error IShaderVariable::AsyncApply()
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->

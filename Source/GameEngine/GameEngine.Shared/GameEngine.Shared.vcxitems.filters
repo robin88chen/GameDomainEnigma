@@ -22,6 +22,9 @@
     <Filter Include="RenderBuffer">
       <UniqueIdentifier>{83e02320-ffe0-4c8b-a507-91cfb214206b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material">
+      <UniqueIdentifier>{540ce2b4-1148-460f-a414-5991d811c4be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -57,6 +60,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h">
       <Filter>RenderBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h">
+      <Filter>Effect Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -76,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp">
       <Filter>RenderBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp">
+      <Filter>Effect Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

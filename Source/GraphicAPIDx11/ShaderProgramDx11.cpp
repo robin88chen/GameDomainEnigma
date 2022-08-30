@@ -96,7 +96,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramDx11::GetVariableByIndex(unsig
     return nullptr;
 }
 
-error ShaderProgramDx11::CommitVariables()
+/*error ShaderProgramDx11::CommitVariables()
 {
     if (m_variables.size() > 0)
     {
@@ -109,7 +109,7 @@ error ShaderProgramDx11::CommitVariables()
         }
     }
     return ErrorCode::ok;
-}
+}*/
 
 error ShaderProgramDx11::ApplyVariables()
 {

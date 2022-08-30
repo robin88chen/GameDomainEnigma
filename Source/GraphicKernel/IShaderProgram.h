@@ -47,7 +47,7 @@ namespace Enigma::Graphics
         virtual unsigned int GetVariableCount() = 0;
         virtual IShaderVariablePtr GetVariableByIndex(unsigned int index) = 0;
 
-        virtual error CommitVariables() = 0;
+        //virtual error CommitVariables() = 0;
 
         virtual error ApplyVariables() = 0;
         virtual future_error AsyncApplyVariables() = 0;

@@ -74,6 +74,21 @@ namespace Enigma::Graphics
 
         static IGraphicAPI* Instance();
 
+        virtual void BeginScene();
+        virtual void EndScene();
+        virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
+        virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset);
+        virtual void Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
+        virtual void Flip();
+
+        virtual void Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual void Bind(const TargetViewPort& vp);
+        virtual void Bind(const IShaderProgramPtr& shader);
+        virtual void Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
+        virtual void Bind(const IIndexBufferPtr& buffer);
+
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
 
@@ -168,10 +183,10 @@ namespace Enigma::Graphics
 
         /** @name scene begin/end  */
         //@{
-        virtual error BeginScene() = 0;
-        virtual error EndScene() = 0;
-        virtual future_error AsyncBeginScene();
-        virtual future_error AsyncEndScene();
+        virtual error BeginDrawingScene() = 0;
+        virtual error EndDrawingScene() = 0;
+        virtual future_error AsyncBeginDrawingScene();
+        virtual future_error AsyncEndDrawingScene();
         //@}
 
         /** @name draw call */
@@ -186,8 +201,8 @@ namespace Enigma::Graphics
             int baseVertexOffset);
         //@}
 
-    	virtual error Flip() = 0;
-        virtual future_error AsyncFlip();
+    	virtual error FlipBackSurface() = 0;
+        virtual future_error AsyncFlipBackSurface();
 
     	/** @name back / depth surface */
         //@{

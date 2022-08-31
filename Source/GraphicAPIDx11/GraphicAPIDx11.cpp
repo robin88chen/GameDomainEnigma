@@ -83,13 +83,13 @@ error GraphicAPIDx11::CleanupDevice()
     return Graphics::ErrorCode::ok;
 }
 
-error GraphicAPIDx11::BeginScene()
+error GraphicAPIDx11::BeginDrawingScene()
 {
     Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::EndScene()
+error GraphicAPIDx11::EndDrawingScene()
 {
     Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
@@ -110,7 +110,7 @@ error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexC
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::Flip()
+error GraphicAPIDx11::FlipBackSurface()
 {
     assert(m_swapChain);
     //DebugPrintf("flip in thread %d\n", std::this_thread::get_id());

@@ -3,6 +3,10 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include <cassert>
 
+#include "GraphicKernel/IDeviceAlphaBlendState.h"
+#include "GraphicKernel/IDeviceDepthStencilState.h"
+#include "GraphicKernel/IDeviceRasterizerState.h"
+
 using namespace Enigma::Graphics;
 using namespace Enigma::Engine;
 
@@ -97,39 +101,23 @@ void EffectPass::CommitVariables()
 
 void EffectPass::Apply()
 {
-    /*if (IGraphicAPI::Instance()->UseAsync())
-    {
-        
-    }
-    er_code er = er_code::OK;
-    if (m_vtxDecl)
-    {
-        er = IGraphicAPI::Instance()->BindVertexDeclaration(m_vtxDecl);
-        if (er != er_code::OK) return er;
-    }
     if (m_shader)
     {
-        er = IGraphicAPI::Instance()->BindShaderProgram(m_shader);
-        if (er != er_code::OK) return er;
-        er = m_shader->ApplyVariables();
-        if (er != er_code::OK) return er;
+        IGraphicAPI::Instance()->Bind(m_shader);
+        m_shader->ApplyVariables();
     }
-    if (m_rasterizerState)
+    if (m_blend_state)
     {
-        er = m_rasterizerState->BindToDevice();
-        if (er != er_code::OK) return er;
+        m_blend_state->Bind();
     }
-    if (m_alphaBlendState)
+    if (m_depth_state)
     {
-        er = m_alphaBlendState->BindToDevice();
-        if (er != er_code::OK) return er;
+        m_depth_state->Bind();
     }
-    if (m_depthStencilState)
+    if (m_rasterizer_state)
     {
-        er = m_depthStencilState->BindToDevice();
-        if (er != er_code::OK) return er;
+        m_rasterizer_state->Bind();
     }
-    return er;*/
 }
 
 stdext::optional_ref<EffectVariable> EffectPass::GetVariableByName(const std::string& name)

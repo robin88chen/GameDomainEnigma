@@ -49,8 +49,11 @@ namespace Enigma::Graphics
 
         //virtual error CommitVariables() = 0;
 
-        virtual error ApplyVariables() = 0;
-        virtual future_error AsyncApplyVariables() = 0;
+        virtual void ApplyVariables();
+
+    protected:
+        virtual error ApplyShaderVariables() = 0;
+        virtual future_error AsyncApplyShaderVariables() = 0;
 
     protected:
         std::string m_name;

@@ -14,6 +14,30 @@ IDeviceAlphaBlendState::~IDeviceAlphaBlendState()
 {
 }
 
+void IDeviceAlphaBlendState::Create(const BlendStateData& data)
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncCreateFromData(data);
+    }
+    else
+    {
+        CreateFromData(data);
+    }
+}
+
+void IDeviceAlphaBlendState::Bind()
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncBindToDevice();
+    }
+    else
+    {
+        BindToDevice();
+    }
+}
+
 error IDeviceAlphaBlendState::CreateFromData(const BlendStateData& data)
 {
     memcpy(&m_data, &data, sizeof(BlendStateData));

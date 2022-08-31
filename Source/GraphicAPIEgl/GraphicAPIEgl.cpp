@@ -60,12 +60,12 @@ error GraphicAPIEgl::CleanupDevice()
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::BeginScene()
+error GraphicAPIEgl::BeginDrawingScene()
 {
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::EndScene()
+error GraphicAPIEgl::EndDrawingScene()
 {
     return ErrorCode::ok;
 }
@@ -96,7 +96,7 @@ error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCo
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::Flip()
+error GraphicAPIEgl::FlipBackSurface()
 {
     return ErrorCode::ok;
 }

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectPassTest.Shared", "EffectPassTest.Shared\EffectPassTest.Shared.vcxitems", "{E7D77AB5-C9FD-4584-99A6-8637F7EAB733}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectPassTest.Win32", "EffectPassTest.Win32\EffectPassTest.Win32.vcxproj", "{63550F3E-0F87-4A07-AC26-8B3613B88F51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Debug|x64.ActiveCfg = Debug|x64
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Debug|x64.Build.0 = Debug|x64
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Debug|x86.ActiveCfg = Debug|Win32
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Debug|x86.Build.0 = Debug|Win32
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Release|x64.ActiveCfg = Release|x64
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Release|x64.Build.0 = Release|x64
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Release|x86.ActiveCfg = Release|Win32
+		{63550F3E-0F87-4A07-AC26-8B3613B88F51}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73969B69-4FC0-4828-BC3F-25F824BDE896}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EffectPassTest.Shared\EffectPassTest.Shared.vcxitems*{63550f3e-0f87-4a07-ac26-8b3613b88f51}*SharedItemsImports = 4
+		EffectPassTest.Shared\EffectPassTest.Shared.vcxitems*{e7d77ab5-c9fd-4584-99a6-8637f7eab733}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

@@ -104,6 +104,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Timer.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp">
+      <Filter>Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

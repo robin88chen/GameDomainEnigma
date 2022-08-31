@@ -15,7 +15,7 @@ namespace Enigma::Engine
     class EffectVariable
     {
     public:
-        using VariableCommitFunc = std::function<void(const EffectVariable&)>;
+        using VariableValueAssignFunc = std::function<void(const EffectVariable&)>;
     public:
         EffectVariable(const Graphics::IShaderVariablePtr& shader_variable);
         EffectVariable(const EffectVariable& var);
@@ -27,14 +27,16 @@ namespace Enigma::Engine
 
         const std::string& GetName() { return m_name; };
         const std::string& GetSemantic() { return m_semantic; };
+        const std::string& GetName() const { return m_name; };
+        const std::string& GetSemantic() const { return m_semantic; };
 
         void AssignValue(std::any value);
         void AssignValues(std::any value_array, unsigned int value_count);
 
-        /** commit : set shader variable value(s), or 呼叫從 Variable Map 或是其他外部掛入的 commit 函式 */
+        /** commit : 先呼叫從 Variable Map 或是其他外部掛入的 assign 函式, then set shader variable value(s) */
         void Commit();
-        /** commit 函式需要直接呼叫 shader variable set value */
-        void SetCommitFunction(VariableCommitFunc fn);
+        /** assign 函式 : assign value(s) */
+        void SetValueAssignFunction(VariableValueAssignFunc fn);
 
     private:
         Graphics::IShaderVariablePtr m_shader_variable;
@@ -42,7 +44,7 @@ namespace Enigma::Engine
         std::string m_semantic;
         std::any m_value;
         unsigned int m_value_count;
-        VariableCommitFunc m_commit;
+        VariableValueAssignFunc m_assign;
     };
 }
 

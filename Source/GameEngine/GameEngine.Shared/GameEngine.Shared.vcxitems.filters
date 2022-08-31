@@ -63,6 +63,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPass.h">
+      <Filter>Effect Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -84,6 +87,9 @@
       <Filter>RenderBuffer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp">
+      <Filter>Effect Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp">
       <Filter>Effect Material</Filter>
     </ClCompile>
   </ItemGroup>

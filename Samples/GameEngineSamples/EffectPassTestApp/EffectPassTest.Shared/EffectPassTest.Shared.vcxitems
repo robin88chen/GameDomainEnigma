@@ -14,9 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)EffectPassTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)EffectPassTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.h" />
   </ItemGroup>
 </Project>

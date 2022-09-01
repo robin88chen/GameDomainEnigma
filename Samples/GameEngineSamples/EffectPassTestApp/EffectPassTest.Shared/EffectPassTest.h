@@ -16,10 +16,13 @@
 #endif
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/Timer.h"
 #include "GameEngine/RenderTarget.h"
 #include "GameEngine/RendererManager.h"
+#include "GameEngine/EffectPass.h"
 
 class BufferBuilder;
+class TextureSamplerBuilder;
 
 class EffectPassTest : public Enigma::Application::AppDelegate
 {
@@ -38,6 +41,10 @@ private:
     void OnShaderProgramBuildFailed(const Enigma::Frameworks::IEventPtr& e);
     void OnVertexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
     void OnIndexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnTextureLoaded(const Enigma::Frameworks::IEventPtr& e);
+    void OnSamplerBuilt(const Enigma::Frameworks::IEventPtr& e);
+
+	void BuildVariables();
 
 private:
     Enigma::Engine::RendererManager* m_rendererManager;
@@ -46,14 +53,23 @@ private:
     Enigma::Graphics::IVertexBufferPtr m_vtxBuffer;
     Enigma::Graphics::IIndexBufferPtr m_idxBuffer;
     Enigma::Graphics::IVertexDeclarationPtr m_vtxDecl;
+    Enigma::Graphics::ITexturePtr m_texture;
+    Enigma::Graphics::IDeviceSamplerStatePtr m_sampler;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onShaderProgramBuildFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onTextureLoaded;
+    Enigma::Frameworks::EventSubscriberPtr m_onSamplerBuilt;
 
+    Enigma::Frameworks::Timer* m_timer;
+    float m_tick;
     BufferBuilder* m_bufferBuilder;
+    TextureSamplerBuilder* m_textureBuilder;
+
+    Enigma::Engine::EffectPass* m_effectPass;
 };
 
 

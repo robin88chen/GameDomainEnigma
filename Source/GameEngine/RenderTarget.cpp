@@ -127,22 +127,28 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 
 error RenderTarget::Bind()
 {
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
+    Graphics::IGraphicAPI::Instance()->Bind(m_backSurface, m_depthStencilSurface);
+    //Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     return ErrorCode::ok;
 }
 
 error RenderTarget::BindViewPort()
 {
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::BindViewPort>(m_viewPort));
+    Graphics::IGraphicAPI::Instance()->Bind(m_viewPort);
+    //Frameworks::CommandBus::Post(std::make_shared<Graphics::BindViewPort>(m_viewPort));
     return ErrorCode::ok;
 }
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
 {
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
+    Graphics::IGraphicAPI::Instance()->Clear(
         ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
         ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
-        color, depth_value, stencil_value));
+        color, depth_value, stencil_value);
+    //Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
+      //  ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
+      //  ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
+      //  color, depth_value, stencil_value));
     return ErrorCode::ok;
 }
 
@@ -155,8 +161,8 @@ error RenderTarget::Clear()
 error RenderTarget::Flip()
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
-
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::FlipBackSurface>());
+    Graphics::IGraphicAPI::Instance()->Flip();
+    //Frameworks::CommandBus::Post(std::make_shared<Graphics::FlipBackSurface>());
     return ErrorCode::ok;
 }
 

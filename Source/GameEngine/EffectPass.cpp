@@ -93,7 +93,7 @@ void EffectPass::CommitVariables()
             }
         }
     }
-    for (auto var : m_variables)
+    for (auto& var : m_variables)
     {
         var.Commit();
     }

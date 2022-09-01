@@ -70,6 +70,7 @@ private:
     TextureSamplerBuilder* m_textureBuilder;
 
     Enigma::Engine::EffectPass* m_effectPass;
+    Enigma::Engine::EffectPass* m_effectPass2;
 };
 
 

@@ -53,6 +53,7 @@ static unsigned int vtx_idx[] =
 };
 
 static std::string vs_code_11 =
+"float offset;\n"
 "struct VS_INPUT \n"
 "{\n"
 "   float3 Pos : POSITION;\n"
@@ -67,7 +68,7 @@ static std::string vs_code_11 =
 "VS_OUTPUT vs_main(const VS_INPUT v)\n"
 "{\n"
 "   VS_OUTPUT o = (VS_OUTPUT)0;"
-"   o.Pos.xyz = v.Pos;\n"
+"   o.Pos.xyz = v.Pos + float3(0.0f, offset, 0.0f);\n"
 " o.Pos.w = 1.0f;\n"
 "   o.Coord = v.Coord;\n"
 "   o.DiffCol = float4(0.5f + v.Pos.x + v.Pos.y, 0.5f + v.Pos.x - v.Pos.y, 0.5f + v.Pos.y - v.Pos.x, 1.0f); \n"
@@ -134,6 +135,7 @@ static const std::string ps_code_egl =
 EffectPassTest::EffectPassTest(const std::string app_name) : AppDelegate(app_name)
 {
     m_effectPass = nullptr;
+    m_effectPass2 = nullptr;
 }
 
 EffectPassTest::~EffectPassTest()
@@ -202,6 +204,8 @@ void EffectPassTest::ShutdownEngine()
 
     if (m_effectPass) delete m_effectPass;
     m_effectPass = nullptr;
+    if (m_effectPass2) delete m_effectPass2;
+    m_effectPass2 = nullptr;
 
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
@@ -244,6 +248,13 @@ void EffectPassTest::FrameUpdate()
         auto var1 = m_effectPass->GetVariableBySemantic("ANIM_SCALE");
         if (var1) var1.value().get().AssignValue(3.0f);
     }
+    if (m_effectPass2)
+    {
+        auto var = m_effectPass2->GetVariableBySemantic("ANIM_TIMER");
+        if (var) var.value().get().AssignValue(-m_tick);
+        auto var1 = m_effectPass2->GetVariableBySemantic("ANIM_SCALE");
+        if (var1) var1.value().get().AssignValue(1.5f);
+    }
 }
 
 void EffectPassTest::RenderFrame()
@@ -251,14 +262,23 @@ void EffectPassTest::RenderFrame()
     if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
     m_renderTarget->Bind();
     m_renderTarget->BindViewPort();
+    IGraphicAPI::Instance()->Bind(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
+    IGraphicAPI::Instance()->Bind(m_idxBuffer);
+    //CommandBus::Post(std::make_shared<BindVertexBuffer>(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList));
+    //CommandBus::Post(std::make_shared<BindIndexBuffer>(m_idxBuffer));
+    m_renderTarget->Clear();
+    IGraphicAPI::Instance()->BeginScene();
+    //CommandBus::Post(std::make_shared<BeginScene>());
     m_effectPass->CommitVariables();
     m_effectPass->Apply();
-    CommandBus::Post(std::make_shared<BindVertexBuffer>(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList));
-    CommandBus::Post(std::make_shared<BindIndexBuffer>(m_idxBuffer));
-    m_renderTarget->Clear();
-    CommandBus::Post(std::make_shared<BeginScene>());
-    CommandBus::Post(std::make_shared<DrawIndexedPrimitive>(6, 4, 0, 0));
-    CommandBus::Post(std::make_shared<EndScene>());
+    IGraphicAPI::Instance()->Draw(6, 4, 0, 0);
+    //CommandBus::Post(std::make_shared<DrawIndexedPrimitive>(6, 4, 0, 0));
+    m_effectPass2->CommitVariables();
+    m_effectPass2->Apply();
+    IGraphicAPI::Instance()->Draw(6, 4, 0, 0);
+    IGraphicAPI::Instance()->EndScene();
+    //CommandBus::Post(std::make_shared<DrawIndexedPrimitive>(6, 4, 0, 0));
+    //CommandBus::Post(std::make_shared<EndScene>());
     m_renderTarget->Flip();
 }
 
@@ -280,6 +300,7 @@ void EffectPassTest::OnShaderProgramBuilt(const IEventPtr& e)
     m_vtxDecl = m_program->GetVertexDeclaration();
     EffectPass p{ m_program, EffectPassStates{} };  // testing copy constructor
     m_effectPass = menew EffectPass(p);
+    m_effectPass2 = menew EffectPass(*m_effectPass);
     BuildVariables();
 }
 
@@ -342,5 +363,25 @@ void EffectPassTest::BuildVariables()
     if (samp_var)
     {
         samp_var.value().get().AssignValue(m_sampler);
+    }
+    auto offset_var = m_effectPass->GetVariableByName("offset");
+    if (offset_var)
+    {
+        offset_var.value().get().AssignValue(-0.3f);
+    }
+    auto var2 = m_effectPass2->GetVariableByName("DiffuseTexture");
+    if (var2)
+    {
+        var2.value().get().AssignValue(IShaderVariable::TextureVarTuple{ m_texture, std::nullopt });
+    }
+    auto samp_var2 = m_effectPass2->GetVariableByName("samLinear");
+    if (samp_var2)
+    {
+        samp_var2.value().get().AssignValue(m_sampler);
+    }
+    auto offset_var2 = m_effectPass2->GetVariableByName("offset");
+    if (offset_var2)
+    {
+        offset_var2.value().get().AssignValue(0.3f);
     }
 }

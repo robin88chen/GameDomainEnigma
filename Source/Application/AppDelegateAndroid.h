@@ -25,6 +25,7 @@ namespace Enigma::Application
 
         virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
             const std::string& log_filename = "");
+        virtual void InitializeMountPaths() {};
         virtual void InstallEngine() = 0;
         virtual void RegisterMediaMountPaths(const std::string& media_path);
         virtual void ShutdownEngine() = 0;

@@ -27,8 +27,12 @@ class TextureSamplerBuilder;
 class EffectPassTest : public Enigma::Application::AppDelegate
 {
 public:
+    static inline std::string MediaPathName = "APK_PATH";
+public:
     EffectPassTest(const std::string app_name);
     ~EffectPassTest();
+
+    virtual void InitializeMountPaths() override;
 
     virtual void InstallEngine() override final;
     virtual void ShutdownEngine() override final;

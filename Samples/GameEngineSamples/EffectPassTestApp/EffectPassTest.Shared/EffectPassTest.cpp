@@ -16,6 +16,10 @@
 #include "MathLib/Vector3.h"
 #include "MathLib/Vector2.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "FileSystem/FileSystem.h"
+#if TARGET_PLATFORM == PLATFORM_WIN32
+#include "FileSystem/StdMountPath.h"
+#endif
 #include "BufferBuilder.h"
 #include "TextureSamplerBuilder.h"
 
@@ -25,6 +29,7 @@ using namespace Enigma::Application;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
+using namespace Enigma::FileSystem;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -105,12 +110,13 @@ static std::string ps_code_11 =
 
 static const std::string vs_code_egl =
 "#version 300 es\n"
+"uniform float offset;\n"
 "layout(location = 0) in vec3 pos;\n"
 "layout(location = 1) in vec2 texco;\n"
 "out vec2 vTexCo;\n"
 "out vec4 vColor;\n"
 "void main() {\n"
-"    gl_Position = vec4(pos, 1.0);\n"
+"    gl_Position = vec4(pos, 1.0) + vec4(0,0f, offset, 0.0f, 0.0f);\n"
 "    vColor = vec4(0.5f + pos.x + pos.y, 0.5f + pos.x - pos.y, 0.5f + pos.y - pos.x, 1.0f);\n"
 "    vTexCo = texco;\n"
 "}\n";
@@ -141,6 +147,18 @@ EffectPassTest::EffectPassTest(const std::string app_name) : AppDelegate(app_nam
 EffectPassTest::~EffectPassTest()
 {
 	
+}
+
+void EffectPassTest::InitializeMountPaths()
+{
+#if TARGET_PLATFORM == PLATFORM_WIN32
+    if (FileSystem::Instance())
+    {
+        auto path = std::filesystem::current_path();
+        auto mediaPath = path / "../../../../Media/";
+        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
+    }
+#endif
 }
 
 void EffectPassTest::InstallEngine()
@@ -182,7 +200,7 @@ void EffectPassTest::InstallEngine()
     m_bufferBuilder->BuildIndexBuffer(IndexBufferName, indices);
 
 	m_textureBuilder = menew TextureSamplerBuilder();
-    m_textureBuilder->BuildTexture(TextureName, "earth.png", "");
+    m_textureBuilder->BuildTexture(TextureName, "earth.png", MediaPathName);
     IDeviceSamplerState::SamplerStateData samp_data;
     samp_data.m_addressModeU = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
     samp_data.m_addressModeV = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;

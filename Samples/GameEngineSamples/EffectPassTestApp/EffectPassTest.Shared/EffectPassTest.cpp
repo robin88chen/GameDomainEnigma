@@ -110,13 +110,14 @@ static std::string ps_code_11 =
 
 static const std::string vs_code_egl =
 "#version 300 es\n"
+"precision mediump float;\n"
 "uniform float offset;\n"
 "layout(location = 0) in vec3 pos;\n"
 "layout(location = 1) in vec2 texco;\n"
 "out vec2 vTexCo;\n"
 "out vec4 vColor;\n"
 "void main() {\n"
-"    gl_Position = vec4(pos, 1.0) + vec4(0,0f, offset, 0.0f, 0.0f);\n"
+"    gl_Position = vec4(pos, 1.0) + vec4(0.0f, offset, 0.0f, 0.0f);\n"
 "    vColor = vec4(0.5f + pos.x + pos.y, 0.5f + pos.x - pos.y, 0.5f + pos.y - pos.x, 1.0f);\n"
 "    vTexCo = texco;\n"
 "}\n";
@@ -134,8 +135,9 @@ static const std::string ps_code_egl =
 "in vec2 vTexCo;\n"
 "out vec4 outColor;\n"
 "void main() {\n"
+"    vec2 co = vec2(vTexCo.x + anim_time, vTexCo.y);\n"
 "    outColor = (0.5f + cos(anim_time * anim_scale)/2.0f) * vColor;\n"
-"    outColor = texture(DiffuseTexture, vTexCo) * outColor;\n"
+"    outColor = texture(DiffuseTexture, co) * outColor;\n"
 "}\n";
 
 EffectPassTest::EffectPassTest(const std::string app_name) : AppDelegate(app_name)

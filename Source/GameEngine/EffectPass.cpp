@@ -101,6 +101,7 @@ void EffectPass::CommitVariables()
 
 void EffectPass::Apply()
 {
+    // 每個 api call 會自行處理 async
     if (m_shader)
     {
         IGraphicAPI::Instance()->Bind(m_shader);

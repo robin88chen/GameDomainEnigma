@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp" />

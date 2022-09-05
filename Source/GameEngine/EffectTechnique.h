@@ -9,7 +9,6 @@
 #define EFFECT_TECHNIQUE_H
 
 #include "EffectPass.h"
-#include "Frameworks/ExtentTypesDefine.h"
 #include <string>
 #include <vector>
 

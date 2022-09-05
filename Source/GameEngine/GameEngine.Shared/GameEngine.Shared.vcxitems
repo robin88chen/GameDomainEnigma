@@ -14,6 +14,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h" />
@@ -30,6 +33,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />

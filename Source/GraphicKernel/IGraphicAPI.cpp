@@ -602,11 +602,11 @@ void IGraphicAPI::DoCreatingSamplerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateSamplerState(cmd->GetName());
+        AsyncCreateSamplerState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateSamplerState(cmd->GetName());
+        CreateSamplerState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -617,11 +617,11 @@ void IGraphicAPI::DoCreatingRasterizerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateRasterizerState(cmd->GetName());
+        AsyncCreateRasterizerState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateRasterizerState(cmd->GetName());
+        CreateRasterizerState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -632,11 +632,11 @@ void IGraphicAPI::DoCreatingBlendState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateAlphaBlendState(cmd->GetName());
+        AsyncCreateAlphaBlendState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateAlphaBlendState(cmd->GetName());
+        CreateAlphaBlendState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -647,11 +647,11 @@ void IGraphicAPI::DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateDepthStencilState(cmd->GetName());
+        AsyncCreateDepthStencilState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateDepthStencilState(cmd->GetName());
+        CreateDepthStencilState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -849,24 +849,24 @@ future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name, u
     return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name, sizeBuffer); });
 }
 
-future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateSamplerState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateSamplerState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateRasterizerState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateRasterizerState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateRasterizerState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateAlphaBlendState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateAlphaBlendState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name, data); });
 }
 
 future_error IGraphicAPI::AsyncCreateTexture(const std::string& tex_name)

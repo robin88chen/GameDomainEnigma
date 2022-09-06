@@ -24,6 +24,7 @@ namespace Enigma::Engine
         findStashedAssetFail = 201,
 
         effectPassEnd = 301,
+        compilingEmptyEffectTech,
     };
     class ErrorCategory : public std::error_category
     {

@@ -14,7 +14,7 @@ IDeviceRasterizerState::~IDeviceRasterizerState()
 {
 }
 
-void IDeviceRasterizerState::Create(const RasterizerStateData& data)
+/*void IDeviceRasterizerState::Create(const RasterizerStateData& data)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {
@@ -24,7 +24,7 @@ void IDeviceRasterizerState::Create(const RasterizerStateData& data)
     {
         CreateFromData(data);
     }
-}
+}*/
 
 void IDeviceRasterizerState::Bind()
 {

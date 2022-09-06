@@ -25,8 +25,9 @@ namespace Enigma::Devices
         DeviceDepthStencilStateDx11& operator=(const DeviceDepthStencilStateDx11&) = delete;
         DeviceDepthStencilStateDx11& operator=(DeviceDepthStencilStateDx11&&) = delete;
 
-    protected:
         virtual error CreateFromData(const DepthStencilData& data) override;
+
+    protected:
         virtual error BindToDevice() override;
 
     private:

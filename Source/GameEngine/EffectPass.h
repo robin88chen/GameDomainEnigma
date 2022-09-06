@@ -34,7 +34,7 @@ namespace Enigma::Engine
     struct EffectPassStates
     {
         std::optional<std::vector<Graphics::IDeviceSamplerStatePtr>> m_samplers;
-        std::optional<std::vector<std::string>> m_sampler_names;
+        std::optional<std::vector<std::string>> m_samplerNames;
         std::optional<Graphics::IDeviceRasterizerStatePtr> m_rasterizer;
         std::optional<Graphics::IDeviceDepthStencilStatePtr> m_depth;
         std::optional<Graphics::IDeviceAlphaBlendStatePtr> m_blend;
@@ -67,10 +67,10 @@ namespace Enigma::Engine
 
         Graphics::IShaderProgramPtr m_shader;
         std::vector<Graphics::IDeviceSamplerStatePtr> m_samplers;
-        std::vector<std::string> m_sampler_names;
-        Graphics::IDeviceRasterizerStatePtr m_rasterizer_state;
-        Graphics::IDeviceDepthStencilStatePtr m_depth_state;
-        Graphics::IDeviceAlphaBlendStatePtr m_blend_state;
+        std::vector<std::string> m_samplerNames;
+        Graphics::IDeviceRasterizerStatePtr m_rasterizerState;
+        Graphics::IDeviceDepthStencilStatePtr m_depthState;
+        Graphics::IDeviceAlphaBlendStatePtr m_blendState;
     };
 }
 

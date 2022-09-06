@@ -39,11 +39,11 @@ namespace Enigma::Engine
         void SetValueAssignFunction(VariableValueAssignFunc fn);
 
     private:
-        Graphics::IShaderVariablePtr m_shader_variable;
+        Graphics::IShaderVariablePtr m_shaderVariable;
         std::string m_name;
         std::string m_semantic;
         std::any m_value;
-        unsigned int m_value_count;
+        unsigned int m_valueCount;
         VariableValueAssignFunc m_assign;
     };
 }

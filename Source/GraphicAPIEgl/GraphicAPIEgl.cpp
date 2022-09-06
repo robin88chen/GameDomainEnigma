@@ -299,43 +299,47 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned in
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateSamplerState(const std::string& name)
+error GraphicAPIEgl::CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data)
 {
     Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateEgl{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateRasterizerState(const std::string& name)
+error GraphicAPIEgl::CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data)
 {
     Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateEgl{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name)
+error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data)
 {
     Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateEgl{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateDepthStencilState(const std::string& name)
+error GraphicAPIEgl::CreateDepthStencilState(const std::string& name, const Graphics::IDeviceDepthStencilState::DepthStencilData& data)
 {
     Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateEgl{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name, state));
     return ErrorCode::ok;
 }
 

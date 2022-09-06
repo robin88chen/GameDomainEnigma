@@ -84,6 +84,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
+      <Filter>Effect Material\Effect Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -118,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp">
       <Filter>Effect Material\Technique Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
+      <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

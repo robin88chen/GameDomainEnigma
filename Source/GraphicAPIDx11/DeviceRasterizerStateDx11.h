@@ -25,8 +25,9 @@ namespace Enigma::Devices
         DeviceRasterizerStateDx11& operator=(const DeviceRasterizerStateDx11&) = delete;
         DeviceRasterizerStateDx11& operator=(DeviceRasterizerStateDx11&&) = delete;
 
-    protected:
         virtual error CreateFromData(const RasterizerStateData& data) override;
+
+    protected:
         virtual error BindToDevice() override;
 
     private:

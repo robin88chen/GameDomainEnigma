@@ -14,7 +14,7 @@ IDeviceAlphaBlendState::~IDeviceAlphaBlendState()
 {
 }
 
-void IDeviceAlphaBlendState::Create(const BlendStateData& data)
+/*void IDeviceAlphaBlendState::Create(const BlendStateData& data)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {
@@ -24,7 +24,7 @@ void IDeviceAlphaBlendState::Create(const BlendStateData& data)
     {
         CreateFromData(data);
     }
-}
+}*/
 
 void IDeviceAlphaBlendState::Bind()
 {

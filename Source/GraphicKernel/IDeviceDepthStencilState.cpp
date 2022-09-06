@@ -14,7 +14,7 @@ IDeviceDepthStencilState::~IDeviceDepthStencilState()
 {
 }
 
-void IDeviceDepthStencilState::Create(const DepthStencilData& data)
+/*void IDeviceDepthStencilState::Create(const DepthStencilData& data)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {
@@ -24,7 +24,7 @@ void IDeviceDepthStencilState::Create(const DepthStencilData& data)
     {
         CreateFromData(data);
     }
-}
+}*/
 
 void IDeviceDepthStencilState::Bind()
 {

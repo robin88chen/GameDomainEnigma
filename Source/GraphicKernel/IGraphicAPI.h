@@ -11,6 +11,10 @@
 #include "DeviceRequiredBits.h"
 #include "TargetViewPort.h"
 #include "GraphicAssetStash.h"
+#include "IDeviceSamplerState.h"
+#include "IDeviceAlphaBlendState.h"
+#include "IDeviceRasterizerState.h"
+#include "IDeviceDepthStencilState.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
@@ -274,17 +278,17 @@ namespace Enigma::Graphics
         /** @name Device States */
         //@{
         /** create sampler state */
-        virtual error CreateSamplerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateSamplerState(const std::string& name);
+        virtual error CreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data) = 0;
+        virtual future_error AsyncCreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data);
         /** create rasterizer state */
-        virtual error CreateRasterizerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateRasterizerState(const std::string& name);
+        virtual error CreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data) = 0;
+        virtual future_error AsyncCreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data);
         /** create alpha blend state */
-        virtual error CreateAlphaBlendState(const std::string& name) = 0;
-        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
+        virtual error CreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data) = 0;
+        virtual future_error AsyncCreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data);
         /** create depth stencil state */
-        virtual error CreateDepthStencilState(const std::string& name) = 0;
-        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
+        virtual error CreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data) = 0;
+        virtual future_error AsyncCreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data);
         //@}
 
         /** @name Textures */

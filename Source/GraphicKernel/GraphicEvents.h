@@ -14,6 +14,11 @@
 
 namespace Enigma::Graphics
 {
+    class IDeviceSamplerState;
+    class IDeviceRasterizerState;
+    class IDeviceAlphaBlendState;
+    class IDeviceDepthStencilState;
+
     //------------------------ Device --------------------//
     class DeviceCreated : public Frameworks::IEvent
     {
@@ -411,38 +416,46 @@ namespace Enigma::Graphics
     class DeviceSamplerStateCreated : public Frameworks::IEvent
     {
     public:
-        DeviceSamplerStateCreated(const std::string& name) :
-            m_stateName(name) {};
+        DeviceSamplerStateCreated(const std::string& name, const std::shared_ptr<IDeviceSamplerState>& state) :
+            m_stateName(name), m_state(state) {};
         const std::string& GetStateName() { return m_stateName; }
+        const std::shared_ptr<IDeviceSamplerState>& GetState() const { return m_state; }
     private:
         std::string m_stateName;
+        std::shared_ptr<IDeviceSamplerState> m_state;
     };
     class DeviceAlphaBlendStateCreated : public Frameworks::IEvent
     {
     public:
-        DeviceAlphaBlendStateCreated(const std::string& name) :
-            m_stateName(name) {};
+        DeviceAlphaBlendStateCreated(const std::string& name, const std::shared_ptr<IDeviceAlphaBlendState>& state) :
+            m_stateName(name), m_state(state) {};
         const std::string& GetStateName() { return m_stateName; }
+        const std::shared_ptr<IDeviceAlphaBlendState>& GetState() const { return m_state; }
     private:
         std::string m_stateName;
+        std::shared_ptr<IDeviceAlphaBlendState> m_state;
     };
     class DeviceDepthStencilStateCreated : public Frameworks::IEvent
     {
     public:
-        DeviceDepthStencilStateCreated(const std::string& name) :
-            m_stateName(name) {};
+        DeviceDepthStencilStateCreated(const std::string& name, const std::shared_ptr<IDeviceDepthStencilState>& state) :
+            m_stateName(name), m_state(state) {};
         const std::string& GetStateName() { return m_stateName; }
+        const std::shared_ptr<IDeviceDepthStencilState>& GetState() const { return m_state; }
     private:
         std::string m_stateName;
+        std::shared_ptr<IDeviceDepthStencilState> m_state;
     };
     class DeviceRasterizerStateCreated : public Frameworks::IEvent
     {
     public:
-        DeviceRasterizerStateCreated(const std::string& name) :
-            m_stateName(name) {};
+        DeviceRasterizerStateCreated(const std::string& name, const std::shared_ptr<IDeviceRasterizerState>& state) :
+            m_stateName(name), m_state(state) {};
         const std::string& GetStateName() { return m_stateName; }
+        const std::shared_ptr<IDeviceRasterizerState>& GetState() const { return m_state; }
     private:
         std::string m_stateName;
+        std::shared_ptr<IDeviceRasterizerState> m_state;
     };
     class ConstBufferResourceCreated : public Frameworks::IEvent
     {

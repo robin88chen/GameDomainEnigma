@@ -62,10 +62,10 @@ namespace Enigma::Devices
             const Graphics::IVertexShaderPtr& shader) override;
         virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) override;
         virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) override;
-        virtual error CreateSamplerState(const std::string& name) override;
-        virtual error CreateRasterizerState(const std::string& name) override;
-        virtual error CreateAlphaBlendState(const std::string& name) override;
-        virtual error CreateDepthStencilState(const std::string& name) override;
+        virtual error CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data) override;
+        virtual error CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data) override;
+        virtual error CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data) override;
+        virtual error CreateDepthStencilState(const std::string& name, const Graphics::IDeviceDepthStencilState::DepthStencilData& data) override;
         virtual error CreateTexture(const std::string& tex_name) override;
         virtual error CreateMultiTexture(const std::string& tex_name) override;
 

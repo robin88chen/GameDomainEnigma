@@ -15,6 +15,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::renderTargetNotExist: return "Render target not exist";
     case ErrorCode::findStashedAssetFail: return "Find stashed asset fail";
     case ErrorCode::effectPassEnd: return "Effect pass ended";
+    case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     }
     return "Unknown";
 }

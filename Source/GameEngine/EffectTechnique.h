@@ -19,7 +19,7 @@ namespace Enigma::Engine
 	class EffectTechnique
     {
     public:
-        EffectTechnique(const std::string& name);
+        EffectTechnique(const std::string& name, const std::vector<EffectPass>& passes);
         EffectTechnique(const EffectTechnique& source_tech);
         EffectTechnique(EffectTechnique&& source_tech) noexcept;
 

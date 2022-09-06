@@ -10,6 +10,7 @@
 
 #include "EffectCompilingPolicies.h"
 #include "EffectPass.h"
+#include "EffectTechnique.h"
 #include "Frameworks/EventSubscriber.h"
 #include <unordered_map>
 
@@ -30,29 +31,42 @@ namespace Enigma::Engine
     private:
         void OnShaderProgramBuilt(const Frameworks::IEventPtr& e);
         void OnProgramBuildFailed(const Frameworks::IEventPtr& e);
+        void OnSamplerStateCreated(const Frameworks::IEventPtr& e);
+        void OnBlendStateCreated(const Frameworks::IEventPtr& e);
+        void OnDepthStateCreated(const Frameworks::IEventPtr& e);
+        void OnRasterizerStateCreated(const Frameworks::IEventPtr& e);
 
         void TryBuildEffectPass(const std::string& name);
+        void TryBuildEffectTechniques(const std::string& name);
+        void TryBuildEffectMaterial();
 
     private:
-        struct BuiltEffectPass
+        struct BuiltEffectPassMeta
         {
             std::string m_name;
             std::optional<EffectPass> m_pass;
         };
-        struct BuiltEffectTechnique
+        struct BuiltEffectTechniqueMeta
         {
             std::string m_name;
-            std::vector<BuiltEffectPass> m_passes;
+            std::vector<BuiltEffectPassMeta> m_passes;
+            std::optional<EffectTechnique> m_technique;
+            bool HasAllPassBuilt();
+            std::vector<EffectPass> RetrieveEffectPasses();
         };
     private:
         EffectCompilingPolicy m_policy;
 
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onProgramBuildFailed;
+        Frameworks::EventSubscriberPtr m_onSamplerStateCreated;
+        Frameworks::EventSubscriberPtr m_onBlendStateCreated;
+        Frameworks::EventSubscriberPtr m_onDepthStateCreated;
+        Frameworks::EventSubscriberPtr m_onRasterizerStateCreated;
 
         std::unordered_map<std::string, Graphics::IShaderProgramPtr> m_builtPrograms;
         std::unordered_map<std::string, EffectPassStates> m_builtPassStates;
-        std::vector<BuiltEffectTechnique> m_builtEffectTechniques;
+        std::vector<BuiltEffectTechniqueMeta> m_builtEffectTechniques;
     };
 }
 

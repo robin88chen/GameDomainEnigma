@@ -15,6 +15,8 @@
 #include "IShaderProgram.h"
 #include "IVertexBuffer.h"
 #include "IIndexBuffer.h"
+#include "IBackSurface.h"
+#include "IDepthStencilSurface.h"
 #include "IDeviceSamplerState.h"
 #include "IDeviceAlphaBlendState.h"
 #include "IDeviceRasterizerState.h"

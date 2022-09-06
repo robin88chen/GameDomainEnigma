@@ -23,7 +23,7 @@ namespace Enigma::Engine
     class EffectMaterial
     {
     public:
-        EffectMaterial(const std::string& source_filename);
+        EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
         EffectMaterial(const EffectMaterial&);
         EffectMaterial(EffectMaterial&&);
         virtual ~EffectMaterial();
@@ -64,7 +64,7 @@ namespace Enigma::Engine
             InstancedAssignFuncList;
 
     protected:
-        std::string m_sourceFileName;
+        std::string m_name;
         std::weak_ptr<EffectMaterialSource> m_sourceMaterial;
 
         EffectTechniqueArray m_effectTechniques;

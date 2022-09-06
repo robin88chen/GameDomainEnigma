@@ -13,6 +13,7 @@
 #include "GraphicKernel/IDeviceRasterizerState.h"
 #include "GraphicKernel/IDeviceAlphaBlendState.h"
 #include "GraphicKernel/IDeviceDepthStencilState.h"
+#include "Frameworks/optional_ref.hpp"
 #include <string>
 
 namespace Enigma::Engine
@@ -55,6 +56,11 @@ namespace Enigma::Engine
     {
         std::string m_name;
         std::vector<EffectTechniqueProfile> m_techniques;
+        stdext::optional_ref<EffectPassProfile> FindPassWithSamplerState(const std::string& name);
+        stdext::optional_ref<EffectPassProfile> FindPassWithBlendState(const std::string& name);
+        stdext::optional_ref<EffectPassProfile> FindPassWithDepthState(const std::string& name);
+        stdext::optional_ref<EffectPassProfile> FindPassWithRasterizerState(const std::string& name);
+        std::optional<unsigned int> FindSamplerIndexInPass(const std::string& name);
     };
 
 }

@@ -2,16 +2,16 @@
 
 using namespace Enigma::Engine;
 
-EffectMaterial::EffectMaterial(const std::string& source_filename)
+EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
 {
-    m_sourceFileName = source_filename;
-    m_effectTechniques.clear();
+    m_name = name;
+    m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
 }
 
 EffectMaterial::EffectMaterial(const EffectMaterial& eff)
 {
-    m_sourceFileName = eff.m_sourceFileName;
+    m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
@@ -19,7 +19,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff)
 
 EffectMaterial::EffectMaterial(EffectMaterial&& eff)
 {
-    m_sourceFileName = std::move(eff.m_sourceFileName);
+    m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
     m_effectTechniques = std::move(eff.m_effectTechniques);
     m_currentTechnique = m_effectTechniques.end();
@@ -30,7 +30,7 @@ EffectMaterial::EffectMaterial(EffectMaterial&& eff)
 
 EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 {
-    m_sourceFileName = eff.m_sourceFileName;
+    m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
@@ -40,7 +40,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 
 EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
 {
-    m_sourceFileName = std::move(eff.m_sourceFileName);
+    m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
     m_effectTechniques = std::move(eff.m_effectTechniques);
     m_currentTechnique = m_effectTechniques.end();

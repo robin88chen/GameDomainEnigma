@@ -128,5 +128,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp">
+      <Filter>Effect Material\Effect Compiler</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

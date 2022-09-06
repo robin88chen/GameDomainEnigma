@@ -4,10 +4,10 @@
 
 using namespace Enigma::Engine;
 
-EffectTechnique::EffectTechnique(const std::string& name)
+EffectTechnique::EffectTechnique(const std::string& name, const std::vector<EffectPass>& passes)
 {
     m_name = name;
-    m_effectPasses.clear();
+    m_effectPasses = passes;
     m_currentApplyPass = m_effectPasses.end();
 }
 

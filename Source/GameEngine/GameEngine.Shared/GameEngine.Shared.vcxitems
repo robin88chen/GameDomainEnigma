@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp" />

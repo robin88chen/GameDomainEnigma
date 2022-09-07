@@ -43,13 +43,15 @@ namespace Enigma::Engine
     class EffectPass
     {
     public:
-        EffectPass(const Graphics::IShaderProgramPtr& program, const EffectPassStates& states);
+        EffectPass(const std::string& name, const Graphics::IShaderProgramPtr& program, const EffectPassStates& states);
         EffectPass(const EffectPass& pass);
         EffectPass(EffectPass&& pass);
         ~EffectPass();
 
         EffectPass& operator=(const EffectPass& pass);
         EffectPass& operator=(EffectPass&& pass) noexcept;
+
+        const std::string& GetName() { return m_name; }
 
         void CommitVariables();
         void Apply();
@@ -63,6 +65,8 @@ namespace Enigma::Engine
         void BuildVariables();
 
     private:
+        std::string m_name;
+
         std::vector<EffectVariable> m_variables;
 
         Graphics::IShaderProgramPtr m_shader;

@@ -41,6 +41,7 @@ namespace Enigma::Engine
     };
     struct EffectPassProfile
     {
+        std::string m_name;
         ShaderProgramPolicy m_program;
         std::vector<EffectSamplerProfile> m_samplers;
         EffectRasterizerProfile m_rasterizer;
@@ -56,11 +57,12 @@ namespace Enigma::Engine
     {
         std::string m_name;
         std::vector<EffectTechniqueProfile> m_techniques;
-        stdext::optional_ref<EffectPassProfile> FindPassWithSamplerState(const std::string& name);
-        stdext::optional_ref<EffectPassProfile> FindPassWithBlendState(const std::string& name);
-        stdext::optional_ref<EffectPassProfile> FindPassWithDepthState(const std::string& name);
-        stdext::optional_ref<EffectPassProfile> FindPassWithRasterizerState(const std::string& name);
-        std::optional<unsigned int> FindSamplerIndexInPass(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithSamplerState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithBlendState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithDepthState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithRasterizerState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithProgram(const std::string& name);
+        std::optional<unsigned int> FindSamplerIndexInPass(const std::string& pass_name, const std::string& sampler_name);
     };
 
 }

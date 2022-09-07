@@ -10,8 +10,9 @@
 using namespace Enigma::Graphics;
 using namespace Enigma::Engine;
 
-EffectPass::EffectPass(const Graphics::IShaderProgramPtr& program, const EffectPassStates& states)
+EffectPass::EffectPass(const std::string& name, const Graphics::IShaderProgramPtr& program, const EffectPassStates& states)
 {
+    m_name = name;
     m_shader = program;
     if (states.m_samplers) m_samplers = states.m_samplers.value();
     if (states.m_samplerNames) m_samplerNames = states.m_samplerNames.value();
@@ -23,6 +24,7 @@ EffectPass::EffectPass(const Graphics::IShaderProgramPtr& program, const EffectP
 
 EffectPass::EffectPass(const EffectPass& pass)
 {
+    m_name = pass.m_name;
     m_shader = pass.m_shader;
     m_samplers = pass.m_samplers;
     m_samplerNames = pass.m_samplerNames;
@@ -34,6 +36,7 @@ EffectPass::EffectPass(const EffectPass& pass)
 
 EffectPass::EffectPass(EffectPass&& pass)
 {
+    m_name = std::move(pass.m_name);
     m_shader = std::move(pass.m_shader);
     m_samplers = std::move(pass.m_samplers);
     m_samplerNames = std::move(pass.m_samplerNames);
@@ -56,6 +59,7 @@ EffectPass::~EffectPass()
 
 EffectPass& EffectPass::operator=(const EffectPass& pass)
 {
+    m_name = pass.m_name;
     m_shader = pass.m_shader;
     m_samplers = pass.m_samplers;
     m_samplerNames = pass.m_samplerNames;
@@ -69,6 +73,7 @@ EffectPass& EffectPass::operator=(const EffectPass& pass)
 
 EffectPass& EffectPass::operator=(EffectPass&& pass) noexcept
 {
+    m_name = std::move(pass.m_name);
     m_shader = std::move(pass.m_shader);
     m_samplers = std::move(pass.m_samplers);
     m_samplerNames = std::move(pass.m_samplerNames);

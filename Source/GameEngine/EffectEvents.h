@@ -22,8 +22,9 @@ namespace Enigma::Engine
         //! try rich event
         EffectMaterialCompiled(const std::string& filename, std::unique_ptr<EffectMaterial> eff) :
             m_filename(filename), m_effect(std::move(eff)) {};
-        const std::string& GetShaderName() { return m_filename; }
-        const std::unique_ptr<EffectMaterial>& GetEffect() { return m_effect; }
+        const std::string& GetFilename() { return m_filename; }
+        bool HasEffect() { return m_effect != nullptr; }
+        std::unique_ptr<EffectMaterial> GetEffect() { return std::move(m_effect); }
     private:
         std::string m_filename;
         std::unique_ptr<EffectMaterial> m_effect;

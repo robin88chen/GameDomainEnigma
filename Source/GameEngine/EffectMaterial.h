@@ -30,9 +30,7 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&);
 
-        void Create(const std::string& source_filename);
-
-        const std::string& GetSourceFileName();
+        const std::string& GetName() { return m_name; };
 
         /** select renderer & visual technique */
         void SelectRendererTechnique(const std::string& renderer_tech_name);
@@ -45,15 +43,17 @@ namespace Enigma::Engine
 
         void CommitEffectVariables();
 
-        std::list<std::reference_wrapper<EffectVariable>> GetShaderVariablesByName(const std::string& name);
-        std::list<std::reference_wrapper<EffectVariable>> GetShaderVariablesBySemantic(const std::string& semantic);
+        std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesByName(const std::string& name);
+        std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesBySemantic(const std::string& semantic);
+        stdext::optional_ref<EffectVariable> GetEffectVariableInPassByName(const std::string& pass_name, const std::string& name);
+        stdext::optional_ref<EffectVariable> GetEffectVariableInPassBySemantic(const std::string& pass_name, const std::string& semantic);
 
         void SetVariableAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
         /** 每個 material instance 已經是獨立的一份 var, 似乎沒有必要了，先留著就是 */
         void SetInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
-        void MappingAutoVariables();
 
-        const Graphics::IShaderProgramPtr GetFirstPassShaderProgram();
+        //todo : mapping auto variables
+        //void MappingAutoVariables();
 
     protected:
         void SelectTechnique();

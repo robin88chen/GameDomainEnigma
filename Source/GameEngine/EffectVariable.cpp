@@ -60,6 +60,14 @@ EffectVariable& EffectVariable::operator=(EffectVariable&& var) noexcept
     return *this;
 }
 
+bool EffectVariable::operator==(const EffectVariable& var)
+{
+    if (m_shaderVariable != var.m_shaderVariable) return false;
+    if (m_name != var.m_name) return false;
+    if (m_semantic != var.m_semantic) return false;
+    return true;
+}
+
 void EffectVariable::AssignValue(std::any value)
 {
     m_value = std::move(value);

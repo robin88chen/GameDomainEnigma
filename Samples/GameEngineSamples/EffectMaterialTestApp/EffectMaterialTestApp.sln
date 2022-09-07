@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectMaterialTest.Shared", "EffectMaterialTest.Shared\EffectMaterialTest.Shared.vcxitems", "{357F2437-2C52-4711-8BBD-63E715066E26}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectMaterialTest.Win32", "EffectMaterialTest.Win32\EffectMaterialTest.Win32.vcxproj", "{0DB0B323-5830-418F-B8C7-D5385E340DE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Debug|x64.ActiveCfg = Debug|x64
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Debug|x64.Build.0 = Debug|x64
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Debug|x86.ActiveCfg = Debug|Win32
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Debug|x86.Build.0 = Debug|Win32
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Release|x64.ActiveCfg = Release|x64
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Release|x64.Build.0 = Release|x64
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Release|x86.ActiveCfg = Release|Win32
+		{0DB0B323-5830-418F-B8C7-D5385E340DE6}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02AD6D36-3ADB-45AC-BCE4-1761EA1BE182}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EffectMaterialTest.Shared\EffectMaterialTest.Shared.vcxitems*{0db0b323-5830-418f-b8c7-d5385e340de6}*SharedItemsImports = 4
+		EffectMaterialTest.Shared\EffectMaterialTest.Shared.vcxitems*{357f2437-2c52-4711-8bbd-63e715066e26}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

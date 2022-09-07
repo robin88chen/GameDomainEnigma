@@ -65,15 +65,18 @@ void EffectCompiler::CompileEffect(const EffectCompilingPolicy& policy)
         if (tech.m_passes.empty()) continue;
         for (auto& pass : tech.m_passes)
         {
-            BuiltEffectPassMeta built_effect_pass{ pass.m_program.m_programName };
+            BuiltEffectPassMeta built_effect_pass{ pass.m_name };
             built_effect_technique.m_passes.emplace_back(built_effect_pass);
-            m_builtPrograms.emplace(pass.m_program.m_programName, nullptr);
+            if (m_builtPrograms.find(pass.m_program.m_programName) == m_builtPrograms.end())
+            {
+                m_builtPrograms.emplace(pass.m_program.m_programName, nullptr);
+            }
             EffectPassStates built_pass_states;
             CommandBus::Post(std::make_shared<BuildShaderProgram>(pass.m_program));
             if (!pass.m_samplers.empty())
             {
-                built_pass_states.m_samplers = {};
-                built_pass_states.m_samplerNames = {};
+                built_pass_states.m_samplers = std::vector<Graphics::IDeviceSamplerStatePtr>{};
+                built_pass_states.m_samplerNames = std::vector<std::string>{};
             }
             for (auto& samp : pass.m_samplers)
             {
@@ -84,7 +87,7 @@ void EffectCompiler::CompileEffect(const EffectCompilingPolicy& policy)
             CommandBus::Post(std::make_shared<CreateDepthStencilState>(pass.m_depth.m_name, pass.m_depth.m_data));
             CommandBus::Post(std::make_shared<CreateBlendState>(pass.m_blend.m_name, pass.m_blend.m_data));
             CommandBus::Post(std::make_shared<CreateRasterizerState>(pass.m_rasterizer.m_name, pass.m_rasterizer.m_data));
-            m_builtPassStates.emplace(pass.m_program.m_programName, built_pass_states);
+            m_builtPassStates.emplace(pass.m_name, built_pass_states);
         }
         m_builtEffectTechniques.emplace_back(built_effect_technique);
     }
@@ -113,15 +116,19 @@ void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceSamplerStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass = m_policy.FindPassWithSamplerState(ev->GetStateName());
-    if (!pass) return;
-    auto index = m_policy.FindSamplerIndexInPass(ev->GetStateName());
-    if (!index) return;
-    std::string pass_name = pass.value().get().m_program.m_programName;
-    auto it = m_builtPassStates.find(pass_name);
-    if (it == m_builtPassStates.end()) return;
-    it->second.m_samplers.value()[*index] = ev->GetState();
-    TryBuildEffectPass(pass_name);
+    auto pass_profiles = m_policy.FindPassesWithSamplerState(ev->GetStateName());
+    if (pass_profiles.empty()) return;
+
+    for (auto& pass_profile : pass_profiles)
+    {
+        std::string pass_name = pass_profile.get().m_name;
+        auto index = m_policy.FindSamplerIndexInPass(pass_name, ev->GetStateName());
+        if (!index) return;
+        auto it = m_builtPassStates.find(pass_name);
+        if (it == m_builtPassStates.end()) return;
+        it->second.m_samplers.value()[*index] = ev->GetState();
+        TryBuildEffectPass(pass_name);
+    }
 }
 
 void EffectCompiler::OnBlendStateCreated(const Frameworks::IEventPtr& e)
@@ -129,12 +136,16 @@ void EffectCompiler::OnBlendStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceAlphaBlendStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass = m_policy.FindPassWithBlendState(ev->GetStateName());
-    if (!pass) return;
-    std::string pass_name = pass.value().get().m_program.m_programName;
-    if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
-    m_builtPassStates[pass_name].m_blend = ev->GetState();
-    TryBuildEffectPass(pass_name);
+    auto pass_profiles = m_policy.FindPassesWithBlendState(ev->GetStateName());
+    if (pass_profiles.empty()) return;
+
+    for (auto& pass_profile : pass_profiles)
+    {
+        std::string pass_name = pass_profile.get().m_name;
+        if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
+        m_builtPassStates[pass_name].m_blend = ev->GetState();
+        TryBuildEffectPass(pass_name);
+    }
 }
 
 void EffectCompiler::OnDepthStateCreated(const Frameworks::IEventPtr& e)
@@ -142,12 +153,16 @@ void EffectCompiler::OnDepthStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceDepthStencilStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass = m_policy.FindPassWithDepthState(ev->GetStateName());
-    if (!pass) return;
-    std::string pass_name = pass.value().get().m_program.m_programName;
-    if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
-    m_builtPassStates[pass_name].m_depth = ev->GetState();
-    TryBuildEffectPass(pass_name);
+    auto pass_profiles = m_policy.FindPassesWithDepthState(ev->GetStateName());
+    if (pass_profiles.empty()) return;
+
+    for (auto& pass_profile : pass_profiles)
+    {
+        std::string pass_name = pass_profile.get().m_name;
+        if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
+        m_builtPassStates[pass_name].m_depth = ev->GetState();
+        TryBuildEffectPass(pass_name);
+    }
 }
 
 void EffectCompiler::OnRasterizerStateCreated(const Frameworks::IEventPtr& e)
@@ -155,45 +170,55 @@ void EffectCompiler::OnRasterizerStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceRasterizerStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass = m_policy.FindPassWithRasterizerState(ev->GetStateName());
-    if (!pass) return;
-    std::string pass_name = pass.value().get().m_program.m_programName;
-    if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
-    m_builtPassStates[pass_name].m_rasterizer = ev->GetState();
-    TryBuildEffectPass(pass_name);
+    auto pass_profiles = m_policy.FindPassesWithRasterizerState(ev->GetStateName());
+    if (pass_profiles.empty()) return;
+
+    for (auto& pass_profile : pass_profiles)
+    {
+        std::string pass_name = pass_profile.get().m_name;
+        if (m_builtPassStates.find(pass_name) == m_builtPassStates.end()) return;
+        m_builtPassStates[pass_name].m_rasterizer = ev->GetState();
+        TryBuildEffectPass(pass_name);
+    }
 }
 
-void EffectCompiler::TryBuildEffectPass(const std::string& name)
+void EffectCompiler::TryBuildEffectPass(const std::string& program_name)
 {
-    if (m_builtPrograms.find(name) == m_builtPrograms.end()) return;
-    if (!m_builtPrograms[name]) return;
-    auto it = m_builtPassStates.find(name);
-    if (it == m_builtPassStates.end()) return;
-    if (it->second.m_samplers)
+    if (m_builtPrograms.find(program_name) == m_builtPrograms.end()) return;
+    if (!m_builtPrograms[program_name]) return;
+    auto pass_profiles = m_policy.FindPassesWithProgram(program_name);
+    if (pass_profiles.empty()) return;
+    for (auto& pass_profile : pass_profiles)
     {
-        for (unsigned int i = 0; i < it->second.m_samplers.value().size(); i++)
+        std::string pass_name = pass_profile.get().m_name;
+        auto it = m_builtPassStates.find(pass_name);
+        if (it == m_builtPassStates.end()) continue;
+        if (it->second.m_samplers)
         {
-            if (it->second.m_samplers.value()[i] == nullptr) return;
-        }
-    }
-    if (!it->second.m_blend) return;
-    if (!it->second.m_depth) return;
-    if (!it->second.m_rasterizer) return;
-
-    std::string tech_name;
-    for (auto& tech : m_builtEffectTechniques)
-    {
-        if (tech.m_passes.empty()) continue;
-        for (auto& pass : tech.m_passes)
-        {
-            if (pass.m_name == name)
+            for (unsigned int i = 0; i < it->second.m_samplers.value().size(); i++)
             {
-                pass.m_pass = EffectPass(m_builtPrograms[name], m_builtPassStates[name]);
-                tech_name = tech.m_name;
+                if (it->second.m_samplers.value()[i] == nullptr) continue;
             }
         }
+        if (!it->second.m_blend) continue;
+        if (!it->second.m_depth) continue;
+        if (!it->second.m_rasterizer) continue;
+
+        std::string tech_name;
+        for (auto& tech : m_builtEffectTechniques)
+        {
+            if (tech.m_passes.empty()) continue;
+            for (auto& pass : tech.m_passes)
+            {
+                if (pass.m_name == pass_name)
+                {
+                    pass.m_pass = EffectPass(pass.m_name, m_builtPrograms[program_name], m_builtPassStates[pass_name]);
+                    tech_name = tech.m_name;
+                }
+            }
+        }
+        TryBuildEffectTechniques(tech_name);
     }
-    TryBuildEffectTechniques(tech_name);
 }
 
 void EffectCompiler::TryBuildEffectTechniques(const std::string& name)

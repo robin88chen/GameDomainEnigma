@@ -36,7 +36,7 @@ namespace Enigma::Engine
         void OnDepthStateCreated(const Frameworks::IEventPtr& e);
         void OnRasterizerStateCreated(const Frameworks::IEventPtr& e);
 
-        void TryBuildEffectPass(const std::string& name);
+        void TryBuildEffectPass(const std::string& program_name);
         void TryBuildEffectTechniques(const std::string& name);
         void TryBuildEffectMaterial();
 

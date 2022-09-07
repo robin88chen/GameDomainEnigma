@@ -25,6 +25,8 @@ namespace Enigma::Engine
         EffectVariable& operator=(const EffectVariable& var);
         EffectVariable& operator=(EffectVariable&& var) noexcept;
 
+        bool operator==(const EffectVariable& var);
+
         const std::string& GetName() { return m_name; };
         const std::string& GetSemantic() { return m_semantic; };
         const std::string& GetName() const { return m_name; };

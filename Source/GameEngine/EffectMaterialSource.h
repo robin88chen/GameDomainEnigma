@@ -8,23 +8,27 @@
 #ifndef EFFECT_MATERIAL_SOURCE_H
 #define EFFECT_MATERIAL_SOURCE_H
 
+#include "EffectMaterial.h"
 #include <memory>
 #include <functional>
 #include <atomic>
 
 namespace Enigma::Engine
 {
-    class EffectMaterial;
-
     class EffectMaterialSource : public std::enable_shared_from_this<EffectMaterialSource>
     {
     public:
         EffectMaterialSource();
+        EffectMaterialSource(std::unique_ptr<EffectMaterial> material);
         EffectMaterialSource(const EffectMaterialSource&) = delete;
         EffectMaterialSource(EffectMaterialSource&&) = delete;
         ~EffectMaterialSource();
         EffectMaterialSource& operator=(const EffectMaterialSource&) = delete;
         EffectMaterialSource& operator=(EffectMaterialSource&&) = delete;
+
+        const std::string& GetName() const;
+
+        EffectMaterialPtr CloneEffectMaterial();
 
         static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> OnDuplicatedEmpty;
 

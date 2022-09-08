@@ -39,9 +39,9 @@ Enigma::Frameworks::ServiceResult ShaderManager::OnInit()
     m_onShaderProgramBuildFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnShaderProgramBuildFailed(c); });
     Frameworks::EventPublisher::Subscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
-    m_handleBuildingShaderProgram =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->HandleBuildingShaderProgram(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Engine::BuildShaderProgram), m_handleBuildingShaderProgram);
+    m_doBuildingShaderProgram =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingShaderProgram(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -68,8 +68,8 @@ Enigma::Frameworks::ServiceResult ShaderManager::OnTerm()
     Frameworks::EventPublisher::Unsubscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
     m_onShaderProgramBuildFailed = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildShaderProgram), m_handleBuildingShaderProgram);
-    m_handleBuildingShaderProgram = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
+    m_doBuildingShaderProgram = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -193,7 +193,7 @@ void ShaderManager::OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e)
         ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }
-void ShaderManager::HandleBuildingShaderProgram(const Frameworks::ICommandPtr& c)
+void ShaderManager::DoBuildingShaderProgram(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Engine::BuildShaderProgram, Frameworks::ICommand>(c);

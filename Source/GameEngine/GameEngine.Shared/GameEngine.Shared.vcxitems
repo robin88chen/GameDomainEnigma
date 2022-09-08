@@ -18,6 +18,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />

@@ -20,14 +20,14 @@ namespace Enigma::Engine
     {
     public:
         //! try rich event
-        EffectMaterialCompiled(const std::string& filename, std::unique_ptr<EffectMaterial> eff) :
+        EffectMaterialCompiled(const std::string& filename, EffectMaterialPtr eff) :
             m_filename(filename), m_effect(std::move(eff)) {};
         const std::string& GetFilename() { return m_filename; }
         bool HasEffect() { return m_effect != nullptr; }
-        std::unique_ptr<EffectMaterial> GetEffect() { return std::move(m_effect); }
+        EffectMaterialPtr GetEffect() { return std::move(m_effect); }
     private:
         std::string m_filename;
-        std::unique_ptr<EffectMaterial> m_effect;
+        EffectMaterialPtr m_effect;
     };
     class EffectMaterialCompileFailed : public Frameworks::IEvent
     {

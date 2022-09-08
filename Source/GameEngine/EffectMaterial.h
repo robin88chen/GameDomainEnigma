@@ -32,6 +32,9 @@ namespace Enigma::Engine
 
         const std::string& GetName() { return m_name; };
 
+        void SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
+        std::shared_ptr<EffectMaterialSource> GetEffectMaterialSource() { return m_sourceMaterial.lock(); };
+
         /** select renderer & visual technique */
         void SelectRendererTechnique(const std::string& renderer_tech_name);
         void SelectVisualTechnique(const std::string& visual_tech_name);
@@ -73,6 +76,7 @@ namespace Enigma::Engine
         std::string m_selectedRendererTechName;
         std::string m_selectedVisualTechName;
     };
+    using EffectMaterialPtr = std::unique_ptr<EffectMaterial, std::function<void(EffectMaterial*)>>;
 };
 
 #endif // EFFECT_MATERIAL_H

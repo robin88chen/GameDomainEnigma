@@ -58,6 +58,11 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
     return *this;
 }
 
+void EffectMaterial::SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source)
+{
+    m_sourceMaterial = mat_source;
+}
+
 void EffectMaterial::SelectRendererTechnique(const std::string& renderer_tech_name)
 {
     m_selectedRendererTechName = renderer_tech_name;

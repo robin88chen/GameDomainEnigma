@@ -73,6 +73,7 @@ error EffectTechnique::ApplyFirstPass()
     {
         return ErrorCode::effectPassEnd;
     }
+    (*m_currentApplyPass).CommitVariables();
     (*m_currentApplyPass).Apply();
     return ErrorCode::ok;
 }
@@ -88,6 +89,7 @@ error EffectTechnique::ApplyNextPass()
     {
         return ErrorCode::effectPassEnd;
     }
+    (*m_currentApplyPass).CommitVariables();
     (*m_currentApplyPass).Apply();
     return ErrorCode::ok;
 }
@@ -96,13 +98,4 @@ bool EffectTechnique::HasNextPass()
 {
     if (m_currentApplyPass < m_effectPasses.end() - 1) return true;
     return false;
-}
-
-void EffectTechnique::CommitVariables()
-{
-    if (m_effectPasses.empty()) return;
-    for (auto& pass : m_effectPasses)
-    {
-        pass.CommitVariables();
-    }
 }

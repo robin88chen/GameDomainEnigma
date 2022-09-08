@@ -41,7 +41,7 @@ namespace Enigma::Engine
         error ApplyNextPass();
         bool HasNextPass();
 
-        void CommitEffectVariables();
+        void CommitInstancedEffectVariables();
 
         std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesByName(const std::string& name);
         std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesBySemantic(const std::string& semantic);

@@ -98,7 +98,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     m_policy = policy;
     if (m_hostManager->HasVertexShader(m_policy.m_vtxShaderName))
     {
-        m_vtxShader = m_hostManager->QueryVertexShader(m_policy.m_vtxShaderName);
+        //m_vtxShader = m_hostManager->QueryVertexShader(m_policy.m_vtxShaderName);
         Frameworks::EventPublisher::Post(std::make_shared<VertexShaderBuilt>(m_policy.m_vtxShaderName));
     }
     else
@@ -107,7 +107,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     }
     if (m_hostManager->HasPixelShader(m_policy.m_pixShaderName))
     {
-        m_pixShader = m_hostManager->QueryPixelShader(m_policy.m_pixShaderName);
+        //m_pixShader = m_hostManager->QueryPixelShader(m_policy.m_pixShaderName);
         Frameworks::EventPublisher::Post(std::make_shared<PixelShaderBuilt>(m_policy.m_pixShaderName));
     }
     else

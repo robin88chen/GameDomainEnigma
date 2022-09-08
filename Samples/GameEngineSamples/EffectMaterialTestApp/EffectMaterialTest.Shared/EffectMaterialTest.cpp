@@ -33,6 +33,10 @@ std::string TextureName = "earth";
 std::string MaterialName = "test_material";
 std::string ShaderProgramName = "shader_program";
 std::string VertexDeclName = "vtx_layout";
+std::string PassTopLeftName = "pass_top_left";
+std::string PassTopRightName = "pass_top_right";
+std::string PassBottomLeftName = "pass_bottom_left";
+std::string PassBottomRightName = "pass_bottom_right";
 
 struct VtxData
 {
@@ -52,7 +56,8 @@ static unsigned int vtx_idx[] =
 };
 
 static std::string vs_code_11 =
-"float offset;\n"
+"float offset_x;\n"
+"float offset_y;\n"
 "struct VS_INPUT \n"
 "{\n"
 "   float3 Pos : POSITION;\n"
@@ -67,7 +72,7 @@ static std::string vs_code_11 =
 "VS_OUTPUT vs_main(const VS_INPUT v)\n"
 "{\n"
 "   VS_OUTPUT o = (VS_OUTPUT)0;"
-"   o.Pos.xyz = v.Pos + float3(0.0f, offset, 0.0f);\n"
+"   o.Pos.xyz = v.Pos + float3(offset_x, offset_y, 0.0f);\n"
 " o.Pos.w = 1.0f;\n"
 "   o.Coord = v.Coord;\n"
 "   o.DiffCol = float4(0.5f + v.Pos.x + v.Pos.y, 0.5f + v.Pos.x - v.Pos.y, 0.5f + v.Pos.y - v.Pos.x, 1.0f); \n"
@@ -105,13 +110,14 @@ static std::string ps_code_11 =
 static const std::string vs_code_egl =
 "#version 300 es\n"
 "precision mediump float;\n"
-"uniform float offset;\n"
+"uniform float offset_x;\n"
+"uniform float offset_y;\n"
 "layout(location = 0) in vec3 pos;\n"
 "layout(location = 1) in vec2 texco;\n"
 "out vec2 vTexCo;\n"
 "out vec4 vColor;\n"
 "void main() {\n"
-"    gl_Position = vec4(pos, 1.0) + vec4(0.0f, offset, 0.0f, 0.0f);\n"
+"    gl_Position = vec4(pos, 1.0) + vec4(offset_x, offset_y, 0.0f, 0.0f);\n"
 "    vColor = vec4(0.5f + pos.x + pos.y, 0.5f + pos.x - pos.y, 0.5f + pos.y - pos.x, 1.0f);\n"
 "    vTexCo = texco;\n"
 "}\n";
@@ -242,15 +248,37 @@ void EffectMaterialTest::FrameUpdate()
     }
     if (m_material)
     {
-        auto vars = m_material->GetEffectVariablesBySemantic("ANIM_TIMER");
-        for (auto& v : vars)
+	    if (auto var_timer = m_material->GetEffectVariableInPassBySemantic(PassTopRightName, "ANIM_TIMER"))
         {
-            v.get().AssignValue(m_tick);
+            var_timer.value().get().AssignValue(m_tick);
         }
-        auto vars1 = m_material->GetEffectVariablesBySemantic("ANIM_SCALE");
-        for (auto& v : vars1)
+	    if (auto var_scale = m_material->GetEffectVariableInPassBySemantic(PassTopRightName, "ANIM_SCALE"))
         {
-            v.get().AssignValue(3.0f);
+            var_scale.value().get().AssignValue(3.0f);
+        }
+        if (auto var_timer = m_material->GetEffectVariableInPassBySemantic(PassBottomLeftName, "ANIM_TIMER"))
+        {
+            var_timer.value().get().AssignValue(-m_tick);
+        }
+        if (auto var_scale = m_material->GetEffectVariableInPassBySemantic(PassBottomLeftName, "ANIM_SCALE"))
+        {
+            var_scale.value().get().AssignValue(1.5f);
+        }
+        if (auto var_timer = m_material->GetEffectVariableInPassBySemantic(PassBottomRightName, "ANIM_TIMER"))
+        {
+            var_timer.value().get().AssignValue(m_tick);
+        }
+        if (auto var_scale = m_material->GetEffectVariableInPassBySemantic(PassBottomRightName, "ANIM_SCALE"))
+        {
+            var_scale.value().get().AssignValue(3.0f);
+        }
+        if (auto var_timer = m_material->GetEffectVariableInPassBySemantic(PassTopLeftName, "ANIM_TIMER"))
+        {
+            var_timer.value().get().AssignValue(-m_tick);
+        }
+        if (auto var_scale = m_material->GetEffectVariableInPassBySemantic(PassTopLeftName, "ANIM_SCALE"))
+        {
+            var_scale.value().get().AssignValue(1.5f);
         }
     }
 }
@@ -265,13 +293,11 @@ void EffectMaterialTest::RenderFrame()
     m_renderTarget->Clear();
     IGraphicAPI::Instance()->BeginScene();
     m_material->SelectRendererTechnique("technique");
-    m_material->CommitEffectVariables();
+    //m_material->SelectVisualTechnique("slash");
+    m_material->SelectVisualTechnique("backslash");
     m_material->ApplyFirstPass();
-    //m_effectPass->CommitVariables();
-    //m_effectPass->Apply();
     IGraphicAPI::Instance()->Draw(6, 4, 0, 0);
-    //m_effectPass2->CommitVariables();
-    //m_effectPass2->Apply();
+    m_material->ApplyNextPass();
     IGraphicAPI::Instance()->Draw(6, 4, 0, 0);
     IGraphicAPI::Instance()->EndScene();
     m_renderTarget->Flip();
@@ -291,10 +317,17 @@ EffectCompilingPolicy EffectMaterialTest::MakeEffectCompilingPolicy()
     IDeviceSamplerState::SamplerStateData samp_data;
     samp_data.m_addressModeU = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
     samp_data.m_addressModeV = IDeviceSamplerState::SamplerStateData::AddressMode::Wrap;
-    EffectPassProfile pass_profile{ "pass1", program,
+    EffectPassProfile pass_profile{ PassTopRightName, program,
         {{"samLinear", samp_data, "samLinear"}},
         {"raster"}, {"blender"}, {"depth"} };
-    policy.m_techniques = { {"technique", {pass_profile}} };
+    EffectPassProfile pass_profile2 = pass_profile;
+    pass_profile2.m_name = PassBottomLeftName;
+    EffectTechniqueProfile technique_profile{ "technique/slash", {pass_profile, pass_profile2} };
+    EffectTechniqueProfile technique_profile2 = technique_profile;
+    technique_profile2.m_name = "technique/backslash";
+    technique_profile2.m_passes[0].m_name = PassBottomRightName;
+    technique_profile2.m_passes[1].m_name = PassTopLeftName;
+    policy.m_techniques = { technique_profile, technique_profile2 };
     return policy;
 }
 
@@ -364,12 +397,36 @@ void EffectMaterialTest::BuildVariables()
             var.get().AssignValue(IShaderVariable::TextureVarTuple{ m_texture, std::nullopt });
         }
     }
-    auto offset_vars = m_material->GetEffectVariablesByName("offset");
-    if (!offset_vars.empty())
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassTopLeftName, "offset_x"))
     {
-        for (auto& var : offset_vars)
-        {
-            var.get().AssignValue(-0.3f);
-        }
+        offset_var.value().get().AssignValue(-0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassTopLeftName, "offset_y"))
+    {
+        offset_var.value().get().AssignValue(0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassBottomLeftName, "offset_x"))
+    {
+        offset_var.value().get().AssignValue(-0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassBottomLeftName, "offset_y"))
+    {
+        offset_var.value().get().AssignValue(-0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassTopRightName, "offset_x"))
+    {
+        offset_var.value().get().AssignValue(0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassTopRightName, "offset_y"))
+    {
+        offset_var.value().get().AssignValue(0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassBottomRightName, "offset_x"))
+    {
+        offset_var.value().get().AssignValue(0.3f);
+    }
+    if (auto offset_var = m_material->GetEffectVariableInPassByName(PassBottomRightName, "offset_y"))
+    {
+        offset_var.value().get().AssignValue(-0.3f);
     }
 }

@@ -38,8 +38,6 @@ namespace Enigma::Engine
         error ApplyNextPass();
         bool HasNextPass();
 
-        void CommitVariables();
-
     protected:
         using EffectPassArray = std::vector<EffectPass>;
 

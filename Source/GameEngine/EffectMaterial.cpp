@@ -94,10 +94,8 @@ bool EffectMaterial::HasNextPass()
     return m_currentTechnique->HasNextPass();
 }
 
-void EffectMaterial::CommitEffectVariables()
+void EffectMaterial::CommitInstancedEffectVariables()
 {
-    if (m_currentTechnique == m_effectTechniques.end()) return;
-    m_currentTechnique->CommitVariables();
     if (m_instancedAssignFuncList.size() > 0)
     {
         for (auto& func : m_instancedAssignFuncList)

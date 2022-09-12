@@ -50,6 +50,9 @@ namespace Enigma::Engine
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
         void OnEffectMaterialCompileFailed(const Frameworks::IEventPtr& e);
 
+        /** release effect material source */
+        void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
+
         void DumpUnreleasedMaterial();
 
     private:

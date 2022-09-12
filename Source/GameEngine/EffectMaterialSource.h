@@ -28,6 +28,8 @@ namespace Enigma::Engine
 
         const std::string& GetName() const;
 
+        void LinkSource();
+
         EffectMaterialPtr CloneEffectMaterial();
 
         static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> OnDuplicatedEmpty;

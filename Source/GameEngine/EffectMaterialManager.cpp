@@ -3,6 +3,7 @@
 #include "EffectMaterial.h"
 #include "EffectCompiler.h"
 #include "EffectEvents.h"
+#include "EngineErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -17,6 +18,7 @@ EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mng
     IMPLEMENT_RTTI(Enigma, Engine, EffectMaterialManager, ISystemService);
     m_needTick = false;
     m_compiler = menew EffectCompiler();
+    m_isCurrentCompiling = false;
 }
 
 EffectMaterialManager::~EffectMaterialManager()
@@ -36,6 +38,10 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompileFailed(c); });
     Frameworks::EventPublisher::Subscribe(typeid(EffectMaterialCompileFailed), m_onEffectMaterialCompileFailed);
 
+    EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
+    {
+        ReleaseEffectMaterialSource(eff);
+    };
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -46,12 +52,21 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
     if (m_policies.empty())
     {
         m_needTick = false;
-        return Frameworks::ServiceResult::Complete;
+        return Frameworks::ServiceResult::Pendding;
     }
     assert(m_compiler);
-    m_compiler->CompileEffect(m_policies.front());
-    m_policies.pop();
-    m_isCurrentCompiling = true;
+    if (HasEffectMaterial(m_policies.front().m_name))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(
+            m_policies.front().m_name, QueryEffectMaterial(m_policies.front().m_name)));
+        m_policies.pop();
+    }
+    else
+    {
+        m_compiler->CompileEffect(m_policies.front());
+        m_policies.pop();
+        m_isCurrentCompiling = true;
+    }
     return Frameworks::ServiceResult::Pendding;
 }
 
@@ -79,6 +94,14 @@ EffectMaterialPtr EffectMaterialManager::QueryEffectMaterial(const std::string& 
     return iter->second->CloneEffectMaterial();
 }
 
+error EffectMaterialManager::CompileEffectMaterial(const EffectCompilingPolicy& policy)
+{
+    std::lock_guard locker{ m_policiesLock };
+    m_policies.push(policy);
+    m_needTick = true;
+    return ErrorCode::ok;
+}
+
 void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
     assert(m_compiler);
@@ -86,7 +109,10 @@ void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr
     auto ev = std::dynamic_pointer_cast<EffectCompiler::EffectMaterialCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
     std::lock_guard<std::recursive_mutex> lock(m_sourceMapLock);
-    m_sourceMaterials.try_emplace(ev->GetFilename(), std::make_shared<EffectMaterialSource>(ev->GetEffect()));
+
+    EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
+    source->LinkSource();
+    m_sourceMaterials.try_emplace(ev->GetFilename(), source);
     Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(ev->GetFilename(), QueryEffectMaterial(ev->GetFilename())));
     m_isCurrentCompiling = false;
 }
@@ -99,6 +125,13 @@ void EffectMaterialManager::OnEffectMaterialCompileFailed(const Frameworks::IEve
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
         ev->GetFilename().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentCompiling = false;
+}
+
+void EffectMaterialManager::ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source)
+{
+    if (!eff_source) return;
+    std::lock_guard locker{ m_sourceMapLock };
+    m_sourceMaterials.erase(eff_source->GetName());
 }
 
 void EffectMaterialManager::DumpUnreleasedMaterial()

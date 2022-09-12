@@ -52,7 +52,7 @@ Enigma::Frameworks::ServiceResult ShaderManager::OnTick()
     if (m_policies.empty())
     {
         m_needTick = false;
-        return Frameworks::ServiceResult::Complete;
+        return Frameworks::ServiceResult::Pendding;
     }
     assert(m_builder);
     m_builder->BuildShaderProgram(m_policies.front());

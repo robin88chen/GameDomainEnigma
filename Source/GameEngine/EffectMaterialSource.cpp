@@ -6,10 +6,18 @@
 
 using namespace Enigma::Engine;
 
+std::function<void(const std::shared_ptr<EffectMaterialSource>&)> EffectMaterialSource::OnDuplicatedEmpty;
+
 EffectMaterialSource::EffectMaterialSource()
 {
     m_duplicateCount = 0;
     m_effectMaterial = nullptr;
+}
+
+EffectMaterialSource::EffectMaterialSource(std::unique_ptr<EffectMaterial> material)
+{
+    m_duplicateCount = 1;
+    m_effectMaterial = std::move(material);
 }
 
 EffectMaterialSource::~EffectMaterialSource()
@@ -22,6 +30,11 @@ const std::string& EffectMaterialSource::GetName() const
 {
     assert(m_effectMaterial != nullptr);
     return m_effectMaterial->GetName();
+}
+
+void EffectMaterialSource::LinkSource()
+{
+    if (m_effectMaterial) m_effectMaterial->SetSource(shared_from_this());
 }
 
 EffectMaterialPtr EffectMaterialSource::CloneEffectMaterial()

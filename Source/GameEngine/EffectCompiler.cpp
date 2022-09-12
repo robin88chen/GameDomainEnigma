@@ -14,6 +14,8 @@ using namespace Enigma::Graphics;
 
 EffectCompiler::EffectCompiler()
 {
+    m_hasMaterialProduced = false;
+
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuilt(e); });
     EventPublisher::Subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onProgramBuildFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnProgramBuildFailed(e); });
@@ -91,6 +93,7 @@ void EffectCompiler::CompileEffect(const EffectCompilingPolicy& policy)
         }
         m_builtEffectTechniques.emplace_back(built_effect_technique);
     }
+    m_hasMaterialProduced = false;
 }
 
 void EffectCompiler::OnShaderProgramBuilt(const Frameworks::IEventPtr& e)
@@ -239,6 +242,7 @@ void EffectCompiler::TryBuildEffectTechniques(const std::string& name)
 
 void EffectCompiler::TryBuildEffectMaterial()
 {
+    if (m_hasMaterialProduced) return;
     std::vector<EffectTechnique> effect_techniques;
     for (auto& built_tech : m_builtEffectTechniques)
     {
@@ -247,6 +251,7 @@ void EffectCompiler::TryBuildEffectMaterial()
     }
     auto effect_material = std::make_unique<EffectMaterial>(m_policy.m_name, effect_techniques);
     EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_policy.m_name, std::move(effect_material)));
+    m_hasMaterialProduced = true;
 }
 
 //---------------------------------------------------------------------------------------------

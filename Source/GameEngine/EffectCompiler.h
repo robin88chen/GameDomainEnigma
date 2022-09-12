@@ -84,6 +84,8 @@ namespace Enigma::Engine
         std::unordered_map<std::string, Graphics::IShaderProgramPtr> m_builtPrograms;
         std::unordered_map<std::string, EffectPassStates> m_builtPassStates;
         std::vector<BuiltEffectTechniqueMeta> m_builtEffectTechniques;
+
+        bool m_hasMaterialProduced;
     };
 }
 

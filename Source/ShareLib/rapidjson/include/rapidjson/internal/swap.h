@@ -1,6 +1,6 @@
 // Tencent is pleased to support the open source community by making RapidJSON available.
 //
-// Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
+// Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
 // Licensed under the MIT License (the "License"); you may not use this file except
 // in compliance with the License. You may obtain a copy of the License at
@@ -17,10 +17,15 @@
 
 #include "../rapidjson.h"
 
+#if defined(__clang__)
+RAPIDJSON_DIAG_PUSH
+RAPIDJSON_DIAG_OFF(c++98-compat)
+#endif
+
 RAPIDJSON_NAMESPACE_BEGIN
 namespace internal {
 
-//! Custom swap() to avoid dependency on C++ <algorith> header
+//! Custom swap() to avoid dependency on C++ <algorithm> header
 /*! \tparam T Type of the arguments to swap, should be instantiated with primitive C++ types only.
     \note This has the same semantics as std::swap().
 */
@@ -33,5 +38,9 @@ inline void Swap(T& a, T& b) RAPIDJSON_NOEXCEPT {
 
 } // namespace internal
 RAPIDJSON_NAMESPACE_END
+
+#if defined(__clang__)
+RAPIDJSON_DIAG_POP
+#endif
 
 #endif // RAPIDJSON_INTERNAL_SWAP_H_

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectJsonGatewayTest.Shared", "EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems", "{5AD2BCEF-B819-4EEB-B375-235D179D37B6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectJsonGatewayTest.Win32", "EffectJsonGatewayTest.Win32\EffectJsonGatewayTest.Win32.vcxproj", "{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x64.ActiveCfg = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x64.Build.0 = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x86.ActiveCfg = Debug|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x86.Build.0 = Debug|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x64.ActiveCfg = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x64.Build.0 = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x86.ActiveCfg = Release|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7C35A49-BD85-4848-99F2-C4450CC9F3BD}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems*{5ad2bcef-b819-4eeb-b375-235d179d37b6}*SharedItemsImports = 9
+		EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems*{c963834c-dd5a-4e9b-98bc-9aab620f7ab1}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

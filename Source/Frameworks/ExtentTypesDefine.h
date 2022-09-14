@@ -29,6 +29,11 @@ std::vector<typename std::enable_if<std::is_scalar<T>::value, T>::type> make_dat
     return buffer;
 }
 
+inline std::string convert_to_string(const byte_buffer& buff, size_t length)
+{
+    return { reinterpret_cast<const char*>(&buff[0]), length };
+}
+
 future_error make_future_err(std::error_code er);
 
 template<typename E, class T, std::size_t N>

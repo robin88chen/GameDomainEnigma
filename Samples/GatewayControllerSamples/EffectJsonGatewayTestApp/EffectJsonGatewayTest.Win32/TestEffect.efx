@@ -1,0 +1,50 @@
+{
+	"VertexShaderList" : [
+	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/mesh.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/mesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/mesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "dx9", "File" : "fx/deferred/mesh.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "dx11", "File" : "fx/deferred/mesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "egl", "File" : "fx/deferred/mesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Clamp", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samShadow", "AddressU" : "Border", "AddressV" : "Border", "MinFilter" : "Linear", "MagFilter" : "Linear",
+		"MipFilter" : "None", "CmpFunc" : "Less", "BorderColor" : "0, 0, 0, 0"}
+	],
+	"RasterizerStateList" : [
+	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},
+	{"Name" : "rasFill", "FillMode" : "Fill", "CullMode" : "None"},
+	{"Name" : "rasFillBias", "FillMode" : "Wireframe", "DepthBias" : -0.5001}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{"VertexShader" : "default_vs", "PixelShader" : "default_ps", 
+			"SamplerState" : [{ "Sampler" : "samClampLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}
+	]
+}

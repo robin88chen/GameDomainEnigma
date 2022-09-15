@@ -19,7 +19,7 @@
 	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
 	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Clamp", "MinFilter" : "Linear", "MagFilter" : "Linear"},
 	{"Name" : "samShadow", "AddressU" : "Border", "AddressV" : "Border", "MinFilter" : "Linear", "MagFilter" : "Linear",
-		"MipFilter" : "None", "CmpFunc" : "Less", "BorderColor" : "0, 0, 0, 0"}
+		"MipFilter" : "None", "CmpFunc" : "Less", "BorderColor" : [0, 0, 0, 0]}
 	],
 	"RasterizerStateList" : [
 	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},

@@ -1,4 +1,5 @@
 {
+	"Name" : "test_effect",
 	"VertexShaderList" : [
 	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/mesh.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
 	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/mesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
@@ -37,13 +38,14 @@
 	"TechniqueList" : [
 	{"Name" : "Primary/Default",
 		"EffectPassArray" : [
-		{"VertexShader" : "default_vs", "PixelShader" : "default_ps", 
+		{ "Name" : "default", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
 			"SamplerState" : [{ "Sampler" : "samClampLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
 		]
 	},
 	{"Name" : "DeferredRenderer/Default",
 		"EffectPassArray" : [
-		{"VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		{ "Name" : "default_lit", "Program" : "default_lit", "VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", 
+			"SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
 		]
 	}
 	]

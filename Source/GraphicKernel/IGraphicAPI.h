@@ -78,6 +78,8 @@ namespace Enigma::Graphics
 
         static IGraphicAPI* Instance();
 
+        APIVersion GetAPIVersion() { return m_apiVersion; }
+
         virtual void BeginScene();
         virtual void EndScene();
         virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);

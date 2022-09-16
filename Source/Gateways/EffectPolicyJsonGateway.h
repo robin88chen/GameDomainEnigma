@@ -72,8 +72,11 @@ namespace Enigma::Gateways
         std::vector<PixelShaderGatewayMeta> DeserializePixelShaderList(const rapidjson::Value& shader_list) const;
         std::vector<SamplerStateGatewayMeta> DeserializeSamplerStateList(const rapidjson::Value& sampler_list) const;
         std::vector<RasterizerStateGatewayMeta> DeserializeRasterizerStateList(const rapidjson::Value& rasterizer_list) const;
-        std::vector<BlendStateGatewayMeta> DeserializeBlendStateList(const rapidjson::Value& sampler_list) const;
-        std::vector<DepthStateGatewayMeta> DeserializeDepthStateList(const rapidjson::Value& sampler_list) const;
+        std::vector<BlendStateGatewayMeta> DeserializeBlendStateList(const rapidjson::Value& blend_list) const;
+        std::vector<DepthStateGatewayMeta> DeserializeDepthStateList(const rapidjson::Value& depth_list) const;
+
+        std::vector<Engine::EffectTechniqueProfile> DeserializeTechniqueProfileList(const rapidjson::Value& tech_list) const;
+        std::vector<Engine::EffectPassProfile> DeserializePassProfileList(const rapidjson::Value& pass_list) const;
 
         VertexShaderGatewayMeta DeserializeVertexShaderMeta(const rapidjson::Value& shader) const;
         PixelShaderGatewayMeta DeserializePixelShaderMeta(const rapidjson::Value& shader) const;
@@ -82,7 +85,19 @@ namespace Enigma::Gateways
         BlendStateGatewayMeta DeserializeBlendStateMeta(const rapidjson::Value& state) const;
         DepthStateGatewayMeta DeserializeDepthStateMeta(const rapidjson::Value& state) const;
 
+        Engine::EffectTechniqueProfile DeserializeTechniqueProfile(const rapidjson::Value& tech) const;
+        Engine::EffectPassProfile DeserializePassProfile(const rapidjson::Value& pass) const;
+        Engine::ShaderProgramPolicy DeserializeProgramPolicy(const std::string& name, const std::string& vtx_shader_name,
+            const std::string& pix_shader_name) const;
+        std::vector<Engine::EffectSamplerProfile> DeserializeSamplerProfileList(const rapidjson::Value& sampler_list) const;
+        Engine::EffectAlphaBlendProfile FetchBlendStateProfile(const std::string& state_name) const;
+        Engine::EffectRasterizerProfile FetchRasterizerStateProfile(const std::string& state_name) const;
+        Engine::EffectDepthStencilProfile FetchDepthStateProfile(const std::string& state_name) const;
+        std::string ReadShaderCode(const std::string& filename) const;
+
         MathLib::ColorRGBA DeserializeColorRGBA(const rapidjson::Value& value) const;
+        Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData DeserializeStencilOp(const rapidjson::Value& value) const;
+
     private:
         const std::unordered_map<std::string, Graphics::IGraphicAPI::APIVersion> m_apiReference {
             {"dx9", Graphics::IGraphicAPI::APIVersion::API_Dx9}, {"dx11", Graphics::IGraphicAPI::APIVersion::API_Dx11},
@@ -99,7 +114,7 @@ namespace Enigma::Gateways
             {"Mirror", Graphics::IDeviceSamplerState::SamplerStateData::AddressMode::Mirror},
             {"Border", Graphics::IDeviceSamplerState::SamplerStateData::AddressMode::Border},
         };
-        const std::unordered_map<std::string, Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc> m_compFuncReference{
+        const std::unordered_map<std::string, Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc> m_samplerCompReference{
             {"Never", Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc::Never},
             {"Always", Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc::Always},
             {"Equal", Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc::Equal},
@@ -118,6 +133,32 @@ namespace Enigma::Gateways
             {"None", Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode::Cull_None},
             {"CW", Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode::Cull_CW},
             {"CCW", Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode::Cull_CCW},
+        };
+        const std::unordered_map<std::string, Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType> m_blendTypeReference{
+            {"Disable", Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType::Blend_Disable},
+            {"Additive", Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType::Blend_Additive},
+            {"Opaque", Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType::Blend_Opaque},
+            {"Transparent", Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType::Blend_Transparent},
+        };
+        const std::unordered_map<std::string, Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc> m_depthCompReference{
+            {"Never", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Never},
+            {"Always", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Always},
+            {"Equal", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Equal},
+            {"Greater", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Greater},
+            {"GreaterEqual", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::GreaterEqual},
+            {"Less", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Less},
+            {"LessEqual", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::LessEqual},
+            {"NotEqual", Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::NotEqual},
+        };
+        const std::unordered_map<std::string, Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode> m_stencilOpReference{
+            {"Keep", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Keep},
+            {"Decr", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Decr},
+            {"Decr_Sat", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Decr_Sat},
+            {"Incr", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Incr},
+            {"Incr_Sat", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Incr_Sat},
+            {"Invert", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Invert},
+            {"Replace", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Replace},
+            {"Zero", Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Zero},
         };
         std::vector<VertexShaderGatewayMeta> m_vertexShaderGateways;
         std::vector<PixelShaderGatewayMeta> m_pixelShaderGateways;

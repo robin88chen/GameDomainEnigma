@@ -2,7 +2,7 @@
 	"Name" : "test_effect",
 	"VertexShaderList" : [
 	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/mesh.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
-	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/mesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "test.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
 	{"Name" : "default_vs", "API" : "egl", "File" : "fx/mesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"},
 	{"Name" : "deferred_lit_vs", "API" : "dx9", "File" : "fx/deferred/mesh.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
 	{"Name" : "deferred_lit_vs", "API" : "dx11", "File" : "fx/deferred/mesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
@@ -10,7 +10,7 @@
 	],
 	"PixelShaderList" : [
 	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
-	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "test.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
 	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""},
 	{"Name" : "deferred_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
 	{"Name" : "deferred_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
@@ -36,15 +36,19 @@
 	{"Name" : "depthDisable", "DepthTest" : false}
 	],
 	"TechniqueList" : [
-	{"Name" : "Primary/Default",
+	{"Name" : "technique/slash",
 		"EffectPassArray" : [
-		{ "Name" : "default", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
-			"SamplerState" : [{ "Sampler" : "samClampLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
+		{ "Name" : "pass_top_right", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
+			"SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] },
+		{ "Name" : "pass_bottom_left", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
+			"SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
 		]
 	},
-	{"Name" : "DeferredRenderer/Default",
+	{"Name" : "technique/backslash",
 		"EffectPassArray" : [
-		{ "Name" : "default_lit", "Program" : "default_lit", "VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", 
+		{ "Name" : "pass_top_left", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
+			"SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] },
+		{ "Name" : "pass_bottom_right", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", 
 			"SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
 		]
 	}

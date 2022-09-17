@@ -15,7 +15,13 @@
 #include "Application/AppDelegateWin32.h"
 #endif
 #include "Gateways/EffectPolicyJsonGateway.h"
+#include "GameEngine/RenderTarget.h"
+#include "GameEngine/EffectMaterialManager.h"
+#include "Frameworks/Timer.h"
 #include <string>
+
+class BufferBuilder;
+class TextureSamplerBuilder;
 
 class EffectJsonGatewayTest : public Enigma::Application::AppDelegate
 {
@@ -34,7 +40,36 @@ public:
     virtual void RenderFrame() override;
 
 private:
+	void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnEffectMaterialCompiled(const Enigma::Frameworks::IEventPtr& e);
+    void OnEffectCompileFailed(const Enigma::Frameworks::IEventPtr& e);
+    void OnVertexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnIndexBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnTextureLoaded(const Enigma::Frameworks::IEventPtr& e);
+
+	void BuildVariables();
+
+private:
     Enigma::Gateways::EffectPolicyJsonGateway* m_gateway;
+    Enigma::Engine::RendererManager* m_rendererManager;
+    Enigma::Engine::RenderTargetPtr m_renderTarget;
+    Enigma::Engine::EffectMaterialManager* m_materialManager;
+    Enigma::Graphics::IVertexBufferPtr m_vtxBuffer;
+    Enigma::Graphics::IIndexBufferPtr m_idxBuffer;
+    Enigma::Graphics::ITexturePtr m_texture;
+    Enigma::Engine::EffectMaterialPtr m_material;
+
+    Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
+    Enigma::Frameworks::EventSubscriberPtr m_onEffectCompileFailed;
+    Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onTextureLoaded;
+
+	Enigma::Frameworks::Timer* m_timer;
+    float m_tick;
+    BufferBuilder* m_bufferBuilder;
+    TextureSamplerBuilder* m_textureBuilder;
 };
 
 

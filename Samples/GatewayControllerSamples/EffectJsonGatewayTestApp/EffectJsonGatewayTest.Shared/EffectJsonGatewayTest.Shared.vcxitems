@@ -14,9 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)EffectJsonGatewayTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)EffectJsonGatewayTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.cpp" />
   </ItemGroup>
 </Project>

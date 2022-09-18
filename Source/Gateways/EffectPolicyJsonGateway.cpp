@@ -524,7 +524,7 @@ EffectDepthStencilProfile EffectPolicyJsonGateway::FetchDepthStateProfile(const 
 
 std::string EffectPolicyJsonGateway::ReadShaderCode(const std::string& filename) const
 {
-    IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename, "rb", "");
+    IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(filename), "rb");
     if (FATAL_LOG_EXPR(!iFile)) return "";
     size_t file_size = iFile->Size();
     if (FATAL_LOG_EXPR(file_size <= 0))

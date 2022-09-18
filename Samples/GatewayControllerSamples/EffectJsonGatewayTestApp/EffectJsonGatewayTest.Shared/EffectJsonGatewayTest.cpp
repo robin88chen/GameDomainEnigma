@@ -3,6 +3,7 @@
 #include "BufferBuilder.h"
 #include "TextureSamplerBuilder.h"
 #include "Controllers/InstallingPolicies.h"
+#include "Gateways/EffectPolicyJsonGateway.h"
 #include "Frameworks/ServiceManager.h"
 #include "GameEngine/RendererManager.h"
 #include "Frameworks/EventSubscriber.h"
@@ -15,6 +16,7 @@
 #include "FileSystem/IFile.h"
 #include "MathLib/Vector2.h"
 #include "FileSystem/StdMountPath.h"
+#include "FileSystem/AndroidMountPath.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::Controllers;
@@ -72,6 +74,11 @@ void EffectJsonGatewayTest::InitializeMountPaths()
 		auto mediaPath = path / "../../../../Media/";
 		FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
 	}
+#elif TARGET_PLATFORM == PLATFORM_ANDROID
+	if (FileSystem::Instance())
+	{
+		FileSystem::Instance()->AddMountPath(std::make_shared<AndroidMountPath>("", MediaPathName));
+	}
 #endif
 }
 
@@ -103,7 +110,7 @@ void EffectJsonGatewayTest::InstallEngine()
 
 	m_gateway = menew EffectPolicyJsonGateway();
 
-    IFilePtr iFile = FileSystem::Instance()->OpenFile("TestEffect.efx", "rb", "");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("TestEffect.efx@APK_PATH"), "rb");
     if (FATAL_LOG_EXPR(!iFile)) return;
     size_t file_size = iFile->Size();
     if (FATAL_LOG_EXPR(file_size <= 0))

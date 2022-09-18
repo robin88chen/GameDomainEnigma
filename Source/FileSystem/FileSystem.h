@@ -10,6 +10,7 @@
 
 #include "IFile.h"
 #include "IMountPath.h"
+#include "Filename.h"
 #include <string>
 #include <list>
 #include <mutex>
@@ -31,6 +32,12 @@ namespace Enigma::FileSystem
         @param path_id  像是變數名稱之類的字串，例如 "EXECUTABLE_PATH", "RESOURCE_PATH" */
         IFilePtr OpenFile(const std::string& filename, const std::string& rw_options, const std::string& path_id);
         FutureFile AsyncOpenFile(const std::string& filename, const std::string& rw_options, const std::string& path_id);
+
+    	/** Open File
+        @param rw_options r: read, w: write, +: open always, m: multi-thread
+        @param filename  filename object */
+        IFilePtr OpenFile(const Filename& filename, const std::string& rw_options);
+        FutureFile AsyncOpenFile(const Filename& filename, const std::string& rw_options);
 
         void CloseFile(const IFilePtr& file);
 

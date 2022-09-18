@@ -7,6 +7,7 @@
 #include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 #include <iostream>
+#include <future>
 
 #undef CreateFile
 
@@ -42,7 +43,7 @@ FileSystem* FileSystem::Instance()
 
 IFilePtr FileSystem::OpenFile(const std::string& filename, const std::string& rw_options, const std::string& path_id)
 {
-    Debug::Printf("Open file %s called in thread %d\n", filename.c_str(), std::this_thread::get_id());
+    Debug::Printf("Open file %s at path %s called in thread %d\n", filename.c_str(), path_id.c_str(), std::this_thread::get_id());
     bool readonly = true;
     if (rw_options.find("w") != std::string::npos) readonly = false;
     if ((path_id.length() != 0) && (m_mountPathList.size()))
@@ -61,7 +62,17 @@ IFilePtr FileSystem::OpenFile(const std::string& filename, const std::string& rw
 FutureFile FileSystem::AsyncOpenFile(const std::string& filename,
     const std::string& rw_options, const std::string& path_id)
 {
-    return std::async(std::launch::async, &FileSystem::OpenFile, this, filename, rw_options, path_id);
+    return std::async(std::launch::async, [=]() -> IFilePtr { return this->OpenFile(filename, rw_options, path_id); });
+}
+
+IFilePtr FileSystem::OpenFile(const Filename& filename, const std::string& rw_options)
+{
+    return OpenFile(filename.GetFileName(), rw_options, filename.GetMountPathID());
+}
+
+FutureFile FileSystem::AsyncOpenFile(const Filename& filename, const std::string& rw_options)
+{
+    return AsyncOpenFile(filename.GetFileName(), rw_options, filename.GetMountPathID());
 }
 
 IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::string& filename,

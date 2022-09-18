@@ -1,0 +1,76 @@
+﻿/*****************************************************************//**
+ * \file   Filename.h
+ * \brief  
+ * 
+ * \author jongb
+ * \date   September 2022
+ *********************************************************************/
+#ifndef _FILESYSTEM_FILENAME_H
+#define _FILESYSTEM_FILENAME_H
+
+#include <cstdlib>
+#include <string>
+/** @file Filename.h */
+
+namespace Enigma::FileSystem
+{
+    /** Filename class */
+    class Filename
+    {
+    public:
+        Filename();
+        Filename(const std::string& full_path);
+        Filename(const Filename& filename);
+
+        /** Contains the path of directories, not including the drive designator or the actual file name.
+        The trailing slash is optional, and either a forward slash (/) or a backslash (\) or both might be used in a single dir argument.
+        If a trailing slash (/ or \) is not specified, it is inserted automatically. */
+        void SetDir(const std::string& dir);
+
+        /** Contains a letter (A, B, and so on) corresponding to the desired drive and an optional trailing colon.
+        inserts the colon automatically in the composite path if it is missing. */
+        void SetDrive(const std::string& drive);
+
+        /** Contains the actual file name extension, with or without a leading period (.).
+        inserts the period automatically if it does not appear in ext. */
+        void SetExt(const std::string& ext);
+
+        /** Contains the base file name without any extensions.  */
+        void SetBaseFileName(const std::string& fname);
+
+        /** Contains the file name with extensions.  */
+        void SetFileName(const std::string& filename);
+
+        /** The mount path id */
+        void SetMountPathID(const std::string& path_id);
+
+        std::string GetDir();  ///< Optional directory path, including trailing slash. Forward slashes ( / ), backslashes ( \ ), or both may be used.
+        std::string GetDrive(); ///< Optional drive letter, followed by a colon (:)
+        std::string GetExt(); ///< Optional filename extension, including leading period (.)
+        std::string GetBaseFileName(); ///< Base filename (no extension)
+        std::string GetFileName(); ///< filename (with extension)
+        const std::string& GetFileName() const; ///< filename (with extension)
+
+        std::string GetFullPath();
+        std::string GetPath();  ///< get file path, like : "C:\Game\Media\"
+        std::string GetMountPathID(); ///< get mount path ID
+        const std::string& GetMountPathID() const; ///< get mount path ID
+        std::string GetFullFileNameAtPath(); ///< return "fullpath@path_id"
+        std::string GetFileNameAtPath(); ///< return "filename(with extension)@path_id"
+
+        bool HasPathID();
+
+    private:
+        void SplitPath(const std::string& str);
+
+    private:
+        std::string m_dir;
+        std::string m_drive;
+        std::string m_ext;
+        std::string m_fname;
+        std::string m_filename;
+        std::string m_pathID;
+    };
+};
+
+#endif // !_FILESYSTEM_FILENAME_H

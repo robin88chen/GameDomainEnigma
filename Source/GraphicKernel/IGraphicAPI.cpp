@@ -219,6 +219,139 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doBindingIndexBuffer = nullptr;
 }
 
+void IGraphicAPI::BeginScene()
+{
+    if (UseAsync())
+    {
+        AsyncBeginDrawingScene();
+    }
+    else
+    {
+        BeginDrawingScene();
+    }
+}
+
+void IGraphicAPI::EndScene()
+{
+    if (UseAsync())
+    {
+        AsyncEndDrawingScene();
+    }
+    else
+    {
+        EndDrawingScene();
+    }
+}
+
+void IGraphicAPI::Draw(unsigned vertexCount, unsigned vertexOffset)
+{
+    if (UseAsync())
+    {
+        AsyncDrawPrimitive(vertexCount, vertexOffset);
+    }
+    else
+    {
+        DrawPrimitive(vertexCount, vertexOffset);
+    }
+}
+
+void IGraphicAPI::Draw(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
+{
+    if (UseAsync())
+    {
+        AsyncDrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
+    }
+    else
+    {
+        DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
+    }
+}
+
+void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface, 
+    const MathLib::ColorRGBA& color, float depth_value, unsigned stencil_value)
+{
+    if (UseAsync())
+    {
+        AsyncClearSurface(back_surface, depth_surface, color, depth_value, stencil_value);
+    }
+    else
+    {
+        ClearSurface(back_surface, depth_surface, color, depth_value, stencil_value);
+    }
+}
+
+void IGraphicAPI::Flip()
+{
+    if (UseAsync())
+    {
+        AsyncFlipBackSurface();
+    }
+    else
+    {
+        FlipBackSurface();
+    }
+}
+
+void IGraphicAPI::Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface)
+{
+    if (UseAsync())
+    {
+        AsyncBindBackSurface(back_surface, depth_surface);
+    }
+    else
+    {
+        BindBackSurface(back_surface, depth_surface);
+    }
+}
+
+void IGraphicAPI::Bind(const TargetViewPort& vp)
+{
+    if (UseAsync())
+    {
+        AsyncBindViewPort(vp);
+    }
+    else
+    {
+        BindViewPort(vp);
+    }
+}
+
+void IGraphicAPI::Bind(const IShaderProgramPtr& shader)
+{
+    if (UseAsync())
+    {
+        AsyncBindShaderProgram(shader);
+    }
+    else
+    {
+        BindShaderProgram(shader);
+    }
+}
+
+void IGraphicAPI::Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
+{
+    if (UseAsync())
+    {
+        AsyncBindVertexBuffer(buffer, pt);
+    }
+    else
+    {
+        BindVertexBuffer(buffer, pt);
+    }
+}
+
+void IGraphicAPI::Bind(const IIndexBufferPtr& buffer)
+{
+    if (UseAsync())
+    {
+        AsyncBindIndexBuffer(buffer);
+    }
+    else
+    {
+        BindIndexBuffer(buffer);
+    }
+}
+
 void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -254,14 +387,7 @@ void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BeginScene, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBeginScene();
-    }
-    else
-    {
-        BeginScene();
-    }
+    BeginScene();
 }
 
 void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
@@ -269,14 +395,7 @@ void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::EndScene, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncEndScene();
-    }
-    else
-    {
-        EndScene();
-    }
+    EndScene();
 }
 
 void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
@@ -284,14 +403,7 @@ void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawPrimitive, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncDrawPrimitive(cmd->GetVertexCount(), cmd->GetVertexOffset());
-    }
-    else
-    {
-        DrawPrimitive(cmd->GetVertexCount(), cmd->GetVertexOffset());
-    }
+    Draw(cmd->GetVertexCount(), cmd->GetVertexOffset());
 }
 
 void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
@@ -299,30 +411,15 @@ void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawIndexedPrimitive, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncDrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
-    }
-    else
-    {
-        DrawIndexedPrimitive(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
-    }
+    Draw(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
 }
 void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::ClearSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(), 
-            cmd->GetDepthValue(), cmd->GetStencilValue());
-    }
-    else
-    {
-        ClearSurface(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
-            cmd->GetDepthValue(), cmd->GetStencilValue());
-    }
+    Clear(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
+        cmd->GetDepthValue(), cmd->GetStencilValue());
 }
 
 void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
@@ -330,14 +427,7 @@ void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::FlipBackSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncFlip();
-    }
-    else
-    {
-        Flip();
-    }
+    Flip();
 }
 
 void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
@@ -512,11 +602,11 @@ void IGraphicAPI::DoCreatingSamplerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateSamplerState(cmd->GetName());
+        AsyncCreateSamplerState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateSamplerState(cmd->GetName());
+        CreateSamplerState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -527,11 +617,11 @@ void IGraphicAPI::DoCreatingRasterizerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateRasterizerState(cmd->GetName());
+        AsyncCreateRasterizerState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateRasterizerState(cmd->GetName());
+        CreateRasterizerState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -542,11 +632,11 @@ void IGraphicAPI::DoCreatingBlendState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateAlphaBlendState(cmd->GetName());
+        AsyncCreateAlphaBlendState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateAlphaBlendState(cmd->GetName());
+        CreateAlphaBlendState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -557,11 +647,11 @@ void IGraphicAPI::DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateDepthStencilState(cmd->GetName());
+        AsyncCreateDepthStencilState(cmd->GetName(), cmd->GetData());
     }
     else
     {
-        CreateDepthStencilState(cmd->GetName());
+        CreateDepthStencilState(cmd->GetName(), cmd->GetData());
     }
 }
 
@@ -600,14 +690,7 @@ void IGraphicAPI::DoBindingBackSurface(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindBackSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBindBackSurface(cmd->GetBackSurface(), cmd->GetDepthSurface());
-    }
-    else
-    {
-        BindBackSurface(cmd->GetBackSurface(), cmd->GetDepthSurface());
-    }
+    Bind(cmd->GetBackSurface(), cmd->GetDepthSurface());
 }
 
 void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
@@ -615,14 +698,7 @@ void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindViewPort, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBindViewPort(cmd->GetViewPort());
-    }
-    else
-    {
-        BindViewPort(cmd->GetViewPort());
-    }
+    Bind(cmd->GetViewPort());
 }
 
 void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
@@ -630,14 +706,7 @@ void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindShaderProgram, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBindShaderProgram(cmd->GetShader());
-    }
-    else
-    {
-        BindShaderProgram(cmd->GetShader());
-    }
+    Bind(cmd->GetShader());
 }
 
 void IGraphicAPI::DoBindingVertexBuffer(const Frameworks::ICommandPtr& c)
@@ -645,14 +714,7 @@ void IGraphicAPI::DoBindingVertexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindVertexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBindVertexBuffer(cmd->GetBuffer(), cmd->GetTopology());
-    }
-    else
-    {
-        BindVertexBuffer(cmd->GetBuffer(), cmd->GetTopology());
-    }
+    Bind(cmd->GetBuffer(), cmd->GetTopology());
 }
 
 void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
@@ -660,14 +722,7 @@ void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindIndexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncBindIndexBuffer(cmd->GetBuffer());
-    }
-    else
-    {
-        BindIndexBuffer(cmd->GetBuffer());
-    }
+    Bind(cmd->GetBuffer());
 }
 
 future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
@@ -680,14 +735,14 @@ future_error IGraphicAPI::AsyncCleanupDevice()
     return m_workerThread->PushTask([=]() -> error { return this->CleanupDevice(); });
 }
 
-future_error IGraphicAPI::AsyncBeginScene()
+future_error IGraphicAPI::AsyncBeginDrawingScene()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->BeginScene(); });
+    return m_workerThread->PushTask([=]() -> error { return this->BeginDrawingScene(); });
 }
 
-future_error IGraphicAPI::AsyncEndScene()
+future_error IGraphicAPI::AsyncEndDrawingScene()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->EndScene(); });
+    return m_workerThread->PushTask([=]() -> error { return this->EndDrawingScene(); });
 }
 
 future_error IGraphicAPI::AsyncDrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
@@ -703,9 +758,9 @@ future_error IGraphicAPI::AsyncDrawIndexedPrimitive(unsigned indexCount, unsigne
         { return this->DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset); });
 }
 
-future_error IGraphicAPI::AsyncFlip()
+future_error IGraphicAPI::AsyncFlipBackSurface()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->Flip(); });
+    return m_workerThread->PushTask([=]() -> error { return this->FlipBackSurface(); });
 }
 
 future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
@@ -794,24 +849,24 @@ future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name, u
     return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name, sizeBuffer); });
 }
 
-future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateSamplerState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateSamplerState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateRasterizerState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateRasterizerState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateRasterizerState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateAlphaBlendState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateAlphaBlendState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name)
+future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name); });
+    return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name, data); });
 }
 
 future_error IGraphicAPI::AsyncCreateTexture(const std::string& tex_name)

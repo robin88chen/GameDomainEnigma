@@ -15,6 +15,12 @@
 #include "IShaderProgram.h"
 #include "IVertexBuffer.h"
 #include "IIndexBuffer.h"
+#include "IBackSurface.h"
+#include "IDepthStencilSurface.h"
+#include "IDeviceSamplerState.h"
+#include "IDeviceAlphaBlendState.h"
+#include "IDeviceRasterizerState.h"
+#include "IDeviceDepthStencilState.h"
 #include "Frameworks/Command.h"
 #include "MathLib/ColorRGBA.h"
 
@@ -262,34 +268,46 @@ namespace Enigma::Graphics
     class CreateSamplerState : public Frameworks::ICommand
     {
     public:
-        CreateSamplerState(const std::string& name) : m_name(name) {};
+        CreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data)
+            : m_name(name), m_data(data) {};
         const std::string& GetName() const { return m_name; }
+        const IDeviceSamplerState::SamplerStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
+        IDeviceSamplerState::SamplerStateData m_data;
     };
     class CreateRasterizerState : public Frameworks::ICommand
     {
     public:
-        CreateRasterizerState(const std::string& name) : m_name(name) {};
+        CreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data)
+            : m_name(name), m_data(data) {};
         const std::string& GetName() const { return m_name; }
+        const IDeviceRasterizerState::RasterizerStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
+        IDeviceRasterizerState::RasterizerStateData m_data;
     };
     class CreateDepthStencilState : public Frameworks::ICommand
     {
     public:
-        CreateDepthStencilState(const std::string& name) : m_name(name) {};
+        CreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData data)
+            : m_name(name), m_data(data) {};
         const std::string& GetName() const { return m_name; }
+        const IDeviceDepthStencilState::DepthStencilData& GetData() const { return m_data; }
     private:
         std::string m_name;
+        IDeviceDepthStencilState::DepthStencilData m_data;
     };
     class CreateBlendState : public Frameworks::ICommand
     {
     public:
-        CreateBlendState(const std::string& name) : m_name(name) {};
+        CreateBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data)
+            : m_name(name), m_data(data) {};
         const std::string& GetName() const { return m_name; }
+        const IDeviceAlphaBlendState::BlendStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
+        IDeviceAlphaBlendState::BlendStateData m_data;
     };
 
     /** create texture */

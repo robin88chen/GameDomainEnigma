@@ -11,6 +11,10 @@
 #include "DeviceRequiredBits.h"
 #include "TargetViewPort.h"
 #include "GraphicAssetStash.h"
+#include "IDeviceSamplerState.h"
+#include "IDeviceAlphaBlendState.h"
+#include "IDeviceRasterizerState.h"
+#include "IDeviceDepthStencilState.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
@@ -73,6 +77,23 @@ namespace Enigma::Graphics
         IGraphicAPI& operator=(IGraphicAPI&&) = delete;
 
         static IGraphicAPI* Instance();
+
+        APIVersion GetAPIVersion() { return m_apiVersion; }
+
+        virtual void BeginScene();
+        virtual void EndScene();
+        virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
+        virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+            int baseVertexOffset);
+        virtual void Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
+        virtual void Flip();
+
+        virtual void Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual void Bind(const TargetViewPort& vp);
+        virtual void Bind(const IShaderProgramPtr& shader);
+        virtual void Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
+        virtual void Bind(const IIndexBufferPtr& buffer);
 
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
@@ -168,10 +189,10 @@ namespace Enigma::Graphics
 
         /** @name scene begin/end  */
         //@{
-        virtual error BeginScene() = 0;
-        virtual error EndScene() = 0;
-        virtual future_error AsyncBeginScene();
-        virtual future_error AsyncEndScene();
+        virtual error BeginDrawingScene() = 0;
+        virtual error EndDrawingScene() = 0;
+        virtual future_error AsyncBeginDrawingScene();
+        virtual future_error AsyncEndDrawingScene();
         //@}
 
         /** @name draw call */
@@ -186,8 +207,8 @@ namespace Enigma::Graphics
             int baseVertexOffset);
         //@}
 
-    	virtual error Flip() = 0;
-        virtual future_error AsyncFlip();
+    	virtual error FlipBackSurface() = 0;
+        virtual future_error AsyncFlipBackSurface();
 
     	/** @name back / depth surface */
         //@{
@@ -259,17 +280,17 @@ namespace Enigma::Graphics
         /** @name Device States */
         //@{
         /** create sampler state */
-        virtual error CreateSamplerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateSamplerState(const std::string& name);
+        virtual error CreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data) = 0;
+        virtual future_error AsyncCreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data);
         /** create rasterizer state */
-        virtual error CreateRasterizerState(const std::string& name) = 0;
-        virtual future_error AsyncCreateRasterizerState(const std::string& name);
+        virtual error CreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data) = 0;
+        virtual future_error AsyncCreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data);
         /** create alpha blend state */
-        virtual error CreateAlphaBlendState(const std::string& name) = 0;
-        virtual future_error AsyncCreateAlphaBlendState(const std::string& name);
+        virtual error CreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data) = 0;
+        virtual future_error AsyncCreateAlphaBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data);
         /** create depth stencil state */
-        virtual error CreateDepthStencilState(const std::string& name) = 0;
-        virtual future_error AsyncCreateDepthStencilState(const std::string& name);
+        virtual error CreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data) = 0;
+        virtual future_error AsyncCreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData& data);
         //@}
 
         /** @name Textures */

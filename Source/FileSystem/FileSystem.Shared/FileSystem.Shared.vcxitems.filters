@@ -13,6 +13,9 @@
     <Filter Include="FileSystem">
       <UniqueIdentifier>{d7e978d1-8c51-45c3-ba63-561233d56e8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Filename">
+      <UniqueIdentifier>{e2da5112-2628-4f1f-9661-cc62593a4385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IFile.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FileSystem.cpp">
       <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Filename.cpp">
+      <Filter>Filename</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FileSystem.h">
       <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Filename.h">
+      <Filter>Filename</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

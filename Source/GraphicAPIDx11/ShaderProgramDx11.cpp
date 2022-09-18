@@ -96,7 +96,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramDx11::GetVariableByIndex(unsig
     return nullptr;
 }
 
-error ShaderProgramDx11::CommitVariables()
+/*error ShaderProgramDx11::CommitVariables()
 {
     if (m_variables.size() > 0)
     {
@@ -109,9 +109,9 @@ error ShaderProgramDx11::CommitVariables()
         }
     }
     return ErrorCode::ok;
-}
+}*/
 
-error ShaderProgramDx11::ApplyVariables()
+error ShaderProgramDx11::ApplyShaderVariables()
 {
     if (m_variables.size() > 0)
     {
@@ -127,7 +127,7 @@ error ShaderProgramDx11::ApplyVariables()
     return ErrorCode::ok;
 }
 
-future_error ShaderProgramDx11::AsyncApplyVariables()
+future_error ShaderProgramDx11::AsyncApplyShaderVariables()
 {
     future_error er = make_future_err(ErrorCode::ok);
     if (m_variables.size() > 0)

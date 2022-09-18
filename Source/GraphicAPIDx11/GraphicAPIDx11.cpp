@@ -83,15 +83,15 @@ error GraphicAPIDx11::CleanupDevice()
     return Graphics::ErrorCode::ok;
 }
 
-error GraphicAPIDx11::BeginScene()
+error GraphicAPIDx11::BeginDrawingScene()
 {
-    Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::EndScene()
+error GraphicAPIDx11::EndDrawingScene()
 {
-    Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
 }
 
@@ -110,7 +110,7 @@ error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexC
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::Flip()
+error GraphicAPIDx11::FlipBackSurface()
 {
     assert(m_swapChain);
     //DebugPrintf("flip in thread %d\n", std::this_thread::get_id());
@@ -349,43 +349,47 @@ error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned i
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateSamplerState(const std::string& name)
+error GraphicAPIDx11::CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data)
 {
     Platforms::Debug::Printf("create sampler state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceSamplerStatePtr state = Graphics::IDeviceSamplerStatePtr{ menew DeviceSamplerStateDx11{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateRasterizerState(const std::string& name)
+error GraphicAPIDx11::CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data)
 {
     Platforms::Debug::Printf("create rasterizer state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceRasterizerStatePtr state = Graphics::IDeviceRasterizerStatePtr{ menew DeviceRasterizerStateDx11{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateAlphaBlendState(const std::string& name)
+error GraphicAPIDx11::CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data)
 {
     Platforms::Debug::Printf("create alpha blend state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceAlphaBlendStatePtr state = Graphics::IDeviceAlphaBlendStatePtr{ menew DeviceAlphaBlendStateDx11{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateDepthStencilState(const std::string& name)
+error GraphicAPIDx11::CreateDepthStencilState(const std::string& name, const Graphics::IDeviceDepthStencilState::DepthStencilData& data)
 {
     Platforms::Debug::Printf("create depth stencil state %s in thread %d\n", name.c_str(), std::this_thread::get_id());
     Graphics::IDeviceDepthStencilStatePtr state = Graphics::IDeviceDepthStencilStatePtr{ menew DeviceDepthStencilStateDx11{ name } };
-    m_stash->Add(name, state);
+    state->CreateFromData(data);
+    //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
@@ -411,7 +415,7 @@ error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
 
 error GraphicAPIDx11::BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl)
 {
-    Platforms::Debug::Printf("bind vertex declaration in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("bind vertex declaration in thread %d\n", std::this_thread::get_id());
     assert(m_d3dDeviceContext);
     if (m_boundVertexDecl == vertexDecl) return ErrorCode::ok;
     if ((vertexDecl == nullptr) && (m_boundVertexDecl != nullptr))
@@ -431,7 +435,7 @@ error GraphicAPIDx11::BindVertexDeclaration(const Graphics::IVertexDeclarationPt
 
 error GraphicAPIDx11::BindVertexShader(const Graphics::IVertexShaderPtr& shader)
 {
-    Platforms::Debug::Printf("bind vertex shader in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("bind vertex shader in thread %d\n", std::this_thread::get_id());
     assert(m_d3dDeviceContext);
     if (m_boundVertexShader == shader) return ErrorCode::ok;
     if ((shader == nullptr) && (m_boundVertexShader != nullptr))
@@ -451,7 +455,7 @@ error GraphicAPIDx11::BindVertexShader(const Graphics::IVertexShaderPtr& shader)
 
 error GraphicAPIDx11::BindPixelShader(const Graphics::IPixelShaderPtr& shader)
 {
-    Platforms::Debug::Printf("bind pixel shader in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("bind pixel shader in thread %d\n", std::this_thread::get_id());
     assert(m_d3dDeviceContext);
     if (m_boundPixelShader == shader) return ErrorCode::ok;
     if ((shader == nullptr) && (m_boundPixelShader != nullptr))
@@ -482,7 +486,7 @@ error GraphicAPIDx11::BindShaderProgram(const Graphics::IShaderProgramPtr& shade
 
 error GraphicAPIDx11::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt)
 {
-    Platforms::Debug::Printf("bind vertex buffer in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("bind vertex buffer in thread %d\n", std::this_thread::get_id());
     assert(m_d3dDeviceContext);
     if ((m_boundVertexBuffer == buffer) && (m_boundTopology == pt)) return ErrorCode::ok;
     if (buffer == nullptr)
@@ -506,7 +510,7 @@ error GraphicAPIDx11::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer,
 
 error GraphicAPIDx11::BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer)
 {
-    Platforms::Debug::Printf("bind index buffer in thread %d\n", std::this_thread::get_id());
+    //Platforms::Debug::Printf("bind index buffer in thread %d\n", std::this_thread::get_id());
     assert(m_d3dDeviceContext);
     if (m_boundIndexBuffer == buffer) return ErrorCode::ok;
     if (buffer == nullptr)

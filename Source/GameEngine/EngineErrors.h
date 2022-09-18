@@ -22,6 +22,10 @@ namespace Enigma::Engine
         renderTargetNotExist,
 
         findStashedAssetFail = 201,
+
+        effectPassEnd = 301,
+        compilingEmptyEffectTech,
+        noSelectedTechnique,
     };
     class ErrorCategory : public std::error_category
     {

@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectJsonGatewayTest.Shared", "EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems", "{5AD2BCEF-B819-4EEB-B375-235D179D37B6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectJsonGatewayTest.Win32", "EffectJsonGatewayTest.Win32\EffectJsonGatewayTest.Win32.vcxproj", "{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectJsonGatewayTest.Jni", "EffectJsonGatewayTest.Jni\EffectJsonGatewayTest.Jni.vcxproj", "{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}"
+EndProject
+Project("{39E2626F-3545-4960-A6E8-258AD8476CE5}") = "EffectJsonGatewayTestApp", "EffectJsonGatewayTestApp\EffectJsonGatewayTestApp.androidproj", "{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|ARM.ActiveCfg = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|ARM.Build.0 = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|ARM64.ActiveCfg = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|ARM64.Build.0 = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x64.ActiveCfg = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x64.Build.0 = Debug|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x86.ActiveCfg = Debug|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Debug|x86.Build.0 = Debug|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|ARM.ActiveCfg = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|ARM.Build.0 = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|ARM64.ActiveCfg = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|ARM64.Build.0 = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x64.ActiveCfg = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x64.Build.0 = Release|x64
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x86.ActiveCfg = Release|Win32
+		{C963834C-DD5A-4E9B-98BC-9AAB620F7AB1}.Release|x86.Build.0 = Release|Win32
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|ARM.Build.0 = Debug|ARM
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|ARM64.Build.0 = Debug|ARM64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|x64.ActiveCfg = Debug|x64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|x64.Build.0 = Debug|x64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|x86.ActiveCfg = Debug|x86
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Debug|x86.Build.0 = Debug|x86
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|ARM.ActiveCfg = Release|ARM
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|ARM.Build.0 = Release|ARM
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|ARM64.ActiveCfg = Release|ARM64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|ARM64.Build.0 = Release|ARM64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|x64.ActiveCfg = Release|x64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|x64.Build.0 = Release|x64
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|x86.ActiveCfg = Release|x86
+		{3286B537-EA5F-4E9F-B49F-A0BD2E49188A}.Release|x86.Build.0 = Release|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM.ActiveCfg = Debug|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM.Build.0 = Debug|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM.Deploy.0 = Debug|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM64.Build.0 = Debug|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x64.ActiveCfg = Debug|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x64.Build.0 = Debug|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x64.Deploy.0 = Debug|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x86.ActiveCfg = Debug|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x86.Build.0 = Debug|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Debug|x86.Deploy.0 = Debug|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM.ActiveCfg = Release|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM.Build.0 = Release|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM.Deploy.0 = Release|ARM
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM64.ActiveCfg = Release|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM64.Build.0 = Release|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|ARM64.Deploy.0 = Release|ARM64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x64.ActiveCfg = Release|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x64.Build.0 = Release|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x64.Deploy.0 = Release|x64
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x86.ActiveCfg = Release|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x86.Build.0 = Release|x86
+		{C01B4CB7-21A4-4A66-B56C-03865E12DBA0}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7C35A49-BD85-4848-99F2-C4450CC9F3BD}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems*{3286b537-ea5f-4e9f-b49f-a0bd2e49188a}*SharedItemsImports = 4
+		EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems*{5ad2bcef-b819-4eeb-b375-235d179d37b6}*SharedItemsImports = 9
+		EffectJsonGatewayTest.Shared\EffectJsonGatewayTest.Shared.vcxitems*{c963834c-dd5a-4e9b-98bc-9aab620f7ab1}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

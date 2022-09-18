@@ -33,7 +33,6 @@ namespace Enigma::Graphics
             VarOfPixelShader,
         };
     public:
-        using VariableCommitFunc = std::function<void(IShaderVariable*)>;
         using SemanticNameTable = std::unordered_map<std::string, std::string>;
         using TextureVarTuple = std::tuple<ITexturePtr, std::optional<unsigned int>>;
 
@@ -45,10 +44,6 @@ namespace Enigma::Graphics
         IShaderVariable& operator=(const IShaderVariable&) = delete;
         IShaderVariable& operator=(IShaderVariable&&) = delete;
 
-        /** commit 會在內部呼叫從 Variable Map 或是其他外部掛入的 commit 函式
-          commit 將數值設定在 Variable 的資料中, 等到 Apply 才會綁入到 Device */
-        virtual void Commit();
-        virtual void SetCommitFunction(VariableCommitFunc fn);
         virtual const std::string& GetVariableName() { return m_name; };
         virtual const std::string& GetVariableSemantic() { return m_semantic; };
         /**  set value 提供　Variable Map 或是其他外部的 commit 函式將值設定至變數資料中,
@@ -67,7 +62,6 @@ namespace Enigma::Graphics
     protected:
         std::string m_name;
         std::string m_semantic;
-        VariableCommitFunc m_commit;
     };
     using IShaderVariablePtr = std::shared_ptr<IShaderVariable>;
     using IShaderVariableWeak = std::weak_ptr<IShaderVariable>;

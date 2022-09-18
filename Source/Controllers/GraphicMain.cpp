@@ -6,6 +6,7 @@
 #include "GameEngine/RendererManager.h"
 #include "GameEngine/RenderTarget.h"
 #include "GameEngine/ShaderManager.h"
+#include "GameEngine/EffectMaterialManager.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -173,11 +174,13 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
 error GraphicMain::InstallShaderManagers()
 {
     m_serviceManager->RegisterSystemService(menew Engine::ShaderManager(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Engine::EffectMaterialManager(m_serviceManager));
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownShaderManagers()
 {
+    m_serviceManager->ShutdownSystemService(Engine::EffectMaterialManager::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(Engine::ShaderManager::TYPE_RTTI);
     return ErrorCode::ok;
 }

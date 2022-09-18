@@ -33,10 +33,12 @@ namespace Enigma::Devices
         virtual unsigned int GetVariableCount() override;
         virtual Graphics::IShaderVariablePtr GetVariableByIndex(unsigned int index) override;
 
-        virtual error CommitVariables() override;
+        //virtual error CommitVariables() override;
 
-        virtual error ApplyVariables() override;
-        virtual future_error AsyncApplyVariables() override;
+    protected:
+        virtual error ApplyShaderVariables() override;
+        virtual future_error AsyncApplyShaderVariables() override;
+
     private:
         void RetrieveShaderVariables(ID3D11ShaderReflection* shaderReflect,
             const Graphics::IShaderVariable::SemanticNameTable& semantic_table,

@@ -1,4 +1,5 @@
 ﻿#include "IShaderProgram.h"
+#include "IGraphicAPI.h"
 
 using namespace Enigma::Graphics;
 
@@ -18,3 +19,14 @@ IShaderProgram::~IShaderProgram()
     m_vtxDeclaration = nullptr;
 }
 
+void IShaderProgram::ApplyVariables()
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncApplyShaderVariables();
+    }
+    else
+    {
+        ApplyShaderVariables();
+    }
+}

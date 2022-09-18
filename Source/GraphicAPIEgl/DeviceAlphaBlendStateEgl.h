@@ -26,8 +26,8 @@ namespace Enigma::Devices
         DeviceAlphaBlendStateEgl& operator=(const DeviceAlphaBlendStateEgl&) = delete;
         DeviceAlphaBlendStateEgl& operator=(DeviceAlphaBlendStateEgl&&) = delete;
 
+    protected:
         virtual error CreateFromData(const BlendStateData& data) override;
-
         virtual error BindToDevice() override;
 
     private:

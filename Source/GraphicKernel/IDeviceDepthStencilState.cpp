@@ -14,6 +14,30 @@ IDeviceDepthStencilState::~IDeviceDepthStencilState()
 {
 }
 
+/*void IDeviceDepthStencilState::Create(const DepthStencilData& data)
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncCreateFromData(data);
+    }
+    else
+    {
+        CreateFromData(data);
+    }
+}*/
+
+void IDeviceDepthStencilState::Bind()
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncBindToDevice();
+    }
+    else
+    {
+        BindToDevice();
+    }
+}
+
 error IDeviceDepthStencilState::CreateFromData(const DepthStencilData& data)
 {
     memcpy(&m_data, &data, sizeof(DepthStencilData));

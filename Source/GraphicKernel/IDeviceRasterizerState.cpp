@@ -14,6 +14,30 @@ IDeviceRasterizerState::~IDeviceRasterizerState()
 {
 }
 
+/*void IDeviceRasterizerState::Create(const RasterizerStateData& data)
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncCreateFromData(data);
+    }
+    else
+    {
+        CreateFromData(data);
+    }
+}*/
+
+void IDeviceRasterizerState::Bind()
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        AsyncBindToDevice();
+    }
+    else
+    {
+        BindToDevice();
+    }
+}
+
 error IDeviceRasterizerState::CreateFromData(const RasterizerStateData& data)
 {
     memcpy(&m_data, &data, sizeof(RasterizerStateData));

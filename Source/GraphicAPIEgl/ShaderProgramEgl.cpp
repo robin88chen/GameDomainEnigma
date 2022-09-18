@@ -79,7 +79,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramEgl::GetVariableByIndex(unsign
     return m_variableArray[index];
 }
 
-error ShaderProgramEgl::CommitVariables()
+/*error ShaderProgramEgl::CommitVariables()
 {
     if (m_variableArray.size() > 0)
     {
@@ -92,9 +92,9 @@ error ShaderProgramEgl::CommitVariables()
         }
     }
     return ErrorCode::ok;
-}
+}*/
 
-error ShaderProgramEgl::ApplyVariables()
+error ShaderProgramEgl::ApplyShaderVariables()
 {
     if (m_variableArray.size() > 0)
     {
@@ -110,7 +110,7 @@ error ShaderProgramEgl::ApplyVariables()
     return ErrorCode::ok;
 }
 
-future_error ShaderProgramEgl::AsyncApplyVariables()
+future_error ShaderProgramEgl::AsyncApplyShaderVariables()
 {
     future_error er = make_future_err(ErrorCode::ok);
     if (m_variableArray.size() > 0)

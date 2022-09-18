@@ -76,12 +76,12 @@ namespace Enigma::Engine
     protected:
         void OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e);
         void OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e);
-        void HandleBuildingShaderProgram(const Frameworks::ICommandPtr& c);
+        void DoBuildingShaderProgram(const Frameworks::ICommandPtr& c);
 
     protected:
         Frameworks::EventSubscriberPtr m_onBuilderShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onShaderProgramBuildFailed;
-        Frameworks::CommandSubscriberPtr m_handleBuildingShaderProgram;
+        Frameworks::CommandSubscriberPtr m_doBuildingShaderProgram;
 
         ShaderBuilder* m_builder;
         std::queue<ShaderProgramPolicy> m_policies;

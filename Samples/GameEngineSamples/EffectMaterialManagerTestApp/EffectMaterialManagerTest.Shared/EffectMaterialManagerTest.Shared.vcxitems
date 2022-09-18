@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{56166aa2-be49-486b-8113-70c6d16a160d}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BufferBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EffectMaterialManagerTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BufferBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)EffectMaterialManagerTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TextureSamplerBuilder.h" />
+  </ItemGroup>
+</Project>

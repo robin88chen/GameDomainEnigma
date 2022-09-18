@@ -35,13 +35,13 @@ namespace Enigma::Devices
     protected:
         virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual error CleanupDevice() override;
-        virtual error BeginScene() override;
-        virtual error EndScene() override;
+        virtual error BeginDrawingScene() override;
+        virtual error EndDrawingScene() override;
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
         virtual error DrawIndexedPrimitive(
             unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset) override;
-        virtual error Flip() override;
+        virtual error FlipBackSurface() override;
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt) override;
@@ -62,10 +62,10 @@ namespace Enigma::Devices
             const Graphics::IVertexShaderPtr& shader) override;
         virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) override;
         virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) override;
-        virtual error CreateSamplerState(const std::string& name) override;
-        virtual error CreateRasterizerState(const std::string& name) override;
-        virtual error CreateAlphaBlendState(const std::string& name) override;
-        virtual error CreateDepthStencilState(const std::string& name) override;
+        virtual error CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data) override;
+        virtual error CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data) override;
+        virtual error CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data) override;
+        virtual error CreateDepthStencilState(const std::string& name, const Graphics::IDeviceDepthStencilState::DepthStencilData& data) override;
         virtual error CreateTexture(const std::string& tex_name) override;
         virtual error CreateMultiTexture(const std::string& tex_name) override;
 

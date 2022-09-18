@@ -33,13 +33,14 @@ namespace Enigma::Devices
         virtual unsigned int GetVariableCount() override;
         virtual Graphics::IShaderVariablePtr GetVariableByIndex(unsigned int index) override;
 
-        virtual error CommitVariables() override;
-
-        virtual error ApplyVariables() override;
-        virtual future_error AsyncApplyVariables() override;
-
+        //virtual error CommitVariables() override;
+        
         GLuint GetProgram() const { return m_program; }
         bool HasLinked() const { return m_hasLinked; }
+    protected:
+        virtual error ApplyShaderVariables() override;
+        virtual future_error AsyncApplyShaderVariables() override;
+
     private:
         void LinkShaders();
         void RetrieveShaderVariables();

@@ -1,0 +1,25 @@
+//semantic anim_time ANIM_TIMER
+//semantic anim_scale ANIM_SCALE
+Texture2D DiffuseTexture : DiffuseMap;
+SamplerState samLinear
+{
+   Filter = MIN_MAG_MIP_LINEAR;
+   AddressU = Wrap;
+   AddressV = Wrap;
+};
+float anim_time : ANIM_TIMER;
+float anim_scale : ANIM_SCALE;
+struct PS_INPUT
+{
+   float4 Pos : SV_POSITION;
+   float2 Coord : TEXCOORD0;
+   float4 DiffCol : COLOR0;
+};
+float4 ps_main(PS_INPUT input) : SV_TARGET
+{
+ float2 co = float2(input.Coord.x + anim_time, input.Coord.y);
+   float4 outputColor = (0.5f + cos(anim_time * anim_scale) / 2.0f) * input.DiffCol;
+   outputColor = DiffuseTexture.Sample(samLinear, co) * outputColor;
+   outputColor.a = 1;
+   return outputColor;
+};

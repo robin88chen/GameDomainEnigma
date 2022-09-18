@@ -27,6 +27,7 @@ namespace Enigma::Devices
 
         virtual error CreateFromData(const RasterizerStateData& data) override;
 
+    protected:
         virtual error BindToDevice() override;
 
     private:

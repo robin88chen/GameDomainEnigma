@@ -48,8 +48,12 @@ namespace Enigma::Graphics
         IDeviceAlphaBlendState& operator=(const IDeviceAlphaBlendState&) = delete;
         IDeviceAlphaBlendState& operator=(IDeviceAlphaBlendState&&) = delete;
 
+        //virtual void Create(const BlendStateData& data);
         virtual error CreateFromData(const BlendStateData& data);
         virtual future_error AsyncCreateFromData(const BlendStateData& data);
+        virtual void Bind();
+
+    protected:
         virtual error BindToDevice() = 0;
         virtual future_error AsyncBindToDevice();
 

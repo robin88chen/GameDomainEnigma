@@ -27,8 +27,8 @@ namespace Enigma::Devices
         DeviceRasterizerStateEgl& operator=(const DeviceRasterizerStateEgl&) = delete;
         DeviceRasterizerStateEgl& operator=(DeviceRasterizerStateEgl&&) = delete;
 
+    protected:
         virtual error CreateFromData(const RasterizerStateData& data) override;
-
         virtual error BindToDevice() override;
 
     private:

@@ -76,6 +76,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     }
 
     FileSystem::FileSystem::Create();
+    InitializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();

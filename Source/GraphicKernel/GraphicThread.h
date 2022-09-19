@@ -25,6 +25,7 @@ namespace Enigma::Graphics
         virtual ~GraphicThread();
         GraphicThread& operator=(const GraphicThread&) = delete;
 
+        std::thread::id GetThreadId();
         /**
         @remark PushTask(...).wait(), 直接在函式回傳 wait, 而不要先把回傳值給到 future 變數上,
                 這樣在 wait() 回傳時, future 也可以釋放

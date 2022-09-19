@@ -31,6 +31,9 @@
     <Filter Include="Effect Material\Effect Compiler">
       <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry Datas">
+      <UniqueIdentifier>{f0f85a76-37c8-4177-9009-85996962e2cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -93,6 +96,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h">
+      <Filter>RenderBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
+      <Filter>Geometry Datas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -136,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp">
       <Filter>Effect Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp">
+      <Filter>RenderBuffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

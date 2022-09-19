@@ -24,6 +24,7 @@ VertexBufferDx11::~VertexBufferDx11()
 
 error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     m_sizeofVertex = sizeofVertex;
     m_bufferSize = sizeBuffer;
     assert(m_bufferSize > 0);
@@ -48,6 +49,7 @@ error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
 
 error VertexBufferDx11::Update(const byte_buffer& dataVertex)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataVertex.empty());
     if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize)) return ErrorCode::bufferSize;
 
@@ -64,6 +66,7 @@ error VertexBufferDx11::Update(const byte_buffer& dataVertex)
 
 error VertexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
     if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize)) return ErrorCode::bufferSize;
 

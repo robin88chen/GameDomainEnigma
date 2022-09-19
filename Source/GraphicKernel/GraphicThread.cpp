@@ -28,6 +28,12 @@ GraphicThread::~GraphicThread()
     m_self = nullptr;
 }
 
+std::thread::id GraphicThread::GetThreadId()
+{
+    if (!m_thread) return std::thread::id{};
+    return m_thread->get_id();
+}
+
 future_error GraphicThread::PushTask(const std::function<std::error_code()>& task)
 {
     std::lock_guard<std::mutex> locker{ m_taskLocker };

@@ -908,3 +908,8 @@ GraphicThread* IGraphicAPI::GetGraphicThread()
     return m_workerThread;
 }
 
+bool IGraphicAPI::IsValidGraphicThread(const std::thread::id& id)
+{
+    if (!m_workerThread) return true;
+    return id == m_workerThread->GetThreadId();
+}

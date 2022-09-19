@@ -23,6 +23,7 @@ IndexBufferDx11::~IndexBufferDx11()
 
 error IndexBufferDx11::Create(unsigned sizeBuffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     m_bufferSize = sizeBuffer;
     assert(m_bufferSize > 0);
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
@@ -46,6 +47,7 @@ error IndexBufferDx11::Create(unsigned sizeBuffer)
 
 error IndexBufferDx11::Update(const uint_buffer& dataIndex)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataIndex.empty());
     unsigned int dataSize = (unsigned int)dataIndex.size() * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize)) return ErrorCode::bufferSize;
@@ -62,6 +64,7 @@ error IndexBufferDx11::Update(const uint_buffer& dataIndex)
 
 error IndexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
     unsigned int dataSize = (unsigned int)buffer.data.size() * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize)) return ErrorCode::bufferSize;

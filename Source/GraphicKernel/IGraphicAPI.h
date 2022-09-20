@@ -96,6 +96,28 @@ namespace Enigma::Graphics
         virtual void CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
         //@}
 
+        /** @name Shader */
+        //@{ 
+        /** create vertex shader */
+        virtual void CreateVertexShader(const std::string& name) = 0;
+        /** create pixel shader */
+        virtual void CreatePixelShader(const std::string& name) = 0;
+        /** create shader program */
+        virtual void CreateShaderProgram(const std::string& name,
+            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;
+        /** create vertex declaration with data vertex format & vertex shader */
+        virtual void CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const IVertexShaderPtr& shader) = 0;
+        //@}
+
+        /** @name Vertex/Index buffer */
+        //@{
+        /** create vertex buffer */
+        virtual void CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
+        /** create index buffer */
+        virtual void CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) = 0;
+        //@}
+
         virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
         virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
@@ -234,46 +256,7 @@ namespace Enigma::Graphics
           //  const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
-        /** @name Shader */
-        //@{ 
-        /** create vertex shader
-        @param name shader name
-        @param shader out shader interface
-        */
-        virtual error CreateVertexShader(const std::string& name) = 0;
-        virtual future_error AsyncCreateVertexShader(const std::string& name);
-        /** create pixel shader
-        @param name shader name
-        @param shader out shader interface
-        */
-        virtual error CreatePixelShader(const std::string& name) = 0;
-        virtual future_error AsyncCreatePixelShader(const std::string& name);
 
-        /** create shader program
-        @param vtx_shader vertex shader
-        @param pix_shader pixel shader
-        @param program out shader program interface
-        */
-        virtual error CreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;
-        virtual future_error AsyncCreateShaderProgram(const std::string& name,
-            const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl);
-
-        /** create vertex declaration with data vertex format & effect */
-        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const IVertexShaderPtr& shader) = 0;
-        virtual future_error AsyncCreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const IVertexShaderPtr& shader);
-
-        /** @name Vertex/Index buffer */
-        //@{
-        /** create vertex buffer */
-        virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
-        virtual future_error AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer);
-        /** create index buffer */
-        virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) = 0;
-        virtual future_error AsyncCreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer);
-        //@}
 
         /** @name Device States */
         //@{

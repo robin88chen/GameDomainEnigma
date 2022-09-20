@@ -39,6 +39,40 @@ void AsyncGraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name,
     m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreatePrimaryBackSurface(back_name, depth_name); return ErrorCode::ok; });
 }
 
+void AsyncGraphicAPIDx11::CreateVertexShader(const std::string& name)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateVertexShader(name); return ErrorCode::ok; });
+}
+
+void AsyncGraphicAPIDx11::CreatePixelShader(const std::string& name)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreatePixelShader(name); return ErrorCode::ok; });
+}
+
+void AsyncGraphicAPIDx11::CreateShaderProgram(const std::string& name, 
+    const Graphics::IVertexShaderPtr& vtx_shader, const Graphics::IPixelShaderPtr& pix_shader, 
+    const Graphics::IVertexDeclarationPtr& vtx_decl)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateShaderProgram(name, vtx_shader, pix_shader, vtx_decl); return ErrorCode::ok; });
+}
+
+void AsyncGraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format, 
+    const Graphics::IVertexShaderPtr& shader)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateVertexDeclaration(name, data_vertex_format, shader); return ErrorCode::ok; });
+}
+
+void AsyncGraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned sizeofVertex,
+    unsigned sizeBuffer)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateVertexBuffer(buff_name, sizeofVertex, sizeBuffer); return ErrorCode::ok; });
+}
+
+void AsyncGraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned sizeBuffer)
+{
+    m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateIndexBuffer(buff_name, sizeBuffer); return ErrorCode::ok; });
+}
+
 void AsyncGraphicAPIDx11::Clear(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value,
     unsigned stencil_value)

@@ -465,14 +465,7 @@ void IGraphicAPI::DoCreatingVertexShader(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexShader, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateVertexShader(cmd->GetName());
-    }
-    else
-    {
-        CreateVertexShader(cmd->GetName());
-    }
+    CreateVertexShader(cmd->GetName());
 }
 
 void IGraphicAPI::DoCreatingPixelShader(const Frameworks::ICommandPtr& c)
@@ -480,14 +473,7 @@ void IGraphicAPI::DoCreatingPixelShader(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreatePixelShader, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreatePixelShader(cmd->GetName());
-    }
-    else
-    {
-        CreatePixelShader(cmd->GetName());
-    }
+    CreatePixelShader(cmd->GetName());
 }
 
 void IGraphicAPI::DoCreatingShaderProgram(const Frameworks::ICommandPtr& c)
@@ -495,14 +481,7 @@ void IGraphicAPI::DoCreatingShaderProgram(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateShaderProgram, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
-    }
-    else
-    {
-        CreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
-    }
+    CreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
 }
 
 void IGraphicAPI::DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c)
@@ -510,14 +489,7 @@ void IGraphicAPI::DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexDeclaration, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
-    }
-    else
-    {
-        CreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
-    }
+    CreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
 }
 
 void IGraphicAPI::DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c)
@@ -525,14 +497,7 @@ void IGraphicAPI::DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateVertexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
-    }
-    else
-    {
-        CreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
-    }
+    CreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
 }
 
 void IGraphicAPI::DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c)
@@ -540,14 +505,7 @@ void IGraphicAPI::DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateIndexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
-    }
-    else
-    {
-        CreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
-    }
+    CreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
 }
 
 void IGraphicAPI::DoCreatingSamplerState(const Frameworks::ICommandPtr& c)
@@ -772,7 +730,7 @@ future_error IGraphicAPI::AsyncBindViewPort(const TargetViewPort& vp)
         { return this->BindViewPort(vp); });
 }
 
-future_error IGraphicAPI::AsyncCreateVertexShader(const std::string& name)
+/*future_error IGraphicAPI::AsyncCreateVertexShader(const std::string& name)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexShader(name); });
 }
@@ -792,9 +750,9 @@ future_error IGraphicAPI::AsyncCreateVertexDeclaration(const std::string& name,
     const std::string& data_vertex_format, const IVertexShaderPtr& shader)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexDeclaration(name, data_vertex_format, shader); });
-}
+}*/
 
-future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+/*future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateVertexBuffer(buff_name, sizeofVertex, sizeBuffer); });
 }
@@ -802,7 +760,7 @@ future_error IGraphicAPI::AsyncCreateVertexBuffer(const std::string& buff_name, 
 future_error IGraphicAPI::AsyncCreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateIndexBuffer(buff_name, sizeBuffer); });
-}
+}*/
 
 future_error IGraphicAPI::AsyncCreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data)
 {

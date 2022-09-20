@@ -220,27 +220,25 @@ error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateVertexShader(const std::string& name)
+void GraphicAPIEgl::CreateVertexShader(const std::string& name)
 {
     Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderEgl{ name } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexShaderCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreatePixelShader(const std::string& name)
+void GraphicAPIEgl::CreatePixelShader(const std::string& name)
 {
     Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderEgl{ name } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DevicePixelShaderCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
+void GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
     const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
 {
     Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
@@ -251,10 +249,9 @@ error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics
 
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceShaderProgramCreated>(name));
     }
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+void GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
     const Graphics::IVertexShaderPtr& shader)
 {
     assert(shader);
@@ -266,10 +263,9 @@ error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std:
     m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexDeclarationCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+void GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferEgl{ buff_name } };
@@ -277,10 +273,9 @@ error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned i
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
+void GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name } };
@@ -288,7 +283,6 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned in
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));
-    return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data)

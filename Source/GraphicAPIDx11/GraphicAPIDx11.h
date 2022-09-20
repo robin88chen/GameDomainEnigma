@@ -44,6 +44,16 @@ namespace Enigma::Devices
 
         virtual void CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
 
+        virtual void CreateVertexShader(const std::string& name) override;
+        virtual void CreatePixelShader(const std::string& name) override;
+        virtual void CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
+            const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl) override;
+        virtual void CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+            const Graphics::IVertexShaderPtr& shader) override;
+
+        virtual void CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) override;
+        virtual void CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) override;
+
         virtual void Clear(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
         virtual void Flip() override;
@@ -70,14 +80,6 @@ namespace Enigma::Devices
             const Graphics::IDepthStencilSurfacePtr& from_depth) override;
         //virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
           //  const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
-        virtual error CreateVertexShader(const std::string& name) override;
-        virtual error CreatePixelShader(const std::string& name) override;
-        virtual error CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
-            const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl) override;
-        virtual error CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
-            const Graphics::IVertexShaderPtr& shader) override;
-        virtual error CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer) override;
-        virtual error CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer) override;
         virtual error CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data) override;
         virtual error CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data) override;
         virtual error CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data) override;

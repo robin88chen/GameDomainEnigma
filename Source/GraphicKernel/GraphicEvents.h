@@ -363,6 +363,11 @@ namespace Enigma::Graphics
     private:
         std::string m_name;
     };
+    class DeviceVertexDeclarationCreateFailed : public GraphicAPIFailed
+    {
+    public:
+        DeviceVertexDeclarationCreateFailed(std::error_code er) : GraphicAPIFailed(er) {};
+    };
     class VertexShaderCompiled : public Frameworks::IEvent
     {
     public:

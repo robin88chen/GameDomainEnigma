@@ -274,27 +274,25 @@ error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateVertexShader(const std::string& name)
+void GraphicAPIDx11::CreateVertexShader(const std::string& name)
 {
     Platforms::Debug::Printf("create vertex shader in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderDx11{ name } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexShaderCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreatePixelShader(const std::string& name)
+void GraphicAPIDx11::CreatePixelShader(const std::string& name)
 {
     Platforms::Debug::Printf("create pixel shader in thread %d\n", std::this_thread::get_id());
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderDx11{ name } };
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DevicePixelShaderCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
+void GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
     const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
 {
     Platforms::Debug::Printf("create shader program in thread %d\n", std::this_thread::get_id());
@@ -303,10 +301,9 @@ error GraphicAPIDx11::CreateShaderProgram(const std::string& name, const Graphic
     m_stash->Add(name, shader);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceShaderProgramCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
+void GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
     const Graphics::IVertexShaderPtr& shader)
 {
     assert(shader);
@@ -323,17 +320,16 @@ error GraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const std
     {
         Platforms::Debug::ErrorPrintf("Create D3DInputLayout Fail %s", er.message().c_str());
         medelete vtx_decl_dx11;
-        return er;
+        return Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexDeclarationCreateFailed>(er));
     }
 
     Graphics::IVertexDeclarationPtr vtxDecl = Graphics::IVertexDeclarationPtr{ vtx_decl_dx11 };
     m_stash->Add(name, vtxDecl);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexDeclarationCreated>(name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+void GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     Platforms::Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
@@ -341,10 +337,9 @@ error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned 
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
+void GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
@@ -352,7 +347,6 @@ error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned i
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));
-    return ErrorCode::ok;
 }
 
 error GraphicAPIDx11::CreateSamplerState(const std::string& name, const Graphics::IDeviceSamplerState::SamplerStateData& data)

@@ -68,28 +68,14 @@ void ShaderBuilder::BuildVertexShader(const std::string& shader_name, const std:
     m_vtxFormatCode = vtx_format_code;
     m_vtxShaderCode = shader_code;
     m_vtxLayoutName = layout_name;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreateVertexShader(m_vtxShaderName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreateVertexShader(m_vtxShaderName);
-    }
+    IGraphicAPI::Instance()->CreateVertexShader(m_vtxShaderName);
 }
 
 void ShaderBuilder::BuildPixelShader(const std::string& shader_name, const std::string& shader_code)
 {
     m_pixShaderName = shader_name;
     m_pixShaderCode = shader_code;
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        IGraphicAPI::Instance()->AsyncCreatePixelShader(m_pixShaderName);
-    }
-    else
-    {
-        IGraphicAPI::Instance()->CreatePixelShader(m_pixShaderName);
-    }
+    IGraphicAPI::Instance()->CreatePixelShader(m_pixShaderName);
 }
 
 void ShaderBuilder::OnVertexShaderCreated(const IEventPtr& e)
@@ -124,23 +110,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const IEventPtr& e)
         return;
     }
     auto shader = IGraphicAPI::Instance()->TryFindGraphicAsset<IVertexShaderPtr>(ev->GetShaderName());
-    std::string existed_layout = IGraphicAPI::Instance()->QueryVertexDeclarationName(m_vtxFormatCode, shader.value());
-    if (!existed_layout.empty())
-    {
-        m_vtxLayoutName = existed_layout;
-        EventPublisher::Post(IEventPtr{ menew VertexShaderBuilt{ shader.value()->GetName() } });
-    }
-    else
-    {
-        if (IGraphicAPI::Instance()->UseAsync())
-        {
-            IGraphicAPI::Instance()->AsyncCreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader.value());
-        }
-        else
-        {
-            IGraphicAPI::Instance()->CreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader.value());
-        }
-    }
+    IGraphicAPI::Instance()->CreateVertexDeclaration(m_vtxLayoutName, m_vtxFormatCode, shader.value());
 }
 
 void ShaderBuilder::OnVertexLayoutCreated(const IEventPtr& e)
@@ -210,18 +180,12 @@ void ShaderBuilder::OnShaderBuilt(const IEventPtr& e)
     {
         IVertexShaderPtr vtx_shader = IGraphicAPI::Instance()->GetGraphicAsset<IVertexShaderPtr>(m_vtxShaderName);
         IPixelShaderPtr pix_shader = IGraphicAPI::Instance()->GetGraphicAsset<IPixelShaderPtr>(m_pixShaderName);
+        IVertexDeclarationPtr layout = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(m_vtxLayoutName);
         if ((!vtx_shader) || (!pix_shader))
         {
             Debug::Printf("can't get vertex or pixel shader asset to create shader program");
             return;
         }
-        if (IGraphicAPI::Instance()->UseAsync())
-        {
-            IGraphicAPI::Instance()->AsyncCreateShaderProgram(m_programName, vtx_shader, pix_shader);
-        }
-        else
-        {
-            IGraphicAPI::Instance()->CreateShaderProgram(m_programName, vtx_shader, pix_shader);
-        }
+        IGraphicAPI::Instance()->CreateShaderProgram(m_programName, vtx_shader, pix_shader, layout);
     }
 }

@@ -129,7 +129,7 @@ namespace Enigma::Engine
         void UnsubscribeHandler();
 
         error Initialize();
-        future_error AsyncInitialize();
+        //future_error AsyncInitialize();
 
         void CreateRenderTargetTexture();
         void InitViewPortSize();
@@ -146,6 +146,7 @@ namespace Enigma::Engine
         void OnDepthSurfaceCreated(const Frameworks::IEventPtr& e);
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
+        void OnGraphicApiFailed(const Frameworks::IEventPtr& e);
         //@}
         /** @name command handler */
         //@{
@@ -175,6 +176,7 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onDepthSurfaceCreated;
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
+        Frameworks::EventSubscriberPtr m_onGraphicApiFailed;
 
         Frameworks::CommandSubscriberPtr m_doChangingViewPort;
         Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;

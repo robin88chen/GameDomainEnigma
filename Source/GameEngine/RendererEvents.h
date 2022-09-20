@@ -35,6 +35,18 @@ namespace Enigma::Engine
     private:
         std::string m_name;
     };
+    class PrimaryRenderTargetCreateFailed : public Frameworks::IEvent
+    {
+    public:
+        PrimaryRenderTargetCreateFailed(const std::string& name, std::error_code er) :
+            m_name{ name }, m_error(er) {};
+        const std::string& GetRenderTargetName() { return m_name; }
+        std::error_code GetError() const { return m_error; }
+
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
     class TargetViewPortInitialized : public Frameworks::IEvent
     {
     public:

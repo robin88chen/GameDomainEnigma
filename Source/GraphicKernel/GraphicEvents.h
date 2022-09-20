@@ -20,27 +20,30 @@ namespace Enigma::Graphics
     class IDeviceAlphaBlendState;
     class IDeviceDepthStencilState;
 
+    class GraphicAPIFailed : public Frameworks::IEvent
+    {
+    public:
+        GraphicAPIFailed(std::error_code er) :
+            m_error(er) {};
+        std::error_code GetError() const { return m_error; }
+        const std::type_info& TypeInfo() override { return typeid(GraphicAPIFailed); };  ///< 衍生的事件類別都用這個類型來接事件處理
+    protected:
+        std::error_code m_error;
+    };
+
     //------------------------ Device --------------------//
     class DeviceCreated : public Frameworks::IEvent
     {
     };
-    class DeviceCreateFailed : public Frameworks::IEvent
+    class DeviceCreateFailed : public GraphicAPIFailed
     {
     public:
-        DeviceCreateFailed(std::error_code er) :
-            m_error(er) {};
-        std::error_code GetError() const { return m_error; }
-    private:
-        std::error_code m_error;
+        DeviceCreateFailed(std::error_code er) : GraphicAPIFailed(er) {};
     };
-    class DeviceCleanupFailed : public Frameworks::IEvent
+    class DeviceCleanupFailed : public GraphicAPIFailed
     {
     public:
-        DeviceCleanupFailed(std::error_code er) :
-            m_error(er) {};
-        std::error_code GetError() const { return m_error; }
-    private:
-        std::error_code m_error;
+        DeviceCleanupFailed(std::error_code er) : GraphicAPIFailed(er) {};
     };
 
     //----------------------- Surfaces -------------------//
@@ -54,6 +57,11 @@ namespace Enigma::Graphics
     private:
         std::string m_backSurfaceName;
         std::string m_depthSurfaceName;
+    };
+    class PrimarySurfaceCreateFailed : public GraphicAPIFailed
+    {
+    public:
+        PrimarySurfaceCreateFailed(std::error_code er) : GraphicAPIFailed(er) {};
     };
     class BackSurfaceCreated : public Frameworks::IEvent
     {
@@ -112,6 +120,16 @@ namespace Enigma::Graphics
         const std::string& GetDepthSurfaceName() { return m_depthSurfaceName; }
     private:
         std::string m_depthSurfaceName;
+    };
+    class BackSurfaceClearFailed : public GraphicAPIFailed
+    {
+    public:
+        BackSurfaceClearFailed(std::error_code er) : GraphicAPIFailed(er) {};
+    };
+    class DepthSurfaceClearFailed : public GraphicAPIFailed
+    {
+    public:
+        DepthSurfaceClearFailed(std::error_code er) : GraphicAPIFailed(er) {};
     };
 
     //---------------- Textures -----------------------//

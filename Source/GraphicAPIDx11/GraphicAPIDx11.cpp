@@ -85,16 +85,14 @@ void GraphicAPIDx11::CleanupDevice()
     SAFE_RELEASE(m_d3dDeviceContext);
 }
 
-error GraphicAPIDx11::BeginDrawingScene()
+void GraphicAPIDx11::BeginScene()
 {
     //Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
-    return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::EndDrawingScene()
+void GraphicAPIDx11::EndScene()
 {
     //Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
-    return ErrorCode::ok;
 }
 
 error GraphicAPIDx11::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
@@ -112,7 +110,7 @@ error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexC
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::FlipBackSurface()
+void GraphicAPIDx11::Flip()
 {
     assert(m_swapChain);
     //DebugPrintf("flip in thread %d\n", std::this_thread::get_id());
@@ -124,18 +122,20 @@ error GraphicAPIDx11::FlipBackSurface()
     //! 有問題!!! 狀態被清光，連續畫同一個 vertex buffer or shader時, 就不會重設了
     //! 解決方式 : 從 D3D Info Queue 將警告關掉
     //m_d3dDeviceContext->ClearState();
-    return er;
 }
 
-error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
+void GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
 {
     Platforms::Debug::Printf("create primary back surface in thread %d\n", std::this_thread::get_id());
-    if (FATAL_LOG_EXPR(!m_d3dDevice)) return ErrorCode::d3dDeviceNullPointer;
+    if (FATAL_LOG_EXPR(!m_d3dDevice))
+    {
+        return Frameworks::EventPublisher::Post(std::make_shared<Graphics::PrimarySurfaceCreateFailed>(ErrorCode::d3dDeviceNullPointer));
+    }
 
     ID3D11Texture2D* d3dbackTex = GetPrimaryD3DBackbuffer();
     if (!d3dbackTex)
     {
-        return ErrorCode::createBackSurfaceFail;
+        return Frameworks::EventPublisher::Post(std::make_shared<Graphics::PrimarySurfaceCreateFailed>(ErrorCode::createBackSurfaceFail));
     }
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
         menew BackSurfaceDx11{back_name, m_d3dDevice, d3dbackTex, true} };
@@ -153,7 +153,6 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     if (d3dbackTex) d3dbackTex->Release();
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));
-    return ErrorCode::ok;
 }
 
 error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
@@ -206,7 +205,7 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface, 
+void GraphicAPIDx11::Clear(const Graphics::IBackSurfacePtr& back_surface, 
     const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, 
     float depth_value, unsigned int stencil_value)
 {
@@ -221,14 +220,19 @@ error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface
         {
             er = ClearMultiBackSurface(back_surface, color);
         }
-        if (er) return er;
+        if (er)
+        {
+            return Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceClearFailed>(er));
+        }
     }
     if (depth_surface)
     {
         er = ClearDepthStencilSurface(depth_surface, depth_value, stencil_value);
-        if (er) return er;
+        if (er)
+        {
+            return Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceClearFailed>(er));
+        }
     }
-    return er;
 }
 
 error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface, 

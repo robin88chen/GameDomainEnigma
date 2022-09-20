@@ -86,14 +86,22 @@ namespace Enigma::Graphics
         virtual void CleanupDevice() = 0;
         //@}
 
-        virtual void BeginScene();
-        virtual void EndScene();
+        /** @name scene begin/end  */
+        //@{
+        virtual void BeginScene() = 0;
+        virtual void EndScene() = 0;
+        //@}
+        /** @name back / depth surface */
+        //@{
+        virtual void CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
+        //@}
+
         virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
         virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
         virtual void Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
-        virtual void Flip();
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
+        virtual void Flip() = 0;
 
         virtual void Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
         virtual void Bind(const TargetViewPort& vp);
@@ -187,13 +195,6 @@ namespace Enigma::Graphics
         //@}
 
 
-        /** @name scene begin/end  */
-        //@{
-        virtual error BeginDrawingScene() = 0;
-        virtual error EndDrawingScene() = 0;
-        virtual future_error AsyncBeginDrawingScene();
-        virtual future_error AsyncEndDrawingScene();
-        //@}
 
         /** @name draw call */
         //@{
@@ -207,12 +208,9 @@ namespace Enigma::Graphics
             int baseVertexOffset);
         //@}
 
-    	virtual error FlipBackSurface() = 0;
-        virtual future_error AsyncFlipBackSurface();
-
     	/** @name back / depth surface */
         //@{
-        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
+        //virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt) = 0;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -220,10 +218,10 @@ namespace Enigma::Graphics
         virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt) = 0;
         virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
-        virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
-        virtual future_error AsyncCreatePrimaryBackSurface(
-            const std::string& back_name, const std::string& depth_name);
+        //virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+            //const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
+        //virtual future_error AsyncCreatePrimaryBackSurface(
+          //  const std::string& back_name, const std::string& depth_name);
         virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt);
         virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -231,9 +229,9 @@ namespace Enigma::Graphics
         virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const GraphicFormat& fmt);
         virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
-        virtual future_error AsyncClearSurface(
-            const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
+        //virtual future_error AsyncClearSurface(
+          //  const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+          //  const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
         //@}
 
         /** @name Shader */

@@ -16,7 +16,7 @@ IGraphicAPI* IGraphicAPI::m_instance = nullptr;
 
 IGraphicAPI::IGraphicAPI()
 {
-    //assert(!m_instance);
+    assert(!m_instance);
     m_instance = this;
     m_async = AsyncType::NotAsyncDevice;
     m_workerThread = new GraphicThread{};
@@ -219,30 +219,6 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doBindingIndexBuffer = nullptr;
 }
 
-void IGraphicAPI::BeginScene()
-{
-    if (UseAsync())
-    {
-        AsyncBeginDrawingScene();
-    }
-    else
-    {
-        BeginDrawingScene();
-    }
-}
-
-void IGraphicAPI::EndScene()
-{
-    if (UseAsync())
-    {
-        AsyncEndDrawingScene();
-    }
-    else
-    {
-        EndDrawingScene();
-    }
-}
-
 void IGraphicAPI::Draw(unsigned vertexCount, unsigned vertexOffset)
 {
     if (UseAsync())
@@ -267,7 +243,7 @@ void IGraphicAPI::Draw(unsigned indexCount, unsigned vertexCount, unsigned index
     }
 }
 
-void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface, 
+/*void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
     const MathLib::ColorRGBA& color, float depth_value, unsigned stencil_value)
 {
     if (UseAsync())
@@ -290,7 +266,7 @@ void IGraphicAPI::Flip()
     {
         FlipBackSurface();
     }
-}
+}*/
 
 void IGraphicAPI::Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface)
 {
@@ -421,14 +397,7 @@ void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreatePrimarySurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreatePrimaryBackSurface(cmd->GetBacksurfaceName(), cmd->GetDepthsurfaceName());
-    }
-    else
-    {
-        CreatePrimaryBackSurface(cmd->GetBacksurfaceName(), cmd->GetDepthsurfaceName());
-    }
+    CreatePrimaryBackSurface(cmd->GetBacksurfaceName(), cmd->GetDepthsurfaceName());
 }
 
 void IGraphicAPI::DoCreatingBackSurface(const Frameworks::ICommandPtr& c)
@@ -721,7 +690,7 @@ future_error IGraphicAPI::AsyncCleanupDevice()
     return m_workerThread->PushTask([=]() -> error { return this->CleanupDevice(); });
 }*/
 
-future_error IGraphicAPI::AsyncBeginDrawingScene()
+/*future_error IGraphicAPI::AsyncBeginDrawingScene()
 {
     return m_workerThread->PushTask([=]() -> error { return this->BeginDrawingScene(); });
 }
@@ -729,7 +698,7 @@ future_error IGraphicAPI::AsyncBeginDrawingScene()
 future_error IGraphicAPI::AsyncEndDrawingScene()
 {
     return m_workerThread->PushTask([=]() -> error { return this->EndDrawingScene(); });
-}
+}*/
 
 future_error IGraphicAPI::AsyncDrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
@@ -744,15 +713,15 @@ future_error IGraphicAPI::AsyncDrawIndexedPrimitive(unsigned indexCount, unsigne
         { return this->DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset); });
 }
 
-future_error IGraphicAPI::AsyncFlipBackSurface()
+/*future_error IGraphicAPI::AsyncFlipBackSurface()
 {
     return m_workerThread->PushTask([=]() -> error { return this->FlipBackSurface(); });
-}
+}*/
 
-future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
+/*future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreatePrimaryBackSurface(back_name, depth_name); });
-}
+}*/
 
 future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
     const GraphicFormat& fmt)
@@ -782,13 +751,13 @@ future_error IGraphicAPI::AsyncShareDepthStencilSurface(const std::string& depth
         { return this->ShareDepthStencilSurface(depth_name, from_depth); });
 }
 
-future_error IGraphicAPI::AsyncClearSurface(const IBackSurfacePtr& back_surface,
+/*future_error IGraphicAPI::AsyncClearSurface(const IBackSurfacePtr& back_surface,
     const IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value,
     unsigned stencil_value)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->ClearSurface(back_surface, depth_surface, color, depth_value, stencil_value); });
-}
+}*/
 
 future_error IGraphicAPI::AsyncBindBackSurface(const IBackSurfacePtr& back_surface,
     const IDepthStencilSurfacePtr& depth_surface)

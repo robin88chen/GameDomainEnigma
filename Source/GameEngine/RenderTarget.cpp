@@ -61,6 +61,8 @@ RenderTarget::~RenderTarget()
 
 error RenderTarget::Initialize()
 {
+    assert(m_backSurface);
+
     if ((m_backSurface) && (m_depthStencilSurface))
     {
         m_depthStencilSurface->MakeBackSurfaceRelated(m_backSurface);
@@ -78,11 +80,11 @@ error RenderTarget::Initialize()
     return ErrorCode::ok;
 }
 
-future_error RenderTarget::AsyncInitialize()
+/*future_error RenderTarget::AsyncInitialize()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
         ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
-}
+}*/
 
 error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
     const Graphics::GraphicFormat& fmt)
@@ -241,6 +243,10 @@ void RenderTarget::SubscribeHandler()
         [=](auto e) { this->OnDepthSurfaceResized(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
 
+    m_onGraphicApiFailed = std::make_shared<Frameworks::EventSubscriber>(
+        [=](auto e) { this->OnGraphicApiFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::GraphicAPIFailed), m_onGraphicApiFailed);
+
     m_doChangingViewPort =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
     Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
@@ -264,6 +270,9 @@ void RenderTarget::UnsubscribeHandler()
     m_onBackSurfaceResized = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
     m_onDepthSurfaceResized = nullptr;
+
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::GraphicAPIFailed), m_onGraphicApiFailed);
+    m_onGraphicApiFailed = nullptr;
 
     Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
     m_doChangingViewPort = nullptr;
@@ -304,14 +313,7 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     {
         m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
     }
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        AsyncInitialize();
-    }
-    else
-    {
-        Initialize();
-    }
+    Initialize();
 }
 
 void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
@@ -337,14 +339,7 @@ void RenderTarget::OnBackSurfaceCreated(const Frameworks::IEventPtr& e)
         m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(m_backSurfaceName);
     }
     if (!m_backSurface) return;
-    if (Graphics::IGraphicAPI::Instance()->UseAsync())
-    {
-        AsyncInitialize();
-    }
-    else
-    {
-        Initialize();
-    }
+    Initialize();
 }
 
 void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
@@ -400,6 +395,14 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
         InitViewPortSize();
         Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
     }
+}
+
+void RenderTarget::OnGraphicApiFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Graphics::GraphicAPIFailed, Frameworks::IEvent>(e);
+
+    Frameworks::EventPublisher::Post(std::make_shared<PrimaryRenderTargetCreateFailed>(m_name, ev->GetError()));
 }
 
 void RenderTarget::DoChangingViewPort(const Frameworks::ICommandPtr& c)

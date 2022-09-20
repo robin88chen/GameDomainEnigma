@@ -58,14 +58,12 @@ void GraphicAPIEgl::CleanupDevice()
     CleanupDeviceObjects();
 }
 
-error GraphicAPIEgl::BeginDrawingScene()
+void GraphicAPIEgl::BeginScene()
 {
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::EndDrawingScene()
+void GraphicAPIEgl::EndScene()
 {
-    return ErrorCode::ok;
 }
 
 void GraphicAPIEgl::CleanupDeviceObjects()
@@ -94,12 +92,11 @@ error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCo
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::FlipBackSurface()
+void GraphicAPIEgl::Flip()
 {
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
+void GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)
 {
     Debug::Printf("create primary back surface in thread %d\n", std::this_thread::get_id());
     Graphics::IBackSurfacePtr back_surface = Graphics::IBackSurfacePtr{
@@ -112,8 +109,6 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
     m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));
-
-    return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -166,7 +161,7 @@ error GraphicAPIEgl::ShareDepthStencilSurface(const std::string& depth_name,
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
+void GraphicAPIEgl::Clear(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value,
     unsigned stencil_value)
 {
@@ -185,7 +180,6 @@ error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
         glClearStencil(stencil_value);
     }
     glClear(mask);
-    return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface,

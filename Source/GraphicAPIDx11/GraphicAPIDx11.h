@@ -39,6 +39,15 @@ namespace Enigma::Devices
         virtual void CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual void CleanupDevice() override;
 
+        virtual void BeginScene() override;
+        virtual void EndScene() override;
+
+        virtual void CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
+
+        virtual void Clear(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
+            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
+        virtual void Flip() override;
+
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
         ID3D11Device* GetD3DDevice() { return m_d3dDevice; };
@@ -46,14 +55,11 @@ namespace Enigma::Devices
         SwapChainDx11* GetSwapChain() { return m_swapChain; }
 
     private:
-        virtual error BeginDrawingScene() override;
-        virtual error EndDrawingScene() override;
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
         virtual error DrawIndexedPrimitive(
             unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset) override;
-        virtual error FlipBackSurface() override;
-        virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
+        //virtual error FlipBackSurface() override;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt) override;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, unsigned int buff_count,
@@ -62,8 +68,8 @@ namespace Enigma::Devices
             const Graphics::GraphicFormat& fmt) override;
         virtual error ShareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& from_depth) override;
-        virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
-            const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
+        //virtual error ClearSurface(const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface,
+          //  const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
         virtual error CreateVertexShader(const std::string& name) override;
         virtual error CreatePixelShader(const std::string& name) override;
         virtual error CreateShaderProgram(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,

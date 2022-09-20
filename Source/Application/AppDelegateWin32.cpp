@@ -3,6 +3,7 @@
 #include "Platforms/MemoryMacro.h"
 #if TARGET_PLATFORM == PLATFORM_WIN32
 #include "../GraphicAPIDx11/GraphicAPIDx11.h"
+#include "../GraphicAPIDx11/AsyncGraphicAPIDx11.h"
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
 #include "GameEngine/RendererCommands.h"
@@ -81,7 +82,14 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();
 
-	menew Devices::GraphicAPIDx11(useAsyncDevice);
+    if (useAsyncDevice == Graphics::IGraphicAPI::AsyncType::NotAsyncDevice)
+    {
+        menew Devices::GraphicAPIDx11();
+    }
+    else
+    {
+        menew Devices::AsyncGraphicAPIDx11();
+    }
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上

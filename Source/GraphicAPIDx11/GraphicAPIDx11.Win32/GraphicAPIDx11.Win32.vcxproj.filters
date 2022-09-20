@@ -68,6 +68,9 @@
     <ClCompile Include="..\DeviceRasterizerStateDx11.cpp">
       <Filter>Device States</Filter>
     </ClCompile>
+    <ClCompile Include="..\AsyncGraphicAPIDx11.cpp">
+      <Filter>Graphic API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="..\DeviceRasterizerStateDx11.h">
       <Filter>Device States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AsyncGraphicAPIDx11.h">
+      <Filter>Graphic API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

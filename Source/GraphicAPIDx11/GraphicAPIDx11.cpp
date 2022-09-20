@@ -34,7 +34,7 @@ static D3D11_PRIMITIVE_TOPOLOGY ConvertTopologyD3D11(Enigma::Graphics::Primitive
     return (D3D11_PRIMITIVE_TOPOLOGY)pt;
 }
 
-GraphicAPIDx11::GraphicAPIDx11(AsyncType async) : IGraphicAPI(async)
+GraphicAPIDx11::GraphicAPIDx11() : IGraphicAPI()
 {
     m_apiVersion = IGraphicAPI::APIVersion::API_Dx11;
     m_wnd = nullptr;
@@ -53,7 +53,7 @@ GraphicAPIDx11::~GraphicAPIDx11()
     SAFE_DELETE(m_adapter);
 }
 
-error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
+void GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     Platforms::Debug::Printf("create dx11 device in thread %d\n", std::this_thread::get_id());
     m_deviceRequiredBits = rqb;
@@ -67,12 +67,15 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
     SAFE_RELEASE(m_d3dDevice);
 
     error er = m_creator->CreateWindowedDevice(m_adapter, m_swapChain, &m_d3dDevice, &m_d3dDeviceContext);
-    if (er) return er;
+    if (er)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceCreateFailed>(er));
+        return;
+    }
     AddDebugInfoFilter();
-    return er;
 }
 
-error GraphicAPIDx11::CleanupDevice()
+void GraphicAPIDx11::CleanupDevice()
 {
     Platforms::Debug::Printf("cleanup device in thread %d\n", std::this_thread::get_id());
     m_stash->Clear();
@@ -80,7 +83,6 @@ error GraphicAPIDx11::CleanupDevice()
 
     SAFE_RELEASE(m_d3dDevice);
     SAFE_RELEASE(m_d3dDeviceContext);
-    return Graphics::ErrorCode::ok;
 }
 
 error GraphicAPIDx11::BeginDrawingScene()

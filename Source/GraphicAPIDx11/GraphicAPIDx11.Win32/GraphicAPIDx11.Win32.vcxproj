@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\AdapterDx11.h" />
+    <ClInclude Include="..\AsyncGraphicAPIDx11.h" />
     <ClInclude Include="..\BackSurfaceDx11.h" />
     <ClInclude Include="..\DepthStencilSurfaceDx11.h" />
     <ClInclude Include="..\DeviceAlphaBlendStateDx11.h" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AdapterDx11.cpp" />
+    <ClCompile Include="..\AsyncGraphicAPIDx11.cpp" />
     <ClCompile Include="..\BackSurfaceDx11.cpp" />
     <ClCompile Include="..\DepthStencilSurfaceDx11.cpp" />
     <ClCompile Include="..\DeviceAlphaBlendStateDx11.cpp" />

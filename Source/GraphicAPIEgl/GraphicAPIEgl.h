@@ -28,13 +28,14 @@ namespace Enigma::Devices
         void SetFormat(int* attrb);
         void SetDimension(const MathLib::Dimension& dim);
 
+        virtual void CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
+        virtual void CleanupDevice() override;
+
         /** vertex / index buffer egl 需要 call */
         virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
         virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
 
     protected:
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
-        virtual error CleanupDevice() override;
         virtual error BeginDrawingScene() override;
         virtual error EndDrawingScene() override;
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;

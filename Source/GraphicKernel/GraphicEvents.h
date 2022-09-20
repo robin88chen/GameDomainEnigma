@@ -11,6 +11,7 @@
 #include "Frameworks/Event.h"
 #include "MathLib/Rect.h"
 #include "MathLib/AlgebraBasicTypes.h"
+#include <system_error>
 
 namespace Enigma::Graphics
 {
@@ -22,6 +23,24 @@ namespace Enigma::Graphics
     //------------------------ Device --------------------//
     class DeviceCreated : public Frameworks::IEvent
     {
+    };
+    class DeviceCreateFailed : public Frameworks::IEvent
+    {
+    public:
+        DeviceCreateFailed(std::error_code er) :
+            m_error(er) {};
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::error_code m_error;
+    };
+    class DeviceCleanupFailed : public Frameworks::IEvent
+    {
+    public:
+        DeviceCleanupFailed(std::error_code er) :
+            m_error(er) {};
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::error_code m_error;
     };
 
     //----------------------- Surfaces -------------------//

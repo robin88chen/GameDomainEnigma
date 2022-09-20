@@ -29,12 +29,15 @@ namespace Enigma::Devices
     class GraphicAPIDx11 : public Graphics::IGraphicAPI
     {
     public:
-        GraphicAPIDx11(AsyncType async);
+        GraphicAPIDx11();
         GraphicAPIDx11(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11(GraphicAPIDx11&&) = delete;
         virtual ~GraphicAPIDx11() override;
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
+
+        virtual void CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
+        virtual void CleanupDevice() override;
 
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
@@ -43,8 +46,6 @@ namespace Enigma::Devices
         SwapChainDx11* GetSwapChain() { return m_swapChain; }
 
     private:
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
-        virtual error CleanupDevice() override;
         virtual error BeginDrawingScene() override;
         virtual error EndDrawingScene() override;
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;

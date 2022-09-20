@@ -14,11 +14,11 @@ using namespace Enigma::Graphics;
 
 IGraphicAPI* IGraphicAPI::m_instance = nullptr;
 
-IGraphicAPI::IGraphicAPI(AsyncType async)
+IGraphicAPI::IGraphicAPI()
 {
-    assert(!m_instance);
+    //assert(!m_instance);
     m_instance = this;
-    m_async = async;
+    m_async = AsyncType::NotAsyncDevice;
     m_workerThread = new GraphicThread{};
     m_stash = new AssetStash{};
     SubscribeHandlers();
@@ -357,14 +357,7 @@ void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateDevice, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
-    }
-    else
-    {
-        CreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
-    }
+    CreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
 }
 
 void IGraphicAPI::DoCleaningDevice(const Frameworks::ICommandPtr& c)
@@ -372,14 +365,7 @@ void IGraphicAPI::DoCleaningDevice(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CleanupDevice, Frameworks::ICommand>(c);
     if (!cmd) return;
-    if (UseAsync())
-    {
-        AsyncCleanupDevice();
-    }
-    else
-    {
-        CleanupDevice();
-    }
+    CleanupDevice();
 }
 
 void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
@@ -725,7 +711,7 @@ void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
     Bind(cmd->GetBuffer());
 }
 
-future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
+/*future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
 {
     return m_workerThread->PushTask([=]() -> error { return this->CreateDevice(rqb, hwnd); });
 }
@@ -733,7 +719,7 @@ future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void*
 future_error IGraphicAPI::AsyncCleanupDevice()
 {
     return m_workerThread->PushTask([=]() -> error { return this->CleanupDevice(); });
-}
+}*/
 
 future_error IGraphicAPI::AsyncBeginDrawingScene()
 {

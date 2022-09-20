@@ -32,7 +32,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt);
 
-GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI(AsyncType::NotAsyncDevice)
+GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI()
 {
     m_apiVersion = APIVersion::API_EGL;
     m_fmtBackSurface = m_fmtDepthSurface = Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_UNKNOWN);
@@ -43,7 +43,7 @@ GraphicAPIEgl::~GraphicAPIEgl()
     
 }
 
-error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
+void GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     m_wnd = hwnd;
     m_deviceRequiredBits = rqb;
@@ -51,13 +51,11 @@ error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void*
     Debug::Printf("Version %s", versionStr);
     const char* extentStr = (const char*)glGetString(GL_EXTENSIONS);
     Debug::Printf("Extensions %s", extentStr);
-    return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CleanupDevice()
+void GraphicAPIEgl::CleanupDevice()
 {
     CleanupDeviceObjects();
-    return ErrorCode::ok;
 }
 
 error GraphicAPIEgl::BeginDrawingScene()

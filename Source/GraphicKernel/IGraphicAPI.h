@@ -69,7 +69,7 @@ namespace Enigma::Graphics
             NotAsyncDevice = false
         };
     public:
-        IGraphicAPI(AsyncType async);
+        IGraphicAPI();
         IGraphicAPI(const IGraphicAPI&) = delete;
         IGraphicAPI(IGraphicAPI&&) = delete;
         virtual ~IGraphicAPI();
@@ -79,6 +79,12 @@ namespace Enigma::Graphics
         static IGraphicAPI* Instance();
 
         APIVersion GetAPIVersion() { return m_apiVersion; }
+
+        /** @name create / cleanup device */
+        //@{
+        virtual void CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
+        virtual void CleanupDevice() = 0;
+        //@}
 
         virtual void BeginScene();
         virtual void EndScene();
@@ -180,12 +186,6 @@ namespace Enigma::Graphics
         void DoBindingIndexBuffer(const Frameworks::ICommandPtr& c);
         //@}
 
-        /** @name create / cleanup device */
-        //@{
-        virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
-        virtual error CleanupDevice() = 0;
-        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
-        virtual future_error AsyncCleanupDevice();
 
         /** @name scene begin/end  */
         //@{

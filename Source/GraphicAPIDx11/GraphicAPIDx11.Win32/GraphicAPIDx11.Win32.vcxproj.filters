@@ -71,6 +71,12 @@
     <ClCompile Include="..\AsyncGraphicAPIDx11.cpp">
       <Filter>Graphic API</Filter>
     </ClCompile>
+    <ClCompile Include="..\AsyncShaderCompilerDx11.cpp">
+      <Filter>Shaders\Shader Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderCompilerDx11.cpp">
+      <Filter>Shaders\Shader Compiler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -140,6 +146,12 @@
     <ClInclude Include="..\AsyncGraphicAPIDx11.h">
       <Filter>Graphic API</Filter>
     </ClInclude>
+    <ClInclude Include="..\AsyncShaderCompilerDx11.h">
+      <Filter>Shaders\Shader Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ShaderCompilerDx11.h">
+      <Filter>Shaders\Shader Compiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic API">
@@ -171,6 +183,9 @@
     </Filter>
     <Filter Include="Device States">
       <UniqueIdentifier>{df33b2be-4d46-4407-a5d3-3388e0a119aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Compiler">
+      <UniqueIdentifier>{21fcbc88-4ae4-4121-b01d-5207ba0ee290}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

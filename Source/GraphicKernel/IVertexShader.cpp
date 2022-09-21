@@ -1,6 +1,7 @@
 ﻿#include "IVertexShader.h"
 #include "IGraphicAPI.h"
 #include "GraphicThread.h"
+#include "IShaderCompiler.h"
 
 using namespace Enigma::Graphics;
 
@@ -15,14 +16,8 @@ IVertexShader::~IVertexShader()
 
 void IVertexShader::Compile(const std::string& code, const std::string& profile, const std::string& entry)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (auto& compiler = IGraphicAPI::Instance()->GetShaderCompiler())
     {
-        IGraphicAPI::Instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), code, profile, entry, this]() 
-                -> error { return CompileCode(code, profile, entry); });
-    }
-    else
-    {
-        CompileCode(code, profile, entry);
+        compiler->CompileVertexShader(shared_from_this(), code, profile, entry);
     }
 }

@@ -1,4 +1,5 @@
 ﻿#include "AsyncGraphicAPIDx11.h"
+#include "AsyncShaderCompilerDx11.h"
 #include "GraphicAPIDx11.h"
 #include "GraphicKernel/GraphicThread.h"
 #include "GraphicKernel/GraphicErrors.h"
@@ -12,6 +13,16 @@ AsyncGraphicAPIDx11::AsyncGraphicAPIDx11() : GraphicAPIDx11()
 
 AsyncGraphicAPIDx11::~AsyncGraphicAPIDx11()
 {
+}
+
+const std::unique_ptr<Enigma::Graphics::IShaderCompiler>& AsyncGraphicAPIDx11::GetShaderCompiler()
+{
+    assert(m_d3dDevice);
+    if (!m_shaderCompiler)
+    {
+        m_shaderCompiler = std::make_unique<AsyncShaderCompilerDx11>(m_d3dDevice);
+    }
+    return m_shaderCompiler;
 }
 
 void AsyncGraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)

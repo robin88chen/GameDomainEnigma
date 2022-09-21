@@ -31,6 +31,8 @@ namespace Enigma::Devices
         AsyncGraphicAPIDx11& operator=(const AsyncGraphicAPIDx11&) = delete;
         AsyncGraphicAPIDx11& operator=(AsyncGraphicAPIDx11&&) = delete;
 
+        virtual const std::unique_ptr<Graphics::IShaderCompiler>& GetShaderCompiler() override;
+
         virtual void CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual void CleanupDevice() override;
 

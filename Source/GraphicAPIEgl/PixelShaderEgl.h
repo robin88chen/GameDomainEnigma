@@ -32,9 +32,6 @@ namespace Enigma::Devices
         std::string GetVarSemantic(const std::string& var_name);
         std::string GetSamplerStateName(const std::string& tex_var_name);
 
-    protected:
-        virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) override;
-
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:
         "//semantic var_name VAR_SEMANTIC"
@@ -52,6 +49,7 @@ namespace Enigma::Devices
         */
         void ParseSamplerStateTable(const std::string& code);
     private:
+        friend class ShaderCompilerEgl;
         GLuint m_shader;
         Graphics::IShaderVariable::SemanticNameTable m_varSemanticTable;
         Graphics::IShaderVariable::SemanticNameTable m_texSamplerTable;

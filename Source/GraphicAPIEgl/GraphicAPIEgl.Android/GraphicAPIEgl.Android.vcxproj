@@ -46,6 +46,7 @@
     <ClInclude Include="..\MultiBackSurfaceEgl.h" />
     <ClInclude Include="..\MultiTextureEgl.h" />
     <ClInclude Include="..\PixelShaderEgl.h" />
+    <ClInclude Include="..\ShaderCompilerEgl.h" />
     <ClInclude Include="..\ShaderProgramEgl.h" />
     <ClInclude Include="..\ShaderVariableEgl.h" />
     <ClInclude Include="..\TextureEgl.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="..\MultiBackSurfaceEgl.cpp" />
     <ClCompile Include="..\MultiTextureEgl.cpp" />
     <ClCompile Include="..\PixelShaderEgl.cpp" />
+    <ClCompile Include="..\ShaderCompilerEgl.cpp" />
     <ClCompile Include="..\ShaderProgramEgl.cpp" />
     <ClCompile Include="..\ShaderVariableEgl.cpp" />
     <ClCompile Include="..\TextureEgl.cpp" />

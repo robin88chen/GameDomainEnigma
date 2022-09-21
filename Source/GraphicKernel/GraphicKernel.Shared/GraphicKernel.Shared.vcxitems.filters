@@ -126,6 +126,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderCompiler.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IDeviceRasterizerState.cpp">
       <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderCompiler.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

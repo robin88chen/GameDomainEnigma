@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="..\AdapterDx11.h" />
     <ClInclude Include="..\AsyncGraphicAPIDx11.h" />
+    <ClInclude Include="..\AsyncShaderCompilerDx11.h" />
     <ClInclude Include="..\BackSurfaceDx11.h" />
     <ClInclude Include="..\DepthStencilSurfaceDx11.h" />
     <ClInclude Include="..\DeviceAlphaBlendStateDx11.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\MultiBackSurfaceDx11.h" />
     <ClInclude Include="..\MultiTextureDx11.h" />
     <ClInclude Include="..\PixelShaderDx11.h" />
+    <ClInclude Include="..\ShaderCompilerDx11.h" />
     <ClInclude Include="..\ShaderProgramDx11.h" />
     <ClInclude Include="..\ShaderVariablesDx11.h" />
     <ClInclude Include="..\SwapChainDx11.h" />
@@ -173,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="..\AdapterDx11.cpp" />
     <ClCompile Include="..\AsyncGraphicAPIDx11.cpp" />
+    <ClCompile Include="..\AsyncShaderCompilerDx11.cpp" />
     <ClCompile Include="..\BackSurfaceDx11.cpp" />
     <ClCompile Include="..\DepthStencilSurfaceDx11.cpp" />
     <ClCompile Include="..\DeviceAlphaBlendStateDx11.cpp" />
@@ -187,6 +190,7 @@
     <ClCompile Include="..\MultiBackSurfaceDx11.cpp" />
     <ClCompile Include="..\MultiTextureDx11.cpp" />
     <ClCompile Include="..\PixelShaderDx11.cpp" />
+    <ClCompile Include="..\ShaderCompilerDx11.cpp" />
     <ClCompile Include="..\ShaderProgramDx11.cpp" />
     <ClCompile Include="..\ShaderVariablesDx11.cpp" />
     <ClCompile Include="..\SwapChainDx11.cpp" />

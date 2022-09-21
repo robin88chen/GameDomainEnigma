@@ -32,9 +32,6 @@ namespace Enigma::Devices
 
         const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }
 
-    protected:
-        virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) override;
-
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:
         "//semantic var_name VAR_SEMANTIC"
@@ -45,6 +42,7 @@ namespace Enigma::Devices
         void ParseSemanticTable(const std::string& code);
 
     private:
+        friend class ShaderCompilerDx11;
         ID3D11PixelShader* m_d3dShader;
         ID3D11ShaderReflection* m_d3dShaderReflect;
         Graphics::IShaderVariable::SemanticNameTable m_semanticTable;

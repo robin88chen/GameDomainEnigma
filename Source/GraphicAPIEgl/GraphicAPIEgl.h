@@ -24,7 +24,9 @@ namespace Enigma::Devices
         virtual ~GraphicAPIEgl() override;
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
-        
+
+        virtual const std::unique_ptr<Graphics::IShaderCompiler>& GetShaderCompiler() override;
+
         void SetFormat(int* attrb);
         void SetDimension(const MathLib::Dimension& dim);
 

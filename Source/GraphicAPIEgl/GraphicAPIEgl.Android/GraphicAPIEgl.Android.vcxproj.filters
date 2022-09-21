@@ -82,6 +82,9 @@
     <ClInclude Include="..\DeviceRasterizerStateEgl.h">
       <Filter>Device States</Filter>
     </ClInclude>
+    <ClInclude Include="..\ShaderCompilerEgl.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GraphicAPIEgl.cpp">
@@ -134,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="..\DeviceRasterizerStateEgl.cpp">
       <Filter>Device States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ShaderCompilerEgl.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

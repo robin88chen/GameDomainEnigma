@@ -15,13 +15,13 @@
 #include "IDeviceAlphaBlendState.h"
 #include "IDeviceRasterizerState.h"
 #include "IDeviceDepthStencilState.h"
+#include "IShaderCompiler.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include <system_error>
 #include <mutex>
 #include <memory>
-
 
 namespace Enigma::MathLib
 {
@@ -80,6 +80,7 @@ namespace Enigma::Graphics
 
         APIVersion GetAPIVersion() { return m_apiVersion; }
 
+        virtual const std::unique_ptr<IShaderCompiler>& GetShaderCompiler() { return m_shaderCompiler; };
         /** @name create / cleanup device */
         //@{
         virtual void CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
@@ -327,6 +328,8 @@ namespace Enigma::Graphics
 
         GraphicThread* m_workerThread;
         AssetStash* m_stash;
+
+        std::unique_ptr<IShaderCompiler> m_shaderCompiler;
 
         IBackSurfacePtr m_boundBackSurface;
         IDepthStencilSurfacePtr m_boundDepthSurface;

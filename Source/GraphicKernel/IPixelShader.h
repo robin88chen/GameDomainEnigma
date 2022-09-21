@@ -38,9 +38,6 @@ namespace Enigma::Graphics
         virtual bool HasCompiled() { return m_hasCompiled; }
 
     protected:
-        virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) = 0;
-
-    protected:
         std::string m_name;
         bool m_hasCompiled;
     };

@@ -1,7 +1,6 @@
 ﻿#include "PixelShaderEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
-#include "GraphicKernel/GraphicEvents.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/TokenVector.h"
 
@@ -23,48 +22,6 @@ PixelShaderEgl::~PixelShaderEgl()
     }
     m_varSemanticTable.clear();
     m_texSamplerTable.clear();
-}
-
-error PixelShaderEgl::CompileCode(const std::string& code, const std::string& profile, const std::string& entry)
-{
-    if (m_shader)
-    {
-        glDeleteShader(m_shader);
-    }
-    m_varSemanticTable.clear();
-    m_texSamplerTable.clear();
-    m_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    const char* code_src = code.c_str();
-    glShaderSource(m_shader, 1, &code_src, NULL);
-
-    GLint compiled = GL_FALSE;
-    glCompileShader(m_shader);
-    glGetShaderiv(m_shader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled)
-    {
-        GLint infoLogLen = 0;
-        glGetShaderiv(m_shader, GL_INFO_LOG_LENGTH, &infoLogLen);
-        if (infoLogLen > 0)
-        {
-            GLchar* infoLog = (GLchar*)malloc(infoLogLen);
-            if (infoLog)
-            {
-                glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
-                Platforms::Debug::ErrorPrintf("Could not compile pixel shader:\n%s\n", infoLog);
-                Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, infoLog));
-                free(infoLog);
-            }
-        }
-        return ErrorCode::compileShader;
-    }
-    ParseSemanticTable(code);
-    ParseSamplerStateTable(code);
-
-    m_hasCompiled = true;
-
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
-    return ErrorCode::ok;
 }
 
 std::string PixelShaderEgl::GetVarSemantic(const std::string& var_name)

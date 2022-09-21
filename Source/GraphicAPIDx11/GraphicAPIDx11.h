@@ -36,6 +36,8 @@ namespace Enigma::Devices
         GraphicAPIDx11& operator=(const GraphicAPIDx11&) = delete;
         GraphicAPIDx11& operator=(GraphicAPIDx11&&) = delete;
 
+        virtual const std::unique_ptr<Graphics::IShaderCompiler>& GetShaderCompiler() override;
+
         virtual void CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
         virtual void CleanupDevice() override;
 
@@ -111,7 +113,7 @@ namespace Enigma::Devices
 
         void AddDebugInfoFilter();
 
-    private:
+    protected:
         DeviceCreatorDx11* m_creator;
         SwapChainDx11* m_swapChain;
         AdapterDx11* m_adapter;

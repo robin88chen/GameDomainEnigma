@@ -14,6 +14,7 @@
 #include "DeviceAlphaBlendStateEgl.h"
 #include "DeviceDepthStencilStateEgl.h"
 #include "DeviceRasterizerStateEgl.h"
+#include "ShaderCompilerEgl.h"
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -41,6 +42,15 @@ GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI()
 GraphicAPIEgl::~GraphicAPIEgl()
 {
     
+}
+
+const std::unique_ptr<Enigma::Graphics::IShaderCompiler>& GraphicAPIEgl::GetShaderCompiler()
+{
+    if (!m_shaderCompiler)
+    {
+        m_shaderCompiler = std::make_unique<ShaderCompilerEgl>();
+    }
+    return m_shaderCompiler;
 }
 
 void GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)

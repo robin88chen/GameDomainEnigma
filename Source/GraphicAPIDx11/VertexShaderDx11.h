@@ -35,9 +35,6 @@ namespace Enigma::Devices
         const byte_buffer& GetShaderSignatureBytes() const { return m_shaderByteCode; };
 
         const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }
-    protected:
-        virtual error CompileCode(
-            const std::string& code, const std::string& profile, const std::string& entry) override;
 
     private:
         /** @remark Semantic 寫在 HLSL 的 註解裡, 格式是:
@@ -52,6 +49,7 @@ namespace Enigma::Devices
         void MakeVertexFormatCode();
 
     private:
+        friend class ShaderCompilerDx11;
         ID3D11VertexShader* m_d3dShader;
         ID3D11ShaderReflection* m_d3dShaderReflect;
 

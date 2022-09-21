@@ -33,6 +33,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMultiTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IPixelShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderProgram.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IShaderVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ITexture.h" />
@@ -58,6 +59,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiBackSurface.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IMultiTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IPixelShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderProgram.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ITexture.cpp" />

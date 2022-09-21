@@ -26,6 +26,8 @@
 #include "Frameworks/EventPublisher.h"
 #include <cassert>
 
+#include "ShaderCompilerDx11.h"
+
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
@@ -51,6 +53,16 @@ GraphicAPIDx11::~GraphicAPIDx11()
     SAFE_DELETE(m_creator);
     SAFE_DELETE(m_swapChain);
     SAFE_DELETE(m_adapter);
+}
+
+const std::unique_ptr<Enigma::Graphics::IShaderCompiler>& GraphicAPIDx11::GetShaderCompiler()
+{
+    assert(m_d3dDevice);
+    if (!m_shaderCompiler)
+    {
+        m_shaderCompiler = std::make_unique<ShaderCompilerDx11>(m_d3dDevice);
+    }
+    return m_shaderCompiler;
 }
 
 void GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)

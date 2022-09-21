@@ -54,12 +54,6 @@ namespace Enigma::Devices
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) override;
         virtual void Flip() override;
 
-        ID3D11Texture2D* GetPrimaryD3DBackbuffer();
-
-        ID3D11Device* GetD3DDevice();
-        ID3D11DeviceContext* GetD3DDeviceContext();
-        SwapChainDx11* GetSwapChain();
-
     private:
         virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override { return error{}; };
         virtual error DrawIndexedPrimitive(

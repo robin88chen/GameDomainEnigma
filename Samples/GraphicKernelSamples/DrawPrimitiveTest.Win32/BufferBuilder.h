@@ -26,20 +26,16 @@ public:
     void BuildIndexBuffer(const std::string& name, const uint_buffer& data_buffer);
 private:
     void OnVertexBufferCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnVertexBufferResourceCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnVertexBufferUpdated(const Enigma::Frameworks::IEventPtr& e);
 
     void OnIndexBufferCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnIndexBufferResourceCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnIndexBufferUpdated(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferCreated;
-    Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferResourceCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onVertexBufferUpdated;
 
     Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferCreated;
-    Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferResourceCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onIndexBufferUpdated;
 
     std::string m_vtxBufferName;

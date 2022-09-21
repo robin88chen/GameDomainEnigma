@@ -26,7 +26,7 @@ namespace Enigma::Graphics
             byte_buffer data;
         };
     public:
-        IVertexBuffer(const std::string& name);
+        IVertexBuffer(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer);
         IVertexBuffer(const IVertexBuffer&) = delete;
         IVertexBuffer(IVertexBuffer&&) = delete;
         virtual ~IVertexBuffer();
@@ -35,7 +35,6 @@ namespace Enigma::Graphics
 
         const std::string& GetName() { return m_name; }
 
-        virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
         virtual error Update(const byte_buffer& dataVertex) = 0;
         virtual future_error AsyncUpdate(const byte_buffer& dataVertex);
         virtual error RangedUpdate(const ranged_buffer& buffer) = 0;

@@ -20,18 +20,20 @@ namespace Enigma::Devices
     class VertexBufferEgl : public Graphics::IVertexBuffer
     {
     public:
-        VertexBufferEgl(const std::string& name);
+        VertexBufferEgl(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer);
         VertexBufferEgl(const VertexBufferEgl&) = delete;
         VertexBufferEgl(VertexBufferEgl&&) = delete;
         virtual ~VertexBufferEgl();
         VertexBufferEgl& operator=(const VertexBufferEgl&) = delete;
         VertexBufferEgl& operator=(VertexBufferEgl&&) = delete;
 
-        virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
         virtual error Update(const byte_buffer& dataVertex) override;
         virtual error RangedUpdate(const ranged_buffer& buffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
+    protected:
+        error Create(unsigned int sizeofVertex, unsigned int sizeBuffer);
+
     protected:
         GLuint m_bufferHandle;
     };

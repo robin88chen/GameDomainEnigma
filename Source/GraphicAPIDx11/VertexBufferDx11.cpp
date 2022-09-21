@@ -10,11 +10,11 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-VertexBufferDx11::VertexBufferDx11(const std::string& name) : IVertexBuffer(name)
+VertexBufferDx11::VertexBufferDx11(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+    : IVertexBuffer(name, sizeofVertex, sizeBuffer)
 {
-    m_sizeofVertex = 0;
-    m_bufferSize = 0;
     m_d3dBuffer = nullptr;
+    Create(sizeofVertex, sizeBuffer);
 }
 
 VertexBufferDx11::~VertexBufferDx11()

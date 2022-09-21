@@ -9,9 +9,10 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-IndexBufferEgl::IndexBufferEgl(const std::string& name) :IIndexBuffer(name)
+IndexBufferEgl::IndexBufferEgl(const std::string& name, unsigned int sizeBuffer) :IIndexBuffer(name, sizeBuffer)
 {
     m_bufferHandle = 0;
+    Create(sizeBuffer);
 }
 
 IndexBufferEgl::~IndexBufferEgl()

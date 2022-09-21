@@ -73,20 +73,20 @@ void AsyncGraphicAPIDx11::CreateVertexDeclaration(const std::string& name, const
     m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateVertexDeclaration(name, data_vertex_format, shader); return ErrorCode::ok; });
 }
 
-void AsyncGraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned sizeofVertex,
-    unsigned sizeBuffer)
+void AsyncGraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex,
+    unsigned int sizeBuffer)
 {
     m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateVertexBuffer(buff_name, sizeofVertex, sizeBuffer); return ErrorCode::ok; });
 }
 
-void AsyncGraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned sizeBuffer)
+void AsyncGraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::CreateIndexBuffer(buff_name, sizeBuffer); return ErrorCode::ok; });
 }
 
 void AsyncGraphicAPIDx11::Clear(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, float depth_value,
-    unsigned stencil_value)
+    unsigned int stencil_value)
 {
     m_workerThread->PushTask([=]() -> error { GraphicAPIDx11::Clear(back_surface, depth_surface, color, depth_value, stencil_value); return ErrorCode::ok; });
 }

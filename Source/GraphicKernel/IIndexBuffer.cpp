@@ -4,10 +4,10 @@
 
 using namespace Enigma::Graphics;
 
-IIndexBuffer::IIndexBuffer(const std::string& name)
+IIndexBuffer::IIndexBuffer(const std::string& name, unsigned int sizeBuffer)
 {
     m_name = name;
-    m_bufferSize = 0;
+    m_bufferSize = sizeBuffer;
 }
 
 IIndexBuffer::~IIndexBuffer()

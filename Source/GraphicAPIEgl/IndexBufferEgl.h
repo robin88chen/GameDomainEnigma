@@ -20,18 +20,20 @@ namespace Enigma::Devices
     class IndexBufferEgl : public Graphics::IIndexBuffer
     {
     public:
-        IndexBufferEgl(const std::string& name);
+        IndexBufferEgl(const std::string& name, unsigned int sizeBuffer);
         IndexBufferEgl(const IndexBufferEgl&) = delete;
         IndexBufferEgl(IndexBufferEgl&&) = delete;
         virtual ~IndexBufferEgl();
         IndexBufferEgl& operator=(const IndexBufferEgl&) = delete;
         IndexBufferEgl& operator=(IndexBufferEgl&&) = delete;
 
-        virtual error Create(unsigned int sizeBuffer) override;
         virtual error Update(const uint_buffer& dataIndex) override;
         virtual error RangedUpdate(const ranged_buffer& buffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
+
+    protected:
+        error Create(unsigned int sizeBuffer);
 
     protected:
         GLuint m_bufferHandle;

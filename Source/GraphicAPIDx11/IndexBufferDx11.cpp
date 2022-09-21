@@ -10,10 +10,10 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-IndexBufferDx11::IndexBufferDx11(const std::string& name) : IIndexBuffer(name)
+IndexBufferDx11::IndexBufferDx11(const std::string& name, unsigned int sizeBuffer) : IIndexBuffer(name, sizeBuffer)
 {
     m_d3dBuffer = nullptr;
-    m_bufferSize = 0;
+    Create(sizeBuffer);
 }
 
 IndexBufferDx11::~IndexBufferDx11()

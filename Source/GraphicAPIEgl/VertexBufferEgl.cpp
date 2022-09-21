@@ -9,9 +9,11 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-VertexBufferEgl::VertexBufferEgl(const std::string& name) : IVertexBuffer(name)
+VertexBufferEgl::VertexBufferEgl(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer)
+    : IVertexBuffer(name, sizeofVertex, sizeBuffer)
 {
     m_bufferHandle = 0;
+    Create(sizeofVertex, sizeBuffer);
 }
 
 VertexBufferEgl::~VertexBufferEgl()

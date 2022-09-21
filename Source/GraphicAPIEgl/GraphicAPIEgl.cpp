@@ -278,8 +278,7 @@ void GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std::
 void GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
-    Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferEgl{ buff_name } };
-    buff->Create(sizeofVertex, sizeBuffer);
+    Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferEgl{ buff_name, sizeofVertex, sizeBuffer } };
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
@@ -288,8 +287,7 @@ void GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned in
 void GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned int sizeBuffer)
 {
     Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
-    Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name } };
-    buff->Create(sizeBuffer);
+    Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferEgl{ buff_name, sizeBuffer } };
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));

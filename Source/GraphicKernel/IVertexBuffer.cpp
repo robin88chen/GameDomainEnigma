@@ -4,11 +4,11 @@
 
 using namespace Enigma::Graphics;
 
-IVertexBuffer::IVertexBuffer(const std::string& name)
+IVertexBuffer::IVertexBuffer(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer)
 {
     m_name = name;
-    m_bufferSize = 0;
-    m_sizeofVertex = 0;
+    m_bufferSize = sizeBuffer;
+    m_sizeofVertex = sizeofVertex;
 }
 
 IVertexBuffer::~IVertexBuffer()

@@ -25,7 +25,7 @@ namespace Enigma::Graphics
             uint_buffer data;
         };
     public:
-        IIndexBuffer(const std::string& name);
+        IIndexBuffer(const std::string& name, unsigned int sizeBuffer);
         IIndexBuffer(const IIndexBuffer&) = delete;
         IIndexBuffer(IIndexBuffer&&) = delete;
         virtual ~IIndexBuffer();
@@ -34,7 +34,6 @@ namespace Enigma::Graphics
 
         const std::string& GetName() { return m_name; }
 
-        virtual error Create(unsigned int sizeBuffer) = 0;
         virtual error Update(const uint_buffer& dataIndex) = 0;
         virtual future_error AsyncUpdate(const uint_buffer& dataIndex);
         virtual error RangedUpdate(const ranged_buffer& buffer) = 0;

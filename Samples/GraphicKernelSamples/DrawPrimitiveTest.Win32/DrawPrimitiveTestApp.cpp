@@ -108,7 +108,7 @@ void DrawPrimitiveTestApp::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(IGraphicAPI::Instance(), DeviceRequiredBits(), m_hwnd);
+    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
     m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
@@ -155,18 +155,17 @@ void DrawPrimitiveTestApp::FrameUpdate()
 
 void DrawPrimitiveTestApp::RenderFrame()
 {
-    if ((!m_vtxDecl) || (!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
-    m_renderTarget->AsyncBind();
-    m_renderTarget->AsyncBindViewPort();
-    IGraphicAPI::Instance()->AsyncBindVertexDeclaration(m_vtxDecl);
-    IGraphicAPI::Instance()->AsyncBindShaderProgram(m_program);
-    IGraphicAPI::Instance()->AsyncBindVertexBuffer(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
-    IGraphicAPI::Instance()->AsyncBindIndexBuffer(m_idxBuffer);
-    m_renderTarget->AsyncClear();
-    IGraphicAPI::Instance()->AsyncBeginScene();
-    IGraphicAPI::Instance()->AsyncDrawIndexedPrimitive(6, 4, 0, 0);
-    IGraphicAPI::Instance()->AsyncEndScene();
-    m_renderTarget->AsyncFlip();
+    if ((!m_program) || (!m_vtxBuffer) || (!m_idxBuffer) || (!m_renderTarget)) return;
+    m_renderTarget->Bind();
+    m_renderTarget->BindViewPort();
+    IGraphicAPI::Instance()->Bind(m_program);
+    IGraphicAPI::Instance()->Bind(m_vtxBuffer, PrimitiveTopology::Topology_TriangleList);
+    IGraphicAPI::Instance()->Bind(m_idxBuffer);
+    m_renderTarget->Clear();
+    IGraphicAPI::Instance()->BeginScene();
+    IGraphicAPI::Instance()->Draw(6, 4, 0, 0);
+    IGraphicAPI::Instance()->EndScene();
+    m_renderTarget->Flip();
 }
 
 void DrawPrimitiveTestApp::OnRenderTargetCreated(const IEventPtr& e)
@@ -184,7 +183,7 @@ void DrawPrimitiveTestApp::OnShaderProgramCreated(const IEventPtr& e)
     if (!ev) return;
     if (ev->GetName() != ShaderProgramName) return;
     m_program = IGraphicAPI::Instance()->GetGraphicAsset<IShaderProgramPtr>(ev->GetName());
-    m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
+    //m_vtxDecl = IGraphicAPI::Instance()->GetGraphicAsset<IVertexDeclarationPtr>(VertexDeclName);
 }
 
 void DrawPrimitiveTestApp::OnVertexBufferBuilt(const IEventPtr& e)

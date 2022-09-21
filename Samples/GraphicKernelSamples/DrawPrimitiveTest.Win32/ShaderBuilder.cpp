@@ -89,14 +89,7 @@ void ShaderBuilder::OnVertexShaderCreated(const IEventPtr& e)
         Debug::Printf("can't get vertex shader asset %s", ev->GetName().c_str());
         return;
     }
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        shader.value()->AsyncCompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
-    }
-    else
-    {
-        shader.value()->CompileCode(m_vtxShaderCode, "vs_4_0", "vs_main");
-    }
+    shader.value()->Compile(m_vtxShaderCode, "vs_4_0", "vs_main");
 }
 
 void ShaderBuilder::OnVertexShaderCompiled(const IEventPtr& e)
@@ -138,14 +131,7 @@ void ShaderBuilder::OnPixelShaderCreated(const IEventPtr& e)
         Debug::Printf("can't get pixel shader asset %s", ev->GetName().c_str());
         return;
     }
-    if (IGraphicAPI::Instance()->UseAsync())
-    {
-        shader.value()->AsyncCompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
-    }
-    else
-    {
-        shader.value()->CompileCode(m_pixShaderCode, "ps_4_0", "ps_main");
-    }
+    shader.value()->Compile(m_pixShaderCode, "ps_4_0", "ps_main");
 }
 
 void ShaderBuilder::OnPixelShaderCompiled(const IEventPtr& e)

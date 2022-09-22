@@ -45,14 +45,24 @@ error IndexBufferEgl::Create(unsigned sizeBuffer)
     return ErrorCode::ok;
 }
 
-error IndexBufferEgl::Update(const uint_buffer& dataIndex)
+error IndexBufferEgl::UpdateBuffer(const uint_buffer& dataIndex)
 {
     assert(!dataIndex.empty());
     assert(m_bufferHandle != 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferHandle);
     unsigned int dataSize = (unsigned int)dataIndex.size() * sizeof(unsigned int);
+    if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
+
     void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, dataSize, GL_MAP_WRITE_BIT);
-    if (!buff) return ErrorCode::eglBufferMapping;
+    if (!buff)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        return ErrorCode::eglBufferMapping;
+    }
 
     memcpy(buff, &dataIndex[0], dataSize);
 
@@ -65,14 +75,24 @@ error IndexBufferEgl::Update(const uint_buffer& dataIndex)
     return ErrorCode::ok;
 }
 
-error IndexBufferEgl::RangedUpdate(const ranged_buffer& buffer)
+error IndexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
     assert(!buffer.data.empty());
     assert(m_bufferHandle != 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferHandle);
-    unsigned int dataSize = (unsigned int)buffer.data.size();
+    unsigned int dataSize = (unsigned int)buffer.data.size() * sizeof(unsigned int);
+    if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
+
     void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, buffer.idx_offset * sizeof(unsigned int), dataSize, GL_MAP_WRITE_BIT);
-    if (!buff) return ErrorCode::eglBufferMapping;
+    if (!buff)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        return ErrorCode::eglBufferMapping;
+    }
 
     memcpy(buff, &buffer.data[0], dataSize);
 

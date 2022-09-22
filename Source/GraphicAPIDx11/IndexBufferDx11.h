@@ -26,10 +26,12 @@ namespace Enigma::Devices
         IndexBufferDx11& operator=(IndexBufferDx11&&) = delete;
 
         virtual error Create(unsigned int sizeBuffer) override;
-        virtual error Update(const uint_buffer& dataIndex) override;
-        virtual error RangedUpdate(const ranged_buffer& buffer) override;
 
         ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; };
+
+    protected:
+        virtual error UpdateBuffer(const uint_buffer& dataIndex) override;
+        virtual error RangedUpdateBuffer(const ranged_buffer& buffer) override;
 
     protected:
         ID3D11Buffer* m_d3dBuffer;

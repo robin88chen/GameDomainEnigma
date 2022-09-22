@@ -14,14 +14,28 @@ IIndexBuffer::~IIndexBuffer()
 {
 }
 
-future_error IIndexBuffer::AsyncUpdate(const uint_buffer& dataIndex)
+void IIndexBuffer::Update(const uint_buffer& dataIndex)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), dataIndex, this]() -> error { return Update(dataIndex); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), dataIndex, this]() -> error { return UpdateBuffer(dataIndex); });
+    }
+    else
+    {
+        UpdateBuffer(dataIndex);
+    }
 }
 
-future_error IIndexBuffer::AsyncRangedUpdate(const ranged_buffer& buffer)
+void IIndexBuffer::RangedUpdate(const ranged_buffer& buffer)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdate(buffer); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdateBuffer(buffer); });
+    }
+    else
+    {
+        RangedUpdateBuffer(buffer);
+    }
 }

@@ -34,6 +34,9 @@
     <Filter Include="Geometry Datas">
       <UniqueIdentifier>{f0f85a76-37c8-4177-9009-85996962e2cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderBuffer\BufferBuilder">
+      <UniqueIdentifier>{deed8b56-b9cb-4947-981a-d040a23952fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -102,6 +105,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
       <Filter>Geometry Datas</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.h">
+      <Filter>RenderBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h">
+      <Filter>RenderBuffer\BufferBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h">
+      <Filter>RenderBuffer\BufferBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -148,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp">
       <Filter>RenderBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.cpp">
+      <Filter>RenderBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp">
+      <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

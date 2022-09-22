@@ -15,14 +15,28 @@ IVertexBuffer::~IVertexBuffer()
 {
 }
 
-future_error IVertexBuffer::AsyncUpdate(const byte_buffer& dataVertex)
+void IVertexBuffer::Update(const byte_buffer& dataVertex)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), dataVertex, this]() -> error { return Update(dataVertex); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), dataVertex, this]() -> error { return UpdateBuffer(dataVertex); });
+    }
+    else
+    {
+        UpdateBuffer(dataVertex);
+    }
 }
 
-future_error IVertexBuffer::AsyncRangedUpdate(const ranged_buffer& buffer)
+void IVertexBuffer::RangedUpdate(const ranged_buffer& buffer)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdate(buffer); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), buffer, this]() -> error { return RangedUpdateBuffer(buffer); });
+    }
+    else
+    {
+        RangedUpdateBuffer(buffer);
+    }
 }

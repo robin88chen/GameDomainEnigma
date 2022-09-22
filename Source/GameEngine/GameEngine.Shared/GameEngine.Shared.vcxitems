@@ -26,6 +26,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
@@ -48,6 +52,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />

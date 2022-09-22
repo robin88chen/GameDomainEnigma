@@ -36,14 +36,16 @@ namespace Enigma::Graphics
         const std::string& GetName() { return m_name; }
 
         virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) = 0;
-        virtual error Update(const byte_buffer& dataVertex) = 0;
-        virtual future_error AsyncUpdate(const byte_buffer& dataVertex);
-        virtual error RangedUpdate(const ranged_buffer& buffer) = 0;
-        virtual future_error AsyncRangedUpdate(const ranged_buffer& buffer);
+        void Update(const byte_buffer& dataVertex);
+        void RangedUpdate(const ranged_buffer& buffer);
 
         // Buffer size
         virtual unsigned int BufferSize() { return m_bufferSize; };
         virtual unsigned int SizeofVertex() { return m_sizeofVertex; };
+
+    protected:
+        virtual error UpdateBuffer(const byte_buffer& dataVertex) = 0;
+        virtual error RangedUpdateBuffer(const ranged_buffer& buffer) = 0;
 
     protected:
         std::string m_name;

@@ -32,12 +32,6 @@ namespace Enigma::Engine
         RenderBuffer& operator=(const RenderBuffer&) = delete;
         RenderBuffer& operator=(RenderBuffer&&) = delete;
 
-        /** create render buffer */
-        //er_code Create();
-        //er_code Create(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer);
-        /** resize render buffer */
-        //er_code ReSize(unsigned int countVertex, unsigned int countIndex);
-
         /** update vertex */
         error UpdateVertex(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer);
         /** ranged update vertex */
@@ -62,9 +56,6 @@ namespace Enigma::Engine
         /** draw */
         error Draw(const MathLib::Matrix4& mxWorld, const EffectMaterialPtr& effectMaterial,
             const GeometrySegment& segment);
-        /** async draw */
-        //future_err AsyncDraw(const Matrix4& mxWorld, const EffectMaterialPtr& effectMaterial,
-          //  const GeometryData::GeometrySegment& segment);
 
     protected:
         // todo: 這些func的 Async 由 Manager 負責以 Async 方式呼叫

@@ -45,14 +45,22 @@ error VertexBufferEgl::Create(unsigned sizeofVertex, unsigned sizeBuffer)
     return ErrorCode::ok;
 }
 
-error VertexBufferEgl::Update(const byte_buffer& dataVertex)
+error VertexBufferEgl::UpdateBuffer(const byte_buffer& dataVertex)
 {
     assert(m_bufferHandle != 0);
     assert(!dataVertex.empty());
-    if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize)) return ErrorCode::bufferSize;
+    if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
     void* buff = glMapBufferRange(GL_ARRAY_BUFFER, 0, dataVertex.size(), GL_MAP_WRITE_BIT);
-    if (!buff) return ErrorCode::eglBufferMapping;
+    if (!buff)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        return ErrorCode::eglBufferMapping;
+    }
 
     memcpy(buff, &dataVertex[0], dataVertex.size());
 
@@ -65,15 +73,24 @@ error VertexBufferEgl::Update(const byte_buffer& dataVertex)
     return ErrorCode::ok;
 }
 
-error VertexBufferEgl::RangedUpdate(const ranged_buffer& buffer)
+error VertexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
     assert(m_bufferHandle != 0);
     assert(!buffer.data.empty());
-    if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize)) return ErrorCode::bufferSize;
+    if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
     void* buff = glMapBufferRange(GL_ARRAY_BUFFER, buffer.vtx_offset * m_sizeofVertex,
         buffer.data.size(), GL_MAP_WRITE_BIT);
-    if (!buff) return ErrorCode::eglBufferMapping;
+    if (!buff)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        return ErrorCode::eglBufferMapping;
+    }
 
     memcpy(buff, &buffer.data[0], buffer.data.size());
 

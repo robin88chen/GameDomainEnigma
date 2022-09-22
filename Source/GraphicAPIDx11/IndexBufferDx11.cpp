@@ -45,16 +45,25 @@ error IndexBufferDx11::Create(unsigned sizeBuffer)
     return ErrorCode::ok;
 }
 
-error IndexBufferDx11::Update(const uint_buffer& dataIndex)
+error IndexBufferDx11::UpdateBuffer(const uint_buffer& dataIndex)
 {
     assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataIndex.empty());
     unsigned int dataSize = (unsigned int)dataIndex.size() * sizeof(unsigned int);
-    if (FATAL_LOG_EXPR(dataSize > m_bufferSize)) return ErrorCode::bufferSize;
+    if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
 
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(graphic);
-    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
+    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        return ErrorCode::d3dDeviceNullPointer;
+    }
+
     D3D11_BOX d3dBox = { 0, 0, 0, dataSize, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataIndex[0], 0, 0);
 
@@ -62,16 +71,24 @@ error IndexBufferDx11::Update(const uint_buffer& dataIndex)
     return ErrorCode::ok;
 }
 
-error IndexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
+error IndexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
     assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
     unsigned int dataSize = (unsigned int)buffer.data.size() * sizeof(unsigned int);
-    if (FATAL_LOG_EXPR(dataSize > m_bufferSize)) return ErrorCode::bufferSize;
+    if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
 
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(graphic);
-    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
+    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        return ErrorCode::d3dDeviceNullPointer;
+    }
 
     unsigned int byte_offset = buffer.idx_offset * sizeof(unsigned int);
     unsigned int byte_length = buffer.idx_count * sizeof(unsigned int);

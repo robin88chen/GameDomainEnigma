@@ -21,6 +21,8 @@ namespace Enigma::Engine
         {
             m_startVtx = m_vtxCount = m_startIdx = m_idxCount = 0;
         };
+        GeometrySegment(unsigned int start_vtx, unsigned int vtx_count, unsigned int start_idx, unsigned int idx_count)
+	        : m_startVtx(start_vtx), m_vtxCount(vtx_count), m_startIdx(start_idx), m_idxCount(idx_count) {}
     };
     using GeometrySegmentVector = std::vector<GeometrySegment>;
 }

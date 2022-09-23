@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderBufferManagerTest.Shared", "RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems", "{F1E1391A-E127-421D-907C-84AF194F5F5E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderBufferManagerTest.Win32", "RenderBufferManagerTest.Win32\RenderBufferManagerTest.Win32.vcxproj", "{DFD0D474-71AB-40C2-B53F-7E85984B0C45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x64.ActiveCfg = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x64.Build.0 = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x86.ActiveCfg = Debug|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x86.Build.0 = Debug|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x64.ActiveCfg = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x64.Build.0 = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x86.ActiveCfg = Release|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48E3E4AF-B380-4CD1-808A-DE6B250CC18E}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems*{dfd0d474-71ab-40c2-b53f-7e85984b0c45}*SharedItemsImports = 4
+		RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems*{f1e1391a-e127-421d-907c-84af194f5f5e}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

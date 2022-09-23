@@ -28,6 +28,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h" />

@@ -19,8 +19,8 @@ namespace Enigma::Engine
     {
     public:
         RenderBufferSignature();
-        RenderBufferSignature(const std::string& name, const Graphics::IVertexDeclarationPtr& vertexDecl,
-            Graphics::PrimitiveTopology pt, unsigned int vertexCapa, unsigned int idxCapa);
+        RenderBufferSignature(const std::string& name, Graphics::PrimitiveTopology pt, 
+            unsigned int vertexCapa, unsigned int idxCapa);
         RenderBufferSignature(const RenderBufferSignature& signature);
         RenderBufferSignature(RenderBufferSignature&& signature);
         ~RenderBufferSignature();
@@ -31,7 +31,8 @@ namespace Enigma::Engine
         bool operator<(const RenderBufferSignature& signature) const;
 
         const std::string& GetName() const { return m_name; };
-        Graphics::IVertexDeclarationPtr GetVertexDeclaration() const { return m_vertexDecl.lock(); };
+        // 拿掉 vertex layout, 應該不需要
+        //Graphics::IVertexDeclarationPtr GetVertexDeclaration() const { return m_vertexDecl.lock(); };
         const Graphics::PrimitiveTopology GetTopology() const { return m_topology; };
         unsigned int GetVertexCapacity() { return m_vertexCapacity; };
         void ChangeVertexCapacity(unsigned int vtxCapa) { m_vertexCapacity = vtxCapa; };
@@ -51,7 +52,7 @@ namespace Enigma::Engine
 
     private:
         std::string m_name;
-        std::weak_ptr<Graphics::IVertexDeclaration> m_vertexDecl;
+        //std::weak_ptr<Graphics::IVertexDeclaration> m_vertexDecl;
         Graphics::PrimitiveTopology m_topology;
         unsigned int m_vertexCapacity;
         unsigned int m_indexCapacity;

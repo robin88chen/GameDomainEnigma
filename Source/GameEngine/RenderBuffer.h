@@ -41,12 +41,6 @@ namespace Enigma::Engine
         Graphics::IVertexBufferPtr GetVertexBuffer() { return m_vertexBuffer; };
         Graphics::IIndexBufferPtr GetIndexBuffer() { return m_indexBuffer; };
 
-        /** get vertex declaration */
-        Graphics::IVertexDeclarationPtr GetVertexDeclaration() const
-        {
-            return m_signature.GetVertexDeclaration();
-        };
-
         /** get signature */
         const RenderBufferSignature& GetSignature() const { return m_signature; };
         RenderBufferSignature GetSignature() { return m_signature; }

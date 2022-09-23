@@ -53,7 +53,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
 
 error RenderBuffer::Draw(const MathLib::Matrix4& mxWorld, const EffectMaterialPtr& effectMaterial, const GeometrySegment& segment)
 {
-    if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
+    //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
     if (FATAL_LOG_EXPR(!effectMaterial)) return ErrorCode::nullMaterial;
     if (FATAL_LOG_EXPR(!m_vertexBuffer)) return Graphics::ErrorCode::nullVertexBuffer;
     if (m_vertexBuffer)

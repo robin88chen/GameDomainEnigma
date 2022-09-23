@@ -8,11 +8,9 @@ Enigma::Engine::RenderBufferSignature::RenderBufferSignature()
 }
 
 Enigma::Engine::RenderBufferSignature::RenderBufferSignature(const std::string& name,
-    const Graphics::IVertexDeclarationPtr& vertexDecl, Graphics::PrimitiveTopology pt,
-    unsigned vertexCapa, unsigned idxCapa)
+    Graphics::PrimitiveTopology pt, unsigned vertexCapa, unsigned idxCapa)
 {
     m_name = name;
-    m_vertexDecl = vertexDecl;
     m_topology = pt;
     m_vertexCapacity = vertexCapa;
     m_indexCapacity = idxCapa;
@@ -21,7 +19,6 @@ Enigma::Engine::RenderBufferSignature::RenderBufferSignature(const std::string& 
 Enigma::Engine::RenderBufferSignature::RenderBufferSignature(const RenderBufferSignature& signature)
 {
     m_name = signature.m_name;
-    m_vertexDecl = signature.m_vertexDecl;
     m_topology = signature.m_topology;
     m_vertexCapacity = signature.m_vertexCapacity;
     m_indexCapacity = signature.m_indexCapacity;
@@ -30,7 +27,6 @@ Enigma::Engine::RenderBufferSignature::RenderBufferSignature(const RenderBufferS
 Enigma::Engine::RenderBufferSignature::RenderBufferSignature(RenderBufferSignature&& signature)
 {
     m_name = std::move(signature.m_name);
-    m_vertexDecl = std::move(signature.m_vertexDecl);
     m_topology = signature.m_topology;
     m_vertexCapacity = signature.m_vertexCapacity;
     m_indexCapacity = signature.m_indexCapacity;
@@ -43,7 +39,6 @@ Enigma::Engine::RenderBufferSignature::~RenderBufferSignature()
 Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::operator=(const RenderBufferSignature& signature)
 {
     m_name = signature.m_name;
-    m_vertexDecl = signature.m_vertexDecl;
     m_topology = signature.m_topology;
     m_vertexCapacity = signature.m_vertexCapacity;
     m_indexCapacity = signature.m_indexCapacity;
@@ -53,7 +48,6 @@ Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::op
 Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::operator=(RenderBufferSignature&& signature)
 {
     m_name = std::move(signature.m_name);
-    m_vertexDecl = std::move(signature.m_vertexDecl);
     m_topology = signature.m_topology;
     m_vertexCapacity = signature.m_vertexCapacity;
     m_indexCapacity = signature.m_indexCapacity;
@@ -63,7 +57,6 @@ Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::op
 bool Enigma::Engine::RenderBufferSignature::operator==(const RenderBufferSignature& signature) const
 {
     if (m_name != signature.m_name) return false;
-    if (m_vertexDecl.lock() != signature.m_vertexDecl.lock()) return false;
     if (m_vertexCapacity != signature.m_vertexCapacity) return false;
     if (m_indexCapacity != signature.m_indexCapacity) return false;
     if (m_topology != signature.m_topology) return false;
@@ -74,8 +67,6 @@ bool Enigma::Engine::RenderBufferSignature::operator<(const RenderBufferSignatur
 {
     if (m_name < signature.m_name) return true;
     if (m_name > signature.m_name) return false;
-    if ((size_t)m_vertexDecl.lock().get() < (size_t)signature.m_vertexDecl.lock().get()) return true;
-    if ((size_t)m_vertexDecl.lock().get() > (size_t)signature.m_vertexDecl.lock().get()) return false;
     if (m_vertexCapacity < signature.m_vertexCapacity) return true;
     if (m_vertexCapacity > signature.m_vertexCapacity) return false;
     if (m_indexCapacity < signature.m_indexCapacity) return true;

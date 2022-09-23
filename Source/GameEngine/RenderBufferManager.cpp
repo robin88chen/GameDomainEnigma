@@ -2,10 +2,13 @@
 #include "RenderBufferBuilder.h"
 #include "EngineErrors.h"
 #include "RenderBufferEvents.h"
+#include "RenderBufferCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
+
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::Engine;
 
@@ -32,6 +35,11 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnInit()
     m_onRenderBufferBuildFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuildFailed(c); });
     Frameworks::EventPublisher::Subscribe(typeid(RenderBufferBuildFailed), m_onRenderBufferBuildFailed);
+
+	m_doBuildingRenderBuffer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingRenderBuffer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
+
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -57,6 +65,9 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnTerm()
     m_onRenderBufferBuilt = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuildFailed), m_onRenderBufferBuildFailed);
     m_onRenderBufferBuildFailed = nullptr;
+
+	Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
+    m_doBuildingRenderBuffer = nullptr;
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -104,4 +115,12 @@ void RenderBufferManager::OnRenderBufferBuildFailed(const Frameworks::IEventPtr&
     Platforms::Debug::ErrorPrintf("render buffer %s build failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
+}
+
+void RenderBufferManager::DoBuildingRenderBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Engine::BuildRenderBuffer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    BuildRenderBuffer(cmd->GetPolicy());
 }

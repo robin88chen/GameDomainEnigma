@@ -24,6 +24,7 @@ VertexBufferDx11::~VertexBufferDx11()
 
 error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     m_sizeofVertex = sizeofVertex;
     m_bufferSize = sizeBuffer;
     assert(m_bufferSize > 0);
@@ -46,14 +47,23 @@ error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
     return ErrorCode::ok;
 }
 
-error VertexBufferDx11::Update(const byte_buffer& dataVertex)
+error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataVertex.empty());
-    if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize)) return ErrorCode::bufferSize;
+    if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
 
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(graphic);
-    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
+    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        return ErrorCode::d3dDeviceNullPointer;
+    }
 
     D3D11_BOX d3dBox = { 0, 0, 0, (unsigned int)dataVertex.size(), 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataVertex[0], 0, 0);
@@ -62,14 +72,22 @@ error VertexBufferDx11::Update(const byte_buffer& dataVertex)
     return ErrorCode::ok;
 }
 
-error VertexBufferDx11::RangedUpdate(const ranged_buffer& buffer)
+error VertexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
+    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
-    if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize)) return ErrorCode::bufferSize;
-
+    if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        return ErrorCode::bufferSize;
+    }
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(graphic);
-    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
+    if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        return ErrorCode::d3dDeviceNullPointer;
+    }
 
     unsigned int byte_offset = buffer.vtx_offset * m_sizeofVertex;
     unsigned int byte_length = buffer.vtx_count * m_sizeofVertex;

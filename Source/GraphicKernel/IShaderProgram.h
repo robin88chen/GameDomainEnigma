@@ -49,7 +49,7 @@ namespace Enigma::Graphics
 
         //virtual error CommitVariables() = 0;
 
-        virtual void ApplyVariables();
+        void ApplyVariables();
 
     protected:
         virtual error ApplyShaderVariables() = 0;

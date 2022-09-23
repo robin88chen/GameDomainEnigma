@@ -26,6 +26,7 @@ namespace Enigma::Engine
         effectPassEnd = 301,
         compilingEmptyEffectTech,
         noSelectedTechnique,
+        nullMaterial,
     };
     class ErrorCategory : public std::error_category
     {

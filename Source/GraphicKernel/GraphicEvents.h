@@ -289,6 +289,28 @@ namespace Enigma::Graphics
         unsigned int m_offset;
         unsigned int m_count;
     };
+    class VertexBufferUpdateFailed : public Frameworks::IEvent
+    {
+    public:
+        VertexBufferUpdateFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
+    class IndexBufferUpdateFailed : public Frameworks::IEvent
+    {
+    public:
+        IndexBufferUpdateFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
     //---------------- Shaders -----------------------//
     class DeviceVertexShaderCreated : public Frameworks::IEvent
     {

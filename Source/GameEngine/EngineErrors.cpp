@@ -17,6 +17,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::effectPassEnd: return "Effect pass ended";
     case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     case ErrorCode::noSelectedTechnique: return "No selected effect technique";
+    case ErrorCode::nullMaterial: return "Null material";
     }
     return "Unknown";
 }

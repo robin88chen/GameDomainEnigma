@@ -7,6 +7,7 @@
 #include "GameEngine/RenderTarget.h"
 #include "GameEngine/ShaderManager.h"
 #include "GameEngine/EffectMaterialManager.h"
+#include "GameEngine/RenderBufferManager.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -121,6 +122,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
     if (er) return er;
     er = InstallShaderManagers();
+    if (er) return er;
+    er = InstallRenderBufferManagers();
     return er;
 }
 
@@ -130,6 +133,7 @@ error GraphicMain::ShutdownDefaultRenderer()
     assert(policy);
 
     error er;
+    er = ShutdownRenderBufferManagers();
     er = ShutdownShaderManagers();
     er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     if (er) return er;
@@ -185,3 +189,14 @@ error GraphicMain::ShutdownShaderManagers()
     return ErrorCode::ok;
 }
 
+error GraphicMain::InstallRenderBufferManagers()
+{
+    m_serviceManager->RegisterSystemService(menew Engine::RenderBufferManager(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownRenderBufferManagers()
+{
+    m_serviceManager->ShutdownSystemService(Engine::RenderBufferManager::TYPE_RTTI);
+    return ErrorCode::ok;
+}

@@ -113,6 +113,7 @@ namespace Enigma::Graphics
 
         virtual void TerminateGraphicThread();
         virtual GraphicThread* GetGraphicThread();
+        virtual bool IsValidGraphicThread(const std::thread::id& id);
 
         /** Get graphic asset, assert if key not found */
         template <class T> T GetGraphicAsset(const std::string& asset_key)

@@ -33,9 +33,9 @@ namespace Enigma::Graphics
         @param profile "ps_1_1", "ps_2_0" ....
         @param entry entry point function name
         */
-        virtual void Compile(const std::string& code, const std::string& profile, const std::string& entry);
+        void Compile(const std::string& code, const std::string& profile, const std::string& entry);
 
-        virtual bool HasCompiled() { return m_hasCompiled; }
+        bool HasCompiled() { return m_hasCompiled; }
 
     protected:
         virtual error CompileCode(const std::string& code, const std::string& profile, const std::string& entry) = 0;

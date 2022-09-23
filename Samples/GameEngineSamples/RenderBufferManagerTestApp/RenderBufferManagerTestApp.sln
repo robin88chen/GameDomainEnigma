@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderBufferManagerTest.Shared", "RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems", "{F1E1391A-E127-421D-907C-84AF194F5F5E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderBufferManagerTest.Win32", "RenderBufferManagerTest.Win32\RenderBufferManagerTest.Win32.vcxproj", "{DFD0D474-71AB-40C2-B53F-7E85984B0C45}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderBufferManagerTest.Jni", "RenderBufferManagerTest.Jni\RenderBufferManagerTest.Jni.vcxproj", "{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}"
+EndProject
+Project("{39E2626F-3545-4960-A6E8-258AD8476CE5}") = "RenderBufferManagerTestApp", "RenderBufferManagerTestApp\RenderBufferManagerTestApp.androidproj", "{A616D8BB-F169-4C7A-BB00-2695209697FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|ARM.ActiveCfg = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|ARM.Build.0 = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|ARM64.ActiveCfg = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|ARM64.Build.0 = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x64.ActiveCfg = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x64.Build.0 = Debug|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x86.ActiveCfg = Debug|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Debug|x86.Build.0 = Debug|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|ARM.ActiveCfg = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|ARM.Build.0 = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|ARM64.ActiveCfg = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|ARM64.Build.0 = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x64.ActiveCfg = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x64.Build.0 = Release|x64
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x86.ActiveCfg = Release|Win32
+		{DFD0D474-71AB-40C2-B53F-7E85984B0C45}.Release|x86.Build.0 = Release|Win32
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|ARM.Build.0 = Debug|ARM
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|ARM64.Build.0 = Debug|ARM64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|x64.ActiveCfg = Debug|x64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|x64.Build.0 = Debug|x64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|x86.ActiveCfg = Debug|x86
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Debug|x86.Build.0 = Debug|x86
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|ARM.ActiveCfg = Release|ARM
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|ARM.Build.0 = Release|ARM
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|ARM64.ActiveCfg = Release|ARM64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|ARM64.Build.0 = Release|ARM64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|x64.ActiveCfg = Release|x64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|x64.Build.0 = Release|x64
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|x86.ActiveCfg = Release|x86
+		{3FD4B6E8-5D2E-4FAE-AF4F-640CC8D6919A}.Release|x86.Build.0 = Release|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM.Build.0 = Debug|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM64.Build.0 = Debug|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x64.ActiveCfg = Debug|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x64.Build.0 = Debug|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x64.Deploy.0 = Debug|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x86.ActiveCfg = Debug|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x86.Build.0 = Debug|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Debug|x86.Deploy.0 = Debug|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM.ActiveCfg = Release|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM.Build.0 = Release|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM.Deploy.0 = Release|ARM
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM64.ActiveCfg = Release|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM64.Build.0 = Release|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|ARM64.Deploy.0 = Release|ARM64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x64.ActiveCfg = Release|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x64.Build.0 = Release|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x64.Deploy.0 = Release|x64
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x86.ActiveCfg = Release|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x86.Build.0 = Release|x86
+		{A616D8BB-F169-4C7A-BB00-2695209697FD}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48E3E4AF-B380-4CD1-808A-DE6B250CC18E}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems*{3fd4b6e8-5d2e-4fae-af4f-640cc8d6919a}*SharedItemsImports = 4
+		RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems*{dfd0d474-71ab-40c2-b53f-7e85984b0c45}*SharedItemsImports = 4
+		RenderBufferManagerTest.Shared\RenderBufferManagerTest.Shared.vcxitems*{f1e1391a-e127-421d-907c-84af194f5f5e}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

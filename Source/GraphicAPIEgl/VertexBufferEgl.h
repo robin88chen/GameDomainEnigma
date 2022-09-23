@@ -28,10 +28,11 @@ namespace Enigma::Devices
         VertexBufferEgl& operator=(VertexBufferEgl&&) = delete;
 
         virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
-        virtual error Update(const byte_buffer& dataVertex) override;
-        virtual error RangedUpdate(const ranged_buffer& buffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
+    protected:
+        virtual error UpdateBuffer(const byte_buffer& dataVertex) override;
+        virtual error RangedUpdateBuffer(const ranged_buffer& buffer) override;
     protected:
         GLuint m_bufferHandle;
     };

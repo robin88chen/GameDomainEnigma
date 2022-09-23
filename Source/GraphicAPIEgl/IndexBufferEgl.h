@@ -28,10 +28,12 @@ namespace Enigma::Devices
         IndexBufferEgl& operator=(IndexBufferEgl&&) = delete;
 
         virtual error Create(unsigned int sizeBuffer) override;
-        virtual error Update(const uint_buffer& dataIndex) override;
-        virtual error RangedUpdate(const ranged_buffer& buffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
+
+    protected:
+        virtual error UpdateBuffer(const uint_buffer& dataIndex) override;
+        virtual error RangedUpdateBuffer(const ranged_buffer& buffer) override;
 
     protected:
         GLuint m_bufferHandle;

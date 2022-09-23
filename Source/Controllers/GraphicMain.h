@@ -67,6 +67,9 @@ namespace Enigma::Controllers
         error InstallShaderManagers();
         error ShutdownShaderManagers();
 
+        error InstallRenderBufferManagers();
+        error ShutdownRenderBufferManagers();
+
     private:
         static GraphicMain* m_instance;
 

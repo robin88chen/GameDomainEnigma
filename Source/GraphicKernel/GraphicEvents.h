@@ -123,6 +123,17 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
     };
+    class TextureResourceCreateFromMemoryFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceCreateFromMemoryFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
     class TextureResourceImageLoaded : public Frameworks::IEvent
     {
     public:
@@ -131,6 +142,17 @@ namespace Enigma::Graphics
         const std::string& GetTextureName() { return m_textureName; }
     private:
         std::string m_textureName;
+    };
+    class TextureResourceLoadImageFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceLoadImageFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
     };
     class MultiTextureResourceImagesLoaded : public Frameworks::IEvent
     {
@@ -151,6 +173,17 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
         std::string m_fullFilename;
+    };
+    class TextureResourceSaveImageFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceSaveImageFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
     };
     class MultiTextureResourceImagesSaved : public Frameworks::IEvent
     {
@@ -174,6 +207,17 @@ namespace Enigma::Graphics
         std::string m_textureName;
         MathLib::Rect m_imageRect;
     };
+    class TextureResourceRetrieveImageFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceRetrieveImageFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
     class TextureResourceImageUpdated : public Frameworks::IEvent
     {
     public:
@@ -185,6 +229,17 @@ namespace Enigma::Graphics
         std::string m_textureName;
         MathLib::Rect m_imageRect;
     };
+    class TextureResourceUpdateImageFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceUpdateImageFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
     class TextureResourceAsBackSurfaceUsed : public Frameworks::IEvent
     {
     public:
@@ -195,6 +250,17 @@ namespace Enigma::Graphics
     private:
         std::string m_textureName;
         std::string m_backSurfaceName;
+    };
+    class TextureResourceUseAsBackSurfaceFailed : public Frameworks::IEvent
+    {
+    public:
+        TextureResourceUseAsBackSurfaceFailed(const std::string& name, std::error_code err) :
+            m_name(name), m_error(err) {};
+        const std::string& GetTextureName() const { return m_name; }
+        std::error_code GetError() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
     };
     class MultiTextureResourcesAsBackSurfaceUsed : public Frameworks::IEvent
     {

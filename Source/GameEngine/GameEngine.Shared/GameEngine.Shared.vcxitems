@@ -41,6 +41,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
@@ -60,5 +65,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureManager.cpp" />
   </ItemGroup>
 </Project>

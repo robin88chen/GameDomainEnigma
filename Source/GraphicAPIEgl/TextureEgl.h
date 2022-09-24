@@ -26,6 +26,8 @@ namespace Enigma::Devices
         TextureEgl& operator=(const TextureEgl&) = delete;
         TextureEgl& operator=(TextureEgl&&) = delete;
 
+        GLuint GetTextureHandle() const { return m_texture; }
+    protected:
         virtual error CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff) override;
         virtual error LoadTextureImage(const byte_buffer& img_buff) override;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) override;
@@ -33,7 +35,6 @@ namespace Enigma::Devices
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) override;
         virtual error UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf) override;
 
-        GLuint GetTextureHandle() const { return m_texture; }
     protected:
         GLuint m_texture;
     };

@@ -189,7 +189,7 @@ void ShaderManager::OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<ShaderProgramBuildFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    Platforms::Debug::ErrorPrintf("shader program %s build failed : %s\n", 
+    Platforms::Debug::ErrorPrintf("shader program %s build failed : %s\n",
         ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }

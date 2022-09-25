@@ -93,7 +93,7 @@ void RenderBufferBuilder::OnVertexBufferCreated(const Frameworks::IEventPtr& e)
     if (!buffer)
     {
         Platforms::Debug::Printf("can't get vertex buffer asset %s", ev->GetBufferName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildRenderBufferFailed>(
             m_policy.m_renderBufferName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -128,7 +128,7 @@ void RenderBufferBuilder::OnIndexBufferCreated(const Frameworks::IEventPtr& e)
     if (!buffer)
     {
         Platforms::Debug::Printf("can't get index buffer asset %s", ev->GetBufferName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildRenderBufferFailed>(
             m_policy.m_renderBufferName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -158,14 +158,14 @@ void RenderBufferBuilder::OnBufferUpdateFailed(const Frameworks::IEventPtr& e)
     auto ev_vtx_fail = std::dynamic_pointer_cast<Graphics::VertexBufferUpdateFailed, Frameworks::IEvent>(e);
     if (ev_vtx_fail)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildRenderBufferFailed>(
             m_policy.m_renderBufferName, ev_vtx_fail->GetError()));
         return;
     }
     auto ev_idx_fail = std::dynamic_pointer_cast<Graphics::IndexBufferUpdateFailed, Frameworks::IEvent>(e);
     if (ev_idx_fail)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildRenderBufferFailed>(
             m_policy.m_renderBufferName, ev_idx_fail->GetError()));
         return;
     }

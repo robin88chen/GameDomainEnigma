@@ -42,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />

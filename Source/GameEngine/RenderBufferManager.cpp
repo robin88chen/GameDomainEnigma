@@ -6,9 +6,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
-#include <cassert>
-
 #include "Frameworks/CommandBus.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
@@ -32,9 +31,9 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnInit()
     m_onRenderBufferBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuilt(c); });
     Frameworks::EventPublisher::Subscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
-    m_onRenderBufferBuildFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuildFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(RenderBufferBuildFailed), m_onRenderBufferBuildFailed);
+    m_onBuildRenderBufferFailed =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildRenderBufferFailed(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
 
 	m_doBuildingRenderBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingRenderBuffer(c); });
@@ -63,8 +62,8 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onRenderBufferBuilt = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuildFailed), m_onRenderBufferBuildFailed);
-    m_onRenderBufferBuildFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
+    m_onBuildRenderBufferFailed = nullptr;
 
 	Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
     m_doBuildingRenderBuffer = nullptr;
@@ -107,10 +106,10 @@ void RenderBufferManager::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->GetName(), ev->GetSignature(), ev->GetBuffer()));
 }
 
-void RenderBufferManager::OnRenderBufferBuildFailed(const Frameworks::IEventPtr& e)
+void RenderBufferManager::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<RenderBufferBuildFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("render buffer %s build failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());

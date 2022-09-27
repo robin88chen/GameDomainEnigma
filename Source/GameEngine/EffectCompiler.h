@@ -47,7 +47,7 @@ namespace Enigma::Engine
 
     private:
         void OnShaderProgramBuilt(const Frameworks::IEventPtr& e);
-        void OnProgramBuildFailed(const Frameworks::IEventPtr& e);
+        void OnBuildProgramFailed(const Frameworks::IEventPtr& e);
         void OnSamplerStateCreated(const Frameworks::IEventPtr& e);
         void OnBlendStateCreated(const Frameworks::IEventPtr& e);
         void OnDepthStateCreated(const Frameworks::IEventPtr& e);
@@ -75,7 +75,7 @@ namespace Enigma::Engine
         EffectCompilingPolicy m_policy;
 
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
-        Frameworks::EventSubscriberPtr m_onProgramBuildFailed;
+        Frameworks::EventSubscriberPtr m_onBuildProgramFailed;
         Frameworks::EventSubscriberPtr m_onSamplerStateCreated;
         Frameworks::EventSubscriberPtr m_onBlendStateCreated;
         Frameworks::EventSubscriberPtr m_onDepthStateCreated;

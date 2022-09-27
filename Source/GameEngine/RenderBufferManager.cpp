@@ -35,7 +35,7 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnInit()
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildRenderBufferFailed(c); });
     Frameworks::EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
 
-	m_doBuildingRenderBuffer =
+    m_doBuildingRenderBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingRenderBuffer(c); });
     Frameworks::CommandBus::Subscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
 
@@ -65,7 +65,7 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnTerm()
     Frameworks::EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
     m_onBuildRenderBufferFailed = nullptr;
 
-	Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
+    Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
     m_doBuildingRenderBuffer = nullptr;
     return Frameworks::ServiceResult::Complete;
 }

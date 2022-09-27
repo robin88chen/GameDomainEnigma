@@ -18,8 +18,8 @@ EffectCompiler::EffectCompiler()
 
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuilt(e); });
     EventPublisher::Subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
-    m_onProgramBuildFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnProgramBuildFailed(e); });
-    EventPublisher::Subscribe(typeid(ShaderProgramBuildFailed), m_onProgramBuildFailed);
+    m_onBuildProgramFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildProgramFailed(e); });
+    EventPublisher::Subscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
 
     m_onSamplerStateCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSamplerStateCreated(e); });
     EventPublisher::Subscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
@@ -35,8 +35,8 @@ EffectCompiler::~EffectCompiler()
 {
     EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onShaderProgramBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(ShaderProgramBuildFailed), m_onProgramBuildFailed);
-    m_onProgramBuildFailed = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
+    m_onBuildProgramFailed = nullptr;
 
     EventPublisher::Unsubscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
     m_onSamplerStateCreated = nullptr;
@@ -57,7 +57,7 @@ void EffectCompiler::CompileEffect(const EffectCompilingPolicy& policy)
 
     if (m_policy.m_techniques.empty())
     {
-        EventPublisher::Post(std::make_shared<EffectMaterialCompileFailed>(m_policy.m_name, ErrorCode::compilingEmptyEffectTech));
+        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.m_name, ErrorCode::compilingEmptyEffectTech));
         return;
     }
     m_builtEffectTechniques.reserve(m_policy.m_techniques.size());
@@ -106,12 +106,12 @@ void EffectCompiler::OnShaderProgramBuilt(const Frameworks::IEventPtr& e)
     TryBuildEffectPass(ev_built->GetShaderName());
 }
 
-void EffectCompiler::OnProgramBuildFailed(const Frameworks::IEventPtr& e)
+void EffectCompiler::OnBuildProgramFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev_fail = std::dynamic_pointer_cast<ShaderProgramBuildFailed, IEvent>(e);
+    auto ev_fail = std::dynamic_pointer_cast<BuildShaderProgramFailed, IEvent>(e);
     if (!ev_fail) return;
-    EventPublisher::Post(std::make_shared<EffectMaterialCompileFailed>(m_policy.m_name, ev_fail->GetErrorCode()));
+    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.m_name, ev_fail->GetErrorCode()));
 }
 
 void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)

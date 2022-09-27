@@ -36,9 +36,9 @@ Enigma::Frameworks::ServiceResult ShaderManager::OnInit()
     m_onBuilderShaderProgramBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuilderShaderProgramBuilt(c); });
     Frameworks::EventPublisher::Subscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
-    m_onShaderProgramBuildFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnShaderProgramBuildFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
+    m_onBuildShaderProgramFailed =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildShaderProgramFailed(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
     m_doBuildingShaderProgram =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingShaderProgram(c); });
     Frameworks::CommandBus::Subscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
@@ -65,8 +65,8 @@ Enigma::Frameworks::ServiceResult ShaderManager::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
     m_onBuilderShaderProgramBuilt = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(ShaderProgramBuildFailed), m_onShaderProgramBuildFailed);
-    m_onShaderProgramBuildFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
+    m_onBuildShaderProgramFailed = nullptr;
 
     Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
     m_doBuildingShaderProgram = nullptr;
@@ -184,10 +184,10 @@ void ShaderManager::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
     m_isCurrentBuilding = false;
 }
 
-void ShaderManager::OnShaderProgramBuildFailed(const Frameworks::IEventPtr& e)
+void ShaderManager::OnBuildShaderProgramFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ShaderProgramBuildFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<BuildShaderProgramFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("shader program %s build failed : %s\n",
         ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());

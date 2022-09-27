@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -29,10 +29,10 @@ namespace Enigma::Engine
         std::string m_filename;
         EffectMaterialPtr m_effect;
     };
-    class EffectMaterialCompileFailed : public Frameworks::IEvent
+    class CompileEffectMaterialFailed : public Frameworks::IEvent
     {
     public:
-        EffectMaterialCompileFailed(const std::string& filename, std::error_code er) :
+        CompileEffectMaterialFailed(const std::string& filename, std::error_code er) :
             m_filename(filename), m_error(er) {};
         const std::string& GetFilename() { return m_filename; }
         std::error_code GetErrorCode() const { return m_error; }

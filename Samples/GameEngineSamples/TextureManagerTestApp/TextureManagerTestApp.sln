@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureManagerTest.Shared", "TextureManagerTest.Shared\TextureManagerTest.Shared.vcxitems", "{BD56D00E-AC01-4F74-BF13-1CA113C78859}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureManagerTest.Win32", "TextureManagerTest.Win32\TextureManagerTest.Win32.vcxproj", "{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureManagerTest.Jni", "TextureManagerTest.Jni\TextureManagerTest.Jni.vcxproj", "{59149070-18A4-42DF-A0D4-3A2B91F090CA}"
+EndProject
+Project("{39E2626F-3545-4960-A6E8-258AD8476CE5}") = "TextureManagerTestApp", "TextureManagerTestApp\TextureManagerTestApp.androidproj", "{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|ARM.ActiveCfg = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|ARM.Build.0 = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|ARM64.ActiveCfg = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|ARM64.Build.0 = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|x64.ActiveCfg = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|x64.Build.0 = Debug|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|x86.ActiveCfg = Debug|Win32
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Debug|x86.Build.0 = Debug|Win32
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|ARM.ActiveCfg = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|ARM.Build.0 = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|ARM64.ActiveCfg = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|ARM64.Build.0 = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|x64.ActiveCfg = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|x64.Build.0 = Release|x64
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|x86.ActiveCfg = Release|Win32
+		{AB2986E7-2A00-468B-A7EB-75D14EE48E9F}.Release|x86.Build.0 = Release|Win32
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|ARM.Build.0 = Debug|ARM
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|ARM64.Build.0 = Debug|ARM64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|x64.ActiveCfg = Debug|x64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|x64.Build.0 = Debug|x64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|x86.ActiveCfg = Debug|x86
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Debug|x86.Build.0 = Debug|x86
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|ARM.ActiveCfg = Release|ARM
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|ARM.Build.0 = Release|ARM
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|ARM64.ActiveCfg = Release|ARM64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|ARM64.Build.0 = Release|ARM64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|x64.ActiveCfg = Release|x64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|x64.Build.0 = Release|x64
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|x86.ActiveCfg = Release|x86
+		{59149070-18A4-42DF-A0D4-3A2B91F090CA}.Release|x86.Build.0 = Release|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM.Build.0 = Debug|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM.Deploy.0 = Debug|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM64.Build.0 = Debug|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x64.ActiveCfg = Debug|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x64.Build.0 = Debug|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x64.Deploy.0 = Debug|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x86.ActiveCfg = Debug|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x86.Build.0 = Debug|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Debug|x86.Deploy.0 = Debug|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM.ActiveCfg = Release|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM.Build.0 = Release|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM.Deploy.0 = Release|ARM
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM64.ActiveCfg = Release|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM64.Build.0 = Release|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|ARM64.Deploy.0 = Release|ARM64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x64.ActiveCfg = Release|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x64.Build.0 = Release|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x64.Deploy.0 = Release|x64
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x86.ActiveCfg = Release|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x86.Build.0 = Release|x86
+		{0BBE69A4-DEB8-4032-B71A-2C71BEE53E92}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6223CDF6-3CE9-47B3-A7CB-8B6BAA686C92}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TextureManagerTest.Shared\TextureManagerTest.Shared.vcxitems*{59149070-18a4-42df-a0d4-3a2b91f090ca}*SharedItemsImports = 4
+		TextureManagerTest.Shared\TextureManagerTest.Shared.vcxitems*{ab2986e7-2a00-468b-a7eb-75d14ee48e9f}*SharedItemsImports = 4
+		TextureManagerTest.Shared\TextureManagerTest.Shared.vcxitems*{bd56d00e-ac01-4f74-bf13-1ca113c78859}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

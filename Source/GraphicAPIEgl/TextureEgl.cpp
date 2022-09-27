@@ -53,7 +53,12 @@ error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension& dimension, co
 
 error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
 {
-    if (FATAL_LOG_EXPR(img_buff.empty())) return ErrorCode::nullMemoryBuffer;
+    if (FATAL_LOG_EXPR(img_buff.empty()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+            m_name, ErrorCode::nullMemoryBuffer));
+        return ErrorCode::nullMemoryBuffer;
+    }
     if (png_check_sig((const unsigned char*)&img_buff[0], 8))
     {
         png_image image;
@@ -68,6 +73,8 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
         res = png_image_finish_read(&image, NULL, &raw_buffer[0], 0, NULL);
         if (res == 0)
         {
+            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+                m_name, ErrorCode::eglLoadTexture));
             return ErrorCode::eglLoadTexture;
         }
 
@@ -88,11 +95,21 @@ error TextureEgl::RetrieveTextureImage(const MathLib::Rect& rcSrc)
 
 error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
-    if (FATAL_LOG_EXPR(img_buff.empty())) return ErrorCode::nullMemoryBuffer;
-    if (FATAL_LOG_EXPR((rcDest.Width() <= 0) || (rcDest.Height() <= 0))) return ErrorCode::invalidParameter;
+    if (FATAL_LOG_EXPR(img_buff.empty()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+            m_name, ErrorCode::nullMemoryBuffer));
+        return ErrorCode::nullMemoryBuffer;
+    }
+    if (FATAL_LOG_EXPR((rcDest.Width() <= 0) || (rcDest.Height() <= 0)))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+            m_name, ErrorCode::invalidParameter));
+        return ErrorCode::invalidParameter;
+    }
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexSubImage2D(GL_TEXTURE_2D, 0,
-        rcDest.Left(), m_dimension.m_height - rcDest.Bottom(), 
+        rcDest.Left(), m_dimension.m_height - rcDest.Bottom(),
         rcDest.Width(), rcDest.Height(),
         GL_RGBA, GL_UNSIGNED_BYTE, &img_buff[0]);
     glBindTexture(GL_TEXTURE_2D, 0);

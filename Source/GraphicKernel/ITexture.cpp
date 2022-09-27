@@ -19,28 +19,84 @@ ITexture::~ITexture()
 {
 }
 
-future_error ITexture::AsyncCreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
+void ITexture::Create(const MathLib::Dimension& dimension, const byte_buffer& buff)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), dimension, buff, this]() -> error { return CreateFromSystemMemory(dimension, buff); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), dimension, buff, this]()
+                -> error { return CreateFromSystemMemory(dimension, buff); });
+    }
+    else
+    {
+        CreateFromSystemMemory(dimension, buff);
+    }
 }
 
-future_error ITexture::AsyncLoadTextureImage(const byte_buffer& img_buff)
+void ITexture::Load(const byte_buffer& img_buff)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), img_buff, this]() -> error { return LoadTextureImage(img_buff); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), img_buff, this]() -> error { return LoadTextureImage(img_buff); });
+    }
+    else
+    {
+        LoadTextureImage(img_buff);
+    }
 }
 
-future_error ITexture::AsyncSaveTextureImage(const FileSystem::IFilePtr& file)
+void ITexture::Load(const std::string& filename, const std::string& pathid)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), file, this]() -> error { return SaveTextureImage(file); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return LoadTextureImage(filename, pathid); });
+    }
+    else
+    {
+        LoadTextureImage(filename, pathid);
+    }
 }
 
-future_error ITexture::AsyncRetrieveTextureImage(const MathLib::Rect& rcSrc)
+void ITexture::Save(const FileSystem::IFilePtr& file)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), rcSrc, this]() -> error { return RetrieveTextureImage(rcSrc); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), file, this]() -> error { return SaveTextureImage(file); });
+    }
+    else
+    {
+        SaveTextureImage(file);
+    }
+}
+
+void ITexture::Save(const std::string& filename, const std::string& pathid)
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), filename, pathid, this]()
+                -> error { return SaveTextureImage(filename, pathid); });
+    }
+    else
+    {
+        SaveTextureImage(filename, pathid);
+    }
+}
+
+void ITexture::Retrieve(const MathLib::Rect& rcSrc)
+{
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), rcSrc, this]() -> error { return RetrieveTextureImage(rcSrc); });
+    }
+    else
+    {
+        RetrieveTextureImage(rcSrc);
+    }
 }
 
 error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)
@@ -60,16 +116,18 @@ error ITexture::LoadTextureImage(const std::string& filename, const std::string&
     return LoadTextureImage(buff.value());
 }
 
-future_error ITexture::AsyncLoadTextureImage(const std::string& filename, const std::string& pathid)
+void ITexture::Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return LoadTextureImage(filename, pathid); });
-}
-
-future_error ITexture::AsyncUpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
-{
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]() -> error { return UpdateTextureImage(rcDest, img_buff); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]() 
+                -> error { return UpdateTextureImage(rcDest, img_buff); });
+    }
+    else
+    {
+        UpdateTextureImage(rcDest, img_buff);
+    }
 }
 
 error ITexture::SaveTextureImage(const std::string& filename, const std::string& pathid)
@@ -82,14 +140,15 @@ error ITexture::SaveTextureImage(const std::string& filename, const std::string&
     return er;
 }
 
-future_error ITexture::AsyncSaveTextureImage(const std::string& filename, const std::string& pathid)
+void ITexture::AsBackSurface(const IBackSurfacePtr& back_surf)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return SaveTextureImage(filename, pathid); });
-}
-
-future_error ITexture::AsyncUseAsBackSurface(const IBackSurfacePtr& back_surf)
-{
-    return IGraphicAPI::Instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), back_surf, this]() -> error { return UseAsBackSurface(back_surf); });
+    if (IGraphicAPI::Instance()->UseAsync())
+    {
+        IGraphicAPI::Instance()->GetGraphicThread()->
+            PushTask([lifetime = shared_from_this(), back_surf, this]() -> error { return UseAsBackSurface(back_surf); });
+    }
+    else
+    {
+        UseAsBackSurface(back_surf);
+    }
 }

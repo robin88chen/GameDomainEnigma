@@ -28,10 +28,10 @@ namespace Enigma::Engine
         RenderBufferSignature m_signature;
         RenderBufferPtr m_buffer;
     };
-    class RenderBufferBuildFailed : public Frameworks::IEvent
+    class BuildRenderBufferFailed : public Frameworks::IEvent
     {
     public:
-        RenderBufferBuildFailed(const std::string& name, std::error_code er) :
+        BuildRenderBufferFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
         const std::string& GetName() const { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }

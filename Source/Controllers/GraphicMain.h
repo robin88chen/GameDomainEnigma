@@ -70,6 +70,9 @@ namespace Enigma::Controllers
         error InstallRenderBufferManagers();
         error ShutdownRenderBufferManagers();
 
+    	error InstallTextureManagers();
+        error ShutdownTextureManagers();
+
     private:
         static GraphicMain* m_instance;
 

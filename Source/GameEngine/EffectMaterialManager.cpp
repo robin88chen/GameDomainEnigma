@@ -34,9 +34,9 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
     m_onEffectMaterialCompiled =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompiled(c); });
     Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onEffectMaterialCompileFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompileFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(EffectMaterialCompileFailed), m_onEffectMaterialCompileFailed);
+    m_onCompileEffectMaterialFailed =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnCompileEffectMaterialFailed(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
 
     EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
     {
@@ -74,8 +74,8 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onEffectMaterialCompiled);
     m_onEffectMaterialCompiled = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(EffectMaterialCompileFailed), m_onEffectMaterialCompileFailed);
-    m_onEffectMaterialCompileFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    m_onCompileEffectMaterialFailed = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -117,10 +117,10 @@ void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr
     m_isCurrentCompiling = false;
 }
 
-void EffectMaterialManager::OnEffectMaterialCompileFailed(const Frameworks::IEventPtr& e)
+void EffectMaterialManager::OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<EffectMaterialCompileFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
         ev->GetFilename().c_str(), ev->GetErrorCode().message().c_str());

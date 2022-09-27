@@ -48,7 +48,7 @@ namespace Enigma::Engine
 
     private:
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnEffectMaterialCompileFailed(const Frameworks::IEventPtr& e);
+        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
 
         /** release effect material source */
         void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
@@ -57,7 +57,7 @@ namespace Enigma::Engine
 
     private:
         Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompileFailed;
+        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
 
         typedef std::unordered_map<std::string, std::shared_ptr<EffectMaterialSource>> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;

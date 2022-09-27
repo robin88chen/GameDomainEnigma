@@ -47,12 +47,12 @@ namespace Enigma::Engine
 
     private:
         void OnRenderBufferBuilt(const Frameworks::IEventPtr& e);
-        void OnRenderBufferBuildFailed(const Frameworks::IEventPtr& e);
+        void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
         void DoBuildingRenderBuffer(const Frameworks::ICommandPtr& c);
 
     private:
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
-        Frameworks::EventSubscriberPtr m_onRenderBufferBuildFailed;
+        Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
         Frameworks::CommandSubscriberPtr m_doBuildingRenderBuffer;
 
         using RenderBufferMap = std::unordered_map<RenderBufferSignature, std::weak_ptr<RenderBuffer>, RenderBufferSignature::_signature_hasher>;

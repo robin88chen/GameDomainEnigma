@@ -27,10 +27,10 @@ namespace Enigma::Engine
         std::string m_name;
         Graphics::IShaderProgramPtr m_program;
     };
-    class ShaderProgramBuildFailed : public Frameworks::IEvent
+    class BuildShaderProgramFailed : public Frameworks::IEvent
     {
     public:
-        ShaderProgramBuildFailed(const std::string& name, std::error_code er) :
+        BuildShaderProgramFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
         const std::string& GetShaderName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }

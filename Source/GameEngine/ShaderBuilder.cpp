@@ -127,7 +127,7 @@ void ShaderBuilder::OnVertexShaderCreated(const Frameworks::IEventPtr& e)
     if (!shader)
     {
         Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->GetName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -144,7 +144,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
     if (!shader)
     {
         Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->GetShaderName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -170,7 +170,7 @@ void ShaderBuilder::OnVertexLayoutCreated(const Frameworks::IEventPtr& e)
     if (!layout)
     {
         Platforms::Debug::Printf("can't get vertex layout asset %s\n", ev->GetName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -188,7 +188,7 @@ void ShaderBuilder::OnPixelShaderCreated(const Frameworks::IEventPtr& e)
     if (!shader)
     {
         Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->GetName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -206,7 +206,7 @@ void ShaderBuilder::OnPixelShaderCompiled(const Frameworks::IEventPtr& e)
     if (!shader)
     {
         Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->GetShaderName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -219,14 +219,14 @@ void ShaderBuilder::OnShaderCompileFailed(const Frameworks::IEventPtr& e)
     auto ev_vtx_fail = std::dynamic_pointer_cast<Graphics::VertexShaderCompileFailed, Frameworks::IEvent>(e);
     if (ev_vtx_fail)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, Graphics::ErrorCode::compileShader));
         return;
     }
     auto ev_pix_fail = std::dynamic_pointer_cast<Graphics::PixelShaderCompileFailed, Frameworks::IEvent>(e);
     if (ev_pix_fail)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, Graphics::ErrorCode::compileShader));
         return;
     }
@@ -286,7 +286,7 @@ void ShaderBuilder::OnShaderProgramCreated(const Frameworks::IEventPtr& e)
     if (!program)
     {
         Platforms::Debug::Printf("can't get shader program asset %s\n", ev->GetName().c_str());
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
@@ -300,7 +300,7 @@ void ShaderBuilder::OnShaderProgramLinkFailed(const Frameworks::IEventPtr& e)
     auto ev_link_fail = std::dynamic_pointer_cast<Graphics::ShaderProgramLinkFailed, Frameworks::IEvent>(e);
     if (ev_link_fail)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuildFailed>(
+        Frameworks::EventPublisher::Post(std::make_shared<BuildShaderProgramFailed>(
             m_policy.m_programName, Graphics::ErrorCode::linkShaderProgram));
         return;
     }

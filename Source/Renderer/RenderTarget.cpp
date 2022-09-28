@@ -1,5 +1,5 @@
 ﻿#include "RenderTarget.h"
-#include "EngineErrors.h"
+#include "RendererErrors.h"
 #include "RendererEvents.h"
 #include "RendererCommands.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -14,7 +14,7 @@
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Renderer;
 
 const std::string primary_back_surface_name = "primary_back_surface";
 const std::string primary_depth_surface_name = "primary_depth_surface";

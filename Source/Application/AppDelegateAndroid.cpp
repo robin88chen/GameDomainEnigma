@@ -4,7 +4,7 @@
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
 #include "Platforms/MemoryMacro.h"
-#include "GameEngine/RendererCommands.h"
+#include "Renderer/RendererCommands.h"
 #include "Frameworks/CommandBus.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "../GraphicAPIEgl/GraphicAPIEgl.h"
@@ -22,7 +22,7 @@ AppDelegate::AppDelegate(const std::string& app_name) : m_appName(app_name)
 
 AppDelegate::~AppDelegate()
 {
-    
+
 }
 
 void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
@@ -40,7 +40,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();
 
-	menew Devices::GraphicAPIEgl();
+    menew Devices::GraphicAPIEgl();
 
     InstallEngine();
 }
@@ -49,7 +49,7 @@ void AppDelegate::Finalize()
 {
     ShutdownEngine();
 
-	std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
     Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
     delete Graphics::IGraphicAPI::Instance();
 
@@ -65,7 +65,7 @@ void AppDelegate::Finalize()
 
 void AppDelegate::Run()
 {
-    
+
 }
 
 void AppDelegate::FrameUpdate()
@@ -75,12 +75,12 @@ void AppDelegate::FrameUpdate()
 
 void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 {
-    
+
 }
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(std::make_shared<Engine::ResizePrimaryRenderTarget>(
+    Frameworks::CommandBus::Post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
         MathLib::Dimension{(unsigned)w, (unsigned)h}));
 }
 

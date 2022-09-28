@@ -3,8 +3,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
-#include "GameEngine/RendererManager.h"
-#include "GameEngine/RenderTarget.h"
+#include "Renderer/RendererManager.h"
+#include "Renderer/RenderTarget.h"
 #include "GameEngine/ShaderManager.h"
 #include "GameEngine/EffectMaterialManager.h"
 #include "GameEngine/RenderBufferManager.h"
@@ -152,12 +152,12 @@ error GraphicMain::ShutdownDefaultRenderer()
 
 error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
 {
-    m_renderer = menew Engine::RendererManager(m_serviceManager);
+    m_renderer = menew Renderer::RendererManager(m_serviceManager);
     m_serviceManager->RegisterSystemService(m_renderer);
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;
     er = m_renderer->CreateRenderTarget(render_target_name,
-        is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary);
+        is_primary ? Renderer::RenderTarget::PrimaryType::IsPrimary : Renderer::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
     Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
@@ -174,7 +174,7 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
         er = m_renderer->DestroyRenderTarget(render_target_name);
         if (er) return er;
     }
-    m_serviceManager->ShutdownSystemService(Engine::RendererManager::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Renderer::RendererManager::TYPE_RTTI);
 
     return ErrorCode::ok;
 }

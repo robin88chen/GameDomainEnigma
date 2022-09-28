@@ -33,9 +33,13 @@ namespace Enigma::Graphics
 
 namespace Enigma::Engine
 {
-    using error = std::error_code;
     class Texture;
     using TexturePtr = std::shared_ptr<Texture>;
+}
+
+namespace Enigma::Renderer
+{
+    using error = std::error_code;
     /** Render Target class */
     class RenderTarget : public std::enable_shared_from_this<RenderTarget>
     {
@@ -112,7 +116,7 @@ namespace Enigma::Engine
         const MathLib::Dimension& GetDimension() const { return m_dimension; };
 
         /** get render target texture */
-        TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
+        Engine::TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
 
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
@@ -163,7 +167,7 @@ namespace Enigma::Engine
         std::string m_backSurfaceName;
         Graphics::IDepthStencilSurfacePtr m_depthStencilSurface;
         std::string m_depthSurfaceName;
-        TexturePtr m_renderTargetTexture;
+        Engine::TexturePtr m_renderTargetTexture;
 
         Graphics::TargetViewPort m_viewPort;
         ClearingProperty m_clearingProperty;

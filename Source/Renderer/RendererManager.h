@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace Enigma::Engine
+namespace Enigma::Renderer
 {
     using error = std::error_code;
 

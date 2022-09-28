@@ -11,7 +11,7 @@
 #include "Frameworks/Event.h"
 #include "MathLib/AlgebraBasicTypes.h"
 
-namespace Enigma::Engine
+namespace Enigma::Renderer
 {
     class RenderTargetResized : public Frameworks::IEvent
     {

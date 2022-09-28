@@ -13,7 +13,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
 
-namespace Enigma::Engine
+namespace Enigma::Renderer
 {
     class RendererManager;
 };
@@ -70,7 +70,7 @@ namespace Enigma::Controllers
         error InstallRenderBufferManagers();
         error ShutdownRenderBufferManagers();
 
-    	error InstallTextureManagers();
+        error InstallTextureManagers();
         error ShutdownTextureManagers();
 
     private:
@@ -82,7 +82,7 @@ namespace Enigma::Controllers
 
         std::unique_ptr<InstallingPolicy> m_policy;
 
-        Engine::RendererManager* m_renderer;
+        Renderer::RendererManager* m_renderer;
     };
 
 };

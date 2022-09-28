@@ -5,7 +5,7 @@
 #include "../GraphicAPIDx11/GraphicAPIDx11.h"
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
-#include "GameEngine/RendererCommands.h"
+#include "Renderer/RendererCommands.h"
 #include "Frameworks/CommandBus.h"
 #include <memory>
 
@@ -81,7 +81,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->InstallFrameworks();
 
-	menew Devices::GraphicAPIDx11(useAsyncDevice);
+    menew Devices::GraphicAPIDx11(useAsyncDevice);
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
@@ -111,7 +111,7 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
             menew StdMountPath(m_mediaRootPath, GeometryData::GetDataFilePathID()) });
         FileSystem::Instance()->AddMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, AnimationAsset::GetAnimationFilePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{ 
+        FileSystem::Instance()->AddMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, GlyphBitmapLoader::GetGlyphFilePathID()) });
     }*/
 }
@@ -120,7 +120,7 @@ void AppDelegate::Finalize()
 {
     ShutdownEngine();
 
-	std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
     Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
     delete Graphics::IGraphicAPI::Instance();
 
@@ -138,7 +138,7 @@ void AppDelegate::Finalize()
 
 void AppDelegate::Run()
 {
-    // 主訊息迴圈: 
+    // 主訊息迴圈:
     MSG msg;
     BOOL bGotMsg;
     msg.message = WM_NULL;
@@ -166,7 +166,7 @@ void AppDelegate::Run()
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(std::make_shared<Engine::ResizePrimaryRenderTarget>(
+    Frameworks::CommandBus::Post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
         MathLib::Dimension{(unsigned)w, (unsigned)h}));
 }
 
@@ -263,7 +263,7 @@ void AppDelegate::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -272,7 +272,7 @@ void AppDelegate::OnMouseLeftDown(WPARAM wParam, LPARAM lParam)
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
         SetFocus(m_hwnd);
-        input->ProcessWinMouseLeftButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseLeftButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -288,7 +288,7 @@ void AppDelegate::OnMouseLeftDblClick(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseLeftButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseLeftButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -296,7 +296,7 @@ void AppDelegate::OnMouseRightDown(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseRightButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseRightButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -304,7 +304,7 @@ void AppDelegate::OnMouseRightUp(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseRightButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseRightButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -312,7 +312,7 @@ void AppDelegate::OnMouseRightDblClick(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseRightButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseRightButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -320,7 +320,7 @@ void AppDelegate::OnMouseMiddleDown(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseMiddleButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseMiddleButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -328,7 +328,7 @@ void AppDelegate::OnMouseMiddleUp(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseMiddleButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseMiddleButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }
@@ -336,7 +336,7 @@ void AppDelegate::OnMouseMiddleDblClick(WPARAM wParam, LPARAM lParam)
 {
     /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
     {
-        input->ProcessWinMouseMiddleButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), 
+        input->ProcessWinMouseMiddleButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
     }*/
 }

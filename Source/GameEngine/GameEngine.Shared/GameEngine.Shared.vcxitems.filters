@@ -1,14 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{27e61b42-96df-49e8-8984-93a673a3e4f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Error Codes">
       <UniqueIdentifier>{b5084566-9087-4140-9244-72e7b8463804}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Render Target">
-      <UniqueIdentifier>{f86001d1-e05b-40f6-92f5-935a45857a95}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
@@ -39,6 +33,12 @@
     </Filter>
     <Filter Include="Textures">
       <UniqueIdentifier>{b518f495-c218-4b5c-8e5c-5b7ae1e47f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bounding Volume">
+      <UniqueIdentifier>{e8a3956f-5637-4dd2-b8c3-00c9db3ea8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bounding Volume\Implementing">
+      <UniqueIdentifier>{785fed8a-f44b-4e98-b211-4377f5b8624b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +129,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h">
+      <Filter>Bounding Volume</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h">
+      <Filter>Bounding Volume\Implementing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h">
+      <Filter>Bounding Volume\Implementing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h">
+      <Filter>Bounding Volume\Implementing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -184,6 +196,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureManager.cpp">
       <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp">
+      <Filter>Bounding Volume</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp">
+      <Filter>Bounding Volume\Implementing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp">
+      <Filter>Bounding Volume\Implementing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp">
+      <Filter>Bounding Volume\Implementing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ using namespace Enigma::MathLib;
 // 中心點為兩個Box中心點的中心，再用Quaternion取得兩組軸向的旋轉值，取出slerp平均值
 // 最後再以兩個Box的頂點取出最大最小值，得到邊長
 // Box要將三個軸取出Major x,y,z，這樣子在做Quaternion時，才會取得比較小的平均旋轉值，
-// 否則會因為角度差異太大，造成算出來的Box比實際需要大很多   
+// 否則會因為角度差異太大，造成算出來的Box比實際需要大很多
 //----------------------------------------------------------------------------
 Box3 ContainmentBox3::MergeBoxes(const Box3& box0, const Box3& box1)
 {

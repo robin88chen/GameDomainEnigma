@@ -14,6 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
@@ -24,6 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
@@ -37,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
@@ -45,6 +49,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
@@ -54,12 +60,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureManager.cpp" />

@@ -1,7 +1,10 @@
 ﻿#include "Box3.h"
 #include "MathGlobal.h"
+#include <cassert>
 
 using namespace Enigma::MathLib;
+
+const Box3 Box3::UNIT_BOX(Vector3::ZERO, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z, 1.0f, 1.0f, 1.0f);
 
 Box3::Box3()
 {
@@ -9,12 +12,13 @@ Box3::Box3()
     m_axis[1] = Vector3::UNIT_Y;
     m_axis[2] = Vector3::UNIT_Z;
     m_center = Vector3::ZERO;
-    m_extent[0] = m_extent[1] = m_extent[2] = (float)0.0;
+    m_extent[0] = m_extent[1] = m_extent[2] = 0.0f;
 }
 
 Box3::Box3(const Vector3& center, const Vector3 axis[3], const float extent[3]) :
     m_center(center)
 {
+    assert((extent[0] > 0.0f) && (extent[1] > 0.0f) && (extent[2] > 0.0f));
     m_axis[0] = axis[0];
     m_axis[1] = axis[1];
     m_axis[2] = axis[2];
@@ -27,6 +31,7 @@ Box3::Box3(const Vector3& center, const Vector3& axis0, const Vector3& axis1, co
     float extent1, float extent2) :
     m_center(center)
 {
+    assert((extent0 > 0.0f) && (extent1 > 0.0f) && (extent2 > 0.0f));
     m_axis[0] = axis0;
     m_axis[1] = axis1;
     m_axis[2] = axis2;
@@ -70,6 +75,12 @@ bool Box3::operator !=(const Box3& box) const
         || (m_axis[2] != box.m_axis[2])
         || (!Math::IsEqual(m_extent[0], box.m_extent[0])) || (!Math::IsEqual(m_extent[1], box.m_extent[1]))
         || (!Math::IsEqual(m_extent[2], box.m_extent[2])));
+}
+
+bool Box3::IsEmpty() const
+{
+    if ((m_extent[0] <= 0.0f) || (m_extent[1] <= 0.0f) || (m_extent[2] <= 0.0f)) return true;
+    return false;
 }
 
 Box3 Box3::SwapToMajorAxis() const

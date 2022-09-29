@@ -8,8 +8,6 @@
 #ifndef RENDER_TARGET_H
 #define RENDER_TARGET_H
 
-#include <bitset>
-
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -20,7 +18,7 @@
 #include <string>
 #include <memory>
 #include <system_error>
-
+#include <bitset>
 
 namespace Enigma::Graphics
 {

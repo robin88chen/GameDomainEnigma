@@ -14,9 +14,14 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
   </ItemGroup>
 </Project>

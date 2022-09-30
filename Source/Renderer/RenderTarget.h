@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   RenderTarget.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -77,7 +77,7 @@ namespace Enigma::Renderer
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
@@ -87,7 +87,7 @@ namespace Enigma::Renderer
         error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
-        error ShareDepthStencilSurface(const std::string& depth_name, 
+        error ShareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
@@ -181,10 +181,15 @@ namespace Enigma::Renderer
         Frameworks::CommandSubscriberPtr m_doChangingViewPort;
         Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
 
+        enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
+        {
+            BackSurfaceBit = 0x01,
+            DepthSurfaceBit = 0x10
+        };
         using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
         ResizingBits m_resizingBits;
-        const ResizingBits ResizingBackSurfaceBit{ "01" };
-        const ResizingBits ResizingDepthSurfaceBit{ "10" };
+        //const ResizingBits ResizingBackSurfaceBit{ "01" };
+        //const ResizingBits ResizingDepthSurfaceBit{ "10" };
     };
     using RenderTargetPtr = std::shared_ptr<RenderTarget>;
 };

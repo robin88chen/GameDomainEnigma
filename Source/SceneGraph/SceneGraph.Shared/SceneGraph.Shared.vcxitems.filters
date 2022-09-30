@@ -4,15 +4,36 @@
     <Filter Include="Scene Graph Errors">
       <UniqueIdentifier>{b60ba73c-4987-47ae-9ddc-c73a2fbf7d7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene Graph">
+      <UniqueIdentifier>{87f32871-2883-4a67-aa50-4872c8b6f4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene Traveler">
+      <UniqueIdentifier>{a612705c-1d5b-4847-b7d6-a6dda06d0ff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
       <Filter>Scene Graph Errors</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
       <Filter>Scene Graph Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp">
+      <Filter>Scene Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -171,7 +171,7 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     if (FATAL_LOG_EXPR(!m_backSurface)) return ErrorCode::nullBackSurface;
     bool isCurrentBound = false;
     m_resizingBits.reset();
-    if (m_depthStencilSurface == nullptr) m_resizingBits |= ResizingDepthSurfaceBit;  // 沒有 depth 需要 resize, 設定成完成
+    if (m_depthStencilSurface == nullptr) m_resizingBits |= Resizing::DepthSurfaceBit;  // 沒有 depth 需要 resize, 設定成完成
 
     if (Graphics::IGraphicAPI::Instance()->CurrentBoundBackSurface() == m_backSurface)
     {
@@ -380,7 +380,7 @@ void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::BackSurfaceResized, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetSurfaceName() != m_backSurfaceName) return;
-    m_resizingBits |= ResizingBackSurfaceBit;
+    m_resizingBits |= Resizing::BackSurfaceBit;
     if (m_resizingBits.all())
     {
         InitViewPortSize();
@@ -394,7 +394,7 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::DepthSurfaceResized, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetSurfaceName() != m_depthSurfaceName) return;
-    m_resizingBits |= ResizingDepthSurfaceBit;
+    m_resizingBits |= Resizing::DepthSurfaceBit;
     if (m_resizingBits.all())
     {
         InitViewPortSize();

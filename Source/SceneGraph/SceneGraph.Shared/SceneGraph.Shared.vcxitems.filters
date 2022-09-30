@@ -10,6 +10,12 @@
     <Filter Include="Scene Traveler">
       <UniqueIdentifier>{a612705c-1d5b-4847-b7d6-a6dda06d0ff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera and Frustum">
+      <UniqueIdentifier>{e61c19a1-1f54-412e-a197-5a674eb21f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Repository">
+      <UniqueIdentifier>{68e2350b-9531-4107-96e4-7fdcd2308f71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -24,6 +30,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h">
       <Filter>Scene Graph</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h">
+      <Filter>Camera and Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -34,6 +46,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp">
       <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp">
+      <Filter>Camera and Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp">
+      <Filter>Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -18,10 +18,9 @@
 using namespace Enigma::Controllers;
 GraphicMain* GraphicMain::m_instance = nullptr;
 
-GraphicMain::GraphicMain(GraphicCoordSys coordSys)
+GraphicMain::GraphicMain()
 {
     assert(!m_instance);
-    m_coordSys = coordSys;
     m_instance = this;
     m_serviceManager = menew Frameworks::ServiceManager();
     m_renderer = nullptr;

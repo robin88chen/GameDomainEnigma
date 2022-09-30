@@ -29,13 +29,7 @@ namespace Enigma::Controllers
     class GraphicMain
     {
     public:
-        enum class GraphicCoordSys
-        {
-            LeftHand,
-            RightHand
-        };
-    public:
-        GraphicMain(GraphicCoordSys coordSys = GraphicCoordSys::LeftHand);
+        GraphicMain();
         GraphicMain(const GraphicMain&) = delete;
         ~GraphicMain();
         GraphicMain& operator=(const GraphicMain&) = delete;
@@ -75,8 +69,6 @@ namespace Enigma::Controllers
 
     private:
         static GraphicMain* m_instance;
-
-        GraphicCoordSys m_coordSys;
 
         Frameworks::ServiceManager* m_serviceManager;
 

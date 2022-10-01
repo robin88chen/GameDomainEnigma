@@ -1,27 +1,55 @@
 ﻿/*********************************************************************
  * \file   SceneGraphRepository.h
  * \brief  scene graph objects repository, maintain objects lifecycle
- * and some global settings
+ *      and some global settings
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
 #ifndef SCENE_GRAPH_REPOSITORY_H
 #define SCENE_GRAPH_REPOSITORY_H
 
+#include "Frameworks/SystemService.h"
+#include "SceneGraphDefines.h"
+#include "Frustum.h"
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <mutex>
+
 namespace Enigma::SceneGraph
 {
-    enum class GraphicCoordSys
+    class Camera;
+    class Frustum;
+
+    class SceneGraphRepository : public Frameworks::ISystemService
     {
-        LeftHand,
-        RightHand
-    };
-    class SceneGraphRepository
-    {
+        DECLARE_EN_RTTI;
     public:
-        static void SetCoordinateSystem(GraphicCoordSys hand);
-        static GraphicCoordSys GetCoordinateSystem();
+        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr);
+        SceneGraphRepository(const SceneGraphRepository&) = delete;
+        SceneGraphRepository(SceneGraphRepository&&) = delete;
+        virtual ~SceneGraphRepository();
+        SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
+        SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
+
+        void SetCoordinateSystem(GraphicCoordSys hand);
+        GraphicCoordSys GetCoordinateSystem();
+
+        std::shared_ptr<Camera> CreateCamera(const std::string& name);
+        bool HasCamera(const std::string& name);
+        std::shared_ptr<Camera> QueryCamera(const std::string& name);
+
+        std::shared_ptr<Frustum> CreateFrustum(const std::string& name, Frustum::ProjectionType proj);
+        bool HasFrustum(const std::string& name);
+        std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
+
     private:
-        static GraphicCoordSys m_handSystem;
+        GraphicCoordSys m_handSystem;
+
+        std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
+        std::recursive_mutex m_cameraMapLock;
+        std::unordered_map<std::string, std::weak_ptr<Frustum>> m_frustums;
+        std::recursive_mutex m_frustumMapLock;
     };
 }
 

@@ -600,7 +600,7 @@ std::tuple<Vector3, float> Matrix3::ToAxisAngle() const
             axis[0] = m_32 - m_23;
             axis[1] = m_13 - m_31;
             axis[2] = m_21 - m_12;
-            axis = axis.Normalize();
+            axis.Normalize();
         }
         else
         {
@@ -1334,9 +1334,9 @@ EigenDecompose<Matrix3> Matrix3::EigenDecomposition() const
 bool Matrix3::Tridiagonalize(float diagonal[3], float subdiagonal[2])
 {
     // Householder reduction T = Q^t M Q
-    //   Input:   
+    //   Input:
     //     mat, symmetric 3x3 matrix M
-    //   Output:  
+    //   Output:
     //     mat, orthogonal matrix Q (a reflection)
     //     diag, diagonal entries of T
     //     subd, subdiagonal entries of T (T is symmetric)

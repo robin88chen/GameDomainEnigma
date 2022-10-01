@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
-#include "MathGlobal.h"
-#include "Matrix4.h"
-#include "Quaternion.h"
+#include "MathLib/MathGlobal.h"
+#include "MathLib/Matrix4.h"
+#include "MathLib/Quaternion.h"
 #include <random>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -49,7 +49,7 @@ namespace MathLibTests
 
             //   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
             Vector3 axis = Vector3(unif_rand(generator), unif_rand(generator), unif_rand(generator));
-            axis = axis.Normalize();
+            axis.Normalize();
             float angle = pi_rand(generator);
             Quaternion q4 = Quaternion(axis, angle);
             Assert::IsTrue(Math::IsEqual(q4.X(), sin(0.5f * angle) * axis.X()));
@@ -120,7 +120,7 @@ namespace MathLibTests
             // 用網頁算,
             // https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
             // 0.9873734753725321, 0.04436357818165539, 0.06654536727248309, 0.15527252363579386
-            // 不過只有兩位 digit 是對的, 
+            // 不過只有兩位 digit 是對的,
         }
     };
 }

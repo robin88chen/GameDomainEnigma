@@ -8,7 +8,7 @@
 #ifndef FRUSTUM_H
 #define FRUSTUM_H
 
-#include "SceneGraphRepository.h"
+#include "SceneGraphDefines.h"
 #include "MathLib/Matrix4.h"
 #include <memory>
 #include <string>

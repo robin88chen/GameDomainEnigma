@@ -716,7 +716,7 @@ std::tuple<Vector3, float> Matrix4::TransformVectorNormalized(const Vector3& vec
     prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z());
     prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z());
     float length = prod.Length();
-    prod = prod.Normalize();
+    prod.Normalize();
     return { prod, length };
 }
 

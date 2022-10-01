@@ -29,7 +29,7 @@ void BoxBV::CreateFromTransform(const MathLib::Matrix4& mx, const std::unique_pt
     {
         m_box.Axis(i) = mx.TransformVector(box_bv->m_box.Axis(i));
         float len = m_box.Axis(i).Length();
-        m_box.Axis(i) = m_box.Axis(i).Normalize();
+        m_box.Axis(i).Normalize();
         m_box.Extent(i) = len * box_bv->m_box.Extent(i);
     }
 }

@@ -617,7 +617,7 @@ Quaternion Quaternion::Align(const Vector3& vec1, const Vector3& vec2)
 
     Quaternion q;
     Vector3 bisector = vec1 + vec2;
-    bisector = bisector.Normalize();
+    bisector.Normalize();
 
     float cosHalfAngle = vec1.Dot(bisector);
     Vector3 cross;

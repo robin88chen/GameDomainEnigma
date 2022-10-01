@@ -72,7 +72,8 @@ namespace Enigma::MathLib
         float Length() const;
         float SquaredLength() const;
         float Dot(const Vector3& v) const;
-        Vector3 Normalize() const;
+        void Normalize();
+        Vector3 CopyNormalized() const;
         /// The cross products are computed using the left-handed rule.
         Vector3 Cross(const Vector3& v) const;
         /// The cross products are computed using the left-handed rule.

@@ -36,6 +36,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h">
       <Filter>Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h">
+      <Filter>Camera and Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -52,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp">
+      <Filter>Camera and Frustum</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

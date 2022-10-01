@@ -29,6 +29,7 @@ namespace Enigma::SceneGraph
         Camera& operator=(Camera&&) = delete;
 
         const std::string& GetName() const { return m_name; }
+        GraphicCoordSys GetCoordHandSys() const { return m_handSys; }
 
         /** set camera local axis -- camera pos to lookat, up axis */
         error SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up);

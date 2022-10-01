@@ -16,6 +16,9 @@
     <Filter Include="Repository">
       <UniqueIdentifier>{68e2350b-9531-4107-96e4-7fdcd2308f71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cullers">
+      <UniqueIdentifier>{388f366a-7ed3-4c06-9c41-a0c84abf2abd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -42,6 +45,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h">
       <Filter>Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h">
+      <Filter>Cullers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h">
+      <Filter>Cullers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -61,6 +70,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp">
       <Filter>Camera and Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp">
+      <Filter>Cullers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp">
+      <Filter>Cullers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

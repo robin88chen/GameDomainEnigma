@@ -15,6 +15,9 @@ namespace Enigma::SceneGraph
     enum class ErrorCode
     {
         ok = 0,
+
+        cameraNotReady = 101,
+        nullSceneGraph,
     };
     class ErrorCategory : public std::error_category
     {

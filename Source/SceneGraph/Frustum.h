@@ -38,6 +38,7 @@ namespace Enigma::SceneGraph
         Frustum& operator=(Frustum&&) = delete;
 
         const std::string& GetName() const { return m_name; }
+        GraphicCoordSys GetCoordHandSys() const { return m_handCoord; }
         /** 設定透視投影矩陣 */
         error SetPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
         /**  設定平行投影矩陣 */

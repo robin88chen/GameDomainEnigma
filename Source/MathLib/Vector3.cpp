@@ -246,7 +246,7 @@ float Vector3::Dot(const Vector3& v) const
         m_tuple[1] * v.m_tuple[1] +
         m_tuple[2] * v.m_tuple[2];
 }
-void Vector3::Normalize()
+void Vector3::NormalizeSelf()
 {
     float length = Length();
 
@@ -266,7 +266,7 @@ void Vector3::Normalize()
     }
 }
 
-Vector3 Vector3::CopyNormalized() const
+Vector3 Vector3::Normalize() const
 {
     float length = Length();
 
@@ -302,7 +302,7 @@ Vector3 Vector3::UnitCross(const Vector3& v) const
         m_tuple[1] * v.m_tuple[2] - m_tuple[2] * v.m_tuple[1],
         m_tuple[2] * v.m_tuple[0] - m_tuple[0] * v.m_tuple[2],
         m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0]);
-    return cross.CopyNormalized();
+    return cross.Normalize();
 }
 
 namespace Enigma::MathLib

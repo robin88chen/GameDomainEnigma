@@ -75,8 +75,8 @@ namespace Enigma::MathLib
         float Length() const;
         float SquaredLength() const;
         float Dot(const Vector4& v) const;
-        void Normalize();
-        Vector4 CopyNormalized() const;
+        void NormalizeSelf();
+        Vector4 Normalize() const;
         //@}
 
         /** @name special vectors */

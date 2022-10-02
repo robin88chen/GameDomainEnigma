@@ -19,6 +19,9 @@
     <Filter Include="Cullers">
       <UniqueIdentifier>{388f366a-7ed3-4c06-9c41-a0c84abf2abd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h">
       <Filter>Cullers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

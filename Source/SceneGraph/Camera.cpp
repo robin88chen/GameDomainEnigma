@@ -22,7 +22,7 @@ Camera::~Camera()
 
 error Camera::SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up)
 {
-    MathLib::Vector3 _eye_to_lookat = eye_to_lookat.CopyNormalized();
+    MathLib::Vector3 _eye_to_lookat = eye_to_lookat.Normalize();
     m_vecEyeToLookAt = _eye_to_lookat;
     if (m_handSys == GraphicCoordSys::LeftHand)
     {
@@ -32,9 +32,9 @@ error Camera::SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib
     {
         m_vecCameraForward = -_eye_to_lookat;
     }
-    MathLib::Vector3 _up = up.CopyNormalized();
+    MathLib::Vector3 _up = up.Normalize();
     MathLib::Vector3 right = _up.Cross(m_vecCameraForward);
-    m_vecRight = right.CopyNormalized();
+    m_vecRight = right.Normalize();
     m_vecUp = m_vecCameraForward.Cross(m_vecRight);
 
     _UpdateViewTransform();
@@ -44,7 +44,7 @@ error Camera::SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib
 error Camera::SetCameraFrame(const MathLib::Vector3& eye, const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up)
 {
     m_vecLocation = eye;
-    MathLib::Vector3 _eye_to_lookat = eye_to_lookat.CopyNormalized();
+    MathLib::Vector3 _eye_to_lookat = eye_to_lookat.Normalize();
     m_vecEyeToLookAt = _eye_to_lookat;
     if (m_handSys == GraphicCoordSys::LeftHand)
     {
@@ -54,9 +54,9 @@ error Camera::SetCameraFrame(const MathLib::Vector3& eye, const MathLib::Vector3
     {
         m_vecCameraForward = -_eye_to_lookat;
     }
-    MathLib::Vector3 _up = up.CopyNormalized();
+    MathLib::Vector3 _up = up.Normalize();
     MathLib::Vector3 _right = _up.Cross(m_vecCameraForward);
-    m_vecRight = _right.CopyNormalized();
+    m_vecRight = _right.Normalize();
     m_vecUp = m_vecCameraForward.Cross(m_vecRight);
     _UpdateViewTransform();
     return ErrorCode::ok;

@@ -46,7 +46,7 @@ namespace Enigma::SceneGraph
             Spatial_ReflectionPlane = 0x10,
             Spatial_Unlit = 0x20,  ///< 不受光的物件, 可以不用計算lighting render state
             Spatial_LightVolume = 0x40,
-            Spatial_FullOpen = 0xffffffff,
+            Spatial_FullOpen = 0xff,
         };
         using SpatialFlags = std::bitset<7>;
 
@@ -83,7 +83,7 @@ namespace Enigma::SceneGraph
         //@{
         /** compute visible set, used by culler */
         virtual error CullVisibleSet(Culler* culler, bool noCull);
-        virtual bool CanVisited();
+        virtual bool CanVisited() = 0;
         /** on cull visible, used by culler, for compute visible set (recursive calling)  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) = 0;
         /** on complete not visible, only for top spatial, will not recursive */
@@ -101,7 +101,7 @@ namespace Enigma::SceneGraph
         /** get world bound */
         const Engine::BoundingVolume& GetWorldBound() { return m_worldBound; };
         /** get parent world transform */
-        MathLib::Matrix4& GetParentWorldTransform();
+        MathLib::Matrix4 GetParentWorldTransform() const;
 
         /** @name set local position attribute, then modify local transform & update world transform/bound */
         //@{
@@ -156,13 +156,22 @@ namespace Enigma::SceneGraph
         CullingMode GetCullingMode() { return m_cullingMode; };
 
         /** add spatial flag */
-        void AddSpatialFlag(SpatialFlags flag);
+        void AddSpatialFlag(SpatialFlags flag)
+        {
+            m_spatialFlags |= flag;
+        }
         /** remove spatial flag */
-        void RemoveSpatialFlag(SpatialFlags flag);
+        void RemoveSpatialFlag(SpatialFlags flag)
+        {
+            m_spatialFlags &= (~flag);
+        }
         /** get spatial flag */
         SpatialFlags GetSpatialFlag() { return m_spatialFlags; };
         /** test spatial flag */
-        bool TestSpatialFlag(SpatialFlags flag);
+        bool TestSpatialFlag(SpatialFlags flag)
+        {
+            return (m_spatialFlags & flag).any();
+        }
 
         /** notify spatial render state changed (after light changed,... etc.) */
         virtual void NotifySpatialRenderStateChanged();
@@ -185,19 +194,19 @@ namespace Enigma::SceneGraph
         //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
 
         /** add spatial notify flag */
-        void AddNotifyMsgFlag(NotifyFlags flag)
+        void AddNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags |= flag;
         };
         /** remove spatial notify flag */
-        void RemoveNotifyMsgFlag(NotifyFlags flag)
+        void RemoveNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags &= (~flag);
         };
         /** get spatial notify flag */
-        NotifyFlags GetNotifyMsgFlag() { return m_notifyFlags; };
+        NotifyFlags GetNotifyFlag() { return m_notifyFlags; };
         /** test spatial notify flag */
-        bool TestNotifyMsgFlag(NotifyFlags flag)
+        bool TestNotifyFlag(NotifyFlags flag)
         {
             return (m_notifyFlags & flag).any();
         };

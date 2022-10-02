@@ -271,7 +271,7 @@ float Vector4::Dot(const Vector4& v) const
         m_tuple[3] * v.m_tuple[3];
 }
 
-Vector4 Vector4::CopyNormalized() const
+Vector4 Vector4::Normalize() const
 {
     float length = Length();
 
@@ -295,7 +295,7 @@ Vector4 Vector4::CopyNormalized() const
     return v;
 }
 
-void Vector4::Normalize()
+void Vector4::NormalizeSelf()
 {
     float length = Length();
 

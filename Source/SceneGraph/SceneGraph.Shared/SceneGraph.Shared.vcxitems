@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />

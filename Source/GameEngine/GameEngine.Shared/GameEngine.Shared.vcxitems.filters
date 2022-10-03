@@ -40,6 +40,9 @@
     <Filter Include="Bounding Volume\Implementing">
       <UniqueIdentifier>{785fed8a-f44b-4e98-b211-4377f5b8624b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer Interface">
+      <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -140,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h">
       <Filter>Bounding Volume\Implementing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h">
+      <Filter>Renderer Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

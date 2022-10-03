@@ -19,6 +19,7 @@ namespace Enigma::SceneGraph
         cameraNotReady = 101,
         nullSceneGraph,
         dataNotReady,
+        parentNode,
     };
     class ErrorCategory : public std::error_category
     {

@@ -11,6 +11,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::ok: return "OK";
     case ErrorCode::cameraNotReady: return "Camera not ready";
     case ErrorCode::nullSceneGraph: return "Null scene graph";
+    case ErrorCode::dataNotReady: return "Data not ready";
+    case ErrorCode::parentNode: return "Parent node error";
     }
     return "Unknown";
 }

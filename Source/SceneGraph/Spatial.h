@@ -12,6 +12,7 @@
 #include "MathLib/Matrix3.h"
 #include "MathLib/Quaternion.h"
 #include "GameEngine/BoundingVolume.h"
+#include "GameEngine/IRenderer.h"
 #include "SceneTraveler.h"
 #include <string>
 #include <memory>
@@ -91,6 +92,8 @@ namespace Enigma::SceneGraph
         //@}
         /** is renderable object?? */
         virtual bool IsRenderable() { return false; };
+        /** insert spatial object to renderer */
+        virtual error InsertToRenderer(const Engine::IRendererPtr&) { return error{}; };
 
         /** get world transform */
         MathLib::Matrix4& GetWorldTransform() { return m_mxWorldTransform; };

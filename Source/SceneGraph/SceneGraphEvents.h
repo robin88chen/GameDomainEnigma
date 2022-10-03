@@ -39,6 +39,31 @@ namespace Enigma::SceneGraph
     public:
         SpatialLocationChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
     };
+    class SpatialRenderStateChanged : public SceneGraphEvent
+    {
+    public:
+        SpatialRenderStateChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+    };
+    class SceneGraphChanged : public SceneGraphEvent
+    {
+    public:
+        enum class NotifyCode
+        {
+            Invalid = 0,
+            AttachChild,
+            DetachChild,
+            DeferredInstanced,
+        };
+    public:
+        SceneGraphChanged(const std::shared_ptr<Spatial>& parent, const std::shared_ptr<Spatial> child, NotifyCode code)
+        : SceneGraphEvent(parent), m_child(child), m_code(code)  {};
+        const std::shared_ptr<Spatial>& GetParentNode() { return m_spatial; }
+        const std::shared_ptr<Spatial>& GetChild() { return m_child; }
+        const NotifyCode GetNotifyCode() const { return m_code; }
+    protected:
+        std::shared_ptr<Spatial> m_child;
+        NotifyCode m_code;
+    };
 }
 
 

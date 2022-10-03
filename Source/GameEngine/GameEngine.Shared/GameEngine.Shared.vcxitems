@@ -28,6 +28,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />

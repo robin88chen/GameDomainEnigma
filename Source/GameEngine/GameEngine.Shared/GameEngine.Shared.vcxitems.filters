@@ -40,7 +40,10 @@
     <Filter Include="Bounding Volume\Implementing">
       <UniqueIdentifier>{785fed8a-f44b-4e98-b211-4377f5b8624b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer Interface">
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{380d5092-147a-44f8-990a-8023f1ec3ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -145,7 +148,13 @@
       <Filter>Bounding Volume\Implementing</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h">
-      <Filter>Renderer Interface</Filter>
+      <Filter>Renderer Interface States</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderLightingState.h">
+      <Filter>Renderer Interface States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp">
       <Filter>Bounding Volume\Implementing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderLightingState.cpp">
+      <Filter>Renderer Interface States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -57,6 +57,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -82,6 +88,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp">
       <Filter>Cullers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
+      <Filter>Scene Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

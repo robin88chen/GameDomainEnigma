@@ -20,6 +20,7 @@ namespace Enigma::SceneGraph
         nullSceneGraph,
         dataNotReady,
         parentNode,
+        nullPrimitive,
     };
     class ErrorCategory : public std::error_category
     {

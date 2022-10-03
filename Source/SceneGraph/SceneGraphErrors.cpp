@@ -13,6 +13,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullSceneGraph: return "Null scene graph";
     case ErrorCode::dataNotReady: return "Data not ready";
     case ErrorCode::parentNode: return "Parent node error";
+    case ErrorCode::nullPrimitive: return "Null primitive";
     }
     return "Unknown";
 }

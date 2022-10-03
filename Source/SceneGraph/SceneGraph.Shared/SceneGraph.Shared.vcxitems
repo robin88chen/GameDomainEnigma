@@ -18,12 +18,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
   </ItemGroup>
   <ItemGroup>
@@ -31,9 +33,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />
   </ItemGroup>
 </Project>

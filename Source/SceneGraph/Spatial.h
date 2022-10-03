@@ -14,6 +14,7 @@
 #include "GameEngine/BoundingVolume.h"
 #include "GameEngine/IRenderer.h"
 #include "SceneTraveler.h"
+#include "SpatialRenderState.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -244,8 +245,7 @@ namespace Enigma::SceneGraph
 
         CullingMode m_cullingMode;
 
-        //todo : spatial render state
-        //SpatialRenderStatePtr m_spatialRenderState;
+        SpatialRenderState m_spatialRenderState;
 
         SpatialFlags m_spatialFlags;  ///< default: "belong to parent"
 

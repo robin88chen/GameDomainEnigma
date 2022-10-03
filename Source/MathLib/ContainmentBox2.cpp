@@ -20,12 +20,12 @@ Box2 ContainmentBox2::MergeBoxes(const Box2& box0, const Box2& box1)
     if (box0.Axis(0).Dot(box1.Axis(0)) >= 0.0f)
     {
         box.Axis(0) = 0.5f * (box0.Axis(0) + box1.Axis(0));
-        box.Axis(0) = box.Axis(0).Normalize();
+        box.Axis(0).NormalizeSelf();
     }
     else
     {
         box.Axis(0) = 0.5f * (box0.Axis(0) - box1.Axis(0));
-        box.Axis(0) = box.Axis(0).Normalize();
+        box.Axis(0).NormalizeSelf();
     }
     box.Axis(1) = -box.Axis(0).Perp();
 

@@ -600,7 +600,7 @@ std::tuple<Vector3, float> Matrix3::ToAxisAngle() const
             axis[0] = m_32 - m_23;
             axis[1] = m_13 - m_31;
             axis[2] = m_21 - m_12;
-            axis.Normalize();
+            axis.NormalizeSelf();
         }
         else
         {
@@ -1237,7 +1237,7 @@ std::tuple<Vector2, float> Matrix3::TransformVectorNormalized(const Vector2& v) 
     prod.X() = (m_11 * v.X() + m_12 * v.Y());
     prod.Y() = (m_21 * v.X() + m_22 * v.Y());
     float length = prod.Length();
-    prod = prod.Normalize();
+    prod.NormalizeSelf();
     return { prod, length };
 }
 

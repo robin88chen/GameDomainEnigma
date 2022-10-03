@@ -31,6 +31,7 @@ namespace Enigma::SceneGraph
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
+        virtual bool CanVisited() override { return true; };
 
         virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
 

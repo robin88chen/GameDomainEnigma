@@ -20,6 +20,7 @@ namespace Enigma::SceneGraph
 {
     class Camera;
     class Frustum;
+    class Node;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -43,6 +44,10 @@ namespace Enigma::SceneGraph
         bool HasFrustum(const std::string& name);
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
+        std::shared_ptr<Node> CreateNode(const std::string& name);
+        bool HasNode(const std::string& name);
+        std::shared_ptr<Node> QueryNode(const std::string& name);
+
     private:
         GraphicCoordSys m_handSystem;
 
@@ -50,6 +55,9 @@ namespace Enigma::SceneGraph
         std::recursive_mutex m_cameraMapLock;
         std::unordered_map<std::string, std::weak_ptr<Frustum>> m_frustums;
         std::recursive_mutex m_frustumMapLock;
+
+        std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
+        std::recursive_mutex m_nodeMapLock;
     };
 }
 

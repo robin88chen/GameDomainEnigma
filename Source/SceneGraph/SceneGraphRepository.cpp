@@ -1,6 +1,7 @@
 ﻿#include "SceneGraphRepository.h"
 #include "Camera.h"
 #include "Frustum.h"
+#include "Node.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -33,7 +34,7 @@ std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& na
     assert(!HasCamera(name));
     auto camera = std::make_shared<Camera>(name, m_handSystem);
     std::lock_guard locker{ m_cameraMapLock };
-    m_cameras.insert({ name, camera });
+    m_cameras.insert_or_assign(name, camera);
     return camera;
 }
 
@@ -58,7 +59,7 @@ std::shared_ptr<Frustum> SceneGraphRepository::CreateFrustum(const std::string& 
     assert(!HasFrustum(name));
     auto frustum = std::make_shared<Frustum>(name, m_handSystem, proj);
     std::lock_guard locker{ m_frustumMapLock };
-    m_frustums.insert({ name, frustum });
+    m_frustums.insert_or_assign(name, frustum);
     return frustum;
 }
 
@@ -74,6 +75,31 @@ std::shared_ptr<Frustum> SceneGraphRepository::QueryFrustum(const std::string& n
     std::lock_guard locker{ m_frustumMapLock };
     auto it = m_frustums.find(name);
     if (it == m_frustums.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
+{
+    assert(!HasNode(name));
+    auto node = std::make_shared<Node>(name);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(name, node);
+    return node;
+}
+
+bool SceneGraphRepository::HasNode(const std::string& name)
+{
+    std::lock_guard locker{ m_nodeMapLock };
+    auto it = m_nodes.find(name);
+    return ((it != m_nodes.end()) && (!it->second.expired()));
+}
+
+std::shared_ptr<Node> SceneGraphRepository::QueryNode(const std::string& name)
+{
+    std::lock_guard locker{ m_nodeMapLock };
+    auto it = m_nodes.find(name);
+    if (it == m_nodes.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
 }

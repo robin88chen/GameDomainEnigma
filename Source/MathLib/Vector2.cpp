@@ -230,6 +230,22 @@ Vector2 Vector2::Normalize() const
     return v;
 }
 
+void Vector2::NormalizeSelf()
+{
+    float length = Length();
+    if (length > Math::ZERO_TOLERANCE)
+    {
+        //float invLength = ((float)1.0) / length;
+        m_tuple[0] = m_tuple[0] / length;
+        m_tuple[1] = m_tuple[1] / length;
+    }
+    else
+    {
+        m_tuple[0] = (float)0.0;
+        m_tuple[1] = (float)0.0;
+    }
+}
+
 Vector2 Vector2::Perp() const
 {
     return Vector2(m_tuple[1], -m_tuple[0]);

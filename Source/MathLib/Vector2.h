@@ -65,6 +65,7 @@ namespace Enigma::MathLib
         float SquaredLength() const;
         float Dot(const Vector2& v) const;
         Vector2 Normalize() const;
+        void NormalizeSelf();
 
         /// returns (y,-x)
         Vector2 Perp() const;

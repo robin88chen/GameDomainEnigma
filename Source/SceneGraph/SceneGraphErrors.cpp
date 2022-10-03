@@ -21,7 +21,7 @@ const char* ErrorCategory::name() const noexcept
 {
     return "Scene Graph Error Category";
 }
-namespace Enigma::Renderer
+namespace Enigma::SceneGraph
 {
     std::error_code make_error_code(ErrorCode ec)
     {

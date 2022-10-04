@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
-#include "ColorRGB.h"
-#include "ColorRGBA.h"
-#include "MathGlobal.h"
+#include "MathLib/ColorRGB.h"
+#include "MathLib/ColorRGBA.h"
+#include "MathLib/MathGlobal.h"
 #include <random>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

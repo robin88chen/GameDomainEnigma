@@ -13,7 +13,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
 
-namespace Enigma::Engine
+namespace Enigma::Renderer
 {
     class RendererManager;
 };
@@ -29,13 +29,7 @@ namespace Enigma::Controllers
     class GraphicMain
     {
     public:
-        enum class GraphicCoordSys
-        {
-            LeftHand,
-            RightHand
-        };
-    public:
-        GraphicMain(GraphicCoordSys coordSys = GraphicCoordSys::LeftHand);
+        GraphicMain();
         GraphicMain(const GraphicMain&) = delete;
         ~GraphicMain();
         GraphicMain& operator=(const GraphicMain&) = delete;
@@ -70,19 +64,20 @@ namespace Enigma::Controllers
         error InstallRenderBufferManagers();
         error ShutdownRenderBufferManagers();
 
-    	error InstallTextureManagers();
+        error InstallTextureManagers();
         error ShutdownTextureManagers();
+
+        error InstallSceneGraphManagers();
+        error ShutdownSceneGraphManagers();
 
     private:
         static GraphicMain* m_instance;
-
-        GraphicCoordSys m_coordSys;
 
         Frameworks::ServiceManager* m_serviceManager;
 
         std::unique_ptr<InstallingPolicy> m_policy;
 
-        Engine::RendererManager* m_renderer;
+        Renderer::RendererManager* m_renderer;
     };
 
 };

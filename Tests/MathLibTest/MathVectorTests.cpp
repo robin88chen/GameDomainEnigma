@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "MathGlobal.h"
+#include "MathLib/Vector2.h"
+#include "MathLib/Vector3.h"
+#include "MathLib/Vector4.h"
+#include "MathLib/MathGlobal.h"
 #include <random>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -97,17 +97,17 @@ namespace MathLibTests
             Assert::IsTrue(Math::IsEqual(vec31.SquaredLength(), l3));
             Assert::IsTrue(Math::IsEqual(vec31.Length() * vec31.Length(), l3));
             float ll3 = vec31.Length();
-            Vector3 vec39 = vec31.Normalize();
+            Vector3 vec39 = vec31.CopyNormalized();
             Assert::IsTrue(vec39 == vec31 / ll3);
             Vector3 vec311 = vec31.Cross(vec32);
-            Assert::IsTrue(Math::IsEqual(vec311.Normalize().Dot(vec31.Normalize()), 0.0f));
-            Assert::IsTrue(Math::IsEqual(vec311.Normalize().Dot(vec32.Normalize()), 0.0f));
+            Assert::IsTrue(Math::IsEqual(vec311.CopyNormalized().Dot(vec31.CopyNormalized()), 0.0f));
+            Assert::IsTrue(Math::IsEqual(vec311.CopyNormalized().Dot(vec32.CopyNormalized()), 0.0f));
             //Assert::IsTrue(Math::IsEqual(vec311.Dot(vec31), 0.0f));  // 浮點數乘除後的誤差會放大，一旦維度很大，就注定會失敗
             //Assert::IsTrue(Math::IsEqual(vec311.Dot(vec32), 0.0f));
             Vector3 vec312 = vec32.Cross(vec31);
             Assert::IsTrue(vec312 == -vec311);
             Vector3 vec313 = vec31.UnitCross(vec32);
-            Vector3 vec314 = vec311.Normalize();
+            Vector3 vec314 = vec311.CopyNormalized();
             Assert::IsTrue(vec313 == vec314);
 
         }
@@ -150,7 +150,7 @@ namespace MathLibTests
             Assert::IsTrue(Math::IsEqual(vec1.SquaredLength(), l));
             Assert::IsTrue(Math::IsEqual(vec1.Length() * vec1.Length(), l));
             float ll = vec1.Length();
-            Vector4 vec9 = vec1.Normalize();
+            Vector4 vec9 = vec1.CopyNormalized();
             Assert::IsTrue(vec9 == vec1 / ll);
         }
     };

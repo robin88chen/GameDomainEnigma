@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
-#include "MathGlobal.h"
-#include "Matrix2.h"
-#include "Matrix3.h"
-#include "Matrix4.h"
+#include "MathLib/MathGlobal.h"
+#include "MathLib/Matrix2.h"
+#include "MathLib/Matrix3.h"
+#include "MathLib/Matrix4.h"
 #include <random>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -109,7 +109,7 @@ namespace MathLibTests
             float angle = pi_rand(generator);
             if (angle < 0.0f) angle = -angle;
             Vector3 axis0 = Vector3(unif_rand(generator), unif_rand(generator), unif_rand(generator));
-            axis0 = axis0.Normalize();
+            axis0.Normalize();
             Matrix3 mxa(axis0, angle);
             mx1 = Matrix3::FromAxisAngle(axis0, angle);
             Assert::IsTrue(mx1 == mxa);

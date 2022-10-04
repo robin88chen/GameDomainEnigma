@@ -76,9 +76,9 @@ Matrix4 MathAlgorithm::MakeLookAtTransformLH(const Vector3& eye, const Vector3& 
     Matrix3 rotation;
 
     axisZ = at - eye;
-    axisZ = axisZ.Normalize();
+    axisZ.NormalizeSelf();
     axisX = up.Cross(axisZ);
-    axisX = axisX.Normalize();
+    axisX.NormalizeSelf();
     axisY = axisZ.Cross(axisX);
     rotation = Matrix3(axisX, axisY, axisZ, false);
     tran = rotation * eye;

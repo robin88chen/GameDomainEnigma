@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Scene Graph Errors">
+      <UniqueIdentifier>{b60ba73c-4987-47ae-9ddc-c73a2fbf7d7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene Graph">
+      <UniqueIdentifier>{87f32871-2883-4a67-aa50-4872c8b6f4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene Traveler">
+      <UniqueIdentifier>{a612705c-1d5b-4847-b7d6-a6dda06d0ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera and Frustum">
+      <UniqueIdentifier>{e61c19a1-1f54-412e-a197-5a674eb21f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Repository">
+      <UniqueIdentifier>{68e2350b-9531-4107-96e4-7fdcd2308f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cullers">
+      <UniqueIdentifier>{388f366a-7ed3-4c06-9c41-a0c84abf2abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
+      <Filter>Scene Graph Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h">
+      <Filter>Camera and Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h">
+      <Filter>Camera and Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h">
+      <Filter>Cullers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h">
+      <Filter>Cullers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
+      <Filter>Scene Graph Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp">
+      <Filter>Camera and Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp">
+      <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp">
+      <Filter>Camera and Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp">
+      <Filter>Cullers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp">
+      <Filter>Cullers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

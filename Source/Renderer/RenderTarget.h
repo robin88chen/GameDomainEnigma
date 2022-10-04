@@ -1,14 +1,12 @@
 ﻿/********************************************************************
  * \file   RenderTarget.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
 #ifndef RENDER_TARGET_H
 #define RENDER_TARGET_H
-
-#include <bitset>
 
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -20,7 +18,7 @@
 #include <string>
 #include <memory>
 #include <system_error>
-
+#include <bitset>
 
 namespace Enigma::Graphics
 {
@@ -33,9 +31,13 @@ namespace Enigma::Graphics
 
 namespace Enigma::Engine
 {
-    using error = std::error_code;
     class Texture;
     using TexturePtr = std::shared_ptr<Texture>;
+}
+
+namespace Enigma::Renderer
+{
+    using error = std::error_code;
     /** Render Target class */
     class RenderTarget : public std::enable_shared_from_this<RenderTarget>
     {
@@ -75,7 +77,7 @@ namespace Enigma::Engine
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
-        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
@@ -85,7 +87,7 @@ namespace Enigma::Engine
         error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
-        error ShareDepthStencilSurface(const std::string& depth_name, 
+        error ShareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
@@ -112,7 +114,7 @@ namespace Enigma::Engine
         const MathLib::Dimension& GetDimension() const { return m_dimension; };
 
         /** get render target texture */
-        TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
+        Engine::TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
 
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
@@ -163,7 +165,7 @@ namespace Enigma::Engine
         std::string m_backSurfaceName;
         Graphics::IDepthStencilSurfacePtr m_depthStencilSurface;
         std::string m_depthSurfaceName;
-        TexturePtr m_renderTargetTexture;
+        Engine::TexturePtr m_renderTargetTexture;
 
         Graphics::TargetViewPort m_viewPort;
         ClearingProperty m_clearingProperty;
@@ -179,10 +181,15 @@ namespace Enigma::Engine
         Frameworks::CommandSubscriberPtr m_doChangingViewPort;
         Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
 
+        enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
+        {
+            BackSurfaceBit = 0x01,
+            DepthSurfaceBit = 0x10
+        };
         using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
         ResizingBits m_resizingBits;
-        const ResizingBits ResizingBackSurfaceBit{ "01" };
-        const ResizingBits ResizingDepthSurfaceBit{ "10" };
+        //const ResizingBits ResizingBackSurfaceBit{ "01" };
+        //const ResizingBits ResizingDepthSurfaceBit{ "10" };
     };
     using RenderTargetPtr = std::shared_ptr<RenderTarget>;
 };

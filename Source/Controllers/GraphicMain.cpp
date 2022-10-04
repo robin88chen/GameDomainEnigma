@@ -3,12 +3,13 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
-#include "GameEngine/RendererManager.h"
-#include "GameEngine/RenderTarget.h"
+#include "Renderer/RendererManager.h"
+#include "Renderer/RenderTarget.h"
 #include "GameEngine/ShaderManager.h"
 #include "GameEngine/EffectMaterialManager.h"
 #include "GameEngine/RenderBufferManager.h"
 #include "GameEngine/TextureManager.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -18,10 +19,9 @@
 using namespace Enigma::Controllers;
 GraphicMain* GraphicMain::m_instance = nullptr;
 
-GraphicMain::GraphicMain(GraphicCoordSys coordSys)
+GraphicMain::GraphicMain()
 {
     assert(!m_instance);
-    m_coordSys = coordSys;
     m_instance = this;
     m_serviceManager = menew Frameworks::ServiceManager();
     m_renderer = nullptr;
@@ -127,6 +127,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallTextureManagers();
     if (er) return er;
     er = InstallRenderBufferManagers();
+    if (er) return er;
+    er = InstallSceneGraphManagers();
     return er;
 }
 
@@ -136,6 +138,7 @@ error GraphicMain::ShutdownDefaultRenderer()
     assert(policy);
 
     error er;
+    er = ShutdownSceneGraphManagers();
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
@@ -152,12 +155,12 @@ error GraphicMain::ShutdownDefaultRenderer()
 
 error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
 {
-    m_renderer = menew Engine::RendererManager(m_serviceManager);
+    m_renderer = menew Renderer::RendererManager(m_serviceManager);
     m_serviceManager->RegisterSystemService(m_renderer);
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;
     er = m_renderer->CreateRenderTarget(render_target_name,
-        is_primary ? Engine::RenderTarget::PrimaryType::IsPrimary : Engine::RenderTarget::PrimaryType::NotPrimary);
+        is_primary ? Renderer::RenderTarget::PrimaryType::IsPrimary : Renderer::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
     Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
@@ -174,7 +177,7 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
         er = m_renderer->DestroyRenderTarget(render_target_name);
         if (er) return er;
     }
-    m_serviceManager->ShutdownSystemService(Engine::RendererManager::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Renderer::RendererManager::TYPE_RTTI);
 
     return ErrorCode::ok;
 }
@@ -214,5 +217,17 @@ error GraphicMain::InstallTextureManagers()
 error GraphicMain::ShutdownTextureManagers()
 {
     m_serviceManager->ShutdownSystemService(Engine::TextureManager::TYPE_RTTI);
+    return ErrorCode::ok;
+}
+
+error GraphicMain::InstallSceneGraphManagers()
+{
+    m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownSceneGraphManagers()
+{
+    m_serviceManager->ShutdownSystemService(SceneGraph::SceneGraphRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }

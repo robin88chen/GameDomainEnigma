@@ -31,6 +31,9 @@ namespace Enigma::MathLib
         bool operator== (const Sphere3& sphere) const; ///< 浮點數值比較
         bool operator!= (const Sphere3& sphere) const;  ///< 浮點數值比較
 
+        bool IsEmpty() const { return m_radius <= 0.0f; };
+        static const Sphere3 UNIT_SPHERE;
+
     private:
         Vector3 m_center;
         float m_radius;

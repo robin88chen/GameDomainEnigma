@@ -13,7 +13,7 @@
 #include "RenderTarget.h"
 #include <optional>
 
-namespace Enigma::Engine
+namespace Enigma::Renderer
 {
     class ChangeTargetViewPort : public Frameworks::ICommand
     {

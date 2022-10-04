@@ -3,6 +3,8 @@
 
 using namespace Enigma::MathLib;
 
+const Sphere3 Sphere3::UNIT_SPHERE(Vector3::ZERO, 1.0f);
+
 Sphere3::Sphere3()
 {
     m_center = Vector3::ZERO;

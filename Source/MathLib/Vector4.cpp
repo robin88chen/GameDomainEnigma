@@ -295,6 +295,28 @@ Vector4 Vector4::Normalize() const
     return v;
 }
 
+void Vector4::NormalizeSelf()
+{
+    float length = Length();
+
+    if (length > Math::ZERO_TOLERANCE)
+    {
+        //float invLength = ((float)1.0) / length;
+        m_tuple[0] /= length;
+        m_tuple[1] /= length;
+        m_tuple[2] /= length;
+        m_tuple[3] /= length;
+    }
+    else
+    {
+        length = (float)0.0;
+        m_tuple[0] = (float)0.0;
+        m_tuple[1] = (float)0.0;
+        m_tuple[2] = (float)0.0;
+        m_tuple[3] = (float)0.0;
+    }
+}
+
 namespace Enigma::MathLib
 {
     Vector4 operator* (float scalar, const Vector4& v)

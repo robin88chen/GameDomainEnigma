@@ -16,14 +16,9 @@ namespace Enigma::Engine
     {
         ok = 0,
 
-        flipNotPrimary = 101,
-        nullBackSurface,
-        renderTargetAlreadyExisted,
-        renderTargetNotExist,
+        findStashedAssetFail = 101,
 
-        findStashedAssetFail = 201,
-
-        effectPassEnd = 301,
+        effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,

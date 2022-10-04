@@ -1,5 +1,5 @@
 ﻿#include "RendererManager.h"
-#include "EngineErrors.h"
+#include "RendererErrors.h"
 #include "RendererEvents.h"
 #include "RendererCommands.h"
 #include "Frameworks/Rtti.h"
@@ -10,13 +10,13 @@
 #include <cassert>
 
 
-using namespace Enigma::Engine;
+using namespace Enigma::Renderer;
 
-DEFINE_RTTI(Engine, RendererManager);
+DEFINE_RTTI(Renderer, RendererManager);
 
 RendererManager::RendererManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, RendererManager, ISystemService);
+    IMPLEMENT_RTTI(Enigma, Renderer, RendererManager, ISystemService);
     m_needTick = false;
     m_accumulateRendererStamp = 0;
 }

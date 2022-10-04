@@ -246,6 +246,25 @@ float Vector3::Dot(const Vector3& v) const
         m_tuple[1] * v.m_tuple[1] +
         m_tuple[2] * v.m_tuple[2];
 }
+void Vector3::NormalizeSelf()
+{
+    float length = Length();
+
+    if (length > Math::ZERO_TOLERANCE)
+    {
+        //float invLength = ((float)1.0) / length;
+        m_tuple[0] /= length;
+        m_tuple[1] /= length;
+        m_tuple[2] /= length;
+    }
+    else
+    {
+        length = (float)0.0;
+        m_tuple[0] = (float)0.0;
+        m_tuple[1] = (float)0.0;
+        m_tuple[2] = (float)0.0;
+    }
+}
 
 Vector3 Vector3::Normalize() const
 {

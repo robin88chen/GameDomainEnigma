@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Frustum.h"
 #include "Node.h"
+#include "Pawn.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -100,6 +101,31 @@ std::shared_ptr<Node> SceneGraphRepository::QueryNode(const std::string& name)
     std::lock_guard locker{ m_nodeMapLock };
     auto it = m_nodes.find(name);
     if (it == m_nodes.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
+}
+
+std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
+{
+    assert(!HasPawn(name));
+    auto pawn = std::make_shared<Pawn>(name);
+    std::lock_guard locker{ m_pawnMapLock };
+    m_pawns.insert_or_assign(name, pawn);
+    return pawn;
+}
+
+bool SceneGraphRepository::HasPawn(const std::string& name)
+{
+    std::lock_guard locker{ m_pawnMapLock };
+    auto it = m_pawns.find(name);
+    return ((it != m_pawns.end()) && (!it->second.expired()));
+}
+
+std::shared_ptr<Pawn> SceneGraphRepository::QueryPawn(const std::string& name)
+{
+    std::lock_guard locker{ m_pawnMapLock };
+    auto it = m_pawns.find(name);
+    if (it == m_pawns.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
 }

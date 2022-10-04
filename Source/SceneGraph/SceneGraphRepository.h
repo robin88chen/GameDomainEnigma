@@ -21,6 +21,7 @@ namespace Enigma::SceneGraph
     class Camera;
     class Frustum;
     class Node;
+    class Pawn;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -48,6 +49,10 @@ namespace Enigma::SceneGraph
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
+        std::shared_ptr<Pawn> CreatePawn(const std::string& name);
+        bool HasPawn(const std::string& name);
+        std::shared_ptr<Pawn> QueryPawn(const std::string& name);
+
     private:
         GraphicCoordSys m_handSystem;
 
@@ -58,6 +63,8 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
         std::recursive_mutex m_nodeMapLock;
+        std::unordered_map<std::string, std::weak_ptr<Pawn>> m_pawns;
+        std::recursive_mutex m_pawnMapLock;
     };
 }
 

@@ -27,6 +27,7 @@ namespace Enigma::SceneGraph
 
         /** on cull visible, insert this object to culler */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
+        virtual bool CanVisited() override { return true; };
         /** if has primitive, then is renderable object */
         virtual bool IsRenderable() override;
         /** insert primitive to renderer (if has any) */

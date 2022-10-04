@@ -9,6 +9,7 @@
 #include "GameEngine/EffectMaterialManager.h"
 #include "GameEngine/RenderBufferManager.h"
 #include "GameEngine/TextureManager.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -126,6 +127,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallTextureManagers();
     if (er) return er;
     er = InstallRenderBufferManagers();
+    if (er) return er;
+    er = InstallSceneGraphManagers();
     return er;
 }
 
@@ -135,6 +138,7 @@ error GraphicMain::ShutdownDefaultRenderer()
     assert(policy);
 
     error er;
+    er = ShutdownSceneGraphManagers();
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
@@ -213,5 +217,17 @@ error GraphicMain::InstallTextureManagers()
 error GraphicMain::ShutdownTextureManagers()
 {
     m_serviceManager->ShutdownSystemService(Engine::TextureManager::TYPE_RTTI);
+    return ErrorCode::ok;
+}
+
+error GraphicMain::InstallSceneGraphManagers()
+{
+    m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownSceneGraphManagers()
+{
+    m_serviceManager->ShutdownSystemService(SceneGraph::SceneGraphRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }

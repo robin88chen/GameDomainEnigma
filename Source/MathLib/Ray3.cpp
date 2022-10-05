@@ -24,7 +24,7 @@ bool Ray3::TestIntersectTriangle(Vector3 triangle[3])
     Vector3 e2 = triangle[2] - triangle[0];
     Vector3 q = m_direction.Cross(e2);
     float a = e1.Dot(q);
-    if ((a > -Math::EPSILON) && (a < Math::EPSILON)) return false; // parallel
+    if ((a > -Math::Epsilon()) && (a < Math::Epsilon())) return false; // parallel
     float f = 1.0f / a;
     Vector3 s = m_origin - triangle[0];
     float u = f * (s.Dot(q));
@@ -41,7 +41,7 @@ float Ray3::FindIntersectTriangle(Vector3 triangle[3])
     Vector3 e2 = triangle[2] - triangle[0];
     Vector3 q = m_direction.Cross(e2);
     float a = e1.Dot(q);
-    if ((a > -Math::EPSILON) && (a < Math::EPSILON)) return -1.0f;
+    if ((a > -Math::Epsilon()) && (a < Math::Epsilon())) return -1.0f;
     float f = 1.0f / a;
     Vector3 s = m_origin - triangle[0];
     float u = f * (s.Dot(q));

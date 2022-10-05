@@ -23,10 +23,11 @@ namespace Enigma
             static Vector3 MaxVectorComponent(const Vector3& vec1, const Vector3& vec2);
             /** Min component of vector */
             static Vector3 MinVectorComponent(const Vector3& vec1, const Vector3& vec2);
+            /** epsilon (scaled) */
+            static float Epsilon();
 
         public:
             static float m_epsilonUlp;  ///< 修正 epsilon 誤差的放大倍數, 預設為 1.0f
-            static const float EPSILON;  ///<  =10e-6
             static const float ZERO_TOLERANCE;  ///< =10e-6
             static const float MAX_FLOAT;   ///< =FLT_MAX
             static const float PI;

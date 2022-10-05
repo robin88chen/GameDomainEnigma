@@ -179,9 +179,9 @@ Box3 ContainmentBox3::ComputeAlignedBox(const Vector3* pos, unsigned int quantit
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::EPSILON) extend.X() = Math::EPSILON * 10.0f;
-    if (extend.Y() <= Math::EPSILON) extend.Y() = Math::EPSILON * 10.0f;
-    if (extend.Z() <= Math::EPSILON) extend.Z() = Math::EPSILON * 10.0f;
+    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
+    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
+    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
         extend.X(), extend.Y(), extend.Z());
@@ -206,9 +206,9 @@ Box3 ContainmentBox3::ComputeAlignedBox(const Vector4* pos, unsigned int quantit
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::EPSILON) extend.X() = Math::EPSILON * 10.0f;
-    if (extend.Y() <= Math::EPSILON) extend.Y() = Math::EPSILON * 10.0f;
-    if (extend.Z() <= Math::EPSILON) extend.Z() = Math::EPSILON * 10.0f;
+    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
+    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
+    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
         extend.X(), extend.Y(), extend.Z());
@@ -235,9 +235,9 @@ Box3 ContainmentBox3::ComputeAlignedBox(const float* vert, unsigned int pitch, u
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::EPSILON) extend.X() = Math::EPSILON * 10.0f;
-    if (extend.Y() <= Math::EPSILON) extend.Y() = Math::EPSILON * 10.0f;
-    if (extend.Z() <= Math::EPSILON) extend.Z() = Math::EPSILON * 10.0f;
+    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
+    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
+    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
         extend.X(), extend.Y(), extend.Z());

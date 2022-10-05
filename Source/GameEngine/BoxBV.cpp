@@ -124,17 +124,17 @@ bool BoxBV::PointInside(const MathLib::Vector3& pos)
 {
     MathLib::Vector3 diff = pos - m_box.Center();
     float d = diff.Dot(m_box.Axis(0));
-    if (((d + MathLib::Math::EPSILON) < -m_box.Extent(0)) || ((d - MathLib::Math::EPSILON) > m_box.Extent(0)))
+    if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(0)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(0)))
     {
         return false;
     }
     d = diff.Dot(m_box.Axis(1));
-    if (((d + MathLib::Math::EPSILON) < -m_box.Extent(1)) || ((d - MathLib::Math::EPSILON) > m_box.Extent(1)))
+    if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(1)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(1)))
     {
         return false;
     }
     d = diff.Dot(m_box.Axis(2));
-    if (((d + MathLib::Math::EPSILON) < -m_box.Extent(2)) || ((d - MathLib::Math::EPSILON) > m_box.Extent(2)))
+    if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(2)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(2)))
     {
         return false;
     }
@@ -147,17 +147,17 @@ BoxBV::FlagBits BoxBV::PointInsideFlags(const MathLib::Vector3& pos)
     FlagBits flags{0x0};
     MathLib::Vector3 diff = pos - m_box.Center();
     float d = diff.Dot(m_box.Axis(0));
-    if (((d + MathLib::Math::EPSILON) > -m_box.Extent(0)) && ((d - MathLib::Math::EPSILON) < m_box.Extent(0)))
+    if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(0)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(0)))
     {
         flags.set((size_t)Axis::x);
     }
     d = diff.Dot(m_box.Axis(1));
-    if (((d + MathLib::Math::EPSILON) > -m_box.Extent(1)) && ((d - MathLib::Math::EPSILON) < m_box.Extent(1)))
+    if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(1)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(1)))
     {
         flags.set((size_t)Axis::y);
     }
     d = diff.Dot(m_box.Axis(2));
-    if (((d + MathLib::Math::EPSILON) > -m_box.Extent(2)) && ((d - MathLib::Math::EPSILON) < m_box.Extent(2)))
+    if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(2)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(2)))
     {
         flags.set((size_t)Axis::z);
     }

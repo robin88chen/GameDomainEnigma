@@ -46,10 +46,10 @@ Plane3::SideOfPlane Plane3::WhichSide(const Vector3& q) const
 {
     float distance = DistanceTo(q);
 
-    if (distance < -Math::EPSILON)
+    if (distance < -Math::Epsilon())
         return SideOfPlane::Negative;
 
-    if (distance > Math::EPSILON)
+    if (distance > Math::Epsilon())
         return SideOfPlane::Positive;
 
     return SideOfPlane::Overlap;

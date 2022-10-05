@@ -23,7 +23,7 @@ const Plane3& IntrRay3Plane3::GetPlane() const
 bool IntrRay3Plane3::Test(IntersectorCache* /*last_result*/)
 {
     float e = m_plane.Normal().Dot(m_ray.Direction());
-    if ((e <= Math::EPSILON) && (e >= -Math::EPSILON)) return false;
+    if ((e <= Math::Epsilon()) && (e >= -Math::Epsilon())) return false;
     float t = (m_plane.Constant() - m_plane.Normal().Dot(m_ray.Origin())) / e;
     if (t < 0.0f) return false;
     m_quantity = 1;

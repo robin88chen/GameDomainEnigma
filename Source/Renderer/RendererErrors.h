@@ -20,6 +20,9 @@ namespace Enigma::Renderer
         nullBackSurface,
         renderTargetAlreadyExisted,
         renderTargetNotExist,
+
+        nullRenderBuffer,
+        nullEffectMaterial,
     };
     class ErrorCategory : public std::error_category
     {

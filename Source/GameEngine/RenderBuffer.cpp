@@ -51,7 +51,8 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     return ErrorCode::ok;
 }
 
-error RenderBuffer::Draw(const MathLib::Matrix4& mxWorld, const EffectMaterialPtr& effectMaterial, const GeometrySegment& segment)
+error RenderBuffer::Draw(const MathLib::Matrix4& mxWorld, const std::shared_ptr<EffectMaterial>& effectMaterial,
+    const GeometrySegment& segment)
 {
     //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
     if (FATAL_LOG_EXPR(!effectMaterial)) return ErrorCode::nullMaterial;

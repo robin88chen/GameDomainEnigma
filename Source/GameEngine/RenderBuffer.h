@@ -24,7 +24,7 @@ namespace Enigma::Engine
     class RenderBuffer
     {
     public:
-        RenderBuffer(const RenderBufferSignature& signature, 
+        RenderBuffer(const RenderBufferSignature& signature,
             const Graphics::IVertexBufferPtr& vertex_buffer, const Graphics::IIndexBufferPtr& index_buffer);
         RenderBuffer(const RenderBuffer&) = delete;
         RenderBuffer(RenderBuffer&&) = delete;
@@ -48,7 +48,7 @@ namespace Enigma::Engine
         bool IsDataEmpty() { return m_isDataEmpty; };
 
         /** draw */
-        error Draw(const MathLib::Matrix4& mxWorld, const EffectMaterialPtr& effectMaterial,
+        error Draw(const MathLib::Matrix4& mxWorld, const std::shared_ptr<EffectMaterial>& effectMaterial,
             const GeometrySegment& segment);
 
     protected:

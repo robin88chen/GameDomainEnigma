@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
@@ -21,6 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />

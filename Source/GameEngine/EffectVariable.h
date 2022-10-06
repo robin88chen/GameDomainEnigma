@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectVariable.h
  * \brief  Effect Variable value object
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
@@ -15,7 +15,7 @@ namespace Enigma::Engine
     class EffectVariable
     {
     public:
-        using VariableValueAssignFunc = std::function<void(const EffectVariable&)>;
+        using VariableValueAssignFunc = std::function<void(EffectVariable&)>;
     public:
         EffectVariable(const Graphics::IShaderVariablePtr& shader_variable);
         EffectVariable(const EffectVariable& var);

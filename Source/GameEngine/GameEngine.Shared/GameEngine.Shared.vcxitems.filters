@@ -156,6 +156,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderLightingState.h">
       <Filter>Renderer Interface States</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h">
+      <Filter>Effect Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderLightingState.cpp">
       <Filter>Renderer Interface States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
+      <Filter>Effect Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

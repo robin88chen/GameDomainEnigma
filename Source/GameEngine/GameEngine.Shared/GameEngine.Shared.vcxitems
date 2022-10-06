@@ -29,6 +29,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
@@ -64,6 +65,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />

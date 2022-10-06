@@ -51,7 +51,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     return ErrorCode::ok;
 }
 
-error RenderBuffer::Draw(const MathLib::Matrix4& mxWorld, const std::shared_ptr<EffectMaterial>& effectMaterial,
+error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     const GeometrySegment& segment)
 {
     //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
@@ -65,8 +65,6 @@ error RenderBuffer::Draw(const MathLib::Matrix4& mxWorld, const std::shared_ptr<
     {
         Graphics::IGraphicAPI::Instance()->Bind(m_indexBuffer);
     }
-    //todo : material variable map
-    //MaterialVariableMap::UseWorldTransform(mxWorld);
 
     effectMaterial->ApplyFirstPass();
     if (m_indexBuffer)

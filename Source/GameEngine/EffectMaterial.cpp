@@ -8,6 +8,7 @@ EffectMaterial::EffectMaterial(const std::string& name, const std::vector<Effect
     m_name = name;
     m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
+    MappingAutoVariables();
 }
 
 EffectMaterial::EffectMaterial(const EffectMaterial& eff)
@@ -16,6 +17,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff)
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
+    MappingAutoVariables();
 }
 
 EffectMaterial::EffectMaterial(EffectMaterial&& eff)
@@ -27,6 +29,7 @@ EffectMaterial::EffectMaterial(EffectMaterial&& eff)
     m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
     m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
     m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
+    MappingAutoVariables();
 }
 
 EffectMaterial::~EffectMaterial()
@@ -41,6 +44,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
+    MappingAutoVariables();
 
     return *this;
 }
@@ -54,6 +58,7 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
     m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
     m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
     m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
+    MappingAutoVariables();
 
     return *this;
 }
@@ -195,6 +200,18 @@ void EffectMaterial::SetInstancedAssignFunc(const std::string& semantic, EffectV
         else
         {
             m_instancedAssignFuncList.emplace_back(std::make_pair(var, fn));
+        }
+    }
+}
+
+void EffectMaterial::MappingAutoVariables()
+{
+    if (m_effectTechniques.empty()) return;
+    for (auto& tech : m_effectTechniques)
+    {
+        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        {
+            tech.GetPassByIndex(i).MappingAutoVariables();
         }
     }
 }

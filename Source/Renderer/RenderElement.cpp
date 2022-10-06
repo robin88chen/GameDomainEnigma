@@ -3,6 +3,7 @@
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/RenderLightingState.h"
+#include "GameEngine/MaterialVariableMap.h"
 
 using namespace Enigma::Renderer;
 
@@ -39,7 +40,8 @@ error RenderElement::Draw(const MathLib::Matrix4& mxWorld,
     if (!m_effectMaterial) return ErrorCode::nullEffectMaterial;
     m_effectMaterial->SelectRendererTechnique(rendererTechnique);
     state.CommitState();
-    error er = m_renderBuffer.lock()->Draw(mxWorld, m_effectMaterial, m_segment);
+    Engine::MaterialVariableMap::UseWorldTransform(mxWorld);
+    error er = m_renderBuffer.lock()->Draw(m_effectMaterial, m_segment);
     return er;
 }
 
@@ -47,6 +49,7 @@ error RenderElement::DrawExternal(const MathLib::Matrix4& mxWorld, const std::sh
 {
     if (m_renderBuffer.expired()) return ErrorCode::nullRenderBuffer;
     if (!effect) return ErrorCode::nullEffectMaterial;
-    error er = m_renderBuffer.lock()->Draw(mxWorld, effect, m_segment);
+    Engine::MaterialVariableMap::UseWorldTransform(mxWorld);
+    error er = m_renderBuffer.lock()->Draw(effect, m_segment);
     return er;
 }

@@ -30,8 +30,7 @@ namespace Enigma::Engine
         void SetPointLightArray(const std::vector<MathLib::Vector4>& positions,
             std::vector<MathLib::ColorRGBA>& colors, std::vector<MathLib::Vector4>& attenuations);
 
-        //todo : commit lighting state
-        void CommitState() const {};
+        void CommitState() const;
     protected:
         MathLib::ColorRGBA m_colorAmbient;
         MathLib::ColorRGBA m_colorSun;

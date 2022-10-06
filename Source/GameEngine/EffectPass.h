@@ -53,6 +53,7 @@ namespace Enigma::Engine
 
         const std::string& GetName() { return m_name; }
 
+        void MappingAutoVariables();
         void CommitVariables();
         void Apply();
 

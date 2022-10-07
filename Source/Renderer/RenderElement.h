@@ -58,13 +58,13 @@ namespace Enigma::Renderer
         error DrawExternal(const MathLib::Matrix4& mxWorld, const std::shared_ptr<Engine::EffectMaterial>& effect);
         //future_err AsyncDrawExternal(const Matrix4& mxWorld, const EffectMaterialPtr& effect);
 
-        void AddRendererStamp(unsigned int stamp) { m_rendererStamp |= stamp; };
-        void RemoveRenderStamp(unsigned int stamp) { m_rendererStamp &= (~stamp); };
-        unsigned int GetRendererStamp() { return m_rendererStamp; };
+        inline void AddRendererStamp(unsigned int stamp) { m_rendererStamp |= stamp; };
+        inline void RemoveRenderStamp(unsigned int stamp) { m_rendererStamp &= (~stamp); };
+        inline unsigned int GetRendererStamp() { return m_rendererStamp; };
 
-        void AddActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag |= renderer_stamp_flag; };
-        void RemoveActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag &= (~renderer_stamp_flag); };
-        unsigned int GetActiveFrameFlag() { return m_rendererActiveFrameFlag; };
+        inline void AddActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag |= renderer_stamp_flag; };
+        inline void RemoveActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag &= (~renderer_stamp_flag); };
+        inline unsigned int GetActiveFrameFlag() const { return m_rendererActiveFrameFlag; };
 
     private:
         std::weak_ptr<Engine::RenderBuffer> m_renderBuffer;

@@ -23,6 +23,7 @@ namespace Enigma::Renderer
 
         nullRenderBuffer,
         nullEffectMaterial,
+        nullRenderElement,
     };
     class ErrorCategory : public std::error_category
     {

@@ -9,12 +9,15 @@
 #define SCENE_GRAPH_EVENTS_H
 
 #include "Frameworks/Event.h"
+#include "SceneGraph/LightInfo.h"
 #include <memory>
 
 namespace Enigma::SceneGraph
 {
     class Spatial;
+    class LightInfo;
 
+    //------------------ Scene Graph Events -------------------
     class SceneGraphEvent : public Frameworks::IEvent
     {
     public:
@@ -63,6 +66,53 @@ namespace Enigma::SceneGraph
     protected:
         std::shared_ptr<Spatial> m_child;
         NotifyCode m_code;
+    };
+    //------------------------- Light Info Events --------------------------
+    class LightInfoEvent : public Frameworks::IEvent
+    {
+    public:
+        LightInfoEvent(const std::shared_ptr<LightInfo>& lit) : m_light(lit) {};
+
+        const std::shared_ptr<LightInfo>& GetLightInfo() { return m_light; }
+    protected:
+        std::shared_ptr<LightInfo> m_light;
+    };
+    class LightInfoCreated : public LightInfoEvent
+    {
+    public:
+        LightInfoCreated(const std::shared_ptr<LightInfo>& lit) : LightInfoEvent(lit) {}
+    };
+    class LightInfoDeleted : public LightInfoEvent
+    {
+    public:
+        LightInfoDeleted(const std::string& name, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
+            m_lightName{ name }, m_lightType{ light_type } {}
+
+        const std::string& GetLightName() { return m_lightName; }
+        LightInfo::LightType GetLightType() const { return m_lightType; }
+    protected:
+        std::string m_lightName;
+        LightInfo::LightType m_lightType;
+    };
+    class LightInfoUpdated : public LightInfoEvent
+    {
+    public:
+        enum class NotifyCode
+        {
+            Color,
+            Position,
+            Direction,
+            Range,
+            Attenuation,
+            Enable,
+        };
+    public:
+        LightInfoUpdated(const std::shared_ptr<LightInfo>& lit, NotifyCode code) : LightInfoEvent(lit),
+        m_notifyCode{ code } {}
+
+        NotifyCode GetNotifyCode() const { return m_notifyCode; }
+    protected:
+        NotifyCode m_notifyCode;
     };
 }
 

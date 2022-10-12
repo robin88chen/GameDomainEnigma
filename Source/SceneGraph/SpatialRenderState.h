@@ -23,6 +23,8 @@ namespace Enigma::SceneGraph
 
         const Engine::RenderLightingState& ToLightingState() const { return m_lightingState; };
 
+        void QueryLightingState(const MathLib::Vector3& spatialPos);
+
     protected:
         Engine::RenderLightingState m_lightingState;
     };

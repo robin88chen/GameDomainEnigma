@@ -15,7 +15,7 @@
 namespace Enigma::SceneGraph
 {
     class Spatial;
-    class LightInfo;
+    class Light;
 
     //------------------ Scene Graph Events -------------------
     class SceneGraphEvent : public Frameworks::IEvent
@@ -71,16 +71,16 @@ namespace Enigma::SceneGraph
     class LightInfoEvent : public Frameworks::IEvent
     {
     public:
-        LightInfoEvent(const std::shared_ptr<LightInfo>& lit) : m_light(lit) {};
+        LightInfoEvent(const std::shared_ptr<Light>& lit) : m_light(lit) {};
 
-        const std::shared_ptr<LightInfo>& GetLightInfo() { return m_light; }
+        const std::shared_ptr<Light>& GetLight() { return m_light; }
     protected:
-        std::shared_ptr<LightInfo> m_light;
+        std::shared_ptr<Light> m_light;
     };
     class LightInfoCreated : public LightInfoEvent
     {
     public:
-        LightInfoCreated(const std::shared_ptr<LightInfo>& lit) : LightInfoEvent(lit) {}
+        LightInfoCreated(const std::shared_ptr<Light>& lit) : LightInfoEvent(lit) {}
     };
     class LightInfoDeleted : public LightInfoEvent
     {
@@ -107,7 +107,7 @@ namespace Enigma::SceneGraph
             Enable,
         };
     public:
-        LightInfoUpdated(const std::shared_ptr<LightInfo>& lit, NotifyCode code) : LightInfoEvent(lit),
+        LightInfoUpdated(const std::shared_ptr<Light>& lit, NotifyCode code) : LightInfoEvent(lit),
         m_notifyCode{ code } {}
 
         NotifyCode GetNotifyCode() const { return m_notifyCode; }

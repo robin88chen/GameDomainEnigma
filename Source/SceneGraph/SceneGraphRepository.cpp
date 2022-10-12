@@ -3,6 +3,9 @@
 #include "Frustum.h"
 #include "Node.h"
 #include "Pawn.h"
+#include "Light.h"
+#include "SceneGraphEvents.h"
+#include "Frameworks/EventPublisher.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -126,6 +129,32 @@ std::shared_ptr<Pawn> SceneGraphRepository::QueryPawn(const std::string& name)
     std::lock_guard locker{ m_pawnMapLock };
     auto it = m_pawns.find(name);
     if (it == m_pawns.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
+}
+
+std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name, const LightInfo& info)
+{
+    assert(!HasLight(name));
+    auto light = std::make_shared<Light>(name, info);
+    std::lock_guard locker{ m_lightMapLock };
+    m_lights.insert_or_assign(name, light);
+    Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
+    return light;
+}
+
+bool SceneGraphRepository::HasLight(const std::string& name)
+{
+    std::lock_guard locker{ m_lightMapLock };
+    auto it = m_lights.find(name);
+    return ((it != m_lights.end()) && (!it->second.expired()));
+}
+
+std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
+{
+    std::lock_guard locker{ m_lightMapLock };
+    auto it = m_lights.find(name);
+    if (it == m_lights.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
 }

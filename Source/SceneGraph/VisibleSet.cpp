@@ -16,12 +16,12 @@ void VisibleSet::Clear()
     m_visibleObjSet.clear();
 }
 
-size_t VisibleSet::GetCount()
+size_t VisibleSet::GetCount() const
 {
     return m_visibleObjSet.size();
 }
 
-const VisibleSet::SpatialVector& VisibleSet::GetObjectSet()
+const VisibleSet::SpatialVector& VisibleSet::GetObjectSet() const
 {
     return m_visibleObjSet;
 }

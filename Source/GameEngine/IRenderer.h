@@ -19,6 +19,9 @@ namespace Enigma::Engine
         IRenderer(const std::string& name) : m_name(name) {};
         virtual ~IRenderer() {};
 
+        /** get renderer's name */
+        const std::string& GetName() { return m_name; };
+
     protected:
         std::string m_name;
     };

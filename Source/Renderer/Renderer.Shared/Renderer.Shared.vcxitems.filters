@@ -42,6 +42,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h">
       <Filter>Render Packs</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h">
+      <Filter>Render Target</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -61,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPackList.cpp">
       <Filter>Render Packs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

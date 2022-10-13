@@ -62,14 +62,14 @@ namespace Enigma::Renderer
     class TargetClearingPropertyChanged : public Frameworks::IEvent
     {
     public:
-        TargetClearingPropertyChanged(const std::string& name, const RenderTarget::ClearingProperty& prop) :
+        TargetClearingPropertyChanged(const std::string& name, const RenderTargetClearingProperty& prop) :
             m_name{ name }, m_clearing(prop) {}
         const std::string& GetRenderTargetName() { return m_name; }
-        const RenderTarget::ClearingProperty& GetClearingProperty() { return m_clearing; }
+        const RenderTargetClearingProperty& GetClearingProperty() { return m_clearing; }
 
     private:
         std::string m_name;
-        RenderTarget::ClearingProperty m_clearing;
+        RenderTargetClearingProperty m_clearing;
     };
 }
 

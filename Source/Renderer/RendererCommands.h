@@ -8,6 +8,7 @@
 #ifndef RENDERER_COMMANDS_H
 #define RENDERER_COMMANDS_H
 
+#include "RenderTargetClearingProperties.h"
 #include "Frameworks/Command.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "RenderTarget.h"
@@ -30,22 +31,18 @@ namespace Enigma::Renderer
     class ChangeTargetClearingProperty : public Frameworks::ICommand
     {
     public:
-        ChangeTargetClearingProperty(const std::string& name, const std::optional<MathLib::ColorRGBA>& color,
-            const std::optional<float>& depth, const std::optional<unsigned int>& stencil,
-            const std::optional<RenderTarget::BufferClearFlag>& flag) :
-            m_name(name), m_color(color), m_depth(depth), m_stencil(stencil), m_flag(flag) {}
+        ChangeTargetClearingProperty(const std::string& name, const RenderTargetClearChangingProperty& prop) :
+            m_name(name), m_prop(prop) {}
         const std::string& GetRenderTargetName() { return m_name; }
-        const std::optional<MathLib::ColorRGBA>& GetClearingColor() const { return m_color; }
-        const std::optional<float>& GetClearingDepth() const { return m_depth; }
-        const std::optional<unsigned int>& GetClearingStencil() const { return m_stencil; }
-        const std::optional<RenderTarget::BufferClearFlag>& GetClearingFlag() const { return m_flag; }
+        const RenderTargetClearChangingProperty& GetProperty() const { return m_prop; }
+        const std::optional<MathLib::ColorRGBA>& GetClearingColor() const { return m_prop.m_color; }
+        const std::optional<float>& GetClearingDepth() const { return m_prop.m_depth; }
+        const std::optional<unsigned int>& GetClearingStencil() const { return m_prop.m_stencil; }
+        const std::optional<RenderTargetClearFlag>& GetClearingFlag() const { return m_prop.m_flag; }
 
     private:
         std::string m_name;
-        std::optional<MathLib::ColorRGBA> m_color;
-        std::optional<float> m_depth;
-        std::optional<unsigned int> m_stencil;
-        std::optional<RenderTarget::BufferClearFlag> m_flag;
+        RenderTargetClearChangingProperty m_prop;
     };
     class ResizePrimaryRenderTarget : public Frameworks::ICommand
     {

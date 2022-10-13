@@ -26,7 +26,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
     m_renderTargetTexture = nullptr;
 
     m_gbufferDepthMapIndex = 0;
-    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClearFlag::BothBuffer };
 
     m_resizingBits.reset();
 
@@ -46,7 +46,7 @@ RenderTarget::RenderTarget(const std::string& name)
     m_renderTargetTexture = nullptr;
 
     m_gbufferDepthMapIndex = 0;
-    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, BufferClearFlag::BothBuffer };
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClearFlag::BothBuffer };
 
     SubscribeHandler();
 }
@@ -84,7 +84,7 @@ future_error RenderTarget::AsyncInitialize()
         ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
 }
 
-error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     m_backSurfaceName = back_name;
@@ -102,7 +102,7 @@ error RenderTarget::InitMultiBackSurface(const std::string& back_name, const Mat
     return ErrorCode::ok;
 }
 
-error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension, 
+error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     m_depthSurfaceName = depth_name;
@@ -111,7 +111,7 @@ error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const
     return ErrorCode::ok;
 }
 
-error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name, 
+error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     m_depthSurfaceName = depth_name;
@@ -139,11 +139,11 @@ error RenderTarget::BindViewPort()
     return ErrorCode::ok;
 }
 
-error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, BufferClearFlag flag)
+error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag)
 {
     Graphics::IGraphicAPI::Instance()->Clear(
-        ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
-        ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
+        ((int)flag & (int)RenderTargetClearFlag::ColorBuffer) ? m_backSurface : nullptr,
+        ((int)flag & (int)RenderTargetClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
         color, depth_value, stencil_value);
     //Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
       //  ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
@@ -154,7 +154,7 @@ error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, un
 
 error RenderTarget::Clear()
 {
-    return Clear(m_clearingProperty.m_color, m_clearingProperty.m_depth, 
+    return Clear(m_clearingProperty.m_color, m_clearingProperty.m_depth,
         m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
 }
 
@@ -163,6 +163,29 @@ error RenderTarget::Flip()
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
     Graphics::IGraphicAPI::Instance()->Flip();
     //Frameworks::CommandBus::Post(std::make_shared<Graphics::FlipBackSurface>());
+    return ErrorCode::ok;
+}
+
+error RenderTarget::ChangeClearingProperty(const RenderTargetClearChangingProperty& prop)
+{
+    if (prop.m_color)
+    {
+        m_clearingProperty.m_color = prop.m_color.value();
+    }
+    if (prop.m_depth)
+    {
+        m_clearingProperty.m_depth = prop.m_depth.value();
+    }
+    if (prop.m_stencil)
+    {
+        m_clearingProperty.m_stencil = prop.m_stencil.value();
+    }
+    if (prop.m_flag)
+    {
+        m_clearingProperty.m_flag = prop.m_flag.value();
+    }
+    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(m_name, m_clearingProperty));
+
     return ErrorCode::ok;
 }
 
@@ -417,21 +440,5 @@ void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
     ChangeTargetClearingProperty* cmd = dynamic_cast<ChangeTargetClearingProperty*>(c.get());
     if (!cmd) return;
     if (cmd->GetRenderTargetName() != m_name) return;
-    if (cmd->GetClearingColor())
-    {
-        m_clearingProperty.m_color = cmd->GetClearingColor().value();
-    }
-    if (cmd->GetClearingDepth())
-    {
-        m_clearingProperty.m_depth = cmd->GetClearingDepth().value();
-    }
-    if (cmd->GetClearingStencil())
-    {
-        m_clearingProperty.m_stencil = cmd->GetClearingStencil().value();
-    }
-    if (cmd->GetClearingFlag())
-    {
-        m_clearingProperty.m_flag = cmd->GetClearingFlag().value();
-    }
-    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(m_name, m_clearingProperty));
+    ChangeClearingProperty(cmd->GetProperty());
 }

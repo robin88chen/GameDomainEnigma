@@ -13,6 +13,10 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullBackSurface: return "Null back surface";
     case ErrorCode::renderTargetAlreadyExisted: return "Render target already existed";
     case ErrorCode::renderTargetNotExist: return "Render target not exist";
+    case ErrorCode::nullRenderBuffer: return "Null render buffer";
+    case ErrorCode::nullEffectMaterial: return "Null effect material";
+    case ErrorCode::nullRenderElement: return "Null render element";
+    case ErrorCode::nullRenderTarget: return "Null render target";
     }
     return "Unknown";
 }

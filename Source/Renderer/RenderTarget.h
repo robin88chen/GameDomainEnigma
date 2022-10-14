@@ -59,8 +59,10 @@ namespace Enigma::Renderer
         RenderTarget(const std::string& name, PrimaryType primary);
         RenderTarget(const std::string& name);
         RenderTarget(const RenderTarget&) = delete;
+        RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
         RenderTarget& operator=(const RenderTarget&) = delete;
+        RenderTarget& operator=(RenderTarget&&) = delete;
 
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -175,7 +177,7 @@ namespace Enigma::Renderer
             BackSurfaceBit = 0x01,
             DepthSurfaceBit = 0x10
         };
-        using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
+        using ResizingBits = std::bitset<static_cast<size_t>(ResizingBitIndex::Count)>;
         ResizingBits m_resizingBits;
         //const ResizingBits ResizingBackSurfaceBit{ "01" };
         //const ResizingBits ResizingDepthSurfaceBit{ "10" };

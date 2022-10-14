@@ -12,7 +12,7 @@ Culler::Culler(const std::shared_ptr<Camera>& camera)
 {
     m_isEnableOuterClipping = false;
     m_camera = camera;
-    m_countCullerPlane = (size_t)CullerPlane::Count;
+    m_countCullerPlane = static_cast<size_t>(CullerPlane::Count);
     m_planeActivations.set();
     UpdateFrustumPlanes();
     m_outerClipShiftZ = 2.0f;
@@ -122,11 +122,11 @@ void Culler::UpdateFrustumPlanes()
     vec.Z() = xSin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
-    m_clipPlanes[(size_t)CullerPlane::Left] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Left)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, -m_outerClipShiftZ));
-        m_outerClipPlanes[(size_t)CullerPlane::Left] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Left)] = MathLib::Plane3(nor, pos);
     }
     // Right Plane
     vec.X() = -xCos;
@@ -134,11 +134,11 @@ void Culler::UpdateFrustumPlanes()
     vec.Z() = xSin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
-    m_clipPlanes[(size_t)CullerPlane::Right] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Right)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, -m_outerClipShiftZ));
-        m_outerClipPlanes[(size_t)CullerPlane::Right] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Right)] = MathLib::Plane3(nor, pos);
     }
 
     // Top Plane
@@ -147,11 +147,11 @@ void Culler::UpdateFrustumPlanes()
     vec.Z() = ySin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
-    m_clipPlanes[(size_t)CullerPlane::Top] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Top)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, -m_outerClipShiftZ));
-        m_outerClipPlanes[(size_t)CullerPlane::Top] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Top)] = MathLib::Plane3(nor, pos);
     }
 
     // Bottom Plane
@@ -160,11 +160,11 @@ void Culler::UpdateFrustumPlanes()
     vec.Z() = ySin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
-    m_clipPlanes[(size_t)CullerPlane::Bottom] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Bottom)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, -m_outerClipShiftZ));
-        m_outerClipPlanes[(size_t)CullerPlane::Bottom] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Bottom)] = MathLib::Plane3(nor, pos);
     }
 
     // Far Plane
@@ -181,11 +181,11 @@ void Culler::UpdateFrustumPlanes()
     }
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, far_z));
-    m_clipPlanes[(size_t)CullerPlane::Back] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Back)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, out_far_z));
-        m_outerClipPlanes[(size_t)CullerPlane::Back] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Back)] = MathLib::Plane3(nor, pos);
     }
 
     // Near Plane
@@ -200,11 +200,11 @@ void Culler::UpdateFrustumPlanes()
     }
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
-    m_clipPlanes[(size_t)CullerPlane::Front] = MathLib::Plane3(nor, pos);
+    m_clipPlanes[static_cast<size_t>(CullerPlane::Front)] = MathLib::Plane3(nor, pos);
     if (m_isEnableOuterClipping)
     {
         pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, out_near_z));
-        m_outerClipPlanes[(size_t)CullerPlane::Front] = MathLib::Plane3(nor, pos);
+        m_outerClipPlanes[static_cast<size_t>(CullerPlane::Front)] = MathLib::Plane3(nor, pos);
     }
 }
 
@@ -268,7 +268,7 @@ bool Culler::IsVisible(MathLib::Vector3* vecPos, unsigned quantity, bool isIgnor
     for (unsigned int i = 0; i < m_countCullerPlane; i++, idxPlane--)
     {
         MathLib::Plane3& plane = m_clipPlanes[idxPlane];
-        if (isIgnoreNearPlane && idxPlane == (unsigned int)CullerPlane::Front)
+        if (isIgnoreNearPlane && idxPlane == static_cast<unsigned int>(CullerPlane::Front))
         {
             continue;
         }
@@ -330,5 +330,5 @@ void Culler::PushAdditionalPlane(const MathLib::Plane3& plane)
 
 void Culler::RemoveAdditionalPlane()
 {
-    m_countCullerPlane = (size_t)CullerPlane::Count;
+    m_countCullerPlane = static_cast<size_t>(CullerPlane::Count);
 }

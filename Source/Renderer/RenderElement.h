@@ -71,7 +71,7 @@ namespace Enigma::Renderer
         std::shared_ptr<Engine::EffectMaterial> m_effectMaterial;
         Engine::GeometrySegment m_segment;
 
-        /// 這個 bit mask, 紀錄 element 放在哪個 rednerer 中，可重複放，所以用 bit 紀錄
+        /// 這個 bit mask, 紀錄 element 放在哪個 renderer 中，可重複放，所以用 bit 紀錄
         unsigned int m_rendererStamp;
         /// element 是否有效的記號, 跟 renderer 相關, 所以也用 bit 存放
         unsigned int m_rendererActiveFrameFlag;

@@ -19,7 +19,7 @@ using namespace Enigma::Renderer;
 const std::string primary_back_surface_name = "primary_back_surface";
 const std::string primary_depth_surface_name = "primary_depth_surface";
 
-RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
+RenderTarget::RenderTarget(const std::string& name, PrimaryType primary) : m_dimension{ 0, 0 }
 {
     m_isPrimary = primary == PrimaryType::IsPrimary;
     m_name = name;
@@ -39,7 +39,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary)
     }
 }
 
-RenderTarget::RenderTarget(const std::string& name)
+RenderTarget::RenderTarget(const std::string& name) : m_dimension{ 0, 0 }
 {
     m_isPrimary = false;
     m_name = name;
@@ -142,8 +142,8 @@ error RenderTarget::BindViewPort()
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag)
 {
     Graphics::IGraphicAPI::Instance()->Clear(
-        ((int)flag & (int)RenderTargetClearFlag::ColorBuffer) ? m_backSurface : nullptr,
-        ((int)flag & (int)RenderTargetClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
+        (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::ColorBuffer)) ? m_backSurface : nullptr,
+        (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::DepthBuffer)) ? m_depthStencilSurface : nullptr,
         color, depth_value, stencil_value);
     //Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
       //  ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,

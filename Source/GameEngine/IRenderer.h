@@ -22,8 +22,16 @@ namespace Enigma::Engine
         /** get renderer's name */
         const std::string& GetName() { return m_name; };
 
+        /** set stamp bit mask */
+        void SetStampBitMask(unsigned int mask) { m_stampBitMask = mask; };
+        /** get stamp bit mask */
+        unsigned int GetStampBitMask() const { return m_stampBitMask; };
+
     protected:
         std::string m_name;
+
+        /** renderer bit mask, 每個renderer各用不同的bit, render element用以記錄放在哪個renderer中 */
+        unsigned int m_stampBitMask;
     };
     using IRendererPtr = std::shared_ptr<IRenderer>;
 }

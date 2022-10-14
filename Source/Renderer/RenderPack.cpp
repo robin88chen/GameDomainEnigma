@@ -50,6 +50,16 @@ RenderPack& RenderPack::operator=(const RenderPack& pack)
     return *this;
 }
 
+RenderPack& RenderPack::operator=(RenderPack&& pack)
+{
+    m_element = std::move(pack.m_element);
+    m_worldTransform = pack.m_worldTransform;
+    m_renderLightingState = std::move(pack.m_renderLightingState);
+    m_squareCameraDistance = pack.m_squareCameraDistance;
+
+    return *this;
+}
+
 bool RenderPack::operator==(const RenderPack& p)
 {
     return m_element == p.m_element;

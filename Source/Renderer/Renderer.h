@@ -95,11 +95,6 @@ namespace Enigma::Renderer
         /** associated camera */
         void SetAssociatedCamera(const std::shared_ptr<SceneGraph::Camera>& camera);
 
-        /** set stamp bit mask */
-        void SetStampBitMask(unsigned int mask) { m_stampBitMask = mask; };
-        /** get stamp bit mask */
-        unsigned int GetStampBitMask() const { return m_stampBitMask; };
-
         /** we need change the sorting setting sometime */
         void EnableSortBeforeDraw(RenderListID list_id, bool flag);
 
@@ -109,12 +104,9 @@ namespace Enigma::Renderer
     protected:
         std::weak_ptr<RenderTarget> m_target;
 
-        std::array<RenderPackList, (size_t)RenderListID::Count> m_renderPacksArray;
+        std::array<RenderPackList, static_cast<size_t>(RenderListID::Count)> m_renderPacksArray;
 
         std::weak_ptr<SceneGraph::Camera> m_associatedCamera;
-
-        /** renderer bit mask, 每個renderer各用不同的bit, render element用以記錄放在哪個renderer中 */
-        unsigned int m_stampBitMask;
 
         std::string m_rendererTechniqueName;
     };

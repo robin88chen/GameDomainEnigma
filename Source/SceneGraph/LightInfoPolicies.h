@@ -11,7 +11,6 @@
 #include "LightInfo.h"
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector3.h"
-#include <string>
 #include <optional>
 
 namespace Enigma::SceneGraph

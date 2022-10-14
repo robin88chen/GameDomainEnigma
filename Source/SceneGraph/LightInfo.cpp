@@ -7,6 +7,8 @@ using namespace Enigma::MathLib;
 LightInfo::LightInfo()
 {
     m_type = LightType::Unknown;
+    m_range = 1.0f;
+    m_isEnable = false;
 }
 LightInfo::LightInfo(LightType type)
 {

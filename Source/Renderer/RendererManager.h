@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   RendererManager.h
- * \brief  
- * 
+ * \brief  Renderer Manager, manage renderer(s) and render targets
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -11,6 +11,7 @@
 #include "RenderTarget.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
+#include "GameEngine/IRenderer.h"
 #include <system_error>
 #include <memory>
 #include <unordered_map>
@@ -20,9 +21,7 @@ namespace Enigma::Renderer
 {
     using error = std::error_code;
 
-    class Renderer;
-    using RendererPtr = std::shared_ptr<Renderer>;
-    using  CustomRendererFactoryFunc = std::function<RendererPtr(const std::string&)>;
+    using  CustomRendererFactoryFunc = std::function<Engine::IRendererPtr(const std::string&)>;
 
     /** Renderer Manager Service */
     class RendererManager : public Frameworks::ISystemService
@@ -31,8 +30,10 @@ namespace Enigma::Renderer
     public:
         RendererManager(Frameworks::ServiceManager* srv_mngr);
         RendererManager(const RendererManager&) = delete;
+        RendererManager(RendererManager&&) = delete;
         virtual ~RendererManager();
         RendererManager& operator=(const RendererManager&) = delete;
+        RendererManager& operator=(RendererManager&&) = delete;
 
         /// On Init
         virtual Frameworks::ServiceResult OnInit() override;
@@ -50,10 +51,7 @@ namespace Enigma::Renderer
         /** destroy renderer by name : remove from map, & destroy  */
         error DestroyRenderer(const std::string& name);
         /** get renderer */
-        RendererPtr GetRenderer(const std::string& name) const;
-
-        /** select renderer technique */
-        void SelectRendererTechnique(const std::string& renderer_name, const std::string& technique_name);
+        Engine::IRendererPtr GetRenderer(const std::string& name) const;
 
         /** create render target */
         error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary);
@@ -75,10 +73,10 @@ namespace Enigma::Renderer
         void ClearAllRenderTarget();
 
     protected:
-        using RendererMap = std::unordered_map<std::string, RendererPtr>;
+        using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;
-        RendererMap m_mapRenderer;
-        RenderTargetMap m_mapRenderTarget;
+        RendererMap m_renderers;
+        RenderTargetMap m_renderTargets;
 
         std::string m_primaryRenderTargetName;
 

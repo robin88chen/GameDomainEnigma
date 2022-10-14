@@ -11,15 +11,15 @@ bool compare_render_pack(const RenderPack& first, const RenderPack& second)
     // 排序的概念是，同樣的buffer通常有同樣的effect，但一個effect常常用在不同的buffer上，
     // 所以，先比對shader再比對buffer
     // 比對shader
-    if ((void*)(first.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get()) <
-        (void*)(second.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get())) return true;
-    if ((void*)(first.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get()) >
-        (void*)(second.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get())) return false;
+    if (static_cast<void*>(first.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get()) <
+        static_cast<void*>(second.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get())) return true;
+    if (static_cast<void*>(first.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get()) >
+        static_cast<void*>(second.GetRenderElement()->GetEffectMaterial()->GetEffectMaterialSource().get())) return false;
     // 比對 render buffer
-    if ((void*)(first.GetRenderElement()->GetRenderBuffer().get()) <
-        ((void*)(second.GetRenderElement()->GetRenderBuffer().get()))) return true;
-    if ((void*)(first.GetRenderElement()->GetRenderBuffer().get()) >
-        ((void*)(second.GetRenderElement()->GetRenderBuffer().get()))) return false;
+    if (static_cast<void*>(first.GetRenderElement()->GetRenderBuffer().get()) <
+        static_cast<void*>(second.GetRenderElement()->GetRenderBuffer().get())) return true;
+    if (static_cast<void*>(first.GetRenderElement()->GetRenderBuffer().get()) >
+        static_cast<void*>(second.GetRenderElement()->GetRenderBuffer().get())) return false;
     //
     //if ((void*)(first->GetRenderBuffer()->GetVertexDeclaration())<(void*)(second->GetRenderBuffer()->GetVertexDeclaration())) return true;
     return false;
@@ -35,6 +35,7 @@ bool compare_render_pack_by_distance(const RenderPack& first, const RenderPack& 
 RenderPackList::RenderPackList()
 {
     m_isListModified = false;
+    m_isSortBeforeDraw = false;
     m_compareFunc = compare_render_pack;
 }
 

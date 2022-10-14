@@ -28,7 +28,8 @@ namespace Enigma::Renderer
         RenderPack(RenderPack&& pack) noexcept;
         ~RenderPack();
 
-        RenderPack& operator=(const RenderPack& pack); // Movable deletes implicit copy
+        RenderPack& operator=(const RenderPack& pack);
+        RenderPack& operator=(RenderPack&& pack);
         bool operator==(const RenderPack& p);
         bool operator!=(const RenderPack& p);
 
@@ -41,7 +42,7 @@ namespace Enigma::Renderer
         void SetRenderLightingState(const Engine::RenderLightingState& state);
 
         float GetSquareCameraDistance() { return m_squareCameraDistance; };
-        const float GetSquareCameraDistance() const { return m_squareCameraDistance; };
+        float GetSquareCameraDistance() const { return m_squareCameraDistance; };
         void CalcSquareCameraDistance(const MathLib::Vector3& camera_loc);
 
     protected:

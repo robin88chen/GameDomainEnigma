@@ -17,6 +17,9 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullEffectMaterial: return "Null effect material";
     case ErrorCode::nullRenderElement: return "Null render element";
     case ErrorCode::nullRenderTarget: return "Null render target";
+    case ErrorCode::rendererAlreadyExist: return "Renderer already exist";
+    case ErrorCode::rendererNotExist: return "Renderer not exist";
+    case ErrorCode::rendererFactoryFail: return "Renderer factory fail";
     }
     return "Unknown";
 }

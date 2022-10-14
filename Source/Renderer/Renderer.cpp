@@ -56,7 +56,7 @@ error Renderer::InsertRenderElement(const std::shared_ptr<RenderElement>& elemen
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lighting, RenderListID list_id)
 {
     assert(element);
-    error er = ErrorCode::ok;
+    error er;
     if ((list_id == RenderListID::OffSurface) && (!m_associatedCamera.expired()))
     {
         er = m_renderPacksArray[static_cast<size_t>(list_id)].
@@ -132,8 +132,7 @@ error Renderer::DrawScene()
     {
         if (!m_renderPacksArray[i].HasElements()) continue;
 
-        error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName);
-        if (er) return er;
+        if (error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName)) return er;
         // ui 的 render 跟順序有關，除了不做排序外，element的cache也有可能會破壞順序，所以要多花時間做flush
         if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].FlushAll(m_stampBitMask);
     }

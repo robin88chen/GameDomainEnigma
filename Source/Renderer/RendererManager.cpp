@@ -1,6 +1,7 @@
 ﻿#include "RendererManager.h"
 #include "RendererErrors.h"
 #include "RendererCommands.h"
+#include "RendererEvents.h"
 #include "Renderer.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/SystemService.h"
@@ -30,16 +31,43 @@ RendererManager::~RendererManager()
 Enigma::Frameworks::ServiceResult RendererManager::OnInit()
 {
     m_accumulateRendererStamp = 0;
+
+    m_doCreatingRenderer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
+    m_doDestroyingRenderer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderer(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
+
+    m_doCreatingRenderTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderTarget(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
+    m_doDestroyingRenderTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderTarget(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
+
     m_doResizingPrimaryTarget =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
     Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
 {
+    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
+    m_doCreatingRenderer = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
+    m_doDestroyingRenderer = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
+    m_doCreatingRenderTarget = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
+    m_doDestroyingRenderTarget = nullptr;
+
     Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
     m_doResizingPrimaryTarget = nullptr;
+
     ClearAllRenderer();
     ClearAllRenderTarget();
     m_accumulateRendererStamp = 0;
@@ -69,6 +97,9 @@ error RendererManager::CreateRenderer(const std::string& name)
     }
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
+
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->GetName(), render));
+
     return ErrorCode::ok;
 }
 
@@ -95,6 +126,8 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->GetName(), render));
+
     return ErrorCode::ok;
 }
 
@@ -106,6 +139,9 @@ error RendererManager::DestroyRenderer(const std::string& name)
     unsigned int stamp = render->GetStampBitMask();
     m_accumulateRendererStamp &= (~stamp);
     m_renderers.erase(name);
+
+    Frameworks::EventPublisher::Post(std::make_shared<RendererDestroyed>(name));
+
     return ErrorCode::ok;
 }
 
@@ -139,6 +175,9 @@ error RendererManager::DestroyRenderTarget(const std::string& name)
     auto target = GetRenderTarget(name);
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
+
+    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetDestroyed>(name));
+
     return ErrorCode::ok;
 }
 
@@ -176,4 +215,36 @@ void RendererManager::ClearAllRenderTarget()
 {
     if (m_renderTargets.size() == 0) return;
     m_renderTargets.clear();
+}
+
+void RendererManager::DoCreatingRenderer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    CreateRenderer(cmd->GetRendererName());
+}
+
+void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderer, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    DestroyRenderer(cmd->GetRendererName());
+}
+
+void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType());
+}
+
+void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    DestroyRenderTarget(cmd->GetRenderTargetName());
 }

@@ -72,7 +72,7 @@ error RenderTarget::Initialize()
     }
     else
     {
-        Frameworks::EventPublisher::Post(std::make_shared<PrimaryRenderTargetCreated>(m_name));
+        Frameworks::EventPublisher::Post(std::make_shared<PrimaryRenderTargetCreated>(m_name, shared_from_this()));
     }
     InitViewPortSize();
     return ErrorCode::ok;

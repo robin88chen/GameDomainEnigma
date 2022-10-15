@@ -63,16 +63,23 @@ namespace Enigma::Renderer
         /** get primary render target */
         RenderTargetPtr GetPrimaryRenderTarget() const;
 
-        /** @name command handler */
-        //@{
-        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
-        //@}
-
     protected:
         void ClearAllRenderer();
         void ClearAllRenderTarget();
 
+        void DoCreatingRenderer(const Frameworks::ICommandPtr& c);
+        void DoDestroyingRenderer(const Frameworks::ICommandPtr& c);
+        void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
+        void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
+        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+
     protected:
+        Frameworks::CommandSubscriberPtr m_doCreatingRenderer;
+        Frameworks::CommandSubscriberPtr m_doDestroyingRenderer;
+        Frameworks::CommandSubscriberPtr m_doCreatingRenderTarget;
+        Frameworks::CommandSubscriberPtr m_doDestroyingRenderTarget;
+        Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
+
         using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;
         RendererMap m_renderers;
@@ -85,7 +92,6 @@ namespace Enigma::Renderer
         using CustomRendererFactoryTable = std::unordered_map<std::string, CustomRendererFactoryFunc>;
         static CustomRendererFactoryTable m_customRendererFactoryTable;
 
-        Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
     };
 };
 

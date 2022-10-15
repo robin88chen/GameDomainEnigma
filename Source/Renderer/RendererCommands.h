@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RendererCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -16,6 +16,47 @@
 
 namespace Enigma::Renderer
 {
+    //--------- renderer commands --------------
+    class CreateRenderer : public Frameworks::ICommand
+    {
+    public:
+        CreateRenderer(const std::string& name) : m_name(name) {}
+        const std::string& GetRendererName() { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+    class DestroyRenderer : public Frameworks::ICommand
+    {
+    public:
+        DestroyRenderer(const std::string& name) : m_name(name) {}
+        const std::string& GetRendererName() { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+
+    //--------- render target commands -----------
+    class CreateRenderTarget : public Frameworks::ICommand
+    {
+    public:
+        CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary)
+            : m_name(name), m_primary(primary) {}
+        const std::string& GetRenderTargetName() { return m_name; }
+        RenderTarget::PrimaryType GetPrimaryType() const { return m_primary; }
+    private:
+        std::string m_name;
+        RenderTarget::PrimaryType m_primary;
+    };
+    class DestroyRenderTarget : public Frameworks::ICommand
+    {
+    public:
+        DestroyRenderTarget(const std::string& name) : m_name(name) {}
+        const std::string& GetRenderTargetName() { return m_name; }
+
+    private:
+        std::string m_name;
+    };
     class ChangeTargetViewPort : public Frameworks::ICommand
     {
     public:

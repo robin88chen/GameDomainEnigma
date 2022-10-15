@@ -36,21 +36,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderLightingState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
@@ -69,14 +69,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferSignature.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderLightingState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
   </ItemGroup>
 </Project>

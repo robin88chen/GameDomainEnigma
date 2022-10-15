@@ -12,9 +12,9 @@
 
 using namespace Enigma::Engine;
 
-TextureLoader::TextureLoader(TextureManager* host)
+TextureLoader::TextureLoader(TextureRepository* host)
 {
-    m_hostManager = host;
+    m_hostRepository = host;
 
     m_onTextureCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureCreated(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DeviceTextureCreated), m_onTextureCreated);

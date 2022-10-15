@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TextureLoader.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -14,7 +14,7 @@
 
 namespace Enigma::Engine
 {
-    class TextureManager;
+    class TextureRepository;
     class TextureLoader
     {
     public:
@@ -30,7 +30,7 @@ namespace Enigma::Engine
             TexturePtr m_texture;
         };
     public:
-        TextureLoader(TextureManager* host);
+        TextureLoader(TextureRepository* host);
         TextureLoader(const TextureLoader&) = delete;
         TextureLoader(TextureLoader&&) = delete;
         ~TextureLoader();
@@ -45,7 +45,7 @@ namespace Enigma::Engine
         void OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
     private:
-        TextureManager* m_hostManager;
+        TextureRepository* m_hostRepository;
         TexturePolicy m_policy;
 
         Enigma::Frameworks::EventSubscriberPtr m_onTextureCreated;

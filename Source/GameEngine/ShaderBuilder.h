@@ -18,7 +18,7 @@
 
 namespace Enigma::Engine
 {
-    class ShaderManager;
+    class ShaderRepository;
 
     class ShaderBuilder
     {
@@ -55,7 +55,7 @@ namespace Enigma::Engine
         };
 
     public:
-        ShaderBuilder(ShaderManager* host);
+        ShaderBuilder(ShaderRepository* host);
         ShaderBuilder(const ShaderBuilder&) = delete;
         ShaderBuilder(ShaderBuilder&&) = delete;
         ~ShaderBuilder();
@@ -80,7 +80,7 @@ namespace Enigma::Engine
         void OnShaderProgramLinkFailed(const Frameworks::IEventPtr& e);
 
     private:
-        ShaderManager* m_hostManager;
+        ShaderRepository* m_hostRepository;
 
         Frameworks::EventSubscriberPtr m_onVertexShaderCreated;
         Frameworks::EventSubscriberPtr m_onVertexShaderCompiled;

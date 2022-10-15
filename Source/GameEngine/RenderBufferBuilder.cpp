@@ -1,6 +1,6 @@
 ﻿#include "RenderBufferBuilder.h"
 #include "RenderBufferEvents.h"
-#include "RenderBufferManager.h"
+#include "RenderBufferRepository.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "GraphicKernel/GraphicCommands.h"
@@ -13,9 +13,9 @@
 
 using namespace Enigma::Engine;
 
-RenderBufferBuilder::RenderBufferBuilder(RenderBufferManager* host)
+RenderBufferBuilder::RenderBufferBuilder(RenderBufferRepository* host)
 {
-    m_hostManager = host;
+    m_hostRepository = host;
     m_onVertexBufferCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnVertexBufferCreated(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DeviceVertexBufferCreated), m_onVertexBufferCreated);
     m_onVertexBufferUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnVertexBufferUpdated(e); });
@@ -62,16 +62,16 @@ RenderBufferBuilder::~RenderBufferBuilder()
 
 void RenderBufferBuilder::BuildRenderBuffer(const RenderBufferPolicy& policy)
 {
-    assert(m_hostManager);
+    assert(m_hostRepository);
 
     m_vertexBuffer = nullptr;
     m_indexBuffer = nullptr;
 
     m_policy = policy;
-    if (m_hostManager->HasRenderBuffer(m_policy.m_signature))
+    if (m_hostRepository->HasRenderBuffer(m_policy.m_signature))
     {
         Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(m_policy.m_renderBufferName, m_policy.m_signature,
-            m_hostManager->QueryRenderBuffer(m_policy.m_signature)));
+            m_hostRepository->QueryRenderBuffer(m_policy.m_signature)));
     }
     else
     {

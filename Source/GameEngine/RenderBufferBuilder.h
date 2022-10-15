@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderBufferBuilder.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -17,7 +17,7 @@
 
 namespace Enigma::Engine
 {
-    class RenderBufferManager;
+    class RenderBufferRepository;
 
     class RenderBufferBuilder
     {
@@ -55,7 +55,7 @@ namespace Enigma::Engine
             RenderBufferPtr m_buffer;
         };
     public:
-        RenderBufferBuilder(RenderBufferManager* host);
+        RenderBufferBuilder(RenderBufferRepository* host);
         RenderBufferBuilder(const RenderBufferBuilder&) = delete;
         RenderBufferBuilder(RenderBufferBuilder&&) = delete;
         ~RenderBufferBuilder();
@@ -83,7 +83,7 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onVertexBufferBuilt;
         Frameworks::EventSubscriberPtr m_onIndexBufferBuilt;
 
-        RenderBufferManager* m_hostManager;
+        RenderBufferRepository* m_hostRepository;
 
         Graphics::IVertexBufferPtr m_vertexBuffer;
         Graphics::IIndexBufferPtr m_indexBuffer;

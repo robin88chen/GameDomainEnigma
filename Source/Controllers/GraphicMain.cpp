@@ -7,6 +7,7 @@
 #include "Renderer/RenderTarget.h"
 #include "GameEngine/ShaderRepository.h"
 #include "GameEngine/EffectMaterialManager.h"
+#include "GameEngine/MaterialVariableMap.h"
 #include "GameEngine/RenderBufferRepository.h"
 #include "GameEngine/TextureRepository.h"
 #include "SceneGraph/SceneGraphRepository.h"
@@ -186,11 +187,13 @@ error GraphicMain::InstallShaderManagers()
 {
     m_serviceManager->RegisterSystemService(menew Engine::ShaderRepository(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Engine::EffectMaterialManager(m_serviceManager));
+    menew Engine::MaterialVariableMap;
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownShaderManagers()
 {
+    delete Engine::MaterialVariableMap::Instance();
     m_serviceManager->ShutdownSystemService(Engine::EffectMaterialManager::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(Engine::ShaderRepository::TYPE_RTTI);
     return ErrorCode::ok;

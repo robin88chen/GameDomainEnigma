@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderManagerTest.Shared", "RenderManagerTest.Shared\RenderManagerTest.Shared.vcxitems", "{94A4A744-70BB-4256-A6AF-576349665C91}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderManagerTest.Win32", "RenderManagerTest.Win32\RenderManagerTest.Win32.vcxproj", "{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Debug|x64.ActiveCfg = Debug|x64
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Debug|x64.Build.0 = Debug|x64
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Debug|x86.ActiveCfg = Debug|Win32
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Debug|x86.Build.0 = Debug|Win32
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Release|x64.ActiveCfg = Release|x64
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Release|x64.Build.0 = Release|x64
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Release|x86.ActiveCfg = Release|Win32
+		{0E5AC1E9-EA78-4D3A-BF5B-CB556885D96A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8AAC304-EAE7-4FCA-9AFF-FE5143D8A531}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		RenderManagerTest.Shared\RenderManagerTest.Shared.vcxitems*{0e5ac1e9-ea78-4d3a-bf5b-cb556885d96a}*SharedItemsImports = 4
+		RenderManagerTest.Shared\RenderManagerTest.Shared.vcxitems*{94a4a744-70bb-4256-a6af-576349665c91}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal

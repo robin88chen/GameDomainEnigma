@@ -16,6 +16,8 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RendererManager);
 
+RendererManager::CustomRendererFactoryTable RendererManager::m_customRendererFactoryTable;
+
 RendererManager::RendererManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
     IMPLEMENT_RTTI(Enigma, Renderer, RendererManager, ISystemService);

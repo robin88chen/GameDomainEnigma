@@ -51,7 +51,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     return ErrorCode::ok;
 }
 
-error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
+error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
     const GeometrySegment& segment)
 {
     //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;

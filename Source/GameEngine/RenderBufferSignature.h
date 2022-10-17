@@ -28,6 +28,7 @@ namespace Enigma::Engine
         RenderBufferSignature& operator=(RenderBufferSignature&& signature);
 
         bool operator==(const RenderBufferSignature& signature) const;
+        bool operator!=(const RenderBufferSignature& signature) const;
         bool operator<(const RenderBufferSignature& signature) const;
 
         const std::string& GetName() const { return m_name; };

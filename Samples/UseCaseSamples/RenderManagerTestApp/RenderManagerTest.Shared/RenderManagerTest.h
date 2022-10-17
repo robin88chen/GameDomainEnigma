@@ -18,6 +18,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
 #include "Renderer/RenderTarget.h"
+#include "Renderer/RenderElement.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectPass.h"
 #include "GameEngine/EffectMaterial.h"
@@ -49,13 +50,15 @@ private:
     void OnLoadTextureFailed(const Enigma::Frameworks::IEventPtr& e);
 
     void BuildVariables();
+    void BuildRenderElement();
 
 private:
     Enigma::Gateways::EffectPolicyJsonGateway* m_gateway;
     //Enigma::Renderer::RendererManager* m_rendererManager;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     Enigma::Engine::EffectMaterialManager* m_materialManager;
-    Enigma::Engine::RenderBufferPtr m_renderBuffer;
+    //Enigma::Engine::RenderBufferPtr m_renderBuffer;
+    Enigma::Renderer::RenderElementPtr m_renderElement;
     Enigma::Engine::TexturePtr m_texture;
     std::shared_ptr<Enigma::Engine::EffectMaterial> m_material;
 

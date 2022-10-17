@@ -121,8 +121,6 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
         er = CreateRenderEngineDevice(policy->GetDeviceCreatingPolicy());
         if (er) return er;
     }
-    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
-    if (er) return er;
     er = InstallShaderManagers();
     if (er) return er;
     er = InstallTextureManagers();
@@ -130,6 +128,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallRenderBufferManagers();
     if (er) return er;
     er = InstallSceneGraphManagers();
+    if (er) return er;
+    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
     return er;
 }
 
@@ -139,11 +139,11 @@ error GraphicMain::ShutdownDefaultRenderer()
     assert(policy);
 
     error er;
+    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     er = ShutdownSceneGraphManagers();
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
-    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     if (er) return er;
 
     if (policy->GetDeviceCreatingPolicy())
@@ -156,7 +156,8 @@ error GraphicMain::ShutdownDefaultRenderer()
 
 error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
 {
-    m_renderer = menew Renderer::RendererManager(m_serviceManager);
+    m_renderer = menew Renderer::RendererManager(m_serviceManager, m_serviceManager->GetSystemServiceAs<Engine::RenderBufferRepository>(),
+        m_serviceManager->GetSystemServiceAs<Engine::EffectMaterialManager>());
     m_serviceManager->RegisterSystemService(m_renderer);
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;

@@ -12,6 +12,9 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/IRenderer.h"
+#include "GameEngine/RenderBufferRepository.h"
+#include "GameEngine/EffectMaterialManager.h"
+#include "RenderElementBuildingPolicies.h"
 #include <system_error>
 #include <memory>
 #include <unordered_map>
@@ -19,6 +22,8 @@
 
 namespace Enigma::Renderer
 {
+    class RenderElementBuilder;
+
     using error = std::error_code;
 
     using  CustomRendererFactoryFunc = std::function<Engine::IRendererPtr(const std::string&)>;
@@ -28,7 +33,8 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        RendererManager(Frameworks::ServiceManager* srv_mngr);
+        RendererManager(Frameworks::ServiceManager* srv_mngr, Engine::RenderBufferRepository* buffer_repository,
+            Engine::EffectMaterialManager* material_manager);
         RendererManager(const RendererManager&) = delete;
         RendererManager(RendererManager&&) = delete;
         virtual ~RendererManager();
@@ -37,6 +43,8 @@ namespace Enigma::Renderer
 
         /// On Init
         virtual Frameworks::ServiceResult OnInit() override;
+        /// On Tick
+        virtual Frameworks::ServiceResult OnTick() override;
         /// On Term
         virtual Frameworks::ServiceResult OnTerm() override;
 
@@ -63,6 +71,8 @@ namespace Enigma::Renderer
         /** get primary render target */
         RenderTargetPtr GetPrimaryRenderTarget() const;
 
+        error BuildRenderElement(const RenderElementPolicy& policy);
+
     protected:
         void ClearAllRenderer();
         void ClearAllRenderTarget();
@@ -72,6 +82,10 @@ namespace Enigma::Renderer
         void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+        void DoBuildingRenderElement(const Frameworks::ICommandPtr& c);
+
+        void OnBuilderRenderElementBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildRenderElementFailed(const Frameworks::IEventPtr& e);
 
     protected:
         Frameworks::CommandSubscriberPtr m_doCreatingRenderer;
@@ -79,6 +93,15 @@ namespace Enigma::Renderer
         Frameworks::CommandSubscriberPtr m_doCreatingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doDestroyingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
+        Frameworks::CommandSubscriberPtr m_doBuildingRenderElement;
+
+        Frameworks::EventSubscriberPtr m_onBuilderRenderElementBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildRenderElementFailed;
+
+        RenderElementBuilder* m_elementBuilder;
+        std::queue<RenderElementPolicy> m_policies;
+        bool m_isCurrentBuilding;
+        std::mutex m_policiesLock;
 
         using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;

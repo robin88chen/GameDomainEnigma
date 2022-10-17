@@ -1,4 +1,5 @@
 ﻿#include "RenderManagerTest.h"
+#include "RenderManagerTest.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/EventSubscriber.h"
@@ -17,6 +18,7 @@
 #include "Frameworks/CommandBus.h"
 #include "GameEngine/RenderBufferCommands.h"
 #include "GameEngine/TextureCommands.h"
+#include "GameEngine/RenderLightingState.h"
 #include "Renderer/RendererManager.h"
 #include "FileSystem/AndroidMountPath.h"
 #include <filesystem>
@@ -174,7 +176,7 @@ void RenderManagerTest::ShutdownEngine()
     m_onLoadTextureFailed = nullptr;
 
     m_renderTarget = nullptr;
-    m_renderBuffer = nullptr;
+    m_renderElement = nullptr;
     m_texture = nullptr;
 
     m_material = nullptr;
@@ -228,15 +230,16 @@ void RenderManagerTest::FrameUpdate()
 
 void RenderManagerTest::RenderFrame()
 {
-    if ((!m_material) || (!m_renderBuffer) || (!m_renderTarget) || (!m_texture)) return;
+    if ((!m_material) || (!m_renderElement) || (!m_renderTarget) || (!m_texture)) return;
     m_renderTarget->Bind();
     m_renderTarget->BindViewPort();
     m_renderTarget->Clear();
     IGraphicAPI::Instance()->BeginScene();
-    m_material->SelectRendererTechnique("technique");
+    //m_material->SelectRendererTechnique("technique");
     m_material->SelectVisualTechnique("slash");
     //m_material->SelectVisualTechnique("backslash");
-    m_renderBuffer->Draw(m_material, GeometrySegment(0, 4, 0, 6));
+    m_renderElement->Draw(Matrix4::IDENTITY, RenderLightingState{}, "technique");
+    //m_renderBuffer->Draw(m_material, GeometrySegment(0, 4, 0, 6));
     IGraphicAPI::Instance()->EndScene();
     m_renderTarget->Flip();
 }

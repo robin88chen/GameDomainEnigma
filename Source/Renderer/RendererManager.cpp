@@ -3,12 +3,15 @@
 #include "RendererCommands.h"
 #include "RendererEvents.h"
 #include "Renderer.h"
+#include "RenderElementBuilder.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
+
+#include "Platforms/PlatformLayer.h"
 
 
 using namespace Enigma::Renderer;
@@ -18,16 +21,19 @@ DEFINE_RTTI(Renderer, RendererManager);
 
 RendererManager::CustomRendererFactoryTable RendererManager::m_customRendererFactoryTable;
 
-RendererManager::RendererManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
+RendererManager::RendererManager(Frameworks::ServiceManager* srv_mngr, Engine::RenderBufferRepository* buffer_repository,
+    Engine::EffectMaterialManager* material_manager) : ISystemService(srv_mngr)
 {
     IMPLEMENT_RTTI(Enigma, Renderer, RendererManager, ISystemService);
     m_needTick = false;
     m_accumulateRendererStamp = 0;
+    m_elementBuilder = menew RenderElementBuilder(this, buffer_repository, material_manager);
 }
 
 RendererManager::~RendererManager()
 {
     assert(m_renderers.empty());
+    delete m_elementBuilder;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::OnInit()
@@ -51,8 +57,34 @@ Enigma::Frameworks::ServiceResult RendererManager::OnInit()
     m_doResizingPrimaryTarget =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
     Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+    m_doBuildingRenderElement =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingRenderElement(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::BuildRenderElement), m_doBuildingRenderElement);
+
+    m_onBuilderRenderElementBuilt =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuilderRenderElementBuilt(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(RenderElementBuilder::RenderElementBuilt), m_onBuilderRenderElementBuilt);
+    m_onBuildRenderElementFailed =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildRenderElementFailed(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(BuildRenderElementFailed), m_onBuildRenderElementFailed);
 
     return Frameworks::ServiceResult::Complete;
+}
+
+Enigma::Frameworks::ServiceResult RendererManager::OnTick()
+{
+    if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
+    std::lock_guard locker{ m_policiesLock };
+    if (m_policies.empty())
+    {
+        m_needTick = false;
+        return Frameworks::ServiceResult::Pendding;
+    }
+    assert(m_elementBuilder);
+    m_elementBuilder->BuildRenderElement(m_policies.front());
+    m_policies.pop();
+    m_isCurrentBuilding = true;
+    return Frameworks::ServiceResult::Pendding;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
@@ -69,6 +101,13 @@ Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
 
     Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
     m_doResizingPrimaryTarget = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::BuildRenderElement), m_doBuildingRenderElement);
+    m_doBuildingRenderElement = nullptr;
+
+    Frameworks::EventPublisher::Unsubscribe(typeid(RenderElementBuilder::RenderElementBuilt), m_onBuilderRenderElementBuilt);
+    m_onBuilderRenderElementBuilt = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(BuildRenderElementFailed), m_onBuildRenderElementFailed);
+    m_onBuildRenderElementFailed = nullptr;
 
     ClearAllRenderer();
     ClearAllRenderTarget();
@@ -195,6 +234,14 @@ RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
     return GetRenderTarget(m_primaryRenderTargetName);
 }
 
+error RendererManager::BuildRenderElement(const RenderElementPolicy& policy)
+{
+    std::lock_guard locker{ m_policiesLock };
+    m_policies.push(policy);
+    m_needTick = true;
+    return ErrorCode::ok;
+}
+
 void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -249,4 +296,33 @@ void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
     DestroyRenderTarget(cmd->GetRenderTargetName());
+}
+
+void RendererManager::DoBuildingRenderElement(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::BuildRenderElement, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    BuildRenderElement(cmd->GetPolicy());
+}
+
+void RendererManager::OnBuilderRenderElementBuilt(const Frameworks::IEventPtr& e)
+{
+    assert(m_elementBuilder);
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<RenderElementBuilder::RenderElementBuilt, Frameworks::IEvent>(e);
+    if (!ev) return;
+    Frameworks::EventPublisher::Post(std::make_shared<RenderElementBuilt>(ev->GetPolicy(), ev->GetElement()));
+    m_isCurrentBuilding = false;
+}
+
+void RendererManager::OnBuildRenderElementFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<BuildRenderElementFailed, Frameworks::IEvent>(e);
+    if (!ev) return;
+    Platforms::Debug::ErrorPrintf("render element (%s, %s) build failed : %s\n",
+        ev->GetPolicy().m_renderBufferSignature.GetName().c_str(), ev->GetPolicy().m_effectMaterialName.c_str(),
+        ev->GetErrorCode().message().c_str());
+    m_isCurrentBuilding = false;
 }

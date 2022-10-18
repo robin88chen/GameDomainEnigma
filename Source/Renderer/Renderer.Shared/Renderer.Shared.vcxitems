@@ -15,8 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElementBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElementBuildingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererErrors.h" />
@@ -29,7 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElementBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />

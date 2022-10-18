@@ -110,6 +110,8 @@ namespace Enigma::Renderer
 
         std::string m_rendererTechniqueName;
     };
+
+    using RendererPtr = std::shared_ptr<Renderer>;
 }
 
 #endif // RENDERER_H

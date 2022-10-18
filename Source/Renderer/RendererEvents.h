@@ -11,7 +11,6 @@
 #include "Frameworks/Event.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "GameEngine/IRenderer.h"
-#include "RenderElementBuildingPolicies.h"
 #include "RenderTargetClearingProperties.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include <system_error>
@@ -114,31 +113,6 @@ namespace Enigma::Renderer
     private:
         std::string m_name;
         RenderTargetClearingProperty m_clearing;
-    };
-
-    //------------ Render Element Events -----------
-    class RenderElementBuilt : public Frameworks::IEvent
-    {
-    public:
-        RenderElementBuilt(const RenderElementPolicy& policy, const std::shared_ptr<RenderElement>& element) :
-            m_policy(policy), m_element(element) {};
-        const RenderElementPolicy& GetPolicy() const { return m_policy; }
-        const std::shared_ptr<RenderElement>& GetElement() { return m_element; }
-
-    private:
-        RenderElementPolicy m_policy;
-        std::shared_ptr<RenderElement> m_element;
-    };
-    class BuildRenderElementFailed : public Frameworks::IEvent
-    {
-    public:
-        BuildRenderElementFailed(const RenderElementPolicy& policy, std::error_code er) :
-            m_policy(policy), m_error(er) {};
-        const RenderElementPolicy& GetPolicy() const { return m_policy; }
-        std::error_code GetErrorCode() const { return m_error; }
-    private:
-        RenderElementPolicy m_policy;
-        std::error_code m_error;
     };
 }
 

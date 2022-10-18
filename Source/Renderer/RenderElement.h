@@ -38,7 +38,7 @@ namespace Enigma::Renderer
     public:
         RenderElement();
         RenderElement(const std::shared_ptr<Engine::RenderBuffer>& renderBuffer,
-            Engine::EffectMaterialPtr& effect, const Engine::GeometrySegment& segment);
+            const Engine::EffectMaterialPtr& effect, const Engine::GeometrySegment& segment);
         RenderElement(const RenderElement&) = delete;
         RenderElement(RenderElement&&) = delete;
         ~RenderElement();

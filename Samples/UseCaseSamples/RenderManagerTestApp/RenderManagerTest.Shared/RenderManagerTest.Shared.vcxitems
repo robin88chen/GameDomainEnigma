@@ -14,11 +14,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)RenderElementBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RenderManagerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)RenderElementBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RenderManagerTest.h" />
   </ItemGroup>
 </Project>

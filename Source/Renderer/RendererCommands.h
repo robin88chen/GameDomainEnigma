@@ -12,7 +12,6 @@
 #include "Frameworks/Command.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "RenderTarget.h"
-#include "RenderElementBuildingPolicies.h"
 #include <optional>
 
 namespace Enigma::Renderer
@@ -94,16 +93,6 @@ namespace Enigma::Renderer
 
     private:
         MathLib::Dimension m_dimension;
-    };
-    //------------- render element command -------------
-    class BuildRenderElement : public Frameworks::ICommand
-    {
-    public:
-        BuildRenderElement(const RenderElementPolicy& policy)
-            : m_policy(policy) {}
-        const RenderElementPolicy& GetPolicy() { return m_policy; }
-    private:
-        RenderElementPolicy m_policy;
     };
 }
 

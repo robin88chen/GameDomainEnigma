@@ -156,8 +156,7 @@ error GraphicMain::ShutdownDefaultRenderer()
 
 error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
 {
-    m_renderer = menew Renderer::RendererManager(m_serviceManager, m_serviceManager->GetSystemServiceAs<Engine::RenderBufferRepository>(),
-        m_serviceManager->GetSystemServiceAs<Engine::EffectMaterialManager>());
+    m_renderer = menew Renderer::RendererManager(m_serviceManager);
     m_serviceManager->RegisterSystemService(m_renderer);
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;

@@ -24,7 +24,7 @@ namespace Enigma::Engine
             m_filename(filename), m_effect(std::move(eff)) {};
         const std::string& GetFilename() { return m_filename; }
         bool HasEffect() { return m_effect != nullptr; }
-        EffectMaterialPtr GetEffect() { return std::move(m_effect); }
+        EffectMaterialPtr GetEffect() { return m_effect; }
     private:
         std::string m_filename;
         EffectMaterialPtr m_effect;

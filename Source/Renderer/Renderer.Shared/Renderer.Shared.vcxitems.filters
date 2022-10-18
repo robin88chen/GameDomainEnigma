@@ -16,9 +16,6 @@
     <Filter Include="Render Packs">
       <UniqueIdentifier>{249a22d1-8c85-45f8-aa95-bcc5461bbea1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render Packs\RenderElementBuilder">
-      <UniqueIdentifier>{d4abac2f-5b62-496b-8c74-3a6df2e91cc9}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -51,12 +48,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h">
       <Filter>Render Target</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElementBuildingPolicies.h">
-      <Filter>Render Packs\RenderElementBuilder</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElementBuilder.h">
-      <Filter>Render Packs\RenderElementBuilder</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -79,9 +70,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElementBuilder.cpp">
-      <Filter>Render Packs\RenderElementBuilder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

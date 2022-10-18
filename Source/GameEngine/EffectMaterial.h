@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   EffectMaterial.h
- * \brief  Effect material, 先弄成 value object 試試
+ * \brief  Effect material, render element 裡會參考到, value object 不適合
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
@@ -75,7 +75,7 @@ namespace Enigma::Engine
         std::string m_selectedRendererTechName;
         std::string m_selectedVisualTechName;
     };
-    using EffectMaterialPtr = std::unique_ptr<EffectMaterial, std::function<void(EffectMaterial*)>>;
+    using EffectMaterialPtr = std::shared_ptr<EffectMaterial>;
 };
 
 #endif // EFFECT_MATERIAL_H

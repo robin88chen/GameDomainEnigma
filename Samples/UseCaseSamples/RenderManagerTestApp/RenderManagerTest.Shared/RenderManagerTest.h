@@ -14,11 +14,13 @@
 #else
 #include "Application/AppDelegateWin32.h"
 #endif
+#include "GameEngine/IRenderer.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/RenderElement.h"
+#include "Renderer/Renderer.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectPass.h"
 #include "GameEngine/EffectMaterial.h"
@@ -42,6 +44,7 @@ public:
     virtual void RenderFrame() override;
 private:
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnEffectMaterialCompiled(const Enigma::Frameworks::IEventPtr& e);
     void OnCompileEffectFailed(const Enigma::Frameworks::IEventPtr& e);
     void OnRenderBufferBuilt(const Enigma::Frameworks::IEventPtr& e);
@@ -56,13 +59,15 @@ private:
     Enigma::Gateways::EffectPolicyJsonGateway* m_gateway;
     //Enigma::Renderer::RendererManager* m_rendererManager;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
+    Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Engine::EffectMaterialManager* m_materialManager;
-    //Enigma::Engine::RenderBufferPtr m_renderBuffer;
+    Enigma::Engine::RenderBufferPtr m_renderBuffer;
     Enigma::Renderer::RenderElementPtr m_renderElement;
     Enigma::Engine::TexturePtr m_texture;
-    std::shared_ptr<Enigma::Engine::EffectMaterial> m_material;
+    Enigma::Engine::EffectMaterialPtr m_material;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
     Enigma::Frameworks::EventSubscriberPtr m_onCompileEffectFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;

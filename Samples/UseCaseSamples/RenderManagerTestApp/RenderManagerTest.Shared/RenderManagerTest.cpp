@@ -94,6 +94,8 @@ void RenderManagerTest::InstallEngine()
 {
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRendererCreated(e); });
+    EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
 
     m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
     EventPublisher::Subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
@@ -160,6 +162,8 @@ void RenderManagerTest::ShutdownEngine()
 
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
+    m_onRendererCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
     m_onEffectMaterialCompiled = nullptr;
     EventPublisher::Unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectFailed);
@@ -175,7 +179,9 @@ void RenderManagerTest::ShutdownEngine()
     EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
     m_onLoadTextureFailed = nullptr;
 
+    m_renderer = nullptr;
     m_renderTarget = nullptr;
+    m_renderBuffer = nullptr;
     m_renderElement = nullptr;
     m_texture = nullptr;
 
@@ -230,18 +236,20 @@ void RenderManagerTest::FrameUpdate()
 
 void RenderManagerTest::RenderFrame()
 {
-    if ((!m_material) || (!m_renderElement) || (!m_renderTarget) || (!m_texture)) return;
-    m_renderTarget->Bind();
-    m_renderTarget->BindViewPort();
-    m_renderTarget->Clear();
-    IGraphicAPI::Instance()->BeginScene();
-    //m_material->SelectRendererTechnique("technique");
-    m_material->SelectVisualTechnique("slash");
-    //m_material->SelectVisualTechnique("backslash");
-    m_renderElement->Draw(Matrix4::IDENTITY, RenderLightingState{}, "technique");
-    //m_renderBuffer->Draw(m_material, GeometrySegment(0, 4, 0, 6));
-    IGraphicAPI::Instance()->EndScene();
-    m_renderTarget->Flip();
+    if ((!m_material) || (!m_renderElement) || (!m_renderTarget) || (!m_texture) || (!m_renderer)) return;
+    m_renderer->InsertRenderElement(m_renderElement, Matrix4::IDENTITY, RenderLightingState{}, Renderer::RenderListID::Scene);
+    m_renderer->ClearRenderTarget();
+    m_renderer->BeginScene();
+    m_renderer->DrawScene();
+    //m_renderTarget->Bind();
+    //m_renderTarget->BindViewPort();
+    //m_renderTarget->Clear();
+    //IGraphicAPI::Instance()->BeginScene();
+    //m_renderElement->Draw(Matrix4::IDENTITY, RenderLightingState{}, "technique");
+    m_renderer->EndScene();
+    m_renderer->Flip();
+    //IGraphicAPI::Instance()->EndScene();
+    //m_renderTarget->Flip();
 }
 
 void RenderManagerTest::OnRenderTargetCreated(const IEventPtr& e)
@@ -250,6 +258,18 @@ void RenderManagerTest::OnRenderTargetCreated(const IEventPtr& e)
     std::shared_ptr<PrimaryRenderTargetCreated> ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
     m_renderTarget = ev->GetRenderTarget();
+    if (m_renderer)
+    {
+        m_renderer->SetRenderTarget(m_renderTarget);
+    }
+}
+
+void RenderManagerTest::OnRendererCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
+    if (!ev) return;
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
 }
 
 void RenderManagerTest::OnEffectMaterialCompiled(const IEventPtr& e)
@@ -259,6 +279,9 @@ void RenderManagerTest::OnEffectMaterialCompiled(const IEventPtr& e)
     if ((!ev) || (!ev->HasEffect())) return;
     if (ev->GetFilename() != MaterialName) return;
     m_material = ev->GetEffect();
+    m_material->SelectVisualTechnique("slash");
+    //m_material->SelectVisualTechnique("backslash");
+    BuildRenderElement();
     BuildVariables();
 }
 
@@ -276,6 +299,7 @@ void RenderManagerTest::OnRenderBufferBuilt(const Enigma::Frameworks::IEventPtr&
     auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (ev->GetName() != RenderBufferName) return;
     m_renderBuffer = ev->GetBuffer();
+    BuildRenderElement();
 }
 
 void RenderManagerTest::OnBuildRenderBufferFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -350,4 +374,10 @@ void RenderManagerTest::BuildVariables()
     {
         offset_var.value().get().AssignValue(-0.3f);
     }
+}
+
+void RenderManagerTest::BuildRenderElement()
+{
+    if ((!m_material) || (!m_renderBuffer)) return;
+    m_renderElement = std::make_shared<RenderElement>(m_renderBuffer, m_material, GeometrySegment(0, 4, 0, 6));
 }

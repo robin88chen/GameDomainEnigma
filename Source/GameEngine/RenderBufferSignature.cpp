@@ -63,6 +63,15 @@ bool Enigma::Engine::RenderBufferSignature::operator==(const RenderBufferSignatu
     return true;
 }
 
+bool Enigma::Engine::RenderBufferSignature::operator!=(const RenderBufferSignature& signature) const
+{
+    if (m_name != signature.m_name) return true;
+    if (m_vertexCapacity != signature.m_vertexCapacity) return true;
+    if (m_indexCapacity != signature.m_indexCapacity) return true;
+    if (m_topology != signature.m_topology) return true;
+    return false;
+}
+
 bool Enigma::Engine::RenderBufferSignature::operator<(const RenderBufferSignature& signature) const
 {
     if (m_name < signature.m_name) return true;

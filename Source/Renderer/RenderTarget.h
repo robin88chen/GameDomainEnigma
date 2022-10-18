@@ -8,6 +8,7 @@
 #ifndef RENDER_TARGET_H
 #define RENDER_TARGET_H
 
+#include "RenderTargetClearingProperties.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -42,23 +43,10 @@ namespace Enigma::Renderer
     class RenderTarget : public std::enable_shared_from_this<RenderTarget>
     {
     public:
-        enum class BufferClearFlag
-        {
-            ColorBuffer = 0x01,
-            DepthBuffer = 0x02,
-            BothBuffer = 0x03,
-        };
         enum class PrimaryType : bool
         {
             IsPrimary = true,
             NotPrimary = false
-        };
-        struct ClearingProperty
-        {
-            MathLib::ColorRGBA m_color;
-            float m_depth;
-            unsigned int m_stencil;
-            BufferClearFlag m_flag;
         };
     protected:
         enum class ResizingBitIndex
@@ -71,8 +59,10 @@ namespace Enigma::Renderer
         RenderTarget(const std::string& name, PrimaryType primary);
         RenderTarget(const std::string& name);
         RenderTarget(const RenderTarget&) = delete;
+        RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
         RenderTarget& operator=(const RenderTarget&) = delete;
+        RenderTarget& operator=(RenderTarget&&) = delete;
 
         /** init Back-Buffer */
         error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -107,6 +97,7 @@ namespace Enigma::Renderer
         /** flip, only primary render target can flip */
         error Flip();
 
+        error ChangeClearingProperty(const RenderTargetClearChangingProperty& prop);
         /** get name */
         const std::string& GetName() { return m_name; };
 
@@ -137,7 +128,7 @@ namespace Enigma::Renderer
         void InitViewPortSize();
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            BufferClearFlag flag = BufferClearFlag::BothBuffer);
+            RenderTargetClearFlag flag = RenderTargetClearFlag::BothBuffer);
 
         void SetViewPort(const Graphics::TargetViewPort& vp);
 
@@ -168,7 +159,7 @@ namespace Enigma::Renderer
         Engine::TexturePtr m_renderTargetTexture;
 
         Graphics::TargetViewPort m_viewPort;
-        ClearingProperty m_clearingProperty;
+        RenderTargetClearingProperty m_clearingProperty;
 
         unsigned int m_gbufferDepthMapIndex;
 
@@ -186,7 +177,7 @@ namespace Enigma::Renderer
             BackSurfaceBit = 0x01,
             DepthSurfaceBit = 0x10
         };
-        using ResizingBits = std::bitset<(size_t)ResizingBitIndex::Count>;
+        using ResizingBits = std::bitset<static_cast<size_t>(ResizingBitIndex::Count)>;
         ResizingBits m_resizingBits;
         //const ResizingBits ResizingBackSurfaceBit{ "01" };
         //const ResizingBits ResizingDepthSurfaceBit{ "10" };

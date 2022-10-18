@@ -1,4 +1,4 @@
-﻿#include "RenderBufferManager.h"
+﻿#include "RenderBufferRepository.h"
 #include "RenderBufferBuilder.h"
 #include "EngineErrors.h"
 #include "RenderBufferEvents.h"
@@ -11,22 +11,22 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, RenderBufferManager);
+DEFINE_RTTI(Engine, RenderBufferRepository);
 
-RenderBufferManager::RenderBufferManager(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
+RenderBufferRepository::RenderBufferRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, RenderBufferManager, ISystemService);
+    IMPLEMENT_RTTI(Enigma, Engine, RenderBufferRepository, ISystemService);
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = new RenderBufferBuilder(this);
 }
 
-RenderBufferManager::~RenderBufferManager()
+RenderBufferRepository::~RenderBufferRepository()
 {
     SAFE_DELETE(m_builder);
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferManager::OnInit()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::OnInit()
 {
     m_onRenderBufferBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuilt(c); });
@@ -42,7 +42,7 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferManager::OnTick()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -58,7 +58,7 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferManager::OnTerm()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onRenderBufferBuilt = nullptr;
@@ -70,7 +70,7 @@ Enigma::Frameworks::ServiceResult RenderBufferManager::OnTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
-error RenderBufferManager::BuildRenderBuffer(const RenderBufferPolicy& policy)
+error RenderBufferRepository::BuildRenderBuffer(const RenderBufferPolicy& policy)
 {
     std::lock_guard locker{ m_policiesLock };
     m_policies.push(policy);
@@ -78,14 +78,14 @@ error RenderBufferManager::BuildRenderBuffer(const RenderBufferPolicy& policy)
     return ErrorCode::ok;
 }
 
-bool RenderBufferManager::HasRenderBuffer(const RenderBufferSignature& signature)
+bool RenderBufferRepository::HasRenderBuffer(const RenderBufferSignature& signature)
 {
     std::lock_guard locker{ m_bufferMapLock };
     auto it = m_renderBuffers.find(signature);
     return ((it != m_renderBuffers.end()) && (!it->second.expired()));
 }
 
-std::shared_ptr<RenderBuffer> RenderBufferManager::QueryRenderBuffer(const RenderBufferSignature& signature)
+std::shared_ptr<RenderBuffer> RenderBufferRepository::QueryRenderBuffer(const RenderBufferSignature& signature)
 {
     std::lock_guard locker{ m_bufferMapLock };
     auto it = m_renderBuffers.find(signature);
@@ -94,7 +94,7 @@ std::shared_ptr<RenderBuffer> RenderBufferManager::QueryRenderBuffer(const Rende
     return it->second.lock();
 }
 
-void RenderBufferManager::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
+void RenderBufferRepository::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
 {
     assert(m_builder);
     if (!e) return;
@@ -106,7 +106,7 @@ void RenderBufferManager::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->GetName(), ev->GetSignature(), ev->GetBuffer()));
 }
 
-void RenderBufferManager::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
+void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, Frameworks::IEvent>(e);
@@ -116,7 +116,7 @@ void RenderBufferManager::OnBuildRenderBufferFailed(const Frameworks::IEventPtr&
     m_isCurrentBuilding = false;
 }
 
-void RenderBufferManager::DoBuildingRenderBuffer(const Frameworks::ICommandPtr& c)
+void RenderBufferRepository::DoBuildingRenderBuffer(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Engine::BuildRenderBuffer, Frameworks::ICommand>(c);

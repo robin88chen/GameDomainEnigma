@@ -1,11 +1,11 @@
 ﻿#include "EffectPass.h"
+#include "MaterialVariableMap.h"
 #include "GraphicKernel/IShaderProgram.h"
 #include "GraphicKernel/IGraphicAPI.h"
-#include <cassert>
-
 #include "GraphicKernel/IDeviceAlphaBlendState.h"
 #include "GraphicKernel/IDeviceDepthStencilState.h"
 #include "GraphicKernel/IDeviceRasterizerState.h"
+#include <cassert>
 
 using namespace Enigma::Graphics;
 using namespace Enigma::Engine;
@@ -83,6 +83,15 @@ EffectPass& EffectPass::operator=(EffectPass&& pass) noexcept
     m_variables = std::move(pass.m_variables);
 
     return *this;
+}
+
+void EffectPass::MappingAutoVariables()
+{
+    if (!MaterialVariableMap::Instance()) return;
+    for (auto& var : m_variables)
+    {
+        MaterialVariableMap::SetAutoVariableCommitFunction(var);
+    }
 }
 
 void EffectPass::CommitVariables()

@@ -10,6 +10,12 @@
     <Filter Include="Error Codes">
       <UniqueIdentifier>{bbb0e33f-916e-454e-b4d5-7eff55752ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render Target">
+      <UniqueIdentifier>{d5c09afe-47f1-43df-8e17-b0032fe1a0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Packs">
+      <UniqueIdentifier>{249a22d1-8c85-45f8-aa95-bcc5461bbea1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -18,25 +24,52 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
       <Filter>Commands Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h">
+      <Filter>Render Target</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h">
+      <Filter>Render Packs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPack.h">
+      <Filter>Render Packs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h">
+      <Filter>Render Packs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h">
+      <Filter>Render Target</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp">
       <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp">
+      <Filter>Render Target</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp">
+      <Filter>Render Packs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPack.cpp">
+      <Filter>Render Packs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPackList.cpp">
+      <Filter>Render Packs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

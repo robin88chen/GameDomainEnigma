@@ -51,7 +51,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderManager.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderRepository.h">
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.h">
@@ -102,7 +102,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
       <Filter>Geometry Datas</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.h">
       <Filter>RenderBuffer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h">
@@ -123,7 +123,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureManager.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h">
       <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h">
@@ -156,12 +156,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderLightingState.h">
       <Filter>Renderer Interface States</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h">
+      <Filter>Effect Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
       <Filter>Error Codes</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderManager.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderRepository.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp">
@@ -197,7 +200,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp">
       <Filter>RenderBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferManager.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.cpp">
       <Filter>RenderBuffer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp">
@@ -209,7 +212,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureManager.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderLightingState.cpp">
       <Filter>Renderer Interface States</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
+      <Filter>Effect Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,10 +5,11 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
-#include "GameEngine/ShaderManager.h"
+#include "GameEngine/ShaderRepository.h"
 #include "GameEngine/EffectMaterialManager.h"
-#include "GameEngine/RenderBufferManager.h"
-#include "GameEngine/TextureManager.h"
+#include "GameEngine/MaterialVariableMap.h"
+#include "GameEngine/RenderBufferRepository.h"
+#include "GameEngine/TextureRepository.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
@@ -120,8 +121,6 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
         er = CreateRenderEngineDevice(policy->GetDeviceCreatingPolicy());
         if (er) return er;
     }
-    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
-    if (er) return er;
     er = InstallShaderManagers();
     if (er) return er;
     er = InstallTextureManagers();
@@ -129,6 +128,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallRenderBufferManagers();
     if (er) return er;
     er = InstallSceneGraphManagers();
+    if (er) return er;
+    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
     return er;
 }
 
@@ -138,11 +139,11 @@ error GraphicMain::ShutdownDefaultRenderer()
     assert(policy);
 
     error er;
+    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     er = ShutdownSceneGraphManagers();
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
-    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     if (er) return er;
 
     if (policy->GetDeviceCreatingPolicy())
@@ -184,39 +185,41 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
 
 error GraphicMain::InstallShaderManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::ShaderManager(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Engine::ShaderRepository(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Engine::EffectMaterialManager(m_serviceManager));
+    menew Engine::MaterialVariableMap;
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownShaderManagers()
 {
+    delete Engine::MaterialVariableMap::Instance();
     m_serviceManager->ShutdownSystemService(Engine::EffectMaterialManager::TYPE_RTTI);
-    m_serviceManager->ShutdownSystemService(Engine::ShaderManager::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Engine::ShaderRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }
 
 error GraphicMain::InstallRenderBufferManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::RenderBufferManager(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Engine::RenderBufferRepository(m_serviceManager));
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownRenderBufferManagers()
 {
-    m_serviceManager->ShutdownSystemService(Engine::RenderBufferManager::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Engine::RenderBufferRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }
 
 error GraphicMain::InstallTextureManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::TextureManager(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Engine::TextureRepository(m_serviceManager));
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownTextureManagers()
 {
-    m_serviceManager->ShutdownSystemService(Engine::TextureManager::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Engine::TextureRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }
 

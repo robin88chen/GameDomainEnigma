@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   ShaderManager.h
+ * \file   ShaderRepository.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
-#ifndef SHADER_MANAGER_H
-#define SHADER_MANAGER_H
+#ifndef SHADER_REPOSITORY_H
+#define SHADER_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
@@ -33,16 +33,16 @@ namespace Enigma::Engine
 
     class ShaderBuilder;
 
-    class ShaderManager : public Frameworks::ISystemService
+    class ShaderRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        ShaderManager(Frameworks::ServiceManager* srv_mngr);
-        ShaderManager(const ShaderManager&) = delete;
-        ShaderManager(ShaderManager&&) = delete;
-        virtual ~ShaderManager();
-        ShaderManager& operator=(const ShaderManager&) = delete;
-        ShaderManager& operator=(ShaderManager&&) = delete;
+        ShaderRepository(Frameworks::ServiceManager* srv_mngr);
+        ShaderRepository(const ShaderRepository&) = delete;
+        ShaderRepository(ShaderRepository&&) = delete;
+        virtual ~ShaderRepository();
+        ShaderRepository& operator=(const ShaderRepository&) = delete;
+        ShaderRepository& operator=(ShaderRepository&&) = delete;
 
         /// On Init
         virtual Frameworks::ServiceResult OnInit() override;
@@ -101,4 +101,4 @@ namespace Enigma::Engine
 }
 
 
-#endif // SHADER_MANAGER_H
+#endif // SHADER_REPOSITORY_H

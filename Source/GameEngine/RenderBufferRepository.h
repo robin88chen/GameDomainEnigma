@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   RenderBufferManager.h
+ * \file   RenderBufferRepository.h
  * \brief  Render buffer repository
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
-#ifndef RENDER_BUFFER_MANAGER_H
-#define RENDER_BUFFER_MANAGER_H
+#ifndef RENDER_BUFFER_REPOSITORY_H
+#define RENDER_BUFFER_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
@@ -25,16 +25,16 @@ namespace Enigma::Engine
     class RenderBuffer;
     class RenderBufferBuilder;
 
-    class RenderBufferManager : public Frameworks::ISystemService
+    class RenderBufferRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        RenderBufferManager(Frameworks::ServiceManager* srv_manager);
-        RenderBufferManager(const RenderBufferManager&) = delete;
-        RenderBufferManager(RenderBufferManager&&) = delete;
-        ~RenderBufferManager();
-        RenderBufferManager& operator=(RenderBufferManager&) = delete;
-        RenderBufferManager& operator=(RenderBufferManager&&) = delete;
+        RenderBufferRepository(Frameworks::ServiceManager* srv_manager);
+        RenderBufferRepository(const RenderBufferRepository&) = delete;
+        RenderBufferRepository(RenderBufferRepository&&) = delete;
+        ~RenderBufferRepository();
+        RenderBufferRepository& operator=(RenderBufferRepository&) = delete;
+        RenderBufferRepository& operator=(RenderBufferRepository&&) = delete;
 
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTick() override;
@@ -67,4 +67,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // RENDER_BUFFER_MANAGER_H
+#endif // RENDER_BUFFER_REPOSITORY_H

@@ -22,6 +22,9 @@
     <Filter Include="Events">
       <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene Graph\LightInfo">
+      <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -63,6 +66,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
       <Filter>Scene Graph</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoPolicies.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -94,6 +112,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
       <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp">
+      <Filter>Scene Graph\LightInfo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <LibraryDependencies>Application_Android;Controllers_Android;Gateways_Android;GameEngine_Android;GraphicAPIEgl_Android;GraphicKernel_Android;Frameworks_Android;Platforms_Android;AssetPackage_Android;FileSystem_Android;MathLib_Android;png;z;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>Application_Android;Controllers_Android;Gateways_Android;Renderer_Android;SceneGraph_Android;GameEngine_Android;GraphicAPIEgl_Android;GraphicKernel_Android;Frameworks_Android;Platforms_Android;AssetPackage_Android;FileSystem_Android;MathLib_Android;png;z;%(LibraryDependencies)</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

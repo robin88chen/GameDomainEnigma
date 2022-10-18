@@ -1,4 +1,4 @@
-﻿#include "TextureManager.h"
+﻿#include "TextureRepository.h"
 #include "TextureLoader.h"
 #include "Platforms/MemoryMacro.h"
 #include "TextureCommands.h"
@@ -11,22 +11,22 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, TextureManager);
+DEFINE_RTTI(Engine, TextureRepository);
 
-TextureManager::TextureManager(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
+TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, TextureManager, ISystemService);
+    IMPLEMENT_RTTI(Enigma, Engine, TextureRepository, ISystemService);
     m_needTick = false;
     m_isCurrentLoading = false;
     m_loader = new TextureLoader(this);
 }
 
-TextureManager::~TextureManager()
+TextureRepository::~TextureRepository()
 {
     SAFE_DELETE(m_loader);
 }
 
-Enigma::Frameworks::ServiceResult TextureManager::OnInit()
+Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
 {
     m_onTextureLoaded =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureLoaded(c); });
@@ -42,7 +42,7 @@ Enigma::Frameworks::ServiceResult TextureManager::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult TextureManager::OnTick()
+Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
 {
     if (m_isCurrentLoading) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -58,7 +58,7 @@ Enigma::Frameworks::ServiceResult TextureManager::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult TextureManager::OnTerm()
+Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;
@@ -70,14 +70,14 @@ Enigma::Frameworks::ServiceResult TextureManager::OnTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
-bool TextureManager::HasTexture(const std::string& name)
+bool TextureRepository::HasTexture(const std::string& name)
 {
     std::lock_guard locker{ m_textureMapLock };
     auto it = m_textures.find(name);
     return ((it != m_textures.end()) && (!it->second.expired()));
 }
 
-std::shared_ptr<Texture> TextureManager::QueryTexture(const std::string& name)
+std::shared_ptr<Texture> TextureRepository::QueryTexture(const std::string& name)
 {
     std::lock_guard locker{ m_textureMapLock };
     auto it = m_textures.find(name);
@@ -86,7 +86,7 @@ std::shared_ptr<Texture> TextureManager::QueryTexture(const std::string& name)
     return it->second.lock();
 }
 
-error TextureManager::LoadTexture(const TexturePolicy& policy)
+error TextureRepository::LoadTexture(const TexturePolicy& policy)
 {
     std::lock_guard locker{ m_policiesLock };
     m_policies.push(policy);
@@ -94,7 +94,7 @@ error TextureManager::LoadTexture(const TexturePolicy& policy)
     return ErrorCode::ok;
 }
 
-void TextureManager::OnTextureLoaded(const Frameworks::IEventPtr& e)
+void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
     if (!e) return;
@@ -106,7 +106,7 @@ void TextureManager::OnTextureLoaded(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(ev->GetTextureName(), ev->GetTexture()));
 }
 
-void TextureManager::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
+void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
     if (!e) return;
@@ -117,7 +117,7 @@ void TextureManager::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     m_isCurrentLoading = false;
 }
 
-void TextureManager::DoLoadingTexture(const Frameworks::ICommandPtr& c)
+void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Engine::LoadTexture, Frameworks::ICommand>(c);

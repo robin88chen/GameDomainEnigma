@@ -1,6 +1,6 @@
 ﻿#include "ShaderBuilder.h"
 #include "ShaderEvents.h"
-#include "ShaderManager.h"
+#include "ShaderRepository.h"
 #include "EngineErrors.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/EventPublisher.h"
@@ -14,9 +14,9 @@
 
 using namespace Enigma::Engine;
 
-ShaderBuilder::ShaderBuilder(ShaderManager* host)
+ShaderBuilder::ShaderBuilder(ShaderRepository* host)
 {
-    m_hostManager = host;
+    m_hostRepository = host;
 
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
@@ -88,7 +88,7 @@ ShaderBuilder::~ShaderBuilder()
 
 void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
 {
-    assert(m_hostManager);
+    assert(m_hostRepository);
 
     m_vtxShader = nullptr;
     m_pixShader = nullptr;
@@ -96,7 +96,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     m_program = nullptr;
 
     m_policy = policy;
-    if (m_hostManager->HasVertexShader(m_policy.m_vtxShaderName))
+    if (m_hostRepository->HasVertexShader(m_policy.m_vtxShaderName))
     {
         //m_vtxShader = m_hostManager->QueryVertexShader(m_policy.m_vtxShaderName);
         Frameworks::EventPublisher::Post(std::make_shared<VertexShaderBuilt>(m_policy.m_vtxShaderName));
@@ -105,7 +105,7 @@ void ShaderBuilder::BuildShaderProgram(const ShaderProgramPolicy& policy)
     {
         Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateVertexShader>(m_policy.m_vtxShaderName));
     }
-    if (m_hostManager->HasPixelShader(m_policy.m_pixShaderName))
+    if (m_hostRepository->HasPixelShader(m_policy.m_pixShaderName))
     {
         //m_pixShader = m_hostManager->QueryPixelShader(m_policy.m_pixShaderName);
         Frameworks::EventPublisher::Post(std::make_shared<PixelShaderBuilt>(m_policy.m_pixShaderName));
@@ -148,7 +148,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
-    if (m_hostManager->HasVertexLayout(m_policy.m_vtxLayoutName))
+    if (m_hostRepository->HasVertexLayout(m_policy.m_vtxLayoutName))
     {
         Frameworks::EventPublisher::Post(std::make_shared<VertexShaderBuilt>(shader.value()->GetName()));
     }
@@ -239,17 +239,17 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
     if (ev_vtx)
     {
         if (ev_vtx->GetShaderName() != m_policy.m_vtxShaderName) return;
-        if (m_hostManager->HasVertexShader(m_policy.m_vtxShaderName))
+        if (m_hostRepository->HasVertexShader(m_policy.m_vtxShaderName))
         {
-            m_vtxShader = m_hostManager->QueryVertexShader(m_policy.m_vtxShaderName);
+            m_vtxShader = m_hostRepository->QueryVertexShader(m_policy.m_vtxShaderName);
         }
         else
         {
             m_vtxShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexShaderPtr>(m_policy.m_vtxShaderName);
         }
-        if (m_hostManager->HasVertexLayout(m_policy.m_vtxLayoutName))
+        if (m_hostRepository->HasVertexLayout(m_policy.m_vtxLayoutName))
         {
-            m_layout = m_hostManager->QueryVertexLayout(m_policy.m_vtxLayoutName);
+            m_layout = m_hostRepository->QueryVertexLayout(m_policy.m_vtxLayoutName);
         }
         else
         {
@@ -260,9 +260,9 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
     if (ev_pix)
     {
         if (ev_pix->GetShaderName() != m_policy.m_pixShaderName) return;
-        if (m_hostManager->HasPixelShader(m_policy.m_pixShaderName))
+        if (m_hostRepository->HasPixelShader(m_policy.m_pixShaderName))
         {
-            m_pixShader = m_hostManager->QueryPixelShader(m_policy.m_pixShaderName);
+            m_pixShader = m_hostRepository->QueryPixelShader(m_policy.m_pixShaderName);
         }
         else
         {

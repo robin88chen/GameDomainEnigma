@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   EffectMaterial.h
- * \brief  Effect material, 先弄成 value object 試試
+ * \brief  Effect material, render element 裡會參考到, value object 不適合
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
@@ -55,8 +55,7 @@ namespace Enigma::Engine
         /** 每個 material instance 已經是獨立的一份 var, 似乎沒有必要了，先留著就是 */
         void SetInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
 
-        //todo : mapping auto variables
-        //void MappingAutoVariables();
+        void MappingAutoVariables();
 
     protected:
         void SelectTechnique();
@@ -76,7 +75,7 @@ namespace Enigma::Engine
         std::string m_selectedRendererTechName;
         std::string m_selectedVisualTechName;
     };
-    using EffectMaterialPtr = std::unique_ptr<EffectMaterial, std::function<void(EffectMaterial*)>>;
+    using EffectMaterialPtr = std::shared_ptr<EffectMaterial>;
 };
 
 #endif // EFFECT_MATERIAL_H

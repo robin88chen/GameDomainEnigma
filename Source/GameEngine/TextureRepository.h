@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   TextureManager.h
+ * \file   TextureRepository.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
-#ifndef TEXTURE_MANAGER_H
-#define TEXTURE_MANAGER_H
+#ifndef TEXTURE_REPOSITORY_H
+#define TEXTURE_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
@@ -24,16 +24,16 @@ namespace Enigma::Engine
 
     class TextureLoader;
 
-    class TextureManager : public Frameworks::ISystemService
+    class TextureRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        TextureManager(Frameworks::ServiceManager* srv_manager);
-        TextureManager(const TextureManager&) = delete;
-        TextureManager(TextureManager&&) = delete;
-        ~TextureManager();
-        TextureManager& operator=(const TextureManager&) = delete;
-        TextureManager& operator=(TextureManager&&) = delete;
+        TextureRepository(Frameworks::ServiceManager* srv_manager);
+        TextureRepository(const TextureRepository&) = delete;
+        TextureRepository(TextureRepository&&) = delete;
+        ~TextureRepository();
+        TextureRepository& operator=(const TextureRepository&) = delete;
+        TextureRepository& operator=(TextureRepository&&) = delete;
 
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTick() override;
@@ -54,7 +54,7 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::CommandSubscriberPtr m_doLoadingTexture;
 
-    	using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
+        using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
         TextureMap m_textures;
         std::recursive_mutex m_textureMapLock;
@@ -66,4 +66,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // TEXTURE_MANAGER_H
+#endif // TEXTURE_REPOSITORY_H

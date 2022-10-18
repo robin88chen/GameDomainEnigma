@@ -22,6 +22,8 @@ namespace Enigma::SceneGraph
     class Frustum;
     class Node;
     class Pawn;
+    class LightInfo;
+    class Light;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -53,6 +55,10 @@ namespace Enigma::SceneGraph
         bool HasPawn(const std::string& name);
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
+        std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
+        bool HasLight(const std::string& name);
+        std::shared_ptr<Light> QueryLight(const std::string& name);
+
     private:
         GraphicCoordSys m_handSystem;
 
@@ -65,6 +71,9 @@ namespace Enigma::SceneGraph
         std::recursive_mutex m_nodeMapLock;
         std::unordered_map<std::string, std::weak_ptr<Pawn>> m_pawns;
         std::recursive_mutex m_pawnMapLock;
+
+        std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
+        std::recursive_mutex m_lightMapLock;
     };
 }
 

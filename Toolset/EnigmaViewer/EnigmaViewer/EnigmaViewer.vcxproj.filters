@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Forms">
+      <UniqueIdentifier>{6133fc09-3a90-4f79-9d03-701ef1480972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AppDelegate">
+      <UniqueIdentifier>{86e0655a-5709-4754-99af-f434540f238d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{4d78a82b-9cb6-4578-a912-87925d0f8d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SchemeColor">
+      <UniqueIdentifier>{b22ff4d7-c576-4748-a458-7467dd924b3f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainForm.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewerAppDelegate.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="SchemeColorDef.h">
+      <Filter>SchemeColor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerAppDelegate.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApplication.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="SchemeColorDef.cpp">
+      <Filter>SchemeColor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

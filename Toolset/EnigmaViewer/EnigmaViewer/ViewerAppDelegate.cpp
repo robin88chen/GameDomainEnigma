@@ -21,6 +21,7 @@ ViewerAppDelegate::ViewerAppDelegate()
 {
     m_hasLogFile = false;
     m_graphicMain = nullptr;
+    m_hwnd = nullptr;
 }
 
 ViewerAppDelegate::~ViewerAppDelegate()

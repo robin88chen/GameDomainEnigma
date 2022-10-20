@@ -1,5 +1,5 @@
 ﻿/*********************************************************************
- * \file   ModleInfoPanel.h
+ * \file   ModelInfoPanel.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen

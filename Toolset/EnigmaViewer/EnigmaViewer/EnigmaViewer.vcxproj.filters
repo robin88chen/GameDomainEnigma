@@ -13,6 +13,9 @@
     <Filter Include="SchemeColor">
       <UniqueIdentifier>{b22ff4d7-c576-4748-a458-7467dd924b3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Forms\Custom Widgets">
+      <UniqueIdentifier>{c76407d6-51e2-459a-bc2a-5cb0758aa634}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -24,6 +27,24 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="SchemeColorDef.h">
       <Filter>SchemeColor</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelInfoPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationInfoPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="ListboxInlineCombox.h">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="ListboxInlineTextbox.h">
+      <Filter>Forms\Custom Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +60,24 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="SchemeColorDef.cpp">
       <Filter>SchemeColor</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelInfoPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationInfoPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="ListboxInlineCombox.cpp">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="ListboxInlineTextbox.cpp">
+      <Filter>Forms\Custom Widgets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -37,13 +37,17 @@ namespace EnigmaViewer
         void OnSaveEntity(const nana::menu::item_proxy& menu_item);
         void OnLoadEntity(const nana::menu::item_proxy& menu_item);
 
-        //void Finalize();
+        void Finalize();
 
     private:
         nana::menubar* m_menubar;
         nana::tabbar<int>* m_tabbar;
         ViewerAppDelegate* m_appDelegate;
         nana::timer* m_timer;
+        RenderPanel* m_renderPanel;
+        OutputPanel* m_outputPanel;
+        ModelInfoPanel* m_modelInfoPanel;
+        AnimationInfoPanel* m_animationInfoPanel;
     };
 }
 

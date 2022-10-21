@@ -4,6 +4,9 @@
 #include "LevelEditorAppDelegate.h"
 #include "RenderPanel.h"
 #include "SceneGraphPanel.h"
+#include "SpatialInspectorToolPanel.h"
+#include "TerrainToolPanel.h"
+#include "OutputPanel.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -30,11 +33,11 @@ MainForm::~MainForm()
     SAFE_DELETE(m_statusCameraZone);
     SAFE_DELETE(m_timer);
     SAFE_DELETE(m_renderPanel);
-    //SAFE_DELETE(m_sceneGraphPanel);
-    //SAFE_DELETE(m_spatialInspectorPanel);
+    SAFE_DELETE(m_sceneGraphPanel);
+    SAFE_DELETE(m_spatialInspectorPanel);
     SAFE_DELETE(m_appDelegate);
-    //SAFE_DELETE(m_terrainToolPanel);
-    //SAFE_DELETE(m_outputPanel);
+    SAFE_DELETE(m_terrainToolPanel);
+    SAFE_DELETE(m_outputPanel);
 }
 
 void MainForm::InitSubPanels()
@@ -43,6 +46,7 @@ void MainForm::InitSubPanels()
     get_place().div("vert<menubar weight=28><main_tools weight=28>< <scene_graph_panel weight=15%> | <render_panel weight=70%> | <vert<toolsbar weight=28> <toolsframe> > > <outputpanel weight=100><statuspanel weight=16>");
     InitMenu();
     m_tabbar = menew nana::tabbar<int>{ *this };
+    UISchemeColors::ApplySchemaColors(m_tabbar->scheme());
     get_place().field("toolsbar") << *m_tabbar;
     InitPanels();
     m_toolbar = menew nana::toolbar(*this);
@@ -106,6 +110,19 @@ void MainForm::InitPanels()
     m_sceneGraphPanel = menew SceneGraphPanel{ *this };
     m_sceneGraphPanel->Initialize(this);
     get_place().field("scene_graph_panel").fasten(*m_sceneGraphPanel);
+
+    m_spatialInspectorPanel = menew SpatialInspectorPanel{ *this };
+    m_spatialInspectorPanel->Initialize(this);
+    get_place().field("toolsframe").fasten(*m_spatialInspectorPanel);
+    m_tabbar->append("Inspector", *m_spatialInspectorPanel);
+    m_terrainToolPanel = menew TerrainToolPanel{ *this };
+    m_terrainToolPanel->Initialize(this);
+    get_place().field("toolsframe").fasten(*m_terrainToolPanel);
+    m_tabbar->append("Terrain", *m_terrainToolPanel);
+
+    m_outputPanel = menew OutputPanel{ *this };
+    m_outputPanel->Initialize();
+    get_place()["outputpanel"] << *m_outputPanel;
 }
 
 void MainForm::InitTools()

@@ -13,6 +13,9 @@
     <Filter Include="AppDelegate">
       <UniqueIdentifier>{4ec8122c-677f-41f2-8ac5-cf24df262139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Forms\Custom Widgets">
+      <UniqueIdentifier>{0cb909bf-fd8b-489c-850c-e4e41f922b60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -34,6 +37,21 @@
     <ClCompile Include="SceneGraphPanel.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="propertygrid\pgitems.cpp">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="propertygrid\propertygrid.cpp">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialInspectorToolPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainToolPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -50,6 +68,21 @@
       <Filter>Forms</Filter>
     </ClInclude>
     <ClInclude Include="SceneGraphPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialInspectorToolPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="propertygrid\pgitems.h">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="propertygrid\propertygrid.h">
+      <Filter>Forms\Custom Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainToolPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputPanel.h">
       <Filter>Forms</Filter>
     </ClInclude>
   </ItemGroup>

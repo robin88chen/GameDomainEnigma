@@ -135,20 +135,30 @@
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="OutputPanel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="propertygrid\pgitems.cpp" />
+    <ClCompile Include="propertygrid\propertygrid.cpp" />
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SceneGraphPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
+    <ClCompile Include="SpatialInspectorToolPanel.cpp" />
+    <ClCompile Include="TerrainToolPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="MainForm.h" />
+    <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="propertygrid\pgitems.h" />
+    <ClInclude Include="propertygrid\propertygrid.h" />
     <ClInclude Include="RenderPanel.h" />
     <ClInclude Include="SceneGraphPanel.h" />
     <ClInclude Include="SchemeColorDef.h" />
+    <ClInclude Include="SpatialInspectorToolPanel.h" />
+    <ClInclude Include="TerrainToolPanel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

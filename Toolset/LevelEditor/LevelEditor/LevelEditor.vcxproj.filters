@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Scheme Colors">
+      <UniqueIdentifier>{b3184597-c64f-468d-912a-1a2ba6ccba19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{7106e965-4da7-4a07-ac35-d41122a236f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forms">
+      <UniqueIdentifier>{e8d3a880-8465-4b01-a92a-bd5ab7ef531c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AppDelegate">
+      <UniqueIdentifier>{4ec8122c-677f-41f2-8ac5-cf24df262139}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SchemeColorDef.cpp">
+      <Filter>Scheme Colors</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApplication.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditorAppDelegate.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraphPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SchemeColorDef.h">
+      <Filter>Scheme Colors</Filter>
+    </ClInclude>
+    <ClInclude Include="MainForm.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="LevelEditorAppDelegate.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraphPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

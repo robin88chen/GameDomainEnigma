@@ -22,6 +22,9 @@
     <Filter Include="Timer">
       <UniqueIdentifier>{e3549b65-ba41-4de6-b26b-058cb82273de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{b1243f80-fa27-46c5-851c-677056085446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Timer.cpp">
       <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp">
+      <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp">
       <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h">
+      <Filter>Contracts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

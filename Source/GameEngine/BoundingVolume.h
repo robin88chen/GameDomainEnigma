@@ -8,6 +8,7 @@
 #ifndef BOUNDING_VOLUME_H
 #define BOUNDING_VOLUME_H
 
+#include "BoundingVolumeContract.h"
 #include "MathLib/Box3.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Sphere3.h"
@@ -30,6 +31,7 @@ namespace Enigma::Engine
         };
     public:
         BoundingVolume();
+        BoundingVolume(const BoundingVolumeContract& contract);
         BoundingVolume(const MathLib::Box3& box);
         BoundingVolume(const MathLib::Sphere3& sphere);
         BoundingVolume(const BoundingVolume&);
@@ -38,6 +40,8 @@ namespace Enigma::Engine
 
         BoundingVolume& operator=(const BoundingVolume&);
         BoundingVolume& operator=(BoundingVolume&&);
+
+        BoundingVolumeContract SerializeContract() const;
 
         static BoundingVolume CreateFromTransform(const BoundingVolume& source_bv, const MathLib::Matrix4& mx);
         void Merge(const MathLib::Matrix4& to_mx, const BoundingVolume& to_bv);

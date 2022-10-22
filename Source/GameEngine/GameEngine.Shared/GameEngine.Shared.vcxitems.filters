@@ -46,6 +46,9 @@
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
       <Filter>Effect Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp">
+      <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

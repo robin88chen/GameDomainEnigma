@@ -8,6 +8,18 @@ BoundingVolume::BoundingVolume()
 {
 }
 
+BoundingVolume::BoundingVolume(const BoundingVolumeContract& contract)
+{
+    if (contract.Box())
+    {
+        m_bv = std::make_unique<BoxBV>(contract.Box().value());
+    }
+    else if (contract.Sphere())
+    {
+        m_bv = std::make_unique<SphereBV>(contract.Sphere().value());
+    }
+}
+
 BoundingVolume::BoundingVolume(const MathLib::Box3& box)
 {
     m_bv = std::make_unique<BoxBV>(box);
@@ -64,6 +76,11 @@ BoundingVolume& BoundingVolume::operator=(BoundingVolume&& bv)
     }
 
     return *this;
+}
+
+BoundingVolumeContract BoundingVolume::SerializeContract() const
+{
+    return BoundingVolumeContract{ BoundingBox3(), BoundingSphere3() };
 }
 
 BoundingVolume BoundingVolume::CreateFromTransform(const BoundingVolume& source_bv, const MathLib::Matrix4& mx)

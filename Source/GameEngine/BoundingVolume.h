@@ -9,6 +9,7 @@
 #define BOUNDING_VOLUME_H
 
 #include "BoundingVolumeContract.h"
+#include "Frameworks/Rtti.h"
 #include "MathLib/Box3.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Sphere3.h"
@@ -21,6 +22,9 @@ namespace Enigma::Engine
     class GenericBV;
     class BoundingVolume
     {
+    public:
+        static Enigma::Frameworks::Rtti TYPE_RTTI;
+        const Enigma::Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; } \
     public:
         enum class Side
         {

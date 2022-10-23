@@ -2,6 +2,8 @@
 
 using namespace Enigma::Frameworks;
 
+std::string TOKEN_RTTI = "Rtti";
+
 Contract::Contract()
 {
 }
@@ -20,4 +22,14 @@ void Contract::Remove(const std::string& attribute)
 {
     if (!HasValue(attribute)) return;
     m_values.erase(attribute);
+}
+
+void Contract::AddRtti(const FactoryDesc& rtti)
+{
+    AddOrUpdate(TOKEN_RTTI, rtti);
+}
+
+FactoryDesc Contract::GetRtti() const
+{
+    return Get<FactoryDesc>(TOKEN_RTTI);
 }

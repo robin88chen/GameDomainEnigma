@@ -4,6 +4,8 @@
 
 using namespace Enigma::Engine;
 
+Enigma::Frameworks::Rtti BoundingVolume::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.Engine.BoundingVolume");
+
 BoundingVolume::BoundingVolume()
 {
 }

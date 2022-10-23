@@ -8,6 +8,7 @@
 #ifndef CONTRACT_H
 #define CONTRACT_H
 
+#include "FactoryDesc.h"
 #include <string>
 #include <any>
 #include <optional>
@@ -35,6 +36,9 @@ namespace Enigma::Frameworks
             m_values.insert_or_assign(attribute, value);
         }
 
+        /** add Rtti */
+        void AddRtti(const FactoryDesc& rtti);
+
         /** Remove key value data */
         void Remove(const std::string& attribute);
 
@@ -42,6 +46,13 @@ namespace Enigma::Frameworks
 
         /** Get data, assert if key not found */
         template <class T> T Get(const std::string& attribute)
+        {
+            assert(HasValue(attribute));
+            return std::any_cast<T>(m_values.at(attribute));
+        }
+
+        /** Get data, assert if key not found */
+        template <class T> T Get(const std::string& attribute) const
         {
             assert(HasValue(attribute));
             return std::any_cast<T>(m_values.at(attribute));
@@ -64,6 +75,8 @@ namespace Enigma::Frameworks
             if (!HasValue(attribute)) return std::nullopt;
             return std::any_cast<T>(m_values.at(attribute));
         }
+
+        FactoryDesc GetRtti() const;
 
         AttributeValues::iterator begin() { return m_values.begin(); }
         AttributeValues::const_iterator begin() const { return m_values.begin(); }

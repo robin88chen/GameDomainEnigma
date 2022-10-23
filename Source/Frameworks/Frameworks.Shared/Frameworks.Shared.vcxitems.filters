@@ -116,6 +116,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h">
       <Filter>Contracts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

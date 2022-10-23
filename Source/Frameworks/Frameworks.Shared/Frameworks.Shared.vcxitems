@@ -36,6 +36,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h" />

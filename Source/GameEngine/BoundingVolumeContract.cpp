@@ -1,4 +1,5 @@
 ﻿#include "BoundingVolumeContract.h"
+#include "BoundingVolume.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -25,6 +26,7 @@ BoundingVolumeContract BoundingVolumeContract::FromContract(const Frameworks::Co
 Contract BoundingVolumeContract::ToContract() const
 {
     Contract contract;
+    contract.AddRtti(FactoryDesc(BoundingVolume::TYPE_RTTI.GetName()));
     if (m_box)
     {
         contract.AddOrUpdate(TOKEN_BOXBV, m_box.value());

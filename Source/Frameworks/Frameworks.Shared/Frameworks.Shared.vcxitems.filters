@@ -63,6 +63,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp">
       <Filter>Contracts</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h">
@@ -117,6 +120,9 @@
       <Filter>Contracts</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h">
       <Filter>Contracts</Filter>
     </ClInclude>
   </ItemGroup>

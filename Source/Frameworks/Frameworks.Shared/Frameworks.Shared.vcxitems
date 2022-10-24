@@ -17,6 +17,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandBus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />

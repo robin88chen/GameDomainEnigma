@@ -10,6 +10,7 @@
 #include "GameEngine/MaterialVariableMap.h"
 #include "GameEngine/RenderBufferRepository.h"
 #include "GameEngine/TextureRepository.h"
+#include "GameEngine/ValueContractRegistry.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
@@ -127,6 +128,9 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     if (er) return er;
     er = InstallRenderBufferManagers();
     if (er) return er;
+
+    Engine::ValueContractRegistry::RegisterValueFactories();
+
     er = InstallSceneGraphManagers();
     if (er) return er;
     er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
@@ -141,6 +145,9 @@ error GraphicMain::ShutdownDefaultRenderer()
     error er;
     er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     er = ShutdownSceneGraphManagers();
+
+    Engine::ValueContractRegistry::UnregisterValueFactories();
+
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();

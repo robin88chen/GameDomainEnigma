@@ -165,6 +165,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h">
       <Filter>Contracts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ValueContractRegistry.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -243,6 +246,9 @@
       <Filter>Effect Material</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ValueContractRegistry.cpp">
       <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>

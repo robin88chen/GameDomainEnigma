@@ -4,15 +4,24 @@
     <Filter Include="EffectPolicy">
       <UniqueIdentifier>{1434ebaa-5879-4041-8a37-5bdc02f751f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{4b989ff9-047d-4221-911f-721e301ecb81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h">
       <Filter>EffectPolicy</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp">
       <Filter>EffectPolicy</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.cpp">
+      <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -30,6 +30,8 @@ namespace Enigma::Frameworks
         Contract& operator=(const Contract& c) = default;
         Contract& operator=(Contract&& c) = default;
 
+        bool IsEmpty() const { return m_values.empty(); }
+
         /** Add or Update key value data */
         template <class T> void AddOrUpdate(const std::string& attribute, const T& value)
         {

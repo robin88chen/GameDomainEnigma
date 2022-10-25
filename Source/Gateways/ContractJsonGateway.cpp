@@ -108,6 +108,7 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
     else if (type == BOX3)
         contract.AddOrUpdate(attribute, DeserializeBox3Values(value[VALUE_TOKEN]));
 }
+
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
 {
     //FactoryDesc::InstanceType instance_type;
@@ -145,6 +146,7 @@ FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
     }*/
     return desc;
 }
+
 std::uint64_t DeserializeUInt64(const rapidjson::Value& value)
 {
     return value.GetUint64();
@@ -189,7 +191,7 @@ rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPo
     return json;
 }
 
-rapidjson::Value SerializeObjectToJson(std::any any_ob, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value node{ rapidjson::kObjectType };
     if (any_ob.type() == typeid(FactoryDesc))

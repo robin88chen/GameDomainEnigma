@@ -4,6 +4,7 @@
 #include "SceneGraphEvents.h"
 #include "SceneGraphContracts.h"
 #include "Frameworks/EventPublisher.h"
+#include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::SceneGraph;
@@ -14,9 +15,14 @@ Node::Node(const std::string& name) : Spatial(name)
 {
 }
 
-Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
+Node::Node(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)
+    : Spatial(dynamic_cast<const SpatialContract&>(contract))
 {
-    
+    for (auto& name : contract.ChildNames())
+    {
+        resolver.TryResolveLinkage(name, [=](auto sp) { this->AttachChild(sp, sp->GetLocalTransform()); });
+    }
+    resolver.InvokeLinkageResolver(m_name, ThisSpatial());
 }
 
 Node::~Node()

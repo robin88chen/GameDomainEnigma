@@ -11,6 +11,11 @@
 #include "Spatial.h"
 #include <list>
 
+namespace Enigma::Engine
+{
+    template <class T> class ContractedLinkageResolver;
+}
+
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
@@ -29,7 +34,7 @@ namespace Enigma::SceneGraph
 
     public:
         Node(const std::string& name);
-        Node(const NodeContract& contract);
+        Node(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node();

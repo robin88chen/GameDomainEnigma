@@ -180,6 +180,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

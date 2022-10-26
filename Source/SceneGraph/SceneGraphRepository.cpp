@@ -23,6 +23,9 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr)
     IMPLEMENT_RTTI(Enigma, SceneGraph, SceneGraphRepository, ISystemService);
     m_handSystem = GraphicCoordSys::LeftHand;
     m_needTick = false;
+
+    m_spatialLinkageResolver = ContractedLinkageResolver<Spatial>([=](auto n) -> std::shared_ptr<Spatial> { return this->QuerySpatial(n); });
+
     CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(), [=](auto c) { this->NodeContractFactory(c); }));
 }
 
@@ -167,6 +170,14 @@ std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
     return it->second.lock();
 }
 
+std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& name)
+{
+    if (auto node = QueryNode(name)) return node;
+    if (auto pawn = QueryPawn(name)) return pawn;
+    if (auto light = QueryLight(name)) return light;
+    return nullptr;
+}
+
 void SceneGraphRepository::NodeContractFactory(const Contract& contract)
 {
     if (contract.GetRtti().GetRttiName() != Node::TYPE_RTTI.GetName())
@@ -176,7 +187,7 @@ void SceneGraphRepository::NodeContractFactory(const Contract& contract)
     }
     NodeContract node_contract = NodeContract::FromContract(contract);
     assert(!HasNode(node_contract.Name()));
-    auto node = std::make_shared<Node>(node_contract);
+    auto node = std::make_shared<Node>(node_contract, m_spatialLinkageResolver);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(node_contract.Name(), node);
     EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(node_contract.Name(), node));

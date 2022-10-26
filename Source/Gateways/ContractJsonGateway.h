@@ -10,7 +10,7 @@
 
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include "Frameworks/Contract.h"
+#include "GameEngine/Contract.h"
 #include <vector>
 #include <string>
 
@@ -19,8 +19,8 @@ namespace Enigma::Gateways
     class ContractJsonGateway
     {
     public:
-        static std::vector<Frameworks::Contract> Deserialize(const std::string& json);
-        static std::string Serialize(const std::vector<Frameworks::Contract>& contracts);
+        static std::vector<Engine::Contract> Deserialize(const std::string& json);
+        static std::string Serialize(const std::vector<Engine::Contract>& contracts);
     };
 }
 

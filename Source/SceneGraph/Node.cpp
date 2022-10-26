@@ -2,13 +2,21 @@
 #include "Culler.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphContracts.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::SceneGraph;
 
+Enigma::Frameworks::Rtti Node::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Node", Spatial::TYPE_RTTI);
+
 Node::Node(const std::string& name) : Spatial(name)
 {
+}
+
+Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
+{
+    
 }
 
 Node::~Node()

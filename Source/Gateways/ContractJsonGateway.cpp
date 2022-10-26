@@ -1,6 +1,6 @@
 ﻿#include "ContractJsonGateway.h"
 #include "Frameworks/StringFormat.h"
-#include "Frameworks/FactoryDesc.h"
+#include "GameEngine/FactoryDesc.h"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
@@ -18,7 +18,7 @@ constexpr const char* BOX3 = "Box3";
 constexpr const char* RTTI_NAME = "RttiName";
 
 using namespace Enigma::Gateways;
-using namespace Enigma::Frameworks;
+using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------

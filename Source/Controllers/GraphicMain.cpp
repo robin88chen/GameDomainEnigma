@@ -10,7 +10,7 @@
 #include "GameEngine/MaterialVariableMap.h"
 #include "GameEngine/RenderBufferRepository.h"
 #include "GameEngine/TextureRepository.h"
-#include "GameEngine/ValueContractRegistry.h"
+#include "GameEngine/ContractedFactories.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
@@ -122,14 +122,15 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
         er = CreateRenderEngineDevice(policy->GetDeviceCreatingPolicy());
         if (er) return er;
     }
+
+    m_serviceManager->RegisterSystemService(menew Engine::ContractedFactories(m_serviceManager));
+
     er = InstallShaderManagers();
     if (er) return er;
     er = InstallTextureManagers();
     if (er) return er;
     er = InstallRenderBufferManagers();
     if (er) return er;
-
-    Engine::ValueContractRegistry::RegisterValueFactories();
 
     er = InstallSceneGraphManagers();
     if (er) return er;
@@ -146,12 +147,12 @@ error GraphicMain::ShutdownDefaultRenderer()
     er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     er = ShutdownSceneGraphManagers();
 
-    Engine::ValueContractRegistry::UnregisterValueFactories();
-
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
     if (er) return er;
+
+    m_serviceManager->ShutdownSystemService(Engine::ContractedFactories::TYPE_RTTI);
 
     if (policy->GetDeviceCreatingPolicy())
     {

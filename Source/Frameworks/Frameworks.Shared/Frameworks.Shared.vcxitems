@@ -16,8 +16,6 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />
@@ -32,13 +30,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Command.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandBus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h" />

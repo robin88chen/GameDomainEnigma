@@ -1,6 +1,6 @@
 ﻿#include "Contract.h"
 
-using namespace Enigma::Frameworks;
+using namespace Enigma::Engine;
 
 std::string TOKEN_RTTI = "Rtti";
 

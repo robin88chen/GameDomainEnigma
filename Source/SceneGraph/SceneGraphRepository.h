@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
+#include "GameEngine/Contract.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -58,6 +59,9 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
+
+    private:
+        void NodeContractFactory(const Engine::Contract& contract);
 
     private:
         GraphicCoordSys m_handSystem;

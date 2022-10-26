@@ -10,7 +10,7 @@
 
 #include "MathLib/Box3.h"
 #include "MathLib/Sphere3.h"
-#include "Frameworks/Contract.h"
+#include "Contract.h"
 #include <optional>
 
 namespace Enigma::Engine
@@ -22,8 +22,8 @@ namespace Enigma::Engine
         BoundingVolumeContract(const std::optional<MathLib::Box3>& box, const std::optional<MathLib::Sphere3>& sphere) :
             m_box(box), m_sphere(sphere) {};
 
-        static BoundingVolumeContract FromContract(const Frameworks::Contract& contract);
-        Frameworks::Contract ToContract() const;
+        static BoundingVolumeContract FromContract(const Contract& contract);
+        Contract ToContract() const;
 
         std::optional<MathLib::Box3> Box() const { return m_box; }
         std::optional<MathLib::Sphere3> Sphere() const { return m_sphere; }

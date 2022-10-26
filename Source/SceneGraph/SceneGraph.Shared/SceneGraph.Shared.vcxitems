@@ -23,6 +23,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
@@ -42,6 +44,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />

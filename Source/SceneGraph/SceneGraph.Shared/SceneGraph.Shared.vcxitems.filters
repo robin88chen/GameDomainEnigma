@@ -25,6 +25,9 @@
     <Filter Include="Scene Graph\LightInfo">
       <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -81,6 +84,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h">
       <Filter>Scene Graph\LightInfo</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -124,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp">
       <Filter>Scene Graph\LightInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp">
+      <Filter>Scene Traveler</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.cpp">
+      <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

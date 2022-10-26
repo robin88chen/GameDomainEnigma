@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <cassert>
 
-namespace Enigma::Frameworks
+namespace Enigma::Engine
 {
     class Contract
     {

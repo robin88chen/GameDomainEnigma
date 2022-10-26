@@ -3,12 +3,17 @@
 #include "SceneGraphErrors.h"
 #include "Culler.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphContracts.h"
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
+#include "GameEngine/BoundingVolume.h"
 #include <cassert>
+#include <tuple>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
+
+Enigma::Frameworks::Rtti Spatial::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
 
 Spatial::Spatial(const std::string& name)
 {
@@ -34,6 +39,26 @@ Spatial::Spatial(const std::string& name)
     m_vecWorldPosition = Vector3::ZERO;
 
     m_notifyFlags = Notify_None;
+}
+
+Spatial::Spatial(const SpatialContract& contract)
+{
+    m_name = contract.Name();
+    m_graphDepth = contract.GraphDepth();
+    m_cullingMode = static_cast<CullingMode>(contract.CullingMode());
+    m_spatialFlags = contract.SpatialFlag();
+    m_notifyFlags = contract.NotifyFlag();
+    m_mxLocalTransform = contract.LocalTransform();
+    m_mxWorldTransform = contract.WorldTransform();
+    m_modelBound = Engine::BoundingVolume(contract.ModelBound());
+    m_worldBound = Engine::BoundingVolume(contract.WorldBound());
+
+    std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
+    m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
+    EulerAngles angles;
+    std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
+    m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
+    m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
 }
 
 Spatial::~Spatial()

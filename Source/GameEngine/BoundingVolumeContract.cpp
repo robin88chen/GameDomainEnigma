@@ -2,13 +2,12 @@
 #include "BoundingVolume.h"
 
 using namespace Enigma::Engine;
-using namespace Enigma::Frameworks;
 using namespace Enigma::MathLib;
 
 std::string TOKEN_BOXBV = "BoxBV";
 std::string TOKEN_SPHEREBV = "SphereBV";
 
-BoundingVolumeContract BoundingVolumeContract::FromContract(const Frameworks::Contract& contract)
+BoundingVolumeContract BoundingVolumeContract::FromContract(const Contract& contract)
 {
     std::optional<Box3> box;
     std::optional<Sphere3> sphere;

@@ -5,10 +5,16 @@
 #include "Pawn.h"
 #include "Light.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphContracts.h"
 #include "Frameworks/EventPublisher.h"
+#include "GameEngine/ContractCommands.h"
+#include "Frameworks/CommandBus.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Frameworks;
+using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository);
 
@@ -17,10 +23,12 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr)
     IMPLEMENT_RTTI(Enigma, SceneGraph, SceneGraphRepository, ISystemService);
     m_handSystem = GraphicCoordSys::LeftHand;
     m_needTick = false;
+    CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(), [=](auto c) { this->NodeContractFactory(c); }));
 }
 
 SceneGraphRepository::~SceneGraphRepository()
 {
+    CommandBus::Post(std::make_shared<UnRegisterContractFactory>(Node::TYPE_RTTI.GetName()));
 }
 
 void SceneGraphRepository::SetCoordinateSystem(GraphicCoordSys hand)
@@ -157,4 +165,19 @@ std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
     if (it == m_lights.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
+}
+
+void SceneGraphRepository::NodeContractFactory(const Contract& contract)
+{
+    if (contract.GetRtti().GetRttiName() != Node::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for node factory", contract.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    NodeContract node_contract = NodeContract::FromContract(contract);
+    assert(!HasNode(node_contract.Name()));
+    auto node = std::make_shared<Node>(node_contract);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(node_contract.Name(), node);
+    EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(node_contract.Name(), node));
 }

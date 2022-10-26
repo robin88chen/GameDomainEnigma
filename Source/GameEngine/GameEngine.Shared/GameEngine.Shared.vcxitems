@@ -17,6 +17,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
@@ -27,6 +30,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
@@ -52,12 +56,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ValueContractRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
@@ -81,6 +86,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ValueContractRegistry.cpp" />
   </ItemGroup>
 </Project>

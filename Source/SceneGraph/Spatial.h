@@ -25,10 +25,15 @@ namespace Enigma::SceneGraph
     using error = std::error_code;
     class Culler;
     class Node;
+    class SpatialContract;
 
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
     {
+    public:
+        static Frameworks::Rtti TYPE_RTTI;
+        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
+
     public:
         enum class CullingMode
         {
@@ -65,6 +70,7 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const std::string& name);
+        Spatial(const SpatialContract& contract);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();

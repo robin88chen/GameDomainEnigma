@@ -114,6 +114,22 @@ namespace Enigma::SceneGraph
     protected:
         NotifyCode m_notifyCode;
     };
+
+    //------------------------ scene graph contract factory event ------------------
+    class ContractedSpatialCreated : public Frameworks::IEvent
+    {
+    public:
+        ContractedSpatialCreated(const std::string& name, const std::shared_ptr<Spatial>& spatial)
+            : m_name(name), m_spatial(spatial) {};
+
+        const std::string& GetName() { return m_name; }
+        const std::shared_ptr<Spatial>& GetSpatial() { return m_spatial; }
+        const Frameworks::Rtti& GetRtti() const { return m_spatial->TypeInfo(); }
+
+    protected:
+        std::string m_name;
+        std::shared_ptr<Spatial> m_spatial;
+    };
 }
 
 

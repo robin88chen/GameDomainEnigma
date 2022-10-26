@@ -60,12 +60,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Timer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp">
-      <Filter>Contracts</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp">
-      <Filter>Contracts</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h">
@@ -115,15 +109,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp">
       <Filter>Extend</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h">
-      <Filter>Contracts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

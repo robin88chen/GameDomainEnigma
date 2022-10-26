@@ -15,14 +15,21 @@ namespace Enigma::SceneGraph
 {
     using error = std::error_code;
 
+    class NodeContract;
+
     /** scene graph node class */
     class Node : public Spatial
     {
+    public:
+        static Frameworks::Rtti TYPE_RTTI;
+        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
+
     public:
         using ChildList = std::list<SpatialPtr>;
 
     public:
         Node(const std::string& name);
+        Node(const NodeContract& contract);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node();
@@ -68,6 +75,7 @@ namespace Enigma::SceneGraph
         }
 
     protected:
+        //todo : rethink -- mutex for lock list??
         ChildList m_childList;
     };
 

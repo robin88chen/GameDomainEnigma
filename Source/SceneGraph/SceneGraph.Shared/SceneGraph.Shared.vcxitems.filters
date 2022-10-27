@@ -90,6 +90,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.h">
       <Filter>Contracts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.cpp">
       <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
+      <Filter>Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

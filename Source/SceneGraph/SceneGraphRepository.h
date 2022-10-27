@@ -12,7 +12,7 @@
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
 #include "GameEngine/Contract.h"
-#include "GameEngine/LinkageResolver.h"
+#include "SpatialLinkageResolver.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -83,7 +83,7 @@ namespace Enigma::SceneGraph
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
 
-        Engine::ContractedLinkageResolver<Spatial> m_spatialLinkageResolver;
+        SpatialLinkageResolver m_spatialLinkageResolver;
     };
 }
 

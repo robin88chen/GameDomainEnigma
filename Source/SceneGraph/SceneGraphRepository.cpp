@@ -24,7 +24,7 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr)
     m_handSystem = GraphicCoordSys::LeftHand;
     m_needTick = false;
 
-    m_spatialLinkageResolver = ContractedLinkageResolver<Spatial>([=](auto n) -> std::shared_ptr<Spatial> { return this->QuerySpatial(n); });
+    m_spatialLinkageResolver = SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial> { return this->QuerySpatial(n); });
 
     CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(), [=](auto c) { this->NodeContractFactory(c); }));
 }

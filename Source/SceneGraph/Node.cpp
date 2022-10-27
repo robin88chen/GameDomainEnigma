@@ -22,7 +22,6 @@ Node::Node(const NodeContract& contract, Engine::ContractedLinkageResolver<Spati
     {
         resolver.TryResolveLinkage(name, [=](auto sp) { this->AttachChild(sp, sp->GetLocalTransform()); });
     }
-    resolver.InvokeLinkageResolver(m_name, ThisSpatial());
 }
 
 Node::~Node()

@@ -24,6 +24,7 @@ namespace Enigma::Engine
     public:
         ContractedLinkageResolver() = default;
         ContractedLinkageResolver(const FactoryQuery<T>& query) : m_query(query) {}
+        ~ContractedLinkageResolver() = default;
 
         void TryResolveLinkage(const std::string& name, const LinkageResolver<T>& resolver)
         {

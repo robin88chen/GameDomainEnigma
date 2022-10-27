@@ -9,12 +9,12 @@
 #define SCENE_GRAPH_EVENTS_H
 
 #include "Frameworks/Event.h"
-#include "SceneGraph/LightInfo.h"
+#include "LightInfo.h"
+#include "Spatial.h"
 #include <memory>
 
 namespace Enigma::SceneGraph
 {
-    class Spatial;
     class Light;
 
     //------------------ Scene Graph Events -------------------

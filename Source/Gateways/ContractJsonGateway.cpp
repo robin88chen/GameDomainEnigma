@@ -6,15 +6,19 @@
 #include "rapidjson/prettywriter.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "MathLib/Box3.h"
+#include "MathLib/Matrix4.h"
 #include <any>
 
 constexpr const char* TYPE_TOKEN = "Type";
 constexpr const char* VALUE_TOKEN = "Value";
+constexpr const char* CONTRACT_TOKEN = "Contract";
 constexpr const char* UINT64_TOKEN = "Uint64";
 constexpr const char* UINT32_TOKEN = "Uint32";
 constexpr const char* STRING_TOKEN = "String";
-constexpr const char* FACTORY_DESC = "FactoryDesc";
-constexpr const char* BOX3 = "Box3";
+constexpr const char* FACTORY_DESC_TOKEN = "FactoryDesc";
+constexpr const char* BOX3_TOKEN = "Box3";
+constexpr const char* MATRIX4_TOKEN = "Matrix4";
+constexpr const char* STRING_ARRAY_TOKEN = "StringArray";
 constexpr const char* RTTI_NAME = "RttiName";
 
 using namespace Enigma::Gateways;
@@ -22,13 +26,15 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------
-Contract DeserializeJsonValue(const rapidjson::Value& value);
+Contract DeserializeContract(const rapidjson::Value& value);
 void DeserializeAttribute(Contract& contract, const std::string& attribute, const rapidjson::Value& value);
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
 std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
 std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
 std::string DeserializeString(const rapidjson::Value& value);
 Box3 DeserializeBox3Values(const rapidjson::Value& value);
+Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value);
+std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& value);
 //------------------------------------------------------------------------
 rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
@@ -37,6 +43,8 @@ rapidjson::Value SerializeUInt64(const std::uint64_t n);
 rapidjson::Value SerializeUInt32(const std::uint32_t n);
 rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator);
+rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator);
+rapidjson::Value SerializeStringArrayValues(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator);
 
 std::vector<Contract> ContractJsonGateway::Deserialize(const std::string& json)
 {
@@ -57,7 +65,7 @@ std::vector<Contract> ContractJsonGateway::Deserialize(const std::string& json)
     }
     for (auto json_it = json_doc.GetArray().Begin(); json_it != json_doc.GetArray().End(); ++json_it)
     {
-        contracts.emplace_back(DeserializeJsonValue(*json_it));
+        contracts.emplace_back(DeserializeContract(*json_it));
     }
 
     return contracts;
@@ -81,7 +89,7 @@ std::string ContractJsonGateway::Serialize(const std::vector<Contract>& contract
 }
 
 //-------------------------------------------------------------------------
-Contract DeserializeJsonValue(const rapidjson::Value& value_ob)
+Contract DeserializeContract(const rapidjson::Value& value_ob)
 {
     Contract contract;
     for (auto json_it = value_ob.MemberBegin(); json_it != value_ob.MemberEnd(); ++json_it)
@@ -97,7 +105,9 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
     if (!value.HasMember(TYPE_TOKEN)) return;
     if (!value.HasMember(VALUE_TOKEN)) return;
     std::string type = value[TYPE_TOKEN].GetString();
-    if (type == FACTORY_DESC)
+    if (type == CONTRACT_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeContract(value[VALUE_TOKEN]));
+    else if (type == FACTORY_DESC_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
     else if (type == UINT64_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
@@ -105,8 +115,12 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
         contract.AddOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
     else if (type == STRING_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
-    else if (type == BOX3)
+    else if (type == BOX3_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeBox3Values(value[VALUE_TOKEN]));
+    else if (type == MATRIX4_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeMatrix4Values(value[VALUE_TOKEN]));
+    else if (type == STRING_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeStringArrayValues(value[VALUE_TOKEN]));
 }
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
@@ -178,6 +192,28 @@ Box3 DeserializeBox3Values(const rapidjson::Value& value)
     return box;
 }
 
+Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return Matrix4::IDENTITY;
+    auto values = value.GetArray();
+    return Matrix4(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat(),
+        values[4].GetFloat(), values[5].GetFloat(), values[6].GetFloat(), values[7].GetFloat(),
+        values[8].GetFloat(), values[9].GetFloat(), values[10].GetFloat(), values[11].GetFloat(),
+        values[12].GetFloat(), values[13].GetFloat(), values[14].GetFloat(), values[15].GetFloat());
+}
+
+std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& value)
+{
+    std::vector<std::string> ss;
+    if (!value.IsArray()) return ss;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        ss.emplace_back(DeserializeString(*json_it));
+    }
+    return ss;
+}
+
 //--------------------------------------------------------------------------
 rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator)
 {
@@ -194,9 +230,15 @@ rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPo
 rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value node{ rapidjson::kObjectType };
-    if (any_ob.type() == typeid(FactoryDesc))
+    if (any_ob.type() == typeid(Contract))
     {
-        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(FACTORY_DESC), allocator);
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(CONTRACT_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
+            SerializeContract(std::any_cast<Contract>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(FactoryDesc))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(FACTORY_DESC_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
             SerializeFactoryDesc(std::any_cast<FactoryDesc>(any_ob), allocator), allocator);
     }
@@ -220,8 +262,18 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
     }
     else if (any_ob.type() == typeid(Box3))
     {
-        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(BOX3), allocator);
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(BOX3_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeBox3Values(std::any_cast<Box3>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(Matrix4))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(MATRIX4_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeMatrix4Values(std::any_cast<Matrix4>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<std::string>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(STRING_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeStringArrayValues(std::any_cast<std::vector<std::string>>(any_ob), allocator), allocator);
     }
     return node;
 }
@@ -268,5 +320,28 @@ rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAlloc
     value.PushBack(box.Extent(1), allocator);
     value.PushBack(box.Extent(2), allocator);
 
+    return value;
+}
+
+rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (int i = 0; i < 4; i++)
+    {
+        value.PushBack(mx[i][0], allocator);
+        value.PushBack(mx[i][1], allocator);
+        value.PushBack(mx[i][2], allocator);
+        value.PushBack(mx[i][3], allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeStringArrayValues(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto s : ss)
+    {
+        value.PushBack(SerializeString(s, allocator), allocator);
+    }
     return value;
 }

@@ -1,5 +1,6 @@
 ﻿#include "Node.h"
 #include "Culler.h"
+#include "Spatial.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphContracts.h"
@@ -34,6 +35,16 @@ Node::~Node()
         child = nullptr;
     }
     m_childList.clear();
+}
+
+NodeContract Node::SerializeContract()
+{
+    NodeContract contract(Spatial::SerializeContract());
+    for (auto child : m_childList)
+    {
+        if (child) contract.ChildNames().emplace_back(child->GetSpatialName());
+    }
+    return contract;
 }
 
 error Node::OnCullingVisible(Culler* culler, bool noCull)

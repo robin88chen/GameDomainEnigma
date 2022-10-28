@@ -66,6 +66,21 @@ Spatial::~Spatial()
     //m_spatialRenderState = nullptr;
 }
 
+SpatialContract Spatial::SerializeContract()
+{
+    SpatialContract contract;
+    contract.Name() = m_name;
+    contract.GraphDepth() = m_graphDepth;
+    contract.CullingMode() = static_cast<unsigned int>(m_cullingMode);
+    contract.SpatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
+    contract.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
+    contract.LocalTransform() = m_mxLocalTransform;
+    contract.WorldTransform() = m_mxWorldTransform;
+    contract.ModelBound() = m_modelBound.SerializeContract();
+    contract.WorldBound() = m_worldBound.SerializeContract();
+    return contract;
+}
+
 void Spatial::LinkParent(const std::shared_ptr<Spatial>& parent)
 {
     m_parent = parent;

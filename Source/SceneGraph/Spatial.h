@@ -77,6 +77,8 @@ namespace Enigma::SceneGraph
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
+        SpatialContract SerializeContract();
+
         const std::string& GetSpatialName() const { return m_name; };
 
         /** @name scene graph relation */

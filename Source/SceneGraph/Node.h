@@ -10,6 +10,7 @@
 
 #include "Spatial.h"
 #include <list>
+#include <string>
 
 namespace Enigma::Engine
 {
@@ -41,6 +42,7 @@ namespace Enigma::SceneGraph
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
+        NodeContract SerializeContract();
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
         virtual bool CanVisited() override { return true; };

@@ -1,0 +1,170 @@
+[
+    {
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "RttiName": "Enigma.SceneGraph.Node"
+            }
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "scene_root"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "ModelBound": {},
+        "WorldBound": {},
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": [
+                "child1",
+                "child2"
+            ]
+        }
+    },
+    {
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [
+                4.123595237731934,
+                -1.2381783723831177,
+                3.247504949569702,
+                -6.454274654388428,
+                -1.8808574676513672,
+                -2.1406471729278564,
+                7.300082683563232,
+                -6.749752998352051,
+                0.13647861778736115,
+                7.909634590148926,
+                2.4840457439422607,
+                5.843033790588379,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "RttiName": "Enigma.SceneGraph.Node"
+            }
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "child1"
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "ModelBound": {},
+        "WorldBound": {},
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": []
+        }
+    },
+    {
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [
+                -0.049249790608882904,
+                2.532167673110962,
+                -1.0582146644592285,
+                -1.1825170516967773,
+                0.020497450605034828,
+                -0.584502100944519,
+                -3.9676666259765625,
+                -4.889436721801758,
+                -0.10524503886699677,
+                -1.2987741231918335,
+                -0.27754461765289307,
+                6.553367614746094,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "RttiName": "Enigma.SceneGraph.Node"
+            }
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "child2"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "ModelBound": {},
+        "WorldBound": {},
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": []
+        }
+    }
+]

@@ -28,10 +28,10 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4& WorldTransform() { return m_worldTransform; }
         [[nodiscard]] unsigned int GraphDepth() const { return m_graphDepth; }
         unsigned int& GraphDepth() { return m_graphDepth; }
-        [[nodiscard]] Engine::BoundingVolumeContract ModelBound() const { return m_modelBound; }
-        Engine::BoundingVolumeContract& ModelBound() { return m_modelBound; }
-        [[nodiscard]] Engine::BoundingVolumeContract WorldBound() const { return m_worldBound; }
-        Engine::BoundingVolumeContract& WorldBound() { return m_worldBound; }
+        [[nodiscard]] Engine::Contract ModelBound() const { return m_modelBound; }
+        Engine::Contract& ModelBound() { return m_modelBound; }
+        [[nodiscard]] Engine::Contract WorldBound() const { return m_worldBound; }
+        Engine::Contract& WorldBound() { return m_worldBound; }
         [[nodiscard]] unsigned int CullingMode() const { return m_cullingMode; }
         unsigned int& CullingMode() { return m_cullingMode; }
         [[nodiscard]] unsigned int SpatialFlag() const { return m_spatialFlag; }
@@ -47,8 +47,8 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4 m_localTransform;
         MathLib::Matrix4 m_worldTransform;
         unsigned int m_graphDepth;
-        Engine::BoundingVolumeContract m_modelBound;
-        Engine::BoundingVolumeContract m_worldBound;
+        Engine::Contract m_modelBound;
+        Engine::Contract m_worldBound;
         unsigned int m_cullingMode;
         unsigned int m_spatialFlag;
         unsigned int m_notifyFlag;

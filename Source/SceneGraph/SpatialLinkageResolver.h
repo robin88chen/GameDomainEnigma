@@ -20,7 +20,9 @@ namespace Enigma::SceneGraph
     public:
         SpatialLinkageResolver();
         SpatialLinkageResolver(const Engine::FactoryQuery<Spatial>& query);
+        SpatialLinkageResolver(const SpatialLinkageResolver&);
         ~SpatialLinkageResolver();
+        SpatialLinkageResolver& operator=(const SpatialLinkageResolver&);
 
     protected:
         void OnContractedSpatialCreated(const Frameworks::IEventPtr& e);

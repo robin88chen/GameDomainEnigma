@@ -50,8 +50,8 @@ Spatial::Spatial(const SpatialContract& contract)
     m_notifyFlags = contract.NotifyFlag();
     m_mxLocalTransform = contract.LocalTransform();
     m_mxWorldTransform = contract.WorldTransform();
-    m_modelBound = Engine::BoundingVolume(contract.ModelBound());
-    m_worldBound = Engine::BoundingVolume(contract.WorldBound());
+    m_modelBound = Engine::BoundingVolume(Engine::BoundingVolumeContract::FromContract(contract.ModelBound()));
+    m_worldBound = Engine::BoundingVolume(Engine::BoundingVolumeContract::FromContract(contract.WorldBound()));
 
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
@@ -76,8 +76,8 @@ SpatialContract Spatial::SerializeContract()
     contract.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
     contract.LocalTransform() = m_mxLocalTransform;
     contract.WorldTransform() = m_mxWorldTransform;
-    contract.ModelBound() = m_modelBound.SerializeContract();
-    contract.WorldBound() = m_worldBound.SerializeContract();
+    contract.ModelBound() = m_modelBound.SerializeContract().ToContract();
+    contract.WorldBound() = m_worldBound.SerializeContract().ToContract();
     return contract;
 }
 

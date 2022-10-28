@@ -14,6 +14,8 @@
 #include "Gateways/ContractJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
+#include "Frameworks/CommandBus.h"
+#include "GameEngine/ContractCommands.h"
 #include <memory>
 #include <cassert>
 #include <string>
@@ -101,11 +103,25 @@ void SceneGraphJsonGatewayTest::InstallEngine()
         }
     }
     std::string json = ContractJsonGateway::Serialize(contracts);
+    delete flatten;
 
     IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt"), "w+b");
     if (FATAL_LOG_EXPR(!iFile)) return;
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
+
+    root_node = nullptr;
+
+    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt"), "rb");
+    size_t filesize = readFile->Size();
+    auto read_buff = readFile->Read(0, filesize);
+    std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
+    assert(json == read_json);
+    std::vector<Contract> read_contracts = ContractJsonGateway::Deserialize(read_json);
+    for (auto& contract : read_contracts)
+    {
+        CommandBus::Post(std::make_shared<InvokeContractFactory>(contract));
+    }
 }
 
 void SceneGraphJsonGatewayTest::ShutdownEngine()

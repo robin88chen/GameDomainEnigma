@@ -25,8 +25,8 @@ SpatialContract SpatialContract::FromContract(const Contract& contract)
     spatial_contract.m_localTransform = contract.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM).value();
     spatial_contract.m_worldTransform = contract.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM).value();
     spatial_contract.m_graphDepth = contract.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH).value();
-    spatial_contract.m_modelBound = contract.TryGetValue<BoundingVolumeContract>(TOKEN_MODEL_BOUND).value();
-    spatial_contract.m_worldBound = contract.TryGetValue<BoundingVolumeContract>(TOKEN_WORLD_BOUND).value();
+    spatial_contract.m_modelBound = contract.TryGetValue<Contract>(TOKEN_MODEL_BOUND).value();
+    spatial_contract.m_worldBound = contract.TryGetValue<Contract>(TOKEN_WORLD_BOUND).value();
     spatial_contract.m_cullingMode = contract.TryGetValue<unsigned int>(TOKEN_CULLING_MODE).value();
     spatial_contract.m_spatialFlag = contract.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG).value();
     spatial_contract.m_notifyFlag = contract.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG).value();

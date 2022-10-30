@@ -115,20 +115,32 @@ namespace Enigma::SceneGraph
         NotifyCode m_notifyCode;
     };
 
-    //------------------------ scene graph contract factory event ------------------
+    //------------------------ scene graph contract event ------------------
     class ContractedSpatialCreated : public Frameworks::IEvent
     {
     public:
-        ContractedSpatialCreated(const std::string& name, const std::shared_ptr<Spatial>& spatial)
-            : m_name(name), m_spatial(spatial) {};
+        ContractedSpatialCreated(const Engine::Contract& contract, const std::shared_ptr<Spatial>& spatial)
+            : m_contract(contract), m_spatial(spatial) {};
 
-        const std::string& GetName() { return m_name; }
+        const Engine::Contract& GetContract() const { return m_contract; }
         const std::shared_ptr<Spatial>& GetSpatial() { return m_spatial; }
-        const Frameworks::Rtti& GetRtti() const { return m_spatial->TypeInfo(); }
 
     protected:
-        std::string m_name;
+        Engine::Contract m_contract;
         std::shared_ptr<Spatial> m_spatial;
+    };
+    class ContractedSceneGraphBuilt : public Frameworks::IEvent
+    {
+    public:
+        ContractedSceneGraphBuilt(const std::string& scene_graph_id, const std::vector<std::shared_ptr<Spatial>>& top_levels)
+            : m_sceneGraphId(scene_graph_id), m_topLevels(top_levels) {}
+
+        const std::string& GetSceneGraphId() { return m_sceneGraphId; }
+        const std::vector<std::shared_ptr<Spatial>>& GetTopLevelSpatial() { return m_topLevels; }
+
+    protected:
+        std::string m_sceneGraphId;
+        std::vector<std::shared_ptr<Spatial>> m_topLevels;
     };
 }
 

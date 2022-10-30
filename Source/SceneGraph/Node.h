@@ -35,7 +35,7 @@ namespace Enigma::SceneGraph
 
     public:
         Node(const std::string& name);
-        Node(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
+        Node(const NodeContract& contract);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node();
@@ -43,6 +43,8 @@ namespace Enigma::SceneGraph
         Node& operator=(Node&&) = delete;
 
         NodeContract SerializeContract();
+        void ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
+
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
         virtual bool CanVisited() override { return true; };

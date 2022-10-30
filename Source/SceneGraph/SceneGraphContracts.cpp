@@ -21,6 +21,7 @@ std::string TOKEN_CHILD_NAMES = "ChildNames";
 SpatialContract SpatialContract::FromContract(const Contract& contract)
 {
     SpatialContract spatial_contract;
+    spatial_contract.m_isTopLevel = contract.IsTopLevel();
     spatial_contract.m_name = contract.TryGetValue<std::string>(TOKEN_NAME).value();
     spatial_contract.m_localTransform = contract.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM).value();
     spatial_contract.m_worldTransform = contract.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM).value();
@@ -36,6 +37,7 @@ SpatialContract SpatialContract::FromContract(const Contract& contract)
 Contract SpatialContract::ToContract()
 {
     Contract contract;
+    contract.AsTopLevel(m_isTopLevel);
     contract.AddRtti(FactoryDesc(Spatial::TYPE_RTTI.GetName()));
     contract.AddOrUpdate(TOKEN_NAME, m_name);
     contract.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);

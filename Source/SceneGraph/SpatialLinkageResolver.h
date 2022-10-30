@@ -24,6 +24,8 @@ namespace Enigma::SceneGraph
         ~SpatialLinkageResolver();
         SpatialLinkageResolver& operator=(const SpatialLinkageResolver&);
 
+        void ClearResolvers();
+
     protected:
         void OnContractedSpatialCreated(const Frameworks::IEventPtr& e);
 

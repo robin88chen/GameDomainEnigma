@@ -9,9 +9,9 @@
 #define SCENE_GRAPH_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
-#include "GameEngine/Contract.h"
 #include "SpatialLinkageResolver.h"
 #include <memory>
 #include <string>
@@ -27,6 +27,8 @@ namespace Enigma::SceneGraph
     class Pawn;
     class LightInfo;
     class Light;
+    class NodeContract;
+    class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -51,6 +53,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name);
+        std::shared_ptr<Node> CreateNode(const NodeContract& contract);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -65,7 +68,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
 
     private:
-        void NodeContractFactory(const Engine::Contract& contract);
+        void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -83,7 +86,9 @@ namespace Enigma::SceneGraph
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
 
-        SpatialLinkageResolver m_spatialLinkageResolver;
+        Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
+
+        SceneGraphBuilder* m_builder;
     };
 }
 

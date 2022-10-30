@@ -45,10 +45,15 @@ SpatialLinkageResolver& SpatialLinkageResolver::operator=(const SpatialLinkageRe
     return *this;
 }
 
+void SpatialLinkageResolver::ClearResolvers()
+{
+    m_linkageResolverTable.clear();
+}
+
 void SpatialLinkageResolver::OnContractedSpatialCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<ContractedSpatialCreated, IEvent>(e);
     if (!ev) return;
-    InvokeLinkageResolver(ev->GetName(), ev->GetSpatial());
+    InvokeLinkageResolver(ev->GetSpatial()->GetSpatialName(), ev->GetSpatial());
 }

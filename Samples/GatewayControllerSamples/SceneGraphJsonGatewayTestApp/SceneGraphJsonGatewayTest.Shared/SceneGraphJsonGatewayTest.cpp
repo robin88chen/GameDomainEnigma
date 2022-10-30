@@ -15,7 +15,9 @@
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/ContractCommands.h"
+#include "Frameworks/EventPublisher.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphEvents.h"
 #include <memory>
 #include <cassert>
 #include <string>
@@ -57,6 +59,8 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
 
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    EventPublisher::Subscribe(typeid(ContractedSceneGraphBuilt), m_onSceneGraphBuilt);
     MathRandom::RandomSeed();
     UniformFloatDistribution unif_rand = MathRandom::IntervalDistribution(-10.0f, std::nextafter(10.0f, 10.1f));
     UniformFloatDistribution half_pi_rand = MathRandom::IntervalDistribution(-Math::HALF_PI, Math::HALF_PI);
@@ -99,7 +103,9 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     {
         if (auto sp_node = std::dynamic_pointer_cast<Node, Spatial>(sp))
         {
-            contracts.emplace_back(sp_node->SerializeContract().ToContract());
+            Contract ct = sp_node->SerializeContract().ToContract();
+            if (sp->GetSpatialName() == "scene_root") ct.AsTopLevel(true);
+            contracts.emplace_back(ct);
         }
     }
     std::string json = ContractJsonGateway::Serialize(contracts);
@@ -118,13 +124,24 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
     assert(json == read_json);
     std::vector<Contract> read_contracts = ContractJsonGateway::Deserialize(read_json);
-    for (auto& contract : read_contracts)
-    {
-        CommandBus::Post(std::make_shared<InvokeContractFactory>(contract));
-    }
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", read_contracts));
 }
 
 void SceneGraphJsonGatewayTest::ShutdownEngine()
 {
+    EventPublisher::Unsubscribe(typeid(ContractedSceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onSceneGraphBuilt = nullptr;
     m_graphicMain->ShutdownRenderEngine();
+}
+
+void SceneGraphJsonGatewayTest::OnSceneGraphBuilt(const IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<ContractedSceneGraphBuilt, IEvent>(e);
+    if (!ev) return;
+    std::shared_ptr<Node> root_node;
+    if (ev->GetTopLevelSpatial().size() > 0)
+    {
+        root_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetTopLevelSpatial()[0]);
+    }
 }

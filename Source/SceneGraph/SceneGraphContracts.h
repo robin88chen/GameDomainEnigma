@@ -20,6 +20,8 @@ namespace Enigma::SceneGraph
     public:
         SpatialContract() = default;
 
+        [[nodiscard]] bool IsTopLevel() const { return m_isTopLevel; }
+        bool& IsTopLevel() { return m_isTopLevel; }
         const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
         [[nodiscard]] MathLib::Matrix4 LocalTransform() const { return m_localTransform; }
@@ -43,6 +45,7 @@ namespace Enigma::SceneGraph
         Engine::Contract ToContract();
 
     protected:
+        bool m_isTopLevel;
         std::string m_name;
         MathLib::Matrix4 m_localTransform;
         MathLib::Matrix4 m_worldTransform;

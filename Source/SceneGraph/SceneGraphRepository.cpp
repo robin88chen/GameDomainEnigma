@@ -6,15 +6,19 @@
 #include "Light.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphContracts.h"
+#include "SceneGraphCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/ContractCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
+#include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
+using namespace Enigma::Platforms;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository);
 
@@ -23,14 +27,18 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr)
     IMPLEMENT_RTTI(Enigma, SceneGraph, SceneGraphRepository, ISystemService);
     m_handSystem = GraphicCoordSys::LeftHand;
     m_needTick = false;
-
-    m_spatialLinkageResolver = SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial> { return this->QuerySpatial(n); });
-
-    CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(), [=](auto c) { this->NodeContractFactory(c); }));
+    m_builder = menew SceneGraphBuilder(this);
+    m_doBuildingSceneGraph =
+        std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
+    CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
 }
 
 SceneGraphRepository::~SceneGraphRepository()
 {
+    CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    m_doBuildingSceneGraph = nullptr;
+
+    delete m_builder;
     CommandBus::Post(std::make_shared<UnRegisterContractFactory>(Node::TYPE_RTTI.GetName()));
 }
 
@@ -100,6 +108,15 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
     auto node = std::make_shared<Node>(name);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(name, node);
+    return node;
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeContract& contract)
+{
+    assert(!HasNode(contract.Name()));
+    auto node = std::make_shared<Node>(contract);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(contract.Name(), node);
     return node;
 }
 
@@ -178,17 +195,11 @@ std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& n
     return nullptr;
 }
 
-void SceneGraphRepository::NodeContractFactory(const Contract& contract)
+void SceneGraphRepository::DoBuildingSceneGraph(const ICommandPtr& c)
 {
-    if (contract.GetRtti().GetRttiName() != Node::TYPE_RTTI.GetName())
-    {
-        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for node factory", contract.GetRtti().GetRttiName().c_str());
-        return;
-    }
-    NodeContract node_contract = NodeContract::FromContract(contract);
-    assert(!HasNode(node_contract.Name()));
-    auto node = std::make_shared<Node>(node_contract, m_spatialLinkageResolver);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(node_contract.Name(), node);
-    EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(node_contract.Name(), node));
+    if (!m_builder) return;
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
+    if (!cmd) return;
+    m_builder->BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetContracts());
 }

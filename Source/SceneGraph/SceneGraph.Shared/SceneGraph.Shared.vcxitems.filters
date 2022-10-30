@@ -28,6 +28,12 @@
     <Filter Include="Contracts">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Repository\Builder">
+      <UniqueIdentifier>{a4c9c21b-20e1-4560-9e29-10b0d82bcae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -93,6 +99,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
       <Filter>Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h">
+      <Filter>Repository\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -145,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp">
+      <Filter>Repository\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

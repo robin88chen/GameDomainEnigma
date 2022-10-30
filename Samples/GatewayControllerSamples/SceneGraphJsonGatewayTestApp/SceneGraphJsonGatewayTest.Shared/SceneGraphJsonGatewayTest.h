@@ -14,6 +14,7 @@
 #else
 #include "Application/AppDelegateWin32.h"
 #endif
+#include "Frameworks/EventSubscriber.h"
 
 class BufferBuilder;
 class TextureSamplerBuilder;
@@ -30,6 +31,12 @@ public:
 
     virtual void InstallEngine() override final;
     virtual void ShutdownEngine() override final;
+
+private:
+    void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
+private:
+    Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 };
 
 #endif // _SCENEGRAPH_JSON_GATEWAY_TEST_H

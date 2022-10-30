@@ -30,6 +30,11 @@ namespace Enigma::Engine
         Contract& operator=(const Contract& c) = default;
         Contract& operator=(Contract&& c) = default;
 
+        bool operator==(const Contract&) const;
+
+        bool IsTopLevel() const { return m_isTopLevel; }
+        void AsTopLevel(bool is_top) { m_isTopLevel = is_top; }
+
         bool IsEmpty() const { return m_values.empty(); }
 
         /** Add or Update key value data */
@@ -86,6 +91,8 @@ namespace Enigma::Engine
         AttributeValues::const_iterator end() const { return m_values.end(); }
 
     private:
+        size_t m_memoryId; // object address, for compare equality.
+        bool m_isTopLevel;
         AttributeValues m_values;
     };
 }

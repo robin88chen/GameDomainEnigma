@@ -16,13 +16,8 @@ Node::Node(const std::string& name) : Spatial(name)
 {
 }
 
-Node::Node(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)
-    : Spatial(dynamic_cast<const SpatialContract&>(contract))
+Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
 {
-    for (auto& name : contract.ChildNames())
-    {
-        resolver.TryResolveLinkage(name, [=](auto sp) { this->AttachChild(sp, sp->GetLocalTransform()); });
-    }
 }
 
 Node::~Node()
@@ -45,6 +40,15 @@ NodeContract Node::SerializeContract()
         if (child) contract.ChildNames().emplace_back(child->GetSpatialName());
     }
     return contract;
+}
+
+void Node::ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)
+{
+    for (auto& name : contract.ChildNames())
+    {
+        resolver.TryResolveLinkage(name, [lifetime = shared_from_this(), this](auto sp)
+            { AttachChild(sp, sp->GetLocalTransform()); });
+    }
 }
 
 error Node::OnCullingVisible(Culler* culler, bool noCull)

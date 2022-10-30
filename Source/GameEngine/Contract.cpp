@@ -6,11 +6,18 @@ std::string TOKEN_RTTI = "Rtti";
 
 Contract::Contract()
 {
+    m_isTopLevel = false;
+    m_memoryId = reinterpret_cast<size_t>(this);
 }
 
 Contract::~Contract()
 {
     m_values.clear();
+}
+
+bool Contract::operator==(const Contract& c) const
+{
+    return m_memoryId == c.m_memoryId;
 }
 
 bool Contract::HasValue(const std::string& attribute) const

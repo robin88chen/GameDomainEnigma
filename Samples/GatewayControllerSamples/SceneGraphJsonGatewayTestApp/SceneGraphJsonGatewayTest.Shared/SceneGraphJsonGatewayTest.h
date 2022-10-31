@@ -15,6 +15,8 @@
 #include "Application/AppDelegateWin32.h"
 #endif
 #include "Frameworks/EventSubscriber.h"
+#include "MathLib/Matrix4.h"
+#include "MathLib/Box3.h"
 
 class BufferBuilder;
 class TextureSamplerBuilder;
@@ -37,6 +39,9 @@ private:
 
 private:
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+    Enigma::MathLib::Matrix4 m_mxChild1Local;
+    Enigma::MathLib::Matrix4 m_mxChild2Local;
+    Enigma::MathLib::Box3 m_child1WorldBox;
 };
 
 #endif // _SCENEGRAPH_JSON_GATEWAY_TEST_H

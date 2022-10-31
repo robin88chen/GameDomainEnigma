@@ -3,11 +3,11 @@
 using namespace Enigma::Engine;
 
 std::string TOKEN_RTTI = "Rtti";
+std::string TOKEN_TOP_LEVEL = "TopLevel";
 
 Contract::Contract()
 {
-    m_isTopLevel = false;
-    m_memoryId = reinterpret_cast<size_t>(this);
+    m_ruid = Platforms::Ruid::Generate();
 }
 
 Contract::~Contract()
@@ -17,7 +17,7 @@ Contract::~Contract()
 
 bool Contract::operator==(const Contract& c) const
 {
-    return m_memoryId == c.m_memoryId;
+    return m_ruid == c.m_ruid;
 }
 
 bool Contract::HasValue(const std::string& attribute) const
@@ -39,4 +39,15 @@ void Contract::AddRtti(const FactoryDesc& rtti)
 FactoryDesc Contract::GetRtti() const
 {
     return Get<FactoryDesc>(TOKEN_RTTI);
+}
+
+void Contract::AsTopLevel(bool is_top)
+{
+    AddOrUpdate(TOKEN_TOP_LEVEL, is_top);
+}
+
+bool Contract::IsTopLevel() const
+{
+    if (!HasValue(TOKEN_TOP_LEVEL)) return false;
+    return Get<bool>(TOKEN_TOP_LEVEL);
 }

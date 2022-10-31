@@ -75,7 +75,7 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     mx_pos = Matrix4::MakeTranslateTransform(vpos);
     Matrix4 mx_scale;
     mx_scale = Matrix4::MakeScaleTransform(vscale);
-    Matrix4 mx_child1 = mx_pos * mx_rot * mx_scale;
+    m_mxChild1Local = mx_pos * mx_rot * mx_scale;
 
     yaw = half_pi_rand();
     pitch = half_pi_rand();
@@ -85,15 +85,17 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     vscale = Vector3(unif_rand(), unif_rand(), unif_rand());
     mx_pos = Matrix4::MakeTranslateTransform(vpos);
     mx_scale = Matrix4::MakeScaleTransform(vscale);
-    Matrix4 mx_child2 = mx_pos * mx_rot * mx_scale;
+    m_mxChild2Local = mx_pos * mx_rot * mx_scale;
 
     SceneGraphRepository* repository = ServiceManager::GetSystemServiceAs<SceneGraphRepository>();
     std::shared_ptr<Node> root_node = repository->CreateNode("scene_root");
     std::shared_ptr<Node> child1 = repository->CreateNode("child1");
     std::shared_ptr<Node> child2 = repository->CreateNode("child2");
 
-    root_node->AttachChild(child1, mx_child1);
-    root_node->AttachChild(child2, mx_child2);
+    root_node->AttachChild(child1, m_mxChild1Local);
+    root_node->AttachChild(child2, m_mxChild2Local);
+    auto bb = child1->GetWorldBound().BoundingBox3();
+    if (bb) m_child1WorldBox = bb.value();
     Matrix4 mx_child2_world = child2->GetWorldTransform();
     SceneFlattenTraversal* flatten = menew SceneFlattenTraversal();
     auto travel = root_node->VisitBy(flatten);
@@ -143,5 +145,19 @@ void SceneGraphJsonGatewayTest::OnSceneGraphBuilt(const IEventPtr& e)
     if (ev->GetTopLevelSpatial().size() > 0)
     {
         root_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetTopLevelSpatial()[0]);
+        std::shared_ptr<Node> child1;
+        std::shared_ptr<Node> child2;
+        for (auto& ch : root_node->GetChildList())
+        {
+            if (ch->GetSpatialName() == "child1") child1 = std::dynamic_pointer_cast<Node, Spatial>(ch);
+            if (ch->GetSpatialName() == "child2") child2 = std::dynamic_pointer_cast<Node, Spatial>(ch);
+        }
+        assert(child1);
+        assert(child2);
+        assert(child1->GetLocalTransform() == m_mxChild1Local);
+        assert(child2->GetLocalTransform() == m_mxChild2Local);
+        auto bb = child1->GetWorldBound().BoundingBox3();
+        assert(bb);
+        assert(m_child1WorldBox == bb.value());
     }
 }

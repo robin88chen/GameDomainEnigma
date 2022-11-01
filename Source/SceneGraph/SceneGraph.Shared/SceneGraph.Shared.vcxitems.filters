@@ -84,9 +84,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h">
       <Filter>Scene Graph\LightInfo</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoPolicies.h">
-      <Filter>Scene Graph\LightInfo</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h">
       <Filter>Scene Graph\LightInfo</Filter>
     </ClInclude>
@@ -104,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.h">
+      <Filter>Contracts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp">
       <Filter>Repository\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.cpp">
+      <Filter>Contracts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

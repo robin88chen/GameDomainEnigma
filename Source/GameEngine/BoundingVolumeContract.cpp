@@ -25,7 +25,6 @@ BoundingVolumeContract BoundingVolumeContract::FromContract(const Contract& cont
 Contract BoundingVolumeContract::ToContract() const
 {
     Contract contract;
-    contract.AddRtti(FactoryDesc(BoundingVolume::TYPE_RTTI.GetName()));
     if (m_box)
     {
         contract.AddOrUpdate(TOKEN_BOXBV, m_box.value());

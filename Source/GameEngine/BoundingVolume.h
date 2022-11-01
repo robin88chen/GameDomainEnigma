@@ -23,10 +23,6 @@ namespace Enigma::Engine
     class BoundingVolume
     {
     public:
-        static Enigma::Frameworks::Rtti TYPE_RTTI;
-        const Enigma::Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
-
-    public:
         enum class Side
         {
             Failed,

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ruid.h
- * \brief  run-time uniform id, 128 bits id, uniform random uint64
- * plus uint64 generate time (hi resolution)
+ * \brief  run-time unique id, 128 bits id, uniform random uint64
+ * plus uint64 generate time (hi resolution), 理論上 run-time 是 unique
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/

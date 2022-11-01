@@ -28,8 +28,12 @@ namespace Enigma::SceneGraph
             Skip,
         };
     public:
-        SceneTraveler() {};
-        virtual ~SceneTraveler() {};
+        SceneTraveler() = default;
+        SceneTraveler(const SceneTraveler&) = default;
+        SceneTraveler(SceneTraveler&&) = default;
+        virtual ~SceneTraveler() = default;
+        SceneTraveler& operator=(const SceneTraveler&) = default;
+        SceneTraveler& operator=(SceneTraveler&&) = default;
 
         virtual TravelResult TravelTo(const SpatialPtr&) = 0;
     };

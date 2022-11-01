@@ -38,7 +38,7 @@ namespace Enigma::SceneGraph
         Node(const NodeContract& contract);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
-        virtual ~Node();
+        virtual ~Node() override;
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 

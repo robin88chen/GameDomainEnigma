@@ -33,6 +33,8 @@ namespace Enigma::Engine
 
         bool operator==(const Contract&) const;
 
+        const Platforms::Ruid& GetId() { return m_ruid; }
+
         bool IsTopLevel() const;
         void AsTopLevel(bool is_top);
 
@@ -46,6 +48,7 @@ namespace Enigma::Engine
 
         /** add Rtti */
         void AddRtti(const FactoryDesc& rtti);
+        FactoryDesc GetRtti() const;
 
         /** Remove key value data */
         void Remove(const std::string& attribute);
@@ -83,8 +86,6 @@ namespace Enigma::Engine
             if (!HasValue(attribute)) return std::nullopt;
             return std::any_cast<T>(m_values.at(attribute));
         }
-
-        FactoryDesc GetRtti() const;
 
         AttributeValues::iterator begin() { return m_values.begin(); }
         AttributeValues::const_iterator begin() const { return m_values.begin(); }

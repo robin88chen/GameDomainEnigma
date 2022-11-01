@@ -13,10 +13,11 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 
-Enigma::Frameworks::Rtti Spatial::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
+Enigma::Frameworks::Rtti Spatial::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
 
 Spatial::Spatial(const std::string& name)
 {
+    Spatial::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
     m_name = name;
 
     m_graphDepth = 0;

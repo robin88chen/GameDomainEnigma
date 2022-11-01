@@ -21,8 +21,10 @@ namespace Enigma::SceneGraph
         SpatialLinkageResolver();
         SpatialLinkageResolver(const Engine::FactoryQuery<Spatial>& query);
         SpatialLinkageResolver(const SpatialLinkageResolver&);
+        SpatialLinkageResolver(SpatialLinkageResolver&&) = delete;
         ~SpatialLinkageResolver();
         SpatialLinkageResolver& operator=(const SpatialLinkageResolver&);
+        SpatialLinkageResolver& operator=(SpatialLinkageResolver&&) = delete;
 
         void ClearResolvers();
 

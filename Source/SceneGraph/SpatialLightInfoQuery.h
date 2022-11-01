@@ -22,9 +22,12 @@ namespace Enigma::SceneGraph
             LightInfo m_lightInfo;
             float m_sqrDistance;
             LightInfoDistance();
-            LightInfoDistance(const LightInfoDistance& d);
+            LightInfoDistance(const LightInfoDistance& d) = default;
             LightInfoDistance(const LightInfo& info, float sqrdist);
+            LightInfoDistance(LightInfoDistance&&) = default;
             ~LightInfoDistance();
+            LightInfoDistance& operator=(const LightInfoDistance&) = default;
+            LightInfoDistance& operator=(LightInfoDistance&&) = default;
         };
 
         typedef std::list<LightInfoDistance> LightInfoList;

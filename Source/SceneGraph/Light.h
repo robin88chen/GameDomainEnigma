@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
         Light(const std::string& spatialName, const LightInfo& lightInfo);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
-        virtual ~Light();
+        virtual ~Light() override;
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
 

@@ -19,7 +19,11 @@ namespace Enigma::SceneGraph
     {
     public:
         SceneFlattenTraversal();
+        SceneFlattenTraversal(const SceneFlattenTraversal&) = default;
+        SceneFlattenTraversal(SceneFlattenTraversal&&) = default;
         ~SceneFlattenTraversal() override;
+        SceneFlattenTraversal& operator=(const SceneFlattenTraversal&) = default;
+        SceneFlattenTraversal& operator=(SceneFlattenTraversal&&) = default;
 
         virtual TravelResult TravelTo(const SpatialPtr&) override;
 

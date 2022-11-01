@@ -28,7 +28,7 @@ namespace Enigma::SceneGraph
         LightInfoTraversal(Frameworks::ServiceManager* srv_mngr);
         LightInfoTraversal(const LightInfoTraversal&) = delete;
         LightInfoTraversal(LightInfoTraversal&&) = delete;
-        ~LightInfoTraversal();
+        ~LightInfoTraversal() override;
         LightInfoTraversal& operator=(const LightInfoTraversal&) = delete;
         LightInfoTraversal& operator=(LightInfoTraversal&&) = delete;
 

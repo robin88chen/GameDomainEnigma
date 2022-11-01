@@ -7,12 +7,6 @@ SpatialLightInfoQuery::LightInfoDistance::LightInfoDistance()
     m_sqrDistance = 0.0f;
 }
 
-SpatialLightInfoQuery::LightInfoDistance::LightInfoDistance(const LightInfoDistance& d)
-{
-    m_lightInfo = d.m_lightInfo;
-    m_sqrDistance = d.m_sqrDistance;
-}
-
 SpatialLightInfoQuery::LightInfoDistance::LightInfoDistance(const LightInfo& info, float sqrdist)
 {
     m_lightInfo = info;

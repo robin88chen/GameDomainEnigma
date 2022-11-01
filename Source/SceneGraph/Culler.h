@@ -41,10 +41,10 @@ namespace Enigma::SceneGraph
     public:
         Culler(const std::shared_ptr<Camera>& camera);
         Culler(const Culler& culler);
-        Culler(Culler&&);
+        Culler(Culler&&) noexcept;
         virtual ~Culler();
         Culler& operator=(const Culler& culler);
-        Culler& operator=(Culler&&);
+        Culler& operator=(Culler&&) noexcept;
 
         void SetCamera(const std::shared_ptr<Camera>& camera);
         const std::shared_ptr<Camera>& GetCamera() const { return m_camera; };

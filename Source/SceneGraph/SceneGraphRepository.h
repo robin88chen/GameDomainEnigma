@@ -37,7 +37,7 @@ namespace Enigma::SceneGraph
         SceneGraphRepository(Frameworks::ServiceManager* srv_mngr);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
-        virtual ~SceneGraphRepository();
+        virtual ~SceneGraphRepository() override;
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 

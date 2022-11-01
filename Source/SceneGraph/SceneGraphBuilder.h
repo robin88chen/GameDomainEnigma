@@ -35,7 +35,11 @@ namespace Enigma::SceneGraph
         };
     public:
         SceneGraphBuilder(SceneGraphRepository* host);
+        SceneGraphBuilder(const SceneGraphBuilder&) = delete;
+        SceneGraphBuilder(SceneGraphBuilder&&) = delete;
         ~SceneGraphBuilder();
+        SceneGraphBuilder& operator=(const SceneGraphBuilder&) = delete;
+        SceneGraphBuilder& operator=(SceneGraphBuilder&&) = delete;
 
         void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::Contract>& contracts);
 

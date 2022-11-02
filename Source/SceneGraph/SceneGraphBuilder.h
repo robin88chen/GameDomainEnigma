@@ -45,6 +45,7 @@ namespace Enigma::SceneGraph
 
     private:
         void NodeContractFactory(const Engine::Contract& contract);
+        void LightContractFactory(const Engine::Contract& contract);
 
         void OnContractedCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();

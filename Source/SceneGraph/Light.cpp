@@ -1,19 +1,36 @@
 ﻿#include "Light.h"
 #include "LightInfo.h"
+#include "LightInfoContracts.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphContracts.h"
 #include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 
+Enigma::Frameworks::Rtti Light::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Light", Spatial::TYPE_RTTI);
+
 Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spatial(spatialName), m_lightInfo(lightInfo)
 {
+    if (Light::TYPE_RTTI.IsEmpty()) Light::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Light", Spatial::TYPE_RTTI);
+}
+
+Light::Light(const LightContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
+{
+    m_lightInfo = LightInfo(LightInfoContract::FromContract(contract.LightInfo()));
 }
 
 Light::~Light()
 {
     Frameworks::EventPublisher::Post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
+}
+
+LightContract Light::SerializeContract()
+{
+    LightContract contract(Spatial::SerializeContract());
+    contract.LightInfo() = m_lightInfo.SerializeContract().ToContract();
+    return contract;
 }
 
 error Light::OnCullingVisible(Culler*, bool)

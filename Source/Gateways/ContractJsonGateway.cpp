@@ -7,6 +7,10 @@
 #include "Platforms/PlatformLayerUtilities.h"
 #include "MathLib/Box3.h"
 #include "MathLib/Matrix4.h"
+#include "MathLib/ColorRGBA.h"
+#include "MathLib/ColorRGB.h"
+#include "MathLib/Vector3.h"
+#include "MathLib/Vector4.h"
 #include <any>
 
 constexpr const char* TYPE_TOKEN = "Type";
@@ -17,6 +21,10 @@ constexpr const char* UINT32_TOKEN = "Uint32";
 constexpr const char* STRING_TOKEN = "String";
 constexpr const char* BOOLEAN_TOKEN = "Boolean";
 constexpr const char* FACTORY_DESC_TOKEN = "FactoryDesc";
+constexpr const char* COLOR_RGBA_TOKEN = "ColorRGBA";
+constexpr const char* COLOR_RGB_TOKEN = "ColorRGB";
+constexpr const char* VECTOR3_TOKEN = "Vector3";
+constexpr const char* VECTOR4_TOKEN = "Vector4";
 constexpr const char* BOX3_TOKEN = "Box3";
 constexpr const char* MATRIX4_TOKEN = "Matrix4";
 constexpr const char* STRING_ARRAY_TOKEN = "StringArray";
@@ -34,6 +42,10 @@ std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
 std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
 std::string DeserializeString(const rapidjson::Value& value);
 bool DeserializeBoolean(const rapidjson::Value& value);
+ColorRGBA DeserializeColorRGBAValues(const rapidjson::Value& value);
+ColorRGB DeserializeColorRGBValues(const rapidjson::Value& value);
+Vector3 DeserializeVector3Values(const rapidjson::Value& value);
+Vector4 DeserializeVector4Values(const rapidjson::Value& value);
 Box3 DeserializeBox3Values(const rapidjson::Value& value);
 Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value);
 std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& value);
@@ -45,6 +57,10 @@ rapidjson::Value SerializeUInt64(const std::uint64_t n);
 rapidjson::Value SerializeUInt32(const std::uint32_t n);
 rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeBoolean(const bool b);
+rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator);
+rapidjson::Value SerializeColorRGBValues(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator);
+rapidjson::Value SerializeVector3Values(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator);
+rapidjson::Value SerializeVector4Values(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeStringArrayValues(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator);
@@ -120,6 +136,14 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
         contract.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
     else if (type == BOOLEAN_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
+    else if (type == COLOR_RGBA_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeColorRGBAValues(value[VALUE_TOKEN]));
+    else if (type == COLOR_RGB_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeColorRGBValues(value[VALUE_TOKEN]));
+    else if (type == VECTOR3_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector3Values(value[VALUE_TOKEN]));
+    else if (type == VECTOR4_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector4Values(value[VALUE_TOKEN]));
     else if (type == BOX3_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeBox3Values(value[VALUE_TOKEN]));
     else if (type == MATRIX4_TOKEN)
@@ -183,6 +207,31 @@ std::string DeserializeString(const rapidjson::Value& value)
 bool DeserializeBoolean(const rapidjson::Value& value)
 {
     return value.GetBool();
+}
+ColorRGBA DeserializeColorRGBAValues(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return ColorRGBA::WHITE;
+    auto values = value.GetArray();
+    return ColorRGBA(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat());
+}
+
+ColorRGB DeserializeColorRGBValues(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return ColorRGB::WHITE;
+    auto values = value.GetArray();
+    return ColorRGB(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat());
+}
+Vector3 DeserializeVector3Values(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return Vector3::ZERO;
+    auto values = value.GetArray();
+    return Vector3(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat());
+}
+Vector4 DeserializeVector4Values(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return Vector4::ZERO;
+    auto values = value.GetArray();
+    return Vector4(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat());
 }
 
 Box3 DeserializeBox3Values(const rapidjson::Value& value)
@@ -275,6 +324,26 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
             SerializeBoolean(std::any_cast<bool>(any_ob)), allocator);
     }
+    else if (any_ob.type() == typeid(ColorRGBA))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(COLOR_RGBA_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGBAValues(std::any_cast<ColorRGBA>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(ColorRGB))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(COLOR_RGB_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGBValues(std::any_cast<ColorRGB>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(Vector3))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR3_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector3Values(std::any_cast<Vector3>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(Vector4))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR4_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector4Values(std::any_cast<Vector4>(any_ob), allocator), allocator);
+    }
     else if (any_ob.type() == typeid(Box3))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(BOX3_TOKEN), allocator);
@@ -322,6 +391,43 @@ rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllo
 rapidjson::Value SerializeBoolean(const bool b)
 {
     return rapidjson::Value(b);
+}
+rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    value.PushBack(color.R(), allocator);
+    value.PushBack(color.G(), allocator);
+    value.PushBack(color.B(), allocator);
+    value.PushBack(color.A(), allocator);
+    return value;
+}
+
+rapidjson::Value SerializeColorRGBValues(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    value.PushBack(color.R(), allocator);
+    value.PushBack(color.G(), allocator);
+    value.PushBack(color.B(), allocator);
+    return value;
+}
+
+rapidjson::Value SerializeVector3Values(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    value.PushBack(vec.X(), allocator);
+    value.PushBack(vec.Y(), allocator);
+    value.PushBack(vec.Z(), allocator);
+    return value;
+}
+
+rapidjson::Value SerializeVector4Values(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    value.PushBack(vec.X(), allocator);
+    value.PushBack(vec.Y(), allocator);
+    value.PushBack(vec.Z(), allocator);
+    value.PushBack(vec.W(), allocator);
+    return value;
 }
 
 rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator)

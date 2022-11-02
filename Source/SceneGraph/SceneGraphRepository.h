@@ -28,6 +28,7 @@ namespace Enigma::SceneGraph
     class LightInfo;
     class Light;
     class NodeContract;
+    class LightContract;
     class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
@@ -62,6 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
+        std::shared_ptr<Light> CreateLight(const LightContract& contract);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 

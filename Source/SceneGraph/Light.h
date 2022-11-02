@@ -17,16 +17,24 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
+    class LightContract;
 
     class Light : public Spatial
     {
     public:
+        static Frameworks::Rtti TYPE_RTTI;
+        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
+
+    public:
         Light(const std::string& spatialName, const LightInfo& lightInfo);
+        Light(const LightContract& contract);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
         virtual ~Light() override;
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
+
+        LightContract SerializeContract();
 
         const LightInfo& Info() const { return m_lightInfo; };
         LightInfo& Info() { return m_lightInfo; }

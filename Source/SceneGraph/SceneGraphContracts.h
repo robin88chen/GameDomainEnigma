@@ -72,6 +72,22 @@ namespace Enigma::SceneGraph
     protected:
         std::vector<std::string> m_childNames;
     };
+
+    class LightContract : public SpatialContract
+    {
+    public:
+        LightContract() = default;
+        LightContract(const SpatialContract& spatial_contract);
+
+        [[nodiscard]] Engine::Contract LightInfo() const { return m_lightInfo; }
+        Engine::Contract& LightInfo() { return m_lightInfo; }
+
+        static LightContract FromContract(const Engine::Contract& contract);
+        Engine::Contract ToContract();
+
+    protected:
+        Engine::Contract m_lightInfo;
+    };
 }
 
 #endif // SCENE_GRAPH_CONTRACTS_H

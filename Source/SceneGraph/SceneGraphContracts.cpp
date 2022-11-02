@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "GameEngine/BoundingVolumeContract.h"
 #include "Spatial.h"
+#include "Light.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -17,6 +18,7 @@ std::string TOKEN_CULLING_MODE = "CullingMode";
 std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 std::string TOKEN_CHILD_NAMES = "ChildNames";
+std::string TOKEN_LIGHT_INFO = "LightInfo";
 
 SpatialContract SpatialContract::FromContract(const Contract& contract)
 {
@@ -67,6 +69,26 @@ Contract NodeContract::ToContract()
     Contract contract = SpatialContract::ToContract();
     contract.AddRtti(FactoryDesc(Node::TYPE_RTTI.GetName()));
     contract.AddOrUpdate(TOKEN_CHILD_NAMES, m_childNames);
+
+    return contract;
+}
+
+LightContract::LightContract(const SpatialContract& spatial_contract) : SpatialContract(spatial_contract)
+{
+}
+
+LightContract LightContract::FromContract(const Engine::Contract& contract)
+{
+    LightContract light_contract(SpatialContract::FromContract(contract));
+    light_contract.m_lightInfo = contract.TryGetValue<Contract>(TOKEN_LIGHT_INFO).value();
+    return light_contract;
+}
+
+Contract LightContract::ToContract()
+{
+    Contract contract = SpatialContract::ToContract();
+    contract.AddRtti(FactoryDesc(Light::TYPE_RTTI.GetName()));
+    contract.AddOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
 
     return contract;
 }

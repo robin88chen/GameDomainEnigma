@@ -17,7 +17,7 @@ Enigma::Frameworks::Rtti Spatial::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enig
 
 Spatial::Spatial(const std::string& name)
 {
-    Spatial::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
+    if (Spatial::TYPE_RTTI.IsEmpty()) Spatial::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Spatial");
     m_name = name;
 
     m_graphDepth = 0;

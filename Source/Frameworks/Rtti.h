@@ -52,6 +52,8 @@ namespace Enigma::Frameworks
         Rtti(Rtti&& rhs) = default;
         ~Rtti() = default;
 
+        bool IsEmpty() const { return m_name.empty(); }
+
         Rtti& operator=(const Rtti& rhs) = default;
         Rtti& operator=(Rtti&& rhs) = default;
         bool operator==(const Rtti& rhs) const;

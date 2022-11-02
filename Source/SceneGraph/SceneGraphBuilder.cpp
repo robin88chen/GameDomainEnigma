@@ -2,6 +2,7 @@
 #include "SpatialLinkageResolver.h"
 #include "SceneGraphRepository.h"
 #include "Node.h"
+#include "Light.h"
 #include "SceneGraphContracts.h"
 #include "SceneGraphEvents.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -25,6 +26,8 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host)
 
     CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(),
         [=](auto c) { this->NodeContractFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterContractFactory>(Light::TYPE_RTTI.GetName(),
+        [=](auto c) { this->LightContractFactory(c); }));
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
@@ -47,6 +50,19 @@ void SceneGraphBuilder::NodeContractFactory(const Contract& contract)
     auto node = m_host->CreateNode(node_contract);
     node->ResolveContractedLinkage(node_contract, *m_resolver);
     EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(contract, node));
+}
+
+void SceneGraphBuilder::LightContractFactory(const Engine::Contract& contract)
+{
+    if (contract.GetRtti().GetRttiName() != Light::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for light factory", contract.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    LightContract light_contract = LightContract::FromContract(contract);
+    assert(!m_host->HasLight(light_contract.Name()));
+    auto light = m_host->CreateLight(light_contract);
+    EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(contract, light));
 }
 
 void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::Contract>& contracts)

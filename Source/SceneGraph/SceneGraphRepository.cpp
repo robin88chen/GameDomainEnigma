@@ -171,6 +171,16 @@ std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name
     return light;
 }
 
+std::shared_ptr<Light> SceneGraphRepository::CreateLight(const LightContract& contract)
+{
+    assert(!HasLight(contract.Name()));
+    auto light = std::make_shared<Light>(contract);
+    std::lock_guard locker{ m_lightMapLock };
+    m_lights.insert_or_assign(contract.Name(), light);
+    Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
+    return light;
+}
+
 bool SceneGraphRepository::HasLight(const std::string& name)
 {
     std::lock_guard locker{ m_lightMapLock };

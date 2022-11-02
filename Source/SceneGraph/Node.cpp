@@ -14,7 +14,7 @@ Enigma::Frameworks::Rtti Node::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enigma.
 
 Node::Node(const std::string& name) : Spatial(name)
 {
-    Node::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Node", Spatial::TYPE_RTTI);
+    if (Node::TYPE_RTTI.IsEmpty()) Node::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Node", Spatial::TYPE_RTTI);
 }
 
 Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))

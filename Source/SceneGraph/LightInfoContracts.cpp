@@ -33,12 +33,12 @@ LightInfoContract LightInfoContract::FromContract(const Contract& contract)
 Contract LightInfoContract::ToContract()
 {
     Contract contract;
-    contract.AddOrUpdate(TOKEN_LIGHT_TYPE, m_type);
+    contract.AddOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));
     contract.AddOrUpdate(TOKEN_LIGHT_COLOR, m_color);
-    if (m_position) contract.AddOrUpdate(TOKEN_LIGHT_POSITION, m_position);
-    if (m_direction) contract.AddOrUpdate(TOKEN_LIGHT_DIRECTION, m_direction);
-    if (m_range) contract.AddOrUpdate(TOKEN_LIGHT_RANGE, m_range);
-    if (m_attenuation) contract.AddOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
+    contract.AddOrUpdate(TOKEN_LIGHT_POSITION, m_position);
+    contract.AddOrUpdate(TOKEN_LIGHT_DIRECTION, m_direction);
+    contract.AddOrUpdate(TOKEN_LIGHT_RANGE, m_range);
+    contract.AddOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
     contract.AddOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
     return contract;
 }

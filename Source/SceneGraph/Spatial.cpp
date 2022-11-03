@@ -66,7 +66,12 @@ Spatial::~Spatial()
     //m_spatialRenderState = nullptr;
 }
 
-SpatialContract Spatial::SerializeContract()
+Enigma::Engine::Contract Spatial::SerializeContract()
+{
+    return SerializeSpatialContract().ToContract();
+}
+
+SpatialContract Spatial::SerializeSpatialContract()
 {
     SpatialContract contract;
     contract.Name() = m_name;

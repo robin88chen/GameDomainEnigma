@@ -42,6 +42,8 @@ private:
     Enigma::MathLib::Matrix4 m_mxChild1Local;
     Enigma::MathLib::Matrix4 m_mxChild2Local;
     Enigma::MathLib::Box3 m_child1WorldBox;
+    Enigma::MathLib::ColorRGBA m_sunColor;
+    Enigma::MathLib::Vector3 m_sunDir;
 };
 
 #endif // _SCENEGRAPH_JSON_GATEWAY_TEST_H

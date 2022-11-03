@@ -3,6 +3,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/ServiceManager.h"
 #include "SceneGraph/Node.h"
+#include "SceneGraph/Light.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
 #include "SceneGraph/SceneGraphContracts.h"
 #include "MathLib/MathGlobal.h"
@@ -64,6 +65,7 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     MathRandom::RandomSeed();
     UniformFloatDistribution unif_rand = MathRandom::IntervalDistribution(-10.0f, std::nextafter(10.0f, 10.1f));
     UniformFloatDistribution half_pi_rand = MathRandom::IntervalDistribution(-Math::HALF_PI, Math::HALF_PI);
+    UniformFloatDistribution one_rand = MathRandom::IntervalDistribution(0.0f, std::nextafter(1.0f, 1.01f));
     float yaw = half_pi_rand();
     float pitch = half_pi_rand();
     float roll = half_pi_rand();
@@ -94,6 +96,16 @@ void SceneGraphJsonGatewayTest::InstallEngine()
 
     root_node->AttachChild(child1, m_mxChild1Local);
     root_node->AttachChild(child2, m_mxChild2Local);
+
+    LightInfo lit_info(LightInfo::LightType::SunLight);
+    m_sunColor = ColorRGBA(one_rand(), one_rand(), one_rand(), one_rand());
+    m_sunDir = Vector3(unif_rand(), unif_rand(), unif_rand());
+    m_sunDir.NormalizeSelf();
+    lit_info.SetLightColor(m_sunColor);
+    lit_info.SetLightDirection(m_sunDir);
+    std::shared_ptr<Light> light_node = repository->CreateLight("light1", lit_info);
+    child2->AttachChild(light_node, Matrix4::IDENTITY);
+
     auto bb = child1->GetWorldBound().BoundingBox3();
     if (bb) m_child1WorldBox = bb.value();
     Matrix4 mx_child2_world = child2->GetWorldTransform();
@@ -103,12 +115,9 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     std::vector<Contract> contracts;
     for (auto& sp : flatten->GetSpatials())
     {
-        if (auto sp_node = std::dynamic_pointer_cast<Node, Spatial>(sp))
-        {
-            Contract ct = sp_node->SerializeContract().ToContract();
-            if (sp->GetSpatialName() == "scene_root") ct.AsTopLevel(true);
-            contracts.emplace_back(ct);
-        }
+       Contract ct = sp->SerializeContract();
+       if (sp->GetSpatialName() == "scene_root") ct.AsTopLevel(true);
+       contracts.emplace_back(ct);
     }
     std::string json = ContractJsonGateway::Serialize(contracts);
     delete flatten;
@@ -147,17 +156,28 @@ void SceneGraphJsonGatewayTest::OnSceneGraphBuilt(const IEventPtr& e)
         root_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetTopLevelSpatial()[0]);
         std::shared_ptr<Node> child1;
         std::shared_ptr<Node> child2;
+        std::shared_ptr<Light> light;
         for (auto& ch : root_node->GetChildList())
         {
             if (ch->GetSpatialName() == "child1") child1 = std::dynamic_pointer_cast<Node, Spatial>(ch);
-            if (ch->GetSpatialName() == "child2") child2 = std::dynamic_pointer_cast<Node, Spatial>(ch);
+            if (ch->GetSpatialName() == "child2")
+            {
+                child2 = std::dynamic_pointer_cast<Node, Spatial>(ch);
+                for (auto& cch : child2->GetChildList())
+                {
+                    if (cch->GetSpatialName() == "light1") light = std::dynamic_pointer_cast<Light, Spatial>(cch);
+                }
+            }
         }
         assert(child1);
         assert(child2);
+        assert(light);
         assert(child1->GetLocalTransform() == m_mxChild1Local);
         assert(child2->GetLocalTransform() == m_mxChild2Local);
         auto bb = child1->GetWorldBound().BoundingBox3();
         assert(bb);
         assert(m_child1WorldBox == bb.value());
+        assert(light->GetLightColor() == m_sunColor);
+        assert(light->GetLightDirection() == m_sunDir);
     }
 }

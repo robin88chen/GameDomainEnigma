@@ -32,14 +32,14 @@ Node::~Node()
     m_childList.clear();
 }
 
-NodeContract Node::SerializeContract()
+Enigma::Engine::Contract Node::SerializeContract()
 {
-    NodeContract contract(Spatial::SerializeContract());
+    NodeContract contract(SerializeSpatialContract());
     for (auto child : m_childList)
     {
         if (child) contract.ChildNames().emplace_back(child->GetSpatialName());
     }
-    return contract;
+    return contract.ToContract();
 }
 
 void Node::ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)

@@ -25,11 +25,11 @@ Light::~Light()
     Frameworks::EventPublisher::Post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
 }
 
-LightContract Light::SerializeContract()
+Enigma::Engine::Contract Light::SerializeContract()
 {
-    LightContract contract(Spatial::SerializeContract());
+    LightContract contract(SerializeSpatialContract());
     contract.LightInfo() = m_lightInfo.SerializeContract().ToContract();
-    return contract;
+    return contract.ToContract();
 }
 
 error Light::OnCullingVisible(Culler*, bool)

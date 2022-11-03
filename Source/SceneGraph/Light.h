@@ -32,7 +32,7 @@ namespace Enigma::SceneGraph
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
 
-        LightContract SerializeContract();
+        virtual Engine::Contract SerializeContract() override;
 
         const LightInfo& Info() const { return m_lightInfo; };
         LightInfo& Info() { return m_lightInfo; }

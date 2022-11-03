@@ -18,6 +18,7 @@ constexpr const char* VALUE_TOKEN = "Value";
 constexpr const char* CONTRACT_TOKEN = "Contract";
 constexpr const char* UINT64_TOKEN = "Uint64";
 constexpr const char* UINT32_TOKEN = "Uint32";
+constexpr const char* FLOAT_TOKEN = "Float";
 constexpr const char* STRING_TOKEN = "String";
 constexpr const char* BOOLEAN_TOKEN = "Boolean";
 constexpr const char* FACTORY_DESC_TOKEN = "FactoryDesc";
@@ -40,6 +41,7 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
 std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
 std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
+float DeserializeFloat(const rapidjson::Value& value);
 std::string DeserializeString(const rapidjson::Value& value);
 bool DeserializeBoolean(const rapidjson::Value& value);
 ColorRGBA DeserializeColorRGBAValues(const rapidjson::Value& value);
@@ -55,6 +57,7 @@ rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& 
 rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeUInt64(const std::uint64_t n);
 rapidjson::Value SerializeUInt32(const std::uint32_t n);
+rapidjson::Value SerializeFloat(const float v);
 rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator);
 rapidjson::Value SerializeBoolean(const bool b);
 rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator);
@@ -132,6 +135,8 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
         contract.AddOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
     else if (type == UINT32_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
+    else if (type == FLOAT_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeFloat(value[VALUE_TOKEN]));
     else if (type == STRING_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
     else if (type == BOOLEAN_TOKEN)
@@ -198,6 +203,11 @@ std::uint64_t DeserializeUInt64(const rapidjson::Value& value)
 std::uint32_t DeserializeUInt32(const rapidjson::Value& value)
 {
     return value.GetUint();
+}
+
+float DeserializeFloat(const rapidjson::Value& value)
+{
+    return value.GetFloat();
 }
 
 std::string DeserializeString(const rapidjson::Value& value)
@@ -312,6 +322,12 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
             SerializeUInt32(std::any_cast<std::uint32_t>(any_ob)), allocator);
     }
+    else if (any_ob.type() == typeid(float))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(FLOAT_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
+            SerializeFloat(std::any_cast<float>(any_ob)), allocator);
+    }
     else if (any_ob.type() == typeid(std::string))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(STRING_TOKEN), allocator);
@@ -381,6 +397,11 @@ rapidjson::Value SerializeUInt64(const std::uint64_t n)
 rapidjson::Value SerializeUInt32(const std::uint32_t n)
 {
     return rapidjson::Value(n);
+}
+
+rapidjson::Value SerializeFloat(const float v)
+{
+    return rapidjson::Value(v);
 }
 
 rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator)

@@ -76,7 +76,7 @@ namespace Enigma::SceneGraph
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
-        SpatialContract SerializeContract();
+        virtual Engine::Contract SerializeContract();
 
         const std::string& GetSpatialName() const { return m_name; };
 
@@ -230,6 +230,10 @@ namespace Enigma::SceneGraph
         {
             return shared_from_this();
         }
+
+    protected:
+        SpatialContract SerializeSpatialContract();
+
     protected:
         std::string m_name;
 

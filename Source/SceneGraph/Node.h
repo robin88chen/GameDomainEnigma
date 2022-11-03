@@ -40,7 +40,7 @@ namespace Enigma::SceneGraph
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
-        NodeContract SerializeContract();
+        virtual Engine::Contract SerializeContract() override;
         void ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */

@@ -12,17 +12,15 @@
 
 #include "Platforms/PlatformLayer.h"
 
-
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Renderer, RendererManager);
+DEFINE_RTTI(Renderer, RendererManager, ISystemService);
 
 RendererManager::CustomRendererFactoryTable RendererManager::m_customRendererFactoryTable;
 
 RendererManager::RendererManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, Renderer, RendererManager, ISystemService);
     m_needTick = false;
     m_accumulateRendererStamp = 0;
 }

@@ -1,5 +1,6 @@
 ﻿#include "LightInfo.h"
-#include "LightInfoPolicies.h"
+#include "LightInfo.h"
+#include "LightInfoContracts.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -21,14 +22,28 @@ LightInfo::LightInfo(LightType type)
     m_isEnable = true;
 }
 
-LightInfo::LightInfo(const LightInfoPolicy& policy) : LightInfo(policy.m_type)
+LightInfo::LightInfo(const LightInfoContract& contract) : LightInfo(contract.LightType())
 {
-    m_color = policy.m_color;
-    if (policy.m_position) m_position = policy.m_position.value();
-    if (policy.m_direction) m_dir = policy.m_direction.value();
-    if (policy.m_attenuation) m_attenuation = policy.m_attenuation.value();
-    if (policy.m_range) m_range = policy.m_range.value();
-    m_isEnable = policy.m_isEnable;
+    m_type = contract.LightType();
+    m_color = contract.Color();
+    m_position = contract.Position();
+    m_dir = contract.Direction();
+    m_attenuation = contract.Attenuation();
+    m_range = contract.Range();
+    m_isEnable = contract.IsEnable();
+}
+
+LightInfoContract LightInfo::SerializeContract()
+{
+    LightInfoContract contract;
+    contract.LightType() = m_type;
+    contract.Color() = m_color;
+    contract.Position() = m_position;
+    contract.Direction() = m_dir;
+    contract.Attenuation() = m_attenuation;
+    contract.Range() = m_range;
+    contract.IsEnable() = m_isEnable;
+    return contract;
 }
 
 void LightInfo::SetLightColor(const MathLib::ColorRGBA& color)

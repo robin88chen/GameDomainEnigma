@@ -9,8 +9,10 @@
 #define SCENE_GRAPH_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
+#include "SpatialLinkageResolver.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -18,12 +20,16 @@
 
 namespace Enigma::SceneGraph
 {
+    class Spatial;
     class Camera;
     class Frustum;
     class Node;
     class Pawn;
     class LightInfo;
     class Light;
+    class NodeContract;
+    class LightContract;
+    class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -32,7 +38,7 @@ namespace Enigma::SceneGraph
         SceneGraphRepository(Frameworks::ServiceManager* srv_mngr);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
-        virtual ~SceneGraphRepository();
+        virtual ~SceneGraphRepository() override;
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
@@ -48,6 +54,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name);
+        std::shared_ptr<Node> CreateNode(const NodeContract& contract);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -56,8 +63,14 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
+        std::shared_ptr<Light> CreateLight(const LightContract& contract);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
+
+        std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
+
+    private:
+        void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -74,6 +87,10 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
+
+        Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
+
+        SceneGraphBuilder* m_builder;
     };
 }
 

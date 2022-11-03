@@ -15,20 +15,24 @@
 #include "GameEngine/IRenderer.h"
 #include "SceneTraveler.h"
 #include "SpatialRenderState.h"
+#include "Frameworks/Rtti.h"
 #include <string>
 #include <memory>
 #include <system_error>
 #include <bitset>
+
 
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
     class Culler;
     class Node;
+    class SpatialContract;
 
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         enum class CullingMode
         {
@@ -65,11 +69,14 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const std::string& name);
+        Spatial(const SpatialContract& contract);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
+
+        virtual Engine::Contract SerializeContract();
 
         const std::string& GetSpatialName() const { return m_name; };
 
@@ -223,6 +230,10 @@ namespace Enigma::SceneGraph
         {
             return shared_from_this();
         }
+
+    protected:
+        SpatialContract SerializeSpatialContract();
+
     protected:
         std::string m_name;
 

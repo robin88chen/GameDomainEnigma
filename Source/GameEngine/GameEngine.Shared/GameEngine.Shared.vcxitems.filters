@@ -46,6 +46,12 @@
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contracts\BV Contract">
+      <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -159,6 +165,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h">
+      <Filter>Contracts\BV Contract</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -235,6 +259,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
       <Filter>Effect Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp">
+      <Filter>Contracts\BV Contract</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

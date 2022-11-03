@@ -30,14 +30,17 @@ double MathRandom::SymmetricRandom()
     return s_symmetric_rand(s_generator);
 }
 
-double MathRandom::IntervalRandom(double minA, double maxA)
+UniformDoubleDistribution MathRandom::IntervalDistribution(double minA, double maxA)
 {
-    std::uniform_real_distribution<double> unif_rand(minA, maxA);
-    return unif_rand(s_generator);
+    return UniformDoubleDistribution(minA, maxA, s_generator);
 }
 
-int MathRandom::IntervalRandom(int minA, int maxA)
+UniformFloatDistribution MathRandom::IntervalDistribution(float minA, float maxA)
 {
-    std::uniform_int_distribution<int> unif_rand(minA, maxA);
-    return unif_rand(s_generator);
+    return UniformFloatDistribution(minA, maxA, s_generator);
+}
+
+UniformIntDistribution MathRandom::IntervalDistribution(int minA, int maxA)
+{
+    return UniformIntDistribution(minA, maxA, s_generator);
 }

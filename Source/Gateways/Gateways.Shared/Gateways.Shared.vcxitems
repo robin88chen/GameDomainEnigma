@@ -14,9 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp" />
   </ItemGroup>
 </Project>

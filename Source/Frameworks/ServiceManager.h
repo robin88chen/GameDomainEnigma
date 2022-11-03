@@ -79,7 +79,7 @@ namespace Enigma::Frameworks
     protected:
         static ServiceManager* m_instance;
 
-        typedef std::unordered_map<Rtti, ISystemService*, RttiHashFunc> SystemServiceMap;  ///< mapping by rtti type_index
+        typedef std::unordered_map<const Rtti*, ISystemService*> SystemServiceMap;  ///< mapping by rtti type_index
 
         SystemServiceList m_services;
         SystemServiceMap m_mapServices;

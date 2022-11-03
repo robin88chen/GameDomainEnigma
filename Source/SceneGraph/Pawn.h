@@ -21,7 +21,7 @@ namespace Enigma::SceneGraph
         Pawn(const std::string& name);
         Pawn(const Pawn&) = delete;
         Pawn(Pawn&&) = delete;
-        virtual ~Pawn();
+        virtual ~Pawn() override;
         Pawn& operator=(const Pawn&) = delete;
         Pawn& operator=(Pawn&&) = delete;
 

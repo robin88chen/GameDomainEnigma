@@ -1,13 +1,22 @@
 ﻿#include "Node.h"
 #include "Culler.h"
+#include "Spatial.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphContracts.h"
 #include "Frameworks/EventPublisher.h"
+#include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::SceneGraph;
 
+DEFINE_RTTI(SceneGraph, Node, Spatial);
+
 Node::Node(const std::string& name) : Spatial(name)
+{
+}
+
+Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
 {
 }
 
@@ -21,6 +30,25 @@ Node::~Node()
         child = nullptr;
     }
     m_childList.clear();
+}
+
+Enigma::Engine::Contract Node::SerializeContract()
+{
+    NodeContract contract(SerializeSpatialContract());
+    for (auto child : m_childList)
+    {
+        if (child) contract.ChildNames().emplace_back(child->GetSpatialName());
+    }
+    return contract.ToContract();
+}
+
+void Node::ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)
+{
+    for (auto& name : contract.ChildNames())
+    {
+        resolver.TryResolveLinkage(name, [lifetime = shared_from_this(), this](auto sp)
+            { AttachChild(sp, sp->GetLocalTransform()); });
+    }
 }
 
 error Node::OnCullingVisible(Culler* culler, bool noCull)
@@ -198,7 +226,7 @@ error Node::_UpdateSpatialRenderState()
 
 error Node::_PropagateSpatialRenderState()
 {
-    error er = ErrorCode::ok;
+    error er;
 
     if (GetParent())
     {

@@ -25,8 +25,7 @@ namespace Enigma::Frameworks
     class ISystemService
     {
     public:
-        static Rtti TYPE_RTTI;
-        virtual const Rtti& TypeInfo() const { return TYPE_RTTI; }
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         ISystemService(ServiceManager*);
         ISystemService(const ISystemService&) = delete;

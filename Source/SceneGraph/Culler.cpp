@@ -29,7 +29,7 @@ Culler::Culler(const Culler& culler)
     UpdateFrustumPlanes();
 }
 
-Culler::Culler(Culler&& culler)
+Culler::Culler(Culler&& culler) noexcept
 {
     m_isEnableOuterClipping = culler.m_isEnableOuterClipping;
     m_camera = std::move(culler.m_camera);
@@ -56,7 +56,7 @@ Culler& Culler::operator=(const Culler& culler)
     return *this;
 }
 
-Culler& Culler::operator=(Culler&& culler)
+Culler& Culler::operator=(Culler&& culler) noexcept
 {
     m_isEnableOuterClipping = culler.m_isEnableOuterClipping;
     m_camera = std::move(culler.m_camera);
@@ -227,7 +227,7 @@ bool Culler::IsVisible(const Engine::BoundingVolume& bound)
 
     // Start with the last pushed plane, which is potentially the most
     // restrictive plane.
-    for (int idxPlane = m_countCullerPlane - 1; idxPlane >= 0; idxPlane--)
+    for (int idxPlane = static_cast<int>(m_countCullerPlane - 1); idxPlane >= 0; idxPlane--)
     {
         if (m_planeActivations[idxPlane])
         {

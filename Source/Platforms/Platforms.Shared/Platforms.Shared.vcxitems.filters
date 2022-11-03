@@ -13,6 +13,9 @@
     <Filter Include="Platform Layer\Android">
       <UniqueIdentifier>{3648bb1f-8e1b-4925-b920-0ad5059c7f3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ruid">
+      <UniqueIdentifier>{0b0919f5-8db2-4c43-80a8-1e5343a73670}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h">
@@ -30,6 +33,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h">
       <Filter>Platform Layer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ruid.h">
+      <Filter>ruid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp">
@@ -40,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayer.cpp">
       <Filter>Platform Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ruid.cpp">
+      <Filter>ruid</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

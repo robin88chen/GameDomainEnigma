@@ -11,22 +11,28 @@
 #include "Spatial.h"
 #include "MathLib/Matrix4.h"
 #include "LightInfo.h"
+#include "Frameworks/Rtti.h"
 #include <memory>
 #include <system_error>
 
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
+    class LightContract;
 
     class Light : public Spatial
     {
+        DECLARE_EN_RTTI
     public:
         Light(const std::string& spatialName, const LightInfo& lightInfo);
+        Light(const LightContract& contract);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
-        virtual ~Light();
+        virtual ~Light() override;
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
+
+        virtual Engine::Contract SerializeContract() override;
 
         const LightInfo& Info() const { return m_lightInfo; };
         LightInfo& Info() { return m_lightInfo; }

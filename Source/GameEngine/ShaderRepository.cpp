@@ -14,13 +14,12 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, ShaderRepository);
+DEFINE_RTTI(Engine, ShaderRepository, ISystemService);
 
 static std::string shaderCodePathID = std::string("SHADER_CODE_PATH");
 
 ShaderRepository::ShaderRepository(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, ShaderRepository, ISystemService);
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew ShaderBuilder(this);

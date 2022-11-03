@@ -10,24 +10,38 @@
 
 #include "Spatial.h"
 #include <list>
+#include "Frameworks/Rtti.h"
+#include <string>
+
+namespace Enigma::Engine
+{
+    template <class T> class ContractedLinkageResolver;
+}
 
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
 
+    class NodeContract;
+
     /** scene graph node class */
     class Node : public Spatial
     {
+        DECLARE_EN_RTTI;
     public:
         using ChildList = std::list<SpatialPtr>;
 
     public:
         Node(const std::string& name);
+        Node(const NodeContract& contract);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
-        virtual ~Node();
+        virtual ~Node() override;
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
+
+        virtual Engine::Contract SerializeContract() override;
+        void ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
@@ -68,6 +82,7 @@ namespace Enigma::SceneGraph
         }
 
     protected:
+        //todo : rethink -- mutex for lock list??
         ChildList m_childList;
     };
 

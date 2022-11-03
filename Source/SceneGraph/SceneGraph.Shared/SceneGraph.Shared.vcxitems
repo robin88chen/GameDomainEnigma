@@ -20,9 +20,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
@@ -30,6 +34,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
   </ItemGroup>
@@ -39,13 +44,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />
   </ItemGroup>

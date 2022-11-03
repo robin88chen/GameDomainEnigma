@@ -15,10 +15,12 @@
 #include "GameEngine/IRenderer.h"
 #include "SceneTraveler.h"
 #include "SpatialRenderState.h"
+#include "Frameworks/Rtti.h"
 #include <string>
 #include <memory>
 #include <system_error>
 #include <bitset>
+
 
 namespace Enigma::SceneGraph
 {
@@ -30,10 +32,7 @@ namespace Enigma::SceneGraph
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
     {
-    public:
-        static Frameworks::Rtti TYPE_RTTI;
-        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
-
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         enum class CullingMode
         {

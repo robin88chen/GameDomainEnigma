@@ -20,11 +20,10 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
 
-DEFINE_RTTI(SceneGraph, SceneGraphRepository);
+DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
 SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, SceneGraph, SceneGraphRepository, ISystemService);
     m_handSystem = GraphicCoordSys::LeftHand;
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this);

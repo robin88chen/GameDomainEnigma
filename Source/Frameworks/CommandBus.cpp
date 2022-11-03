@@ -3,13 +3,12 @@
 
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(Frameworks, CommandBus);
+DEFINE_RTTI(Frameworks, CommandBus, ISystemService);
 
 CommandBus* CommandBus::m_thisBus = nullptr;
 
 CommandBus::CommandBus(ServiceManager* manager) : ISystemService(manager)
 {
-    IMPLEMENT_RTTI(Enigma, Frameworks, CommandBus, ISystemService);
     assert(m_thisBus == nullptr);
     m_needTick = false;
     m_orderValue = MessageServiceOrderValue;

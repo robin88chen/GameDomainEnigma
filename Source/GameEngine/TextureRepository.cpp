@@ -11,11 +11,10 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, TextureRepository);
+DEFINE_RTTI(Engine, TextureRepository, ISystemService);
 
 TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, TextureRepository, ISystemService);
     m_needTick = false;
     m_isCurrentLoading = false;
     m_loader = new TextureLoader(this);

@@ -9,7 +9,6 @@
 #define BOUNDING_VOLUME_H
 
 #include "BoundingVolumeContract.h"
-#include "Frameworks/Rtti.h"
 #include "MathLib/Box3.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Sphere3.h"

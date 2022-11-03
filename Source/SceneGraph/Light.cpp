@@ -9,11 +9,10 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 
-Enigma::Frameworks::Rtti Light::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Light", Spatial::TYPE_RTTI);
+DEFINE_RTTI(SceneGraph, Light, Spatial);
 
 Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spatial(spatialName), m_lightInfo(lightInfo)
 {
-    if (Light::TYPE_RTTI.IsEmpty()) Light::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Light", Spatial::TYPE_RTTI);
 }
 
 Light::Light(const LightContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))

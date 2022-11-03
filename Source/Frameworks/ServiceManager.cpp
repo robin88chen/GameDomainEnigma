@@ -28,7 +28,7 @@ void ServiceManager::RegisterSystemService(ISystemService* service)
     rec.m_isRegistered = true;
     m_services.emplace_back(rec);
     m_services.sort(comp_service_order);
-    m_mapServices[service->TypeInfo()] = service;
+    m_mapServices[service->TypeIndex()] = service;
 }
 
 void ServiceManager::UnregisterSystemService(const Rtti& service_type)
@@ -48,12 +48,12 @@ void ServiceManager::UnregisterSystemService(const Rtti& service_type)
 void ServiceManager::InsertHashAsService(const Rtti& service_type, ISystemService* service)
 {
     if (!service) return;
-    m_mapServices[service_type] = service;
+    m_mapServices[&service_type] = service;
 }
 
 void ServiceManager::RemoveHashAsService(const Rtti& service_type)
 {
-    m_mapServices.erase(service_type);
+    m_mapServices.erase(&service_type);
 }
 
 void ServiceManager::ShutdownSystemService(const Rtti& service_type)
@@ -70,7 +70,7 @@ void ServiceManager::ShutdownSystemService(const Rtti& service_type)
                 ServiceResult res = (*iter).m_service->OnTerm();
                 if (res == ServiceResult::Complete)
                 {
-                    m_mapServices[service_type] = nullptr;
+                    m_mapServices[&service_type] = nullptr;
                     delete (*iter).m_service;
                     (*iter).m_service = nullptr;
                     (*iter).m_state = ServiceState::Deleted;
@@ -125,7 +125,7 @@ void ServiceManager::RunOnce()
             break;
             case ServiceState::Complete:
             {  // 完成，砍掉service
-                m_mapServices[(*iterService).m_service->TypeInfo()] = nullptr;
+                m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
                 delete (*iterService).m_service;
                 (*iterService).m_service = nullptr;
             }
@@ -199,7 +199,7 @@ void ServiceManager::RunForState(ServiceState st)
             break;
             case ServiceState::Complete:
             {  // 完成，砍掉service
-                m_mapServices[(*iterService).m_service->TypeInfo()] = nullptr;
+                m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
                 delete (*iterService).m_service;
                 (*iterService).m_service = nullptr;
             }
@@ -253,7 +253,7 @@ ISystemService* ServiceManager::GetSystemService(const Rtti& service_type)
 
 std::optional<ISystemService*> ServiceManager::TryGetSystemService(const Rtti& service_type)
 {
-    SystemServiceMap::iterator iter = m_instance->m_mapServices.find(service_type);
+    SystemServiceMap::iterator iter = m_instance->m_mapServices.find(&service_type);
     if (iter != m_instance->m_mapServices.end())
     {
         return iter->second;
@@ -262,7 +262,7 @@ std::optional<ISystemService*> ServiceManager::TryGetSystemService(const Rtti& s
     // map中沒有完全符合的，找service type的繼承者
     for (iter = m_instance->m_mapServices.begin(); iter != m_instance->m_mapServices.end(); ++iter)
     {
-        if (iter->first.IsDerived(service_type))
+        if (iter->first->IsDerived(service_type))
         {
             return iter->second;
         }

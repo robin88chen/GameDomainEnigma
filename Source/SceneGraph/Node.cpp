@@ -10,11 +10,10 @@
 
 using namespace Enigma::SceneGraph;
 
-Enigma::Frameworks::Rtti Node::TYPE_RTTI; // = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Node", Spatial::TYPE_RTTI);
+DEFINE_RTTI(SceneGraph, Node, Spatial);
 
 Node::Node(const std::string& name) : Spatial(name)
 {
-    if (Node::TYPE_RTTI.IsEmpty()) Node::TYPE_RTTI = Enigma::Frameworks::Rtti("Enigma.SceneGraph.Node", Spatial::TYPE_RTTI);
 }
 
 Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))

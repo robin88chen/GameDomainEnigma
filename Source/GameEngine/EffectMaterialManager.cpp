@@ -11,11 +11,10 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, EffectMaterialManager);
+DEFINE_RTTI(Engine, EffectMaterialManager, ISystemService);
 
 EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, EffectMaterialManager, ISystemService);
     m_needTick = false;
     m_compiler = menew EffectCompiler();
     m_isCurrentCompiling = false;

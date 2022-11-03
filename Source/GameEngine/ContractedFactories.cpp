@@ -8,11 +8,10 @@ using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(Engine, ContractedFactories);
+DEFINE_RTTI(Engine, ContractedFactories, ISystemService);
 
 ContractedFactories::ContractedFactories(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, ContractedFactories, ISystemService);
     m_doRegisteringFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringFactory(c); });
     CommandBus::Subscribe(typeid(RegisterContractFactory), m_doRegisteringFactory);

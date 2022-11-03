@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Rtti.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -19,12 +19,22 @@ public: \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
     virtual const Enigma::Frameworks::Rtti& TypeInfo () const override { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* TypeIndex() override { return &TYPE_RTTI; } \
 //----------------------------------------------------------------------------
-#define DEFINE_RTTI(modulename, classname) \
-    Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI
+#define DECLARE_EN_RTTI_OF_BASE \
+public: \
+    static Enigma::Frameworks::Rtti TYPE_RTTI; \
+    virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; } \
 //----------------------------------------------------------------------------
-#define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
-    TYPE_RTTI = Enigma::Frameworks::Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
+#define DEFINE_RTTI(modulename, classname, baseclassname) \
+    Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{"En."#modulename"."#classname, &baseclassname::TYPE_RTTI}
+//----------------------------------------------------------------------------
+#define DEFINE_RTTI_OF_BASE(modulename, classname) \
+    Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{"En."#modulename"."#classname}
+//----------------------------------------------------------------------------
+//#define IMPLEMENT_RTTI(nsname, modulename, classname, baseclassname) \
+  //  TYPE_RTTI = Enigma::Frameworks::Rtti(#nsname"."#modulename"."#classname, baseclassname::TYPE_RTTI)
 //----------------------------------------------------------------------------
 #define IMPLEMENT_TEMPLATE_RTTI(nsname, classname, baseclassname) \
   template <> \
@@ -41,21 +51,22 @@ namespace Enigma::Frameworks
     @remarks
     The name must be unique among all objects in the system.  In the Enigma
     namespace, a class Foo should use "En.Foo".  If an application has
-    another namespace, SomeName, then the name should be "SomeName.Foo". */
+    another namespace, SomeName, then the name should be "SomeName.Foo".
+    base rtti 用指標，是base type rtti 靜態物件的位址，即使 base rtti 初始化比較晚，
+    也可以正確塞入資料。
+    */
     class Rtti
     {
     public:
         Rtti() {}
         Rtti(const std::string& name);
-        Rtti(const std::string& name, const Rtti& base_rtti);
-        Rtti(const Rtti& rhs) = default;
-        Rtti(Rtti&& rhs) = default;
+        Rtti(const std::string& name, const Rtti* base_rtti);
+        Rtti(const Rtti& rhs) = delete;
+        Rtti(Rtti&& rhs) = delete;
         ~Rtti() = default;
 
-        bool IsEmpty() const { return m_name.empty(); }
-
-        Rtti& operator=(const Rtti& rhs) = default;
-        Rtti& operator=(Rtti&& rhs) = default;
+        Rtti& operator=(const Rtti& rhs) = delete;
+        Rtti& operator=(Rtti&& rhs) = delete;
         bool operator==(const Rtti& rhs) const;
 
         const std::string& GetName() const;
@@ -65,6 +76,7 @@ namespace Enigma::Frameworks
 
     private:
         std::string m_name;
+        const Rtti* m_base;
     };
     class RttiHashFunc
     {

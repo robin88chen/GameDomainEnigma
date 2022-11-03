@@ -7,11 +7,10 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(SceneGraph, LightInfoTraversal);
+DEFINE_RTTI(SceneGraph, LightInfoTraversal, ISystemService);
 
 LightInfoTraversal::LightInfoTraversal(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    IMPLEMENT_RTTI(Enigma, SceneGraph, LightInfoTraversal, ISystemService);
     m_needTick = false;
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnLightInfoCreated(e); });
     EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);

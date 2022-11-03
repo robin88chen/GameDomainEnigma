@@ -11,11 +11,10 @@
 
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Engine, RenderBufferRepository);
+DEFINE_RTTI(Engine, RenderBufferRepository, ISystemService);
 
 RenderBufferRepository::RenderBufferRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
 {
-    IMPLEMENT_RTTI(Enigma, Engine, RenderBufferRepository, ISystemService);
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = new RenderBufferBuilder(this);

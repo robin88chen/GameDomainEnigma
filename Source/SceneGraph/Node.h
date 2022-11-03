@@ -10,6 +10,7 @@
 
 #include "Spatial.h"
 #include <list>
+#include "Frameworks/Rtti.h"
 #include <string>
 
 namespace Enigma::Engine
@@ -26,10 +27,7 @@ namespace Enigma::SceneGraph
     /** scene graph node class */
     class Node : public Spatial
     {
-    public:
-        static Frameworks::Rtti TYPE_RTTI;
-        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
-
+        DECLARE_EN_RTTI;
     public:
         using ChildList = std::list<SpatialPtr>;
 

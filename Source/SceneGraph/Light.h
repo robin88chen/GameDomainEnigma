@@ -11,6 +11,7 @@
 #include "Spatial.h"
 #include "MathLib/Matrix4.h"
 #include "LightInfo.h"
+#include "Frameworks/Rtti.h"
 #include <memory>
 #include <system_error>
 
@@ -21,10 +22,7 @@ namespace Enigma::SceneGraph
 
     class Light : public Spatial
     {
-    public:
-        static Frameworks::Rtti TYPE_RTTI;
-        const Frameworks::Rtti& TypeInfo() const { return TYPE_RTTI; }
-
+        DECLARE_EN_RTTI
     public:
         Light(const std::string& spatialName, const LightInfo& lightInfo);
         Light(const LightContract& contract);

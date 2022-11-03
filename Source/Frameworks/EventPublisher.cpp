@@ -3,13 +3,12 @@
 
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(Frameworks, EventPublisher);
+DEFINE_RTTI(Frameworks, EventPublisher, ISystemService);
 
 EventPublisher* EventPublisher::m_thisPublisher = nullptr;
 
 EventPublisher::EventPublisher(ServiceManager* manager) : ISystemService(manager)
 {
-    IMPLEMENT_RTTI(Enigma, Frameworks, EventPublisher, ISystemService);
     assert(m_thisPublisher == nullptr);
     m_needTick = false;
     m_orderValue = MessageServiceOrderValue;

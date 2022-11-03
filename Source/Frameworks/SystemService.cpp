@@ -3,11 +3,10 @@
 
 using namespace Enigma::Frameworks;
 
-Rtti ISystemService::TYPE_RTTI;
+DEFINE_RTTI_OF_BASE(Frameworks, ISystemService);
 
 ISystemService::ISystemService(ServiceManager* manager)
 {
-    TYPE_RTTI = Rtti("Enigma.Frameworks.ISystemService");
     m_serviceManager = manager;
     m_needTick = true;
     m_isSuspended = false;

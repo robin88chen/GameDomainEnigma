@@ -105,6 +105,7 @@ std::string ContractJsonGateway::Serialize(const std::vector<Contract>& contract
 
     rapidjson::StringBuffer buf;
     rapidjson::PrettyWriter writer(buf);
+    writer.SetFormatOptions(rapidjson::kFormatSingleLineArray);
     json_doc.Accept(writer);
     std::string json(buf.GetString(), buf.GetSize());
     return json;

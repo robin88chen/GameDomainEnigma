@@ -183,6 +183,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
       <Filter>Contracts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
+      <Filter>Geometry Datas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -268,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp">
       <Filter>Contracts\BV Contract</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
+      <Filter>Geometry Datas</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

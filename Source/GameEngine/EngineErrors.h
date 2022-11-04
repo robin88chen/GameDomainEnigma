@@ -22,6 +22,10 @@ namespace Enigma::Engine
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,
+
+        invalidArrayIndex = 301,
+        nullMemoryBuffer,
+        zeroVertexSize,
     };
     class ErrorCategory : public std::error_category
     {

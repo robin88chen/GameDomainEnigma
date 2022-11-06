@@ -14,8 +14,12 @@
 #include "GraphicKernel/IVertexDeclaration.h"
 #include "BoundingVolume.h"
 #include "GraphicKernel/GraphicAPITypes.h"
+#include "MathLib/ColorRGBA.h"
+#include "MathLib/Vector2.h"
 #include <memory>
 #include <any>
+
+#include "GraphicKernel/IVertexBuffer.h"
 
 namespace Enigma::Engine
 {
@@ -55,14 +59,91 @@ namespace Enigma::Engine
         /** get position array */
         virtual std::vector<MathLib::Vector3> GetPosition3Array(unsigned int count);
         virtual std::vector<MathLib::Vector3> GetPosition3Array(unsigned int offset, unsigned int count);
+        /** set position */
+        virtual error SetPosition3(unsigned int vtxIndex, const MathLib::Vector3& position);
+        /** set position */
+        virtual error SetPosition4(unsigned int vtxIndex, const MathLib::Vector4& position);
+        /** set position array */
+        virtual error SetPosition3Array(const std::vector<MathLib::Vector3>& positions);
+        virtual error SetPosition3Array(unsigned int offset, const std::vector<MathLib::Vector3>& positions);
+        /** set position array */
+        virtual error SetPosition4Array(const std::vector<MathLib::Vector4>& positions);
+        virtual error SetPosition4Array(unsigned int offset, const std::vector<MathLib::Vector4>& positions);
+
+        /** get vertex normal */
+        virtual MathLib::Vector3 GetVertexNormal(unsigned int vtxIndex);
+        /** set vertex normal */
+        virtual error SetVertexNormal(unsigned int vtxIndex, const MathLib::Vector3& nor);
+        /** get vertex normal array */
+        virtual std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int count);
+        virtual std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int offset, unsigned int count);
+        /** set vertex normal array */
+        virtual error SetVertexNormalArray(const std::vector<MathLib::Vector3>& normals);
+        virtual error SetVertexNormalArray(unsigned int offset, const std::vector<MathLib::Vector3>& normals);
+
+        /** set diffuse color */
+        virtual error SetDiffuseColorArray(const std::vector<MathLib::Vector4>& color);
+        virtual error SetDiffuseColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
+        /** set diffuse color */
+        virtual error SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& color);
+        virtual error SetDiffuseColorArray(unsigned int offset, const std::vector<MathLib::ColorRGBA>& color);
+
+        /** set texture coord array */
+        virtual error SetTexture2DCoordArray(unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
+        virtual error SetTexture2DCoordArray(unsigned int offset, unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
+        /** get texture coord array */
+        virtual std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int stage, unsigned int count);
+        virtual std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
+        /** set texture coord array */
+        virtual error SetTexture1DCoordArray(unsigned int stage, const std::vector<float>& us);
+        /** set texture coord array @param count : count of data in array ( vtx count * 3 ) */
+        virtual error SetTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
+
+        /** set palette index array */
+        virtual error SetPaletteIndexArray(const std::vector<unsigned int>& palette_array);
+        /** set skin weight array */
+        virtual error SetSkinWeightArray(unsigned int weight_idx, const std::vector<float>& weight_array);
+        /** set total skin weight array, array size : vtx count * blend weight count */
+        virtual error SetTotalSkinWeightArray(const std::vector<float>& weight_array);
+        /** set vertex tangent array */
+        virtual error SetVertexTangentArray(const std::vector<MathLib::Vector4>& tangent);
+
+        /** set index array */
+        virtual error SetIndexArray(const std::vector<unsigned int>& idx_ary);
+
+        /** get primitive type */
+        virtual Graphics::PrimitiveTopology GetPrimitiveTopology() { return m_topology; };
+
+        /** get vertex format string */
+        virtual std::string GetVertexFormatString() { return m_vertexFormatCode.ToString(); };
+
+        /** get vertex memory */
+        virtual const byte_buffer& GetVertexMemory() { return m_vertexMemory; };
+        /** get ranged vertex memory */
+        virtual Graphics::IVertexBuffer::ranged_buffer GetRangedVertexMemory(unsigned int offset, unsigned int count);
+        /** get index memory */
+        virtual const uint_buffer& GetIndexMemory() { return m_indexMemory; };
+
+        /** get vertex capacity */
+        virtual unsigned int GetVertexCapacity() { return m_vtxCapacity; };
+        /** get index capacity */
+        virtual unsigned int GetIndexCapacity() { return m_idxCapacity; };
+
+        /** get used vertex count */
+        virtual unsigned int GetUsedVertexCount() { return m_vtxUsedCount; };
+        /** get used index count */
+        virtual unsigned int GetUsedIndexCount() { return m_idxUsedCount; };
+
+        /** size of vertex (in byte) */
+        virtual unsigned int SizeofVertex() { return m_vertexDesc.m_totalVertexSize; };
 
     protected:
         error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos);
-        error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, float* src, bool isPos);
+        error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);
         error GetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int destDimension, float* dest, unsigned int count, bool isPos, std::function<bool()> skip_check = nullptr);
         error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
-            int srcDimension, float* src, unsigned int count, bool isPos, std::function<bool()> skip_check = nullptr);
+            int srcDimension, const float* src, unsigned int count, bool isPos, std::function<bool()> skip_check = nullptr);
 
     protected:
         std::string m_name;

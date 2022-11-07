@@ -1,6 +1,7 @@
 ﻿#include "GeometryData.h"
 #include "EngineErrors.h"
 #include "Platforms/PlatformLayer.h"
+#include "MathLib/ContainmentBox3.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -425,4 +426,37 @@ error GeometryData::SetVertexMemoryDataArray(unsigned start, int elementOffset, 
     }
 
     return ErrorCode::ok;
+}
+
+const GeometrySegment& GeometryData::GetSegment(unsigned index) const
+{
+    assert(index < m_geoSegmentVector.size());
+    return m_geoSegmentVector[index];
+}
+
+void GeometryData::ChangeSegment(unsigned index, unsigned start_vtx, unsigned vtx_count, unsigned start_idx, unsigned idx_count)
+{
+    if (FATAL_LOG_EXPR(index >= m_geoSegmentVector.size())) return;
+    m_geoSegmentVector[index].m_startVtx = start_vtx;
+    m_geoSegmentVector[index].m_vtxCount = vtx_count;
+    m_geoSegmentVector[index].m_startIdx = start_idx;
+    m_geoSegmentVector[index].m_idxCount = idx_count;
+}
+
+void GeometryData::CalculateBoundingVolume(bool axis_align)
+{
+    if (FATAL_LOG_EXPR(m_vertexMemory.size() == 0)) return;
+
+    if (axis_align)
+    {
+        m_geometryBound = BoundingVolume(ContainmentBox3::ComputeAlignedBox(
+            reinterpret_cast<float*>(&m_vertexMemory[0]), SizeofVertex() / sizeof(float),
+            GetUsedVertexCount()));
+    }
+    else
+    {
+        m_geometryBound = BoundingVolume(ContainmentBox3::ComputeOrientedBox(
+            reinterpret_cast<float*>(&m_vertexMemory[0]), SizeofVertex() / sizeof(float),
+            GetUsedVertexCount()));
+    }
 }

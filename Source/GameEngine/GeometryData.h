@@ -137,6 +137,22 @@ namespace Enigma::Engine
         /** size of vertex (in byte) */
         virtual unsigned int SizeofVertex() { return m_vertexDesc.m_totalVertexSize; };
 
+        /** get geometry segment */
+        virtual const GeometrySegment& GetSegment(unsigned int index) const;
+        /** get geometry segment count */
+        virtual unsigned int GetSegmentCount() { return static_cast<unsigned int>(m_geoSegmentVector.size()); };
+        /** get geometry segment vector */
+        virtual const GeometrySegmentVector& GetSegmentVector() const { return m_geoSegmentVector; };
+        /** change segment */
+        virtual void ChangeSegment(unsigned int index, unsigned int start_vtx, unsigned int vtx_count, unsigned int start_idx, unsigned int idx_count);
+        /** resize segment array */
+        virtual void ResizeSegmentVector(unsigned int new_size) { m_geoSegmentVector.resize(new_size, GeometrySegment()); };
+
+        /** calculate bounding volume */
+        virtual void CalculateBoundingVolume(bool axis_align);
+        /** get bounding volume */
+        const BoundingVolume& GetBoundingVolume() { return m_geometryBound; };
+
     protected:
         error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos);
         error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);

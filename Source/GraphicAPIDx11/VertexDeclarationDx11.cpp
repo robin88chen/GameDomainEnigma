@@ -21,7 +21,7 @@ const std::string VertexDeclarationDx11::m_tangentSemanticName = "TANGENT";
 const std::string VertexDeclarationDx11::m_binormalSemanticName = "BINORMAL";
 
 VertexDeclarationDx11::VertexDeclarationDx11(const std::string& name, const std::string& data_vertex_format,
-    const VertexFormatCode& shader_fmt_code) : IVertexDeclaration(name, data_vertex_format)
+    const Graphics::VertexFormatCode& shader_fmt_code) : IVertexDeclaration(name, data_vertex_format)
 {
     m_d3dInputLayout = nullptr;
     m_shaderVertexFormat = shader_fmt_code;
@@ -34,7 +34,7 @@ VertexDeclarationDx11::~VertexDeclarationDx11()
 
 bool VertexDeclarationDx11::IsMatched(const std::string& data_vertex_format, const Graphics::IVertexShaderPtr& vtx_shader)
 {
-    VertexFormatCode data_vertex_code;
+    Graphics::VertexFormatCode data_vertex_code;
     data_vertex_code.FromString(data_vertex_format);
     if (data_vertex_code != m_dataVertexFormatCode) return false;
     VertexShaderDx11* shader_dx11 = dynamic_cast<VertexShaderDx11*>(vtx_shader.get());
@@ -72,27 +72,27 @@ void VertexDeclarationDx11::FillShaderVertexFormat(const std::shared_ptr<VertexS
     m_shaderSignatureBytes = shader->GetShaderSignatureBytes();
 }
 
-std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::CreateVertexLayout(const VertexDesc& vertex_desc)
+std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::CreateVertexLayout(const Graphics::VertexDescription& vertex_desc)
 {
-    if (vertex_desc.m_numElements <= 0) return { nullptr, 0 };
+    if (vertex_desc.NumberOfElements() <= 0) return { nullptr, 0 };
 
-    D3D11_INPUT_ELEMENT_DESC* input_layout = memalloc(D3D11_INPUT_ELEMENT_DESC, vertex_desc.m_numElements);
-    memset(input_layout, 0, vertex_desc.m_numElements * sizeof(D3D11_INPUT_ELEMENT_DESC));
+    D3D11_INPUT_ELEMENT_DESC* input_layout = memalloc(D3D11_INPUT_ELEMENT_DESC, vertex_desc.NumberOfElements());
+    memset(input_layout, 0, vertex_desc.NumberOfElements() * sizeof(D3D11_INPUT_ELEMENT_DESC));
 
     unsigned int element_idx = 0;
-    if (vertex_desc.m_positionOffset >= 0)
+    if (vertex_desc.PositionOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_positionSemanticName.c_str();
         input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32_FLOAT;
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_positionOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.PositionOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_weightOffset >= 0)
+    if (vertex_desc.WeightOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_weightsSemanticName.c_str();
-        switch (vertex_desc.m_blendWeightCount)
+        switch (vertex_desc.BlendWeightCount())
         {
         case 1:
             input_layout[element_idx].Format = DXGI_FORMAT_R32_FLOAT;
@@ -108,32 +108,32 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
             break;
         }
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_weightOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.WeightOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_paletteIndexOffset >= 0)
+    if (vertex_desc.PaletteIndexOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_boneIndexSemanticName.c_str();
         input_layout[element_idx].Format = DXGI_FORMAT_R32_UINT;
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_paletteIndexOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.PaletteIndexOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_normalOffset >= 0)
+    if (vertex_desc.NormalOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_normalSemanticName.c_str();
         input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32_FLOAT;
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_normalOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.NormalOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_colorOffset >= 0)
+    if (vertex_desc.DiffuseColorOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_color0SemanticName.c_str();
-        if (vertex_desc.m_colorDimension == 1)
+        if (vertex_desc.DiffuseColorDimension() == 1)
         {
             input_layout[element_idx].Format = DXGI_FORMAT_R32_UINT;
         }
@@ -142,14 +142,14 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
             input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
         }
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_colorOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.DiffuseColorOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_specularOffset >= 0)
+    if (vertex_desc.SpecularColorOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_color1SemanticName.c_str();
-        if (vertex_desc.m_specularDimension == 1)
+        if (vertex_desc.SpecularColorDimension() == 1)
         {
             input_layout[element_idx].Format = DXGI_FORMAT_R32_UINT;
         }
@@ -158,14 +158,14 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
             input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
         }
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_specularOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.SpecularColorOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_tangentOffset >= 0)
+    if (vertex_desc.TangentOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_tangentSemanticName.c_str();
-        if (vertex_desc.m_tangentDimension == 3)
+        if (vertex_desc.TangentDimension() == 3)
         {
             input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32_FLOAT;
         }
@@ -174,26 +174,26 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
             input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
         }
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_tangentOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.TangentOffset() * sizeof(float);
 
         element_idx++;
     }
-    if (vertex_desc.m_biNormalOffset >= 0)
+    if (vertex_desc.BiNormalOffset() >= 0)
     {
         input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_binormalSemanticName.c_str();
         input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32_FLOAT;
         input_layout[element_idx].InputSlot = 0;
-        input_layout[element_idx].AlignedByteOffset = vertex_desc.m_biNormalOffset * sizeof(float);
+        input_layout[element_idx].AlignedByteOffset = vertex_desc.BiNormalOffset() * sizeof(float);
 
         element_idx++;
     }
-    for (unsigned int ti = 0; ti < IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD; ti++)
+    for (unsigned int ti = 0; ti < Graphics::VertexFormatCode::MAX_TEX_COORD; ti++)
     {
-        if (vertex_desc.m_texCoordOffset[ti] >= 0)
+        if (vertex_desc.TextureCoordOffset(ti) >= 0)
         {
             input_layout[element_idx].SemanticName = VertexDeclarationDx11::m_texCoordSemanticName.c_str();
             input_layout[element_idx].SemanticIndex = ti;
-            switch (vertex_desc.m_texCoordSize[ti])
+            switch (vertex_desc.TextureCoordSize(ti))
             {
             case 1:
                 input_layout[element_idx].Format = DXGI_FORMAT_R32_FLOAT;
@@ -209,13 +209,13 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
                 break;
             }
             input_layout[element_idx].InputSlot = 0;
-            input_layout[element_idx].AlignedByteOffset = vertex_desc.m_texCoordOffset[ti] * sizeof(float);
+            input_layout[element_idx].AlignedByteOffset = vertex_desc.TextureCoordOffset(ti) * sizeof(float);
 
             element_idx++;
         }
         else break;
     }
 
-    return { input_layout, vertex_desc.m_numElements };
+    return { input_layout, vertex_desc.NumberOfElements() };
 }
 

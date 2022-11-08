@@ -52,6 +52,9 @@
     <Filter Include="Contracts\BV Contract">
       <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contracts\Geometry Contract">
+      <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -185,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
       <Filter>Geometry Datas</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h">
+      <Filter>Contracts\Geometry Contract</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

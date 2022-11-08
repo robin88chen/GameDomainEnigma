@@ -30,11 +30,11 @@ GeometryData::~GeometryData()
 error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string, unsigned vtx_capa, unsigned vtx_count, unsigned idx_capa, unsigned idx_count)
 {
     m_vertexFormatCode.FromString(vertex_format_string);
-    m_vertexFormatCode.CalculateVertexSize(&m_vertexDesc);
+    m_vertexDesc = m_vertexFormatCode.CalculateVertexSize();
 
     if (vtx_capa)
     {
-        m_vertexMemory.resize(vtx_capa * m_vertexDesc.m_totalVertexSize);
+        m_vertexMemory.resize(vtx_capa * m_vertexDesc.TotalVertexSize());
     }
     if (idx_capa)
     {
@@ -58,7 +58,7 @@ error GeometryData::ReSizeVertexMemoryCapacity(unsigned vtx_capa, unsigned idx_c
 {
     if (vtx_capa)
     {
-        m_vertexMemory.resize(vtx_capa * m_vertexDesc.m_totalVertexSize);
+        m_vertexMemory.resize(vtx_capa * m_vertexDesc.TotalVertexSize());
         m_vtxCapacity = vtx_capa;
     }
     if (idx_capa)
@@ -92,14 +92,14 @@ void GeometryData::SetUsingVertexCount(unsigned vtx_count, unsigned idx_count)
 Vector3 GeometryData::GetPosition3(unsigned vtxIndex)
 {
     Vector3 pos;
-    GetVertexMemoryData(vtxIndex, m_vertexDesc.m_positionOffset, m_vertexDesc.m_posVecDimension, 3, (float*)pos, true);
+    GetVertexMemoryData(vtxIndex, m_vertexDesc.PositionOffset(), m_vertexDesc.PositionDimension(), 3, (float*)pos, true);
     return pos;
 }
 
 Vector4 GeometryData::GetPosition4(unsigned vtxIndex)
 {
     Vector4 pos;
-    GetVertexMemoryData(vtxIndex, m_vertexDesc.m_positionOffset, m_vertexDesc.m_posVecDimension, 4, (float*)pos, true);
+    GetVertexMemoryData(vtxIndex, m_vertexDesc.PositionOffset(), m_vertexDesc.PositionDimension(), 4, (float*)pos, true);
     return pos;
 }
 
@@ -112,21 +112,21 @@ std::vector<Vector3> GeometryData::GetPosition3Array(unsigned offset, unsigned c
 {
     std::vector<Vector3> positions;
     positions.resize(count);
-    GetVertexMemoryDataArray(offset, m_vertexDesc.m_positionOffset,
-        m_vertexDesc.m_posVecDimension, 3, reinterpret_cast<float*>(&positions[0]), count, true);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 3, reinterpret_cast<float*>(&positions[0]), count, true);
     return positions;
 }
 
 error GeometryData::SetPosition3(unsigned vtxIndex, const MathLib::Vector3& position)
 {
-    return SetVertexMemoryData(vtxIndex, m_vertexDesc.m_positionOffset,
-        m_vertexDesc.m_posVecDimension, 3, (const float*)position, true);
+    return SetVertexMemoryData(vtxIndex, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 3, (const float*)position, true);
 }
 
 error GeometryData::SetPosition4(unsigned vtxIndex, const MathLib::Vector4& position)
 {
-    return SetVertexMemoryData(vtxIndex, m_vertexDesc.m_positionOffset,
-        m_vertexDesc.m_posVecDimension, 4, (const float*)position, true);
+    return SetVertexMemoryData(vtxIndex, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 4, (const float*)position, true);
 }
 
 error GeometryData::SetPosition3Array(const std::vector<MathLib::Vector3>& positions)
@@ -136,8 +136,8 @@ error GeometryData::SetPosition3Array(const std::vector<MathLib::Vector3>& posit
 
 error GeometryData::SetPosition3Array(unsigned offset, const std::vector<MathLib::Vector3>& positions)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_positionOffset,
-        m_vertexDesc.m_posVecDimension, 3, reinterpret_cast<const float*>(&positions[0]), static_cast<unsigned>(positions.size()), true);
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 3, reinterpret_cast<const float*>(&positions[0]), static_cast<unsigned>(positions.size()), true);
 }
 
 error GeometryData::SetPosition4Array(const std::vector<MathLib::Vector4>& positions)
@@ -147,20 +147,20 @@ error GeometryData::SetPosition4Array(const std::vector<MathLib::Vector4>& posit
 
 error GeometryData::SetPosition4Array(unsigned offset, const std::vector<MathLib::Vector4>& positions)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_positionOffset,
-        m_vertexDesc.m_posVecDimension, 4, reinterpret_cast<const float*>(&positions[0]), static_cast<unsigned>(positions.size()), true);
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 4, reinterpret_cast<const float*>(&positions[0]), static_cast<unsigned>(positions.size()), true);
 }
 
 Vector3 GeometryData::GetVertexNormal(unsigned vtxIndex)
 {
     Vector3 nor;
-    GetVertexMemoryData(vtxIndex, m_vertexDesc.m_normalOffset, 3, 3, (float*)nor, false);
+    GetVertexMemoryData(vtxIndex, m_vertexDesc.NormalOffset(), 3, 3, (float*)nor, false);
     return nor;
 }
 
 error GeometryData::SetVertexNormal(unsigned vtxIndex, const MathLib::Vector3& nor)
 {
-    return SetVertexMemoryData(vtxIndex, m_vertexDesc.m_normalOffset, 3, 3, (const float*)nor, false);
+    return SetVertexMemoryData(vtxIndex, m_vertexDesc.NormalOffset(), 3, 3, (const float*)nor, false);
 }
 
 std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned count)
@@ -172,7 +172,7 @@ std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned offset, unsigne
 {
     std::vector<Vector3> normals;
     normals.resize(count);
-    GetVertexMemoryDataArray(offset, m_vertexDesc.m_normalOffset, 3, 3, reinterpret_cast<float*>(&normals[0]), count, false);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.NormalOffset(), 3, 3, reinterpret_cast<float*>(&normals[0]), count, false);
     return normals;
 }
 
@@ -183,7 +183,7 @@ error GeometryData::SetVertexNormalArray(const std::vector<MathLib::Vector3>& no
 
 error GeometryData::SetVertexNormalArray(unsigned offset, const std::vector<MathLib::Vector3>& normals)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_normalOffset, 3, 3, reinterpret_cast<const float*>(&normals[0]),
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.NormalOffset(), 3, 3, reinterpret_cast<const float*>(&normals[0]),
         static_cast<unsigned>(normals.size()), false);
 }
 
@@ -194,9 +194,8 @@ error GeometryData::SetDiffuseColorArray(const std::vector<MathLib::Vector4>& co
 
 error GeometryData::SetDiffuseColorArray(unsigned offset, const std::vector<MathLib::Vector4>& colors)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_colorOffset, m_vertexDesc.m_colorDimension,
-        4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false,
-        [this]()->bool { return this->m_vertexDesc.m_colorDimension != 4; });
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorType::Float),
+        m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
 }
 
 error GeometryData::SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& colors)
@@ -206,18 +205,17 @@ error GeometryData::SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& 
 
 error GeometryData::SetDiffuseColorArray(unsigned offset, const std::vector<MathLib::ColorRGBA>& colors)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_colorOffset, m_vertexDesc.m_colorDimension,
-        4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false,
-        [this]()->bool { return this->m_vertexDesc.m_colorDimension != 4; });
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorType::Float),
+        m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
 }
 
 std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned offset, unsigned stage, unsigned count)
 {
-    assert(stage < IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD);
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
     std::vector<Vector2> uvs;
     uvs.resize(count);
-    GetVertexMemoryDataArray(offset, m_vertexDesc.m_texCoordOffset[stage],
-        m_vertexDesc.m_texCoordSize[stage], 2, reinterpret_cast<float*>(&uvs[0]), count, false);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.TextureCoordOffset(stage),
+        m_vertexDesc.TextureCoordSize(stage), 2, reinterpret_cast<float*>(&uvs[0]), count, false);
     return uvs;
 }
 
@@ -228,9 +226,9 @@ std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned stage, unsign
 
 error GeometryData::SetTexture2DCoordArray(unsigned offset, unsigned stage, const std::vector<MathLib::Vector2>& uvs)
 {
-    assert(stage < IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD);
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.m_texCoordOffset[stage],
-        m_vertexDesc.m_texCoordSize[stage], 2, reinterpret_cast<const float*>(&uvs[0]), static_cast<unsigned>(uvs.size()), false);
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.TextureCoordOffset(stage),
+        m_vertexDesc.TextureCoordSize(stage), 2, reinterpret_cast<const float*>(&uvs[0]), static_cast<unsigned>(uvs.size()), false);
 }
 
 error GeometryData::SetTexture2DCoordArray(unsigned stage, const std::vector<MathLib::Vector2>& uvs)
@@ -240,47 +238,47 @@ error GeometryData::SetTexture2DCoordArray(unsigned stage, const std::vector<Mat
 
 error GeometryData::SetTexture1DCoordArray(unsigned stage, const std::vector<float>& us)
 {
-    assert(stage < IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD);
-    return SetVertexMemoryDataArray(0, m_vertexDesc.m_texCoordOffset[stage], m_vertexDesc.m_texCoordSize[stage], 1,
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    return SetVertexMemoryDataArray(0, m_vertexDesc.TextureCoordOffset(stage), m_vertexDesc.TextureCoordSize(stage), 1,
         (const float*)(&us[0]), static_cast<unsigned>(us.size()), false);
 }
 
 error GeometryData::SetTexture3DCoordArray(unsigned stage, const std::vector<MathLib::Vector3>& uvws)
 {
-    assert(stage < IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD);
-    return SetVertexMemoryDataArray(0, m_vertexDesc.m_texCoordOffset[stage], m_vertexDesc.m_texCoordSize[stage], 3,
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    return SetVertexMemoryDataArray(0, m_vertexDesc.TextureCoordOffset(stage), m_vertexDesc.TextureCoordSize(stage), 3,
         (const float*)(&uvws[0]), static_cast<unsigned>(uvws.size()), false);
 }
 
 error GeometryData::SetPaletteIndexArray(const std::vector<unsigned>& palette_array)
 {
-    return SetVertexMemoryDataArray(0, m_vertexDesc.m_paletteIndexOffset, 1, 1, reinterpret_cast<const float*>(&palette_array[0]), static_cast<unsigned>(palette_array.size()), false);
+    return SetVertexMemoryDataArray(0, m_vertexDesc.PaletteIndexOffset(), 1, 1, 
+        reinterpret_cast<const float*>(&palette_array[0]), static_cast<unsigned>(palette_array.size()), false);
 }
 
 error GeometryData::SetSkinWeightArray(unsigned weight_idx, const std::vector<float>& weight_array)
 {
-    return SetVertexMemoryDataArray(0, m_vertexDesc.m_weightOffset + weight_idx, 1, 1,
+    return SetVertexMemoryDataArray(0, m_vertexDesc.WeightOffset() + weight_idx, 1, 1,
         &weight_array[0], static_cast<unsigned>(weight_array.size()), false,
-        [this, weight_idx]()->bool { return m_vertexDesc.m_blendWeightCount <= (int)weight_idx; });
+        [this, weight_idx]()->bool { return m_vertexDesc.BlendWeightCount() <= (int)weight_idx; });
 }
 
 error GeometryData::SetTotalSkinWeightArray(const std::vector<float>& weight_array)
 {
-    if (m_vertexDesc.m_blendWeightCount > 0)
+    if (m_vertexDesc.BlendWeightCount() > 0)
     {
-        return SetVertexMemoryDataArray(0, m_vertexDesc.m_weightOffset, m_vertexDesc.m_blendWeightCount,
-            m_vertexDesc.m_blendWeightCount, &weight_array[0],
-            static_cast<unsigned>(weight_array.size()) / m_vertexDesc.m_blendWeightCount, false,
-            [this]()->bool { return m_vertexDesc.m_blendWeightCount <= 0; });
+        return SetVertexMemoryDataArray(0, m_vertexDesc.WeightOffset(), m_vertexDesc.BlendWeightCount(),
+            m_vertexDesc.BlendWeightCount(), &weight_array[0],
+            static_cast<unsigned>(weight_array.size()) / m_vertexDesc.BlendWeightCount(), false);
     }
     return ErrorCode::ok;
 }
 
 error GeometryData::SetVertexTangentArray(const std::vector<MathLib::Vector4>& tangents)
 {
-    return SetVertexMemoryDataArray(0, m_vertexDesc.m_tangentOffset, m_vertexDesc.m_tangentDimension, 4,
+    return SetVertexMemoryDataArray(0, m_vertexDesc.TangentOffset(), m_vertexDesc.TangentDimension(), 4,
         reinterpret_cast<const float*>(&tangents[0]), static_cast<unsigned>(tangents.size()), false,
-        [this]()->bool { return m_vertexDesc.m_tangentDimension != 4; });
+        [this]()->bool { return m_vertexDesc.TangentDimension() != 4; });
 }
 
 error GeometryData::SetIndexArray(const std::vector<unsigned>& idx_ary)
@@ -297,8 +295,8 @@ error GeometryData::SetIndexArray(const std::vector<unsigned>& idx_ary)
 
 IVertexBuffer::ranged_buffer GeometryData::GetRangedVertexMemory(unsigned offset, unsigned count)
 {
-    unsigned int byte_offset = offset * m_vertexDesc.m_totalVertexSize;
-    unsigned int byte_count = count * m_vertexDesc.m_totalVertexSize;
+    unsigned int byte_offset = offset * m_vertexDesc.TotalVertexSize();
+    unsigned int byte_count = count * m_vertexDesc.TotalVertexSize();
     byte_buffer buffer;
     buffer.resize(byte_count);
     memcpy(&buffer[0], &m_vertexMemory[byte_offset], byte_count);
@@ -313,11 +311,11 @@ error GeometryData::GetVertexMemoryData(unsigned vtxIndex, int elementOffset, in
     if (FATAL_LOG_EXPR(vtxIndex >= m_vtxUsedCount)) return ErrorCode::invalidArrayIndex;
 
     if (FATAL_LOG_EXPR(m_vertexMemory.size() == 0)) return ErrorCode::nullMemoryBuffer;
-    if (FATAL_LOG_EXPR(m_vertexDesc.m_totalVertexSize == 0)) return ErrorCode::zeroVertexSize;
+    if (FATAL_LOG_EXPR(m_vertexDesc.TotalVertexSize() == 0)) return ErrorCode::zeroVertexSize;
 
     if (elementOffset < 0) return ErrorCode::ok;  // no need set
 
-    unsigned int step = m_vertexDesc.m_totalVertexSize / sizeof(float);
+    unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int base_idx = step * vtxIndex + elementOffset;
 
     //todo: 這邊參數的運算要看怎麼調整
@@ -343,11 +341,11 @@ error GeometryData::SetVertexMemoryData(unsigned vtxIndex, int elementOffset, in
     if (FATAL_LOG_EXPR(vtxIndex >= m_vtxUsedCount)) return ErrorCode::invalidArrayIndex;
 
     if (FATAL_LOG_EXPR(m_vertexMemory.size() == 0)) return ErrorCode::nullMemoryBuffer;
-    if (FATAL_LOG_EXPR(m_vertexDesc.m_totalVertexSize == 0)) return ErrorCode::zeroVertexSize;
+    if (FATAL_LOG_EXPR(m_vertexDesc.TotalVertexSize() == 0)) return ErrorCode::zeroVertexSize;
 
     if (elementOffset < 0) return ErrorCode::ok;  // no need set
 
-    unsigned int step = m_vertexDesc.m_totalVertexSize / sizeof(float);
+    unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int base_idx = step * vtxIndex + elementOffset;
     int cp_dimension = srcDimension;
     if (cp_dimension > elementDimension) cp_dimension = elementDimension;
@@ -371,7 +369,7 @@ error GeometryData::GetVertexMemoryDataArray(unsigned start, int elementOffset, 
     assert(count > 0);
 
     if (FATAL_LOG_EXPR(m_vertexMemory.size() == 0)) return ErrorCode::nullMemoryBuffer;
-    if (FATAL_LOG_EXPR(m_vertexDesc.m_totalVertexSize == 0)) return ErrorCode::zeroVertexSize;
+    if (FATAL_LOG_EXPR(m_vertexDesc.TotalVertexSize() == 0)) return ErrorCode::zeroVertexSize;
 
     if ((skip_check) && (skip_check())) return ErrorCode::ok;
     if (elementOffset < 0)
@@ -380,7 +378,7 @@ error GeometryData::GetVertexMemoryDataArray(unsigned start, int elementOffset, 
         return ErrorCode::ok;
     }
 
-    unsigned int step = m_vertexDesc.m_totalVertexSize / sizeof(float);
+    unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int pos_count = m_vtxUsedCount - start;
     if (count < pos_count) pos_count = count;
     float* src = (float*)&m_vertexMemory[(elementOffset + step * start) * sizeof(float)];
@@ -405,12 +403,12 @@ error GeometryData::SetVertexMemoryDataArray(unsigned start, int elementOffset, 
     assert(count > 0);
 
     if (FATAL_LOG_EXPR(m_vertexMemory.size() == 0)) return ErrorCode::nullMemoryBuffer;
-    if (FATAL_LOG_EXPR(m_vertexDesc.m_totalVertexSize == 0)) return ErrorCode::zeroVertexSize;
+    if (FATAL_LOG_EXPR(m_vertexDesc.TotalVertexSize() == 0)) return ErrorCode::zeroVertexSize;
 
     if ((skip_check) && (skip_check())) return ErrorCode::ok;
     if (elementOffset < 0) return ErrorCode::ok;  // no need set
 
-    unsigned int step = m_vertexDesc.m_totalVertexSize / sizeof(float);
+    unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int pos_count = m_vtxUsedCount - start;
     if (count < pos_count) pos_count = count;
     float* dst = (float*)&m_vertexMemory[(elementOffset + step * start) * sizeof(float)];

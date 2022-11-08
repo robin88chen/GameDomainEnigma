@@ -9,6 +9,7 @@
 #define VERTEX_DECLARATION_EGL_H
 
 #include "GraphicKernel/IVertexDeclaration.h"
+#include "GraphicKernel/VertexDescription.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include <system_error>
 #if TARGET_PLATFORM == PLATFORM_ANDROID
@@ -41,7 +42,7 @@ namespace Enigma::Devices
         const std::vector<LayoutElement>& GetLayoutElements() const { return m_layouts; }
         GLsizei GetVertexSize() const { return m_vertexSize; }
     protected:
-        void CreateVertexLayout(const VertexDesc& vertex_desc);
+        void CreateVertexLayout(const Graphics::VertexDescription& vertex_desc);
 
     protected:
         std::vector<LayoutElement> m_layouts;

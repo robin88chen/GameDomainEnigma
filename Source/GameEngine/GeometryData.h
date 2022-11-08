@@ -11,7 +11,7 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GeometrySegment.h"
-#include "GraphicKernel/IVertexDeclaration.h"
+#include "GraphicKernel/VertexDescription.h"
 #include "BoundingVolume.h"
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "MathLib/ColorRGBA.h"
@@ -135,7 +135,7 @@ namespace Enigma::Engine
         virtual unsigned int GetUsedIndexCount() { return m_idxUsedCount; };
 
         /** size of vertex (in byte) */
-        virtual unsigned int SizeofVertex() { return m_vertexDesc.m_totalVertexSize; };
+        virtual unsigned int SizeofVertex() { return m_vertexDesc.TotalVertexSize(); };
 
         /** get geometry segment */
         virtual const GeometrySegment& GetSegment(unsigned int index) const;
@@ -166,8 +166,8 @@ namespace Enigma::Engine
 
         GeometrySegmentVector m_geoSegmentVector;
 
-        Graphics::IVertexDeclaration::VertexFormatCode m_vertexFormatCode;
-        Graphics::IVertexDeclaration::VertexDesc m_vertexDesc;
+        Graphics::VertexFormatCode m_vertexFormatCode;
+        Graphics::VertexDescription m_vertexDesc;
 
         byte_buffer m_vertexMemory;
         uint_buffer m_indexMemory;

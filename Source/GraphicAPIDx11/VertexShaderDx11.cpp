@@ -15,7 +15,7 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-// 這個 IID 是新版的, 正確的 GUID 在 dxguid.lib 裡, d3dcompiler.lib 裡是舊的, 
+// 這個 IID 是新版的, 正確的 GUID 在 dxguid.lib 裡, d3dcompiler.lib 裡是舊的,
 // 但為了避免錯誤, 還是重新定義一個
 //DEFINE_GUID(Fix_IID_ID3D11ShaderReflection, 0x8d536ca1, 0x0cca, 0x4956, 0xa8, 0x37, 0x78, 0x69, 0x63, 0x75, 0x55, 0x84);
 EXTERN_C const GUID DECLSPEC_SELECTANY Fix_IID_ID3D11ShaderReflection
@@ -91,8 +91,8 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
     if (semantic_name == VertexDeclarationDx11::m_positionSemanticName)
     {
         m_shaderVertexFormat.m_fvfCode =
-            (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                | Graphics::IVertexDeclaration::VertexFormatCode::XYZ;
+            (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                | Graphics::VertexFormatCode::XYZ;
     }
     else if (semantic_name == VertexDeclarationDx11::m_weightsSemanticName)
     {
@@ -100,82 +100,82 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
         {
         case 0x01:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB1;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB1;
             break;
         case 0x03:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB2;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB2;
             break;
         case 0x07:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB3;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB3;
             break;
         case 0x0f:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB4;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB4;
             break;
         }
     }
     else if (semantic_name == VertexDeclarationDx11::m_boneIndexSemanticName)
     {
-        unsigned int pos_code = m_shaderVertexFormat.m_fvfCode & Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK;
+        unsigned int pos_code = m_shaderVertexFormat.m_fvfCode & Graphics::VertexFormatCode::POSITION_MASK;
         switch (pos_code)
         {
-        case Graphics::IVertexDeclaration::VertexFormatCode::XYZ:
+        case Graphics::VertexFormatCode::XYZ:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB1;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB1;
             break;
-        case Graphics::IVertexDeclaration::VertexFormatCode::XYZB1:
+        case Graphics::VertexFormatCode::XYZB1:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB2;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB2;
             break;
-        case Graphics::IVertexDeclaration::VertexFormatCode::XYZB2:
+        case Graphics::VertexFormatCode::XYZB2:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB3;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB3;
             break;
-        case Graphics::IVertexDeclaration::VertexFormatCode::XYZB3:
+        case Graphics::VertexFormatCode::XYZB3:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB4;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB4;
             break;
-        case Graphics::IVertexDeclaration::VertexFormatCode::XYZB4:
+        case Graphics::VertexFormatCode::XYZB4:
             m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::IVertexDeclaration::VertexFormatCode::POSITION_MASK))
-                    | Graphics::IVertexDeclaration::VertexFormatCode::XYZB5;
+                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
+                    | Graphics::VertexFormatCode::XYZB5;
             break;
         }
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::LASTBETA_UBYTE4;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::LASTBETA_UBYTE4;
     }
     else if (semantic_name == VertexDeclarationDx11::m_normalSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::NORMAL;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     }
     else if (semantic_name == VertexDeclarationDx11::m_tangentSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::TANGENT;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::TANGENT;
     }
     else if (semantic_name == VertexDeclarationDx11::m_binormalSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::BINORMAL;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::BINORMAL;
     }
     else if (semantic_name == VertexDeclarationDx11::m_color0SemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::F_DIFFUSE;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::F_DIFFUSE;
     }
     else if (semantic_name == VertexDeclarationDx11::m_color1SemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::IVertexDeclaration::VertexFormatCode::F_SPECULAR;
+        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::F_SPECULAR;
     }
     else if (semantic_name == VertexDeclarationDx11::m_texCoordSemanticName)
     {
-        if (semantic_index >= Graphics::IVertexDeclaration::VertexFormatCode::MAX_TEX_COORD) return;
+        if (semantic_index >= Graphics::VertexFormatCode::MAX_TEX_COORD) return;
         if (m_shaderVertexFormat.m_texCount <= semantic_index) m_shaderVertexFormat.m_texCount = semantic_index + 1;
         if (mask == 0x01)
         {

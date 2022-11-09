@@ -498,3 +498,30 @@ void VertexDescription::Initialize()
     m_texCoordSize[6] = 0;
     m_texCoordSize[7] = 0;
 }
+
+int VertexDescription::DiffuseColorOffset(ColorType type) const
+{
+    if ((type == ColorType::UInt) && (m_colorDimension == 1)) return m_colorOffset;
+    if ((type == ColorType::Float) && (m_colorDimension == 4)) return m_colorOffset;
+    return -1;
+}
+
+int VertexDescription::SpecularColorOffset(ColorType type) const
+{
+    if ((type == ColorType::UInt) && (m_specularDimension == 1)) return m_specularOffset;
+    if ((type == ColorType::Float) && (m_specularDimension == 4)) return m_specularOffset;
+    return -1;
+}
+
+int VertexDescription::TextureCoordOffset(int stage) const
+{
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    return m_texCoordOffset[stage];
+}
+
+int VertexDescription::TextureCoordSize(int stage) const
+{
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    return m_texCoordSize[stage];
+}
+

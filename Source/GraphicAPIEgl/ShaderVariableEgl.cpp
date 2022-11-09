@@ -9,6 +9,7 @@
 #include "MathLib/Matrix3.h"
 #include "MathLib/Matrix4.h"
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -60,7 +61,7 @@ void ShaderVariableEgl_Matrix::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix%d : %s", 
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix%d : %s",
             m_name.c_str(), m_semantic.c_str(), m_dimension, e.what());
     }
 }
@@ -89,7 +90,7 @@ void ShaderVariableEgl_Matrix::SetValues(std::any data_array, unsigned count)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix%d array : %s", 
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix%d array : %s",
             m_name.c_str(), m_semantic.c_str(), m_dimension, e.what());
     }
 }
@@ -250,7 +251,7 @@ void ShaderVariableEgl_Vector::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector%d : %s", 
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector%d : %s",
             m_name.c_str(), m_semantic.c_str(), m_dimension, e.what());
     }
 }
@@ -279,7 +280,7 @@ void ShaderVariableEgl_Vector::SetValues(std::any data_array, unsigned count)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector%d array : %s", 
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector%d array : %s",
             m_name.c_str(), m_semantic.c_str(), m_dimension, e.what());
     }
 }

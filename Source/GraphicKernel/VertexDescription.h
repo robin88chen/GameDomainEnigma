@@ -83,7 +83,7 @@ namespace Enigma::Graphics
     public:
         enum class ColorType
         {
-            Byte,
+            UInt,
             Float
         };
     public:

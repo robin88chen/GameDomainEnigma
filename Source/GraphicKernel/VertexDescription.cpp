@@ -499,17 +499,17 @@ void VertexDescription::Initialize()
     m_texCoordSize[7] = 0;
 }
 
-int VertexDescription::DiffuseColorOffset(ColorType type) const
+int VertexDescription::DiffuseColorOffset(ColorNumeric type) const
 {
-    if ((type == ColorType::UInt) && (m_colorDimension == 1)) return m_colorOffset;
-    if ((type == ColorType::Float) && (m_colorDimension == 4)) return m_colorOffset;
+    if ((type == ColorNumeric::UInt) && (m_colorDimension == 1)) return m_colorOffset;
+    if ((type == ColorNumeric::Float) && (m_colorDimension == 4)) return m_colorOffset;
     return -1;
 }
 
-int VertexDescription::SpecularColorOffset(ColorType type) const
+int VertexDescription::SpecularColorOffset(ColorNumeric type) const
 {
-    if ((type == ColorType::UInt) && (m_specularDimension == 1)) return m_specularOffset;
-    if ((type == ColorType::Float) && (m_specularDimension == 4)) return m_specularOffset;
+    if ((type == ColorNumeric::UInt) && (m_specularDimension == 1)) return m_specularOffset;
+    if ((type == ColorNumeric::Float) && (m_specularDimension == 4)) return m_specularOffset;
     return -1;
 }
 

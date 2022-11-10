@@ -22,9 +22,110 @@ GeometryData::GeometryData(const std::string& name)
     m_geometryBound = BoundingVolume{Box3::UNIT_BOX};
 }
 
+GeometryData::GeometryData(const GeometryDataContract& contract)
+{
+    m_name = contract.Name();
+    CreateVertexCapacity(contract.VertexFormat(), contract.VertexCapacity(), contract.VertexUsedCount(),
+                         contract.IndexCapacity(), contract.IndexUsedCount());
+    for (unsigned i = 0; i < contract.Segments().size(); i += 4)
+    {
+        m_geoSegmentVector.emplace_back(contract.Segments()[i], contract.Segments()[i + 1],
+            contract.Segments()[i + 2], contract.Segments()[i + 3]);
+    }
+    m_topology = static_cast<PrimitiveTopology>(contract.Topology());
+    if (contract.Position3s())
+    {
+        SetPosition3Array(contract.Position3s().value());
+    }
+    if (contract.Position4s())
+    {
+        SetPosition4Array(contract.Position4s().value());
+    }
+    if (contract.Normals())
+    {
+        SetVertexNormalArray(contract.Normals().value());
+    }
+    if (contract.DiffuseColors())
+    {
+        SetDiffuseColorArray(contract.DiffuseColors().value());
+    }
+    if (contract.SpecularColors())
+    {
+        SetSpecularColorArray(contract.SpecularColors().value());
+    }
+    for (unsigned i = 0; i < contract.TextureCoords().size(); i++)
+    {
+        TextureCoordContract coord = TextureCoordContract::FromContract(contract.TextureCoords()[i]);
+        if (coord.Texture2DCoords())
+        {
+            SetTexture2DCoordArray(i, coord.Texture2DCoords().value());
+        }
+        else if (coord.Texture1DCoords())
+        {
+            SetTexture1DCoordArray(i, coord.Texture1DCoords().value());
+        }
+        else if (coord.Texture3DCoords())
+        {
+            SetTexture3DCoordArray(i, coord.Texture3DCoords().value());
+        }
+    }
+    if (contract.PaletteIndices())
+    {
+        SetPaletteIndexArray(contract.PaletteIndices().value());
+    }
+    if (contract.Weights())
+    {
+        SetTotalSkinWeightArray(contract.Weights().value());
+    }
+    if (contract.Tangents())
+    {
+        SetVertexTangentArray(contract.Tangents().value());
+    }
+    if (contract.Indices())
+    {
+        SetIndexArray(contract.Indices().value());
+    }
+    m_geometryBound = BoundingVolume(BoundingVolumeContract::FromContract(contract.GeometryBound()));
+}
+
 GeometryData::~GeometryData()
 {
 
+}
+
+GeometryDataContract GeometryData::SerializeContract()
+{
+    GeometryDataContract contract;
+    contract.Name() = m_name;
+    contract.VertexFormat() = m_vertexFormatCode.ToString();
+    for (unsigned i = 0; i < m_geoSegmentVector.size(); i++)
+    {
+        contract.Segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
+        contract.Segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
+        contract.Segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
+        contract.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
+    }
+    contract.Topology() = static_cast<unsigned>(m_topology);
+    if (m_vertexDesc.HasPosition3())
+    {
+        contract.Position3s() = GetPosition3Array(m_vtxUsedCount);
+    }
+    if (m_vertexDesc.HasPosition4())
+    {
+        contract.Position4s() = GetPosition4Array(m_vtxUsedCount);
+    }
+    if (m_vertexDesc.HasNormal())
+    {
+        contract.Normals() = GetVertexNormalArray(m_vtxUsedCount);
+    }
+    if (m_vertexDesc.HasDiffuseColor(VertexDescription::ColorNumeric::Float))
+    {
+        contract.DiffuseColors() = GetDiffuseColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
+    }
+    if (m_vertexDesc.HasSpecularColor(VertexDescription::ColorNumeric::Float))
+    {
+        contract.SpecularColors() = GetSpecularColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
+    }
 }
 
 error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string, unsigned vtx_capa, unsigned vtx_count, unsigned idx_capa, unsigned idx_count)
@@ -117,6 +218,20 @@ std::vector<Vector3> GeometryData::GetPosition3Array(unsigned offset, unsigned c
     return positions;
 }
 
+std::vector<Vector4> GeometryData::GetPosition4Array(unsigned count)
+{
+    return GetPosition4Array(0, count);
+}
+
+std::vector<Vector4> GeometryData::GetPosition4Array(unsigned offset, unsigned count)
+{
+    std::vector<Vector4> positions;
+    positions.resize(count);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.PositionOffset(),
+        m_vertexDesc.PositionDimension(), 4, reinterpret_cast<float*>(&positions[0]), count, true);
+    return positions;
+}
+
 error GeometryData::SetPosition3(unsigned vtxIndex, const MathLib::Vector3& position)
 {
     return SetVertexMemoryData(vtxIndex, m_vertexDesc.PositionOffset(),
@@ -194,7 +309,7 @@ error GeometryData::SetDiffuseColorArray(const std::vector<MathLib::Vector4>& co
 
 error GeometryData::SetDiffuseColorArray(unsigned offset, const std::vector<MathLib::Vector4>& colors)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorType::Float),
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorNumeric::Float),
         m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
 }
 
@@ -205,8 +320,47 @@ error GeometryData::SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& 
 
 error GeometryData::SetDiffuseColorArray(unsigned offset, const std::vector<MathLib::ColorRGBA>& colors)
 {
-    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorType::Float),
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(VertexDescription::ColorNumeric::Float),
         m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
+}
+
+std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count)
+{
+    return GetDiffuseColorArray(type, 0, count);
+}
+
+std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count)
+{
+    std::vector<Vector4> colors;
+    colors.resize(count);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.DiffuseColorOffset(type),
+        m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<float*>(&colors[0]), count, true);
+    return colors;
+}
+
+error GeometryData::SetSpecularColorArray(const std::vector<MathLib::Vector4>& colors)
+{
+    return SetSpecularColorArray(0, colors);
+}
+
+error GeometryData::SetSpecularColorArray(unsigned offset, const std::vector<MathLib::Vector4>& colors)
+{
+    return SetVertexMemoryDataArray(offset, m_vertexDesc.SpecularColorOffset(VertexDescription::ColorNumeric::Float),
+        m_vertexDesc.SpecularColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
+}
+
+std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count)
+{
+    return GetSpecularColorArray(type, 0, count);
+}
+
+std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count)
+{
+    std::vector<Vector4> colors;
+    colors.resize(count);
+    GetVertexMemoryDataArray(offset, m_vertexDesc.SpecularColorOffset(type),
+        m_vertexDesc.SpecularColorDimension(), 4, reinterpret_cast<float*>(&colors[0]), count, true);
+    return colors;
 }
 
 std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned offset, unsigned stage, unsigned count)
@@ -252,7 +406,7 @@ error GeometryData::SetTexture3DCoordArray(unsigned stage, const std::vector<Mat
 
 error GeometryData::SetPaletteIndexArray(const std::vector<unsigned>& palette_array)
 {
-    return SetVertexMemoryDataArray(0, m_vertexDesc.PaletteIndexOffset(), 1, 1, 
+    return SetVertexMemoryDataArray(0, m_vertexDesc.PaletteIndexOffset(), 1, 1,
         reinterpret_cast<const float*>(&palette_array[0]), static_cast<unsigned>(palette_array.size()), false);
 }
 

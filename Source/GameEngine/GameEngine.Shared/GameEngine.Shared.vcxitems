@@ -77,6 +77,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />

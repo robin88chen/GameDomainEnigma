@@ -281,5 +281,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
       <Filter>Geometry Datas</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp">
+      <Filter>Contracts\Geometry Contract</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -81,7 +81,7 @@ namespace Enigma::Graphics
     class VertexDescription
     {
     public:
-        enum class ColorType
+        enum class ColorNumeric
         {
             UInt,
             Float
@@ -101,9 +101,9 @@ namespace Enigma::Graphics
         int PaletteIndexOffset() const { return m_paletteIndexOffset; }
         int NormalOffset() const { return m_normalOffset; }
         int DiffuseColorOffset() const { return m_colorOffset; }
-        int DiffuseColorOffset(ColorType type) const;
+        int DiffuseColorOffset(ColorNumeric type) const;
         int SpecularColorOffset() const { return m_specularOffset; }
-        int SpecularColorOffset(ColorType type) const;
+        int SpecularColorOffset(ColorNumeric type) const;
         int TextureCoordOffset(int stage) const;
         int TextureCoordSize(int stage) const;
         int TangentOffset() const { return m_tangentOffset; }
@@ -116,6 +116,13 @@ namespace Enigma::Graphics
         int DiffuseColorDimension() const { return m_colorDimension; }
         int SpecularColorDimension() const { return m_specularDimension; }
         int TangentDimension() const { return m_tangentDimension; }
+
+        bool HasPosition3() const { return (PositionOffset() >= 0) && (PositionDimension() == 3); }
+        bool HasPosition4() const { return (PositionOffset() >= 0) && (PositionDimension() == 4); }
+        bool HasNormal() const { return NormalOffset() >= 0; }
+        bool HasDiffuseColor(ColorNumeric type) const { return DiffuseColorOffset(type) >= 0; }
+        bool HasSpecularColor(ColorNumeric type) const { return SpecularColorOffset(type) >= 0; }
+
     private:
         friend VertexFormatCode;
         // offset -- 從vertex的基本位置算起

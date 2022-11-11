@@ -38,7 +38,7 @@ namespace Enigma::Engine
         GeometryData& operator=(const GeometryData&) = delete;
         GeometryData& operator=(GeometryData&&) = delete;
 
-        GeometryDataContract SerializeContract();
+        virtual Contract SerializeContract();
 
         const std::string& GetName() { return m_name; }
 
@@ -189,6 +189,8 @@ namespace Enigma::Engine
             int destDimension, float* dest, unsigned int count, bool isPos);
         error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int srcDimension, const float* src, unsigned int count, bool isPos);
+
+        GeometryDataContract SerializeGeometryDataContract();
 
     protected:
         std::string m_name;

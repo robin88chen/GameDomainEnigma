@@ -110,6 +110,19 @@ namespace Enigma::Engine
         unsigned m_topology;
         Contract m_geometryBound;
     };
+
+    class TriangleListContract : public GeometryDataContract
+    {
+    public:
+        TriangleListContract() = default;
+        TriangleListContract(const GeometryDataContract& geometry_contract);
+
+        static TriangleListContract FromContract(const Engine::Contract& contract);
+        Engine::Contract ToContract();
+
+    protected:
+        std::vector<std::string> m_childNames;
+    };
 }
 
 #endif // _GEOMETRY_DATA_CONTRACT_H

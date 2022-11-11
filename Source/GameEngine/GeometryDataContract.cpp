@@ -1,6 +1,7 @@
 ﻿#include "GeometryDataContract.h"
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryData.h"
+#include "TriangleList.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
@@ -191,6 +192,23 @@ Contract GeometryDataContract::ToContract()
     contract.AddOrUpdate(TOKEN_INDEX_USED_COUNT, m_idxUsedCount);
     contract.AddOrUpdate(TOKEN_TOPOLOGY, m_topology);
     contract.AddOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound);
+
+    return contract;
+}
+
+TriangleListContract::TriangleListContract(const GeometryDataContract& geometry_contract) : GeometryDataContract(geometry_contract)
+{
+}
+
+TriangleListContract TriangleListContract::FromContract(const Engine::Contract& contract)
+{
+    return TriangleListContract(GeometryDataContract::FromContract(contract));
+}
+
+Contract TriangleListContract::ToContract()
+{
+    Contract contract = GeometryDataContract::ToContract();
+    contract.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.GetName()));
 
     return contract;
 }

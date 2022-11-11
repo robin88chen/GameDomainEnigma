@@ -192,6 +192,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h">
       <Filter>Contracts\Geometry Contract</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h">
+      <Filter>Geometry Datas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp">
       <Filter>Contracts\Geometry Contract</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp">
+      <Filter>Geometry Datas</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

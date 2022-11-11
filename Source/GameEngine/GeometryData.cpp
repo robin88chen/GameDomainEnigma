@@ -93,7 +93,12 @@ GeometryData::~GeometryData()
 
 }
 
-GeometryDataContract GeometryData::SerializeContract()
+Contract GeometryData::SerializeContract()
+{
+    return SerializeGeometryDataContract().ToContract();
+}
+
+GeometryDataContract GeometryData::SerializeGeometryDataContract()
 {
     GeometryDataContract contract;
     contract.Name() = m_name;

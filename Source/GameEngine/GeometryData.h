@@ -110,17 +110,32 @@ namespace Enigma::Engine
         std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
         /** set texture coord array */
         error SetTexture1DCoordArray(unsigned int stage, const std::vector<float>& us);
+        /** get texture coord array */
+        std::vector<float> GetTexture1DCoordArray(unsigned int stage, unsigned int count);
+        std::vector<float> GetTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
         /** set texture coord array @param count : count of data in array ( vtx count * 3 ) */
         error SetTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
+        /** get texture coord array */
+        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int stage, unsigned int count);
+        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
 
         /** set palette index array */
         error SetPaletteIndexArray(const std::vector<unsigned int>& palette_array);
+        /** get palette index array */
+        std::vector<unsigned> GetPaletteIndexArray(unsigned int count);
+        std::vector<unsigned> GetPaletteIndexArray(unsigned int offset, unsigned int count);
         /** set skin weight array */
         error SetSkinWeightArray(unsigned int weight_idx, const std::vector<float>& weight_array);
         /** set total skin weight array, array size : vtx count * blend weight count */
         error SetTotalSkinWeightArray(const std::vector<float>& weight_array);
+        /** get total skin weight array, array size : vtx count * blend weight count */
+        std::vector<float> GetTotalSkinWeightArray(unsigned int vtx_count);
+        std::vector<float> GetTotalSkinWeightArray(unsigned int offset, unsigned int vtx_count);
         /** set vertex tangent array */
         error SetVertexTangentArray(const std::vector<MathLib::Vector4>& tangent);
+        /** get vertex tangent array */
+        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int count);
+        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int offset, unsigned int count);
 
         /** set index array */
         error SetIndexArray(const std::vector<unsigned int>& idx_ary);
@@ -171,9 +186,9 @@ namespace Enigma::Engine
         error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos);
         error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);
         error GetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
-            int destDimension, float* dest, unsigned int count, bool isPos, std::function<bool()> skip_check = nullptr);
+            int destDimension, float* dest, unsigned int count, bool isPos);
         error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
-            int srcDimension, const float* src, unsigned int count, bool isPos, std::function<bool()> skip_check = nullptr);
+            int srcDimension, const float* src, unsigned int count, bool isPos);
 
     protected:
         std::string m_name;

@@ -98,6 +98,7 @@ namespace Enigma::Graphics
 
         int PositionOffset() const { return m_positionOffset; }
         int WeightOffset() const { return m_weightOffset; }
+        int WeightOffset(unsigned weight_idx) const;
         int PaletteIndexOffset() const { return m_paletteIndexOffset; }
         int NormalOffset() const { return m_normalOffset; }
         int DiffuseColorOffset() const { return m_colorOffset; }
@@ -106,7 +107,7 @@ namespace Enigma::Graphics
         int SpecularColorOffset(ColorNumeric type) const;
         int TextureCoordOffset(int stage) const;
         int TextureCoordSize(int stage) const;
-        int TangentOffset() const { return m_tangentOffset; }
+        int TangentOffset() const;
         int BiNormalOffset() const { return m_biNormalOffset; }
         int BlendWeightCount() const { return m_blendWeightCount; }
         int TotalVertexSize() const { return m_totalVertexSize; }
@@ -122,6 +123,10 @@ namespace Enigma::Graphics
         bool HasNormal() const { return NormalOffset() >= 0; }
         bool HasDiffuseColor(ColorNumeric type) const { return DiffuseColorOffset(type) >= 0; }
         bool HasSpecularColor(ColorNumeric type) const { return SpecularColorOffset(type) >= 0; }
+        bool HasTextureCoord(unsigned stage, unsigned dimension) const;
+        bool HasPaletteIndex() const { return PaletteIndexOffset() >= 0; }
+        bool HasBlendWeight() const { return (WeightOffset() >= 0) && (BlendWeightCount() > 0); }
+        bool HasTangent() const { return TangentOffset() >= 0; }
 
     private:
         friend VertexFormatCode;

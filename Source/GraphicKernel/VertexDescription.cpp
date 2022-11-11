@@ -499,6 +499,12 @@ void VertexDescription::Initialize()
     m_texCoordSize[7] = 0;
 }
 
+int VertexDescription::WeightOffset(unsigned weight_idx) const
+{
+    if (BlendWeightCount() <= static_cast<int>(weight_idx)) return -1;
+    return WeightOffset() + static_cast<int>(weight_idx);
+}
+
 int VertexDescription::DiffuseColorOffset(ColorNumeric type) const
 {
     if ((type == ColorNumeric::UInt) && (m_colorDimension == 1)) return m_colorOffset;
@@ -525,3 +531,15 @@ int VertexDescription::TextureCoordSize(int stage) const
     return m_texCoordSize[stage];
 }
 
+int VertexDescription::TangentOffset() const
+{
+    if ((m_tangentOffset >= 0) && (m_tangentDimension == 4)) return m_tangentOffset;
+    return -1;
+}
+
+bool VertexDescription::HasTextureCoord(unsigned stage, unsigned dimension) const
+{
+    assert(stage < VertexFormatCode::MAX_TEX_COORD);
+    assert((dimension > 0) && (dimension <= 3));
+    return (m_texCoordOffset[stage] >= 0) && (m_texCoordSize[stage] == static_cast<int>(dimension));
+}

@@ -2,6 +2,8 @@
 #include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
@@ -46,6 +48,8 @@ error GraphicMain::InstallFrameworks()
     assert(m_serviceManager);
     m_serviceManager->RegisterSystemService(menew Frameworks::EventPublisher(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Frameworks::CommandBus(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Frameworks::RequestBus(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Frameworks::ResponseBus(m_serviceManager));
 
     Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
 

@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace Enigma::Platforms
+namespace Enigma::Frameworks
 {
     class Ruid
     {

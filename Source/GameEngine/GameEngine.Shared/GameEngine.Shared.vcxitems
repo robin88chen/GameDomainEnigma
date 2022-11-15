@@ -34,6 +34,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />

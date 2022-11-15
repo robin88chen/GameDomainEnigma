@@ -2,7 +2,7 @@
 #include <chrono>
 #include <random>
 
-using namespace Enigma::Platforms;
+using namespace Enigma::Frameworks;
 
 using hclock = std::chrono::high_resolution_clock;
 using duration = std::chrono::duration<std::uint64_t>;

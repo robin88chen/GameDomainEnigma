@@ -19,12 +19,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ruid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerAndroid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ruid.cpp" />
   </ItemGroup>
 </Project>

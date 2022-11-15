@@ -47,7 +47,7 @@ namespace Enigma::Frameworks
         static void Post(const ICommandPtr& c);
         static void Send(const ICommandPtr& c);
 
-        void CleanupAllEvents();
+        void CleanupAllCommands();
 
     protected:
         void InvokeHandlers(const ICommandPtr& e, const SubscriberList& subscribers);

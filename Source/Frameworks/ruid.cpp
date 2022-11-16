@@ -30,3 +30,8 @@ bool Ruid::operator==(const Ruid& ruid) const
 {
     return ((m_first == ruid.m_first) && (m_second == ruid.m_second));
 }
+
+bool Ruid::operator!=(const Ruid& ruid) const
+{
+    return ((m_first != ruid.m_first) || (m_second != ruid.m_second));
+}

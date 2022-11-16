@@ -58,6 +58,9 @@
     <Filter Include="Geometry Repository\Geometry Datas">
       <UniqueIdentifier>{f0f85a76-37c8-4177-9009-85996962e2cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry Repository\Geometry Datas\Policy">
+      <UniqueIdentifier>{108a32c0-3939-481c-a9c3-84d22d345a4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -201,6 +204,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h">
       <Filter>Geometry Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h">
+      <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractDeserializer.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
+      <Filter>Geometry Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -297,6 +315,12 @@
       <Filter>Geometry Repository\Geometry Datas</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp">
+      <Filter>Geometry Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp">
       <Filter>Geometry Repository</Filter>
     </ClCompile>
   </ItemGroup>

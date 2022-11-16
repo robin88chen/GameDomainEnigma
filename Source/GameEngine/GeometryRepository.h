@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GeometryRepository.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -12,10 +12,18 @@
 #include "Frameworks/ServiceManager.h"
 #include <memory>
 #include <mutex>
+#include <queue>
+#include <unordered_map>
 
 namespace Enigma::Engine
 {
+    using error = std::error_code;
+
     class GeometryData;
+    class Contract;
+    class TriangleListContract;
+    class GeometryDataPolicy;
+    class GeometryBuilder;
 
     class GeometryRepository : public Frameworks::ISystemService
     {
@@ -28,12 +36,30 @@ namespace Enigma::Engine
         GeometryRepository& operator=(const GeometryRepository&) = delete;
         GeometryRepository& operator=(GeometryRepository&&) = delete;
 
+        /// On Init
+        virtual Frameworks::ServiceResult OnInit() override;
+        /// On Tick
+        virtual Frameworks::ServiceResult OnTick() override;
+        /// On Term
+        virtual Frameworks::ServiceResult OnTerm() override;
+
         bool HasGeometryData(const std::string& name);
         std::shared_ptr<GeometryData> QueryGeometryData(const std::string& name);
+        std::shared_ptr<GeometryData> Create(const Contract& contract);
+
+        error BuildGeometry(const GeometryDataPolicy& policy);
+
+    protected:
+        std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListContract& contract);
 
     protected:
         std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometries;
         std::recursive_mutex m_geometryLock;
+
+        GeometryBuilder* m_builder;
+        std::queue<GeometryDataPolicy> m_policies;
+        bool m_isCurrentBuilding;
+        std::mutex m_policiesLock;
     };
 }
 

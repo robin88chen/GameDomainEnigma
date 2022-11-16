@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp" />

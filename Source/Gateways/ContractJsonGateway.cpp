@@ -30,6 +30,10 @@ constexpr const char* BOX3_TOKEN = "Box3";
 constexpr const char* MATRIX4_TOKEN = "Matrix4";
 constexpr const char* STRING_ARRAY_TOKEN = "StringArray";
 constexpr const char* RTTI_NAME = "RttiName";
+constexpr const char* INSTANCE_TYPE = "InstanceType";
+constexpr const char* RESOURCE_NAME = "ResourceName";
+constexpr const char* RESOURCE_FILENAME = "ResourceFilename";
+constexpr const char* PREFAB_FILENAME = "PrefabFilename";
 
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
@@ -160,18 +164,17 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
 {
-    //FactoryDesc::InstanceType instance_type;
-    //std::string resource_name;
-    //std::string resource_filename;
+    FactoryDesc::InstanceType instance_type;
+    std::string resource_name;
+    std::string resource_filename;
     std::string rtti;
-    //std::string prefab;
-    //if (value.HasMember(INSTANCE_TYPE)) instance_type = static_cast<FactoryDesc::InstanceType>(value[INSTANCE_TYPE].GetInt());
-    //if (value.HasMember(RESOURCE_NAME)) resource_name = value[RESOURCE_NAME].GetString();
-    //if (value.HasMember(RESOURCE_FILENAME)) resource_filename = value[RESOURCE_FILENAME].GetString();
+    std::string prefab;
+    if (value.HasMember(INSTANCE_TYPE)) instance_type = static_cast<FactoryDesc::InstanceType>(value[INSTANCE_TYPE].GetInt());
+    if (value.HasMember(RESOURCE_NAME)) resource_name = value[RESOURCE_NAME].GetString();
+    if (value.HasMember(RESOURCE_FILENAME)) resource_filename = value[RESOURCE_FILENAME].GetString();
     if (value.HasMember(RTTI_NAME)) rtti = value[RTTI_NAME].GetString();
-    //if (value.HasMember(PREFAB_FILENAME)) prefab = value[PREFAB_FILENAME].GetString();
+    if (value.HasMember(PREFAB_FILENAME)) prefab = value[PREFAB_FILENAME].GetString();
     FactoryDesc desc(rtti);
-    /*desc.SetRtti(rtti);
     switch (instance_type)
     {
     case FactoryDesc::InstanceType::Native:
@@ -192,7 +195,7 @@ FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
     case FactoryDesc::InstanceType::ResourceAsset:
         desc.ClaimAsResourceAsset(resource_name, resource_filename);
         break;
-    }*/
+    }
     return desc;
 }
 
@@ -382,11 +385,11 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
 rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value{ rapidjson::kObjectType };
-    //value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.GetInstanceType()), allocator);
-    //value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.GetResourceName(), allocator), allocator);
-    //value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.GetResourceFilename(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.GetInstanceType()), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.GetResourceName(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.GetResourceFilename(), allocator), allocator);
     value.AddMember(rapidjson::StringRef(RTTI_NAME), SerializeString(desc.GetRttiName(), allocator), allocator);
-    //value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.GetPrefab(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.GetPrefab(), allocator), allocator);
     return value;
 }
 

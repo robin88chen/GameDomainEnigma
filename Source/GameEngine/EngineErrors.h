@@ -17,6 +17,7 @@ namespace Enigma::Engine
         ok = 0,
 
         findStashedAssetFail = 101,
+        policyIncomplete,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,

@@ -12,12 +12,12 @@
 
 namespace Enigma::Engine
 {
-    class ContractDeserializer
+    class IContractDeserializer
     {
     public:
-        ContractDeserializer() = default;
+        IContractDeserializer() = default;
 
-        virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing) const {};
+        virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing) = 0;
     };
 }
 

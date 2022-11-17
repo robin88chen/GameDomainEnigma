@@ -8,6 +8,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -28,7 +29,10 @@ GeometryRepository::~GeometryRepository()
 
 ServiceResult GeometryRepository::OnInit()
 {
-
+    m_onGeometryBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryBuilt(e); });
+    EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    m_onBuildGeometryFail = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryFail(e); });
+    EventPublisher::Subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -50,6 +54,10 @@ ServiceResult GeometryRepository::OnTick()
 
 ServiceResult GeometryRepository::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    m_onGeometryBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+    m_onBuildGeometryFail = nullptr;
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -90,7 +98,25 @@ std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const Trian
 {
     if (HasGeometryData(contract.Name())) return QueryGeometryData(contract.Name());
     std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(contract);
-    std::lock_guard locker{ m_geometryLock };
-    m_geometries.insert_or_assign(contract.Name(), geometry);
     return geometry;
+}
+
+void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
+    if (!ev) return;
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(ev->GetName(), ev->GetGeometryData());
+    m_isCurrentBuilding = false;
+}
+
+void GeometryRepository::OnBuildGeometryFail(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
+    if (!ev) return;
+    Platforms::Debug::ErrorPrintf("geometry data %s build failed : %s\n",
+        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+    m_isCurrentBuilding = false;
 }

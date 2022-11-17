@@ -10,6 +10,8 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/EventSubscriber.h"
+#include "GeometryDataPolicy.h"
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -22,7 +24,6 @@ namespace Enigma::Engine
     class GeometryData;
     class Contract;
     class TriangleListContract;
-    class GeometryDataPolicy;
     class GeometryBuilder;
 
     class GeometryRepository : public Frameworks::ISystemService
@@ -52,6 +53,9 @@ namespace Enigma::Engine
     protected:
         std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListContract& contract);
 
+        void OnGeometryBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
+
     protected:
         std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometries;
         std::recursive_mutex m_geometryLock;
@@ -60,6 +64,9 @@ namespace Enigma::Engine
         std::queue<GeometryDataPolicy> m_policies;
         bool m_isCurrentBuilding;
         std::mutex m_policiesLock;
+
+        Frameworks::EventSubscriberPtr m_onGeometryBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
     };
 }
 

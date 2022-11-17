@@ -2,6 +2,7 @@
 #include "GeometryDataEvents.h"
 #include "GeometryRepository.h"
 #include "GeometryDataPolicy.h"
+#include "EngineErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ContractDeserializer.h"
@@ -30,25 +31,29 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     assert(m_hostRepository);
     if (m_hostRepository->HasGeometryData(policy.Name()))
     {
-        EventPublisher::Post(std::make_shared<GeometryDataCreated>(policy.Name(),
+        EventPublisher::Post(std::make_shared<GeometryDataBuilt>(policy.Name(),
             m_hostRepository->QueryGeometryData(policy.Name())));
     }
     else if (policy.GetContract())
     {
         CreateFromContract(policy.Name(), policy.GetContract().value());
     }
-    else
+    else if (policy.GetDeserializer())
     {
         m_policy = policy;
         m_ruidDeserializing = Ruid::Generate();
-        policy.GetDeserializer().InvokeDeserialize(m_ruidDeserializing);
+        policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing);
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(policy.Name(), ErrorCode::policyIncomplete));
     }
 }
 
 void GeometryBuilder::CreateFromContract(const std::string& name, const Contract& contract)
 {
     assert(m_hostRepository);
-    EventPublisher::Post(std::make_shared<GeometryDataCreated>(name, m_hostRepository->Create(contract)));
+    EventPublisher::Post(std::make_shared<GeometryDataBuilt>(name, m_hostRepository->Create(contract)));
 }
 
 void GeometryBuilder::OnContractDeserialized(const Frameworks::IEventPtr& e)

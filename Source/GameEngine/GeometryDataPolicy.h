@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GeometryDataPolicy.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -19,21 +19,22 @@ namespace Enigma::Engine
     {
     public:
         GeometryDataPolicy() = default;
-        GeometryDataPolicy(const std::string& name, const Contract& contract);
-        GeometryDataPolicy(const std::string& name, const std::string& file_at_path, const ContractDeserializer& deserializer);
+        GeometryDataPolicy(const std::string& name, const Contract& contract) : m_name(name), m_contract(contract) {}
+        GeometryDataPolicy(const std::string& name, const std::string& file_at_path,
+            const std::shared_ptr<IContractDeserializer>& deserializer) : m_name(name), m_fileAtPath(file_at_path), m_deserializer(deserializer) {}
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
         [[nodiscard]] const std::optional<Contract>& GetContract() const { return m_contract; }
 
-        [[nodiscard]] const ContractDeserializer& GetDeserializer() const { return m_deserializer; }
+        [[nodiscard]] const std::shared_ptr<IContractDeserializer>& GetDeserializer() const { return m_deserializer; }
 
     protected:
         std::string m_name;
         std::optional<Contract> m_contract;
         std::string m_fileAtPath;
-        ContractDeserializer m_deserializer;
+        std::shared_ptr<IContractDeserializer> m_deserializer;
     };
 }
 

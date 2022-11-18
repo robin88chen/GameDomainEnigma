@@ -42,7 +42,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     {
         m_policy = policy;
         m_ruidDeserializing = Ruid::Generate();
-        policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing);
+        policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
     }
     else
     {
@@ -62,6 +62,11 @@ void GeometryBuilder::OnContractDeserialized(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<ContractDeserialized, IEvent>(e);
     if (!ev) return;
     if (ev->GetRuid() != m_ruidDeserializing) return;
-    CreateFromContract(m_policy.Name(), ev->GetContract());
+    if (ev->GetContracts().empty())
+    {
+        EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ErrorCode::deserializeFail));
+        return;
+    }
+    CreateFromContract(m_policy.Name(), ev->GetContracts()[0]);
 }
 

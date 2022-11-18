@@ -20,20 +20,21 @@ namespace Enigma::Engine
     public:
         GeometryDataPolicy() = default;
         GeometryDataPolicy(const std::string& name, const Contract& contract) : m_name(name), m_contract(contract) {}
-        GeometryDataPolicy(const std::string& name, const std::string& file_at_path,
-            const std::shared_ptr<IContractDeserializer>& deserializer) : m_name(name), m_fileAtPath(file_at_path), m_deserializer(deserializer) {}
+        GeometryDataPolicy(const std::string& name, const std::string& deserialize_param,
+            const std::shared_ptr<IContractDeserializer>& deserializer) : m_name(name), m_parameter(deserialize_param), m_deserializer(deserializer) {}
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
         [[nodiscard]] const std::optional<Contract>& GetContract() const { return m_contract; }
 
+        [[nodiscard]] const std::string& Parameter() const { return m_parameter; }
         [[nodiscard]] const std::shared_ptr<IContractDeserializer>& GetDeserializer() const { return m_deserializer; }
 
     protected:
         std::string m_name;
         std::optional<Contract> m_contract;
-        std::string m_fileAtPath;
+        std::string m_parameter;
         std::shared_ptr<IContractDeserializer> m_deserializer;
     };
 }

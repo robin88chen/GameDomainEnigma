@@ -18,6 +18,8 @@ namespace Enigma::Engine
 
         findStashedAssetFail = 101,
         policyIncomplete,
+        deserializeFail,
+        fileIOError,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,

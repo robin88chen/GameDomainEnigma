@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ContractEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -17,13 +17,24 @@ namespace Enigma::Engine
     class ContractDeserialized : public Frameworks::IEvent
     {
     public:
-        ContractDeserialized(const Frameworks::Ruid& ruid, const Contract& contract) :
-            m_ruid(ruid), m_contract(contract) {};
+        ContractDeserialized(const Frameworks::Ruid& ruid, const std::vector<Contract>& contracts) :
+            m_ruid(ruid), m_contracts(contracts) {};
         const Frameworks::Ruid& GetRuid() { return m_ruid; }
-        const Contract& GetContract() { return m_contract; }
+        const std::vector<Contract>& GetContracts() { return m_contracts; }
     private:
         Frameworks::Ruid m_ruid;
-        Contract m_contract;
+        std::vector<Contract> m_contracts;
+    };
+    class DeserializeContractFailed : public Frameworks::IEvent
+    {
+    public:
+        DeserializeContractFailed(const Frameworks::Ruid& ruid, std::error_code er) :
+            m_ruid(ruid), m_error(er) {};
+        const Frameworks::Ruid& GetRuid() { return m_ruid; }
+        std::error_code GetErrorCode() const { return m_error; }
+    private:
+        Frameworks::Ruid m_ruid;
+        std::error_code m_error;
     };
 }
 

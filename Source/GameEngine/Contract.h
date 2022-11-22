@@ -9,7 +9,7 @@
 #define CONTRACT_H
 
 #include "FactoryDesc.h"
-#include "Platforms/ruid.h"
+#include "Frameworks/ruid.h"
 #include <string>
 #include <any>
 #include <optional>
@@ -33,7 +33,7 @@ namespace Enigma::Engine
 
         bool operator==(const Contract&) const;
 
-        const Platforms::Ruid& GetId() { return m_ruid; }
+        const Frameworks::Ruid& GetId() const { return m_ruid; }
 
         bool IsTopLevel() const;
         void AsTopLevel(bool is_top);
@@ -93,7 +93,7 @@ namespace Enigma::Engine
         AttributeValues::const_iterator end() const { return m_values.end(); }
 
     private:
-        Platforms::Ruid m_ruid; // run-time uniform id
+        Frameworks::Ruid m_ruid; // run-time uniform id
         AttributeValues m_values;
     };
 }

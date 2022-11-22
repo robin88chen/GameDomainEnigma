@@ -54,7 +54,7 @@ ServiceResult CommandBus::OnTick()
 
 ServiceResult CommandBus::OnTerm()
 {
-    CleanupAllEvents();
+    CleanupAllCommands();
 
     return ServiceResult::Complete;
 }
@@ -94,7 +94,7 @@ void CommandBus::Send(const ICommandPtr& c)
     m_thisBus->InvokeHandlers(c, subscribers->second);
 }
 
-void CommandBus::CleanupAllEvents()
+void CommandBus::CleanupAllCommands()
 {
     std::lock_guard<std::mutex> locker{ m_commandListLock };
     m_commands.clear();

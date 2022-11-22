@@ -2,6 +2,8 @@
 #include "GraphicKernel/GraphicCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
@@ -12,6 +14,7 @@
 #include "GameEngine/TextureRepository.h"
 #include "GameEngine/ContractedFactories.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "GameEngine/GeometryRepository.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -46,6 +49,8 @@ error GraphicMain::InstallFrameworks()
     assert(m_serviceManager);
     m_serviceManager->RegisterSystemService(menew Frameworks::EventPublisher(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Frameworks::CommandBus(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Frameworks::RequestBus(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Frameworks::ResponseBus(m_serviceManager));
 
     Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
 
@@ -57,6 +62,8 @@ error GraphicMain::ShutdownFrameworks()
     assert(m_serviceManager);
     m_serviceManager->ShutdownSystemService(Frameworks::EventPublisher::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(Frameworks::CommandBus::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Frameworks::RequestBus::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Frameworks::ResponseBus::TYPE_RTTI);
     return ErrorCode::ok;
 }
 
@@ -125,6 +132,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
 
     m_serviceManager->RegisterSystemService(menew Engine::ContractedFactories(m_serviceManager));
 
+    er = InstallGeometryManagers();
+    if (er) return er;
     er = InstallShaderManagers();
     if (er) return er;
     er = InstallTextureManagers();
@@ -150,6 +159,7 @@ error GraphicMain::ShutdownDefaultRenderer()
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
     er = ShutdownShaderManagers();
+    er = ShutdownGeometryManagers();
     if (er) return er;
 
     m_serviceManager->ShutdownSystemService(Engine::ContractedFactories::TYPE_RTTI);
@@ -188,6 +198,18 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
     }
     m_serviceManager->ShutdownSystemService(Renderer::RendererManager::TYPE_RTTI);
 
+    return ErrorCode::ok;
+}
+
+error GraphicMain::InstallGeometryManagers()
+{
+    m_serviceManager->RegisterSystemService(menew Engine::GeometryRepository(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownGeometryManagers()
+{
+    m_serviceManager->ShutdownSystemService(Engine::GeometryRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }
 

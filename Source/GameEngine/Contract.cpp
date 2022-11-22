@@ -7,7 +7,7 @@ std::string TOKEN_TOP_LEVEL = "TopLevel";
 
 Contract::Contract()
 {
-    m_ruid = Platforms::Ruid::Generate();
+    m_ruid = Frameworks::Ruid::Generate();
 }
 
 Contract::~Contract()

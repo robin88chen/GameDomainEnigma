@@ -2,7 +2,7 @@
 #include <chrono>
 #include <random>
 
-using namespace Enigma::Platforms;
+using namespace Enigma::Frameworks;
 
 using hclock = std::chrono::high_resolution_clock;
 using duration = std::chrono::duration<std::uint64_t>;
@@ -29,4 +29,9 @@ Ruid Ruid::Generate()
 bool Ruid::operator==(const Ruid& ruid) const
 {
     return ((m_first == ruid.m_first) && (m_second == ruid.m_second));
+}
+
+bool Ruid::operator!=(const Ruid& ruid) const
+{
+    return ((m_first != ruid.m_first) || (m_second != ruid.m_second));
 }

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   Primitive.h
- * \brief  primitive base class, entity, use shared_ptr
+ * \brief  primitive base class, value object, use shared_ptr
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
@@ -11,6 +11,7 @@
 #include "RenderLightingState.h"
 #include "BoundingVolume.h"
 #include "MathLib/Matrix4.h"
+#include "Frameworks/Rtti.h"
 #include <memory>
 #include <bitset>
 #include <system_error>
@@ -23,6 +24,7 @@ namespace Enigma::Engine
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         enum PrimitiveBits
         {
@@ -40,7 +42,7 @@ namespace Enigma::Engine
         Primitive& operator=(Primitive&&) = delete;
 
         /** insert to renderer */
-        virtual error InsertToRenderer(const std::shared_ptr<IRenderer>& renderer,
+        virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
             const MathLib::Matrix4& mxWorld, const RenderLightingState& lightingState) = 0;
         /** remove from renderer */
         virtual error RemoveFromRenderer(const std::shared_ptr<IRenderer>& renderer) = 0;
@@ -55,6 +57,8 @@ namespace Enigma::Engine
 
     protected:
         BoundingVolume m_bound;
+        PrimitiveFlags m_primitiveFlags;
+        MathLib::Matrix4 m_mxPrimitiveWorld;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

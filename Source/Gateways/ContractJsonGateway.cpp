@@ -11,6 +11,7 @@
 #include "MathLib/ColorRGB.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/Vector4.h"
+#include "MathLib/Vector2.h"
 #include <any>
 
 constexpr const char* TYPE_TOKEN = "Type";
@@ -24,49 +25,71 @@ constexpr const char* BOOLEAN_TOKEN = "Boolean";
 constexpr const char* FACTORY_DESC_TOKEN = "FactoryDesc";
 constexpr const char* COLOR_RGBA_TOKEN = "ColorRGBA";
 constexpr const char* COLOR_RGB_TOKEN = "ColorRGB";
+constexpr const char* VECTOR2_TOKEN = "Vector2";
 constexpr const char* VECTOR3_TOKEN = "Vector3";
 constexpr const char* VECTOR4_TOKEN = "Vector4";
 constexpr const char* BOX3_TOKEN = "Box3";
 constexpr const char* MATRIX4_TOKEN = "Matrix4";
 constexpr const char* STRING_ARRAY_TOKEN = "StringArray";
+constexpr const char* UINT32_ARRAY_TOKEN = "Uint32Array";
+constexpr const char* VECTOR2_ARRAY_TOKEN = "Vector2Array";
+constexpr const char* VECTOR3_ARRAY_TOKEN = "Vector3Array";
+constexpr const char* VECTOR4_ARRAY_TOKEN = "Vector4Array";
+constexpr const char* MATRIX4_ARRAY_TOKEN = "Matrix4Array";
 constexpr const char* RTTI_NAME = "RttiName";
+constexpr const char* INSTANCE_TYPE = "InstanceType";
+constexpr const char* RESOURCE_NAME = "ResourceName";
+constexpr const char* RESOURCE_FILENAME = "ResourceFilename";
+constexpr const char* PREFAB_FILENAME = "PrefabFilename";
 
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------
-Contract DeserializeContract(const rapidjson::Value& value);
-void DeserializeAttribute(Contract& contract, const std::string& attribute, const rapidjson::Value& value);
-FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
-std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
-std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
-float DeserializeFloat(const rapidjson::Value& value);
-std::string DeserializeString(const rapidjson::Value& value);
-bool DeserializeBoolean(const rapidjson::Value& value);
-ColorRGBA DeserializeColorRGBAValues(const rapidjson::Value& value);
-ColorRGB DeserializeColorRGBValues(const rapidjson::Value& value);
-Vector3 DeserializeVector3Values(const rapidjson::Value& value);
-Vector4 DeserializeVector4Values(const rapidjson::Value& value);
-Box3 DeserializeBox3Values(const rapidjson::Value& value);
-Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value);
-std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& value);
+static Contract DeserializeContract(const rapidjson::Value& value);
+static void DeserializeAttribute(Contract& contract, const std::string& attribute, const rapidjson::Value& value);
+static FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
+static std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
+static std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
+static float DeserializeFloat(const rapidjson::Value& value);
+static std::string DeserializeString(const rapidjson::Value& value);
+static bool DeserializeBoolean(const rapidjson::Value& value);
+static ColorRGBA DeserializeColorRGBA(const rapidjson::Value& value);
+static ColorRGB DeserializeColorRGB(const rapidjson::Value& value);
+static Vector2 DeserializeVector2(const rapidjson::Value& value);
+static Vector3 DeserializeVector3(const rapidjson::Value& value);
+static Vector4 DeserializeVector4(const rapidjson::Value& value);
+static Box3 DeserializeBox3(const rapidjson::Value& value);
+static Matrix4 DeserializeMatrix4(const rapidjson::Value& value);
+static std::vector<std::string> DeserializeStringArray(const rapidjson::Value& value);
+static std::vector<std::uint32_t> DeserializeUInt32Array(const rapidjson::Value& value);
+static std::vector<Vector2> DeserializeVector2Array(const rapidjson::Value& value);
+static std::vector<Vector3> DeserializeVector3Array(const rapidjson::Value& value);
+static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& value);
+static std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value);
 //------------------------------------------------------------------------
-rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeUInt64(const std::uint64_t n);
-rapidjson::Value SerializeUInt32(const std::uint32_t n);
-rapidjson::Value SerializeFloat(const float v);
-rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeBoolean(const bool b);
-rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeColorRGBValues(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeVector3Values(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeVector4Values(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator);
-rapidjson::Value SerializeStringArrayValues(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeUInt64(const std::uint64_t n);
+static rapidjson::Value SerializeUInt32(const std::uint32_t n);
+static rapidjson::Value SerializeFloat(const float v);
+static rapidjson::Value SerializeString(const std::string& s, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeBoolean(const bool b);
+static rapidjson::Value SerializeColorRGBA(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeColorRGB(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector2(const Vector2& vec, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector3(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector4(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeBox3(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeMatrix4(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeStringArray(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeUInt32Array(const std::vector<std::uint32_t>& ns, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector2Array(const std::vector<Vector2>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeMatrix4Array(const std::vector<Matrix4>& mxs, rapidjson::MemoryPoolAllocator<>& allocator);
 
 std::vector<Contract> ContractJsonGateway::Deserialize(const std::string& json)
 {
@@ -105,6 +128,7 @@ std::string ContractJsonGateway::Serialize(const std::vector<Contract>& contract
 
     rapidjson::StringBuffer buf;
     rapidjson::PrettyWriter writer(buf);
+    writer.SetFormatOptions(rapidjson::kFormatSingleLineArray);
     json_doc.Accept(writer);
     std::string json(buf.GetString(), buf.GetSize());
     return json;
@@ -142,35 +166,46 @@ void DeserializeAttribute(Contract& contract, const std::string& attribute, cons
     else if (type == BOOLEAN_TOKEN)
         contract.AddOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
     else if (type == COLOR_RGBA_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeColorRGBAValues(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeColorRGBA(value[VALUE_TOKEN]));
     else if (type == COLOR_RGB_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeColorRGBValues(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeColorRGB(value[VALUE_TOKEN]));
+    else if (type == VECTOR2_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector2(value[VALUE_TOKEN]));
     else if (type == VECTOR3_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector3Values(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeVector3(value[VALUE_TOKEN]));
     else if (type == VECTOR4_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector4Values(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeVector4(value[VALUE_TOKEN]));
     else if (type == BOX3_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeBox3Values(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeBox3(value[VALUE_TOKEN]));
     else if (type == MATRIX4_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeMatrix4Values(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeMatrix4(value[VALUE_TOKEN]));
     else if (type == STRING_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeStringArrayValues(value[VALUE_TOKEN]));
+        contract.AddOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
+    else if (type == UINT32_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
+    else if (type == VECTOR2_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
+    else if (type == VECTOR3_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector3Array(value[VALUE_TOKEN]));
+    else if (type == VECTOR4_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeVector4Array(value[VALUE_TOKEN]));
+    else if (type == MATRIX4_ARRAY_TOKEN)
+        contract.AddOrUpdate(attribute, DeserializeMatrix4Array(value[VALUE_TOKEN]));
 }
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
 {
-    //FactoryDesc::InstanceType instance_type;
-    //std::string resource_name;
-    //std::string resource_filename;
+    FactoryDesc::InstanceType instance_type;
+    std::string resource_name;
+    std::string resource_filename;
     std::string rtti;
-    //std::string prefab;
-    //if (value.HasMember(INSTANCE_TYPE)) instance_type = static_cast<FactoryDesc::InstanceType>(value[INSTANCE_TYPE].GetInt());
-    //if (value.HasMember(RESOURCE_NAME)) resource_name = value[RESOURCE_NAME].GetString();
-    //if (value.HasMember(RESOURCE_FILENAME)) resource_filename = value[RESOURCE_FILENAME].GetString();
+    std::string prefab;
+    if (value.HasMember(INSTANCE_TYPE)) instance_type = static_cast<FactoryDesc::InstanceType>(value[INSTANCE_TYPE].GetInt());
+    if (value.HasMember(RESOURCE_NAME)) resource_name = value[RESOURCE_NAME].GetString();
+    if (value.HasMember(RESOURCE_FILENAME)) resource_filename = value[RESOURCE_FILENAME].GetString();
     if (value.HasMember(RTTI_NAME)) rtti = value[RTTI_NAME].GetString();
-    //if (value.HasMember(PREFAB_FILENAME)) prefab = value[PREFAB_FILENAME].GetString();
+    if (value.HasMember(PREFAB_FILENAME)) prefab = value[PREFAB_FILENAME].GetString();
     FactoryDesc desc(rtti);
-    /*desc.SetRtti(rtti);
     switch (instance_type)
     {
     case FactoryDesc::InstanceType::Native:
@@ -191,7 +226,7 @@ FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
     case FactoryDesc::InstanceType::ResourceAsset:
         desc.ClaimAsResourceAsset(resource_name, resource_filename);
         break;
-    }*/
+    }
     return desc;
 }
 
@@ -218,33 +253,39 @@ bool DeserializeBoolean(const rapidjson::Value& value)
 {
     return value.GetBool();
 }
-ColorRGBA DeserializeColorRGBAValues(const rapidjson::Value& value)
+ColorRGBA DeserializeColorRGBA(const rapidjson::Value& value)
 {
     if (!value.IsArray()) return ColorRGBA::WHITE;
     auto values = value.GetArray();
     return ColorRGBA(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat());
 }
 
-ColorRGB DeserializeColorRGBValues(const rapidjson::Value& value)
+ColorRGB DeserializeColorRGB(const rapidjson::Value& value)
 {
     if (!value.IsArray()) return ColorRGB::WHITE;
     auto values = value.GetArray();
     return ColorRGB(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat());
 }
-Vector3 DeserializeVector3Values(const rapidjson::Value& value)
+Vector2 DeserializeVector2(const rapidjson::Value& value)
+{
+    if (!value.IsArray()) return Vector2::ZERO;
+    auto values = value.GetArray();
+    return Vector2(values[0].GetFloat(), values[1].GetFloat());
+}
+Vector3 DeserializeVector3(const rapidjson::Value& value)
 {
     if (!value.IsArray()) return Vector3::ZERO;
     auto values = value.GetArray();
     return Vector3(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat());
 }
-Vector4 DeserializeVector4Values(const rapidjson::Value& value)
+Vector4 DeserializeVector4(const rapidjson::Value& value)
 {
     if (!value.IsArray()) return Vector4::ZERO;
     auto values = value.GetArray();
     return Vector4(values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat());
 }
 
-Box3 DeserializeBox3Values(const rapidjson::Value& value)
+Box3 DeserializeBox3(const rapidjson::Value& value)
 {
     Box3 box;
     if (!value.IsArray()) return box;
@@ -260,7 +301,7 @@ Box3 DeserializeBox3Values(const rapidjson::Value& value)
     return box;
 }
 
-Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value)
+Matrix4 DeserializeMatrix4(const rapidjson::Value& value)
 {
     if (!value.IsArray()) return Matrix4::IDENTITY;
     auto values = value.GetArray();
@@ -270,7 +311,7 @@ Matrix4 DeserializeMatrix4Values(const rapidjson::Value& value)
         values[12].GetFloat(), values[13].GetFloat(), values[14].GetFloat(), values[15].GetFloat());
 }
 
-std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& value)
+std::vector<std::string> DeserializeStringArray(const rapidjson::Value& value)
 {
     std::vector<std::string> ss;
     if (!value.IsArray()) return ss;
@@ -280,6 +321,66 @@ std::vector<std::string> DeserializeStringArrayValues(const rapidjson::Value& va
         ss.emplace_back(DeserializeString(*json_it));
     }
     return ss;
+}
+
+std::vector<std::uint32_t> DeserializeUInt32Array(const rapidjson::Value& value)
+{
+    std::vector<std::uint32_t> ns;
+    if (!value.IsArray()) return ns;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        ns.emplace_back(DeserializeUInt32(*json_it));
+    }
+    return ns;
+}
+
+std::vector<Vector2> DeserializeVector2Array(const rapidjson::Value& value)
+{
+    std::vector<Vector2> vecs;
+    if (!value.IsArray()) return vecs;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        vecs.emplace_back(DeserializeVector2(*json_it));
+    }
+    return vecs;
+}
+
+std::vector<Vector3> DeserializeVector3Array(const rapidjson::Value& value)
+{
+    std::vector<Vector3> vecs;
+    if (!value.IsArray()) return vecs;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        vecs.emplace_back(DeserializeVector3(*json_it));
+    }
+    return vecs;
+}
+
+std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& value)
+{
+    std::vector<Vector4> vecs;
+    if (!value.IsArray()) return vecs;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        vecs.emplace_back(DeserializeVector4(*json_it));
+    }
+    return vecs;
+}
+
+std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value)
+{
+    std::vector<Matrix4> mxs;
+    if (!value.IsArray()) return mxs;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        mxs.emplace_back(DeserializeMatrix4(*json_it));
+    }
+    return mxs;
 }
 
 //--------------------------------------------------------------------------
@@ -343,37 +444,67 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
     else if (any_ob.type() == typeid(ColorRGBA))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(COLOR_RGBA_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGBAValues(std::any_cast<ColorRGBA>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGBA(std::any_cast<ColorRGBA>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(ColorRGB))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(COLOR_RGB_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGBValues(std::any_cast<ColorRGB>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeColorRGB(std::any_cast<ColorRGB>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(Vector2))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR2_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector2(std::any_cast<Vector2>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(Vector3))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR3_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector3Values(std::any_cast<Vector3>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector3(std::any_cast<Vector3>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(Vector4))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR4_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector4Values(std::any_cast<Vector4>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector4(std::any_cast<Vector4>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(Box3))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(BOX3_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeBox3Values(std::any_cast<Box3>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeBox3(std::any_cast<Box3>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(Matrix4))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(MATRIX4_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeMatrix4Values(std::any_cast<Matrix4>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeMatrix4(std::any_cast<Matrix4>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(std::vector<std::string>))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(STRING_ARRAY_TOKEN), allocator);
-        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeStringArrayValues(std::any_cast<std::vector<std::string>>(any_ob), allocator), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeStringArray(std::any_cast<std::vector<std::string>>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<std::uint32_t>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(UINT32_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeUInt32Array(std::any_cast<std::vector<std::uint32_t>>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<Vector2>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR2_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector2Array(std::any_cast<std::vector<Vector2>>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<Vector3>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR3_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector3Array(std::any_cast<std::vector<Vector3>>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<Vector4>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR4_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeVector4Array(std::any_cast<std::vector<Vector4>>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<Matrix4>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(MATRIX4_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeMatrix4Array(std::any_cast<std::vector<Matrix4>>(any_ob), allocator), allocator);
     }
     return node;
 }
@@ -381,11 +512,11 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
 rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value{ rapidjson::kObjectType };
-    //value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.GetInstanceType()), allocator);
-    //value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.GetResourceName(), allocator), allocator);
-    //value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.GetResourceFilename(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.GetInstanceType()), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.GetResourceName(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.GetResourceFilename(), allocator), allocator);
     value.AddMember(rapidjson::StringRef(RTTI_NAME), SerializeString(desc.GetRttiName(), allocator), allocator);
-    //value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.GetPrefab(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.GetPrefab(), allocator), allocator);
     return value;
 }
 
@@ -413,7 +544,7 @@ rapidjson::Value SerializeBoolean(const bool b)
 {
     return rapidjson::Value(b);
 }
-rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeColorRGBA(const ColorRGBA& color, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     value.PushBack(color.R(), allocator);
@@ -423,7 +554,7 @@ rapidjson::Value SerializeColorRGBAValues(const ColorRGBA& color, rapidjson::Mem
     return value;
 }
 
-rapidjson::Value SerializeColorRGBValues(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeColorRGB(const ColorRGB& color, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     value.PushBack(color.R(), allocator);
@@ -432,7 +563,15 @@ rapidjson::Value SerializeColorRGBValues(const ColorRGB& color, rapidjson::Memor
     return value;
 }
 
-rapidjson::Value SerializeVector3Values(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeVector2(const Vector2& vec, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    value.PushBack(vec.X(), allocator);
+    value.PushBack(vec.Y(), allocator);
+    return value;
+}
+
+rapidjson::Value SerializeVector3(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     value.PushBack(vec.X(), allocator);
@@ -441,7 +580,7 @@ rapidjson::Value SerializeVector3Values(const Vector3& vec, rapidjson::MemoryPoo
     return value;
 }
 
-rapidjson::Value SerializeVector4Values(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeVector4(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     value.PushBack(vec.X(), allocator);
@@ -451,7 +590,7 @@ rapidjson::Value SerializeVector4Values(const Vector4& vec, rapidjson::MemoryPoo
     return value;
 }
 
-rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeBox3(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     value.PushBack(box.Center().X(), allocator);
@@ -470,7 +609,7 @@ rapidjson::Value SerializeBox3Values(const Box3& box, rapidjson::MemoryPoolAlloc
     return value;
 }
 
-rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeMatrix4(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     for (int i = 0; i < 4; i++)
@@ -483,12 +622,62 @@ rapidjson::Value SerializeMatrix4Values(const Matrix4& mx, rapidjson::MemoryPool
     return value;
 }
 
-rapidjson::Value SerializeStringArrayValues(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeStringArray(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     for (auto s : ss)
     {
         value.PushBack(SerializeString(s, allocator), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeUInt32Array(const std::vector<std::uint32_t>& ns, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto n : ns)
+    {
+        value.PushBack(SerializeUInt32(n), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeVector2Array(const std::vector<Vector2>& vecs, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto vec : vecs)
+    {
+        value.PushBack(SerializeVector2(vec, allocator), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto vec : vecs)
+    {
+        value.PushBack(SerializeVector3(vec, allocator), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto vec : vecs)
+    {
+        value.PushBack(SerializeVector4(vec, allocator), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeMatrix4Array(const std::vector<Matrix4>& mxs, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto mx : mxs)
+    {
+        value.PushBack(SerializeMatrix4(mx, allocator), allocator);
     }
     return value;
 }

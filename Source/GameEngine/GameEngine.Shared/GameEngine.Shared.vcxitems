@@ -19,7 +19,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
@@ -32,6 +34,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
@@ -57,6 +65,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
@@ -73,7 +82,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
@@ -87,5 +101,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace Enigma::Platforms
+namespace Enigma::Frameworks
 {
     class Ruid
     {
@@ -26,6 +26,7 @@ namespace Enigma::Platforms
         static Ruid Generate();
 
         bool operator==(const Ruid& ruid) const;
+        bool operator!=(const Ruid& ruid) const;
 
     private:
         std::uint64_t m_first;

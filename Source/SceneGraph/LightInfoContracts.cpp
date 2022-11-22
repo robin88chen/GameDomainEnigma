@@ -3,13 +3,13 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
-std::string TOKEN_LIGHT_TYPE = "LightType";
-std::string TOKEN_LIGHT_COLOR = "LightColor";
-std::string TOKEN_LIGHT_POSITION = "LightPosition";
-std::string TOKEN_LIGHT_DIRECTION = "LightDirection";
-std::string TOKEN_LIGHT_RANGE = "LightRange";
-std::string TOKEN_LIGHT_ATTENUATION = "LightAttenuation";
-std::string TOKEN_LIGHT_ENABLE = "LightIsEnable";
+static std::string TOKEN_LIGHT_TYPE = "LightType";
+static std::string TOKEN_LIGHT_COLOR = "LightColor";
+static std::string TOKEN_LIGHT_POSITION = "LightPosition";
+static std::string TOKEN_LIGHT_DIRECTION = "LightDirection";
+static std::string TOKEN_LIGHT_RANGE = "LightRange";
+static std::string TOKEN_LIGHT_ATTENUATION = "LightAttenuation";
+static std::string TOKEN_LIGHT_ENABLE = "LightIsEnable";
 
 LightInfoContract::LightInfoContract()
 {

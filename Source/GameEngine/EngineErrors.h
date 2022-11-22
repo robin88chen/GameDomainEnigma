@@ -17,11 +17,18 @@ namespace Enigma::Engine
         ok = 0,
 
         findStashedAssetFail = 101,
+        policyIncomplete,
+        deserializeFail,
+        fileIOError,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,
+
+        invalidArrayIndex = 301,
+        nullMemoryBuffer,
+        zeroVertexSize,
     };
     class ErrorCategory : public std::error_category
     {

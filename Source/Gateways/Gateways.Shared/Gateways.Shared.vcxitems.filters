@@ -7,6 +7,9 @@
     <Filter Include="Contracts">
       <UniqueIdentifier>{4b989ff9-047d-4221-911f-721e301ecb81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ContractDeserializer">
+      <UniqueIdentifier>{c7d1c588-5a85-4f8a-b576-f88f1a36407c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h">
@@ -15,6 +18,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.h">
       <Filter>Contracts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.h">
+      <Filter>ContractDeserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.h">
+      <Filter>ContractDeserializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp">
@@ -22,6 +31,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.cpp">
       <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.cpp">
+      <Filter>ContractDeserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.cpp">
+      <Filter>ContractDeserializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

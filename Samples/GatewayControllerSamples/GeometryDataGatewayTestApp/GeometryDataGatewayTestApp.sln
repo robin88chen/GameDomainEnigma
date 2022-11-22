@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryDataGatewayTest.Shared", "GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems", "{5E40A4E8-72DC-4CAB-BF3F-098FFB49C9E3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryDataGatewayTest.Win32", "GeometryDataGatewayTest.Win32\GeometryDataGatewayTest.Win32.vcxproj", "{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x64.ActiveCfg = Debug|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x64.Build.0 = Debug|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x86.ActiveCfg = Debug|Win32
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x86.Build.0 = Debug|Win32
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x64.ActiveCfg = Release|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x64.Build.0 = Release|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x86.ActiveCfg = Release|Win32
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C686074-2B30-458D-A063-075BB50B72CE}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems*{5e40a4e8-72dc-4cab-bf3f-098ffb49c9e3}*SharedItemsImports = 9
+		GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems*{ce0d678e-048f-45ca-ae3d-1d22ce8815a3}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

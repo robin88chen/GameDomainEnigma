@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   VertexDeclarationDx11.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -22,7 +22,7 @@ namespace Enigma::Devices
     {
     public:
         VertexDeclarationDx11(const std::string& name, const std::string& data_vertex_format,
-            const VertexFormatCode& shader_fmt_code);
+            const Graphics::VertexFormatCode& shader_fmt_code);
         VertexDeclarationDx11(const VertexDeclarationDx11&) = delete;
         VertexDeclarationDx11(VertexDeclarationDx11&&) = delete;
         virtual ~VertexDeclarationDx11();
@@ -37,7 +37,7 @@ namespace Enigma::Devices
         void FillShaderVertexFormat(const std::shared_ptr<VertexShaderDx11>& shader);
 
     protected:
-        std::tuple<D3D11_INPUT_ELEMENT_DESC* , unsigned int> CreateVertexLayout(const VertexDesc& vertex_desc);
+        std::tuple<D3D11_INPUT_ELEMENT_DESC* , unsigned int> CreateVertexLayout(const Graphics::VertexDescription& vertex_desc);
 
     public:
         // HLSL Semantic String
@@ -55,7 +55,7 @@ namespace Enigma::Devices
         byte_buffer m_shaderSignatureBytes;
         ID3D11InputLayout* m_d3dInputLayout;
 
-        VertexFormatCode m_shaderVertexFormat;
+        Graphics::VertexFormatCode m_shaderVertexFormat;
     };
 
 };

@@ -16,6 +16,12 @@
     <Filter Include="Render Packs">
       <UniqueIdentifier>{249a22d1-8c85-45f8-aa95-bcc5461bbea1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderable Primitives">
+      <UniqueIdentifier>{112fa852-2d10-4574-9862-87b2d961cb25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderable Primitives\Mesh">
+      <UniqueIdentifier>{f58e3171-484c-4e29-a7e1-23d120c5324f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -48,6 +54,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h">
       <Filter>Render Target</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h">
+      <Filter>Renderable Primitives\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -70,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
+      <Filter>Renderable Primitives\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

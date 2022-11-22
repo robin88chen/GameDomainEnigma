@@ -33,13 +33,16 @@ namespace Enigma::Engine
         void CreateFromContract(const std::string& name, const Contract& contract);
 
         void OnContractDeserialized(const Frameworks::IEventPtr& e);
+        void OnContractedGeometryCreated(const Frameworks::IEventPtr& e);
 
     protected:
         GeometryRepository* m_hostRepository;
         Frameworks::Ruid m_ruidDeserializing;
+        Frameworks::Ruid m_ruidContracting;
         GeometryDataPolicy m_policy;
 
         Frameworks::EventSubscriberPtr m_onContractDeserialized;
+        Frameworks::EventSubscriberPtr m_onContractedGeometryCreated;
     };
 }
 

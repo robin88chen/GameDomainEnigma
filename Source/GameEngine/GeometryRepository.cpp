@@ -9,6 +9,8 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "Frameworks/CommandBus.h"
+#include "GameEngine/ContractCommands.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -20,6 +22,8 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
+    CommandBus::Post(std::make_shared<RegisterContractFactory>(TriangleList::TYPE_RTTI.GetName(),
+        [=](auto c) { this->GeometryContractFactory(c); }));
 }
 
 GeometryRepository::~GeometryRepository()
@@ -99,6 +103,17 @@ std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const Trian
     if (HasGeometryData(contract.Name())) return QueryGeometryData(contract.Name());
     std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(contract);
     return geometry;
+}
+
+void GeometryRepository::GeometryContractFactory(const Contract& contract)
+{
+    if (contract.GetRtti().GetRttiName() != TriangleList::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for geometry factory", contract.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    auto geometry = Create(contract);
+    EventPublisher::Post(std::make_shared<ContractedGeometryCreated>(contract, geometry));
 }
 
 void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)

@@ -7,41 +7,40 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 using namespace Enigma::Graphics;
 
-std::string TOKEN_NAME = "Name";
-std::string TOKEN_VERTEX_FORMAT = "VertexFormat";
-std::string TOKEN_SEGMENTS = "Segments";
-std::string TOKEN_POSITIONS_3 = "Positions3";
-std::string TOKEN_POSITIONS_4 = "Positions4";
-std::string TOKEN_NORMALS = "Normals";
-std::string TOKEN_DIFFUSE_COLORS = "DiffuseColors";
-std::string TOKEN_SPECULAR_COLORS = "SpecularColors";
-std::string TOKEN_TEX_COORD0 = "TexCoord0";
-std::string TOKEN_TEX_COORD1 = "TexCoord1";
-std::string TOKEN_TEX_COORD2 = "TexCoord2";
-std::string TOKEN_TEX_COORD3 = "TexCoord3";
-std::string TOKEN_TEX_COORD4 = "TexCoord4";
-std::string TOKEN_TEX_COORD5 = "TexCoord5";
-std::string TOKEN_TEX_COORD6 = "TexCoord6";
-std::string TOKEN_TEX_COORD7 = "TexCoord7";
-std::string TOKEN_PALETTE_INDICES = "PaletteIndices";
-std::string TOKEN_WEIGHTS = "Weights";
-std::string TOKEN_TANGENTS = "Tangents";
-std::string TOKEN_INDICES = "Indices";
-std::string TOKEN_VERTEX_CAPACITY = "VertexCapacity";
-std::string TOKEN_INDEX_CAPACITY = "IndexCapacity";
-std::string TOKEN_VERTEX_USED_COUNT = "VertexUsedCount";
-std::string TOKEN_INDEX_USED_COUNT = "IndexUsedCount";
-std::string TOKEN_TOPOLOGY = "Topology";
-std::string TOKEN_GEOMETRY_BOUND = "GeometryBound";
-std::string TOKEN_2D_COORDS = "2DCoords";
-std::string TOKEN_1D_COORDS = "1DCoords";
-std::string TOKEN_3D_COORDS = "3DCoords";
-std::array<std::string, VertexFormatCode::MAX_TEX_COORD> TOKEN_TEX_COORDS =
+static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_VERTEX_FORMAT = "VertexFormat";
+static std::string TOKEN_SEGMENTS = "Segments";
+static std::string TOKEN_POSITIONS_3 = "Positions3";
+static std::string TOKEN_POSITIONS_4 = "Positions4";
+static std::string TOKEN_NORMALS = "Normals";
+static std::string TOKEN_DIFFUSE_COLORS = "DiffuseColors";
+static std::string TOKEN_SPECULAR_COLORS = "SpecularColors";
+static std::string TOKEN_TEX_COORD0 = "TexCoord0";
+static std::string TOKEN_TEX_COORD1 = "TexCoord1";
+static std::string TOKEN_TEX_COORD2 = "TexCoord2";
+static std::string TOKEN_TEX_COORD3 = "TexCoord3";
+static std::string TOKEN_TEX_COORD4 = "TexCoord4";
+static std::string TOKEN_TEX_COORD5 = "TexCoord5";
+static std::string TOKEN_TEX_COORD6 = "TexCoord6";
+static std::string TOKEN_TEX_COORD7 = "TexCoord7";
+static std::string TOKEN_PALETTE_INDICES = "PaletteIndices";
+static std::string TOKEN_WEIGHTS = "Weights";
+static std::string TOKEN_TANGENTS = "Tangents";
+static std::string TOKEN_INDICES = "Indices";
+static std::string TOKEN_VERTEX_CAPACITY = "VertexCapacity";
+static std::string TOKEN_INDEX_CAPACITY = "IndexCapacity";
+static std::string TOKEN_VERTEX_USED_COUNT = "VertexUsedCount";
+static std::string TOKEN_INDEX_USED_COUNT = "IndexUsedCount";
+static std::string TOKEN_TOPOLOGY = "Topology";
+static std::string TOKEN_GEOMETRY_BOUND = "GeometryBound";
+static std::string TOKEN_2D_COORDS = "2DCoords";
+static std::string TOKEN_1D_COORDS = "1DCoords";
+static std::string TOKEN_3D_COORDS = "3DCoords";
+static std::array<std::string, VertexFormatCode::MAX_TEX_COORD> TOKEN_TEX_COORDS =
 {
     TOKEN_TEX_COORD0, TOKEN_TEX_COORD1, TOKEN_TEX_COORD2, TOKEN_TEX_COORD3,
     TOKEN_TEX_COORD4, TOKEN_TEX_COORD5, TOKEN_TEX_COORD6, TOKEN_TEX_COORD7
 };
-
 
 TextureCoordContract TextureCoordContract::FromContract(const Contract& contract)
 {

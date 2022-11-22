@@ -8,17 +8,17 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
-std::string TOKEN_NAME = "Name";
-std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
-std::string TOKEN_WORLD_TRANSFORM = "LocalTransform";
-std::string TOKEN_GRAPH_DEPTH = "GraphDepth";
-std::string TOKEN_WORLD_BOUND = "WorldBound";
-std::string TOKEN_MODEL_BOUND = "ModelBound";
-std::string TOKEN_CULLING_MODE = "CullingMode";
-std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
-std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
-std::string TOKEN_CHILD_NAMES = "ChildNames";
-std::string TOKEN_LIGHT_INFO = "LightInfo";
+static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
+static std::string TOKEN_WORLD_TRANSFORM = "LocalTransform";
+static std::string TOKEN_GRAPH_DEPTH = "GraphDepth";
+static std::string TOKEN_WORLD_BOUND = "WorldBound";
+static std::string TOKEN_MODEL_BOUND = "ModelBound";
+static std::string TOKEN_CULLING_MODE = "CullingMode";
+static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
+static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
+static std::string TOKEN_CHILD_NAMES = "ChildNames";
+static std::string TOKEN_LIGHT_INFO = "LightInfo";
 
 SpatialContract SpatialContract::FromContract(const Contract& contract)
 {

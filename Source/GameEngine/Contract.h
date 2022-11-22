@@ -33,7 +33,7 @@ namespace Enigma::Engine
 
         bool operator==(const Contract&) const;
 
-        const Frameworks::Ruid& GetId() { return m_ruid; }
+        const Frameworks::Ruid& GetId() const { return m_ruid; }
 
         bool IsTopLevel() const;
         void AsTopLevel(bool is_top);

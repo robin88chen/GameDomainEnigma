@@ -4,8 +4,8 @@
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
-std::string TOKEN_BOXBV = "BoxBV";
-std::string TOKEN_SPHEREBV = "SphereBV";
+static std::string TOKEN_BOXBV = "BoxBV";
+static std::string TOKEN_SPHEREBV = "SphereBV";
 
 BoundingVolumeContract BoundingVolumeContract::FromContract(const Contract& contract)
 {

@@ -46,12 +46,13 @@ namespace Enigma::Engine
 
         bool HasGeometryData(const std::string& name);
         std::shared_ptr<GeometryData> QueryGeometryData(const std::string& name);
-        std::shared_ptr<GeometryData> Create(const Contract& contract);
 
         error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
+        std::shared_ptr<GeometryData> Create(const Contract& contract);
         std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListContract& contract);
+        void GeometryContractFactory(const Contract& contract);
 
         void OnGeometryBuilt(const Frameworks::IEventPtr& e);
         void OnBuildGeometryFail(const Frameworks::IEventPtr& e);

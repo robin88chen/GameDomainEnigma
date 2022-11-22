@@ -1,6 +1,6 @@
 ﻿#include "GeometryRepository.h"
 #include "TriangleList.h"
-#include "GeometryDataContract.h"
+#include "GeometryDataDto.h"
 #include "GeometryDataEvents.h"
 #include "GeometryDataPolicy.h"
 #include "GeometryBuilder.h"
@@ -10,7 +10,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/ContractCommands.h"
+#include "GameEngine/FactoryCommands.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -22,8 +22,8 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
-    CommandBus::Post(std::make_shared<RegisterContractFactory>(TriangleList::TYPE_RTTI.GetName(),
-        [=](auto c) { this->GeometryContractFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(TriangleList::TYPE_RTTI.GetName(),
+        [=](auto o) { this->GeometryFactory(o); }));
 }
 
 GeometryRepository::~GeometryRepository()
@@ -89,31 +89,31 @@ error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)
     return ErrorCode::ok;
 }
 
-std::shared_ptr<GeometryData> GeometryRepository::Create(const Contract& contract)
+std::shared_ptr<GeometryData> GeometryRepository::Create(const GenericDto& dto)
 {
-    if (contract.GetRtti().GetRttiName() == TriangleList::TYPE_RTTI.GetName())
+    if (dto.GetRtti().GetRttiName() == TriangleList::TYPE_RTTI.GetName())
     {
-        return CreateTriangleList(TriangleListContract::FromContract(contract));
+        return CreateTriangleList(TriangleListDto::FromGenericDto(dto));
     }
     return nullptr;
 }
 
-std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const TriangleListContract& contract)
+std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const TriangleListDto& dto)
 {
-    if (HasGeometryData(contract.Name())) return QueryGeometryData(contract.Name());
-    std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(contract);
+    if (HasGeometryData(dto.Name())) return QueryGeometryData(dto.Name());
+    std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(dto);
     return geometry;
 }
 
-void GeometryRepository::GeometryContractFactory(const Contract& contract)
+void GeometryRepository::GeometryFactory(const GenericDto& dto)
 {
-    if (contract.GetRtti().GetRttiName() != TriangleList::TYPE_RTTI.GetName())
+    if (dto.GetRtti().GetRttiName() != TriangleList::TYPE_RTTI.GetName())
     {
-        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for geometry factory", contract.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    auto geometry = Create(contract);
-    EventPublisher::Post(std::make_shared<ContractedGeometryCreated>(contract, geometry));
+    auto geometry = Create(dto);
+    EventPublisher::Post(std::make_shared<FactoryGeometryCreated>(dto, geometry));
 }
 
 void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)

@@ -6,9 +6,9 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandBus.h"
-#include "ContractDeserializer.h"
-#include "ContractEvents.h"
-#include "ContractCommands.h"
+#include "DtoDeserializer.h"
+#include "DtoEvents.h"
+#include "FactoryCommands.h"
 #include <cassert>
 #include <memory>
 
@@ -18,18 +18,18 @@ using namespace Enigma::Frameworks;
 GeometryBuilder::GeometryBuilder(GeometryRepository* host)
 {
     m_hostRepository = host;
-    m_onContractDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnContractDeserialized(e); });
-    EventPublisher::Subscribe(typeid(ContractDeserialized), m_onContractDeserialized);
-    m_onContractedGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnContractedGeometryCreated(e); });
-    EventPublisher::Subscribe(typeid(ContractedGeometryCreated), m_onContractedGeometryCreated);
+    m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoDeserialized(e); });
+    EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    m_onDtoGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoGeometryCreated(e); });
+    EventPublisher::Subscribe(typeid(FactoryGeometryCreated), m_onDtoGeometryCreated);
 }
 
 GeometryBuilder::~GeometryBuilder()
 {
-    EventPublisher::Unsubscribe(typeid(ContractDeserialized), m_onContractDeserialized);
-    m_onContractDeserialized = nullptr;
-    EventPublisher::Unsubscribe(typeid(ContractedGeometryCreated), m_onContractedGeometryCreated);
-    m_onContractedGeometryCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    m_onDtoDeserialized = nullptr;
+    EventPublisher::Unsubscribe(typeid(FactoryGeometryCreated), m_onDtoGeometryCreated);
+    m_onDtoGeometryCreated = nullptr;
 }
 
 void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
@@ -40,9 +40,9 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
         EventPublisher::Post(std::make_shared<GeometryDataBuilt>(policy.Name(),
             m_hostRepository->QueryGeometryData(policy.Name())));
     }
-    else if (policy.GetContract())
+    else if (policy.GetDto())
     {
-        CreateFromContract(policy.Name(), policy.GetContract().value());
+        CreateFromDto(policy.Name(), policy.GetDto().value());
     }
     else if (policy.GetDeserializer())
     {
@@ -56,32 +56,32 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     }
 }
 
-void GeometryBuilder::CreateFromContract(const std::string& name, const Contract& contract)
+void GeometryBuilder::CreateFromDto(const std::string& name, const GenericDto& dto)
 {
     assert(m_hostRepository);
-    m_ruidContracting = contract.GetId();
-    CommandBus::Post(std::make_shared<InvokeContractFactory>(contract));
+    m_ruidContracting = dto.GetId();
+    CommandBus::Post(std::make_shared<InvokeDtoFactory>(dto));
 }
 
-void GeometryBuilder::OnContractDeserialized(const Frameworks::IEventPtr& e)
+void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractDeserialized, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized, IEvent>(e);
     if (!ev) return;
     if (ev->GetRuid() != m_ruidDeserializing) return;
-    if (ev->GetContracts().empty())
+    if (ev->GetDtos().empty())
     {
         EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ErrorCode::deserializeFail));
         return;
     }
-    CreateFromContract(m_policy.Name(), ev->GetContracts()[0]);
+    CreateFromDto(m_policy.Name(), ev->GetDtos()[0]);
 }
 
-void GeometryBuilder::OnContractedGeometryCreated(const Frameworks::IEventPtr& e)
+void GeometryBuilder::OnDtoGeometryCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractedGeometryCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
-    if (ev->GetContract().GetId() != m_ruidContracting) return;
+    if (ev->GetDto().GetId() != m_ruidContracting) return;
     EventPublisher::Post(std::make_shared<GeometryDataBuilt>(m_policy.Name(), ev->GetGeometryData()));
 }

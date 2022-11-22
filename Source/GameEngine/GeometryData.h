@@ -17,7 +17,7 @@
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector2.h"
 #include "GraphicKernel/IVertexBuffer.h"
-#include "GeometryDataContract.h"
+#include "GeometryDataDto.h"
 #include <memory>
 
 
@@ -30,7 +30,7 @@ namespace Enigma::Engine
         DECLARE_EN_RTTI_OF_BASE;
     public:
         GeometryData(const std::string& name);
-        GeometryData(const GeometryDataContract& contract);
+        GeometryData(const GeometryDataDto& dto);
         GeometryData(const GeometryData&) = delete;
         GeometryData(GeometryData&&) = delete;
         virtual ~GeometryData();
@@ -38,7 +38,7 @@ namespace Enigma::Engine
         GeometryData& operator=(const GeometryData&) = delete;
         GeometryData& operator=(GeometryData&&) = delete;
 
-        virtual Contract SerializeContract();
+        virtual GenericDto SerializeDto();
 
         const std::string& GetName() { return m_name; }
 
@@ -190,7 +190,7 @@ namespace Enigma::Engine
         error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
-        GeometryDataContract SerializeGeometryDataContract();
+        GeometryDataDto SerializeGeometryDto();
 
     protected:
         std::string m_name;

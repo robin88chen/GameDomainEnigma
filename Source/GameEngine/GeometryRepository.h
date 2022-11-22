@@ -22,8 +22,8 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class GeometryData;
-    class Contract;
-    class TriangleListContract;
+    class GenericDto;
+    class TriangleListDto;
     class GeometryBuilder;
 
     class GeometryRepository : public Frameworks::ISystemService
@@ -50,9 +50,9 @@ namespace Enigma::Engine
         error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        std::shared_ptr<GeometryData> Create(const Contract& contract);
-        std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListContract& contract);
-        void GeometryContractFactory(const Contract& contract);
+        std::shared_ptr<GeometryData> Create(const GenericDto& dto);
+        std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListDto& dto);
+        void GeometryFactory(const GenericDto& dto);
 
         void OnGeometryBuilt(const Frameworks::IEventPtr& e);
         void OnBuildGeometryFail(const Frameworks::IEventPtr& e);

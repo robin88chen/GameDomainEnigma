@@ -1,26 +1,26 @@
 ﻿/*********************************************************************
- * \file   ContractDeserializer.h
- * \brief  contract deserializer, a base class, will implement by gateways
+ * \file   DtoDeserializer.h
+ * \brief  dto deserializer, a base class, will implement by gateways
  *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
-#ifndef _CONTRACT_DESERIALIZER_H
-#define _CONTRACT_DESERIALIZER_H
+#ifndef _DTO_DESERIALIZER_H
+#define _DTO_DESERIALIZER_H
 
 #include "Frameworks/ruid.h"
 #include <memory>
 
 namespace Enigma::Engine
 {
-    class IContractDeserializer : public std::enable_shared_from_this<IContractDeserializer>
+    class IDtoDeserializer : public std::enable_shared_from_this<IDtoDeserializer>
     {
     public:
-        IContractDeserializer() = default;
-        virtual ~IContractDeserializer() = default;
+        IDtoDeserializer() = default;
+        virtual ~IDtoDeserializer() = default;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
     };
 }
 
-#endif // _CONTRACT_DESERIALIZER_H
+#endif // _DTO_DESERIALIZER_H

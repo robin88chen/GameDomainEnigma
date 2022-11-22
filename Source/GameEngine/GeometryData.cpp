@@ -22,40 +22,40 @@ GeometryData::GeometryData(const std::string& name)
     m_geometryBound = BoundingVolume{Box3::UNIT_BOX};
 }
 
-GeometryData::GeometryData(const GeometryDataContract& contract)
+GeometryData::GeometryData(const GeometryDataDto& dto)
 {
-    m_name = contract.Name();
-    CreateVertexCapacity(contract.VertexFormat(), contract.VertexCapacity(), contract.VertexUsedCount(),
-                         contract.IndexCapacity(), contract.IndexUsedCount());
-    for (unsigned i = 0; i < contract.Segments().size(); i += 4)
+    m_name = dto.Name();
+    CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),
+                         dto.IndexCapacity(), dto.IndexUsedCount());
+    for (unsigned i = 0; i < dto.Segments().size(); i += 4)
     {
-        m_geoSegmentVector.emplace_back(contract.Segments()[i], contract.Segments()[i + 1],
-            contract.Segments()[i + 2], contract.Segments()[i + 3]);
+        m_geoSegmentVector.emplace_back(dto.Segments()[i], dto.Segments()[i + 1],
+            dto.Segments()[i + 2], dto.Segments()[i + 3]);
     }
-    m_topology = static_cast<PrimitiveTopology>(contract.Topology());
-    if (contract.Position3s())
+    m_topology = static_cast<PrimitiveTopology>(dto.Topology());
+    if (dto.Position3s())
     {
-        SetPosition3Array(contract.Position3s().value());
+        SetPosition3Array(dto.Position3s().value());
     }
-    if (contract.Position4s())
+    if (dto.Position4s())
     {
-        SetPosition4Array(contract.Position4s().value());
+        SetPosition4Array(dto.Position4s().value());
     }
-    if (contract.Normals())
+    if (dto.Normals())
     {
-        SetVertexNormalArray(contract.Normals().value());
+        SetVertexNormalArray(dto.Normals().value());
     }
-    if (contract.DiffuseColors())
+    if (dto.DiffuseColors())
     {
-        SetDiffuseColorArray(contract.DiffuseColors().value());
+        SetDiffuseColorArray(dto.DiffuseColors().value());
     }
-    if (contract.SpecularColors())
+    if (dto.SpecularColors())
     {
-        SetSpecularColorArray(contract.SpecularColors().value());
+        SetSpecularColorArray(dto.SpecularColors().value());
     }
-    for (unsigned i = 0; i < contract.TextureCoords().size(); i++)
+    for (unsigned i = 0; i < dto.TextureCoords().size(); i++)
     {
-        TextureCoordContract coord = TextureCoordContract::FromContract(contract.TextureCoords()[i]);
+        TextureCoordDto coord = TextureCoordDto::FromGenericDto(dto.TextureCoords()[i]);
         if (coord.Texture2DCoords())
         {
             SetTexture2DCoordArray(i, coord.Texture2DCoords().value());
@@ -69,23 +69,23 @@ GeometryData::GeometryData(const GeometryDataContract& contract)
             SetTexture3DCoordArray(i, coord.Texture3DCoords().value());
         }
     }
-    if (contract.PaletteIndices())
+    if (dto.PaletteIndices())
     {
-        SetPaletteIndexArray(contract.PaletteIndices().value());
+        SetPaletteIndexArray(dto.PaletteIndices().value());
     }
-    if (contract.Weights())
+    if (dto.Weights())
     {
-        SetTotalSkinWeightArray(contract.Weights().value());
+        SetTotalSkinWeightArray(dto.Weights().value());
     }
-    if (contract.Tangents())
+    if (dto.Tangents())
     {
-        SetVertexTangentArray(contract.Tangents().value());
+        SetVertexTangentArray(dto.Tangents().value());
     }
-    if (contract.Indices())
+    if (dto.Indices())
     {
-        SetIndexArray(contract.Indices().value());
+        SetIndexArray(dto.Indices().value());
     }
-    m_geometryBound = BoundingVolume(BoundingVolumeContract::FromContract(contract.GeometryBound()));
+    m_geometryBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.GeometryBound()));
 }
 
 GeometryData::~GeometryData()
@@ -93,88 +93,88 @@ GeometryData::~GeometryData()
 
 }
 
-Contract GeometryData::SerializeContract()
+GenericDto GeometryData::SerializeDto()
 {
-    return SerializeGeometryDataContract().ToContract();
+    return SerializeGeometryDto().ToGenericDto();
 }
 
-GeometryDataContract GeometryData::SerializeGeometryDataContract()
+GeometryDataDto GeometryData::SerializeGeometryDto()
 {
-    GeometryDataContract contract;
-    contract.Name() = m_name;
-    contract.VertexFormat() = m_vertexFormatCode.ToString();
-    contract.VertexCapacity() = m_vtxCapacity;
-    contract.VertexUsedCount() = m_vtxUsedCount;
-    contract.IndexCapacity() = m_idxCapacity;
-    contract.IndexUsedCount() = m_idxUsedCount;
+    GeometryDataDto dto;
+    dto.Name() = m_name;
+    dto.VertexFormat() = m_vertexFormatCode.ToString();
+    dto.VertexCapacity() = m_vtxCapacity;
+    dto.VertexUsedCount() = m_vtxUsedCount;
+    dto.IndexCapacity() = m_idxCapacity;
+    dto.IndexUsedCount() = m_idxUsedCount;
     for (unsigned i = 0; i < m_geoSegmentVector.size(); i++)
     {
-        contract.Segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
-        contract.Segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
-        contract.Segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
-        contract.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
     }
-    contract.Topology() = static_cast<unsigned>(m_topology);
+    dto.Topology() = static_cast<unsigned>(m_topology);
     if (m_vertexDesc.HasPosition3())
     {
-        contract.Position3s() = GetPosition3Array(m_vtxUsedCount);
+        dto.Position3s() = GetPosition3Array(m_vtxUsedCount);
     }
     if (m_vertexDesc.HasPosition4())
     {
-        contract.Position4s() = GetPosition4Array(m_vtxUsedCount);
+        dto.Position4s() = GetPosition4Array(m_vtxUsedCount);
     }
     if (m_vertexDesc.HasNormal())
     {
-        contract.Normals() = GetVertexNormalArray(m_vtxUsedCount);
+        dto.Normals() = GetVertexNormalArray(m_vtxUsedCount);
     }
     if (m_vertexDesc.HasDiffuseColor(VertexDescription::ColorNumeric::Float))
     {
-        contract.DiffuseColors() = GetDiffuseColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
+        dto.DiffuseColors() = GetDiffuseColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
     }
     if (m_vertexDesc.HasSpecularColor(VertexDescription::ColorNumeric::Float))
     {
-        contract.SpecularColors() = GetSpecularColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
+        dto.SpecularColors() = GetSpecularColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
     }
     for (unsigned i = 0; i < VertexFormatCode::MAX_TEX_COORD; i++)
     {
-        TextureCoordContract texture_coord_contract;
+        TextureCoordDto texture_coord_dto;
         if (m_vertexDesc.HasTextureCoord(i, 2))
         {
-            texture_coord_contract.Texture2DCoords() = GetTexture2DCoordArray(i, m_vtxUsedCount);
+            texture_coord_dto.Texture2DCoords() = GetTexture2DCoordArray(i, m_vtxUsedCount);
         }
         else if (m_vertexDesc.HasTextureCoord(i, 1))
         {
-            texture_coord_contract.Texture1DCoords() = GetTexture1DCoordArray(i, m_vtxUsedCount);
+            texture_coord_dto.Texture1DCoords() = GetTexture1DCoordArray(i, m_vtxUsedCount);
         }
         else if (m_vertexDesc.HasTextureCoord(i, 3))
         {
-            texture_coord_contract.Texture3DCoords() = GetTexture3DCoordArray(i, m_vtxUsedCount);
+            texture_coord_dto.Texture3DCoords() = GetTexture3DCoordArray(i, m_vtxUsedCount);
         }
         else
         {
             break;
         }
-        contract.TextureCoords().push_back(texture_coord_contract.ToContract());
+        dto.TextureCoords().push_back(texture_coord_dto.ToGenericDto());
     }
     if (m_vertexDesc.HasPaletteIndex())
     {
-        contract.PaletteIndices() = GetPaletteIndexArray(m_vtxUsedCount);
+        dto.PaletteIndices() = GetPaletteIndexArray(m_vtxUsedCount);
     }
     if (m_vertexDesc.HasBlendWeight())
     {
-        contract.Weights() = GetTotalSkinWeightArray(m_vtxUsedCount);
+        dto.Weights() = GetTotalSkinWeightArray(m_vtxUsedCount);
     }
     if (m_vertexDesc.HasTangent())
     {
-        contract.Tangents() = GetVertexTangentArray(m_vtxUsedCount);
+        dto.Tangents() = GetVertexTangentArray(m_vtxUsedCount);
     }
     if (!m_indexMemory.empty())
     {
-        contract.Indices() = GetIndexMemory();
+        dto.Indices() = GetIndexMemory();
     }
-    contract.GeometryBound() = m_geometryBound.SerializeContract().ToContract();
+    dto.GeometryBound() = m_geometryBound.SerializeDto().ToGenericDto();
 
-    return contract;
+    return dto;
 }
 
 error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string, unsigned vtx_capa, unsigned vtx_count, unsigned idx_capa, unsigned idx_count)

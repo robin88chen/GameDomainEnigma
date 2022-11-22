@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   Contract.h
- * \brief  合約物件，存放屬性與資料組，給合約工廠建立物件
+ * \file   GenericDto.h
+ * \brief  一般化的 DTO 物件，存放屬性與資料組，特化後的DTO轉給工廠建立物件
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
-#ifndef CONTRACT_H
-#define CONTRACT_H
+#ifndef GENERIC_DTO_H
+#define GENERIC_DTO_H
 
 #include "FactoryDesc.h"
 #include "Frameworks/ruid.h"
@@ -18,20 +18,20 @@
 
 namespace Enigma::Engine
 {
-    class Contract
+    class GenericDto
     {
     public:
         using AttributeValues = std::unordered_map<std::string, std::any>;
 
     public:
-        Contract();
-        ~Contract();
-        Contract(const Contract& c) = default;
-        Contract(Contract&& c) = default;
-        Contract& operator=(const Contract& c) = default;
-        Contract& operator=(Contract&& c) = default;
+        GenericDto();
+        ~GenericDto();
+        GenericDto(const GenericDto& c) = default;
+        GenericDto(GenericDto&& c) = default;
+        GenericDto& operator=(const GenericDto& c) = default;
+        GenericDto& operator=(GenericDto&& c) = default;
 
-        bool operator==(const Contract&) const;
+        bool operator==(const GenericDto&) const;
 
         const Frameworks::Ruid& GetId() const { return m_ruid; }
 
@@ -98,4 +98,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // CONTRACT_H
+#endif // GENERIC_DTO_H

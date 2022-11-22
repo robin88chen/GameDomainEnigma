@@ -1,29 +1,29 @@
 ﻿/*********************************************************************
- * \file   BoundingVolumeContract.h
+ * \file   BoundingVolumeDto.h
  * \brief  for serializing
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
-#ifndef _BOUNDING_VOLUME_CONTRACT_H
-#define _BOUNDING_VOLUME_CONTRACT_H
+#ifndef _BOUNDING_VOLUME_DTO_H
+#define _BOUNDING_VOLUME_DTO_H
 
 #include "MathLib/Box3.h"
 #include "MathLib/Sphere3.h"
-#include "Contract.h"
+#include "GenericDto.h"
 #include <optional>
 
 namespace Enigma::Engine
 {
-    class BoundingVolumeContract
+    class BoundingVolumeDto
     {
     public:
-        BoundingVolumeContract() = default;
-        BoundingVolumeContract(const std::optional<MathLib::Box3>& box, const std::optional<MathLib::Sphere3>& sphere) :
+        BoundingVolumeDto() = default;
+        BoundingVolumeDto(const std::optional<MathLib::Box3>& box, const std::optional<MathLib::Sphere3>& sphere) :
             m_box(box), m_sphere(sphere) {};
 
-        static BoundingVolumeContract FromContract(const Contract& contract);
-        Contract ToContract() const;
+        static BoundingVolumeDto FromGenericDto(const GenericDto& dto);
+        GenericDto ToGenericDto() const;
 
         std::optional<MathLib::Box3> Box() const { return m_box; }
         std::optional<MathLib::Sphere3> Sphere() const { return m_sphere; }
@@ -34,4 +34,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // _BOUNDING_VOLUME_CONTRACT_H
+#endif // _BOUNDING_VOLUME_DTO_H

@@ -1,34 +1,34 @@
 ﻿/*********************************************************************
- * \file   ContractEvents.h
+ * \file   DtoEvents.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
-#ifndef CONTRACT_EVENTS_H
-#define CONTRACT_EVENTS_H
+#ifndef DTO_EVENTS_H
+#define DTO_EVENTS_H
 
 #include "Frameworks/Event.h"
 #include "Frameworks/ruid.h"
-#include "Contract.h"
+#include "GenericDto.h"
 
 namespace Enigma::Engine
 {
-    class ContractDeserialized : public Frameworks::IEvent
+    class GenericDtoDeserialized : public Frameworks::IEvent
     {
     public:
-        ContractDeserialized(const Frameworks::Ruid& ruid, const std::vector<Contract>& contracts) :
-            m_ruid(ruid), m_contracts(contracts) {};
+        GenericDtoDeserialized(const Frameworks::Ruid& ruid, const std::vector<GenericDto>& dtos) :
+            m_ruid(ruid), m_dtos(dtos) {};
         const Frameworks::Ruid& GetRuid() { return m_ruid; }
-        const std::vector<Contract>& GetContracts() { return m_contracts; }
+        const std::vector<GenericDto>& GetDtos() { return m_dtos; }
     private:
         Frameworks::Ruid m_ruid;
-        std::vector<Contract> m_contracts;
+        std::vector<GenericDto> m_dtos;
     };
-    class DeserializeContractFailed : public Frameworks::IEvent
+    class DeserializeDtoFailed : public Frameworks::IEvent
     {
     public:
-        DeserializeContractFailed(const Frameworks::Ruid& ruid, std::error_code er) :
+        DeserializeDtoFailed(const Frameworks::Ruid& ruid, std::error_code er) :
             m_ruid(ruid), m_error(er) {};
         const Frameworks::Ruid& GetRuid() { return m_ruid; }
         std::error_code GetErrorCode() const { return m_error; }
@@ -38,4 +38,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // CONTRACT_EVENTS_H
+#endif // DTO_EVENTS_H

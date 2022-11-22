@@ -9,7 +9,7 @@
 #define _TRIANGLE_LIST_H
 
 #include "GeometryData.h"
-#include "GeometryDataContract.h"
+#include "GeometryDataDto.h"
 #include <memory>
 
 namespace Enigma::Engine
@@ -21,14 +21,14 @@ namespace Enigma::Engine
         DECLARE_EN_RTTI;
     public:
         TriangleList(const std::string& name);
-        TriangleList(const TriangleListContract& contract);
+        TriangleList(const TriangleListDto& dto);
         TriangleList(const TriangleList&) = delete;
         TriangleList(TriangleList&&) = delete;
         virtual ~TriangleList();
         TriangleList& operator=(const TriangleList&) = delete;
         TriangleList& operator=(TriangleList&&) = delete;
 
-        virtual Contract SerializeContract() override;
+        virtual GenericDto SerializeDto() override;
 
         unsigned int GetTriangleCount();
         void FetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);

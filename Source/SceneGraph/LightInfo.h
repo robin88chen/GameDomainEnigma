@@ -13,7 +13,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class LightInfoContract;
+    class LightInfoDto;
 
     class LightInfo
     {
@@ -33,14 +33,14 @@ namespace Enigma::SceneGraph
     public:
         LightInfo();
         LightInfo(LightType type);
-        LightInfo(const LightInfoContract& contract);
+        LightInfo(const LightInfoDto& dto);
         LightInfo(const LightInfo&) = default;
         LightInfo(LightInfo&&) = default;
         virtual ~LightInfo() = default;
         LightInfo& operator=(const LightInfo&) = default;
         LightInfo& operator=(LightInfo&&) = default;
 
-        LightInfoContract SerializeContract();
+        LightInfoDto SerializeDto();
 
         LightType GetLightType() const { return m_type; };
 

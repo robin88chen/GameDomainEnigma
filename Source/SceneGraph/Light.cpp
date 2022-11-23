@@ -1,9 +1,9 @@
 ﻿#include "Light.h"
 #include "LightInfo.h"
-#include "LightInfoContracts.h"
+#include "LightInfoDtos.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphContracts.h"
+#include "SceneGraphDtos.h"
 #include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;
@@ -15,9 +15,9 @@ Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spati
 {
 }
 
-Light::Light(const LightContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
+Light::Light(const LightDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
 {
-    m_lightInfo = LightInfo(LightInfoContract::FromContract(contract.LightInfo()));
+    m_lightInfo = LightInfo(LightInfoDto::FromGenericDto(dto.LightInfo()));
 }
 
 Light::~Light()
@@ -25,11 +25,11 @@ Light::~Light()
     Frameworks::EventPublisher::Post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
 }
 
-Enigma::Engine::Contract Light::SerializeContract()
+Enigma::Engine::GenericDto Light::SerializeDto()
 {
-    LightContract contract(SerializeSpatialContract());
-    contract.LightInfo() = m_lightInfo.SerializeContract().ToContract();
-    return contract.ToContract();
+    LightDto dto(SerializeSpatialDto());
+    dto.LightInfo() = m_lightInfo.SerializeDto().ToGenericDto();
+    return dto.ToGenericDto();
 }
 
 error Light::OnCullingVisible(Culler*, bool)

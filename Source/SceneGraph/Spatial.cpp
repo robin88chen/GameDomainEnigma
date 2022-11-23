@@ -3,7 +3,7 @@
 #include "SceneGraphErrors.h"
 #include "Culler.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphContracts.h"
+#include "SceneGraphDtos.h"
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
@@ -41,17 +41,17 @@ Spatial::Spatial(const std::string& name)
     m_notifyFlags = Notify_None;
 }
 
-Spatial::Spatial(const SpatialContract& contract)
+Spatial::Spatial(const SpatialDto& dto)
 {
-    m_name = contract.Name();
-    m_graphDepth = contract.GraphDepth();
-    m_cullingMode = static_cast<CullingMode>(contract.CullingMode());
-    m_spatialFlags = contract.SpatialFlag();
-    m_notifyFlags = contract.NotifyFlag();
-    m_mxLocalTransform = contract.LocalTransform();
-    m_mxWorldTransform = contract.WorldTransform();
-    m_modelBound = Engine::BoundingVolume(Engine::BoundingVolumeContract::FromContract(contract.ModelBound()));
-    m_worldBound = Engine::BoundingVolume(Engine::BoundingVolumeContract::FromContract(contract.WorldBound()));
+    m_name = dto.Name();
+    m_graphDepth = dto.GraphDepth();
+    m_cullingMode = static_cast<CullingMode>(dto.CullingMode());
+    m_spatialFlags = dto.SpatialFlag();
+    m_notifyFlags = dto.NotifyFlag();
+    m_mxLocalTransform = dto.LocalTransform();
+    m_mxWorldTransform = dto.WorldTransform();
+    m_modelBound = Engine::BoundingVolume(Engine::BoundingVolumeDto::FromGenericDto(dto.ModelBound()));
+    m_worldBound = Engine::BoundingVolume(Engine::BoundingVolumeDto::FromGenericDto(dto.WorldBound()));
 
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
@@ -66,24 +66,24 @@ Spatial::~Spatial()
     //m_spatialRenderState = nullptr;
 }
 
-Enigma::Engine::Contract Spatial::SerializeContract()
+Enigma::Engine::GenericDto Spatial::SerializeDto()
 {
-    return SerializeSpatialContract().ToContract();
+    return SerializeSpatialDto().ToGenericDto();
 }
 
-SpatialContract Spatial::SerializeSpatialContract()
+SpatialDto Spatial::SerializeSpatialDto()
 {
-    SpatialContract contract;
-    contract.Name() = m_name;
-    contract.GraphDepth() = m_graphDepth;
-    contract.CullingMode() = static_cast<unsigned int>(m_cullingMode);
-    contract.SpatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
-    contract.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
-    contract.LocalTransform() = m_mxLocalTransform;
-    contract.WorldTransform() = m_mxWorldTransform;
-    contract.ModelBound() = m_modelBound.SerializeContract().ToContract();
-    contract.WorldBound() = m_worldBound.SerializeContract().ToContract();
-    return contract;
+    SpatialDto dto;
+    dto.Name() = m_name;
+    dto.GraphDepth() = m_graphDepth;
+    dto.CullingMode() = static_cast<unsigned int>(m_cullingMode);
+    dto.SpatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
+    dto.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
+    dto.LocalTransform() = m_mxLocalTransform;
+    dto.WorldTransform() = m_mxWorldTransform;
+    dto.ModelBound() = m_modelBound.SerializeDto().ToGenericDto();
+    dto.WorldBound() = m_worldBound.SerializeDto().ToGenericDto();
+    return dto;
 }
 
 void Spatial::LinkParent(const std::shared_ptr<Spatial>& parent)

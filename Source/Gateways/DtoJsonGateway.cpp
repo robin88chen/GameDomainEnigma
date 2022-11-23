@@ -1,4 +1,4 @@
-﻿#include "ContractJsonGateway.h"
+﻿#include "DtoJsonGateway.h"
 #include "Frameworks/StringFormat.h"
 #include "GameEngine/FactoryDesc.h"
 #include "rapidjson/document.h"
@@ -16,7 +16,7 @@
 
 constexpr const char* TYPE_TOKEN = "Type";
 constexpr const char* VALUE_TOKEN = "Value";
-constexpr const char* CONTRACT_TOKEN = "Contract";
+constexpr const char* DATA_OBJECT_TOKEN = "DataObject";
 constexpr const char* UINT64_TOKEN = "Uint64";
 constexpr const char* UINT32_TOKEN = "Uint32";
 constexpr const char* FLOAT_TOKEN = "Float";
@@ -47,8 +47,8 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------
-static Contract DeserializeContract(const rapidjson::Value& value);
-static void DeserializeAttribute(Contract& contract, const std::string& attribute, const rapidjson::Value& value);
+static GenericDto DeserializeDto(const rapidjson::Value& value);
+static void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const rapidjson::Value& value);
 static FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
 static std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
 static std::uint32_t DeserializeUInt32(const rapidjson::Value& value);
@@ -69,7 +69,7 @@ static std::vector<Vector3> DeserializeVector3Array(const rapidjson::Value& valu
 static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& value);
 static std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value);
 //------------------------------------------------------------------------
-static rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeUInt64(const std::uint64_t n);
@@ -91,39 +91,39 @@ static rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, 
 static rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeMatrix4Array(const std::vector<Matrix4>& mxs, rapidjson::MemoryPoolAllocator<>& allocator);
 
-std::vector<Contract> ContractJsonGateway::Deserialize(const std::string& json)
+std::vector<GenericDto> DtoJsonGateway::Deserialize(const std::string& json)
 {
-    std::vector<Contract> contracts;
+    std::vector<GenericDto> dtos;
     rapidjson::Document json_doc;
     json_doc.Parse<0>(json.c_str());
     if (FATAL_LOG_EXPR(json_doc.HasParseError()))
     {
         std::string ss = string_format("error %d, @ %d", json_doc.GetParseError(), json_doc.GetErrorOffset());
         LOG(Info, ss);
-        return contracts;
+        return dtos;
     }
     if (FATAL_LOG_EXPR(!json_doc.IsArray()))
     {
         std::string ss = string_format("json is not a contract array");
         LOG(Info, ss);
-        return contracts;
+        return dtos;
     }
     for (auto json_it = json_doc.GetArray().Begin(); json_it != json_doc.GetArray().End(); ++json_it)
     {
-        contracts.emplace_back(DeserializeContract(*json_it));
+        dtos.emplace_back(DeserializeDto(*json_it));
     }
 
-    return contracts;
+    return dtos;
 }
 
-std::string ContractJsonGateway::Serialize(const std::vector<Contract>& contracts)
+std::string DtoJsonGateway::Serialize(const std::vector<GenericDto>& dtos)
 {
-    if (contracts.empty()) return "";
+    if (dtos.empty()) return "";
     rapidjson::Document json_doc;
     json_doc.SetArray();
-    for (auto contract : contracts)
+    for (auto dto : dtos)
     {
-        json_doc.PushBack(SerializeContract(contract, json_doc.GetAllocator()), json_doc.GetAllocator());
+        json_doc.PushBack(SerializeDto(dto, json_doc.GetAllocator()), json_doc.GetAllocator());
     }
 
     rapidjson::StringBuffer buf;
@@ -135,62 +135,62 @@ std::string ContractJsonGateway::Serialize(const std::vector<Contract>& contract
 }
 
 //-------------------------------------------------------------------------
-Contract DeserializeContract(const rapidjson::Value& value_ob)
+GenericDto DeserializeDto(const rapidjson::Value& value_ob)
 {
-    Contract contract;
+    GenericDto dto;
     for (auto json_it = value_ob.MemberBegin(); json_it != value_ob.MemberEnd(); ++json_it)
     {
         if (json_it->value.IsNull()) continue;
-        DeserializeAttribute(contract, json_it->name.GetString(), json_it->value);
+        DeserializeAttribute(dto, json_it->name.GetString(), json_it->value);
     }
-    return contract;
+    return dto;
 }
 
-void DeserializeAttribute(Contract& contract, const std::string& attribute, const rapidjson::Value& value)
+void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const rapidjson::Value& value)
 {
     if (!value.HasMember(TYPE_TOKEN)) return;
     if (!value.HasMember(VALUE_TOKEN)) return;
     std::string type = value[TYPE_TOKEN].GetString();
-    if (type == CONTRACT_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeContract(value[VALUE_TOKEN]));
+    if (type == DATA_OBJECT_TOKEN)
+        dto.AddOrUpdate(attribute, DeserializeDto(value[VALUE_TOKEN]));
     else if (type == FACTORY_DESC_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
     else if (type == UINT64_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
     else if (type == UINT32_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
     else if (type == FLOAT_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeFloat(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeFloat(value[VALUE_TOKEN]));
     else if (type == STRING_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
     else if (type == BOOLEAN_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
     else if (type == COLOR_RGBA_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeColorRGBA(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeColorRGBA(value[VALUE_TOKEN]));
     else if (type == COLOR_RGB_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeColorRGB(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeColorRGB(value[VALUE_TOKEN]));
     else if (type == VECTOR2_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector2(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector2(value[VALUE_TOKEN]));
     else if (type == VECTOR3_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector3(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector3(value[VALUE_TOKEN]));
     else if (type == VECTOR4_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector4(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector4(value[VALUE_TOKEN]));
     else if (type == BOX3_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeBox3(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeBox3(value[VALUE_TOKEN]));
     else if (type == MATRIX4_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeMatrix4(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeMatrix4(value[VALUE_TOKEN]));
     else if (type == STRING_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
     else if (type == UINT32_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
     else if (type == VECTOR2_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
     else if (type == VECTOR3_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector3Array(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector3Array(value[VALUE_TOKEN]));
     else if (type == VECTOR4_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeVector4Array(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeVector4Array(value[VALUE_TOKEN]));
     else if (type == MATRIX4_ARRAY_TOKEN)
-        contract.AddOrUpdate(attribute, DeserializeMatrix4Array(value[VALUE_TOKEN]));
+        dto.AddOrUpdate(attribute, DeserializeMatrix4Array(value[VALUE_TOKEN]));
 }
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
@@ -384,11 +384,11 @@ std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value)
 }
 
 //--------------------------------------------------------------------------
-rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator)
 {
-    if (contract.IsEmpty()) return rapidjson::Value();
+    if (dto.IsEmpty()) return rapidjson::Value();
     rapidjson::Value json{ rapidjson::kObjectType };
-    for (auto it : contract)
+    for (auto it : dto)
     {
         json.AddMember(SerializeString(it.first, allocator), SerializeObject(it.second, allocator), allocator);
     }
@@ -399,11 +399,11 @@ rapidjson::Value SerializeContract(const Contract& contract, rapidjson::MemoryPo
 rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value node{ rapidjson::kObjectType };
-    if (any_ob.type() == typeid(Contract))
+    if (any_ob.type() == typeid(GenericDto))
     {
-        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(CONTRACT_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(DATA_OBJECT_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
-            SerializeContract(std::any_cast<Contract>(any_ob), allocator), allocator);
+            SerializeDto(std::any_cast<GenericDto>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(FactoryDesc))
     {

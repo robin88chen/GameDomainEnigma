@@ -18,21 +18,21 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
-    class LightContract;
+    class LightDto;
 
     class Light : public Spatial
     {
         DECLARE_EN_RTTI
     public:
         Light(const std::string& spatialName, const LightInfo& lightInfo);
-        Light(const LightContract& contract);
+        Light(const LightDto& dto);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
         virtual ~Light() override;
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
 
-        virtual Engine::Contract SerializeContract() override;
+        virtual Engine::GenericDto SerializeDto() override;
 
         const LightInfo& Info() const { return m_lightInfo; };
         LightInfo& Info() { return m_lightInfo; }

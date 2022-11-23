@@ -1,30 +1,30 @@
 ﻿/*********************************************************************
- * \file   LightInfoContracts.h
+ * \file   LightInfoDtos.h
  * \brief  Light Info Policy
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
-#ifndef LIGHT_INFO_CONTRACTS_H
-#define LIGHT_INFO_CONTRACTS_H
+#ifndef LIGHT_INFO_DTOS_H
+#define LIGHT_INFO_DTOS_H
 
 #include "LightInfo.h"
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector3.h"
-#include "GameEngine/Contract.h"
+#include "GameEngine/GenericDto.h"
 #include <optional>
 
 namespace Enigma::SceneGraph
 {
-    class LightInfoContract
+    class LightInfoDto
     {
     public:
-        LightInfoContract();
-        LightInfoContract(const LightInfoContract&) = default;
-        LightInfoContract(LightInfoContract&&) = default;
-        ~LightInfoContract() = default;
-        LightInfoContract& operator=(const LightInfoContract&) = default;
-        LightInfoContract& operator=(LightInfoContract&&) = default;
+        LightInfoDto();
+        LightInfoDto(const LightInfoDto&) = default;
+        LightInfoDto(LightInfoDto&&) = default;
+        ~LightInfoDto() = default;
+        LightInfoDto& operator=(const LightInfoDto&) = default;
+        LightInfoDto& operator=(LightInfoDto&&) = default;
 
         LightInfo::LightType& LightType() { return m_type; }
         [[nodiscard]] LightInfo::LightType LightType() const { return m_type; }
@@ -41,8 +41,8 @@ namespace Enigma::SceneGraph
         bool& IsEnable() { return m_isEnable; }
         [[nodiscard]] bool IsEnable() const { return m_isEnable; }
 
-        static LightInfoContract FromContract(const Engine::Contract& contract);
-        Engine::Contract ToContract();
+        static LightInfoDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     private:
         LightInfo::LightType m_type;
@@ -55,4 +55,4 @@ namespace Enigma::SceneGraph
     };
 }
 
-#endif // LIGHT_INFO_CONTRACTS_H
+#endif // LIGHT_INFO_DTOS_H

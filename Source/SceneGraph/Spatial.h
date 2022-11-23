@@ -27,7 +27,7 @@ namespace Enigma::SceneGraph
     using error = std::error_code;
     class Culler;
     class Node;
-    class SpatialContract;
+    class SpatialDto;
 
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
@@ -69,14 +69,14 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const std::string& name);
-        Spatial(const SpatialContract& contract);
+        Spatial(const SpatialDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
-        virtual Engine::Contract SerializeContract();
+        virtual Engine::GenericDto SerializeDto();
 
         const std::string& GetSpatialName() const { return m_name; };
 
@@ -232,7 +232,7 @@ namespace Enigma::SceneGraph
         }
 
     protected:
-        SpatialContract SerializeSpatialContract();
+        SpatialDto SerializeSpatialDto();
 
     protected:
         std::string m_name;

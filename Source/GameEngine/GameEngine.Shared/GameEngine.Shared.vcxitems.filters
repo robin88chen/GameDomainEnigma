@@ -43,15 +43,6 @@
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contracts">
-      <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Contracts\BV Contract">
-      <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Contracts\Geometry Contract">
-      <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Geometry Repository">
       <UniqueIdentifier>{a1a7b622-6eb9-4187-a2fd-1ed4ac1333b9}</UniqueIdentifier>
     </Filter>
@@ -60,6 +51,15 @@
     </Filter>
     <Filter Include="Geometry Repository\Geometry Datas\Policy">
       <UniqueIdentifier>{108a32c0-3939-481c-a9c3-84d22d345a4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs">
+      <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs\BV Dto">
+      <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs\Geometry Dto">
+      <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,29 +174,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h">
-      <Filter>Contracts\BV Contract</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
-      <Filter>Contracts</Filter>
+      <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
       <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h">
-      <Filter>Contracts\Geometry Contract</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h">
       <Filter>Geometry Repository\Geometry Datas</Filter>
@@ -207,17 +192,32 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h">
       <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractDeserializer.h">
-      <Filter>Contracts</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
       <Filter>Geometry Repository</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractEvents.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h">
+      <Filter>DTOs\BV Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
+      <Filter>DTOs\Geometry Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -296,20 +296,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
       <Filter>Effect Material</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp">
-      <Filter>Contracts</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp">
-      <Filter>Contracts</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp">
-      <Filter>Contracts\BV Contract</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
       <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp">
-      <Filter>Contracts\Geometry Contract</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp">
       <Filter>Geometry Repository\Geometry Datas</Filter>
@@ -318,10 +306,22 @@
       <Filter>Geometry Repository</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp">
-      <Filter>Contracts</Filter>
+      <Filter>DTOs</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp">
       <Filter>Geometry Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp">
+      <Filter>DTOs\BV Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
+      <Filter>DTOs\Geometry Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp">
+      <Filter>DTOs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp">
+      <Filter>DTOs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace Enigma::SceneGraph
 {
     class Spatial;
 
-    class SpatialLinkageResolver : public Engine::ContractedLinkageResolver<Spatial>
+    class SpatialLinkageResolver : public Engine::FactoryLinkageResolver<Spatial>
     {
     public:
         SpatialLinkageResolver();
@@ -29,10 +29,10 @@ namespace Enigma::SceneGraph
         void ClearResolvers();
 
     protected:
-        void OnContractedSpatialCreated(const Frameworks::IEventPtr& e);
+        void OnFactorySpatialCreated(const Frameworks::IEventPtr& e);
 
     protected:
-        Frameworks::EventSubscriberPtr m_onContractedSpatialCreated;
+        Frameworks::EventSubscriberPtr m_onFactorySpatialCreated;
     };
 }
 

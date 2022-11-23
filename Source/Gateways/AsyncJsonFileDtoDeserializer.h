@@ -1,24 +1,24 @@
 ﻿/*********************************************************************
- * \file   AsyncJsonFileContractDeserializer.h
+ * \file   AsyncJsonFileDtoDeserializer.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
-#ifndef _ASYNC_JSON_FILE_CONTRACT_DESERIALIZER_H
-#define _ASYNC_JSON_FILE_CONTRACT_DESERIALIZER_H
+#ifndef _ASYNC_JSON_FILE_DTO_DESERIALIZER_H
+#define _ASYNC_JSON_FILE_DTO_DESERIALIZER_H
 
 #include <string>
 #include <future>
-#include "GameEngine/ContractDeserializer.h"
+#include "GameEngine/DtoDeserializer.h"
 
 namespace Enigma::Gateways
 {
-    class AsyncJsonFileContractDeserializer : public Engine::IContractDeserializer
+    class AsyncJsonFileDtoDeserializer : public Engine::IDtoDeserializer
     {
     public:
-        AsyncJsonFileContractDeserializer();
-        ~AsyncJsonFileContractDeserializer() override;
+        AsyncJsonFileDtoDeserializer();
+        ~AsyncJsonFileDtoDeserializer() override;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
     protected:

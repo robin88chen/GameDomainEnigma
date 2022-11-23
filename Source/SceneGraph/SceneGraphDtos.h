@@ -1,24 +1,24 @@
 ﻿/*********************************************************************
- * \file   SceneGraphContracts.h
+ * \file   SceneGraphDtos.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
-#ifndef SCENE_GRAPH_CONTRACTS_H
-#define SCENE_GRAPH_CONTRACTS_H
+#ifndef SCENE_GRAPH_DTOS_H
+#define SCENE_GRAPH_DTOS_H
 
 #include "MathLib/Matrix4.h"
-#include "GameEngine/BoundingVolumeContract.h"
+#include "GameEngine/BoundingVolumeDto.h"
 #include <string>
 #include <vector>
 
 namespace Enigma::SceneGraph
 {
-    class SpatialContract
+    class SpatialDto
     {
     public:
-        SpatialContract() = default;
+        SpatialDto() = default;
 
         [[nodiscard]] bool IsTopLevel() const { return m_isTopLevel; }
         bool& IsTopLevel() { return m_isTopLevel; }
@@ -30,10 +30,10 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4& WorldTransform() { return m_worldTransform; }
         [[nodiscard]] unsigned int GraphDepth() const { return m_graphDepth; }
         unsigned int& GraphDepth() { return m_graphDepth; }
-        [[nodiscard]] Engine::Contract ModelBound() const { return m_modelBound; }
-        Engine::Contract& ModelBound() { return m_modelBound; }
-        [[nodiscard]] Engine::Contract WorldBound() const { return m_worldBound; }
-        Engine::Contract& WorldBound() { return m_worldBound; }
+        [[nodiscard]] Engine::GenericDto ModelBound() const { return m_modelBound; }
+        Engine::GenericDto& ModelBound() { return m_modelBound; }
+        [[nodiscard]] Engine::GenericDto WorldBound() const { return m_worldBound; }
+        Engine::GenericDto& WorldBound() { return m_worldBound; }
         [[nodiscard]] unsigned int CullingMode() const { return m_cullingMode; }
         unsigned int& CullingMode() { return m_cullingMode; }
         [[nodiscard]] unsigned int SpatialFlag() const { return m_spatialFlag; }
@@ -41,8 +41,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] unsigned int NotifyFlag() const { return m_notifyFlag; }
         unsigned int& NotifyFlag() { return m_notifyFlag; }
 
-        static SpatialContract FromContract(const Engine::Contract& contract);
-        Engine::Contract ToContract();
+        static SpatialDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     protected:
         bool m_isTopLevel;
@@ -50,44 +50,44 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4 m_localTransform;
         MathLib::Matrix4 m_worldTransform;
         unsigned int m_graphDepth;
-        Engine::Contract m_modelBound;
-        Engine::Contract m_worldBound;
+        Engine::GenericDto m_modelBound;
+        Engine::GenericDto m_worldBound;
         unsigned int m_cullingMode;
         unsigned int m_spatialFlag;
         unsigned int m_notifyFlag;
     };
 
-    class NodeContract : public SpatialContract
+    class NodeDto : public SpatialDto
     {
     public:
-        NodeContract() = default;
-        NodeContract(const SpatialContract& spatial_contract);
+        NodeDto() = default;
+        NodeDto(const SpatialDto& spatial_dto);
 
         const std::vector<std::string>& ChildNames() const { return m_childNames; }
         std::vector<std::string>& ChildNames() { return m_childNames; }
 
-        static NodeContract FromContract(const Engine::Contract& contract);
-        Engine::Contract ToContract();
+        static NodeDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     protected:
         std::vector<std::string> m_childNames;
     };
 
-    class LightContract : public SpatialContract
+    class LightDto : public SpatialDto
     {
     public:
-        LightContract() = default;
-        LightContract(const SpatialContract& spatial_contract);
+        LightDto() = default;
+        LightDto(const SpatialDto& spatial_dto);
 
-        [[nodiscard]] Engine::Contract LightInfo() const { return m_lightInfo; }
-        Engine::Contract& LightInfo() { return m_lightInfo; }
+        [[nodiscard]] Engine::GenericDto LightInfo() const { return m_lightInfo; }
+        Engine::GenericDto& LightInfo() { return m_lightInfo; }
 
-        static LightContract FromContract(const Engine::Contract& contract);
-        Engine::Contract ToContract();
+        static LightDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     protected:
-        Engine::Contract m_lightInfo;
+        Engine::GenericDto m_lightInfo;
     };
 }
 
-#endif // SCENE_GRAPH_CONTRACTS_H
+#endif // SCENE_GRAPH_DTOS_H

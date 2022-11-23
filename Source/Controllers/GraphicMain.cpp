@@ -12,7 +12,7 @@
 #include "GameEngine/MaterialVariableMap.h"
 #include "GameEngine/RenderBufferRepository.h"
 #include "GameEngine/TextureRepository.h"
-#include "GameEngine/ContractedFactories.h"
+#include "GameEngine/GenericDtoFactories.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GeometryRepository.h"
 #include "ControllerErrors.h"
@@ -130,7 +130,7 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
         if (er) return er;
     }
 
-    m_serviceManager->RegisterSystemService(menew Engine::ContractedFactories(m_serviceManager));
+    m_serviceManager->RegisterSystemService(menew Engine::GenericDtoFactories(m_serviceManager));
 
     er = InstallGeometryManagers();
     if (er) return er;
@@ -162,7 +162,7 @@ error GraphicMain::ShutdownDefaultRenderer()
     er = ShutdownGeometryManagers();
     if (er) return er;
 
-    m_serviceManager->ShutdownSystemService(Engine::ContractedFactories::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Engine::GenericDtoFactories::TYPE_RTTI);
 
     if (policy->GetDeviceCreatingPolicy())
     {

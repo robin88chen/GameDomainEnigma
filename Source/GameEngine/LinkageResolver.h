@@ -19,12 +19,12 @@ namespace Enigma::Engine
     template <class T> using LinkageResolver = std::function<void(const std::shared_ptr<T>& spawned)>;
     template <class T> using FactoryQuery = std::function<std::shared_ptr<T>(const std::string& name)>;
 
-    template <class T> class ContractedLinkageResolver
+    template <class T> class FactoryLinkageResolver
     {
     public:
-        ContractedLinkageResolver() = default;
-        ContractedLinkageResolver(const FactoryQuery<T>& query) : m_query(query) {}
-        ~ContractedLinkageResolver() = default;
+        FactoryLinkageResolver() = default;
+        FactoryLinkageResolver(const FactoryQuery<T>& query) : m_query(query) {}
+        ~FactoryLinkageResolver() = default;
 
         void TryResolveLinkage(const std::string& name, const LinkageResolver<T>& resolver)
         {

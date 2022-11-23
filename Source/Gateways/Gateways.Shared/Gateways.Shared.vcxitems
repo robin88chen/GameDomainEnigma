@@ -14,15 +14,15 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.cpp" />
   </ItemGroup>
 </Project>

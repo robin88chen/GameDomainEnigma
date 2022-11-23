@@ -3,12 +3,12 @@
 #include "SceneGraphRepository.h"
 #include "Node.h"
 #include "Light.h"
-#include "SceneGraphContracts.h"
+#include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "GameEngine/ContractCommands.h"
+#include "GameEngine/FactoryCommands.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::SceneGraph;
@@ -21,69 +21,72 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host)
     m_resolver = menew SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial>
         { return m_host->QuerySpatial(n); });
 
-    m_onContractedCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnContractedCreated(e); });
-    EventPublisher::Subscribe(typeid(ContractedSpatialCreated), m_onContractedCreated);
+    m_onFactoryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryCreated(e); });
+    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
 
-    CommandBus::Post(std::make_shared<RegisterContractFactory>(Node::TYPE_RTTI.GetName(),
-        [=](auto c) { this->NodeContractFactory(c); }));
-    CommandBus::Post(std::make_shared<RegisterContractFactory>(Light::TYPE_RTTI.GetName(),
-        [=](auto c) { this->LightContractFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(Node::TYPE_RTTI.GetName(),
+        [=](auto c) { this->NodeFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(Light::TYPE_RTTI.GetName(),
+        [=](auto c) { this->LightFactory(c); }));
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
-    EventPublisher::Unsubscribe(typeid(ContractedSpatialCreated), m_onContractedCreated);
-    m_onContractedCreated = nullptr;
+    CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Node::TYPE_RTTI.GetName()));
+    CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Light::TYPE_RTTI.GetName()));
+
+    EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
+    m_onFactoryCreated = nullptr;
 
     delete m_resolver;
 }
 
-void SceneGraphBuilder::NodeContractFactory(const Contract& contract)
+void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
 {
-    if (contract.GetRtti().GetRttiName() != Node::TYPE_RTTI.GetName())
+    if (dto.GetRtti().GetRttiName() != Node::TYPE_RTTI.GetName())
     {
-        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for node factory", contract.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    NodeContract node_contract = NodeContract::FromContract(contract);
-    assert(!m_host->HasNode(node_contract.Name()));
-    auto node = m_host->CreateNode(node_contract);
-    node->ResolveContractedLinkage(node_contract, *m_resolver);
-    EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(contract, node));
+    NodeDto node_dto = NodeDto::FromGenericDto(dto);
+    assert(!m_host->HasNode(node_dto.Name()));
+    auto node = m_host->CreateNode(node_dto);
+    node->ResolveFactoryLinkage(node_dto, *m_resolver);
+    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
 }
 
-void SceneGraphBuilder::LightContractFactory(const Engine::Contract& contract)
+void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
 {
-    if (contract.GetRtti().GetRttiName() != Light::TYPE_RTTI.GetName())
+    if (dto.GetRtti().GetRttiName() != Light::TYPE_RTTI.GetName())
     {
-        Platforms::Debug::ErrorPrintf("wrong contract rtti %s for light factory", contract.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    LightContract light_contract = LightContract::FromContract(contract);
-    assert(!m_host->HasLight(light_contract.Name()));
-    auto light = m_host->CreateLight(light_contract);
-    EventPublisher::Post(std::make_shared<ContractedSpatialCreated>(contract, light));
+    LightDto light_dto = LightDto::FromGenericDto(dto);
+    assert(!m_host->HasLight(light_dto.Name()));
+    auto light = m_host->CreateLight(light_dto);
+    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
-void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::Contract>& contracts)
+void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos)
 {
     if (m_resolver) m_resolver->ClearResolvers();
     m_builtSceneGraphMeta = BuiltSceneGraphMeta{ scene_graph_id, {} };
-    for (auto& cont : contracts)
+    for (auto& o : dtos)
     {
-        m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ cont, std::nullopt });
-        CommandBus::Post(std::make_shared<InvokeContractFactory>(cont));
+        m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
+        CommandBus::Post(std::make_shared<InvokeDtoFactory>(o));
     }
 }
 
-void SceneGraphBuilder::OnContractedCreated(const Frameworks::IEventPtr& e)
+void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractedSpatialCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
     if (!ev) return;
     for (auto& meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
     {
-        if (meta.m_contract == ev->GetContract())
+        if (meta.m_dto == ev->GetDto())
         {
             meta.m_spatial = ev->GetSpatial();
             break;
@@ -98,11 +101,11 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     for (auto meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
     {
         if (!meta.m_spatial) return;
-        if (meta.m_contract.IsTopLevel())
+        if (meta.m_dto.IsTopLevel())
         {
             top_levels.emplace_back(meta.m_spatial.value());
         }
     }
 
-    EventPublisher::Post(std::make_shared<ContractedSceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+    EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
 }

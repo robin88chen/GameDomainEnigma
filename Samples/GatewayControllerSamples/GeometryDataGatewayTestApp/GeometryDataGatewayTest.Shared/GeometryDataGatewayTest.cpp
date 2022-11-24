@@ -6,14 +6,14 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/TriangleList.h"
-#include "GameEngine/GeometryDataContract.h"
-#include "GameEngine/ContractCommands.h"
+#include "GameEngine/GeometryDataDto.h"
+#include "GameEngine/FactoryCommands.h"
 #include "GameEngine/GeometryDataEvents.h"
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/GraphicAPITypes.h"
-#include "Gateways/ContractJsonGateway.h"
+#include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/Filename.h"
 #include "FileSystem/IFile.h"
 #include "FileSystem/FileSystem.h"
@@ -56,8 +56,8 @@ void GeometryDataGatewayTest::InstallEngine()
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
 
-    m_onContractedGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnContractedGeometryCreated(e); });
-    EventPublisher::Subscribe(typeid(ContractedGeometryCreated), m_onContractedGeometryCreated);
+    m_onFactoryGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryGeometryCreated(e); });
+    EventPublisher::Subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
 
     MathRandom::RandomSeed();
 
@@ -67,8 +67,8 @@ void GeometryDataGatewayTest::InstallEngine()
 
 void GeometryDataGatewayTest::ShutdownEngine()
 {
-    EventPublisher::Unsubscribe(typeid(ContractedGeometryCreated), m_onContractedGeometryCreated);
-    m_onContractedGeometryCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
+    m_onFactoryGeometryCreated = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -78,10 +78,10 @@ void GeometryDataGatewayTest::OnGeometryDataBuilt(const Enigma::Frameworks::IEve
 
 }
 
-void GeometryDataGatewayTest::OnContractedGeometryCreated(const Enigma::Frameworks::IEventPtr& e)
+void GeometryDataGatewayTest::OnFactoryGeometryCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractedGeometryCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     assert(ev);
     std::shared_ptr<GeometryData> geometry = ev->GetGeometryData();
     for (int i = 0; i < 4; i++)
@@ -99,10 +99,10 @@ void GeometryDataGatewayTest::MakeGeometrySaved()
     UniformFloatDistribution one_rand = MathRandom::IntervalDistribution(0.0f, std::nextafter(1.0f, 1.01f));
     GeometryRepository* repository = ServiceManager::GetSystemServiceAs<GeometryRepository>();
     assert(repository);
-    TriangleListContract contract;
-    contract.Name() = GeometryName;
-    contract.VertexFormat() = "xyz_nor_tex1(2)_fdiffuse";
-    contract.Segments() = { 0, 0, 4, 4 };
+    TriangleListDto dto;
+    dto.Name() = GeometryName;
+    dto.VertexFormat() = "xyz_nor_tex1(2)_fdiffuse";
+    dto.Segments() = { 0, 0, 4, 4 };
     for (int i = 0; i < 4; i++)
     {
         m_uvs.emplace_back(one_rand(), one_rand());
@@ -110,26 +110,26 @@ void GeometryDataGatewayTest::MakeGeometrySaved()
         m_normals.emplace_back(ten_rand(), ten_rand(), ten_rand());
         m_diffuses.emplace_back(one_rand(), one_rand(), one_rand(), one_rand());
     }
-    TextureCoordContract texture_coord_contract;
-    texture_coord_contract.Texture2DCoords() = m_uvs;
-    contract.TextureCoords().emplace_back(texture_coord_contract.ToContract());
-    contract.Position3s() = m_positions;
-    contract.Normals() = m_normals;
-    contract.DiffuseColors() = m_diffuses;
-    contract.Indices() = m_indices;
-    contract.VertexCapacity() = 4;
-    contract.VertexUsedCount() = 4;
-    contract.IndexCapacity() = 4;
-    contract.IndexUsedCount() = 4;
-    contract.Topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
+    TextureCoordDto texture_coord_dto;
+    texture_coord_dto.Texture2DCoords() = m_uvs;
+    dto.TextureCoords().emplace_back(texture_coord_dto.ToGenericDto());
+    dto.Position3s() = m_positions;
+    dto.Normals() = m_normals;
+    dto.DiffuseColors() = m_diffuses;
+    dto.Indices() = m_indices;
+    dto.VertexCapacity() = 4;
+    dto.VertexUsedCount() = 4;
+    dto.IndexCapacity() = 4;
+    dto.IndexUsedCount() = 4;
+    dto.Topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
     BoundingVolume bound{ Box3::UNIT_BOX };
-    contract.GeometryBound() = bound.SerializeContract().ToContract();
+    dto.GeometryBound() = bound.SerializeDto().ToGenericDto();
 
-    Contract gen_contract = contract.ToContract();
+    GenericDto gen_dto = dto.ToGenericDto();
     FactoryDesc desc(TriangleList::TYPE_RTTI.GetName());
     desc.ClaimAsResourceAsset(GeometryName, "test_geometry.geo");
-    gen_contract.AddRtti(desc);
-    std::string json = ContractJsonGateway::Serialize(std::vector<Contract>{gen_contract});
+    gen_dto.AddRtti(desc);
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{gen_dto});
 
     IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("test_geometry.geo"), "w+b");
     if (FATAL_LOG_EXPR(!iFile)) return;
@@ -144,7 +144,7 @@ void GeometryDataGatewayTest::LoadGeometry()
     size_t filesize = readFile->Size();
     auto read_buff = readFile->Read(0, filesize);
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
-    std::vector<Contract> read_contracts = ContractJsonGateway::Deserialize(read_json);
-    assert(read_contracts.size() == 1);
-    CommandBus::Post(std::make_shared<InvokeContractFactory>(read_contracts[0]));
+    std::vector<GenericDto> read_dtos = DtoJsonGateway::Deserialize(read_json);
+    assert(read_dtos.size() == 1);
+    CommandBus::Post(std::make_shared<InvokeDtoFactory>(read_dtos[0]));
 }

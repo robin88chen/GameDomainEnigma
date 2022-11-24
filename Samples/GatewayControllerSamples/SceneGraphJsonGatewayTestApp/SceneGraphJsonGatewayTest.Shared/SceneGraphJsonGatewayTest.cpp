@@ -5,14 +5,14 @@
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
-#include "SceneGraph/SceneGraphContracts.h"
+#include "SceneGraph/SceneGraphDtos.h"
 #include "MathLib/MathGlobal.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/MathRandom.h"
 #include "Platforms/MemoryAllocMacro.h"
-#include "GameEngine/Contract.h"
-#include "Gateways/ContractJsonGateway.h"
+#include "GameEngine/GenericDto.h"
+#include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
 #include "Frameworks/CommandBus.h"
@@ -61,7 +61,7 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     m_graphicMain->InstallRenderEngine(std::move(policy));
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(ContractedSceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     MathRandom::RandomSeed();
     UniformFloatDistribution unif_rand = MathRandom::IntervalDistribution(-10.0f, std::nextafter(10.0f, 10.1f));
     UniformFloatDistribution half_pi_rand = MathRandom::IntervalDistribution(-Math::HALF_PI, Math::HALF_PI);
@@ -112,14 +112,14 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     SceneFlattenTraversal* flatten = menew SceneFlattenTraversal();
     auto travel = root_node->VisitBy(flatten);
     assert(travel != SceneTraveler::TravelResult::InterruptError);
-    std::vector<Contract> contracts;
+    std::vector<GenericDto> dtos;
     for (auto& sp : flatten->GetSpatials())
     {
-       Contract ct = sp->SerializeContract();
-       if (sp->GetSpatialName() == "scene_root") ct.AsTopLevel(true);
-       contracts.emplace_back(ct);
+       GenericDto dto = sp->SerializeDto();
+       if (sp->GetSpatialName() == "scene_root") dto.AsTopLevel(true);
+       dtos.emplace_back(dto);
     }
-    std::string json = ContractJsonGateway::Serialize(contracts);
+    std::string json = DtoJsonGateway::Serialize(dtos);
     delete flatten;
 
     IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt"), "w+b");
@@ -134,13 +134,13 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     auto read_buff = readFile->Read(0, filesize);
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
     assert(json == read_json);
-    std::vector<Contract> read_contracts = ContractJsonGateway::Deserialize(read_json);
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", read_contracts));
+    std::vector<GenericDto> read_dtos = DtoJsonGateway::Deserialize(read_json);
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", read_dtos));
 }
 
 void SceneGraphJsonGatewayTest::ShutdownEngine()
 {
-    EventPublisher::Unsubscribe(typeid(ContractedSceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -148,7 +148,7 @@ void SceneGraphJsonGatewayTest::ShutdownEngine()
 void SceneGraphJsonGatewayTest::OnSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractedSceneGraphBuilt, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
     if (!ev) return;
     std::shared_ptr<Node> root_node;
     if (ev->GetTopLevelSpatial().size() > 0)

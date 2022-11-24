@@ -5,7 +5,6 @@
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
-#include "SceneGraph/SceneGraphDtos.h"
 #include "MathLib/MathGlobal.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Vector3.h"

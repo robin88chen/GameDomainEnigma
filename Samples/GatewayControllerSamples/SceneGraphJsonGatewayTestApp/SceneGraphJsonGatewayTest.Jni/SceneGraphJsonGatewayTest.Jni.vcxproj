@@ -93,6 +93,11 @@
     <Import Project="..\..\..\..\Source\AndroidLibSettings.props" />
     <Import Project="..\..\..\..\Source\EnigmaLinks.Android.props" />
   </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\..\..\..\Source\EnigmaHeaders.props" />
+    <Import Project="..\..\..\..\Source\AndroidLibSettings.props" />
+    <Import Project="..\..\..\..\Source\EnigmaLinks.Android.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
   </PropertyGroup>

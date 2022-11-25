@@ -18,6 +18,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "Platforms/AndroidBridge.h"
+#include "FileSystem/StdMountPath.h"
 #include <memory>
 #include <cassert>
 #include <string>
@@ -48,7 +50,15 @@ SceneGraphJsonGatewayTest::~SceneGraphJsonGatewayTest()
 
 void SceneGraphJsonGatewayTest::InitializeMountPaths()
 {
-
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    std::string data_path = Enigma::Platforms::AndroidBridge::GetDataFilePath();
+    char s[2048];
+    memset(s, 0, 2048);
+    memcpy(s, data_path.c_str(), data_path.size());
+#else
+    std::string data_path = std::filesystem::current_path().string();
+#endif
+    FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
 }
 
 void SceneGraphJsonGatewayTest::InstallEngine()
@@ -121,14 +131,14 @@ void SceneGraphJsonGatewayTest::InstallEngine()
     std::string json = DtoJsonGateway::Serialize(dtos);
     delete flatten;
 
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt"), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt@DataPath"), "w+b");
     if (FATAL_LOG_EXPR(!iFile)) return;
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
 
     root_node = nullptr;
 
-    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt"), "rb");
+    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt@DataPath"), "rb");
     size_t filesize = readFile->Size();
     auto read_buff = readFile->Read(0, filesize);
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());

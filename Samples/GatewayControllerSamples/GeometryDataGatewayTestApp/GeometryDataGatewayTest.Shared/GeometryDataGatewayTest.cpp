@@ -17,8 +17,12 @@
 #include "FileSystem/Filename.h"
 #include "FileSystem/IFile.h"
 #include "FileSystem/FileSystem.h"
+#include "FileSystem/StdMountPath.h"
+#include "GameEngine/GeometryDataPolicy.h"
+#include "Gateways/JsonFileDtoDeserializer.h"
+#include "Gateways/AsyncJsonFileDtoDeserializer.h"
+#include "GameEngine/GeometryCommands.h"
 #include <cassert>
-#include <FileSystem/IFile.h>
 
 using namespace Enigma::Application;
 using namespace Enigma::Controllers;
@@ -45,7 +49,15 @@ GeometryDataGatewayTest::~GeometryDataGatewayTest()
 
 void GeometryDataGatewayTest::InitializeMountPaths()
 {
-
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    std::string data_path = Enigma::Platforms::AndroidBridge::GetDataFilePath();
+    char s[2048];
+    memset(s, 0, 2048);
+    memcpy(s, data_path.c_str(), data_path.size());
+#else
+    std::string data_path = std::filesystem::current_path().string();
+#endif
+    FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
 }
 
 void GeometryDataGatewayTest::InstallEngine()
@@ -62,7 +74,8 @@ void GeometryDataGatewayTest::InstallEngine()
     MathRandom::RandomSeed();
 
     MakeGeometrySaved();
-    LoadGeometry();
+    //LoadGeometry();
+    LoadGeometryByPolicy();
 }
 
 void GeometryDataGatewayTest::ShutdownEngine()
@@ -127,11 +140,11 @@ void GeometryDataGatewayTest::MakeGeometrySaved()
 
     GenericDto gen_dto = dto.ToGenericDto();
     FactoryDesc desc(TriangleList::TYPE_RTTI.GetName());
-    desc.ClaimAsResourceAsset(GeometryName, "test_geometry.geo");
+    desc.ClaimAsResourceAsset(GeometryName, "test_geometry.geo", "DataPath");
     gen_dto.AddRtti(desc);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{gen_dto});
 
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("test_geometry.geo"), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("test_geometry.geo@DataPath"), "w+b");
     if (FATAL_LOG_EXPR(!iFile)) return;
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
@@ -140,11 +153,18 @@ void GeometryDataGatewayTest::MakeGeometrySaved()
 
 void GeometryDataGatewayTest::LoadGeometry()
 {
-    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename("test_geometry.geo"), "rb");
+    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename("test_geometry.geo@DataPath"), "rb");
     size_t filesize = readFile->Size();
     auto read_buff = readFile->Read(0, filesize);
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
     std::vector<GenericDto> read_dtos = DtoJsonGateway::Deserialize(read_json);
     assert(read_dtos.size() == 1);
     CommandBus::Post(std::make_shared<InvokeDtoFactory>(read_dtos[0]));
+}
+
+void GeometryDataGatewayTest::LoadGeometryByPolicy()
+{
+    //GeometryDataPolicy policy(GeometryName, "test_geometry.geo@DataPath", std::make_shared<JsonFileDtoDeserializer>());
+    GeometryDataPolicy policy(GeometryName, "test_geometry.geo@DataPath", std::make_shared<AsyncJsonFileDtoDeserializer>());
+    CommandBus::Post(std::make_shared<BuildGeometryData>(policy));
 }

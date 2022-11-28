@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "GeometryDataPolicy.h"
 #include <memory>
 #include <mutex>
@@ -56,6 +57,7 @@ namespace Enigma::Engine
 
         void OnGeometryBuilt(const Frameworks::IEventPtr& e);
         void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
+        void DoBuildingGeometry(const Frameworks::ICommandPtr& c);
 
     protected:
         std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometries;
@@ -68,6 +70,7 @@ namespace Enigma::Engine
 
         Frameworks::EventSubscriberPtr m_onGeometryBuilt;
         Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
+        Frameworks::CommandSubscriberPtr m_doBuildingGeometry;
     };
 }
 

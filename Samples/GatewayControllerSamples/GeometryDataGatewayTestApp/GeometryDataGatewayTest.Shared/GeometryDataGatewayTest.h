@@ -38,6 +38,7 @@ private:
 
     void MakeGeometrySaved();
     void LoadGeometry();
+    void LoadGeometryByPolicy();
 
 private:
     Enigma::Frameworks::EventSubscriberPtr m_onGeometryDataBuilt;

@@ -11,6 +11,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/CommandBus.h"
 #include "GameEngine/FactoryCommands.h"
+#include "GeometryCommands.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -28,6 +29,7 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
 
 GeometryRepository::~GeometryRepository()
 {
+    CommandBus::Post(std::make_shared<UnRegisterDtoFactory>(TriangleList::TYPE_RTTI.GetName()));
     SAFE_DELETE(m_builder);
 }
 
@@ -37,6 +39,10 @@ ServiceResult GeometryRepository::OnInit()
     EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
     m_onBuildGeometryFail = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryFail(e); });
     EventPublisher::Subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+
+    m_doBuildingGeometry = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingGeometry(c); });
+    CommandBus::Subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -62,6 +68,10 @@ ServiceResult GeometryRepository::OnTerm()
     m_onGeometryBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
     m_onBuildGeometryFail = nullptr;
+
+    CommandBus::Unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+    m_doBuildingGeometry = nullptr;
+
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -134,4 +144,12 @@ void GeometryRepository::OnBuildGeometryFail(const Frameworks::IEventPtr& e)
     Platforms::Debug::ErrorPrintf("geometry data %s build failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
+}
+
+void GeometryRepository::DoBuildingGeometry(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<BuildGeometryData, ICommand>(c);
+    if (!cmd) return;
+    BuildGeometry(cmd->GetPolicy());
 }

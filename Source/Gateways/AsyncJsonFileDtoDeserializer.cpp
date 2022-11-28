@@ -24,7 +24,8 @@ void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& rui
 {
     m_ruid = ruid_deserializing;
     m_parameter = param;
-    m_deserializing = std::async(std::launch::async, [lifetime = shared_from_this(), this]() { DeserializeProcedure(); });
+    m_deserializing = std::async(std::launch::async, [self = weak_from_this()]() // 抓給自己的 shared_ptr, 要抓 weak, 否則相當於自己抓自己shared_ptr, 永遠無法釋放
+        { if (!self.expired()) std::dynamic_pointer_cast<AsyncJsonFileDtoDeserializer, IDtoDeserializer>(self.lock())->DeserializeProcedure(); });
 }
 
 void AsyncJsonFileDtoDeserializer::DeserializeProcedure()

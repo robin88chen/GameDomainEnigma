@@ -35,6 +35,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />

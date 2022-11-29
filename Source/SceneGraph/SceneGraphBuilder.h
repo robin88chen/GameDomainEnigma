@@ -8,7 +8,7 @@
 #ifndef SCENE_GRAPH_BUILDER_H
 #define SCENE_GRAPH_BUILDER_H
 
-#include "GameEngine/Contract.h"
+#include "GameEngine/GenericDto.h"
 #include "Frameworks/EventSubscriber.h"
 #include <optional>
 #include <memory>
@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
     private:
         struct BuiltSpatialMeta
         {
-            Engine::Contract m_contract;
+            Engine::GenericDto m_dto;
             std::optional<std::shared_ptr<Spatial>> m_spatial;
         };
         struct BuiltSceneGraphMeta
@@ -41,20 +41,20 @@ namespace Enigma::SceneGraph
         SceneGraphBuilder& operator=(const SceneGraphBuilder&) = delete;
         SceneGraphBuilder& operator=(SceneGraphBuilder&&) = delete;
 
-        void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::Contract>& contracts);
+        void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos);
 
     private:
-        void NodeContractFactory(const Engine::Contract& contract);
-        void LightContractFactory(const Engine::Contract& contract);
+        void NodeFactory(const Engine::GenericDto& dto);
+        void LightFactory(const Engine::GenericDto& dto);
 
-        void OnContractedCreated(const Frameworks::IEventPtr& e);
+        void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();
 
     private:
         SceneGraphRepository* m_host;
         SpatialLinkageResolver* m_resolver;
 
-        Frameworks::EventSubscriberPtr m_onContractedCreated;
+        Frameworks::EventSubscriberPtr m_onFactoryCreated;
 
         BuiltSceneGraphMeta m_builtSceneGraphMeta;
     };

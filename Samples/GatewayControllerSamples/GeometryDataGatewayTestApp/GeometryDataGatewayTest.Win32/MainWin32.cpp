@@ -9,7 +9,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     meInitMemoryCheck();
-    //_CrtSetBreakAlloc(372);
+    //_CrtSetBreakAlloc(1640);
     GeometryDataGatewayTest* app = menew GeometryDataGatewayTest("geometry data gateway test");
     app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
     RECT rc;

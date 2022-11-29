@@ -37,17 +37,17 @@ namespace Enigma::Engine
         std::string m_name;
         std::error_code m_error;
     };
-    class ContractedGeometryCreated : public Frameworks::IEvent
+    class FactoryGeometryCreated : public Frameworks::IEvent
     {
     public:
-        ContractedGeometryCreated(const Engine::Contract& contract, const std::shared_ptr<GeometryData>& geometry)
-            : m_contract(contract), m_geometry(geometry) {};
+        FactoryGeometryCreated(const Engine::GenericDto& dto, const std::shared_ptr<GeometryData>& geometry)
+            : m_dto(dto), m_geometry(geometry) {};
 
-        const Engine::Contract& GetContract() const { return m_contract; }
+        const Engine::GenericDto& GetDto() const { return m_dto; }
         const std::shared_ptr<GeometryData>& GetGeometryData() { return m_geometry; }
 
     protected:
-        Engine::Contract m_contract;
+        Engine::GenericDto m_dto;
         std::shared_ptr<GeometryData> m_geometry;
     };
 }

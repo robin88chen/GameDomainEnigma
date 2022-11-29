@@ -15,13 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Contract.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractDeserializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractedFactories.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
@@ -35,8 +35,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
@@ -69,10 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeContract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Contract.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractedFactories.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
@@ -86,7 +87,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataContract.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />

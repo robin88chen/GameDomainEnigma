@@ -34,14 +34,15 @@ public:
 
 private:
     void OnGeometryDataBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnContractedGeometryCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnFactoryGeometryCreated(const Enigma::Frameworks::IEventPtr& e);
 
     void MakeGeometrySaved();
     void LoadGeometry();
+    void LoadGeometryByPolicy();
 
 private:
     Enigma::Frameworks::EventSubscriberPtr m_onGeometryDataBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onContractedGeometryCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onFactoryGeometryCreated;
 
     std::vector<Enigma::MathLib::Vector2> m_uvs;
     std::vector<Enigma::MathLib::Vector3> m_positions;

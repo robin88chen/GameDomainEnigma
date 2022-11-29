@@ -4,39 +4,39 @@
     <Filter Include="EffectPolicy">
       <UniqueIdentifier>{1434ebaa-5879-4041-8a37-5bdc02f751f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contracts">
-      <UniqueIdentifier>{4b989ff9-047d-4221-911f-721e301ecb81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ContractDeserializer">
+    <Filter Include="DtoDeserializer">
       <UniqueIdentifier>{c7d1c588-5a85-4f8a-b576-f88f1a36407c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs">
+      <UniqueIdentifier>{4b989ff9-047d-4221-911f-721e301ecb81}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h">
       <Filter>EffectPolicy</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.h">
-      <Filter>Contracts</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h">
+      <Filter>DTOs</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.h">
-      <Filter>ContractDeserializer</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.h">
+      <Filter>DtoDeserializer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.h">
-      <Filter>ContractDeserializer</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h">
+      <Filter>DtoDeserializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp">
       <Filter>EffectPolicy</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContractJsonGateway.cpp">
-      <Filter>Contracts</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.cpp">
+      <Filter>DTOs</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileContractDeserializer.cpp">
-      <Filter>ContractDeserializer</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.cpp">
+      <Filter>DtoDeserializer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileContractDeserializer.cpp">
-      <Filter>ContractDeserializer</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.cpp">
+      <Filter>DtoDeserializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

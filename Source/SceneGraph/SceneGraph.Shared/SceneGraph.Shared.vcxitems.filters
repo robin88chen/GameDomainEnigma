@@ -25,14 +25,14 @@
     <Filter Include="Scene Graph\LightInfo">
       <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contracts">
-      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Repository\Builder">
       <UniqueIdentifier>{a4c9c21b-20e1-4560-9e29-10b0d82bcae5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs">
+      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,8 +90,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h">
       <Filter>Scene Traveler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.h">
-      <Filter>Contracts</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
+      <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
       <Filter>Repository</Filter>
@@ -102,8 +102,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.h">
-      <Filter>Contracts</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h">
+      <Filter>DTOs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +152,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphContracts.cpp">
-      <Filter>Contracts</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
+      <Filter>DTOs</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
       <Filter>Repository</Filter>
@@ -161,8 +161,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp">
       <Filter>Repository\Builder</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoContracts.cpp">
-      <Filter>Contracts</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
+      <Filter>DTOs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

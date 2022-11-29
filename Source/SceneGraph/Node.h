@@ -15,14 +15,14 @@
 
 namespace Enigma::Engine
 {
-    template <class T> class ContractedLinkageResolver;
+    template <class T> class FactoryLinkageResolver;
 }
 
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
 
-    class NodeContract;
+    class NodeDto;
 
     /** scene graph node class */
     class Node : public Spatial
@@ -33,15 +33,15 @@ namespace Enigma::SceneGraph
 
     public:
         Node(const std::string& name);
-        Node(const NodeContract& contract);
+        Node(const NodeDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node() override;
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
-        virtual Engine::Contract SerializeContract() override;
-        void ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver);
+        virtual Engine::GenericDto SerializeDto() override;
+        void ResolveFactoryLinkage(const NodeDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver);
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;

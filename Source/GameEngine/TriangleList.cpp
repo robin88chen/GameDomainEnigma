@@ -17,7 +17,7 @@ TriangleList::TriangleList(const std::string& name) : GeometryData(name)
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
 
-TriangleList::TriangleList(const TriangleListContract& contract) : GeometryData(dynamic_cast<const GeometryDataContract&>(contract))
+TriangleList::TriangleList(const TriangleListDto& dto) : GeometryData(dynamic_cast<const GeometryDataDto&>(dto))
 {
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
@@ -26,10 +26,10 @@ TriangleList::~TriangleList()
 {
 }
 
-Contract TriangleList::SerializeContract()
+GenericDto TriangleList::SerializeDto()
 {
-    TriangleListContract contract(SerializeGeometryDataContract());
-    return contract.ToContract();
+    TriangleListDto dto(SerializeGeometryDto());
+    return dto.ToGenericDto();
 }
 
 unsigned TriangleList::GetTriangleCount()

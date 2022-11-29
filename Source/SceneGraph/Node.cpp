@@ -3,7 +3,7 @@
 #include "Spatial.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphContracts.h"
+#include "SceneGraphDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
@@ -16,7 +16,7 @@ Node::Node(const std::string& name) : Spatial(name)
 {
 }
 
-Node::Node(const NodeContract& contract) : Spatial(dynamic_cast<const SpatialContract&>(contract))
+Node::Node(const NodeDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
 {
 }
 
@@ -32,19 +32,19 @@ Node::~Node()
     m_childList.clear();
 }
 
-Enigma::Engine::Contract Node::SerializeContract()
+Enigma::Engine::GenericDto Node::SerializeDto()
 {
-    NodeContract contract(SerializeSpatialContract());
+    NodeDto dto(SerializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) contract.ChildNames().emplace_back(child->GetSpatialName());
+        if (child) dto.ChildNames().emplace_back(child->GetSpatialName());
     }
-    return contract.ToContract();
+    return dto.ToGenericDto();
 }
 
-void Node::ResolveContractedLinkage(const NodeContract& contract, Engine::ContractedLinkageResolver<Spatial>& resolver)
+void Node::ResolveFactoryLinkage(const NodeDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    for (auto& name : contract.ChildNames())
+    for (auto& name : dto.ChildNames())
     {
         resolver.TryResolveLinkage(name, [lifetime = shared_from_this(), this](auto sp)
             { AttachChild(sp, sp->GetLocalTransform()); });

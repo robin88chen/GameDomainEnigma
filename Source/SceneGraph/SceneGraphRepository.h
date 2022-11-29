@@ -27,8 +27,8 @@ namespace Enigma::SceneGraph
     class Pawn;
     class LightInfo;
     class Light;
-    class NodeContract;
-    class LightContract;
+    class NodeDto;
+    class LightDto;
     class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
@@ -54,7 +54,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name);
-        std::shared_ptr<Node> CreateNode(const NodeContract& contract);
+        std::shared_ptr<Node> CreateNode(const NodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -63,7 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
-        std::shared_ptr<Light> CreateLight(const LightContract& contract);
+        std::shared_ptr<Light> CreateLight(const LightDto& dto);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 

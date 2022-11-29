@@ -6,32 +6,32 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
-SpatialLinkageResolver::SpatialLinkageResolver() : ContractedLinkageResolver<Spatial>()
+SpatialLinkageResolver::SpatialLinkageResolver() : FactoryLinkageResolver<Spatial>()
 {
-    m_onContractedSpatialCreated = nullptr;
+    m_onFactorySpatialCreated = nullptr;
 }
 
-SpatialLinkageResolver::SpatialLinkageResolver(const Engine::FactoryQuery<Spatial>& query) : ContractedLinkageResolver<Spatial>(query)
+SpatialLinkageResolver::SpatialLinkageResolver(const Engine::FactoryQuery<Spatial>& query) : FactoryLinkageResolver<Spatial>(query)
 {
-    m_onContractedSpatialCreated =
-        std::make_shared<EventSubscriber>([=](auto c) { this->OnContractedSpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(ContractedSpatialCreated), m_onContractedSpatialCreated);
+    m_onFactorySpatialCreated =
+        std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
+    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
 }
 
 SpatialLinkageResolver::SpatialLinkageResolver(const SpatialLinkageResolver& resolver)
-    : ContractedLinkageResolver<Spatial>(dynamic_cast<const ContractedLinkageResolver<Spatial>&>(resolver))
+    : FactoryLinkageResolver<Spatial>(dynamic_cast<const FactoryLinkageResolver<Spatial>&>(resolver))
 {
-    m_onContractedSpatialCreated =
-        std::make_shared<EventSubscriber>([=](auto c) { this->OnContractedSpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(ContractedSpatialCreated), m_onContractedSpatialCreated);
+    m_onFactorySpatialCreated =
+        std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
+    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
 }
 
 SpatialLinkageResolver::~SpatialLinkageResolver()
 {
-    if (m_onContractedSpatialCreated)
+    if (m_onFactorySpatialCreated)
     {
-        EventPublisher::Unsubscribe(typeid(ContractedSpatialCreated), m_onContractedSpatialCreated);
-        m_onContractedSpatialCreated = nullptr;
+        EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
+        m_onFactorySpatialCreated = nullptr;
     }
 }
 
@@ -39,9 +39,9 @@ SpatialLinkageResolver& SpatialLinkageResolver::operator=(const SpatialLinkageRe
 {
     m_query = resolver.m_query;
     m_linkageResolverTable = resolver.m_linkageResolverTable;
-    m_onContractedSpatialCreated =
-        std::make_shared<EventSubscriber>([=](auto c) { this->OnContractedSpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(ContractedSpatialCreated), m_onContractedSpatialCreated);
+    m_onFactorySpatialCreated =
+        std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
+    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
     return *this;
 }
 
@@ -50,10 +50,10 @@ void SpatialLinkageResolver::ClearResolvers()
     m_linkageResolverTable.clear();
 }
 
-void SpatialLinkageResolver::OnContractedSpatialCreated(const Frameworks::IEventPtr& e)
+void SpatialLinkageResolver::OnFactorySpatialCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContractedSpatialCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
     if (!ev) return;
     InvokeLinkageResolver(ev->GetSpatial()->GetSpatialName(), ev->GetSpatial());
 }

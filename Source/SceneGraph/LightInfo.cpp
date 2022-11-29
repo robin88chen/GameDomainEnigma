@@ -1,6 +1,5 @@
 ﻿#include "LightInfo.h"
-#include "LightInfo.h"
-#include "LightInfoContracts.h"
+#include "LightInfoDtos.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -22,28 +21,28 @@ LightInfo::LightInfo(LightType type)
     m_isEnable = true;
 }
 
-LightInfo::LightInfo(const LightInfoContract& contract) : LightInfo(contract.LightType())
+LightInfo::LightInfo(const LightInfoDto& dto) : LightInfo(dto.LightType())
 {
-    m_type = contract.LightType();
-    m_color = contract.Color();
-    m_position = contract.Position();
-    m_dir = contract.Direction();
-    m_attenuation = contract.Attenuation();
-    m_range = contract.Range();
-    m_isEnable = contract.IsEnable();
+    m_type = dto.LightType();
+    m_color = dto.Color();
+    m_position = dto.Position();
+    m_dir = dto.Direction();
+    m_attenuation = dto.Attenuation();
+    m_range = dto.Range();
+    m_isEnable = dto.IsEnable();
 }
 
-LightInfoContract LightInfo::SerializeContract()
+LightInfoDto LightInfo::SerializeDto()
 {
-    LightInfoContract contract;
-    contract.LightType() = m_type;
-    contract.Color() = m_color;
-    contract.Position() = m_position;
-    contract.Direction() = m_dir;
-    contract.Attenuation() = m_attenuation;
-    contract.Range() = m_range;
-    contract.IsEnable() = m_isEnable;
-    return contract;
+    LightInfoDto dto;
+    dto.LightType() = m_type;
+    dto.Color() = m_color;
+    dto.Position() = m_position;
+    dto.Direction() = m_dir;
+    dto.Attenuation() = m_attenuation;
+    dto.Range() = m_range;
+    dto.IsEnable() = m_isEnable;
+    return dto;
 }
 
 void LightInfo::SetLightColor(const MathLib::ColorRGBA& color)

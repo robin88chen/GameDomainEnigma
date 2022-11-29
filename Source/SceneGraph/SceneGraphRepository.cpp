@@ -5,10 +5,9 @@
 #include "Pawn.h"
 #include "Light.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphContracts.h"
+#include "SceneGraphDtos.h"
 #include "SceneGraphCommands.h"
 #include "Frameworks/EventPublisher.h"
-#include "GameEngine/ContractCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
@@ -38,7 +37,6 @@ SceneGraphRepository::~SceneGraphRepository()
     m_doBuildingSceneGraph = nullptr;
 
     delete m_builder;
-    CommandBus::Post(std::make_shared<UnRegisterContractFactory>(Node::TYPE_RTTI.GetName()));
 }
 
 void SceneGraphRepository::SetCoordinateSystem(GraphicCoordSys hand)
@@ -110,12 +108,12 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
     return node;
 }
 
-std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeContract& contract)
+std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeDto& dto)
 {
-    assert(!HasNode(contract.Name()));
-    auto node = std::make_shared<Node>(contract);
+    assert(!HasNode(dto.Name()));
+    auto node = std::make_shared<Node>(dto);
     std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(contract.Name(), node);
+    m_nodes.insert_or_assign(dto.Name(), node);
     return node;
 }
 
@@ -170,12 +168,12 @@ std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name
     return light;
 }
 
-std::shared_ptr<Light> SceneGraphRepository::CreateLight(const LightContract& contract)
+std::shared_ptr<Light> SceneGraphRepository::CreateLight(const LightDto& dto)
 {
-    assert(!HasLight(contract.Name()));
-    auto light = std::make_shared<Light>(contract);
+    assert(!HasLight(dto.Name()));
+    auto light = std::make_shared<Light>(dto);
     std::lock_guard locker{ m_lightMapLock };
-    m_lights.insert_or_assign(contract.Name(), light);
+    m_lights.insert_or_assign(dto.Name(), light);
     Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
     return light;
 }
@@ -210,5 +208,5 @@ void SceneGraphRepository::DoBuildingSceneGraph(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
     if (!cmd) return;
-    m_builder->BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetContracts());
+    m_builder->BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
 }

@@ -8,7 +8,7 @@
 #ifndef _GEOMETRY_BUILDER_H
 #define _GEOMETRY_BUILDER_H
 
-#include "Contract.h"
+#include "GenericDto.h"
 #include "GeometryDataPolicy.h"
 #include "Frameworks/ruid.h"
 #include "Frameworks/EventSubscriber.h"
@@ -30,10 +30,10 @@ namespace Enigma::Engine
         void BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        void CreateFromContract(const std::string& name, const Contract& contract);
+        void CreateFromDto(const std::string& name, const GenericDto& dto);
 
-        void OnContractDeserialized(const Frameworks::IEventPtr& e);
-        void OnContractedGeometryCreated(const Frameworks::IEventPtr& e);
+        void OnDtoDeserialized(const Frameworks::IEventPtr& e);
+        void OnDtoGeometryCreated(const Frameworks::IEventPtr& e);
 
     protected:
         GeometryRepository* m_hostRepository;
@@ -41,8 +41,8 @@ namespace Enigma::Engine
         Frameworks::Ruid m_ruidContracting;
         GeometryDataPolicy m_policy;
 
-        Frameworks::EventSubscriberPtr m_onContractDeserialized;
-        Frameworks::EventSubscriberPtr m_onContractedGeometryCreated;
+        Frameworks::EventSubscriberPtr m_onDtoDeserialized;
+        Frameworks::EventSubscriberPtr m_onDtoGeometryCreated;
     };
 }
 

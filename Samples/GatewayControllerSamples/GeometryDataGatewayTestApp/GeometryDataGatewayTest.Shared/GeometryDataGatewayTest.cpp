@@ -22,6 +22,7 @@
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/AsyncJsonFileDtoDeserializer.h"
 #include "GameEngine/GeometryCommands.h"
+#include "Platforms/AndroidBridge.h"
 #include <cassert>
 
 using namespace Enigma::Application;
@@ -68,6 +69,8 @@ void GeometryDataGatewayTest::InstallEngine()
     auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine(std::move(policy));
 
+    m_onGeometryDataBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryDataBuilt(e); });
+    EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
     m_onFactoryGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryGeometryCreated(e); });
     EventPublisher::Subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
 
@@ -80,6 +83,8 @@ void GeometryDataGatewayTest::InstallEngine()
 
 void GeometryDataGatewayTest::ShutdownEngine()
 {
+    EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
+    m_onGeometryDataBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
     m_onFactoryGeometryCreated = nullptr;
 
@@ -88,7 +93,7 @@ void GeometryDataGatewayTest::ShutdownEngine()
 
 void GeometryDataGatewayTest::OnGeometryDataBuilt(const Enigma::Frameworks::IEventPtr& e)
 {
-
+    Enigma::Platforms::Debug::Printf("geometry data built!!");
 }
 
 void GeometryDataGatewayTest::OnFactoryGeometryCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -104,6 +109,7 @@ void GeometryDataGatewayTest::OnFactoryGeometryCreated(const Enigma::Frameworks:
         assert(m_diffuses[i] == geometry->GetDiffuseColorArray(VertexDescription::ColorNumeric::Float, 4)[i]);
         assert(m_uvs[i] == geometry->GetTexture2DCoordArray(0, 4)[i]);
     }
+    Enigma::Platforms::Debug::Printf("factory geometry created!!");
 }
 
 void GeometryDataGatewayTest::MakeGeometrySaved()

@@ -7,22 +7,76 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryDataGatewayTest.Sha
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryDataGatewayTest.Win32", "GeometryDataGatewayTest.Win32\GeometryDataGatewayTest.Win32.vcxproj", "{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryDataGatewayTest.Jni", "GeometryDataGatewayTest.Jni\GeometryDataGatewayTest.Jni.vcxproj", "{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}"
+EndProject
+Project("{39E2626F-3545-4960-A6E8-258AD8476CE5}") = "GeometryDataGatewayTestApp", "GeometryDataGatewayTestApp\GeometryDataGatewayTestApp.androidproj", "{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|ARM.ActiveCfg = Debug|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|ARM.Build.0 = Debug|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|ARM64.ActiveCfg = Debug|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|ARM64.Build.0 = Debug|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x64.ActiveCfg = Debug|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x64.Build.0 = Debug|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x86.ActiveCfg = Debug|Win32
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Debug|x86.Build.0 = Debug|Win32
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|ARM.ActiveCfg = Release|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|ARM.Build.0 = Release|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|ARM64.ActiveCfg = Release|x64
+		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|ARM64.Build.0 = Release|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x64.ActiveCfg = Release|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x64.Build.0 = Release|x64
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x86.ActiveCfg = Release|Win32
 		{CE0D678E-048F-45CA-AE3D-1D22CE8815A3}.Release|x86.Build.0 = Release|Win32
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|ARM.Build.0 = Debug|ARM
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|ARM64.Build.0 = Debug|ARM64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|x64.ActiveCfg = Debug|x64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|x86.ActiveCfg = Debug|x86
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Debug|x86.Build.0 = Debug|x86
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|ARM.ActiveCfg = Release|ARM
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|ARM.Build.0 = Release|ARM
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|ARM64.ActiveCfg = Release|ARM64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|ARM64.Build.0 = Release|ARM64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|x64.ActiveCfg = Release|x64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|x64.Build.0 = Release|x64
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|x86.ActiveCfg = Release|x86
+		{EA5DFB8F-E81E-4AF9-A0BC-8C57100158F2}.Release|x86.Build.0 = Release|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM.Build.0 = Debug|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM64.Build.0 = Debug|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|x64.ActiveCfg = Debug|x64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|x64.Deploy.0 = Debug|x64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|x86.ActiveCfg = Debug|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|x86.Build.0 = Debug|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Debug|x86.Deploy.0 = Debug|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM.ActiveCfg = Release|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM.Build.0 = Release|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM.Deploy.0 = Release|ARM
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM64.ActiveCfg = Release|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM64.Build.0 = Release|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|ARM64.Deploy.0 = Release|ARM64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x64.ActiveCfg = Release|x64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x64.Build.0 = Release|x64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x64.Deploy.0 = Release|x64
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x86.ActiveCfg = Release|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x86.Build.0 = Release|x86
+		{4B6C8EC9-BA88-4D00-BB00-875CD6FACCFB}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -33,5 +87,6 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems*{5e40a4e8-72dc-4cab-bf3f-098ffb49c9e3}*SharedItemsImports = 9
 		GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems*{ce0d678e-048f-45ca-ae3d-1d22ce8815a3}*SharedItemsImports = 4
+		GeometryDataGatewayTest.Shared\GeometryDataGatewayTest.Shared.vcxitems*{ea5dfb8f-e81e-4af9-a0bc-8c57100158f2}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

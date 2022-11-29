@@ -7,6 +7,7 @@
 #include "GameEngine/DtoEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "FileSystem/FileSystemErrors.h"
+#include "Platforms/PlatformLayerUtilities.h"
 
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
@@ -22,6 +23,7 @@ AsyncJsonFileDtoDeserializer::~AsyncJsonFileDtoDeserializer()
 
 void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
+    Platforms::Debug::Printf("async invoke deserialize %s", param.c_str());
     m_ruid = ruid_deserializing;
     m_parameter = param;
     m_deserializing = std::async(std::launch::async, [self = weak_from_this()]() // 抓給自己的 shared_ptr, 要抓 weak, 否則相當於自己抓自己shared_ptr, 永遠無法釋放

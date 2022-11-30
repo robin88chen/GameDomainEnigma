@@ -16,7 +16,7 @@ DEFINE_RTTI(Engine, EffectMaterialManager, ISystemService);
 EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
     m_needTick = false;
-    m_compiler = menew EffectCompiler();
+    m_compiler = menew EffectCompiler(this);
     m_isCurrentCompiling = false;
 }
 
@@ -48,24 +48,15 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
 {
     if (m_isCurrentCompiling) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
-    if (m_profiles.empty())
+    if (m_policies.empty())
     {
         m_needTick = false;
         return Frameworks::ServiceResult::Pendding;
     }
     assert(m_compiler);
-    if (HasEffectMaterial(m_profiles.front().m_name))
-    {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(
-            m_profiles.front().m_name, QueryEffectMaterial(m_profiles.front().m_name)));
-        m_profiles.pop();
-    }
-    else
-    {
-        m_compiler->CompileEffect(m_profiles.front());
-        m_profiles.pop();
-        m_isCurrentCompiling = true;
-    }
+    m_compiler->CompileEffectMaterial(m_policies.front());
+    m_policies.pop();
+    m_isCurrentCompiling = true;
     return Frameworks::ServiceResult::Pendding;
 }
 
@@ -93,10 +84,10 @@ EffectMaterialPtr EffectMaterialManager::QueryEffectMaterial(const std::string& 
     return iter->second->CloneEffectMaterial();
 }
 
-error EffectMaterialManager::CompileEffectMaterial(const EffectCompilingProfile& profile)
+error EffectMaterialManager::CompileEffectMaterial(const EffectMaterialPolicy& policy)
 {
     std::lock_guard locker{ m_policiesLock };
-    m_profiles.push(profile);
+    m_policies.push(policy);
     m_needTick = true;
     return ErrorCode::ok;
 }

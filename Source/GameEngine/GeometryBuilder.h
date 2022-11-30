@@ -33,6 +33,7 @@ namespace Enigma::Engine
         void CreateFromDto(const std::string& name, const GenericDto& dto);
 
         void OnDtoDeserialized(const Frameworks::IEventPtr& e);
+        void OnDeserializeDtoFailed(const Frameworks::IEventPtr& e);
         void OnDtoGeometryCreated(const Frameworks::IEventPtr& e);
 
     protected:
@@ -42,6 +43,7 @@ namespace Enigma::Engine
         GeometryDataPolicy m_policy;
 
         Frameworks::EventSubscriberPtr m_onDtoDeserialized;
+        Frameworks::EventSubscriberPtr m_onDeserializeDtoFailed;
         Frameworks::EventSubscriberPtr m_onDtoGeometryCreated;
     };
 }

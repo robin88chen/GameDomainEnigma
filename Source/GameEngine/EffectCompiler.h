@@ -9,14 +9,17 @@
 #define EFFECT_COMPILER_H
 
 #include "EffectCompilingProfile.h"
+#include "EffectMaterialPolicy.h"
 #include "EffectPass.h"
 #include "EffectTechnique.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/ruid.h"
 #include <unordered_map>
 
 namespace Enigma::Engine
 {
     class EffectMaterial;
+    class EffectMaterialManager;
 
     class EffectCompiler
     {
@@ -36,16 +39,20 @@ namespace Enigma::Engine
         };
 
     public:
-        EffectCompiler();
+        EffectCompiler(EffectMaterialManager* host);
         EffectCompiler(const EffectCompiler&) = delete;
         EffectCompiler(EffectCompiler&&) = delete;
         ~EffectCompiler();
         EffectCompiler& operator=(const EffectCompiler&) = delete;
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
-        void CompileEffect(const EffectCompilingProfile& profile);
+        void CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
+        void CompileEffect(const EffectCompilingProfile& profile);
+
+        void OnCompilingProfileDeserialized(const Frameworks::IEventPtr& e);
+        void OnDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e);
         void OnShaderProgramBuilt(const Frameworks::IEventPtr& e);
         void OnBuildProgramFailed(const Frameworks::IEventPtr& e);
         void OnSamplerStateCreated(const Frameworks::IEventPtr& e);
@@ -72,8 +79,14 @@ namespace Enigma::Engine
             std::vector<EffectPass> RetrieveEffectPasses();
         };
     private:
+        EffectMaterialManager* m_hostManager;
         EffectCompilingProfile m_profile;
 
+        Frameworks::Ruid m_ruidDeserializing;
+        EffectMaterialPolicy m_policy;
+
+        Frameworks::EventSubscriberPtr m_onCompilingProfileDeserialized;
+        Frameworks::EventSubscriberPtr m_onDeserializeCompilingProfileFailed;
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onBuildProgramFailed;
         Frameworks::EventSubscriberPtr m_onSamplerStateCreated;

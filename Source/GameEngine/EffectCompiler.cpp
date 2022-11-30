@@ -7,14 +7,23 @@
 #include "Frameworks/CommandBus.h"
 #include "GraphicKernel/GraphicCommands.h"
 #include "GraphicKernel/GraphicEvents.h"
+#include "EffectMaterialManager.h"
+#include "EffectMaterialPolicy.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 
-EffectCompiler::EffectCompiler()
+EffectCompiler::EffectCompiler(EffectMaterialManager* host)
 {
+    m_hostManager = host;
     m_hasMaterialProduced = false;
+
+    m_onCompilingProfileDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompilingProfileDeserialized(e); });
+    EventPublisher::Subscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
+    m_onDeserializeCompilingProfileFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnDeserializeCompilingProfileFailed(e); });
+    EventPublisher::Subscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
 
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuilt(e); });
     EventPublisher::Subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
@@ -33,6 +42,11 @@ EffectCompiler::EffectCompiler()
 
 EffectCompiler::~EffectCompiler()
 {
+    EventPublisher::Unsubscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
+    m_onCompilingProfileDeserialized = nullptr;
+    EventPublisher::Unsubscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
+    m_onDeserializeCompilingProfileFailed = nullptr;
+
     EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onShaderProgramBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
@@ -46,6 +60,30 @@ EffectCompiler::~EffectCompiler()
     m_onDepthStateCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(DeviceRasterizerStateCreated), m_onRasterizerStateCreated);
     m_onRasterizerStateCreated = nullptr;
+}
+
+void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
+{
+    assert(m_hostManager);
+    if (m_hostManager->HasEffectMaterial(policy.Name()))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
+            policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name())));
+    }
+    else if (policy.GetProfile())
+    {
+        CompileEffect(policy.GetProfile().value());
+    }
+    else if (policy.GetDeserializer())
+    {
+        m_policy = policy;
+        m_ruidDeserializing = Ruid::Generate();
+        policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(policy.Name(), ErrorCode::policyIncomplete));
+    }
 }
 
 void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
@@ -94,6 +132,23 @@ void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
         m_builtEffectTechniques.emplace_back(built_effect_technique);
     }
     m_hasMaterialProduced = false;
+}
+
+void EffectCompiler::OnCompilingProfileDeserialized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<CompilingProfileDeserialized, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetRuid() != m_ruidDeserializing) return;
+    CompileEffect(ev->GetProfile());
+}
+
+void EffectCompiler::OnDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<DeserializeCompilingProfileFailed, IEvent>(e);
+    if (!ev) return;
+    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.Name(), ev->GetErrorCode()));
 }
 
 void EffectCompiler::OnShaderProgramBuilt(const Frameworks::IEventPtr& e)

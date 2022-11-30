@@ -8,7 +8,7 @@
 #ifndef EFFECT_COMPILER_H
 #define EFFECT_COMPILER_H
 
-#include "EffectCompilingPolicies.h"
+#include "EffectCompilingProfile.h"
 #include "EffectPass.h"
 #include "EffectTechnique.h"
 #include "Frameworks/EventSubscriber.h"
@@ -43,7 +43,7 @@ namespace Enigma::Engine
         EffectCompiler& operator=(const EffectCompiler&) = delete;
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
-        void CompileEffect(const EffectCompilingPolicy& policy);
+        void CompileEffect(const EffectCompilingProfile& profile);
 
     private:
         void OnShaderProgramBuilt(const Frameworks::IEventPtr& e);
@@ -72,7 +72,7 @@ namespace Enigma::Engine
             std::vector<EffectPass> RetrieveEffectPasses();
         };
     private:
-        EffectCompilingPolicy m_policy;
+        EffectCompilingProfile m_profile;
 
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onBuildProgramFailed;

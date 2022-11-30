@@ -12,7 +12,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.h">
       <Filter>EffectPolicy</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h">
@@ -26,7 +26,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPolicyJsonGateway.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.cpp">
       <Filter>EffectPolicy</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.cpp">

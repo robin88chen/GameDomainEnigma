@@ -23,7 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h" />
@@ -75,7 +75,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />

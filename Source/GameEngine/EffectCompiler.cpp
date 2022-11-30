@@ -48,20 +48,20 @@ EffectCompiler::~EffectCompiler()
     m_onRasterizerStateCreated = nullptr;
 }
 
-void EffectCompiler::CompileEffect(const EffectCompilingPolicy& policy)
+void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
 {
-    m_policy = policy;
+    m_profile = profile;
     m_builtPrograms.clear();
     m_builtPassStates.clear();
     m_builtEffectTechniques.clear();
 
-    if (m_policy.m_techniques.empty())
+    if (m_profile.m_techniques.empty())
     {
-        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.m_name, ErrorCode::compilingEmptyEffectTech));
+        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ErrorCode::compilingEmptyEffectTech));
         return;
     }
-    m_builtEffectTechniques.reserve(m_policy.m_techniques.size());
-    for (auto& tech : m_policy.m_techniques)
+    m_builtEffectTechniques.reserve(m_profile.m_techniques.size());
+    for (auto& tech : m_profile.m_techniques)
     {
         BuiltEffectTechniqueMeta built_effect_technique{ tech.m_name };
         if (tech.m_passes.empty()) continue;
@@ -111,7 +111,7 @@ void EffectCompiler::OnBuildProgramFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev_fail = std::dynamic_pointer_cast<BuildShaderProgramFailed, IEvent>(e);
     if (!ev_fail) return;
-    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.m_name, ev_fail->GetErrorCode()));
+    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ev_fail->GetErrorCode()));
 }
 
 void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)
@@ -119,13 +119,13 @@ void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceSamplerStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass_profiles = m_policy.FindPassesWithSamplerState(ev->GetStateName());
+    auto pass_profiles = m_profile.FindPassesWithSamplerState(ev->GetStateName());
     if (pass_profiles.empty()) return;
 
     for (auto& pass_profile : pass_profiles)
     {
         std::string pass_name = pass_profile.get().m_name;
-        auto index = m_policy.FindSamplerIndexInPass(pass_name, ev->GetStateName());
+        auto index = m_profile.FindSamplerIndexInPass(pass_name, ev->GetStateName());
         if (!index) return;
         auto it = m_builtPassStates.find(pass_name);
         if (it == m_builtPassStates.end()) return;
@@ -139,7 +139,7 @@ void EffectCompiler::OnBlendStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceAlphaBlendStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass_profiles = m_policy.FindPassesWithBlendState(ev->GetStateName());
+    auto pass_profiles = m_profile.FindPassesWithBlendState(ev->GetStateName());
     if (pass_profiles.empty()) return;
 
     for (auto& pass_profile : pass_profiles)
@@ -156,7 +156,7 @@ void EffectCompiler::OnDepthStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceDepthStencilStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass_profiles = m_policy.FindPassesWithDepthState(ev->GetStateName());
+    auto pass_profiles = m_profile.FindPassesWithDepthState(ev->GetStateName());
     if (pass_profiles.empty()) return;
 
     for (auto& pass_profile : pass_profiles)
@@ -173,7 +173,7 @@ void EffectCompiler::OnRasterizerStateCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeviceRasterizerStateCreated, IEvent>(e);
     if (!ev) return;
-    auto pass_profiles = m_policy.FindPassesWithRasterizerState(ev->GetStateName());
+    auto pass_profiles = m_profile.FindPassesWithRasterizerState(ev->GetStateName());
     if (pass_profiles.empty()) return;
 
     for (auto& pass_profile : pass_profiles)
@@ -189,7 +189,7 @@ void EffectCompiler::TryBuildEffectPass(const std::string& program_name)
 {
     if (m_builtPrograms.find(program_name) == m_builtPrograms.end()) return;
     if (!m_builtPrograms[program_name]) return;
-    auto pass_profiles = m_policy.FindPassesWithProgram(program_name);
+    auto pass_profiles = m_profile.FindPassesWithProgram(program_name);
     if (pass_profiles.empty()) return;
     for (auto& pass_profile : pass_profiles)
     {
@@ -249,8 +249,8 @@ void EffectCompiler::TryBuildEffectMaterial()
         if (!built_tech.m_technique) return;
         effect_techniques.emplace_back(built_tech.m_technique.value());
     }
-    auto effect_material = std::make_unique<EffectMaterial>(m_policy.m_name, effect_techniques);
-    EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_policy.m_name, std::move(effect_material)));
+    auto effect_material = std::make_unique<EffectMaterial>(m_profile.m_name, effect_techniques);
+    EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, std::move(effect_material)));
     m_hasMaterialProduced = true;
 }
 

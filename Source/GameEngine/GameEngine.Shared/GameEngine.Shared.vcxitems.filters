@@ -99,7 +99,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h">
       <Filter>Effect Material\Technique Pass</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
@@ -254,7 +254,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp">

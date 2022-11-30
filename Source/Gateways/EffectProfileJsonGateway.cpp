@@ -1,4 +1,4 @@
-﻿#include "EffectPolicyJsonGateway.h"
+﻿#include "EffectProfileJsonGateway.h"
 #include "Frameworks/StringFormat.h"
 #include "Platforms/PlatformLayer.h"
 #include "FileSystem/FileSystem.h"
@@ -11,12 +11,12 @@ using namespace Enigma::FileSystem;
 
 #define VERTEX_SHADER_LIST_TOKEN "VertexShaderList"
 #define PIXEL_SHADER_LIST_TOKEN "PixelShaderList"
-#define NAME_TOKEN	"Name"
-#define FILE_TOKEN	"File"
-#define PROFILE_TOKEN	"Profile"
-#define ENTRY_TOKEN	"Entry"
+#define NAME_TOKEN  "Name"
+#define FILE_TOKEN  "File"
+#define PROFILE_TOKEN   "Profile"
+#define ENTRY_TOKEN "Entry"
 #define VTX_DECL_TOKEN "VtxDecl"
-#define API_TOKEN	"API"
+#define API_TOKEN   "API"
 #define SAMPLER_STATE_LIST_TOKEN "SamplerStateList"
 #define ADDRESS_U_TOKEN "AddressU"
 #define ADDRESS_V_TOKEN "AddressV"
@@ -53,7 +53,7 @@ using namespace Enigma::FileSystem;
 #define STENCIL_DEPTH_FAIL_TOKEN "OnDepthFail"
 #define STENCIL_REF_VALUE_TOKEN "StencilRefValue"
 #define EFFECT_PASS_ARRAY_TOKEN "EffectPassArray"
-#define TECHNIQUE_LIST_TOKEN	"TechniqueList"
+#define TECHNIQUE_LIST_TOKEN    "TechniqueList"
 #define PROGRAM_TOKEN "Program"
 #define VERTEX_SHADER_TOKEN "VertexShader"
 #define PIXEL_SHADER_TOKEN "PixelShader"
@@ -64,11 +64,11 @@ using namespace Enigma::FileSystem;
 #define SAMPLER_TOKEN "Sampler"
 #define VAR_TOKEN "Var"
 
-EffectPolicyJsonGateway::EffectPolicyJsonGateway()
+EffectProfileJsonGateway::EffectProfileJsonGateway()
 {
 }
 
-std::optional<EffectCompilingPolicy> EffectPolicyJsonGateway::Deserialize(const std::string& json)
+std::optional<EffectCompilingProfile> EffectProfileJsonGateway::Deserialize(const std::string& json)
 {
     rapidjson::Document json_doc;
     json_doc.Parse<0>(json.c_str());
@@ -91,14 +91,14 @@ std::optional<EffectCompilingPolicy> EffectPolicyJsonGateway::Deserialize(const 
     m_blendStateGateways = DeserializeBlendStateList(json_doc[BLEND_STATE_LIST_TOKEN]);
     m_depthStateGateways = DeserializeDepthStateList(json_doc[DEPTH_STATE_LIST_TOKEN]);
 
-    EffectCompilingPolicy policy;
-    policy.m_name = json_doc[NAME_TOKEN].GetString();
-    policy.m_techniques = DeserializeTechniqueProfileList(json_doc[TECHNIQUE_LIST_TOKEN]);
+    EffectCompilingProfile profile;
+    profile.m_name = json_doc[NAME_TOKEN].GetString();
+    profile.m_techniques = DeserializeTechniqueProfileList(json_doc[TECHNIQUE_LIST_TOKEN]);
 
-    return policy;
+    return profile;
 }
 
-std::vector<EffectPolicyJsonGateway::VertexShaderGatewayMeta> EffectPolicyJsonGateway::DeserializeVertexShaderList(
+std::vector<EffectProfileJsonGateway::VertexShaderGatewayMeta> EffectProfileJsonGateway::DeserializeVertexShaderList(
     const rapidjson::Value& shader_list) const
 {
     auto shader_metas = std::vector<VertexShaderGatewayMeta>{};
@@ -116,7 +116,7 @@ std::vector<EffectPolicyJsonGateway::VertexShaderGatewayMeta> EffectPolicyJsonGa
     return shader_metas;
 }
 
-std::vector<EffectPolicyJsonGateway::PixelShaderGatewayMeta> EffectPolicyJsonGateway::DeserializePixelShaderList(
+std::vector<EffectProfileJsonGateway::PixelShaderGatewayMeta> EffectProfileJsonGateway::DeserializePixelShaderList(
     const rapidjson::Value& shader_list) const
 {
     auto shader_metas = std::vector<PixelShaderGatewayMeta>{};
@@ -134,7 +134,7 @@ std::vector<EffectPolicyJsonGateway::PixelShaderGatewayMeta> EffectPolicyJsonGat
     return shader_metas;
 }
 
-std::vector<EffectPolicyJsonGateway::SamplerStateGatewayMeta> EffectPolicyJsonGateway::DeserializeSamplerStateList(const rapidjson::Value& sampler_list) const
+std::vector<EffectProfileJsonGateway::SamplerStateGatewayMeta> EffectProfileJsonGateway::DeserializeSamplerStateList(const rapidjson::Value& sampler_list) const
 {
     auto state_metas = std::vector<SamplerStateGatewayMeta>{};
     if (FATAL_LOG_EXPR(!sampler_list.IsArray()))
@@ -151,7 +151,7 @@ std::vector<EffectPolicyJsonGateway::SamplerStateGatewayMeta> EffectPolicyJsonGa
     return state_metas;
 }
 
-std::vector<EffectPolicyJsonGateway::RasterizerStateGatewayMeta> EffectPolicyJsonGateway::DeserializeRasterizerStateList(const rapidjson::Value& rasterizer_list) const
+std::vector<EffectProfileJsonGateway::RasterizerStateGatewayMeta> EffectProfileJsonGateway::DeserializeRasterizerStateList(const rapidjson::Value& rasterizer_list) const
 {
     auto state_metas = std::vector<RasterizerStateGatewayMeta>{};
     if (FATAL_LOG_EXPR(!rasterizer_list.IsArray()))
@@ -168,7 +168,7 @@ std::vector<EffectPolicyJsonGateway::RasterizerStateGatewayMeta> EffectPolicyJso
     return state_metas;
 }
 
-std::vector<EffectPolicyJsonGateway::BlendStateGatewayMeta> EffectPolicyJsonGateway::DeserializeBlendStateList(const rapidjson::Value& blend_list) const
+std::vector<EffectProfileJsonGateway::BlendStateGatewayMeta> EffectProfileJsonGateway::DeserializeBlendStateList(const rapidjson::Value& blend_list) const
 {
     auto state_metas = std::vector<BlendStateGatewayMeta>{};
     if (FATAL_LOG_EXPR(!blend_list.IsArray()))
@@ -185,7 +185,7 @@ std::vector<EffectPolicyJsonGateway::BlendStateGatewayMeta> EffectPolicyJsonGate
     return state_metas;
 }
 
-std::vector<EffectPolicyJsonGateway::DepthStateGatewayMeta> EffectPolicyJsonGateway::DeserializeDepthStateList(const rapidjson::Value& depth_list) const
+std::vector<EffectProfileJsonGateway::DepthStateGatewayMeta> EffectProfileJsonGateway::DeserializeDepthStateList(const rapidjson::Value& depth_list) const
 {
     auto state_metas = std::vector<DepthStateGatewayMeta>{};
     if (FATAL_LOG_EXPR(!depth_list.IsArray()))
@@ -202,7 +202,7 @@ std::vector<EffectPolicyJsonGateway::DepthStateGatewayMeta> EffectPolicyJsonGate
     return state_metas;
 }
 
-std::vector<EffectTechniqueProfile> EffectPolicyJsonGateway::DeserializeTechniqueProfileList(const rapidjson::Value& tech_list) const
+std::vector<EffectTechniqueProfile> EffectProfileJsonGateway::DeserializeTechniqueProfileList(const rapidjson::Value& tech_list) const
 {
     auto profiles = std::vector<EffectTechniqueProfile>{};
     if (FATAL_LOG_EXPR(!tech_list.IsArray()))
@@ -219,7 +219,7 @@ std::vector<EffectTechniqueProfile> EffectPolicyJsonGateway::DeserializeTechniqu
     return profiles;
 }
 
-std::vector<EffectPassProfile> EffectPolicyJsonGateway::DeserializePassProfileList(const rapidjson::Value& pass_list) const
+std::vector<EffectPassProfile> EffectProfileJsonGateway::DeserializePassProfileList(const rapidjson::Value& pass_list) const
 {
     auto profiles = std::vector<EffectPassProfile>{};
     if (FATAL_LOG_EXPR(!pass_list.IsArray()))
@@ -236,7 +236,7 @@ std::vector<EffectPassProfile> EffectPolicyJsonGateway::DeserializePassProfileLi
     return profiles;
 }
 
-EffectPolicyJsonGateway::VertexShaderGatewayMeta EffectPolicyJsonGateway::DeserializeVertexShaderMeta(const rapidjson::Value& shader) const
+EffectProfileJsonGateway::VertexShaderGatewayMeta EffectProfileJsonGateway::DeserializeVertexShaderMeta(const rapidjson::Value& shader) const
 {
     assert(!shader.IsNull());
 
@@ -251,7 +251,7 @@ EffectPolicyJsonGateway::VertexShaderGatewayMeta EffectPolicyJsonGateway::Deseri
     return meta;
 }
 
-EffectPolicyJsonGateway::PixelShaderGatewayMeta EffectPolicyJsonGateway::DeserializePixelShaderMeta(const rapidjson::Value& shader) const
+EffectProfileJsonGateway::PixelShaderGatewayMeta EffectProfileJsonGateway::DeserializePixelShaderMeta(const rapidjson::Value& shader) const
 {
     assert(!shader.IsNull());
 
@@ -264,7 +264,7 @@ EffectPolicyJsonGateway::PixelShaderGatewayMeta EffectPolicyJsonGateway::Deseria
     return meta;
 }
 
-EffectPolicyJsonGateway::SamplerStateGatewayMeta EffectPolicyJsonGateway::DeserializeSamplerStateMeta(const rapidjson::Value& state) const
+EffectProfileJsonGateway::SamplerStateGatewayMeta EffectProfileJsonGateway::DeserializeSamplerStateMeta(const rapidjson::Value& state) const
 {
     assert(!state.IsNull());
 
@@ -298,7 +298,7 @@ EffectPolicyJsonGateway::SamplerStateGatewayMeta EffectPolicyJsonGateway::Deseri
     return meta;
 }
 
-EffectPolicyJsonGateway::RasterizerStateGatewayMeta EffectPolicyJsonGateway::DeserializeRasterizerStateMeta(const rapidjson::Value& state) const
+EffectProfileJsonGateway::RasterizerStateGatewayMeta EffectProfileJsonGateway::DeserializeRasterizerStateMeta(const rapidjson::Value& state) const
 {
     assert(!state.IsNull());
 
@@ -318,7 +318,7 @@ EffectPolicyJsonGateway::RasterizerStateGatewayMeta EffectPolicyJsonGateway::Des
     return meta;
 }
 
-EffectPolicyJsonGateway::BlendStateGatewayMeta EffectPolicyJsonGateway::DeserializeBlendStateMeta(const rapidjson::Value& state) const
+EffectProfileJsonGateway::BlendStateGatewayMeta EffectProfileJsonGateway::DeserializeBlendStateMeta(const rapidjson::Value& state) const
 {
     assert(!state.IsNull());
 
@@ -339,7 +339,7 @@ EffectPolicyJsonGateway::BlendStateGatewayMeta EffectPolicyJsonGateway::Deserial
     return meta;
 }
 
-EffectPolicyJsonGateway::DepthStateGatewayMeta EffectPolicyJsonGateway::DeserializeDepthStateMeta(const rapidjson::Value& state) const
+EffectProfileJsonGateway::DepthStateGatewayMeta EffectProfileJsonGateway::DeserializeDepthStateMeta(const rapidjson::Value& state) const
 {
     assert(!state.IsNull());
 
@@ -385,7 +385,7 @@ EffectPolicyJsonGateway::DepthStateGatewayMeta EffectPolicyJsonGateway::Deserial
     return meta;
 }
 
-EffectTechniqueProfile EffectPolicyJsonGateway::DeserializeTechniqueProfile(const rapidjson::Value& tech) const
+EffectTechniqueProfile EffectProfileJsonGateway::DeserializeTechniqueProfile(const rapidjson::Value& tech) const
 {
     assert(!tech.IsNull());
     EffectTechniqueProfile profile;
@@ -395,12 +395,12 @@ EffectTechniqueProfile EffectPolicyJsonGateway::DeserializeTechniqueProfile(cons
     return profile;
 }
 
-EffectPassProfile EffectPolicyJsonGateway::DeserializePassProfile(const rapidjson::Value& pass) const
+EffectPassProfile EffectProfileJsonGateway::DeserializePassProfile(const rapidjson::Value& pass) const
 {
     assert(!pass.IsNull());
     EffectPassProfile profile;
     profile.m_name = pass[NAME_TOKEN].GetString();
-    profile.m_program = DeserializeProgramPolicy(pass[PROGRAM_TOKEN].GetString(), 
+    profile.m_program = DeserializeProgramPolicy(pass[PROGRAM_TOKEN].GetString(),
         pass[VERTEX_SHADER_TOKEN].GetString(), pass[PIXEL_SHADER_TOKEN].GetString());
     if (pass.HasMember(SAMPLER_STATE_TOKEN))
         profile.m_samplers = DeserializeSamplerProfileList(pass[SAMPLER_STATE_TOKEN]);
@@ -414,13 +414,13 @@ EffectPassProfile EffectPolicyJsonGateway::DeserializePassProfile(const rapidjso
     return profile;
 }
 
-ShaderProgramPolicy EffectPolicyJsonGateway::DeserializeProgramPolicy(const std::string& name, 
+ShaderProgramPolicy EffectProfileJsonGateway::DeserializeProgramPolicy(const std::string& name,
     const std::string& vtx_shader_name, const std::string& pix_shader_name) const
 {
     Graphics::IGraphicAPI::APIVersion api = Graphics::IGraphicAPI::Instance()->GetAPIVersion();
     ShaderProgramPolicy policy;
     policy.m_programName = name;
-    auto vtx_it = std::find_if(m_vertexShaderGateways.begin(), m_vertexShaderGateways.end(), [=](auto g) 
+    auto vtx_it = std::find_if(m_vertexShaderGateways.begin(), m_vertexShaderGateways.end(), [=](auto g)
         { return g.m_shaderName == vtx_shader_name && g.m_api == api; });
     if (vtx_it != m_vertexShaderGateways.end())
     {
@@ -443,7 +443,7 @@ ShaderProgramPolicy EffectPolicyJsonGateway::DeserializeProgramPolicy(const std:
     return policy;
 }
 
-std::vector<EffectSamplerProfile> EffectPolicyJsonGateway::DeserializeSamplerProfileList(const rapidjson::Value& sampler_list) const
+std::vector<EffectSamplerProfile> EffectProfileJsonGateway::DeserializeSamplerProfileList(const rapidjson::Value& sampler_list) const
 {
     assert(!sampler_list.IsNull());
     auto profiles = std::vector<EffectSamplerProfile>{};
@@ -461,14 +461,14 @@ std::vector<EffectSamplerProfile> EffectPolicyJsonGateway::DeserializeSamplerPro
         });
         if (samp_it != m_samplerStateGateways.end())
         {
-            profiles.emplace_back(EffectSamplerProfile{ 
+            profiles.emplace_back(EffectSamplerProfile{
                 samp_it->m_name, samp_it->m_stateData, (*samp)[VAR_TOKEN].GetString() });
         }
     }
     return profiles;
 }
 
-EffectAlphaBlendProfile EffectPolicyJsonGateway::FetchBlendStateProfile(const std::string& state_name) const
+EffectAlphaBlendProfile EffectProfileJsonGateway::FetchBlendStateProfile(const std::string& state_name) const
 {
     EffectAlphaBlendProfile profile;
     auto it = std::find_if(m_blendStateGateways.begin(), m_blendStateGateways.end(), [=](auto g)
@@ -486,7 +486,7 @@ EffectAlphaBlendProfile EffectPolicyJsonGateway::FetchBlendStateProfile(const st
     return profile;
 }
 
-EffectRasterizerProfile EffectPolicyJsonGateway::FetchRasterizerStateProfile(const std::string& state_name) const
+EffectRasterizerProfile EffectProfileJsonGateway::FetchRasterizerStateProfile(const std::string& state_name) const
 {
     EffectRasterizerProfile profile;
     auto it = std::find_if(m_rasterizerStateGateways.begin(), m_rasterizerStateGateways.end(), [=](auto g)
@@ -504,7 +504,7 @@ EffectRasterizerProfile EffectPolicyJsonGateway::FetchRasterizerStateProfile(con
     return profile;
 }
 
-EffectDepthStencilProfile EffectPolicyJsonGateway::FetchDepthStateProfile(const std::string& state_name) const
+EffectDepthStencilProfile EffectProfileJsonGateway::FetchDepthStateProfile(const std::string& state_name) const
 {
     EffectDepthStencilProfile profile;
     auto it = std::find_if(m_depthStateGateways.begin(), m_depthStateGateways.end(), [=](auto g)
@@ -522,7 +522,7 @@ EffectDepthStencilProfile EffectPolicyJsonGateway::FetchDepthStateProfile(const 
     return profile;
 }
 
-std::string EffectPolicyJsonGateway::ReadShaderCode(const std::string& filename) const
+std::string EffectProfileJsonGateway::ReadShaderCode(const std::string& filename) const
 {
     IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(filename), "rb");
     if (FATAL_LOG_EXPR(!iFile)) return "";
@@ -539,14 +539,14 @@ std::string EffectPolicyJsonGateway::ReadShaderCode(const std::string& filename)
     return convert_to_string(code_buff.value(), file_size);
 }
 
-Enigma::MathLib::ColorRGBA EffectPolicyJsonGateway::DeserializeColorRGBA(const rapidjson::Value& value) const
+Enigma::MathLib::ColorRGBA EffectProfileJsonGateway::DeserializeColorRGBA(const rapidjson::Value& value) const
 {
     if (!value.IsArray()) return MathLib::ColorRGBA{};
     auto values = value.GetArray();
     return MathLib::ColorRGBA{ values[0].GetFloat(), values[1].GetFloat(), values[2].GetFloat(), values[3].GetFloat() };
 }
 
-Enigma::Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData EffectPolicyJsonGateway::DeserializeStencilOp(
+Enigma::Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData EffectProfileJsonGateway::DeserializeStencilOp(
     const rapidjson::Value& value) const
 {
     Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData data;

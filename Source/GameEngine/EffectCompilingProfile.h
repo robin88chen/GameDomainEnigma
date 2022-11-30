@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   EffectCompilingPolicies.h
+ * \file   EffectCompilingProfile.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
-#ifndef EFFECT_COMPILING_POLICIES_H
-#define EFFECT_COMPILING_POLICIES_H
+#ifndef EFFECT_COMPILING_PROFILE_H
+#define EFFECT_COMPILING_PROFILE_H
 
 #include "ShaderBuildingPolicies.h"
 #include "GraphicKernel/IDeviceSamplerState.h"
@@ -53,7 +53,7 @@ namespace Enigma::Engine
         std::string m_name;
         std::vector<EffectPassProfile> m_passes;
     };
-    struct EffectCompilingPolicy
+    struct EffectCompilingProfile
     {
         std::string m_name;
         std::vector<EffectTechniqueProfile> m_techniques;

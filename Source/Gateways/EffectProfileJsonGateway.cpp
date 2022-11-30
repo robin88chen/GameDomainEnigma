@@ -98,6 +98,16 @@ std::optional<EffectCompilingProfile> EffectProfileJsonGateway::Deserialize(cons
     return profile;
 }
 
+void EffectProfileJsonGateway::Cleanup()
+{
+    m_vertexShaderGateways.clear();
+    m_pixelShaderGateways.clear();
+    m_samplerStateGateways.clear();
+    m_rasterizerStateGateways.clear();
+    m_blendStateGateways.clear();
+    m_depthStateGateways.clear();
+}
+
 std::vector<EffectProfileJsonGateway::VertexShaderGatewayMeta> EffectProfileJsonGateway::DeserializeVertexShaderList(
     const rapidjson::Value& shader_list) const
 {

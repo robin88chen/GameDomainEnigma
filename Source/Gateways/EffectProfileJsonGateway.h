@@ -67,6 +67,8 @@ namespace Enigma::Gateways
         EffectProfileJsonGateway();
         std::optional<Engine::EffectCompilingProfile> Deserialize(const std::string& json);
 
+        void Cleanup();
+
     private:
         std::vector<VertexShaderGatewayMeta> DeserializeVertexShaderList(const rapidjson::Value& shader_list) const;
         std::vector<PixelShaderGatewayMeta> DeserializePixelShaderList(const rapidjson::Value& shader_list) const;

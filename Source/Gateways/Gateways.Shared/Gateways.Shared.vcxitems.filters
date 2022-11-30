@@ -1,19 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="EffectPolicy">
-      <UniqueIdentifier>{1434ebaa-5879-4041-8a37-5bdc02f751f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DtoDeserializer">
       <UniqueIdentifier>{c7d1c588-5a85-4f8a-b576-f88f1a36407c}</UniqueIdentifier>
     </Filter>
     <Filter Include="DTOs">
       <UniqueIdentifier>{4b989ff9-047d-4221-911f-721e301ecb81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EffectProfile">
+      <UniqueIdentifier>{1434ebaa-5879-4041-8a37-5bdc02f751f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectProfile\Deserializer">
+      <UniqueIdentifier>{04da3665-eeb4-4e5f-af98-b79c224185f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.h">
-      <Filter>EffectPolicy</Filter>
+      <Filter>EffectProfile</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h">
       <Filter>DTOs</Filter>
@@ -24,10 +27,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h">
       <Filter>DtoDeserializer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.h">
+      <Filter>EffectProfile\Deserializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.cpp">
-      <Filter>EffectPolicy</Filter>
+      <Filter>EffectProfile</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.cpp">
       <Filter>DTOs</Filter>
@@ -37,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.cpp">
       <Filter>DtoDeserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.cpp">
+      <Filter>EffectProfile\Deserializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

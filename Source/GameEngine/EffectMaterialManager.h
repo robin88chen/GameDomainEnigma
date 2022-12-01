@@ -9,7 +9,7 @@
 #define EFFECT_MATERIAL_MANAGER_H
 
 #include "EffectMaterial.h"
-#include "EffectCompilingPolicies.h"
+#include "EffectMaterialPolicy.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Event.h"
@@ -44,7 +44,7 @@ namespace Enigma::Engine
         bool HasEffectMaterial(const std::string& name);
         EffectMaterialPtr QueryEffectMaterial(const std::string& name);
 
-        error CompileEffectMaterial(const EffectCompilingPolicy& policy);
+        error CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
@@ -64,7 +64,7 @@ namespace Enigma::Engine
         std::recursive_mutex m_sourceMapLock;
 
         EffectCompiler* m_compiler;
-        std::queue<EffectCompilingPolicy> m_policies;
+        std::queue<EffectMaterialPolicy> m_policies;
         bool m_isCurrentCompiling;
         std::mutex m_policiesLock;
     };

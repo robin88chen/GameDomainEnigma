@@ -1,16 +1,16 @@
 ﻿/*********************************************************************
- * \file   EffectPolicyJsonGateway.h
+ * \file   EffectProfileJsonGateway.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
-#ifndef EFFECT_POLICY_JSON_GATEWAY_H
-#define EFFECT_POLICY_JSON_GATEWAY_H
+#ifndef EFFECT_PROFILE_JSON_GATEWAY_H
+#define EFFECT_PROFILE_JSON_GATEWAY_H
 
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include "GameEngine/EffectCompilingPolicies.h"
+#include "GameEngine/EffectCompilingProfile.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/IDeviceSamplerState.h"
 #include "GraphicKernel/IDeviceRasterizerState.h"
@@ -22,7 +22,7 @@
 
 namespace Enigma::Gateways
 {
-    class EffectPolicyJsonGateway
+    class EffectProfileJsonGateway
     {
     private:
         struct VertexShaderGatewayMeta
@@ -64,8 +64,10 @@ namespace Enigma::Gateways
             Graphics::IDeviceDepthStencilState::DepthStencilData m_stateData;
         };
     public:
-        EffectPolicyJsonGateway();
-        std::optional<Engine::EffectCompilingPolicy> Deserialize(const std::string& json);
+        EffectProfileJsonGateway();
+        std::optional<Engine::EffectCompilingProfile> Deserialize(const std::string& json);
+
+        void Cleanup();
 
     private:
         std::vector<VertexShaderGatewayMeta> DeserializeVertexShaderList(const rapidjson::Value& shader_list) const;

@@ -61,6 +61,9 @@
     <Filter Include="DTOs\Geometry Dto">
       <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material\Policy">
+      <UniqueIdentifier>{b133a405-2a7c-4b1e-a87d-63113fc8b5c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -99,7 +102,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectVariable.h">
       <Filter>Effect Material\Technique Pass</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
@@ -222,6 +225,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
+      <Filter>Effect Material\Effect Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h">
+      <Filter>Effect Material\Policy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -254,7 +263,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp">

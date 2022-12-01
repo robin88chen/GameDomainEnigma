@@ -17,13 +17,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h" />
@@ -75,7 +77,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingPolicies.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />

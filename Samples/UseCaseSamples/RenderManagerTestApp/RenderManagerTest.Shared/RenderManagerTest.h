@@ -22,10 +22,8 @@
 #include "Renderer/RenderElement.h"
 #include "Renderer/Renderer.h"
 #include "GameEngine/RenderBuffer.h"
-#include "GameEngine/EffectPass.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectMaterialManager.h"
-#include "Gateways/EffectPolicyJsonGateway.h"
 
 class RenderManagerTest : public Enigma::Application::AppDelegate
 {
@@ -56,7 +54,6 @@ private:
     void BuildRenderElement();
 
 private:
-    Enigma::Gateways::EffectPolicyJsonGateway* m_gateway;
     //Enigma::Renderer::RendererManager* m_rendererManager;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     Enigma::Renderer::RendererPtr m_renderer;

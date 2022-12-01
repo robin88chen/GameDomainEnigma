@@ -3,11 +3,13 @@
           package="com.RenderManagerTestApp"
           android:versionCode="1"
           android:versionName="1.0">
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
   <application
       android:allowBackup="false"
       android:label="@string/app_name">
     <activity android:name=".RenderManagerTestApp"
-              android:label="@string/app_name">
+              android:label="@string/app_name"
+              android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

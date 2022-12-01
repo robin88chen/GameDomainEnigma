@@ -20,6 +20,8 @@ GeometryBuilder::GeometryBuilder(GeometryRepository* host)
     m_hostRepository = host;
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoDeserialized(e); });
     EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    m_onDeserializeDtoFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnDeserializeDtoFailed(e); });
+    EventPublisher::Subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
     m_onDtoGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoGeometryCreated(e); });
     EventPublisher::Subscribe(typeid(FactoryGeometryCreated), m_onDtoGeometryCreated);
 }
@@ -28,6 +30,8 @@ GeometryBuilder::~GeometryBuilder()
 {
     EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDtoDeserialized = nullptr;
+    EventPublisher::Unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
+    m_onDeserializeDtoFailed = nullptr;
     EventPublisher::Unsubscribe(typeid(FactoryGeometryCreated), m_onDtoGeometryCreated);
     m_onDtoGeometryCreated = nullptr;
 }
@@ -75,6 +79,15 @@ void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
         return;
     }
     CreateFromDto(m_policy.Name(), ev->GetDtos()[0]);
+}
+
+void GeometryBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetRuid() != m_ruidDeserializing) return;
+    EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ev->GetErrorCode()));
 }
 
 void GeometryBuilder::OnDtoGeometryCreated(const Frameworks::IEventPtr& e)

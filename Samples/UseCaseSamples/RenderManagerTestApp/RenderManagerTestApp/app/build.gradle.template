@@ -1,52 +1,37 @@
-﻿apply plugin: 'com.android.model.$(ConfigurationType)'
+﻿apply plugin: 'com.android.$(ConfigurationType)'
 
-model {
-    android {
-        compileSdkVersion = $(AndroidAPILevelNumber)
-        buildToolsVersion = "$(AndroidBuildToolsVersion)"
+android {
+    compileSdkVersion $(AndroidAPILevelNumber)
+    buildToolsVersion '$(AndroidBuildToolsVersion)'
 
-        defaultConfig.with {
-            $(ApplicationId)
-            minSdkVersion.apiLevel = 16
-            targetSdkVersion.apiLevel = 23
-        }
-
-        compileOptions.with {
-            sourceCompatibility=JavaVersion.VERSION_1_7
-            targetCompatibility=JavaVersion.VERSION_1_7
-        }
+    defaultConfig.with {
+        $(ApplicationId)
+        minSdkVersion 29
+        targetSdkVersion 33
     }
 
-    android.sources {
+    compileOptions.with {
+        sourceCompatibility=JavaVersion.VERSION_1_7
+        targetCompatibility=JavaVersion.VERSION_1_7
+    }
+
+	sourceSets {
 		main {
-			java {
-				source
-				{
-					srcDir 'src'
-					srcDir '../../../../../Source/Platforms/JavaBridge/src'
-					srcDir '../../../../../Source/Application/JavaBridge/src'
-				}
-			}
-			assets {
-				source
-				{
-					srcDir 'src/main/assets'
-					srcDir '../../../../../Media/'
-				}
-			}
+			java.srcDirs = ['src','../../../../../Source/Platforms/JavaBridge/src','../../../../../Source/Application/JavaBridge/src']
+			assets.srcDirs = ['src/main/assets','../../../../../Media/']
 		}
 	}
 
-    android.buildTypes {
+    buildTypes {
         release {
-            minifyEnabled = false
-            proguardFiles.add(file('proguard-rules.txt'))
-            ndk.debuggable = true
-            debuggable = true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
         }
     }
 
-    android.productFlavors {
+    flavorDimensions 'cpuArch'
+    productFlavors {
         create("arm7") {
             ndk.abiFilters.add("armeabi-v7a")
         }
@@ -63,13 +48,7 @@ model {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     $(AarDependencies)
 }

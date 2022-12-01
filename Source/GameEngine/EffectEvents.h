@@ -40,6 +40,28 @@ namespace Enigma::Engine
         std::string m_filename;
         std::error_code m_error;
     };
+    class CompilingProfileDeserialized : public Frameworks::IEvent
+    {
+    public:
+        CompilingProfileDeserialized(const Frameworks::Ruid& ruid, const EffectCompilingProfile& profile) :
+            m_ruid(ruid), m_profile(profile) {};
+        const Frameworks::Ruid& GetRuid() { return m_ruid; }
+        const EffectCompilingProfile& GetProfile() { return m_profile; }
+    private:
+        Frameworks::Ruid m_ruid;
+        EffectCompilingProfile m_profile;
+    };
+    class DeserializeCompilingProfileFailed : public Frameworks::IEvent
+    {
+    public:
+        DeserializeCompilingProfileFailed(const Frameworks::Ruid& ruid, std::error_code er) :
+            m_ruid(ruid), m_error(er) {};
+        const Frameworks::Ruid& GetRuid() { return m_ruid; }
+        std::error_code GetErrorCode() const { return m_error; }
+    private:
+        Frameworks::Ruid m_ruid;
+        std::error_code m_error;
+    };
 }
 
 #endif // EFFECT_EVENTS_H

@@ -150,14 +150,7 @@ bool StdioFile::IsExisted()
 bool StdioFile::IsFileExisted(const std::string& filepath)
 {
     if (filepath.length() <= 0) return false;
-#if TARGET_PLATFORM == PLATFORM_WIN32
     return std::filesystem::is_regular_file(filepath);
-#else
-    struct stat attrib;
-    int err = stat(filepath.c_str(), &attrib);
-    if (err != 0) return false;
-    return true;
-#endif
 }
 
 

@@ -100,9 +100,9 @@ error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
     std::string header_filename = m_baseFilename + PACKAGE_HEADER_FILE_EXT;
     std::string bundle_filename = m_baseFilename + PACKAGE_BUNDLE_FILE_EXT;
 
-    m_headerFile.open(header_filename.c_str(), std::fstream::in | std::fstream::out 
+    m_headerFile.open(header_filename.c_str(), std::fstream::in | std::fstream::out
         | std::fstream::binary | std::fstream::trunc);
-    m_bundleFile.open(bundle_filename.c_str(), std::fstream::in | std::fstream::out 
+    m_bundleFile.open(bundle_filename.c_str(), std::fstream::in | std::fstream::out
         | std::fstream::binary | std::fstream::trunc);
     if ((!m_headerFile) || (!m_bundleFile))
     {
@@ -280,7 +280,7 @@ std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(cons
     unsigned long buff_out_length = (unsigned long)asset_orig_size;
     std::vector<char> buff;
     buff.resize(buff_out_length, 0);
-    int z_result = uncompress((unsigned char*)&buff[0], &buff_out_length, 
+    int z_result = uncompress((unsigned char*)&buff[0], &buff_out_length,
         (const unsigned char*)&comp_buff[0], header_data->m_size);
 
     if (z_result != Z_OK) return std::nullopt;
@@ -331,7 +331,7 @@ error AssetPackageFile::RemoveAsset(const std::string& asset_key)
     er = m_headerDataMap->RemoveHeaderData(asset_key);
     assert(!er);
     SaveHeaderFile();
-    
+
     return ErrorCode::ok;
 }
 

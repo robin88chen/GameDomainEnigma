@@ -39,7 +39,7 @@
     <RootNamespace>RenderManagerTestApp</RootNamespace>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ProjectVersion>1.0</ProjectVersion>
-    <ProjectGuid>{a0bccb6d-8a91-490e-82d1-15cb1f9a1a55}</ProjectGuid>
+    <ProjectGuid>{2ecf71ca-6c70-4838-a7e2-6ad79bd8b436}</ProjectGuid>
     <_PackagingProjectWithoutNativeComponent>true</_PackagingProjectWithoutNativeComponent>
     <LaunchActivity Condition="'$(LaunchActivity)' == ''">com.RenderManagerTestApp.RenderManagerTestApp</LaunchActivity>
     <JavaSourceRoots>src\main\java</JavaSourceRoots>

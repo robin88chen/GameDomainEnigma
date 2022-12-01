@@ -1,5 +1,4 @@
 ﻿#include "RenderManagerTest.h"
-#include "RenderManagerTest.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/EventSubscriber.h"
@@ -8,7 +7,8 @@
 #include "GameEngine/EffectEvents.h"
 #include "GameEngine/RenderBufferEvents.h"
 #include "GameEngine/TextureEvents.h"
-#include "Gateways/EffectPolicyJsonGateway.h"
+#include "Gateways/JsonFileEffectProfileDeserializer.h"
+#include "GameEngine/EffectMaterialPolicy.h"
 #include "Controllers/InstallingPolicies.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "MathLib/Vector3.h"
@@ -120,25 +120,9 @@ void RenderManagerTest::InstallEngine()
     //m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
     m_materialManager = ServiceManager::GetSystemServiceAs<EffectMaterialManager>();
 
-    m_gateway = menew EffectPolicyJsonGateway();
+    EffectMaterialPolicy eff_policy("TestEffect", "TestEffect.efx@APK_PATH", std::make_shared<JsonFileEffectProfileDeserializer>());
+    m_materialManager->CompileEffectMaterial(eff_policy);
 
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("TestEffect.efx@APK_PATH"), "rb");
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    size_t file_size = iFile->Size();
-    if (FATAL_LOG_EXPR(file_size <= 0))
-    {
-        FileSystem::Instance()->CloseFile(iFile);
-        return;
-    }
-
-    auto code_buff = iFile->Read(0, file_size);
-    if (!code_buff) return;
-    FileSystem::Instance()->CloseFile(iFile);
-    auto compiling_policy = m_gateway->Deserialize(convert_to_string(code_buff.value(), file_size));
-    if (compiling_policy)
-    {
-        m_materialManager->CompileEffectMaterial(compiling_policy.value());
-    }
     byte_buffer points = make_data_buffer((unsigned char*)vtx_pos, sizeof(vtx_pos));
     uint_buffer indices = make_data_buffer(vtx_idx, 6);
     RenderBufferSignature signature{ BufferSignatureName, PrimitiveTopology::Topology_TriangleList, 4, 6 };
@@ -155,8 +139,6 @@ void RenderManagerTest::InstallEngine()
 
 void RenderManagerTest::ShutdownEngine()
 {
-    delete m_gateway;
-    m_gateway = nullptr;
     delete m_timer;
     m_timer = nullptr;
 

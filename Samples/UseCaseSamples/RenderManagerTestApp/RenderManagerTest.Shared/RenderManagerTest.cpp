@@ -8,6 +8,7 @@
 #include "GameEngine/RenderBufferEvents.h"
 #include "GameEngine/TextureEvents.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
+#include "Gateways/AsyncJsonFileEffectProfileDeserializer.h"
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "Controllers/InstallingPolicies.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -120,7 +121,8 @@ void RenderManagerTest::InstallEngine()
     //m_rendererManager = ServiceManager::GetSystemServiceAs<RendererManager>();
     m_materialManager = ServiceManager::GetSystemServiceAs<EffectMaterialManager>();
 
-    EffectMaterialPolicy eff_policy("TestEffect", "TestEffect.efx@APK_PATH", std::make_shared<JsonFileEffectProfileDeserializer>());
+    //EffectMaterialPolicy eff_policy("TestEffect", "TestEffect.efx@APK_PATH", std::make_shared<JsonFileEffectProfileDeserializer>());
+    EffectMaterialPolicy eff_policy("TestEffect", "TestEffect.efx@APK_PATH", std::make_shared<AsyncJsonFileEffectProfileDeserializer>());
     m_materialManager->CompileEffectMaterial(eff_policy);
 
     byte_buffer points = make_data_buffer((unsigned char*)vtx_pos, sizeof(vtx_pos));

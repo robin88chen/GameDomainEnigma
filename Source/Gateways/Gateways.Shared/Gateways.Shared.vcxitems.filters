@@ -30,6 +30,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.h">
       <Filter>EffectProfile\Deserializer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.h">
+      <Filter>EffectProfile\Deserializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.cpp">
@@ -45,6 +48,9 @@
       <Filter>DtoDeserializer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.cpp">
+      <Filter>EffectProfile\Deserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.cpp">
       <Filter>EffectProfile\Deserializer</Filter>
     </ClCompile>
   </ItemGroup>

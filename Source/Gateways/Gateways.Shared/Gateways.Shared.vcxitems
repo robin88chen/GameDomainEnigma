@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.h" />
@@ -22,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.cpp" />

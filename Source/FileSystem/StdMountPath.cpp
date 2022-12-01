@@ -48,12 +48,8 @@ bool StdMountPath::EqualMountPath(IMountPath* path)
 
 bool StdMountPath::EqualMountPath(const std::filesystem::path& path)
 {
-#if TARGET_PLATFORM == PLATFORM_WIN32
     std::filesystem::path f_path(m_filePath);
     return std::filesystem::equivalent(path, f_path);
-#else
-    return m_filePath == path.string();
-#endif
 }
 
 bool StdMountPath::EqualMouthPath(const std::string& path)

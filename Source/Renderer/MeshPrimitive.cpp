@@ -33,9 +33,7 @@ MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) : Primitive()
 
 MeshPrimitive::~MeshPrimitive()
 {
-    m_geometry = nullptr;
-    m_renderBuffer = nullptr;
-    m_elements.clear();
+    CleanupGeometry();
 }
 
 MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
@@ -58,3 +56,44 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
     return *this;
 }
 
+EffectMaterialPtr MeshPrimitive::GetEffectMaterial(unsigned index)
+{
+    if (index >= m_effects.size()) return nullptr;
+    return m_effects[index];
+}
+
+unsigned MeshPrimitive::GetEffectMaterialCount() const
+{
+    return static_cast<unsigned>(m_effects.size());
+}
+
+void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo)
+{
+    CleanupGeometry();
+    m_geometry = geo;
+    m_bound = m_geometry->GetBoundingVolume();
+}
+
+void MeshPrimitive::ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
+{
+    if (index >= m_effects.size()) return;
+    LooseSegmentEffectTexture(index);
+    m_effects[index] = effect;
+    BindSegmentEffectTexture(index);
+}
+
+void MeshPrimitive::ChangeEffectMaterial(const EffectMaterialList& effects)
+{
+    LoosePrimitiveEffectTexture();
+    m_effects.clear();
+    if (effects.size() == 0) return;
+    m_effects = effects;
+    BindPrimitiveEffectTexture();
+}
+
+void MeshPrimitive::CleanupGeometry()
+{
+    m_elements.clear();
+    m_geometry = nullptr;
+    m_renderBuffer = nullptr;
+}

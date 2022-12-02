@@ -21,6 +21,8 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
+        using EffectMaterialList = std::vector<Engine::EffectMaterialPtr>;
+    public:
         MeshPrimitive(const std::string& name);
         MeshPrimitive(const MeshPrimitive&);
         MeshPrimitive(MeshPrimitive&&);
@@ -32,12 +34,42 @@ namespace Enigma::Renderer
         /** get geometry data */
         const Engine::GeometryDataPtr& GetGeometryData() const { return m_geometry; };
 
+        /** get effect */
+        Engine::EffectMaterialPtr GetEffectMaterial(unsigned index);
+        /** get material count */
+        unsigned GetEffectMaterialCount() const;
+
+        /** @name building mesh primitive */
+        //@{
+        /** link geometry object */
+        void LinkGeometryData(const Engine::GeometryDataPtr& geo);
+        /** change segment's effect */
+        virtual void ChangeEffectMaterialInSegment(unsigned int index, const Engine::EffectMaterialPtr& effect);
+        /** change primitive's effect */
+        virtual void ChangeEffectMaterial(const EffectMaterialList& effects);
+        /** resize effect list */
+        void ResizeEffectMaterialVector(unsigned int new_size) { m_effects.resize(new_size); };
+        //@}
+
+    protected:
+        void CleanupGeometry();
+
+        /** bind primitive effect texture */
+        void BindPrimitiveEffectTexture();
+        /** bind segment effect texture */
+        void BindSegmentEffectTexture(unsigned index);
+        /** un-bind primitive effect texture */
+        void LoosePrimitiveEffectTexture();
+        /** un-bind segment effect texture */
+        void LooseSegmentEffectTexture(unsigned index);
+
     protected:
         using RenderElementList = std::vector<std::shared_ptr<RenderElement>>;
         std::string m_name;
         Engine::GeometryDataPtr m_geometry;
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;
+        EffectMaterialList m_effects;
     };
     using MeshPrimitivePtr = std::shared_ptr<MeshPrimitive>;
 }

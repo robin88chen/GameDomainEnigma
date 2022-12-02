@@ -64,6 +64,9 @@
     <Filter Include="Effect Material\Policy">
       <UniqueIdentifier>{b133a405-2a7c-4b1e-a87d-63113fc8b5c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material\Effect Texture Map">
+      <UniqueIdentifier>{cb5ad250-41d0-4f9f-8832-8dd059098647}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h">
       <Filter>Effect Material\Policy</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
+      <Filter>Effect Material\Effect Texture Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -334,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp">
       <Filter>DTOs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp">
+      <Filter>Effect Material\Effect Texture Map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

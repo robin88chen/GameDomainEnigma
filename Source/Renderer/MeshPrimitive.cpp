@@ -3,6 +3,9 @@
 #include "GameEngine/EffectMaterialSource.h"
 #include "GameEngine/Texture.h"
 #include "GraphicKernel/IShaderVariable.h"
+#include "GameEngine/RenderBuffer.h"
+#include "RendererErrors.h"
+#include "GameEngine/GeometryData.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -97,10 +100,30 @@ unsigned MeshPrimitive::GetTextureMapCount() const
     return static_cast<unsigned>(m_textures.size());
 }
 
-void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo)
+error MeshPrimitive::UpdateRenderBuffer()
+{
+    assert(m_geometry);
+    if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
+    error er = m_renderBuffer->UpdateVertex(m_geometry->GetVertexMemory(), m_geometry->GetIndexMemory());
+    return er;
+}
+
+error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_count,
+    std::optional<unsigned> idx_offset, std::optional<unsigned> idx_count)
+{
+    assert(m_geometry);
+    if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
+    std::optional<IIndexBuffer::ranged_buffer> idx_memory;
+    if (idx_count && idx_offset) idx_memory = m_geometry->GetRangedIndexMemory(idx_offset.value(), idx_count.value());
+    error er = m_renderBuffer->RangedUpdateVertex(m_geometry->GetRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
+    return er;
+}
+
+void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
 {
     CleanupGeometry();
     m_geometry = geo;
+    m_renderBuffer = render_buffer;
     m_bound = m_geometry->GetBoundingVolume();
 }
 

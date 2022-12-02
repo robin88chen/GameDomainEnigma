@@ -177,6 +177,11 @@ GeometryDataDto GeometryData::SerializeGeometryDto()
     return dto;
 }
 
+RenderBufferSignature GeometryData::MakeRenderBufferSignature() const
+{
+    return RenderBufferSignature{ m_name + ".rndbuf", m_topology, m_vtxCapacity, m_idxCapacity };
+}
+
 error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string, unsigned vtx_capa, unsigned vtx_count, unsigned idx_capa, unsigned idx_count)
 {
     m_vertexFormatCode.FromString(vertex_format_string);
@@ -573,6 +578,14 @@ IVertexBuffer::ranged_buffer GeometryData::GetRangedVertexMemory(unsigned offset
     byte_buffer buffer;
     buffer.resize(byte_count);
     memcpy(&buffer[0], &m_vertexMemory[byte_offset], byte_count);
+    return { offset, count, buffer };
+}
+
+IIndexBuffer::ranged_buffer GeometryData::GetRangedIndexMemory(unsigned offset, unsigned count)
+{
+    uint_buffer buffer;
+    buffer.resize(count);
+    memcpy(&buffer[0], &m_indexMemory[offset], count * sizeof(unsigned));
     return { offset, count, buffer };
 }
 

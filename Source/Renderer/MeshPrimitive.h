@@ -14,9 +14,12 @@
 #include "GameEngine/EffectTextureMap.h"
 #include <string>
 #include <memory>
+#include <system_error>
 
 namespace Enigma::Renderer
 {
+    using error = std::error_code;
+
     class RenderElement;
 
     class MeshPrimitive : public Engine::Primitive
@@ -46,10 +49,15 @@ namespace Enigma::Renderer
         /** get texture map size */
         unsigned GetTextureMapCount() const;
 
+        /** update render buffer */
+        error UpdateRenderBuffer();
+        /** update render buffer */
+        error RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_count, std::optional<unsigned> idx_offset, std::optional<unsigned> idx_count);
+
         /** @name building mesh primitive */
         //@{
-        /** link geometry object */
-        void LinkGeometryData(const Engine::GeometryDataPtr& geo);
+        /** link geometry object and render buffer */
+        void LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer);
         /** change segment's effect */
         virtual void ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect);
         /** change primitive's effect */

@@ -20,6 +20,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::rendererAlreadyExist: return "Renderer already exist";
     case ErrorCode::rendererNotExist: return "Renderer not exist";
     case ErrorCode::rendererFactoryFail: return "Renderer factory fail";
+    case ErrorCode::nullRenderer: return "Null Renderer error";
+    case ErrorCode::emptyRenderElementList: return "Empty render element list";
     }
     return "Unknown";
 }

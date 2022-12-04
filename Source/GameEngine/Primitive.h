@@ -55,6 +55,11 @@ namespace Enigma::Engine
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) = 0;
 
+        bool TestPrimitiveFlag(PrimitiveFlags flag)
+        {
+            return (m_primitiveFlags & flag).any();
+        }
+
     protected:
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;

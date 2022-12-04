@@ -29,6 +29,9 @@ namespace Enigma::Renderer
         rendererAlreadyExist,
         rendererNotExist,
         rendererFactoryFail,
+
+        nullRenderer = 401,
+        emptyRenderElementList,
     };
     class ErrorCategory : public std::error_category
     {

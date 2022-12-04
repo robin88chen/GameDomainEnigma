@@ -6,7 +6,10 @@
 #include "GameEngine/RenderBuffer.h"
 #include "RendererErrors.h"
 #include "GameEngine/GeometryData.h"
+#include "GameEngine/IRenderer.h"
 #include <cassert>
+
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -19,6 +22,7 @@ MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
     m_name = name;
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
+    m_renderListID = Renderer::RenderListID::Scene;
     m_elements.clear();
     m_effects.clear();
     m_textures.clear();
@@ -30,6 +34,7 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     m_bound = mesh.m_bound;
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
+    m_renderListID = mesh.m_renderListID;
     //todo: 這邊要改，element 不能複製，裡面的 effect 是不能共用的, elements 由 builder 來建立
     //m_elements = mesh.m_elements;
     for (auto& eff : mesh.m_effects)
@@ -45,6 +50,7 @@ MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) : Primitive()
     m_bound = std::move(mesh.m_bound);
     m_geometry = std::move(mesh.m_geometry);
     m_renderBuffer = std::move(mesh.m_renderBuffer);
+    m_renderListID = mesh.m_renderListID;
     m_elements = std::move(mesh.m_elements);
     m_effects = std::move(mesh.m_effects);
     m_textures = std::move(mesh.m_textures);
@@ -64,7 +70,9 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
     m_bound = mesh.m_bound;
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
-    m_elements = mesh.m_elements;
+    m_renderListID = mesh.m_renderListID;
+    //todo: 這邊要改，element 不能複製，裡面的 effect 是不能共用的, elements 由 builder 來建立
+    //m_elements = mesh.m_elements;
     return *this;
 }
 
@@ -74,6 +82,7 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
     m_bound = std::move(mesh.m_bound);
     m_geometry = std::move(mesh.m_geometry);
     m_renderBuffer = std::move(mesh.m_renderBuffer);
+    m_renderListID = mesh.m_renderListID;
     m_elements = std::move(mesh.m_elements);
     return *this;
 }
@@ -117,6 +126,51 @@ error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     if (idx_count && idx_offset) idx_memory = m_geometry->GetRangedIndexMemory(idx_offset.value(), idx_count.value());
     error er = m_renderBuffer->RangedUpdateVertex(m_geometry->GetRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
     return er;
+}
+
+error MeshPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+    const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
+{
+    auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
+    m_mxPrimitiveWorld = mxWorld;
+    if (TestPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
+
+    if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
+
+    error er = ErrorCode::ok;
+    for (auto& ele : m_elements)
+    {
+        er = render->InsertRenderElement(ele, mxWorld, lightingState, m_renderListID);
+        if (er) return er;
+    }
+    return er;
+}
+
+error MeshPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
+{
+    auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
+    if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
+    for (auto& ele : m_elements)
+    {
+        render->RemoveRenderElement(ele, m_renderListID);
+    }
+    return ErrorCode::ok;
+}
+
+void MeshPrimitive::CalculateBoundingVolume(bool axis_align)
+{
+    if (m_geometry)
+    {
+        m_geometry->CalculateBoundingVolume(axis_align);
+        m_bound = m_geometry->GetBoundingVolume();
+    }
+}
+
+void MeshPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
+{
+    m_mxPrimitiveWorld = mxWorld;
 }
 
 void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)

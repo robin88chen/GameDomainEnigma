@@ -12,6 +12,7 @@
 #include "GameEngine/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectTextureMap.h"
+#include "Renderer.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -54,6 +55,22 @@ namespace Enigma::Renderer
         /** update render buffer */
         error RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_count, std::optional<unsigned> idx_offset, std::optional<unsigned> idx_count);
 
+        /** render list id */
+        Renderer::RenderListID RenderListID() const { return m_renderListID; };
+        Renderer::RenderListID& RenderListID() { return m_renderListID; };
+
+        /** insert to renderer */
+        virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+            const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState) override;
+        /** remove from renderer */
+        virtual error RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
+
+        /** calculate bounding volume */
+        virtual void CalculateBoundingVolume(bool axis_align) override;
+
+        /** update world transform */
+        virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
+
         /** @name building mesh primitive */
         //@{
         /** link geometry object and render buffer */
@@ -92,6 +109,7 @@ namespace Enigma::Renderer
         RenderElementList m_elements;
         EffectMaterialList m_effects;
         TextureMapList m_textures;
+        Renderer::RenderListID m_renderListID;  ///< default : render group scene
     };
     using MeshPrimitivePtr = std::shared_ptr<MeshPrimitive>;
 }

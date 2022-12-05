@@ -4,7 +4,9 @@
 #include "EffectCompiler.h"
 #include "EffectEvents.h"
 #include "EngineErrors.h"
+#include "EffectCommands.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
@@ -30,12 +32,13 @@ EffectMaterialManager::~EffectMaterialManager()
 
 Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
 {
-    m_onEffectMaterialCompiled =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompiled(c); });
+    m_onEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompiled(c); });
     Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onCompileEffectMaterialFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnCompileEffectMaterialFailed(c); });
+    m_onCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnCompileEffectMaterialFailed(c); });
     Frameworks::EventPublisher::Subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+
+    m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCompilingEffectMaterial(c); });
+    Frameworks::CommandBus::Subscribe(typeid(Engine::CompileEffectMaterial), m_doCompilingEffectMaterial);
 
     EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
     {
@@ -66,6 +69,9 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTerm()
     m_onEffectMaterialCompiled = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
     m_onCompileEffectMaterialFailed = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(Engine::CompileEffectMaterial), m_doCompilingEffectMaterial);
+    m_doCompilingEffectMaterial = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -115,6 +121,14 @@ void EffectMaterialManager::OnCompileEffectMaterialFailed(const Frameworks::IEve
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
         ev->GetFilename().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentCompiling = false;
+}
+
+void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Engine::CompileEffectMaterial, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    CompileEffectMaterial(cmd->GetPolicy());
 }
 
 void EffectMaterialManager::ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source)

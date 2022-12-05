@@ -14,6 +14,7 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <unordered_map>
 #include <mutex>
 #include <queue>
@@ -49,6 +50,7 @@ namespace Enigma::Engine
     private:
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
         void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c);
 
         /** release effect material source */
         void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
@@ -58,6 +60,7 @@ namespace Enigma::Engine
     private:
         Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
         Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
+        Frameworks::CommandSubscriberPtr m_doCompilingEffectMaterial;
 
         typedef std::unordered_map<std::string, std::shared_ptr<EffectMaterialSource>> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;

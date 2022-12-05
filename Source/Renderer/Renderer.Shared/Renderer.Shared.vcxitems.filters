@@ -75,6 +75,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
+      <Filter>Renderable Primitives\Builder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp">
       <Filter>Renderable Primitives\Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp">
+      <Filter>Renderable Primitives\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

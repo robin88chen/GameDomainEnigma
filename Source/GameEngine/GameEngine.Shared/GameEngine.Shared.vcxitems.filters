@@ -237,6 +237,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h" />
@@ -31,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />

@@ -1,5 +1,6 @@
 ﻿#include "RenderablePrimitiveBuilder.h"
 #include "RenderablePrimitivePolicies.h"
+#include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
 #include "RendererErrors.h"
 #include "Frameworks/CommandBus.h"
@@ -8,7 +9,12 @@
 #include "GameEngine/GeometryDataEvents.h"
 #include "GameEngine/RenderBufferCommands.h"
 #include "GameEngine/RenderBufferEvents.h"
+#include "GameEngine/EffectCommands.h"
+#include "GameEngine/EffectEvents.h"
 #include "RenderablePrimitiveEvents.h"
+#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -20,6 +26,7 @@ RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : I
 {
     m_needTick = false;
     m_isCurrentBuilding = false;
+    m_meshBuilder = nullptr;
 }
 
 RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
@@ -29,14 +36,12 @@ RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
 
 ServiceResult RenderablePrimitiveBuilder::OnInit()
 {
-    m_onGeometryDataBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryDataBuilt(e); });
-    EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
-    m_onBuildGeometryDataFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryDataFailed(e); });
-    EventPublisher::Subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryDataFailed);
-    m_onRenderBufferBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderBufferBuilt(e); });
-    EventPublisher::Subscribe(typeid(RenderBufferBuilt), m_onRenderBufferBuilt);
-    m_onBuildRenderBufferFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildRenderBufferFailed(e); });
-    EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
+    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+
+    m_meshBuilder = menew MeshPrimitiveBuilder();
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -57,14 +62,12 @@ ServiceResult RenderablePrimitiveBuilder::OnTick()
 
 ServiceResult RenderablePrimitiveBuilder::OnTerm()
 {
-    EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
-    m_onGeometryDataBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryDataFailed);
-    m_onBuildGeometryDataFailed = nullptr;
-    EventPublisher::Unsubscribe(typeid(RenderBufferBuilt), m_onRenderBufferBuilt);
-    m_onRenderBufferBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
-    m_onBuildRenderBufferFailed = nullptr;
+    SAFE_DELETE(m_meshBuilder);
+
+    EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    m_onPrimitiveBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_onBuildPrimitiveFailed = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -79,93 +82,30 @@ error RenderablePrimitiveBuilder::BuildPrimitive(const RenderablePrimitivePolicy
 
 void RenderablePrimitiveBuilder::BuildRenderablePrimitive(const RenderablePrimitivePolicy& policy)
 {
-    m_builtPrimitive = nullptr;
-    m_builtGeometry = nullptr;
-    m_builtRenderBuffer = nullptr;
+    assert(m_meshBuilder);
     m_currentPolicy = policy;
     if (typeid(policy) == typeid(MeshPrimitivePolicy))
     {
-        BuildMeshPrimitive(dynamic_cast<const MeshPrimitivePolicy&>(policy));
+        m_meshBuilder->BuildMeshPrimitive(dynamic_cast<const MeshPrimitivePolicy&>(policy));
     }
 }
 
-void RenderablePrimitiveBuilder::BuildMeshPrimitive(const MeshPrimitivePolicy& policy)
-{
-    m_builtPrimitive = std::make_shared<MeshPrimitive>(policy.Name());
-    Frameworks::CommandBus::Post(std::make_shared<BuildGeometryData>(policy.GeometryPolicy()));
-}
-
-void RenderablePrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
+void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    if (typeid(m_currentPolicy) == typeid(MeshPrimitivePolicy))
-    {
-        const MeshPrimitivePolicy& mesh_policy = dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy);
-        if (ev->GetName() != mesh_policy.GeometryPolicy().Name()) return;
-    }
-    else return;
-    m_builtGeometry = ev->GetGeometryData();
-    RenderBufferPolicy buffer;
-    buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
-    buffer.m_renderBufferName = buffer.m_signature.GetName();
-    buffer.m_vtxBufferName = buffer.m_renderBufferName + ".vtx";
-    buffer.m_idxBufferName = buffer.m_renderBufferName + ".idx";
-    buffer.m_sizeofVertex = m_builtGeometry->SizeofVertex();
-    buffer.m_vtxBufferSize = m_builtGeometry->GetVertexCapacity() * m_builtGeometry->SizeofVertex();
-    buffer.m_idxBufferSize = m_builtGeometry->GetIndexCapacity();
-    buffer.m_vtxBuffer = m_builtGeometry->GetVertexMemory();
-    if (m_builtGeometry->GetIndexCapacity() > 0)
-    {
-        buffer.m_idxBuffer = m_builtGeometry->GetIndexMemory();
-    }
-    CommandBus::Post(std::make_shared<BuildRenderBuffer>(buffer));
-}
-
-void RenderablePrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
-    if (!ev) return;
-    if (typeid(m_currentPolicy) == typeid(MeshPrimitivePolicy))
-    {
-        const MeshPrimitivePolicy& mesh_policy = dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy);
-        if (ev->GetName() != mesh_policy.GeometryPolicy().Name()) return;
-    }
-    else return;
+    if (ev->GetName() != m_currentPolicy.Name()) return;
     m_isCurrentBuilding = false;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy).Name(), ev->GetErrorCode()));
 }
 
-void RenderablePrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
-{
-    assert(m_builtGeometry);
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
-    if (!ev) return;
-    if (typeid(m_currentPolicy) == typeid(MeshPrimitivePolicy))
-    {
-        const MeshPrimitivePolicy& mesh_policy = dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy);
-        if (ev->GetName() != mesh_policy.GeometryPolicy().Name()) return;
-    }
-    else return;
-    m_builtRenderBuffer = ev->GetBuffer();
-    std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->LinkGeometryData(m_builtGeometry, m_builtRenderBuffer);
-}
-
-void RenderablePrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
+void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
-    if (typeid(m_currentPolicy) == typeid(MeshPrimitivePolicy))
-    {
-        const MeshPrimitivePolicy& mesh_policy = dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy);
-        if (ev->GetName() != mesh_policy.GeometryPolicy().Name()) return;
-    }
-    else return;
+    if (ev->GetName() != m_currentPolicy.Name()) return;
+    Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n",
+        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(dynamic_cast<const MeshPrimitivePolicy&>(m_currentPolicy).Name(), ev->GetErrorCode()));
-
 }

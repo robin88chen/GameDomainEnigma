@@ -1,16 +1,8 @@
 ﻿#include "RenderablePrimitiveBuilder.h"
 #include "RenderablePrimitivePolicies.h"
 #include "MeshPrimitiveBuilder.h"
-#include "MeshPrimitive.h"
 #include "RendererErrors.h"
-#include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "GameEngine/GeometryCommands.h"
-#include "GameEngine/GeometryDataEvents.h"
-#include "GameEngine/RenderBufferCommands.h"
-#include "GameEngine/RenderBufferEvents.h"
-#include "GameEngine/EffectCommands.h"
-#include "GameEngine/EffectEvents.h"
 #include "RenderablePrimitiveEvents.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
@@ -93,7 +85,7 @@ void RenderablePrimitiveBuilder::BuildRenderablePrimitive(const RenderablePrimit
 void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_currentPolicy.Name()) return;
     m_isCurrentBuilding = false;
@@ -102,7 +94,7 @@ void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e
 void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_currentPolicy.Name()) return;
     Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n",

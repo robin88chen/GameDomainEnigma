@@ -60,12 +60,12 @@ RenderPack& RenderPack::operator=(RenderPack&& pack)
     return *this;
 }
 
-bool RenderPack::operator==(const RenderPack& p)
+bool RenderPack::operator==(const RenderPack& p) const
 {
     return m_element == p.m_element;
 }
 
-bool RenderPack::operator!=(const RenderPack& p)
+bool RenderPack::operator!=(const RenderPack& p) const
 {
     return m_element != p.m_element;
 }
@@ -107,6 +107,6 @@ void RenderPack::SetRenderLightingState(const Engine::RenderLightingState& state
 
 void RenderPack::CalcSquareCameraDistance(const MathLib::Vector3& camera_loc)
 {
-    Vector3 dist = m_worldTransform.UnMatrixTranslate() - camera_loc;
+    const Vector3 dist = m_worldTransform.UnMatrixTranslate() - camera_loc;
     m_squareCameraDistance = dist.SquaredLength();
 }

@@ -10,7 +10,6 @@
 #define RENDER_PACK_H
 
 #include "MathLib/Matrix4.h"
-#include "MathLib/Vector3.h"
 #include "GameEngine/RenderLightingState.h"
 #include <memory>
 
@@ -30,8 +29,8 @@ namespace Enigma::Renderer
 
         RenderPack& operator=(const RenderPack& pack);
         RenderPack& operator=(RenderPack&& pack);
-        bool operator==(const RenderPack& p);
-        bool operator!=(const RenderPack& p);
+        bool operator==(const RenderPack& p) const;
+        bool operator!=(const RenderPack& p) const;
 
         const std::shared_ptr<RenderElement>& GetRenderElement();
         const std::shared_ptr<RenderElement>& GetRenderElement() const;
@@ -41,8 +40,8 @@ namespace Enigma::Renderer
         const Engine::RenderLightingState& GetRenderLightingState() const;
         void SetRenderLightingState(const Engine::RenderLightingState& state);
 
-        float GetSquareCameraDistance() { return m_squareCameraDistance; };
-        float GetSquareCameraDistance() const { return m_squareCameraDistance; };
+        float GetSquareCameraDistance() { return m_squareCameraDistance; }
+        float GetSquareCameraDistance() const { return m_squareCameraDistance; }
         void CalcSquareCameraDistance(const MathLib::Vector3& camera_loc);
 
     protected:

@@ -34,6 +34,6 @@ namespace Enigma::Renderer
 {
     std::error_code make_error_code(ErrorCode ec)
     {
-        return std::error_code(static_cast<int>(ec), ErrorCategory::get());
+        return std::error_code{ static_cast<int>(ec), ErrorCategory::get() };
     }
 }

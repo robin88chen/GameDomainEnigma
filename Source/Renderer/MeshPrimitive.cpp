@@ -117,7 +117,7 @@ error MeshPrimitive::UpdateRenderBuffer()
 {
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
-    error er = m_renderBuffer->UpdateVertex(m_geometry->GetVertexMemory(), m_geometry->GetIndexMemory());
+    const error er = m_renderBuffer->UpdateVertex(m_geometry->GetVertexMemory(), m_geometry->GetIndexMemory());
     return er;
 }
 
@@ -128,14 +128,14 @@ error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     std::optional<IIndexBuffer::ranged_buffer> idx_memory;
     if (idx_count && idx_offset) idx_memory = m_geometry->GetRangedIndexMemory(idx_offset.value(), idx_count.value());
-    error er = m_renderBuffer->RangedUpdateVertex(m_geometry->GetRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
+    const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->GetRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
     return er;
 }
 
 error MeshPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
 {
-    auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
+    const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
     if (TestPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
@@ -153,7 +153,7 @@ error MeshPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr
 
 error MeshPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
 {
-    auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
+    const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
     for (auto& ele : m_elements)

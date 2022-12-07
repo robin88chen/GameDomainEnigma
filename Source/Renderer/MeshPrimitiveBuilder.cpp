@@ -70,7 +70,7 @@ void MeshPrimitiveBuilder::BuildMeshPrimitive(const MeshPrimitivePolicy& policy)
 void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_policy.GeometryPolicy().Name()) return;
     m_builtGeometry = ev->GetGeometryData();
@@ -93,7 +93,7 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
 void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_policy.GeometryPolicy().Name()) return;
     EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy.Name(), ev->GetErrorCode()));
@@ -103,7 +103,7 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
 {
     if (!m_builtGeometry) return;
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_policy.GeometryPolicy().Name()) return;
     m_builtRenderBuffer = ev->GetBuffer();
@@ -128,7 +128,7 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
 {
     if (!m_builtGeometry) return;
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_builtGeometry->MakeRenderBufferSignature().GetName()) return;
     EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy.Name(), ev->GetErrorCode()));
@@ -137,9 +137,9 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
 void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled, IEvent>(e);
     if (!ev) return;
-    std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetFilename());
+    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetFilename());
     if (!found_idx) return;
     m_builtEffects[found_idx.value()] = ev->GetEffect();
     TryCompletingMesh();
@@ -148,9 +148,9 @@ void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr&
 void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed, IEvent>(e);
     if (!ev) return;
-    std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetFilename());
+    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetFilename());
     if (!found_idx) return;
     EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy.Name(), ev->GetErrorCode()));
 }
@@ -158,12 +158,12 @@ void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEven
 void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<TextureLoaded, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<TextureLoaded, IEvent>(e);
     if (!ev) return;
-    auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
+    const auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
     if (!found_idx) return;
-    unsigned tex_idx = std::get<0>(found_idx.value());
-    unsigned tuple_idx = std::get<1>(found_idx.value());
+    const unsigned tex_idx = std::get<0>(found_idx.value());
+    const unsigned tuple_idx = std::get<1>(found_idx.value());
     m_builtTextures[tex_idx].ChangeTexture({ std::get<std::string>(m_policy.GetTextureTuplePolicy(tex_idx, tuple_idx)),
         ev->GetTexture(), std::get<std::optional<unsigned>>(m_policy.GetTextureTuplePolicy(tex_idx, tuple_idx)) });
     TryCompletingMesh();
@@ -172,9 +172,9 @@ void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
 void MeshPrimitiveBuilder::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<LoadTextureFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<LoadTextureFailed, IEvent>(e);
     if (!ev) return;
-    auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
+    const auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
     if (!found_idx) return;
     EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy.Name(), ev->GetError()));
 }
@@ -183,7 +183,7 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
 {
     if (!m_builtGeometry) return;
     if (!m_builtRenderBuffer) return;
-    for (auto& eff : m_builtEffects)
+    for (const auto& eff : m_builtEffects)
     {
         if (!eff) return;
     }

@@ -87,7 +87,7 @@ namespace Enigma::Renderer
         const Graphics::TargetViewPort& GetViewPort();
 
         /** is primary render target?? */
-        bool IsPrimary() { return m_isPrimary; };
+        bool IsPrimary() const { return m_isPrimary; };
         /** bind to device */
         error Bind();
         /** bind viewport */
@@ -95,7 +95,7 @@ namespace Enigma::Renderer
         /** clear render target */
         error Clear();
         /** flip, only primary render target can flip */
-        error Flip();
+        error Flip() const;
 
         error ChangeClearingProperty(const RenderTargetClearChangingProperty& prop);
         /** get name */
@@ -112,8 +112,8 @@ namespace Enigma::Renderer
 
         /** @name depth map info */
         //@{
-        bool HasGBufferDepthMap();
-        unsigned int GetGBufferDepthMapIndex();
+        bool HasGBufferDepthMap() const;
+        unsigned int GetGBufferDepthMapIndex() const;
         void SetGBufferDepthMapIndex(unsigned int index);
         //@}
 
@@ -128,7 +128,7 @@ namespace Enigma::Renderer
         void InitViewPortSize();
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            RenderTargetClearFlag flag = RenderTargetClearFlag::BothBuffer);
+            RenderTargetClearFlag flag = RenderTargetClearFlag::BothBuffer) const;
 
         void SetViewPort(const Graphics::TargetViewPort& vp);
 

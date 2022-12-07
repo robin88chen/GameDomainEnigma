@@ -139,7 +139,7 @@ error RenderTarget::BindViewPort()
     return ErrorCode::ok;
 }
 
-error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag)
+error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag) const
 {
     Graphics::IGraphicAPI::Instance()->Clear(
         (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::ColorBuffer)) ? m_backSurface : nullptr,
@@ -158,7 +158,7 @@ error RenderTarget::Clear()
         m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
 }
 
-error RenderTarget::Flip()
+error RenderTarget::Flip() const
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
     Graphics::IGraphicAPI::Instance()->Flip();
@@ -223,7 +223,7 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     return ErrorCode::ok;
 }
 
-bool RenderTarget::HasGBufferDepthMap()
+bool RenderTarget::HasGBufferDepthMap() const
 {
     if (!m_backSurface) return false;
     if (!m_backSurface->IsMultiSurface()) return false;
@@ -231,7 +231,7 @@ bool RenderTarget::HasGBufferDepthMap()
     return true;
 }
 
-unsigned RenderTarget::GetGBufferDepthMapIndex()
+unsigned RenderTarget::GetGBufferDepthMapIndex() const
 {
     return m_gbufferDepthMapIndex;
 }
@@ -400,7 +400,7 @@ void RenderTarget::OnDepthSurfaceCreated(const Frameworks::IEventPtr& e)
 void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Graphics::BackSurfaceResized, Frameworks::IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<Graphics::BackSurfaceResized, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetSurfaceName() != m_backSurfaceName) return;
     m_resizingBits |= Resizing::BackSurfaceBit;
@@ -414,7 +414,7 @@ void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
 void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Graphics::DepthSurfaceResized, Frameworks::IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<Graphics::DepthSurfaceResized, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetSurfaceName() != m_depthSurfaceName) return;
     m_resizingBits |= Resizing::DepthSurfaceBit;

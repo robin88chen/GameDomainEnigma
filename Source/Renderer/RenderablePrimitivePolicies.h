@@ -21,7 +21,11 @@ namespace Enigma::Renderer
     {
     public:
         RenderablePrimitivePolicy() { m_ruid = Frameworks::Ruid::Generate(); }
+        RenderablePrimitivePolicy(const RenderablePrimitivePolicy&) = default;
+        RenderablePrimitivePolicy(RenderablePrimitivePolicy&&) = default;
         virtual ~RenderablePrimitivePolicy() = default;
+        RenderablePrimitivePolicy& operator=(const RenderablePrimitivePolicy&) = default;
+        RenderablePrimitivePolicy& operator=(RenderablePrimitivePolicy&&) = default;
 
         Frameworks::Ruid GetRuid() { return m_ruid; }
 

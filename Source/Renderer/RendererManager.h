@@ -13,7 +13,6 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/IRenderer.h"
 #include "GameEngine/RenderBufferRepository.h"
-#include "GameEngine/EffectMaterialManager.h"
 #include <system_error>
 #include <memory>
 #include <unordered_map>
@@ -35,7 +34,7 @@ namespace Enigma::Renderer
         RendererManager(Frameworks::ServiceManager* srv_mngr);
         RendererManager(const RendererManager&) = delete;
         RendererManager(RendererManager&&) = delete;
-        virtual ~RendererManager();
+        virtual ~RendererManager() override;
         RendererManager& operator=(const RendererManager&) = delete;
         RendererManager& operator=(RendererManager&&) = delete;
 
@@ -45,7 +44,7 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult OnTerm() override;
 
         /** register renderer factory */
-        static void RegisterCustomRendererFactory(const std::string& type_name, CustomRendererFactoryFunc fn);
+        static void RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn);
 
         /** create renderer */
         error CreateRenderer(const std::string& name);
@@ -75,7 +74,7 @@ namespace Enigma::Renderer
         void DoDestroyingRenderer(const Frameworks::ICommandPtr& c);
         void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
-        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c);
+        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const;
 
     protected:
         Frameworks::CommandSubscriberPtr m_doCreatingRenderer;

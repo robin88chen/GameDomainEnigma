@@ -240,6 +240,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h">
+      <Filter>Effect Material\Policy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

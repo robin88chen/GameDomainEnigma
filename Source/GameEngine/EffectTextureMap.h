@@ -8,7 +8,10 @@
 #ifndef _EFFECT_TEXTURE_MAP_H
 #define _EFFECT_TEXTURE_MAP_H
 
-#include "GraphicKernel/IShaderVariable.h"
+#include <system_error>
+#include <memory>
+#include <optional>
+#include <vector>
 
 namespace Enigma::Engine
 {

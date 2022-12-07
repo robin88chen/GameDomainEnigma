@@ -9,6 +9,7 @@
 #include "GameEngine/IRenderer.h"
 #include <cassert>
 
+#include "RenderElement.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderer;
@@ -35,13 +36,12 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
     m_renderListID = mesh.m_renderListID;
-    //todo: 這邊要改，element 不能複製，裡面的 effect 是不能共用的, elements 由 builder 來建立
-    //m_elements = mesh.m_elements;
     for (auto& eff : mesh.m_effects)
     {
         m_effects.emplace_back(eff->GetEffectMaterialSource()->CloneEffectMaterial());
     }
     m_textures = mesh.m_textures;
+    CreateRenderElements();
 }
 
 MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) : Primitive()
@@ -71,8 +71,12 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
     m_renderListID = mesh.m_renderListID;
-    //todo: 這邊要改，element 不能複製，裡面的 effect 是不能共用的, elements 由 builder 來建立
-    //m_elements = mesh.m_elements;
+    for (auto& eff : mesh.m_effects)
+    {
+        m_effects.emplace_back(eff->GetEffectMaterialSource()->CloneEffectMaterial());
+    }
+    m_textures = mesh.m_textures;
+    CreateRenderElements();
     return *this;
 }
 
@@ -213,6 +217,21 @@ void MeshPrimitive::ChangeTextureMap(const TextureMapList& tex_maps)
     if (tex_maps.size() == 0) return;
     m_textures = tex_maps;
     BindPrimitiveEffectTexture();
+}
+
+void MeshPrimitive::CreateRenderElements()
+{
+    assert(m_geometry);
+    assert(m_renderBuffer);
+    unsigned elem_count = m_geometry->GetSegmentCount();
+    if (elem_count > m_effects.size()) elem_count = static_cast<unsigned>(m_effects.size());
+    assert(elem_count > 0);
+    m_elements.clear();
+    m_elements.reserve(elem_count);
+    for (unsigned i = 0; i < elem_count; i++)
+    {
+        m_elements.emplace_back(std::make_shared<RenderElement>(m_renderBuffer, m_effects[i], m_geometry->GetSegment(i)));
+    }
 }
 
 void MeshPrimitive::CleanupGeometry()

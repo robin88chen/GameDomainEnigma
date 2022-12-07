@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />

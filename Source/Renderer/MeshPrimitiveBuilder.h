@@ -14,6 +14,8 @@
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
+#include "GameEngine/EffectTextureMap.h"
+#include "MeshPrimitive.h"
 
 namespace Enigma::Renderer
 {
@@ -36,16 +38,22 @@ namespace Enigma::Renderer
         void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
         void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void OnTextureLoaded(const Frameworks::IEventPtr& e);
+        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
 
-        void TryCompletingEffect();
+        void TryCompletingMesh();
+
+        std::optional<unsigned> FindBuildingEffectIndex(const std::string& name);
+        std::optional<std::tuple<unsigned, unsigned>> FindLoadingTextureIndex(const std::string& name);
 
     protected:
         MeshPrimitivePolicy m_policy;
 
-        std::shared_ptr<Engine::Primitive> m_builtPrimitive;
+        std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Engine::GeometryData> m_builtGeometry;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
         std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
+        std::vector<Engine::EffectTextureMap> m_builtTextures;
 
         Frameworks::EventSubscriberPtr m_onGeometryDataBuilt;
         Frameworks::EventSubscriberPtr m_onBuildGeometryDataFailed;
@@ -53,6 +61,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
         Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
         Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onTextureLoaded;
+        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
     };
 }
 

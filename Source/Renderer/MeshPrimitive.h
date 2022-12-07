@@ -87,6 +87,8 @@ namespace Enigma::Renderer
         void ChangeTextureMap(const TextureMapList& tex_maps);
         /** resize texture map list */
         void ResizeTextureMapVector(unsigned new_size) { m_textures.resize(new_size); };
+        /** create render elements */
+        void CreateRenderElements();
         //@}
 
     protected:

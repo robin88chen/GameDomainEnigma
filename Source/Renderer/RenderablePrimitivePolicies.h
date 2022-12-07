@@ -11,6 +11,7 @@
 #include "Frameworks/ruid.h"
 #include "GameEngine/GeometryDataPolicy.h"
 #include "GameEngine/EffectMaterialPolicy.h"
+#include "GameEngine/EffectTextureMapPolicy.h"
 #include <string>
 #include <vector>
 
@@ -48,9 +49,15 @@ namespace Enigma::Renderer
         [[nodiscard]] const std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() const { return m_effectPolicies; }
         std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() { return m_effectPolicies; }
 
+        [[nodiscard]] const std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() const { return m_texturePolicies; }
+        std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() { return m_texturePolicies; }
+
+        [[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
+
     protected:
         Engine::GeometryDataPolicy m_geometryPolicy;
         std::vector<Engine::EffectMaterialPolicy> m_effectPolicies;
+        std::vector<Engine::EffectTextureMapPolicy> m_texturePolicies;
     };
 }
 

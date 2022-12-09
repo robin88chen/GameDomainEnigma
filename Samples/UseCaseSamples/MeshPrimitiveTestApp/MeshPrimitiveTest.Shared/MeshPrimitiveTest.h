@@ -40,6 +40,14 @@ public:
 
     virtual void FrameUpdate() override;
     virtual void RenderFrame() override;
+
+protected:
+    void OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
+
+protected:
+    Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
 };
 
 

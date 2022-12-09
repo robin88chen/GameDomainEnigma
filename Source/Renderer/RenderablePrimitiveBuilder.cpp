@@ -3,10 +3,13 @@
 #include "MeshPrimitiveBuilder.h"
 #include "RendererErrors.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "RenderablePrimitiveEvents.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "RenderablePrimitiveCommands.h"
+#include "Frameworks/unique_ptr_dynamic_cast.hpp"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -23,7 +26,11 @@ RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : I
 
 RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
 {
-
+    std::lock_guard locker{ m_policiesLock };
+    while (!m_policies.empty())
+    {
+        m_policies.pop();
+    }
 }
 
 ServiceResult RenderablePrimitiveBuilder::OnInit()
@@ -32,6 +39,8 @@ ServiceResult RenderablePrimitiveBuilder::OnInit()
     EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
     EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_doBuildingPrimitive = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingPrimitive(c); });
+    CommandBus::Subscribe(typeid(Enigma::Renderer::BuildRenderablePrimitive), m_doBuildingPrimitive);
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
 
@@ -46,7 +55,7 @@ ServiceResult RenderablePrimitiveBuilder::OnTick()
         m_needTick = false;
         return Frameworks::ServiceResult::Pendding;
     }
-    BuildRenderablePrimitive(m_policies.front());
+    BuildRenderablePrimitive(std::move(m_policies.front()));
     m_policies.pop();
     m_isCurrentBuilding = true;
     return Frameworks::ServiceResult::Pendding;
@@ -60,25 +69,28 @@ ServiceResult RenderablePrimitiveBuilder::OnTerm()
     m_onPrimitiveBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
     m_onBuildPrimitiveFailed = nullptr;
+    CommandBus::Unsubscribe(typeid(Enigma::Renderer::BuildRenderablePrimitive), m_doBuildingPrimitive);
+    m_doBuildingPrimitive = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
 
-error RenderablePrimitiveBuilder::BuildPrimitive(const RenderablePrimitivePolicy& policy)
+error RenderablePrimitiveBuilder::BuildPrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy)
 {
     std::lock_guard locker{ m_policiesLock };
-    m_policies.push(policy);
+    m_policies.push(std::move(policy));
     m_needTick = true;
     return ErrorCode::ok;
 }
 
-void RenderablePrimitiveBuilder::BuildRenderablePrimitive(const RenderablePrimitivePolicy& policy)
+void RenderablePrimitiveBuilder::BuildRenderablePrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy)
 {
     assert(m_meshBuilder);
-    m_currentPolicy = policy;
-    if (typeid(policy) == typeid(MeshPrimitivePolicy))
+    m_buildingRuid = policy->GetRuid();
+    auto& p = *policy;
+    if (typeid(p) == typeid(MeshPrimitivePolicy))
     {
-        m_meshBuilder->BuildMeshPrimitive(dynamic_cast<const MeshPrimitivePolicy&>(policy));
+        m_meshBuilder->BuildMeshPrimitive(stdext::dynamic_pointer_cast<MeshPrimitivePolicy, RenderablePrimitivePolicy>(std::move(policy)));
     }
 }
 
@@ -87,7 +99,7 @@ void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_currentPolicy.Name()) return;
+    if (ev->GetRuid() != m_buildingRuid) return;
     m_isCurrentBuilding = false;
 }
 
@@ -96,8 +108,16 @@ void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const Frameworks::IEvent
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_currentPolicy.Name()) return;
+    if (ev->GetRuid() != m_buildingRuid) return;
     Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
+}
+
+void RenderablePrimitiveBuilder::DoBuildingPrimitive(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::BuildRenderablePrimitive, ICommand>(c);
+    if (!cmd) return;
+    BuildPrimitive(std::move(cmd->GetPolicy()));
 }

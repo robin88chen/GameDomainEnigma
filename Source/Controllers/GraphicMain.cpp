@@ -7,6 +7,7 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
+#include "Renderer/RenderablePrimitiveBuilder.h"
 #include "GameEngine/ShaderRepository.h"
 #include "GameEngine/EffectMaterialManager.h"
 #include "GameEngine/MaterialVariableMap.h"
@@ -182,6 +183,7 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
         is_primary ? Renderer::RenderTarget::PrimaryType::IsPrimary : Renderer::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
+    m_serviceManager->RegisterSystemService(menew Renderer::RenderablePrimitiveBuilder(m_serviceManager));
     Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
 
     return ErrorCode::ok;
@@ -189,6 +191,8 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
 
 error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name)
 {
+    m_serviceManager->ShutdownSystemService(Renderer::RenderablePrimitiveBuilder::TYPE_RTTI);
+
     if (m_renderer)
     {
         error er = m_renderer->DestroyRenderer(renderer_name);

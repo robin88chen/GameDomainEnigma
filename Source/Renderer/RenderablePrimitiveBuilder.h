@@ -11,6 +11,7 @@
 #include "RenderablePrimitivePolicies.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -21,7 +22,7 @@ namespace Enigma::Renderer
 
     class MeshPrimitiveBuilder;
 
-    class RenderablePrimitiveBuilder : Frameworks::ISystemService
+    class RenderablePrimitiveBuilder : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
@@ -36,22 +37,24 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult OnTick() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        error BuildPrimitive(const RenderablePrimitivePolicy& policy);
+        error BuildPrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy);
 
     protected:
-        void BuildRenderablePrimitive(const RenderablePrimitivePolicy& policy);
+        void BuildRenderablePrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy);
 
         void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+        void DoBuildingPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
-        std::queue<RenderablePrimitivePolicy> m_policies;
+        std::queue<std::unique_ptr<RenderablePrimitivePolicy>> m_policies;
         std::mutex m_policiesLock;
         bool m_isCurrentBuilding;
-        RenderablePrimitivePolicy m_currentPolicy;
+        Frameworks::Ruid m_buildingRuid;
 
         Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
+        Frameworks::CommandSubscriberPtr m_doBuildingPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
     };

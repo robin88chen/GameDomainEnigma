@@ -3,9 +3,19 @@
 #include "FileSystem/StdMountPath.h"
 #include "Controllers/InstallingPolicies.h"
 #include "CubeGeometryMaker.h"
+#include "MeshPrimitiveMaker.h"
+#include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
+#include "Renderer/RenderablePrimitiveCommands.h"
+#include "Renderer/RenderablePrimitiveEvents.h"
+#include "Renderer/MeshPrimitive.h"
+#include "GameEngine/Primitive.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
+using namespace Enigma::Renderer;
+using namespace Enigma::Frameworks;
+using namespace Enigma::Engine;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -46,6 +56,11 @@ void MeshPrimitiveTest::InitializeMountPaths()
 
 void MeshPrimitiveTest::InstallEngine()
 {
+    m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->OnRenderablePrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
+    m_onBuildRenderablePrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) {this->OnBuildRenderablePrimitiveFailed(e); });
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
+
     assert(m_graphicMain);
 
     auto creating_policy = std::make_unique<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
@@ -53,10 +68,17 @@ void MeshPrimitiveTest::InstallEngine()
     m_graphicMain->InstallRenderEngine(std::move(policy));
 
     CubeGeometryMaker::MakeSavedCube("test_geometry");
+    auto prim_policy = MeshPrimitiveMaker::MakeMeshPrimitivePolicy("test_mesh", "test_geometry");
+    CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(std::move(prim_policy)));
 }
 
 void MeshPrimitiveTest::ShutdownEngine()
 {
+    EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
+    m_onRenderablePrimitiveBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
+    m_onBuildRenderablePrimitiveFailed = nullptr;
+
     m_graphicMain->ShutdownRenderEngine();
 }
 
@@ -70,3 +92,18 @@ void MeshPrimitiveTest::RenderFrame()
 
 }
 
+void MeshPrimitiveTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPrimitive());
+}
+
+void MeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+}

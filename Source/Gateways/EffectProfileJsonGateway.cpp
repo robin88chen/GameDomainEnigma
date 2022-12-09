@@ -84,12 +84,40 @@ std::optional<EffectCompilingProfile> EffectProfileJsonGateway::Deserialize(cons
         LOG(Info, ss);
         return std::nullopt;
     }
+    if (!json_doc.HasMember(VERTEX_SHADER_LIST_TOKEN))
+    {
+        std::string ss = string_format("effect doesn't have vertex shader list");
+        LOG(Info, ss);
+        return std::nullopt;
+    }
+    if (!json_doc.HasMember(PIXEL_SHADER_LIST_TOKEN))
+    {
+        std::string ss = string_format("effect doesn't have pixel shader list");
+        LOG(Info, ss);
+        return std::nullopt;
+    }
     m_vertexShaderGateways = DeserializeVertexShaderList(json_doc[VERTEX_SHADER_LIST_TOKEN]);
     m_pixelShaderGateways = DeserializePixelShaderList(json_doc[PIXEL_SHADER_LIST_TOKEN]);
-    m_samplerStateGateways = DeserializeSamplerStateList(json_doc[SAMPLER_STATE_LIST_TOKEN]);
-    m_rasterizerStateGateways = DeserializeRasterizerStateList(json_doc[RASTERIZER_STATE_LIST_TOKEN]);
-    m_blendStateGateways = DeserializeBlendStateList(json_doc[BLEND_STATE_LIST_TOKEN]);
-    m_depthStateGateways = DeserializeDepthStateList(json_doc[DEPTH_STATE_LIST_TOKEN]);
+    m_samplerStateGateways.clear();
+    if (json_doc.HasMember(SAMPLER_STATE_LIST_TOKEN))
+    {
+        m_samplerStateGateways = DeserializeSamplerStateList(json_doc[SAMPLER_STATE_LIST_TOKEN]);
+    }
+    m_rasterizerStateGateways.clear();
+    if (json_doc.HasMember(RASTERIZER_STATE_LIST_TOKEN))
+    {
+        m_rasterizerStateGateways = DeserializeRasterizerStateList(json_doc[RASTERIZER_STATE_LIST_TOKEN]);
+    }
+    m_blendStateGateways.clear();
+    if (json_doc.HasMember(BLEND_STATE_LIST_TOKEN))
+    {
+        m_blendStateGateways = DeserializeBlendStateList(json_doc[BLEND_STATE_LIST_TOKEN]);
+    }
+    m_depthStateGateways.clear();
+    if (json_doc.HasMember(DEPTH_STATE_LIST_TOKEN))
+    {
+        m_depthStateGateways = DeserializeDepthStateList(json_doc[DEPTH_STATE_LIST_TOKEN]);
+    }
 
     EffectCompilingProfile profile;
     profile.m_name = json_doc[NAME_TOKEN].GetString();

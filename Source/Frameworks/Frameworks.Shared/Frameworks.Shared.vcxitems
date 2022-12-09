@@ -57,6 +57,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SystemServiceEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TokenVector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\unique_ptr_dynamic_cast.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

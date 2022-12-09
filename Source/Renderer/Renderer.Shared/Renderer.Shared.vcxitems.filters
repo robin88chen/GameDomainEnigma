@@ -22,9 +22,6 @@
     <Filter Include="Renderable Primitives\Mesh">
       <UniqueIdentifier>{f58e3171-484c-4e29-a7e1-23d120c5324f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{ece20ad4-d560-48e6-a043-8fee269f5364}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderable Primitives\Builder">
       <UniqueIdentifier>{09448a4b-37e5-47fa-a6f9-d9fbc6706c79}</UniqueIdentifier>
     </Filter>
@@ -72,11 +69,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h">
       <Filter>Renderable Primitives\Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
       <Filter>Renderable Primitives\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h">
+      <Filter>Commands Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveCommands.h">
+      <Filter>Commands Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

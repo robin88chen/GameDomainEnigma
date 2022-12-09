@@ -19,7 +19,7 @@
         },
         "VertexFormat": {
             "Type": "String",
-            "Value": ""
+            "Value": "xyz_tex1(2)"
         },
         "Segments": {
             "Type": "Uint32Array",

@@ -11,11 +11,12 @@
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "GameEngine/EffectTextureMapPolicy.h"
+#include <memory>
 
 class MeshPrimitiveMaker
 {
 public:
-    static Enigma::Renderer::MeshPrimitivePolicy MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name);
+    static std::unique_ptr<Enigma::Renderer::MeshPrimitivePolicy> MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name);
 
 private:
     static Enigma::Engine::EffectMaterialPolicy MakeEffectPolicy(const std::string& eff_name);

@@ -70,6 +70,7 @@ void CubeGeometryMaker::MakeSavedCube(const std::string& name)
     dto.IndexCapacity() = 36;
     dto.IndexUsedCount() = 36;
     dto.Name() = name;
+    dto.VertexFormat() = "xyz_tex1(2)";
     dto.Topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
     Box3 box = ContainmentBox3::ComputeAlignedBox(&vtx_pos[0], vtx_pos.size());
     BoundingVolume bv{ box };

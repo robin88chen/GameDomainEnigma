@@ -1,0 +1,25 @@
+﻿/*********************************************************************
+ * \file   MeshPrimitiveMaker.h
+ * \brief  
+ * 
+ * \author Lancelot 'Robin' Chen
+ * \date   December 2022
+ *********************************************************************/
+#ifndef _MESH_PRIMITIVE_MAKER_H
+#define _MESH_PRIMITIVE_MAKER_H
+
+#include "Renderer/RenderablePrimitivePolicies.h"
+#include "GameEngine/EffectMaterialPolicy.h"
+#include "GameEngine/EffectTextureMapPolicy.h"
+
+class MeshPrimitiveMaker
+{
+public:
+    static Enigma::Renderer::MeshPrimitivePolicy MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name);
+
+private:
+    static Enigma::Engine::EffectMaterialPolicy MakeEffectPolicy(const std::string& eff_name);
+    static Enigma::Engine::EffectTextureMapPolicy MakeTextureMapPolicy();
+};
+
+#endif // _MESH_PRIMITIVE_MAKER_H

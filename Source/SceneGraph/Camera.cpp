@@ -1,8 +1,14 @@
 ﻿#include "Camera.h"
 #include "SceneGraphErrors.h"
+#include "CameraFrustumDtos.h"
+#include "Frustum.h"
 #include <cassert>
+#include <memory>
 
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Engine;
+
+DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
 Camera::Camera(const std::string& name, GraphicCoordSys hand)
 {
@@ -15,9 +21,30 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand)
     m_vecRight = MathLib::Vector3::UNIT_X;
 }
 
+Camera::Camera(const CameraDto& dto)
+{
+    m_name = dto.Name();
+    m_handSys = dto.HandSystem();
+    SetCameraFrame(dto.EyePosition(), dto.LookAtDirection(), dto.UpVector());
+    //todo : 要改成 lazy load
+    m_cullingFrustum = std::make_shared<Frustum>(FrustumDto::FromGenericDto(dto.Frustum()));
+}
+
 Camera::~Camera()
 {
     m_cullingFrustum = nullptr;
+}
+
+GenericDto Camera::SerializeDto()
+{
+    CameraDto dto;
+    dto.Name() = m_name;
+    dto.HandSystem() = m_handSys;
+    dto.EyePosition() = m_vecLocation;
+    dto.LookAtDirection() = m_vecEyeToLookAt;
+    dto.UpVector() = m_vecUp;
+    dto.Frustum() = m_cullingFrustum->SerializeDto();
+    return dto.ToGenericDto();
 }
 
 error Camera::SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up)

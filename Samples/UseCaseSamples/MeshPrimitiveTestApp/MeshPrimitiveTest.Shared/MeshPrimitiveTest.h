@@ -18,6 +18,7 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
+#include "Renderer/MeshPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/RenderElement.h"
 #include "Renderer/Renderer.h"
@@ -31,7 +32,7 @@ public:
     static inline std::string MediaPathName = "APK_PATH";
 public:
     MeshPrimitiveTest(const std::string app_name);
-    ~MeshPrimitiveTest();
+    ~MeshPrimitiveTest() override;
 
     virtual void InitializeMountPaths() override;
 
@@ -44,11 +45,18 @@ public:
 protected:
     void OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
     void OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
+    void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
-};
+    Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
+    Enigma::Renderer::RendererPtr m_renderer;
+    Enigma::Renderer::RenderTargetPtr m_renderTarget;
+    Enigma::Renderer::MeshPrimitivePtr m_mesh;
+};
 
 #endif // _MESH_PRIMITIVE_TEST_H

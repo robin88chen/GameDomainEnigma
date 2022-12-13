@@ -10,23 +10,29 @@
 
 #include "SceneGraphRepository.h"
 #include "MathLib/Vector3.h"
+#include "GameEngine/GenericDto.h"
 #include <memory>
 #include <string>
 #include <system_error>
 
 namespace Enigma::SceneGraph
 {
+    class CameraDto;
     using error = std::error_code;
 
     class Camera : public std::enable_shared_from_this<Camera>
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         Camera(const std::string& name, GraphicCoordSys hand);
+        Camera(const CameraDto& dto);
         Camera(const Camera&) = delete;
         Camera(Camera&&) = delete;
         virtual ~Camera();
         Camera& operator=(const Camera&) = delete;
         Camera& operator=(Camera&&) = delete;
+
+        Engine::GenericDto SerializeDto();
 
         const std::string& GetName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handSys; }

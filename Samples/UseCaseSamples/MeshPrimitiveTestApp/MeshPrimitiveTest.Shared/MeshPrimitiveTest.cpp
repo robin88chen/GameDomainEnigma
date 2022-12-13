@@ -2,6 +2,7 @@
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Controllers/InstallingPolicies.h"
+#include "Renderer/RendererEvents.h"
 #include "CubeGeometryMaker.h"
 #include "MeshPrimitiveMaker.h"
 #include "Frameworks/CommandBus.h"
@@ -60,6 +61,10 @@ void MeshPrimitiveTest::InstallEngine()
     EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
     m_onBuildRenderablePrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) {this->OnBuildRenderablePrimitiveFailed(e); });
     EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
+    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->OnRendererCreated(e); });
+    EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
+    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->OnRenderTargetCreated(e); });
+    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
 
     assert(m_graphicMain);
 
@@ -74,10 +79,18 @@ void MeshPrimitiveTest::InstallEngine()
 
 void MeshPrimitiveTest::ShutdownEngine()
 {
+    m_mesh = nullptr;
+    m_renderer = nullptr;
+    m_renderTarget = nullptr;
+
     EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
     m_onRenderablePrimitiveBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
     m_onBuildRenderablePrimitiveFailed = nullptr;
+    EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
+    m_onRendererCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    m_onRenderTargetCreated = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -89,7 +102,11 @@ void MeshPrimitiveTest::FrameUpdate()
 
 void MeshPrimitiveTest::RenderFrame()
 {
-
+    if (!m_renderer) return;
+    m_renderer->BeginScene();
+    m_renderer->ClearRenderTarget();
+    m_renderer->EndScene();
+    m_renderer->Flip();
 }
 
 void MeshPrimitiveTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
@@ -97,7 +114,7 @@ void MeshPrimitiveTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEv
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPrimitive());
+    m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPrimitive());
 }
 
 void MeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -106,4 +123,22 @@ void MeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const Enigma::Framework
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
     Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+}
+
+void MeshPrimitiveTest::OnRendererCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
+    if (!ev) return;
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
+    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+}
+
+void MeshPrimitiveTest::OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
+    if (!ev) return;
+    m_renderTarget = ev->GetRenderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
 }

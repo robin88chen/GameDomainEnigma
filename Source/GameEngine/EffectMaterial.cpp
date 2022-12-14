@@ -204,6 +204,38 @@ void EffectMaterial::SetInstancedAssignFunc(const std::string& semantic, EffectV
     }
 }
 
+void EffectMaterial::AssignVariableValue(const std::string& semantic, std::any value)
+{
+    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    if (vars_list.empty()) return;
+    for (auto& var : vars_list)
+    {
+        var.get().AssignValue(value);
+    }
+}
+
+void EffectMaterial::AssignVariableValues(const std::string& semantic, std::any value_array, unsigned value_count)
+{
+    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    if (vars_list.empty()) return;
+    for (auto& var : vars_list)
+    {
+        var.get().AssignValues(value_array, value_count);
+    }
+}
+
+void EffectMaterial::AssignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value)
+{
+    auto var = GetEffectVariableInPassBySemantic(pass_name, semantic);
+    if (var) var.value().get().AssignValue(std::move(value));
+}
+
+void EffectMaterial::AssignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned value_count)
+{
+    auto var = GetEffectVariableInPassBySemantic(pass_name, semantic);
+    if (var) var.value().get().AssignValues(std::move(value_array), value_count);
+}
+
 void EffectMaterial::MappingAutoVariables()
 {
     if (m_effectTechniques.empty()) return;

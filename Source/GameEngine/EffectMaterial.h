@@ -55,6 +55,11 @@ namespace Enigma::Engine
         /** 每個 material instance 已經是獨立的一份 var, 似乎沒有必要了，先留著就是 */
         void SetInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
 
+        void AssignVariableValue(const std::string& semantic, std::any value);
+        void AssignVariableValues(const std::string& semantic, std::any value_array, unsigned int value_count);
+        void AssignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value);
+        void AssignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned int value_count);
+
         void MappingAutoVariables();
 
     protected:

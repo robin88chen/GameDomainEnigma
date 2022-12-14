@@ -14,11 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)MeshPrimitiveMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)MeshPrimitiveTest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)MeshPrimitiveMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)MeshPrimitiveTest.cpp" />

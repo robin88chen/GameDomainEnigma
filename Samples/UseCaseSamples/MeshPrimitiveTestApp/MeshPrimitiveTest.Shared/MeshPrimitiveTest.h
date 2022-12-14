@@ -57,6 +57,7 @@ protected:
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     Enigma::Renderer::MeshPrimitivePtr m_mesh;
+    std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };
 
 #endif // _MESH_PRIMITIVE_TEST_H

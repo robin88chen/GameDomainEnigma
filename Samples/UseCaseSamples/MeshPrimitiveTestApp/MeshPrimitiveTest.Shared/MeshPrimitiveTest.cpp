@@ -11,12 +11,14 @@
 #include "Renderer/RenderablePrimitiveEvents.h"
 #include "Renderer/MeshPrimitive.h"
 #include "GameEngine/Primitive.h"
+#include "CameraMaker.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
+using namespace Enigma::MathLib;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -75,6 +77,8 @@ void MeshPrimitiveTest::InstallEngine()
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     auto prim_policy = MeshPrimitiveMaker::MakeMeshPrimitivePolicy("test_mesh", "test_geometry");
     CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(std::move(prim_policy)));
+
+    m_camera = CameraMaker::MakeCamera();
 }
 
 void MeshPrimitiveTest::ShutdownEngine()
@@ -98,6 +102,10 @@ void MeshPrimitiveTest::ShutdownEngine()
 void MeshPrimitiveTest::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+    if ((m_renderer) && (m_mesh))
+    {
+        m_mesh->InsertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
+    }
 }
 
 void MeshPrimitiveTest::RenderFrame()
@@ -105,6 +113,7 @@ void MeshPrimitiveTest::RenderFrame()
     if (!m_renderer) return;
     m_renderer->BeginScene();
     m_renderer->ClearRenderTarget();
+    m_renderer->DrawScene();
     m_renderer->EndScene();
     m_renderer->Flip();
 }
@@ -131,6 +140,7 @@ void MeshPrimitiveTest::OnRendererCreated(const Enigma::Frameworks::IEventPtr& e
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
     m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
+    m_renderer->SetAssociatedCamera(m_camera);
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
 }
 

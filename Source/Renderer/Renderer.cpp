@@ -34,21 +34,21 @@ std::shared_ptr<RenderTarget> Renderer::GetRenderTarget() const
 error Renderer::ChangeClearingProperty(const RenderTargetClearChangingProperty& prop)
 {
     if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    error er = GetRenderTarget()->ChangeClearingProperty(prop);
+    const error er = GetRenderTarget()->ChangeClearingProperty(prop);
     return er;
 }
 
 error Renderer::ClearRenderTarget()
 {
     if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    error er = GetRenderTarget()->Clear();
+    const error er = GetRenderTarget()->Clear();
     return er;
 }
 
 error Renderer::Flip()
 {
     if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    error er = GetRenderTarget()->Flip();
+    const error er = GetRenderTarget()->Flip();
     return er;
 }
 
@@ -113,10 +113,10 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
 error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     SceneGraph::Spatial::SpatialFlags accept_filter, SceneGraph::Spatial::SpatialFlags reject_filter)
 {
-    size_t count = visible_set.GetCount();
+    const size_t count = visible_set.GetCount();
     if (count <= 0) return ErrorCode::ok;
-    SceneGraph::VisibleSet::SpatialVector spatial_array = visible_set.GetObjectSet();
-    for (auto& sp : spatial_array)
+    const SceneGraph::VisibleSet::SpatialVector& spatial_array = visible_set.GetObjectSet();
+    for (const auto& sp : spatial_array)
     {
         if (!sp->IsRenderable()) continue;  // 有很多不需要render的node, 先檢查效率較好
         if (!sp->TestSpatialFlag(accept_filter)) continue;
@@ -132,7 +132,7 @@ error Renderer::DrawScene()
     {
         if (!m_renderPacksArray[i].HasElements()) continue;
 
-        if (error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName)) return er;
+        if (const error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName)) return er;
         // ui 的 render 跟順序有關，除了不做排序外，element的cache也有可能會破壞順序，所以要多花時間做flush
         if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].FlushAll(m_stampBitMask);
     }

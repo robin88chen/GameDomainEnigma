@@ -75,7 +75,7 @@ Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
     m_accumulateRendererStamp = 0;
     return Frameworks::ServiceResult::Complete;
 }
-void RendererManager::RegisterCustomRendererFactory(const std::string& type_name, CustomRendererFactoryFunc fn)
+void RendererManager::RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn)
 {
     m_customRendererFactoryTable.emplace(type_name, fn);
 }
@@ -135,10 +135,10 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
 
 error RendererManager::DestroyRenderer(const std::string& name)
 {
-    IRendererPtr render = GetRenderer(name);
+    const IRendererPtr render = GetRenderer(name);
     if (!render) return ErrorCode::rendererNotExist;
 
-    unsigned int stamp = render->GetStampBitMask();
+    const unsigned int stamp = render->GetStampBitMask();
     m_accumulateRendererStamp &= (~stamp);
     m_renderers.erase(name);
 
@@ -149,7 +149,7 @@ error RendererManager::DestroyRenderer(const std::string& name)
 
 IRendererPtr RendererManager::GetRenderer(const std::string& name) const
 {
-    auto it = m_renderers.find(name);
+    const auto it = m_renderers.find(name);
     if (it == m_renderers.end()) return nullptr;
     return it->second;
 }
@@ -174,7 +174,7 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
 
 error RendererManager::DestroyRenderTarget(const std::string& name)
 {
-    auto target = GetRenderTarget(name);
+    const auto target = GetRenderTarget(name);
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
 
@@ -195,12 +195,12 @@ RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
     return GetRenderTarget(m_primaryRenderTargetName);
 }
 
-void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c)
+void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ResizePrimaryRenderTarget, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<ResizePrimaryRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    auto target = GetPrimaryRenderTarget();
+    const auto target = GetPrimaryRenderTarget();
     if (!target) return;
     target->Resize(cmd->GetDimension());
 }
@@ -222,7 +222,7 @@ void RendererManager::ClearAllRenderTarget()
 void RendererManager::DoCreatingRenderer(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderer, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
     CreateRenderer(cmd->GetRendererName());
 }
@@ -230,7 +230,7 @@ void RendererManager::DoCreatingRenderer(const Frameworks::ICommandPtr& c)
 void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderer, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
     DestroyRenderer(cmd->GetRendererName());
 }
@@ -238,7 +238,7 @@ void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
 void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
     CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType());
 }
@@ -246,7 +246,7 @@ void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
 void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
     DestroyRenderTarget(cmd->GetRenderTargetName());
 }

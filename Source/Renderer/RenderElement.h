@@ -61,7 +61,7 @@ namespace Enigma::Renderer
 
         inline void AddRendererStamp(unsigned int stamp) { m_rendererStamp |= stamp; };
         inline void RemoveRenderStamp(unsigned int stamp) { m_rendererStamp &= (~stamp); };
-        inline unsigned int GetRendererStamp() { return m_rendererStamp; };
+        inline unsigned int GetRendererStamp() const { return m_rendererStamp; };
 
         inline void AddActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag |= renderer_stamp_flag; };
         inline void RemoveActiveFrameFlag(unsigned int renderer_stamp_flag) { m_rendererActiveFrameFlag &= (~renderer_stamp_flag); };

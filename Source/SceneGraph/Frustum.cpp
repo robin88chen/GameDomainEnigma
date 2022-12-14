@@ -3,8 +3,12 @@
 #include "SceneGraphErrors.h"
 #include "MathLib/MathAlgorithm.h"
 #include "MathLib/MathGlobal.h"
+#include "CameraFrustumDtos.h"
 
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Engine;
+
+DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
 Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj)
 {
@@ -41,8 +45,58 @@ Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType p
     }
 }
 
+Frustum::Frustum(const FrustumDto& dto)
+{
+    m_name = dto.Name();
+    m_handCoord = dto.HandSystem();
+    m_projectionType = dto.ProjectionType();
+    m_fov = dto.Fov();
+    m_nearPlaneZ = dto.NearPlaneZ();
+    m_farPlaneZ = dto.FarPlaneZ();
+    m_aspectRatio = dto.AspectRatio();
+    m_nearWidth = dto.NearWidth();
+    m_nearHeight = dto.NearHeight();
+    if (m_handCoord == GraphicCoordSys::LeftHand)
+    {
+        if (m_projectionType == ProjectionType::Perspective)
+        {
+            m_mxProjTransform = MathLib::MathAlgorithm::MakePerspectiveProjectionFovLH(m_fov, m_aspectRatio, m_nearPlaneZ, m_farPlaneZ);
+        }
+        else
+        {
+            m_mxProjTransform = MathLib::MathAlgorithm::MakeOrthoProjectionLH(m_nearWidth, m_nearHeight, m_nearPlaneZ, m_farPlaneZ);
+        }
+    }
+    else
+    {
+        if (m_projectionType == ProjectionType::Perspective)
+        {
+            m_mxProjTransform = MathLib::MathAlgorithm::MakePerspectiveProjectionFovRH(m_fov, m_aspectRatio, m_nearPlaneZ, m_farPlaneZ);
+        }
+        else
+        {
+            m_mxProjTransform = MathLib::MathAlgorithm::MakeOrthoProjectionRH(m_nearWidth, m_nearHeight, m_nearPlaneZ, m_farPlaneZ);
+        }
+    }
+}
+
 Frustum::~Frustum()
 {
+}
+
+GenericDto Frustum::SerializeDto()
+{
+    FrustumDto dto;
+    dto.Name() = m_name;
+    dto.HandSystem() = m_handCoord;
+    dto.ProjectionType() = m_projectionType;
+    dto.Fov() = m_fov;
+    dto.NearPlaneZ() = m_nearPlaneZ;
+    dto.FarPlaneZ() = m_farPlaneZ;
+    dto.AspectRatio() = m_aspectRatio;
+    dto.NearWidth() = m_nearWidth;
+    dto.NearHeight() = m_nearHeight;
+    return dto.ToGenericDto();
 }
 
 error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane)

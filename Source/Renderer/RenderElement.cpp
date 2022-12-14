@@ -43,7 +43,7 @@ error RenderElement::Draw(const MathLib::Matrix4& mxWorld,
     m_effectMaterial->SelectRendererTechnique(rendererTechnique);
     state.CommitState();
     Engine::MaterialVariableMap::UseWorldTransform(mxWorld);
-    error er = m_renderBuffer.lock()->Draw(m_effectMaterial, m_segment);
+    const error er = m_renderBuffer.lock()->Draw(m_effectMaterial, m_segment);
     return er;
 }
 
@@ -52,6 +52,6 @@ error RenderElement::DrawExternal(const MathLib::Matrix4& mxWorld, const Engine:
     if (m_renderBuffer.expired()) return ErrorCode::nullRenderBuffer;
     if (!effect) return ErrorCode::nullEffectMaterial;
     Engine::MaterialVariableMap::UseWorldTransform(mxWorld);
-    error er = m_renderBuffer.lock()->Draw(effect, m_segment);
+    const error er = m_renderBuffer.lock()->Draw(effect, m_segment);
     return er;
 }

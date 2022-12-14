@@ -47,7 +47,7 @@ namespace Enigma::Renderer
         Renderer(const std::string& name);
         Renderer(const Renderer&) = delete;
         Renderer(Renderer&&) = delete;
-        virtual ~Renderer();
+        virtual ~Renderer() override;
         Renderer& operator=(const Renderer&) = delete;
         Renderer& operator=(Renderer&&) = delete;
 

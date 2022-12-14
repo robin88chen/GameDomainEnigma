@@ -17,7 +17,9 @@
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector2.h"
 #include "GraphicKernel/IVertexBuffer.h"
+#include "GraphicKernel/IIndexBuffer.h"
 #include "GeometryDataDto.h"
+#include "RenderBufferSignature.h"
 #include <memory>
 
 
@@ -41,6 +43,8 @@ namespace Enigma::Engine
         virtual GenericDto SerializeDto();
 
         const std::string& GetName() { return m_name; }
+
+        RenderBufferSignature MakeRenderBufferSignature() const;
 
         /** Create geometry vertex
         @param vertex_format_string vertex format string
@@ -152,6 +156,8 @@ namespace Enigma::Engine
         Graphics::IVertexBuffer::ranged_buffer GetRangedVertexMemory(unsigned int offset, unsigned int count);
         /** get index memory */
         const uint_buffer& GetIndexMemory() { return m_indexMemory; };
+        /** get ranged index memory */
+        Graphics::IIndexBuffer::ranged_buffer GetRangedIndexMemory(unsigned int offset, unsigned int count);
 
         /** get vertex capacity */
         unsigned int GetVertexCapacity() { return m_vtxCapacity; };

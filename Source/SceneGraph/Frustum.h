@@ -10,6 +10,8 @@
 
 #include "SceneGraphDefines.h"
 #include "MathLib/Matrix4.h"
+#include "Frameworks/Rtti.h"
+#include "GameEngine/GenericDto.h"
 #include <memory>
 #include <string>
 #include <system_error>
@@ -17,10 +19,12 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
+    class FrustumDto;
 
     /** Frustum class */
     class Frustum : public std::enable_shared_from_this<Frustum>
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         /** projection type */
         enum class ProjectionType
@@ -31,11 +35,14 @@ namespace Enigma::SceneGraph
 
     public:
         Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj);
+        Frustum(const FrustumDto& dto);
         Frustum(const Frustum&) = delete;
         Frustum(Frustum&&) = delete;
         virtual ~Frustum();
         Frustum& operator=(const Frustum&) = delete;
         Frustum& operator=(Frustum&&) = delete;
+
+        Engine::GenericDto SerializeDto();
 
         const std::string& GetName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handCoord; }

@@ -25,6 +25,7 @@ namespace Enigma::Engine
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,
+        textureSemantic,
 
         invalidArrayIndex = 301,
         nullMemoryBuffer,

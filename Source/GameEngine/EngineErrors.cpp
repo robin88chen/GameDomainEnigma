@@ -17,6 +17,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     case ErrorCode::noSelectedTechnique: return "No selected effect technique";
     case ErrorCode::nullMaterial: return "Null material";
+    case ErrorCode::textureSemantic: return "texture semantic error";
     case ErrorCode::invalidArrayIndex: return "Invalid array index";
     case ErrorCode::nullMemoryBuffer: return "Null memory buffer";
     case ErrorCode::zeroVertexSize: return "Zero vertex size";

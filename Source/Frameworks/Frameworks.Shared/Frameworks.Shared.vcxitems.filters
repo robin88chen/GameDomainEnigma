@@ -161,6 +161,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ResponseBus.h">
       <Filter>Requests &amp; Responses\Response</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\unique_ptr_dynamic_cast.hpp">
+      <Filter>Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

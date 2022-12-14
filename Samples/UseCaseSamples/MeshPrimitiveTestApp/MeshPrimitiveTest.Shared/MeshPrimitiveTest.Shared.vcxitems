@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{f2bc8523-d56f-477f-80de-00859031c53f}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MeshPrimitiveMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MeshPrimitiveTest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MeshPrimitiveMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MeshPrimitiveTest.cpp" />
+  </ItemGroup>
+</Project>

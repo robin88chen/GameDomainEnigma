@@ -105,6 +105,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h">
       <Filter>DTOs</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -162,6 +165,9 @@
       <Filter>Repository\Builder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
+      <Filter>DTOs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
   </ItemGroup>

@@ -108,7 +108,7 @@ namespace Enigma::Renderer
         TargetClearingPropertyChanged(const std::string& name, const RenderTargetClearingProperty& prop) :
             m_name{ name }, m_clearing(prop) {}
         const std::string& GetRenderTargetName() { return m_name; }
-        const RenderTargetClearingProperty& GetClearingProperty() { return m_clearing; }
+        const RenderTargetClearingProperty& GetClearingProperty() const { return m_clearing; }
 
     private:
         std::string m_name;

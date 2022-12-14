@@ -89,7 +89,7 @@ namespace Enigma::Renderer
     {
     public:
         ResizePrimaryRenderTarget(const MathLib::Dimension& dimension) : m_dimension(dimension) {}
-        const MathLib::Dimension& GetDimension() { return m_dimension; }
+        const MathLib::Dimension& GetDimension() const { return m_dimension; }
 
     private:
         MathLib::Dimension m_dimension;

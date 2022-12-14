@@ -1,0 +1,11 @@
+#version 300 es
+//semantic DiffuseTexture DiffuseMap
+precision mediump float;
+//sampler_state samLinear DiffuseTexture
+uniform sampler2D DiffuseTexture;
+in vec2 vTexCo;
+out vec4 outColor;
+
+void main() {
+    outColor = texture(DiffuseTexture, vTexCo);
+}

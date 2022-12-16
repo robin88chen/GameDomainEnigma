@@ -71,6 +71,8 @@ namespace Enigma::Renderer
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
 
+        virtual void SelectVisualTechnique(const std::string& techniqueName) override;
+
         /** @name building mesh primitive */
         //@{
         /** link geometry object and render buffer */

@@ -28,6 +28,9 @@
     <Filter Include="Renderable Primitives\Policies">
       <UniqueIdentifier>{c48db79f-e678-409e-8ee7-f146eebb23b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderable Primitives\Model">
+      <UniqueIdentifier>{15df78de-5dd8-4106-b161-e4ab7b64c103}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -78,6 +81,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveCommands.h">
       <Filter>Commands Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h">
+      <Filter>Renderable Primitives\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h">
+      <Filter>Renderable Primitives\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h">
+      <Filter>Renderable Primitives\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -112,6 +124,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp">
       <Filter>Renderable Primitives\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp">
+      <Filter>Renderable Primitives\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp">
+      <Filter>Renderable Primitives\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp">
+      <Filter>Renderable Primitives\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

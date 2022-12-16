@@ -7,10 +7,9 @@
 #include "RendererErrors.h"
 #include "GameEngine/GeometryData.h"
 #include "GameEngine/IRenderer.h"
-#include <cassert>
-
 #include "RenderElement.h"
 #include "Platforms/PlatformLayer.h"
+#include <cassert>
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -33,6 +32,8 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
 {
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
+    m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
+    m_primitiveFlags = mesh.m_primitiveFlags;
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
     m_renderListID = mesh.m_renderListID;
@@ -42,12 +43,15 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     }
     m_textures = mesh.m_textures;
     CreateRenderElements();
+    MeshPrimitive::SelectVisualTechnique(mesh.m_selectedVisualTech);
 }
 
 MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) : Primitive()
 {
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
+    m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
+    m_primitiveFlags = std::move(mesh.m_primitiveFlags);
     m_geometry = std::move(mesh.m_geometry);
     m_renderBuffer = std::move(mesh.m_renderBuffer);
     m_renderListID = mesh.m_renderListID;
@@ -68,6 +72,8 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 {
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
+    m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
+    m_primitiveFlags = mesh.m_primitiveFlags;
     m_geometry = mesh.m_geometry;
     m_renderBuffer = mesh.m_renderBuffer;
     m_renderListID = mesh.m_renderListID;
@@ -77,6 +83,7 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
     }
     m_textures = mesh.m_textures;
     CreateRenderElements();
+    MeshPrimitive::SelectVisualTechnique(mesh.m_selectedVisualTech);
     return *this;
 }
 
@@ -84,6 +91,8 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
 {
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
+    m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
+    m_primitiveFlags = std::move(mesh.m_primitiveFlags);
     m_geometry = std::move(mesh.m_geometry);
     m_renderBuffer = std::move(mesh.m_renderBuffer);
     m_renderListID = mesh.m_renderListID;
@@ -175,6 +184,15 @@ void MeshPrimitive::CalculateBoundingVolume(bool axis_align)
 void MeshPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
 {
     m_mxPrimitiveWorld = mxWorld;
+}
+
+void MeshPrimitive::SelectVisualTechnique(const std::string& techniqueName)
+{
+    Primitive::SelectVisualTechnique(techniqueName);
+    for (auto& eff : m_effects)
+    {
+        eff->SelectVisualTechnique(techniqueName);
+    }
 }
 
 void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)

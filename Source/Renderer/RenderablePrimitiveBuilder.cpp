@@ -1,6 +1,7 @@
 ﻿#include "RenderablePrimitiveBuilder.h"
 #include "RenderablePrimitivePolicies.h"
 #include "MeshPrimitiveBuilder.h"
+#include "ModelPrimitiveBuilder.h"
 #include "RendererErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
@@ -22,6 +23,7 @@ RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : I
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_meshBuilder = nullptr;
+    m_modelBuilder = nullptr;
 }
 
 RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
@@ -43,6 +45,7 @@ ServiceResult RenderablePrimitiveBuilder::OnInit()
     CommandBus::Subscribe(typeid(Enigma::Renderer::BuildRenderablePrimitive), m_doBuildingPrimitive);
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
+    m_modelBuilder = menew ModelPrimitiveBuilder();
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -64,6 +67,7 @@ ServiceResult RenderablePrimitiveBuilder::OnTick()
 ServiceResult RenderablePrimitiveBuilder::OnTerm()
 {
     SAFE_DELETE(m_meshBuilder);
+    SAFE_DELETE(m_modelBuilder);
 
     EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     m_onPrimitiveBuilt = nullptr;
@@ -86,11 +90,16 @@ error RenderablePrimitiveBuilder::BuildPrimitive(std::unique_ptr<RenderablePrimi
 void RenderablePrimitiveBuilder::BuildRenderablePrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy)
 {
     assert(m_meshBuilder);
+    assert(m_modelBuilder);
     m_buildingRuid = policy->GetRuid();
     auto& p = *policy;
     if (typeid(p) == typeid(MeshPrimitivePolicy))
     {
         m_meshBuilder->BuildMeshPrimitive(stdext::dynamic_pointer_cast<MeshPrimitivePolicy, RenderablePrimitivePolicy>(std::move(policy)));
+    }
+    else if (typeid(p) == typeid(ModelPrimitivePolicy))
+    {
+        m_modelBuilder->BuildModelPrimitive(stdext::dynamic_pointer_cast<ModelPrimitivePolicy, RenderablePrimitivePolicy>(std::move(policy)));
     }
 }
 

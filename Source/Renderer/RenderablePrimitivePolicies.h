@@ -69,17 +69,15 @@ namespace Enigma::Renderer
     {
     public:
         ModelPrimitivePolicy();
-        ModelPrimitivePolicy(const ModelPrimitivePolicy&) = default;
+        ModelPrimitivePolicy(const ModelPrimitivePolicy&) = delete;
         ModelPrimitivePolicy(ModelPrimitivePolicy&&) = default;
         ~ModelPrimitivePolicy() override;
-        ModelPrimitivePolicy& operator=(const ModelPrimitivePolicy&) = default;
-        ModelPrimitivePolicy& operator=(ModelPrimitivePolicy&&) = default;
 
-        [[nodiscard]] const std::vector<MeshNodeTreeDto>& NodeTreeDto() const { return m_nodeTreeDto; }
-        std::vector<MeshNodeTreeDto>& NodeTreeDto() { return m_nodeTreeDto; }
+        [[nodiscard]] const MeshNodeTreeDto& NodeTreeDto() const { return m_nodeTreeDto; }
+        MeshNodeTreeDto& NodeTreeDto() { return m_nodeTreeDto; }
 
     protected:
-        std::vector<MeshNodeTreeDto> m_nodeTreeDto;
+        MeshNodeTreeDto m_nodeTreeDto;
     };
 }
 

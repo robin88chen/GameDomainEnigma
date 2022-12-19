@@ -71,7 +71,7 @@ void MeshNode::SetMeshPrimitive(const MeshPrimitivePtr& mesh)
     }*/
 }
 
-void MeshNode::SetParentIndexIndexInArray(unsigned idx)
+void MeshNode::SetParentIndexInArray(unsigned idx)
 {
     m_parentIndexInArray = idx;
 }

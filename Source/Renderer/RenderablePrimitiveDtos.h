@@ -31,7 +31,7 @@ namespace Enigma::Renderer
         MathLib::Matrix4& LocalTransform() { return m_localTransform; }
         [[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
         MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
-        [[nodiscard]] const std::unique_ptr<MeshPrimitivePolicy>& GetMeshPrimitivePolicy() const { return m_meshPrimitive; }
+        [[nodiscard]] std::unique_ptr<MeshPrimitivePolicy>& GetMeshPrimitivePolicy() { return m_meshPrimitive; }
         void SetMeshPrimitivePolicy(std::unique_ptr<MeshPrimitivePolicy> policy);
         [[nodiscard]] std::optional<unsigned> ParentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& ParentIndexInArray() { return m_parentIndexInArray; }

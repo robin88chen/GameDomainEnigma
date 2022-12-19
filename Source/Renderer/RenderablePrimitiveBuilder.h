@@ -21,6 +21,7 @@ namespace Enigma::Renderer
     using error = std::error_code;
 
     class MeshPrimitiveBuilder;
+    class ModelPrimitiveBuilder;
 
     class RenderablePrimitiveBuilder : public Frameworks::ISystemService
     {
@@ -57,6 +58,7 @@ namespace Enigma::Renderer
         Frameworks::CommandSubscriberPtr m_doBuildingPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
+        ModelPrimitiveBuilder* m_modelBuilder;
     };
 }
 

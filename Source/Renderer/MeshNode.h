@@ -34,7 +34,7 @@ namespace Enigma::Renderer
         MeshPrimitivePtr GetMeshPrimitive() { return m_meshPrimitive; }
         void SetMeshPrimitive(const MeshPrimitivePtr& mesh);
         std::optional<unsigned> GetParentIndexInArray() const { return m_parentIndexInArray; }
-        void SetParentIndexIndexInArray(unsigned idx);
+        void SetParentIndexInArray(unsigned idx);
 
     protected:
         std::string m_name;

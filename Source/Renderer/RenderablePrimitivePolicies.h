@@ -12,6 +12,7 @@
 #include "GameEngine/GeometryDataPolicy.h"
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "GameEngine/EffectTextureMapPolicy.h"
+#include "RenderablePrimitiveDtos.h"
 #include <string>
 #include <vector>
 
@@ -62,6 +63,23 @@ namespace Enigma::Renderer
         Engine::GeometryDataPolicy m_geometryPolicy;
         std::vector<Engine::EffectMaterialPolicy> m_effectPolicies;
         std::vector<Engine::EffectTextureMapPolicy> m_texturePolicies;
+    };
+
+    class ModelPrimitivePolicy : public RenderablePrimitivePolicy
+    {
+    public:
+        ModelPrimitivePolicy();
+        ModelPrimitivePolicy(const ModelPrimitivePolicy&) = default;
+        ModelPrimitivePolicy(ModelPrimitivePolicy&&) = default;
+        ~ModelPrimitivePolicy() override;
+        ModelPrimitivePolicy& operator=(const ModelPrimitivePolicy&) = default;
+        ModelPrimitivePolicy& operator=(ModelPrimitivePolicy&&) = default;
+
+        [[nodiscard]] const std::vector<MeshNodeTreeDto>& NodeTreeDto() const { return m_nodeTreeDto; }
+        std::vector<MeshNodeTreeDto>& NodeTreeDto() { return m_nodeTreeDto; }
+
+    protected:
+        std::vector<MeshNodeTreeDto> m_nodeTreeDto;
     };
 }
 

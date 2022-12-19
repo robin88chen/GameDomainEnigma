@@ -44,6 +44,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />

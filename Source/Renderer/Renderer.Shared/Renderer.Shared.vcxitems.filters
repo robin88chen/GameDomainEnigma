@@ -146,5 +146,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp">
       <Filter>Renderable Primitives\Builders</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp">
+      <Filter>Renderable Primitives\Dtos</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

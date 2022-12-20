@@ -29,7 +29,7 @@ namespace Enigma::Renderer
         MeshPrimitiveBuilder& operator=(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder& operator=(MeshPrimitiveBuilder&&) = delete;
 
-        void BuildMeshPrimitive(std::unique_ptr<MeshPrimitivePolicy> policy);
+        void BuildMeshPrimitive(const std::shared_ptr<MeshPrimitivePolicy>& policy);
 
     protected:
         void OnGeometryDataBuilt(const Frameworks::IEventPtr& e);
@@ -47,7 +47,7 @@ namespace Enigma::Renderer
         std::optional<std::tuple<unsigned, unsigned>> FindLoadingTextureIndex(const std::string& name);
 
     protected:
-        std::unique_ptr<MeshPrimitivePolicy> m_policy;
+        std::shared_ptr<MeshPrimitivePolicy> m_policy;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Engine::GeometryData> m_builtGeometry;

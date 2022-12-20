@@ -28,10 +28,10 @@ namespace Enigma::Renderer
         ModelPrimitiveBuilder& operator=(const ModelPrimitiveBuilder&) = delete;
         ModelPrimitiveBuilder& operator=(ModelPrimitiveBuilder&&) = delete;
 
-        void BuildModelPrimitive(std::unique_ptr<ModelPrimitivePolicy> policy);
+        void BuildModelPrimitive(const std::shared_ptr<ModelPrimitivePolicy>& policy);
 
     protected:
-        void PushInnerMesh(const std::string& node_name, std::unique_ptr<MeshPrimitivePolicy>& policy);
+        void PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy);
         void ContinueBuildInnerMesh();
         void CompleteModelPrimitive();
 
@@ -47,10 +47,10 @@ namespace Enigma::Renderer
     protected:
         MeshPrimitiveBuilder* m_meshBuilder;
 
-        std::unique_ptr<ModelPrimitivePolicy> m_policy;
+        std::shared_ptr<ModelPrimitivePolicy> m_policy;
         std::shared_ptr<ModelPrimitive> m_builtPrimitive;
 
-        std::queue<std::unique_ptr<MeshPrimitivePolicy>> m_meshPolicies;
+        std::queue<std::shared_ptr<MeshPrimitivePolicy>> m_meshPolicies;
         std::vector<MeshBuildingMeta> m_meshBuildingMetas;
 
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;

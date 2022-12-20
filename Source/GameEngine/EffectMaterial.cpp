@@ -1,17 +1,24 @@
 ﻿#include "EffectMaterial.h"
 #include "EngineErrors.h"
+#include "Frameworks/Rtti.h"
+#include "EffectMaterialDto.h"
 
 using namespace Enigma::Engine;
+using namespace Enigma::Frameworks;
+
+DEFINE_RTTI_OF_BASE(Engine, EffectMaterial);
 
 EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
+    : m_factoryDesc(EffectMaterial::TYPE_RTTI.GetName())
 {
+    m_factoryDesc.ClaimAsNative(name);
     m_name = name;
     m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
     MappingAutoVariables();
 }
 
-EffectMaterial::EffectMaterial(const EffectMaterial& eff)
+EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_factoryDesc)
 {
     m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
@@ -20,7 +27,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff)
     MappingAutoVariables();
 }
 
-EffectMaterial::EffectMaterial(EffectMaterial&& eff)
+EffectMaterial::EffectMaterial(EffectMaterial&& eff) : m_factoryDesc(eff.TheFactoryDesc())
 {
     m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
@@ -40,6 +47,7 @@ EffectMaterial::~EffectMaterial()
 
 EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 {
+    m_factoryDesc = eff.m_factoryDesc;
     m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
@@ -51,6 +59,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 
 EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
 {
+    m_factoryDesc = std::move(eff.m_factoryDesc);
     m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
     m_effectTechniques = std::move(eff.m_effectTechniques);
@@ -61,6 +70,14 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
     MappingAutoVariables();
 
     return *this;
+}
+
+EffectMaterialDto EffectMaterial::ToEffectMaterialDto()
+{
+    EffectMaterialDto dto;
+    dto.Name() = m_name;
+    dto.TheFactoryDesc() = m_factoryDesc;
+    return dto;
 }
 
 void EffectMaterial::SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source)

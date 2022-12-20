@@ -28,7 +28,7 @@ ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
     SAFE_DELETE(m_meshBuilder);
 }
 
-void ModelPrimitiveBuilder::BuildModelPrimitive(std::unique_ptr<ModelPrimitivePolicy> policy)
+void ModelPrimitiveBuilder::BuildModelPrimitive(const std::shared_ptr<ModelPrimitivePolicy>& policy)
 {
     while (!m_meshPolicies.empty())
     {
@@ -36,7 +36,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(std::unique_ptr<ModelPrimitivePo
     }
     m_meshBuildingMetas.clear();
 
-    m_policy = std::move(policy);
+    m_policy = policy;
     m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->Name());
     for (auto& node_dto : m_policy->NodeTreeDto().MeshNodes())
     {
@@ -47,19 +47,19 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(std::unique_ptr<ModelPrimitivePo
         {
             node.SetParentIndexInArray(node_dto.ParentIndexInArray().value());
         }
-        if (node_dto.GetMeshPrimitivePolicy())
+        if (node_dto.TheMeshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), node_dto.GetMeshPrimitivePolicy());
+            PushInnerMesh(node_dto.Name(), node_dto.TheMeshPrimitive()->ConvertToPolicy());
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }
     ContinueBuildInnerMesh();
 }
 
-void ModelPrimitiveBuilder::PushInnerMesh(const std::string& node_name, std::unique_ptr<MeshPrimitivePolicy>& policy)
+void ModelPrimitiveBuilder::PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
     m_meshBuildingMetas.emplace_back(node_name, policy->GetRuid());
-    m_meshPolicies.push(std::move(policy));
+    m_meshPolicies.push(policy);
 }
 
 void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
@@ -69,7 +69,7 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
         CompleteModelPrimitive();
         return;
     }
-    m_meshBuilder->BuildMeshPrimitive(std::move(m_meshPolicies.front()));
+    m_meshBuilder->BuildMeshPrimitive(m_meshPolicies.front());
     m_meshPolicies.pop();
 }
 

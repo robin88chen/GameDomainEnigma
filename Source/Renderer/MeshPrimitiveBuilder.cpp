@@ -58,9 +58,9 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
     m_onLoadTextureFailed = nullptr;
 }
 
-void MeshPrimitiveBuilder::BuildMeshPrimitive(std::unique_ptr<MeshPrimitivePolicy> policy)
+void MeshPrimitiveBuilder::BuildMeshPrimitive(const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
-    m_policy = std::move(policy);
+    m_policy = policy;
     m_builtPrimitive = std::make_shared<MeshPrimitive>(m_policy->Name());
     m_builtGeometry = nullptr;
     m_builtRenderBuffer = nullptr;

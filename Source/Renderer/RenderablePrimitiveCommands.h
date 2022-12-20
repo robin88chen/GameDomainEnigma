@@ -16,11 +16,11 @@ namespace Enigma::Renderer
     class BuildRenderablePrimitive : public Frameworks::ICommand
     {
     public:
-        BuildRenderablePrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy) : m_policy(std::move(policy)) {}
-        std::unique_ptr<RenderablePrimitivePolicy>& GetPolicy() { return m_policy; }
+        BuildRenderablePrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy) : m_policy(policy) {}
+        const std::shared_ptr<RenderablePrimitivePolicy>& GetPolicy() { return m_policy; }
 
     private:
-        std::unique_ptr<RenderablePrimitivePolicy> m_policy;
+        std::shared_ptr<RenderablePrimitivePolicy> m_policy;
     };
 }
 

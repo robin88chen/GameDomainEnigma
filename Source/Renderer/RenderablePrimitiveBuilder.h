@@ -38,17 +38,17 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult OnTick() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        error BuildPrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy);
+        error BuildPrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
     protected:
-        void BuildRenderablePrimitive(std::unique_ptr<RenderablePrimitivePolicy> policy);
+        void BuildRenderablePrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
         void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
         void DoBuildingPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
-        std::queue<std::unique_ptr<RenderablePrimitivePolicy>> m_policies;
+        std::queue<std::shared_ptr<RenderablePrimitivePolicy>> m_policies;
         std::mutex m_policiesLock;
         bool m_isCurrentBuilding;
         Frameworks::Ruid m_buildingRuid;

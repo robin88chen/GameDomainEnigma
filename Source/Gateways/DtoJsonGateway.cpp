@@ -17,6 +17,7 @@
 constexpr const char* TYPE_TOKEN = "Type";
 constexpr const char* VALUE_TOKEN = "Value";
 constexpr const char* DATA_OBJECT_TOKEN = "DataObject";
+constexpr const char* DATA_OBJECT_ARRAY_TOKEN = "DataObjectArray";
 constexpr const char* UINT64_TOKEN = "Uint64";
 constexpr const char* UINT32_TOKEN = "Uint32";
 constexpr const char* FLOAT_TOKEN = "Float";
@@ -48,6 +49,7 @@ using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------
 static GenericDto DeserializeDto(const rapidjson::Value& value);
+static std::vector<GenericDto> DeserializeDtoArray(const rapidjson::Value& value);
 static void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const rapidjson::Value& value);
 static FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
 static std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
@@ -70,6 +72,7 @@ static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& valu
 static std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value);
 //------------------------------------------------------------------------
 static rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeDtoArray(const std::vector<GenericDto>& dtos, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeUInt64(const std::uint64_t n);
@@ -146,6 +149,18 @@ GenericDto DeserializeDto(const rapidjson::Value& value_ob)
     return dto;
 }
 
+std::vector<GenericDto> DeserializeDtoArray(const rapidjson::Value& value)
+{
+    std::vector<GenericDto> dtos;
+    if (!value.IsArray()) return dtos;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        dtos.emplace_back(DeserializeDto(*json_it));
+    }
+    return dtos;
+}
+
 void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const rapidjson::Value& value)
 {
     if (!value.HasMember(TYPE_TOKEN)) return;
@@ -153,6 +168,8 @@ void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const r
     std::string type = value[TYPE_TOKEN].GetString();
     if (type == DATA_OBJECT_TOKEN)
         dto.AddOrUpdate(attribute, DeserializeDto(value[VALUE_TOKEN]));
+    else if (type == DATA_OBJECT_ARRAY_TOKEN)
+        dto.AddOrUpdate(attribute, DeserializeDtoArray(value[VALUE_TOKEN]));
     else if (type == FACTORY_DESC_TOKEN)
         dto.AddOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
     else if (type == UINT64_TOKEN)
@@ -396,6 +413,16 @@ rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAlloca
     return json;
 }
 
+rapidjson::Value SerializeDtoArray(const std::vector<GenericDto>& dtos, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto& o : dtos)
+    {
+        value.PushBack(SerializeDto(o, allocator), allocator);
+    }
+    return value;
+}
+
 rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value node{ rapidjson::kObjectType };
@@ -404,6 +431,12 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(DATA_OBJECT_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
             SerializeDto(std::any_cast<GenericDto>(any_ob), allocator), allocator);
+    }
+    else if (any_ob.type() == typeid(std::vector<GenericDto>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(DATA_OBJECT_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
+            SerializeDtoArray(std::any_cast<std::vector<GenericDto>>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(FactoryDesc))
     {

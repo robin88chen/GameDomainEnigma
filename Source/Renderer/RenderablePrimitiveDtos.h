@@ -12,6 +12,9 @@
 #include "MathLib/Matrix4.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/GeometryDataDto.h"
+#include "GameEngine/FactoryDesc.h"
+#include "GameEngine/DtoDeserializer.h"
 #include <memory>
 #include <vector>
 
@@ -22,7 +25,7 @@ namespace Enigma::Renderer
     class MeshPrimitiveDto
     {
     public:
-        MeshPrimitiveDto() = default;
+        MeshPrimitiveDto();
         MeshPrimitiveDto(const MeshPrimitiveDto&) = default;
         MeshPrimitiveDto(MeshPrimitiveDto&&) = default;
         ~MeshPrimitiveDto() = default;
@@ -31,6 +34,12 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& GeometryName() const { return m_geometryName; }
+        std::string& GeometryName() { return m_geometryName; }
+        [[nodiscard]] const std::optional<Engine::GeometryDataDto>& TheGeometry() const { return m_geometry; }
+        std::optional<Engine::GeometryDataDto>& TheGeometry() { return m_geometry; }
+        [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactory; }
+        Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactory; }
         [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& Effects() const { return m_effects; }
         std::vector<Engine::EffectMaterialDto>& Effects() { return m_effects; }
         [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& TextureMaps() const { return m_textureMaps; }
@@ -39,10 +48,14 @@ namespace Enigma::Renderer
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
-        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy();
+        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
+            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
 
     protected:
         std::string m_name;
+        std::string m_geometryName;
+        std::optional<Engine::GeometryDataDto> m_geometry;
+        Engine::FactoryDesc m_geometryFactory;
         std::vector<Engine::EffectMaterialDto> m_effects;
         std::vector<Engine::EffectTextureMapDto> m_textureMaps;
     };

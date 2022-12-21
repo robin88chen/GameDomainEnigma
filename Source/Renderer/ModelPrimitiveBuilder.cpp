@@ -49,7 +49,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const std::shared_ptr<ModelPrimi
         }
         if (node_dto.TheMeshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), node_dto.TheMeshPrimitive()->ConvertToPolicy());
+            PushInnerMesh(node_dto.Name(), node_dto.TheMeshPrimitive()->ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }

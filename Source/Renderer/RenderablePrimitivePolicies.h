@@ -13,6 +13,8 @@
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "GameEngine/EffectTextureMapPolicy.h"
 #include "RenderablePrimitiveDtos.h"
+#include "GameEngine/DtoDeserializer.h"
+#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include <string>
 #include <vector>
 
@@ -32,10 +34,16 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
+        [[nodiscard]] const std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() const { return m_dtoDeserializer; }
+        std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() { return m_dtoDeserializer; }
+        [[nodiscard]] const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& TheEffectDeserializer() const { return m_effectDeserializer; }
+        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& TheEffectDeserializer() { return m_effectDeserializer; }
 
     protected:
         Frameworks::Ruid m_ruid;
         std::string m_name;
+        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
+        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
     };
 
     class MeshPrimitivePolicy : public RenderablePrimitivePolicy

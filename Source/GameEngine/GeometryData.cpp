@@ -11,7 +11,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI_OF_BASE(Engine, GeometryData);
 
-GeometryData::GeometryData(const std::string& name)
+GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
 {
     m_name = name;
     m_vtxCapacity = m_idxCapacity = 0;
@@ -22,7 +22,7 @@ GeometryData::GeometryData(const std::string& name)
     m_geometryBound = BoundingVolume{Box3::UNIT_BOX};
 }
 
-GeometryData::GeometryData(const GeometryDataDto& dto)
+GeometryData::GeometryData(const GeometryDataDto& dto) : m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
 {
     m_name = dto.Name();
     CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),

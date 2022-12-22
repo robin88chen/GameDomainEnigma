@@ -18,6 +18,7 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class Texture;
+    class GenericDto;
 
     class EffectTextureMap
     {
@@ -33,6 +34,8 @@ namespace Enigma::Engine
         virtual ~EffectTextureMap();
         EffectTextureMap& operator=(const EffectTextureMap&) = default;
         EffectTextureMap& operator=(EffectTextureMap&&) = default;
+
+        GenericDto SerializeDto();
 
         error BindTexture(const EffectTextureTuple& tuple);
         error ChangeTexture(const EffectTextureTuple& tuple);

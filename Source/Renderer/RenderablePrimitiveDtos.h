@@ -36,14 +36,14 @@ namespace Enigma::Renderer
         std::string& Name() { return m_name; }
         [[nodiscard]] const std::string& GeometryName() const { return m_geometryName; }
         std::string& GeometryName() { return m_geometryName; }
-        [[nodiscard]] const std::optional<Engine::GeometryDataDto>& TheGeometry() const { return m_geometry; }
-        std::optional<Engine::GeometryDataDto>& TheGeometry() { return m_geometry; }
+        [[nodiscard]] const std::optional<Engine::GenericDto>& TheGeometry() const { return m_geometry; }
+        std::optional<Engine::GenericDto>& TheGeometry() { return m_geometry; }
         [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactory; }
         Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactory; }
-        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& Effects() const { return m_effects; }
-        std::vector<Engine::EffectMaterialDto>& Effects() { return m_effects; }
-        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& TextureMaps() const { return m_textureMaps; }
-        std::vector<Engine::EffectTextureMapDto>& TextureMaps() { return m_textureMaps; }
+        [[nodiscard]] const std::vector<Engine::GenericDto>& Effects() const { return m_effects; }
+        std::vector<Engine::GenericDto>& Effects() { return m_effects; }
+        [[nodiscard]] const std::vector<Engine::GenericDto>& TextureMaps() const { return m_textureMaps; }
+        std::vector<Engine::GenericDto>& TextureMaps() { return m_textureMaps; }
 
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -54,10 +54,10 @@ namespace Enigma::Renderer
     protected:
         std::string m_name;
         std::string m_geometryName;
-        std::optional<Engine::GeometryDataDto> m_geometry;
+        std::optional<Engine::GenericDto> m_geometry;
         Engine::FactoryDesc m_geometryFactory;
-        std::vector<Engine::EffectMaterialDto> m_effects;
-        std::vector<Engine::EffectTextureMapDto> m_textureMaps;
+        std::vector<Engine::GenericDto> m_effects;
+        std::vector<Engine::GenericDto> m_textureMaps;
     };
 
     class MeshNodeDto

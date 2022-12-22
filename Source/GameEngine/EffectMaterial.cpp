@@ -72,12 +72,12 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
     return *this;
 }
 
-EffectMaterialDto EffectMaterial::ToEffectMaterialDto()
+GenericDto EffectMaterial::SerializeDto()
 {
     EffectMaterialDto dto;
     dto.Name() = m_name;
     dto.TheFactoryDesc() = m_factoryDesc;
-    return dto;
+    return dto.ToGenericDto();
 }
 
 void EffectMaterial::SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source)

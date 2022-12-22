@@ -27,20 +27,20 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
     MeshPrimitiveDto mesh;
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) mesh.Name() = v.value();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_NAME)) mesh.GeometryName() = v.value();
-    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.TheGeometry() = GeometryDataDto::FromGenericDto(v.value());
+    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.TheGeometry() = v.value();
     if (const auto v = dto.TryGetValue<FactoryDesc>(TOKEN_GEOMETRY_FACTORY)) mesh.GeometryFactoryDesc() = v.value();
     if (const auto ary = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_EFFECTS))
     {
         for (auto& eff_dto : ary.value())
         {
-            mesh.Effects().emplace_back(EffectMaterialDto::FromGenericDto(eff_dto));
+            mesh.Effects().emplace_back(eff_dto);
         }
     }
     if (const auto ary = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_TEXTURE_MAPS))
     {
         for (auto& tex_dto : ary.value())
         {
-            mesh.TextureMaps().emplace_back(EffectTextureMapDto::FromGenericDto(tex_dto));
+            mesh.TextureMaps().emplace_back(tex_dto);
         }
     }
     return mesh;
@@ -54,21 +54,11 @@ GenericDto MeshPrimitiveDto::ToGenericDto()
     dto.AddOrUpdate(TOKEN_GEOMETRY_NAME, m_geometryName);
     if (m_geometry)
     {
-        dto.AddOrUpdate(TOKEN_RAW_GEOMETRY, m_geometry.value().ToGenericDto());
+        dto.AddOrUpdate(TOKEN_RAW_GEOMETRY, m_geometry.value());
     }
     dto.AddOrUpdate(TOKEN_GEOMETRY_FACTORY, m_geometryFactory);
-    std::vector<GenericDto> eff_dtos;
-    for (auto& eff : m_effects)
-    {
-        eff_dtos.emplace_back(eff.ToGenericDto());
-    }
-    dto.AddOrUpdate(TOKEN_EFFECTS, eff_dtos);
-    std::vector<GenericDto> tex_dtos;
-    for (auto& tex : m_textureMaps)
-    {
-        tex_dtos.emplace_back(tex.ToGenericDto());
-    }
-    dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, tex_dtos);
+    dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
+    dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     return dto;
 }
 
@@ -81,7 +71,7 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
     policy->TheEffectDeserializer() = effect_deserializer;
     if (m_geometry)
     {
-        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value().ToGenericDto());
+        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value());
     }
     else
     {
@@ -89,11 +79,11 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
     }
     for (auto& eff : m_effects)
     {
-        policy->EffectPolicies().emplace_back(eff.ConvertToPolicy(effect_deserializer));
+        policy->EffectPolicies().emplace_back(EffectMaterialDto::FromGenericDto(eff).ConvertToPolicy(effect_deserializer));
     }
     for (auto& tex : m_textureMaps)
     {
-        policy->TexturePolicies().emplace_back(tex.ConvertToPolicy());
+        policy->TexturePolicies().emplace_back(EffectTextureMapDto::FromGenericDto(tex).ConvertToPolicy());
     }
     return policy;
 }

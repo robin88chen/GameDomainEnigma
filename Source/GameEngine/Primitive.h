@@ -21,6 +21,7 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class IRenderer;
+    class GenericDto;
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
@@ -40,6 +41,8 @@ namespace Enigma::Engine
         virtual ~Primitive();
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
+
+        virtual GenericDto SerializeDto() = 0;
 
         /** insert to renderer */
         virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,

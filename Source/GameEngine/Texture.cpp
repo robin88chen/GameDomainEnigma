@@ -4,7 +4,9 @@
 
 using namespace Enigma::Engine;
 
-Texture::Texture(const std::string& name, const Graphics::ITexturePtr & tex)
+DEFINE_RTTI_OF_BASE(Engine, Texture);
+
+Texture::Texture(const std::string& name, const Graphics::ITexturePtr & tex) : m_factoryDesc(Texture::TYPE_RTTI.GetName())
 {
     m_name = name;
     m_texture = tex;

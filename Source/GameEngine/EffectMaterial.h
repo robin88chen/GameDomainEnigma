@@ -21,7 +21,7 @@ namespace Enigma::Engine
 {
     using error = std::error_code;
     class EffectMaterialSource;
-    class EffectMaterialDto;
+    class GenericDto;
 
     class EffectMaterial
     {
@@ -34,7 +34,7 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&);
 
-        EffectMaterialDto ToEffectMaterialDto();
+        GenericDto SerializeDto();
 
         const std::string& GetName() { return m_name; };
 

@@ -28,6 +28,8 @@ namespace Enigma::Renderer
         ModelPrimitive& operator=(const ModelPrimitive& prim);
         ModelPrimitive& operator=(ModelPrimitive&& prim);
 
+        virtual Engine::GenericDto SerializeDto() override;
+
         const std::string& GetName() const { return m_name; }
 
         const MeshNodeTree& GetMeshNodeTree() const { return m_nodeTree; };

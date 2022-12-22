@@ -9,6 +9,7 @@
 #include "GameEngine/IRenderer.h"
 #include "RenderElement.h"
 #include "Platforms/PlatformLayer.h"
+#include "RenderablePrimitiveDtos.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -98,6 +99,31 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
     m_renderListID = mesh.m_renderListID;
     m_elements = std::move(mesh.m_elements);
     return *this;
+}
+
+GenericDto MeshPrimitive::SerializeDto()
+{
+    MeshPrimitiveDto dto;
+    dto.Name() = m_name;
+    if (m_geometry)
+    {
+        dto.GeometryName() = m_geometry->GetName();
+        dto.GeometryFactoryDesc() = m_geometry->TheFactoryDesc();
+        if ((m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+            || (m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        {
+            dto.TheGeometry() = m_geometry->SerializeDto();
+        }
+    }
+    for (auto& eff : m_effects)
+    {
+        dto.Effects().emplace_back(eff->SerializeDto());
+    }
+    for (auto& tex : m_textures)
+    {
+        dto.TextureMaps().emplace_back(tex.SerializeDto());
+    }
+    return dto.ToGenericDto();
 }
 
 EffectMaterialPtr MeshPrimitive::GetEffectMaterial(unsigned index)

@@ -67,6 +67,11 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim)
     return *this;
 }
 
+GenericDto ModelPrimitive::SerializeDto()
+{
+    return GenericDto();
+}
+
 unsigned ModelPrimitive::GetMeshPrimitiveCount()
 {
     if (m_meshPrimitiveIndexCache.empty())

@@ -75,14 +75,19 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
 
 void ModelPrimitiveBuilder::CompleteModelPrimitive()
 {
+    if (!m_policy) return;
     EventPublisher::Post(std::make_shared<RenderablePrimitiveBuilt>(m_policy->GetRuid(), m_policy->Name(), m_builtPrimitive));
 }
 
 void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
+    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->GetPrimitive());
+    if (!mesh_prim) return;
+    bool has_mesh_built = false;
     for (auto& meta : m_meshBuildingMetas)
     {
         if (meta.m_ruidPolicy == ev->GetRuid())
@@ -90,16 +95,18 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
             auto index = m_builtPrimitive->GetMeshNodeTree().FindMeshNodeIndex(meta.m_nodeName);
             if (index)
             {
-                m_builtPrimitive->GetMeshNodeTree().GetMeshNode(index.value()).value().get().
-                    SetMeshPrimitive(std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->GetPrimitive()));
+                m_builtPrimitive->GetMeshNodeTree().GetMeshNode(index.value()).value().get().SetMeshPrimitive(mesh_prim);
+                has_mesh_built = true;
             }
+            break;
         }
     }
-    ContinueBuildInnerMesh();
+    if (has_mesh_built) ContinueBuildInnerMesh();
 }
 
 void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;

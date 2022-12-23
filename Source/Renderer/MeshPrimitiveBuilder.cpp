@@ -71,10 +71,11 @@ void MeshPrimitiveBuilder::BuildMeshPrimitive(const std::shared_ptr<MeshPrimitiv
 
 void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_policy->GeometryPolicy().Name()) return;
+    if ((m_policy) && (ev->GetName() != m_policy->GeometryPolicy().Name())) return;
     m_builtGeometry = ev->GetGeometryData();
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
@@ -94,6 +95,7 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
 
 void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
@@ -103,6 +105,7 @@ void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr
 
 void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
@@ -128,6 +131,7 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
 
 void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
@@ -138,6 +142,7 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
 
 void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled, IEvent>(e);
     if (!ev) return;
@@ -149,6 +154,7 @@ void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr&
 
 void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed, IEvent>(e);
     if (!ev) return;
@@ -159,6 +165,7 @@ void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEven
 
 void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TextureLoaded, IEvent>(e);
     if (!ev) return;
@@ -173,6 +180,7 @@ void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
 
 void MeshPrimitiveBuilder::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 {
+    if (!m_policy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LoadTextureFailed, IEvent>(e);
     if (!ev) return;

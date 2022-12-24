@@ -26,6 +26,7 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveMaker::MakeMeshPrimitivePolicy
 
 void MeshPrimitiveMaker::SaveMeshPrimitiveDto(const std::shared_ptr<MeshPrimitive>& mesh, const std::string& filename_at_path)
 {
+    mesh->GetGeometryData()->TheFactoryDesc().ClaimFromResource(mesh->GetGeometryData()->GetName(), "test_geometry.geo@DataPath");
     GenericDto dto = mesh->SerializeDto();
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> {dto });
     IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(filename_at_path), "w+b");

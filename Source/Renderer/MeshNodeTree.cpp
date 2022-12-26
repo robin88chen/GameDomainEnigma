@@ -1,6 +1,10 @@
 ﻿#include "MeshNodeTree.h"
+#include "RenderablePrimitiveDtos.h"
 
 using namespace Enigma::Renderer;
+using namespace Enigma::Engine;
+
+DEFINE_RTTI_OF_BASE(Renderer, MeshNodeTree);
 
 MeshNodeTree::MeshNodeTree()
 {
@@ -32,6 +36,16 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree)
 {
     m_meshNodes = std::move(tree.m_meshNodes);
     return *this;
+}
+
+GenericDto MeshNodeTree::SerializeDto()
+{
+    MeshNodeTreeDto dto;
+    for (auto& node : m_meshNodes)
+    {
+        dto.MeshNodes().emplace_back(node.SerializeDto());
+    }
+    return dto.ToGenericDto();
 }
 
 std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_name) const

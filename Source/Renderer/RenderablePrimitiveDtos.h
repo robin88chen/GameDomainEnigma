@@ -76,16 +76,19 @@ namespace Enigma::Renderer
         MathLib::Matrix4& LocalTransform() { return m_localTransform; }
         [[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
         MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
-        [[nodiscard]] const std::optional<MeshPrimitiveDto>& TheMeshPrimitive() const { return m_meshPrimitive; }
-        std::optional<MeshPrimitiveDto>& TheMeshPrimitive() { return m_meshPrimitive; }
+        [[nodiscard]] const std::optional<Engine::GenericDto>& TheMeshPrimitive() const { return m_meshPrimitive; }
+        std::optional<Engine::GenericDto>& TheMeshPrimitive() { return m_meshPrimitive; }
         [[nodiscard]] std::optional<unsigned> ParentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& ParentIndexInArray() { return m_parentIndexInArray; }
+
+        static MeshNodeDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     protected:
         std::string m_name;
         MathLib::Matrix4 m_localTransform;
         MathLib::Matrix4 m_rootRefTransform;
-        std::optional<MeshPrimitiveDto> m_meshPrimitive;
+        std::optional<Engine::GenericDto> m_meshPrimitive;
         std::optional<unsigned> m_parentIndexInArray;
     };
 
@@ -99,11 +102,14 @@ namespace Enigma::Renderer
         MeshNodeTreeDto& operator=(const MeshNodeTreeDto&) = default;
         MeshNodeTreeDto& operator=(MeshNodeTreeDto&&) = default;
 
-        [[nodiscard]] const std::vector<MeshNodeDto>& MeshNodes() const { return m_nodeDtos; }
-        std::vector<MeshNodeDto>& MeshNodes() { return m_nodeDtos; }
+        [[nodiscard]] const std::vector<Engine::GenericDto>& MeshNodes() const { return m_nodeDtos; }
+        std::vector<Engine::GenericDto>& MeshNodes() { return m_nodeDtos; }
+
+        static MeshNodeTreeDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
 
     protected:
-        std::vector<MeshNodeDto> m_nodeDtos;
+        std::vector<Engine::GenericDto> m_nodeDtos;
     };
 }
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterial.h
  * \brief  Effect material, render element 裡會參考到, value object 不適合
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/

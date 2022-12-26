@@ -1,7 +1,11 @@
 ﻿#include "MeshNode.h"
+#include "RenderablePrimitiveDtos.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
+
+DEFINE_RTTI_OF_BASE(Renderer, MeshNode);
 
 MeshNode::MeshNode(const std::string& name)
 {
@@ -58,6 +62,23 @@ MeshNode& MeshNode::operator=(MeshNode&& node)
     m_meshPrimitive = std::move(node.m_meshPrimitive);
     m_parentIndexInArray = std::move(node.m_parentIndexInArray);
     return *this;
+}
+
+GenericDto MeshNode::SerializeDto()
+{
+    MeshNodeDto dto;
+    dto.Name() = m_name;
+    dto.LocalTransform() = m_mxLocalTransform;
+    dto.RootRefTransform() = m_mxRootRefTransform;
+    if (m_meshPrimitive)
+    {
+        dto.TheMeshPrimitive() = m_meshPrimitive->SerializeDto();
+    }
+    if (m_parentIndexInArray)
+    {
+        dto.ParentIndexInArray() = m_parentIndexInArray.value();
+    }
+    return dto.ToGenericDto();
 }
 
 void MeshNode::SetMeshPrimitive(const MeshPrimitivePtr& mesh)

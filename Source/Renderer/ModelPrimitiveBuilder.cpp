@@ -38,8 +38,9 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const std::shared_ptr<ModelPrimi
 
     m_policy = policy;
     m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->Name());
-    for (auto& node_dto : m_policy->NodeTreeDto().MeshNodes())
+    for (auto& dto : m_policy->NodeTreeDto().MeshNodes())
     {
+        MeshNodeDto node_dto = MeshNodeDto::FromGenericDto(dto);
         MeshNode node(node_dto.Name());
         node.SetLocalTransform(node_dto.LocalTransform());
         node.SetRootRefTransform(node_dto.RootRefTransform());
@@ -49,7 +50,8 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const std::shared_ptr<ModelPrimi
         }
         if (node_dto.TheMeshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), node_dto.TheMeshPrimitive()->ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+            PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
+                ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }

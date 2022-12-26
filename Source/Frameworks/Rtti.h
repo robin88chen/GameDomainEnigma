@@ -13,19 +13,25 @@
 #define DECLARE_RTTI \
 public: \
   static Rtti TYPE_RTTI; \
-  virtual const Rtti& TypeInfo () const override { return TYPE_RTTI; };\
+  virtual const Rtti& TypeInfo () const override { return TYPE_RTTI; };
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
     virtual const Enigma::Frameworks::Rtti& TypeInfo () const override { return TYPE_RTTI; } \
-    virtual const Enigma::Frameworks::Rtti* TypeIndex() override { return &TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* TypeIndex() override { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI_OF_BASE \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
     virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
-    virtual const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; }
+//----------------------------------------------------------------------------
+#define DECLARE_EN_RTTI_NON_BASE \
+public: \
+    static Enigma::Frameworks::Rtti TYPE_RTTI; \
+    const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
+    const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
 #define DEFINE_RTTI(modulename, classname, baseclassname) \
     Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{"En."#modulename"."#classname, &baseclassname::TYPE_RTTI}

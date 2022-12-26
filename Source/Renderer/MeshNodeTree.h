@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MeshNodeTree.h
  * \brief  Mesh Node Tree, value object, used by value
- * Model Primitive 中的 Mesh Node 樹狀結構, 
+ * Model Primitive 中的 Mesh Node 樹狀結構,
  * 實際上是用一個陣列存放 Mesh Node
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
@@ -18,6 +18,7 @@ namespace Enigma::Renderer
 {
     class MeshNodeTree
     {
+        DECLARE_EN_RTTI_NON_BASE;
     public:
         MeshNodeTree();
         MeshNodeTree(const MeshNodeTree& tree);
@@ -25,6 +26,8 @@ namespace Enigma::Renderer
         ~MeshNodeTree();
         MeshNodeTree& operator=(const MeshNodeTree& tree);
         MeshNodeTree& operator=(MeshNodeTree&& tree);
+
+        Engine::GenericDto SerializeDto();
 
         std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name) const;
         /** add mesh node to tree

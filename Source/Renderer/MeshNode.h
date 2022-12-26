@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MeshNode.h
  * \brief  Mesh Node, value object, used by value
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -16,6 +16,7 @@ namespace Enigma::Renderer
 {
     class MeshNode
     {
+        DECLARE_EN_RTTI_NON_BASE;
     public:
         MeshNode(const std::string& name);
         MeshNode(const MeshNode& node);
@@ -23,6 +24,8 @@ namespace Enigma::Renderer
         ~MeshNode();
         MeshNode& operator=(const MeshNode& node);
         MeshNode& operator=(MeshNode&& node);
+
+        Engine::GenericDto SerializeDto();
 
         const std::string& GetName() const { return m_name; }
         void SetName(const std::string& name) { m_name = name; }

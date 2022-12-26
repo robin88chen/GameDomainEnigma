@@ -7,6 +7,8 @@
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "GameEngine/EffectTextureMapPolicy.h"
 #include "MeshPrimitive.h"
+#include "MeshNode.h"
+#include "MeshNodeTree.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -17,6 +19,11 @@ static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
 static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
+static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
+static std::string TOKEN_ROOT_REF_TRANSFORM = "RootRefTransform";
+static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
+static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
+static std::string TOKEN_MESH_NODES = "MeshNodes";
 
 MeshPrimitiveDto::MeshPrimitiveDto() : m_geometryFactory(GeometryData::TYPE_RTTI.GetName())
 {
@@ -86,4 +93,48 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
         policy->TexturePolicies().emplace_back(EffectTextureMapDto::FromGenericDto(tex).ConvertToPolicy());
     }
     return policy;
+}
+
+MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+{
+    MeshNodeDto node;
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) node.Name() = v.value();
+    if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_TRANSFORM)) node.LocalTransform() = v.value();
+    if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
+    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MESH_PRIMITIVE_OBJECT)) node.TheMeshPrimitive() = v.value();
+    if (const auto v = dto.TryGetValue<unsigned>(TOKEN_PARENT_NODE_INDEX)) node.ParentIndexInArray() = v.value();
+    return node;
+}
+
+GenericDto MeshNodeDto::ToGenericDto()
+{
+    GenericDto dto;
+    dto.AddRtti(FactoryDesc(MeshNode::TYPE_RTTI.GetName()));
+    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
+    dto.AddOrUpdate(TOKEN_ROOT_REF_TRANSFORM, m_rootRefTransform);
+    if (m_meshPrimitive)
+    {
+        dto.AddOrUpdate(TOKEN_MESH_PRIMITIVE_OBJECT, m_meshPrimitive.value());
+    }
+    if (m_parentIndexInArray)
+    {
+        dto.AddOrUpdate(TOKEN_PARENT_NODE_INDEX, m_parentIndexInArray.value());
+    }
+    return dto;
+}
+
+MeshNodeTreeDto MeshNodeTreeDto::FromGenericDto(const GenericDto& dto)
+{
+    MeshNodeTreeDto tree;
+    if (const auto v = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_MESH_NODES)) tree.MeshNodes() = v.value();
+    return tree;
+}
+
+GenericDto MeshNodeTreeDto::ToGenericDto()
+{
+    GenericDto dto;
+    dto.AddRtti(FactoryDesc(MeshNodeTree::TYPE_RTTI.GetName()));
+    dto.AddOrUpdate(TOKEN_MESH_NODES, m_nodeDtos);
+    return dto;
 }

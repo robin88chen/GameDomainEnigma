@@ -9,6 +9,7 @@
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
 #include "MeshNodeTree.h"
+#include "ModelPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -24,6 +25,7 @@ static std::string TOKEN_ROOT_REF_TRANSFORM = "RootRefTransform";
 static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";
+static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 
 MeshPrimitiveDto::MeshPrimitiveDto() : m_geometryFactory(GeometryData::TYPE_RTTI.GetName())
 {
@@ -137,4 +139,32 @@ GenericDto MeshNodeTreeDto::ToGenericDto()
     dto.AddRtti(FactoryDesc(MeshNodeTree::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_MESH_NODES, m_nodeDtos);
     return dto;
+}
+
+ModelPrimitiveDto ModelPrimitiveDto::FromGenericDto(const GenericDto& dto)
+{
+    ModelPrimitiveDto model;
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.Name() = v.value();
+    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MESH_NODE_TREE)) model.TheNodeTree() = v.value();
+    return model;
+}
+
+GenericDto ModelPrimitiveDto::ToGenericDto()
+{
+    GenericDto dto;
+    dto.AddRtti(FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName()));
+    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
+    return dto;
+}
+
+std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+{
+    auto policy = std::make_shared<ModelPrimitivePolicy>();
+    policy->Name() = m_name;
+    policy->TheDtoDeserializer() = deserializer;
+    policy->TheEffectDeserializer() = effect_deserializer;
+    policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(m_nodeTreeDto);
+    return policy;
 }

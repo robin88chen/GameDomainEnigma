@@ -21,6 +21,7 @@
 namespace Enigma::Renderer
 {
     class MeshPrimitivePolicy;
+    class ModelPrimitivePolicy;
 
     class MeshPrimitiveDto
     {
@@ -110,6 +111,32 @@ namespace Enigma::Renderer
 
     protected:
         std::vector<Engine::GenericDto> m_nodeDtos;
+    };
+
+    class ModelPrimitiveDto
+    {
+    public:
+        ModelPrimitiveDto() = default;
+        ModelPrimitiveDto(const ModelPrimitiveDto&) = default;
+        ModelPrimitiveDto(ModelPrimitiveDto&&) = default;
+        ~ModelPrimitiveDto() = default;
+        ModelPrimitiveDto& operator=(const ModelPrimitiveDto&) = default;
+        ModelPrimitiveDto& operator=(ModelPrimitiveDto&&) = default;
+
+        [[nodiscard]] const std::string& Name() const { return m_name; }
+        std::string& Name() { return m_name; }
+        [[nodiscard]] const Engine::GenericDto& TheNodeTree() const { return m_nodeTreeDto; }
+        Engine::GenericDto& TheNodeTree() { return m_nodeTreeDto; }
+
+        static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
+
+        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
+            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+
+    protected:
+        std::string m_name;
+        Engine::GenericDto m_nodeTreeDto;
     };
 }
 

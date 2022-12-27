@@ -3,6 +3,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "RendererErrors.h"
 #include "MathLib/Matrix4.h"
+#include "RenderablePrimitiveDtos.h"
 #include <memory>
 
 using namespace Enigma::Renderer;
@@ -69,7 +70,10 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim)
 
 GenericDto ModelPrimitive::SerializeDto()
 {
-    return GenericDto();
+    ModelPrimitiveDto dto;
+    dto.Name() = m_name;
+    dto.TheNodeTree() = m_nodeTree.SerializeDto();
+    return dto.ToGenericDto();
 }
 
 unsigned ModelPrimitive::GetMeshPrimitiveCount()

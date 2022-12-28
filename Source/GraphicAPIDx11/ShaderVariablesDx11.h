@@ -1,13 +1,12 @@
 ﻿/*********************************************************************
  * \file   ShaderVariablesDx11.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
 #ifndef SHADER_VARIABLES_DX11_H
 #define SHADER_VARIABLES_DX11_H
-
 
 #include "GraphicKernel/IShaderVariable.h"
 #include "DeviceConstBufferDx11.h"
@@ -94,7 +93,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Base : public Graphics::IShaderVariable
     {
     public:
-        ShaderVariableDx11_Base(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Base(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner);
         ShaderVariableDx11_Base(const ShaderVariableDx11_Base&) = delete;
         ShaderVariableDx11_Base(ShaderVariableDx11_Base&&) = delete;
@@ -115,7 +114,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Float : public ShaderVariableDx11_Base
     {
     public:
-        ShaderVariableDx11_Float(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Float(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Float(const ShaderVariableDx11_Float&) = delete;
         ShaderVariableDx11_Float(ShaderVariableDx11_Float&&) = delete;
@@ -135,7 +134,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Int : public ShaderVariableDx11_Base
     {
     public:
-        ShaderVariableDx11_Int(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Int(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Int(const ShaderVariableDx11_Int&) = delete;
         ShaderVariableDx11_Int(ShaderVariableDx11_Int&&) = delete;
@@ -155,7 +154,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Boolean : public ShaderVariableDx11_Base
     {
     public:
-        ShaderVariableDx11_Boolean(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Boolean(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Boolean(const ShaderVariableDx11_Boolean&) = delete;
         ShaderVariableDx11_Boolean(ShaderVariableDx11_Boolean&&) = delete;
@@ -175,7 +174,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Matrix : public ShaderVariableDx11_Base
     {
     public:
-        ShaderVariableDx11_Matrix(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Matrix(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements, bool isColumnMajor);
         ShaderVariableDx11_Matrix(const ShaderVariableDx11_Matrix&) = delete;
         ShaderVariableDx11_Matrix(ShaderVariableDx11_Matrix&&) = delete;
@@ -196,7 +195,7 @@ namespace Enigma::Devices
     class ShaderVariableDx11_Vector : public ShaderVariableDx11_Base
     {
     public:
-        ShaderVariableDx11_Vector(const std::string& name, const std::string& semantic, 
+        ShaderVariableDx11_Vector(const std::string& name, const std::string& semantic,
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Vector(const ShaderVariableDx11_Vector&) = delete;
         ShaderVariableDx11_Vector(ShaderVariableDx11_Vector&&) = delete;
@@ -229,7 +228,7 @@ namespace Enigma::Devices
         virtual error Apply() override;
 
     protected:
-        Graphics::ITextureWeak m_texture;
+        Graphics::ITexturePtr m_texture; //todo: 為什麼原本用 weak ptr?? (2022.12.28)
         std::optional<unsigned int> m_indexMultiTexture;
     };
     class ShaderVariableDx11_Sampler : public ShaderVariableDx11_Resource
@@ -249,7 +248,7 @@ namespace Enigma::Devices
         virtual error Apply() override;
 
     protected:
-        Graphics::IDeviceSamplerStateWeak m_sampler;
+        Graphics::IDeviceSamplerStatePtr m_sampler; //todo: 為什麼原本用 weak ptr?? (2022.12.28)
     };
 }
 

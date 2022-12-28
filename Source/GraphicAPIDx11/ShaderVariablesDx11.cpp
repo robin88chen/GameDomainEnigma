@@ -198,7 +198,7 @@ future_error ShaderVariableDx11_ConstBuffer::AsyncApply()
 }
 
 //---------------------------------------------------
-ShaderVariableDx11_Base::ShaderVariableDx11_Base(const std::string& name, const std::string& semantic, 
+ShaderVariableDx11_Base::ShaderVariableDx11_Base(const std::string& name, const std::string& semantic,
     const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner) : IShaderVariable(name, semantic)
 {
     m_owner = owner;
@@ -366,7 +366,7 @@ void ShaderVariableDx11_Boolean::SetValues(std::any data_array, unsigned int cou
 
 //------------------------------------------------------
 ShaderVariableDx11_Matrix::ShaderVariableDx11_Matrix(const std::string& name, const std::string& semantic,
-    const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, 
+    const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner,
     unsigned int offset, unsigned int elements, bool isColumnMajor)
     : ShaderVariableDx11_Base(name, semantic, owner)
 {
@@ -495,7 +495,7 @@ void ShaderVariableDx11_Vector::SetValues(std::any data_array, unsigned int coun
     }
 }
 //----------------------------------------------------------------------------
-ShaderVariableDx11_Texture::ShaderVariableDx11_Texture(VarOwner var_of, 
+ShaderVariableDx11_Texture::ShaderVariableDx11_Texture(VarOwner var_of,
     const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount)
     : ShaderVariableDx11_Resource(var_of, name, semantic, bindPoint, bindCount)
 {
@@ -535,9 +535,9 @@ error ShaderVariableDx11_Texture::Apply()
     assert(deviceContext);
 
     ID3D11ShaderResourceView* resource[1] = { nullptr /*m_texture->GetD3DResourceView() */ };
-    if ((!m_texture.expired()) && (!m_texture.lock()->IsMultiTexture()))
+    if ((m_texture) && (!m_texture->IsMultiTexture()))
     {
-        TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(m_texture.lock().get());
+        TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(m_texture.get());
         if (texDx11)
         {
             resource[0] = texDx11->GetD3DResourceView();
@@ -546,9 +546,9 @@ error ShaderVariableDx11_Texture::Apply()
         m_texture->GetDimension(&w, &h);
         DebugPrintf("Texture %s, %d, %d\n", m_texture->GetName().String().c_str(), w, h);*/
     }
-    else if ((!m_texture.expired()) && (m_texture.lock()->IsMultiTexture()) && (m_indexMultiTexture))
+    else if ((m_texture) && (m_texture->IsMultiTexture()) && (m_indexMultiTexture))
     {
-        MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(m_texture.lock().get());
+        MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(m_texture.get());
         if (texDx11)
         {
             resource[0] = texDx11->GetD3DResourceView(m_indexMultiTexture.value());
@@ -617,8 +617,8 @@ error ShaderVariableDx11_Sampler::Apply()
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
     assert(deviceContext);
 
-    if (m_sampler.expired()) return ErrorCode::nullSamplerState;
-    DeviceSamplerStateDx11* samplerDx11 = dynamic_cast<DeviceSamplerStateDx11*>(m_sampler.lock().get());
+    if (!m_sampler) return ErrorCode::nullSamplerState;
+    DeviceSamplerStateDx11* samplerDx11 = dynamic_cast<DeviceSamplerStateDx11*>(m_sampler.get());
     if (!samplerDx11) return ErrorCode::dynamicCastState;
     return samplerDx11->BindToShader(m_varOf, m_bindPoint);
 }

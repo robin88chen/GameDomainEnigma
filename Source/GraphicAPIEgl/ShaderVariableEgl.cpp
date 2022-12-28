@@ -151,9 +151,9 @@ error ShaderVariableEgl_Texture::Apply()
     assert(glIsProgram(m_program));
     GLint loc = glGetUniformLocation(m_program, m_name.c_str());
     if (loc < 0) return ErrorCode::shaderVarLocation;
-    if ((!m_texture.expired()) && (!m_texture.lock()->IsMultiTexture()))
+    if ((m_texture) && (!m_texture->IsMultiTexture()))
     {
-        TextureEgl* tex_egl = dynamic_cast<TextureEgl*>(m_texture.lock().get());
+        TextureEgl* tex_egl = dynamic_cast<TextureEgl*>(m_texture.get());
         assert(tex_egl);
         glActiveTexture(GL_TEXTURE0 + m_bindSlot);
         if (!tex_egl->IsCubeTexture())
@@ -165,9 +165,9 @@ error ShaderVariableEgl_Texture::Apply()
             glBindTexture(GL_TEXTURE_CUBE_MAP, tex_egl->GetTextureHandle());
         }
     }
-    else if ((!m_texture.expired()) && (m_texture.lock()->IsMultiTexture()) &&(m_indexMultiTexture))
+    else if ((m_texture) && (m_texture->IsMultiTexture()) &&(m_indexMultiTexture))
     {
-        MultiTextureEgl* tex_egl = dynamic_cast<MultiTextureEgl*>(m_texture.lock().get());
+        MultiTextureEgl* tex_egl = dynamic_cast<MultiTextureEgl*>(m_texture.get());
         assert(tex_egl);
         glActiveTexture(GL_TEXTURE0 + m_bindSlot);
         glBindTexture(GL_TEXTURE_2D, tex_egl->GetTextureHandle(m_indexMultiTexture.value()));
@@ -207,8 +207,8 @@ void ShaderVariableEgl_Sampler::SetValues(std::any data_array, unsigned count)
 
 error ShaderVariableEgl_Sampler::Apply()
 {
-    if (m_sampler.expired()) return ErrorCode::nullSamplerState;
-    DeviceSamplerStateEgl* sampler_egl = dynamic_cast<DeviceSamplerStateEgl*>(m_sampler.lock().get());
+    if (!m_sampler) return ErrorCode::nullSamplerState;
+    DeviceSamplerStateEgl* sampler_egl = dynamic_cast<DeviceSamplerStateEgl*>(m_sampler.get());
     assert(sampler_egl);
 
     return sampler_egl->BindToShader(m_bindSlot);

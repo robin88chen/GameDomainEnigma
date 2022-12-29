@@ -57,9 +57,9 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
         return Frameworks::ServiceResult::Pendding;
     }
     assert(m_compiler);
-    m_compiler->CompileEffectMaterial(m_policies.front());
+    auto proceed = m_compiler->CompileEffectMaterial(m_policies.front());
     m_policies.pop();
-    m_isCurrentCompiling = true;
+    m_isCurrentCompiling = static_cast<bool>(proceed);
     return Frameworks::ServiceResult::Pendding;
 }
 
@@ -108,7 +108,7 @@ void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr
 
     EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
     source->LinkSource();
-    m_sourceMaterials.try_emplace(ev->GetFilename(), source);
+    m_sourceMaterials.insert_or_assign(ev->GetFilename(), source);
     Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(ev->GetFilename(), QueryEffectMaterial(ev->GetFilename())));
     m_isCurrentCompiling = false;
 }

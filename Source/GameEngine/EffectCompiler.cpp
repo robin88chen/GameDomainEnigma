@@ -62,7 +62,7 @@ EffectCompiler::~EffectCompiler()
     m_onRasterizerStateCreated = nullptr;
 }
 
-void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
+EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
 {
     assert(m_hostManager);
     m_policy = policy;
@@ -70,6 +70,7 @@ void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
     {
         Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
             policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name())));
+        return CompilingProceed::False;
     }
     else if (policy.GetProfile())
     {
@@ -83,7 +84,9 @@ void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
     else
     {
         EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(policy.Name(), ErrorCode::policyIncomplete));
+        return CompilingProceed::False;
     }
+    return CompilingProceed::True;
 }
 
 void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)

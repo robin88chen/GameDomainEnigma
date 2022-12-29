@@ -24,6 +24,12 @@ namespace Enigma::Engine
     class EffectCompiler
     {
     public:
+        enum class CompilingProceed : bool
+        {
+            False,
+            True,
+        };
+    public:
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:
@@ -46,7 +52,7 @@ namespace Enigma::Engine
         EffectCompiler& operator=(const EffectCompiler&) = delete;
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
-        void CompileEffectMaterial(const EffectMaterialPolicy& policy);
+        CompilingProceed CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
         void CompileEffect(const EffectCompilingProfile& profile);

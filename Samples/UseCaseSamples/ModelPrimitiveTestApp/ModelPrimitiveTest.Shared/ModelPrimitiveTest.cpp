@@ -142,11 +142,25 @@ void ModelPrimitiveTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IE
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
+    if (ev->GetName() != "test_model") return;
     auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
-    m_model = model;
+    if (!m_isPrefabBuilt)
+    {
+        ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
+        auto policy = ModelPrimitiveMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
+        CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
+        m_isPrefabBuilt = true;
+    }
+    else
+    {
+        m_model = model;
+    }
 }
 
 void ModelPrimitiveTest::OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
 {
-
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
 }

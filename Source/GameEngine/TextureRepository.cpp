@@ -100,7 +100,7 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<TextureLoader::TextureLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_textureMapLock };
-    m_textures.try_emplace(ev->GetTextureName(), ev->GetTexture());
+    m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
     m_isCurrentLoading = false;
     Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(ev->GetTextureName(), ev->GetTexture()));
 }

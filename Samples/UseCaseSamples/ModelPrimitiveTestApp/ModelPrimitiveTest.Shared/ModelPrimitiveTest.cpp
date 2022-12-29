@@ -11,6 +11,7 @@
 #include "CubeGeometryMaker.h"
 #include "CameraMaker.h"
 #include "ModelPrimitiveMaker.h"
+#include "Platforms/AndroidBridge.h"
 
 using namespace Enigma::Controllers;
 using namespace Enigma::FileSystem;

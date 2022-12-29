@@ -44,6 +44,9 @@ namespace Enigma::Engine
 
         const std::string& GetName() { return m_name; }
 
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         RenderBufferSignature MakeRenderBufferSignature() const;
 
         /** Create geometry vertex
@@ -199,6 +202,7 @@ namespace Enigma::Engine
         GeometryDataDto SerializeGeometryDto();
 
     protected:
+        FactoryDesc m_factoryDesc;
         std::string m_name;
 
         GeometrySegmentVector m_geoSegmentVector;

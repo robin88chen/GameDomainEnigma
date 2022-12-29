@@ -22,3 +22,10 @@ const EffectTextureMapPolicy::TextureTuplePolicy& MeshPrimitivePolicy::GetTextur
     return m_texturePolicies[tex_idx].GetTuplePolicies()[tuple_idx];
 }
 
+ModelPrimitivePolicy::ModelPrimitivePolicy() : RenderablePrimitivePolicy()
+{
+}
+
+ModelPrimitivePolicy::~ModelPrimitivePolicy()
+{
+}

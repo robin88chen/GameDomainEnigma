@@ -27,7 +27,7 @@ std::string DefaultRendererName = "default_renderer";
 
 MeshPrimitiveTest::MeshPrimitiveTest(const std::string app_name) : AppDelegate(app_name)
 {
-
+    m_isPrefabBuilt = false;
 }
 
 MeshPrimitiveTest::~MeshPrimitiveTest()
@@ -78,7 +78,7 @@ void MeshPrimitiveTest::InstallEngine()
 
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     auto prim_policy = MeshPrimitiveMaker::MakeMeshPrimitivePolicy("test_mesh", "test_geometry");
-    CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(std::move(prim_policy)));
+    CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(prim_policy));
 
     m_camera = CameraMaker::MakeCamera();
 }
@@ -125,7 +125,18 @@ void MeshPrimitiveTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEv
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPrimitive());
+    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPrimitive());
+    if (!m_isPrefabBuilt)
+    {
+        MeshPrimitiveMaker::SaveMeshPrimitiveDto(mesh, "test_mesh.mesh@DataPath");
+        auto policy = MeshPrimitiveMaker::LoadMeshPrimitivePolicy("test_mesh.mesh@DataPath");
+        CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
+        m_isPrefabBuilt = true;
+    }
+    else
+    {
+        m_mesh = mesh;
+    }
 }
 
 void MeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)

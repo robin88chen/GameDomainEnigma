@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Texture.h
  * \brief  texture entity
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -10,12 +10,15 @@
 
 #include "GraphicKernel/ITexture.h"
 #include "MathLib/AlgebraBasicTypes.h"
+#include "FactoryDesc.h"
+#include "Frameworks/Rtti.h"
 #include <string>
 
 namespace Enigma::Engine
 {
     class Texture
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         Texture(const std::string& name, const Graphics::ITexturePtr& tex);
         Texture(const Texture&) = delete;
@@ -23,6 +26,9 @@ namespace Enigma::Engine
         virtual ~Texture();
         Texture& operator=(const Texture&) = delete;
         Texture& operator=(Texture&&) = delete;
+
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         const std::string& GetName() const { return m_name; }
 
@@ -34,6 +40,7 @@ namespace Enigma::Engine
         virtual bool IsMultiTexture() { return false; }
 
     protected:
+        FactoryDesc m_factoryDesc;
         std::string m_name;
         Graphics::ITexturePtr m_texture;
     };

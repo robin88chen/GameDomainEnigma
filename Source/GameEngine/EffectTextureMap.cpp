@@ -1,5 +1,10 @@
 ﻿#include "EffectTextureMap.h"
 #include "EngineErrors.h"
+#include "EffectTextureMapDto.h"
+#include "Texture.h"
+#include <tuple>
+#include <string>
+#include <memory>
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -22,6 +27,24 @@ EffectTextureMap::EffectTextureMap(const EffectTextures& textures)
 EffectTextureMap::~EffectTextureMap()
 {
     m_effectTextures.clear();
+}
+
+GenericDto EffectTextureMap::SerializeDto()
+{
+    EffectTextureMapDto dto;
+    for (auto& tex : m_effectTextures)
+    {
+        TextureMappingDto mapping;
+        mapping.Semantic() = std::get<std::string>(tex);
+        if (auto& t = std::get<std::shared_ptr<Texture>>(tex))
+        {
+            mapping.TextureName() = t->TheFactoryDesc().GetResourceName();
+            mapping.Filename() = t->TheFactoryDesc().GetResourceFilename();
+        }
+        if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.ArrayIndex() = v.value();
+        dto.TextureMappings().emplace_back(mapping);
+    }
+    return dto.ToGenericDto();
 }
 
 error EffectTextureMap::BindTexture(const EffectTextureTuple& tuple)

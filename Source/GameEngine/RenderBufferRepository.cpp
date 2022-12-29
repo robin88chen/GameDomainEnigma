@@ -100,7 +100,7 @@ void RenderBufferRepository::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<RenderBufferBuilder::RenderBufferBuilt, Frameworks::IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_bufferMapLock };
-    m_renderBuffers.try_emplace(ev->GetSignature(), ev->GetBuffer());
+    m_renderBuffers.insert_or_assign(ev->GetSignature(), ev->GetBuffer());
     m_isCurrentBuilding = false;
     Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->GetName(), ev->GetSignature(), ev->GetBuffer()));
 }

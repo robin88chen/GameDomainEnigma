@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ShaderVariableEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -72,7 +72,7 @@ namespace Enigma::Devices
         virtual error Apply() override;
 
     protected:
-        Graphics::ITextureWeak m_texture;
+        Graphics::ITexturePtr m_texture;
         std::optional<unsigned int> m_indexMultiTexture;
         unsigned int m_bindSlot;
     };
@@ -92,7 +92,7 @@ namespace Enigma::Devices
         virtual error Apply() override;
 
     protected:
-        Graphics::IDeviceSamplerStateWeak m_sampler;
+        Graphics::IDeviceSamplerStatePtr m_sampler;
         unsigned int m_bindSlot;
     };
 

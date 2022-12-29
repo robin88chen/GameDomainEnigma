@@ -21,6 +21,7 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class IRenderer;
+    class GenericDto;
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
@@ -41,6 +42,8 @@ namespace Enigma::Engine
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
 
+        virtual GenericDto SerializeDto() = 0;
+
         /** insert to renderer */
         virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
             const MathLib::Matrix4& mxWorld, const RenderLightingState& lightingState) = 0;
@@ -55,6 +58,24 @@ namespace Enigma::Engine
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) = 0;
 
+        /** select visual technique */
+        virtual void SelectVisualTechnique(const std::string& techniqueName) { m_selectedVisualTech = techniqueName; };
+        /** get selected visual technique */
+        virtual std::string& GetSelectedVisualTechnique() { return m_selectedVisualTech; };
+
+        /** add primitive flag */
+        void AddPrimitiveFlag(PrimitiveFlags flag)
+        {
+            m_primitiveFlags |= flag;
+        }
+        /** remove primitive flag */
+        void RemovePrimitiveFlag(PrimitiveFlags flag)
+        {
+            m_primitiveFlags &= (~flag);
+        }
+        /** get primitive flag */
+        PrimitiveFlags GetPrimitiveFlag() { return m_primitiveFlags; };
+        /** test primitive flag */
         bool TestPrimitiveFlag(PrimitiveFlags flag)
         {
             return (m_primitiveFlags & flag).any();
@@ -64,6 +85,7 @@ namespace Enigma::Engine
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;
+        std::string m_selectedVisualTech;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

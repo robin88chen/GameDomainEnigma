@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterial.h
  * \brief  Effect material, render element 裡會參考到, value object 不適合
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -11,6 +11,8 @@
 #include "EffectVariable.h"
 #include "EffectTechnique.h"
 #include "GraphicKernel/IShaderProgram.h"
+#include "Frameworks/Rtti.h"
+#include "FactoryDesc.h"
 #include <string>
 #include <system_error>
 #include <list>
@@ -19,9 +21,11 @@ namespace Enigma::Engine
 {
     using error = std::error_code;
     class EffectMaterialSource;
+    class GenericDto;
 
     class EffectMaterial
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
         EffectMaterial(const EffectMaterial&);
@@ -30,7 +34,12 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&);
 
+        GenericDto SerializeDto();
+
         const std::string& GetName() { return m_name; };
+
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         void SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
         std::shared_ptr<EffectMaterialSource> GetEffectMaterialSource() { return m_sourceMaterial.lock(); };
@@ -71,6 +80,8 @@ namespace Enigma::Engine
             InstancedAssignFuncList;
 
     protected:
+        FactoryDesc m_factoryDesc;
+
         std::string m_name;
         std::weak_ptr<EffectMaterialSource> m_sourceMaterial;
 

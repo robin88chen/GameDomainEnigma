@@ -14,10 +14,15 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
@@ -32,9 +37,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />

@@ -1,0 +1,295 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderer.ModelPrimitive",
+                "PrefabFilename": ""
+            }
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "test_model"
+        },
+        "MeshNodeTree": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Renderer.MeshNodeTree",
+                        "PrefabFilename": ""
+                    }
+                },
+                "MeshNodes": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderer.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "test_model_node_0"
+                            },
+                            "MeshPrimitiveObject": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshPrimitive",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "test_model_mesh"
+                                    },
+                                    "GeometryName": {
+                                        "Type": "String",
+                                        "Value": "test_geometry"
+                                    },
+                                    "GeometryFactory": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 4,
+                                            "ResourceName": "test_geometry",
+                                            "ResourceFilename": "test_geometry.geo@DataPath",
+                                            "RttiName": "En.Engine.TriangleList",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Effects": {
+                                        "Type": "DataObjectArray",
+                                        "Value": [{
+                                                "Rtti": {
+                                                    "Type": "FactoryDesc",
+                                                    "Value": {
+                                                        "InstanceType": 4,
+                                                        "ResourceName": "basic_vtx_tex",
+                                                        "ResourceFilename": "basic_vtx_tex.efx@APK_PATH",
+                                                        "RttiName": "En.Engine.EffectMaterial",
+                                                        "PrefabFilename": "basic_vtx_tex"
+                                                    }
+                                                },
+                                                "Name": {
+                                                    "Type": "String",
+                                                    "Value": "basic_vtx_tex"
+                                                }
+                                            }]
+                                    },
+                                    "TextureMaps": {
+                                        "Type": "DataObjectArray",
+                                        "Value": [{
+                                                "TextureMappings": {
+                                                    "Type": "DataObjectArray",
+                                                    "Value": [{
+                                                            "TextureName": {
+                                                                "Type": "String",
+                                                                "Value": "earth"
+                                                            },
+                                                            "Filename": {
+                                                                "Type": "String",
+                                                                "Value": "earth.png@APK_PATH"
+                                                            },
+                                                            "PathId": {
+                                                                "Type": "String",
+                                                                "Value": ""
+                                                            },
+                                                            "Semantic": {
+                                                                "Type": "String",
+                                                                "Value": "DiffuseMap"
+                                                            }
+                                                        }]
+                                                }
+                                            }]
+                                    }
+                                }
+                            },
+                            "RootRefTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            }
+                        }, {
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderer.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.30000001192092896, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "test_model_node_1"
+                            },
+                            "RootRefTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.30000001192092896, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "ParentNodeIndex": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            }
+                        }, {
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6000000238418579, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderer.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "test_model_node_2"
+                            },
+                            "RootRefTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9000000357627869, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "ParentNodeIndex": {
+                                "Type": "Uint32",
+                                "Value": 1
+                            }
+                        }, {
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderer.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9000000357627869, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "test_model_node_3"
+                            },
+                            "RootRefTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.8000000715255737, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "MeshPrimitiveObject": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshPrimitive",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "test_model_mesh"
+                                    },
+                                    "GeometryName": {
+                                        "Type": "String",
+                                        "Value": "test_geometry"
+                                    },
+                                    "GeometryFactory": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 4,
+                                            "ResourceName": "test_geometry",
+                                            "ResourceFilename": "test_geometry.geo@DataPath",
+                                            "RttiName": "En.Engine.TriangleList",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Effects": {
+                                        "Type": "DataObjectArray",
+                                        "Value": [{
+                                                "Rtti": {
+                                                    "Type": "FactoryDesc",
+                                                    "Value": {
+                                                        "InstanceType": 4,
+                                                        "ResourceName": "basic_vtx_tex",
+                                                        "ResourceFilename": "basic_vtx_tex.efx@APK_PATH",
+                                                        "RttiName": "En.Engine.EffectMaterial",
+                                                        "PrefabFilename": "basic_vtx_tex"
+                                                    }
+                                                },
+                                                "Name": {
+                                                    "Type": "String",
+                                                    "Value": "basic_vtx_tex"
+                                                }
+                                            }]
+                                    },
+                                    "TextureMaps": {
+                                        "Type": "DataObjectArray",
+                                        "Value": [{
+                                                "TextureMappings": {
+                                                    "Type": "DataObjectArray",
+                                                    "Value": [{
+                                                            "TextureName": {
+                                                                "Type": "String",
+                                                                "Value": "earth"
+                                                            },
+                                                            "Filename": {
+                                                                "Type": "String",
+                                                                "Value": "earth.png@APK_PATH"
+                                                            },
+                                                            "PathId": {
+                                                                "Type": "String",
+                                                                "Value": ""
+                                                            },
+                                                            "Semantic": {
+                                                                "Type": "String",
+                                                                "Value": "DiffuseMap"
+                                                            }
+                                                        }]
+                                                }
+                                            }]
+                                    }
+                                }
+                            },
+                            "ParentNodeIndex": {
+                                "Type": "Uint32",
+                                "Value": 2
+                            }
+                        }]
+                }
+            }
+        }
+    }]

@@ -12,6 +12,7 @@
 #include "GameEngine/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectTextureMap.h"
+#include "GameEngine/GenericDto.h"
 #include "Renderer.h"
 #include <string>
 #include <memory>
@@ -36,6 +37,8 @@ namespace Enigma::Renderer
         ~MeshPrimitive() override;
         MeshPrimitive& operator=(const MeshPrimitive&);
         MeshPrimitive& operator=(MeshPrimitive&&);
+
+        virtual Engine::GenericDto SerializeDto() override;
 
         const std::string& GetName() const { return m_name; }
         /** get geometry data */
@@ -70,6 +73,8 @@ namespace Enigma::Renderer
 
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
+
+        virtual void SelectVisualTechnique(const std::string& techniqueName) override;
 
         /** @name building mesh primitive */
         //@{

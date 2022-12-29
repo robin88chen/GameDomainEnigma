@@ -165,19 +165,19 @@ void ShaderRepository::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& 
     }
     {
         std::lock_guard locker{ m_vtxShaderTableLock };
-        m_vtxShaderTable.try_emplace(program->GetVertexShader()->GetName(), program->GetVertexShader());
+        m_vtxShaderTable.insert_or_assign(program->GetVertexShader()->GetName(), program->GetVertexShader());
     }
     {
         std::lock_guard locker{ m_vtxLayoutTableLock };
-        m_vtxLayoutTable.try_emplace(program->GetVertexDeclaration()->GetName(), program->GetVertexDeclaration());
+        m_vtxLayoutTable.insert_or_assign(program->GetVertexDeclaration()->GetName(), program->GetVertexDeclaration());
     }
     {
         std::lock_guard locker{ m_pixShaderTableLock };
-        m_pixShaderTable.try_emplace(program->GetPixelShader()->GetName(), program->GetPixelShader());
+        m_pixShaderTable.insert_or_assign(program->GetPixelShader()->GetName(), program->GetPixelShader());
     }
     {
         std::lock_guard locker{ m_programTableLock };
-        m_programTable.try_emplace(program->GetName(), program);
+        m_programTable.insert_or_assign(program->GetName(), program);
     }
     Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuilt>(program->GetName(), program));
     m_isCurrentBuilding = false;

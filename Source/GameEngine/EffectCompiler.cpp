@@ -62,13 +62,15 @@ EffectCompiler::~EffectCompiler()
     m_onRasterizerStateCreated = nullptr;
 }
 
-void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
+EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
 {
     assert(m_hostManager);
+    m_policy = policy;
     if (m_hostManager->HasEffectMaterial(policy.Name()))
     {
         Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
             policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name())));
+        return CompilingProceed::False;
     }
     else if (policy.GetProfile())
     {
@@ -76,14 +78,15 @@ void EffectCompiler::CompileEffectMaterial(const EffectMaterialPolicy& policy)
     }
     else if (policy.GetDeserializer())
     {
-        m_policy = policy;
         m_ruidDeserializing = Ruid::Generate();
         policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
     }
     else
     {
         EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(policy.Name(), ErrorCode::policyIncomplete));
+        return CompilingProceed::False;
     }
+    return CompilingProceed::True;
 }
 
 void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
@@ -305,6 +308,10 @@ void EffectCompiler::TryBuildEffectMaterial()
         effect_techniques.emplace_back(built_tech.m_technique.value());
     }
     auto effect_material = std::make_unique<EffectMaterial>(m_profile.m_name, effect_techniques);
+    if (!m_policy.Parameter().empty())
+    {
+        effect_material->TheFactoryDesc().ClaimFromResource(effect_material->GetName(), m_policy.Parameter());
+    }
     EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, std::move(effect_material)));
     m_hasMaterialProduced = true;
 }

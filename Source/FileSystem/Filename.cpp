@@ -7,6 +7,18 @@ Filename::Filename()
 
 }
 
+Filename::Filename(const std::string& file_path, const std::string& path_id)
+{
+    if (path_id.empty())
+    {
+        SplitPath(file_path);
+    }
+    else
+    {
+        SplitPath(file_path + "@" + path_id);
+    }
+}
+
 Filename::Filename(const std::string& full_path)
 {
     SplitPath(full_path);

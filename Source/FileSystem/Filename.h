@@ -20,6 +20,7 @@ namespace Enigma::FileSystem
     public:
         Filename();
         Filename(const std::string& full_path);
+        Filename(const std::string& file_path, const std::string& path_id);
         Filename(const Filename& filename);
 
         /** Contains the path of directories, not including the drive designator or the actual file name.

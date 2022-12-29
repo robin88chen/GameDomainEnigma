@@ -4,6 +4,7 @@
 #include "GraphicErrors.h"
 #include "MathLib/Rect.h"
 #include "FileSystem/FileSystem.h"
+#include "FileSystem/Filename.h"
 
 using namespace Enigma::Graphics;
 
@@ -101,7 +102,8 @@ void ITexture::Retrieve(const MathLib::Rect& rcSrc)
 
 error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)
 {
-    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename, "rb", pathid);
+    FileSystem::Filename filename_at_path(filename, pathid);
+    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetFileName(), "rb", filename_at_path.GetMountPathID());
     if (!iFile) return ErrorCode::fileIO;
     size_t file_size = iFile->Size();
     if (file_size <= 0)
@@ -121,7 +123,7 @@ void ITexture::Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
     if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]() 
+            PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]()
                 -> error { return UpdateTextureImage(rcDest, img_buff); });
     }
     else
@@ -132,7 +134,8 @@ void ITexture::Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 
 error ITexture::SaveTextureImage(const std::string& filename, const std::string& pathid)
 {
-    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename, "w+b", pathid);
+    FileSystem::Filename filename_at_path(filename, pathid);
+    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetFileName(), "w+b", filename_at_path.GetMountPathID());
     if (!iFile) return ErrorCode::fileIO;
     error er = SaveTextureImage(iFile);
     FileSystem::FileSystem::Instance()->CloseFile(iFile);

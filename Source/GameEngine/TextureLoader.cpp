@@ -8,6 +8,7 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/ITexture.h"
 #include "Platforms/PlatformLayer.h"
+#include "TextureRepository.h"
 #include <memory>
 
 using namespace Enigma::Engine;
@@ -37,7 +38,15 @@ TextureLoader::~TextureLoader()
 void TextureLoader::LoadTexture(const TexturePolicy& policy)
 {
     m_policy = policy;
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateTexture>(m_policy.m_name));
+    if (m_hostRepository->HasTexture(m_policy.m_name))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<TextureLoader::TextureLoaded>(
+            m_policy.m_name, m_hostRepository->QueryTexture(m_policy.m_name)));
+    }
+    else
+    {
+        Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateTexture>(m_policy.m_name));
+    }
 }
 
 void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)

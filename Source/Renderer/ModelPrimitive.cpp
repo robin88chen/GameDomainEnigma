@@ -38,6 +38,7 @@ ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim)
     m_primitiveFlags = std::move(prim.m_primitiveFlags);
     m_nodeTree = std::move(prim.m_nodeTree);
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
+    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
 }
 
 ModelPrimitive::~ModelPrimitive()
@@ -65,6 +66,7 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim)
     m_mxPrimitiveWorld = std::move(prim.m_mxPrimitiveWorld);
     m_primitiveFlags = std::move(prim.m_primitiveFlags);
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
+    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
     return *this;
 }
 

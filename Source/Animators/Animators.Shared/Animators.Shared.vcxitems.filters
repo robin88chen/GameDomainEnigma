@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Animators">
+      <UniqueIdentifier>{913ba7bc-15ca-4804-8579-e122d0c26622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Assets">
+      <UniqueIdentifier>{ec2de6d4-d3f5-4f9d-893a-245a47f80f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Clip">
+      <UniqueIdentifier>{c5554cb0-1381-4377-bb1f-bdb55b0ceaf4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
+      <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
+      <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h">
+      <Filter>Animation Clip</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
+      <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
+      <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp">
+      <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp">
+      <Filter>Animation Clip</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

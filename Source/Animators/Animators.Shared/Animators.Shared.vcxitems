@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{326643fe-647d-4460-8439-73193d3bf35d}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
+  </ItemGroup>
+</Project>

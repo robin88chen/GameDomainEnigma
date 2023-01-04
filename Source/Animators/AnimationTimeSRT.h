@@ -50,11 +50,6 @@ namespace Enigma::Animators
 
     public:
         AnimationTimeSRT();
-        AnimationTimeSRT(const AnimationTimeSRT& anim_srt);
-        AnimationTimeSRT(AnimationTimeSRT&& anim_srt);
-        ~AnimationTimeSRT();
-        AnimationTimeSRT& operator=(const AnimationTimeSRT& anim_srt);
-        AnimationTimeSRT& operator=(AnimationTimeSRT&& anim_srt);
 
         MathLib::Matrix4 CalculateTransformMatrix(float off_time);
         SRTValueTie CalculateLerpedSRT(float off_time);

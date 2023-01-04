@@ -10,43 +10,6 @@ AnimationTimeSRT::AnimationTimeSRT()
 
 }
 
-AnimationTimeSRT::AnimationTimeSRT(const AnimationTimeSRT& anim_srt)
-{
-    m_scaleKeyVector = anim_srt.m_scaleKeyVector;
-    m_rotationKeyVector = anim_srt.m_rotationKeyVector;
-    m_translateKeyVector = anim_srt.m_translateKeyVector;
-}
-
-AnimationTimeSRT::AnimationTimeSRT(AnimationTimeSRT&& anim_srt)
-{
-    m_scaleKeyVector = std::move(anim_srt.m_scaleKeyVector);
-    m_rotationKeyVector = std::move(anim_srt.m_rotationKeyVector);
-    m_translateKeyVector = std::move(anim_srt.m_translateKeyVector);
-}
-
-AnimationTimeSRT::~AnimationTimeSRT()
-{
-    m_scaleKeyVector.clear();
-    m_rotationKeyVector.clear();
-    m_translateKeyVector.clear();
-}
-
-AnimationTimeSRT& AnimationTimeSRT::operator=(const AnimationTimeSRT& anim_srt)
-{
-    m_scaleKeyVector = anim_srt.m_scaleKeyVector;
-    m_rotationKeyVector = anim_srt.m_rotationKeyVector;
-    m_translateKeyVector = anim_srt.m_translateKeyVector;
-    return *this;
-}
-
-AnimationTimeSRT& AnimationTimeSRT::operator=(AnimationTimeSRT&& anim_srt)
-{
-    m_scaleKeyVector = std::move(anim_srt.m_scaleKeyVector);
-    m_rotationKeyVector = std::move(anim_srt.m_rotationKeyVector);
-    m_translateKeyVector = std::move(anim_srt.m_translateKeyVector);
-    return *this;
-}
-
 Matrix4 AnimationTimeSRT::CalculateTransformMatrix(float off_time)
 {
     auto [scale, rotate, translate] = CalculateLerpedSRT(off_time);

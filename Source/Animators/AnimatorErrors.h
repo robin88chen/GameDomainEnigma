@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
- * \file   AnimatorErrorCode.h
- * \brief  
- * 
+ * \file   AnimatorErrors.h
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/

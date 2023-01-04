@@ -23,11 +23,9 @@ namespace Enigma::Animators
         {
             std::string m_meshNodeName;
             AnimationTimeSRT m_timeSRTData;
-            MeshNodeTimeSRTData() {};
+            MeshNodeTimeSRTData() = default;
             MeshNodeTimeSRTData(const std::string& mesh_node_name, const AnimationTimeSRT& srt_data)
                 : m_meshNodeName(mesh_node_name), m_timeSRTData(srt_data) {};
-            MeshNodeTimeSRTData(const MeshNodeTimeSRTData& data)
-                : m_meshNodeName(data.m_meshNodeName), m_timeSRTData(data.m_timeSRTData) {};
         };
     public:
         ModelAnimationAsset(const std::string& name);
@@ -59,7 +57,7 @@ namespace Enigma::Animators
         /** find mesh node in data array, return array index */
         std::optional<unsigned> FindMeshNodeIndex(std::string& node_name);
 
-        unsigned int GetMeshNodeDataCount() { return (unsigned int)m_meshNodeKeyArray.size(); };
+        unsigned int GetMeshNodeDataCount() const { return static_cast<unsigned int>(m_meshNodeKeyArray.size()); };
 
         /** get animation length (in second) */
         virtual float GetAnimationLengthInSecond() override;

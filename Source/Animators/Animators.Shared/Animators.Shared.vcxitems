@@ -15,14 +15,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
   </ItemGroup>
 </Project>

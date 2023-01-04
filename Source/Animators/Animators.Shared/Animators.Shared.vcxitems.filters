@@ -10,6 +10,18 @@
     <Filter Include="Animation Clip">
       <UniqueIdentifier>{c5554cb0-1381-4377-bb1f-bdb55b0ceaf4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands &amp; Events">
+      <UniqueIdentifier>{b7ce90ef-fd18-4cfa-9b52-9464ace73f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dtos &amp; Policies">
+      <UniqueIdentifier>{99479165-5079-4cdb-b68a-c5db9b00391a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCodes">
+      <UniqueIdentifier>{81e95ecf-bc57-43e1-97d3-9899e6b91891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Assets\Model Animation">
+      <UniqueIdentifier>{d981ddef-ed96-455f-a323-45d4c33c55d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
@@ -24,6 +36,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h">
       <Filter>Animation Clip</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h">
+      <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h">
+      <Filter>ErrorCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h">
+      <Filter>Animation Assets\Model Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
@@ -37,6 +64,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp">
       <Filter>Animation Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp">
+      <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp">
+      <Filter>ErrorCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp">
+      <Filter>Animation Assets\Model Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

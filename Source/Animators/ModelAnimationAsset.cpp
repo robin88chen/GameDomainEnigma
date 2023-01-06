@@ -1,16 +1,43 @@
 ﻿#include "ModelAnimationAsset.h"
+#include "AnimationAssetDtos.h"
 
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
 
 ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAsset(name)
 {
+    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());
+}
 
+ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.Name())
+{
+    m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
+    for (unsigned i = 0; i < dto.MeshNodeNames().size(); i++)
+    {
+        AddMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::FromGenericDto(dto.TimeSRTs()[i])));
+    }
 }
 
 ModelAnimationAsset::~ModelAnimationAsset()
 {
     m_meshNodeKeyArray.clear();
+}
+
+ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
+{
+    ModelAnimationAssetDto dto;
+    dto.Name() = m_name;
+    std::vector<std::string> names;
+    std::vector<GenericDto> srts;
+    for (auto& key : m_meshNodeKeyArray)
+    {
+        names.emplace_back(key.m_meshNodeName);
+        srts.emplace_back(key.m_timeSRTData.SerializeDto().ToGenericDto());
+    }
+    dto.MeshNodeNames() = names;
+    dto.TimeSRTs() = srts;
+    return dto;
 }
 
 void ModelAnimationAsset::ReserveCapacity(unsigned mesh_node_count)

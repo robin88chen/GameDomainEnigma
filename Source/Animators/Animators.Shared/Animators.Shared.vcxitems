@@ -15,7 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
@@ -26,6 +29,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />

@@ -17,6 +17,9 @@
 namespace Enigma::Animators
 {
     using SRTValueTie = std::tuple<MathLib::Vector3, MathLib::Quaternion, MathLib::Vector3>;
+
+    class AnimationTimeSRTDto;
+
     /** Animation Time SRT data */
     class AnimationTimeSRT
     {
@@ -27,6 +30,7 @@ namespace Enigma::Animators
             MathLib::Vector3 m_vecKey;
             ScaleKey() : m_time(0.0f), m_vecKey(MathLib::Vector3(1.0f, 1.0f, 1.0f)) {};
             ScaleKey(float t, const MathLib::Vector3& vec) : m_time(t), m_vecKey(vec) {};
+            ScaleKey(float t, float x, float y, float z) : m_time(t), m_vecKey(MathLib::Vector3(x, y, z)) {};
         };
         typedef std::vector<ScaleKey> ScaleKeyVector;
 
@@ -36,6 +40,7 @@ namespace Enigma::Animators
             MathLib::Quaternion m_qtKey;
             RotationKey() : m_time(0.0f), m_qtKey(MathLib::Quaternion::IDENTITY) {};
             RotationKey(float t, const MathLib::Quaternion& q) : m_time(t), m_qtKey(q) {};
+            RotationKey(float t, float w, float x, float y, float z) : m_time(t), m_qtKey(MathLib::Quaternion(w, x, y, z)) {};
         };
         typedef std::vector<RotationKey> RotationKeyVector;
 
@@ -45,11 +50,15 @@ namespace Enigma::Animators
             MathLib::Vector3 m_vecKey;
             TranslateKey() : m_time(0.0f), m_vecKey(MathLib::Vector3::ZERO) {};
             TranslateKey(float t, const MathLib::Vector3& vec) : m_time(t), m_vecKey(vec) {};
+            TranslateKey(float t, float x, float y, float z) : m_time(t), m_vecKey(MathLib::Vector3(x, y, z)) {};
         };
         typedef std::vector<TranslateKey> TranslateKeyVector;
 
     public:
         AnimationTimeSRT();
+        AnimationTimeSRT(const AnimationTimeSRTDto& dto);
+
+        AnimationTimeSRTDto SerializeDto();
 
         MathLib::Matrix4 CalculateTransformMatrix(float off_time);
         SRTValueTie CalculateLerpedSRT(float off_time);

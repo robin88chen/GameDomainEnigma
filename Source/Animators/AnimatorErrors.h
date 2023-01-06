@@ -15,6 +15,9 @@ namespace Enigma::Animators
     enum class ErrorCode
     {
         ok = 0,
+
+        policyIncomplete = 101,
+        deserializeFail,
     };
     class ErrorCategory : public std::error_category
     {

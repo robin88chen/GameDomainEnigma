@@ -26,6 +26,8 @@ namespace Enigma::Animators
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& RttiName() const { return m_rttiName; }
+        std::string& RttiName() { return m_rttiName; }
 
         [[nodiscard]] const std::optional<Engine::GenericDto>& GetDto() const { return m_dto; }
 
@@ -34,6 +36,7 @@ namespace Enigma::Animators
 
     protected:
         std::string m_name;
+        std::string m_rttiName;
         std::optional<Engine::GenericDto> m_dto;
         std::string m_parameter;
         std::shared_ptr<Engine::IDtoDeserializer> m_deserializer;

@@ -9,6 +9,8 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
+    case ErrorCode::policyIncomplete: return "policy incomplete error";
+    case ErrorCode::deserializeFail: return "deserialize dto failed";
     }
     return "Unknown";
 }

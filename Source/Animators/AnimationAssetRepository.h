@@ -10,6 +10,8 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/CommandSubscriber.h"
+#include "GameEngine/GenericDto.h"
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -19,6 +21,7 @@ namespace Enigma::Animators
     using error = std::error_code;
     class AnimationAsset;
     class AnimationAssetPolicy;
+    class AnimationAssetBuilder;
 
     class AnimationAssetRepository : public Frameworks::ISystemService
     {
@@ -38,21 +41,28 @@ namespace Enigma::Animators
         /// On Term
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        bool HasAnimationAsset(const Frameworks::Rtti& type_rtti, const std::string& name);
-        std::shared_ptr<AnimationAsset> QueryAnimationAsset(const Frameworks::Rtti& type_rtti, const std::string& name);
+        bool HasAnimationAsset(const std::string& rtti_name, const std::string& name);
+        std::shared_ptr<AnimationAsset> QueryAnimationAsset(const std::string& rtti_name, const std::string& name);
 
         error BuildAnimationAsset(const std::shared_ptr<AnimationAssetPolicy>& policy);
 
     private:
-        std::string MakeAssetKey(const Frameworks::Rtti& type_rtti, const std::string& name);
+        std::string MakeAssetKey(const std::string& rtti_name, const std::string& name);
 
+        void ModelAnimationAssetFactory(const Engine::GenericDto& dto);
+
+        void DoBuildingAnimationAsset(const Frameworks::ICommandPtr& c);
     private:
         std::unordered_map<std::string, std::weak_ptr<AnimationAsset>> m_assets;
         std::recursive_mutex m_assetsLock;
 
+        std::unique_ptr<AnimationAssetBuilder> m_builder;
+
         std::queue<std::shared_ptr<AnimationAssetPolicy>> m_policies;
         bool m_isCurrentBuilding;
         std::mutex m_policiesLock;
+
+        Frameworks::CommandSubscriberPtr m_doBuildingAnimationAsset;
     };
 }
 

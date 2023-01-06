@@ -9,6 +9,7 @@
 #define _ANIMATION_ASSET_H
 
 #include "Frameworks/Rtti.h"
+#include "GameEngine/FactoryDesc.h"
 #include <string>
 #include <memory>
 
@@ -27,10 +28,14 @@ namespace Enigma::Animators
 
         const std::string& GetName() { return m_name; }
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         virtual float GetAnimationLengthInSecond() = 0;
 
     protected:
         std::string m_name;
+        Engine::FactoryDesc m_factoryDesc;
     };
     using AnimationAssetPtr = std::shared_ptr<AnimationAsset>;
 }

@@ -15,25 +15,31 @@
 
 namespace Enigma::Animators
 {
+    class ModelAnimationAssetDto;
+
     class ModelAnimationAsset : public AnimationAsset
     {
         DECLARE_EN_RTTI
     protected:
         struct MeshNodeTimeSRTData
         {
-            std::string m_meshNodeName;
-            AnimationTimeSRT m_timeSRTData;
             MeshNodeTimeSRTData() = default;
             MeshNodeTimeSRTData(const std::string& mesh_node_name, const AnimationTimeSRT& srt_data)
                 : m_meshNodeName(mesh_node_name), m_timeSRTData(srt_data) {};
+
+            std::string m_meshNodeName;
+            AnimationTimeSRT m_timeSRTData;
         };
     public:
         ModelAnimationAsset(const std::string& name);
+        ModelAnimationAsset(const ModelAnimationAssetDto& dto);
         ModelAnimationAsset(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset(ModelAnimationAsset&&) = delete;
         virtual ~ModelAnimationAsset() override;
         ModelAnimationAsset& operator=(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset& operator=(ModelAnimationAsset&&) = delete;
+
+        ModelAnimationAssetDto SerializeDto();
 
         /** reserve data array capacity */
         void ReserveCapacity(unsigned int mesh_node_count);

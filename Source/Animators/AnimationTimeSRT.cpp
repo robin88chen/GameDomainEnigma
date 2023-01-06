@@ -1,5 +1,6 @@
 ﻿#include "AnimationTimeSRT.h"
 #include "MathLib/MathAlgorithm.h"
+#include "AnimationAssetDtos.h"
 #include <cassert>
 
 using namespace Enigma::MathLib;
@@ -7,7 +8,67 @@ using namespace Enigma::Animators;
 
 AnimationTimeSRT::AnimationTimeSRT()
 {
+}
 
+AnimationTimeSRT::AnimationTimeSRT(const AnimationTimeSRTDto& dto)
+{
+    auto& scale_keys = dto.ScaleTimeKeys();
+    auto& rotate_keys = dto.RotateTimeKeys();
+    auto& translate_keys = dto.TranslateTimeKeys();
+    const unsigned scale_size = static_cast<unsigned>(scale_keys.size());
+    const unsigned rotate_size = static_cast<unsigned>(rotate_keys.size());
+    const unsigned translate_size = static_cast<unsigned>(translate_keys.size());
+    assert(scale_size % 4 == 0);
+    assert(rotate_size % 5 == 0);
+    assert(translate_size % 4 == 0);
+    for (unsigned i = 0; i < scale_size; i += 4)
+    {
+        m_scaleKeyVector.emplace_back(ScaleKey(scale_keys[i], scale_keys[i + 1], scale_keys[i + 2], scale_keys[i + 3]));
+    }
+    for (unsigned i = 0; i < rotate_size; i += 5)
+    {
+        m_rotationKeyVector.emplace_back(RotationKey(rotate_keys[i], rotate_keys[i + 1],
+            rotate_keys[i + 2], rotate_keys[i + 3], rotate_keys[i + 4]));
+    }
+    for (unsigned i = 0; i < translate_size; i += 4)
+    {
+        m_translateKeyVector.emplace_back(TranslateKey(translate_keys[i],
+            translate_keys[i + 1], translate_keys[i + 2], translate_keys[i + 3]));
+    }
+}
+
+AnimationTimeSRTDto AnimationTimeSRT::SerializeDto()
+{
+    AnimationTimeSRTDto dto;
+    std::vector<float> scale_keys;
+    for (auto& key : m_scaleKeyVector)
+    {
+        scale_keys.emplace_back(key.m_time);
+        scale_keys.emplace_back(key.m_vecKey.X());
+        scale_keys.emplace_back(key.m_vecKey.Y());
+        scale_keys.emplace_back(key.m_vecKey.Z());
+    }
+    dto.ScaleTimeKeys() = scale_keys;
+    std::vector<float> rotate_keys;
+    for (auto& key : m_rotationKeyVector)
+    {
+        rotate_keys.emplace_back(key.m_time);
+        rotate_keys.emplace_back(key.m_qtKey.W());
+        rotate_keys.emplace_back(key.m_qtKey.X());
+        rotate_keys.emplace_back(key.m_qtKey.Y());
+        rotate_keys.emplace_back(key.m_qtKey.Z());
+    }
+    dto.RotateTimeKeys() = rotate_keys;
+    std::vector<float> translate_keys;
+    for (auto& key : m_translateKeyVector)
+    {
+        translate_keys.emplace_back(key.m_time);
+        translate_keys.emplace_back(key.m_vecKey.X());
+        translate_keys.emplace_back(key.m_vecKey.Y());
+        translate_keys.emplace_back(key.m_vecKey.Z());
+    }
+    dto.TranslateTimeKeys() = translate_keys;
+    return dto;
 }
 
 Matrix4 AnimationTimeSRT::CalculateTransformMatrix(float off_time)

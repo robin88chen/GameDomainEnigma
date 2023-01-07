@@ -60,6 +60,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
       <Filter>Commands &amp; Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
       <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp">
+      <Filter>Animators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -76,7 +76,7 @@ SRTValueTie ModelAnimationAsset::CalculateFadedLerpedSRT(unsigned ani_node_index
         CalculateFadedLerpedSRT(off_time_a, off_time_b, weight_a);
 }
 
-std::optional<unsigned> ModelAnimationAsset::FindMeshNodeIndex(std::string& node_name)
+std::optional<unsigned> ModelAnimationAsset::FindMeshNodeIndex(const std::string& node_name)
 {
     if (m_meshNodeKeyArray.size() == 0) return std::nullopt;
     unsigned int count = static_cast<unsigned int>(m_meshNodeKeyArray.size());

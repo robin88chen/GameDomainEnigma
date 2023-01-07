@@ -61,7 +61,7 @@ namespace Enigma::Animators
             float off_time_a, float off_time_b, float weight_a);
 
         /** find mesh node in data array, return array index */
-        std::optional<unsigned> FindMeshNodeIndex(std::string& node_name);
+        std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name);
 
         unsigned int GetMeshNodeDataCount() const { return static_cast<unsigned int>(m_meshNodeKeyArray.size()); };
 

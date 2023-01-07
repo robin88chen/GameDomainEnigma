@@ -9,10 +9,8 @@
 #define _ANIMATION_ASSET_DTOS_H
 
 #include "GameEngine/GenericDto.h"
-#include "GameEngine/DtoDeserializer.h"
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace Enigma::Animators
 {

@@ -4,17 +4,17 @@ using namespace Enigma::Animators;
 
 DEFINE_RTTI_OF_BASE(Animators, Animator);
 
-Animator::Animator()
+Animator::Animator() : m_isListened(false)
 {
 
 }
 
-Animator::Animator(const Animator& ani)
+Animator::Animator(const Animator& ani) : m_isListened(false)
 {
 
 }
 
-Animator::Animator(Animator&& ani)
+Animator::Animator(Animator&& ani) : m_isListened(false)
 {
 
 }

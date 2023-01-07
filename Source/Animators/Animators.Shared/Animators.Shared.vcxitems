@@ -26,6 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
@@ -37,5 +38,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp" />
   </ItemGroup>
 </Project>

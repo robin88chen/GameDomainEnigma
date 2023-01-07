@@ -14,6 +14,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
 AnimationAssetBuilder::AnimationAssetBuilder(AnimationAssetRepository* host)
+    : m_ruidConstructing(Ruid::Generate()), m_ruidDeserializing(Ruid::Generate())
 {
     m_repository = host;
     m_onDtoAnimationCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoAnimationAssetCreated(e); });

@@ -21,18 +21,20 @@ namespace Enigma::Animators
     using error = std::error_code;
     class AnimationAsset;
     class AnimationAssetPolicy;
+    class ModelAnimatorPolicy;
     class AnimationAssetBuilder;
+    class ModelAnimatorBuilder;
 
-    class AnimationAssetRepository : public Frameworks::ISystemService
+    class AnimationRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI
     public:
-        AnimationAssetRepository(Frameworks::ServiceManager* manager);
-        AnimationAssetRepository(const AnimationAssetRepository&) = delete;
-        AnimationAssetRepository(AnimationAssetRepository&&) = delete;
-        virtual ~AnimationAssetRepository() override;
-        AnimationAssetRepository& operator=(const AnimationAssetRepository&) = delete;
-        AnimationAssetRepository& operator=(AnimationAssetRepository&&) = delete;
+        AnimationRepository(Frameworks::ServiceManager* manager);
+        AnimationRepository(const AnimationRepository&) = delete;
+        AnimationRepository(AnimationRepository&&) = delete;
+        virtual ~AnimationRepository() override;
+        AnimationRepository& operator=(const AnimationRepository&) = delete;
+        AnimationRepository& operator=(AnimationRepository&&) = delete;
 
         /// On Init
         virtual Frameworks::ServiceResult OnInit() override;
@@ -45,24 +47,36 @@ namespace Enigma::Animators
         std::shared_ptr<AnimationAsset> QueryAnimationAsset(const std::string& rtti_name, const std::string& name);
 
         error BuildAnimationAsset(const std::shared_ptr<AnimationAssetPolicy>& policy);
+        error BuildModelAnimator(const std::shared_ptr<ModelAnimatorPolicy>& policy);
 
     private:
+        /// true : current building
+        bool PopAssetBuilding();
+        bool PopAnimatorBuilding();
+
         std::string MakeAssetKey(const std::string& rtti_name, const std::string& name);
 
         void ModelAnimationAssetFactory(const Engine::GenericDto& dto);
 
         void DoBuildingAnimationAsset(const Frameworks::ICommandPtr& c);
+        void DoBuildingModelAnimator(const Frameworks::ICommandPtr& c);
     private:
         std::unordered_map<std::string, std::weak_ptr<AnimationAsset>> m_assets;
         std::recursive_mutex m_assetsLock;
 
-        std::unique_ptr<AnimationAssetBuilder> m_builder;
+        std::unique_ptr<AnimationAssetBuilder> m_assetBuilder;
+        std::unique_ptr<ModelAnimatorBuilder> m_animatorBuilder;
 
-        std::queue<std::shared_ptr<AnimationAssetPolicy>> m_policies;
-        bool m_isCurrentBuilding;
-        std::mutex m_policiesLock;
+        std::queue<std::shared_ptr<AnimationAssetPolicy>> m_assetPolicies;
+        bool m_isAssetCurrentBuilding;
+        std::mutex m_assetPoliciesLock;
+
+        std::queue<std::shared_ptr<ModelAnimatorPolicy>> m_animatorPolicies;
+        bool m_isAnimatorCurrentBuilding;
+        std::mutex m_animatorPoliciesLock;
 
         Frameworks::CommandSubscriberPtr m_doBuildingAnimationAsset;
+        Frameworks::CommandSubscriberPtr m_doBuildingModelAnimator;
     };
 }
 

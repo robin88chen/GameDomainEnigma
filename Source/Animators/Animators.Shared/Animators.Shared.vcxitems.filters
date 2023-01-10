@@ -22,6 +22,12 @@
     <Filter Include="Animation Assets\Model Animation">
       <UniqueIdentifier>{d981ddef-ed96-455f-a323-45d4c33c55d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimationRepository">
+      <UniqueIdentifier>{93c8f825-6836-4914-a0b5-623dc5903ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnimationRepository\Builder">
+      <UniqueIdentifier>{6d8abe21-60d5-45fb-8c27-965dd768d03e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
@@ -35,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h">
       <Filter>Animation Clip</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h">
-      <Filter>Animation Assets</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h">
       <Filter>Dtos &amp; Policies</Filter>
@@ -54,14 +57,32 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
       <Filter>Dtos &amp; Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h">
-      <Filter>Animation Assets</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
       <Filter>Commands &amp; Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h">
       <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationRepository.h">
+      <Filter>AnimationRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
+      <Filter>Commands &amp; Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +98,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp">
       <Filter>Animation Clip</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp">
-      <Filter>Animation Assets</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp">
       <Filter>ErrorCodes</Filter>
     </ClCompile>
@@ -89,11 +107,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
       <Filter>Dtos &amp; Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
-      <Filter>Animation Assets</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp">
       <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationRepository.cpp">
+      <Filter>AnimationRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
+      <Filter>AnimationRepository\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

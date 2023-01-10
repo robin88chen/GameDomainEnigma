@@ -18,6 +18,7 @@ namespace Enigma::Animators
 
         policyIncomplete = 101,
         deserializeFail,
+        dynamicCastFail,
     };
     class ErrorCategory : public std::error_category
     {

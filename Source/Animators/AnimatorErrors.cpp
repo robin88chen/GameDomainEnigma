@@ -11,6 +11,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::ok: return "OK";
     case ErrorCode::policyIncomplete: return "policy incomplete error";
     case ErrorCode::deserializeFail: return "deserialize dto failed";
+    case ErrorCode::dynamicCastFail: return "dynamic cast fail";
     }
     return "Unknown";
 }

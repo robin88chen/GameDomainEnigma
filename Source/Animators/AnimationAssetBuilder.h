@@ -16,13 +16,13 @@
 
 namespace Enigma::Animators
 {
-    class AnimationAssetRepository;
+    class AnimationRepository;
     class AnimationAssetPolicy;
 
     class AnimationAssetBuilder
     {
     public:
-        AnimationAssetBuilder(AnimationAssetRepository* host);
+        AnimationAssetBuilder(AnimationRepository* host);
         AnimationAssetBuilder(const AnimationAssetBuilder&) = delete;
         AnimationAssetBuilder(AnimationAssetBuilder&&) = delete;
         ~AnimationAssetBuilder();
@@ -39,7 +39,7 @@ namespace Enigma::Animators
         void OnDeserializeDtoFailed(const Frameworks::IEventPtr& e);
 
     private:
-        AnimationAssetRepository* m_repository;
+        AnimationRepository* m_repository;
         std::shared_ptr<AnimationAssetPolicy> m_policy;
 
         Frameworks::Ruid m_ruidConstructing;

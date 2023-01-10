@@ -1,6 +1,6 @@
 ﻿#include "AnimationAssetBuilder.h"
 #include "AnimationAssetPolicies.h"
-#include "AnimationAssetRepository.h"
+#include "AnimationRepository.h"
 #include "Frameworks/EventPublisher.h"
 #include "AnimationAssetEvents.h"
 #include "Frameworks/CommandBus.h"
@@ -13,7 +13,7 @@ using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
-AnimationAssetBuilder::AnimationAssetBuilder(AnimationAssetRepository* host)
+AnimationAssetBuilder::AnimationAssetBuilder(AnimationRepository* host)
     : m_ruidConstructing(Ruid::Generate()), m_ruidDeserializing(Ruid::Generate())
 {
     m_repository = host;

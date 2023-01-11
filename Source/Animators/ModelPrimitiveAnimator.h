@@ -9,9 +9,10 @@
 #ifndef _MODEL_PRIMITIVE_ANIMATOR_H
 #define _MODEL_PRIMITIVE_ANIMATOR_H
 
-#include "Animator.h"
+#include "GameEngine/Animator.h"
 #include "AnimationClip.h"
 #include "Renderer/ModelPrimitive.h"
+#include "AnimatorDtos.h"
 #include <optional>
 #include <memory>
 
@@ -19,7 +20,7 @@ namespace Enigma::Animators
 {
     class ModelAnimationAsset;
 
-    class ModelPrimitiveAnimator : public Animator
+    class ModelPrimitiveAnimator : public Engine::Animator
     {
         DECLARE_EN_RTTI
     public:
@@ -30,6 +31,7 @@ namespace Enigma::Animators
         ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani);
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
+        ModelAnimatorDto SerializeDto();
         virtual HasUpdated Update(Frameworks::Timer* timer) override;
         virtual void Reset() override;
 

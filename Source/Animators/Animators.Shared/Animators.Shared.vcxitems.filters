@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
-      <Filter>Animators</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>
@@ -86,9 +83,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
-      <Filter>Animators</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>
@@ -118,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
       <Filter>AnimationRepository\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp">
+      <Filter>Dtos &amp; Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

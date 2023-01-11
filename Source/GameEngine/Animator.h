@@ -12,7 +12,7 @@
 #include "Frameworks/Timer.h"
 #include <memory>
 
-namespace Enigma::Animators
+namespace Enigma::Engine
 {
     class Animator
     {

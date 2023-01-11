@@ -23,7 +23,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h" />
@@ -40,7 +39,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp" />

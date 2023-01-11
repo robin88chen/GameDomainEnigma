@@ -1,8 +1,8 @@
 ﻿#include "Animator.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Engine;
 
-DEFINE_RTTI_OF_BASE(Animators, Animator);
+DEFINE_RTTI_OF_BASE(Engine, Animator);
 
 Animator::Animator() : m_isListened(false)
 {

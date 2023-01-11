@@ -12,6 +12,7 @@
 #include "RenderablePrimitivePolicies.h"
 #include "RenderablePrimitiveBuilder.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Animators/AnimatorPolicies.h"
 #include <vector>
 
 namespace Enigma::Renderer
@@ -33,10 +34,13 @@ namespace Enigma::Renderer
     protected:
         void PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy);
         void ContinueBuildInnerMesh();
+        void TryBuildAnimator();
         void CompleteModelPrimitive();
 
         void OnMeshPrimitiveBuilt(const Frameworks::IEventPtr&);
         void OnBuildMeshPrimitiveFailed(const Frameworks::IEventPtr&);
+        void OnModelAnimatorBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildModelAnimatorFailed(const Frameworks::IEventPtr& e);
     protected:
         struct MeshBuildingMeta
         {
@@ -53,8 +57,12 @@ namespace Enigma::Renderer
         std::queue<std::shared_ptr<MeshPrimitivePolicy>> m_meshPolicies;
         std::vector<MeshBuildingMeta> m_meshBuildingMetas;
 
+        std::shared_ptr<Animators::ModelAnimatorPolicy> m_animatorPolicy;
+
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildMeshPrimitiveFailed;
+        Frameworks::EventSubscriberPtr m_onModelAnimatorBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildModelAnimatorFailed;
     };
 }
 

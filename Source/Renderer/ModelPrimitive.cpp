@@ -4,12 +4,14 @@
 #include "RendererErrors.h"
 #include "MathLib/Matrix4.h"
 #include "RenderablePrimitiveDtos.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 #include <memory>
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::Graphics;
 using namespace Enigma::MathLib;
+using namespace Enigma::Animators;
 
 DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
@@ -75,6 +77,8 @@ GenericDto ModelPrimitive::SerializeDto()
     ModelPrimitiveDto dto;
     dto.Name() = m_name;
     dto.TheNodeTree() = m_nodeTree.SerializeDto();
+    if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
+        dto.TheAnimator() = ani->SerializeDto().ToGenericDto();
     return dto.ToGenericDto();
 }
 

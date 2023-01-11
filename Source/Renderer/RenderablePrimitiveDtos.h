@@ -127,6 +127,8 @@ namespace Enigma::Renderer
         std::string& Name() { return m_name; }
         [[nodiscard]] const Engine::GenericDto& TheNodeTree() const { return m_nodeTreeDto; }
         Engine::GenericDto& TheNodeTree() { return m_nodeTreeDto; }
+        [[nodiscard]] const std::optional<Engine::GenericDto>& TheAnimator() const { return m_animatorDto; }
+        std::optional<Engine::GenericDto>& TheAnimator() { return m_animatorDto; }
 
         static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -137,6 +139,7 @@ namespace Enigma::Renderer
     protected:
         std::string m_name;
         Engine::GenericDto m_nodeTreeDto;
+        std::optional<Engine::GenericDto> m_animatorDto;
     };
 }
 

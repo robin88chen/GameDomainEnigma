@@ -5,6 +5,8 @@ using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
+DEFINE_RTTI(Animators, ModelAnimationAsset, AnimationAsset);
+
 ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAsset(name)
 {
     m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());

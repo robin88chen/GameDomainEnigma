@@ -1,4 +1,5 @@
 ﻿#include "ModelPrimitiveAnimator.h"
+#include "AnimationAssetDtos.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
@@ -52,6 +53,20 @@ ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAn
     m_isOnPlay = false;
 
     return *this;
+}
+
+ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
+{
+    ModelAnimatorDto dto;
+    if (!m_animationAsset) return dto;
+    dto.AssetName() = m_animationAsset->GetName();
+    dto.AssetFactoryDesc() = m_animationAsset->TheFactoryDesc();
+    if ((m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+    {
+        dto.AnimationAssetDto() = m_animationAsset->SerializeDto().ToGenericDto();
+    }
+    return dto;
 }
 
 Animator::HasUpdated ModelPrimitiveAnimator::Update(Frameworks::Timer* timer)

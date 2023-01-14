@@ -74,6 +74,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +115,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
 </Project>

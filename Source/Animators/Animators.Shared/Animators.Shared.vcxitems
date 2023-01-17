@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
@@ -36,6 +37,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />

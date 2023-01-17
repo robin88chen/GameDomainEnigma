@@ -69,7 +69,7 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
     return dto;
 }
 
-Animator::HasUpdated ModelPrimitiveAnimator::Update(Frameworks::Timer* timer)
+Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Frameworks::Timer>& timer)
 {
     if (FATAL_LOG_EXPR(!timer)) return HasUpdated::False;
     if (!m_isOnPlay) return HasUpdated::False;

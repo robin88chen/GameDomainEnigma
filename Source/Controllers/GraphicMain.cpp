@@ -16,6 +16,8 @@
 #include "GameEngine/GenericDtoFactories.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GeometryRepository.h"
+#include "GameEngine/TimerService.h"
+#include "Animators/AnimationFrameListener.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include "InstallingPolicies.h"
@@ -144,6 +146,8 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
 
     er = InstallSceneGraphManagers();
     if (er) return er;
+    er = InstallAnimationServices();
+    if (er) return er;
     er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
     return er;
 }
@@ -155,6 +159,7 @@ error GraphicMain::ShutdownDefaultRenderer()
 
     error er;
     er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
+    er = ShutdownAnimationServices();
     er = ShutdownSceneGraphManagers();
 
     er = ShutdownRenderBufferManagers();
@@ -266,5 +271,21 @@ error GraphicMain::InstallSceneGraphManagers()
 error GraphicMain::ShutdownSceneGraphManagers()
 {
     m_serviceManager->ShutdownSystemService(SceneGraph::SceneGraphRepository::TYPE_RTTI);
+    return ErrorCode::ok;
+}
+
+error GraphicMain::InstallAnimationServices()
+{
+    //todo : timer 跟 animation 先放在一起，以後有適合的地方再改
+    auto timer = menew Engine::TimerService(m_serviceManager);
+    m_serviceManager->RegisterSystemService(timer);
+    m_serviceManager->RegisterSystemService(menew Animators::AnimationFrameListener(m_serviceManager, timer));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownAnimationServices()
+{
+    m_serviceManager->ShutdownSystemService(Animators::AnimationFrameListener::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Engine::TimerService::TYPE_RTTI);
     return ErrorCode::ok;
 }

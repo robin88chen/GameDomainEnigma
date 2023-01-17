@@ -73,6 +73,9 @@ namespace Enigma::Controllers
         error InstallSceneGraphManagers();
         error ShutdownSceneGraphManagers();
 
+        error InstallAnimationServices();
+        error ShutdownAnimationServices();
+
     private:
         static GraphicMain* m_instance;
 

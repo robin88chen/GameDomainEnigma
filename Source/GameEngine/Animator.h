@@ -33,7 +33,7 @@ namespace Enigma::Engine
 
         /** animation update
         @return has update something or not */
-        virtual HasUpdated Update(Frameworks::Timer*) { return HasUpdated::False; /* base class do nothing */ };
+        virtual HasUpdated Update(const std::unique_ptr<Frameworks::Timer>&) { return HasUpdated::False; /* base class do nothing */ };
         /** reset animation */
         virtual void Reset() {};
 

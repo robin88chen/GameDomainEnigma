@@ -12,6 +12,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::policyIncomplete: return "policy incomplete error";
     case ErrorCode::deserializeFail: return "deserialize dto failed";
     case ErrorCode::dynamicCastFail: return "dynamic cast fail";
+    case ErrorCode::nullAnimator: return "null animator";
+    case ErrorCode::animatorMultiListening: return "animator multi listening";
     }
     return "Unknown";
 }

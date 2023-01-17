@@ -12,6 +12,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "GameEngine/TimerService.h"
 #include "GameEngine/Animator.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <system_error>
 #include <memory>
 
@@ -32,6 +33,7 @@ namespace Enigma::Animators
 
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult OnTerm() override;
 
         error AddListeningAnimator(const Engine::AnimatorPtr& ani);
         error RemoveListeningAnimator(const Engine::AnimatorPtr& ani);
@@ -42,12 +44,18 @@ namespace Enigma::Animators
     private:
         void RemoveExpiredAnimator();
 
+        void DoAddingListeningAnimator(const Frameworks::ICommandPtr& c);
+        void DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c);
+
     private:
         Engine::TimerService* m_timer;
 
         using ListeningList = std::list<std::weak_ptr<Engine::Animator>>;
         ListeningList m_listeningAnimators;
         bool m_hasExpiredAnimator;
+
+        Frameworks::CommandSubscriberPtr m_doAddingListeningAnimator;
+        Frameworks::CommandSubscriberPtr m_doRemovingListeningAnimator;
     };
 }
 

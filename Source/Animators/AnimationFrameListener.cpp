@@ -1,5 +1,7 @@
 ﻿#include "AnimationFrameListener.h"
 #include "AnimatorErrors.h"
+#include "AnimatorCommands.h"
+#include "Frameworks/CommandBus.h"
 #include <cassert>
 
 using namespace Enigma::Frameworks;
@@ -22,6 +24,10 @@ AnimationFrameListener::~AnimationFrameListener()
 
 ServiceResult AnimationFrameListener::OnInit()
 {
+    m_doAddingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingListeningAnimator(c); });
+    m_doRemovingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoRemovingListeningAnimator(c); });
+    CommandBus::Subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::Subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
     return ServiceResult::Complete;
 }
 
@@ -33,6 +39,15 @@ ServiceResult AnimationFrameListener::OnTick()
     }
     if (m_hasExpiredAnimator) RemoveExpiredAnimator();
     return ServiceResult::Pendding;
+}
+
+ServiceResult AnimationFrameListener::OnTerm()
+{
+    CommandBus::Unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::Unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    m_doAddingListeningAnimator = nullptr;
+    m_doRemovingListeningAnimator = nullptr;
+    return ServiceResult::Complete;
 }
 
 error AnimationFrameListener::AddListeningAnimator(const Engine::AnimatorPtr& ani)
@@ -111,4 +126,20 @@ void AnimationFrameListener::RemoveExpiredAnimator()
     {
         m_needTick = false;
     }
+}
+
+void AnimationFrameListener::DoAddingListeningAnimator(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Animators::AddListeningAnimator, ICommand>(c);
+    if (!cmd) return;
+    AddListeningAnimator(cmd->GetAnimator());
+}
+
+void AnimationFrameListener::DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<Animators::RemoveListeningAnimator, ICommand>(c);
+    if (!cmd) return;
+    RemoveListeningAnimator(cmd->GetAnimator());
 }

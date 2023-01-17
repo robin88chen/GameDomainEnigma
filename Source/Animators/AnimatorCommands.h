@@ -9,6 +9,7 @@
 #define _ANIMATOR_COMMANDS_H
 
 #include "Frameworks/Command.h"
+#include "GameEngine/Animator.h"
 
 namespace Enigma::Animators
 {
@@ -22,6 +23,24 @@ namespace Enigma::Animators
 
     private:
         std::shared_ptr<ModelAnimatorPolicy> m_policy;
+    };
+    class AddListeningAnimator : public Frameworks::ICommand
+    {
+    public:
+        AddListeningAnimator(const std::shared_ptr<Engine::Animator>& animator) : m_animator(animator) {}
+        const std::shared_ptr<Engine::Animator>& GetAnimator() { return m_animator; }
+
+    private:
+        std::shared_ptr<Engine::Animator> m_animator;
+    };
+    class RemoveListeningAnimator : public Frameworks::ICommand
+    {
+    public:
+        RemoveListeningAnimator(const std::shared_ptr<Engine::Animator>& animator) : m_animator(animator) {}
+        const std::shared_ptr<Engine::Animator>& GetAnimator() { return m_animator; }
+
+    private:
+        std::shared_ptr<Engine::Animator> m_animator;
     };
 }
 

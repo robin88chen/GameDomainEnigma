@@ -72,8 +72,6 @@ namespace Enigma::Renderer
         std::string m_name;
         MeshNodeTree m_nodeTree;
         std::vector<unsigned int> m_meshPrimitiveIndexCache;  ///< 記錄哪個index的mesh node擁有mesh primitive
-
-       Engine::AnimatorPtr m_animator;
     };
     using ModelPrimitivePtr = std::shared_ptr<ModelPrimitive>;
 }

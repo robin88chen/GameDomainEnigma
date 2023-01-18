@@ -17,6 +17,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GeometryRepository.h"
 #include "GameEngine/TimerService.h"
+#include "Animators/AnimationRepository.h"
 #include "Animators/AnimationFrameListener.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
@@ -279,6 +280,7 @@ error GraphicMain::InstallAnimationServices()
     //todo : timer 跟 animation 先放在一起，以後有適合的地方再改
     auto timer = menew Engine::TimerService(m_serviceManager);
     m_serviceManager->RegisterSystemService(timer);
+    m_serviceManager->RegisterSystemService(menew Animators::AnimationRepository(m_serviceManager));
     m_serviceManager->RegisterSystemService(menew Animators::AnimationFrameListener(m_serviceManager, timer));
     return ErrorCode::ok;
 }
@@ -286,6 +288,7 @@ error GraphicMain::InstallAnimationServices()
 error GraphicMain::ShutdownAnimationServices()
 {
     m_serviceManager->ShutdownSystemService(Animators::AnimationFrameListener::TYPE_RTTI);
+    m_serviceManager->ShutdownSystemService(Animators::AnimationRepository::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(Engine::TimerService::TYPE_RTTI);
     return ErrorCode::ok;
 }

@@ -23,6 +23,8 @@ DEFINE_RTTI(Animators, AnimationRepository, ISystemService);
 AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemService(manager)
 {
     m_needTick = false;
+    m_isAnimatorCurrentBuilding = false;
+    m_isAssetCurrentBuilding = false;
     m_assetBuilder = std::make_unique<AnimationAssetBuilder>(this);
     m_animatorBuilder = std::make_unique<ModelAnimatorBuilder>(this);
 

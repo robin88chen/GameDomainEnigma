@@ -35,7 +35,7 @@ namespace Enigma::Animators
         virtual HasUpdated Update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void Reset() override;
 
-        void SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model) { m_controlledPrimitive = model; }
+        void SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
 
         /** link animation set, then re-calculate mapping */
         void LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);

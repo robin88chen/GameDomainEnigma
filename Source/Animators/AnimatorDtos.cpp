@@ -26,7 +26,8 @@ ModelAnimatorDto ModelAnimatorDto::FromGenericDto(const GenericDto& dto)
 GenericDto ModelAnimatorDto::ToGenericDto()
 {
     GenericDto dto;
-    dto.AddOrUpdate(TOKEN_ASSET_OBJECT, m_animationAssetDto);
+    dto.AddRtti(FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.GetName()));
+    if (m_animationAssetDto) dto.AddOrUpdate(TOKEN_ASSET_OBJECT, m_animationAssetDto.value());
     dto.AddOrUpdate(TOKEN_ANIMATION_NAME, m_assetName);
     dto.AddOrUpdate(TOKEN_ANIMATION_FACTORY, m_assetFactory);
     return dto;

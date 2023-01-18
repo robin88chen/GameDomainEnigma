@@ -14,7 +14,7 @@
 
 namespace Enigma::Engine
 {
-    class Animator
+    class Animator : public std::enable_shared_from_this<Animator>
     {
         DECLARE_EN_RTTI_OF_BASE
     public:

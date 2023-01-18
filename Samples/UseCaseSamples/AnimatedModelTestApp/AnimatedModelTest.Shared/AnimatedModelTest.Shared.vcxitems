@@ -17,12 +17,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)AnimatedModelTest.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ModelAnimatorMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ModelPrimitiveMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)AnimatedModelTest.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ModelAnimatorMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ModelPrimitiveMaker.h" />
   </ItemGroup>
 </Project>

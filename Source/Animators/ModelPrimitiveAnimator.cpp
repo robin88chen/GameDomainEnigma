@@ -96,6 +96,13 @@ void ModelPrimitiveAnimator::Reset()
 {
     m_currentAnimClip.Reset();
 }
+
+void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model)
+{
+    m_controlledPrimitive = model;
+    if (model) model->AttachAnimator(shared_from_this());
+}
+
 void ModelPrimitiveAnimator::LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset)
 {
     m_animationAsset = anim_asset;

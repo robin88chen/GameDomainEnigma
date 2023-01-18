@@ -22,6 +22,7 @@ namespace Enigma::Engine
 
     class IRenderer;
     class GenericDto;
+    class Animator;
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
@@ -63,6 +64,7 @@ namespace Enigma::Engine
         /** get selected visual technique */
         virtual std::string& GetSelectedVisualTechnique() { return m_selectedVisualTech; };
 
+        virtual void AttachAnimator(const std::shared_ptr<Animator>& animator) { m_animator = animator; }
         /** add primitive flag */
         void AddPrimitiveFlag(PrimitiveFlags flag)
         {
@@ -86,6 +88,7 @@ namespace Enigma::Engine
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;
         std::string m_selectedVisualTech;
+        std::shared_ptr<Animator> m_animator;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

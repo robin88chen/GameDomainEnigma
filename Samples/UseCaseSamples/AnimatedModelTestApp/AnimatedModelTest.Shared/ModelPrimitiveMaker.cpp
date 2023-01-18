@@ -1,4 +1,5 @@
 ﻿#include "ModelPrimitiveMaker.h"
+#include "ModelAnimatorMaker.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectTextureMapDto.h"
@@ -21,10 +22,12 @@ std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveMaker::MakeModelPrimitivePol
     const std::string& model_name, const std::string& geo_name)
 {
     MeshNodeTreeDto tree;
+    std::vector<std::string> node_names;
     for (unsigned i = 0; i < 4; i++)
     {
         MeshNodeDto node;
         node.Name() = string_format("%s_node_%d", model_name.c_str(), i);
+        node_names.emplace_back(node.Name());
         node.LocalTransform() = Matrix4::MakeTranslateTransform(0.0f, (float)i * 0.3f, 0.0f);
         if (i != 0)
         {
@@ -39,6 +42,9 @@ std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveMaker::MakeModelPrimitivePol
     ModelPrimitiveDto dto;
     dto.Name() = model_name;
     dto.TheNodeTree() = tree.ToGenericDto();
+    auto animation = ModelAnimatorMaker::MakeModelAnimationAsset(model_name, node_names);
+    auto animator = ModelAnimatorMaker::MakeModelAnimator(model_name, animation);
+    dto.TheAnimator() = animator->SerializeDto().ToGenericDto();
     return dto.ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
         std::make_shared<JsonFileEffectProfileDeserializer>());
 }

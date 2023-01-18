@@ -99,7 +99,7 @@ bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Ti
             continue;
         }
 
-        bool res = (bool)(ani->Update(timer));
+        bool res = static_cast<bool>(ani->Update(timer));
         all_res |= res;
         if (!res)  // no update, remove this animator and continue
         {

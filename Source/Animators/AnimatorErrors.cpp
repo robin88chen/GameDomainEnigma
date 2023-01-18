@@ -22,7 +22,7 @@ const char* ErrorCategory::name() const noexcept
 {
     return "Animators Error Category";
 }
-namespace Enigma::Renderer
+namespace Enigma::Animators
 {
     std::error_code make_error_code(ErrorCode ec)
     {

@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/GenericDto.h"
 #include <memory>
 #include <mutex>
@@ -60,6 +61,10 @@ namespace Enigma::Animators
 
         void DoBuildingAnimationAsset(const Frameworks::ICommandPtr& c);
         void DoBuildingModelAnimator(const Frameworks::ICommandPtr& c);
+        void OnAnimationAssetBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildAnimationAssetFailed(const Frameworks::IEventPtr& e);
+        void OnAnimatorBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildAnimatorFailed(const Frameworks::IEventPtr& e);
     private:
         std::unordered_map<std::string, std::weak_ptr<AnimationAsset>> m_assets;
         std::recursive_mutex m_assetsLock;
@@ -69,14 +74,20 @@ namespace Enigma::Animators
 
         std::queue<std::shared_ptr<AnimationAssetPolicy>> m_assetPolicies;
         bool m_isAssetCurrentBuilding;
+        std::string m_buildingAssetName;
         std::mutex m_assetPoliciesLock;
 
         std::queue<std::shared_ptr<ModelAnimatorPolicy>> m_animatorPolicies;
         bool m_isAnimatorCurrentBuilding;
+        Frameworks::Ruid m_constructingAnimatorRuid;
         std::mutex m_animatorPoliciesLock;
 
         Frameworks::CommandSubscriberPtr m_doBuildingAnimationAsset;
         Frameworks::CommandSubscriberPtr m_doBuildingModelAnimator;
+        Frameworks::EventSubscriberPtr m_onAnimationAssetBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildAnimationAssetFailed;
+        Frameworks::EventSubscriberPtr m_onAnimatorBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildAnimatorFailed;
     };
 }
 

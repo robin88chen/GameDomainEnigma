@@ -33,6 +33,7 @@ constexpr const char* BOX3_TOKEN = "Box3";
 constexpr const char* MATRIX4_TOKEN = "Matrix4";
 constexpr const char* STRING_ARRAY_TOKEN = "StringArray";
 constexpr const char* UINT32_ARRAY_TOKEN = "Uint32Array";
+constexpr const char* FLOAT_ARRAY_TOKEN = "FloatArray";
 constexpr const char* VECTOR2_ARRAY_TOKEN = "Vector2Array";
 constexpr const char* VECTOR3_ARRAY_TOKEN = "Vector3Array";
 constexpr const char* VECTOR4_ARRAY_TOKEN = "Vector4Array";
@@ -66,6 +67,7 @@ static Box3 DeserializeBox3(const rapidjson::Value& value);
 static Matrix4 DeserializeMatrix4(const rapidjson::Value& value);
 static std::vector<std::string> DeserializeStringArray(const rapidjson::Value& value);
 static std::vector<std::uint32_t> DeserializeUInt32Array(const rapidjson::Value& value);
+static std::vector<float> DeserializeFloatArray(const rapidjson::Value& value);
 static std::vector<Vector2> DeserializeVector2Array(const rapidjson::Value& value);
 static std::vector<Vector3> DeserializeVector3Array(const rapidjson::Value& value);
 static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& value);
@@ -89,6 +91,7 @@ static rapidjson::Value SerializeBox3(const Box3& box, rapidjson::MemoryPoolAllo
 static rapidjson::Value SerializeMatrix4(const Matrix4& mx, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeStringArray(const std::vector<std::string>& ss, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeUInt32Array(const std::vector<std::uint32_t>& ns, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeFloatArray(const std::vector<float>& vs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeVector2Array(const std::vector<Vector2>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
@@ -200,6 +203,8 @@ void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const r
         dto.AddOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
     else if (type == UINT32_ARRAY_TOKEN)
         dto.AddOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
+    else if (type == FLOAT_ARRAY_TOKEN)
+        dto.AddOrUpdate(attribute, DeserializeFloatArray(value[VALUE_TOKEN]));
     else if (type == VECTOR2_ARRAY_TOKEN)
         dto.AddOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
     else if (type == VECTOR3_ARRAY_TOKEN)
@@ -350,6 +355,18 @@ std::vector<std::uint32_t> DeserializeUInt32Array(const rapidjson::Value& value)
         ns.emplace_back(DeserializeUInt32(*json_it));
     }
     return ns;
+}
+
+std::vector<float> DeserializeFloatArray(const rapidjson::Value& value)
+{
+    std::vector<float> vs;
+    if (!value.IsArray()) return vs;
+    auto values = value.GetArray();
+    for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
+    {
+        vs.emplace_back(DeserializeFloat(*json_it));
+    }
+    return vs;
 }
 
 std::vector<Vector2> DeserializeVector2Array(const rapidjson::Value& value)
@@ -519,6 +536,11 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(UINT32_ARRAY_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeUInt32Array(std::any_cast<std::vector<std::uint32_t>>(any_ob), allocator), allocator);
     }
+    else if (any_ob.type() == typeid(std::vector<float>))
+    {
+        node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(FLOAT_ARRAY_TOKEN), allocator);
+        node.AddMember(rapidjson::StringRef(VALUE_TOKEN), SerializeFloatArray(std::any_cast<std::vector<float>>(any_ob), allocator), allocator);
+    }
     else if (any_ob.type() == typeid(std::vector<Vector2>))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(VECTOR2_ARRAY_TOKEN), allocator);
@@ -671,6 +693,16 @@ rapidjson::Value SerializeUInt32Array(const std::vector<std::uint32_t>& ns, rapi
     for (auto n : ns)
     {
         value.PushBack(SerializeUInt32(n), allocator);
+    }
+    return value;
+}
+
+rapidjson::Value SerializeFloatArray(const std::vector<float>& vs, rapidjson::MemoryPoolAllocator<>& allocator)
+{
+    rapidjson::Value value(rapidjson::kArrayType);
+    for (auto v : vs)
+    {
+        value.PushBack(SerializeFloat(v), allocator);
     }
     return value;
 }

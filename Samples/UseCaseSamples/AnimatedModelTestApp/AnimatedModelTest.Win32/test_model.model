@@ -329,9 +329,18 @@
                         "TimeSRTs": {
                             "Type": "DataObjectArray",
                             "Value": [{
-                                    "ScaleTimeKeys": {},
-                                    "RotateTimeKeys": {},
-                                    "TranslateTimeKeys": {}
+                                    "ScaleTimeKeys": {
+                                        "Type": "FloatArray",
+                                        "Value": [0.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 2.0, 1.0, 1.0, 1.0]
+                                    },
+                                    "RotateTimeKeys": {
+                                        "Type": "FloatArray",
+                                        "Value": [0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0]
+                                    },
+                                    "TranslateTimeKeys": {
+                                        "Type": "FloatArray",
+                                        "Value": [0.0, 2.0, 2.0, 0.0, 1.0, -1.2000000476837158, 1.2000000476837158, 0.0, 2.0, 2.0, 2.0, 0.0]
+                                    }
                                 }]
                         }
                     }

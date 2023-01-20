@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
@@ -73,9 +74,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
@@ -112,6 +115,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
 </Project>

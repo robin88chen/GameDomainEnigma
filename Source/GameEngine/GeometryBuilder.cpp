@@ -39,6 +39,7 @@ GeometryBuilder::~GeometryBuilder()
 void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
 {
     assert(m_hostRepository);
+    m_policy = policy;
     if (m_hostRepository->HasGeometryData(policy.Name()))
     {
         EventPublisher::Post(std::make_shared<GeometryDataBuilt>(policy.Name(),
@@ -50,7 +51,6 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     }
     else if (policy.GetDeserializer())
     {
-        m_policy = policy;
         m_ruidDeserializing = Ruid::Generate();
         policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
     }

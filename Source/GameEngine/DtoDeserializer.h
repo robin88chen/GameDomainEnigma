@@ -10,6 +10,7 @@
 
 #include "Frameworks/ruid.h"
 #include <memory>
+#include <string>
 
 namespace Enigma::Engine
 {

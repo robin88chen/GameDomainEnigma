@@ -11,9 +11,11 @@
 #include "GameEngine/Primitive.h"
 #include "MeshNodeTree.h"
 #include "MeshPrimitive.h"
+#include "GameEngine/Animator.h"
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 
 namespace Enigma::Renderer
 {

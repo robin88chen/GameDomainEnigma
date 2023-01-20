@@ -6,6 +6,8 @@
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/EffectMaterialPolicy.h"
 #include "GameEngine/EffectTextureMapPolicy.h"
+#include "Animators/ModelPrimitiveAnimator.h"
+#include "Animators/AnimatorDtos.h"
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
 #include "MeshNodeTree.h"
@@ -13,6 +15,7 @@
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_GEOMETRY_NAME = "GeometryName";
@@ -26,6 +29,7 @@ static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";
 static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
+static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
 
 MeshPrimitiveDto::MeshPrimitiveDto() : m_geometryFactory(GeometryData::TYPE_RTTI.GetName())
 {
@@ -146,6 +150,7 @@ ModelPrimitiveDto ModelPrimitiveDto::FromGenericDto(const GenericDto& dto)
     ModelPrimitiveDto model;
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.Name() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MESH_NODE_TREE)) model.TheNodeTree() = v.value();
+    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MODEL_ANIMATOR)) model.TheAnimator() = v.value();
     return model;
 }
 
@@ -155,6 +160,7 @@ GenericDto ModelPrimitiveDto::ToGenericDto()
     dto.AddRtti(FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
+    if (m_animatorDto) dto.AddOrUpdate(TOKEN_MODEL_ANIMATOR, m_animatorDto.value());
     return dto;
 }
 
@@ -166,5 +172,9 @@ std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const s
     policy->TheDtoDeserializer() = deserializer;
     policy->TheEffectDeserializer() = effect_deserializer;
     policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(m_nodeTreeDto);
+    if ((m_animatorDto) && (m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
+    {
+        policy->TheModelAnimator() = ModelAnimatorDto::FromGenericDto(m_animatorDto.value());
+    }
     return policy;
 }

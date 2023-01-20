@@ -70,6 +70,12 @@
     <Filter Include="DTOs\Effect Dto">
       <UniqueIdentifier>{6d277dec-bcd4-4379-8e49-98880421cc8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animator">
+      <UniqueIdentifier>{19ab70b1-527b-4690-9653-b9785fc12717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer Service">
+      <UniqueIdentifier>{50528cc3-7ae8-4eee-87bc-e3d9dc1ec9d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -252,6 +258,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
+      <Filter>Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h">
+      <Filter>Timer Service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -364,6 +376,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp">
       <Filter>DTOs\Effect Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
+      <Filter>Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp">
+      <Filter>Timer Service</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

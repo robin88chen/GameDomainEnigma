@@ -15,8 +15,10 @@
 #include "RenderablePrimitiveDtos.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/EffectCompilingProfileDeserializer.h"
+#include "Animators/AnimatorDtos.h"
 #include <string>
 #include <vector>
+#include <optional>
 
 namespace Enigma::Renderer
 {
@@ -86,8 +88,12 @@ namespace Enigma::Renderer
         [[nodiscard]] const MeshNodeTreeDto& NodeTreeDto() const { return m_nodeTreeDto; }
         MeshNodeTreeDto& NodeTreeDto() { return m_nodeTreeDto; }
 
+        [[nodiscard]] const std::optional<Animators::ModelAnimatorDto>& TheModelAnimator() const { return m_animatorDto; }
+        std::optional<Animators::ModelAnimatorDto>& TheModelAnimator() { return m_animatorDto; }
+
     protected:
         MeshNodeTreeDto m_nodeTreeDto;
+        std::optional<Animators::ModelAnimatorDto> m_animatorDto;
     };
 }
 

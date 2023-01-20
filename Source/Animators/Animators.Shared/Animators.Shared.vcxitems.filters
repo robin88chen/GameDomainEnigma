@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Animators">
+      <UniqueIdentifier>{913ba7bc-15ca-4804-8579-e122d0c26622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Assets">
+      <UniqueIdentifier>{ec2de6d4-d3f5-4f9d-893a-245a47f80f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Clip">
+      <UniqueIdentifier>{c5554cb0-1381-4377-bb1f-bdb55b0ceaf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands &amp; Events">
+      <UniqueIdentifier>{b7ce90ef-fd18-4cfa-9b52-9464ace73f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dtos &amp; Policies">
+      <UniqueIdentifier>{99479165-5079-4cdb-b68a-c5db9b00391a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCodes">
+      <UniqueIdentifier>{81e95ecf-bc57-43e1-97d3-9899e6b91891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Assets\Model Animation">
+      <UniqueIdentifier>{d981ddef-ed96-455f-a323-45d4c33c55d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnimationRepository">
+      <UniqueIdentifier>{93c8f825-6836-4914-a0b5-623dc5903ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnimationRepository\Builder">
+      <UniqueIdentifier>{6d8abe21-60d5-45fb-8c27-965dd768d03e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation Listener">
+      <UniqueIdentifier>{633d9104-2f6f-42c1-8133-92e051d8b698}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
+      <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
+      <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h">
+      <Filter>Animation Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h">
+      <Filter>ErrorCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h">
+      <Filter>Animation Assets\Model Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationRepository.h">
+      <Filter>AnimationRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
+      <Filter>Animation Listener</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
+      <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp">
+      <Filter>Animation Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp">
+      <Filter>Animation Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp">
+      <Filter>ErrorCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp">
+      <Filter>Animation Assets\Model Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp">
+      <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationRepository.cpp">
+      <Filter>AnimationRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
+      <Filter>AnimationRepository\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp">
+      <Filter>Dtos &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
+      <Filter>Animation Listener</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

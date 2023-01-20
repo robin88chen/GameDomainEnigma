@@ -1,6 +1,7 @@
 ﻿#include "ModelPrimitiveMaker.h"
 #include "ModelAnimatorMaker.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/TriangleList.h"
@@ -17,6 +18,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 using namespace Enigma::MathLib;
+using namespace Enigma::Animators;
 
 std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveMaker::MakeModelPrimitivePolicy(
     const std::string& model_name, const std::string& geo_name)
@@ -56,6 +58,13 @@ void ModelPrimitiveMaker::SaveModelPrimitiveDto(const std::shared_ptr<ModelPrimi
     {
         auto mesh = model->GetMeshPrimitive(i);
         mesh->GetGeometryData()->TheFactoryDesc().ClaimFromResource(mesh->GetGeometryData()->GetName(), "test_geometry.geo@DataPath");
+    }
+    if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(model->GetAnimator()))
+    {
+        if (auto asset = ani->GetAnimationAsset())
+        {
+            asset->TheFactoryDesc().ClaimFromResource(asset->GetName(), asset->GetName() + ".ani@DataPath");
+        }
     }
     GenericDto dto = model->SerializeDto();
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> {dto });

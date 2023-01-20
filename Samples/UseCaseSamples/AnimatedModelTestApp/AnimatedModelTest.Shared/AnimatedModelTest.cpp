@@ -8,6 +8,8 @@
 #include "Renderer/RenderablePrimitiveCommands.h"
 #include "Renderer/RenderablePrimitiveEvents.h"
 #include "Renderer/RendererEvents.h"
+#include "Animators/AnimatorCommands.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 #include "CubeGeometryMaker.h"
 #include "CameraMaker.h"
 #include "ModelPrimitiveMaker.h"
@@ -155,6 +157,14 @@ void AnimatedModelTest::OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEv
     else
     {
         m_model = model;
+        if (auto ani = m_model->GetAnimator())
+        {
+            CommandBus::Post(std::make_shared<Enigma::Animators::AddListeningAnimator>(ani));
+            if (auto model_ani = std::dynamic_pointer_cast<Enigma::Animators::ModelPrimitiveAnimator, Enigma::Engine::Animator>(ani))
+            {
+                model_ani->PlayAnimation(Enigma::Animators::AnimationClip{ 0.0f, 2.0f, Enigma::Animators::AnimationClip::WarpMode::Loop, 0 });
+            }
+        }
     }
 }
 

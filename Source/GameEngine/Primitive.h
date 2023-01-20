@@ -65,6 +65,7 @@ namespace Enigma::Engine
         virtual std::string& GetSelectedVisualTechnique() { return m_selectedVisualTech; };
 
         virtual void AttachAnimator(const std::shared_ptr<Animator>& animator) { m_animator = animator; }
+        virtual const std::shared_ptr<Animator>& GetAnimator() { return m_animator; }
         /** add primitive flag */
         void AddPrimitiveFlag(PrimitiveFlags flag)
         {

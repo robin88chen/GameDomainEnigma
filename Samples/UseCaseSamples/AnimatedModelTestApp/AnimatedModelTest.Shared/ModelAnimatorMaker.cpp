@@ -2,10 +2,19 @@
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationTimeSRT.h"
 #include "Animators/ModelPrimitiveAnimator.h"
+#include "Animators/AnimationAssetDtos.h"
+#include "Gateways/DtoJsonGateway.h"
+#include "FileSystem/FileSystem.h"
+#include "FileSystem/Filename.h"
+#include "FileSystem/IFile.h"
 #include <memory>
+#include <Platforms/PlatformLayer.h>
 
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
+using namespace Enigma::Gateways;
+using namespace Enigma::FileSystem;
 
 std::shared_ptr<ModelAnimationAsset> ModelAnimatorMaker::MakeModelAnimationAsset(
     const std::string& model_name, const std::vector<std::string>& mesh_node_names)
@@ -29,6 +38,17 @@ std::shared_ptr<ModelAnimationAsset> ModelAnimatorMaker::MakeModelAnimationAsset
     anim_srt.SetRotationKeyVector(rot_key);
     anim_srt.SetTranslateKeyVector(trans_key);
     animation_asset->AddMeshNodeTimeSRTData(mesh_node_names[mesh_node_names.size() - 1], anim_srt);
+
+    GenericDto dto = animation_asset->SerializeDto().ToGenericDto();
+    FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    desc.ClaimAsResourceAsset(anim_name, anim_name + ".ani", "DataPath");
+    dto.AddRtti(desc);
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{dto});
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(anim_name + ".ani@DataPath"), "w+b");
+    if (FATAL_LOG_EXPR(!iFile)) return animation_asset;
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+
     return animation_asset;
 }
 

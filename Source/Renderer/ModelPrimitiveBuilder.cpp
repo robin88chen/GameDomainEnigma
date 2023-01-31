@@ -5,6 +5,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "RenderablePrimitiveEvents.h"
+#include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
 #include "Animators/AnimatorCommands.h"
 #include "Animators/AnimatorEvents.h"
@@ -62,8 +63,16 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const std::shared_ptr<ModelPrimi
         }
         if (node_dto.TheMeshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
-                ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+            if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
+            {
+                PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
+                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+            }
+            else if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
+            {
+                PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
+                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+            }
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }

@@ -1,6 +1,7 @@
 ﻿#include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
 #include "RenderablePrimitiveEvents.h"
+#include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/GeometryCommands.h"
@@ -61,7 +62,16 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 void MeshPrimitiveBuilder::BuildMeshPrimitive(const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
     m_policy = policy;
-    m_builtPrimitive = std::make_shared<MeshPrimitive>(m_policy->Name());
+    auto& p = *policy;
+    if (typeid(p) == typeid(MeshPrimitivePolicy))
+    {
+        m_builtPrimitive = std::make_shared<MeshPrimitive>(m_policy->Name());
+    }
+    else if (typeid(p) == typeid(SkinMeshPrimitivePolicy))
+    {
+        m_builtPrimitive = std::make_shared<SkinMeshPrimitive>(m_policy->Name());
+    }
+
     m_builtGeometry = nullptr;
     m_builtRenderBuffer = nullptr;
     m_builtEffects.clear();

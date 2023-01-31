@@ -1,17 +1,16 @@
 ﻿#include "RenderablePrimitiveDtos.h"
 #include "RenderablePrimitivePolicies.h"
 #include "GameEngine/GeometryData.h"
-#include "GameEngine/GeometryDataDto.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
-#include "GameEngine/EffectMaterialPolicy.h"
-#include "GameEngine/EffectTextureMapPolicy.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include "Animators/AnimatorDtos.h"
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
 #include "MeshNodeTree.h"
 #include "ModelPrimitive.h"
+#include "SkinMeshPrimitive.h"
+#include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -99,6 +98,29 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
         policy->TexturePolicies().emplace_back(EffectTextureMapDto::FromGenericDto(tex).ConvertToPolicy());
     }
     return policy;
+}
+
+SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const MeshPrimitiveDto& mesh) : MeshPrimitiveDto(mesh)
+{
+}
+
+SkinMeshPrimitiveDto SkinMeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
+{
+    return MeshPrimitiveDto::FromGenericDto(dto);
+}
+
+GenericDto SkinMeshPrimitiveDto::ToGenericDto()
+{
+    GenericDto dto = MeshPrimitiveDto::ToGenericDto();
+    dto.AddRtti(FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName()));
+    return dto;
+}
+
+std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+{
+    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer, effect_deserializer);
+    return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
 MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)

@@ -22,6 +22,7 @@ namespace Enigma::Renderer
 {
     class MeshPrimitivePolicy;
     class ModelPrimitivePolicy;
+    class SkinMeshPrimitivePolicy;
 
     class MeshPrimitiveDto
     {
@@ -59,6 +60,23 @@ namespace Enigma::Renderer
         Engine::FactoryDesc m_geometryFactory;
         std::vector<Engine::GenericDto> m_effects;
         std::vector<Engine::GenericDto> m_textureMaps;
+    };
+
+    class SkinMeshPrimitiveDto : public MeshPrimitiveDto
+    {
+    public:
+        SkinMeshPrimitiveDto() : MeshPrimitiveDto() {};
+        SkinMeshPrimitiveDto(const MeshPrimitiveDto&);
+        SkinMeshPrimitiveDto(const SkinMeshPrimitiveDto&) = default;
+        SkinMeshPrimitiveDto(SkinMeshPrimitiveDto&&) = default;
+        ~SkinMeshPrimitiveDto() = default;
+        SkinMeshPrimitiveDto& operator=(const SkinMeshPrimitiveDto&) = default;
+        SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
+
+        static SkinMeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
+        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
+            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
     };
 
     class MeshNodeDto

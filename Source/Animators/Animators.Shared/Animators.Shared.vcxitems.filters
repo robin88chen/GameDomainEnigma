@@ -87,6 +87,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
       <Filter>Animation Listener</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
       <Filter>Animation Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp">
+      <Filter>Animators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

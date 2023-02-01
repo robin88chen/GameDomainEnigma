@@ -28,6 +28,7 @@ namespace Enigma::Renderer
         virtual Engine::GenericDto SerializeDto() override;
 
         void BindOwnerMeshNode(const MeshNode& node);
+        const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
         virtual void ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect) override;
         virtual void ChangeEffectMaterial(const EffectMaterialList& effects) override;
 

@@ -10,11 +10,13 @@
 
 #include "Renderer/SkinMeshPrimitive.h"
 #include "Renderer/ModelPrimitive.h"
+#include "AnimatorDtos.h"
 
 namespace Enigma::Animators
 {
     class SkinAnimationOperator
     {
+        DECLARE_EN_RTTI_NON_BASE
     public:
         SkinAnimationOperator();
         SkinAnimationOperator(const SkinAnimationOperator& op);
@@ -22,6 +24,8 @@ namespace Enigma::Animators
         ~SkinAnimationOperator();
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
         SkinAnimationOperator& operator=(SkinAnimationOperator&& op);
+
+        SkinOperatorDto SerializeDto();
 
         void LinkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
         void CalculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);

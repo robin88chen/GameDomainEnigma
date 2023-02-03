@@ -12,6 +12,8 @@
 #include "GameEngine/Animator.h"
 #include "AnimationClip.h"
 #include "Renderer/ModelPrimitive.h"
+#include "Renderer/SkinMeshPrimitive.h"
+#include "SkinAnimationOperator.h"
 #include "AnimatorDtos.h"
 #include <optional>
 #include <memory>
@@ -36,13 +38,21 @@ namespace Enigma::Animators
         virtual void Reset() override;
 
         void SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
+        std::shared_ptr<Renderer::ModelPrimitive> GetControlledModel() const;
 
         /** link animation set, then re-calculate mapping */
         void LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
         /** calculate mesh node mapping */
         virtual void CalculateMeshNodeMapping();
 
-        //todo : skin mesh
+        /** link skin mesh */
+        void LinkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
+        void LinkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
+            const std::vector<MathLib::Matrix4>& boneNodeOffsets);
+        /** get skin mesh animation operator,
+                model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/
+        const SkinAnimationOperator& GetSkinAnimOperator(unsigned int index);
+        unsigned GetSkinAnimationOperatorCount() const { return static_cast<unsigned>(m_skinAnimOperators.size()); };
 
         /** get animation key set */
         const std::shared_ptr<ModelAnimationAsset>& GetAnimationAsset() { return m_animationAsset; };
@@ -84,9 +94,7 @@ namespace Enigma::Animators
 
         bool m_isOnPlay;
 
-        //todo: skin mesh
-        //typedef std::vector<SkinAnimOperatorPtr> SkinAnimationOperatorVector;
-        //SkinAnimationOperatorVector m_skinAnimOperators;
+        std::vector<SkinAnimationOperator> m_skinAnimOperators;
     };
     using ModelPrimitiveAnimatorPtr = std::shared_ptr<ModelPrimitiveAnimator>;
 }

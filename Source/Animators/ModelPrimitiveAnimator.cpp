@@ -3,6 +3,8 @@
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
+#include "SkinAnimationOperator.h"
+#include <cassert>
 
 using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
@@ -15,8 +17,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
 {
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
-    //todo: skin mesh
-    //m_skinAnimOperators.clear();
+    m_skinAnimOperators.clear();
 
     m_remainFadingTime = 0.0f;
     m_fadingTime = 0.1f;
@@ -28,7 +29,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani
 {
     m_animationAsset = ani.m_animationAsset;
     m_meshNodeMapping = ani.m_meshNodeMapping;
-    //todo : skin mesh
+    m_skinAnimOperators = ani.m_skinAnimOperators;
     m_remainFadingTime = 0.0f;
     m_fadingTime = 0.1f;
     m_isFading = false;
@@ -39,14 +40,14 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 {
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
-    //todo : skin mesh
+    m_skinAnimOperators.clear();
 }
 
 ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAnimator& ani)
 {
     m_animationAsset = ani.m_animationAsset;
     m_meshNodeMapping = ani.m_meshNodeMapping;
-    //todo : skin mesh
+    m_skinAnimOperators = ani.m_skinAnimOperators;
     m_remainFadingTime = 0.0f;
     m_fadingTime = 0.1f;
     m_isFading = false;
@@ -66,10 +67,14 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
     {
         dto.AnimationAssetDto() = m_animationAsset->SerializeDto().ToGenericDto();
     }
+    for (auto& op : m_skinAnimOperators)
+    {
+        dto.SkinOperators().emplace_back(op.SerializeDto().ToGenericDto());
+    }
     return dto;
 }
 
-Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Frameworks::Timer>& timer)
+Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>& timer)
 {
     if (FATAL_LOG_EXPR(!timer)) return HasUpdated::False;
     if (!m_isOnPlay) return HasUpdated::False;
@@ -97,10 +102,16 @@ void ModelPrimitiveAnimator::Reset()
     m_currentAnimClip.Reset();
 }
 
-void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model)
+void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<ModelPrimitive>& model)
 {
     m_controlledPrimitive = model;
     if (model) model->AttachAnimator(shared_from_this());
+}
+
+std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::GetControlledModel() const
+{
+    if (m_controlledPrimitive.expired()) return nullptr;
+    return m_controlledPrimitive.lock();
 }
 
 void ModelPrimitiveAnimator::LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset)
@@ -142,6 +153,38 @@ void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
                 m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().GetName());
         }
     }
+}
+
+void ModelPrimitiveAnimator::LinkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
+    const std::vector<std::string>& boneNodeNames)
+{
+    SkinAnimationOperator skin_oper = SkinAnimationOperator();
+    skin_oper.LinkSkinMeshPrimitive(skin_prim, boneNodeNames);
+    if (!m_controlledPrimitive.expired())
+    {
+        ModelPrimitivePtr model = m_controlledPrimitive.lock();
+        skin_oper.CalculateNodeOffsetMatrix(model, skin_prim->GetOwnerRootRefTransform());
+    }
+    m_skinAnimOperators.emplace_back(skin_oper);
+}
+
+void ModelPrimitiveAnimator::LinkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
+    const std::vector<std::string>& boneNodeNames, const std::vector<MathLib::Matrix4>& boneNodeOffsets)
+{
+    SkinAnimationOperator skin_oper = SkinAnimationOperator();
+    skin_oper.LinkSkinMeshPrimitive(skin_prim, boneNodeNames);
+    if (!m_controlledPrimitive.expired())
+    {
+        ModelPrimitivePtr model = m_controlledPrimitive.lock();
+        skin_oper.LinkNodeOffsetMatrix(model, boneNodeOffsets);
+    }
+    m_skinAnimOperators.emplace_back(skin_oper);
+}
+
+const SkinAnimationOperator& ModelPrimitiveAnimator::GetSkinAnimOperator(unsigned index)
+{
+    assert(index < m_skinAnimOperators.size());
+    return m_skinAnimOperators[index];
 }
 
 void ModelPrimitiveAnimator::PlayAnimation(const AnimationClip& clip)
@@ -189,20 +232,17 @@ bool ModelPrimitiveAnimator::TimeValueUpdate()
     if (m_controlledPrimitive.expired()) return false;
     ModelPrimitivePtr model = m_controlledPrimitive.lock();
     if (!model) return false;
-    //todo : skin mesh
-    /*if (m_skinAnimOperators.size() == 1)
+    if (m_skinAnimOperators.size() == 1)
     {
-        m_skinAnimOperators[0]->UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
+        m_skinAnimOperators[0].UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
     }
     else
     {
-        SkinAnimationOperatorVector::iterator iter = m_skinAnimOperators.begin();
-        while (iter != m_skinAnimOperators.end())
+        for (auto& op : m_skinAnimOperators)
         {
-            if (*iter) (*iter)->UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
-            ++iter;
+            op.UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
         }
-    }*/
+    }
 
     return true;
 }

@@ -6,6 +6,8 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
 
+DEFINE_RTTI_OF_BASE(Animators, SkinAnimationOperator);
+
 SkinAnimationOperator::SkinAnimationOperator()
 {
 }
@@ -46,6 +48,15 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
     m_nodeOffsets = std::move(op.m_nodeOffsets);
     m_skinNodeIndexMapping = std::move(op.m_skinNodeIndexMapping);
     return *this;
+}
+
+SkinOperatorDto SkinAnimationOperator::SerializeDto()
+{
+    SkinOperatorDto dto;
+    if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->GetName();
+    dto.BoneNodeNames() = m_boneNodeNames;
+    dto.NodeOffsets() = m_nodeOffsets;
+    return dto;
 }
 
 void SkinAnimationOperator::UpdateSkinMeshBoneMatrix(const MeshNodeTree& mesh_node_tree)

@@ -30,6 +30,10 @@ SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op)
 
 SkinAnimationOperator::~SkinAnimationOperator()
 {
+    if (!m_skinMeshPrim.expired())
+    {
+        m_skinMeshPrim.lock()->LoosePrimitiveBoneMatrix();
+    }
 }
 
 SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOperator& op)

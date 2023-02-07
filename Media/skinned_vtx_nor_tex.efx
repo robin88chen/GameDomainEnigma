@@ -1,5 +1,5 @@
 {
-	"Name" : "basic_vtx_tex",
+	"Name" : "skinned_vtx_nor_tex",
 	"VertexShaderList" : [
 	{"Name" : "default_vs", "API" : "dx9", "File" : "default.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"},
 	{"Name" : "default_vs", "API" : "dx11", "File" : "skinned_vtx_nor_tex_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"},

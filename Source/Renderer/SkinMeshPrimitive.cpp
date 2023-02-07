@@ -97,8 +97,8 @@ void SkinMeshPrimitive::BindPrimitiveBoneMatrix()
     {
         if (!(*eff_iter)) continue;
         (*eff_iter)->SetVariableAssignFunc(SEMANTIC_BONE_MATRIX,
-            [lifetime = shared_from_this(), this](EffectVariable& v)
-            { BoneMatrixAssign(v); });
+            [lifetime = weak_from_this()](EffectVariable& v)
+            { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->BoneMatrixAssign(v); });
     }
 }
 
@@ -107,8 +107,8 @@ void SkinMeshPrimitive::BindSegmentBoneMatrix(unsigned index)
     if (index >= m_effects.size()) return;
     if (!m_effects[index]) return;
     m_effects[index]->SetVariableAssignFunc(SEMANTIC_BONE_MATRIX,
-        [lifetime = shared_from_this(), this](EffectVariable& v)
-        { BoneMatrixAssign(v); });
+        [lifetime = weak_from_this()](EffectVariable& v)
+        { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->BoneMatrixAssign(v); });
 }
 
 void SkinMeshPrimitive::LoosePrimitiveBoneMatrix()

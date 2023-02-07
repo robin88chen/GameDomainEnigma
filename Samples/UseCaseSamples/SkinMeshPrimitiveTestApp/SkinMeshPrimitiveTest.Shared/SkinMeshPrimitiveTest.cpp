@@ -11,6 +11,7 @@
 #include "CubeGeometryMaker.h"
 #include "CameraMaker.h"
 #include "SkinMeshModelMaker.h"
+#include "Renderer/SkinMeshPrimitive.h"
 #include <string>
 
 using namespace Enigma::Controllers;
@@ -18,6 +19,8 @@ using namespace Enigma::Application;
 using namespace Enigma::Frameworks;
 using namespace Enigma::FileSystem;
 using namespace Enigma::Renderer;
+using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -83,36 +86,87 @@ void SkinMeshPrimitiveTest::InstallEngine()
 
 void SkinMeshPrimitiveTest::ShutdownEngine()
 {
+    m_model = nullptr;
+    m_renderer = nullptr;
+    m_renderTarget = nullptr;
+    m_camera = nullptr;
 
+    EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
+    m_onRenderablePrimitiveBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
+    m_onBuildRenderablePrimitiveFailed = nullptr;
+    EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
+    m_onRendererCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    m_onRenderTargetCreated = nullptr;
+
+    m_graphicMain->ShutdownRenderEngine();
 }
 
 void SkinMeshPrimitiveTest::FrameUpdate()
 {
-
+    AppDelegate::FrameUpdate();
+    if ((m_renderer) && (m_model))
+    {
+        m_model->InsertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
+    }
 }
 
 void SkinMeshPrimitiveTest::RenderFrame()
 {
-
+    if (!m_renderer) return;
+    m_renderer->BeginScene();
+    m_renderer->ClearRenderTarget();
+    m_renderer->DrawScene();
+    m_renderer->EndScene();
+    m_renderer->Flip();
 }
 
 void SkinMeshPrimitiveTest::OnRendererCreated(const IEventPtr& e)
 {
-
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
+    if (!ev) return;
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
+    m_renderer->SetAssociatedCamera(m_camera);
+    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
 }
 
 void SkinMeshPrimitiveTest::OnRenderTargetCreated(const IEventPtr& e)
 {
-
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
+    if (!ev) return;
+    m_renderTarget = ev->GetRenderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
 }
 
 void SkinMeshPrimitiveTest::OnRenderablePrimitiveBuilt(const IEventPtr& e)
 {
-
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetName() != "test_model") return;
+    auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
+    m_model = model;
+    /*if (!m_isPrefabBuilt)
+    {
+        ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
+        auto policy = ModelPrimitiveMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
+        CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
+        m_isPrefabBuilt = true;
+    }
+    else
+    {
+        m_model = model;
+    }*/
 }
 
 void SkinMeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const IEventPtr& e)
 {
-
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
 }
 

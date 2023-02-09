@@ -45,7 +45,7 @@ SkinMeshPrimitiveDto SkinMeshModelMaker::MakeSkinMeshPrimitiveDto(const std::str
     dto.Name() = mesh_name;
     dto.GeometryName() = geo_name;
     dto.GeometryFactoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.GetName()).ClaimFromResource(geo_name, geo_name + ".geo", "DataPath");
-    dto.Effects().emplace_back(MakeEffectDto("skinned_vtx_nor_tex").ToGenericDto());
+    dto.Effects().emplace_back(MakeEffectDto("skin_mesh_prim_test").ToGenericDto());
     dto.TextureMaps().emplace_back(MakeTextureMapDto().ToGenericDto());
     return dto;
 }

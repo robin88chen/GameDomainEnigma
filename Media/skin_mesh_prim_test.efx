@@ -1,9 +1,9 @@
 {
-	"Name" : "skinned_vtx_nor_tex",
+	"Name" : "skin_mesh_prim_test",
 	"VertexShaderList" : [
 	{"Name" : "default_vs", "API" : "dx9", "File" : "default.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"},
-	{"Name" : "default_vs", "API" : "dx11", "File" : "skinned_vtx_nor_tex_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"},
-	{"Name" : "default_vs", "API" : "egl", "File" : "skinned_vtx_nor_tex_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"}
+	{"Name" : "default_vs", "API" : "dx11", "File" : "skin_mesh_prim_test_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "skin_mesh_prim_test_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb2_nor_tex1(2)_betabyte"}
 	],
 	"PixelShaderList" : [
 	{"Name" : "default_ps", "API" : "dx9", "File" : "default.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},

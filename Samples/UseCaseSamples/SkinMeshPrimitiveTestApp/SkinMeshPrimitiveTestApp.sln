@@ -7,22 +7,75 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SkinMeshPrimitiveTest.Share
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SkinMeshPrimitiveTest.Win32", "SkinMeshPrimitiveTest.Win32\SkinMeshPrimitiveTest.Win32.vcxproj", "{AC049B87-B622-4EBC-90D7-D35D01237BC3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SkinMeshPrimitiveTest.Jni", "SkinMeshPrimitiveTest.Jni\SkinMeshPrimitiveTest.Jni.vcxproj", "{7B41ABC8-B6DC-4E11-8270-3587834E858D}"
+EndProject
+Project("{39E2626F-3545-4960-A6E8-258AD8476CE5}") = "SkinMeshPrimitiveTestApp", "SkinMeshPrimitiveTestApp\SkinMeshPrimitiveTestApp.androidproj", "{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|ARM.ActiveCfg = Debug|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|ARM.Build.0 = Debug|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|ARM64.ActiveCfg = Debug|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|ARM64.Build.0 = Debug|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|x64.ActiveCfg = Debug|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|x64.Build.0 = Debug|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|x86.ActiveCfg = Debug|Win32
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Debug|x86.Build.0 = Debug|Win32
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|ARM.ActiveCfg = Release|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|ARM.Build.0 = Release|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|ARM64.ActiveCfg = Release|x64
+		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|ARM64.Build.0 = Release|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|x64.ActiveCfg = Release|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|x64.Build.0 = Release|x64
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|x86.ActiveCfg = Release|Win32
 		{AC049B87-B622-4EBC-90D7-D35D01237BC3}.Release|x86.Build.0 = Release|Win32
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|ARM.Build.0 = Debug|ARM
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|ARM64.Build.0 = Debug|ARM64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|x64.ActiveCfg = Debug|x64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|x86.ActiveCfg = Debug|x86
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Debug|x86.Build.0 = Debug|x86
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|ARM.ActiveCfg = Release|ARM
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|ARM.Build.0 = Release|ARM
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|ARM64.ActiveCfg = Release|ARM64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|ARM64.Build.0 = Release|ARM64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|x64.ActiveCfg = Release|x64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|x64.Build.0 = Release|x64
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|x86.ActiveCfg = Release|x86
+		{7B41ABC8-B6DC-4E11-8270-3587834E858D}.Release|x86.Build.0 = Release|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM.Build.0 = Debug|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM.Deploy.0 = Debug|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM64.Build.0 = Debug|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|x64.ActiveCfg = Debug|x64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|x86.ActiveCfg = Debug|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|x86.Build.0 = Debug|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Debug|x86.Deploy.0 = Debug|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM.ActiveCfg = Release|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM.Build.0 = Release|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM.Deploy.0 = Release|ARM
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM64.ActiveCfg = Release|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM64.Build.0 = Release|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|ARM64.Deploy.0 = Release|ARM64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x64.ActiveCfg = Release|x64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x64.Build.0 = Release|x64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x64.Deploy.0 = Release|x64
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x86.ActiveCfg = Release|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x86.Build.0 = Release|x86
+		{6E66C7AA-6C33-4888-882C-1B6F1F7D9806}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +85,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SkinMeshPrimitiveTest.Shared\SkinMeshPrimitiveTest.Shared.vcxitems*{1d39451a-7e96-4844-9afc-6210c856fd81}*SharedItemsImports = 9
+		SkinMeshPrimitiveTest.Shared\SkinMeshPrimitiveTest.Shared.vcxitems*{7b41abc8-b6dc-4e11-8270-3587834e858d}*SharedItemsImports = 4
 		SkinMeshPrimitiveTest.Shared\SkinMeshPrimitiveTest.Shared.vcxitems*{ac049b87-b622-4ebc-90d7-d35d01237bc3}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,7 @@
 ﻿#include "SkinMeshPrimitiveTest.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
+#include "FileSystem/AndroidMountPath.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RenderablePrimitiveEvents.h"
 #include "Renderer/RenderablePrimitiveCommands.h"
@@ -12,6 +13,7 @@
 #include "CameraMaker.h"
 #include "SkinMeshModelMaker.h"
 #include "Renderer/SkinMeshPrimitive.h"
+#include "Platforms/AndroidBridge.h"
 #include <string>
 
 using namespace Enigma::Controllers;

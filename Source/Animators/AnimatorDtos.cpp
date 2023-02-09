@@ -74,6 +74,6 @@ GenericDto SkinOperatorDto::ToGenericDto()
     dto.AddRtti(FactoryDesc(SkinAnimationOperator::TYPE_RTTI.GetName()));
     if (m_skinMeshName) dto.AddOrUpdate(TOKEN_SKIN_MESH_NAME, m_skinMeshName.value());
     dto.AddOrUpdate(TOKEN_BONE_NODE_NAMES, m_boneNodeNames);
-    dto.AddOrUpdate(TOKEN_NODE_OFFSETS, m_nodeOffsets);
+    if (m_nodeOffsets) dto.AddOrUpdate(TOKEN_NODE_OFFSETS, m_nodeOffsets);
     return dto;
 }

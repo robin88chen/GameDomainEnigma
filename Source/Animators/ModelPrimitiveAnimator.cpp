@@ -100,6 +100,7 @@ Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>
 void ModelPrimitiveAnimator::Reset()
 {
     m_currentAnimClip.Reset();
+    TimeValueUpdate();
 }
 
 void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<ModelPrimitive>& model)

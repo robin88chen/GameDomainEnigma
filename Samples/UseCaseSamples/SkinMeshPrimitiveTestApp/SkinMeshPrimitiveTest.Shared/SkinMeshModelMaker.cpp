@@ -5,6 +5,7 @@
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "GameEngine/TriangleList.h"
+#include "SkinAnimationMaker.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
@@ -15,6 +16,7 @@ std::vector<std::string> bone_node_names{ "bone_root", "bone_one" };
 
 std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::MakeModelPrimitivePolicy(const std::string& model_name, const std::string& geo_name)
 {
+    std::string skinmesh_name = model_name + "_skinmesh";
     MeshNodeTreeDto tree;
     MeshNodeDto root_node_dto;
     root_node_dto.Name() = bone_node_names[0];
@@ -30,9 +32,9 @@ std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::MakeModelPrimitivePoli
     ModelPrimitiveDto dto;
     dto.Name() = model_name;
     dto.TheNodeTree() = tree.ToGenericDto();
-    /*auto animation = ModelAnimatorMaker::MakeModelAnimationAsset(model_name, node_names);
-    auto animator = ModelAnimatorMaker::MakeModelAnimator(model_name, animation);
-    dto.TheAnimator() = animator->SerializeDto().ToGenericDto();*/
+    auto animation = SkinAnimationMaker::MakeSkinAnimationAsset(model_name, bone_node_names);
+    auto animator_dto = SkinAnimationMaker::MakeModelAnimatorDto(animation, skinmesh_name, bone_node_names);
+    dto.TheAnimator() = animator_dto.ToGenericDto();
     return dto.ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
         std::make_shared<JsonFileEffectProfileDeserializer>());
 }

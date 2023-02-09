@@ -149,6 +149,12 @@ void SkinMeshPrimitiveTest::OnRenderablePrimitiveBuilt(const IEventPtr& e)
     if (ev->GetName() != "test_model") return;
     auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
     m_model = model;
+    if (auto animator = m_model->GetAnimator())
+    {
+        animator->Reset();
+    }
+    auto mesh = m_model->GetMeshPrimitive(0);
+
     /*if (!m_isPrefabBuilt)
     {
         ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");

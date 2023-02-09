@@ -74,18 +74,42 @@ void ShaderVariableEgl_Matrix::SetValues(std::any data_array, unsigned count)
     {
         if (m_dimension == 4)
         {
-            MathLib::Matrix4* mx = std::any_cast<MathLib::Matrix4*>(data_array);
-            memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Matrix4>))
+            {
+                auto mx = std::any_cast<std::vector<MathLib::Matrix4>>(data_array);
+                memcpy(&m_values[0], &(mx[0]), count * m_dimension * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Matrix4* mx = std::any_cast<MathLib::Matrix4*>(data_array);
+                memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 3)
         {
-            MathLib::Matrix3* mx = std::any_cast<MathLib::Matrix3*>(data_array);
-            memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Matrix3>))
+            {
+                auto mx = std::any_cast<std::vector<MathLib::Matrix3>>(data_array);
+                memcpy(&m_values[0], &(mx[0]), count * m_dimension * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Matrix3* mx = std::any_cast<MathLib::Matrix3*>(data_array);
+                memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 2)
         {
-            MathLib::Matrix2* mx = std::any_cast<MathLib::Matrix2*>(data_array);
-            memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Matrix2>))
+            {
+                auto mx = std::any_cast<std::vector<MathLib::Matrix2>>(data_array);
+                memcpy(&m_values[0], &(mx[0]), count * m_dimension * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Matrix2* mx = std::any_cast<MathLib::Matrix2*>(data_array);
+                memcpy(&m_values[0], mx, count * m_dimension * m_dimension * sizeof(float));
+            }
         }
     }
     catch (const std::bad_any_cast& e)
@@ -264,18 +288,42 @@ void ShaderVariableEgl_Vector::SetValues(std::any data_array, unsigned count)
     {
         if (m_dimension == 4)
         {
-            MathLib::Vector4* vec = std::any_cast<MathLib::Vector4*>(data_array);
-            memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Vector4>))
+            {
+                auto vec = std::any_cast<std::vector<MathLib::Vector4>>(data_array);
+                memcpy(&m_values[0], &(vec[0]), count * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Vector4* vec = std::any_cast<MathLib::Vector4*>(data_array);
+                memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 3)
         {
-            MathLib::Vector3* vec = std::any_cast<MathLib::Vector3*>(data_array);
-            memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Vector3>))
+            {
+                auto vec = std::any_cast<std::vector<MathLib::Vector3>>(data_array);
+                memcpy(&m_values[0], &(vec[0]), count * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Vector3* vec = std::any_cast<MathLib::Vector3*>(data_array);
+                memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 2)
         {
-            MathLib::Vector2* vec = std::any_cast<MathLib::Vector2*>(data_array);
-            memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            if (data_array.type() == typeid(std::vector<MathLib::Vector2>))
+            {
+                auto vec = std::any_cast<std::vector<MathLib::Vector2>>(data_array);
+                memcpy(&m_values[0], &(vec[0]), count * m_dimension * sizeof(float));
+            }
+            else
+            {
+                MathLib::Vector2* vec = std::any_cast<MathLib::Vector2*>(data_array);
+                memcpy(&m_values[0], vec, count * m_dimension * sizeof(float));
+            }
         }
     }
     catch (const std::bad_any_cast& e)
@@ -336,12 +384,23 @@ void ShaderVariableEgl_Boolean::SetValues(std::any data_array, unsigned count)
 {
     try
     {
-        bool* bs = std::any_cast<bool*>(data_array);
         if (count == 0) count = 1;
         if (count > m_numElements) count = m_numElements;
-        for (int i = 0; i < count; i++)
+        if (data_array.type() == typeid(std::vector<bool>))
         {
-            m_values[i] = bs[i] ? 1 : 0;
+            auto bs = std::any_cast<std::vector<bool>>(data_array);
+            for (int i = 0; i < count; i++)
+            {
+                m_values[i] = bs[i] ? 1 : 0;
+            }
+        }
+        else
+        {
+            auto bs = std::any_cast<bool*>(data_array);
+            for (int i = 0; i < count; i++)
+            {
+                m_values[i] = bs[i] ? 1 : 0;
+            }
         }
     }
     catch (const std::bad_any_cast& e)
@@ -398,8 +457,16 @@ void ShaderVariableEgl_Float::SetValues(std::any data_array, unsigned count)
     if (count > m_numElements) count = m_numElements;
     try
     {
-        float* datas = std::any_cast<float*>(data_array);
-        memcpy(&m_values[0], datas, count * sizeof(float));
+        if (data_array.type() == typeid(std::vector<float>))
+        {
+            auto datas = std::any_cast<std::vector<float>>(data_array);
+            memcpy(&m_values[0], &(datas[0]), count * sizeof(float));
+        }
+        else
+        {
+            float* datas = std::any_cast<float*>(data_array);
+            memcpy(&m_values[0], datas, count * sizeof(float));
+        }
     }
     catch (const std::bad_any_cast& e)
     {
@@ -455,8 +522,16 @@ void ShaderVariableEgl_Int::SetValues(std::any data_array, unsigned count)
     if (count > m_numElements) count = m_numElements;
     try
     {
-        int* datas = std::any_cast<int*>(data_array);
-        memcpy(&m_values[0], datas, count * sizeof(int));
+        if (data_array.type() == typeid(std::vector<int>))
+        {
+            auto datas = std::any_cast<std::vector<int>>(data_array);
+            memcpy(&m_values[0], &(datas[0]), count * sizeof(int));
+        }
+        else
+        {
+            int* datas = std::any_cast<int*>(data_array);
+            memcpy(&m_values[0], datas, count * sizeof(int));
+        }
     }
     catch (const std::bad_any_cast& e)
     {

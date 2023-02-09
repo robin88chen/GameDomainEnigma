@@ -52,8 +52,8 @@ namespace Enigma::Animators
         std::optional<std::string>& SkinMeshName() { return m_skinMeshName; }
         [[nodiscard]] const std::vector<std::string>& BoneNodeNames() const { return m_boneNodeNames; }
         std::vector<std::string>& BoneNodeNames() { return m_boneNodeNames; }
-        [[nodiscard]] const std::vector<MathLib::Matrix4>& NodeOffsets() const { return m_nodeOffsets; }
-        std::vector<MathLib::Matrix4>& NodeOffsets() { return m_nodeOffsets; }
+        [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() const { return m_nodeOffsets; }
+        std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() { return m_nodeOffsets; }
 
         static SkinOperatorDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -61,7 +61,7 @@ namespace Enigma::Animators
     private:
         std::optional<std::string> m_skinMeshName;
         std::vector<std::string> m_boneNodeNames;
-        std::vector<MathLib::Matrix4> m_nodeOffsets;
+        std::optional<std::vector<MathLib::Matrix4>> m_nodeOffsets;
     };
 }
 

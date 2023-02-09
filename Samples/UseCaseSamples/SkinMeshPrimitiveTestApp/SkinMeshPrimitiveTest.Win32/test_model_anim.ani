@@ -1,0 +1,37 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 5,
+                "ResourceName": "test_model_anim",
+                "ResourceFilename": "test_model_anim.ani@DataPath",
+                "RttiName": "En.Animators.ModelAnimationAsset",
+                "PrefabFilename": ""
+            }
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "test_model_anim"
+        },
+        "MeshNodeNames": {
+            "Type": "StringArray",
+            "Value": ["bone_one"]
+        },
+        "TimeSRTs": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "ScaleTimeKeys": {
+                        "Type": "FloatArray",
+                        "Value": [0.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 2.0, 1.0, 1.0, 1.0]
+                    },
+                    "RotateTimeKeys": {
+                        "Type": "FloatArray",
+                        "Value": [0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0]
+                    },
+                    "TranslateTimeKeys": {
+                        "Type": "FloatArray",
+                        "Value": [0.0, 2.0, 2.0, 0.0, 1.0, -1.2000000476837158, 1.2000000476837158, 0.0, 2.0, 2.0, 2.0, 0.0]
+                    }
+                }]
+        }
+    }]

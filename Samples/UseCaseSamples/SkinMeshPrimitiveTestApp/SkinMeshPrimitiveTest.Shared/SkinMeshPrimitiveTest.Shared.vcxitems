@@ -16,12 +16,14 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SkinMeshPrimitiveTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SkinMeshPrimitiveTest.h" />
   </ItemGroup>

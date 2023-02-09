@@ -68,7 +68,14 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
         if (!mesh) continue;
         auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh);
         if (!skin_mesh) continue;
-        m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames(), op.NodeOffsets());
+        if (op.NodeOffsets())
+        {
+            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames(), op.NodeOffsets().value());
+        }
+        else
+        {
+            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames());
+        }
     }
 }
 

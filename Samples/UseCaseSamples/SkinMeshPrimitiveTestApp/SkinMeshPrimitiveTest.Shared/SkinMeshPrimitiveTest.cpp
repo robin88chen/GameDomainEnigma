@@ -12,8 +12,9 @@
 #include "CubeGeometryMaker.h"
 #include "CameraMaker.h"
 #include "SkinMeshModelMaker.h"
-#include "Renderer/SkinMeshPrimitive.h"
 #include "Platforms/AndroidBridge.h"
+#include "Animators/AnimatorCommands.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 #include <string>
 
 using namespace Enigma::Controllers;
@@ -23,6 +24,7 @@ using namespace Enigma::FileSystem;
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -150,24 +152,36 @@ void SkinMeshPrimitiveTest::OnRenderablePrimitiveBuilt(const IEventPtr& e)
     if (!ev) return;
     if (ev->GetName() != "test_model") return;
     auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
-    m_model = model;
-    if (auto animator = m_model->GetAnimator())
+    //m_model = model;
+    /*if (auto animator = m_model->GetAnimator())
     {
         animator->Reset();
     }
-    auto mesh = m_model->GetMeshPrimitive(0);
+    auto mesh = m_model->GetMeshPrimitive(0);*/
 
-    /*if (!m_isPrefabBuilt)
+    if (!m_isPrefabBuilt)
     {
-        ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
-        auto policy = ModelPrimitiveMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
+        SkinMeshModelMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
+        auto policy = SkinMeshModelMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
         CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
         m_isPrefabBuilt = true;
     }
     else
     {
         m_model = model;
-    }*/
+        if (auto ani = m_model->GetAnimator())
+        {
+            //ani->Reset();
+            CommandBus::Post(std::make_shared<Enigma::Animators::AddListeningAnimator>(ani));
+            if (auto model_ani = std::dynamic_pointer_cast<Enigma::Animators::ModelPrimitiveAnimator, Enigma::Engine::Animator>(ani))
+            {
+                model_ani->PlayAnimation(Enigma::Animators::AnimationClip{ 0.0f, 2.0f, Enigma::Animators::AnimationClip::WarpMode::Loop, 0 });
+            }
+        }
+        if (auto animator = m_model->GetAnimator())
+        {
+        }
+    }
 }
 
 void SkinMeshPrimitiveTest::OnBuildRenderablePrimitiveFailed(const IEventPtr& e)

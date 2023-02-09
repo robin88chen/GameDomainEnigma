@@ -103,6 +103,11 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
 
 GenericDto MeshPrimitive::SerializeDto()
 {
+    return SerializeMeshDto().ToGenericDto();
+}
+
+MeshPrimitiveDto MeshPrimitive::SerializeMeshDto()
+{
     MeshPrimitiveDto dto;
     dto.Name() = m_name;
     if (m_geometry)
@@ -123,7 +128,7 @@ GenericDto MeshPrimitive::SerializeDto()
     {
         dto.TextureMaps().emplace_back(tex.SerializeDto());
     }
-    return dto.ToGenericDto();
+    return dto;
 }
 
 EffectMaterialPtr MeshPrimitive::GetEffectMaterial(unsigned index)

@@ -15,6 +15,8 @@ class SkinMeshModelMaker
 {
 public:
     static std::shared_ptr<Enigma::Renderer::ModelPrimitivePolicy> MakeModelPrimitivePolicy(const std::string& model_name, const std::string& geo_name);
+    static void SaveModelPrimitiveDto(const std::shared_ptr<Enigma::Renderer::ModelPrimitive>& model, const std::string& filename_at_path);
+    static std::shared_ptr<Enigma::Renderer::ModelPrimitivePolicy> LoadModelPrimitivePolicy(const std::string& filename_at_path);
 
 private:
     static Enigma::Renderer::SkinMeshPrimitiveDto MakeSkinMeshPrimitiveDto(const std::string& mesh_name, const std::string& geo_name);

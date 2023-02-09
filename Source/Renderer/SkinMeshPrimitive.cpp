@@ -1,4 +1,5 @@
 ﻿#include "SkinMeshPrimitive.h"
+#include "RenderablePrimitiveDtos.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -49,7 +50,9 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin)
 
 GenericDto SkinMeshPrimitive::SerializeDto()
 {
-    return GenericDto();
+    SkinMeshPrimitiveDto dto(SerializeMeshDto());
+
+    return dto.ToGenericDto();
 }
 
 void SkinMeshPrimitive::BindOwnerMeshNode(const MeshNode& node)

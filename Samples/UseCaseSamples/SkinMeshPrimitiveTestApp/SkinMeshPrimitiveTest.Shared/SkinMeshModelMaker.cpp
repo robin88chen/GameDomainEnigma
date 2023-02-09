@@ -6,11 +6,17 @@
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "GameEngine/TriangleList.h"
 #include "SkinAnimationMaker.h"
+#include "Animators/ModelPrimitiveAnimator.h"
+#include "FileSystem/FileSystem.h"
+#include "FileSystem/IFile.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
+using namespace Enigma::FileSystem;
 
 std::vector<std::string> bone_node_names{ "bone_root", "bone_one" };
 
@@ -36,6 +42,43 @@ std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::MakeModelPrimitivePoli
     auto animator_dto = SkinAnimationMaker::MakeModelAnimatorDto(animation, skinmesh_name, bone_node_names);
     dto.TheAnimator() = animator_dto.ToGenericDto();
     return dto.ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
+        std::make_shared<JsonFileEffectProfileDeserializer>());
+}
+
+void SkinMeshModelMaker::SaveModelPrimitiveDto(const std::shared_ptr<ModelPrimitive>& model, const std::string& filename_at_path)
+{
+    unsigned mesh_count = model->GetMeshPrimitiveCount();
+    for (unsigned i = 0; i < mesh_count; i++)
+    {
+        auto mesh = model->GetMeshPrimitive(i);
+        mesh->GetGeometryData()->TheFactoryDesc().ClaimFromResource(mesh->GetGeometryData()->GetName(), "test_geometry.geo@DataPath");
+    }
+    if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(model->GetAnimator()))
+    {
+        if (auto asset = ani->GetAnimationAsset())
+        {
+            asset->TheFactoryDesc().ClaimFromResource(asset->GetName(), asset->GetName() + ".ani@DataPath");
+        }
+    }
+    GenericDto dto = model->SerializeDto();
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> {dto });
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(filename_at_path), "w+b");
+    if (FATAL_LOG_EXPR(!iFile)) return;
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+}
+
+std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::LoadModelPrimitivePolicy(const std::string& filename_at_path)
+{
+    IFilePtr readFile = FileSystem::Instance()->OpenFile(Filename(filename_at_path), "rb");
+    size_t filesize = readFile->Size();
+    auto read_buff = readFile->Read(0, filesize);
+    std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
+    std::vector<GenericDto> read_dtos = DtoJsonGateway::Deserialize(read_json);
+    assert(read_dtos.size() == 1);
+    FileSystem::Instance()->CloseFile(readFile);
+    if (read_dtos[0].GetRtti().GetRttiName() != ModelPrimitive::TYPE_RTTI.GetName()) return nullptr;
+    return ModelPrimitiveDto::FromGenericDto(read_dtos[0]).ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
         std::make_shared<JsonFileEffectProfileDeserializer>());
 }
 

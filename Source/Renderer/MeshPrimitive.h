@@ -23,6 +23,7 @@ namespace Enigma::Renderer
     using error = std::error_code;
 
     class RenderElement;
+    class MeshPrimitiveDto;
 
     class MeshPrimitive : public Engine::Primitive
     {
@@ -97,6 +98,8 @@ namespace Enigma::Renderer
         //@}
 
     protected:
+        MeshPrimitiveDto SerializeMeshDto();
+
         void CleanupGeometry();
 
         /** bind primitive effect texture */

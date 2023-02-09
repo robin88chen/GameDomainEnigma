@@ -246,7 +246,17 @@ void ShaderVariableDx11_Float::SetValues(std::any data_array, unsigned int count
     if (count > m_numElements) count = m_numElements;
     try
     {
-        float* values = std::any_cast<float*>(data_array);
+        float* values;
+        std::vector<float> value_vec;
+        if (data_array.type() == typeid(std::vector<float>))
+        {
+            value_vec = std::any_cast<std::vector<float>>(data_array);
+            values = &(value_vec[0]);
+        }
+        else
+        {
+            values = std::any_cast<float*>(data_array);
+        }
         assert(values);
         unsigned char* dest = m_owner.lock()->GetDataBuff() + m_offset;
         memcpy_s(dest, count * sizeof(float), values, count * sizeof(float));
@@ -296,7 +306,17 @@ void ShaderVariableDx11_Int::SetValues(std::any data_array, unsigned int count)
     if (count > m_numElements) count = m_numElements;
     try
     {
-        int* values = std::any_cast<int*>(data_array);
+        int* values;
+        std::vector<int> value_vec;
+        if (data_array.type() == typeid(std::vector<int>))
+        {
+            value_vec = std::any_cast<std::vector<int>>(data_array);
+            values = &(value_vec[0]);
+        }
+        else
+        {
+            values = std::any_cast<int*>(data_array);
+        }
         assert(values);
         unsigned char* dest = m_owner.lock()->GetDataBuff() + m_offset;
         memcpy_s(dest, count * sizeof(int), values, count * sizeof(int));
@@ -349,10 +369,21 @@ void ShaderVariableDx11_Boolean::SetValues(std::any data_array, unsigned int cou
     if (count > m_numElements) count = m_numElements;
     try
     {
-        bool* data_values = std::any_cast<bool*>(data_array);
-        for (unsigned int i = 0; i < count; i++)
+        if (data_array.type() == typeid(std::vector<bool>))
         {
-            m_value[i] = data_values[i] ? TRUE : FALSE;
+            auto data_values = std::any_cast<std::vector<bool>>(data_array);
+            for (unsigned int i = 0; i < count; i++)
+            {
+                m_value[i] = data_values[i] ? TRUE : FALSE;
+            }
+        }
+        else
+        {
+            bool* data_values = std::any_cast<bool*>(data_array);
+            for (unsigned int i = 0; i < count; i++)
+            {
+                m_value[i] = data_values[i] ? TRUE : FALSE;
+            }
         }
         unsigned char* dest = m_owner.lock()->GetDataBuff() + m_offset;
         memcpy_s(dest, count * sizeof(BOOL), m_value, count * sizeof(BOOL));
@@ -414,7 +445,17 @@ void ShaderVariableDx11_Matrix::SetValues(std::any data_array, unsigned int coun
     if (count > m_numElements) count = m_numElements;
     try
     {
-        MathLib::Matrix4* values = std::any_cast<MathLib::Matrix4*>(data_array);
+        const MathLib::Matrix4* values = nullptr;
+        std::vector<MathLib::Matrix4> mx_vector;
+        if (data_array.type() == typeid(std::vector<MathLib::Matrix4>))
+        {
+            mx_vector = std::any_cast<std::vector<MathLib::Matrix4>>(data_array);
+            values = &(mx_vector[0]);
+        }
+        else
+        {
+            values = std::any_cast<MathLib::Matrix4*>(data_array);
+        }
         assert(values);
         if (m_isColumnMajor)
         {
@@ -484,7 +525,18 @@ void ShaderVariableDx11_Vector::SetValues(std::any data_array, unsigned int coun
     if (count > m_numElements) count = m_numElements;
     try
     {
-        MathLib::Vector4* values = std::any_cast<MathLib::Vector4*>(data_array);
+        MathLib::Vector4* values;
+        std::vector<MathLib::Vector4> vecs;
+        if (data_array.type() == typeid(std::vector<MathLib::Vector4>))
+        {
+            vecs = std::any_cast<std::vector<MathLib::Vector4>>(data_array);
+            values = &(vecs[0]);
+        }
+        else
+        {
+            values = std::any_cast<MathLib::Vector4*>(data_array);
+        }
+        assert(values);
         unsigned char* dest = m_owner.lock()->GetDataBuff() + m_offset;
         memcpy_s(dest, count * sizeof(MathLib::Vector4), values, count * sizeof(MathLib::Vector4));
         m_owner.lock()->SetDirty();

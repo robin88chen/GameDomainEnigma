@@ -34,6 +34,9 @@
     <Filter Include="Renderable Primitives\Builders">
       <UniqueIdentifier>{09448a4b-37e5-47fa-a6f9-d9fbc6706c79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderable Primitives\Skin Mesh">
+      <UniqueIdentifier>{e291082e-92ce-4840-90d3-fd21d298b2f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h">
       <Filter>Renderable Primitives\Dtos</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h">
+      <Filter>Renderable Primitives\Skin Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -148,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp">
       <Filter>Renderable Primitives\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp">
+      <Filter>Renderable Primitives\Skin Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

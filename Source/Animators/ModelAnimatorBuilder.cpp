@@ -14,6 +14,7 @@
 
 using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
+using namespace Enigma::Renderer;
 
 ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host)
 {
@@ -56,7 +57,29 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     }
 }
 
-void ModelAnimatorBuilder::OnAnimationAssetBuilt(const Frameworks::IEventPtr& e)
+void ModelAnimatorBuilder::LinkSkinMeshOperators()
+{
+    if (!m_builtAnimator->GetControlledModel()) return;
+
+    for (auto& op : m_policy->SkinOperators())
+    {
+        if (!op.SkinMeshName()) continue;
+        auto mesh = m_builtAnimator->GetControlledModel()->FindMeshPrimitive(op.SkinMeshName().value());
+        if (!mesh) continue;
+        auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh);
+        if (!skin_mesh) continue;
+        if (op.NodeOffsets())
+        {
+            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames(), op.NodeOffsets().value());
+        }
+        else
+        {
+            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames());
+        }
+    }
+}
+
+void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
 {
     assert(m_builtAnimator);
     if (!e) return;
@@ -70,10 +93,11 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const Frameworks::IEventPtr& e)
         return;
     }
     m_builtAnimator->LinkAnimationAsset(model_anim);
+    if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
     EventPublisher::Post(std::make_shared<ModelAnimatorBuilt>(m_policy->GetRuid(), m_builtAnimator));
 }
 
-void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const Frameworks::IEventPtr& e)
+void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildAnimationAssetFailed, IEvent>(e);

@@ -31,6 +31,8 @@ namespace Enigma::Animators
         void BuildModelAnimator(const std::shared_ptr<ModelAnimatorPolicy>& policy);
 
     private:
+        void LinkSkinMeshOperators();
+
         void OnAnimationAssetBuilt(const Frameworks::IEventPtr& e);
         void OnBuildAnimationAssetFailed(const Frameworks::IEventPtr& e);
 

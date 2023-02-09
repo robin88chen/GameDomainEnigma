@@ -1,5 +1,6 @@
 ﻿#include "MeshNode.h"
 #include "RenderablePrimitiveDtos.h"
+#include "SkinMeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
@@ -84,12 +85,10 @@ GenericDto MeshNode::SerializeDto()
 void MeshNode::SetMeshPrimitive(const MeshPrimitivePtr& mesh)
 {
     m_meshPrimitive = mesh;
-    //todo : skin mesh
-    /*SkinMeshPrimitivePtr skin_prim = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(prim);
-    if (skin_prim)
+    if (const auto skin_prim = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh))
     {
-        skin_prim->SetOwnerMeshNode(std::dynamic_pointer_cast<MeshNode, Object>(shared_from_this()));
-    }*/
+        skin_prim->BindOwnerMeshNode(*this);
+    }
 }
 
 void MeshNode::SetParentIndexInArray(unsigned idx)

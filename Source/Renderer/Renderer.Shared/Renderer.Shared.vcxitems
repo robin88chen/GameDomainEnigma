@@ -35,6 +35,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
@@ -53,5 +54,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPackList.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
   </ItemGroup>
 </Project>

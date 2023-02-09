@@ -9,7 +9,6 @@
 #define _MESH_PRIMITIVE_BUILDER_H
 
 #include "RenderablePrimitivePolicies.h"
-#include "GameEngine/Primitive.h"
 #include "GameEngine/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"

@@ -75,6 +75,18 @@ namespace Enigma::Renderer
         std::vector<Engine::EffectTextureMapPolicy> m_texturePolicies;
     };
 
+    class SkinMeshPrimitivePolicy : public MeshPrimitivePolicy
+    {
+    public:
+        SkinMeshPrimitivePolicy() : MeshPrimitivePolicy() {};
+        SkinMeshPrimitivePolicy(const MeshPrimitivePolicy& policy) : MeshPrimitivePolicy(policy) {};
+        SkinMeshPrimitivePolicy(const SkinMeshPrimitivePolicy&) = default;
+        SkinMeshPrimitivePolicy(SkinMeshPrimitivePolicy&&) = default;
+        ~SkinMeshPrimitivePolicy() = default;
+        SkinMeshPrimitivePolicy& operator=(const SkinMeshPrimitivePolicy&) = default;
+        SkinMeshPrimitivePolicy& operator=(SkinMeshPrimitivePolicy&&) = default;
+    };
+
     class ModelPrimitivePolicy : public RenderablePrimitivePolicy
     {
     public:

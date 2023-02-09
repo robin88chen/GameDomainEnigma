@@ -32,6 +32,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
@@ -46,5 +47,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp" />
   </ItemGroup>
 </Project>

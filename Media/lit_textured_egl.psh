@@ -1,0 +1,27 @@
+#version 300 es
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic DiffuseTexture DiffuseMap
+precision mediump float;
+//sampler_state samLinear DiffuseTexture
+uniform sampler2D DiffuseTexture;
+uniform vec4 Ambient;
+uniform vec4 SunColor;
+uniform vec3 SunDir;
+in vec3 vNor;
+in vec2 vTexCo;
+in vec4 vWorldPos;
+out vec4 outColor;
+
+vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
+{
+    vec4 diffuse = Ambient;
+    diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, SunDir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+    return diffuse;
+}
+void main() {
+    outColor = texture(DiffuseTexture, vTexCo);
+    vec4 diffuse = CommonDiffuseLighting(vWorldPos, vNor, 1.0f);
+    outColor = outColor * diffuse;
+}

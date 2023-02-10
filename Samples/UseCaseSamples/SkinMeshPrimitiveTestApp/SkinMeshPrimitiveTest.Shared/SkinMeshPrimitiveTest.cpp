@@ -76,9 +76,10 @@ void SkinMeshPrimitiveTest::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
-    m_graphicMain->InstallRenderEngine(std::move(policy));
+    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
+    auto renderer_policy = std::make_shared<InstallingDefaultRendererPolicy>(DefaultRendererName, PrimaryTargetName);
+    auto scene_graph_policy = std::make_shared<SceneGraphBuildingPolicy>(nullptr, nullptr);
+    m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });
 
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     auto prim_policy = SkinMeshModelMaker::MakeModelPrimitivePolicy("test_model", "test_geometry");

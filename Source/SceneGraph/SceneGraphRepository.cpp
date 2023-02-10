@@ -21,9 +21,14 @@ using namespace Enigma::Platforms;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
-SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
+SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, 
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
+    m_dtoDeserializer = dto_deserializer;
+    m_effectDeserializer = effect_deserializer;
+
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this);
     m_doBuildingSceneGraph =
@@ -139,6 +144,15 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
     auto pawn = std::make_shared<Pawn>(name);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(name, pawn);
+    return pawn;
+}
+
+std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
+{
+    assert(!HasPawn(dto.Name()));
+    auto pawn = std::make_shared<Pawn>(dto);
+    std::lock_guard locker{ m_pawnMapLock };
+    m_pawns.insert_or_assign(dto.Name(), pawn);
     return pawn;
 }
 

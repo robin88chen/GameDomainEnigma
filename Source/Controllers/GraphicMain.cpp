@@ -71,35 +71,27 @@ error GraphicMain::ShutdownFrameworks()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy)
+error GraphicMain::InstallRenderEngine(const std::vector<std::shared_ptr<InstallingPolicy>>& policies)
 {
-    assert(policy);
-    m_policy = std::move(policy);
+    assert(policies.size());
+    m_policies = policies;
     error er = ErrorCode::unknownInstallingPolicy;
-    auto& p = *m_policy;
-    if (typeid(p) == typeid(DeviceCreatingPolicy))
-    {
-        er = CreateRenderEngineDevice(dynamic_cast<DeviceCreatingPolicy*>(m_policy.get()));
-    }
-    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
-    {
-        er = InstallDefaultRenderer(dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get()));
-    }
+
+    er = CreateRenderEngineDevice(std::dynamic_pointer_cast<DeviceCreatingPolicy, InstallingPolicy>(FindDeviceCreatingPolicy()));
+    if (er) return er;
+    er = InstallDefaultRenderer(std::dynamic_pointer_cast<InstallingDefaultRendererPolicy, InstallingPolicy>(FindRendererInstallingPolicy()));
+    if (er) return er;
+    er = InstallSceneGraphManagers(std::dynamic_pointer_cast<SceneGraphBuildingPolicy, InstallingPolicy>(FindSceneGraphBuildingPolicy()));
+
     return er;
 }
 
 error GraphicMain::ShutdownRenderEngine()
 {
     error er;
-    auto& p = *m_policy;
-    if (typeid(p) == typeid(DeviceCreatingPolicy))
-    {
-        er = CleanupRenderEngineDevice();
-    }
-    else if (typeid(p) == typeid(InstallingDefaultRendererPolicy))
-    {
-        er = ShutdownDefaultRenderer();
-    }
+    er = ShutdownSceneGraphManagers();
+    er = ShutdownDefaultRenderer();
+    er = CleanupRenderEngineDevice();
     return er;
 }
 
@@ -111,7 +103,7 @@ void GraphicMain::FrameUpdate()
     }
 }
 
-error GraphicMain::CreateRenderEngineDevice(DeviceCreatingPolicy* policy)
+error GraphicMain::CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy)
 {
     assert(policy);
 
@@ -125,14 +117,9 @@ error GraphicMain::CleanupRenderEngineDevice()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy)
+error GraphicMain::InstallDefaultRenderer(const std::shared_ptr<InstallingDefaultRendererPolicy>& policy)
 {
     error er;
-    if (policy->GetDeviceCreatingPolicy())
-    {
-        er = CreateRenderEngineDevice(policy->GetDeviceCreatingPolicy());
-        if (er) return er;
-    }
 
     m_serviceManager->RegisterSystemService(menew Engine::GenericDtoFactories(m_serviceManager));
 
@@ -145,8 +132,6 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
     er = InstallRenderBufferManagers();
     if (er) return er;
 
-    er = InstallSceneGraphManagers();
-    if (er) return er;
     er = InstallAnimationServices();
     if (er) return er;
     er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
@@ -155,13 +140,13 @@ error GraphicMain::InstallDefaultRenderer(InstallingDefaultRendererPolicy* polic
 
 error GraphicMain::ShutdownDefaultRenderer()
 {
-    InstallingDefaultRendererPolicy* policy = dynamic_cast<InstallingDefaultRendererPolicy*>(m_policy.get());
+    std::shared_ptr<InstallingDefaultRendererPolicy> policy = std::dynamic_pointer_cast<InstallingDefaultRendererPolicy, InstallingPolicy>(
+        FindRendererInstallingPolicy());
     assert(policy);
 
     error er;
     er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
     er = ShutdownAnimationServices();
-    er = ShutdownSceneGraphManagers();
 
     er = ShutdownRenderBufferManagers();
     er = ShutdownTextureManagers();
@@ -171,11 +156,6 @@ error GraphicMain::ShutdownDefaultRenderer()
 
     m_serviceManager->ShutdownSystemService(Engine::GenericDtoFactories::TYPE_RTTI);
 
-    if (policy->GetDeviceCreatingPolicy())
-    {
-        er = CleanupRenderEngineDevice();
-        if (er) return er;
-    }
     return er;
 }
 
@@ -263,9 +243,11 @@ error GraphicMain::ShutdownTextureManagers()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallSceneGraphManagers()
+error GraphicMain::InstallSceneGraphManagers(const std::shared_ptr<SceneGraphBuildingPolicy>& policy)
 {
-    m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager));
+    assert(policy);
+    m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager, policy->GetDtoDeserializer(),
+        policy->GetEffectDeserializer()));
     return ErrorCode::ok;
 }
 
@@ -291,4 +273,37 @@ error GraphicMain::ShutdownAnimationServices()
     m_serviceManager->ShutdownSystemService(Animators::AnimationRepository::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(Engine::TimerService::TYPE_RTTI);
     return ErrorCode::ok;
+}
+
+std::shared_ptr<InstallingPolicy> GraphicMain::FindDeviceCreatingPolicy()
+{
+    if (m_policies.empty()) return nullptr;
+    for (auto policy : m_policies)
+    {
+        auto& p = *policy;
+        if (typeid(p) == typeid(DeviceCreatingPolicy)) return policy;
+    }
+    return nullptr;
+}
+
+std::shared_ptr<InstallingPolicy> GraphicMain::FindRendererInstallingPolicy()
+{
+    if (m_policies.empty()) return nullptr;
+    for (auto policy : m_policies)
+    {
+        auto& p = *policy;
+        if (typeid(p) == typeid(InstallingDefaultRendererPolicy)) return policy;
+    }
+    return nullptr;
+}
+
+std::shared_ptr<InstallingPolicy> GraphicMain::FindSceneGraphBuildingPolicy()
+{
+    if (m_policies.empty()) return nullptr;
+    for (auto policy : m_policies)
+    {
+        auto& p = *policy;
+        if (typeid(p) == typeid(SceneGraphBuildingPolicy)) return policy;
+    }
+    return nullptr;
 }

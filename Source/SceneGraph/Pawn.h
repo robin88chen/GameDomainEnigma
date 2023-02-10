@@ -15,10 +15,13 @@
 
 namespace Enigma::SceneGraph
 {
+    class PawnDto;
+
     class Pawn : public Spatial
     {
     public:
         Pawn(const std::string& name);
+        Pawn(const PawnDto& dto);
         Pawn(const Pawn&) = delete;
         Pawn(Pawn&&) = delete;
         virtual ~Pawn() override;

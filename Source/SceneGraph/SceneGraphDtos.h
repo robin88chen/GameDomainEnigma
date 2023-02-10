@@ -88,6 +88,22 @@ namespace Enigma::SceneGraph
     protected:
         Engine::GenericDto m_lightInfo;
     };
+
+    class PawnDto : public SpatialDto
+    {
+    public:
+        PawnDto() = default;
+        PawnDto(const SpatialDto& spatial_dto);
+
+        [[nodiscard]] const std::optional<Engine::GenericDto>& ThePrimitive() const { return m_primitive; }
+        std::optional<Engine::GenericDto>& ThePrimitive() { return m_primitive; }
+
+        static PawnDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
+
+    protected:
+        std::optional<Engine::GenericDto> m_primitive;
+    };
 }
 
 #endif // SCENE_GRAPH_DTOS_H

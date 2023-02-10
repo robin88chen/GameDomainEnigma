@@ -10,6 +10,8 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "GameEngine/DtoDeserializer.h"
+#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
 #include "SpatialLinkageResolver.h"
@@ -29,13 +31,15 @@ namespace Enigma::SceneGraph
     class Light;
     class NodeDto;
     class LightDto;
+    class PawnDto;
     class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr);
+        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
+            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
         virtual ~SceneGraphRepository() override;
@@ -59,6 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
+        std::shared_ptr<Pawn> CreatePawn(const PawnDto& dto);
         bool HasPawn(const std::string& name);
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
@@ -74,6 +79,9 @@ namespace Enigma::SceneGraph
 
     private:
         GraphicCoordSys m_handSystem;
+
+        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
+        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
         std::recursive_mutex m_cameraMapLock;

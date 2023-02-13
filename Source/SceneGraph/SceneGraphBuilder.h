@@ -46,6 +46,7 @@ namespace Enigma::SceneGraph
     private:
         void NodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);
+        void PawnFactory(const Engine::GenericDto& dto);
 
         void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();

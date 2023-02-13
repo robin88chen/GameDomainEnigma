@@ -10,6 +10,7 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "SceneGraphDefines.h"
@@ -76,6 +77,10 @@ namespace Enigma::SceneGraph
 
     private:
         void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
+        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+
+        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -96,7 +101,13 @@ namespace Enigma::SceneGraph
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
 
+        std::unordered_map<Frameworks::Ruid, std::string, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn name
+        std::recursive_mutex m_buildingPrimitiveLock;
+
         Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
+
+        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
 
         SceneGraphBuilder* m_builder;
     };

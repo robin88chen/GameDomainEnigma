@@ -9,6 +9,8 @@
 #define RUID_H
 
 #include <cstdint>
+#include <type_traits>
+#include <memory>
 
 namespace Enigma::Frameworks
 {
@@ -27,6 +29,15 @@ namespace Enigma::Frameworks
 
         bool operator==(const Ruid& ruid) const;
         bool operator!=(const Ruid& ruid) const;
+
+        class HashFunc
+        {
+        public:
+            size_t operator()(const Ruid& ruid) const
+            {
+                return std::hash<std::uint64_t>()(ruid.m_first) ^ std::hash<std::uint64_t>()(ruid.m_second);
+            }
+        };
 
     private:
         std::uint64_t m_first;

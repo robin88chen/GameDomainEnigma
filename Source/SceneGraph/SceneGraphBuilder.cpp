@@ -3,6 +3,7 @@
 #include "SceneGraphRepository.h"
 #include "Node.h"
 #include "Light.h"
+#include "Pawn.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "Platforms/MemoryAllocMacro.h"
@@ -28,12 +29,15 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host)
         [=](auto c) { this->NodeFactory(c); }));
     CommandBus::Post(std::make_shared<RegisterDtoFactory>(Light::TYPE_RTTI.GetName(),
         [=](auto c) { this->LightFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(Pawn::TYPE_RTTI.GetName(),
+        [=](auto c) { this->PawnFactory(c); }));
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Node::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Light::TYPE_RTTI.GetName()));
+    CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Pawn::TYPE_RTTI.GetName()));
 
     EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
     m_onFactoryCreated = nullptr;
@@ -67,6 +71,20 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     auto light = m_host->CreateLight(light_dto);
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
+
+void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
+{
+    if (dto.GetRtti().GetRttiName() != Pawn::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory", dto.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    PawnDto pawn_dto = PawnDto::FromGenericDto(dto);
+    assert(!m_host->HasPawn(pawn_dto.Name()));
+    auto pawn = m_host->CreatePawn(pawn_dto);
+    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, pawn));
+}
+
 
 void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos)
 {

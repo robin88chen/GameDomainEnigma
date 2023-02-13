@@ -12,16 +12,22 @@
 #include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderer/ModelPrimitive.h"
+#include "Renderer/RenderablePrimitiveCommands.h"
+#include "Renderer/RenderablePrimitivePolicies.h"
+#include "Renderer/RenderablePrimitiveEvents.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
+using namespace Enigma::Renderer;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
-SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, 
+SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
     const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
 {
@@ -34,12 +40,22 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
     CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+
+    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
+    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
 }
 
 SceneGraphRepository::~SceneGraphRepository()
 {
     CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
     m_doBuildingSceneGraph = nullptr;
+
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_onPrimitiveBuilt = nullptr;
+    m_onBuildPrimitiveFailed = nullptr;
 
     delete m_builder;
 }
@@ -153,6 +169,10 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
     auto pawn = std::make_shared<Pawn>(dto);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(dto.Name(), pawn);
+    if (dto.ThePrimitive())
+    {
+        BuildPawnPrimitive(pawn, dto.ThePrimitive().value());
+    }
     return pawn;
 }
 
@@ -223,4 +243,48 @@ void SceneGraphRepository::DoBuildingSceneGraph(const ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
     if (!cmd) return;
     m_builder->BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
+}
+
+void SceneGraphRepository::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    if (m_buildingPawnPrimitives.empty()) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
+    if (it == m_buildingPawnPrimitives.end()) return;
+    if (auto pawn = QueryPawn(it->second))
+    {
+        pawn->SetPrimitive(ev->GetPrimitive());
+    }
+    m_buildingPawnPrimitives.erase(it);
+}
+
+void SceneGraphRepository::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    if (m_buildingPawnPrimitives.empty()) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
+    if (it == m_buildingPawnPrimitives.end()) return;
+    Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
+        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+    m_buildingPawnPrimitives.erase(it);
+}
+
+void SceneGraphRepository::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
+{
+    assert(pawn);
+    if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
+    {
+        ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
+        auto policy = model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+        std::lock_guard locker{ m_buildingPrimitiveLock };
+        m_buildingPawnPrimitives.insert({ policy->GetRuid(), pawn->GetSpatialName() });
+        CommandBus::Post(std::make_shared<BuildRenderablePrimitive>(policy));
+    }
+    //todo : 其他的 primitive 需要嗎??
 }

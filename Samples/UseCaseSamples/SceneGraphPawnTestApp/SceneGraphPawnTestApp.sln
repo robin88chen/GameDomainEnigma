@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGraphPawnTest.Shared", "SceneGraphPawnTest.Shared\SceneGraphPawnTest.Shared.vcxitems", "{3009C773-679E-405E-A76B-49CFFDC85545}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGraphPawnTest.Win32", "SceneGraphPawnTest.Win32\SceneGraphPawnTest.Win32.vcxproj", "{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Debug|x64.ActiveCfg = Debug|x64
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Debug|x64.Build.0 = Debug|x64
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Debug|x86.ActiveCfg = Debug|Win32
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Debug|x86.Build.0 = Debug|Win32
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Release|x64.ActiveCfg = Release|x64
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Release|x64.Build.0 = Release|x64
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Release|x86.ActiveCfg = Release|Win32
+		{3AA15E78-DB5D-42F6-A544-42EA4D0F3AFF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EC73AB9-9976-41D8-842F-352337ECBDA4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SceneGraphPawnTest.Shared\SceneGraphPawnTest.Shared.vcxitems*{3009c773-679e-405e-a76b-49cffdc85545}*SharedItemsImports = 9
+		SceneGraphPawnTest.Shared\SceneGraphPawnTest.Shared.vcxitems*{3aa15e78-db5d-42f6-a544-42ea4d0f3aff}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

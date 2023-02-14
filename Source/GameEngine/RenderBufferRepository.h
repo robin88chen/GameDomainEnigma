@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderBufferRepository.h
  * \brief  Render buffer repository
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/

@@ -21,6 +21,8 @@
 #include "Renderer/ModelPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
+#include "SceneGraph/Node.h"
+#include "SceneGraph/Pawn.h"
 
 class SceneGraphPawnTest : public Enigma::Application::AppDelegate
 {
@@ -41,14 +43,19 @@ public:
 protected:
     void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     Enigma::Renderer::ModelPrimitivePtr m_model;
+    Enigma::SceneGraph::NodePtr m_sceneRoot;
+    Enigma::SceneGraph::PawnPtr m_pawn;
+
     bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };

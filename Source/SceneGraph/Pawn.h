@@ -56,6 +56,7 @@ namespace Enigma::SceneGraph
     protected:
         Engine::PrimitivePtr m_primitive;
     };
+    using PawnPtr = std::shared_ptr<Pawn>;
 }
 
 #endif // PAWN_H

@@ -2,6 +2,7 @@
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
+#include "Platforms/AndroidBridge.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
 #include "Controllers/GraphicMain.h"
@@ -116,10 +117,10 @@ void SceneGraphPawnTest::FrameUpdate()
             m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
             if (auto ani = m_model->GetAnimator())
             {
-                CommandBus::Post(std::make_shared<Enigma::Animators::AddListeningAnimator>(ani));
-                if (auto model_ani = std::dynamic_pointer_cast<Enigma::Animators::ModelPrimitiveAnimator, Enigma::Engine::Animator>(ani))
+                CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
+                if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
                 {
-                    model_ani->PlayAnimation(Enigma::Animators::AnimationClip{ 0.0f, 2.0f, Enigma::Animators::AnimationClip::WarpMode::Loop, 0 });
+                    model_ani->PlayAnimation(AnimationClip{ 0.0f, 2.0f, AnimationClip::WarpMode::Loop, 0 });
                 }
             }
         }

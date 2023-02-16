@@ -11,7 +11,7 @@ using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
-static std::string TOKEN_WORLD_TRANSFORM = "LocalTransform";
+static std::string TOKEN_WORLD_TRANSFORM = "WorldTransform";
 static std::string TOKEN_GRAPH_DEPTH = "GraphDepth";
 static std::string TOKEN_WORLD_BOUND = "WorldBound";
 static std::string TOKEN_MODEL_BOUND = "ModelBound";

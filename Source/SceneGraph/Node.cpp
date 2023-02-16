@@ -46,8 +46,9 @@ void Node::ResolveFactoryLinkage(const NodeDto& dto, Engine::FactoryLinkageResol
 {
     for (auto& name : dto.ChildNames())
     {
-        resolver.TryResolveLinkage(name, [lifetime = shared_from_this(), this](auto sp)
-            { AttachChild(sp, sp->GetLocalTransform()); });
+        resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
+            { if (!lifetime.expired())
+                std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->AttachChild(sp, sp->GetLocalTransform()); });
     }
 }
 

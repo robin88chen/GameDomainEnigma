@@ -20,6 +20,8 @@ using namespace Enigma::Graphics;
 using namespace Enigma::FileSystem;
 using namespace Enigma::Gateways;
 
+BoundingVolume CubeGeometryMaker::m_geometryBounding;
+
 void CubeGeometryMaker::MakeSavedCube(const std::string& name)
 {
     std::vector<Vector3> vtx_pos =
@@ -145,8 +147,8 @@ void CubeGeometryMaker::MakeSavedCube(const std::string& name)
     dto.VertexFormat() = "xyzb2_nor_tex1(2)_betabyte";
     dto.Topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
     Box3 box = ContainmentBox3::ComputeAlignedBox(&vtx_pos[0], static_cast<unsigned>(vtx_pos.size()));
-    BoundingVolume bv{ box };
-    dto.GeometryBound() = bv.SerializeDto().ToGenericDto();
+    m_geometryBounding = BoundingVolume{ box };
+    dto.GeometryBound() = m_geometryBounding.SerializeDto().ToGenericDto();
 
     GenericDto gen_dto = dto.ToGenericDto();
     FactoryDesc desc(TriangleList::TYPE_RTTI.GetName());

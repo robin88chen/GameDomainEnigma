@@ -16,7 +16,6 @@ Pawn::Pawn(const std::string& name) : Spatial(name)
 
 Pawn::Pawn(const PawnDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
 {
-    
 }
 
 Pawn::~Pawn()

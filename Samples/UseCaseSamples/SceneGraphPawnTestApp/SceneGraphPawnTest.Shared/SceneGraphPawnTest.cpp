@@ -1,4 +1,7 @@
 ﻿#include "SceneGraphPawnTest.h"
+
+#include <Gateways/DtoJsonGateway.h>
+
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
@@ -18,6 +21,9 @@
 #include "CameraMaker.h"
 #include "Animators/AnimatorCommands.h"
 #include "Animators/ModelPrimitiveAnimator.h"
+#include "SceneGraph/Culler.h"
+#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -82,9 +88,17 @@ void SceneGraphPawnTest::InstallEngine()
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
     m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });
     CubeGeometryMaker::MakeSavedCube("test_geometry");
+    auto dtos = SceneGraphMaker::MakeSceneGraphDtos();
+    std::string json = DtoJsonGateway::Serialize(dtos);
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt@DataPath"), "w+b");
+    if (FATAL_LOG_EXPR(!iFile)) return;
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+
     CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", SceneGraphMaker::MakeSceneGraphDtos()));
 
     m_camera = CameraMaker::MakeCamera();
+    m_culler = menew Culler(m_camera);
 }
 
 void SceneGraphPawnTest::ShutdownEngine()
@@ -95,6 +109,7 @@ void SceneGraphPawnTest::ShutdownEngine()
     m_renderer = nullptr;
     m_renderTarget = nullptr;
     m_camera = nullptr;
+    SAFE_DELETE(m_culler);
 
     EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
@@ -109,6 +124,20 @@ void SceneGraphPawnTest::ShutdownEngine()
 void SceneGraphPawnTest::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+    //RetrieveDtoCreatedModel();
+    //InsertDtoCreatedModelToRenderer();
+    if (m_sceneRoot)
+    {
+        m_culler->ComputeVisibleSet(m_sceneRoot);
+    }
+    if (m_renderer)
+    {
+        m_renderer->PrepareScene(m_culler->GetVisibleSet());
+    }
+}
+
+void SceneGraphPawnTest::RetrieveDtoCreatedModel()
+{
     if ((m_pawn) && (!m_model))
     {
         auto prim = m_pawn->GetPrimitive();
@@ -125,6 +154,10 @@ void SceneGraphPawnTest::FrameUpdate()
             }
         }
     }
+}
+
+void SceneGraphPawnTest::InsertDtoCreatedModelToRenderer()
+{
     if ((m_renderer) && (m_model))
     {
         m_model->InsertToRendererWithTransformUpdating(m_renderer, Enigma::MathLib::Matrix4::IDENTITY, RenderLightingState{});

@@ -45,6 +45,10 @@ protected:
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
 
+private:
+    void RetrieveDtoCreatedModel();
+    void InsertDtoCreatedModelToRenderer();
+
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
@@ -58,6 +62,7 @@ protected:
 
     bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
+    Enigma::SceneGraph::Culler* m_culler;
 };
 
 

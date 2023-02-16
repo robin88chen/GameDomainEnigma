@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MemoryAllocMacro.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -16,7 +16,7 @@
 /** @addtogroup core_macro Utility Macro Define
 @{ */
 
-#if defined _DEBUG && defined _MSC_VER 
+#if defined _DEBUG && defined _MSC_VER
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>

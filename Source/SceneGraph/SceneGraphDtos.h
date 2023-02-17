@@ -96,7 +96,7 @@ namespace Enigma::SceneGraph
     class PawnDto : public SpatialDto
     {
     public:
-        PawnDto() = default;
+        PawnDto();
         PawnDto(const SpatialDto& spatial_dto);
 
         [[nodiscard]] const std::optional<Engine::GenericDto>& ThePrimitive() const { return m_primitive; }

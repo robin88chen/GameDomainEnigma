@@ -98,6 +98,10 @@ GenericDto LightDto::ToGenericDto()
     return dto;
 }
 
+PawnDto::PawnDto() : SpatialDto(), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
+{
+}
+
 PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
 {
 }

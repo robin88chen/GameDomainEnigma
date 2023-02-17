@@ -93,7 +93,7 @@ void SceneGraphPawnTest::InstallEngine()
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
 
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", SceneGraphMaker::MakeSceneGraphDtos()));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", dtos));
 
     m_camera = CameraMaker::MakeCamera();
     m_culler = menew Culler(m_camera);

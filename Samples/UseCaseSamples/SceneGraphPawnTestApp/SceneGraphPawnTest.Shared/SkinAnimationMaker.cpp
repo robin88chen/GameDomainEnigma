@@ -46,6 +46,7 @@ std::shared_ptr<ModelAnimationAsset> SkinAnimationMaker::MakeSkinAnimationAsset(
     if (FATAL_LOG_EXPR(!iFile)) return animation_asset;
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
+    animation_asset->TheFactoryDesc() = desc;
 
     return animation_asset;
 }

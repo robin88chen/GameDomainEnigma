@@ -254,6 +254,16 @@
             "Type": "Uint32",
             "Value": 33
         },
+        "PrimitiveFactory": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Engine.Primitive",
+                "PrefabFilename": ""
+            }
+        },
         "PawnPrimitive": {
             "Type": "DataObject",
             "Value": {
@@ -478,9 +488,9 @@
                         "AnimationFactory": {
                             "Type": "FactoryDesc",
                             "Value": {
-                                "InstanceType": 0,
-                                "ResourceName": "",
-                                "ResourceFilename": "",
+                                "InstanceType": 5,
+                                "ResourceName": "test_model_anim",
+                                "ResourceFilename": "test_model_anim.ani@DataPath",
                                 "RttiName": "En.Animators.ModelAnimationAsset",
                                 "PrefabFilename": ""
                             }

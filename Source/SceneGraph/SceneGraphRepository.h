@@ -16,6 +16,7 @@
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
 #include "SpatialLinkageResolver.h"
+#include "Renderer/RenderablePrimitivePolicies.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -80,7 +81,8 @@ namespace Enigma::SceneGraph
         void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
 
-        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto);
+        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto);
+        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
     private:
         GraphicCoordSys m_handSystem;

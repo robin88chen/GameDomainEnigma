@@ -171,7 +171,7 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
     m_pawns.insert_or_assign(dto.Name(), pawn);
     if (dto.ThePrimitive())
     {
-        BuildPawnPrimitive(pawn, dto.ThePrimitive().value());
+        BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(dto.ThePrimitive().value()));
     }
     return pawn;
 }
@@ -275,16 +275,22 @@ void SceneGraphRepository::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e
     m_buildingPawnPrimitives.erase(it);
 }
 
-void SceneGraphRepository::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
+std::shared_ptr<RenderablePrimitivePolicy> SceneGraphRepository::ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto)
 {
-    assert(pawn);
     if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
     {
         ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
-        auto policy = model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
-        std::lock_guard locker{ m_buildingPrimitiveLock };
-        m_buildingPawnPrimitives.insert({ policy->GetRuid(), pawn->GetSpatialName() });
-        CommandBus::Post(std::make_shared<BuildRenderablePrimitive>(policy));
+        return model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
     }
     //todo : 其他的 primitive 需要嗎??
+    return nullptr;
+}
+
+void SceneGraphRepository::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
+{
+    assert(pawn);
+    if (!primitive_policy) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    m_buildingPawnPrimitives.insert({ primitive_policy->GetRuid(), pawn->GetSpatialName() });
+    CommandBus::Post(std::make_shared<BuildRenderablePrimitive>(primitive_policy));
 }

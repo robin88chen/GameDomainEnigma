@@ -4,6 +4,8 @@
 #include "Spatial.h"
 #include "Light.h"
 #include "Pawn.h"
+#include "SceneGraphPolicies.h"
+#include "GameEngine/DtoDeserializer.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -21,6 +23,7 @@ static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_CHILD_NAMES = "ChildNames";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
+static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
 {
@@ -95,7 +98,7 @@ GenericDto LightDto::ToGenericDto()
     return dto;
 }
 
-PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
+PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
 {
 }
 
@@ -103,6 +106,7 @@ PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     PawnDto pawn_dto(SpatialDto::FromGenericDto(dto));
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_PAWN_PRIMITIVE)) pawn_dto.m_primitive = v.value();
+    if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) pawn_dto.m_primitiveFactory = v.value();
     return pawn_dto;
 }
 
@@ -111,5 +115,18 @@ GenericDto PawnDto::ToGenericDto()
     GenericDto dto = SpatialDto::ToGenericDto();
     dto.AddRtti(FactoryDesc(Pawn::TYPE_RTTI.GetName()));
     if (m_primitive) dto.AddOrUpdate(TOKEN_PAWN_PRIMITIVE, m_primitive.value());
+    dto.AddOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
+}
+
+std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+{
+    if (m_primitive)
+    {
+        return std::make_shared<PawnPolicy>(m_name, m_primitive.value());
+    }
+    else
+    {
+        return std::make_shared<PawnPolicy>(m_name, m_primitiveFactory.GetPrefab(), deserializer);
+    }
 }

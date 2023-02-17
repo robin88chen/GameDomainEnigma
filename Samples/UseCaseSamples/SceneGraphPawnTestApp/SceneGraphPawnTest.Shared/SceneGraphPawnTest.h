@@ -49,6 +49,8 @@ private:
     void RetrieveDtoCreatedModel();
     void InsertDtoCreatedModelToRenderer();
 
+    void PrepareRenderScene();
+
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;

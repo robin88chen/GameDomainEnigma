@@ -1,7 +1,4 @@
 ﻿#include "SceneGraphPawnTest.h"
-
-#include <Gateways/DtoJsonGateway.h>
-
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
@@ -24,6 +21,7 @@
 #include "SceneGraph/Culler.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
+#include "Gateways/DtoJsonGateway.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -126,14 +124,9 @@ void SceneGraphPawnTest::FrameUpdate()
     AppDelegate::FrameUpdate();
     //RetrieveDtoCreatedModel();
     //InsertDtoCreatedModelToRenderer();
-    if (m_sceneRoot)
-    {
-        m_culler->ComputeVisibleSet(m_sceneRoot);
-    }
-    if (m_renderer)
-    {
-        m_renderer->PrepareScene(m_culler->GetVisibleSet());
-    }
+
+    RetrieveDtoCreatedModel();
+    PrepareRenderScene();
 }
 
 void SceneGraphPawnTest::RetrieveDtoCreatedModel()
@@ -161,6 +154,18 @@ void SceneGraphPawnTest::InsertDtoCreatedModelToRenderer()
     if ((m_renderer) && (m_model))
     {
         m_model->InsertToRendererWithTransformUpdating(m_renderer, Enigma::MathLib::Matrix4::IDENTITY, RenderLightingState{});
+    }
+}
+
+void SceneGraphPawnTest::PrepareRenderScene()
+{
+    if (m_sceneRoot)
+    {
+        m_culler->ComputeVisibleSet(m_sceneRoot);
+    }
+    if (m_renderer)
+    {
+        m_renderer->PrepareScene(m_culler->GetVisibleSet());
     }
 }
 

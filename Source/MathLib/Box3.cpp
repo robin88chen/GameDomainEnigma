@@ -4,7 +4,7 @@
 
 using namespace Enigma::MathLib;
 
-const Box3 Box3::UNIT_BOX(Vector3::ZERO, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z, 1.0f, 1.0f, 1.0f);
+const Box3 Box3::UNIT_BOX(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f), 1.0f, 1.0f, 1.0f);
 
 Box3::Box3()
 {

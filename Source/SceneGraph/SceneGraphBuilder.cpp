@@ -6,19 +6,27 @@
 #include "Pawn.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
+#include "SceneGraphCommands.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/FactoryCommands.h"
 #include "Platforms/PlatformLayer.h"
+#include "Renderer/RenderablePrimitiveCommands.h"
+#include "Renderer/RenderablePrimitiveEvents.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
+using namespace Enigma::Renderer;
+using namespace Enigma::Platforms;
 
-SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host)
+SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
 {
     m_host = host;
+    m_dtoDeserializer = dto_deserializer;
+    m_effectDeserializer = effect_deserializer;
     m_resolver = menew SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial>
         { return m_host->QuerySpatial(n); });
 
@@ -31,10 +39,27 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host)
         [=](auto c) { this->LightFactory(c); }));
     CommandBus::Post(std::make_shared<RegisterDtoFactory>(Pawn::TYPE_RTTI.GetName(),
         [=](auto c) { this->PawnFactory(c); }));
+
+    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
+    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+
+    m_doBuildingSceneGraph =
+        std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
+    CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
+    CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    m_doBuildingSceneGraph = nullptr;
+
+    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_onPrimitiveBuilt = nullptr;
+    m_onBuildPrimitiveFailed = nullptr;
+
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Node::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Light::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Pawn::TYPE_RTTI.GetName()));
@@ -82,6 +107,10 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     PawnDto pawn_dto = PawnDto::FromGenericDto(dto);
     assert(!m_host->HasPawn(pawn_dto.Name()));
     auto pawn = m_host->CreatePawn(pawn_dto);
+    if (pawn_dto.ThePrimitive())
+    {
+        BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn_dto.ThePrimitive().value()));
+    }
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }
 
@@ -95,6 +124,14 @@ void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
         CommandBus::Post(std::make_shared<InvokeDtoFactory>(o));
     }
+}
+
+void SceneGraphBuilder::DoBuildingSceneGraph(const ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
+    if (!cmd) return;
+    BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
 }
 
 void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)
@@ -126,4 +163,54 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     }
 
     EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+}
+
+std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto)
+{
+    if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
+    {
+        ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
+        return model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+    }
+    //todo : 其他的 primitive 需要嗎??
+    return nullptr;
+}
+
+void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
+{
+    assert(pawn);
+    if (!primitive_policy) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    m_buildingPawnPrimitives.insert({ primitive_policy->GetRuid(), pawn->GetSpatialName() });
+    CommandBus::Post(std::make_shared<BuildRenderablePrimitive>(primitive_policy));
+}
+
+void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    if (m_buildingPawnPrimitives.empty()) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
+    if (it == m_buildingPawnPrimitives.end()) return;
+    if (auto pawn = m_host->QueryPawn(it->second))
+    {
+        pawn->SetPrimitive(ev->GetPrimitive());
+    }
+    m_buildingPawnPrimitives.erase(it);
+}
+
+void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    if (m_buildingPawnPrimitives.empty()) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
+    if (it == m_buildingPawnPrimitives.end()) return;
+    Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
+        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+    m_buildingPawnPrimitives.erase(it);
 }

@@ -34,6 +34,12 @@
     <Filter Include="DTO &amp; Policies">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Portal System">
+      <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lazy Node IO">
+      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -111,6 +117,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h">
       <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
+      <Filter>Lazy Node IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -175,6 +187,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp">
       <Filter>DTO &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
+      <Filter>Lazy Node IO</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

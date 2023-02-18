@@ -77,18 +77,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
 
     private:
-        void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
-        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
-
-        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto);
-        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
-
-    private:
         GraphicCoordSys m_handSystem;
-
-        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
         std::recursive_mutex m_cameraMapLock;
@@ -102,14 +91,6 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
-
-        std::unordered_map<Frameworks::Ruid, std::string, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn name
-        std::recursive_mutex m_buildingPrimitiveLock;
-
-        Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
-
-        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
 
         SceneGraphBuilder* m_builder;
     };

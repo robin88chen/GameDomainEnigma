@@ -17,6 +17,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
@@ -44,6 +46,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />

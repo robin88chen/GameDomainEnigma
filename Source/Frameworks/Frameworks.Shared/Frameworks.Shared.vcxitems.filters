@@ -34,6 +34,9 @@
     <Filter Include="Requests &amp; Responses\Response">
       <UniqueIdentifier>{19aaf587-0d2b-4d46-a254-57b33fcd2dcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LazyStatus">
+      <UniqueIdentifier>{10b2669a-fc7c-48be-9bfb-f3f2f00902bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ResponseBus.cpp">
       <Filter>Requests &amp; Responses\Response</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyStatus.cpp">
+      <Filter>LazyStatus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\unique_ptr_dynamic_cast.hpp">
       <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyStatus.h">
+      <Filter>LazyStatus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

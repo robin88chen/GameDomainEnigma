@@ -10,11 +10,15 @@
 
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolumeDto.h"
+#include "GameEngine/DtoDeserializer.h"
+#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include <string>
 #include <vector>
 
 namespace Enigma::SceneGraph
 {
+    class PawnPolicy;
+
     class SpatialDto
     {
     public:
@@ -87,6 +91,26 @@ namespace Enigma::SceneGraph
 
     protected:
         Engine::GenericDto m_lightInfo;
+    };
+
+    class PawnDto : public SpatialDto
+    {
+    public:
+        PawnDto();
+        PawnDto(const SpatialDto& spatial_dto);
+
+        [[nodiscard]] const std::optional<Engine::GenericDto>& ThePrimitive() const { return m_primitive; }
+        std::optional<Engine::GenericDto>& ThePrimitive() { return m_primitive; }
+        [[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
+        Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
+
+        static PawnDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
+
+        std::shared_ptr<PawnPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
+    protected:
+        std::optional<Engine::GenericDto> m_primitive;
+        Engine::FactoryDesc m_primitiveFactory;
     };
 }
 

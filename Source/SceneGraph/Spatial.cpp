@@ -12,6 +12,7 @@
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Spatial);
 
@@ -36,6 +37,9 @@ Spatial::Spatial(const std::string& name)
     m_mxLocalTransform = Matrix4::IDENTITY;
     m_mxWorldTransform = Matrix4::IDENTITY;
 
+    m_modelBound = BoundingVolume(Box3::UNIT_BOX);
+    m_worldBound = BoundingVolume(Box3::UNIT_BOX);
+
     m_vecWorldPosition = Vector3::ZERO;
 
     m_notifyFlags = Notify_None;
@@ -49,10 +53,13 @@ Spatial::Spatial(const SpatialDto& dto)
     m_spatialFlags = dto.SpatialFlag();
     m_notifyFlags = dto.NotifyFlag();
     m_mxLocalTransform = dto.LocalTransform();
+    assert(m_mxLocalTransform != Matrix4::ZERO);
     m_mxWorldTransform = dto.WorldTransform();
-    m_modelBound = Engine::BoundingVolume(Engine::BoundingVolumeDto::FromGenericDto(dto.ModelBound()));
-    m_worldBound = Engine::BoundingVolume(Engine::BoundingVolumeDto::FromGenericDto(dto.WorldBound()));
-
+    assert(m_mxWorldTransform != Matrix4::ZERO);
+    m_modelBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.ModelBound()));
+    m_worldBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.WorldBound()));
+    assert(!m_modelBound.IsEmpty());
+    assert(!m_worldBound.IsEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
     EulerAngles angles;

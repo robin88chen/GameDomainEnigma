@@ -65,9 +65,10 @@ void SceneGraphJsonGatewayTest::InstallEngine()
 {
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_unique<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto policy = std::make_unique<InstallingDefaultRendererPolicy>(std::move(creating_policy), DefaultRendererName, PrimaryTargetName);
-    m_graphicMain->InstallRenderEngine(std::move(policy));
+    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
+    auto policy = std::make_shared<InstallingDefaultRendererPolicy>(DefaultRendererName, PrimaryTargetName);
+    auto scene_policy = std::make_shared<SceneGraphBuildingPolicy>(nullptr, nullptr);
+    m_graphicMain->InstallRenderEngine({ creating_policy, policy, scene_policy });
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
@@ -183,6 +184,7 @@ void SceneGraphJsonGatewayTest::OnSceneGraphBuilt(const IEventPtr& e)
         assert(light);
         assert(child1->GetLocalTransform() == m_mxChild1Local);
         assert(child2->GetLocalTransform() == m_mxChild2Local);
+        assert(light->GetWorldTransform() == m_mxChild2Local);
         auto bb = child1->GetWorldBound().BoundingBox3();
         assert(bb);
         assert(m_child1WorldBox == bb.value());

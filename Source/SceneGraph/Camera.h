@@ -8,9 +8,11 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "SceneGraphRepository.h"
+#include "SceneGraphDefines.h"
 #include "MathLib/Vector3.h"
 #include "GameEngine/GenericDto.h"
+#include "Frameworks/Rtti.h"
+#include "MathLib/Matrix4.h"
 #include <memory>
 #include <string>
 #include <system_error>
@@ -18,7 +20,9 @@
 namespace Enigma::SceneGraph
 {
     class CameraDto;
+    class Frustum;
     using error = std::error_code;
+    using FrustumPtr = std::shared_ptr<Frustum>;
 
     class Camera : public std::enable_shared_from_this<Camera>
     {
@@ -57,7 +61,7 @@ namespace Enigma::SceneGraph
         /** get view transform */
         virtual const MathLib::Matrix4& GetViewTransform() { return m_mxViewTransform; };
         /** get projection transform */
-        virtual const MathLib::Matrix4& GetProjectionTransform() { return m_cullingFrustum->GetProjectionTransform(); };
+        virtual const MathLib::Matrix4& GetProjectionTransform();
 
         /** enum animator list deep, including geometry's animator */
         //todo : animators

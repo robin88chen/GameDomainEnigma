@@ -31,7 +31,7 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DTOs">
+    <Filter Include="DTO &amp; Policies">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -91,7 +91,7 @@
       <Filter>Scene Traveler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
       <Filter>Repository</Filter>
@@ -103,10 +103,13 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h">
+      <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +159,7 @@
       <Filter>Scene Traveler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
       <Filter>Repository</Filter>
@@ -165,10 +168,13 @@
       <Filter>Repository\Builder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
-      <Filter>DTOs</Filter>
+      <Filter>DTO &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp">
+      <Filter>DTO &amp; Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -24,6 +24,7 @@ namespace Enigma::Controllers
     class InstallingPolicy;
     class DeviceCreatingPolicy;
     class InstallingDefaultRendererPolicy;
+    class SceneGraphBuildingPolicy;
 
     /** Graphic Kernel Main class \n singleton */
     class GraphicMain
@@ -40,7 +41,7 @@ namespace Enigma::Controllers
         error InstallFrameworks();
         error ShutdownFrameworks();
 
-        error InstallRenderEngine(std::unique_ptr<InstallingPolicy> policy);
+        error InstallRenderEngine(const std::vector<std::shared_ptr<InstallingPolicy>>& policies);
         error ShutdownRenderEngine();
 
         /** frame update (service manager call run one to update) */
@@ -49,10 +50,14 @@ namespace Enigma::Controllers
         Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
 
     private:
-        error CreateRenderEngineDevice(DeviceCreatingPolicy* policy);
+        std::shared_ptr<InstallingPolicy> FindDeviceCreatingPolicy();
+        std::shared_ptr<InstallingPolicy> FindRendererInstallingPolicy();
+        std::shared_ptr<InstallingPolicy> FindSceneGraphBuildingPolicy();
+
+        error CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy);
         error CleanupRenderEngineDevice();
 
-        error InstallDefaultRenderer(InstallingDefaultRendererPolicy* policy);
+        error InstallDefaultRenderer(const std::shared_ptr<InstallingDefaultRendererPolicy>& policy);
         error ShutdownDefaultRenderer();
 
         error InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary);
@@ -70,7 +75,7 @@ namespace Enigma::Controllers
         error InstallTextureManagers();
         error ShutdownTextureManagers();
 
-        error InstallSceneGraphManagers();
+        error InstallSceneGraphManagers(const std::shared_ptr<SceneGraphBuildingPolicy>& policy);
         error ShutdownSceneGraphManagers();
 
         error InstallAnimationServices();
@@ -81,7 +86,7 @@ namespace Enigma::Controllers
 
         Frameworks::ServiceManager* m_serviceManager;
 
-        std::unique_ptr<InstallingPolicy> m_policy;
+        std::vector<std::shared_ptr<InstallingPolicy>> m_policies;
 
         Renderer::RendererManager* m_renderer;
     };

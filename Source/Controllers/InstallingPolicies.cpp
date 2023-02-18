@@ -8,10 +8,16 @@ Enigma::Controllers::DeviceCreatingPolicy::DeviceCreatingPolicy(
 }
 
 Enigma::Controllers::InstallingDefaultRendererPolicy::InstallingDefaultRendererPolicy(
-    std::unique_ptr<DeviceCreatingPolicy> creating_policy, const std::string& renderer_name,
-    const std::string& primary_target_name) : InstallingPolicy()
+    const std::string& renderer_name, const std::string& primary_target_name) : InstallingPolicy()
 {
-    m_creatingPolicy = std::move(creating_policy);
     m_rendererName = renderer_name;
     m_primaryTargetName = primary_target_name;
+}
+
+Enigma::Controllers::SceneGraphBuildingPolicy::SceneGraphBuildingPolicy(
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : InstallingPolicy()
+{
+    m_dtoDeserializer = dto_deserializer;
+    m_effectDeserializer = effect_deserializer;
 }

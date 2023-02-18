@@ -3,7 +3,7 @@
 
 using namespace Enigma::MathLib;
 
-const Sphere3 Sphere3::UNIT_SPHERE(Vector3::ZERO, 1.0f);
+const Sphere3 Sphere3::UNIT_SPHERE(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
 
 Sphere3::Sphere3()
 {

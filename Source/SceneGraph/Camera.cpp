@@ -112,3 +112,8 @@ void Camera::_UpdateViewTransform()
     trans.Z() = m_vecCameraForward.Dot(m_vecLocation);
     m_mxViewTransform = MathLib::Matrix4(m_vecRight, m_vecUp, m_vecCameraForward, -trans, false);
 }
+
+const Enigma::MathLib::Matrix4& Camera::GetProjectionTransform()
+{
+    return m_cullingFrustum->GetProjectionTransform();
+}

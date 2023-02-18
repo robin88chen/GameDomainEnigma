@@ -217,7 +217,7 @@ void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const r
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
 {
-    FactoryDesc::InstanceType instance_type;
+    FactoryDesc::InstanceType instance_type = FactoryDesc::InstanceType::Native;
     std::string resource_name;
     std::string resource_filename;
     std::string rtti;

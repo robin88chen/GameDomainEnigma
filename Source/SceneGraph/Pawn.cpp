@@ -2,6 +2,7 @@
 #include "Culler.h"
 #include "SceneGraphErrors.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraphDtos.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -11,6 +12,10 @@ Pawn::Pawn(const std::string& name) : Spatial(name)
     m_primitive = nullptr;
     m_spatialFlags |=  (Spatial_ShadowCaster | Spatial_ShadowReceiver);
     RemoveSpatialFlag(Spatial_Unlit);
+}
+
+Pawn::Pawn(const PawnDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+{
 }
 
 Pawn::~Pawn()

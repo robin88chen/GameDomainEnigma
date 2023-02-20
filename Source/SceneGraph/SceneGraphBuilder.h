@@ -15,6 +15,7 @@
 #include <optional>
 #include <memory>
 #include <vector>
+#include <deque>
 
 namespace Enigma::SceneGraph
 {
@@ -47,6 +48,7 @@ namespace Enigma::SceneGraph
 
     private:
         void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
+        void BuildNextSceneGraph();
         void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos);
 
         void NodeFactory(const Engine::GenericDto& dto);
@@ -80,6 +82,10 @@ namespace Enigma::SceneGraph
 
         Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
+
+        std::deque<Frameworks::ICommandPtr> m_buildCommands;
+        std::recursive_mutex m_buildCommandsLock;
+        std::atomic_bool m_isCurrentBuilding;
     };
 }
 

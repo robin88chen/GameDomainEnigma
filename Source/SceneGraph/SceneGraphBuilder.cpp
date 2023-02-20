@@ -24,6 +24,7 @@ using namespace Enigma::Platforms;
 SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
     const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
 {
+    m_isCurrentBuilding = false;
     m_host = host;
     m_dtoDeserializer = dto_deserializer;
     m_effectDeserializer = effect_deserializer;
@@ -117,6 +118,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
 
 void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos)
 {
+    m_isCurrentBuilding = true;
     if (m_resolver) m_resolver->ClearResolvers();
     m_builtSceneGraphMeta = BuiltSceneGraphMeta{ scene_graph_id, {} };
     for (auto& o : dtos)
@@ -129,6 +131,17 @@ void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const
 void SceneGraphBuilder::DoBuildingSceneGraph(const ICommandPtr& c)
 {
     if (!c) return;
+    std::lock_guard locker{ m_buildCommandsLock };
+    m_buildCommands.push_back(c);
+    if (!m_isCurrentBuilding) BuildNextSceneGraph();
+}
+
+void SceneGraphBuilder::BuildNextSceneGraph()
+{
+    if (m_buildCommands.empty()) return;
+    std::lock_guard locker{ m_buildCommandsLock };
+    auto c = m_buildCommands.front();
+    m_buildCommands.pop_front();
     auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
     if (!cmd) return;
     BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
@@ -161,8 +174,9 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
             top_levels.emplace_back(meta.m_spatial.value());
         }
     }
-
+    m_isCurrentBuilding = false;
     EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+    BuildNextSceneGraph();
 }
 
 std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto)

@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "Light.h"
 #include "Pawn.h"
+#include "LazyNode.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphCommands.h"
@@ -40,6 +41,8 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
         [=](auto c) { this->LightFactory(c); }));
     CommandBus::Post(std::make_shared<RegisterDtoFactory>(Pawn::TYPE_RTTI.GetName(),
         [=](auto c) { this->PawnFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(LazyNode::TYPE_RTTI.GetName(),
+        [=](auto c) { this->LazyNodeFactory(c); }));
 
     m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
     m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
@@ -81,6 +84,20 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     NodeDto node_dto = NodeDto::FromGenericDto(dto);
     assert(!m_host->HasNode(node_dto.Name()));
     auto node = m_host->CreateNode(node_dto);
+    node->ResolveFactoryLinkage(node_dto, *m_resolver);
+    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
+}
+
+void SceneGraphBuilder::LazyNodeFactory(const GenericDto& dto)
+{
+    if (dto.GetRtti().GetRttiName() != LazyNode::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for lazy node factory", dto.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    LazyNodeDto node_dto = LazyNodeDto::FromGenericDto(dto);
+    assert(!m_host->HasNode(node_dto.Name()));
+    auto node = m_host->CreateNode(dynamic_cast<const NodeDto&>(node_dto));
     node->ResolveFactoryLinkage(node_dto, *m_resolver);
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
 }

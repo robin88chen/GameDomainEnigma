@@ -59,7 +59,7 @@ namespace Enigma::SceneGraph
         bool HasFrustum(const std::string& name);
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
-        std::shared_ptr<Node> CreateNode(const std::string& name);
+        std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         std::shared_ptr<Node> CreateNode(const NodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);

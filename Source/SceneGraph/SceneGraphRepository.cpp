@@ -16,6 +16,8 @@
 #include "Renderer/ModelPrimitive.h"
 #include <cassert>
 
+#include "LazyNode.h"
+
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
@@ -99,10 +101,19 @@ std::shared_ptr<Frustum> SceneGraphRepository::QueryFrustum(const std::string& n
     return it->second.lock();
 }
 
-std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
+std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name, const Rtti& rtti)
 {
     assert(!HasNode(name));
-    auto node = std::make_shared<Node>(name);
+    std::shared_ptr<Node> node = nullptr;
+    if (rtti == Node::TYPE_RTTI)
+    {
+        node = std::make_shared<Node>(name);
+    }
+    else if (rtti == LazyNode::TYPE_RTTI)
+    {
+        node = std::make_shared<LazyNode>(name);
+    }
+    assert(node);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(name, node);
     return node;
@@ -111,7 +122,16 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
 std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeDto& dto)
 {
     assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<Node>(dto);
+    std::shared_ptr<Node> node;
+    if (dto.TheFactoryDesc().GetRttiName() == Node::TYPE_RTTI.GetName())
+    {
+        node = std::make_shared<Node>(dto);
+    }
+    else if (dto.TheFactoryDesc().GetRttiName() == LazyNode::TYPE_RTTI.GetName())
+    {
+        node = std::make_shared<LazyNode>(LazyNodeDto(dto));
+    }
+    assert(node);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(dto.Name(), node);
     return node;

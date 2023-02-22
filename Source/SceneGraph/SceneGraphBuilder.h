@@ -55,6 +55,7 @@ namespace Enigma::SceneGraph
         void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos);
 
         void NodeFactory(const Engine::GenericDto& dto);
+        void LazyNodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);
         void PawnFactory(const Engine::GenericDto& dto);
 

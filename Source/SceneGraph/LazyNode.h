@@ -13,16 +13,21 @@
 
 namespace Enigma::SceneGraph
 {
+    class LazyNodeDto;
+
     class LazyNode : public Node
     {
         DECLARE_EN_RTTI;
     public:
         LazyNode(const std::string& name);
+        LazyNode(const LazyNodeDto& dto);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;
         virtual ~LazyNode() override;
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
+
+        virtual Engine::GenericDto SerializeDto() override;
 
         virtual bool CanVisited() override;
 

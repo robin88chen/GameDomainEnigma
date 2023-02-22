@@ -25,9 +25,14 @@ static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
 static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
+SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName())
+{
+}
+
 SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
 {
     SpatialDto spatial_dto;
+    spatial_dto.TheFactoryDesc() = dto.GetRtti();
     spatial_dto.m_isTopLevel = dto.IsTopLevel();
     spatial_dto.m_name = dto.TryGetValue<std::string>(TOKEN_NAME).value();
     spatial_dto.m_localTransform = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM).value();
@@ -44,8 +49,8 @@ SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
 GenericDto SpatialDto::ToGenericDto()
 {
     GenericDto dto;
+    dto.AddRtti(m_factoryDesc);
     dto.AsTopLevel(m_isTopLevel);
-    dto.AddRtti(FactoryDesc(Spatial::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
     dto.AddOrUpdate(TOKEN_WORLD_TRANSFORM, m_worldTransform);
@@ -72,7 +77,6 @@ NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
 GenericDto NodeDto::ToGenericDto()
 {
     GenericDto dto = SpatialDto::ToGenericDto();
-    dto.AddRtti(FactoryDesc(Node::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_CHILD_NAMES, m_childNames);
 
     return dto;
@@ -92,7 +96,6 @@ LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
 GenericDto LightDto::ToGenericDto()
 {
     GenericDto dto = SpatialDto::ToGenericDto();
-    dto.AddRtti(FactoryDesc(Light::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
 
     return dto;
@@ -117,7 +120,6 @@ PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
 GenericDto PawnDto::ToGenericDto()
 {
     GenericDto dto = SpatialDto::ToGenericDto();
-    dto.AddRtti(FactoryDesc(Pawn::TYPE_RTTI.GetName()));
     if (m_primitive) dto.AddOrUpdate(TOKEN_PAWN_PRIMITIVE, m_primitive.value());
     dto.AddOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
@@ -133,4 +135,20 @@ std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engin
     {
         return std::make_shared<PawnPolicy>(m_name, m_primitiveFactory.GetPrefab(), deserializer);
     }
+}
+
+LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
+{
+}
+
+LazyNodeDto LazyNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+{
+    LazyNodeDto node_dto(NodeDto::FromGenericDto(dto));
+    return node_dto;
+}
+
+GenericDto LazyNodeDto::ToGenericDto()
+{
+    GenericDto dto = NodeDto::ToGenericDto();
+    return dto;
 }

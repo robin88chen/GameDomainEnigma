@@ -23,6 +23,7 @@ namespace Enigma::SceneGraph
     class SceneGraphRepository;
     class SpatialLinkageResolver;
     class Pawn;
+    class Node;
 
     class SceneGraphBuilder
     {
@@ -35,6 +36,7 @@ namespace Enigma::SceneGraph
         struct BuiltSceneGraphMeta
         {
             std::string m_sceneGraphId;
+            std::shared_ptr<Node> m_in_placeRoot;
             std::vector<BuiltSpatialMeta> m_builtSpatialMetas;
         };
     public:
@@ -50,6 +52,7 @@ namespace Enigma::SceneGraph
         void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
         void BuildNextSceneGraph();
         void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos);
+        void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos);
 
         void NodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);

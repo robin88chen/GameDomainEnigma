@@ -16,6 +16,7 @@
 #include "SceneTraveler.h"
 #include "SpatialRenderState.h"
 #include "Frameworks/Rtti.h"
+#include "GameEngine/FactoryDesc.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -80,6 +81,8 @@ namespace Enigma::SceneGraph
 
         const std::string& GetSpatialName() const { return m_name; };
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
         /** @name scene graph relation */
         //@{
         void LinkParent(const std::shared_ptr<Spatial>& parent);
@@ -236,6 +239,8 @@ namespace Enigma::SceneGraph
 
     protected:
         std::string m_name;
+
+        Engine::FactoryDesc m_factoryDesc;
 
         MathLib::Vector3 m_vecLocalPosition;
         MathLib::Vector3 m_vecLocalScale;

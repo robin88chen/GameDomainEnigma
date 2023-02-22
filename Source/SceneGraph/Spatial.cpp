@@ -16,7 +16,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Spatial);
 
-Spatial::Spatial(const std::string& name)
+Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.GetName())
 {
     m_name = name;
 
@@ -45,7 +45,7 @@ Spatial::Spatial(const std::string& name)
     m_notifyFlags = Notify_None;
 }
 
-Spatial::Spatial(const SpatialDto& dto)
+Spatial::Spatial(const SpatialDto& dto) : m_factoryDesc(dto.TheFactoryDesc())
 {
     m_name = dto.Name();
     m_graphDepth = dto.GraphDepth();
@@ -81,6 +81,7 @@ Enigma::Engine::GenericDto Spatial::SerializeDto()
 SpatialDto Spatial::SerializeSpatialDto()
 {
     SpatialDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.GraphDepth() = m_graphDepth;
     dto.CullingMode() = static_cast<unsigned int>(m_cullingMode);

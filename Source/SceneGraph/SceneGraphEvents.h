@@ -12,10 +12,12 @@
 #include "LightInfo.h"
 #include "Spatial.h"
 #include <memory>
+#include <system_error>
 
 namespace Enigma::SceneGraph
 {
     class Light;
+    class LazyNode;
 
     //------------------ Scene Graph Events -------------------
     class SceneGraphEvent : public Frameworks::IEvent
@@ -115,7 +117,7 @@ namespace Enigma::SceneGraph
         NotifyCode m_notifyCode;
     };
 
-    //------------------------ scene graph contract event ------------------
+    //------------------------ scene graph factory event ------------------
     class FactorySpatialCreated : public Frameworks::IEvent
     {
     public:
@@ -141,6 +143,37 @@ namespace Enigma::SceneGraph
     protected:
         std::string m_sceneGraphId;
         std::vector<std::shared_ptr<Spatial>> m_topLevels;
+    };
+    class InPlaceSceneGraphBuilt : public Frameworks::IEvent
+    {
+    public:
+        InPlaceSceneGraphBuilt(const std::shared_ptr<Node>& in_place_root) : m_in_placeRoot(in_place_root) {};
+
+        const std::shared_ptr<Node>& GetInPlaceRootNode() { return m_in_placeRoot; }
+    protected:
+        std::shared_ptr<Node> m_in_placeRoot;
+    };
+
+    class LazyNodeInstanced : public Frameworks::IEvent
+    {
+    public:
+        LazyNodeInstanced(const std::shared_ptr<LazyNode>& node) : m_node(node) {};
+
+        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
+    protected:
+        std::shared_ptr<LazyNode> m_node;
+    };
+    class InstanceLazyNodeFailed : public  Frameworks::IEvent
+    {
+    public:
+        InstanceLazyNodeFailed(const std::shared_ptr<LazyNode>& node, std::error_code er)
+            : m_node(node), m_error(er) {}
+
+        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
+        std::error_code GetErrorCode() const { return m_error; }
+    protected:
+        std::shared_ptr<LazyNode> m_node;
+        std::error_code m_error;
     };
 }
 

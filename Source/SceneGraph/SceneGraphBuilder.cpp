@@ -120,7 +120,20 @@ void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const
 {
     m_isCurrentBuilding = true;
     if (m_resolver) m_resolver->ClearResolvers();
-    m_builtSceneGraphMeta = BuiltSceneGraphMeta{ scene_graph_id, {} };
+    m_builtSceneGraphMeta = BuiltSceneGraphMeta{ scene_graph_id, nullptr, {} };
+    for (auto& o : dtos)
+    {
+        m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
+        CommandBus::Post(std::make_shared<InvokeDtoFactory>(o));
+    }
+}
+
+void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos)
+{
+    if (!sub_root) return;
+    m_isCurrentBuilding = true;
+    if (m_resolver) m_resolver->ClearResolvers();
+    m_builtSceneGraphMeta = BuiltSceneGraphMeta{ sub_root->GetSpatialName(), sub_root, {} };
     for (auto& o : dtos)
     {
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
@@ -142,9 +155,14 @@ void SceneGraphBuilder::BuildNextSceneGraph()
     std::lock_guard locker{ m_buildCommandsLock };
     auto c = m_buildCommands.front();
     m_buildCommands.pop_front();
-    auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
-    if (!cmd) return;
-    BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
+    if (auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c))
+    {
+        BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
+    }
+    else if (auto cmd = std::dynamic_pointer_cast<SceneGraph::InPlaceBuildSceneGraph, ICommand>(c))
+    {
+        InPlaceBuildSceneGraph(cmd->GetOwnerNode(), cmd->GetDtos());
+    }
 }
 
 void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)
@@ -175,7 +193,14 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
         }
     }
     m_isCurrentBuilding = false;
-    EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+    if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
+    {
+        EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<InPlaceSceneGraphBuilt>(m_builtSceneGraphMeta.m_in_placeRoot));
+    }
     BuildNextSceneGraph();
 }
 

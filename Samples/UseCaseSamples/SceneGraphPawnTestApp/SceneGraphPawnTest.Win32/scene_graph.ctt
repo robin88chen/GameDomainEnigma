@@ -1,17 +1,4 @@
 [{
-        "ModelBound": {
-            "Type": "DataObject",
-            "Value": {
-                "BoxBV": {
-                    "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
-                }
-            }
-        },
-        "TopLevel": {
-            "Type": "Boolean",
-            "Value": true
-        },
         "LocalTransform": {
             "Type": "Matrix4",
             "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -25,6 +12,19 @@
                 "RttiName": "En.SceneGraph.Node",
                 "PrefabFilename": ""
             }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": true
         },
         "NotifyFlag": {
             "Type": "Uint32",
@@ -64,19 +64,6 @@
             "Value": ["child1", "child2"]
         }
     }, {
-        "ModelBound": {
-            "Type": "DataObject",
-            "Value": {
-                "BoxBV": {
-                    "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
-                }
-            }
-        },
-        "TopLevel": {
-            "Type": "Boolean",
-            "Value": false
-        },
         "LocalTransform": {
             "Type": "Matrix4",
             "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -90,6 +77,19 @@
                 "RttiName": "En.SceneGraph.Node",
                 "PrefabFilename": ""
             }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
         },
         "NotifyFlag": {
             "Type": "Uint32",
@@ -129,19 +129,6 @@
             "Value": []
         }
     }, {
-        "ModelBound": {
-            "Type": "DataObject",
-            "Value": {
-                "BoxBV": {
-                    "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
-                }
-            }
-        },
-        "TopLevel": {
-            "Type": "Boolean",
-            "Value": false
-        },
         "LocalTransform": {
             "Type": "Matrix4",
             "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -155,6 +142,19 @@
                 "RttiName": "En.SceneGraph.Node",
                 "PrefabFilename": ""
             }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
         },
         "NotifyFlag": {
             "Type": "Uint32",
@@ -194,19 +194,6 @@
             "Value": ["pawn"]
         }
     }, {
-        "ModelBound": {
-            "Type": "DataObject",
-            "Value": {
-                "BoxBV": {
-                    "Type": "Box3",
-                    "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
-                }
-            }
-        },
-        "TopLevel": {
-            "Type": "Boolean",
-            "Value": false
-        },
         "LocalTransform": {
             "Type": "Matrix4",
             "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -220,6 +207,19 @@
                 "RttiName": "En.SceneGraph.Spatial",
                 "PrefabFilename": ""
             }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
         },
         "NotifyFlag": {
             "Type": "Uint32",

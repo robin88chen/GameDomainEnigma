@@ -67,6 +67,7 @@ SceneGraphBuilder::~SceneGraphBuilder()
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Node::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Light::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Pawn::TYPE_RTTI.GetName()));
+    CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(LazyNode::TYPE_RTTI.GetName()));
 
     EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
     m_onFactoryCreated = nullptr;

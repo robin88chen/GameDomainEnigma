@@ -33,6 +33,9 @@ namespace Enigma::SceneGraph
 
         virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
 
+        const Frameworks::LazyStatus& TheLazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& TheLazyStatus() { return m_lazyStatus; }
+
     protected:
         Frameworks::LazyStatus m_lazyStatus;
     };

@@ -13,7 +13,6 @@ LazyNode::LazyNode(const std::string& name) : Node(name)
 
 LazyNode::LazyNode(const LazyNodeDto& dto) : Node(dynamic_cast<const NodeDto&>(dto))
 {
-
 }
 
 LazyNode::~LazyNode()

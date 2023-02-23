@@ -78,6 +78,7 @@ void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
     if (m_in_placeNode) node_name = m_in_placeNode->GetSpatialName();
     Platforms::Debug::ErrorPrintf("deserializing lazy node %s dto failed : %s", node_name.c_str(), ev->GetErrorCode().message().c_str());
     EventPublisher::Post(std::make_shared<InstanceLazyNodeFailed>(m_in_placeNode, ev->GetErrorCode()));
+    if (m_in_placeNode) m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ghost);
     m_isCurrentInstancing = false;
 }
 
@@ -88,6 +89,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_in_placeNode) return;
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
+    m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
     EventPublisher::Post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
 }
@@ -107,7 +109,9 @@ void LazyNodeIOService::InstanceNextLazyNode()
     const auto cmd = std::dynamic_pointer_cast<InstanceLazyNode, ICommand>(c);
     if (!cmd) return;
     if (!cmd->GetNode()) return;
+    if (!cmd->GetNode()->TheLazyStatus().IsGhost()) return;
     m_in_placeNode = cmd->GetNode();
+    m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Loading);
     m_isCurrentInstancing = true;
     if (m_dtoDeserializer)
     {
@@ -117,6 +121,7 @@ void LazyNodeIOService::InstanceNextLazyNode()
     else
     {
         Platforms::Debug::ErrorPrintf("Instance Lazy Node without dto deserializer!!");
+        m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ghost);
         m_isCurrentInstancing = false;
     }
 }

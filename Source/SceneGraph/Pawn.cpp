@@ -7,6 +7,8 @@
 
 using namespace Enigma::SceneGraph;
 
+DEFINE_RTTI(SceneGraph, Pawn, Spatial);
+
 Pawn::Pawn(const std::string& name) : Spatial(name)
 {
     m_factoryDesc = Engine::FactoryDesc(Pawn::TYPE_RTTI.GetName());

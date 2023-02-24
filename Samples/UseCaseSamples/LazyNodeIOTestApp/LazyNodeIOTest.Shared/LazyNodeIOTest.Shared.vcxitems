@@ -15,10 +15,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)LazyNodeIOTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SceneGraphMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)LazyNodeIOTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SceneGraphMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.h" />
   </ItemGroup>
 </Project>

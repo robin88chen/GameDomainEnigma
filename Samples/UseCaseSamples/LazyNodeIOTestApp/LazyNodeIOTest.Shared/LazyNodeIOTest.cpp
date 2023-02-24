@@ -14,6 +14,8 @@
 #include "SceneGraph/Culler.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
+#include "CubeGeometryMaker.h"
+#include "SceneGraphMaker.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -74,6 +76,9 @@ void LazyNodeIOTest::InstallEngine()
     auto scene_graph_policy = std::make_shared<SceneGraphBuildingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
     m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });
+
+    CubeGeometryMaker::MakeSavedCube("test_geometry");
+    SceneGraphMaker::MakeSavedLazyNode("lazy");
 
     m_camera = CameraMaker::MakeCamera();
     m_culler = menew Culler(m_camera);

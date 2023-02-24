@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LazyNodeIOTest.Shared", "LazyNodeIOTest.Shared\LazyNodeIOTest.Shared.vcxitems", "{4B356739-90E0-4F4C-8CEB-496E1F8781E7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LazyNodeIOTest.Win32", "LazyNodeIOTest.Win32\LazyNodeIOTest.Win32.vcxproj", "{594CFEB7-792D-4EF5-B539-203353F32A89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Debug|x64.ActiveCfg = Debug|x64
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Debug|x64.Build.0 = Debug|x64
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Debug|x86.ActiveCfg = Debug|Win32
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Debug|x86.Build.0 = Debug|Win32
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Release|x64.ActiveCfg = Release|x64
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Release|x64.Build.0 = Release|x64
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Release|x86.ActiveCfg = Release|Win32
+		{594CFEB7-792D-4EF5-B539-203353F32A89}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6A84383-D610-4BE6-8F9D-38B9EDC974AA}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		LazyNodeIOTest.Shared\LazyNodeIOTest.Shared.vcxitems*{4b356739-90e0-4f4c-8ceb-496e1f8781e7}*SharedItemsImports = 9
+		LazyNodeIOTest.Shared\LazyNodeIOTest.Shared.vcxitems*{594cfeb7-792d-4ef5-b539-203353f32a89}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

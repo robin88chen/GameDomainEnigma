@@ -247,9 +247,11 @@ error GraphicMain::ShutdownTextureManagers()
 error GraphicMain::InstallSceneGraphManagers(const std::shared_ptr<SceneGraphBuildingPolicy>& policy)
 {
     assert(policy);
+    const auto timer = m_serviceManager->GetSystemServiceAs<Engine::TimerService>();
+    assert(timer);
     m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager, policy->GetDtoDeserializer(),
         policy->GetEffectDeserializer()));
-    m_serviceManager->RegisterSystemService(menew SceneGraph::LazyNodeIOService(m_serviceManager, policy->GetDtoDeserializer()));
+    m_serviceManager->RegisterSystemService(menew SceneGraph::LazyNodeIOService(m_serviceManager, timer, policy->GetDtoDeserializer()));
     return ErrorCode::ok;
 }
 

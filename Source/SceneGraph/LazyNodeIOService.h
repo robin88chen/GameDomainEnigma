@@ -12,9 +12,11 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "Frameworks/EventSubscriber.h"
+#include "GameEngine/TimerService.h"
 #include <memory>
 #include <deque>
 #include <mutex>
+#include <unordered_map>
 
 namespace Enigma::SceneGraph
 {
@@ -23,7 +25,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        LazyNodeIOService(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
+        LazyNodeIOService(Frameworks::ServiceManager* mngr, Engine::TimerService* timer, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         LazyNodeIOService(const LazyNodeIOService&) = delete;
         LazyNodeIOService(LazyNodeIOService&&) = delete;
         virtual ~LazyNodeIOService() override;
@@ -37,10 +39,13 @@ namespace Enigma::SceneGraph
         void OnDtoDeserialized(const Frameworks::IEventPtr& e);
         void OnDeserializingDtoFailed(const Frameworks::IEventPtr& e);
         void OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void OnVisibilityChanged(const Frameworks::IEventPtr& e);
 
         void InstanceNextLazyNode();
 
     private:
+        Engine::TimerService* m_timer;
+
         Frameworks::CommandSubscriberPtr m_doInstancingLazyNode;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
 
@@ -50,10 +55,13 @@ namespace Enigma::SceneGraph
         Frameworks::EventSubscriberPtr m_onDtoDeserialized;
         Frameworks::EventSubscriberPtr m_onDeserializingDtoFailed;
         Frameworks::EventSubscriberPtr m_onInPlaceSceneGraphBuilt;
+        Frameworks::EventSubscriberPtr m_onVisibilityChanged;
 
-        std::deque<Frameworks::ICommandPtr> m_InstanceCommands;
-        std::mutex m_InstanceCommandsLock;
+        std::deque<std::shared_ptr<LazyNode>> m_waitingNodes;
+        std::mutex m_waitingNodesLock;
         std::atomic_bool m_isCurrentInstancing;
+
+        std::unordered_map<std::shared_ptr<LazyNode>, float> m_visibilityTimers;
     };
 }
 

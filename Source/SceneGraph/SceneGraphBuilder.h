@@ -56,6 +56,7 @@ namespace Enigma::SceneGraph
 
         void NodeFactory(const Engine::GenericDto& dto);
         void LazyNodeFactory(const Engine::GenericDto& dto);
+        void VisibilityManagedNodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);
         void PawnFactory(const Engine::GenericDto& dto);
 

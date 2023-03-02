@@ -4,6 +4,8 @@
 #include "Node.h"
 #include "Pawn.h"
 #include "Light.h"
+#include "LazyNode.h"
+#include "VisibilityManagedNode.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphCommands.h"
@@ -15,8 +17,6 @@
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Renderer/ModelPrimitive.h"
 #include <cassert>
-
-#include "LazyNode.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -112,6 +112,10 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name, 
     else if (rtti == LazyNode::TYPE_RTTI)
     {
         node = std::make_shared<LazyNode>(name);
+    }
+    else if (rtti == VisibilityManagedNode::TYPE_RTTI)
+    {
+        node = std::make_shared<VisibilityManagedNode>(name);
     }
     assert(node);
     std::lock_guard locker{ m_nodeMapLock };

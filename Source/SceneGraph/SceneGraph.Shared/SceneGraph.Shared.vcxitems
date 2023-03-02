@@ -40,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +66,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />
   </ItemGroup>
 </Project>

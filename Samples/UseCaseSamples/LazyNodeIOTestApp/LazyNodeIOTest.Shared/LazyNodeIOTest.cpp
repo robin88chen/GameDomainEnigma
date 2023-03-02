@@ -5,8 +5,10 @@
 #include "Platforms/AndroidBridge.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphCommands.h"
 #include "Controllers/InstallingPolicies.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
@@ -79,6 +81,9 @@ void LazyNodeIOTest::InstallEngine()
 
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     SceneGraphMaker::MakeSavedLazyNode("lazy");
+    auto dtos = SceneGraphMaker::MakeSceneGraphDtos("lazy");
+
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", dtos));
 
     m_camera = CameraMaker::MakeCamera();
     m_culler = menew Culler(m_camera);
@@ -106,6 +111,8 @@ void LazyNodeIOTest::ShutdownEngine()
 void LazyNodeIOTest::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+
+    PrepareRenderScene();
 }
 
 void LazyNodeIOTest::RenderFrame()
@@ -116,6 +123,18 @@ void LazyNodeIOTest::RenderFrame()
     m_renderer->DrawScene();
     m_renderer->EndScene();
     m_renderer->Flip();
+}
+
+void LazyNodeIOTest::PrepareRenderScene()
+{
+    if (m_sceneRoot)
+    {
+        m_culler->ComputeVisibleSet(m_sceneRoot);
+    }
+    if (m_renderer)
+    {
+        m_renderer->PrepareScene(m_culler->GetVisibleSet());
+    }
 }
 
 void LazyNodeIOTest::OnRendererCreated(const IEventPtr& e)
@@ -139,4 +158,11 @@ void LazyNodeIOTest::OnRenderTargetCreated(const IEventPtr& e)
 
 void LazyNodeIOTest::OnSceneGraphBuilt(const IEventPtr& e)
 {
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    if (!ev) return;
+    auto top_spatials = ev->GetTopLevelSpatial();
+    if (top_spatials.empty()) return;
+    m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
+    if (!m_sceneRoot) return;
 }

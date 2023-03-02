@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "Pawn.h"
 #include "LazyNode.h"
+#include "VisibilityManagedNode.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphCommands.h"
@@ -43,6 +44,8 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
         [=](auto c) { this->PawnFactory(c); }));
     CommandBus::Post(std::make_shared<RegisterDtoFactory>(LazyNode::TYPE_RTTI.GetName(),
         [=](auto c) { this->LazyNodeFactory(c); }));
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(VisibilityManagedNode::TYPE_RTTI.GetName(),
+        [=](auto c) { this->VisibilityManagedNodeFactory(c); }));
 
     m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
     m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
@@ -97,6 +100,20 @@ void SceneGraphBuilder::LazyNodeFactory(const GenericDto& dto)
         return;
     }
     LazyNodeDto node_dto = LazyNodeDto::FromGenericDto(dto);
+    assert(!m_host->HasNode(node_dto.Name()));
+    auto node = m_host->CreateNode(dynamic_cast<const NodeDto&>(node_dto));
+    node->ResolveFactoryLinkage(node_dto, *m_resolver);
+    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
+}
+
+void SceneGraphBuilder::VisibilityManagedNodeFactory(const GenericDto& dto)
+{
+    if (dto.GetRtti().GetRttiName() != VisibilityManagedNode::TYPE_RTTI.GetName())
+    {
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for visibility managed node factory", dto.GetRtti().GetRttiName().c_str());
+        return;
+    }
+    VisibilityManagedNodeDto node_dto = VisibilityManagedNodeDto::FromGenericDto(dto);
     assert(!m_host->HasNode(node_dto.Name()));
     auto node = m_host->CreateNode(dynamic_cast<const NodeDto&>(node_dto));
     node->ResolveFactoryLinkage(node_dto, *m_resolver);

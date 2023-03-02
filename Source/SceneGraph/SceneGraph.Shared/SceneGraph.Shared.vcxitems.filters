@@ -40,6 +40,9 @@
     <Filter Include="Lazy Node IO">
       <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Visibilities">
+      <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -123,6 +126,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
       <Filter>Lazy Node IO</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h">
+      <Filter>Visibilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -193,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
       <Filter>Lazy Node IO</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp">
+      <Filter>Visibilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

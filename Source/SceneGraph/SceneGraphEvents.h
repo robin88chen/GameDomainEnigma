@@ -175,6 +175,21 @@ namespace Enigma::SceneGraph
         std::shared_ptr<LazyNode> m_node;
         std::error_code m_error;
     };
+
+    //------------ visibility manage ------------
+    class VisibilityChanged : public Frameworks::IEvent
+    {
+        public:
+        VisibilityChanged(const std::shared_ptr<LazyNode>& node, bool visible)
+            : m_node(node), m_isVisible(visible) {};
+
+        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
+        bool IsVisible() const { return m_isVisible; }
+
+    protected:
+        std::shared_ptr<LazyNode> m_node;
+        bool m_isVisible;
+    };
 }
 
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LazyNode.h
  * \brief  延遲載入的 Scene Graph Node, 先建立空間相關數據, 等可見時才載入內容
- * 
+ * VisiblityManagedNode, PortalZoneNode 繼承自此
  * \author Lancelot 'Robin' Chen
  * \date   February 2023
  *********************************************************************/

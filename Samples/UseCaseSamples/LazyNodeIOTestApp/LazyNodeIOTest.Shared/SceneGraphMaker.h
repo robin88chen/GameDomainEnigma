@@ -16,7 +16,7 @@ class SceneGraphMaker
 public:
     static void MakeSavedLazyNode(const std::string& name);
 
-    static std::vector<Enigma::Engine::GenericDto> MakeSceneGraphDtos();
+    static std::vector<Enigma::Engine::GenericDto> MakeSceneGraphDtos(const std::string& lazy_node_name);
 };
 
 #endif // _SCENE_GRAPH_MAKER_H

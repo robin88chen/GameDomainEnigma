@@ -152,3 +152,19 @@ GenericDto LazyNodeDto::ToGenericDto()
     GenericDto dto = NodeDto::ToGenericDto();
     return dto;
 }
+
+VisibilityManagedNodeDto::VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
+{
+}
+
+VisibilityManagedNodeDto VisibilityManagedNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+{
+    VisibilityManagedNodeDto node_dto(LazyNodeDto::FromGenericDto(dto));
+    return node_dto;
+}
+
+GenericDto VisibilityManagedNodeDto::ToGenericDto()
+{
+    GenericDto dto = LazyNodeDto::ToGenericDto();
+    return dto;
+}

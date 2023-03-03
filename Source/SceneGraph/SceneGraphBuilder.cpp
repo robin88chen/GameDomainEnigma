@@ -54,13 +54,18 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
 
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
+    m_doInPlaceBuildingSceneGraph =
+        std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
     CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    CommandBus::Subscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
     CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    CommandBus::Unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
     m_doBuildingSceneGraph = nullptr;
+    m_doInPlaceBuildingSceneGraph = nullptr;
 
     EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
@@ -114,8 +119,16 @@ void SceneGraphBuilder::VisibilityManagedNodeFactory(const GenericDto& dto)
         return;
     }
     VisibilityManagedNodeDto node_dto = VisibilityManagedNodeDto::FromGenericDto(dto);
-    assert(!m_host->HasNode(node_dto.Name()));
-    auto node = m_host->CreateNode(dynamic_cast<const NodeDto&>(node_dto));
+    std::shared_ptr<Node> node;
+    if (m_host->HasNode(node_dto.Name()))
+    {
+        node = m_host->QueryNode(node_dto.Name());
+    }
+    else
+    {
+        node = m_host->CreateNode(dynamic_cast<const NodeDto&>(node_dto));
+    }
+    assert(node);
     node->ResolveFactoryLinkage(node_dto, *m_resolver);
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
 }

@@ -135,6 +135,10 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeDto& dto)
     {
         node = std::make_shared<LazyNode>(LazyNodeDto(dto));
     }
+    else if (dto.TheFactoryDesc().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.GetName())
+    {
+        node = std::make_shared<VisibilityManagedNode>(VisibilityManagedNodeDto(LazyNodeDto(dto)));
+    }
     assert(node);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(dto.Name(), node);

@@ -18,6 +18,7 @@ namespace Enigma::Frameworks
         enum class Status
         {
             Ghost,
+            InQueue,
             Loading,
             Ready
         };

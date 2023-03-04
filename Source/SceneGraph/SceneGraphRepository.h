@@ -48,6 +48,8 @@ namespace Enigma::SceneGraph
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
+        virtual Frameworks::ServiceResult OnTerm() override;
+
         void SetCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys GetCoordinateSystem();
 

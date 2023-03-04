@@ -38,6 +38,12 @@ namespace Enigma::SceneGraph
             std::string m_sceneGraphId;
             std::shared_ptr<Node> m_in_placeRoot;
             std::vector<BuiltSpatialMeta> m_builtSpatialMetas;
+            void Reset()
+            {
+                m_sceneGraphId.clear();
+                m_in_placeRoot = nullptr;
+                m_builtSpatialMetas.clear();
+            }
         };
     public:
         SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,

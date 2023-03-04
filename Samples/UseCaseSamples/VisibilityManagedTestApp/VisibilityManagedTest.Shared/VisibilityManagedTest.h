@@ -46,6 +46,7 @@ protected:
     void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     void RetrieveDtoCreatedModel();
@@ -57,6 +58,7 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;

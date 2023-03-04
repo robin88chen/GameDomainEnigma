@@ -24,6 +24,14 @@ LazyNodeIOService::LazyNodeIOService(Frameworks::ServiceManager* mngr, Engine::T
     m_dtoDeserializer = dto_deserializer;
     m_needTick = false;
     m_isCurrentInstancing = false;
+}
+
+LazyNodeIOService::~LazyNodeIOService()
+{
+}
+
+ServiceResult LazyNodeIOService::OnInit()
+{
     m_doInstancingLazyNode = std::make_shared<CommandSubscriber>([=](auto c) { DoInstancingLazyNode(c); });
     CommandBus::Subscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
 
@@ -35,13 +43,29 @@ LazyNodeIOService::LazyNodeIOService(Frameworks::ServiceManager* mngr, Engine::T
     EventPublisher::Subscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
     EventPublisher::Subscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
     EventPublisher::Subscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
+
+    return ServiceResult::Complete;
 }
 
-LazyNodeIOService::~LazyNodeIOService()
+ServiceResult LazyNodeIOService::OnTick()
 {
+    if (m_isCurrentInstancing) return ServiceResult::Pendding;
+    InstanceNextLazyNode();
+    return ServiceResult::Pendding;
+}
+
+ServiceResult LazyNodeIOService::OnTerm()
+{
+    m_in_placeNode = nullptr;
+    {
+        std::lock_guard locker{ m_waitingNodesLock };
+        m_waitingNodes.clear();
+    }
+    m_visibilityTimers.clear();
+
     EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     EventPublisher::Unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
-    EventPublisher::Subscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
+    EventPublisher::Unsubscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
     EventPublisher::Unsubscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
     m_onDtoDeserialized = nullptr;
     m_onDeserializingDtoFailed = nullptr;
@@ -50,13 +74,8 @@ LazyNodeIOService::~LazyNodeIOService()
 
     CommandBus::Unsubscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
     m_doInstancingLazyNode = nullptr;
-}
 
-ServiceResult LazyNodeIOService::OnTick()
-{
-    if (m_isCurrentInstancing) return ServiceResult::Pendding;
-    InstanceNextLazyNode();
-    return ServiceResult::Pendding;
+    return ServiceResult::Complete;
 }
 
 void LazyNodeIOService::DoInstancingLazyNode(const Frameworks::ICommandPtr& c)
@@ -67,6 +86,7 @@ void LazyNodeIOService::DoInstancingLazyNode(const Frameworks::ICommandPtr& c)
     if (!cmd->GetNode()) return;
     if (!cmd->GetNode()->TheLazyStatus().IsGhost()) return;
     std::lock_guard locker{ m_waitingNodesLock };
+    cmd->GetNode()->TheLazyStatus().ChangeStatus(LazyStatus::Status::InQueue);
     m_waitingNodes.push_back(cmd->GetNode());
     m_needTick = true;
 }
@@ -119,10 +139,10 @@ void LazyNodeIOService::OnVisibilityChanged(const Frameworks::IEventPtr& e)
     }
     else
     {
-        auto it = m_visibilityTimers.find(ev->GetNode());
-        if (it != m_visibilityTimers.end())
+        auto it_vis = m_visibilityTimers.find(ev->GetNode());
+        if (it_vis != m_visibilityTimers.end())
         {
-            auto time = m_timer->GetGameTimer()->GetTotalTime() - it->second;
+            auto time = m_timer->GetGameTimer()->GetTotalTime() - it_vis->second;
             if ((time > MIN_KEEP_TIME) && (m_in_placeNode != ev->GetNode()))
             {
                 std::lock_guard locker{ m_waitingNodesLock };

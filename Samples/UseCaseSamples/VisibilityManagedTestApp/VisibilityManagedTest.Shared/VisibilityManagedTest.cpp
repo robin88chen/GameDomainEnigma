@@ -18,6 +18,9 @@
 #include "Platforms/MemoryMacro.h"
 #include "CubeGeometryMaker.h"
 #include "SceneGraphMaker.h"
+#include "SceneGraph/LazyNode.h"
+#include "Animators/AnimatorCommands.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -27,6 +30,7 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Controllers;
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -70,9 +74,11 @@ void VisibilityManagedTest::InstallEngine()
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRendererCreated(e); });
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     assert(m_graphicMain);
 
@@ -104,9 +110,11 @@ void VisibilityManagedTest::ShutdownEngine()
     EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
     m_onSceneGraphBuilt = nullptr;
+    m_onPawnPrimitiveBuilt = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -134,7 +142,7 @@ void VisibilityManagedTest::PrepareRenderScene()
     {
         m_culler->ComputeVisibleSet(m_sceneRoot);
     }
-    if (m_renderer)
+    if ((m_renderer) && (m_sceneRoot) && (m_culler->GetVisibleSet().GetCount() !=  0))
     {
         m_renderer->PrepareScene(m_culler->GetVisibleSet());
     }
@@ -168,4 +176,25 @@ void VisibilityManagedTest::OnSceneGraphBuilt(const IEventPtr& e)
     if (top_spatials.empty()) return;
     m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
     if (!m_sceneRoot) return;
+}
+
+void VisibilityManagedTest::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    m_pawn = ev->GetPawn();
+    auto prim = m_pawn->GetPrimitive();
+    if (prim)
+    {
+        m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+        if (auto ani = m_model->GetAnimator())
+        {
+            CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
+            if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
+            {
+                model_ani->PlayAnimation(AnimationClip{ 0.0f, 2.0f, AnimationClip::WarpMode::Loop, 0 });
+            }
+        }
+    }
 }

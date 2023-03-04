@@ -62,13 +62,15 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
+    m_builtSceneGraphMeta.Reset();
+
     CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
     CommandBus::Unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
     m_doBuildingSceneGraph = nullptr;
     m_doInPlaceBuildingSceneGraph = nullptr;
 
-    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    EventPublisher::Unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::Unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
     m_onPrimitiveBuilt = nullptr;
     m_onBuildPrimitiveFailed = nullptr;
 
@@ -76,6 +78,7 @@ SceneGraphBuilder::~SceneGraphBuilder()
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Light::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(Pawn::TYPE_RTTI.GetName()));
     CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(LazyNode::TYPE_RTTI.GetName()));
+    CommandBus::Send(std::make_shared<UnRegisterDtoFactory>(VisibilityManagedNode::TYPE_RTTI.GetName()));
 
     EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
     m_onFactoryCreated = nullptr;
@@ -284,6 +287,7 @@ void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
     if (auto pawn = m_host->QueryPawn(it->second))
     {
         pawn->SetPrimitive(ev->GetPrimitive());
+        EventPublisher::Post(std::make_shared<PawnPrimitiveBuilt>(pawn));
     }
     m_buildingPawnPrimitives.erase(it);
 }
@@ -299,5 +303,9 @@ void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
     if (it == m_buildingPawnPrimitives.end()) return;
     Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+    if (auto pawn = m_host->QueryPawn(it->second))
+    {
+        EventPublisher::Post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ev->GetErrorCode()));
+    }
     m_buildingPawnPrimitives.erase(it);
 }

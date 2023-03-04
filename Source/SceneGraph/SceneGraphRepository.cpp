@@ -16,6 +16,7 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Renderer/ModelPrimitive.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -38,7 +39,13 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
 
 SceneGraphRepository::~SceneGraphRepository()
 {
-    delete m_builder;
+    SAFE_DELETE(m_builder);
+}
+
+ServiceResult SceneGraphRepository::OnTerm()
+{
+    SAFE_DELETE(m_builder);
+    return ServiceResult::Complete;
 }
 
 void SceneGraphRepository::SetCoordinateSystem(GraphicCoordSys hand)

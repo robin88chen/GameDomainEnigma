@@ -25,14 +25,12 @@ namespace Enigma::Renderer
     class RenderablePrimitivePolicy
     {
     public:
-        RenderablePrimitivePolicy() { m_ruid = Frameworks::Ruid::Generate(); }
+        RenderablePrimitivePolicy() = default;
         RenderablePrimitivePolicy(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy(RenderablePrimitivePolicy&&) = default;
         virtual ~RenderablePrimitivePolicy() = default;
         RenderablePrimitivePolicy& operator=(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy& operator=(RenderablePrimitivePolicy&&) = default;
-
-        Frameworks::Ruid GetRuid() { return m_ruid; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -42,7 +40,6 @@ namespace Enigma::Renderer
         std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& TheEffectDeserializer() { return m_effectDeserializer; }
 
     protected:
-        Frameworks::Ruid m_ruid;
         std::string m_name;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;

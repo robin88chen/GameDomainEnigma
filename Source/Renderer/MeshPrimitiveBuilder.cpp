@@ -1,6 +1,5 @@
 ﻿#include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
-#include "RenderablePrimitiveEvents.h"
 #include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
@@ -59,8 +58,9 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
     m_onLoadTextureFailed = nullptr;
 }
 
-void MeshPrimitiveBuilder::BuildMeshPrimitive(const std::shared_ptr<MeshPrimitivePolicy>& policy)
+void MeshPrimitiveBuilder::BuildMeshPrimitive(const Frameworks::Ruid& ruid, const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
+    m_buildingRuid = ruid;
     m_policy = policy;
     auto& p = *policy;
     if (typeid(p) == typeid(MeshPrimitivePolicy))
@@ -110,7 +110,7 @@ void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr
     const auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_policy->GeometryPolicy().Name()) return;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy->GetRuid(), m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
 void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
@@ -147,7 +147,7 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
     if (ev->GetName() != m_builtGeometry->MakeRenderBufferSignature().GetName()) return;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy->GetRuid(), m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
 void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
@@ -170,7 +170,7 @@ void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEven
     if (!ev) return;
     const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetFilename());
     if (!found_idx) return;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy->GetRuid(), m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
 void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
@@ -196,7 +196,7 @@ void MeshPrimitiveBuilder::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     if (!ev) return;
     const auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
     if (!found_idx) return;
-    EventPublisher::Post(std::make_shared<BuildRenderablePrimitiveFailed>(m_policy->GetRuid(), m_policy->Name(), ev->GetError()));
+    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetError()));
 }
 
 void MeshPrimitiveBuilder::TryCompletingMesh()
@@ -217,7 +217,7 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
     m_builtPrimitive->ChangeEffectMaterial(m_builtEffects);
     m_builtPrimitive->ChangeTextureMap(m_builtTextures);
     m_builtPrimitive->CreateRenderElements();
-    EventPublisher::Post(std::make_shared<RenderablePrimitiveBuilt>(m_policy->GetRuid(), m_policy->Name(), m_builtPrimitive));
+    EventPublisher::Post(std::make_shared<MeshPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
 }
 
 std::optional<unsigned> MeshPrimitiveBuilder::FindBuildingEffectIndex(const std::string& name)

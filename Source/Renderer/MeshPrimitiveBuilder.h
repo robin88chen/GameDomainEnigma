@@ -21,6 +21,36 @@ namespace Enigma::Renderer
     class MeshPrimitiveBuilder
     {
     public:
+        class MeshPrimitiveBuilt : public Frameworks::IEvent
+        {
+        public:
+            MeshPrimitiveBuilt(const Frameworks::Ruid& ruid, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
+                : m_ruid(ruid), m_name(name), m_prim(prim) {};
+            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
+            const std::string& GetName() const { return m_name; }
+            const std::shared_ptr<MeshPrimitive>& GetPrimitive() { return m_prim; }
+
+        private:
+            Frameworks::Ruid m_ruid;
+            std::string m_name;
+            std::shared_ptr<MeshPrimitive> m_prim;
+        };
+        class BuildMeshPrimitiveFailed : public Frameworks::IEvent
+        {
+        public:
+            BuildMeshPrimitiveFailed(const Frameworks::Ruid& ruid, const std::string& name, std::error_code er)
+                : m_ruid(ruid), m_name(name), m_error(er) {};
+
+            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
+            const std::string& GetName() const { return m_name; }
+            std::error_code GetErrorCode() const { return m_error; }
+
+        private:
+            Frameworks::Ruid m_ruid;
+            std::string m_name;
+            std::error_code m_error;
+        };
+    public:
         MeshPrimitiveBuilder();
         MeshPrimitiveBuilder(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder(MeshPrimitiveBuilder&&) = delete;
@@ -28,7 +58,7 @@ namespace Enigma::Renderer
         MeshPrimitiveBuilder& operator=(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder& operator=(MeshPrimitiveBuilder&&) = delete;
 
-        void BuildMeshPrimitive(const std::shared_ptr<MeshPrimitivePolicy>& policy);
+        void BuildMeshPrimitive(const Frameworks::Ruid& ruid, const std::shared_ptr<MeshPrimitivePolicy>& policy);
 
     protected:
         void OnGeometryDataBuilt(const Frameworks::IEventPtr& e);
@@ -46,6 +76,7 @@ namespace Enigma::Renderer
         std::optional<std::tuple<unsigned, unsigned>> FindLoadingTextureIndex(const std::string& name);
 
     protected:
+        Frameworks::Ruid m_buildingRuid;
         std::shared_ptr<MeshPrimitivePolicy> m_policy;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;

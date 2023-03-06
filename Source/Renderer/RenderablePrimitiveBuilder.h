@@ -11,7 +11,7 @@
 #include "RenderablePrimitivePolicies.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/RequestSubscriber.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -38,24 +38,28 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult OnTick() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        error BuildPrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        error BuildPrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
     protected:
-        void BuildRenderablePrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        void BuildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
         void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
-        void DoBuildingPrimitive(const Frameworks::ICommandPtr& c);
+
+        void DoBuildingPrimitive(const Frameworks::IRequestPtr& r);
 
     protected:
-        std::queue<std::shared_ptr<RenderablePrimitivePolicy>> m_policies;
+        std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
         std::mutex m_policiesLock;
         bool m_isCurrentBuilding;
         Frameworks::Ruid m_buildingRuid;
 
-        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
-        Frameworks::CommandSubscriberPtr m_doBuildingPrimitive;
+        Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildMeshPrimitiveFailed;
+        Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
+
+        Frameworks::RequestSubscriberPtr m_doBuildingPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
         ModelPrimitiveBuilder* m_modelBuilder;

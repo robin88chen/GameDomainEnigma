@@ -12,6 +12,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/ResponseSubscriber.h"
 #include <optional>
 #include <memory>
 #include <vector>
@@ -72,8 +73,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto);
         void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
-        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+        void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r);
 
     private:
         SceneGraphRepository* m_host;
@@ -92,8 +92,7 @@ namespace Enigma::SceneGraph
         std::unordered_map<Frameworks::Ruid, std::string, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn name
         std::recursive_mutex m_buildingPrimitiveLock;
 
-        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
+        Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
 
         std::deque<Frameworks::ICommandPtr> m_buildCommands;
         std::recursive_mutex m_buildCommandsLock;

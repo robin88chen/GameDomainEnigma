@@ -131,7 +131,7 @@ namespace Enigma::SceneGraph
 
     class VisibilityManagedNodeDto : public LazyNodeDto
     {
-        public:
+    public:
         VisibilityManagedNodeDto() = default;
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
 

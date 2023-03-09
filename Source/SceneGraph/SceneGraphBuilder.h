@@ -66,6 +66,9 @@ namespace Enigma::SceneGraph
         void VisibilityManagedNodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);
         void PawnFactory(const Engine::GenericDto& dto);
+        void PortalZoneNodeFactory(const Engine::GenericDto& dto);
+        void PortalFactory(const Engine::GenericDto& dto);
+        void PortalManagementNodeFactory(const Engine::GenericDto& dto);
 
         void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();

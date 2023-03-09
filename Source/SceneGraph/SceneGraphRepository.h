@@ -29,11 +29,17 @@ namespace Enigma::SceneGraph
     class Frustum;
     class Node;
     class Pawn;
+    class Portal;
     class LightInfo;
     class Light;
     class NodeDto;
+    class LazyNodeDto;
+    class VisibilityManagedNodeDto;
     class LightDto;
     class PawnDto;
+    class PortalDto;
+    class PortalZoneNodeDto;
+    class PortalManagementNodeDto;
     class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
@@ -63,6 +69,10 @@ namespace Enigma::SceneGraph
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         std::shared_ptr<Node> CreateNode(const NodeDto& dto);
+        std::shared_ptr<Node> CreateLazyNode(const LazyNodeDto& dto);
+        std::shared_ptr<Node> CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto);
+        std::shared_ptr<Node> CreatePortalZoneNode(const PortalZoneNodeDto& dto);
+        std::shared_ptr<Node> CreatePortalManagementNode(const PortalManagementNodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -75,6 +85,11 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Light> CreateLight(const LightDto& dto);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
+
+        std::shared_ptr<Portal> CreatePortal(const std::string& name);
+        std::shared_ptr<Portal> CreatePortal(const PortalDto& dto);
+        bool HasPortal(const std::string& name);
+        std::shared_ptr<Portal> QueryPortal(const std::string& name);
 
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
 
@@ -93,6 +108,9 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
+
+        std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
+        std::recursive_mutex m_portalMapLock;
 
         SceneGraphBuilder* m_builder;
     };

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h" />
@@ -50,6 +51,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp" />

@@ -144,6 +144,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h">
       <Filter>Portal System</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -228,6 +231,9 @@
       <Filter>Portal System</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp">
+      <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp">
       <Filter>Portal System</Filter>
     </ClCompile>
   </ItemGroup>

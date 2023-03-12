@@ -58,8 +58,10 @@ namespace Enigma::FileSystem
         const std::string& GetMountPathID() const; ///< get mount path ID
         std::string GetFullFileNameAtPath(); ///< return "fullpath@path_id"
         std::string GetFileNameAtPath(); ///< return "filename(with extension)@path_id"
+        const std::string& GetSubPathFileName() const; ///< return the filepath when using filepath constructor, 必須提供這個, 否則跟PathID 組合後, 子目錄路徑會被組合掉
+        std::string GetSubPathFileNameAtPath();
 
-        bool HasPathID();
+        bool HasPathID() const;
 
     private:
         void SplitPath(const std::string& str);
@@ -71,6 +73,7 @@ namespace Enigma::FileSystem
         std::string m_fname;
         std::string m_filename;
         std::string m_pathID;
+        std::string m_subPathFilename; ///< 用 filepath 建構子時的 filepath
     };
 };
 

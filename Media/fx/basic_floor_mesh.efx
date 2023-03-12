@@ -1,0 +1,40 @@
+{
+	"Name" : "basic_floor_mesh",
+	"VertexShaderList" : [
+	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/mesh.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/basic_vtx_nor_tex_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/mesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Clamp", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samShadow", "AddressU" : "Border", "AddressV" : "Border", "MinFilter" : "Linear", "MagFilter" : "Linear",
+		"MipFilter" : "None", "CmpFunc" : "Less", "BorderColor" : "0, 0, 0, 0"}
+	],
+	"RasterizerStateList" : [
+	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},
+	{"Name" : "rasFill", "FillMode" : "Fill", "CullMode" : "None"},
+	{"Name" : "rasFillBias", "FillMode" : "Wireframe", "DepthBias" : -0.5001}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{ "Name" : "default", "VertexShader" : "default_vs", "Program" : "default", "PixelShader" : "default_ps", 
+			"SamplerState" : [{ "Sampler" : "samClampLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
+		]
+	}
+	]
+}

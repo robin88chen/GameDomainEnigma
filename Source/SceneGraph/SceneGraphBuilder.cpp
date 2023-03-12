@@ -9,6 +9,7 @@
 #include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphCommands.h"
+#include "SceneGraphErrors.h"
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
@@ -22,6 +23,7 @@
 #include "Frameworks/RequestBus.h"
 #include "Renderer/RenderablePrimitiveRequests.h"
 #include "Renderer/RenderablePrimitiveResponses.h"
+#include "Renderer/SkinMeshPrimitive.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -172,7 +174,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     auto pawn = m_host->CreatePawn(pawn_dto);
     if (pawn_dto.ThePrimitive())
     {
-        BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn_dto.ThePrimitive().value()));
+        BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn, pawn_dto.ThePrimitive().value()));
     }
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }
@@ -323,14 +325,27 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     BuildNextSceneGraph();
 }
 
-std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto)
+std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
 {
     if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
     {
         ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
         return model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
     }
-    //todo : 其他的 primitive 需要嗎??
+    else if (primitive_dto.GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
+    {
+        MeshPrimitiveDto mesh = MeshPrimitiveDto::FromGenericDto(primitive_dto);
+        return mesh.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+    }
+    else if (primitive_dto.GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
+    {
+        SkinMeshPrimitiveDto mesh = SkinMeshPrimitiveDto::FromGenericDto(primitive_dto);
+        return mesh.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
+    }
     return nullptr;
 }
 

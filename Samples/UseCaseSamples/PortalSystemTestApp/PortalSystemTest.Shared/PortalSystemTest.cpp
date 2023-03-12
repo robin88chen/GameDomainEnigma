@@ -15,6 +15,10 @@
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayerUtilities.h"
+#include "CameraMaker.h"
+#include "PrimitiveMeshMaker.h"
+#include "SceneGraphMaker.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -24,6 +28,7 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Controllers;
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
+using namespace Enigma::Platforms;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -65,8 +70,12 @@ void PortalSystemTest::InstallEngine()
 {
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRendererCreated(e); });
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    m_onBuildPawnPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPawnPrimitiveFailed(e); });
     EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Subscribe(typeid(BuildPawnPrimitiveFailed), m_onBuildPawnPrimitiveFailed);
 
     assert(m_graphicMain);
 
@@ -75,6 +84,13 @@ void PortalSystemTest::InstallEngine()
     auto scene_graph_policy = std::make_shared<SceneGraphBuildingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
     m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });
+
+    m_camera = CameraMaker::MakeCamera();
+    m_culler = menew Culler(m_camera);
+
+    PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");
+    auto dtos = SceneGraphMaker::MakeFloorDtos("floor_node");
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_floor", dtos));
 }
 
 void PortalSystemTest::ShutdownEngine()
@@ -88,10 +104,13 @@ void PortalSystemTest::ShutdownEngine()
     SAFE_DELETE(m_culler);
     EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::Unsubscribe(typeid(BuildPawnPrimitiveFailed), m_onBuildPawnPrimitiveFailed);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
     m_onSceneGraphBuilt = nullptr;
     m_onPawnPrimitiveBuilt = nullptr;
+    m_onBuildPawnPrimitiveFailed = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -99,6 +118,8 @@ void PortalSystemTest::ShutdownEngine()
 void PortalSystemTest::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+
+    PrepareRenderScene();
 }
 
 void PortalSystemTest::RenderFrame()
@@ -109,6 +130,18 @@ void PortalSystemTest::RenderFrame()
     m_renderer->DrawScene();
     m_renderer->EndScene();
     m_renderer->Flip();
+}
+
+void PortalSystemTest::PrepareRenderScene()
+{
+    if (m_sceneRoot)
+    {
+        m_culler->ComputeVisibleSet(m_sceneRoot);
+    }
+    if ((m_renderer) && (m_sceneRoot) && (m_culler->GetVisibleSet().GetCount() != 0))
+    {
+        m_renderer->PrepareScene(m_culler->GetVisibleSet());
+    }
 }
 
 void PortalSystemTest::OnRendererCreated(const IEventPtr& e)
@@ -128,4 +161,23 @@ void PortalSystemTest::OnRenderTargetCreated(const IEventPtr& e)
     if (!ev) return;
     m_renderTarget = ev->GetRenderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+}
+
+void PortalSystemTest::OnSceneGraphBuilt(const IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    if (!ev) return;
+    auto top_spatials = ev->GetTopLevelSpatial();
+    if (top_spatials.empty()) return;
+    m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
+    if (!m_sceneRoot) return;
+}
+
+void PortalSystemTest::OnBuildPawnPrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildPawnPrimitiveFailed, IEvent>(e);
+    if (!ev) return;
+    Debug::ErrorPrintf("build pawn primitive failed %s\n", ev->GetErrorCode().message().c_str());
 }

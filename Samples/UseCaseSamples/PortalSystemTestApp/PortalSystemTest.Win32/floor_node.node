@@ -1,0 +1,215 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.Node",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": true
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "floor_node"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": ["floor"]
+        }
+    }, {
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.Pawn",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 10.0, 0.0000011920928955078125, 10.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "pawn"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 10.0, 0.0000011920928955078125, 10.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "PrimitiveFactory": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Engine.Primitive",
+                "PrefabFilename": ""
+            }
+        },
+        "PawnPrimitive": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Renderer.MeshPrimitive",
+                        "PrefabFilename": ""
+                    }
+                },
+                "Name": {
+                    "Type": "String",
+                    "Value": "floor"
+                },
+                "GeometryName": {
+                    "Type": "String",
+                    "Value": "floor"
+                },
+                "GeometryFactory": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 4,
+                        "ResourceName": "floor",
+                        "ResourceFilename": "floor.geo@DataPath",
+                        "RttiName": "En.Engine.TriangleList",
+                        "PrefabFilename": ""
+                    }
+                },
+                "Effects": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 4,
+                                    "ResourceName": "basic_floor_mesh",
+                                    "ResourceFilename": "basic_floor_mesh.efx@APK_PATH",
+                                    "RttiName": "En.Engine.EffectMaterial",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "basic_floor_mesh"
+                            }
+                        }]
+                },
+                "TextureMaps": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureName": {
+                                            "Type": "String",
+                                            "Value": "floor_tex"
+                                        },
+                                        "Filename": {
+                                            "Type": "String",
+                                            "Value": "du011.png"
+                                        },
+                                        "PathId": {
+                                            "Type": "String",
+                                            "Value": "APK_PATH"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "DiffuseMap"
+                                        }
+                                    }]
+                            }
+                        }]
+                }
+            }
+        }
+    }]

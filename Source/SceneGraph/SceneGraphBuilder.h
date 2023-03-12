@@ -73,7 +73,8 @@ namespace Enigma::SceneGraph
         void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();
 
-        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto);
+        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, 
+            const Engine::GenericDto& primitive_dto);
         void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
         void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r);

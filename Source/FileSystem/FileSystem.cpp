@@ -67,12 +67,12 @@ FutureFile FileSystem::AsyncOpenFile(const std::string& filename,
 
 IFilePtr FileSystem::OpenFile(const Filename& filename, const std::string& rw_options)
 {
-    return OpenFile(filename.GetFileName(), rw_options, filename.GetMountPathID());
+    return OpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
 }
 
 FutureFile FileSystem::AsyncOpenFile(const Filename& filename, const std::string& rw_options)
 {
-    return AsyncOpenFile(filename.GetFileName(), rw_options, filename.GetMountPathID());
+    return AsyncOpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
 }
 
 IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::string& filename,

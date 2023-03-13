@@ -12,6 +12,7 @@ DEFINE_RTTI(SceneGraph, PortalZoneNode, LazyNode);
 
 PortalZoneNode::PortalZoneNode(const std::string& name) : LazyNode(name)
 {
+    m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.GetName());
     m_hasTraversed = false;
 }
 

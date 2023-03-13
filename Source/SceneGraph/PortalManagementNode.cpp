@@ -10,11 +10,13 @@
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, PortalManagementNode, Node);
 
 PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
 {
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.GetName());
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
 }
@@ -31,14 +33,14 @@ PortalManagementNode::~PortalManagementNode()
     m_cachedStartZone = nullptr;
 }
 
-Enigma::Engine::GenericDto PortalManagementNode::SerializeDto()
+GenericDto PortalManagementNode::SerializeDto()
 {
     PortalManagementNodeDto dto(SerializeSpatialDto());
     if (m_outsideZone) dto.OutsideZoneNodeName() = m_outsideZone->GetSpatialName();
     return dto.ToGenericDto();
 }
 
-void PortalManagementNode::ResolveFactoryLinkage(const std::string& outside_node_name, Engine::FactoryLinkageResolver<Spatial>& resolver)
+void PortalManagementNode::ResolveFactoryLinkage(const std::string& outside_node_name, FactoryLinkageResolver<Spatial>& resolver)
 {
     resolver.TryResolveLinkage(outside_node_name, [lifetime = weak_from_this()](auto sp)
         {

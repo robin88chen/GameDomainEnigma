@@ -8,6 +8,7 @@
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
+using namespace Enigma::Engine;
 
 // 預設的通道，可見的位置是在通道的+z方向
 Vector3 s_vecPortalLocalQuad[PORTAL_VERTEX_COUNT] =
@@ -20,6 +21,7 @@ DEFINE_RTTI(SceneGraph, Portal, Spatial);
 
 Portal::Portal(const std::string& name) : Spatial(name)
 {
+    m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.GetName());
     m_isOpen = false;
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }

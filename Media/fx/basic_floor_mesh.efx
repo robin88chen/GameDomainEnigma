@@ -3,12 +3,12 @@
 	"VertexShaderList" : [
 	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/mesh.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
 	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/basic_vtx_nor_tex_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
-	{"Name" : "default_vs", "API" : "egl", "File" : "fx/mesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/basic_vtx_nor_tex_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
 	],
 	"PixelShaderList" : [
 	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
 	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
-	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""}
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
 	],
 	"SamplerStateList" : [
 	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},

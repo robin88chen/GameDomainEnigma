@@ -89,6 +89,7 @@ void PortalSystemTest::InstallEngine()
     m_culler = menew Culler(m_camera);
 
     PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");
+    PrimitiveMeshMaker::MakeSavedDoorGeometry("door");
     auto dtos = SceneGraphMaker::MakeFloorDtos("floor_node");
     CommandBus::Post(std::make_shared<BuildSceneGraph>("test_floor", dtos));
 }

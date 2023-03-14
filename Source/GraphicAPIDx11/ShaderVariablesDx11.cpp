@@ -594,6 +594,7 @@ error ShaderVariableDx11_Texture::Apply()
         {
             resource[0] = texDx11->GetD3DResourceView();
         }
+        Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
         /*unsigned int w, h;
         m_texture->GetDimension(&w, &h);
         DebugPrintf("Texture %s, %d, %d\n", m_texture->GetName().String().c_str(), w, h);*/

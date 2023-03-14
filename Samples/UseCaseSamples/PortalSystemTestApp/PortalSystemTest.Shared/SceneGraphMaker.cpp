@@ -29,19 +29,29 @@ std::vector<Enigma::Engine::GenericDto> SceneGraphMaker::MakeFloorDtos(const std
     node_dto.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
     node_dto.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
     node_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
-    node_dto.ChildNames() = { "floor" };
-    PawnDto pawn_dto;
+    node_dto.ChildNames() = { "floor", "door" };
+    PawnDto floor_dto;
     MeshPrimitiveDto mesh_dto = PrimitiveMeshMaker::MakeMeshPrimitiveDto("floor", "floor", "basic_floor_mesh", "fx/basic_floor_mesh.efx", "image/du011.png", "floor_tex", "DiffuseMap");
-    pawn_dto.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
-    pawn_dto.Name() = "floor";
-    pawn_dto.LocalTransform() = Matrix4::IDENTITY;
-    pawn_dto.WorldTransform() = node_dto.WorldTransform() * pawn_dto.LocalTransform();
-    pawn_dto.ModelBound() = PrimitiveMeshMaker::GetFloorBound().SerializeDto().ToGenericDto();
-    pawn_dto.WorldBound() = BoundingVolume::CreateFromTransform(PrimitiveMeshMaker::GetFloorBound(), pawn_dto.WorldTransform()).SerializeDto().ToGenericDto();
-    pawn_dto.ThePrimitive() = mesh_dto.ToGenericDto();
-    pawn_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    floor_dto.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    floor_dto.Name() = "floor";
+    floor_dto.LocalTransform() = Matrix4::IDENTITY;
+    floor_dto.WorldTransform() = node_dto.WorldTransform() * floor_dto.LocalTransform();
+    floor_dto.ModelBound() = PrimitiveMeshMaker::GetFloorBound().SerializeDto().ToGenericDto();
+    floor_dto.WorldBound() = BoundingVolume::CreateFromTransform(PrimitiveMeshMaker::GetFloorBound(), floor_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    floor_dto.ThePrimitive() = mesh_dto.ToGenericDto();
+    floor_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    PawnDto door_dto;
+    mesh_dto = PrimitiveMeshMaker::MakeMeshPrimitiveDto("door", "door", "basic_floor_mesh", "fx/basic_floor_mesh.efx", "earth.png", "door_tex", "DiffuseMap");
+    door_dto.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    door_dto.Name() = "door";
+    door_dto.LocalTransform() = Matrix4::IDENTITY;
+    door_dto.WorldTransform() = node_dto.WorldTransform() * door_dto.LocalTransform();
+    door_dto.ModelBound() = PrimitiveMeshMaker::GetDoorBound().SerializeDto().ToGenericDto();
+    door_dto.WorldBound() = BoundingVolume::CreateFromTransform(PrimitiveMeshMaker::GetDoorBound(), door_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    door_dto.ThePrimitive() = mesh_dto.ToGenericDto();
+    door_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
 
-    return { node_dto.ToGenericDto(), pawn_dto.ToGenericDto() };
+    return { node_dto.ToGenericDto(), floor_dto.ToGenericDto(), door_dto.ToGenericDto() };
 }
 
 void SceneGraphMaker::MakeSavedFloorNode(const std::string& node_name)

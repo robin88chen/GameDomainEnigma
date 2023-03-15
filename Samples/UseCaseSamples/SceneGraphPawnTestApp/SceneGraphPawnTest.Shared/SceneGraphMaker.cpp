@@ -36,6 +36,7 @@ std::vector<Enigma::Engine::GenericDto> SceneGraphMaker::MakeSceneGraphDtos()
     child1_dto.ModelBound() = child_bv.SerializeDto().ToGenericDto();
     child1_dto.WorldBound() = BoundingVolume::CreateFromTransform(child_bv, child1_dto.WorldTransform()).SerializeDto().ToGenericDto();
     child1_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    child1_dto.ChildNames() = { "still_pawn" };
     NodeDto child2_dto;
     child2_dto.TheFactoryDesc() = FactoryDesc(Node::TYPE_RTTI.GetName());
     child2_dto.Name() = "child2";
@@ -55,6 +56,16 @@ std::vector<Enigma::Engine::GenericDto> SceneGraphMaker::MakeSceneGraphDtos()
     pawn_dto.WorldBound() = BoundingVolume::CreateFromTransform(CubeGeometryMaker::GetGeometryBound(), pawn_dto.WorldTransform()).SerializeDto().ToGenericDto();
     pawn_dto.ThePrimitive() = model_dto.ToGenericDto();
     pawn_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    PawnDto stillpawn_dto;
+    //ModelPrimitiveDto model_dto = SkinMeshModelMaker::MakeModelPrimitiveDto("test_model", "test_geometry");
+    stillpawn_dto.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    stillpawn_dto.Name() = "still_pawn";
+    stillpawn_dto.LocalTransform() = Matrix4::IDENTITY;
+    stillpawn_dto.WorldTransform() = child1_dto.WorldTransform() * stillpawn_dto.LocalTransform();
+    stillpawn_dto.ModelBound() = CubeGeometryMaker::GetGeometryBound().SerializeDto().ToGenericDto();
+    stillpawn_dto.WorldBound() = BoundingVolume::CreateFromTransform(CubeGeometryMaker::GetGeometryBound(), stillpawn_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    stillpawn_dto.ThePrimitive() = model_dto.ToGenericDto();
+    stillpawn_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
 
-    return { root_dto.ToGenericDto(), child1_dto.ToGenericDto(), child2_dto.ToGenericDto(), pawn_dto.ToGenericDto() };
+    return { root_dto.ToGenericDto(), child1_dto.ToGenericDto(), child2_dto.ToGenericDto(), pawn_dto.ToGenericDto(), stillpawn_dto.ToGenericDto() };
 }

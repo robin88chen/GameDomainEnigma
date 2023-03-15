@@ -126,7 +126,7 @@
         },
         "ChildNames": {
             "Type": "StringArray",
-            "Value": []
+            "Value": ["still_pawn"]
         }
     }, {
         "LocalTransform": {
@@ -204,7 +204,7 @@
                 "InstanceType": 0,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.Spatial",
+                "RttiName": "En.SceneGraph.Pawn",
                 "PrefabFilename": ""
             }
         },
@@ -243,6 +243,335 @@
                 "BoxBV": {
                     "Type": "Box3",
                     "Value": [2.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 33
+        },
+        "PrimitiveFactory": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Engine.Primitive",
+                "PrefabFilename": ""
+            }
+        },
+        "PawnPrimitive": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Renderer.ModelPrimitive",
+                        "PrefabFilename": ""
+                    }
+                },
+                "Name": {
+                    "Type": "String",
+                    "Value": "test_model"
+                },
+                "MeshNodeTree": {
+                    "Type": "DataObject",
+                    "Value": {
+                        "Rtti": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 0,
+                                "ResourceName": "",
+                                "ResourceFilename": "",
+                                "RttiName": "En.Renderer.MeshNodeTree",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "MeshNodes": {
+                            "Type": "DataObjectArray",
+                            "Value": [{
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "LocalTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "bone_root"
+                                    },
+                                    "RootRefTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.SkinMeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "test_model_skinmesh"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "test_geometry"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "test_geometry",
+                                                    "ResourceFilename": "test_geometry.geo@DataPath",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "skin_mesh_prim_test",
+                                                                "ResourceFilename": "skin_mesh_prim_test.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": ""
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "skin_mesh_prim_test"
+                                                        }
+                                                    }]
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "TextureMappings": {
+                                                            "Type": "DataObjectArray",
+                                                            "Value": [{
+                                                                    "TextureName": {
+                                                                        "Type": "String",
+                                                                        "Value": "earth"
+                                                                    },
+                                                                    "Filename": {
+                                                                        "Type": "String",
+                                                                        "Value": "earth.png"
+                                                                    },
+                                                                    "PathId": {
+                                                                        "Type": "String",
+                                                                        "Value": "APK_PATH"
+                                                                    },
+                                                                    "Semantic": {
+                                                                        "Type": "String",
+                                                                        "Value": "DiffuseMap"
+                                                                    }
+                                                                }]
+                                                        }
+                                                    }]
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    "LocalTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "bone_one"
+                                    },
+                                    "RootRefTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 0
+                                    }
+                                }]
+                        }
+                    }
+                },
+                "ModelAnimator": {
+                    "Type": "DataObject",
+                    "Value": {
+                        "Rtti": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 0,
+                                "ResourceName": "",
+                                "ResourceFilename": "",
+                                "RttiName": "En.Animators.ModelPrimitiveAnimator",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "AssetObject": {
+                            "Type": "DataObject",
+                            "Value": {
+                                "Rtti": {
+                                    "Type": "FactoryDesc",
+                                    "Value": {
+                                        "InstanceType": 0,
+                                        "ResourceName": "",
+                                        "ResourceFilename": "",
+                                        "RttiName": "En.Animators.ModelAnimationAsset",
+                                        "PrefabFilename": ""
+                                    }
+                                },
+                                "Name": {
+                                    "Type": "String",
+                                    "Value": "test_model_anim"
+                                },
+                                "TimeSRTs": {
+                                    "Type": "DataObjectArray",
+                                    "Value": [{
+                                            "ScaleTimeKeys": {
+                                                "Type": "FloatArray",
+                                                "Value": [0.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 2.0, 1.0, 1.0, 1.0]
+                                            },
+                                            "RotateTimeKeys": {
+                                                "Type": "FloatArray",
+                                                "Value": [0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0]
+                                            },
+                                            "TranslateTimeKeys": {
+                                                "Type": "FloatArray",
+                                                "Value": [0.0, 2.0, 2.0, 0.0, 1.0, -1.2000000476837158, 1.2000000476837158, 0.0, 2.0, 2.0, 2.0, 0.0]
+                                            }
+                                        }]
+                                },
+                                "MeshNodeNames": {
+                                    "Type": "StringArray",
+                                    "Value": ["bone_one"]
+                                }
+                            }
+                        },
+                        "AnimationName": {
+                            "Type": "String",
+                            "Value": "test_model_anim"
+                        },
+                        "AnimationFactory": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 5,
+                                "ResourceName": "test_model_anim",
+                                "ResourceFilename": "test_model_anim.ani@DataPath",
+                                "RttiName": "En.Animators.ModelAnimationAsset",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "SkinOperators": {
+                            "Type": "DataObjectArray",
+                            "Value": [{
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Animators.SkinAnimationOperator",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "SkinMeshName": {
+                                        "Type": "String",
+                                        "Value": "test_model_skinmesh"
+                                    },
+                                    "BoneNodeNames": {
+                                        "Type": "StringArray",
+                                        "Value": ["bone_root", "bone_one"]
+                                    }
+                                }]
+                        }
+                    }
+                }
+            }
+        }
+    }, {
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.Pawn",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "still_pawn"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
                 }
             }
         },

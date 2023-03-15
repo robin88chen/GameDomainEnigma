@@ -8,8 +8,11 @@
 #include "Renderer/RendererCommands.h"
 #include "Frameworks/CommandBus.h"
 #include <memory>
+#include <chrono>
 
 #define WM_MOUSEWHEEL_LEGACY 0x020A
+
+using namespace std::chrono_literals;
 
 using namespace Enigma::Application;
 AppDelegate* AppDelegate::m_instance = nullptr;
@@ -251,7 +254,8 @@ void AppDelegate::OnIdle()
     PrepareRender();
     RenderFrame();
 
-    std::this_thread::sleep_for(std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
+    //todo : GPU 太慢的時候要睡久一點, 看要怎麼動態調整
+    std::this_thread::sleep_for(1ms);// std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
 }
 
 void AppDelegate::FrameUpdate()

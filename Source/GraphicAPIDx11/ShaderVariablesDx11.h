@@ -226,6 +226,9 @@ namespace Enigma::Devices
         virtual void SetValues(std::any data_array, unsigned int count) override;
 
         virtual error Apply() override;
+        virtual future_error AsyncApply() override;
+
+        error ApplyTexture(const Graphics::ITexturePtr& tex, std::optional<unsigned> indexMultiTexture);
 
     protected:
         Graphics::ITexturePtr m_texture; //todo: 為什麼原本用 weak ptr?? (2022.12.28)

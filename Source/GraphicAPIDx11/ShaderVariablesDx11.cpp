@@ -9,6 +9,7 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "GraphicKernel/GraphicThread.h"
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -580,6 +581,17 @@ void ShaderVariableDx11_Texture::SetValues(std::any data_array, unsigned int cou
 
 error ShaderVariableDx11_Texture::Apply()
 {
+    return ApplyTexture(m_texture, m_indexMultiTexture);
+}
+
+future_error ShaderVariableDx11_Texture::AsyncApply()
+{
+    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+        PushTask([lifetime = shared_from_this(), tex = m_texture, idx = m_indexMultiTexture]() -> error { return std::dynamic_pointer_cast<ShaderVariableDx11_Texture, IShaderVariable>(lifetime)->ApplyTexture(tex, idx); });
+}
+
+error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex, std::optional<unsigned> indexMultiTexture)
+{
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
@@ -587,24 +599,24 @@ error ShaderVariableDx11_Texture::Apply()
     assert(deviceContext);
 
     ID3D11ShaderResourceView* resource[1] = { nullptr /*m_texture->GetD3DResourceView() */ };
-    if ((m_texture) && (!m_texture->IsMultiTexture()))
+    if ((tex) && (!tex->IsMultiTexture()))
     {
-        TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(m_texture.get());
+        TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(tex.get());
         if (texDx11)
         {
             resource[0] = texDx11->GetD3DResourceView();
         }
-        Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
+        //Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
         /*unsigned int w, h;
         m_texture->GetDimension(&w, &h);
         DebugPrintf("Texture %s, %d, %d\n", m_texture->GetName().String().c_str(), w, h);*/
     }
-    else if ((m_texture) && (m_texture->IsMultiTexture()) && (m_indexMultiTexture))
+    else if ((tex) && (tex->IsMultiTexture()) && (indexMultiTexture))
     {
-        MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(m_texture.get());
+        MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(tex.get());
         if (texDx11)
         {
-            resource[0] = texDx11->GetD3DResourceView(m_indexMultiTexture.value());
+            resource[0] = texDx11->GetD3DResourceView(indexMultiTexture.value());
         }
         /*unsigned int w, h;
         m_multiTexture->GetDimension(&w, &h);

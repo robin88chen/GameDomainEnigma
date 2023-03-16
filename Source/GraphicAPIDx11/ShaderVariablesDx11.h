@@ -76,7 +76,7 @@ namespace Enigma::Devices
 
         unsigned int GetBindPoint() { return m_bindPoint; };
         virtual error Apply() override;
-        /** const buffer 會用保存的 data buffer 給 async functor, value 不會跑掉 */
+        /** device const buffer dx11 會用保存的 data buffer 給 async functor, value 不會跑掉 */
         virtual future_error AsyncApply() override;
 
     protected:
@@ -249,7 +249,9 @@ namespace Enigma::Devices
         virtual void SetValues(std::any data_array, unsigned int count) override;
 
         virtual error Apply() override;
+        virtual future_error AsyncApply() override;
 
+        error ApplySampler(const Graphics::IDeviceSamplerStatePtr& sampler);
     protected:
         Graphics::IDeviceSamplerStatePtr m_sampler; //todo: 為什麼原本用 weak ptr?? (2022.12.28)
     };

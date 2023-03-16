@@ -255,7 +255,7 @@ void AppDelegate::OnIdle()
     RenderFrame();
 
     //todo : GPU 太慢的時候要睡久一點, 看要怎麼動態調整
-    std::this_thread::sleep_for(1ms);// std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
+    std::this_thread::sleep_for(5us);// std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
 }
 
 void AppDelegate::FrameUpdate()

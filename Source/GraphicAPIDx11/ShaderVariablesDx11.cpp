@@ -676,14 +676,25 @@ void ShaderVariableDx11_Sampler::SetValues(std::any data_array, unsigned int cou
 
 error ShaderVariableDx11_Sampler::Apply()
 {
+    return ApplySampler(m_sampler);
+}
+
+future_error ShaderVariableDx11_Sampler::AsyncApply()
+{
+    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+        PushTask([lifetime = shared_from_this(), samp = m_sampler]() -> error { return std::dynamic_pointer_cast<ShaderVariableDx11_Sampler, IShaderVariable>(lifetime)->ApplySampler(samp); });
+}
+
+error ShaderVariableDx11_Sampler::ApplySampler(const Graphics::IDeviceSamplerStatePtr& sampler)
+{
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
     assert(deviceContext);
 
-    if (!m_sampler) return ErrorCode::nullSamplerState;
-    DeviceSamplerStateDx11* samplerDx11 = dynamic_cast<DeviceSamplerStateDx11*>(m_sampler.get());
+    if (!sampler) return ErrorCode::nullSamplerState;
+    DeviceSamplerStateDx11* samplerDx11 = dynamic_cast<DeviceSamplerStateDx11*>(sampler.get());
     if (!samplerDx11) return ErrorCode::dynamicCastState;
     return samplerDx11->BindToShader(m_varOf, m_bindPoint);
 }

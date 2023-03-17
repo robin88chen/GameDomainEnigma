@@ -78,11 +78,11 @@ error GraphicMain::InstallRenderEngine(const std::vector<std::shared_ptr<Install
     m_policies = policies;
     error er = ErrorCode::unknownInstallingPolicy;
 
-    er = CreateRenderEngineDevice(std::dynamic_pointer_cast<DeviceCreatingPolicy, InstallingPolicy>(FindDeviceCreatingPolicy()));
+    er = CreateRenderEngineDevice(m_policies.FindDeviceCreatingPolicy());
     if (er) return er;
-    er = InstallDefaultRenderer(std::dynamic_pointer_cast<InstallingDefaultRendererPolicy, InstallingPolicy>(FindRendererInstallingPolicy()));
+    er = InstallDefaultRenderer(m_policies.FindRendererInstallingPolicy());
     if (er) return er;
-    er = InstallSceneGraphManagers(std::dynamic_pointer_cast<SceneGraphBuildingPolicy, InstallingPolicy>(FindSceneGraphBuildingPolicy()));
+    er = InstallSceneGraphManagers(m_policies.FindSceneGraphBuildingPolicy());
 
     return er;
 }
@@ -141,8 +141,7 @@ error GraphicMain::InstallDefaultRenderer(const std::shared_ptr<InstallingDefaul
 
 error GraphicMain::ShutdownDefaultRenderer()
 {
-    std::shared_ptr<InstallingDefaultRendererPolicy> policy = std::dynamic_pointer_cast<InstallingDefaultRendererPolicy, InstallingPolicy>(
-        FindRendererInstallingPolicy());
+    std::shared_ptr<InstallingDefaultRendererPolicy> policy = m_policies.FindRendererInstallingPolicy();
     assert(policy);
 
     error er;
@@ -280,35 +279,3 @@ error GraphicMain::ShutdownAnimationServices()
     return ErrorCode::ok;
 }
 
-std::shared_ptr<InstallingPolicy> GraphicMain::FindDeviceCreatingPolicy()
-{
-    if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
-    {
-        auto& p = *policy;
-        if (typeid(p) == typeid(DeviceCreatingPolicy)) return policy;
-    }
-    return nullptr;
-}
-
-std::shared_ptr<InstallingPolicy> GraphicMain::FindRendererInstallingPolicy()
-{
-    if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
-    {
-        auto& p = *policy;
-        if (typeid(p) == typeid(InstallingDefaultRendererPolicy)) return policy;
-    }
-    return nullptr;
-}
-
-std::shared_ptr<InstallingPolicy> GraphicMain::FindSceneGraphBuildingPolicy()
-{
-    if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
-    {
-        auto& p = *policy;
-        if (typeid(p) == typeid(SceneGraphBuildingPolicy)) return policy;
-    }
-    return nullptr;
-}

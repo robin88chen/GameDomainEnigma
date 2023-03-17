@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ApplicationBridge.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -80,9 +80,9 @@ namespace  Enigma::Application
         Enigma::GraphicAPIBridge::m_initializeGraphicDevice = []() { app_assigned_function(); };
         @endcode */
         //@{
-        /// init graphic device, 
+        /// init graphic device,
         static std::function<void()> m_initializeGraphicDevice;
-        /// init graphic device, 
+        /// init graphic device,
         static std::function<void()> m_finalizeGraphicDevice;
         //@}
     };

@@ -10,6 +10,7 @@
 
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Controllers/GraphicMain.h"
+#include "InputHandlers/InputHandlerService.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 
@@ -50,6 +51,7 @@ namespace Enigma::Application
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;
+        InputHandlers::InputHandlerService* m_inputHandler;
     };
 }
 #endif

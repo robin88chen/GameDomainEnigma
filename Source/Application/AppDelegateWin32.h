@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AppDelegateWin32.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -10,6 +10,7 @@
 
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Controllers/GraphicMain.h"
+#include "InputHandlers/InputHandlerService.h"
 
 #if TARGET_PLATFORM == PLATFORM_WIN32
 #include <string>
@@ -25,7 +26,7 @@ namespace Enigma::Application
 
         static AppDelegate* Instance() { return m_instance; };
 
-        virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice, 
+        virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
                                 const std::string & log_filename = "");
         virtual void InitializeMountPaths() {};
 
@@ -82,6 +83,7 @@ namespace Enigma::Application
         std::string m_mediaRootPath;
 
         Controllers::GraphicMain* m_graphicMain;
+        InputHandlers::InputHandlerService* m_inputHandler;
     };
 }
 #endif

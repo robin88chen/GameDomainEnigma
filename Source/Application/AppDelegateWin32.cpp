@@ -7,6 +7,7 @@
 #include "FileSystem/FileSystem.h"
 #include "Renderer/RendererCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "InputHandlers/MouseKeyButtons.h"
 #include <memory>
 #include <chrono>
 
@@ -15,6 +16,8 @@
 using namespace std::chrono_literals;
 
 using namespace Enigma::Application;
+using namespace Enigma::InputHandlers;
+
 AppDelegate* AppDelegate::m_instance = nullptr;
 
 AppDelegate::AppDelegate(const std::string app_name)
@@ -265,113 +268,113 @@ void AppDelegate::FrameUpdate()
 
 void AppDelegate::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseLeftDown(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
         SetFocus(m_hwnd);
-        input->ProcessWinMouseLeftButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseLeftButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseLeftUp(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseLeftButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseLeftButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseLeftDblClick(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseLeftButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseLeftButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseRightDown(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseRightButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseRightButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseRightUp(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseRightButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseRightButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseRightDblClick(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseRightButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseRightButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseMiddleDown(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseMiddleButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseMiddleButtonDown(false, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseMiddleUp(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseMiddleButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseMiddleButtonUp((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseMiddleDblClick(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseMiddleButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseMiddleButtonDown(true, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnMouseWheel(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinMouseWheel((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
+        m_inputHandler->ProcessWinMouseWheel((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam),
             MouseKeyFlags{ (unsigned int)wParam });
-    }*/
+    }
 }
 void AppDelegate::OnKeyChar(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinKeyChar((char)(wParam), (int)(short)LOWORD(lParam));
-    }*/
+        m_inputHandler->ProcessWinKeyChar((char)(wParam), (int)(short)LOWORD(lParam));
+    }
 }
 void AppDelegate::OnKeyDown(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinKeyPressDown((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
-    }*/
+        m_inputHandler->ProcessWinKeyPressDown((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
+    }
 }
 void AppDelegate::OnKeyUp(WPARAM wParam, LPARAM lParam)
 {
-    /*if (InputHandlerService* input = ServiceManager::GetSystemServiceAs<InputHandlerService>())
+    if (m_inputHandler)
     {
-        input->ProcessWinKeyPressUp((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
-    }*/
+        m_inputHandler->ProcessWinKeyPressUp((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
+    }
 }
 void AppDelegate::OnClose(WPARAM , LPARAM )
 {

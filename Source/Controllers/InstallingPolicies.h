@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   InstallingPolicies.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -56,6 +56,20 @@ namespace Enigma::Controllers
     protected:
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
+    };
+
+    class InstallingPolicyGroup
+    {
+    public:
+        InstallingPolicyGroup() = default;
+        InstallingPolicyGroup(const std::vector<std::shared_ptr<InstallingPolicy>>& policies) : m_policies(policies) {};
+
+        std::shared_ptr<DeviceCreatingPolicy> FindDeviceCreatingPolicy();
+        std::shared_ptr<InstallingDefaultRendererPolicy> FindRendererInstallingPolicy();
+        std::shared_ptr<SceneGraphBuildingPolicy> FindSceneGraphBuildingPolicy();
+
+    private:
+        std::vector<std::shared_ptr<InstallingPolicy>> m_policies;
     };
 }
 

@@ -12,6 +12,7 @@
 #include <memory>
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include "InstallingPolicies.h"
 
 namespace Enigma::Renderer
 {
@@ -21,10 +22,6 @@ namespace Enigma::Renderer
 namespace Enigma::Controllers
 {
     using error = std::error_code;
-    class InstallingPolicy;
-    class DeviceCreatingPolicy;
-    class InstallingDefaultRendererPolicy;
-    class SceneGraphBuildingPolicy;
 
     /** Graphic Kernel Main class \n singleton */
     class GraphicMain
@@ -50,10 +47,6 @@ namespace Enigma::Controllers
         Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
 
     private:
-        std::shared_ptr<InstallingPolicy> FindDeviceCreatingPolicy();
-        std::shared_ptr<InstallingPolicy> FindRendererInstallingPolicy();
-        std::shared_ptr<InstallingPolicy> FindSceneGraphBuildingPolicy();
-
         error CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy);
         error CleanupRenderEngineDevice();
 
@@ -86,7 +79,7 @@ namespace Enigma::Controllers
 
         Frameworks::ServiceManager* m_serviceManager;
 
-        std::vector<std::shared_ptr<InstallingPolicy>> m_policies;
+        InstallingPolicyGroup m_policies;
 
         Renderer::RendererManager* m_renderer;
     };

@@ -32,6 +32,7 @@ Filename::Filename(const Filename& filename)
     m_fname = filename.m_fname;
     m_filename = filename.m_filename;
     m_pathID = filename.m_pathID;
+    m_subPathFilename = filename.m_subPathFilename;
 }
 
 void Filename::SplitPath(const std::string& str)
@@ -46,6 +47,13 @@ void Filename::SplitPath(const std::string& str)
     {
         m_dir = str;
     }
+    pos = m_dir.find('@');
+    if (pos != std::string::npos)
+    {
+        m_pathID = m_dir.substr(pos + 1);
+        m_dir = m_dir.substr(0, pos);
+        m_subPathFilename = m_dir;
+    }
     pos = m_dir.find_last_of("/\\");
     if (pos != std::string::npos)
     {
@@ -56,12 +64,6 @@ void Filename::SplitPath(const std::string& str)
     {
         m_fname = m_dir;
         m_dir = "";
-    }
-    pos = m_fname.find('@');
-    if (pos != std::string::npos)
-    {
-        m_pathID = m_fname.substr(pos + 1);
-        m_fname = m_fname.substr(0, pos);
     }
     pos = m_fname.find_last_of('.');
     if (pos != std::string::npos)
@@ -111,6 +113,24 @@ std::string Filename::GetFileNameAtPath()
         return GetFileName() + "@" + m_pathID;
     }
     return GetFileName();
+}
+
+const std::string& Filename::GetSubPathFileName() const
+{
+    if (!HasPathID())
+    {
+        return m_filename;
+    }
+    return m_subPathFilename;
+}
+
+std::string Filename::GetSubPathFileNameAtPath()
+{
+    if (!HasPathID())
+    {
+        return GetFileNameAtPath();
+    }
+    return GetSubPathFileName() + "@" + m_pathID;
 }
 
 void Filename::SetDir(const std::string& dir)
@@ -198,7 +218,7 @@ const std::string& Filename::GetFileName() const
     return m_filename;
 }
 
-bool Filename::HasPathID()
+bool Filename::HasPathID() const
 {
     return m_pathID.length() > 0;
 }

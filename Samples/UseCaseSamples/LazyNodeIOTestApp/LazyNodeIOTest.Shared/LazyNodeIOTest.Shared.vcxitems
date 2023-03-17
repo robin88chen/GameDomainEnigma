@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{4b356739-90e0-4f4c-8ceb-496e1f8781e7}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)LazyNodeIOTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SceneGraphMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CubeGeometryMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)LazyNodeIOTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SceneGraphMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkinAnimationMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkinMeshModelMaker.h" />
+  </ItemGroup>
+</Project>

@@ -22,6 +22,36 @@ namespace Enigma::Renderer
     class ModelPrimitiveBuilder
     {
     public:
+        class ModelPrimitiveBuilt : public Frameworks::IEvent
+        {
+        public:
+            ModelPrimitiveBuilt(const Frameworks::Ruid& ruid, const std::string& name, const std::shared_ptr<ModelPrimitive>& prim)
+                : m_ruid(ruid), m_name(name), m_prim(prim) {};
+            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
+            const std::string& GetName() const { return m_name; }
+            const std::shared_ptr<ModelPrimitive>& GetPrimitive() { return m_prim; }
+
+        private:
+            Frameworks::Ruid m_ruid;
+            std::string m_name;
+            std::shared_ptr<ModelPrimitive> m_prim;
+        };
+        class BuildModelPrimitiveFailed : public Frameworks::IEvent
+        {
+        public:
+            BuildModelPrimitiveFailed(const Frameworks::Ruid& ruid, const std::string& name, std::error_code er)
+                : m_ruid(ruid), m_name(name), m_error(er) {};
+
+            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
+            const std::string& GetName() const { return m_name; }
+            std::error_code GetErrorCode() const { return m_error; }
+
+        private:
+            Frameworks::Ruid m_ruid;
+            std::string m_name;
+            std::error_code m_error;
+        };
+    public:
         ModelPrimitiveBuilder();
         ModelPrimitiveBuilder(const ModelPrimitiveBuilder&) = delete;
         ModelPrimitiveBuilder(ModelPrimitiveBuilder&&) = delete;
@@ -29,7 +59,7 @@ namespace Enigma::Renderer
         ModelPrimitiveBuilder& operator=(const ModelPrimitiveBuilder&) = delete;
         ModelPrimitiveBuilder& operator=(ModelPrimitiveBuilder&&) = delete;
 
-        void BuildModelPrimitive(const std::shared_ptr<ModelPrimitivePolicy>& policy);
+        void BuildModelPrimitive(const Frameworks::Ruid& ruid, const std::shared_ptr<ModelPrimitivePolicy>& policy);
 
     protected:
         void PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy);
@@ -51,10 +81,11 @@ namespace Enigma::Renderer
     protected:
         MeshPrimitiveBuilder* m_meshBuilder;
 
+        Frameworks::Ruid m_buildingRuid;
         std::shared_ptr<ModelPrimitivePolicy> m_policy;
         std::shared_ptr<ModelPrimitive> m_builtPrimitive;
 
-        std::queue<std::shared_ptr<MeshPrimitivePolicy>> m_meshPolicies;
+        std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<MeshPrimitivePolicy>>> m_meshPolicies;
         std::vector<MeshBuildingMeta> m_meshBuildingMetas;
 
         std::shared_ptr<Animators::ModelAnimatorPolicy> m_animatorPolicy;

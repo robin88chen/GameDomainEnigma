@@ -15,6 +15,7 @@
 #include "GameEngine/TextureRepository.h"
 #include "GameEngine/GenericDtoFactories.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "SceneGraph/LazyNodeIOService.h"
 #include "GameEngine/GeometryRepository.h"
 #include "GameEngine/TimerService.h"
 #include "Animators/AnimationRepository.h"
@@ -246,13 +247,17 @@ error GraphicMain::ShutdownTextureManagers()
 error GraphicMain::InstallSceneGraphManagers(const std::shared_ptr<SceneGraphBuildingPolicy>& policy)
 {
     assert(policy);
+    const auto timer = m_serviceManager->GetSystemServiceAs<Engine::TimerService>();
+    assert(timer);
     m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager, policy->GetDtoDeserializer(),
         policy->GetEffectDeserializer()));
+    m_serviceManager->RegisterSystemService(menew SceneGraph::LazyNodeIOService(m_serviceManager, timer, policy->GetDtoDeserializer()));
     return ErrorCode::ok;
 }
 
 error GraphicMain::ShutdownSceneGraphManagers()
 {
+    m_serviceManager->ShutdownSystemService(SceneGraph::LazyNodeIOService::TYPE_RTTI);
     m_serviceManager->ShutdownSystemService(SceneGraph::SceneGraphRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }

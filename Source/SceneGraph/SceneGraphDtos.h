@@ -9,11 +9,14 @@
 #define SCENE_GRAPH_DTOS_H
 
 #include "MathLib/Matrix4.h"
-#include "GameEngine/BoundingVolumeDto.h"
+#include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/EffectCompilingProfileDeserializer.h"
+#include "GameEngine/GenericDto.h"
 #include <string>
 #include <vector>
+#include <optional>
+#include <memory>
 
 namespace Enigma::SceneGraph
 {
@@ -22,8 +25,10 @@ namespace Enigma::SceneGraph
     class SpatialDto
     {
     public:
-        SpatialDto() = default;
+        SpatialDto();
 
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
         [[nodiscard]] bool IsTopLevel() const { return m_isTopLevel; }
         bool& IsTopLevel() { return m_isTopLevel; }
         const std::string& Name() const { return m_name; }
@@ -49,6 +54,7 @@ namespace Enigma::SceneGraph
         Engine::GenericDto ToGenericDto();
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         bool m_isTopLevel;
         std::string m_name;
         MathLib::Matrix4 m_localTransform;
@@ -111,6 +117,26 @@ namespace Enigma::SceneGraph
     protected:
         std::optional<Engine::GenericDto> m_primitive;
         Engine::FactoryDesc m_primitiveFactory;
+    };
+
+    class LazyNodeDto : public NodeDto
+    {
+    public:
+        LazyNodeDto() = default;
+        LazyNodeDto(const NodeDto& node_dto);
+
+        static LazyNodeDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
+    };
+
+    class VisibilityManagedNodeDto : public LazyNodeDto
+    {
+    public:
+        VisibilityManagedNodeDto() = default;
+        VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
+
+        static VisibilityManagedNodeDto FromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto ToGenericDto();
     };
 }
 

@@ -4,9 +4,15 @@
 #include "Node.h"
 #include "Pawn.h"
 #include "Light.h"
+#include "LazyNode.h"
+#include "VisibilityManagedNode.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphCommands.h"
+#include "PortalZoneNode.h"
+#include "Portal.h"
+#include "PortalManagementNode.h"
+#include "PortalDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraphBuilder.h"
@@ -14,10 +20,9 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Renderer/ModelPrimitive.h"
-#include "Renderer/RenderablePrimitiveCommands.h"
-#include "Renderer/RenderablePrimitivePolicies.h"
-#include "Renderer/RenderablePrimitiveEvents.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
+#include <mutex>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -32,32 +37,20 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
-    m_dtoDeserializer = dto_deserializer;
-    m_effectDeserializer = effect_deserializer;
 
     m_needTick = false;
-    m_builder = menew SceneGraphBuilder(this);
-    m_doBuildingSceneGraph =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-
-    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
-    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
-    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_builder = menew SceneGraphBuilder(this, dto_deserializer, effect_deserializer);
 }
 
 SceneGraphRepository::~SceneGraphRepository()
 {
-    CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-    m_doBuildingSceneGraph = nullptr;
+    SAFE_DELETE(m_builder);
+}
 
-    EventPublisher::Subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
-    m_onPrimitiveBuilt = nullptr;
-    m_onBuildPrimitiveFailed = nullptr;
-
-    delete m_builder;
+ServiceResult SceneGraphRepository::OnTerm()
+{
+    SAFE_DELETE(m_builder);
+    return ServiceResult::Complete;
 }
 
 void SceneGraphRepository::SetCoordinateSystem(GraphicCoordSys hand)
@@ -120,10 +113,31 @@ std::shared_ptr<Frustum> SceneGraphRepository::QueryFrustum(const std::string& n
     return it->second.lock();
 }
 
-std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name)
+std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name, const Rtti& rtti)
 {
     assert(!HasNode(name));
-    auto node = std::make_shared<Node>(name);
+    std::shared_ptr<Node> node = nullptr;
+    if (rtti == Node::TYPE_RTTI)
+    {
+        node = std::make_shared<Node>(name);
+    }
+    else if (rtti == LazyNode::TYPE_RTTI)
+    {
+        node = std::make_shared<LazyNode>(name);
+    }
+    else if (rtti == VisibilityManagedNode::TYPE_RTTI)
+    {
+        node = std::make_shared<VisibilityManagedNode>(name);
+    }
+    else if (rtti == PortalZoneNode::TYPE_RTTI)
+    {
+        node = std::make_shared<PortalZoneNode>(name);
+    }
+    else if (rtti == PortalManagementNode::TYPE_RTTI)
+    {
+        node = std::make_shared<PortalManagementNode>(name);
+    }
+    assert(node);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(name, node);
     return node;
@@ -133,6 +147,42 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeDto& dto)
 {
     assert(!HasNode(dto.Name()));
     auto node = std::make_shared<Node>(dto);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(dto.Name(), node);
+    return node;
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreateLazyNode(const LazyNodeDto& dto)
+{
+    assert(!HasNode(dto.Name()));
+    auto node = std::make_shared<LazyNode>(dto);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(dto.Name(), node);
+    return node;
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto)
+{
+    assert(!HasNode(dto.Name()));
+    auto node = std::make_shared<VisibilityManagedNode>(dto);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(dto.Name(), node);
+    return node;
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreatePortalZoneNode(const PortalZoneNodeDto& dto)
+{
+    assert(!HasNode(dto.Name()));
+    auto node = std::make_shared<PortalZoneNode>(dto);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(dto.Name(), node);
+    return node;
+}
+
+std::shared_ptr<Node> SceneGraphRepository::CreatePortalManagementNode(const PortalManagementNodeDto& dto)
+{
+    assert(!HasNode(dto.Name()));
+    auto node = std::make_shared<PortalManagementNode>(dto);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(dto.Name(), node);
     return node;
@@ -169,10 +219,6 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
     auto pawn = std::make_shared<Pawn>(dto);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(dto.Name(), pawn);
-    if (dto.ThePrimitive())
-    {
-        BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(dto.ThePrimitive().value()));
-    }
     return pawn;
 }
 
@@ -228,69 +274,46 @@ std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
     return it->second.lock();
 }
 
+std::shared_ptr<Portal> SceneGraphRepository::CreatePortal(const std::string& name)
+{
+    assert(!HasPortal(name));
+    auto portal = std::make_shared<Portal>(name);
+    std::lock_guard locker{ m_portalMapLock };
+    m_portals.insert_or_assign(name, portal);
+    return portal;
+}
+
+std::shared_ptr<Portal> SceneGraphRepository::CreatePortal(const PortalDto& dto)
+{
+    assert(!HasPortal(dto.Name()));
+    auto portal = std::make_shared<Portal>(dto);
+    std::lock_guard locker{ m_portalMapLock };
+    m_portals.insert_or_assign(dto.Name(), portal);
+    return portal;
+}
+
+bool SceneGraphRepository::HasPortal(const std::string& name)
+{
+    std::lock_guard locker{ m_portalMapLock };
+    auto it = m_portals.find(name);
+    return ((it != m_portals.end()) && (!it->second.expired()));
+}
+
+std::shared_ptr<Portal> SceneGraphRepository::QueryPortal(const std::string& name)
+{
+    std::lock_guard locker{ m_portalMapLock };
+    auto it = m_portals.find(name);
+    if (it == m_portals.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
+}
+
 std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& name)
 {
     if (auto node = QueryNode(name)) return node;
     if (auto pawn = QueryPawn(name)) return pawn;
     if (auto light = QueryLight(name)) return light;
+    if (auto portal = QueryPortal(name)) return portal;
     return nullptr;
 }
 
-void SceneGraphRepository::DoBuildingSceneGraph(const ICommandPtr& c)
-{
-    if (!m_builder) return;
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<SceneGraph::BuildSceneGraph, ICommand>(c);
-    if (!cmd) return;
-    m_builder->BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
-}
-
-void SceneGraphRepository::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    if (m_buildingPawnPrimitives.empty()) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
-    if (it == m_buildingPawnPrimitives.end()) return;
-    if (auto pawn = QueryPawn(it->second))
-    {
-        pawn->SetPrimitive(ev->GetPrimitive());
-    }
-    m_buildingPawnPrimitives.erase(it);
-}
-
-void SceneGraphRepository::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
-    if (!ev) return;
-    if (m_buildingPawnPrimitives.empty()) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(ev->GetRuid());
-    if (it == m_buildingPawnPrimitives.end()) return;
-    Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
-    m_buildingPawnPrimitives.erase(it);
-}
-
-std::shared_ptr<RenderablePrimitivePolicy> SceneGraphRepository::ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto)
-{
-    if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
-    {
-        ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
-        return model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
-    }
-    //todo : 其他的 primitive 需要嗎??
-    return nullptr;
-}
-
-void SceneGraphRepository::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
-{
-    assert(pawn);
-    if (!primitive_policy) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    m_buildingPawnPrimitives.insert({ primitive_policy->GetRuid(), pawn->GetSpatialName() });
-    CommandBus::Post(std::make_shared<BuildRenderablePrimitive>(primitive_policy));
-}

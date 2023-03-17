@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Commands Events">
-      <UniqueIdentifier>{3d0986fe-5f53-41e3-9304-5b82b093f4fa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{fc1e9717-66af-4f4f-b4b8-3210e989f1ce}</UniqueIdentifier>
     </Filter>
@@ -37,13 +34,16 @@
     <Filter Include="Renderable Primitives\Skin Mesh">
       <UniqueIdentifier>{e291082e-92ce-4840-90d3-fd21d298b2f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Communicatios">
+      <UniqueIdentifier>{3d0986fe-5f53-41e3-9304-5b82b093f4fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
-      <Filter>Commands Events</Filter>
+      <Filter>Communicatios</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
-      <Filter>Commands Events</Filter>
+      <Filter>Communicatios</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
       <Filter>Renderer</Filter>
@@ -81,11 +81,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
       <Filter>Renderable Primitives\Builders</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h">
-      <Filter>Commands Events</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveResponses.h">
+      <Filter>Communicatios</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveCommands.h">
-      <Filter>Commands Events</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveRequests.h">
+      <Filter>Communicatios</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h">
       <Filter>Renderable Primitives\Model</Filter>

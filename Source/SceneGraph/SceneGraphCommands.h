@@ -15,6 +15,8 @@
 
 namespace Enigma::SceneGraph
 {
+    class Node;
+    class LazyNode;
     class BuildSceneGraph : public Frameworks::ICommand
     {
     public:
@@ -26,6 +28,31 @@ namespace Enigma::SceneGraph
 
     protected:
         std::string m_id;
+        std::vector<Engine::GenericDto> m_dtos;
+    };
+
+    class InstanceLazyNode : public Frameworks::ICommand
+    {
+    public:
+        InstanceLazyNode(const std::shared_ptr<LazyNode>& node) : m_node(node) {}
+
+        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
+
+    protected:
+        std::shared_ptr<LazyNode> m_node;
+    };
+
+    class InPlaceBuildSceneGraph : public Frameworks::ICommand
+    {
+    public:
+        InPlaceBuildSceneGraph(const std::shared_ptr<Node>& owner_node, const std::vector<Engine::GenericDto>& dtos)
+            : m_ownerNode(owner_node), m_dtos(dtos) {}
+
+        const std::shared_ptr<Node>& GetOwnerNode() { return m_ownerNode; }
+        const std::vector<Engine::GenericDto>& GetDtos() { return m_dtos; }
+
+    protected:
+        std::shared_ptr<Node> m_ownerNode;
         std::vector<Engine::GenericDto> m_dtos;
     };
 }

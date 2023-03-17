@@ -19,6 +19,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyStatus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Request.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestBus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventPublisher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyStatus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Request.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestBus.h" />

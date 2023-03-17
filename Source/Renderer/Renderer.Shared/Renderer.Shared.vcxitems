@@ -21,9 +21,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveRequests.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveResponses.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h" />

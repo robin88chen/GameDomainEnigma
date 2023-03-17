@@ -29,11 +29,17 @@ namespace Enigma::SceneGraph
     class Frustum;
     class Node;
     class Pawn;
+    class Portal;
     class LightInfo;
     class Light;
     class NodeDto;
+    class LazyNodeDto;
+    class VisibilityManagedNodeDto;
     class LightDto;
     class PawnDto;
+    class PortalDto;
+    class PortalZoneNodeDto;
+    class PortalManagementNodeDto;
     class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
@@ -48,6 +54,8 @@ namespace Enigma::SceneGraph
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
+        virtual Frameworks::ServiceResult OnTerm() override;
+
         void SetCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys GetCoordinateSystem();
 
@@ -59,8 +67,12 @@ namespace Enigma::SceneGraph
         bool HasFrustum(const std::string& name);
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
-        std::shared_ptr<Node> CreateNode(const std::string& name);
+        std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         std::shared_ptr<Node> CreateNode(const NodeDto& dto);
+        std::shared_ptr<Node> CreateLazyNode(const LazyNodeDto& dto);
+        std::shared_ptr<Node> CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto);
+        std::shared_ptr<Node> CreatePortalZoneNode(const PortalZoneNodeDto& dto);
+        std::shared_ptr<Node> CreatePortalManagementNode(const PortalManagementNodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -74,21 +86,15 @@ namespace Enigma::SceneGraph
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 
+        std::shared_ptr<Portal> CreatePortal(const std::string& name);
+        std::shared_ptr<Portal> CreatePortal(const PortalDto& dto);
+        bool HasPortal(const std::string& name);
+        std::shared_ptr<Portal> QueryPortal(const std::string& name);
+
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
 
     private:
-        void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
-        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
-
-        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const Engine::GenericDto& primitive_dto);
-        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
-
-    private:
         GraphicCoordSys m_handSystem;
-
-        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
         std::recursive_mutex m_cameraMapLock;
@@ -103,13 +109,8 @@ namespace Enigma::SceneGraph
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
 
-        std::unordered_map<Frameworks::Ruid, std::string, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn name
-        std::recursive_mutex m_buildingPrimitiveLock;
-
-        Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
-
-        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
+        std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
+        std::recursive_mutex m_portalMapLock;
 
         SceneGraphBuilder* m_builder;
     };

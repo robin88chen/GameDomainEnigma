@@ -19,6 +19,7 @@ namespace Enigma::SceneGraph
 
     class Pawn : public Spatial
     {
+        DECLARE_EN_RTTI;
     public:
         Pawn(const std::string& name);
         Pawn(const PawnDto& dto);

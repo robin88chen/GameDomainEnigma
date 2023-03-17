@@ -18,6 +18,7 @@ namespace Enigma::Frameworks
     {
     public:
         IRequest();
+        IRequest(const Ruid& ruid) : m_ruid(ruid) {}
         IRequest(const IRequest&) = delete;
         IRequest(IRequest&&) = delete;
         virtual ~IRequest() = default;

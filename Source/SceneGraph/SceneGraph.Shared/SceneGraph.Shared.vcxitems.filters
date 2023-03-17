@@ -34,6 +34,18 @@
     <Filter Include="DTO &amp; Policies">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Portal System">
+      <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lazy Node IO">
+      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visibilities">
+      <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Portal System\Dtos">
+      <UniqueIdentifier>{06aaa09e-d052-45ed-8dde-145f70ebfb2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -111,6 +123,30 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h">
       <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
+      <Filter>Lazy Node IO</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h">
+      <Filter>Visibilities</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h">
+      <Filter>Portal System\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -175,6 +211,30 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp">
       <Filter>DTO &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
+      <Filter>Lazy Node IO</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp">
+      <Filter>Visibilities</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp">
+      <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp">
+      <Filter>Portal System\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp">
+      <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp">
+      <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp">
+      <Filter>Portal System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

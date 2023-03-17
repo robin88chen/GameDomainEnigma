@@ -26,6 +26,7 @@ using namespace Enigma::Renderer;
 
 BoundingVolume PrimitiveMeshMaker::m_floorBounding;
 BoundingVolume PrimitiveMeshMaker::m_doorBounding;
+BoundingVolume PrimitiveMeshMaker::m_boardBounding;
 
 void PrimitiveMeshMaker::MakeSavedFloorGeometry(const std::string& name)
 {
@@ -166,7 +167,60 @@ void PrimitiveMeshMaker::MakeSavedDoorGeometry(const std::string& name)
     FileSystem::Instance()->CloseFile(iFile);
 }
 
-Enigma::Renderer::MeshPrimitiveDto PrimitiveMeshMaker::MakeMeshPrimitiveDto(const std::string& mesh_name, const std::string& geo_name,
+void PrimitiveMeshMaker::MakeSavedBoardGeometry(const std::string& name)
+{
+    std::vector<Vector3> pos =
+    {
+        Vector3(-0.5f, 0.0f, 0.0f), Vector3(-0.5f, 4.0f, 0.0f),
+        Vector3(0.5f, 4.0f, 0.0f), Vector3(0.5f, 0.0f, 0.0f),
+    };
+    unsigned int vtx_count = pos.size();
+    std::vector<Vector3> nor =
+    {
+        Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f),
+        Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f),
+    };
+    std::vector<Vector2> uv =
+    {
+        Vector2(0.0f, 1.0f), Vector2(0.0f, 0.0f),
+        Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f),
+    };
+    uint_buffer idx =
+    {
+        0,1,2, 0,2,3,
+    };
+    TextureCoordDto tex_dto;
+    tex_dto.Texture2DCoords() = uv;
+    TriangleListDto dto;
+    dto.Position3s() = pos;
+    dto.Normals() = nor;
+    dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    dto.Indices() = idx;
+    dto.Segments() = { 0, static_cast<unsigned>(pos.size()), 0, static_cast<unsigned>(idx.size()) };
+    dto.VertexCapacity() = pos.size();
+    dto.VertexUsedCount() = pos.size();
+    dto.IndexCapacity() = idx.size();
+    dto.IndexUsedCount() = idx.size();
+    dto.Name() = name;
+    dto.VertexFormat() = "xyz_nor_tex1(2)";
+    dto.Topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
+    Box3 box = ContainmentBox3::ComputeAlignedBox(&pos[0], static_cast<unsigned>(pos.size()));
+    m_boardBounding = BoundingVolume{ box };
+    dto.GeometryBound() = m_boardBounding.SerializeDto().ToGenericDto();
+
+    GenericDto gen_dto = dto.ToGenericDto();
+    FactoryDesc desc(TriangleList::TYPE_RTTI.GetName());
+    desc.ClaimAsResourceAsset(name, name + ".geo", "DataPath");
+    gen_dto.AddRtti(desc);
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{gen_dto});
+
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(name + ".geo@DataPath"), "w+b");
+    if (FATAL_LOG_EXPR(!iFile)) return;
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+}
+
+MeshPrimitiveDto PrimitiveMeshMaker::MakeMeshPrimitiveDto(const std::string& mesh_name, const std::string& geo_name,
     const std::string& eff_name, const std::string& eff_filename,
     const std::string& tex_filename, const std::string& tex_name, const std::string& tex_semantic)
 {

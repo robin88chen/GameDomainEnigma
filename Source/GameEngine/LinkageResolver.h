@@ -12,7 +12,9 @@
 #include <memory>
 #include <list>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
+#include <vector>
 
 namespace Enigma::Engine
 {
@@ -34,6 +36,7 @@ namespace Enigma::Engine
             }
             else
             {
+                m_unresolvedNames.insert(name);
                 auto iter = m_linkageResolverTable.find(name);
                 if (iter != m_linkageResolverTable.end())
                 {
@@ -50,15 +53,22 @@ namespace Enigma::Engine
         {
             auto iter = m_linkageResolverTable.find(name);
             if (iter == m_linkageResolverTable.end()) return;
+            m_unresolvedNames.erase(name);
             for (auto resolver : iter->second)
             {
                 resolver(spawned);
             }
         }
+
+        std::vector<std::string> GetUnresolvedNames() const
+        {
+            return std::vector<std::string>(m_unresolvedNames.begin(), m_unresolvedNames.end());
+        }
     protected:
         FactoryQuery<T> m_query;
         using LinkageResolverTable = std::unordered_map<std::string, std::list<LinkageResolver<T>>>;
         LinkageResolverTable m_linkageResolverTable;
+        std::unordered_set<std::string> m_unresolvedNames;
     };
 }
 

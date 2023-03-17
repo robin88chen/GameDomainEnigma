@@ -313,6 +313,11 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
             top_levels.emplace_back(meta.m_spatial.value());
         }
     }
+    auto unresolved_names = m_resolver->GetUnresolvedNames();
+    for (auto name : unresolved_names)
+    {
+        Debug::ErrorPrintf("unresolved name %s\n", name.c_str());
+    }
     m_isCurrentBuilding = false;
     if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
     {

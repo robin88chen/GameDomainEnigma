@@ -90,8 +90,11 @@ void PortalSystemTest::InstallEngine()
 
     PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");
     PrimitiveMeshMaker::MakeSavedDoorGeometry("door");
-    auto dtos = SceneGraphMaker::MakeFloorDtos("floor_node");
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_floor", dtos));
+    PrimitiveMeshMaker::MakeSavedBoardGeometry("board");
+    //auto dtos = SceneGraphMaker::MakeFloorDtos("floor_node");
+    //SceneGraphMaker::MakeSavedPortalSceneGraph("portal_scene");
+    auto dtos = SceneGraphMaker::MakePortalSceneGraph("portal_scene");
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_portal", dtos));
 }
 
 void PortalSystemTest::ShutdownEngine()

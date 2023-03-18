@@ -98,14 +98,14 @@ namespace Enigma::InputHandlers
     class GestureShoveBegin : public Frameworks::IEvent
     {
     public:
-        GestureShoveBeginMessage(MathLib::Vector2 focus) : m_focus(focus) {}
+        GestureShoveBegin(MathLib::Vector2 focus) : m_focus(focus) {}
         MathLib::Vector2 m_focus;
     };
     /** gesture shove end message */
     class GestureShoveEnd : public Frameworks::IEvent
     {
     public:
-        GestureShoveEndMessage(MathLib::Vector2 focus) : m_focus(focus) {}
+        GestureShoveEnd(MathLib::Vector2 focus) : m_focus(focus) {}
         MathLib::Vector2 m_focus;
     };
 

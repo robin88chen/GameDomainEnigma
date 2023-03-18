@@ -13,6 +13,9 @@
     <Filter Include="Platform Layer\Android">
       <UniqueIdentifier>{3648bb1f-8e1b-4925-b920-0ad5059c7f3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TextConverter">
+      <UniqueIdentifier>{2c538939-b05d-4483-8a0a-23460693fba5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformConfig.h">
@@ -30,6 +33,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayer.h">
       <Filter>Platform Layer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextConverter.h">
+      <Filter>TextConverter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayerWin32.cpp">
@@ -40,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PlatformLayer.cpp">
       <Filter>Platform Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextConverter.cpp">
+      <Filter>TextConverter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

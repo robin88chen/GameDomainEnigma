@@ -22,4 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PadTextEditingEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WinKeyboardInputEvents.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerService.cpp" />
+  </ItemGroup>
 </Project>

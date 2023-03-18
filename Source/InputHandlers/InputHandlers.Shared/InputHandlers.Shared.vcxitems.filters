@@ -31,4 +31,9 @@
       <Filter>Inputs</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerService.cpp">
+      <Filter>Inputs</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

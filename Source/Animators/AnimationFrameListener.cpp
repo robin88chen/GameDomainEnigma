@@ -10,7 +10,7 @@ using namespace Enigma::Animators;
 
 DEFINE_RTTI(Animators, AnimationFrameListener, ISystemService);
 
-AnimationFrameListener::AnimationFrameListener(Frameworks::ServiceManager* manager, Engine::TimerService* timer) : ISystemService(manager)
+AnimationFrameListener::AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer) : ISystemService(manager)
 {
     assert(timer);
     m_timer = timer;
@@ -33,9 +33,9 @@ ServiceResult AnimationFrameListener::OnInit()
 
 ServiceResult AnimationFrameListener::OnTick()
 {
-    if (m_timer)
+    if (!m_timer.expired())
     {
-        UpdateAnimator(m_timer->GetGameTimer());
+        UpdateAnimator(m_timer.lock()->GetGameTimer());
     }
     if (m_hasExpiredAnimator) RemoveExpiredAnimator();
     return ServiceResult::Pendding;

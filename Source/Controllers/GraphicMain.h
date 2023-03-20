@@ -81,7 +81,7 @@ namespace Enigma::Controllers
 
         InstallingPolicyGroup m_policies;
 
-        Renderer::RendererManager* m_renderer;
+        std::shared_ptr<Renderer::RendererManager> m_renderer;
     };
 
 };

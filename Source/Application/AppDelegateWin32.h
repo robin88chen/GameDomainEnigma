@@ -83,7 +83,7 @@ namespace Enigma::Application
         std::string m_mediaRootPath;
 
         Controllers::GraphicMain* m_graphicMain;
-        InputHandlers::InputHandlerService* m_inputHandler;
+        std::weak_ptr<InputHandlers::InputHandlerService> m_inputHandler;
     };
 }
 #endif

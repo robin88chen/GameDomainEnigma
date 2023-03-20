@@ -13,6 +13,7 @@
 #include <list>
 #include <optional>
 #include <unordered_map>
+#include <memory>
 
 namespace Enigma::Frameworks
 {
@@ -39,9 +40,9 @@ namespace Enigma::Frameworks
         virtual ~ServiceManager();
         ServiceManager& operator=(const ServiceManager&) = delete;
 
-        void RegisterSystemService(ISystemService* service);
+        void RegisterSystemService(const std::shared_ptr<ISystemService>& service);
         void UnregisterSystemService(const Rtti& service_type);
-        void InsertHashAsService(const Rtti& service_type, ISystemService* service);
+        void InsertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service);
         void RemoveHashAsService(const Rtti& service_type);
         /// shutdown immediately
         void ShutdownSystemService(const Rtti& service_type);
@@ -52,20 +53,20 @@ namespace Enigma::Frameworks
 
         ServiceState CheckServiceState(const Rtti& service_type);
 
-        static ISystemService* GetSystemService(const Rtti& service_type);
-        static std::optional<ISystemService*> TryGetSystemService(const Rtti& service_type);
+        static std::shared_ptr<ISystemService> GetSystemService(const Rtti& service_type);
+        static std::optional<std::shared_ptr<ISystemService>> TryGetSystemService(const Rtti& service_type);
 
         template <class T>
-        static T* GetSystemServiceAs()
+        static std::shared_ptr<T> GetSystemServiceAs()
         {
-            return dynamic_cast<T*>(GetSystemService(T::TYPE_RTTI));
+            return std::dynamic_pointer_cast<T, ISystemService>(GetSystemService(T::TYPE_RTTI));
         };
 
     protected:
         struct ServiceStateRecord
         {
             ServiceState m_state;
-            ISystemService* m_service;
+            std::shared_ptr<ISystemService> m_service;
             bool m_isRegistered;
         };
         static bool comp_service_order(const ServiceStateRecord& rec1, const ServiceStateRecord& rec2)
@@ -79,7 +80,7 @@ namespace Enigma::Frameworks
     protected:
         static ServiceManager* m_instance;
 
-        typedef std::unordered_map<const Rtti*, ISystemService*> SystemServiceMap;  ///< mapping by rtti type_index
+        typedef std::unordered_map<const Rtti*, std::shared_ptr<ISystemService>> SystemServiceMap;  ///< mapping by rtti type_index
 
         SystemServiceList m_services;
         SystemServiceMap m_mapServices;

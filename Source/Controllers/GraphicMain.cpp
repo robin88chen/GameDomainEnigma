@@ -52,10 +52,10 @@ GraphicMain* GraphicMain::Instance()
 error GraphicMain::InstallFrameworks()
 {
     assert(m_serviceManager);
-    m_serviceManager->RegisterSystemService(menew Frameworks::EventPublisher(m_serviceManager));
-    m_serviceManager->RegisterSystemService(menew Frameworks::CommandBus(m_serviceManager));
-    m_serviceManager->RegisterSystemService(menew Frameworks::RequestBus(m_serviceManager));
-    m_serviceManager->RegisterSystemService(menew Frameworks::ResponseBus(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::EventPublisher>(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared <Frameworks::CommandBus>(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::RequestBus>(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::ResponseBus>(m_serviceManager));
 
     Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
 
@@ -122,7 +122,7 @@ error GraphicMain::InstallDefaultRenderer(const std::shared_ptr<InstallingDefaul
 {
     error er;
 
-    m_serviceManager->RegisterSystemService(menew Engine::GenericDtoFactories(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::GenericDtoFactories>(m_serviceManager));
 
     er = InstallGeometryManagers();
     if (er) return er;
@@ -161,7 +161,7 @@ error GraphicMain::ShutdownDefaultRenderer()
 
 error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
 {
-    m_renderer = menew Renderer::RendererManager(m_serviceManager);
+    m_renderer = std::make_shared<Renderer::RendererManager>(m_serviceManager);
     m_serviceManager->RegisterSystemService(m_renderer);
     error er = m_renderer->CreateRenderer(renderer_name);
     if (er) return er;
@@ -169,7 +169,7 @@ error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::
         is_primary ? Renderer::RenderTarget::PrimaryType::IsPrimary : Renderer::RenderTarget::PrimaryType::NotPrimary);
     if (er) return er;
 
-    m_serviceManager->RegisterSystemService(menew Renderer::RenderablePrimitiveBuilder(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Renderer::RenderablePrimitiveBuilder>(m_serviceManager));
     Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
 
     return ErrorCode::ok;
@@ -193,7 +193,7 @@ error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std:
 
 error GraphicMain::InstallGeometryManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::GeometryRepository(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::GeometryRepository>(m_serviceManager));
     return ErrorCode::ok;
 }
 
@@ -205,8 +205,8 @@ error GraphicMain::ShutdownGeometryManagers()
 
 error GraphicMain::InstallShaderManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::ShaderRepository(m_serviceManager));
-    m_serviceManager->RegisterSystemService(menew Engine::EffectMaterialManager(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::ShaderRepository>(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::EffectMaterialManager>(m_serviceManager));
     menew Engine::MaterialVariableMap;
     return ErrorCode::ok;
 }
@@ -221,7 +221,7 @@ error GraphicMain::ShutdownShaderManagers()
 
 error GraphicMain::InstallRenderBufferManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::RenderBufferRepository(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::RenderBufferRepository>(m_serviceManager));
     return ErrorCode::ok;
 }
 
@@ -233,7 +233,7 @@ error GraphicMain::ShutdownRenderBufferManagers()
 
 error GraphicMain::InstallTextureManagers()
 {
-    m_serviceManager->RegisterSystemService(menew Engine::TextureRepository(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::TextureRepository>(m_serviceManager));
     return ErrorCode::ok;
 }
 
@@ -248,9 +248,9 @@ error GraphicMain::InstallSceneGraphManagers(const std::shared_ptr<SceneGraphBui
     assert(policy);
     const auto timer = m_serviceManager->GetSystemServiceAs<Engine::TimerService>();
     assert(timer);
-    m_serviceManager->RegisterSystemService(menew SceneGraph::SceneGraphRepository(m_serviceManager, policy->GetDtoDeserializer(),
+    m_serviceManager->RegisterSystemService(std::make_shared<SceneGraph::SceneGraphRepository>(m_serviceManager, policy->GetDtoDeserializer(),
         policy->GetEffectDeserializer()));
-    m_serviceManager->RegisterSystemService(menew SceneGraph::LazyNodeIOService(m_serviceManager, timer, policy->GetDtoDeserializer()));
+    m_serviceManager->RegisterSystemService(std::make_shared<SceneGraph::LazyNodeIOService>(m_serviceManager, timer, policy->GetDtoDeserializer()));
     return ErrorCode::ok;
 }
 
@@ -264,10 +264,10 @@ error GraphicMain::ShutdownSceneGraphManagers()
 error GraphicMain::InstallAnimationServices()
 {
     //todo : timer 跟 animation 先放在一起，以後有適合的地方再改
-    auto timer = menew Engine::TimerService(m_serviceManager);
+    auto timer = std::make_shared<Engine::TimerService>(m_serviceManager);
     m_serviceManager->RegisterSystemService(timer);
-    m_serviceManager->RegisterSystemService(menew Animators::AnimationRepository(m_serviceManager));
-    m_serviceManager->RegisterSystemService(menew Animators::AnimationFrameListener(m_serviceManager, timer));
+    m_serviceManager->RegisterSystemService(std::make_shared<Animators::AnimationRepository>(m_serviceManager));
+    m_serviceManager->RegisterSystemService(std::make_shared<Animators::AnimationFrameListener>(m_serviceManager, timer));
     return ErrorCode::ok;
 }
 

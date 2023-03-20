@@ -16,6 +16,7 @@ SpatialRenderState::~SpatialRenderState()
 
 void SpatialRenderState::QueryLightingState(const MathLib::Vector3& spatialPos)
 {
+    //todo : 要把這個 service 取用分離出去
     auto traversal = Frameworks::ServiceManager::GetSystemServiceAs<LightInfoTraversal>();
     SpatialLightInfoQuery query;
     query.InitSpatialPosition(spatialPos);

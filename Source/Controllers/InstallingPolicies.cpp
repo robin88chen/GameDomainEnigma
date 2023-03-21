@@ -23,6 +23,18 @@ SceneGraphBuildingPolicy::SceneGraphBuildingPolicy(
     m_dtoDeserializer = dto_deserializer;
     m_effectDeserializer = effect_deserializer;
 }
+
+InstallingInputHandlerPolicy::InstallingInputHandlerPolicy(const ServiceCreator& creator) : InstallingPolicy()
+{
+    m_creator = creator;
+}
+
+std::shared_ptr<Enigma::Frameworks::ISystemService> InstallingInputHandlerPolicy::CreateService(Frameworks::ServiceManager* manager)
+{
+    m_inputHandler = std::shared_ptr<InputHandlers::InputHandlerService>(dynamic_cast<InputHandlers::InputHandlerService*>(m_creator(manager)));
+    return m_inputHandler;
+}
+
 std::shared_ptr<DeviceCreatingPolicy> InstallingPolicyGroup::FindDeviceCreatingPolicy()
 {
     if (m_policies.empty()) return nullptr;
@@ -52,6 +64,17 @@ std::shared_ptr<SceneGraphBuildingPolicy> InstallingPolicyGroup::FindSceneGraphB
     {
         auto& p = *policy;
         if (typeid(p) == typeid(SceneGraphBuildingPolicy)) return std::dynamic_pointer_cast<SceneGraphBuildingPolicy, InstallingPolicy>(policy);
+    }
+    return nullptr;
+}
+
+std::shared_ptr<InstallingInputHandlerPolicy> InstallingPolicyGroup::FindInputHandlerInstallingPolicy()
+{
+    if (m_policies.empty()) return nullptr;
+    for (auto policy : m_policies)
+    {
+        auto& p = *policy;
+        if (typeid(p) == typeid(InstallingInputHandlerPolicy)) return std::dynamic_pointer_cast<InstallingInputHandlerPolicy, InstallingPolicy>(policy);
     }
     return nullptr;
 }

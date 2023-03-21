@@ -74,6 +74,9 @@ namespace Enigma::Controllers
         error InstallAnimationServices();
         error ShutdownAnimationServices();
 
+        error InstallInputHandlers(const std::shared_ptr<InstallingInputHandlerPolicy>& policy);
+        error ShutdownInputHandlers();
+
     private:
         static GraphicMain* m_instance;
 

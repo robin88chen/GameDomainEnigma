@@ -279,3 +279,15 @@ error GraphicMain::ShutdownAnimationServices()
     return ErrorCode::ok;
 }
 
+error GraphicMain::InstallInputHandlers(const std::shared_ptr<InstallingInputHandlerPolicy>& policy)
+{
+    assert(policy);
+    m_serviceManager->RegisterSystemService(policy->CreateService(m_serviceManager));
+    return ErrorCode::ok;
+}
+
+error GraphicMain::ShutdownInputHandlers()
+{
+    m_serviceManager->ShutdownSystemService(InputHandlers::InputHandlerService::TYPE_RTTI);
+    return ErrorCode::ok;
+}

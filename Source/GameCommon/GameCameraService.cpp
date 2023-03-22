@@ -4,7 +4,6 @@
 #include "SceneGraph/Frustum.h"
 #include "Frameworks/EventPublisher.h"
 #include "MathLib/IntrRay3Plane3.h"
-#include "MathLib/MathGlobal.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -18,13 +17,13 @@ DEFINE_RTTI(GameCommon, GameCameraService, ISystemService);
 #define PRIMARY_CAMERA_NAME "PrimaryCamera"
 #define PRIMARY_FRUSTUM_NAME "PrimaryFrustum"
 
-GameCameraService::GameCameraService(Frameworks::ServiceManager* mngr,
-    const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
+GameCameraService::GameCameraService(ServiceManager* mngr,
+                                     const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
 {
     m_sceneGraphRepository = scene_graph_repository;
     m_needTick = false;
     m_primaryCamera = nullptr;
-    m_orderValue = ISystemService::ServiceDefaultOrderValue - 1;
+    m_orderValue = ServiceDefaultOrderValue - 1;
 }
 
 GameCameraService::~GameCameraService()
@@ -44,13 +43,12 @@ ServiceResult GameCameraService::OnTerm()
     return ServiceResult::Complete;
 }
 
-void GameCameraService::CreatePrimaryCamera(const MathLib::Vector3& vecCameraPos)
+void GameCameraService::CreatePrimaryCamera(const Vector3& vecCameraPos)
 {
     assert(!m_sceneGraphRepository.expired());
     m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(PRIMARY_CAMERA_NAME);
     m_primaryCamera->SetCullingFrustum(m_sceneGraphRepository.lock()->CreateFrustum(PRIMARY_FRUSTUM_NAME, Frustum::ProjectionType::Perspective));
-    m_primaryCamera->SetCameraAxis(Vector3(1.0f, -1.0f, 1.0f), Vector3(0.0f, 1.0f, 0.0f));
-    m_primaryCamera->SetCameraLocation(vecCameraPos);
+    m_primaryCamera->ChangeCameraFrame(vecCameraPos, Vector3(1.0f, -1.0f, 1.0f), Vector3(0.0f, 1.0f, 0.0f));
     m_primaryCamera->GetCullingFrustum()->ChangeFarZ(300.0f);
 
     EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
@@ -60,84 +58,45 @@ void GameCameraService::CameraZoom(float dist)
 {
     if (!m_primaryCamera) return;
 
-    Vector3 dir = m_primaryCamera->GetEyeToLookatVector();
-    Vector3 pos = m_primaryCamera->GetLocation();
-    m_primaryCamera->SetCameraLocation(pos + dist * dir);
+    const error er = m_primaryCamera->Zoom(dist);
 
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraMove(float dir_dist, float slide_dist)
 {
     if (!m_primaryCamera) return;
-    Vector3 right = m_primaryCamera->GetRightVector();
-    Vector3 up = Vector3::UNIT_Y;
 
-    Vector3 move_dir = right.Cross(up);
-    Vector3 move_right = up.Cross(move_dir);
-    Vector3 pos = m_primaryCamera->GetLocation() + dir_dist * move_dir + slide_dist * move_right;
+    const error er = m_primaryCamera->Move(dir_dist, slide_dist);
 
-    m_primaryCamera->SetCameraLocation(pos);
-
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraMoveXZ(float move_x, float move_z)
 {
     if (!m_primaryCamera) return;
-    Vector3 pos = m_primaryCamera->GetLocation() + Vector3(move_x, 0.0f, move_z);
 
-    m_primaryCamera->SetCameraLocation(pos);
+    const error er = m_primaryCamera->MoveXZ(move_x, move_z);
 
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
-void GameCameraService::CameraShiftLookAt(const MathLib::Vector3& vecLookAt)
+void GameCameraService::CameraShiftLookAt(const Vector3& vecLookAt)
 {
     if (!m_primaryCamera) return;
-    Vector3 dir = m_primaryCamera->GetEyeToLookatVector();
-    Vector3 loc = m_primaryCamera->GetLocation();
-    Plane3 horz_plane(Vector3::UNIT_Y, loc);
-    Ray3 dir_ray(vecLookAt, -dir);
-    IntrRay3Plane3 intr(dir_ray, horz_plane);
-    bool res = intr.Find(0);
-    if (!res) return;
-    Vector3 new_loc = intr.GetPoint();
-    m_primaryCamera->SetCameraLocation(new_loc);
 
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    const error er = m_primaryCamera->ShiftLookAt(vecLookAt);
+
+    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
-void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center)
+void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, const Vector3& center)
 {
     if (!m_primaryCamera) return;
-    Vector3 vecCenter = center;
-    if (center == Vector3::ZERO)
-    {
-        Vector3 eye = m_primaryCamera->GetLocation();
-        Vector3 dir = m_primaryCamera->GetEyeToLookatVector();
-        if (std::fabs(dir.Y()) > Math::Epsilon())
-        {
-            float t = (-eye.Y()) / dir.Y();
-            vecCenter = eye + t * dir;
-        }
-    }
-    // thx to george lu
-    Vector3 right = m_primaryCamera->GetRightVector();
-    right = Quaternion(Vector3(0.0f, 1.0f, 0.0f), horz_angle) * right;
 
-    Vector3 dir = Quaternion(right, vert_angle) *
-        Quaternion(Vector3(0.0f, 1.0f, 0.0f), horz_angle) * m_primaryCamera->GetEyeToLookatVector();    // 對XZ軸做旋轉
-    Vector3 up = Quaternion(right, vert_angle) *
-        Quaternion(Vector3(0.0f, 1.0f, 0.0f), horz_angle) * m_primaryCamera->GetUpVector(); // 對XZ軸做旋轉
-    float radius;
-    Vector3 dist = m_primaryCamera->GetLocation() - vecCenter;
-    radius = dist.Length();
-    Vector3 loc = vecCenter - radius * dir;                                         // 新的camera位置
+    const error er = m_primaryCamera->SphereRotate(horz_angle, vert_angle, center);
 
-    m_primaryCamera->SetCameraFrame(loc, dir, up);
-
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::ChangeAspectRatio(float ratio)

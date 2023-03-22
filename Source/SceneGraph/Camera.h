@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Camera.h
  * \brief  camera class, entity, use shared_ptr, maintained by repository
- *
+ *          zoom, move, rotate 等操作行為直接在物件內
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -16,6 +16,7 @@
 #include <memory>
 #include <string>
 #include <system_error>
+#include <optional>
 
 namespace Enigma::SceneGraph
 {
@@ -41,12 +42,18 @@ namespace Enigma::SceneGraph
         const std::string& GetName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handSys; }
 
-        /** set camera local axis -- camera pos to lookat, up axis */
-        error SetCameraAxis(const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up);
-        /** set camera location */
-        error SetCameraLocation(const MathLib::Vector3& pos);
-        /** set camera frame */
-        error SetCameraFrame(const MathLib::Vector3& eye, const MathLib::Vector3& eye_to_lookat, const MathLib::Vector3& up);
+        /** change camera frame, eye_to_lookat & up must both set together or both not set   */
+        error ChangeCameraFrame(const std::optional<MathLib::Vector3>& eye,
+            const std::optional<MathLib::Vector3>& eye_to_lookat, const std::optional<MathLib::Vector3>& up);
+
+        /** @name camera operations */
+        //@{
+        error Zoom(float dist);
+        error SphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center = MathLib::Vector3::ZERO);
+        error Move(float dir_dist, float slide_dist);
+        error MoveXZ(float move_x, float move_z);
+        error ShiftLookAt(const MathLib::Vector3& vecLookAt);
+        //@}
 
         MathLib::Vector3 GetLocation() const { return m_vecLocation; };
         MathLib::Vector3 GetEyeToLookatVector() const { return m_vecEyeToLookAt; };

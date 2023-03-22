@@ -23,6 +23,8 @@ namespace Enigma::SceneGraph
         nullPrimitive,
         nullCullerCamera,
         unsupportPawnPrimitive,
+
+        invalidChangingCamera = 201,
     };
     class ErrorCategory : public std::error_category
     {

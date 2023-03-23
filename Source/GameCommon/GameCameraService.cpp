@@ -1,14 +1,20 @@
-﻿#include "GameCameraService.h"
+﻿#include "Platforms/PlatformConfig.h"
+#include "GameCameraService.h"
 #include "GameCameraEvents.h"
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Frustum.h"
 #include "Frameworks/EventPublisher.h"
 #include "MathLib/IntrRay3Plane3.h"
+#include "Renderer/RendererEvents.h"
+#include "Renderer/RenderTarget.h"
+#include "InputHandlers/MouseInputEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::MathLib;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Renderer;
+using namespace Enigma::InputHandlers;
 
 DEFINE_RTTI(GameCommon, GameCameraService, ISystemService);
 
@@ -34,12 +40,31 @@ GameCameraService::~GameCameraService()
 ServiceResult GameCameraService::OnInit()
 {
     CreatePrimaryCamera(DEFAULT_CAMERA_POS);
+
+    m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
+    m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
+    m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
+    EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
+#if TARGET_PLATFORM == PLATFORM_WIN32
+    EventPublisher::Subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    EventPublisher::Subscribe(typeid(MouseWheeled), m_onMouseWheel);
+#endif
     return ServiceResult::Complete;
 }
 
 ServiceResult GameCameraService::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
+#if TARGET_PLATFORM == PLATFORM_WIN32
+    EventPublisher::Unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    EventPublisher::Unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
+#endif
+    m_onTargetResized = nullptr;
+    m_onRightBtnDrag = nullptr;
+    m_onMouseWheel = nullptr;
+
     m_primaryCamera = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -150,4 +175,35 @@ Ray3 GameCameraService::GetPickerRay(float clip_space_x, float clip_space_y)
     ray_dir.NormalizeSelf();
 
     return Ray3(m_primaryCamera->GetLocation(), ray_dir);
+}
+
+void GameCameraService::OnTargetResized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetRenderTarget() == nullptr) return;
+    if (!ev->GetRenderTarget()->IsPrimary()) return;
+    ChangeAspectRatio((float)ev->GetDimension().m_width / (float)ev->GetDimension().m_height);
+}
+
+void GameCameraService::OnMouseRightBtnDrag(const Frameworks::IEventPtr& e)
+{
+#if TARGET_PLATFORM == PLATFORM_WIN32
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<MouseRightButtonDrag, IEvent>(e);
+    if (!ev) return;
+    CameraSphereRotate(ev->m_param.m_deltaX * 0.003f, ev->m_param.m_deltaY * 0.003f);
+#endif
+}
+
+void GameCameraService::OnMouseWheel(const Frameworks::IEventPtr& e)
+{
+#if TARGET_PLATFORM == PLATFORM_WIN32
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<MouseWheeled, IEvent>(e);
+    if (!ev) return;
+    float delta_dist = (float)(ev->m_param.m_deltaWheel / WHEEL_THRESHOLD) * 0.5f;
+    CameraZoom(delta_dist);
+#endif
 }

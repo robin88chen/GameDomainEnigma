@@ -184,7 +184,7 @@ error RenderTarget::ChangeClearingProperty(const RenderTargetClearChangingProper
     {
         m_clearingProperty.m_flag = prop.m_flag.value();
     }
-    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(m_name, m_clearingProperty));
+    Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(shared_from_this(), m_clearingProperty));
 
     return ErrorCode::ok;
 }
@@ -304,13 +304,13 @@ void RenderTarget::InitViewPortSize()
     m_viewPort.Width() = m_dimension.m_width;
     m_viewPort.Height() = m_dimension.m_height;
 
-    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortInitialized>(m_name, m_viewPort));
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortInitialized>(shared_from_this(), m_viewPort));
 }
 
 void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
-    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortChanged>(m_name, m_viewPort));
+    Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortChanged>(shared_from_this(), m_viewPort));
 }
 
 void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
@@ -407,7 +407,7 @@ void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         InitViewPortSize();
-        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
     }
 }
 
@@ -421,7 +421,7 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         InitViewPortSize();
-        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(m_name, m_dimension));
+        Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
     }
 }
 

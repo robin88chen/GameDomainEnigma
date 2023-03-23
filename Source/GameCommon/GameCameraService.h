@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "MathLib/Ray3.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace Enigma::GameCommon
 {
@@ -49,8 +50,17 @@ namespace Enigma::GameCommon
         MathLib::Ray3 GetPickerRay(float clip_space_x, float clip_space_y);
 
     protected:
+        void OnTargetResized(const Frameworks::IEventPtr& e);
+        void OnMouseRightBtnDrag(const Frameworks::IEventPtr& e);
+        void OnMouseWheel(const Frameworks::IEventPtr& e);
+
+    protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
         std::shared_ptr<SceneGraph::Camera> m_primaryCamera;
+
+        Frameworks::EventSubscriberPtr m_onTargetResized;
+        Frameworks::EventSubscriberPtr m_onRightBtnDrag;
+        Frameworks::EventSubscriberPtr m_onMouseWheel;
     };
 }
 

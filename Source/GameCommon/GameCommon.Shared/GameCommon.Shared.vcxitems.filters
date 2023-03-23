@@ -4,6 +4,9 @@
     <Filter Include="GameCamera">
       <UniqueIdentifier>{5e7f6221-913a-48ee-b329-8fd562142414}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameScene">
+      <UniqueIdentifier>{c018063f-362e-455a-b703-5ee9f36614c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -12,10 +15,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h">
       <Filter>GameCamera</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
       <Filter>GameCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp">
+      <Filter>GameScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -150,6 +150,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp">
       <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.cpp">
+      <Filter>Scene Traveler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

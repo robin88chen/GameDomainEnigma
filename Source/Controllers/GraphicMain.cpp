@@ -6,7 +6,6 @@
 #include "Frameworks/ResponseBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Renderer/RendererManager.h"
-#include "Renderer/RenderTarget.h"
 #include "Renderer/RenderablePrimitiveBuilder.h"
 #include "GameEngine/ShaderRepository.h"
 #include "GameEngine/EffectMaterialManager.h"
@@ -80,7 +79,25 @@ error GraphicMain::InstallRenderEngine(const std::vector<std::shared_ptr<Install
 
     er = CreateRenderEngineDevice(m_policies.FindDeviceCreatingPolicy());
     if (er) return er;
-    er = InstallDefaultRenderer(m_policies.FindRendererInstallingPolicy());
+
+    // 底下是目前還沒有使用 policy 的部分
+    //{
+    m_serviceManager->RegisterSystemService(std::make_shared<Engine::GenericDtoFactories>(m_serviceManager));
+    er = InstallGeometryManagers();
+    if (er) return er;
+    er = InstallShaderManagers();
+    if (er) return er;
+    er = InstallTextureManagers();
+    if (er) return er;
+    er = InstallRenderBufferManagers();
+    if (er) return er;
+    er = InstallAnimationServices();
+    if (er) return er;
+    er = InstallRenderManagers();
+    if (er) return er;
+    //}
+
+    er = InstallRenderer(m_policies.FindRendererInstallingPolicy());
     if (er) return er;
     er = InstallSceneGraphManagers(m_policies.FindSceneGraphBuildingPolicy());
 
@@ -91,7 +108,19 @@ error GraphicMain::ShutdownRenderEngine()
 {
     error er;
     er = ShutdownSceneGraphManagers();
-    er = ShutdownDefaultRenderer();
+    er = ShutdownRenderer(m_policies.FindRendererInstallingPolicy());
+
+    // 底下是目前還沒有使用 policy 的部分
+    //{
+    er = ShutdownRenderManagers();
+    er = ShutdownAnimationServices();
+    er = ShutdownRenderBufferManagers();
+    er = ShutdownTextureManagers();
+    er = ShutdownShaderManagers();
+    er = ShutdownGeometryManagers();
+    m_serviceManager->ShutdownSystemService(Engine::GenericDtoFactories::TYPE_RTTI);
+    //}
+
     er = CleanupRenderEngineDevice();
     return er;
 }
@@ -118,76 +147,31 @@ error GraphicMain::CleanupRenderEngineDevice()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallDefaultRenderer(const std::shared_ptr<InstallingDefaultRendererPolicy>& policy)
+error GraphicMain::InstallRenderer(const std::shared_ptr<RendererInstallingPolicy>& policy)
 {
-    error er;
-
-    m_serviceManager->RegisterSystemService(std::make_shared<Engine::GenericDtoFactories>(m_serviceManager));
-
-    er = InstallGeometryManagers();
-    if (er) return er;
-    er = InstallShaderManagers();
-    if (er) return er;
-    er = InstallTextureManagers();
-    if (er) return er;
-    er = InstallRenderBufferManagers();
-    if (er) return er;
-
-    er = InstallAnimationServices();
-    if (er) return er;
-    er = InstallRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName(), true);
-    return er;
+    if (!policy) return ErrorCode::ok;
+    return policy->WhenInstalling(m_serviceManager->GetSystemServiceAs<Renderer::RendererManager>());
 }
 
-error GraphicMain::ShutdownDefaultRenderer()
+error GraphicMain::ShutdownRenderer(const std::shared_ptr<RendererInstallingPolicy>& policy)
 {
-    std::shared_ptr<InstallingDefaultRendererPolicy> policy = m_policies.FindRendererInstallingPolicy();
-    assert(policy);
-
-    error er;
-    er = ShutdownRenderer(policy->GetRendererName(), policy->GetPrimaryTargetName());
-    er = ShutdownAnimationServices();
-
-    er = ShutdownRenderBufferManagers();
-    er = ShutdownTextureManagers();
-    er = ShutdownShaderManagers();
-    er = ShutdownGeometryManagers();
-    if (er) return er;
-
-    m_serviceManager->ShutdownSystemService(Engine::GenericDtoFactories::TYPE_RTTI);
-
-    return er;
+    if (!policy) return ErrorCode::ok;
+    return policy->WhenShutdown(m_serviceManager->GetSystemServiceAs<Renderer::RendererManager>());
 }
 
-error GraphicMain::InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary)
+error GraphicMain::InstallRenderManagers()
 {
-    m_renderer = std::make_shared<Renderer::RendererManager>(m_serviceManager);
-    m_serviceManager->RegisterSystemService(m_renderer);
-    error er = m_renderer->CreateRenderer(renderer_name);
-    if (er) return er;
-    er = m_renderer->CreateRenderTarget(render_target_name,
-        is_primary ? Renderer::RenderTarget::PrimaryType::IsPrimary : Renderer::RenderTarget::PrimaryType::NotPrimary);
-    if (er) return er;
-
+    auto renderer = std::make_shared<Renderer::RendererManager>(m_serviceManager);
+    m_serviceManager->RegisterSystemService(renderer);
     m_serviceManager->RegisterSystemService(std::make_shared<Renderer::RenderablePrimitiveBuilder>(m_serviceManager));
-    Frameworks::EventPublisher::Post(std::make_shared<DefaultRendererInstalled>());
 
     return ErrorCode::ok;
 }
 
-error GraphicMain::ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name)
+error GraphicMain::ShutdownRenderManagers()
 {
     m_serviceManager->ShutdownSystemService(Renderer::RenderablePrimitiveBuilder::TYPE_RTTI);
-
-    if (m_renderer)
-    {
-        error er = m_renderer->DestroyRenderer(renderer_name);
-        if (er) return er;
-        er = m_renderer->DestroyRenderTarget(render_target_name);
-        if (er) return er;
-    }
     m_serviceManager->ShutdownSystemService(Renderer::RendererManager::TYPE_RTTI);
-
     return ErrorCode::ok;
 }
 
@@ -279,7 +263,7 @@ error GraphicMain::ShutdownAnimationServices()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallInputHandlers(const std::shared_ptr<InstallingInputHandlerPolicy>& policy)
+error GraphicMain::InstallInputHandlers(const std::shared_ptr<InputHandlerInstallingPolicy>& policy)
 {
     assert(policy);
     m_serviceManager->RegisterSystemService(policy->CreateService(m_serviceManager));

@@ -83,13 +83,14 @@ error Camera::ChangeCameraFrame(const std::optional<Vector3>& eye,
     }
 
     _UpdateViewTransform();
-    EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return ErrorCode::ok;
 }
 
 error Camera::Zoom(float dist)
 {
-    return ChangeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
+    error er = ChangeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
+    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    return er;
 }
 
 error Camera::SphereRotate(float horz_angle, float vert_angle, const Vector3& center)
@@ -118,7 +119,9 @@ error Camera::SphereRotate(float horz_angle, float vert_angle, const Vector3& ce
     radius = dist.Length();
     Vector3 loc = vecCenter - radius * dir;  // 新的camera位置
 
-    return ChangeCameraFrame(loc, dir, up);
+    error er = ChangeCameraFrame(loc, dir, up);
+    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    return er;
 }
 
 error Camera::Move(float dir_dist, float slide_dist)
@@ -130,12 +133,16 @@ error Camera::Move(float dir_dist, float slide_dist)
     Vector3 move_right = up.Cross(move_dir);
     Vector3 pos = m_vecLocation + dir_dist * move_dir + slide_dist * move_right;
 
-    return ChangeCameraFrame(pos, std::nullopt, std::nullopt);
+    error er = ChangeCameraFrame(pos, std::nullopt, std::nullopt);
+    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    return er;
 }
 
 error Camera::MoveXZ(float move_x, float move_z)
 {
-    return ChangeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
+    error er = ChangeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
+    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    return er;
 }
 
 error Camera::ShiftLookAt(const Vector3& vecLookAt)
@@ -148,7 +155,9 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     bool res = intr.Find(0);
     if (!res) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
-    return ChangeCameraFrame(new_loc, std::nullopt, std::nullopt);
+    error er = ChangeCameraFrame(new_loc, std::nullopt, std::nullopt);
+    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    return er;
 }
 
 error Camera::SetCullingFrustum(const FrustumPtr& frustum)

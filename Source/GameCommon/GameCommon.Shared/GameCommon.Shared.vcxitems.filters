@@ -7,6 +7,9 @@
     <Filter Include="GameScene">
       <UniqueIdentifier>{c018063f-362e-455a-b703-5ee9f36614c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SceneRenderer">
+      <UniqueIdentifier>{db721fcd-ceff-4cd9-a32b-270fe5962598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -21,6 +24,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h">
       <Filter>GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h">
+      <Filter>SceneRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -28,6 +34,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp">
       <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp">
+      <Filter>SceneRenderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -50,11 +50,14 @@ namespace Enigma::Controllers
         error CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy);
         error CleanupRenderEngineDevice();
 
-        error InstallDefaultRenderer(const std::shared_ptr<InstallingDefaultRendererPolicy>& policy);
-        error ShutdownDefaultRenderer();
+        error InstallRenderer(const std::shared_ptr<RendererInstallingPolicy>& policy);
+        error ShutdownRenderer(const std::shared_ptr<RendererInstallingPolicy>& policy);
 
-        error InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary);
-        error ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name);
+        //error InstallRenderer(const std::string& renderer_name, const std::string render_target_name, bool is_primary);
+        //error ShutdownRenderer(const std::string& renderer_name, const std::string render_target_name);
+
+        error InstallRenderManagers();
+        error ShutdownRenderManagers();
 
         error InstallGeometryManagers();
         error ShutdownGeometryManagers();
@@ -74,7 +77,7 @@ namespace Enigma::Controllers
         error InstallAnimationServices();
         error ShutdownAnimationServices();
 
-        error InstallInputHandlers(const std::shared_ptr<InstallingInputHandlerPolicy>& policy);
+        error InstallInputHandlers(const std::shared_ptr<InputHandlerInstallingPolicy>& policy);
         error ShutdownInputHandlers();
 
     private:

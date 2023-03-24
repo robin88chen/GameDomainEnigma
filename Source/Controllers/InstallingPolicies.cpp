@@ -1,6 +1,10 @@
 ﻿#include "InstallingPolicies.h"
+#include "ControllerEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::Controllers;
+
+using error = std::error_code;
 
 DeviceCreatingPolicy::DeviceCreatingPolicy(
     const Graphics::DeviceRequiredBits& rqb, void* hwnd) : InstallingPolicy()
@@ -9,11 +13,29 @@ DeviceCreatingPolicy::DeviceCreatingPolicy(
     m_hwnd = hwnd;
 }
 
-InstallingDefaultRendererPolicy::InstallingDefaultRendererPolicy(
-    const std::string& renderer_name, const std::string& primary_target_name) : InstallingPolicy()
+DefaultRendererInstallingPolicy::DefaultRendererInstallingPolicy(
+    const std::string& renderer_name, const std::string& primary_target_name) : RendererInstallingPolicy()
 {
     m_rendererName = renderer_name;
     m_primaryTargetName = primary_target_name;
+}
+
+error DefaultRendererInstallingPolicy::WhenInstalling(const std::shared_ptr<Renderer::RendererManager>& manager)
+{
+    assert(manager);
+    error er = manager->CreateRenderer(m_rendererName);
+    if (er) return er;
+    er = manager->CreateRenderTarget(m_primaryTargetName, Renderer::RenderTarget::PrimaryType::IsPrimary);
+    return er;
+}
+
+error DefaultRendererInstallingPolicy::WhenShutdown(const std::shared_ptr<Renderer::RendererManager>& manager)
+{
+    assert(manager);
+    error er = manager->DestroyRenderer(m_rendererName);
+    if (er) return er;
+    er = manager->DestroyRenderTarget(m_primaryTargetName);
+    return er;
 }
 
 SceneGraphBuildingPolicy::SceneGraphBuildingPolicy(
@@ -24,12 +46,12 @@ SceneGraphBuildingPolicy::SceneGraphBuildingPolicy(
     m_effectDeserializer = effect_deserializer;
 }
 
-InstallingInputHandlerPolicy::InstallingInputHandlerPolicy(const ServiceCreator& creator) : InstallingPolicy()
+InputHandlerInstallingPolicy::InputHandlerInstallingPolicy(const ServiceCreator& creator) : InstallingPolicy()
 {
     m_creator = creator;
 }
 
-std::shared_ptr<Enigma::Frameworks::ISystemService> InstallingInputHandlerPolicy::CreateService(Frameworks::ServiceManager* manager)
+std::shared_ptr<Enigma::Frameworks::ISystemService> InputHandlerInstallingPolicy::CreateService(Frameworks::ServiceManager* manager)
 {
     m_inputHandler = std::shared_ptr<InputHandlers::InputHandlerService>(dynamic_cast<InputHandlers::InputHandlerService*>(m_creator(manager)));
     return m_inputHandler;
@@ -38,21 +60,19 @@ std::shared_ptr<Enigma::Frameworks::ISystemService> InstallingInputHandlerPolicy
 std::shared_ptr<DeviceCreatingPolicy> InstallingPolicyGroup::FindDeviceCreatingPolicy()
 {
     if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
+    for (auto& policy : m_policies)
     {
-        auto& p = *policy;
-        if (typeid(p) == typeid(DeviceCreatingPolicy)) return std::dynamic_pointer_cast<DeviceCreatingPolicy, InstallingPolicy>(policy);
+        if (auto p = std::dynamic_pointer_cast<DeviceCreatingPolicy, InstallingPolicy>(policy)) return p;
     }
     return nullptr;
 }
 
-std::shared_ptr<InstallingDefaultRendererPolicy> InstallingPolicyGroup::FindRendererInstallingPolicy()
+std::shared_ptr<RendererInstallingPolicy> InstallingPolicyGroup::FindRendererInstallingPolicy()
 {
     if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
+    for (auto& policy : m_policies)
     {
-        auto& p = *policy;
-        if (typeid(p) == typeid(InstallingDefaultRendererPolicy)) return std::dynamic_pointer_cast<InstallingDefaultRendererPolicy, InstallingPolicy>(policy);
+        if (auto p = std::dynamic_pointer_cast<RendererInstallingPolicy, InstallingPolicy>(policy)) return p;
     }
     return nullptr;
 }
@@ -60,21 +80,19 @@ std::shared_ptr<InstallingDefaultRendererPolicy> InstallingPolicyGroup::FindRend
 std::shared_ptr<SceneGraphBuildingPolicy> InstallingPolicyGroup::FindSceneGraphBuildingPolicy()
 {
     if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
+    for (auto& policy : m_policies)
     {
-        auto& p = *policy;
-        if (typeid(p) == typeid(SceneGraphBuildingPolicy)) return std::dynamic_pointer_cast<SceneGraphBuildingPolicy, InstallingPolicy>(policy);
+        if (auto p = std::dynamic_pointer_cast<SceneGraphBuildingPolicy, InstallingPolicy>(policy)) return p;
     }
     return nullptr;
 }
 
-std::shared_ptr<InstallingInputHandlerPolicy> InstallingPolicyGroup::FindInputHandlerInstallingPolicy()
+std::shared_ptr<InputHandlerInstallingPolicy> InstallingPolicyGroup::FindInputHandlerInstallingPolicy()
 {
     if (m_policies.empty()) return nullptr;
-    for (auto policy : m_policies)
+    for (auto& policy : m_policies)
     {
-        auto& p = *policy;
-        if (typeid(p) == typeid(InstallingInputHandlerPolicy)) return std::dynamic_pointer_cast<InstallingInputHandlerPolicy, InstallingPolicy>(policy);
+        if (auto p = std::dynamic_pointer_cast<InputHandlerInstallingPolicy, InstallingPolicy>(policy)) return p;
     }
     return nullptr;
 }

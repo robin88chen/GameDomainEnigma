@@ -81,7 +81,7 @@ void SceneGraphPawnTest::InstallEngine()
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto renderer_policy = std::make_shared<InstallingDefaultRendererPolicy>(DefaultRendererName, PrimaryTargetName);
+    auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     auto scene_graph_policy = std::make_shared<SceneGraphBuildingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
     m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });

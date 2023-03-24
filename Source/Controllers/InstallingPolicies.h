@@ -14,11 +14,15 @@
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/EventSubscriber.h"
+#include "Renderer/RendererManager.h"
 #include <memory>
+#include <system_error>
 
 namespace Enigma::Controllers
 {
     using ServiceCreator = std::function<Frameworks::ISystemService*(Frameworks::ServiceManager*)>;
+    using error = std::error_code;
 
     class InstallingPolicy
     {
@@ -37,13 +41,25 @@ namespace Enigma::Controllers
         Graphics::DeviceRequiredBits m_rqb;
         void* m_hwnd;
     };
-    class InstallingDefaultRendererPolicy : public InstallingPolicy
+    class RendererInstallingPolicy : public InstallingPolicy
     {
     public:
-        InstallingDefaultRendererPolicy(const std::string& renderer_name, const std::string& primary_target_name);
+        RendererInstallingPolicy() = default;
+
+        virtual error WhenInstalling(const std::shared_ptr<Renderer::RendererManager>& manager) = 0;
+        virtual error WhenShutdown(const std::shared_ptr<Renderer::RendererManager>& manager) = 0;
+    };
+
+    class DefaultRendererInstallingPolicy : public RendererInstallingPolicy
+    {
+    public:
+        DefaultRendererInstallingPolicy(const std::string& renderer_name, const std::string& primary_target_name);
 
         const std::string& GetRendererName() { return m_rendererName; }
         const std::string& GetPrimaryTargetName() { return m_primaryTargetName; }
+
+        error WhenInstalling(const std::shared_ptr<Renderer::RendererManager>& manager) override;
+        error WhenShutdown(const std::shared_ptr<Renderer::RendererManager>& manager) override;
 
     protected:
         std::string m_rendererName;
@@ -62,10 +78,10 @@ namespace Enigma::Controllers
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
     };
-    class InstallingInputHandlerPolicy : public InstallingPolicy
+    class InputHandlerInstallingPolicy : public InstallingPolicy
     {
     public:
-        InstallingInputHandlerPolicy(const ServiceCreator& creator);
+        InputHandlerInstallingPolicy(const ServiceCreator& creator);
 
         std::shared_ptr<Frameworks::ISystemService> CreateService(Frameworks::ServiceManager* manager);
         const std::shared_ptr<InputHandlers::InputHandlerService>& GetInputHandler() { return m_inputHandler; }
@@ -82,9 +98,9 @@ namespace Enigma::Controllers
         InstallingPolicyGroup(const std::vector<std::shared_ptr<InstallingPolicy>>& policies) : m_policies(policies) {};
 
         std::shared_ptr<DeviceCreatingPolicy> FindDeviceCreatingPolicy();
-        std::shared_ptr<InstallingDefaultRendererPolicy> FindRendererInstallingPolicy();
+        std::shared_ptr<RendererInstallingPolicy> FindRendererInstallingPolicy();
         std::shared_ptr<SceneGraphBuildingPolicy> FindSceneGraphBuildingPolicy();
-        std::shared_ptr<InstallingInputHandlerPolicy> FindInputHandlerInstallingPolicy();
+        std::shared_ptr<InputHandlerInstallingPolicy> FindInputHandlerInstallingPolicy();
 
     private:
         std::vector<std::shared_ptr<InstallingPolicy>> m_policies;

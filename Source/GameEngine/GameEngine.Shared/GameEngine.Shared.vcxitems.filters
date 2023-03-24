@@ -76,6 +76,9 @@
     <Filter Include="Timer Service">
       <UniqueIdentifier>{50528cc3-7ae8-4eee-87bc-e3d9dc1ec9d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Installing Policies">
+      <UniqueIdentifier>{171f8bf3-2c18-4b14-845d-280a052fdb61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -264,6 +267,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h">
       <Filter>Timer Service</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -382,6 +394,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp">
       <Filter>Timer Service</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

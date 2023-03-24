@@ -6,6 +6,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameCameraEvents.h"
+#include "GameSceneEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -71,6 +72,9 @@ void GameSceneService::CreateRootScene()
     m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode, Node>(
         m_sceneGraphRepository.lock()->CreateNode(PORTAL_MGT_NODE_NAME, PortalManagementNode::TYPE_RTTI.GetName()));
     m_sceneRoot->AttachChild(m_portalMgtNode, Matrix4::IDENTITY);
+
+    EventPublisher::Post(std::make_shared<SceneRootCreated>(m_sceneRoot));
+    EventPublisher::Post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
 }
 
 void GameSceneService::DestroyRootScene()

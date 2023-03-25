@@ -137,7 +137,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp">
       <Filter>Animators</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallPolicy.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp">
       <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,6 +13,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "InstallingPolicies.h"
+#include "InstallingPolicyList.h"
 
 namespace Enigma::Renderer
 {
@@ -40,6 +41,7 @@ namespace Enigma::Controllers
 
         error InstallRenderEngine(const std::vector<std::shared_ptr<InstallingPolicy>>& policies);
         error ShutdownRenderEngine();
+        error InstallRenderEngine(const InstallingPolicyList& policies);
 
         /** frame update (service manager call run one to update) */
         void FrameUpdate();

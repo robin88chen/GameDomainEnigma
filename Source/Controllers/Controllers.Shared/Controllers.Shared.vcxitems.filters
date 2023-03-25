@@ -21,6 +21,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.cpp">
       <Filter>Graphic Main</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicyList.cpp">
+      <Filter>Graphic Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ControllerErrors.h">
@@ -33,6 +36,9 @@
       <Filter>Graphic Main</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.h">
+      <Filter>Graphic Main</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicyList.h">
       <Filter>Graphic Main</Filter>
     </ClInclude>
   </ItemGroup>

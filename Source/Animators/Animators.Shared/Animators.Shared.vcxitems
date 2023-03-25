@@ -45,7 +45,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp" />

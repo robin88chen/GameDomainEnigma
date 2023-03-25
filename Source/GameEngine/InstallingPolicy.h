@@ -9,17 +9,20 @@
 #define _INSTALLING_POLICY_H
 
 #include "Frameworks/ServiceManager.h"
+#include <system_error>
 
 namespace Enigma::Engine
 {
+    using error = std::error_code;
+
     class InstallingPolicy
     {
     public:
         InstallingPolicy() = default;
         virtual ~InstallingPolicy() = default;
 
-        virtual void Install(Frameworks::ServiceManager* service_manager) = 0;
-        virtual void Shutdown(Frameworks::ServiceManager* service_manager) = 0;
+        virtual error Install(Frameworks::ServiceManager* service_manager) = 0;
+        virtual error Shutdown(Frameworks::ServiceManager* service_manager) = 0;
     };
 }
 

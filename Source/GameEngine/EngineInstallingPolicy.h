@@ -18,8 +18,8 @@ namespace Enigma::Engine
         EngineInstallingPolicy() = default;
         virtual ~EngineInstallingPolicy() override = default;
 
-        virtual void Install(Frameworks::ServiceManager* service_manager) override;
-        virtual void Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error Install(Frameworks::ServiceManager* service_manager) override;
+        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
     };
 }
 #endif // _ENGINE_INSTALLING_POLICY_H

@@ -8,11 +8,12 @@
 #include "RenderBufferRepository.h"
 #include "TimerService.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "EngineErrors.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
 
-void EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->RegisterSystemService(std::make_shared<GenericDtoFactories>(service_manager));
@@ -23,9 +24,10 @@ void EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manager
     service_manager->RegisterSystemService(std::make_shared<TextureRepository>(service_manager));
     service_manager->RegisterSystemService(std::make_shared<RenderBufferRepository>(service_manager));
     service_manager->RegisterSystemService(std::make_shared<TimerService>(service_manager));
+    return ErrorCode::ok;
 }
 
-void EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->ShutdownSystemService(TimerService::TYPE_RTTI);
@@ -36,4 +38,5 @@ void EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manage
     service_manager->ShutdownSystemService(ShaderRepository::TYPE_RTTI);
     service_manager->ShutdownSystemService(GeometryRepository::TYPE_RTTI);
     service_manager->ShutdownSystemService(GenericDtoFactories::TYPE_RTTI);
+    return ErrorCode::ok;
 }

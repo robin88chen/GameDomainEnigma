@@ -7,6 +7,9 @@
     <Filter Include="Inputs">
       <UniqueIdentifier>{0666f287-0dc2-43d2-b16d-e914e30b0745}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{6bd24a99-2bbb-4cb9-b0fb-f79fe0cd9880}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WinKeyboardInputEvents.h">
@@ -30,10 +33,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InputHandlerService.h">
       <Filter>Inputs</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InputHandlerInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerService.cpp">
       <Filter>Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

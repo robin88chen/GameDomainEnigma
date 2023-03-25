@@ -22,6 +22,11 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Gateways/DtoJsonGateway.h"
+#include "GameEngine/DeviceCreatingPolicy.h"
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "Renderer/RendererInstallingPolicy.h"
+#include "Animators/AnimatorInstallingPolicy.h"
+#include "SceneGraph/SceneGraphInstallingPolicy.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -80,11 +85,14 @@ void SceneGraphPawnTest::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
-    auto scene_graph_policy = std::make_shared<SceneGraphBuildingPolicy>(
+    auto creating_policy = std::make_shared<Enigma::Engine::DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
+    auto engine_policy = std::make_shared<Enigma::Engine::EngineInstallingPolicy>();
+    auto render_sys_policy = std::make_shared<Enigma::Renderer::RenderSystemInstallingPolicy>();
+    auto animator_policy = std::make_shared<Enigma::Animators::AnimatorInstallingPolicy>();
+    auto renderer_policy = std::make_shared<Enigma::Renderer::DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
+    auto scene_graph_policy = std::make_shared<Enigma::SceneGraph::SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
-    m_graphicMain->InstallRenderEngine({ creating_policy, renderer_policy, scene_graph_policy });
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, renderer_policy, scene_graph_policy });
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     auto dtos = SceneGraphMaker::MakeSceneGraphDtos();
     std::string json = DtoJsonGateway::Serialize(dtos);

@@ -1,15 +1,18 @@
 ﻿#include "DeviceCreatingPolicy.h"
 #include "Frameworks/CommandBus.h"
 #include "GraphicKernel/GraphicCommands.h"
+#include "EngineErrors.h"
 
 using namespace Enigma::Engine;
 
-void DeviceCreatingPolicy::Install([[maybe_unused]] Frameworks::ServiceManager* service_manager)
+error DeviceCreatingPolicy::Install([[maybe_unused]] Frameworks::ServiceManager* service_manager)
 {
     Frameworks::CommandBus::Send(std::make_shared<Graphics::CreateDevice>(m_rqb, m_hwnd));
+    return ErrorCode::ok;
 }
 
-void DeviceCreatingPolicy::Shutdown([[maybe_unused]] Frameworks::ServiceManager* service_manager)
+error DeviceCreatingPolicy::Shutdown([[maybe_unused]] Frameworks::ServiceManager* service_manager)
 {
     Frameworks::CommandBus::Send(std::make_shared<Graphics::CleanupDevice>());
+    return ErrorCode::ok;
 }

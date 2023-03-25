@@ -125,6 +125,17 @@ error GraphicMain::ShutdownRenderEngine()
     return er;
 }
 
+error GraphicMain::InstallRenderEngine(const InstallingPolicyList& policies)
+{
+    for (auto it = policies.begin(); it != policies.end(); ++it)
+    {
+        if (*it == nullptr) continue;
+        error er = (*it)->Install(m_serviceManager);
+        if (er) return er;
+    }
+    return ErrorCode::ok;
+}
+
 void GraphicMain::FrameUpdate()
 {
     if (m_serviceManager)

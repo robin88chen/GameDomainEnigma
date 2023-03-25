@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GestureInputEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GestureThreshold.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InputHandlerInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InputHandlerService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MouseInputEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MouseKeyButtons.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WinKeyboardInputEvents.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\InputHandlerService.cpp" />
   </ItemGroup>
 </Project>

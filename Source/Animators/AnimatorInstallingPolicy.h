@@ -12,14 +12,16 @@
 
 namespace Enigma::Animators
 {
+    using error = std::error_code;
+
     class AnimatorInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
         AnimatorInstallingPolicy() = default;
         virtual ~AnimatorInstallingPolicy() override = default;
 
-        virtual void Install(Frameworks::ServiceManager* service_manager) override;
-        virtual void Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error Install(Frameworks::ServiceManager* service_manager) override;
+        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
     };
 }
 

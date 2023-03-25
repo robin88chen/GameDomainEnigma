@@ -9,6 +9,7 @@
 #define _APPLICATION_DELEGATE_WIN32_H
 
 #include "Platforms/PlatformLayerUtilities.h"
+#include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
 

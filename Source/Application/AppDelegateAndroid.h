@@ -9,6 +9,7 @@
 #define APP_DELEGATE_ANDROID_H
 
 #include "Platforms/PlatformLayerUtilities.h"
+#include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
 

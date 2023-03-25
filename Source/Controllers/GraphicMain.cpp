@@ -17,7 +17,6 @@ GraphicMain::GraphicMain()
     assert(!m_instance);
     m_instance = this;
     m_serviceManager = menew Frameworks::ServiceManager();
-    m_renderer = nullptr;
 }
 
 GraphicMain::~GraphicMain()

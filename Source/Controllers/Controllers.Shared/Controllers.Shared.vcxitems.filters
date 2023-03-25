@@ -18,9 +18,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicMain.cpp">
       <Filter>Graphic Main</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.cpp">
-      <Filter>Graphic Main</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\InstallingPolicyList.cpp">
       <Filter>Graphic Main</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GraphicMain.h">
-      <Filter>Graphic Main</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicies.h">
       <Filter>Graphic Main</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicyList.h">

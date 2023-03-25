@@ -6,7 +6,6 @@
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
 #include "Controllers/GraphicMain.h"
-#include "Controllers/InstallingPolicies.h"
 #include "Frameworks/CommandBus.h"
 #include "CubeGeometryMaker.h"
 #include "SceneGraphMaker.h"

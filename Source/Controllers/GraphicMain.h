@@ -12,7 +12,6 @@
 #include <memory>
 #include "Frameworks/ServiceManager.h"
 #include "GraphicKernel/IGraphicAPI.h"
-#include "InstallingPolicies.h"
 #include "InstallingPolicyList.h"
 
 namespace Enigma::Renderer
@@ -39,9 +38,9 @@ namespace Enigma::Controllers
         error InstallFrameworks();
         error ShutdownFrameworks();
 
-        error InstallRenderEngine(const std::vector<std::shared_ptr<InstallingPolicy>>& policies);
-        error ShutdownRenderEngine();
+        //error InstallRenderEngine(const std::vector<std::shared_ptr<InstallingPolicy>>& policies);
         error InstallRenderEngine(const InstallingPolicyList& policies);
+        error ShutdownRenderEngine();
 
         /** frame update (service manager call run one to update) */
         void FrameUpdate();
@@ -49,7 +48,7 @@ namespace Enigma::Controllers
         Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
 
     private:
-        error CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy);
+        /*error CreateRenderEngineDevice(const std::shared_ptr<DeviceCreatingPolicy>& policy);
         error CleanupRenderEngineDevice();
 
         error InstallRenderer(const std::shared_ptr<RendererInstallingPolicy>& policy);
@@ -80,14 +79,14 @@ namespace Enigma::Controllers
         error ShutdownAnimationServices();
 
         error InstallInputHandlers(const std::shared_ptr<InputHandlerInstallingPolicy>& policy);
-        error ShutdownInputHandlers();
+        error ShutdownInputHandlers();*/
 
     private:
         static GraphicMain* m_instance;
 
         Frameworks::ServiceManager* m_serviceManager;
 
-        InstallingPolicyGroup m_policies;
+        InstallingPolicyList m_policies;
 
         std::shared_ptr<Renderer::RendererManager> m_renderer;
     };

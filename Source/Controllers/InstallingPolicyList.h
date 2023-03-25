@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   InstallingPolicyList.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -10,14 +10,22 @@
 
 #include "GameEngine/InstallingPolicy.h"
 #include <list>
+#include <typeindex>
 
 namespace Enigma::Controllers
 {
     class InstallingPolicyList : public std::list<std::shared_ptr<Engine::InstallingPolicy>>
     {
     public:
+        InstallingPolicyList() = default;
         InstallingPolicyList(std::initializer_list<std::shared_ptr<Engine::InstallingPolicy>> initializer_list);
-        
+
+        void SortOrder();
+    private:
+        void MakeOrderMap();
+
+    private:
+        std::unordered_map<std::type_index, std::uint16_t> m_orderMap;
     };
 }
 

@@ -10,18 +10,22 @@
 
 #include "Frameworks/SystemService.h"
 #include "Renderer/RendererManager.h"
+#include "Renderer/Renderer.h"
+#include "Frameworks/EventSubscriber.h"
 #include <memory>
 
 namespace Enigma::GameCommon
 {
     class GameSceneService;
+    class GameCameraService;
 
     class SceneRendererService : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
         SceneRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::string& renderer_name);
+            const std::shared_ptr<GameCameraService>& camera_service,
+            const std::shared_ptr<Renderer::RendererManager>& renderer_manager);
         SceneRendererService(const SceneRendererService&) = delete;
         SceneRendererService(SceneRendererService&&) = delete;
         virtual ~SceneRendererService() override;
@@ -31,11 +35,25 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
+        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary);
+        virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
+
+        virtual void PrepareGameScene();
+        virtual void RenderGameScene();
+        virtual void Flip();
+
+    protected:
+        void AttachCamera();
+
+        void OnPrimaryCameraCreated(const Frameworks::IEventPtr& e);
+
     protected:
         std::weak_ptr<GameSceneService> m_sceneService;
+        std::weak_ptr<GameCameraService> m_cameraService;
         std::weak_ptr<Renderer::RendererManager> m_rendererManager;
-        std::weak_ptr<Engine::IRenderer> m_renderer;
-        std::string m_rendererName;
+        std::weak_ptr<Renderer::Renderer> m_renderer;
+
+        Frameworks::EventSubscriberPtr m_onPrimaryCameraCreated;
     };
 }
 

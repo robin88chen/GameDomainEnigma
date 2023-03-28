@@ -12,6 +12,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/SceneGraphDtos.h"
 
 namespace Enigma::GameCommon
 {
@@ -29,7 +30,8 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        void CreatePrimaryCamera(const MathLib::Vector3& vecCameraPos);
+        void CreatePrimaryCamera(const SceneGraph::CameraDto& dto);
+        const std::shared_ptr<SceneGraph::Camera>& GetPrimaryCamera() const { return m_primaryCamera; }
 
         /** @name camera operations */
         //@{

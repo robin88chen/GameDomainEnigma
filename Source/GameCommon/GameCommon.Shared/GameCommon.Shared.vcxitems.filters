@@ -10,6 +10,9 @@
     <Filter Include="SceneRenderer">
       <UniqueIdentifier>{db721fcd-ceff-4cd9-a32b-270fe5962598}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{cdcca7f6-4464-4278-868b-565d27c7f123}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -27,6 +30,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h">
       <Filter>SceneRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -37,6 +46,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp">
       <Filter>SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

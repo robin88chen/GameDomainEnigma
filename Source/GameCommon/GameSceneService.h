@@ -18,11 +18,14 @@
 
 namespace Enigma::GameCommon
 {
+    class GameCameraService;
+
     class GameSceneService : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        GameSceneService(Frameworks::ServiceManager* mngr, const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository);
+        GameSceneService(Frameworks::ServiceManager* mngr, const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
+            const std::shared_ptr<GameCameraService>& camera_service);
         GameSceneService(const GameSceneService&) = delete;
         GameSceneService(GameSceneService&&) = delete;
         virtual ~GameSceneService() override;
@@ -35,7 +38,7 @@ namespace Enigma::GameCommon
 
         /** @name scene root */
         //@{
-        void CreateRootScene();
+        void CreateRootScene(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name);
         void DestroyRootScene();
         const std::shared_ptr<SceneGraph::Node>& GetSceneRoot() { return m_sceneRoot; };
         //@}
@@ -57,6 +60,7 @@ namespace Enigma::GameCommon
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
+        std::weak_ptr<GameCameraService> m_cameraService;
         std::shared_ptr<SceneGraph::Node> m_sceneRoot;
         std::shared_ptr<SceneGraph::PortalManagementNode> m_portalMgtNode;
         SceneGraph::Culler* m_culler;

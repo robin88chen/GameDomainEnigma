@@ -18,10 +18,7 @@ using namespace Enigma::InputHandlers;
 
 DEFINE_RTTI(GameCommon, GameCameraService, ISystemService);
 
-#define DEFAULT_CAMERA_POS Vector3(-5.0f, 5.0f, -5.0f)
 #define WHEEL_THRESHOLD 120
-#define PRIMARY_CAMERA_NAME "PrimaryCamera"
-#define PRIMARY_FRUSTUM_NAME "PrimaryFrustum"
 
 GameCameraService::GameCameraService(ServiceManager* mngr,
                                      const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
@@ -39,8 +36,6 @@ GameCameraService::~GameCameraService()
 
 ServiceResult GameCameraService::OnInit()
 {
-    CreatePrimaryCamera(DEFAULT_CAMERA_POS);
-
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
     m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
     m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
@@ -68,13 +63,10 @@ ServiceResult GameCameraService::OnTerm()
     return ServiceResult::Complete;
 }
 
-void GameCameraService::CreatePrimaryCamera(const Vector3& vecCameraPos)
+void GameCameraService::CreatePrimaryCamera(const CameraDto& dto)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(PRIMARY_CAMERA_NAME);
-    m_primaryCamera->SetCullingFrustum(m_sceneGraphRepository.lock()->CreateFrustum(PRIMARY_FRUSTUM_NAME, Frustum::ProjectionType::Perspective));
-    m_primaryCamera->ChangeCameraFrame(vecCameraPos, Vector3(1.0f, -1.0f, 1.0f), Vector3(0.0f, 1.0f, 0.0f));
-    m_primaryCamera->GetCullingFrustum()->ChangeFarZ(300.0f);
+    m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(dto);
 
     EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }

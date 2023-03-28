@@ -1,16 +1,29 @@
 ﻿#include "SceneRendererService.h"
+#include "GameSceneService.h"
+#include "GameCameraEvents.h"
+#include "GameCameraService.h"
+#include "Renderer/RendererManager.h"
+#include "Renderer/RenderTarget.h"
+#include "Renderer/Renderer.h"
+#include "Frameworks/EventPublisher.h"
+#include <cassert>
+#include <system_error>
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
+using namespace Enigma::Renderer;
+
+using error = std::error_code;
 
 DEFINE_RTTI(GameCommon, SceneRendererService, ISystemService);
 
 SceneRendererService::SceneRendererService(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
-    const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::string& renderer_name) : ISystemService(mngr)
+    const std::shared_ptr<GameCameraService>& camera_service,
+    const std::shared_ptr<RendererManager>& renderer_manager) : ISystemService(mngr)
 {
     m_sceneService = scene_service;
+    m_cameraService = camera_service;
     m_rendererManager = renderer_manager;
-    m_rendererName = renderer_name;
     m_needTick = false;
 }
 
@@ -21,12 +34,74 @@ SceneRendererService::~SceneRendererService()
 
 ServiceResult SceneRendererService::OnInit()
 {
-    assert(!m_rendererManager.expired());
-    m_renderer = m_rendererManager.lock()->GetRenderer(m_rendererName);
+    m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryCameraCreated(e); });
+    EventPublisher::Subscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+
     return ServiceResult::Complete;
 }
 
 ServiceResult SceneRendererService::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    m_onPrimaryCameraCreated = nullptr;
+
     return ServiceResult::Complete;
+}
+
+void SceneRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary)
+{
+    assert(!m_rendererManager.expired());
+    error er = m_rendererManager.lock()->CreateRenderer(renderer_name);
+    if (er) return;
+    er = m_rendererManager.lock()->CreateRenderTarget(target_name, is_primary ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary);
+    if (er) return;
+    auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
+    auto target = m_rendererManager.lock()->GetRenderTarget(target_name);
+    std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->SetRenderTarget(target);
+    m_renderer = renderer;
+    AttachCamera();
+}
+
+void SceneRendererService::DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
+{
+    assert(!m_rendererManager.expired());
+    m_rendererManager.lock()->DestroyRenderTarget(target_name);
+    m_rendererManager.lock()->DestroyRenderer(renderer_name);
+}
+
+void SceneRendererService::PrepareGameScene()
+{
+    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneCuller()))
+    {
+        m_renderer.lock()->PrepareScene(m_sceneService.lock()->GetSceneCuller()->GetVisibleSet());
+    }
+}
+
+void SceneRendererService::RenderGameScene()
+{
+    if (m_renderer.expired()) return;
+    m_renderer.lock()->ClearRenderTarget();
+    m_renderer.lock()->BeginScene();
+    m_renderer.lock()->DrawScene();
+    m_renderer.lock()->EndScene();
+}
+
+void SceneRendererService::Flip()
+{
+    if (m_renderer.expired()) return;
+    m_renderer.lock()->Flip();
+}
+
+void SceneRendererService::AttachCamera()
+{
+    if ((m_renderer.expired()) || (m_cameraService.expired())) return;
+    m_renderer.lock()->SetAssociatedCamera(m_cameraService.lock()->GetPrimaryCamera());
+    auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
+    assert((w > 0) && (h > 0));
+    m_cameraService.lock()->GetPrimaryCamera()->GetCullingFrustum()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+}
+
+void SceneRendererService::OnPrimaryCameraCreated(const IEventPtr& e)
+{
+    AttachCamera();
 }

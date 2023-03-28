@@ -1,4 +1,5 @@
 ﻿#include "GameSceneService.h"
+#include "GameCameraService.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/PortalManagementNode.h"
@@ -15,12 +16,11 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(GameCommon, GameSceneService, ISystemService);
 
-#define SCENE_ROOT_NAME "_SceneRoot_"
-#define PORTAL_MGT_NODE_NAME "_PortalManagementNode_"
-
-GameSceneService::GameSceneService(ServiceManager* mngr, const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
+GameSceneService::GameSceneService(ServiceManager* mngr, const std::shared_ptr<SceneGraphRepository>& scene_graph_repository,
+    const std::shared_ptr<GameCameraService>& camera_service) : ISystemService(mngr)
 {
     m_sceneGraphRepository = scene_graph_repository;
+    m_cameraService = camera_service;
     m_needTick = true;
     m_culler = nullptr;
 }
@@ -63,16 +63,23 @@ ServiceResult GameSceneService::OnTerm()
     return ServiceResult::Complete;
 }
 
-void GameSceneService::CreateRootScene()
+void GameSceneService::CreateRootScene(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_sceneRoot = m_sceneGraphRepository.lock()->CreateNode(SCENE_ROOT_NAME, Node::TYPE_RTTI.GetName());
+    m_sceneRoot = m_sceneGraphRepository.lock()->CreateNode(scene_root_name, Node::TYPE_RTTI.GetName());
     m_sceneRoot->SetLocalTransform(Matrix4::IDENTITY);
 
-    m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode, Node>(
-        m_sceneGraphRepository.lock()->CreateNode(PORTAL_MGT_NODE_NAME, PortalManagementNode::TYPE_RTTI.GetName()));
-    m_sceneRoot->AttachChild(m_portalMgtNode, Matrix4::IDENTITY);
+    if (portal_managed_name.has_value())
+    {
+        m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode, Node>(
+            m_sceneGraphRepository.lock()->CreateNode(portal_managed_name.value(), PortalManagementNode::TYPE_RTTI.GetName()));
+        m_sceneRoot->AttachChild(m_portalMgtNode, Matrix4::IDENTITY);
+    }
 
+    if ((!m_cameraService.expired()) && m_cameraService.lock()->GetPrimaryCamera())
+    {
+        CreateSceneCuller(m_cameraService.lock()->GetPrimaryCamera());
+    }
     EventPublisher::Post(std::make_shared<SceneRootCreated>(m_sceneRoot));
     EventPublisher::Post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
 }

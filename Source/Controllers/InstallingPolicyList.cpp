@@ -5,6 +5,8 @@
 #include "Renderer/RendererInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
+#include "GameCommon/GameCommonInstallingPolicies.h"
+#include "GameCommon/SceneRendererInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
 
@@ -15,6 +17,11 @@ constexpr std::uint16_t OrderOfRenderSystemInstalling = 30;
 constexpr std::uint16_t OrderOfSceneGraphInstalling = 40;
 constexpr std::uint16_t OrderOfDefaultRendererInstalling = 50;
 constexpr std::uint16_t OrderOfInputHandlerInstalling = 60;
+
+constexpr std::uint16_t OrderOfGameCameraInstalling = 500;
+constexpr std::uint16_t OrderOfGameSceneInstalling = 510;
+
+constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
 
 constexpr std::uint64_t OrderOfUnknownPolicy = UINT16_MAX;
 
@@ -46,4 +53,7 @@ void InstallingPolicyList::MakeOrderMap()
     m_orderMap[typeid(Renderer::DefaultRendererInstallingPolicy)] = OrderOfDefaultRendererInstalling;
     m_orderMap[typeid(SceneGraph::SceneGraphInstallingPolicy)] = OrderOfSceneGraphInstalling;
     m_orderMap[typeid(InputHandlers::InputHandlerInstallingPolicy)] = OrderOfInputHandlerInstalling;
+    m_orderMap[typeid(GameCommon::GameCameraInstallingPolicy)] = OrderOfGameCameraInstalling;
+    m_orderMap[typeid(GameCommon::GameSceneInstallingPolicy)] = OrderOfGameSceneInstalling;
+    m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
 }

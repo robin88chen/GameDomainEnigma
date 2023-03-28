@@ -24,6 +24,8 @@
 #include <cassert>
 #include <mutex>
 
+#include "CameraFrustumDtos.h"
+
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
@@ -69,6 +71,15 @@ std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& na
     auto camera = std::make_shared<Camera>(name, m_handSystem);
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(name, camera);
+    return camera;
+}
+
+std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const CameraDto& dto)
+{
+    assert(!HasCamera(dto.Name()));
+    auto camera = std::make_shared<Camera>(dto);
+    std::lock_guard locker{ m_cameraMapLock };
+    m_cameras.insert_or_assign(dto.Name(), camera);
     return camera;
 }
 

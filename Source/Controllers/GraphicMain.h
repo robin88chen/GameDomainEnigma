@@ -11,6 +11,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "InstallingPolicyList.h"
 #include <system_error>
+#include <cassert>
 
 namespace Enigma::Controllers
 {
@@ -38,6 +39,13 @@ namespace Enigma::Controllers
         void FrameUpdate();
 
         Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
+
+        template <class T>
+        std::shared_ptr<T> GetSystemServiceAs()
+        {
+            assert(m_serviceManager);
+            return m_serviceManager->GetSystemServiceAs<T>();
+        };
 
     private:
         static GraphicMain* m_instance;

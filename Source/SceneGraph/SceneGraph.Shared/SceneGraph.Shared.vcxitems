@@ -46,6 +46,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h" />

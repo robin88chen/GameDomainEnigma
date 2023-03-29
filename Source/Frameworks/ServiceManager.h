@@ -53,11 +53,11 @@ namespace Enigma::Frameworks
 
         ServiceState CheckServiceState(const Rtti& service_type);
 
-        static std::shared_ptr<ISystemService> GetSystemService(const Rtti& service_type);
-        static std::optional<std::shared_ptr<ISystemService>> TryGetSystemService(const Rtti& service_type);
+        std::shared_ptr<ISystemService> GetSystemService(const Rtti& service_type);
+        std::optional<std::shared_ptr<ISystemService>> TryGetSystemService(const Rtti& service_type);
 
         template <class T>
-        static std::shared_ptr<T> GetSystemServiceAs()
+        std::shared_ptr<T> GetSystemServiceAs()
         {
             return std::dynamic_pointer_cast<T, ISystemService>(GetSystemService(T::TYPE_RTTI));
         };
@@ -78,8 +78,6 @@ namespace Enigma::Frameworks
         typedef std::list<ServiceStateRecord> SystemServiceList;
 
     protected:
-        static ServiceManager* m_instance;
-
         typedef std::unordered_map<const Rtti*, std::shared_ptr<ISystemService>> SystemServiceMap;  ///< mapping by rtti type_index
 
         SystemServiceList m_services;

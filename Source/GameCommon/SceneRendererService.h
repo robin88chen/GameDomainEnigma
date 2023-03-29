@@ -46,6 +46,7 @@ namespace Enigma::GameCommon
         void AttachCamera();
 
         void OnPrimaryCameraCreated(const Frameworks::IEventPtr& e);
+        void OnPrimaryTargetCreated(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<GameSceneService> m_sceneService;
@@ -54,6 +55,7 @@ namespace Enigma::GameCommon
         std::weak_ptr<Renderer::Renderer> m_renderer;
 
         Frameworks::EventSubscriberPtr m_onPrimaryCameraCreated;
+        Frameworks::EventSubscriberPtr m_onPrimaryTargetCreated;
     };
 }
 

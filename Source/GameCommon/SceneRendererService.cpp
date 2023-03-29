@@ -5,6 +5,7 @@
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/RendererEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include <cassert>
 #include <system_error>
@@ -35,7 +36,9 @@ SceneRendererService::~SceneRendererService()
 ServiceResult SceneRendererService::OnInit()
 {
     m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryCameraCreated(e); });
+    m_onPrimaryTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryTargetCreated(e); });
     EventPublisher::Subscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
 
     return ServiceResult::Complete;
 }
@@ -43,7 +46,9 @@ ServiceResult SceneRendererService::OnInit()
 ServiceResult SceneRendererService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
     m_onPrimaryCameraCreated = nullptr;
+    m_onPrimaryTargetCreated = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -97,11 +102,19 @@ void SceneRendererService::AttachCamera()
     if ((m_renderer.expired()) || (m_cameraService.expired())) return;
     m_renderer.lock()->SetAssociatedCamera(m_cameraService.lock()->GetPrimaryCamera());
     auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
-    assert((w > 0) && (h > 0));
-    m_cameraService.lock()->GetPrimaryCamera()->GetCullingFrustum()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+    if ((w > 0) && (h > 0))
+    {
+        m_cameraService.lock()->GetPrimaryCamera()->GetCullingFrustum()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+    }
 }
 
 void SceneRendererService::OnPrimaryCameraCreated(const IEventPtr& e)
 {
     AttachCamera();
 }
+
+void SceneRendererService::OnPrimaryTargetCreated(const Frameworks::IEventPtr& e)
+{
+    AttachCamera();
+}
+

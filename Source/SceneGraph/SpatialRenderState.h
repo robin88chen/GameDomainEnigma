@@ -9,6 +9,8 @@
 #define SPATIAL_RENDER_STATE_H
 
 #include "GameEngine/RenderLightingState.h"
+#include "Frameworks/ResponseSubscriber.h"
+
 namespace Enigma::SceneGraph
 {
     class SpatialRenderState
@@ -21,12 +23,17 @@ namespace Enigma::SceneGraph
         SpatialRenderState& operator=(const SpatialRenderState&) = default;
         SpatialRenderState& operator=(SpatialRenderState&&) = default;
 
-        const Engine::RenderLightingState& ToLightingState() const { return m_lightingState; };
+        [[nodiscard]] Engine::RenderLightingState ToLightingState() const { return m_lightingState; };  // 物件複製取用，避免 race condition
 
         void QueryLightingState(const MathLib::Vector3& spatialPos);
 
     protected:
+        void OnLightingStateResponse(const Frameworks::IResponsePtr& r);
+
+    protected:
         Engine::RenderLightingState m_lightingState;
+        Frameworks::ResponseSubscriberPtr m_onLightingStateResponse;
+        Frameworks::Ruid m_requestRuid;
     };
 }
 

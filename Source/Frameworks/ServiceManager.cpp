@@ -6,17 +6,13 @@
 
 using namespace Enigma::Frameworks;
 
-ServiceManager* ServiceManager::m_instance = nullptr;
-
 ServiceManager::ServiceManager()
 {
-    m_instance = this;
     m_minServiceState = ServiceState::Invalid;
 }
 
 ServiceManager::~ServiceManager()
 {
-    m_instance = nullptr;
 }
 
 void ServiceManager::RegisterSystemService(const std::shared_ptr<ISystemService>& service)
@@ -250,14 +246,14 @@ std::shared_ptr<ISystemService> ServiceManager::GetSystemService(const Rtti& ser
 
 std::optional<std::shared_ptr<ISystemService>> ServiceManager::TryGetSystemService(const Rtti& service_type)
 {
-    SystemServiceMap::iterator iter = m_instance->m_mapServices.find(&service_type);
-    if (iter != m_instance->m_mapServices.end())
+    SystemServiceMap::iterator iter = m_mapServices.find(&service_type);
+    if (iter != m_mapServices.end())
     {
         return iter->second;
     }
 
     // map中沒有完全符合的，找service type的繼承者
-    for (iter = m_instance->m_mapServices.begin(); iter != m_instance->m_mapServices.end(); ++iter)
+    for (iter = m_mapServices.begin(); iter != m_mapServices.end(); ++iter)
     {
         if (iter->first->IsDerived(service_type))
         {

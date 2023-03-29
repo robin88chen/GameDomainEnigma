@@ -159,6 +159,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">

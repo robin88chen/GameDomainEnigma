@@ -25,6 +25,7 @@ namespace Enigma::SceneGraph
         unsupportPawnPrimitive,
 
         invalidChangingCamera = 201,
+        emptyLightQueryResult,
     };
     class ErrorCategory : public std::error_category
     {

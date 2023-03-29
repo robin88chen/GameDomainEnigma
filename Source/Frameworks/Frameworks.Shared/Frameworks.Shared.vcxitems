@@ -43,6 +43,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EventSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyStatus.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\menew_make_shared.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Request.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestBus.h" />

@@ -6,20 +6,16 @@
 
 using namespace Enigma::Frameworks;
 
-ServiceManager* ServiceManager::m_instance = nullptr;
-
 ServiceManager::ServiceManager()
 {
-    m_instance = this;
     m_minServiceState = ServiceState::Invalid;
 }
 
 ServiceManager::~ServiceManager()
 {
-    m_instance = nullptr;
 }
 
-void ServiceManager::RegisterSystemService(ISystemService* service)
+void ServiceManager::RegisterSystemService(const std::shared_ptr<ISystemService>& service)
 {
     if (!service) return;
     ServiceStateRecord rec;
@@ -45,7 +41,7 @@ void ServiceManager::UnregisterSystemService(const Rtti& service_type)
     }
 }
 
-void ServiceManager::InsertHashAsService(const Rtti& service_type, ISystemService* service)
+void ServiceManager::InsertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service)
 {
     if (!service) return;
     m_mapServices[&service_type] = service;
@@ -71,7 +67,6 @@ void ServiceManager::ShutdownSystemService(const Rtti& service_type)
                 if (res == ServiceResult::Complete)
                 {
                     m_mapServices[&service_type] = nullptr;
-                    delete (*iter).m_service;
                     (*iter).m_service = nullptr;
                     (*iter).m_state = ServiceState::Deleted;
                 }
@@ -126,7 +121,6 @@ void ServiceManager::RunOnce()
             case ServiceState::Complete:
             {  // 完成，砍掉service
                 m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
-                delete (*iterService).m_service;
                 (*iterService).m_service = nullptr;
             }
             break;
@@ -200,7 +194,6 @@ void ServiceManager::RunForState(ServiceState st)
             case ServiceState::Complete:
             {  // 完成，砍掉service
                 m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
-                delete (*iterService).m_service;
                 (*iterService).m_service = nullptr;
             }
             break;
@@ -244,23 +237,23 @@ ServiceManager::ServiceState ServiceManager::CheckServiceState(const Rtti& servi
     return ServiceState::Invalid;
 }
 
-ISystemService* ServiceManager::GetSystemService(const Rtti& service_type)
+std::shared_ptr<ISystemService> ServiceManager::GetSystemService(const Rtti& service_type)
 {
     auto service = TryGetSystemService(service_type);
     if (service) return service.value();
     return nullptr;
 }
 
-std::optional<ISystemService*> ServiceManager::TryGetSystemService(const Rtti& service_type)
+std::optional<std::shared_ptr<ISystemService>> ServiceManager::TryGetSystemService(const Rtti& service_type)
 {
-    SystemServiceMap::iterator iter = m_instance->m_mapServices.find(&service_type);
-    if (iter != m_instance->m_mapServices.end())
+    SystemServiceMap::iterator iter = m_mapServices.find(&service_type);
+    if (iter != m_mapServices.end())
     {
         return iter->second;
     }
 
     // map中沒有完全符合的，找service type的繼承者
-    for (iter = m_instance->m_mapServices.begin(); iter != m_instance->m_mapServices.end(); ++iter)
+    for (iter = m_mapServices.begin(); iter != m_mapServices.end(); ++iter)
     {
         if (iter->first->IsDerived(service_type))
         {

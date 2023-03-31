@@ -173,6 +173,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyStatus.h">
       <Filter>LazyStatus</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\menew_make_shared.hpp">
+      <Filter>Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        LazyNodeIOService(Frameworks::ServiceManager* mngr, Engine::TimerService* timer, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
+        LazyNodeIOService(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::TimerService>& timer, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         LazyNodeIOService(const LazyNodeIOService&) = delete;
         LazyNodeIOService(LazyNodeIOService&&) = delete;
         virtual ~LazyNodeIOService() override;
@@ -46,7 +46,7 @@ namespace Enigma::SceneGraph
         void InstanceNextLazyNode();
 
     private:
-        Engine::TimerService* m_timer;
+        std::weak_ptr<Engine::TimerService> m_timer;
 
         Frameworks::CommandSubscriberPtr m_doInstancingLazyNode;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;

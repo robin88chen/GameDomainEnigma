@@ -4,9 +4,12 @@
 #include "MathLib/MathAlgorithm.h"
 #include "MathLib/MathGlobal.h"
 #include "CameraFrustumDtos.h"
+#include "CameraFrustumEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
+using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
@@ -117,6 +120,7 @@ error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, 
 
     m_projectionType = ProjectionType::Perspective;
 
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
     return ErrorCode::ok;
 }
 
@@ -139,6 +143,7 @@ error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, flo
 
     m_projectionType = ProjectionType::Ortho;
 
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
     return ErrorCode::ok;
 }
 

@@ -32,6 +32,7 @@ namespace Enigma::SceneGraph
     class Portal;
     class LightInfo;
     class Light;
+    class CameraDto;
     class NodeDto;
     class LazyNodeDto;
     class VisibilityManagedNodeDto;
@@ -60,6 +61,7 @@ namespace Enigma::SceneGraph
         GraphicCoordSys GetCoordinateSystem();
 
         std::shared_ptr<Camera> CreateCamera(const std::string& name);
+        std::shared_ptr<Camera> CreateCamera(const CameraDto& dto);
         bool HasCamera(const std::string& name);
         std::shared_ptr<Camera> QueryCamera(const std::string& name);
 

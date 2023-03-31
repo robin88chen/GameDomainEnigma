@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7cc65fdb-2daf-4489-9228-a86903b5dee3}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />
+  </ItemGroup>
+</Project>

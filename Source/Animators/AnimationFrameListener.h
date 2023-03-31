@@ -24,7 +24,7 @@ namespace Enigma::Animators
     {
         DECLARE_EN_RTTI;
     public:
-        AnimationFrameListener(Frameworks::ServiceManager* manager, Engine::TimerService* timer);
+        AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer);
         AnimationFrameListener(const AnimationFrameListener&) = delete;
         AnimationFrameListener(AnimationFrameListener&&) = delete;
         ~AnimationFrameListener() override;
@@ -48,7 +48,7 @@ namespace Enigma::Animators
         void DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c);
 
     private:
-        Engine::TimerService* m_timer;
+        std::weak_ptr<Engine::TimerService> m_timer;
 
         using ListeningList = std::list<std::weak_ptr<Engine::Animator>>;
         ListeningList m_listeningAnimators;

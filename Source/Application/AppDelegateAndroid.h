@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AppDelegateAndroid.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -9,7 +9,9 @@
 #define APP_DELEGATE_ANDROID_H
 
 #include "Platforms/PlatformLayerUtilities.h"
+#include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
+#include "InputHandlers/InputHandlerService.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 
@@ -50,6 +52,7 @@ namespace Enigma::Application
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;
+        std::weak_ptr<InputHandlers::InputHandlerService> m_inputHandler;
     };
 }
 #endif

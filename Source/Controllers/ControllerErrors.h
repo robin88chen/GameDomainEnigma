@@ -1,12 +1,12 @@
 ﻿/********************************************************************
- * \file   ApplicationErrors.h
+ * \file   ControllerErrors.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
-#ifndef APPLICATION_ERRORS_H
-#define APPLICATION_ERRORS_H
+#ifndef CONTROLLER_ERRORS_H
+#define CONTROLLER_ERRORS_H
 
 #include <system_error>
 
@@ -40,4 +40,4 @@ namespace std
     struct is_error_code_enum<Enigma::Controllers::ErrorCode> : true_type {};
 }
 
-#endif // APPLICATION_ERRORS_H
+#endif // CONTROLLER_ERRORS_H

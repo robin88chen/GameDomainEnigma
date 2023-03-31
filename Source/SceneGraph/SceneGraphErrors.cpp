@@ -16,6 +16,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullPrimitive: return "Null primitive";
     case ErrorCode::nullCullerCamera: return "Null culler camera";
     case ErrorCode::unsupportPawnPrimitive: return "Unsupport pawn primitive";
+    case ErrorCode::invalidChangingCamera: return "Invalid changing camera";
+    case ErrorCode::emptyLightQueryResult: return "Empty light query result";
     }
     return "Unknown";
 }

@@ -37,6 +37,9 @@
     <Filter Include="Communicatios">
       <UniqueIdentifier>{3d0986fe-5f53-41e3-9304-5b82b093f4fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{5d4c5d57-c9e4-49a9-b825-7cd36a651139}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -105,6 +108,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h">
       <Filter>Renderable Primitives\Skin Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -157,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp">
       <Filter>Renderable Primitives\Skin Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

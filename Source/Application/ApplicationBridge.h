@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ApplicationBridge.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -9,6 +9,8 @@
 #define _APPLICATION_BRIDGE_H
 
 #include "Platforms/PlatformConfig.h"
+#include "InputHandlers/InputHandlerService.h"
+#include <memory>
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include <functional>
@@ -18,6 +20,7 @@ namespace  Enigma::Application
     class ApplicationBridge
     {
     public:
+        static void InitInputHandler(const std::shared_ptr<InputHandlers::InputHandlerService>& input_handler);
         /// on Bridge Activity Create Callback, 先呼叫 m_onBridgeCreate, 再 m_initializeGraphicDevice, 再 m_afterDeviceCreated
         static void OnBridgeCreate();
         /// on Bridge Activity Destroy Callback, 先呼叫 m_beforeDeviceCleaning, 再 m_finalizeGraphicDevice, 再 m_onBridgeDestroy
@@ -80,11 +83,14 @@ namespace  Enigma::Application
         Enigma::GraphicAPIBridge::m_initializeGraphicDevice = []() { app_assigned_function(); };
         @endcode */
         //@{
-        /// init graphic device, 
+        /// init graphic device,
         static std::function<void()> m_initializeGraphicDevice;
-        /// init graphic device, 
+        /// init graphic device,
         static std::function<void()> m_finalizeGraphicDevice;
         //@}
+
+    private:
+        static std::weak_ptr<InputHandlers::InputHandlerService> m_input;
     };
 }
 #endif

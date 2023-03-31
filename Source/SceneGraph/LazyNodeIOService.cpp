@@ -17,7 +17,7 @@ float constexpr MIN_KEEP_TIME = 5.0000f;
 
 DEFINE_RTTI(SceneGraph, LazyNodeIOService, ISystemService);
 
-LazyNodeIOService::LazyNodeIOService(Frameworks::ServiceManager* mngr, Engine::TimerService* timer,
+LazyNodeIOService::LazyNodeIOService(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::TimerService>& timer,
     const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr)
 {
     m_timer = timer;
@@ -128,21 +128,21 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
 
 void LazyNodeIOService::OnVisibilityChanged(const Frameworks::IEventPtr& e)
 {
-    assert(m_timer);
+    assert(!m_timer.expired());
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<VisibilityChanged, IEvent>(e);
     if (!ev) return;
     if (!ev->GetNode()) return;
     if (ev->IsVisible())
     {
-        m_visibilityTimers.insert_or_assign(ev->GetNode(), m_timer->GetGameTimer()->GetTotalTime());
+        m_visibilityTimers.insert_or_assign(ev->GetNode(), m_timer.lock()->GetGameTimer()->GetTotalTime());
     }
     else
     {
         auto it_vis = m_visibilityTimers.find(ev->GetNode());
         if (it_vis != m_visibilityTimers.end())
         {
-            auto time = m_timer->GetGameTimer()->GetTotalTime() - it_vis->second;
+            auto time = m_timer.lock()->GetGameTimer()->GetTotalTime() - it_vis->second;
             if ((time > MIN_KEEP_TIME) && (m_in_placeNode != ev->GetNode()))
             {
                 std::lock_guard locker{ m_waitingNodesLock };

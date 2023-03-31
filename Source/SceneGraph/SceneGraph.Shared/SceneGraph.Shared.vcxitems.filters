@@ -46,6 +46,9 @@
     <Filter Include="Portal System\Dtos">
       <UniqueIdentifier>{06aaa09e-d052-45ed-8dde-145f70ebfb2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{8cf6c686-c6e8-43fb-831a-333a82d058ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -147,6 +150,21 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h">
       <Filter>Portal System</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h">
+      <Filter>Scene Graph\LightInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -235,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp">
       <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.cpp">
+      <Filter>Scene Traveler</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

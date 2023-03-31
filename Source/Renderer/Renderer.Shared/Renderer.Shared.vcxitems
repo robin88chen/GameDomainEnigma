@@ -30,6 +30,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h" />
@@ -50,6 +51,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPackList.cpp" />

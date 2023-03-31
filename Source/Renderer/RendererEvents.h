@@ -48,13 +48,13 @@ namespace Enigma::Renderer
     class RenderTargetResized : public Frameworks::IEvent
     {
     public:
-        RenderTargetResized(const std::string& name, const MathLib::Dimension& dimension) :
-            m_name(name), m_dimension(dimension) {};
-        const std::string& GetRenderTargetName() { return m_name; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        RenderTargetResized(const std::shared_ptr<RenderTarget>& target, const MathLib::Dimension& dimension) :
+            m_target(target), m_dimension(dimension) {};
+        [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const MathLib::Dimension& GetDimension() const { return m_dimension; }
 
     private:
-        std::string m_name;
+        std::weak_ptr<RenderTarget> m_target;
         MathLib::Dimension m_dimension;
     };
     class PrimaryRenderTargetCreated : public Frameworks::IEvent
@@ -81,37 +81,37 @@ namespace Enigma::Renderer
     class TargetViewPortInitialized : public Frameworks::IEvent
     {
     public:
-        TargetViewPortInitialized(const std::string& name, const Graphics::TargetViewPort& vp) :
-            m_name{ name }, m_view_port(vp) {}
-        const std::string& GetRenderTargetName() { return m_name; }
-        const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
+        TargetViewPortInitialized(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
+            m_target{ target }, m_view_port(vp) {}
+        [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
 
     private:
-        std::string m_name;
+        std::weak_ptr<RenderTarget> m_target;
         Graphics::TargetViewPort m_view_port;
     };
     class TargetViewPortChanged : public Frameworks::IEvent
     {
     public:
-        TargetViewPortChanged(const std::string& name, const Graphics::TargetViewPort& vp) :
-            m_name{ name }, m_view_port(vp) {}
-        const std::string& GetRenderTargetName() { return m_name; }
-        const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
+        TargetViewPortChanged(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
+            m_target{ target }, m_view_port(vp) {}
+        [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
 
     private:
-        std::string m_name;
+        std::weak_ptr<RenderTarget> m_target;
         Graphics::TargetViewPort m_view_port;
     };
     class TargetClearingPropertyChanged : public Frameworks::IEvent
     {
     public:
-        TargetClearingPropertyChanged(const std::string& name, const RenderTargetClearingProperty& prop) :
-            m_name{ name }, m_clearing(prop) {}
-        const std::string& GetRenderTargetName() { return m_name; }
-        const RenderTargetClearingProperty& GetClearingProperty() const { return m_clearing; }
+        TargetClearingPropertyChanged(const std::shared_ptr<RenderTarget>& target, const RenderTargetClearingProperty& prop) :
+            m_target{ target }, m_clearing(prop) {}
+        [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const RenderTargetClearingProperty& GetClearingProperty() const { return m_clearing; }
 
     private:
-        std::string m_name;
+        std::weak_ptr<RenderTarget> m_target;
         RenderTargetClearingProperty m_clearing;
     };
 }

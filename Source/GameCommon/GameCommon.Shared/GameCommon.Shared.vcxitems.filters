@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GameCamera">
+      <UniqueIdentifier>{5e7f6221-913a-48ee-b329-8fd562142414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameScene">
+      <UniqueIdentifier>{c018063f-362e-455a-b703-5ee9f36614c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneRenderer">
+      <UniqueIdentifier>{db721fcd-ceff-4cd9-a32b-270fe5962598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{cdcca7f6-4464-4278-868b-565d27c7f123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCodes">
+      <UniqueIdentifier>{8adaacc5-f416-4fdd-a6e9-b658a472858d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h">
+      <Filter>SceneRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h">
+      <Filter>ErrorCodes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
+      <Filter>GameCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp">
+      <Filter>SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp">
+      <Filter>ErrorCodes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -18,6 +18,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />
@@ -50,6 +52,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h" />
@@ -82,9 +85,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />

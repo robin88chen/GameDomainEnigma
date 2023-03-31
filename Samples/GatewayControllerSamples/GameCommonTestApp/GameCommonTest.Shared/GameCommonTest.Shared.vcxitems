@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{2212d4e4-939a-4faa-840f-8593d9c9daa8}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraDtoMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GameCommonTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PrimitiveMeshMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SceneGraphMaker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraDtoMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameCommonTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PrimitiveMeshMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SceneGraphMaker.h" />
+  </ItemGroup>
+</Project>

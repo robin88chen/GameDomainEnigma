@@ -8,7 +8,7 @@ precision mediump float;
 uniform sampler2D DiffuseTexture;
 uniform vec4 Ambient;
 uniform vec4 SunColor;
-uniform vec3 SunDir;
+uniform vec4 SunDir;
 in vec3 vNor;
 in vec2 vTexCo;
 in vec4 vWorldPos;
@@ -17,7 +17,8 @@ out vec4 outColor;
 vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
 {
 	vec4 diffuse = Ambient;
-	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, SunDir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+	vec3 sun_dir = vec3(SunDir.x, SunDir.y, SunDir.z);
+	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, sun_dir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
 	return diffuse;
 }
 void main() {

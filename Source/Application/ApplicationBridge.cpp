@@ -28,6 +28,11 @@ std::function<void()> ApplicationBridge::m_finalizeGraphicDevice = nullptr;
 
 std::weak_ptr<InputHandlerService> ApplicationBridge::m_input;
 
+void ApplicationBridge::InitInputHandler(const std::shared_ptr<InputHandlers::InputHandlerService>& input_handler)
+{
+    m_input = input_handler;
+}
+
 void ApplicationBridge::OnBridgeCreate()
 {
     if (m_onBridgeCreate)

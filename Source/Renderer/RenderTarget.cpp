@@ -141,6 +141,8 @@ error RenderTarget::BindViewPort()
 
 error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag) const
 {
+    if (!m_backSurface) return ErrorCode::nullBackSurface;
+
     Graphics::IGraphicAPI::Instance()->Clear(
         (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::ColorBuffer)) ? m_backSurface : nullptr,
         (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::DepthBuffer)) ? m_depthStencilSurface : nullptr,

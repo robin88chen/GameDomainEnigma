@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AppDelegateAndroid.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -52,7 +52,7 @@ namespace Enigma::Application
         bool m_hasLogFile;
 
         Controllers::GraphicMain* m_graphicMain;
-        InputHandlers::InputHandlerService* m_inputHandler;
+        std::weak_ptr<InputHandlers::InputHandlerService> m_inputHandler;
     };
 }
 #endif

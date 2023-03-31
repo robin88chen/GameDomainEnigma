@@ -8,6 +8,7 @@
 #include "Renderer/RendererEvents.h"
 #include "Renderer/RenderTarget.h"
 #include "InputHandlers/MouseInputEvents.h"
+#include "InputHandlers/GestureInputEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -39,10 +40,16 @@ ServiceResult GameCameraService::OnInit()
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
     m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
     m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
+    m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
+    m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
     EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
 #if TARGET_PLATFORM == PLATFORM_WIN32
     EventPublisher::Subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
     EventPublisher::Subscribe(typeid(MouseWheeled), m_onMouseWheel);
+#endif
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    EventPublisher::Subscribe(typeid(GestureScroll), m_onGestureScroll);
+    EventPublisher::Subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
     return ServiceResult::Complete;
 }
@@ -54,9 +61,15 @@ ServiceResult GameCameraService::OnTerm()
     EventPublisher::Unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
     EventPublisher::Unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
 #endif
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    EventPublisher::Unsubscribe(typeid(GestureScroll), m_onGestureScroll);
+    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
+#endif
     m_onTargetResized = nullptr;
     m_onRightBtnDrag = nullptr;
     m_onMouseWheel = nullptr;
+    m_onGestureScroll = nullptr;
+    m_onGestureScale = nullptr;
 
     m_primaryCamera = nullptr;
 
@@ -196,6 +209,27 @@ void GameCameraService::OnMouseWheel(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<MouseWheeled, IEvent>(e);
     if (!ev) return;
     float delta_dist = (float)(ev->m_param.m_deltaWheel / WHEEL_THRESHOLD) * 0.5f;
+    CameraZoom(delta_dist);
+#endif
+}
+
+void GameCameraService::OnGestureScroll(const Frameworks::IEventPtr& e)
+{
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<GestureScroll, IEvent>(e);
+    if (!ev) return;
+    CameraSphereRotate(ev->m_delta.X() * 0.001f, -ev->m_delta.Y() * 0.001f);
+#endif
+}
+
+void GameCameraService::OnGestureScale(const Frameworks::IEventPtr& e)
+{
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<GestureScale, IEvent>(e);
+    if (!ev) return;
+    float delta_dist = (ev->m_factor - 1.0f) * 10.0f;
     CameraZoom(delta_dist);
 #endif
 }

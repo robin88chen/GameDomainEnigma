@@ -25,6 +25,9 @@
 #include "GameCommon/GameSceneService.h"
 #include "PrimitiveMeshMaker.h"
 #include "SceneGraphMaker.h"
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+#include "Application/ApplicationBridge.h"
+#endif
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -95,6 +98,9 @@ void GameCommonTest::InstallEngine()
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
         input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+    ApplicationBridge::InitInputHandler(input_handler_policy->GetInputHandler());
+#endif
     m_sceneRendererService = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 
     PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");

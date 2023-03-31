@@ -55,6 +55,8 @@ namespace Enigma::GameCommon
         void OnTargetResized(const Frameworks::IEventPtr& e);
         void OnMouseRightBtnDrag(const Frameworks::IEventPtr& e);
         void OnMouseWheel(const Frameworks::IEventPtr& e);
+        void OnGestureScroll(const Frameworks::IEventPtr& e);
+        void OnGestureScale(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
@@ -63,6 +65,8 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onTargetResized;
         Frameworks::EventSubscriberPtr m_onRightBtnDrag;
         Frameworks::EventSubscriberPtr m_onMouseWheel;
+        Frameworks::EventSubscriberPtr m_onGestureScroll;
+        Frameworks::EventSubscriberPtr m_onGestureScale;
     };
 }
 

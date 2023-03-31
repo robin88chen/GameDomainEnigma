@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h" />
@@ -24,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />

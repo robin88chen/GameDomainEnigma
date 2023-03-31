@@ -16,9 +16,13 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CameraDtoMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GameCommonTest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PrimitiveMeshMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SceneGraphMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CameraDtoMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GameCommonTest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PrimitiveMeshMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SceneGraphMaker.h" />
   </ItemGroup>
 </Project>

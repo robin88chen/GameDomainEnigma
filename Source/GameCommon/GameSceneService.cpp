@@ -8,6 +8,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "GameCameraEvents.h"
 #include "GameSceneEvents.h"
+#include "GameCommonErrors.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -88,6 +89,13 @@ void GameSceneService::DestroyRootScene()
 {
     m_sceneRoot = nullptr;
     m_portalMgtNode = nullptr;
+}
+
+error GameSceneService::AttachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node)
+{
+    if (!m_portalMgtNode) return ErrorCode::nullPortalManagement;
+    m_portalMgtNode->AttachOutsideZone(node);
+    return ErrorCode::ok;
 }
 
 std::shared_ptr<Spatial> GameSceneService::FindSpatialByName(const std::string& spatial_name)

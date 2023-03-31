@@ -8,6 +8,9 @@
 #include "Frameworks/CommandBus.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/PortalZoneNode.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EngineInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
@@ -19,6 +22,9 @@
 #include "CameraDtoMaker.h"
 #include "Frameworks/menew_make_shared.hpp"
 #include "GameCommon/SceneRendererService.h"
+#include "GameCommon/GameSceneService.h"
+#include "PrimitiveMeshMaker.h"
+#include "SceneGraphMaker.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -30,6 +36,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
 using namespace Enigma::GameCommon;
+using namespace Enigma::MathLib;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -70,6 +77,9 @@ void GameCommonTest::InitializeMountPaths()
 
 void GameCommonTest::InstallEngine()
 {
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
@@ -86,12 +96,25 @@ void GameCommonTest::InstallEngine()
         input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRendererService = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
+
+    PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");
+    PrimitiveMeshMaker::MakeSavedDoorGeometry("door");
+    PrimitiveMeshMaker::MakeSavedBoardGeometry("board");
+    auto outside_dto = SceneGraphMaker::MakeOutsideRegion("outside_region", Matrix4::IDENTITY);
+    outside_dto.TheFactoryDesc().ClaimAsDeferred(outside_dto.Name() + ".node", "DataPath");
+    outside_dto.ChildNames() = {};
+    auto dtos = { outside_dto.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("outside_region", dtos));
 }
 
 void GameCommonTest::ShutdownEngine()
 {
-    m_graphicMain->ShutdownRenderEngine();
+    m_sceneRoot = nullptr;
 
+    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onSceneGraphBuilt = nullptr;
+
+    m_graphicMain->ShutdownRenderEngine();
 }
 
 void GameCommonTest::FrameUpdate()
@@ -107,4 +130,18 @@ void GameCommonTest::RenderFrame()
         m_sceneRendererService.lock()->RenderGameScene();
         m_sceneRendererService.lock()->Flip();
     }
+}
+
+void GameCommonTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    if (!ev) return;
+    auto top_spatials = ev->GetTopLevelSpatial();
+    if (top_spatials.empty()) return;
+    auto outside_node = std::dynamic_pointer_cast<PortalZoneNode, Spatial>(top_spatials[0]);
+    if (!outside_node) return;
+    auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
+    if (!scene_service) return;
+    error er = scene_service->AttachOutsideZone(outside_node);
 }

@@ -13,6 +13,9 @@
     <Filter Include="Installing">
       <UniqueIdentifier>{cdcca7f6-4464-4278-868b-565d27c7f123}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ErrorCodes">
+      <UniqueIdentifier>{8adaacc5-f416-4fdd-a6e9-b658a472858d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -36,6 +39,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h">
+      <Filter>ErrorCodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -52,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp">
+      <Filter>ErrorCodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

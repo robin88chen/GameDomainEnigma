@@ -18,6 +18,8 @@
 
 namespace Enigma::GameCommon
 {
+    using error = std::error_code;
+
     class GameCameraService;
 
     class GameSceneService : public Frameworks::ISystemService
@@ -44,6 +46,7 @@ namespace Enigma::GameCommon
         //@}
 
         const std::shared_ptr<SceneGraph::PortalManagementNode>& GetPortalManagementNode() { return m_portalMgtNode; };
+        error AttachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
 
         std::shared_ptr<SceneGraph::Spatial> FindSpatialByName(const std::string& spatial_name);
 

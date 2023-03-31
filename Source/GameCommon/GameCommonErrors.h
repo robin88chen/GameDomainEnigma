@@ -1,21 +1,21 @@
-﻿/********************************************************************
- * \file   ControllerErrors.h
+﻿/*********************************************************************
+ * \file   GameCommonErrors.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
- * \date   June 2022
+ * \date   March 2023
  *********************************************************************/
-#ifndef CONTROLLER_ERRORS_H
-#define CONTROLLER_ERRORS_H
+#ifndef _GAME_COMMON_ERRORS_H
+#define _GAME_COMMON_ERRORS_H
 
 #include <system_error>
 
-namespace Enigma::Controllers
+namespace Enigma::GameCommon
 {
     enum class ErrorCode
     {
         ok = 0,
-        unknownInstallingPolicy,
+        nullPortalManagement,
     };
     class ErrorCategory : public std::error_category
     {
@@ -37,7 +37,7 @@ namespace std
 {
     // let compiler know that ErrorCode is compatible with std::error_code
     template <>
-    struct is_error_code_enum<Enigma::Controllers::ErrorCode> : true_type {};
+    struct is_error_code_enum<Enigma::GameCommon::ErrorCode> : true_type {};
 }
 
-#endif // CONTROLLER_ERRORS_H
+#endif // _GAME_COMMON_ERRORS_H

@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationInfoPanel.h" />
+    <ClInclude Include="CameraDtoMaker.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
     <ClInclude Include="MainForm.h" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
+    <ClCompile Include="CameraDtoMaker.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />
     <ClCompile Include="MainApplication.cpp" />

@@ -7,6 +7,8 @@
 #include "AnimationInfoPanel.h"
 #include "Platforms/MemoryMacro.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include "nana/gui/filebox.hpp"
+#include "DaeParser.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -71,6 +73,8 @@ void MainForm::Initialize()
     m_timer->start();
     events().destroy([this] { this->Finalize(); });
 
+    m_outputPanel->SubscribeHandlers();
+
     get_place().collocate();
 }
 
@@ -92,7 +96,22 @@ void MainForm::InitMenu()
 
 void MainForm::OnImportDaeFile(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::filebox fb{ *this, true };
+    fb.add_filter({ {"Collada File(*.dae)", "*.dae"} });
+    auto paths = fb.show();
+    if (paths.size() > 0)
+    {
+        if (m_outputPanel)
+        {
+            m_outputPanel->AddMessage(std::string{ "open Collada file " } + paths[0].string());
+        }
+        DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::Instance()->GetSystemServiceAs<Enigma::Engine::GeometryRepository>());
+        parser->LoadDaeFile(paths[0].string());
+        //m_appDelegate->SetPrimitive(parser->GetModelPrimitive());
+        m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
+        //m_modelInfoPanel->EnumModelMeshNode(parser->GetModelPrimitive());
+        delete parser;
+    }
 }
 
 void MainForm::OnSaveEntity(const nana::menu::item_proxy& menu_item)
@@ -112,5 +131,6 @@ void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::Finalize()
 {
+    if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }

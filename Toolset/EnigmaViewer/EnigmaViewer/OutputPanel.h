@@ -11,6 +11,7 @@
 #include "nana/gui/widgets/panel.hpp"
 #include "nana/gui/widgets/textbox.hpp"
 #include "nana/gui/place.hpp"
+#include "Frameworks/CommandSubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -21,12 +22,17 @@ namespace EnigmaViewer
         virtual ~OutputPanel();
 
         void Initialize();
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
 
         void AddMessage(const std::string& msg);
 
     private:
+        void DoOutputMessage(const Enigma::Frameworks::ICommandPtr& c);
+    private:
         nana::place* m_place;
         nana::textbox* m_outputText;
+        Enigma::Frameworks::CommandSubscriberPtr m_doOutputMessage;
     };
 }
 

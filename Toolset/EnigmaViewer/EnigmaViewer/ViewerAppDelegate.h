@@ -13,6 +13,8 @@
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
 #include "GameCommon/SceneRendererService.h"
+#include "SceneGraph/SceneGraphDtos.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -36,6 +38,11 @@ namespace EnigmaViewer
 
         void OnTimerElapsed();
 
+        void LoadPawn(const Enigma::SceneGraph::PawnDto& pawn_dto);
+
+    protected:
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
     protected:
         HWND m_hwnd;
         bool m_hasLogFile;
@@ -46,6 +53,8 @@ namespace EnigmaViewer
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
     };
 }
 

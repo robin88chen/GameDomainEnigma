@@ -107,6 +107,7 @@ void MainForm::OnImportDaeFile(const nana::menu::item_proxy& menu_item)
         }
         DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::Instance()->GetSystemServiceAs<Enigma::Engine::GeometryRepository>());
         parser->LoadDaeFile(paths[0].string());
+        m_appDelegate->LoadPawn(parser->GetPawnDto());
         //m_appDelegate->SetPrimitive(parser->GetModelPrimitive());
         m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         //m_modelInfoPanel->EnumModelMeshNode(parser->GetModelPrimitive());

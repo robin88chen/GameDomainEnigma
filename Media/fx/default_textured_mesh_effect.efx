@@ -1,0 +1,51 @@
+{
+	"Name" : "default_textured_mesh_effect",
+	"VertexShaderList" : [
+	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/default_mesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/default_mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/default_mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "dx9", "File" : "fx/deferred/mesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "dx11", "File" : "fx/deferred/mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred_lit_vs", "API" : "egl", "File" : "fx/deferred/mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/default_textured_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "default_inter_ps", "API" : "dx9", "File" : "fx/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "default_inter_ps", "API" : "dx11", "File" : "fx/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_inter_ps", "API" : "egl", "File" : "fx/default_textured_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_inter_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_inter_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_inter_lit_ps", "API" : "egl", "File" : "fx/deferred/textured_mesh_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{"Name" : "default", "Program" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}, 
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"Name" : "deferred_lit", "Program" : "deferred_lit", "VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "Primary/Intersect",
+		"EffectPassArray" : [
+		{"Name" : "default_intr", "Program" : "default_intr", "VertexShader" : "default_vs", "PixelShader" : "default_inter_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Intersect",
+		"EffectPassArray" : [
+		{"Name" : "deferred_lit_intr", "Program" : "deferred_lit_intr", "VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_inter_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}
+	]
+}

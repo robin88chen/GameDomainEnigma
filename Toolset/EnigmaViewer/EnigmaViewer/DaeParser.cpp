@@ -804,11 +804,11 @@ std::string DaeParser::FindMaterialTexImageFilename(const pugi::xml_node& collad
     Filename filename;
     if (pos != std::string::npos)
     {
-        filename.SetFileName(file_url.substr(pos + 2));
+        filename = Filename(file_url.substr(pos + 2));
     }
     else
     {
-        filename.SetFileName(file_url);
+        filename = Filename(file_url);
     }
     OutputLog("    " + material_id + " image file name: " + filename.GetFileName());
     return "image/" + filename.GetFileName();

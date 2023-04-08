@@ -1,0 +1,63 @@
+{
+	"VertexShaderList" : [
+	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/skinmesh.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/skinmesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/skinmesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred_lit_vs", "API" : "dx9", "File" : "fx/deferred/skinmesh.vsh", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred_lit_vs", "API" : "dx11", "File" : "fx/deferred/skinmesh_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred_lit_vs", "API" : "egl", "File" : "fx/deferred/skinmesh_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/textured_mesh.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_lit_ps", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh", "Profile" : "", "Entry" : ""},
+	{"Name" : "default_inter_ps", "API" : "dx9", "File" : "fx/textured_mesh_intersect.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "default_inter_ps", "API" : "dx11", "File" : "fx/textured_mesh_intersect_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_inter_ps", "API" : "egl", "File" : "fx/textured_mesh_intersect_egl.psh", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_inter_lit_ps", "API" : "dx9", "File" : "fx/deferred/textured_mesh_intersect.psh", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_inter_lit_ps", "API" : "dx11", "File" : "fx/deferred/textured_mesh_intersect_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_inter_lit_ps", "API" : "egl", "File" : "fx/deferred/textured_mesh_intersect_egl.psh", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Clamp", "MinFilter" : "Linear", "MagFilter" : "Linear"}
+	],
+	"RasterizerStateList" : [
+	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},
+	{"Name" : "rasFill", "FillMode" : "Fill", "CullMode" : "None"},
+	{"Name" : "rasFillBias", "FillMode" : "Wireframe", "DepthBias" : -0.5001}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{"VertexShader" : "default_vs", "PixelShader" : "default_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "Primary/Intersect",
+		"EffectPassArray" : [
+		{"VertexShader" : "default_vs", "PixelShader" : "default_inter_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Intersect",
+		"EffectPassArray" : [
+		{"VertexShader" : "deferred_lit_vs", "PixelShader" : "deferred_inter_lit_ps", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}
+	]
+}

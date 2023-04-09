@@ -11,6 +11,10 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "GameEngine/TriangleList.h"
 #include "SceneGraph/Pawn.h"
+#include "Animators/AnimatorDtos.h"
+#include "Animators/ModelPrimitiveAnimator.h"
+#include "Animators/ModelAnimationAsset.h"
+#include "Animators/AnimationAssetDtos.h"
 #include <sstream>
 
 using namespace EnigmaViewer;
@@ -21,6 +25,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Animators;
 
 #define TOKEN_SCENE "scene"
 #define TOKEN_INSTANCE_SCENE "instance_visual_scene"
@@ -88,11 +93,12 @@ using namespace Enigma::SceneGraph;
 #define DEFAULT_TEXTURED_MESH_EFFECT_FILENAME "fx/default_textured_mesh_effect.efx"
 #define DEFAULT_TEXTURED_MESH_EFFECT_NAME "default_textured_mesh_effect"
 #define DEFAULT_TEXTURED_SKIN_MESH_EFFECT_FILENAME "fx/default_textured_skinmesh_effect.efx"
+#define DEFAULT_TEXTURED_SKIN_MESH_EFFECT_NAME "default_textured_skinmesh_effect"
 #define DIFFUSE_MAP_SEMANTIC "DiffuseMap"
 
 #define MAX_WEIGHT_COUNT 4
 
-DaeParser::DaeParser(const std::shared_ptr<Enigma::Engine::GeometryRepository>& geometry_repository)
+DaeParser::DaeParser(const std::shared_ptr<GeometryRepository>& geometry_repository)
 {
     m_geometryRepository = geometry_repository;
 }
@@ -133,9 +139,10 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     }
     m_pawn = PawnDto();
     ParseScene(collada_root);
-    /*ParseAnimations(collada_root);
+    ParseAnimations(collada_root);
 
-    if ((m_model) && (m_animation))
+    ComposeModelPrimitiveDto();
+    /*if ((m_model) && (m_animation))
     {
         ModelPrimitiveAnimatorPtr model_anim = ModelPrimitiveAnimatorPtr{ menew ModelPrimitiveAnimator() };
         model_anim->LinkAnimationAsset(m_animation);
@@ -163,6 +170,31 @@ void DaeParser::LoadDaeFile(const std::string& filename)
 void DaeParser::OutputLog(const std::string& msg)
 {
     CommandBus::Post(std::make_shared<OutputMessage>(msg));
+}
+
+void DaeParser::ComposeModelPrimitiveDto()
+{
+    std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>();
+    animator->LinkAnimationAsset(m_animationAsset);
+    auto animator_dto = animator->SerializeDto();
+    for (auto skin_bone_name : m_skinBoneNames)
+    {
+        SkinOperatorDto operator_dto;
+        operator_dto.BoneNodeNames() = skin_bone_name.second;
+        operator_dto.SkinMeshName() = skin_bone_name.first;
+        animator_dto.SkinOperators().emplace_back(operator_dto.ToGenericDto());
+    }
+    m_model.TheAnimator() = animator_dto.ToGenericDto();
+
+    BoundingVolume unit_bv(Box3::UNIT_BOX);
+    m_pawn.ThePrimitive() = m_model.ToGenericDto();
+    m_pawn.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    m_pawn.Name() = m_filename;
+    m_pawn.LocalTransform() = Matrix4::IDENTITY;
+    m_pawn.WorldTransform() = Matrix4::IDENTITY;
+    m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
+    m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
+    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)
@@ -204,9 +236,15 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
 {
     OutputLog(" Parse model scene node "
         + std::string(model_scene_node.attribute(TOKEN_ID).as_string()) + "...");
-    ModelPrimitiveDto model_dto;
-    model_dto.Name() = model_scene_node.attribute(TOKEN_NAME).as_string();
-    m_modelName = model_dto.Name();
+    m_model = ModelPrimitiveDto();
+    std::string model_name = model_scene_node.attribute(TOKEN_NAME).as_string();
+    if (model_name == "Scene")
+    {
+        Filename filename(m_filename);
+        model_name = filename.GetBaseFileName();
+    }
+    m_model.Name() = model_name;
+    m_modelName = m_model.Name();
     MeshNodeTreeDto tree_dto;
     //m_model = std::make_shared<ModelPrimitive>(model_scene_node.attribute(TOKEN_NAME).as_string());
     pugi::xml_node scene_node_xml = model_scene_node.child(TOKEN_NODE);
@@ -215,17 +253,7 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
         ParseSceneNode(tree_dto, scene_node_xml, std::nullopt);
         scene_node_xml = scene_node_xml.next_sibling(TOKEN_NODE);
     }
-    model_dto.TheNodeTree() = tree_dto.ToGenericDto();
-
-    BoundingVolume unit_bv(Box3::UNIT_BOX);
-    m_pawn.ThePrimitive() = model_dto.ToGenericDto();
-    m_pawn.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
-    m_pawn.Name() = m_filename;
-    m_pawn.LocalTransform() = Matrix4::IDENTITY;
-    m_pawn.WorldTransform() = Matrix4::IDENTITY;
-    m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    m_model.TheNodeTree() = tree_dto.ToGenericDto();
 
     // parse for skin
     /*scene_node_xml = model_scene_node.child(TOKEN_NODE);
@@ -238,7 +266,7 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
     //m_model->SelectVisualTechnique("Default");
 }
 
-void DaeParser::ParseSceneNode(Enigma::Renderer::MeshNodeTreeDto& node_tree, const pugi::xml_node& scene_node_xml, std::optional<unsigned> parent_node_array_index)
+void DaeParser::ParseSceneNode(MeshNodeTreeDto& node_tree, const pugi::xml_node& scene_node_xml, std::optional<unsigned> parent_node_array_index)
 {
     std::string node_id = std::string(scene_node_xml.attribute(TOKEN_ID).as_string());
     OutputLog("   Parse scene node " + node_id + "...");
@@ -246,7 +274,7 @@ void DaeParser::ParseSceneNode(Enigma::Renderer::MeshNodeTreeDto& node_tree, con
     if (inst_controller)
     {
         OutputLog("   " + node_id + " is a skin mesh node");
-        //ParseSceneNodeForSkin(scene_node_xml, parent_node_array_index);
+        ParseSceneNodeForSkin(node_tree, scene_node_xml, parent_node_array_index);
         return;  // this is a skin mesh node
     }
 
@@ -286,6 +314,45 @@ void DaeParser::ParseSceneNode(Enigma::Renderer::MeshNodeTreeDto& node_tree, con
         ParseSceneNode(node_tree, child_node, current_index);
         child_node = child_node.next_sibling(TOKEN_NODE);
     }
+}
+
+void DaeParser::ParseSceneNodeForSkin(MeshNodeTreeDto& node_tree, const pugi::xml_node& scene_node_xml, std::optional<unsigned> parent_node_array_index)
+{
+    std::string node_name = std::string(scene_node_xml.attribute(TOKEN_ID).as_string());
+    OutputLog("   Parse skin mesh node " + node_name + "...");
+    pugi::xml_node inst_controller = scene_node_xml.child(TOKEN_INSTANCE_CONTROLLER);
+    if (!inst_controller)
+    {
+        OutputLog("   " + node_name + " is not a skin mesh node");
+        return;
+    }
+
+    MeshNodeDto mesh_node;
+    mesh_node.Name() = scene_node_xml.attribute(TOKEN_NAME).as_string();
+
+    std::string controller_id = &(inst_controller.attribute(TOKEN_URL).as_string()[1]);
+    pugi::xml_node controller_node = FindNodeWithId(scene_node_xml.root(), TOKEN_CONTROLLER, controller_id);
+    if (!controller_node)
+    {
+        OutputLog("can't find controller " + controller_id);
+        return;
+    }
+    pugi::xml_node skin_node = controller_node.child(TOKEN_SKIN);
+    if (!skin_node)
+    {
+        OutputLog("no skin define!!");
+        return;
+    }
+    ClearParsedDatas();
+    ParseSkinMesh(mesh_node, skin_node);
+    if (parent_node_array_index) mesh_node.ParentIndexInArray() = parent_node_array_index.value();
+    node_tree.MeshNodes().emplace_back(mesh_node.ToGenericDto());
+    /*mesh_node->SetParentIndexInArray(parent_node_array_index);
+    mesh_node->SetDataStatus(Object::DataStatus::Ready);
+    if (m_model)
+    {
+        m_model->GetMeshNodeTree()->AddMeshNode(mesh_node);
+    }*/
 }
 
 void DaeParser::ParseGeometryInstanceNode(MeshNodeDto& mesh_node, const pugi::xml_node& geometry_inst)
@@ -339,7 +406,21 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
     auto geo_dto = ComposeTriangleListDto(geo_name, is_skin);
     if (is_skin)
     {
-
+        SkinMeshPrimitiveDto dto;
+        dto.Name() = attr_name.as_string();
+        dto.GeometryName() = geo_name;
+        dto.GeometryFactoryDesc() = geo_dto.GetRtti();
+        //dto.TheGeometry() = geo_dto;
+        if (texmap_filename.empty())
+        {
+            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_COLOR_MESH_EFFECT_NAME, DEFAULT_COLOR_MESH_EFFECT_FILENAME).ToGenericDto());
+        }
+        else
+        {
+            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_TEXTURED_SKIN_MESH_EFFECT_NAME, DEFAULT_TEXTURED_SKIN_MESH_EFFECT_FILENAME).ToGenericDto());
+            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).ToGenericDto());
+        }
+        mesh_node.TheMeshPrimitive() = dto.ToGenericDto();
     }
     else
     {
@@ -359,6 +440,38 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
         }
         mesh_node.TheMeshPrimitive() = dto.ToGenericDto();
     }
+}
+
+void DaeParser::ParseSkinMesh(MeshNodeDto& mesh_node, const pugi::xml_node& skin_node_xml)
+{
+    pugi::xml_node matrix_xml_node = skin_node_xml.child(TOKEN_BIND_SHAPE_MATRIX);
+    if (matrix_xml_node)
+    {
+        Matrix4 mx;
+        std::stringstream ss(std::string(matrix_xml_node.text().as_string()));
+        for (int i = 0; i < 16; i++)
+        {
+            ss >> ((float*)mx)[i];
+        }
+        mesh_node.LocalTransform() = mx;
+    }
+
+    pugi::xml_node vertex_weights_node_xml = skin_node_xml.child(TOKEN_VERTEX_WEIGHTS);
+    if (!vertex_weights_node_xml)
+    {
+        OutputLog("no vertex weights define!!");
+        return;
+    }
+    ParseVertexWeights(mesh_node, skin_node_xml, vertex_weights_node_xml);
+    std::string geometry_url = &(skin_node_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+    pugi::xml_node geometry_node = FindNodeWithId(skin_node_xml.root(), TOKEN_GEOMETRY, geometry_url);
+    if (!geometry_node)
+    {
+        OutputLog("can't find geometry " + geometry_url + "!!");
+        return;
+    }
+    ParseSingleGeometry(mesh_node, geometry_node, true);
+
 }
 
 std::tuple<std::string, DaeParser::GeometryValueOffsets> DaeParser::ParseGeometryMesh(const pugi::xml_node& mesh_node)
@@ -531,6 +644,421 @@ void DaeParser::ParseIndexArray(const pugi::xml_node& index_ary_node, int triang
     {
         ss >> m_primitiveIndices[i];
     }
+}
+
+void DaeParser::ParseVertexWeights(MeshNodeDto& mesh_node, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml)
+{
+    OutputLog("  Parse Vertex Weights for " + mesh_node.Name());
+    pugi::xml_node input_xml = vertex_weights_xml.child(TOKEN_INPUT);
+    while (input_xml)
+    {
+        if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_JOINT_SEMANTIC) == 0)
+        {
+            std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+            pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
+            if (source_xml)
+            {
+                ParseJointNameSource(mesh_node, source_xml);
+            }
+        }
+        else if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_WEIGHT_SEMANTIC) == 0)
+        {
+            std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+            pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
+            if (source_xml)
+            {
+                ParseWeightsArraySource(source_xml);
+            }
+        }
+        input_xml = input_xml.next_sibling(TOKEN_INPUT);
+    }
+    pugi::xml_node weight_count_xml = vertex_weights_xml.child(TOKEN_VERTEX_WEIGHT_COUNT);
+    if (!weight_count_xml)
+    {
+        OutputLog("no weight count define!!");
+        return;
+    }
+    int data_count = vertex_weights_xml.attribute(TOKEN_COUNT).as_int();
+    int max_weight_count = 0;
+    m_weightCounts.resize(data_count);
+    std::stringstream ss(std::string(weight_count_xml.text().as_string()));
+    for (int i = 0; i < data_count; i++)
+    {
+        ss >> m_weightCounts[i];
+        if (m_weightCounts[i] > max_weight_count) max_weight_count = m_weightCounts[i];
+    }
+    if (max_weight_count > MAX_WEIGHT_COUNT)
+    {
+        OutputLog("(not supported) max weight count > 4!!");
+    }
+    pugi::xml_node influence_pair_xml = vertex_weights_xml.child(TOKEN_JOINT_WEIGHT_PAIR);
+    if (!influence_pair_xml)
+    {
+        OutputLog("no influence pair!!");
+        return;
+    }
+    m_weightPaletteIndices.resize(data_count, 0xffffffff);
+    m_vertexWeights.resize(data_count * MAX_WEIGHT_COUNT, 0.0f);
+    ss = std::stringstream(std::string(influence_pair_xml.text().as_string()));
+    for (int i = 0; i < data_count; i++)
+    {
+        unsigned char p[4] = { 0xff, 0xff, 0xff, 0xff };
+        float w[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        for (int j = 0; j < m_weightCounts[i]; j++)
+        {
+            unsigned int b_idx;
+            ss >> b_idx;
+            unsigned int w_index;
+            ss >> w_index;
+            if (j >= MAX_WEIGHT_COUNT) continue;  // 超過max weight count, 不處理
+            p[j] = (unsigned char)b_idx;
+            //ss >> p[j];
+            m_vertexWeights[i * MAX_WEIGHT_COUNT + j] = m_weightSource[w_index];
+        }
+        m_weightPaletteIndices[i] = (unsigned int)(p[3] << 24) + (unsigned int)(p[2] << 16)
+            + (unsigned int)(p[1] << 8) + (unsigned int)(p[0]);
+    }
+}
+
+void DaeParser::ParseJointNameSource(MeshNodeDto& mesh_node, const pugi::xml_node& bone_names_xml)
+{
+    pugi::xml_node name_array_xml = bone_names_xml.child(TOKEN_NAME_ARRAY);
+    if (!name_array_xml)
+    {
+        OutputLog("no bone name array define!!");
+        return;
+    }
+    int data_count = name_array_xml.attribute(TOKEN_COUNT).as_int();
+    std::vector<std::string> bone_names;
+    bone_names.resize(data_count, "");
+    std::stringstream ss(std::string(name_array_xml.text().as_string()));
+    for (int i = 0; i < data_count; i++)
+    {
+        ss >> bone_names[i];
+    }
+    m_skinBoneNames[mesh_node.Name()] = bone_names;
+    for (std::string& joint : m_skinBoneNames[mesh_node.Name()])
+    {
+        joint = m_nodeJointIdMapping[joint];
+    }
+}
+
+void DaeParser::ParseWeightsArraySource(const pugi::xml_node& weights_array_xml)
+{
+    pugi::xml_node data_array_xml = weights_array_xml.child(TOKEN_FLOAT_ARRAY);
+    if (!data_array_xml)
+    {
+        OutputLog("no weight array source define!!");
+        return;
+    }
+    int data_count = data_array_xml.attribute(TOKEN_COUNT).as_int();
+    m_weightSource.resize(data_count, 0.0f);
+    std::stringstream ss(std::string(data_array_xml.text().as_string()));
+    for (int i = 0; i < data_count; i++)
+    {
+        ss >> m_weightSource[i];
+    }
+}
+
+void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
+{
+    if (!collada_root) return;
+    pugi::xml_node anim_lib_node = collada_root.child(TOKEN_LIB_ANIMATIONS);
+    if (!anim_lib_node)
+    {
+        OutputLog("has no animations lib");
+        return;
+    }
+    m_animationAsset = std::make_shared<ModelAnimationAsset>(m_modelName);
+    pugi::xml_node anim_name_node = anim_lib_node.child(TOKEN_ANIMATION);
+    if (anim_name_node)
+    {
+        pugi::xml_node anim_node = anim_name_node.child(TOKEN_ANIMATION);
+        while (anim_node)
+        {
+            ParseSingleAnimation(anim_node);
+            anim_node = anim_node.next_sibling(TOKEN_ANIMATION);
+        }
+        //anim_name_node = anim_name_node.next_sibling(TOKEN_ANIMATION);
+    }
+    //m_animation->SetDataStatus(Object::DataStatus::Ready);
+    //m_animation->GetFactoryDesc().ClaimAsResourceAsset(m_filename, m_filename + ".anim");
+    GenericDto dto = m_animationAsset->SerializeDto().ToGenericDto();
+    FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
+    dto.AddRtti(desc);
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{dto});
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), "w+b");
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+    desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
+    m_animationAsset->TheFactoryDesc() = desc;
+}
+
+void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
+{
+    if (!anim_node)
+    {
+        OutputLog("no anim node!!");
+        return;
+    }
+    AnimationTimeSRT srt_data;
+    pugi::xml_node channel_node = anim_node.child(TOKEN_CHANNEL);
+    if (!channel_node)
+    {
+        OutputLog("animation has no channel!!");
+        return;
+    }
+    std::string sampler_source_id;
+    if (channel_node.attribute(TOKEN_SOURCE))
+    {
+        sampler_source_id = &(channel_node.attribute(TOKEN_SOURCE).as_string()[1]);
+    }
+    if (sampler_source_id.length() == 0)
+    {
+        OutputLog("anim source id empty!!");
+        return;
+    }
+    pugi::xml_node sampler_node = FindNodeWithId(anim_node, TOKEN_SAMPLER, sampler_source_id);
+    if (!sampler_node)
+    {
+        OutputLog("can't find anim sampler " + sampler_source_id + "!!");
+        return;
+    }
+    ParseAnimationSample(srt_data, sampler_node, anim_node);
+
+    std::string target_matrix_id;
+    if (channel_node.attribute(TOKEN_TARGET))
+    {
+        target_matrix_id = channel_node.attribute(TOKEN_TARGET).as_string();
+    }
+    if (target_matrix_id.length() == 0)
+    {
+        OutputLog("anim target empty!!");
+        return;
+    }
+    size_t pos = target_matrix_id.rfind(SUFFIX_ANIM_TRANSFORM);
+    std::string target_mesh_node_id;
+    if (pos != std::string::npos)
+    {
+        target_mesh_node_id = target_matrix_id.substr(0, pos);
+    }
+    if (target_mesh_node_id.length() == 0)
+    {
+        OutputLog("can't find target mesh node id from" + target_matrix_id + "!!");
+        return;
+    }
+    std::string target_mesh_node_name = m_nodeIdNameMapping[target_mesh_node_id];
+    if (target_mesh_node_name.length() == 0)
+    {
+        OutputLog("can't find animation target mesh node of " + target_mesh_node_id + "!!");
+        return;
+    }
+    OutputLog("parse animation for node " + target_mesh_node_name + " done.");
+
+    if (m_animationAsset)
+    {
+        m_animationAsset->AddMeshNodeTimeSRTData(target_mesh_node_name, srt_data);
+    }
+}
+
+void DaeParser::ParseAnimationSample(AnimationTimeSRT& srt_data, const pugi::xml_node& sampler_node, const pugi::xml_node& anim_node)
+{
+    if (!sampler_node) return;
+    m_timeValues.clear();
+    m_animMatrixs.clear();
+    pugi::xml_node input_node = sampler_node.child(TOKEN_INPUT);
+    while (input_node)
+    {
+        if (!input_node.attribute(TOKEN_SEMANTIC))
+        {
+            input_node = input_node.next_sibling(TOKEN_INPUT);
+            continue;
+        }
+        if (strcmp(input_node.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_INPUT_SEMANTIC) == 0)
+        {
+            std::string source_id = &(input_node.attribute(TOKEN_SOURCE).as_string()[1]);
+            pugi::xml_node time_value_source = FindNodeWithId(anim_node, TOKEN_SOURCE, source_id);
+            if (time_value_source)
+            {
+                ParseTimeValue(time_value_source);
+            }
+        }
+        else if (strcmp(input_node.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_OUTPUT_SEMANTIC) == 0)
+        {
+            std::string source_id = &(input_node.attribute(TOKEN_SOURCE).as_string()[1]);
+            pugi::xml_node anim_matrix_source = FindNodeWithId(anim_node, TOKEN_SOURCE, source_id);
+            if (anim_matrix_source)
+            {
+                ParseAnimationMatrix(anim_matrix_source);
+            }
+        }
+        input_node = input_node.next_sibling(TOKEN_INPUT);
+    }
+    AnalyzeSRTKeys(srt_data);
+}
+
+void DaeParser::ParseTimeValue(const pugi::xml_node& time_value_source)
+{
+    if (!time_value_source) return;
+    unsigned int count = 0;
+    pugi::xml_node data_ary = time_value_source.child(TOKEN_FLOAT_ARRAY);
+    if (!data_ary)
+    {
+        OutputLog("time value source has no data!!");
+        return;
+    }
+    if (data_ary.attribute(TOKEN_COUNT))
+    {
+        count = data_ary.attribute(TOKEN_COUNT).as_uint();
+    }
+    if (count == 0)
+    {
+        OutputLog("time value count = 0 !!");
+        return;
+    }
+    m_timeValues.resize(count);
+    std::stringstream ss(std::string(data_ary.text().as_string()));
+    for (unsigned int i = 0; i < count; i++)
+    {
+        ss >> m_timeValues[i];
+    }
+}
+
+void DaeParser::ParseAnimationMatrix(const pugi::xml_node& anim_matrix_source)
+{
+    if (!anim_matrix_source) return;
+    unsigned int count = 0;
+    pugi::xml_node data_ary = anim_matrix_source.child(TOKEN_FLOAT_ARRAY);
+    if (!data_ary)
+    {
+        OutputLog("animation matrix source has no data!!");
+        return;
+    }
+    if (data_ary.attribute(TOKEN_COUNT))
+    {
+        count = data_ary.attribute(TOKEN_COUNT).as_uint() / 16;
+    }
+    if (count == 0)
+    {
+        OutputLog("animation matrix count = 0 !!");
+        return;
+    }
+    m_animMatrixs.resize(count);
+    std::stringstream ss(std::string(data_ary.text().as_string()));
+    for (unsigned int i = 0; i < count; i++)
+    {
+        for (unsigned int j = 0; j < 16; j++)
+        {
+            ss >> ((float*)m_animMatrixs[i])[j];
+        }
+    }
+}
+
+void DaeParser::AnalyzeSRTKeys(AnimationTimeSRT& srt_data)
+{
+    if (m_timeValues.size() == 0) return;
+    AnimationTimeSRT::ScaleKey scale_key;
+    AnimationTimeSRT::TranslateKey trans_key;
+    AnimationTimeSRT::RotationKey rot_key;
+    AnimationTimeSRT::ScaleKeyVector scale_keys;
+    AnimationTimeSRT::TranslateKeyVector translate_keys;
+    AnimationTimeSRT::RotationKeyVector rotation_keys;
+
+    unsigned sample_count = static_cast<unsigned>(m_timeValues.size());
+    if (m_animMatrixs.size() != sample_count)
+    {
+        OutputLog("number of time values & matrixs not match!!");
+        return;
+    }
+
+    scale_keys.reserve(sample_count);
+    translate_keys.reserve(sample_count);
+    rotation_keys.reserve(sample_count);
+
+    Quaternion last_qt;
+    Vector3 last_trans = Vector3::ZERO;
+    Vector3 last_scale = Vector3(1.0f, 1.0f, 1.0f);
+
+    for (unsigned int i = 0; i < sample_count; i++)
+    {
+        float time_value = m_timeValues[i];
+        std::tie(scale_key.m_vecKey, rot_key.m_qtKey, trans_key.m_vecKey) = m_animMatrixs[i].UnMatrixSRT();
+        // fix invalid key values
+        if ((!std::isfinite(scale_key.m_vecKey.X())) || (!std::isfinite(scale_key.m_vecKey.Y()))
+            || (!std::isfinite(scale_key.m_vecKey.Z())))
+        {
+            scale_key.m_vecKey = last_scale; //Vector3::ZERO;
+            rot_key.m_qtKey = last_qt; //Quaternion::ZERO;
+        }
+        if ((!std::isfinite(trans_key.m_vecKey.X())) || (!std::isfinite(trans_key.m_vecKey.Y()))
+            || (!std::isfinite(trans_key.m_vecKey.Z())))
+        {
+            trans_key.m_vecKey = last_trans; //Vector3::ZERO;
+        }
+        if (i > 0)
+        {
+            if (last_qt.Dot(rot_key.m_qtKey) < 0)  // 這個東西是一個trick.... 我們如果確保兩個Quaternion之間夾角是最短路徑的話，算slerp時就不用強制取shortest path
+            {
+                rot_key.m_qtKey = -rot_key.m_qtKey;
+            }
+        }
+
+        last_qt = rot_key.m_qtKey;
+        last_scale = scale_key.m_vecKey;
+        last_trans = trans_key.m_vecKey;
+
+        if (i <= 1)  // 第一個key,第二個key先輸出
+        {
+            scale_key.m_time = time_value;
+            scale_keys.push_back(scale_key);
+            rot_key.m_time = time_value;
+            rotation_keys.push_back(rot_key);
+            trans_key.m_time = time_value;
+            translate_keys.push_back(trans_key);
+        }
+        else
+        {
+            // 如果連續三個相同的key, 將這個key蓋掉上一個
+            if ((scale_key.m_vecKey == scale_keys[scale_keys.size() - 1].m_vecKey)
+                && (scale_key.m_vecKey == scale_keys[scale_keys.size() - 2].m_vecKey))
+            {
+                scale_keys[scale_keys.size() - 1].m_time = time_value;  // key相同，只要改時間就好
+            }
+            else // 不同的key, 新增
+            {
+                scale_key.m_time = time_value;
+                scale_keys.push_back(scale_key);
+            }
+
+            // 如果連續三個相同的key, 將這個key蓋掉上一個
+            if ((rot_key.m_qtKey == rotation_keys[rotation_keys.size() - 1].m_qtKey)
+                && (rot_key.m_qtKey == rotation_keys[rotation_keys.size() - 2].m_qtKey))
+            {
+                rotation_keys[rotation_keys.size() - 1].m_time = time_value;  // key相同，只要改時間就好
+            }
+            else // 不同的key, 新增
+            {
+                rot_key.m_time = time_value;
+                rotation_keys.push_back(rot_key);
+            }
+
+            // 如果連續三個相同的key, 將這個key蓋掉上一個
+            if ((trans_key.m_vecKey == translate_keys[translate_keys.size() - 1].m_vecKey)
+                && (trans_key.m_vecKey == translate_keys[translate_keys.size() - 2].m_vecKey))
+            {
+                translate_keys[translate_keys.size() - 1].m_time = time_value;  // key相同，只要改時間就好
+            }
+            else // 不同的key, 新增
+            {
+                trans_key.m_time = time_value;
+                translate_keys.push_back(trans_key);
+            }
+        }
+    }
+    srt_data.SetScaleKeyVector(scale_keys);
+    srt_data.SetRotationKeyVector(rotation_keys);
+    srt_data.SetTranslateKeyVector(translate_keys);
 }
 
 void DaeParser::SplitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin)

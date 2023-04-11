@@ -133,18 +133,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationInfoPanel.h" />
+    <ClInclude Include="CameraDtoMaker.h" />
+    <ClInclude Include="DaeParser.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="ModelInfoPanel.h" />
     <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="RenderPanel.h" />
     <ClInclude Include="SchemeColorDef.h" />
     <ClInclude Include="ViewerAppDelegate.h" />
+    <ClInclude Include="ViewerCommands.h" />
+    <ClInclude Include="ViewerEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
+    <ClCompile Include="CameraDtoMaker.cpp" />
+    <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />
     <ClCompile Include="MainApplication.cpp" />
@@ -154,6 +161,7 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
     <ClCompile Include="ViewerAppDelegate.cpp" />

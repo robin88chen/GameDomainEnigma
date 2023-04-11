@@ -1,0 +1,32 @@
+#version 300 es
+//semantic DiffuseTexture DiffuseMap
+//semantic View View
+precision highp float;
+//sampler_state samLinear DiffuseTexture
+uniform sampler2D DiffuseTexture;
+in vec3 vNor;
+in vec2 vTexCo;
+in float Depth;
+layout (location = 0) out vec4 outNormal;
+layout (location = 1) out vec4 outColor;
+layout (location = 2) out vec4 outSpecular;
+layout (location = 3) out vec4 outDepth;
+
+void main() {
+	vec4 tex_color = texture(DiffuseTexture, vTexCo);
+    outColor = tex_color;
+    outNormal = vec4(vNor, 0.0f);
+    outSpecular = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	// store the float value to bytes...
+	highp uint depth_int = floatBitsToUint(Depth);
+	highp uint r = (depth_int & 0xff000000u) >> 24;
+	highp uint g = (depth_int & 0x00ff0000u) >> 16;
+	highp uint b = (depth_int & 0x0000ff00u) >> 8;
+	highp uint a = (depth_int & 0x000000ffu);
+	
+	outDepth.r = float(r) / 255.0f;
+	outDepth.g = float(g) / 255.0f;
+	outDepth.b = float(b) / 255.0f;
+	outDepth.a = float(a) / 255.0f;
+}

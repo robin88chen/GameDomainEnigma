@@ -46,7 +46,7 @@ SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
     return spatial_dto;
 }
 
-GenericDto SpatialDto::ToGenericDto()
+GenericDto SpatialDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -74,7 +74,7 @@ NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
     return node_dto;
 }
 
-GenericDto NodeDto::ToGenericDto()
+GenericDto NodeDto::ToGenericDto() const
 {
     GenericDto dto = SpatialDto::ToGenericDto();
     dto.AddOrUpdate(TOKEN_CHILD_NAMES, m_childNames);
@@ -93,7 +93,7 @@ LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
     return light_dto;
 }
 
-GenericDto LightDto::ToGenericDto()
+GenericDto LightDto::ToGenericDto() const
 {
     GenericDto dto = SpatialDto::ToGenericDto();
     dto.AddOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
@@ -117,7 +117,7 @@ PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
     return pawn_dto;
 }
 
-GenericDto PawnDto::ToGenericDto()
+GenericDto PawnDto::ToGenericDto() const
 {
     GenericDto dto = SpatialDto::ToGenericDto();
     if (m_primitive) dto.AddOrUpdate(TOKEN_PAWN_PRIMITIVE, m_primitive.value());
@@ -147,7 +147,7 @@ LazyNodeDto LazyNodeDto::FromGenericDto(const Engine::GenericDto& dto)
     return node_dto;
 }
 
-GenericDto LazyNodeDto::ToGenericDto()
+GenericDto LazyNodeDto::ToGenericDto() const
 {
     GenericDto dto = NodeDto::ToGenericDto();
     return dto;

@@ -1,0 +1,51 @@
+{
+	"Name" : "default_textured_mesh_effect",
+	"VertexShaderList" : [
+	{"Name" : "default_mesh", "API" : "dx9", "File" : "fx/default_mesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_mesh", "API" : "dx11", "File" : "fx/default_mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_mesh", "API" : "egl", "File" : "fx/default_mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred/mesh", "API" : "dx9", "File" : "fx/deferred/mesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred/mesh", "API" : "dx11", "File" : "fx/deferred/mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "deferred/mesh", "API" : "egl", "File" : "fx/deferred/mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "textured_mesh", "API" : "dx9", "File" : "fx/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh", "API" : "egl", "File" : "fx/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred/textured_mesh", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "textured_mesh_intersect", "API" : "dx9", "File" : "fx/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh_intersect", "API" : "dx11", "File" : "fx/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh_intersect", "API" : "egl", "File" : "fx/default_textured_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "dx9", "File" : "fx/deferred/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "dx11", "File" : "fx/deferred/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "egl", "File" : "fx/deferred/textured_mesh_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{"Name" : "default", "Program" : "default", "VertexShader" : "default_mesh", "PixelShader" : "textured_mesh", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}, 
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"Name" : "deferred_lit", "Program" : "deferred_lit", "VertexShader" : "deferred/mesh", "PixelShader" : "deferred/textured_mesh", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "Primary/Intersect",
+		"EffectPassArray" : [
+		{"Name" : "default_intr", "Program" : "default_intr", "VertexShader" : "default_mesh", "PixelShader" : "textured_mesh_intersect", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Intersect",
+		"EffectPassArray" : [
+		{"Name" : "deferred_lit_intr", "Program" : "deferred_lit_intr", "VertexShader" : "deferred/mesh", "PixelShader" : "deferred/textured_mesh_intersect", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}
+	]
+}

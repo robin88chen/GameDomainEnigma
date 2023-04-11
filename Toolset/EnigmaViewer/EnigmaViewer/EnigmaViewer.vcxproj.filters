@@ -16,6 +16,15 @@
     <Filter Include="Forms\Custom Widgets">
       <UniqueIdentifier>{c76407d6-51e2-459a-bc2a-5cb0758aa634}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dtos">
+      <UniqueIdentifier>{6a667bca-d5bf-4320-9a38-7a3d90bf178d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dae Parser">
+      <UniqueIdentifier>{a7b2da3a-e74a-4ba2-af23-ddca4ce67df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events &amp; Commands">
+      <UniqueIdentifier>{a1f98a01-408e-4d7d-a466-d412805b2362}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -45,6 +54,21 @@
     </ClInclude>
     <ClInclude Include="ListboxInlineTextbox.h">
       <Filter>Forms\Custom Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraDtoMaker.h">
+      <Filter>Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeParser.h">
+      <Filter>Dae Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewerEvents.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewerCommands.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml.hpp">
+      <Filter>Dae Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +102,15 @@
     </ClCompile>
     <ClCompile Include="ListboxInlineTextbox.cpp">
       <Filter>Forms\Custom Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraDtoMaker.cpp">
+      <Filter>Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeParser.cpp">
+      <Filter>Dae Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="pugixml.cpp">
+      <Filter>Dae Parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

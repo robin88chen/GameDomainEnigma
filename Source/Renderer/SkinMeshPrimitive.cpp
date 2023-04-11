@@ -55,9 +55,9 @@ GenericDto SkinMeshPrimitive::SerializeDto()
     return dto.ToGenericDto();
 }
 
-void SkinMeshPrimitive::BindOwnerMeshNode(const MeshNode& node)
+void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 {
-    m_ownerNodeRootRefTransform = node.GetRootRefTransform();
+    m_ownerNodeRootRefTransform = mx;
 }
 
 void SkinMeshPrimitive::ChangeEffectMaterial(const EffectMaterialList& effects)

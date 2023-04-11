@@ -1,0 +1,24 @@
+{
+	"Name" : "default_color_mesh_effect",
+	"VertexShaderList" : [
+	{"Name" : "default_vs", "API" : "dx9", "File" : "fx/default_mesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "dx11", "File" : "fx/default_mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex1(2)"},
+	{"Name" : "default_vs", "API" : "egl", "File" : "fx/default_mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "default_ps", "API" : "dx9", "File" : "fx/default_color.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "dx11", "File" : "fx/default_color_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "default_ps", "API" : "egl", "File" : "fx/default_color_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"}
+	],
+	"TechniqueList" : [
+	{"Name" : "Default", 
+		"EffectPassArray" : [
+		{ "Name" : "default", "VertexShader" : "default_vs", "PixelShader" : "default_ps", "Program" : "default", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}]}
+		]
+	}
+	]
+}

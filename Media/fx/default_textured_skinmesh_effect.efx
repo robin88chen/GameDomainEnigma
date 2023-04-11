@@ -1,0 +1,64 @@
+{
+	"Name" : "default_textured_skinmesh_effect",
+	"VertexShaderList" : [
+	{"Name" : "skinmesh", "API" : "dx9", "File" : "fx/skinmesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "skinmesh", "API" : "dx11", "File" : "fx/skinmesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "skinmesh", "API" : "egl", "File" : "fx/skinmesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred/skinmesh", "API" : "dx9", "File" : "fx/deferred/skinmesh.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred/skinmesh", "API" : "dx11", "File" : "fx/deferred/skinmesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"},
+	{"Name" : "deferred/skinmesh", "API" : "egl", "File" : "fx/deferred/skinmesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyzb5_nor_tex1(2)_betabyte"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "textured_mesh", "API" : "dx9", "File" : "fx/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh", "API" : "dx11", "File" : "fx/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh", "API" : "egl", "File" : "fx/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred/textured_mesh", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/texture_mesh", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "textured_mesh_intersect", "API" : "dx9", "File" : "fx/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh_intersect", "API" : "dx11", "File" : "fx/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "textured_mesh_intersect", "API" : "egl", "File" : "fx/textured_mesh_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "dx9", "File" : "fx/deferred/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "dx11", "File" : "fx/deferred/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred/textured_mesh_intersect", "API" : "egl", "File" : "fx/deferred/textured_mesh_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
+	{"Name" : "samClampLinear", "AddressU" : "Clamp", "AddressV" : "Clamp", "MinFilter" : "Linear", "MagFilter" : "Linear"}
+	],
+	"RasterizerStateList" : [
+	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},
+	{"Name" : "rasFill", "FillMode" : "Fill", "CullMode" : "None"},
+	{"Name" : "rasFillBias", "FillMode" : "Wireframe", "DepthBias" : -0.5001}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{ "Name" : "default", "Program" : "default", "VertexShader" : "skinmesh", "PixelShader" : "textured_mesh", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{ "Name" : "deferred_lit", "Program" : "deferred_lit", "VertexShader" : "deferred/skinmesh", "PixelShader" : "deferred/textured_mesh", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "Primary/Intersect",
+		"EffectPassArray" : [
+		{ "Name" : "default_intr", "Program" : "default_intr", "VertexShader" : "skinmesh", "PixelShader" : "textured_mesh_intersect", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	},
+	{"Name" : "DeferredRenderer/Intersect",
+		"EffectPassArray" : [
+		{ "Name" : "deferred_lit_intr", "Program" : "deferred_lit_intr", "VertexShader" : "deferred/skinmesh", "PixelShader" : "deferred/textured_mesh_intersect", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}] }
+		]
+	}
+	]
+}

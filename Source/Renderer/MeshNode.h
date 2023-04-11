@@ -32,7 +32,7 @@ namespace Enigma::Renderer
         const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocalTransform; }
         void SetLocalTransform(const MathLib::Matrix4& mx) { m_mxLocalTransform = mx; }
         const MathLib::Matrix4& GetRootRefTransform() const { return m_mxRootRefTransform; }
-        void SetRootRefTransform(const MathLib::Matrix4& mx) { m_mxRootRefTransform = mx; }
+        void SetRootRefTransform(const MathLib::Matrix4& mx); // { m_mxRootRefTransform = mx; }
         const MeshPrimitivePtr& GetMeshPrimitive() const { return m_meshPrimitive; }
         MeshPrimitivePtr GetMeshPrimitive() { return m_meshPrimitive; }
         void SetMeshPrimitive(const MeshPrimitivePtr& mesh);
@@ -45,6 +45,7 @@ namespace Enigma::Renderer
         MathLib::Matrix4 m_mxRootRefTransform; ///< mesh node transform (reference: model root)
         MeshPrimitivePtr m_meshPrimitive;   ///< mesh primitive
         std::optional<unsigned> m_parentIndexInArray;  ///< parent index in mesh node array
+        bool m_hasSkinMeshPrimitive;
     };
 }
 

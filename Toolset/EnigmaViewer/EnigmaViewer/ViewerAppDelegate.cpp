@@ -23,6 +23,9 @@
 #include "SceneGraph/Pawn.h"
 #include "GameCommon/GameSceneService.h"
 #include "ViewerCommands.h"
+#include "Animators/AnimatorEvents.h"
+#include "Animators/AnimatorCommands.h"
+#include "Animators/ModelPrimitiveAnimator.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -111,8 +114,8 @@ void ViewerAppDelegate::InitializeMountPaths()
 
 void ViewerAppDelegate::InstallEngine()
 {
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     assert(m_graphicMain);
 
@@ -138,8 +141,8 @@ void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void ViewerAppDelegate::ShutdownEngine()
 {
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnPrimitiveBuilt = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -179,17 +182,29 @@ void ViewerAppDelegate::LoadPawn(const PawnDto& pawn_dto)
     Enigma::Frameworks::CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
 }
 
-void ViewerAppDelegate::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
+    auto pawn = ev->GetPawn();
     if (!pawn) return;
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
-    error er = scene_service->GetSceneRoot()->AttachChild(pawn, Enigma::MathLib::Matrix4::IDENTITY);
+    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
+    error er = scene_service->GetSceneRoot()->AttachChild(pawn, mx);
+    auto prim = pawn->GetPrimitive();
+    if (prim)
+    {
+        auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+        if (auto ani = model->GetAnimator())
+        {
+            ani->Reset();
+            CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
+            if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
+            {
+                model_ani->PlayAnimation(AnimationClip{ 0.0f, 20.0f, AnimationClip::WarpMode::Loop, 0 });
+            }
+        }
+    }
 }
-

@@ -264,10 +264,10 @@ Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
         {
             if ((m < count - 1) && (m_rotationKeyVector[m + 1].m_time > offset_time))  // off-time在m~m+1範圍內
             {
-                ret.Slerp((offset_time - m_rotationKeyVector[m].m_time)
+                return Quaternion::Slerp((offset_time - m_rotationKeyVector[m].m_time)
                     / (m_rotationKeyVector[m + 1].m_time - m_rotationKeyVector[m].m_time),
                     m_rotationKeyVector[m].m_qtKey, m_rotationKeyVector[m + 1].m_qtKey);
-                return ret;
+                //return ret;
             }
             else if (m == count - 1)  // m 是邊界
             {
@@ -282,10 +282,10 @@ Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
         {
             if ((m > 0) && (m_rotationKeyVector[m - 1].m_time <= offset_time))  // off-time在m-1~m的範圍內
             {
-                ret.Slerp((offset_time - m_rotationKeyVector[m - 1].m_time)
+                return Quaternion::Slerp((offset_time - m_rotationKeyVector[m - 1].m_time)
                     / (m_rotationKeyVector[m].m_time - m_rotationKeyVector[m - 1].m_time),
                     m_rotationKeyVector[m - 1].m_qtKey, m_rotationKeyVector[m].m_qtKey);
-                return ret;
+                //return ret;
             }
             else if (m == 0)  // m 是邊界
             {

@@ -5,7 +5,7 @@
 matrix World : World;
 matrix View : View;
 matrix Projection : Projection;
-matrix BoneAnimation[25] : BoneMatrix;
+matrix BoneAnimation[32] : BoneMatrix;
 struct VS_INPUT
 {
 	float4 Pos : POSITION;

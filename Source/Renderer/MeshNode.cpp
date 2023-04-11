@@ -23,7 +23,14 @@ MeshNode::MeshNode(const MeshNode& node)
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     if (node.m_meshPrimitive)
     {
-        m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+        if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
+        {
+            m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
+        }
+        else
+        {
+            m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+        }
     }
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
@@ -49,7 +56,14 @@ MeshNode& MeshNode::operator=(const MeshNode& node)
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     if (node.m_meshPrimitive)
     {
-        m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+        if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
+        {
+            m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
+        }
+        else
+        {
+            m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+        }
     }
     m_parentIndexInArray = node.m_parentIndexInArray;
     return *this;

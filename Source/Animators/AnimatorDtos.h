@@ -50,6 +50,8 @@ namespace Enigma::Animators
 
         [[nodiscard]] const std::optional<std::string>& SkinMeshName() const { return m_skinMeshName; }
         std::optional<std::string>& SkinMeshName() { return m_skinMeshName; }
+        [[nodiscard]] const std::optional<std::string>& SkinMeshNodeName() const { return m_skinMeshNodeName; }
+        std::optional<std::string>& SkinMeshNodeName() { return m_skinMeshNodeName; }
         [[nodiscard]] const std::vector<std::string>& BoneNodeNames() const { return m_boneNodeNames; }
         std::vector<std::string>& BoneNodeNames() { return m_boneNodeNames; }
         [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() const { return m_nodeOffsets; }
@@ -60,6 +62,7 @@ namespace Enigma::Animators
 
     private:
         std::optional<std::string> m_skinMeshName;
+        std::optional<std::string> m_skinMeshNodeName;
         std::vector<std::string> m_boneNodeNames;
         std::optional<std::vector<MathLib::Matrix4>> m_nodeOffsets;
     };

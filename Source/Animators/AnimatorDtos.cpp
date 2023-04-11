@@ -11,6 +11,7 @@ static std::string TOKEN_ASSET_OBJECT = "AssetObject";
 static std::string TOKEN_ANIMATION_FACTORY = "AnimationFactory";
 static std::string TOKEN_SKIN_OPERATORS = "SkinOperators";
 static std::string TOKEN_SKIN_MESH_NAME = "SkinMeshName";
+static std::string TOKEN_SKIN_MESH_NODE_NAME = "SkinMeshNodeName";
 static std::string TOKEN_BONE_NODE_NAMES = "BoneNodeNames";
 static std::string TOKEN_NODE_OFFSETS = "NodeOffsets";
 
@@ -63,6 +64,7 @@ SkinOperatorDto SkinOperatorDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     SkinOperatorDto op;
     if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NAME)) op.SkinMeshName() = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NODE_NAME)) op.SkinMeshNodeName() = v.value();
     if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_BONE_NODE_NAMES)) op.BoneNodeNames() = v.value();
     if (auto v = dto.TryGetValue<std::vector<MathLib::Matrix4>>(TOKEN_NODE_OFFSETS)) op.NodeOffsets() = v.value();
     return op;
@@ -73,6 +75,7 @@ GenericDto SkinOperatorDto::ToGenericDto()
     GenericDto dto;
     dto.AddRtti(FactoryDesc(SkinAnimationOperator::TYPE_RTTI.GetName()));
     if (m_skinMeshName) dto.AddOrUpdate(TOKEN_SKIN_MESH_NAME, m_skinMeshName.value());
+    if (m_skinMeshNodeName) dto.AddOrUpdate(TOKEN_SKIN_MESH_NODE_NAME, m_skinMeshNodeName.value());
     dto.AddOrUpdate(TOKEN_BONE_NODE_NAMES, m_boneNodeNames);
     if (m_nodeOffsets) dto.AddOrUpdate(TOKEN_NODE_OFFSETS, m_nodeOffsets);
     return dto;

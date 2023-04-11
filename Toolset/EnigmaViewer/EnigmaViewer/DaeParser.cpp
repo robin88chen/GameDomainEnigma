@@ -181,7 +181,7 @@ void DaeParser::ComposeModelPrimitiveDto()
     {
         SkinOperatorDto operator_dto;
         operator_dto.BoneNodeNames() = skin_bone_name.second;
-        operator_dto.SkinMeshName() = skin_bone_name.first;
+        operator_dto.SkinMeshNodeName() = skin_bone_name.first;
         animator_dto.SkinOperators().emplace_back(operator_dto.ToGenericDto());
     }
     m_model.TheAnimator() = animator_dto.ToGenericDto();
@@ -1365,6 +1365,6 @@ void DaeParser::ClearParsedDatas()
     m_splitedVertexWeights.clear();
     m_weightSource.clear();
     //m_skinBoneNames.clear();
-    /*m_timeValues.clear();
-    m_animMatrixs.clear();*/
+    m_timeValues.clear();
+    m_animMatrixs.clear();
 }

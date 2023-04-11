@@ -63,8 +63,18 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
 
     for (auto& op : m_policy->SkinOperators())
     {
-        if (!op.SkinMeshName()) continue;
-        auto mesh = m_builtAnimator->GetControlledModel()->FindMeshPrimitive(op.SkinMeshName().value());
+        if ((!op.SkinMeshName()) && (!op.SkinMeshNodeName())) continue;
+        std::shared_ptr<MeshPrimitive> mesh = nullptr;
+        if (op.SkinMeshName())
+        {
+            mesh = m_builtAnimator->GetControlledModel()->FindMeshPrimitive(op.SkinMeshName().value());
+        }
+        else if (op.SkinMeshNodeName())
+        {
+            auto& node_tree = m_builtAnimator->GetControlledModel()->GetMeshNodeTree();
+            auto node_idx = node_tree.FindMeshNodeIndex(op.SkinMeshNodeName().value());
+            if (node_idx) mesh = node_tree.GetMeshPrimitiveInNode(node_idx.value());
+        }
         if (!mesh) continue;
         auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh);
         if (!skin_mesh) continue;

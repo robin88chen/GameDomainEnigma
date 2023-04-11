@@ -174,9 +174,14 @@ void DaeParser::OutputLog(const std::string& msg)
 
 void DaeParser::ComposeModelPrimitiveDto()
 {
-    std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>();
-    animator->LinkAnimationAsset(m_animationAsset);
-    auto animator_dto = animator->SerializeDto();
+    ModelAnimatorDto animator_dto;
+    animator_dto.AssetName() = m_animationAsset.Name();
+    animator_dto.AssetFactoryDesc() = m_animationAsset.ToGenericDto().GetRtti();
+    if ((animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+    {
+        animator_dto.AnimationAssetDto() = m_animationAsset.ToGenericDto();
+    }
     for (auto skin_bone_name : m_skinBoneNames)
     {
         SkinOperatorDto operator_dto;
@@ -769,7 +774,8 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
         OutputLog("has no animations lib");
         return;
     }
-    m_animationAsset = std::make_shared<ModelAnimationAsset>(m_modelName);
+    m_animationAsset = ModelAnimationAssetDto();
+    m_animationAsset.Name() = m_modelName;
     pugi::xml_node anim_name_node = anim_lib_node.child(TOKEN_ANIMATION);
     if (anim_name_node)
     {
@@ -783,7 +789,7 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     }
     //m_animation->SetDataStatus(Object::DataStatus::Ready);
     //m_animation->GetFactoryDesc().ClaimAsResourceAsset(m_filename, m_filename + ".anim");
-    GenericDto dto = m_animationAsset->SerializeDto().ToGenericDto();
+    GenericDto dto = m_animationAsset.ToGenericDto();
     FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
     desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
     dto.AddRtti(desc);
@@ -792,7 +798,8 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
     desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
-    m_animationAsset->TheFactoryDesc() = desc;
+    dto.AddRtti(desc);
+    m_animationAsset = ModelAnimationAssetDto::FromGenericDto(dto);
 }
 
 void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
@@ -802,7 +809,7 @@ void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
         OutputLog("no anim node!!");
         return;
     }
-    AnimationTimeSRT srt_data;
+    AnimationTimeSRTDto srt_data;
     pugi::xml_node channel_node = anim_node.child(TOKEN_CHANNEL);
     if (!channel_node)
     {
@@ -856,13 +863,11 @@ void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
     }
     OutputLog("parse animation for node " + target_mesh_node_name + " done.");
 
-    if (m_animationAsset)
-    {
-        m_animationAsset->AddMeshNodeTimeSRTData(target_mesh_node_name, srt_data);
-    }
+    m_animationAsset.MeshNodeNames().emplace_back(target_mesh_node_name);
+    m_animationAsset.TimeSRTs().emplace_back(srt_data.ToGenericDto());
 }
 
-void DaeParser::ParseAnimationSample(AnimationTimeSRT& srt_data, const pugi::xml_node& sampler_node, const pugi::xml_node& anim_node)
+void DaeParser::ParseAnimationSample(AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node, const pugi::xml_node& anim_node)
 {
     if (!sampler_node) return;
     m_timeValues.clear();
@@ -955,7 +960,7 @@ void DaeParser::ParseAnimationMatrix(const pugi::xml_node& anim_matrix_source)
     }
 }
 
-void DaeParser::AnalyzeSRTKeys(AnimationTimeSRT& srt_data)
+void DaeParser::AnalyzeSRTKeys(AnimationTimeSRTDto& srt_data)
 {
     if (m_timeValues.size() == 0) return;
     AnimationTimeSRT::ScaleKey scale_key;
@@ -1056,9 +1061,28 @@ void DaeParser::AnalyzeSRTKeys(AnimationTimeSRT& srt_data)
             }
         }
     }
-    srt_data.SetScaleKeyVector(scale_keys);
-    srt_data.SetRotationKeyVector(rotation_keys);
-    srt_data.SetTranslateKeyVector(translate_keys);
+    for (auto& key : scale_keys)
+    {
+        srt_data.ScaleTimeKeys().push_back(key.m_time);
+        srt_data.ScaleTimeKeys().push_back(key.m_vecKey.X());
+        srt_data.ScaleTimeKeys().push_back(key.m_vecKey.Y());
+        srt_data.ScaleTimeKeys().push_back(key.m_vecKey.Z());
+    }
+    for (auto& key : rotation_keys)
+    {
+        srt_data.RotateTimeKeys().push_back(key.m_time);
+        srt_data.RotateTimeKeys().push_back(key.m_qtKey.W());
+        srt_data.RotateTimeKeys().push_back(key.m_qtKey.X());
+        srt_data.RotateTimeKeys().push_back(key.m_qtKey.Y());
+        srt_data.RotateTimeKeys().push_back(key.m_qtKey.Z());
+    }
+    for (auto& key : translate_keys)
+    {
+        srt_data.TranslateTimeKeys().push_back(key.m_time);
+        srt_data.TranslateTimeKeys().push_back(key.m_vecKey.X());
+        srt_data.TranslateTimeKeys().push_back(key.m_vecKey.Y());
+        srt_data.TranslateTimeKeys().push_back(key.m_vecKey.Z());
+    }
 }
 
 void DaeParser::SplitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin)

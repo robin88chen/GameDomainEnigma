@@ -15,6 +15,7 @@
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "SceneGraph/SceneGraphDtos.h"
 #include "Animators/ModelAnimationAsset.h"
+#include "Animators/AnimationAssetDtos.h"
 #include "pugixml.hpp"
 #include <string>
 #include <optional>
@@ -62,11 +63,11 @@ namespace EnigmaViewer
 
         void ParseAnimations(const pugi::xml_node& collada_root);
         void ParseSingleAnimation(const pugi::xml_node& anim_node);
-        void ParseAnimationSample(Enigma::Animators::AnimationTimeSRT& srt_data, const pugi::xml_node& sampler_node,
+        void ParseAnimationSample(Enigma::Animators::AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node,
             const pugi::xml_node& anim_node);
         void ParseTimeValue(const pugi::xml_node& time_value_source);
         void ParseAnimationMatrix(const pugi::xml_node& anim_matrix_source);
-        void AnalyzeSRTKeys(Enigma::Animators::AnimationTimeSRT& srt_data);
+        void AnalyzeSRTKeys(Enigma::Animators::AnimationTimeSRTDto& srt_data);
 
         void SplitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin);
         void CollapseVertexNormals(int pos_offset, int nor_offset, bool is_split_vertex);
@@ -91,7 +92,7 @@ namespace EnigmaViewer
 
         Enigma::Renderer::ModelPrimitiveDto m_model;
         Enigma::SceneGraph::PawnDto m_pawn;
-        std::shared_ptr<Enigma::Animators::ModelAnimationAsset> m_animationAsset;
+        Enigma::Animators::ModelAnimationAssetDto m_animationAsset;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;
         std::vector<Enigma::MathLib::Vector3> m_normals;

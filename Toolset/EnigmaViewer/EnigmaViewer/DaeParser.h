@@ -8,7 +8,6 @@
 #ifndef _DAE_PARSER_H
 #define _DAE_PARSER_H
 
-#include "Renderer/ModelPrimitive.h"
 #include "GameEngine/GeometryRepository.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/EffectMaterialDto.h"

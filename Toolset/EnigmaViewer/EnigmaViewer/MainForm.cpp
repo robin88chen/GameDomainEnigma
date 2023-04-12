@@ -74,6 +74,7 @@ void MainForm::Initialize()
     events().destroy([this] { this->Finalize(); });
 
     m_outputPanel->SubscribeHandlers();
+    m_modelInfoPanel->SubscribeHandlers();
 
     get_place().collocate();
 }
@@ -87,8 +88,8 @@ void MainForm::InitMenu()
     m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     m_menubar->push_back("&File");
     m_menubar->at(0).append("Import DAE File", [this](auto item) { OnImportDaeFile(item); });
-    m_menubar->at(0).append("Save Entity", [this](auto item) { OnSaveEntity(item); });
-    m_menubar->at(0).append("Load Entity", [this](auto item) { OnLoadEntity(item); });
+    m_menubar->at(0).append("Save Animated Pawn", [this](auto item) { OnSaveAnimatedPawn(item); });
+    m_menubar->at(0).append("Load Animated Pawn", [this](auto item) { OnLoadAnimatedPawn(item); });
     m_menubar->at(0).append_splitter();
     m_menubar->at(0).append("Exit", [this](auto item) { OnCloseCommand(item); });
     get_place().field("menubar") << *m_menubar;
@@ -108,19 +109,17 @@ void MainForm::OnImportDaeFile(const nana::menu::item_proxy& menu_item)
         DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::Instance()->GetSystemServiceAs<Enigma::Engine::GeometryRepository>());
         parser->LoadDaeFile(paths[0].string());
         m_appDelegate->LoadPawn(parser->GetPawnDto());
-        //m_appDelegate->SetPrimitive(parser->GetModelPrimitive());
         m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
-        //m_modelInfoPanel->EnumModelMeshNode(parser->GetModelPrimitive());
         delete parser;
     }
 }
 
-void MainForm::OnSaveEntity(const nana::menu::item_proxy& menu_item)
+void MainForm::OnSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
 
 }
 
-void MainForm::OnLoadEntity(const nana::menu::item_proxy& menu_item)
+void MainForm::OnLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
 
 }
@@ -133,5 +132,6 @@ void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::Finalize()
 {
     if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
+    if (m_modelInfoPanel) m_modelInfoPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }

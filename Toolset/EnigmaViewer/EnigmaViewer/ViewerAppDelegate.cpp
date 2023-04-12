@@ -23,7 +23,6 @@
 #include "SceneGraph/Pawn.h"
 #include "GameCommon/GameSceneService.h"
 #include "ViewerCommands.h"
-#include "Animators/AnimatorEvents.h"
 #include "Animators/AnimatorCommands.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include <memory>
@@ -96,7 +95,7 @@ void ViewerAppDelegate::Finalize()
     {
         Logger::CloseLoggerFile();
     }
-    delete FileSystem::FileSystem::Instance();
+    delete FileSystem::Instance();
 
     CoUninitialize();
 }
@@ -119,10 +118,10 @@ void ViewerAppDelegate::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
+    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto animator_policy = std::make_shared<Enigma::Animators::AnimatorInstallingPolicy>();
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
@@ -178,11 +177,11 @@ void ViewerAppDelegate::OnTimerElapsed()
 
 void ViewerAppDelegate::LoadPawn(const PawnDto& pawn_dto)
 {
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
+    CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
 }
 
-void ViewerAppDelegate::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
@@ -197,6 +196,8 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr
     if (prim)
     {
         auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+        if (!model) return;
+        CommandBus::Post(std::make_shared<RefreshModelNodeTree>(model));
         if (auto ani = model->GetAnimator())
         {
             ani->Reset();

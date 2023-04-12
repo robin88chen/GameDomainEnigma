@@ -12,7 +12,6 @@
 #include "GameEngine/TriangleList.h"
 #include "SceneGraph/Pawn.h"
 #include "Animators/AnimatorDtos.h"
-#include "Animators/ModelPrimitiveAnimator.h"
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
 #include <sstream>

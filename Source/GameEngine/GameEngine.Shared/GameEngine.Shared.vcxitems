@@ -23,6 +23,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectRequests.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectResponses.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h" />

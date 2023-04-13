@@ -91,7 +91,7 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
     }
     for (auto& eff : m_effects)
     {
-        policy->EffectPolicies().emplace_back(EffectMaterialDto::FromGenericDto(eff).ConvertToPolicy(effect_deserializer));
+        policy->EffectDtos().emplace_back(EffectMaterialDto::FromGenericDto(eff));
     }
     for (auto& tex : m_textureMaps)
     {

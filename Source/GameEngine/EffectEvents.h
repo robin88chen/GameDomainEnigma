@@ -16,7 +16,7 @@
 namespace Enigma::Engine
 {
     /** effect events */
-    class EffectMaterialCompiled : public Frameworks::IEvent
+    /*class EffectMaterialCompiled : public Frameworks::IEvent
     {
     public:
         //! try rich event
@@ -28,7 +28,7 @@ namespace Enigma::Engine
     private:
         std::string m_filename;
         EffectMaterialPtr m_effect;
-    };
+    };*/
     class CompileEffectMaterialFailed : public Frameworks::IEvent
     {
     public:

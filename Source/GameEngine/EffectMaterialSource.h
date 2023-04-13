@@ -19,7 +19,7 @@ namespace Enigma::Engine
     {
     public:
         EffectMaterialSource();
-        EffectMaterialSource(std::unique_ptr<EffectMaterial> material);
+        EffectMaterialSource(std::shared_ptr<EffectMaterial> material);
         EffectMaterialSource(const EffectMaterialSource&) = delete;
         EffectMaterialSource(EffectMaterialSource&&) = delete;
         ~EffectMaterialSource();
@@ -38,7 +38,7 @@ namespace Enigma::Engine
         void DuplicatedEffectDeleter(EffectMaterial* effect);
 
     private:
-        std::unique_ptr<EffectMaterial> m_effectMaterial;
+        std::shared_ptr<EffectMaterial> m_effectMaterial;
         std::atomic_uint32_t m_duplicateCount;
     };
     using EffectMaterialSourcePtr = std::shared_ptr<EffectMaterialSource>;

@@ -16,6 +16,9 @@
     <Filter Include="ErrorCodes">
       <UniqueIdentifier>{8adaacc5-f416-4fdd-a6e9-b658a472858d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Avatar">
+      <UniqueIdentifier>{c176b552-2eb2-4c1b-9f38-e703032731f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -42,6 +45,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h">
       <Filter>ErrorCodes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h">
+      <Filter>Avatar</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarBaker.h">
+      <Filter>Avatar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -61,6 +70,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp">
       <Filter>ErrorCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp">
+      <Filter>Avatar</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarBaker.cpp">
+      <Filter>Avatar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

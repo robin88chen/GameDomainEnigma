@@ -27,7 +27,7 @@ GenericDto EffectMaterialDto::ToGenericDto()
     return dto;
 }
 
-EffectMaterialPolicy EffectMaterialDto::ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer)
+EffectMaterialPolicy EffectMaterialDto::ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer) const
 {
     return EffectMaterialPolicy(m_name, m_factoryDesc.GetResourceFilename(), deserializer);
 }

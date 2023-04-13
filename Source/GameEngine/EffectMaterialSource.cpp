@@ -14,10 +14,10 @@ EffectMaterialSource::EffectMaterialSource()
     m_effectMaterial = nullptr;
 }
 
-EffectMaterialSource::EffectMaterialSource(std::unique_ptr<EffectMaterial> material)
+EffectMaterialSource::EffectMaterialSource(std::shared_ptr<EffectMaterial> material)
 {
     m_duplicateCount = 1;
-    m_effectMaterial = std::move(material);
+    m_effectMaterial = material;
 }
 
 EffectMaterialSource::~EffectMaterialSource()
@@ -28,7 +28,7 @@ EffectMaterialSource::~EffectMaterialSource()
 
 const std::string& EffectMaterialSource::GetName() const
 {
-    assert(m_effectMaterial != nullptr);
+    assert(m_effectMaterial);
     return m_effectMaterial->GetName();
 }
 
@@ -39,7 +39,7 @@ void EffectMaterialSource::LinkSource()
 
 EffectMaterialPtr EffectMaterialSource::CloneEffectMaterial()
 {
-    assert(m_effectMaterial != nullptr);
+    assert(m_effectMaterial);
     m_duplicateCount++;
     return EffectMaterialPtr(menew EffectMaterial(*(m_effectMaterial.get())), [=](EffectMaterial* e) { this->DuplicatedEffectDeleter(e); });
 }

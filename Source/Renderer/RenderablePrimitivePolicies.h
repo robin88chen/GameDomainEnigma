@@ -58,8 +58,8 @@ namespace Enigma::Renderer
         [[nodiscard]] const Engine::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
         Engine::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
 
-        [[nodiscard]] const std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() const { return m_effectPolicies; }
-        std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() { return m_effectPolicies; }
+        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& EffectDtos() const { return m_effectDtos; }
+        std::vector<Engine::EffectMaterialDto>& EffectDtos() { return m_effectDtos; }
 
         [[nodiscard]] const std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() const { return m_texturePolicies; }
         std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() { return m_texturePolicies; }
@@ -68,7 +68,7 @@ namespace Enigma::Renderer
 
     protected:
         Engine::GeometryDataPolicy m_geometryPolicy;
-        std::vector<Engine::EffectMaterialPolicy> m_effectPolicies;
+        std::vector<Engine::EffectMaterialDto> m_effectDtos;
         std::vector<Engine::EffectTextureMapPolicy> m_texturePolicies;
     };
 

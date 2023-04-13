@@ -33,15 +33,14 @@ namespace Enigma::Engine
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:
-            //! try rich event
-            EffectMaterialCompiled(const std::string& filename, std::unique_ptr<EffectMaterial> eff) :
-                m_filename(filename), m_effect(std::move(eff)) {};
-            const std::string& GetFilename() { return m_filename; }
+            EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff) :
+                m_name(name), m_effect(eff) {};
+            const std::string& GetName() { return m_name; }
             bool HasEffect() { return m_effect != nullptr; }
-            std::unique_ptr<EffectMaterial> GetEffect() { return std::move(m_effect); }
+            std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
         private:
-            std::string m_filename;
-            std::unique_ptr<EffectMaterial> m_effect;
+            std::string m_name;
+            std::shared_ptr<EffectMaterial> m_effect;
         };
 
     public:

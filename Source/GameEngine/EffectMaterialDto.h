@@ -36,7 +36,7 @@ namespace Enigma::Engine
         static EffectMaterialDto FromGenericDto(const GenericDto& dto);
         GenericDto ToGenericDto();
 
-        EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer);
+        EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer) const;
 
     protected:
         std::string m_name;

@@ -69,7 +69,7 @@ EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const Eff
     if (m_hostManager->HasEffectMaterial(policy.Name()))
     {
         Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(
-            policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name())));
+            policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name()), true));
         return CompilingProceed::False;
     }
     else if (policy.GetProfile())
@@ -312,7 +312,7 @@ void EffectCompiler::TryBuildEffectMaterial()
     {
         effect_material->TheFactoryDesc().ClaimFromResource(effect_material->GetName(), m_policy.Parameter());
     }
-    EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material));
+    EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
     m_hasMaterialProduced = true;
 }
 

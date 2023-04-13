@@ -117,9 +117,12 @@ void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr
     if (ev->GetName() != m_currentCompilingEffectName) return;
 
     std::lock_guard lock(m_sourceMapLock);
-    EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
-    source->LinkSource();
-    m_sourceMaterials.insert_or_assign(ev->GetName(), source);
+    if (!ev->HasExisted())
+    {
+        EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
+        source->LinkSource();
+        m_sourceMaterials.insert_or_assign(ev->GetName(), source);
+    }
     Frameworks::ResponseBus::Post(std::make_shared<CompileEffectMaterialResponse>(
         m_currentCompilingRuid, ev->GetName(), QueryEffectMaterial(ev->GetName()), ErrorCode::ok));
     m_isCurrentCompiling = false;
@@ -142,6 +145,7 @@ void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::IRequest
     if (!req) return;
     std::lock_guard locker{ m_requestLock };
     m_requests.push(req);
+    m_needTick = true;
     //CompileEffectMaterial(cmd->GetPolicy());
 }
 

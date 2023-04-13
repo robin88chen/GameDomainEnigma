@@ -33,14 +33,16 @@ namespace Enigma::Engine
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:
-            EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff) :
-                m_name(name), m_effect(eff) {};
+            EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff, bool has_existed) :
+                m_name(name), m_effect(eff), m_hasExisted(has_existed) {};
             const std::string& GetName() { return m_name; }
             bool HasEffect() { return m_effect != nullptr; }
             std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
+            bool HasExisted() { return m_hasExisted; }
         private:
             std::string m_name;
             std::shared_ptr<EffectMaterial> m_effect;
+            bool m_hasExisted;
         };
 
     public:

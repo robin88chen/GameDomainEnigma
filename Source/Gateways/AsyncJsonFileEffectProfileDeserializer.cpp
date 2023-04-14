@@ -4,11 +4,11 @@
 #include "FileSystem/IFile.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "GameEngine/EffectEvents.h"
 #include "EffectProfileJsonGateway.h"
 #include "FileSystem/FileSystemErrors.h"
 #include "GameEngine/EngineErrors.h"
 #include "Platforms/PlatformLayer.h"
+#include "GameEngine/EffectCompiler.h"
 
 using namespace Enigma::Frameworks;
 using namespace Enigma::FileSystem;
@@ -41,7 +41,7 @@ void AsyncJsonFileEffectProfileDeserializer::DeserializeProcedure()
     IFilePtr readFile = readingFile.get();
     if (!readFile)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<DeserializeCompilingProfileFailed>(m_ruid, FileSystem::ErrorCode::fileOpenError));
+        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(m_ruid, FileSystem::ErrorCode::fileOpenError));
         return;
     }
     size_t filesize = readFile->Size();
@@ -50,17 +50,17 @@ void AsyncJsonFileEffectProfileDeserializer::DeserializeProcedure()
     auto buff = read.get();
     if (!buff)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<DeserializeCompilingProfileFailed>(m_ruid, FileSystem::ErrorCode::readFail));
+        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(m_ruid, FileSystem::ErrorCode::readFail));
         return;
     }
     std::string read_json = convert_to_string(buff.value(), buff->size());
     auto profile = m_gateway.Deserialize(read_json);
     if (profile)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<CompilingProfileDeserialized>(m_ruid, profile.value()));
+        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::CompilingProfileDeserialized>(m_ruid, profile.value()));
     }
     else
     {
-        Frameworks::EventPublisher::Post(std::make_shared<DeserializeCompilingProfileFailed>(m_ruid, Engine::ErrorCode::deserializeFail));
+        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(m_ruid, Engine::ErrorCode::deserializeFail));
     }
 }

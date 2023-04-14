@@ -123,9 +123,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
-      <Filter>Events &amp; Response</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
@@ -248,9 +245,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h">
       <Filter>Effect Material\Policy</Filter>

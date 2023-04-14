@@ -9,13 +9,9 @@
 #define SCENE_GRAPH_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
-#include "Frameworks/CommandSubscriber.h"
-#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
-#include "SpatialLinkageResolver.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include <memory>
 #include <string>
@@ -47,8 +43,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer);
+        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
         virtual ~SceneGraphRepository() override;

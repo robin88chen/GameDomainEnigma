@@ -119,11 +119,11 @@ void ViewerAppDelegate::InstallEngine()
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
+        std::make_shared<JsonFileDtoDeserializer>());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDtoMaker::MakeCameraDto());
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);

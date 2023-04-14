@@ -66,12 +66,12 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
             if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
             {
                 PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
             else if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
             {
                 PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);

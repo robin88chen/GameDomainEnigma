@@ -1,7 +1,6 @@
 ﻿#include "EffectCompiler.h"
 #include "ShaderEvents.h"
 #include "ShaderCommands.h"
-#include "EffectEvents.h"
 #include "EngineErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"

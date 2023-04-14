@@ -47,8 +47,7 @@ namespace Enigma::SceneGraph
             }
         };
     public:
-        SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer);
+        SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         SceneGraphBuilder(const SceneGraphBuilder&) = delete;
         SceneGraphBuilder(SceneGraphBuilder&&) = delete;
         ~SceneGraphBuilder();
@@ -84,7 +83,6 @@ namespace Enigma::SceneGraph
         SpatialLinkageResolver* m_resolver;
 
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
         Frameworks::EventSubscriberPtr m_onFactoryCreated;
 

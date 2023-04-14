@@ -74,13 +74,11 @@ GenericDto MeshPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     auto policy = std::make_shared<MeshPrimitivePolicy>();
     policy->Name() = m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->TheEffectDeserializer() = effect_deserializer;
     if (m_geometry)
     {
         policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value());
@@ -116,10 +114,9 @@ GenericDto SkinMeshPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer, effect_deserializer);
+    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer);
     return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
@@ -186,13 +183,11 @@ GenericDto ModelPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     auto policy = std::make_shared<ModelPrimitivePolicy>();
     policy->Name() = m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->TheEffectDeserializer() = effect_deserializer;
     policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(m_nodeTreeDto);
     if ((m_animatorDto) && (m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
     {

@@ -50,8 +50,7 @@ namespace Enigma::Renderer
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
-        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         std::string m_name;
@@ -75,8 +74,7 @@ namespace Enigma::Renderer
 
         static SkinMeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
-        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 
     class MeshNodeDto
@@ -151,8 +149,7 @@ namespace Enigma::Renderer
         static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
-        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         std::string m_name;

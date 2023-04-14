@@ -22,8 +22,7 @@ std::vector<std::string> bone_node_names{ "bone_root", "bone_one" };
 
 std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::MakeModelPrimitivePolicy(const std::string& model_name, const std::string& geo_name)
 {
-    return MakeModelPrimitiveDto(model_name, geo_name).ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
-        std::make_shared<JsonFileEffectProfileDeserializer>());
+    return MakeModelPrimitiveDto(model_name, geo_name).ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>());
 }
 
 ModelPrimitiveDto SkinMeshModelMaker::MakeModelPrimitiveDto(const std::string& model_name, const std::string& geo_name)
@@ -83,8 +82,7 @@ std::shared_ptr<ModelPrimitivePolicy> SkinMeshModelMaker::LoadModelPrimitivePoli
     assert(read_dtos.size() == 1);
     FileSystem::Instance()->CloseFile(readFile);
     if (read_dtos[0].GetRtti().GetRttiName() != ModelPrimitive::TYPE_RTTI.GetName()) return nullptr;
-    return ModelPrimitiveDto::FromGenericDto(read_dtos[0]).ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>(),
-        std::make_shared<JsonFileEffectProfileDeserializer>());
+    return ModelPrimitiveDto::FromGenericDto(read_dtos[0]).ConvertToPolicy(std::make_shared<JsonFileDtoDeserializer>());
 }
 
 SkinMeshPrimitiveDto SkinMeshModelMaker::MakeSkinMeshPrimitiveDto(const std::string& mesh_name, const std::string& geo_name)

@@ -35,13 +35,12 @@ using namespace Enigma::Renderer;
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
 SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
 
     m_needTick = false;
-    m_builder = menew SceneGraphBuilder(this, dto_deserializer, effect_deserializer);
+    m_builder = menew SceneGraphBuilder(this, dto_deserializer);
 }
 
 SceneGraphRepository::~SceneGraphRepository()

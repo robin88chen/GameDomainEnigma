@@ -31,13 +31,11 @@ using namespace Enigma::Engine;
 using namespace Enigma::Renderer;
 using namespace Enigma::Platforms;
 
-SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
 {
     m_isCurrentBuilding = false;
     m_host = host;
     m_dtoDeserializer = dto_deserializer;
-    m_effectDeserializer = effect_deserializer;
     m_resolver = menew SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial>
         { return m_host->QuerySpatial(n); });
 
@@ -335,17 +333,17 @@ std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePo
     if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
     {
         ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
-        return model.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+        return model.ConvertToPolicy(m_dtoDeserializer);
     }
     else if (primitive_dto.GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
     {
         MeshPrimitiveDto mesh = MeshPrimitiveDto::FromGenericDto(primitive_dto);
-        return mesh.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+        return mesh.ConvertToPolicy(m_dtoDeserializer);
     }
     else if (primitive_dto.GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
     {
         SkinMeshPrimitiveDto mesh = SkinMeshPrimitiveDto::FromGenericDto(primitive_dto);
-        return mesh.ConvertToPolicy(m_dtoDeserializer, m_effectDeserializer);
+        return mesh.ConvertToPolicy(m_dtoDeserializer);
     }
     else
     {

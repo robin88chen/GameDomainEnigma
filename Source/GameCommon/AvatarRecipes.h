@@ -10,6 +10,7 @@
 
 #include "SceneGraph/Pawn.h"
 #include "GameEngine/EffectMaterialDto.h"
+#include "Renderer/MeshPrimitive.h"
 
 namespace Enigma::GameCommon
 {
@@ -25,14 +26,23 @@ namespace Enigma::GameCommon
     class ReplaceAvatarMaterial : public AvatarRecipe
     {
     public:
-        ReplaceAvatarMaterial(const std::string& old_material_name, const Engine::EffectMaterialDto& new_material_dto)
-            : m_oldMaterialName(old_material_name), m_newMaterialDto(new_material_dto) {}
+        ReplaceAvatarMaterial(const std::string& old_material_name, const Engine::EffectMaterialDto& new_material_dto);
+        virtual ~ReplaceAvatarMaterial() override;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
 
-    protected:
+    private:
+        void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
+
+        void OnCompileEffectResponse(const Frameworks::IResponsePtr& r);
+
+    private:
         std::string m_oldMaterialName;
         Engine::EffectMaterialDto m_newMaterialDto;
+
+        Frameworks::ResponseSubscriberPtr m_onCompileEffectResponse;
+        using ChangeSpecifyMaterial = std::function<void(const std::shared_ptr<Engine::EffectMaterial>&)>;
+        std::unordered_map<Frameworks::Ruid, ChangeSpecifyMaterial, Frameworks::Ruid::HashFunc> m_changeSpecifyMaterialMap;
     };
 }
 

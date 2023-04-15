@@ -48,9 +48,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h">
       <Filter>Avatar</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarBaker.h">
-      <Filter>Avatar</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -72,9 +69,6 @@
       <Filter>ErrorCodes</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp">
-      <Filter>Avatar</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarBaker.cpp">
       <Filter>Avatar</Filter>
     </ClCompile>
   </ItemGroup>

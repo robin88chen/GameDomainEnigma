@@ -32,6 +32,7 @@ void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
     if (m_oldMaterialName == m_newMaterialDto.Name()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
+    m_primitive = prim;
     ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
     if (model)
     {
@@ -50,7 +51,6 @@ void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
     {
         ReplaceMeshMaterial(mesh);
     }
-    prim->SelectVisualTechnique(prim->GetSelectedVisualTechnique());
 }
 
 void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
@@ -69,10 +69,14 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
         {
             //todo: 先丟 request
             auto req = std::make_shared<RequestCompileEffectMaterial>(m_newMaterialDto);
-            m_changeSpecifyMaterialMap[req->GetRuid()] = [mesh, i](const EffectMaterialPtr& eff_new)
+            m_changeSpecifyMaterialMap[req->GetRuid()] = [mesh, i, this](const EffectMaterialPtr& eff_new)
             {
                 mesh->ChangeEffectMaterialInSegment(i, eff_new);
                 mesh->CreateRenderElements();
+                if (!m_primitive.expired())
+                {
+                    m_primitive.lock()->SelectVisualTechnique(m_primitive.lock()->GetSelectedVisualTechnique());
+                }
             };
             RequestBus::Post(req);
         }
@@ -91,4 +95,44 @@ void ReplaceAvatarMaterial::OnCompileEffectResponse(const IResponsePtr& r)
         return;
     }
     it->second(res->GetEffect());
+}
+
+ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
+    : m_meshName(mesh_name), m_textureDto(texture_dto)
+{
+    
+}
+
+ChangeAvatarTexture::~ChangeAvatarTexture()
+{
+    
+}
+
+void ChangeAvatarTexture::Bake(const std::shared_ptr<Pawn>& pawn)
+{
+    if (!pawn) return;
+    if (m_meshName.empty()) return;
+    if (m_textureDto.TextureName().empty()) return;
+    PrimitivePtr prim = pawn->GetPrimitive();
+    if (!prim) return;
+    ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    if (model)
+    {
+        auto mesh = model->FindMeshPrimitive(m_meshName);
+        if (!mesh) return;
+        ChangeMeshTexture(mesh);
+    }
+    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    if (mesh)
+    {
+        if (mesh->GetName() != m_meshName) return;
+        ChangeMeshTexture(mesh);
+    }
+}
+
+void ChangeAvatarTexture::ChangeMeshTexture(const MeshPrimitivePtr& mesh)
+{
+    if (!mesh) return;
+    if (m_meshName.empty()) return;
+    if (m_textureDto.TextureName().empty()) return;
 }

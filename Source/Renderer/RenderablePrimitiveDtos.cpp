@@ -93,7 +93,7 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
     }
     for (auto& tex : m_textureMaps)
     {
-        policy->TexturePolicies().emplace_back(EffectTextureMapDto::FromGenericDto(tex).ConvertToPolicy());
+        policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
     }
     return policy;
 }

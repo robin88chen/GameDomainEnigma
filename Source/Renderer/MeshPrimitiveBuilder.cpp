@@ -11,7 +11,7 @@
 #include "GameEngine/RenderBufferEvents.h"
 #include "GameEngine/EffectRequests.h"
 #include "GameEngine/EffectResponses.h"
-#include "GameEngine/TextureCommands.h"
+#include "GameEngine/TextureRequests.h"
 #include "GameEngine/TextureEvents.h"
 
 using namespace Enigma::Renderer;
@@ -128,13 +128,13 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     {
         RequestBus::Post(std::make_shared<RequestCompileEffectMaterial>(dto));
     }
-    m_builtTextures.resize(m_policy->TexturePolicies().size());
-    for (unsigned i = 0; i < m_policy->TexturePolicies().size(); i++)
+    m_builtTextures.resize(m_policy->TextureDtos().size());
+    for (unsigned i = 0; i < m_policy->TextureDtos().size(); i++)
     {
-        for (auto& t : m_policy->TexturePolicies()[i].GetTuplePolicies())
+        for (auto& t : m_policy->TextureDtos()[i].TextureMappings())
         {
-            m_builtTextures[i].AppendTextureSemantic(std::get<std::string>(t));
-            CommandBus::Post(std::make_shared<LoadTexture>(std::get<TexturePolicy>(t)));
+            m_builtTextures[i].AppendTextureSemantic(t.Semantic());
+            RequestBus::Post(std::make_shared<RequestLoadTexture>(std::get<TexturePolicy>(t.ConvertToPolicy())));
         }
     }
 }
@@ -177,8 +177,9 @@ void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
     if (!found_idx) return;
     const unsigned tex_idx = std::get<0>(found_idx.value());
     const unsigned tuple_idx = std::get<1>(found_idx.value());
-    m_builtTextures[tex_idx].ChangeTexture({ std::get<std::string>(m_policy->GetTextureTuplePolicy(tex_idx, tuple_idx)),
-        ev->GetTexture(), std::get<std::optional<unsigned>>(m_policy->GetTextureTuplePolicy(tex_idx, tuple_idx)) });
+    auto semantic = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
+    auto array_idx = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
+    m_builtTextures[tex_idx].ChangeTexture({ semantic, ev->GetTexture(), array_idx });
     TryCompletingMesh();
 }
 
@@ -225,11 +226,11 @@ std::optional<unsigned> MeshPrimitiveBuilder::FindBuildingEffectIndex(const std:
 
 std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::FindLoadingTextureIndex(const std::string& name)
 {
-    for (unsigned tex = 0; tex < m_policy->TexturePolicies().size(); tex++)
+    for (unsigned tex = 0; tex < m_policy->TextureDtos().size(); tex++)
     {
-        for (unsigned tp = 0; tp < m_policy->TexturePolicies()[tex].GetTuplePolicies().size(); tp++)
+        for (unsigned tp = 0; tp < m_policy->TextureDtos()[tex].TextureMappings().size(); tp++)
         {
-            if ((std::get<TexturePolicy>(m_policy->GetTextureTuplePolicy(tex, tp)).m_name == name)
+            if ((m_policy->TextureDtos()[tex].TextureMappings()[tp].TextureName() == name)
                 && (m_builtTextures[tex].GetTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
         }
     }

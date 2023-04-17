@@ -276,6 +276,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectResponses.h">
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">
+      <Filter>Commands &amp; Requests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

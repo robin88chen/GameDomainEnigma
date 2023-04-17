@@ -10,6 +10,7 @@
 
 #include "SceneGraph/Pawn.h"
 #include "GameEngine/EffectMaterialDto.h"
+#include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
 
 namespace Enigma::GameCommon
@@ -37,12 +38,27 @@ namespace Enigma::GameCommon
         void OnCompileEffectResponse(const Frameworks::IResponsePtr& r);
 
     private:
+        std::weak_ptr<Engine::Primitive> m_primitive;
         std::string m_oldMaterialName;
         Engine::EffectMaterialDto m_newMaterialDto;
 
         Frameworks::ResponseSubscriberPtr m_onCompileEffectResponse;
         using ChangeSpecifyMaterial = std::function<void(const std::shared_ptr<Engine::EffectMaterial>&)>;
         std::unordered_map<Frameworks::Ruid, ChangeSpecifyMaterial, Frameworks::Ruid::HashFunc> m_changeSpecifyMaterialMap;
+    };
+    class ChangeAvatarTexture : public AvatarRecipe
+    {
+    public:
+        ChangeAvatarTexture(const std::string& mesh_name, const Engine::TextureMappingDto& texture_dto);
+        virtual ~ChangeAvatarTexture() override;
+        void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
+
+    private:
+        void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
+
+    private:
+        std::string m_meshName;
+        Engine::TextureMappingDto m_textureDto;
     };
 }
 

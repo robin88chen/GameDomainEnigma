@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />

@@ -55,10 +55,14 @@ namespace Enigma::GameCommon
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
+        void OnLoadTextureResponse(const Frameworks::IResponsePtr& r);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
+        Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
+        std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
+        Frameworks::Ruid m_requsetRuid;
     };
 }
 

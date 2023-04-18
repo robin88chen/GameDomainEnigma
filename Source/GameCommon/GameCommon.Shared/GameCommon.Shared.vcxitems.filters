@@ -19,6 +19,9 @@
     <Filter Include="Avatar">
       <UniqueIdentifier>{c176b552-2eb2-4c1b-9f38-e703032731f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimationClipMap">
+      <UniqueIdentifier>{baf8fe26-9bde-4139-94fc-b5f9cb28df7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h">
       <Filter>Avatar</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h">
+      <Filter>AnimationClipMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -70,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp">
       <Filter>Avatar</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp">
+      <Filter>AnimationClipMap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

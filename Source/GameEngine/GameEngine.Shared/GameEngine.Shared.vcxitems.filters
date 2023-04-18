@@ -159,12 +159,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
-      <Filter>Events &amp; Response</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h">
       <Filter>Bounding Volume</Filter>
     </ClInclude>
@@ -278,6 +272,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">
       <Filter>Commands &amp; Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h">
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

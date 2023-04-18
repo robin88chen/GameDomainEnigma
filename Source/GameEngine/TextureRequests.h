@@ -9,7 +9,7 @@
 #define _TEXTURE_REQUESTS_H
 
 #include "TextureLoadingPolicies.h"
-#include "Frameworks/RequestBus.h"
+#include "Frameworks/Request.h"
 
 namespace Enigma::Engine
 {

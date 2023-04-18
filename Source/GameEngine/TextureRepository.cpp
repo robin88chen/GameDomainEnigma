@@ -1,10 +1,11 @@
 ﻿#include "TextureRepository.h"
 #include "TextureLoader.h"
 #include "Platforms/MemoryMacro.h"
-#include "TextureCommands.h"
-#include "TextureEvents.h"
+#include "TextureRequests.h"
+#include "TextureResponses.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
 #include "EngineErrors.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -32,7 +33,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     Frameworks::EventPublisher::Subscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onLoadTextureFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnLoadTextureFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    Frameworks::EventPublisher::Subscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
 
     m_doLoadingTexture =
         std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
@@ -63,7 +64,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
     m_onLoadTextureFailed = nullptr;
 
     Frameworks::RequestBus::Unsubscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
@@ -104,18 +105,19 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_textureMapLock };
     m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
     m_isCurrentLoading = false;
-    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(ev->GetTextureName(), ev->GetTexture()));
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
 }
 
 void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<LoadTextureFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<TextureLoader::LoadTextureFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n",
         ev->GetTextureName().c_str(), ev->GetError().message().c_str());
     m_isCurrentLoading = false;
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
 }
 
 void TextureRepository::DoLoadingTexture(const Frameworks::IRequestPtr& r)

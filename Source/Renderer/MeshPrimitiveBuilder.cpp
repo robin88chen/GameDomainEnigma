@@ -12,7 +12,7 @@
 #include "GameEngine/EffectRequests.h"
 #include "GameEngine/EffectResponses.h"
 #include "GameEngine/TextureRequests.h"
-#include "GameEngine/TextureEvents.h"
+#include "GameEngine/TextureResponses.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -28,13 +28,11 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder()
     EventPublisher::Subscribe(typeid(RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onBuildRenderBufferFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildRenderBufferFailed(e); });
     EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
-    m_onTextureLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureLoaded(e); });
-    EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
-    m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
-    EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
 
     m_onCompileEffectMaterialResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnCompileEffectMaterialResponse(r); });
     ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectMaterialResponse);
+    m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
+    ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
@@ -49,13 +47,11 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
     m_onRenderBufferBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
     m_onBuildRenderBufferFailed = nullptr;
-    EventPublisher::Unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
-    m_onTextureLoaded = nullptr;
-    EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
-    m_onLoadTextureFailed = nullptr;
 
     ResponseBus::Unsubscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectMaterialResponse);
     m_onCompileEffectMaterialResponse = nullptr;
+    ResponseBus::Unsubscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
+    m_onLoadTextureResponse = nullptr;
 }
 
 void MeshPrimitiveBuilder::BuildMeshPrimitive(const Frameworks::Ruid& ruid, const std::shared_ptr<MeshPrimitivePolicy>& policy)
@@ -167,31 +163,26 @@ void MeshPrimitiveBuilder::OnCompileEffectMaterialResponse(const Frameworks::IRe
     TryCompletingMesh();
 }
 
-void MeshPrimitiveBuilder::OnTextureLoaded(const Frameworks::IEventPtr& e)
+void MeshPrimitiveBuilder::OnLoadTextureResponse(const Frameworks::IResponsePtr& r)
 {
     if (!m_policy) return;
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<TextureLoaded, IEvent>(e);
-    if (!ev) return;
-    const auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
+    if (!r) return;
+    const auto res = std::dynamic_pointer_cast<LoadTextureResponse, IResponse>(r);
+    if (!res) return;
+    const auto found_idx = FindLoadingTextureIndex(res->GetName());
     if (!found_idx) return;
+    if (res->GetErrorCode())
+    {
+        EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), res->GetErrorCode()));
+        return;
+    }
+
     const unsigned tex_idx = std::get<0>(found_idx.value());
     const unsigned tuple_idx = std::get<1>(found_idx.value());
     auto semantic = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
     auto array_idx = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
-    m_builtTextures[tex_idx].ChangeTexture({ semantic, ev->GetTexture(), array_idx });
+    m_builtTextures[tex_idx].ChangeTexture({ semantic, res->GetTexture(), array_idx });
     TryCompletingMesh();
-}
-
-void MeshPrimitiveBuilder::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
-{
-    if (!m_policy) return;
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<LoadTextureFailed, IEvent>(e);
-    if (!ev) return;
-    const auto found_idx = FindLoadingTextureIndex(ev->GetTextureName());
-    if (!found_idx) return;
-    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetError()));
 }
 
 void MeshPrimitiveBuilder::TryCompletingMesh()

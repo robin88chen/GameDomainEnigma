@@ -19,7 +19,7 @@ EffectMaterialDto EffectMaterialDto::FromGenericDto(const GenericDto& dto)
     return effect;
 }
 
-GenericDto EffectMaterialDto::ToGenericDto()
+GenericDto EffectMaterialDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

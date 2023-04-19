@@ -15,6 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
@@ -27,6 +29,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />

@@ -15,22 +15,30 @@
 
 namespace Enigma::GameCommon
 {
+    class AvatarRecipeReplaceMaterialDto;
+    class AvatarRecipeChangeTextureDto;
+
     class AvatarRecipe
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         AvatarRecipe() = default;
         virtual ~AvatarRecipe() = default;
 
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
+        virtual Engine::GenericDto ToGenericDto() const = 0;
     };
 
     class ReplaceAvatarMaterial : public AvatarRecipe
     {
+        DECLARE_EN_RTTI;
     public:
         ReplaceAvatarMaterial(const std::string& old_material_name, const Engine::EffectMaterialDto& new_material_dto);
+        ReplaceAvatarMaterial(const AvatarRecipeReplaceMaterialDto& dto);
         virtual ~ReplaceAvatarMaterial() override;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
+        Engine::GenericDto ToGenericDto() const override;
 
     private:
         void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
@@ -48,10 +56,13 @@ namespace Enigma::GameCommon
     };
     class ChangeAvatarTexture : public AvatarRecipe
     {
+        DECLARE_EN_RTTI;
     public:
         ChangeAvatarTexture(const std::string& mesh_name, const Engine::TextureMappingDto& texture_dto);
+        ChangeAvatarTexture(const AvatarRecipeChangeTextureDto& dto);
         virtual ~ChangeAvatarTexture() override;
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
+        Engine::GenericDto ToGenericDto() const override;
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);

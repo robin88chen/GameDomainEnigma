@@ -6,12 +6,17 @@
 #include "GameEngine/TextureRequests.h"
 #include "GameEngine/TextureResponses.h"
 #include "Renderer/ModelPrimitive.h"
+#include "AvatarRecipeDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
+
+DEFINE_RTTI_OF_BASE(GameCommon, AvatarRecipe);
+DEFINE_RTTI(GameCommon, ReplaceAvatarMaterial, AvatarRecipe);
+DEFINE_RTTI(GameCommon, ChangeAvatarTexture, AvatarRecipe);
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_name, const EffectMaterialDto& new_material_dto)
     : m_oldMaterialName(old_material_name), m_newMaterialDto(new_material_dto)
@@ -20,11 +25,24 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_nam
     ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectResponse);
 }
 
+ReplaceAvatarMaterial::ReplaceAvatarMaterial(const AvatarRecipeReplaceMaterialDto& dto)
+    : ReplaceAvatarMaterial(dto.OldMaterialName(), dto.NewMaterialDto())
+{
+}
+
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 {
     ResponseBus::Unsubscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectResponse);
     m_onCompileEffectResponse = nullptr;
     m_changeSpecifyMaterialMap.clear();
+}
+
+GenericDto ReplaceAvatarMaterial::ToGenericDto() const
+{
+    AvatarRecipeReplaceMaterialDto dto;
+    dto.OldMaterialName() = m_oldMaterialName;
+    dto.NewMaterialDto() = m_newMaterialDto;
+    return dto.ToGenericDto();
 }
 
 void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
@@ -103,10 +121,23 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
+ChangeAvatarTexture::ChangeAvatarTexture(const AvatarRecipeChangeTextureDto& dto)
+    : ChangeAvatarTexture(dto.MeshName(), dto.TextureDto())
+{
+}
+
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
     ResponseBus::Unsubscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
     m_onLoadTextureResponse = nullptr;
+}
+
+GenericDto ChangeAvatarTexture::ToGenericDto() const
+{
+    AvatarRecipeChangeTextureDto dto;
+    dto.MeshName() = m_meshName;
+    dto.TextureDto() = m_textureDto;
+    return dto.ToGenericDto();
 }
 
 void ChangeAvatarTexture::Bake(const std::shared_ptr<Pawn>& pawn)

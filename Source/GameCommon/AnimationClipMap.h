@@ -12,11 +12,16 @@
 #include <unordered_map>
 #include <optional>
 #include "Animators/AnimationClip.h"
+#include "Frameworks/Rtti.h"
+#include "GameEngine/GenericDto.h"
 
 namespace Enigma::GameCommon
 {
+    class AnimationClipMapDto;
+
     class AnimationClipMap
     {
+        DECLARE_EN_RTTI_OF_BASE;
     public:
         struct AnimClip
         {
@@ -32,7 +37,10 @@ namespace Enigma::GameCommon
         typedef std::unordered_map<std::string, AnimClip> ClipMap;
     public:
         AnimationClipMap() = default;
+        AnimationClipMap(const AnimationClipMapDto& dto);
         ~AnimationClipMap() = default;
+
+        Engine::GenericDto ToGenericDto() const;
 
         std::optional<AnimClip> FindAnimationClip(const std::string& name);
         unsigned GetSize() const { return static_cast<unsigned int>(m_animClips.size()); };

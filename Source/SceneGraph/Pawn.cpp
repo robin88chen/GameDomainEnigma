@@ -89,3 +89,8 @@ error Pawn::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
     if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
     return er;
 }
+
+void Pawn::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+{
+    if (m_primitive) m_primitive->EnumAnimatorListDeep(resultList);
+}

@@ -80,6 +80,9 @@ namespace Enigma::Frameworks
         bool IsExactly(const Rtti& type) const;
         bool IsDerived(const Rtti& type) const;
 
+        static bool IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+
     private:
         std::string m_name;
         const Rtti* m_base;

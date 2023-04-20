@@ -74,7 +74,6 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
-        std::shared_ptr<Pawn> CreatePawn(const PawnDto& dto);
         bool HasPawn(const std::string& name);
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
@@ -89,6 +88,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Portal> QueryPortal(const std::string& name);
 
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
+        std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
     private:
         GraphicCoordSys m_handSystem;

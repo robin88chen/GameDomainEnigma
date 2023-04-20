@@ -26,6 +26,8 @@ namespace Enigma::SceneGraph
     class Pawn;
     class Node;
 
+    using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
+
     class SceneGraphBuilder
     {
     private:
@@ -60,6 +62,8 @@ namespace Enigma::SceneGraph
         void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos);
         void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos);
 
+        void SpatialFactory(const Engine::GenericDto& dto);
+
         void NodeFactory(const Engine::GenericDto& dto);
         void LazyNodeFactory(const Engine::GenericDto& dto);
         void VisibilityManagedNodeFactory(const Engine::GenericDto& dto);
@@ -72,11 +76,15 @@ namespace Enigma::SceneGraph
         void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();
 
-        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, 
+        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn,
             const Engine::GenericDto& primitive_dto);
         void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
         void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r);
+
+        void DoRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);
+        void DoUnRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);
+        void DoInvokingSpatialFactory(const Frameworks::ICommandPtr& c);
 
     private:
         SceneGraphRepository* m_host;
@@ -99,6 +107,12 @@ namespace Enigma::SceneGraph
         std::deque<Frameworks::ICommandPtr> m_buildCommands;
         std::recursive_mutex m_buildCommandsLock;
         std::atomic_bool m_isCurrentBuilding;
+
+        using DtoFactoryTable = std::unordered_map<std::string, SpatialDtoFactory>;
+        DtoFactoryTable m_factories;
+        Frameworks::CommandSubscriberPtr m_doRegisteringSpatialFactory;
+        Frameworks::CommandSubscriberPtr m_doUnRegisteringSpatialFactory;
+        Frameworks::CommandSubscriberPtr m_doInvokingSpatialDtoFactory;
     };
 }
 

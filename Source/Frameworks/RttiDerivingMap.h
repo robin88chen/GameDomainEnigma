@@ -8,7 +8,7 @@
 #ifndef RTTI_DERIVING_MAP_H
 #define RTTI_DERIVING_MAP_H
 
-#include "Rtti.h"
+#include <string>
 #include <unordered_map>
 
 namespace Enigma::Frameworks
@@ -19,6 +19,7 @@ namespace Enigma::Frameworks
         friend class Rtti;
         static bool TryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token);
         static bool IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
 
     private:
         using DerivingMap = std::unordered_map<std::string, std::string>;

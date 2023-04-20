@@ -223,14 +223,14 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
     return pawn;
 }
 
-std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
+/*std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
 {
     assert(!HasPawn(dto.Name()));
     auto pawn = std::make_shared<Pawn>(dto);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(dto.Name(), pawn);
     return pawn;
-}
+}*/
 
 bool SceneGraphRepository::HasPawn(const std::string& name)
 {
@@ -324,6 +324,19 @@ std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& n
     if (auto pawn = QueryPawn(name)) return pawn;
     if (auto light = QueryLight(name)) return light;
     if (auto portal = QueryPortal(name)) return portal;
+    return nullptr;
+}
+
+std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
+{
+    assert(spatial);
+    if (auto pawn = std::shared_ptr<Pawn>(dynamic_cast<Pawn*>(spatial)))
+    {
+        assert(!HasPawn(pawn->GetSpatialName()));
+        std::lock_guard locker{ m_pawnMapLock };
+        m_pawns.insert_or_assign(pawn->GetSpatialName(), pawn);
+        return pawn;
+    }
     return nullptr;
 }
 

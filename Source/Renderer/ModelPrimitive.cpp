@@ -267,3 +267,19 @@ void ModelPrimitive::SelectVisualTechnique(const std::string& techniqueName)
         }
     }
 }
+
+void ModelPrimitive::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+{
+    if (m_animator) resultList.push_back(m_animator);
+    if (m_nodeTree.GetMeshNodeCount() == 0) return;  // no mesh node
+    unsigned int mesh_count = GetMeshPrimitiveCount();
+    if (mesh_count == 0) return;
+
+    for (unsigned int i = 0; i < mesh_count; i++)
+    {
+        if (GetMeshPrimitive(i))
+        {
+            GetMeshPrimitive(i)->EnumAnimatorListDeep(resultList);
+        }
+    }
+}

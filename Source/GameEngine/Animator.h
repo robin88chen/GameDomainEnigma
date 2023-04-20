@@ -8,7 +8,7 @@
 #ifndef _ANIMATOR_H
 #define _ANIMATOR_H
 
-#include "Frameworks/RttiDerivingMap.h"
+#include "Frameworks/Rtti.h"
 #include "Frameworks/Timer.h"
 #include <memory>
 

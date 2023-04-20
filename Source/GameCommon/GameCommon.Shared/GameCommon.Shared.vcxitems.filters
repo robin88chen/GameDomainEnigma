@@ -22,6 +22,9 @@
     <Filter Include="AnimationClipMap">
       <UniqueIdentifier>{baf8fe26-9bde-4139-94fc-b5f9cb28df7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimatedPawn">
+      <UniqueIdentifier>{9919acf8-edc1-4f47-9131-808aecf2a4ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -60,6 +63,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h">
       <Filter>AnimationClipMap</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.h">
+      <Filter>AnimatedPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h">
+      <Filter>AnimatedPawn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -91,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp">
       <Filter>AnimationClipMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.cpp">
+      <Filter>AnimatedPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp">
+      <Filter>AnimatedPawn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 
 using namespace Enigma::Frameworks;
 
+RttiDerivingMap::DerivingMap RttiDerivingMap::m_derivingMap;
 
 bool RttiDerivingMap::TryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token)
 {

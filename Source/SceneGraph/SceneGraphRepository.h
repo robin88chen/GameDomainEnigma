@@ -65,11 +65,6 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
-        std::shared_ptr<Node> CreateNode(const NodeDto& dto);
-        std::shared_ptr<Node> CreateLazyNode(const LazyNodeDto& dto);
-        std::shared_ptr<Node> CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto);
-        std::shared_ptr<Node> CreatePortalZoneNode(const PortalZoneNodeDto& dto);
-        std::shared_ptr<Node> CreatePortalManagementNode(const PortalManagementNodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
@@ -78,12 +73,10 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
-        std::shared_ptr<Light> CreateLight(const LightDto& dto);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 
         std::shared_ptr<Portal> CreatePortal(const std::string& name);
-        std::shared_ptr<Portal> CreatePortal(const PortalDto& dto);
         bool HasPortal(const std::string& name);
         std::shared_ptr<Portal> QueryPortal(const std::string& name);
 

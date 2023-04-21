@@ -17,11 +17,11 @@
 #include "SpatialRenderState.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
+#include "GameEngine/LinkageResolver.h"
 #include <string>
 #include <memory>
 #include <system_error>
 #include <bitset>
-
 
 namespace Enigma::SceneGraph
 {
@@ -78,6 +78,7 @@ namespace Enigma::SceneGraph
         Spatial& operator=(Spatial&&) = delete;
 
         virtual Engine::GenericDto SerializeDto();
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {};
 
         const std::string& GetSpatialName() const { return m_name; };
 

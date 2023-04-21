@@ -41,7 +41,7 @@ namespace Enigma::SceneGraph
         Node& operator=(Node&&) = delete;
 
         virtual Engine::GenericDto SerializeDto() override;
-        void ResolveFactoryLinkage(const NodeDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver);
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;

@@ -9,6 +9,8 @@
 #define _EN_RTTI_H
 
 #include <string>
+#include <unordered_map>
+#include <memory>
 //----------------------------------------------------------------------------
 #define DECLARE_RTTI \
 public: \
@@ -86,6 +88,7 @@ namespace Enigma::Frameworks
     private:
         std::string m_name;
         const Rtti* m_base;
+        static std::unique_ptr<std::unordered_map<std::string, const Rtti*>> m_valueMap; // base 的 rtti 未必比 derived 早建立，為了用name 查衍生關係，所以要建個反查表
     };
     class RttiHashFunc
     {

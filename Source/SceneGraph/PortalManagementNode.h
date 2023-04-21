@@ -32,7 +32,7 @@ namespace Enigma::SceneGraph
         virtual ~PortalManagementNode() override;
 
         virtual Engine::GenericDto SerializeDto() override;
-        void ResolveFactoryLinkage(const std::string& outside_node_name, Engine::FactoryLinkageResolver<Spatial>& resolver);
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void AttachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
 

@@ -16,9 +16,10 @@ Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spati
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.GetName());
 }
 
-Light::Light(const LightDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+Light::Light(const Engine::GenericDto& o) : Spatial(o)
 {
-    m_lightInfo = LightInfo(LightInfoDto::FromGenericDto(dto.LightInfo()));
+    LightDto dto = LightDto::FromGenericDto(o);
+    m_lightInfo = LightInfo(dto.LightInfo());
 }
 
 Light::~Light()

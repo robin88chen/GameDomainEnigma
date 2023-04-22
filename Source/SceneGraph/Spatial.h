@@ -70,7 +70,7 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const std::string& name);
-        Spatial(const SpatialDto& dto);
+        Spatial(const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();

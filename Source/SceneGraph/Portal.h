@@ -19,14 +19,13 @@
 namespace Enigma::SceneGraph
 {
     class PortalZoneNode;
-    class PortalDto;
 
     class Portal : public Spatial
     {
         DECLARE_EN_RTTI;
     public:
         Portal(const std::string& name);
-        Portal(const PortalDto& dto);
+        Portal(const Engine::GenericDto& dto);
         Portal(const Portal&) = delete;
         Portal(Portal&&) = delete;
         Portal& operator=(const Portal&) = delete;

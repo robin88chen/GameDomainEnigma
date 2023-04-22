@@ -26,8 +26,9 @@ Portal::Portal(const std::string& name) : Spatial(name)
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }
 
-Portal::Portal(const PortalDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+Portal::Portal(const GenericDto& o) : Spatial(o)
 {
+    PortalDto dto = PortalDto::FromGenericDto(o);
     m_isOpen = dto.IsOpen();
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }

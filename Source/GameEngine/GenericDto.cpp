@@ -4,6 +4,7 @@ using namespace Enigma::Engine;
 
 std::string TOKEN_RTTI = "Rtti";
 std::string TOKEN_TOP_LEVEL = "TopLevel";
+std::string TOKEN_NAME = "Name";
 
 GenericDto::GenericDto()
 {
@@ -39,6 +40,16 @@ void GenericDto::AddRtti(const FactoryDesc& rtti)
 FactoryDesc GenericDto::GetRtti() const
 {
     return Get<FactoryDesc>(TOKEN_RTTI);
+}
+
+void GenericDto::AddName(const std::string& name)
+{
+   AddOrUpdate(TOKEN_NAME, name);
+}
+
+std::string GenericDto::GetName() const
+{
+   return Get<std::string>(TOKEN_NAME);
 }
 
 void GenericDto::AsTopLevel(bool is_top)

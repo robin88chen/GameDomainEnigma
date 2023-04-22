@@ -17,7 +17,7 @@ Pawn::Pawn(const std::string& name) : Spatial(name)
     RemoveSpatialFlag(Spatial_Unlit);
 }
 
-Pawn::Pawn(const PawnDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+Pawn::Pawn(const Engine::GenericDto& dto) : Spatial(dto)
 {
 }
 

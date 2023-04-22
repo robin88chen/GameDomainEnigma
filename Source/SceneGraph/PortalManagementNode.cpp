@@ -21,7 +21,7 @@ PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
     m_cachedStartZone = nullptr;
 }
 
-PortalManagementNode::PortalManagementNode(const PortalManagementNodeDto& dto) : Node(dynamic_cast<const NodeDto&>(dto))
+PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
 {
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;

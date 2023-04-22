@@ -33,7 +33,7 @@ namespace Enigma::SceneGraph
 
     public:
         Node(const std::string& name);
-        Node(const NodeDto& dto);
+        Node(const Engine::GenericDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node() override;

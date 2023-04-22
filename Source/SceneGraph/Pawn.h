@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         Pawn(const std::string& name);
-        Pawn(const PawnDto& dto);
+        Pawn(const Engine::GenericDto& dto);
         Pawn(const Pawn&) = delete;
         Pawn(Pawn&&) = delete;
         virtual ~Pawn() override;

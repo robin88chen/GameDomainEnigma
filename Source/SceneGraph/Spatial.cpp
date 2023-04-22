@@ -45,8 +45,9 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.Get
     m_notifyFlags = Notify_None;
 }
 
-Spatial::Spatial(const SpatialDto& dto) : m_factoryDesc(dto.TheFactoryDesc())
+Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
+    SpatialDto dto = SpatialDto::FromGenericDto(o);
     m_name = dto.Name();
     m_graphDepth = dto.GraphDepth();
     m_cullingMode = static_cast<CullingMode>(dto.CullingMode());

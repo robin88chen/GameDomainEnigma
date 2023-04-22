@@ -13,14 +13,12 @@
 
 namespace Enigma::SceneGraph
 {
-    class VisibilityManagedNodeDto;
-
     class VisibilityManagedNode : public LazyNode
     {
         DECLARE_EN_RTTI;
     public:
         VisibilityManagedNode(const std::string& name);
-        VisibilityManagedNode(const VisibilityManagedNodeDto& dto);
+        VisibilityManagedNode(const Engine::GenericDto& dto);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;
         virtual ~VisibilityManagedNode() override;

@@ -25,6 +25,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Animators;
+using namespace Enigma::GameCommon;
 
 #define TOKEN_SCENE "scene"
 #define TOKEN_INSTANCE_SCENE "instance_visual_scene"
@@ -136,7 +137,7 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     {
         OutputLog(filename + " not a COLLADA file!!");
     }
-    m_pawn = PawnDto();
+    m_pawn = AnimatedPawnDto();
     ParseScene(collada_root);
     ParseAnimations(collada_root);
 

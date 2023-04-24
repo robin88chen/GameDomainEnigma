@@ -128,8 +128,9 @@ void ViewerAppDelegate::InstallEngine()
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDtoMaker::MakeCameraDto());
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
+    auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy });
+        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }
@@ -140,6 +141,8 @@ void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void ViewerAppDelegate::ShutdownEngine()
 {
+    m_pawn = nullptr;
+
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
@@ -175,7 +178,7 @@ void ViewerAppDelegate::OnTimerElapsed()
     RenderFrame();
 }
 
-void ViewerAppDelegate::LoadPawn(const PawnDto& pawn_dto)
+void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
 {
     CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
     CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
@@ -186,13 +189,13 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto pawn = ev->GetPawn();
-    if (!pawn) return;
+    m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
+    if (!m_pawn) return;
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-    error er = scene_service->GetSceneRoot()->AttachChild(pawn, mx);
-    auto prim = pawn->GetPrimitive();
+    error er = scene_service->GetSceneRoot()->AttachChild(m_pawn, mx);
+    auto prim = m_pawn->GetPrimitive();
     if (prim)
     {
         auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);

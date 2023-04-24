@@ -18,6 +18,20 @@ DEFINE_RTTI_OF_BASE(GameCommon, AvatarRecipe);
 DEFINE_RTTI(GameCommon, ReplaceAvatarMaterial, AvatarRecipe);
 DEFINE_RTTI(GameCommon, ChangeAvatarTexture, AvatarRecipe);
 
+std::shared_ptr<AvatarRecipe> AvatarRecipe::CreateFromGenericDto(const Engine::GenericDto& dto)
+{
+    std::string type = dto.GetRtti().GetRttiName();
+    if (type == ReplaceAvatarMaterial::TYPE_RTTI.GetName())
+    {
+        return std::make_shared<ReplaceAvatarMaterial>(dto);
+    }
+    else if (type == ChangeAvatarTexture::TYPE_RTTI.GetName())
+    {
+        return std::make_shared<ChangeAvatarTexture>(dto);
+    }
+    return nullptr;
+}
+
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_name, const EffectMaterialDto& new_material_dto)
     : m_oldMaterialName(old_material_name), m_newMaterialDto(new_material_dto)
 {
@@ -25,9 +39,10 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_nam
     ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectResponse);
 }
 
-ReplaceAvatarMaterial::ReplaceAvatarMaterial(const AvatarRecipeReplaceMaterialDto& dto)
-    : ReplaceAvatarMaterial(dto.OldMaterialName(), dto.NewMaterialDto())
+ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o)
 {
+    AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::FromGenericDto(o);
+    ReplaceAvatarMaterial(dto.OldMaterialName(), dto.NewMaterialDto());
 }
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
@@ -121,9 +136,10 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const AvatarRecipeChangeTextureDto& dto)
-    : ChangeAvatarTexture(dto.MeshName(), dto.TextureDto())
+ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o)
 {
+    AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
+    ChangeAvatarTexture(dto.MeshName(), dto.TextureDto());
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()

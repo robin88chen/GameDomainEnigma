@@ -15,6 +15,7 @@
 #include "SceneGraph/SceneGraphDtos.h"
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
+#include "GameCommon/AnimatedPawnDto.h"
 #include "pugixml.hpp"
 #include <string>
 #include <optional>
@@ -29,7 +30,7 @@ namespace EnigmaViewer
 
         void LoadDaeFile(const std::string& filename);
 
-        const Enigma::SceneGraph::PawnDto& GetPawnDto() { return m_pawn; }
+        const Enigma::GameCommon::AnimatedPawnDto& GetPawnDto() { return m_pawn; }
 
     private:
         struct GeometryValueOffsets
@@ -90,7 +91,7 @@ namespace EnigmaViewer
         std::string m_modelName;
 
         Enigma::Renderer::ModelPrimitiveDto m_model;
-        Enigma::SceneGraph::PawnDto m_pawn;
+        Enigma::GameCommon::AnimatedPawnDto m_pawn;
         Enigma::Animators::ModelAnimationAssetDto m_animationAsset;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;

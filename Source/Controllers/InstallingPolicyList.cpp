@@ -23,6 +23,8 @@ constexpr std::uint16_t OrderOfGameSceneInstalling = 510;
 
 constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
 
+constexpr std::uint16_t OrderOfGamePawnsInstalling = 700;
+
 constexpr std::uint64_t OrderOfUnknownPolicy = UINT16_MAX;
 
 InstallingPolicyList::InstallingPolicyList(std::initializer_list<std::shared_ptr<Engine::InstallingPolicy>> initializer_list)
@@ -56,4 +58,5 @@ void InstallingPolicyList::MakeOrderMap()
     m_orderMap[typeid(GameCommon::GameCameraInstallingPolicy)] = OrderOfGameCameraInstalling;
     m_orderMap[typeid(GameCommon::GameSceneInstallingPolicy)] = OrderOfGameSceneInstalling;
     m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
+    m_orderMap[typeid(GameCommon::AnimatedPawnInstallingPolicy)] = OrderOfGamePawnsInstalling;
 }

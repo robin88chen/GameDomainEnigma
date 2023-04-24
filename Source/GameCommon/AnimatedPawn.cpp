@@ -3,6 +3,7 @@
 #include "Frameworks/CommandBus.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include "AvatarRecipes.h"
+#include "AnimatedPawnDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -14,6 +15,16 @@ DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 AnimatedPawn::AnimatedPawn(const std::string& name) : Pawn(name)
 {
 
+}
+
+AnimatedPawn::AnimatedPawn(const Engine::GenericDto& o) : Pawn(o)
+{
+    AnimatedPawnDto dto = AnimatedPawnDto::FromGenericDto(o);
+    m_animationClipMap = AnimationClipMap(dto.TheAnimationClipMapDto());
+    for (auto& avatar_dto : dto.AvatarRecipeDtos())
+    {
+        m_avatarRecipeList.push_back(AvatarRecipe::CreateFromGenericDto(avatar_dto));
+    }
 }
 
 AnimatedPawn::~AnimatedPawn()

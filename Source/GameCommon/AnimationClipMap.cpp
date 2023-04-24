@@ -8,8 +8,9 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);
 
-AnimationClipMap::AnimationClipMap(const AnimationClipMapDto& dto)
+AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
 {
+    AnimationClipMapDto dto = AnimationClipMapDto::FromGenericDto(o);
     for (unsigned i = 0; i < dto.AnimNames().size(); ++i)
     {
         AnimClip clip;

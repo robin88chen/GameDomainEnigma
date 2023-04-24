@@ -9,7 +9,6 @@
 #define _ANIMATED_PAWN_DTO_H
 
 #include "SceneGraph/SceneGraphDtos.h"
-#include "AnimationClipMapDto.h"
 
 namespace Enigma::GameCommon
 {
@@ -20,8 +19,8 @@ namespace Enigma::GameCommon
         AnimatedPawnDto(const SceneGraph::PawnDto& dto);
         virtual ~AnimatedPawnDto() = default;
 
-        AnimationClipMapDto& TheAnimationClipMapDto() { return m_animationClipMapDto; }
-        [[nodiscard]] const AnimationClipMapDto& TheAnimationClipMapDto() const { return m_animationClipMapDto; }
+        Engine::GenericDto& TheAnimationClipMapDto() { return m_animationClipMapDto; }
+        [[nodiscard]] const Engine::GenericDto& TheAnimationClipMapDto() const { return m_animationClipMapDto; }
         std::vector<Engine::GenericDto>& AvatarRecipeDtos() { return m_avatarRecipeDtos; }
         [[nodiscard]] const std::vector<Engine::GenericDto>& AvatarRecipeDtos() const { return m_avatarRecipeDtos; }
 
@@ -29,7 +28,7 @@ namespace Enigma::GameCommon
         Engine::GenericDto ToGenericDto() const;
 
     private:
-        AnimationClipMapDto m_animationClipMapDto;
+        Engine::GenericDto m_animationClipMapDto;
         std::vector<Engine::GenericDto> m_avatarRecipeDtos;
     };
 }

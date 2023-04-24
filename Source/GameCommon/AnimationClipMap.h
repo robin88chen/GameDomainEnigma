@@ -37,7 +37,7 @@ namespace Enigma::GameCommon
         typedef std::unordered_map<std::string, AnimClip> ClipMap;
     public:
         AnimationClipMap() = default;
-        AnimationClipMap(const AnimationClipMapDto& dto);
+        AnimationClipMap(const Engine::GenericDto& o);
         ~AnimationClipMap() = default;
 
         Engine::GenericDto ToGenericDto() const;

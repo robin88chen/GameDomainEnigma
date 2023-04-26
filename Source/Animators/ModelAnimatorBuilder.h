@@ -9,6 +9,7 @@
 #define _MODEL_ANIMATOR_BUILDER_H
 
 #include "Frameworks/EventSubscriber.h"
+#include "GameEngine/FactoryDesc.h"
 #include <memory>
 #include <string>
 
@@ -41,6 +42,7 @@ namespace Enigma::Animators
         std::shared_ptr<ModelAnimatorPolicy> m_policy;
         std::string m_assetName;
 
+        Engine::FactoryDesc m_originalAssetDesc;
         std::shared_ptr<ModelPrimitiveAnimator> m_builtAnimator;
 
         Frameworks::EventSubscriberPtr m_onAnimationAssetBuilt;

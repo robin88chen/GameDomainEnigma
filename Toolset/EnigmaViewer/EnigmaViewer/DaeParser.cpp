@@ -175,12 +175,12 @@ void DaeParser::OutputLog(const std::string& msg)
 void DaeParser::ComposeModelPrimitiveDto()
 {
     ModelAnimatorDto animator_dto;
-    animator_dto.AssetName() = m_animationAsset.Name();
-    animator_dto.AssetFactoryDesc() = m_animationAsset.ToGenericDto().GetRtti();
+    animator_dto.AssetName() = m_animationAssetDto.GetName();
+    animator_dto.AssetFactoryDesc() = m_animationAssetDto.GetRtti();
     if ((animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
     {
-        animator_dto.AnimationAssetDto() = m_animationAsset.ToGenericDto();
+        animator_dto.AnimationAssetDto() = m_animationAssetDto;
     }
     for (auto skin_bone_name : m_skinBoneNames)
     {
@@ -299,7 +299,7 @@ void DaeParser::ParseSceneNode(MeshNodeTreeDto& node_tree, const pugi::xml_node&
         {
             ss >> ((float*)mx)[i];
         }
-        mesh_node.LocalTransform() = mx;
+        mesh_node.LocalT_PosTransform() = mx;
     }
     else
     {
@@ -458,7 +458,7 @@ void DaeParser::ParseSkinMesh(MeshNodeDto& mesh_node, const pugi::xml_node& skin
         {
             ss >> ((float*)mx)[i];
         }
-        mesh_node.LocalTransform() = mx;
+        mesh_node.LocalT_PosTransform() = mx;
     }
 
     pugi::xml_node vertex_weights_node_xml = skin_node_xml.child(TOKEN_VERTEX_WEIGHTS);
@@ -774,35 +774,34 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
         OutputLog("has no animations lib");
         return;
     }
-    m_animationAsset = ModelAnimationAssetDto();
-    m_animationAsset.Name() = m_modelName;
+    ModelAnimationAssetDto asset_dto = ModelAnimationAssetDto();
+    asset_dto.Name() = m_modelName;
     pugi::xml_node anim_name_node = anim_lib_node.child(TOKEN_ANIMATION);
     if (anim_name_node)
     {
         pugi::xml_node anim_node = anim_name_node.child(TOKEN_ANIMATION);
         while (anim_node)
         {
-            ParseSingleAnimation(anim_node);
+            ParseSingleAnimation(asset_dto, anim_node);
             anim_node = anim_node.next_sibling(TOKEN_ANIMATION);
         }
         //anim_name_node = anim_name_node.next_sibling(TOKEN_ANIMATION);
     }
     //m_animation->SetDataStatus(Object::DataStatus::Ready);
     //m_animation->GetFactoryDesc().ClaimAsResourceAsset(m_filename, m_filename + ".anim");
-    GenericDto dto = m_animationAsset.ToGenericDto();
+    m_animationAssetDto = asset_dto.ToGenericDto();
     FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
     desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
-    dto.AddRtti(desc);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{dto});
+    m_animationAssetDto.AddRtti(desc);
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{m_animationAssetDto});
     IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), "w+b");
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
     desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
-    dto.AddRtti(desc);
-    m_animationAsset = ModelAnimationAssetDto::FromGenericDto(dto);
+    m_animationAssetDto.AddRtti(desc);
 }
 
-void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
+void DaeParser::ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node)
 {
     if (!anim_node)
     {
@@ -863,8 +862,8 @@ void DaeParser::ParseSingleAnimation(const pugi::xml_node& anim_node)
     }
     OutputLog("parse animation for node " + target_mesh_node_name + " done.");
 
-    m_animationAsset.MeshNodeNames().emplace_back(target_mesh_node_name);
-    m_animationAsset.TimeSRTs().emplace_back(srt_data.ToGenericDto());
+    asset_dto.MeshNodeNames().emplace_back(target_mesh_node_name);
+    asset_dto.TimeSRTs().emplace_back(srt_data.ToGenericDto());
 }
 
 void DaeParser::ParseAnimationSample(AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node, const pugi::xml_node& anim_node)

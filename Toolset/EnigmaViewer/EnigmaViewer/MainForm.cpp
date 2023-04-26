@@ -116,12 +116,31 @@ void MainForm::OnImportDaeFile(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::filebox fb{ *this, false };
+    fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} });
+    auto paths = fb.show();
+    if (paths.size() > 0)
+    {
+        m_appDelegate->SavePawnFile(paths[0].string());
+    }
 }
 
 void MainForm::OnLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::filebox fb{ *this, true };
+    fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} });
+    auto paths = fb.show();
+    if (paths.size() > 0)
+    {
+        m_appDelegate->LoadPawnFile(paths[0].string());
+        /*m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
+        m_modelInfoPanel->EnumModelMeshNode(std::dynamic_pointer_cast<Enigma::ModelPrimitive, Enigma::Primitive>
+            (m_appDelegate->GetEntityPrimitive()));
+        Enigma::ActionClipMapPtr clip_map = std::dynamic_pointer_cast<Enigma::AnimatedEntity, Enigma::Entity>
+            (m_appDelegate->GetEntity())->GetActionClipMap();
+        m_animInfoPanel->RefreshActionTable(clip_map);
+        m_animInfoPanel->RefreshActionCombo(clip_map);*/
+    }
 }
 
 void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)

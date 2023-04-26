@@ -52,6 +52,9 @@ namespace Enigma::Renderer
         MeshPrimitivePolicy& operator=(const MeshPrimitivePolicy&) = default;
         MeshPrimitivePolicy& operator=(MeshPrimitivePolicy&&) = default;
 
+        [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactoryDesc; }
+        Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactoryDesc; }
+
         [[nodiscard]] const Engine::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
         Engine::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
 
@@ -64,6 +67,7 @@ namespace Enigma::Renderer
         //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
     protected:
+        Engine::FactoryDesc m_geometryFactoryDesc;
         Engine::GeometryDataPolicy m_geometryPolicy;
         std::vector<Engine::EffectMaterialDto> m_effectDtos;
         std::vector<Engine::EffectTextureMapDto> m_textureDtos;

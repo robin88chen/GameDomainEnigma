@@ -1,6 +1,7 @@
 ﻿#include <windows.h>
 #include "MainForm.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/PlatformLayer.h"
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 

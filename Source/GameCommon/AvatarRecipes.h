@@ -23,7 +23,7 @@ namespace Enigma::GameCommon
         virtual ~AvatarRecipe() = default;
 
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
-        virtual Engine::GenericDto ToGenericDto() const = 0;
+        virtual Engine::GenericDto SerializeDto() const = 0;
 
         static std::shared_ptr<AvatarRecipe> CreateFromGenericDto(const Engine::GenericDto& dto);
     };
@@ -37,7 +37,7 @@ namespace Enigma::GameCommon
         virtual ~ReplaceAvatarMaterial() override;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
-        Engine::GenericDto ToGenericDto() const override;
+        Engine::GenericDto SerializeDto() const override;
 
     private:
         void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
@@ -61,7 +61,7 @@ namespace Enigma::GameCommon
         ChangeAvatarTexture(const Engine::GenericDto& o);
         virtual ~ChangeAvatarTexture() override;
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
-        Engine::GenericDto ToGenericDto() const override;
+        Engine::GenericDto SerializeDto() const override;
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);

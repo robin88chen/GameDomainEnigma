@@ -103,14 +103,14 @@ std::shared_ptr<GeometryData> GeometryRepository::Create(const GenericDto& dto)
 {
     if (dto.GetRtti().GetRttiName() == TriangleList::TYPE_RTTI.GetName())
     {
-        return CreateTriangleList(TriangleListDto::FromGenericDto(dto));
+        return CreateTriangleList(dto);
     }
     return nullptr;
 }
 
-std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const TriangleListDto& dto)
+std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const GenericDto& dto)
 {
-    if (HasGeometryData(dto.Name())) return QueryGeometryData(dto.Name());
+    if (HasGeometryData(dto.GetName())) return QueryGeometryData(dto.GetName());
     std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(dto);
     return geometry;
 }

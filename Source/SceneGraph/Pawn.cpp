@@ -26,6 +26,21 @@ Pawn::~Pawn()
     m_primitive = nullptr;
 }
 
+Enigma::Engine::GenericDto Pawn::SerializeDto()
+{
+    return SerializePawnDto().ToGenericDto();
+}
+
+PawnDto Pawn::SerializePawnDto()
+{
+    PawnDto dto(SerializeSpatialDto());
+    if (m_primitive)
+    {
+        dto.ThePrimitive() = m_primitive->SerializeDto();
+    }
+    return dto;
+}
+
 error Pawn::OnCullingVisible(Culler* culler, bool noCull)
 {
     assert(culler);

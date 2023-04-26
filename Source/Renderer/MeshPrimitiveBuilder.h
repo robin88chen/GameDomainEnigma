@@ -81,6 +81,7 @@ namespace Enigma::Renderer
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Engine::GeometryData> m_builtGeometry;
+        Engine::FactoryDesc m_originalGeometryDesc;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
         std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
         std::vector<Engine::EffectTextureMap> m_builtTextures;

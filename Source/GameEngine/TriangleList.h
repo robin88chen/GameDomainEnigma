@@ -21,7 +21,7 @@ namespace Enigma::Engine
         DECLARE_EN_RTTI;
     public:
         TriangleList(const std::string& name);
-        TriangleList(const TriangleListDto& dto);
+        TriangleList(const GenericDto& o);
         TriangleList(const TriangleList&) = delete;
         TriangleList(TriangleList&&) = delete;
         virtual ~TriangleList();

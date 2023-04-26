@@ -21,7 +21,7 @@ AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
     }
 }
 
-GenericDto AnimationClipMap::ToGenericDto() const
+GenericDto AnimationClipMap::SerializeDto() const
 {
     AnimationClipMapDto dto;
     for (auto& [name, clip] : m_animClips)

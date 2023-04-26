@@ -52,7 +52,7 @@ ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
     m_changeSpecifyMaterialMap.clear();
 }
 
-GenericDto ReplaceAvatarMaterial::ToGenericDto() const
+GenericDto ReplaceAvatarMaterial::SerializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
     dto.OldMaterialName() = m_oldMaterialName;
@@ -148,7 +148,7 @@ ChangeAvatarTexture::~ChangeAvatarTexture()
     m_onLoadTextureResponse = nullptr;
 }
 
-GenericDto ChangeAvatarTexture::ToGenericDto() const
+GenericDto ChangeAvatarTexture::SerializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
     dto.MeshName() = m_meshName;

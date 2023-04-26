@@ -4,7 +4,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 
-MeshPrimitivePolicy::MeshPrimitivePolicy() : RenderablePrimitivePolicy()
+MeshPrimitivePolicy::MeshPrimitivePolicy() : RenderablePrimitivePolicy(), m_geometryFactoryDesc(GeometryData::TYPE_RTTI.GetName())
 {
 
 }

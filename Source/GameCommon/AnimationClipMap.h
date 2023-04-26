@@ -40,7 +40,7 @@ namespace Enigma::GameCommon
         AnimationClipMap(const Engine::GenericDto& o);
         ~AnimationClipMap() = default;
 
-        Engine::GenericDto ToGenericDto() const;
+        Engine::GenericDto SerializeDto() const;
 
         std::optional<AnimClip> FindAnimationClip(const std::string& name);
         unsigned GetSize() const { return static_cast<unsigned int>(m_animClips.size()); };

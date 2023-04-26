@@ -16,6 +16,7 @@
 #include "GameCommon/AnimatedPawnDto.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameCommon/AnimatedPawn.h"
+#include <filesystem>
 
 namespace EnigmaViewer
 {
@@ -40,6 +41,9 @@ namespace EnigmaViewer
         void OnTimerElapsed();
 
         void LoadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
+
+        void SavePawnFile(const std::filesystem::path& filepath);
+        void LoadPawnFile(const std::filesystem::path& filepath);
 
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);

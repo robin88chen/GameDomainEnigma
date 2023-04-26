@@ -11,6 +11,7 @@ DEFINE_RTTI_OF_BASE(Renderer, MeshNode);
 MeshNode::MeshNode(const std::string& name)
 {
     m_name = name;
+    m_mxT_PosTransform = Matrix4::IDENTITY;
     m_mxLocalTransform = Matrix4::IDENTITY;
     m_mxRootRefTransform = Matrix4::IDENTITY;
     m_meshPrimitive = nullptr;
@@ -20,6 +21,7 @@ MeshNode::MeshNode(const std::string& name)
 MeshNode::MeshNode(const MeshNode& node)
 {
     m_name = node.m_name;
+    m_mxT_PosTransform = node.m_mxT_PosTransform;
     m_mxLocalTransform = node.m_mxLocalTransform;
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     m_hasSkinMeshPrimitive = node.m_hasSkinMeshPrimitive;
@@ -40,6 +42,7 @@ MeshNode::MeshNode(const MeshNode& node)
 MeshNode::MeshNode(MeshNode&& node)
 {
     m_name = std::move(node.m_name);
+    m_mxT_PosTransform = std::move(node.m_mxT_PosTransform);
     m_mxLocalTransform = std::move(node.m_mxLocalTransform);
     m_mxRootRefTransform = std::move(node.m_mxRootRefTransform);
     m_meshPrimitive = std::move(node.m_meshPrimitive);
@@ -55,6 +58,7 @@ MeshNode::~MeshNode()
 MeshNode& MeshNode::operator=(const MeshNode& node)
 {
     m_name = node.m_name;
+    m_mxT_PosTransform = node.m_mxT_PosTransform;
     m_mxLocalTransform = node.m_mxLocalTransform;
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     m_hasSkinMeshPrimitive = node.m_hasSkinMeshPrimitive;
@@ -76,6 +80,7 @@ MeshNode& MeshNode::operator=(const MeshNode& node)
 MeshNode& MeshNode::operator=(MeshNode&& node)
 {
     m_name = std::move(node.m_name);
+    m_mxT_PosTransform = std::move(node.m_mxT_PosTransform);
     m_mxLocalTransform = std::move(node.m_mxLocalTransform);
     m_mxRootRefTransform = std::move(node.m_mxRootRefTransform);
     m_meshPrimitive = std::move(node.m_meshPrimitive);
@@ -88,8 +93,8 @@ GenericDto MeshNode::SerializeDto()
 {
     MeshNodeDto dto;
     dto.Name() = m_name;
-    dto.LocalTransform() = m_mxLocalTransform;
-    dto.RootRefTransform() = m_mxRootRefTransform;
+    dto.LocalT_PosTransform() = m_mxT_PosTransform;
+    //dto.RootRefTransform() = m_mxRootRefTransform;
     if (m_meshPrimitive)
     {
         dto.TheMeshPrimitive() = m_meshPrimitive->SerializeDto();

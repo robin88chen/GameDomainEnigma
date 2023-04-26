@@ -26,6 +26,8 @@ namespace Enigma::GameCommon
         AnimatedPawn& operator=(const AnimatedPawn&) = delete;
         AnimatedPawn& operator=(AnimatedPawn&&) = delete;
 
+        virtual Engine::GenericDto SerializeDto() override;
+
         virtual void PlayAnimation(const std::string& name);
         virtual void StopAnimation();
 

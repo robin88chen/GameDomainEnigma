@@ -62,7 +62,7 @@ namespace EnigmaViewer
         void ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);
 
         void ParseAnimations(const pugi::xml_node& collada_root);
-        void ParseSingleAnimation(const pugi::xml_node& anim_node);
+        void ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node);
         void ParseAnimationSample(Enigma::Animators::AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node,
             const pugi::xml_node& anim_node);
         void ParseTimeValue(const pugi::xml_node& time_value_source);
@@ -92,7 +92,7 @@ namespace EnigmaViewer
 
         Enigma::Renderer::ModelPrimitiveDto m_model;
         Enigma::GameCommon::AnimatedPawnDto m_pawn;
-        Enigma::Animators::ModelAnimationAssetDto m_animationAsset;
+        Enigma::Engine::GenericDto m_animationAssetDto;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;
         std::vector<Enigma::MathLib::Vector3> m_normals;

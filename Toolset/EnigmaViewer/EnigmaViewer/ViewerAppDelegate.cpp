@@ -26,6 +26,7 @@
 #include "Animators/AnimatorCommands.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include <memory>
+#include <Gateways/DtoJsonGateway.h>
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -182,6 +183,27 @@ void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
 {
     CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
     CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
+}
+
+void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
+{
+    if (!m_pawn) return;
+    auto pawn_dto = m_pawn->SerializeDto();
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "w+b");
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+}
+
+void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
+{
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "rb");
+    size_t file_size = iFile->Size();
+
+    auto read_buf = iFile->Read(0, file_size);
+    FileSystem::Instance()->CloseFile(iFile);
+    auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", dtos));
 }
 
 void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)

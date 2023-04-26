@@ -18,7 +18,7 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
-MeshPrimitiveBuilder::MeshPrimitiveBuilder()
+MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.GetName())
 {
     m_onGeometryDataBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryDataBuilt(e); });
     EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
@@ -68,6 +68,7 @@ void MeshPrimitiveBuilder::BuildMeshPrimitive(const Frameworks::Ruid& ruid, cons
         m_builtPrimitive = std::make_shared<SkinMeshPrimitive>(m_policy->Name());
     }
 
+    m_originalGeometryDesc = m_policy->GeometryFactoryDesc();
     m_builtGeometry = nullptr;
     m_builtRenderBuffer = nullptr;
     m_builtEffects.clear();
@@ -83,6 +84,7 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if ((m_policy) && (ev->GetName() != m_policy->GeometryPolicy().Name())) return;
     m_builtGeometry = ev->GetGeometryData();
+    m_builtGeometry->TheFactoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
     buffer.m_renderBufferName = buffer.m_signature.GetName();

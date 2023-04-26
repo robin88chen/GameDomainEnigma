@@ -31,6 +31,8 @@ namespace Enigma::SceneGraph
         Pawn& operator=(const Pawn&) = delete;
         Pawn& operator=(Pawn&&) = delete;
 
+        virtual Engine::GenericDto SerializeDto() override;
+
         /** on cull visible, insert this object to culler */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
         virtual bool CanVisited() override { return true; };
@@ -54,6 +56,9 @@ namespace Enigma::SceneGraph
 
         /** enum animator list deep, including geometry's animator */
         virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+
+    protected:
+        PawnDto SerializePawnDto();
 
     protected:
         Engine::PrimitivePtr m_primitive;

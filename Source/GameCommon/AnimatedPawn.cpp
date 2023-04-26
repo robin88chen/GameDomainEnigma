@@ -32,6 +32,17 @@ AnimatedPawn::~AnimatedPawn()
     m_avatarRecipeList.clear();
 }
 
+GenericDto AnimatedPawn::SerializeDto()
+{
+    AnimatedPawnDto dto(SerializePawnDto());
+    dto.TheAnimationClipMapDto() = m_animationClipMap.SerializeDto();
+    for (auto& avatar_recipe : m_avatarRecipeList)
+    {
+        dto.AvatarRecipeDtos().push_back(avatar_recipe->SerializeDto());
+    }
+    return dto.ToGenericDto();
+}
+
 void AnimatedPawn::PlayAnimation(const std::string& name)
 {
     if (m_animationClipMap.GetAnimationClipMap().empty()) return;

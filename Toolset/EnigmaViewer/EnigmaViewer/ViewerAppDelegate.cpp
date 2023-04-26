@@ -197,6 +197,11 @@ void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
 
 void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
 {
+    if (m_pawn)
+    {
+        m_pawn->DetachFromParent();
+        m_pawn = nullptr;
+    }
     IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "rb");
     size_t file_size = iFile->Size();
 

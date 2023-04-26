@@ -35,13 +35,12 @@ using namespace Enigma::Renderer;
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
 SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
 
     m_needTick = false;
-    m_builder = menew SceneGraphBuilder(this, dto_deserializer, effect_deserializer);
+    m_builder = menew SceneGraphBuilder(this, dto_deserializer);
 }
 
 SceneGraphRepository::~SceneGraphRepository()
@@ -154,51 +153,6 @@ std::shared_ptr<Node> SceneGraphRepository::CreateNode(const std::string& name, 
     return node;
 }
 
-std::shared_ptr<Node> SceneGraphRepository::CreateNode(const NodeDto& dto)
-{
-    assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<Node>(dto);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(dto.Name(), node);
-    return node;
-}
-
-std::shared_ptr<Node> SceneGraphRepository::CreateLazyNode(const LazyNodeDto& dto)
-{
-    assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<LazyNode>(dto);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(dto.Name(), node);
-    return node;
-}
-
-std::shared_ptr<Node> SceneGraphRepository::CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto)
-{
-    assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<VisibilityManagedNode>(dto);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(dto.Name(), node);
-    return node;
-}
-
-std::shared_ptr<Node> SceneGraphRepository::CreatePortalZoneNode(const PortalZoneNodeDto& dto)
-{
-    assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<PortalZoneNode>(dto);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(dto.Name(), node);
-    return node;
-}
-
-std::shared_ptr<Node> SceneGraphRepository::CreatePortalManagementNode(const PortalManagementNodeDto& dto)
-{
-    assert(!HasNode(dto.Name()));
-    auto node = std::make_shared<PortalManagementNode>(dto);
-    std::lock_guard locker{ m_nodeMapLock };
-    m_nodes.insert_or_assign(dto.Name(), node);
-    return node;
-}
-
 bool SceneGraphRepository::HasNode(const std::string& name)
 {
     std::lock_guard locker{ m_nodeMapLock };
@@ -221,15 +175,6 @@ std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
     auto pawn = std::make_shared<Pawn>(name);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(name, pawn);
-    return pawn;
-}
-
-std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const PawnDto& dto)
-{
-    assert(!HasPawn(dto.Name()));
-    auto pawn = std::make_shared<Pawn>(dto);
-    std::lock_guard locker{ m_pawnMapLock };
-    m_pawns.insert_or_assign(dto.Name(), pawn);
     return pawn;
 }
 
@@ -259,16 +204,6 @@ std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name
     return light;
 }
 
-std::shared_ptr<Light> SceneGraphRepository::CreateLight(const LightDto& dto)
-{
-    assert(!HasLight(dto.Name()));
-    auto light = std::make_shared<Light>(dto);
-    std::lock_guard locker{ m_lightMapLock };
-    m_lights.insert_or_assign(dto.Name(), light);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
-    return light;
-}
-
 bool SceneGraphRepository::HasLight(const std::string& name)
 {
     std::lock_guard locker{ m_lightMapLock };
@@ -291,15 +226,6 @@ std::shared_ptr<Portal> SceneGraphRepository::CreatePortal(const std::string& na
     auto portal = std::make_shared<Portal>(name);
     std::lock_guard locker{ m_portalMapLock };
     m_portals.insert_or_assign(name, portal);
-    return portal;
-}
-
-std::shared_ptr<Portal> SceneGraphRepository::CreatePortal(const PortalDto& dto)
-{
-    assert(!HasPortal(dto.Name()));
-    auto portal = std::make_shared<Portal>(dto);
-    std::lock_guard locker{ m_portalMapLock };
-    m_portals.insert_or_assign(dto.Name(), portal);
     return portal;
 }
 
@@ -326,5 +252,44 @@ std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& n
     if (auto light = QueryLight(name)) return light;
     if (auto portal = QueryPortal(name)) return portal;
     return nullptr;
+}
+
+std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
+{
+    assert(spatial);
+    if (auto pawn = std::shared_ptr<Pawn>(dynamic_cast<Pawn*>(spatial)))
+    {
+        assert(!HasPawn(pawn->GetSpatialName()));
+        std::lock_guard locker{ m_pawnMapLock };
+        m_pawns.insert_or_assign(pawn->GetSpatialName(), pawn);
+        return pawn;
+    }
+    else if (auto node = std::shared_ptr<Node>(dynamic_cast<Node*>(spatial)))
+    {
+        assert(!HasNode(node->GetSpatialName()));
+        std::lock_guard locker{ m_nodeMapLock };
+        m_nodes.insert_or_assign(node->GetSpatialName(), node);
+        return node;
+    }
+    else if (auto portal = std::shared_ptr<Portal>(dynamic_cast<Portal*>(spatial)))
+    {
+        assert(!HasPortal(portal->GetSpatialName()));
+        std::lock_guard locker{ m_portalMapLock };
+        m_portals.insert_or_assign(portal->GetSpatialName(), portal);
+        return portal;
+    }
+    else if (auto light = std::shared_ptr<Light>(dynamic_cast<Light*>(spatial)))
+    {
+        assert(!HasLight(light->GetSpatialName()));
+        std::lock_guard locker{ m_lightMapLock };
+        m_lights.insert_or_assign(light->GetSpatialName(), light);
+        Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
+        return light;
+    }
+    else
+    {
+        assert(false);
+        return nullptr;
+    }
 }
 

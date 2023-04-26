@@ -22,9 +22,10 @@ GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData
     m_geometryBound = BoundingVolume{Box3::UNIT_BOX};
 }
 
-GeometryData::GeometryData(const GeometryDataDto& dto) : m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
+GeometryData::GeometryData(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
-    m_name = dto.Name();
+    m_name = o.GetName();
+    GeometryDataDto dto = GeometryDataDto::FromGenericDto(o);
     CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),
                          dto.IndexCapacity(), dto.IndexUsedCount());
     for (unsigned i = 0; i < dto.Segments().size(); i += 4)

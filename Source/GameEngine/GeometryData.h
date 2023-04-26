@@ -32,7 +32,7 @@ namespace Enigma::Engine
         DECLARE_EN_RTTI_OF_BASE;
     public:
         GeometryData(const std::string& name);
-        GeometryData(const GeometryDataDto& dto);
+        GeometryData(const GenericDto& dto);
         GeometryData(const GeometryData&) = delete;
         GeometryData(GeometryData&&) = delete;
         virtual ~GeometryData();

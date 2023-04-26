@@ -50,6 +50,10 @@ namespace Enigma::Engine
         void AddRtti(const FactoryDesc& rtti);
         FactoryDesc GetRtti() const;
 
+        /** add Name */
+        void AddName(const std::string& name);
+        std::string GetName() const;
+
         /** Remove key value data */
         void Remove(const std::string& attribute);
 

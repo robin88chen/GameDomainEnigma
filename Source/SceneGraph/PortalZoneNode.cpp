@@ -16,7 +16,7 @@ PortalZoneNode::PortalZoneNode(const std::string& name) : LazyNode(name)
     m_hasTraversed = false;
 }
 
-PortalZoneNode::PortalZoneNode(const PortalZoneNodeDto& dto) : LazyNode(dynamic_cast<const LazyNodeDto&>(dto))
+PortalZoneNode::PortalZoneNode(const GenericDto& dto) : LazyNode(dto)
 {
     m_hasTraversed = false;
 }

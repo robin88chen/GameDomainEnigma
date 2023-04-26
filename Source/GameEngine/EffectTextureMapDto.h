@@ -38,7 +38,7 @@ namespace Enigma::Engine
         std::optional<unsigned>& ArrayIndex() { return m_arrayIndex; }
 
         static TextureMappingDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        GenericDto ToGenericDto() const;
 
         EffectTextureMapPolicy::TextureTuplePolicy ConvertToPolicy();
 

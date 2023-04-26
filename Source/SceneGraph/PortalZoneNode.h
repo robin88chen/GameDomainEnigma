@@ -13,14 +13,12 @@
 
 namespace Enigma::SceneGraph
 {
-    class PortalZoneNodeDto;
-
     class PortalZoneNode : public LazyNode
     {
         DECLARE_EN_RTTI;
     public:
         PortalZoneNode(const std::string& name);
-        PortalZoneNode(const PortalZoneNodeDto& dto);
+        PortalZoneNode(const Engine::GenericDto& dto);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;
         PortalZoneNode& operator=(const PortalZoneNode&) = delete;

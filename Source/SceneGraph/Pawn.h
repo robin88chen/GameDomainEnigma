@@ -11,7 +11,9 @@
 #include "Spatial.h"
 #include "GameEngine/IRenderer.h"
 #include "GameEngine/Primitive.h"
+#include "GameEngine/Animator.h"
 #include <string>
+#include <list>
 
 namespace Enigma::SceneGraph
 {
@@ -22,12 +24,14 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         Pawn(const std::string& name);
-        Pawn(const PawnDto& dto);
+        Pawn(const Engine::GenericDto& dto);
         Pawn(const Pawn&) = delete;
         Pawn(Pawn&&) = delete;
         virtual ~Pawn() override;
         Pawn& operator=(const Pawn&) = delete;
         Pawn& operator=(Pawn&&) = delete;
+
+        virtual Engine::GenericDto SerializeDto() override;
 
         /** on cull visible, insert this object to culler */
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
@@ -51,8 +55,10 @@ namespace Enigma::SceneGraph
         virtual error _UpdateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         /** enum animator list deep, including geometry's animator */
-        //todo : animators
-        //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
+        virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+
+    protected:
+        PawnDto SerializePawnDto();
 
     protected:
         Engine::PrimitivePtr m_primitive;

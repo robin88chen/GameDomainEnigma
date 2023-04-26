@@ -1,5 +1,4 @@
 ﻿#include "TextureLoader.h"
-#include "TextureEvents.h"
 #include "EngineErrors.h"
 #include "GraphicKernel/GraphicCommands.h"
 #include "GraphicKernel/GraphicEvents.h"
@@ -40,7 +39,7 @@ void TextureLoader::LoadTexture(const TexturePolicy& policy)
     m_policy = policy;
     if (m_hostRepository->HasTexture(m_policy.m_name))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<TextureLoader::TextureLoaded>(
+        Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(
             m_policy.m_name, m_hostRepository->QueryTexture(m_policy.m_name)));
     }
     else
@@ -82,7 +81,7 @@ void TextureLoader::OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
     }
     auto tex = std::make_shared<Texture>(m_policy.m_name, dev_tex);
     tex->TheFactoryDesc().ClaimAsResourceAsset(m_policy.m_name, m_policy.m_filename, m_policy.m_pathId);
-    Frameworks::EventPublisher::Post(std::make_shared<TextureLoader::TextureLoaded>(m_policy.m_name, tex));
+    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(m_policy.m_name, tex));
 }
 
 void TextureLoader::OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e)

@@ -26,8 +26,9 @@ Portal::Portal(const std::string& name) : Spatial(name)
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }
 
-Portal::Portal(const PortalDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+Portal::Portal(const GenericDto& o) : Spatial(o)
 {
+    PortalDto dto = PortalDto::FromGenericDto(o);
     m_isOpen = dto.IsOpen();
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }
@@ -44,9 +45,10 @@ Enigma::Engine::GenericDto Portal::SerializeDto()
     return dto.ToGenericDto();
 }
 
-void Portal::ResolveFactoryLinkage(const std::string& adjacent_node_name, Engine::FactoryLinkageResolver<Spatial>& resolver)
+void Portal::ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    resolver.TryResolveLinkage(adjacent_node_name, [lifetime = weak_from_this()](auto sp)
+    PortalDto portalDto = PortalDto::FromGenericDto(dto);
+    resolver.TryResolveLinkage(portalDto.AdjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
                 std::dynamic_pointer_cast<Portal, Spatial>(lifetime.lock())->SetAdjacentZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));

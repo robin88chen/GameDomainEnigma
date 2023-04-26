@@ -9,7 +9,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     _In_ LPTSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    meInitMemoryCheck();
+    //meInitMemoryCheck();
     //_CrtSetBreakAlloc(157);
     SceneGraphPawnTest* app = menew SceneGraphPawnTest("scene graph pawn test");
     app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);

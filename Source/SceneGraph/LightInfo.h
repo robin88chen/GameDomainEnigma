@@ -10,6 +10,7 @@
 
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector3.h"
+#include "GameEngine/GenericDto.h"
 
 namespace Enigma::SceneGraph
 {
@@ -33,7 +34,7 @@ namespace Enigma::SceneGraph
     public:
         LightInfo();
         LightInfo(LightType type);
-        LightInfo(const LightInfoDto& dto);
+        LightInfo(const Engine::GenericDto& dto);
         LightInfo(const LightInfo&) = default;
         LightInfo(LightInfo&&) = default;
         virtual ~LightInfo() = default;

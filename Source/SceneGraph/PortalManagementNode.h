@@ -17,14 +17,13 @@
 namespace Enigma::SceneGraph
 {
     class PortalZoneNode;
-    class PortalManagementNodeDto;
 
     class PortalManagementNode : public Node
     {
         DECLARE_EN_RTTI;
     public:
         PortalManagementNode(const std::string& name);
-        PortalManagementNode(const PortalManagementNodeDto& dto);
+        PortalManagementNode(const Engine::GenericDto& dto);
         PortalManagementNode(const PortalManagementNode&) = delete;
         PortalManagementNode(PortalManagementNode&&) = delete;
         PortalManagementNode& operator=(const PortalManagementNode&) = delete;
@@ -32,7 +31,7 @@ namespace Enigma::SceneGraph
         virtual ~PortalManagementNode() override;
 
         virtual Engine::GenericDto SerializeDto() override;
-        void ResolveFactoryLinkage(const std::string& outside_node_name, Engine::FactoryLinkageResolver<Spatial>& resolver);
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void AttachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
 

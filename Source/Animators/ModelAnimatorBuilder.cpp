@@ -16,7 +16,7 @@ using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 
-ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host)
+ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(AnimationAsset::TYPE_RTTI.GetName())
 {
     m_repository = host;
     m_builtAnimator = nullptr;
@@ -46,6 +46,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     m_assetName = "";
     m_builtAnimator = std::make_shared<ModelPrimitiveAnimator>();
     m_builtAnimator->SetControlledModel(m_policy->ControlledPrimitive());
+    m_originalAssetDesc = policy->AssetFactoryDesc();
     if (m_policy->GetAssetPolicy())
     {
         m_assetName = m_policy->GetAssetPolicy()->Name();
@@ -102,6 +103,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
         EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->GetRuid(), ErrorCode::dynamicCastFail));
         return;
     }
+    model_anim->TheFactoryDesc() = m_originalAssetDesc;
     m_builtAnimator->LinkAnimationAsset(model_anim);
     if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
     EventPublisher::Post(std::make_shared<ModelAnimatorBuilt>(m_policy->GetRuid(), m_builtAnimator));

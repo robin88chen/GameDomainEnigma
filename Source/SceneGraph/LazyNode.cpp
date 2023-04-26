@@ -11,7 +11,7 @@ LazyNode::LazyNode(const std::string& name) : Node(name)
     m_factoryDesc = Engine::FactoryDesc(LazyNode::TYPE_RTTI.GetName());
 }
 
-LazyNode::LazyNode(const LazyNodeDto& dto) : Node(dynamic_cast<const NodeDto&>(dto))
+LazyNode::LazyNode(const GenericDto& o) : Node(o)
 {
 }
 

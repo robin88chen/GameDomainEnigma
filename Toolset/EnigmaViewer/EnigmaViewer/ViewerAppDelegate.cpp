@@ -23,10 +23,10 @@
 #include "SceneGraph/Pawn.h"
 #include "GameCommon/GameSceneService.h"
 #include "ViewerCommands.h"
-#include "Animators/AnimatorEvents.h"
 #include "Animators/AnimatorCommands.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include <memory>
+#include <Gateways/DtoJsonGateway.h>
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -96,7 +96,7 @@ void ViewerAppDelegate::Finalize()
     {
         Logger::CloseLoggerFile();
     }
-    delete FileSystem::FileSystem::Instance();
+    delete FileSystem::Instance();
 
     CoUninitialize();
 }
@@ -119,18 +119,19 @@ void ViewerAppDelegate::InstallEngine()
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto animator_policy = std::make_shared<Enigma::Animators::AnimatorInstallingPolicy>();
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
+        std::make_shared<JsonFileDtoDeserializer>());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDtoMaker::MakeCameraDto());
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
+    auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy });
+        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }
@@ -141,6 +142,8 @@ void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void ViewerAppDelegate::ShutdownEngine()
 {
+    m_pawn = nullptr;
+
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
@@ -176,27 +179,55 @@ void ViewerAppDelegate::OnTimerElapsed()
     RenderFrame();
 }
 
-void ViewerAppDelegate::LoadPawn(const PawnDto& pawn_dto)
+void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
 {
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
+    CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
 }
 
-void ViewerAppDelegate::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
+{
+    if (!m_pawn) return;
+    auto pawn_dto = m_pawn->SerializeDto();
+    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "w+b");
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
+}
+
+void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
+{
+    if (m_pawn)
+    {
+        m_pawn->DetachFromParent();
+        m_pawn = nullptr;
+    }
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "rb");
+    size_t file_size = iFile->Size();
+
+    auto read_buf = iFile->Read(0, file_size);
+    FileSystem::Instance()->CloseFile(iFile);
+    auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", dtos));
+}
+
+void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto pawn = ev->GetPawn();
-    if (!pawn) return;
+    m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
+    if (!m_pawn) return;
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-    error er = scene_service->GetSceneRoot()->AttachChild(pawn, mx);
-    auto prim = pawn->GetPrimitive();
+    error er = scene_service->GetSceneRoot()->AttachChild(m_pawn, mx);
+    auto prim = m_pawn->GetPrimitive();
     if (prim)
     {
         auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+        if (!model) return;
+        CommandBus::Post(std::make_shared<RefreshModelNodeTree>(model));
         if (auto ani = model->GetAnimator())
         {
             ani->Reset();

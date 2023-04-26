@@ -17,13 +17,28 @@ Pawn::Pawn(const std::string& name) : Spatial(name)
     RemoveSpatialFlag(Spatial_Unlit);
 }
 
-Pawn::Pawn(const PawnDto& dto) : Spatial(dynamic_cast<const SpatialDto&>(dto))
+Pawn::Pawn(const Engine::GenericDto& dto) : Spatial(dto)
 {
 }
 
 Pawn::~Pawn()
 {
     m_primitive = nullptr;
+}
+
+Enigma::Engine::GenericDto Pawn::SerializeDto()
+{
+    return SerializePawnDto().ToGenericDto();
+}
+
+PawnDto Pawn::SerializePawnDto()
+{
+    PawnDto dto(SerializeSpatialDto());
+    if (m_primitive)
+    {
+        dto.ThePrimitive() = m_primitive->SerializeDto();
+    }
+    return dto;
 }
 
 error Pawn::OnCullingVisible(Culler* culler, bool noCull)
@@ -88,4 +103,9 @@ error Pawn::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
     error er = Spatial::_UpdateWorldData(mxParentWorld);
     if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
     return er;
+}
+
+void Pawn::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+{
+    if (m_primitive) m_primitive->EnumAnimatorListDeep(resultList);
 }

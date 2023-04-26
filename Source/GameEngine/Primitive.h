@@ -15,6 +15,7 @@
 #include <memory>
 #include <bitset>
 #include <system_error>
+#include <list>
 
 namespace Enigma::Engine
 {
@@ -66,6 +67,10 @@ namespace Enigma::Engine
 
         virtual void AttachAnimator(const std::shared_ptr<Animator>& animator) { m_animator = animator; }
         virtual const std::shared_ptr<Animator>& GetAnimator() { return m_animator; }
+
+        /** enum animator list deep, including geometry's animator */
+        virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList);
+
         /** add primitive flag */
         void AddPrimitiveFlag(PrimitiveFlags flag)
         {

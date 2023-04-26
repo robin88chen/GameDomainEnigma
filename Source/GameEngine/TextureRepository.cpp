@@ -1,10 +1,11 @@
 ﻿#include "TextureRepository.h"
 #include "TextureLoader.h"
 #include "Platforms/MemoryMacro.h"
-#include "TextureCommands.h"
-#include "TextureEvents.h"
+#include "TextureRequests.h"
+#include "TextureResponses.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/CommandBus.h"
+#include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
 #include "EngineErrors.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -32,11 +33,11 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     Frameworks::EventPublisher::Subscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onLoadTextureFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnLoadTextureFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    Frameworks::EventPublisher::Subscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
 
     m_doLoadingTexture =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Engine::LoadTexture), m_doLoadingTexture);
+        std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
+    Frameworks::RequestBus::Subscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -44,15 +45,17 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
 Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
 {
     if (m_isCurrentLoading) return Frameworks::ServiceResult::Pendding;
-    std::lock_guard locker{ m_policiesLock };
-    if (m_policies.empty())
+    std::lock_guard locker{ m_requestsLock };
+    if (m_requests.empty())
     {
         m_needTick = false;
         return Frameworks::ServiceResult::Pendding;
     }
     assert(m_loader);
-    m_loader->LoadTexture(m_policies.front());
-    m_policies.pop();
+    auto r = m_requests.front();
+    m_currentRequiestRuid = r->GetRuid();
+    m_loader->LoadTexture(r->GetPolicy());
+    m_requests.pop();
     m_isCurrentLoading = true;
     return Frameworks::ServiceResult::Pendding;
 }
@@ -61,10 +64,10 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
     m_onLoadTextureFailed = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Engine::LoadTexture), m_doLoadingTexture);
+    Frameworks::RequestBus::Unsubscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
     m_doLoadingTexture = nullptr;
     return Frameworks::ServiceResult::Complete;
 }
@@ -85,13 +88,13 @@ std::shared_ptr<Texture> TextureRepository::QueryTexture(const std::string& name
     return it->second.lock();
 }
 
-error TextureRepository::LoadTexture(const TexturePolicy& policy)
+/*error TextureRepository::LoadTexture(const TexturePolicy& policy)
 {
-    std::lock_guard locker{ m_policiesLock };
+    std::lock_guard locker{ m_requestsLock };
     m_policies.push(policy);
     m_needTick = true;
     return ErrorCode::ok;
-}
+}*/
 
 void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
@@ -102,24 +105,27 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_textureMapLock };
     m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
     m_isCurrentLoading = false;
-    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(ev->GetTextureName(), ev->GetTexture()));
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
 }
 
 void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<LoadTextureFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<TextureLoader::LoadTextureFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n",
         ev->GetTextureName().c_str(), ev->GetError().message().c_str());
     m_isCurrentLoading = false;
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
 }
 
-void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)
+void TextureRepository::DoLoadingTexture(const Frameworks::IRequestPtr& r)
 {
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Engine::LoadTexture, Frameworks::ICommand>(c);
-    if (!cmd) return;
-    LoadTexture(cmd->GetPolicy());
+    if (!r) return;
+    auto req = std::dynamic_pointer_cast<RequestLoadTexture, Frameworks::IRequest>(r);
+    if (!req) return;
+    std::lock_guard locker{ m_requestsLock };
+    m_requests.push(req);
+    m_needTick = true;
 }

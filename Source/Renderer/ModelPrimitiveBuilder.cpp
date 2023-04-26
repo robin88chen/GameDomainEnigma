@@ -55,8 +55,9 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
     {
         MeshNodeDto node_dto = MeshNodeDto::FromGenericDto(dto);
         MeshNode node(node_dto.Name());
-        node.SetLocalTransform(node_dto.LocalTransform());
-        node.SetRootRefTransform(node_dto.RootRefTransform());
+        node.SetT_PosTransform(node_dto.LocalT_PosTransform());
+        node.SetLocalTransform(node_dto.LocalT_PosTransform());
+        //node.SetRootRefTransform(node_dto.RootRefTransform());
         if (node_dto.ParentIndexInArray())
         {
             node.SetParentIndexInArray(node_dto.ParentIndexInArray().value());
@@ -66,12 +67,12 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
             if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
             {
                 PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
             else if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
             {
                 PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer(), m_policy->TheEffectDeserializer()));
+                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);

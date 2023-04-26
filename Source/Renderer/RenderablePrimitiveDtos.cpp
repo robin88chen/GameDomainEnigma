@@ -22,7 +22,7 @@ static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
 static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
-static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
+static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
 static std::string TOKEN_ROOT_REF_TRANSFORM = "RootRefTransform";
 static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
@@ -74,28 +74,28 @@ GenericDto MeshPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     auto policy = std::make_shared<MeshPrimitivePolicy>();
     policy->Name() = m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->TheEffectDeserializer() = effect_deserializer;
     if (m_geometry)
     {
         policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value());
+        policy->GeometryFactoryDesc() = m_geometry.value().GetRtti();
     }
     else
     {
         policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometryFactory.GetResourceFilename(), deserializer);
+        policy->GeometryFactoryDesc() = m_geometryFactory;
     }
     for (auto& eff : m_effects)
     {
-        policy->EffectPolicies().emplace_back(EffectMaterialDto::FromGenericDto(eff).ConvertToPolicy(effect_deserializer));
+        policy->EffectDtos().emplace_back(EffectMaterialDto::FromGenericDto(eff));
     }
     for (auto& tex : m_textureMaps)
     {
-        policy->TexturePolicies().emplace_back(EffectTextureMapDto::FromGenericDto(tex).ConvertToPolicy());
+        policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
     }
     return policy;
 }
@@ -116,10 +116,9 @@ GenericDto SkinMeshPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer, effect_deserializer);
+    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer);
     return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
@@ -127,8 +126,8 @@ MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     MeshNodeDto node;
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) node.Name() = v.value();
-    if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_TRANSFORM)) node.LocalTransform() = v.value();
-    if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
+    if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_T_POS_TRANSFORM)) node.LocalT_PosTransform() = v.value();
+    //if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MESH_PRIMITIVE_OBJECT)) node.TheMeshPrimitive() = v.value();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_PARENT_NODE_INDEX)) node.ParentIndexInArray() = v.value();
     return node;
@@ -139,8 +138,8 @@ GenericDto MeshNodeDto::ToGenericDto()
     GenericDto dto;
     dto.AddRtti(FactoryDesc(MeshNode::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NAME, m_name);
-    dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
-    dto.AddOrUpdate(TOKEN_ROOT_REF_TRANSFORM, m_rootRefTransform);
+    dto.AddOrUpdate(TOKEN_LOCAL_T_POS_TRANSFORM, m_localT_PosTransform);
+    //dto.AddOrUpdate(TOKEN_ROOT_REF_TRANSFORM, m_rootRefTransform);
     if (m_meshPrimitive)
     {
         dto.AddOrUpdate(TOKEN_MESH_PRIMITIVE_OBJECT, m_meshPrimitive.value());
@@ -186,13 +185,11 @@ GenericDto ModelPrimitiveDto::ToGenericDto()
     return dto;
 }
 
-std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
+std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     auto policy = std::make_shared<ModelPrimitivePolicy>();
     policy->Name() = m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->TheEffectDeserializer() = effect_deserializer;
     policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(m_nodeTreeDto);
     if ((m_animatorDto) && (m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
     {

@@ -85,12 +85,12 @@ void SceneGraphPawnTest::InstallEngine()
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<Enigma::Engine::DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<Enigma::Engine::EngineInstallingPolicy>();
+    auto engine_policy = std::make_shared<Enigma::Engine::EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
     auto render_sys_policy = std::make_shared<Enigma::Renderer::RenderSystemInstallingPolicy>();
     auto animator_policy = std::make_shared<Enigma::Animators::AnimatorInstallingPolicy>();
     auto renderer_policy = std::make_shared<Enigma::Renderer::DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     auto scene_graph_policy = std::make_shared<Enigma::SceneGraph::SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<JsonFileEffectProfileDeserializer>());
+        std::make_shared<JsonFileDtoDeserializer>());
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, renderer_policy, scene_graph_policy });
     CubeGeometryMaker::MakeSavedCube("test_geometry");
     auto dtos = SceneGraphMaker::MakeSceneGraphDtos();

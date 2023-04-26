@@ -12,14 +12,20 @@
 
 namespace Enigma::Engine
 {
+    class IEffectCompilingProfileDeserializer;
+    
     class EngineInstallingPolicy : public InstallingPolicy
     {
     public:
-        EngineInstallingPolicy() = default;
+        EngineInstallingPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer)
+            : m_effectDeserializer(effect_deserializer) {};
         virtual ~EngineInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+
+    protected:
+        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
     };
 }
 #endif // _ENGINE_INSTALLING_POLICY_H

@@ -29,6 +29,17 @@ namespace Enigma::Engine
             std::string m_name;
             TexturePtr m_texture;
         };
+        class LoadTextureFailed : public Frameworks::IEvent
+        {
+        public:
+            LoadTextureFailed(const std::string& name, std::error_code er) :
+                m_name(name), m_error(er) {};
+            const std::string& GetTextureName() const { return m_name; }
+            std::error_code GetError() const { return m_error; }
+        private:
+            std::string m_name;
+            std::error_code m_error;
+        };
     public:
         TextureLoader(TextureRepository* host);
         TextureLoader(const TextureLoader&) = delete;

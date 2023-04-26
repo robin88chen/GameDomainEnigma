@@ -19,9 +19,8 @@ namespace Enigma::SceneGraph
     class SceneGraphInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer)
-                : m_dtoDeserializer(dto_deserializer), m_effectDeserializer(effect_deserializer) {}
+        SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
+                : m_dtoDeserializer(dto_deserializer) {}
         virtual ~SceneGraphInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
@@ -29,7 +28,6 @@ namespace Enigma::SceneGraph
 
     protected:
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
     };
 }
 

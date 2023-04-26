@@ -9,13 +9,9 @@
 #define SCENE_GRAPH_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
-#include "Frameworks/CommandSubscriber.h"
-#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
-#include "SpatialLinkageResolver.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include <memory>
 #include <string>
@@ -47,8 +43,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer);
+        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
         virtual ~SceneGraphRepository() override;
@@ -70,30 +65,23 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
-        std::shared_ptr<Node> CreateNode(const NodeDto& dto);
-        std::shared_ptr<Node> CreateLazyNode(const LazyNodeDto& dto);
-        std::shared_ptr<Node> CreateVisibilityManagedNode(const VisibilityManagedNodeDto& dto);
-        std::shared_ptr<Node> CreatePortalZoneNode(const PortalZoneNodeDto& dto);
-        std::shared_ptr<Node> CreatePortalManagementNode(const PortalManagementNodeDto& dto);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
-        std::shared_ptr<Pawn> CreatePawn(const PawnDto& dto);
         bool HasPawn(const std::string& name);
         std::shared_ptr<Pawn> QueryPawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
-        std::shared_ptr<Light> CreateLight(const LightDto& dto);
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 
         std::shared_ptr<Portal> CreatePortal(const std::string& name);
-        std::shared_ptr<Portal> CreatePortal(const PortalDto& dto);
         bool HasPortal(const std::string& name);
         std::shared_ptr<Portal> QueryPortal(const std::string& name);
 
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
+        std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
     private:
         GraphicCoordSys m_handSystem;

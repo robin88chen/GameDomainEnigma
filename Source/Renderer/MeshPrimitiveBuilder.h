@@ -13,6 +13,7 @@
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/ResponseSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
 #include "MeshPrimitive.h"
 
@@ -65,10 +66,9 @@ namespace Enigma::Renderer
         void OnBuildGeometryDataFailed(const Frameworks::IEventPtr& e);
         void OnRenderBufferBuilt(const Frameworks::IEventPtr& e);
         void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
-        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void OnTextureLoaded(const Frameworks::IEventPtr& e);
-        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
+
+        void OnCompileEffectMaterialResponse(const Frameworks::IResponsePtr& e);
+        void OnLoadTextureResponse(const Frameworks::IResponsePtr& e);
 
         void TryCompletingMesh();
 
@@ -81,6 +81,7 @@ namespace Enigma::Renderer
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Engine::GeometryData> m_builtGeometry;
+        Engine::FactoryDesc m_originalGeometryDesc;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
         std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
         std::vector<Engine::EffectTextureMap> m_builtTextures;
@@ -89,10 +90,9 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBuildGeometryDataFailed;
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
+
+        Frameworks::ResponseSubscriberPtr m_onCompileEffectMaterialResponse;
+        Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
     };
 }
 

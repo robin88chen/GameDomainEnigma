@@ -20,7 +20,7 @@ TextureMappingDto TextureMappingDto::FromGenericDto(const GenericDto& dto)
     return tex;
 }
 
-GenericDto TextureMappingDto::ToGenericDto()
+GenericDto TextureMappingDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddOrUpdate(TOKEN_TEXTURE_NAME, m_textureName);

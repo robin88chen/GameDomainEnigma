@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TextureRepository.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -14,8 +14,9 @@
 #include "TextureLoadingPolicies.h"
 #include "Frameworks/Command.h"
 #include "Frameworks/Event.h"
-#include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/RequestSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "TextureRequests.h"
 #include <queue>
 
 namespace Enigma::Engine
@@ -39,7 +40,7 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult OnTick() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        error LoadTexture(const TexturePolicy& policy);
+        //error LoadTexture(const TexturePolicy& policy);
 
         bool HasTexture(const std::string& name);
         std::shared_ptr<Texture> QueryTexture(const std::string& name);
@@ -47,12 +48,12 @@ namespace Enigma::Engine
     private:
         void OnTextureLoaded(const Frameworks::IEventPtr& e);
         void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
-        void DoLoadingTexture(const Frameworks::ICommandPtr& c);
+        void DoLoadingTexture(const Frameworks::IRequestPtr& r);
 
     private:
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
-        Frameworks::CommandSubscriberPtr m_doLoadingTexture;
+        Frameworks::RequestSubscriberPtr m_doLoadingTexture;
 
         using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
@@ -60,9 +61,10 @@ namespace Enigma::Engine
         std::recursive_mutex m_textureMapLock;
 
         TextureLoader* m_loader;
-        std::queue<TexturePolicy> m_policies;
+        std::queue<std::shared_ptr<RequestLoadTexture>> m_requests;
+        Frameworks::Ruid m_currentRequiestRuid;
         bool m_isCurrentLoading;
-        std::mutex m_policiesLock;
+        std::mutex m_requestsLock;
     };
 }
 

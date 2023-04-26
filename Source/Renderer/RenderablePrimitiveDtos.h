@@ -50,8 +50,7 @@ namespace Enigma::Renderer
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
-        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         std::string m_name;
@@ -75,8 +74,7 @@ namespace Enigma::Renderer
 
         static SkinMeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
-        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 
     class MeshNodeDto
@@ -91,10 +89,10 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
-        [[nodiscard]] const MathLib::Matrix4& LocalTransform() const { return m_localTransform; }
-        MathLib::Matrix4& LocalTransform() { return m_localTransform; }
-        [[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
-        MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
+        [[nodiscard]] const MathLib::Matrix4& LocalT_PosTransform() const { return m_localT_PosTransform; }
+        MathLib::Matrix4& LocalT_PosTransform() { return m_localT_PosTransform; }
+        //[[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
+        //MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& TheMeshPrimitive() const { return m_meshPrimitive; }
         std::optional<Engine::GenericDto>& TheMeshPrimitive() { return m_meshPrimitive; }
         [[nodiscard]] std::optional<unsigned> ParentIndexInArray() const { return m_parentIndexInArray; }
@@ -105,8 +103,8 @@ namespace Enigma::Renderer
 
     protected:
         std::string m_name;
-        MathLib::Matrix4 m_localTransform;
-        MathLib::Matrix4 m_rootRefTransform;
+        MathLib::Matrix4 m_localT_PosTransform;
+        //MathLib::Matrix4 m_rootRefTransform;
         std::optional<Engine::GenericDto> m_meshPrimitive;
         std::optional<unsigned> m_parentIndexInArray;
     };
@@ -151,8 +149,7 @@ namespace Enigma::Renderer
         static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
-        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&,
-            const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>&);
+        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         std::string m_name;

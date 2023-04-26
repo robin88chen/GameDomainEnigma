@@ -13,9 +13,10 @@
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
 #include "GameCommon/SceneRendererService.h"
-#include "SceneGraph/SceneGraphDtos.h"
+#include "GameCommon/AnimatedPawnDto.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneGraph/Pawn.h"
+#include "GameCommon/AnimatedPawn.h"
+#include <filesystem>
 
 namespace EnigmaViewer
 {
@@ -39,7 +40,10 @@ namespace EnigmaViewer
 
         void OnTimerElapsed();
 
-        void LoadPawn(const Enigma::SceneGraph::PawnDto& pawn_dto);
+        void LoadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
+
+        void SavePawnFile(const std::filesystem::path& filepath);
+        void LoadPawnFile(const std::filesystem::path& filepath);
 
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
@@ -56,6 +60,8 @@ namespace EnigmaViewer
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+
+        std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
     };
 }
 

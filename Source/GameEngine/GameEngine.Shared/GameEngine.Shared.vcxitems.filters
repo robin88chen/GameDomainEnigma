@@ -4,12 +4,6 @@
     <Filter Include="Error Codes">
       <UniqueIdentifier>{b5084566-9087-4140-9244-72e7b8463804}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Commands">
-      <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{1ea8e655-aa8f-4eb5-b7f5-3f64f2b362b9}</UniqueIdentifier>
     </Filter>
@@ -79,6 +73,12 @@
     <Filter Include="Installing Policies">
       <UniqueIdentifier>{171f8bf3-2c18-4b14-845d-280a052fdb61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands &amp; Requests">
+      <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events &amp; Response">
+      <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -91,10 +91,10 @@
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h">
       <Filter>Shader</Filter>
@@ -123,9 +123,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
       <Filter>Effect Material\Effect Compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h">
       <Filter>Effect Material</Filter>
     </ClInclude>
@@ -145,10 +142,10 @@
       <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h">
       <Filter>Textures</Filter>
@@ -161,12 +158,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h">
       <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h">
       <Filter>Bounding Volume</Filter>
@@ -211,7 +202,7 @@
       <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
       <Filter>Geometry Repository</Filter>
@@ -232,13 +223,13 @@
       <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
       <Filter>Effect Material\Effect Compiler</Filter>
@@ -248,9 +239,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h">
       <Filter>Effect Material\Policy</Filter>
@@ -275,6 +263,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectRequests.h">
+      <Filter>Commands &amp; Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectResponses.h">
+      <Filter>Events &amp; Response</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">
+      <Filter>Commands &amp; Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h">
+      <Filter>Events &amp; Response</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

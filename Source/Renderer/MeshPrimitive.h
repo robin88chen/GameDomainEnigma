@@ -53,6 +53,8 @@ namespace Enigma::Renderer
         const Engine::EffectTextureMap& GetTextureMap(unsigned int index);
         /** get texture map size */
         unsigned GetTextureMapCount() const;
+        /** change specify semantic texture */
+        void ChangeTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple);
 
         /** update render buffer */
         error UpdateRenderBuffer();

@@ -8,7 +8,6 @@
 #ifndef _DAE_PARSER_H
 #define _DAE_PARSER_H
 
-#include "Renderer/ModelPrimitive.h"
 #include "GameEngine/GeometryRepository.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/EffectMaterialDto.h"
@@ -16,6 +15,7 @@
 #include "SceneGraph/SceneGraphDtos.h"
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
+#include "GameCommon/AnimatedPawnDto.h"
 #include "pugixml.hpp"
 #include <string>
 #include <optional>
@@ -30,7 +30,7 @@ namespace EnigmaViewer
 
         void LoadDaeFile(const std::string& filename);
 
-        const Enigma::SceneGraph::PawnDto& GetPawnDto() { return m_pawn; }
+        const Enigma::GameCommon::AnimatedPawnDto& GetPawnDto() { return m_pawn; }
 
     private:
         struct GeometryValueOffsets
@@ -62,7 +62,7 @@ namespace EnigmaViewer
         void ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);
 
         void ParseAnimations(const pugi::xml_node& collada_root);
-        void ParseSingleAnimation(const pugi::xml_node& anim_node);
+        void ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node);
         void ParseAnimationSample(Enigma::Animators::AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node,
             const pugi::xml_node& anim_node);
         void ParseTimeValue(const pugi::xml_node& time_value_source);
@@ -91,8 +91,8 @@ namespace EnigmaViewer
         std::string m_modelName;
 
         Enigma::Renderer::ModelPrimitiveDto m_model;
-        Enigma::SceneGraph::PawnDto m_pawn;
-        Enigma::Animators::ModelAnimationAssetDto m_animationAsset;
+        Enigma::GameCommon::AnimatedPawnDto m_pawn;
+        Enigma::Engine::GenericDto m_animationAssetDto;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;
         std::vector<Enigma::MathLib::Vector3> m_normals;

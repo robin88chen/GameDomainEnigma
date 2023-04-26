@@ -36,13 +36,10 @@ namespace Enigma::Renderer
         std::string& Name() { return m_name; }
         [[nodiscard]] const std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() const { return m_dtoDeserializer; }
         std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() { return m_dtoDeserializer; }
-        [[nodiscard]] const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& TheEffectDeserializer() const { return m_effectDeserializer; }
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& TheEffectDeserializer() { return m_effectDeserializer; }
 
     protected:
         std::string m_name;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;
     };
 
     class MeshPrimitivePolicy : public RenderablePrimitivePolicy
@@ -55,21 +52,25 @@ namespace Enigma::Renderer
         MeshPrimitivePolicy& operator=(const MeshPrimitivePolicy&) = default;
         MeshPrimitivePolicy& operator=(MeshPrimitivePolicy&&) = default;
 
+        [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactoryDesc; }
+        Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactoryDesc; }
+
         [[nodiscard]] const Engine::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
         Engine::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
 
-        [[nodiscard]] const std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() const { return m_effectPolicies; }
-        std::vector<Engine::EffectMaterialPolicy>& EffectPolicies() { return m_effectPolicies; }
+        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& EffectDtos() const { return m_effectDtos; }
+        std::vector<Engine::EffectMaterialDto>& EffectDtos() { return m_effectDtos; }
 
-        [[nodiscard]] const std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() const { return m_texturePolicies; }
-        std::vector<Engine::EffectTextureMapPolicy>& TexturePolicies() { return m_texturePolicies; }
+        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& TextureDtos() const { return m_textureDtos; }
+        std::vector<Engine::EffectTextureMapDto>& TextureDtos() { return m_textureDtos; }
 
-        [[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
+        //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
     protected:
+        Engine::FactoryDesc m_geometryFactoryDesc;
         Engine::GeometryDataPolicy m_geometryPolicy;
-        std::vector<Engine::EffectMaterialPolicy> m_effectPolicies;
-        std::vector<Engine::EffectTextureMapPolicy> m_texturePolicies;
+        std::vector<Engine::EffectMaterialDto> m_effectDtos;
+        std::vector<Engine::EffectTextureMapDto> m_textureDtos;
     };
 
     class SkinMeshPrimitivePolicy : public MeshPrimitivePolicy

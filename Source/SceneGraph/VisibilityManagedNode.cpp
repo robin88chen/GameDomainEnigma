@@ -19,8 +19,8 @@ VisibilityManagedNode::VisibilityManagedNode(const std::string& name)
     m_factoryDesc = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.GetName());
 }
 
-VisibilityManagedNode::VisibilityManagedNode(const VisibilityManagedNodeDto& dto)
-    : LazyNode(dynamic_cast<const LazyNodeDto&>(dto))
+VisibilityManagedNode::VisibilityManagedNode(const GenericDto& dto)
+    : LazyNode(dto)
 {
 }
 

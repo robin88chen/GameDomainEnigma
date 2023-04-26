@@ -3,6 +3,9 @@
 #include "GameCameraService.h"
 #include "GameSceneService.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "Frameworks/CommandBus.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "AnimatedPawn.h"
 #include <cassert>
 
 using namespace Enigma::GameCommon;
@@ -39,5 +42,18 @@ error GameSceneInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_ma
 {
     assert(service_manager);
     service_manager->ShutdownSystemService(GameSceneService::TYPE_RTTI);
+    return error();
+}
+
+error AnimatedPawnInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+{
+    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.GetName(),
+        [](auto o) { return new AnimatedPawn(o); }));
+    return error();
+}
+
+error AnimatedPawnInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+{
+    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.GetName()));
     return error();
 }

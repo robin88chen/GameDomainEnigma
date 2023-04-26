@@ -52,7 +52,7 @@ namespace Enigma::Engine
 
     protected:
         std::shared_ptr<GeometryData> Create(const GenericDto& dto);
-        std::shared_ptr<GeometryData> CreateTriangleList(const TriangleListDto& dto);
+        std::shared_ptr<GeometryData> CreateTriangleList(const GenericDto& dto);
         void GeometryFactory(const GenericDto& dto);
 
         void OnGeometryBuilt(const Frameworks::IEventPtr& e);

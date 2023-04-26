@@ -29,6 +29,7 @@ namespace Enigma::Renderer
 
         const std::string& GetName() const { return m_name; }
         void SetName(const std::string& name) { m_name = name; }
+        void SetT_PosTransform(const MathLib::Matrix4& mx) { m_mxT_PosTransform = mx; }
         const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocalTransform; }
         void SetLocalTransform(const MathLib::Matrix4& mx) { m_mxLocalTransform = mx; }
         const MathLib::Matrix4& GetRootRefTransform() const { return m_mxRootRefTransform; }
@@ -41,6 +42,7 @@ namespace Enigma::Renderer
 
     protected:
         std::string m_name;
+        MathLib::Matrix4 m_mxT_PosTransform; ///< mesh node local original T-Pos transform
         MathLib::Matrix4 m_mxLocalTransform;   ///< mesh node local transform (reference: parent node)
         MathLib::Matrix4 m_mxRootRefTransform; ///< mesh node transform (reference: model root)
         MeshPrimitivePtr m_meshPrimitive;   ///< mesh primitive

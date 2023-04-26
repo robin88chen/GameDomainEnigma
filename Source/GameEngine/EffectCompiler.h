@@ -33,15 +33,49 @@ namespace Enigma::Engine
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:
-            //! try rich event
-            EffectMaterialCompiled(const std::string& filename, std::unique_ptr<EffectMaterial> eff) :
-                m_filename(filename), m_effect(std::move(eff)) {};
-            const std::string& GetFilename() { return m_filename; }
+            EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff, bool has_existed) :
+                m_name(name), m_effect(eff), m_hasExisted(has_existed) {};
+            const std::string& GetName() { return m_name; }
             bool HasEffect() { return m_effect != nullptr; }
-            std::unique_ptr<EffectMaterial> GetEffect() { return std::move(m_effect); }
+            std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
+            bool HasExisted() { return m_hasExisted; }
         private:
-            std::string m_filename;
-            std::unique_ptr<EffectMaterial> m_effect;
+            std::string m_name;
+            std::shared_ptr<EffectMaterial> m_effect;
+            bool m_hasExisted;
+        };
+        class CompileEffectMaterialFailed : public Frameworks::IEvent
+        {
+        public:
+            CompileEffectMaterialFailed(const std::string& name, std::error_code er) :
+                m_name(name), m_error(er) {};
+            const std::string& GetName() { return m_name; }
+            std::error_code GetErrorCode() const { return m_error; }
+        private:
+            std::string m_name;
+            std::error_code m_error;
+        };
+        class CompilingProfileDeserialized : public Frameworks::IEvent
+        {
+        public:
+            CompilingProfileDeserialized(const Frameworks::Ruid& ruid, const EffectCompilingProfile& profile) :
+                m_ruid(ruid), m_profile(profile) {};
+            const Frameworks::Ruid& GetRuid() { return m_ruid; }
+            const EffectCompilingProfile& GetProfile() { return m_profile; }
+        private:
+            Frameworks::Ruid m_ruid;
+            EffectCompilingProfile m_profile;
+        };
+        class DeserializeCompilingProfileFailed : public Frameworks::IEvent
+        {
+        public:
+            DeserializeCompilingProfileFailed(const Frameworks::Ruid& ruid, std::error_code er) :
+                m_ruid(ruid), m_error(er) {};
+            const Frameworks::Ruid& GetRuid() { return m_ruid; }
+            std::error_code GetErrorCode() const { return m_error; }
+        private:
+            Frameworks::Ruid m_ruid;
+            std::error_code m_error;
         };
 
     public:

@@ -39,6 +39,14 @@ namespace Enigma::GameCommon
         std::string m_sceneRootName;
         std::optional<std::string> m_portalManagedName;
     };
+    class AnimatedPawnInstallingPolicy : public Engine::InstallingPolicy
+    {
+    public:
+        AnimatedPawnInstallingPolicy() = default;
+        virtual ~AnimatedPawnInstallingPolicy() override = default;
+        virtual error Install(Frameworks::ServiceManager* service_manager) override;
+        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+    };
 }
 
 #endif // _GAME_COMMON_INSTALLING_POLICIES_H

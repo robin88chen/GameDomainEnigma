@@ -44,15 +44,19 @@ std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::ConvertToPolicy(const std
     const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     std::shared_ptr<AnimationAssetPolicy> asset_policy;
+    std::shared_ptr<ModelAnimatorPolicy> policy;
     if (m_animationAssetDto)
     {
         asset_policy = std::make_shared<AnimationAssetPolicy>(m_assetName, m_animationAssetDto.value());
+        policy = std::make_shared<ModelAnimatorPolicy>(controlled, asset_policy);
+        policy->AssetFactoryDesc() = m_animationAssetDto.value().GetRtti();
     }
     else
     {
         asset_policy = std::make_shared<AnimationAssetPolicy>(m_assetName, m_assetFactory.GetResourceFilename(), deserializer);
+        policy = std::make_shared<ModelAnimatorPolicy>(controlled, asset_policy);
+        policy->AssetFactoryDesc() = m_assetFactory;
     }
-    auto policy = std::make_shared<ModelAnimatorPolicy>(controlled, asset_policy);
     for (auto& op : m_skinOperators)
     {
         policy->SkinOperators().emplace_back(SkinOperatorDto::FromGenericDto(op));

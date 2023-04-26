@@ -34,9 +34,9 @@ namespace Enigma::Engine
         FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         static EffectMaterialDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        GenericDto ToGenericDto() const;
 
-        EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer);
+        EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer) const;
 
     protected:
         std::string m_name;

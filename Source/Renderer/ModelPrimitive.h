@@ -16,6 +16,7 @@
 #include <vector>
 #include <optional>
 #include <memory>
+#include <list>
 
 namespace Enigma::Renderer
 {
@@ -63,6 +64,9 @@ namespace Enigma::Renderer
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
 
         virtual void SelectVisualTechnique(const std::string& techniqueName) override;
+
+        /** enum animator list deep, including geometry's animator */
+        virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList) override;
 
     protected:
         /** sometimes we need re-cache */

@@ -20,7 +20,7 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         LazyNode(const std::string& name);
-        LazyNode(const LazyNodeDto& dto);
+        LazyNode(const Engine::GenericDto& dto);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;
         virtual ~LazyNode() override;

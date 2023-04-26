@@ -14,7 +14,8 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/RequestSubscriber.h"
+#include "EffectRequests.h"
 #include <unordered_map>
 #include <mutex>
 #include <queue>
@@ -28,7 +29,8 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        EffectMaterialManager(Frameworks::ServiceManager* srv_mngr);
+        EffectMaterialManager(Frameworks::ServiceManager* srv_mngr,
+            const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer);
         EffectMaterialManager(const EffectMaterialManager&) = delete;
         EffectMaterialManager(EffectMaterialManager&&) = delete;
         virtual ~EffectMaterialManager();
@@ -45,12 +47,13 @@ namespace Enigma::Engine
         bool HasEffectMaterial(const std::string& name);
         EffectMaterialPtr QueryEffectMaterial(const std::string& name);
 
-        error CompileEffectMaterial(const EffectMaterialPolicy& policy);
+        //error CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
         void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c);
+
+        void DoCompilingEffectMaterial(const Frameworks::IRequestPtr& r);
 
         /** release effect material source */
         void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
@@ -58,18 +61,23 @@ namespace Enigma::Engine
         void DumpUnreleasedMaterial();
 
     private:
+        std::shared_ptr<IEffectCompilingProfileDeserializer> m_effectDeserializer;
+
         Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
         Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
-        Frameworks::CommandSubscriberPtr m_doCompilingEffectMaterial;
+
+        Frameworks::RequestSubscriberPtr m_doCompilingEffectMaterial;
 
         typedef std::unordered_map<std::string, std::shared_ptr<EffectMaterialSource>> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;
         std::recursive_mutex m_sourceMapLock;
 
         EffectCompiler* m_compiler;
-        std::queue<EffectMaterialPolicy> m_policies;
+        std::queue<std::shared_ptr<RequestCompileEffectMaterial>> m_requests;
+        Frameworks::Ruid m_currentCompilingRuid;
+        std::string m_currentCompilingEffectName;
         bool m_isCurrentCompiling;
-        std::mutex m_policiesLock;
+        std::mutex m_requestLock;
     };
 }
 

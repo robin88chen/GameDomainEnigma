@@ -42,7 +42,10 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_nam
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o)
 {
     AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::FromGenericDto(o);
-    ReplaceAvatarMaterial(dto.OldMaterialName(), dto.NewMaterialDto());
+    m_oldMaterialName = dto.OldMaterialName();
+    m_newMaterialDto = dto.NewMaterialDto();
+    m_onCompileEffectResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnCompileEffectResponse(r); });
+    ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectResponse);
 }
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
@@ -139,7 +142,10 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o)
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
-    ChangeAvatarTexture(dto.MeshName(), dto.TextureDto());
+    m_meshName = dto.MeshName();
+    m_textureDto = dto.TextureDto();
+    m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
+    ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
@@ -186,6 +192,7 @@ void ChangeAvatarTexture::ChangeMeshTexture(const MeshPrimitivePtr& mesh)
     auto policy = m_textureDto.ConvertToPolicy();
     auto req = std::make_shared<RequestLoadTexture>(std::get<TexturePolicy>(policy));
     m_requsetRuid = req->GetRuid();
+    m_mesh = mesh;
     RequestBus::Post(req);
 }
 

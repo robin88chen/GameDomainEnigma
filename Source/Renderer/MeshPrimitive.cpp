@@ -156,10 +156,12 @@ unsigned MeshPrimitive::GetTextureMapCount() const
 void MeshPrimitive::ChangeTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple)
 {
     if (m_textures.empty()) return;
+    LoosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
         tm.ChangeTexture(tuple);
     }
+    BindPrimitiveEffectTexture();
 }
 
 error MeshPrimitive::UpdateRenderBuffer()

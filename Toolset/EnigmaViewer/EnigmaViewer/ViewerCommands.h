@@ -32,6 +32,18 @@ namespace EnigmaViewer
         const std::shared_ptr<Enigma::Renderer::ModelPrimitive>& GetModel() const { return m_model; }
     private:
         std::shared_ptr<Enigma::Renderer::ModelPrimitive> m_model;
-    };;
+    };
+    class ChangeMeshTexture : public Enigma::Frameworks::ICommand
+    {
+    public:
+        ChangeMeshTexture(const std::string& mesh_name, const std::string& tex_filename) : m_meshName(mesh_name), m_texFilename(tex_filename) {};
+
+        const std::string& GetMeshName() const { return m_meshName; }
+        const std::string& GetTextureFilename() const { return m_texFilename; }
+
+    private:
+        std::string m_meshName;
+        std::string m_texFilename;
+    };
 }
 #endif // _VIEWER_COMMANDS_H

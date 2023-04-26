@@ -25,6 +25,7 @@
 #include "ViewerCommands.h"
 #include "Animators/AnimatorCommands.h"
 #include "Animators/ModelPrimitiveAnimator.h"
+#include "GameCommon/AvatarRecipes.h"
 #include <memory>
 #include <Gateways/DtoJsonGateway.h>
 
@@ -117,6 +118,9 @@ void ViewerAppDelegate::InstallEngine()
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
+    m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
+    CommandBus::Subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
+
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
@@ -146,6 +150,9 @@ void ViewerAppDelegate::ShutdownEngine()
 
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
+
+    CommandBus::Unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
+    m_doChangingMeshTexture = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -218,6 +225,7 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!ev) return;
     m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
     if (!m_pawn) return;
+    m_pawn->BakeAvatarRecipes();
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
@@ -238,4 +246,20 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
             }
         }
     }
+}
+
+void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<ChangeMeshTexture, ICommand>(c);
+    if (!cmd) return;
+    if (!m_pawn) return;
+    TextureMappingDto tex_dto;
+    tex_dto.Filename() = "image/" + cmd->GetTextureFilename();
+    tex_dto.TextureName() = cmd->GetTextureFilename();
+    tex_dto.PathId() = "APK_PATH";
+    tex_dto.Semantic() = "DiffuseMap";
+    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->GetMeshName(), tex_dto);
+    m_pawn->AddAvatarRecipe(recipe);
+    m_pawn->BakeAvatarRecipes();
 }

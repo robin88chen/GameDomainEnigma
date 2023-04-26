@@ -133,6 +133,7 @@ void MainForm::OnLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
     if (paths.size() > 0)
     {
         m_appDelegate->LoadPawnFile(paths[0].string());
+        m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         /*m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         m_modelInfoPanel->EnumModelMeshNode(std::dynamic_pointer_cast<Enigma::ModelPrimitive, Enigma::Primitive>
             (m_appDelegate->GetEntityPrimitive()));

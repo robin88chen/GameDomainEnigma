@@ -120,6 +120,14 @@ void ViewerAppDelegate::InstallEngine()
 
     m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
     CommandBus::Subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
+    m_doAddingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingAnimationClip(c); });
+    CommandBus::Subscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
+    m_doDeletingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoDeletingAnimationClip(c); });
+    CommandBus::Subscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
+    m_doPlayingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoPlayingAnimationClip(c); });
+    CommandBus::Subscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
+    m_doChangingAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingAnimationTimeValue(c); });
+    CommandBus::Subscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
 
     assert(m_graphicMain);
 
@@ -153,6 +161,14 @@ void ViewerAppDelegate::ShutdownEngine()
 
     CommandBus::Unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
     m_doChangingMeshTexture = nullptr;
+    CommandBus::Unsubscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
+    m_doAddingAnimationClip = nullptr;
+    CommandBus::Unsubscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
+    m_doDeletingAnimationClip = nullptr;
+    CommandBus::Unsubscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
+    m_doPlayingAnimationClip = nullptr;
+    CommandBus::Unsubscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
+    m_doChangingAnimationTimeValue = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -226,6 +242,7 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
     if (!m_pawn) return;
     m_pawn->BakeAvatarRecipes();
+    CommandBus::Post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
@@ -262,4 +279,67 @@ void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommand
     auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->GetMeshName(), tex_dto);
     m_pawn->AddAvatarRecipe(recipe);
     m_pawn->BakeAvatarRecipes();
+}
+
+void ViewerAppDelegate::DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<AddAnimationClip, ICommand>(c);
+    if (!cmd) return;
+    if (!m_pawn) return;
+    if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetName()); !act_clip)
+    {
+        AnimationClipMap::AnimClip act_clip_new(cmd->GetName(), cmd->GetClip());
+        m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
+    }
+    else
+    {
+        act_clip.value().get().ChangeClip(cmd->GetClip());
+    }
+}
+
+void ViewerAppDelegate::DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<DeleteAnimationClip, ICommand>(c);
+    if (!cmd) return;
+    if (!m_pawn) return;
+    m_pawn->TheAnimationClipMap().RemoveClip(cmd->GetName());
+}
+
+void ViewerAppDelegate::DoPlayingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PlayAnimationClip, ICommand>(c);
+    if (!cmd) return;
+    if (!m_pawn) return;
+    m_pawn->PlayAnimation(cmd->GetName());
+}
+
+void ViewerAppDelegate::DoChangingAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<ChangeAnimationTimeValue, ICommand>(c);
+    if (!cmd) return;
+    if (!m_pawn) return;
+    bool isNameChanged = false;
+    if ((m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetOldName()))
+        && (cmd->GetOldName() != cmd->GetNewName()))
+    {
+        isNameChanged = true;
+    }
+
+    if (!isNameChanged)
+    {
+        if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetNewName()); act_clip)
+        {
+            act_clip.value().get().ChangeClip(cmd->GetClip());
+        }
+    }
+    else
+    {
+        m_pawn->TheAnimationClipMap().RemoveClip(cmd->GetOldName());
+        Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->GetNewName(), cmd->GetClip());
+        m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
+    }
 }

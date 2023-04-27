@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
     <ClInclude Include="CameraDtoMaker.h" />
     <ClInclude Include="DaeParser.h" />

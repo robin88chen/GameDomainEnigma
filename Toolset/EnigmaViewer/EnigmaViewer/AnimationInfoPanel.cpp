@@ -1,11 +1,18 @@
 ﻿#include "AnimationInfoPanel.h"
+#include "AnimationClipInfoItem.h"
 #include "SchemeColorDef.h"
 #include "ListboxInlineTextbox.h"
 #include "ListboxInlineCombox.h"
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/StringFormat.h"
+#include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
+#include "ViewerCommands.h"
+#include "GameCommon/AnimationClipMapEvents.h"
+#include "ViewerEvents.h"
 
 using namespace EnigmaViewer;
+using namespace Enigma::Frameworks;
 
 AnimationInfoPanel::AnimationInfoPanel(const nana::window& wd) : panel<false>{ wd }
 {
@@ -114,20 +121,97 @@ void AnimationInfoPanel::Initialize()
 
 void AnimationInfoPanel::OnAddActionButton(const nana::arg_click& ev)
 {
+    if (!m_actionTableBox) return;
+    auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
+    unsigned int count = cat.size();
+    std::string name = string_format("Item %d", count);
+    AnimClipInfoItem clip{ name };
+    cat.append(clip);
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<AddAnimationClip>(clip.m_name, clip.m_clip));
 }
 
 void AnimationInfoPanel::OnDeleteActionButton(const nana::arg_click& ev)
 {
+    if (!m_actionTableBox) return;
+    auto idx_pairs = m_actionTableBox->selected();
+    if (idx_pairs.empty()) return;
+    for (auto idx : idx_pairs)
+    {
+        auto item = m_actionTableBox->at(idx.cat).at(idx.item);
+        AnimClipInfoItem clip{ "" };
+        item->resolve_to(clip);
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<DeleteAnimationClip>(clip.m_name));
+    }
+    m_actionTableBox->erase(idx_pairs);
 }
 
 void AnimationInfoPanel::OnActionComboTextChanged(const nana::arg_combox& ev)
 {
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<PlayAnimationClip>(ev.widget.caption()));
 }
 
-void AnimationInfoPanel::RegisterMessageHandler()
+void AnimationInfoPanel::SubscribeHandlers()
 {
+    m_onAnimationClipMapChanged = std::make_shared<EventSubscriber>([=](auto e) { OnAnimationClipMapChanged(e); });
+    EventPublisher::Subscribe(typeid(Enigma::GameCommon::AnimationClipMapChanged),m_onAnimationClipMapChanged);
+    m_onAnimationClipItemUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnAnimationClipItemUpdated(e); });
+    EventPublisher::Subscribe(typeid(AnimationClipItemUpdated), m_onAnimationClipItemUpdated);
+
+    m_doRefreshingAnimClipMap = std::make_shared<CommandSubscriber>([=](auto c) { DoRefreshingAnimClipMap(c); });
+    CommandBus::Subscribe(typeid(RefreshAnimationClipList), m_doRefreshingAnimClipMap);
+}
+
+void AnimationInfoPanel::UnsubscribeHandlers()
+{
+    EventPublisher::Unsubscribe(typeid(Enigma::GameCommon::AnimationClipMapChanged), m_onAnimationClipMapChanged);
+    m_onAnimationClipMapChanged = nullptr;
+    EventPublisher::Unsubscribe(typeid(AnimationClipItemUpdated), m_onAnimationClipItemUpdated);
+    m_onAnimationClipItemUpdated = nullptr;
+
+    CommandBus::Unsubscribe(typeid(RefreshAnimationClipList), m_doRefreshingAnimClipMap);
+    m_doRefreshingAnimClipMap = nullptr;
 }
 
 void AnimationInfoPanel::RefreshActionCombo()
 {
+}
+
+void AnimationInfoPanel::OnAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::AnimationClipMapChanged, Enigma::Frameworks::IEvent>(e);
+    if (!ev) return;
+    m_actionCombox->clear();
+    for (auto clip : ev->GetClipMap())
+    {
+        m_actionCombox->push_back(clip.second.GetName());
+    }
+}
+
+void AnimationInfoPanel::OnAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<AnimationClipItemUpdated, IEvent>(e);
+    if (!ev) return;
+    auto cat = m_actionTableBox->at(ev->GetCategoryIndex());
+    auto item = cat.at(ev->GetItemIndex());
+    AnimClipInfoItem clip{ "" };
+    item->resolve_to(clip);
+    CommandBus::Post(std::make_shared<ChangeAnimationTimeValue>(ev->GetOldText(), clip.m_name, clip.m_clip));
+}
+
+void AnimationInfoPanel::DoRefreshingAnimClipMap(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<RefreshAnimationClipList, Enigma::Frameworks::ICommand>(c);
+    if (!cmd) return;
+    m_actionCombox->clear();
+    auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
+    for (auto clip : cmd->GetClipMap().GetAnimationClipMap())
+    {
+        AnimClipInfoItem clip_info{ clip.second.GetName() };
+        clip_info.m_clip = clip.second.GetClip();
+        cat.append(clip_info);
+        m_actionCombox->push_back(clip.second.GetName());
+    }
 }

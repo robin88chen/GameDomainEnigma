@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <optional>
 #include "Animators/AnimationClip.h"
+#include "Frameworks/optional_ref.hpp"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/GenericDto.h"
 
@@ -23,16 +24,22 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        struct AnimClip
+        class AnimClip
         {
-            std::string m_actionName;
-            Animators::AnimationClip m_animClip;
+        public:
             AnimClip() {};
             AnimClip(const std::string& name, const Animators::AnimationClip& clip)
             {
                 m_actionName = name; m_animClip = clip;
             };
             // copy-er, move-er, destructor 會自動建立
+            const std::string& GetName() const { return m_actionName; };
+            void ChangeClip(const Animators::AnimationClip& clip) { m_animClip = clip; };
+            const Animators::AnimationClip& GetClip() const { return m_animClip; };
+
+        private:
+            std::string m_actionName;
+            Animators::AnimationClip m_animClip;
         };
         typedef std::unordered_map<std::string, AnimClip> ClipMap;
     public:
@@ -42,9 +49,10 @@ namespace Enigma::GameCommon
 
         Engine::GenericDto SerializeDto() const;
 
-        std::optional<AnimClip> FindAnimationClip(const std::string& name);
+        stdext::optional_ref<AnimClip> FindAnimationClip(const std::string& name);
+        std::optional<AnimClip> FindAnimationClip(const std::string& name) const;
         unsigned GetSize() const { return static_cast<unsigned int>(m_animClips.size()); };
-        const ClipMap& GetAnimationClipMap() { return m_animClips; };
+        const ClipMap& GetAnimationClipMap() const { return m_animClips; };
 
         void InsertClip(const AnimClip& anim_clip);
         void RemoveClip(const std::string& name);

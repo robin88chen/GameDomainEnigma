@@ -61,7 +61,7 @@ void AnimatedPawn::PlayAnimation(const std::string& name)
             Frameworks::CommandBus::Post(std::make_shared<AddListeningAnimator>(anim));
             if (ModelPrimitiveAnimatorPtr model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
-                model_ani->FadeInAnimation(0.3f, action_clip->m_animClip);
+                model_ani->FadeInAnimation(0.3f, action_clip.value().get().GetClip());
             }
         }
     }

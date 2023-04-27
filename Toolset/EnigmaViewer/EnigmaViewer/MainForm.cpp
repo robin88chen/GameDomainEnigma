@@ -75,6 +75,7 @@ void MainForm::Initialize()
 
     m_outputPanel->SubscribeHandlers();
     m_modelInfoPanel->SubscribeHandlers();
+    m_animationInfoPanel->SubscribeHandlers();
 
     get_place().collocate();
 }
@@ -153,5 +154,6 @@ void MainForm::Finalize()
 {
     if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->UnsubscribeHandlers();
+    if (m_animationInfoPanel) m_animationInfoPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }

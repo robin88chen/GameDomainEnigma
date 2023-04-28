@@ -9,6 +9,7 @@
 #define _ENIGMA_GAME_MAIN_H
 
 #include <string>
+#include "AppConfiguration.h"
 #include "Application/AppDelegateWin32.h"
 #include "GameCommon/SceneRendererService.h"
 
@@ -28,8 +29,10 @@ namespace EnigmaGame
         virtual void FrameUpdate() override;
         virtual void RenderFrame() override;
 
-    protected:
+    private:
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+
+        AppConfiguration m_appConfig;
     };
 }
 

@@ -14,9 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AppConfiguration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnigmaGameMain.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AppConfiguration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnigmaGameMain.cpp" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Application Main">
+      <UniqueIdentifier>{de9646da-9e7d-4413-b442-e7751fb88839}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EnigmaGameMain.cpp">
+      <Filter>Application Main</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AppConfiguration.cpp">
+      <Filter>Application Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EnigmaGameMain.h">
+      <Filter>Application Main</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AppConfiguration.h">
+      <Filter>Application Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

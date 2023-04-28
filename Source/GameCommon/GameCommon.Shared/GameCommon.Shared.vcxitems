@@ -18,6 +18,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />

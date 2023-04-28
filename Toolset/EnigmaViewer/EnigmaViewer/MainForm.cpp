@@ -75,6 +75,7 @@ void MainForm::Initialize()
 
     m_outputPanel->SubscribeHandlers();
     m_modelInfoPanel->SubscribeHandlers();
+    m_animationInfoPanel->SubscribeHandlers();
 
     get_place().collocate();
 }
@@ -133,6 +134,7 @@ void MainForm::OnLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
     if (paths.size() > 0)
     {
         m_appDelegate->LoadPawnFile(paths[0].string());
+        m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         /*m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         m_modelInfoPanel->EnumModelMeshNode(std::dynamic_pointer_cast<Enigma::ModelPrimitive, Enigma::Primitive>
             (m_appDelegate->GetEntityPrimitive()));
@@ -152,5 +154,6 @@ void MainForm::Finalize()
 {
     if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->UnsubscribeHandlers();
+    if (m_animationInfoPanel) m_animationInfoPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }

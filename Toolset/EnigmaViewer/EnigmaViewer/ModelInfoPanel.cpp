@@ -3,6 +3,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "ViewerCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "nana/gui/filebox.hpp"
 
 using namespace EnigmaViewer;
 
@@ -130,6 +131,13 @@ void ModelInfoPanel::OnAddSuperSprayParticle(const nana::menu::item_proxy& menu_
 void ModelInfoPanel::OnChangeMeshTexture(const nana::menu::item_proxy& menu_item)
 {
     if (m_meshNodeTree->selected().empty()) return;
+    nana::filebox fb{ *this, true };
+    fb.add_filter({ {"Image File(*.png)", "*.png"} });
+    auto paths = fb.show();
+    if (paths.size() > 0)
+    {
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<ChangeMeshTexture>(m_meshNodeTree->selected().key(), paths[0].filename().generic_string()));
+    }
     //m_main->GetAppDelegate()->ChangeMeshTexture(m_meshNodeTree->selected().key());
 }
 

@@ -28,6 +28,9 @@ namespace Enigma::GameCommon
 
         virtual Engine::GenericDto SerializeDto() override;
 
+        AnimationClipMap& TheAnimationClipMap() { return m_animationClipMap; };
+        const AnimationClipMap& TheAnimationClipMap() const { return m_animationClipMap; };
+
         virtual void PlayAnimation(const std::string& name);
         virtual void StopAnimation();
 

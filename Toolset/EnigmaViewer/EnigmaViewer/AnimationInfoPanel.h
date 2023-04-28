@@ -8,6 +8,7 @@
 #ifndef _ANIMATION_INFO_PANEL_H
 #define _ANIMATION_INFO_PANEL_H
 
+#include "Frameworks/CommandSubscriber.h"
 #include "nana/gui/widgets/panel.hpp"
 #include "nana/gui/place.hpp"
 #include "nana/gui/widgets/button.hpp"
@@ -16,6 +17,7 @@
 #include "nana/gui/widgets/group.hpp"
 #include "nana/gui/widgets/combox.hpp"
 #include "nana/gui/widgets/slider.hpp"
+#include "Frameworks/EventSubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -33,10 +35,15 @@ namespace EnigmaViewer
 
         void OnActionComboTextChanged(const nana::arg_combox& ev);
 
-        void RegisterMessageHandler();
-        void SetAppDelegate(ViewerAppDelegate* app) { m_appDelegate = app; }
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
 
     private:
+        void OnAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e);
+
+        void DoRefreshingAnimClipMap(const Enigma::Frameworks::ICommandPtr& c);
+
         void RefreshActionCombo();
     private:
         nana::place* m_place;
@@ -51,7 +58,10 @@ namespace EnigmaViewer
         nana::label* m_speedPrompt;
         nana::slider* m_speedSlider;
 
-        ViewerAppDelegate* m_appDelegate;
+        Enigma::Frameworks::EventSubscriberPtr m_onAnimationClipMapChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onAnimationClipItemUpdated;
+
+        Enigma::Frameworks::CommandSubscriberPtr m_doRefreshingAnimClipMap;
     };
 }
 

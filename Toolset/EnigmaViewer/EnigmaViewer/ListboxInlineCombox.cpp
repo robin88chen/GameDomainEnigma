@@ -1,5 +1,7 @@
 ﻿#include "ListboxInlineCombox.h"
 #include "SchemeColorDef.h"
+#include "ViewerEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 void EnigmaViewer::InlineComboxItem::create(nana::window wd)
 {
@@ -28,6 +30,7 @@ void EnigmaViewer::InlineComboxItem::create(nana::window wd)
             auto s = ar.widget.caption();
             auto s1 = m_combo.text(0);
             auto s2 = m_combo.text(1);
+            Enigma::Frameworks::EventPublisher::Post(std::make_shared<AnimationClipItemUpdated>(static_cast<unsigned int>(m_pos.cat), static_cast<unsigned int>(m_pos.item), "", ""));
         });
 }
 

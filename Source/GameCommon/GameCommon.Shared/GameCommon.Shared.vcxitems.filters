@@ -69,6 +69,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h">
       <Filter>AnimatedPawn</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h">
+      <Filter>AnimationClipMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">

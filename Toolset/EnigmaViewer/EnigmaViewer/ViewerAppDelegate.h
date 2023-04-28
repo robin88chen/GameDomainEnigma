@@ -16,6 +16,7 @@
 #include "GameCommon/AnimatedPawnDto.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameCommon/AnimatedPawn.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <filesystem>
 
 namespace EnigmaViewer
@@ -47,6 +48,11 @@ namespace EnigmaViewer
 
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
+        void DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void DoPlayingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void DoChangingAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
 
     protected:
         HWND m_hwnd;
@@ -60,6 +66,12 @@ namespace EnigmaViewer
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+
+        Enigma::Frameworks::CommandSubscriberPtr m_doChangingMeshTexture;
+        Enigma::Frameworks::CommandSubscriberPtr m_doAddingAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_doDeletingAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_doPlayingAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_doChangingAnimationTimeValue;
 
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
     };

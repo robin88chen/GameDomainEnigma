@@ -1,5 +1,7 @@
 ﻿#include "AnimationClipMap.h"
 #include "AnimationClipMapDto.h"
+#include "AnimationClipMapEvents.h"
+#include "Frameworks/EventPublisher.h"
 #include <optional>
 
 using namespace Enigma::GameCommon;
@@ -13,11 +15,9 @@ AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
     AnimationClipMapDto dto = AnimationClipMapDto::FromGenericDto(o);
     for (unsigned i = 0; i < dto.AnimNames().size(); ++i)
     {
-        AnimClip clip;
-        clip.m_actionName = dto.AnimNames()[i];
-        clip.m_animClip = AnimationClip(dto.StartOffsets()[i], dto.LoopTimes()[i],
-            static_cast<AnimationClip::WarpMode>(dto.WarpModes()[i]), dto.DivideIndices()[i]);
-        m_animClips[clip.m_actionName] = clip;
+        AnimClip clip(dto.AnimNames()[i], AnimationClip(dto.StartOffsets()[i], dto.LoopTimes()[i],
+            static_cast<AnimationClip::WarpMode>(dto.WarpModes()[i]), dto.DivideIndices()[i]));
+        m_animClips[clip.GetName()] = clip;
     }
 }
 
@@ -27,15 +27,22 @@ GenericDto AnimationClipMap::SerializeDto() const
     for (auto& [name, clip] : m_animClips)
     {
         dto.AnimNames().push_back(name);
-        dto.StartOffsets().push_back(clip.m_animClip.GetStartOffset());
-        dto.LoopTimes().push_back(clip.m_animClip.GetLoopTime());
-        dto.WarpModes().push_back(static_cast<unsigned>(clip.m_animClip.GetWarpMode()));
-        dto.DivideIndices().push_back(clip.m_animClip.GetDivideIndex());
+        dto.StartOffsets().push_back(clip.GetClip().GetStartOffset());
+        dto.LoopTimes().push_back(clip.GetClip().GetLoopTime());
+        dto.WarpModes().push_back(static_cast<unsigned>(clip.GetClip().GetWarpMode()));
+        dto.DivideIndices().push_back(clip.GetClip().GetDivideIndex());
     }
     return dto.ToGenericDto();
 }
 
-std::optional<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(const std::string& name)
+stdext::optional_ref<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(const std::string& name)
+{
+    auto iter = m_animClips.find(name);
+    if (iter == m_animClips.end()) return std::nullopt;
+    return iter->second;
+}
+
+std::optional<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(const std::string& name) const
 {
     auto iter = m_animClips.find(name);
     if (iter == m_animClips.end()) return std::nullopt;
@@ -44,10 +51,12 @@ std::optional<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(co
 
 void AnimationClipMap::InsertClip(const AnimClip& anim_clip)
 {
-    m_animClips[anim_clip.m_actionName] = anim_clip;
+    m_animClips[anim_clip.GetName()] = anim_clip;
+    Frameworks::EventPublisher::Post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
 }
 
 void AnimationClipMap::RemoveClip(const std::string& name)
 {
     m_animClips.erase(name);
+    Frameworks::EventPublisher::Post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
 }

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldOfEnigma.Shared", "WorldOfEnigma.Shared\WorldOfEnigma.Shared.vcxitems", "{084940A1-F491-4412-BE2E-671C4CBDA1DE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldOfEnigma.Win32", "WorldOfEnigma.Win32\WorldOfEnigma.Win32.vcxproj", "{E8188DEB-0148-4F07-AD28-3FFE3FB50569}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Debug|x64.ActiveCfg = Debug|x64
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Debug|x64.Build.0 = Debug|x64
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Debug|x86.ActiveCfg = Debug|Win32
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Debug|x86.Build.0 = Debug|Win32
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Release|x64.ActiveCfg = Release|x64
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Release|x64.Build.0 = Release|x64
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Release|x86.ActiveCfg = Release|Win32
+		{E8188DEB-0148-4F07-AD28-3FFE3FB50569}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1CA64E2-5492-4BFC-9D9F-83402473F106}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WorldOfEnigma.Shared\WorldOfEnigma.Shared.vcxitems*{084940a1-f491-4412-be2e-671c4cbda1de}*SharedItemsImports = 9
+		WorldOfEnigma.Shared\WorldOfEnigma.Shared.vcxitems*{e8188deb-0148-4f07-ad28-3ffe3fb50569}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

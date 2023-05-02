@@ -18,12 +18,9 @@ float constexpr MIN_KEEP_TIME = 5.0000f;
 DEFINE_RTTI(SceneGraph, LazyNodeIOService, ISystemService);
 
 LazyNodeIOService::LazyNodeIOService(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::TimerService>& timer,
-    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr)
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_timer(timer), m_dtoDeserializer(dto_deserializer), m_isCurrentInstancing(false), m_ruidDeserializing()
 {
-    m_timer = timer;
-    m_dtoDeserializer = dto_deserializer;
     m_needTick = false;
-    m_isCurrentInstancing = false;
 }
 
 LazyNodeIOService::~LazyNodeIOService()

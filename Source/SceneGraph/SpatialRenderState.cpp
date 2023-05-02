@@ -11,7 +11,7 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 
-SpatialRenderState::SpatialRenderState()
+SpatialRenderState::SpatialRenderState() : m_requestRuid()
 {
 }
 

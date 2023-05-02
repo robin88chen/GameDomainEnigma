@@ -21,7 +21,6 @@ namespace Enigma::SceneGraph
     public:
         SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
                 : m_dtoDeserializer(dto_deserializer) {}
-        virtual ~SceneGraphInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;

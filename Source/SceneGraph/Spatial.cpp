@@ -63,7 +63,7 @@ Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
     assert(!m_worldBound.IsEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
-    EulerAngles angles;
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
@@ -157,7 +157,7 @@ error Spatial::SetLocalPosition(const Vector3& pos)
 error Spatial::SetLocalRotation(const Matrix3& rot)
 {
     m_mxLocalRotation = rot;
-    EulerAngles angles;
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     m_qtLocalQuaternion = Quaternion::FromRotationMatrix(m_mxLocalRotation);
@@ -169,7 +169,7 @@ error Spatial::SetLocalRotation(const Quaternion& qt)
 {
     m_qtLocalQuaternion = qt;
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
-    EulerAngles angles;
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     m_mxLocalTransform = Matrix4::FromSRT(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition);
@@ -203,7 +203,7 @@ error Spatial::SetLocalTransform(const MathLib::Matrix4& mx)
 {
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = mx.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
-    EulerAngles angles;
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     return _UpdateLocalTransform(mx);

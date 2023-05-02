@@ -19,9 +19,8 @@ static std::string TOKEN_ASPECT_RATIO = "AspectRatio";
 static std::string TOKEN_NEAR_WIDTH = "NearWidth";
 static std::string TOKEN_NEAR_HEIGHT = "NearHeight";
 
-CameraDto::CameraDto()
+CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand)
 {
-
 }
 
 CameraDto CameraDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -49,7 +48,8 @@ GenericDto CameraDto::ToGenericDto()
     return dto;
 }
 
-FrustumDto::FrustumDto()
+FrustumDto::FrustumDto() : m_handSys(GraphicCoordSys::LeftHand), m_projectionType(Frustum::ProjectionType::Perspective),
+    m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f)
 {
 }
 
@@ -71,7 +71,7 @@ FrustumDto FrustumDto::FromGenericDto(const Engine::GenericDto& dto)
 GenericDto FrustumDto::ToGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(FactoryDesc(Camera::TYPE_RTTI.GetName()));
+    dto.AddRtti(FactoryDesc(Frustum::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_HAND_SYSTEM, static_cast<unsigned>(m_handSys));
     dto.AddOrUpdate(TOKEN_PROJECTION_TYPE, static_cast<unsigned>(m_projectionType));

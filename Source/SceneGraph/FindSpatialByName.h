@@ -19,7 +19,7 @@ namespace Enigma::SceneGraph
         FindSpatialByName(const std::string& spatial_name);
         FindSpatialByName(const FindSpatialByName&) = default;
         FindSpatialByName(FindSpatialByName&&) = default;
-        virtual ~FindSpatialByName();
+        virtual ~FindSpatialByName() override;
         FindSpatialByName& operator=(const FindSpatialByName&) = default;
         FindSpatialByName& operator=(FindSpatialByName&&) = default;
 

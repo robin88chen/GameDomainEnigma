@@ -1,5 +1,6 @@
 ﻿#include "CameraFrustumDtos.h"
 #include "Camera.h"
+#include "MathLib/MathGlobal.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;

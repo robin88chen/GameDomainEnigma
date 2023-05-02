@@ -13,7 +13,6 @@
 #include "GameEngine/IRenderer.h"
 #include "RenderTargetClearingProperties.h"
 #include "GraphicKernel/TargetViewPort.h"
-#include <system_error>
 
 namespace Enigma::Renderer
 {

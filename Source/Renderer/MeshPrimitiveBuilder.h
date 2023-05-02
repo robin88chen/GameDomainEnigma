@@ -16,6 +16,7 @@
 #include "Frameworks/ResponseSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
 #include "MeshPrimitive.h"
+#include <memory>
 
 namespace Enigma::Renderer
 {

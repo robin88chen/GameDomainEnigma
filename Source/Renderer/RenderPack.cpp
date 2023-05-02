@@ -42,6 +42,7 @@ RenderPack::~RenderPack()
 
 RenderPack& RenderPack::operator=(const RenderPack& pack)
 {
+    if (this == &pack) return *this;
     m_element = pack.m_element;
     m_worldTransform = pack.m_worldTransform;
     m_renderLightingState = pack.m_renderLightingState;
@@ -50,7 +51,7 @@ RenderPack& RenderPack::operator=(const RenderPack& pack)
     return *this;
 }
 
-RenderPack& RenderPack::operator=(RenderPack&& pack)
+RenderPack& RenderPack::operator=(RenderPack&& pack) noexcept
 {
     m_element = std::move(pack.m_element);
     m_worldTransform = pack.m_worldTransform;

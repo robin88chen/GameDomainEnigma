@@ -1,4 +1,5 @@
-﻿#include "MeshPrimitiveBuilder.h"
+﻿#include <memory>
+#include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
@@ -18,7 +19,7 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
-MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.GetName())
+MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.GetName()), m_buildingRuid()
 {
     m_onGeometryDataBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryDataBuilt(e); });
     EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);

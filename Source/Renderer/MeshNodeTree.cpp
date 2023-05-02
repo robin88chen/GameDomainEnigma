@@ -16,7 +16,7 @@ MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree)
     m_meshNodes = tree.m_meshNodes;
 }
 
-MeshNodeTree::MeshNodeTree(MeshNodeTree&& tree)
+MeshNodeTree::MeshNodeTree(MeshNodeTree&& tree) noexcept
 {
     m_meshNodes = std::move(tree.m_meshNodes);
 }
@@ -32,7 +32,7 @@ MeshNodeTree& MeshNodeTree::operator=(const MeshNodeTree& tree)
     return *this;
 }
 
-MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree)
+MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
 {
     m_meshNodes = std::move(tree.m_meshNodes);
     return *this;

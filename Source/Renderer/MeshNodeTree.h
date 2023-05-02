@@ -22,10 +22,10 @@ namespace Enigma::Renderer
     public:
         MeshNodeTree();
         MeshNodeTree(const MeshNodeTree& tree);
-        MeshNodeTree(MeshNodeTree&& tree);
+        MeshNodeTree(MeshNodeTree&& tree) noexcept;
         ~MeshNodeTree();
         MeshNodeTree& operator=(const MeshNodeTree& tree);
-        MeshNodeTree& operator=(MeshNodeTree&& tree);
+        MeshNodeTree& operator=(MeshNodeTree&& tree) noexcept;
 
         Engine::GenericDto SerializeDto();
 

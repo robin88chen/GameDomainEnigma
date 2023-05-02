@@ -47,7 +47,7 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     MeshPrimitive::SelectVisualTechnique(mesh.m_selectedVisualTech);
 }
 
-MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) : Primitive()
+MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive()
 {
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
@@ -71,6 +71,7 @@ MeshPrimitive::~MeshPrimitive()
 
 MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 {
+    if (this == &mesh) return *this;
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
     m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
@@ -88,7 +89,7 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
     return *this;
 }
 
-MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
+MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
 {
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
@@ -98,6 +99,8 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh)
     m_renderBuffer = std::move(mesh.m_renderBuffer);
     m_renderListID = mesh.m_renderListID;
     m_elements = std::move(mesh.m_elements);
+    m_effects = std::move(mesh.m_effects);
+    m_textures = std::move(mesh.m_textures);
     return *this;
 }
 

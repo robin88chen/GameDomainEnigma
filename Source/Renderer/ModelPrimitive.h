@@ -26,10 +26,10 @@ namespace Enigma::Renderer
     public:
         ModelPrimitive(const std::string& name);
         ModelPrimitive(const ModelPrimitive& prim);
-        ModelPrimitive(ModelPrimitive&& prim);
+        ModelPrimitive(ModelPrimitive&& prim) noexcept;
         ~ModelPrimitive() override;
         ModelPrimitive& operator=(const ModelPrimitive& prim);
-        ModelPrimitive& operator=(ModelPrimitive&& prim);
+        ModelPrimitive& operator=(ModelPrimitive&& prim) noexcept;
 
         virtual Engine::GenericDto SerializeDto() override;
 

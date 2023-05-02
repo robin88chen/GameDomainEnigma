@@ -8,13 +8,11 @@
 #ifndef _RENDERABLE_PRIMITIVE_POLICIES_H
 #define _RENDERABLE_PRIMITIVE_POLICIES_H
 
-#include "Frameworks/ruid.h"
+#include <memory>
 #include "GameEngine/GeometryDataPolicy.h"
-#include "GameEngine/EffectMaterialPolicy.h"
-#include "GameEngine/EffectTextureMapPolicy.h"
 #include "RenderablePrimitiveDtos.h"
+#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "Animators/AnimatorDtos.h"
 #include <string>
 #include <vector>

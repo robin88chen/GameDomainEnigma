@@ -20,10 +20,10 @@ namespace Enigma::Renderer
     public:
         SkinMeshPrimitive(const std::string& name);
         SkinMeshPrimitive(const SkinMeshPrimitive&);
-        SkinMeshPrimitive(SkinMeshPrimitive&&);
+        SkinMeshPrimitive(SkinMeshPrimitive&&) noexcept;
         ~SkinMeshPrimitive() override;
         SkinMeshPrimitive& operator=(const SkinMeshPrimitive&);
-        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&);
+        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) noexcept;
 
         virtual Engine::GenericDto SerializeDto() override;
 

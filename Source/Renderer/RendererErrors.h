@@ -8,6 +8,7 @@
 #ifndef RENDERER_ERRORS_H
 #define RENDERER_ERRORS_H
 
+#include <string>
 #include <system_error>
 
 namespace Enigma::Renderer

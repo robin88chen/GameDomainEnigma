@@ -1,4 +1,5 @@
-﻿#include "RenderablePrimitiveBuilder.h"
+﻿#include <memory>
+#include "RenderablePrimitiveBuilder.h"
 #include "RenderablePrimitivePolicies.h"
 #include "MeshPrimitiveBuilder.h"
 #include "ModelPrimitiveBuilder.h"
@@ -18,7 +19,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 
-RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : ISystemService(mngr)
+RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : ISystemService(mngr), m_buildingRuid()
 {
     m_needTick = false;
     m_isCurrentBuilding = false;

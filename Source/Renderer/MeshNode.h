@@ -20,10 +20,10 @@ namespace Enigma::Renderer
     public:
         MeshNode(const std::string& name);
         MeshNode(const MeshNode& node);
-        MeshNode(MeshNode&& node);
+        MeshNode(MeshNode&& node) noexcept;
         ~MeshNode();
         MeshNode& operator=(const MeshNode& node);
-        MeshNode& operator=(MeshNode&& node);
+        MeshNode& operator=(MeshNode&& node) noexcept;
 
         Engine::GenericDto SerializeDto();
 

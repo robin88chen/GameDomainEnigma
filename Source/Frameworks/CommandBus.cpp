@@ -24,9 +24,8 @@ ServiceResult CommandBus::OnTick()
 {
     assert(m_thisBus);
 
-    unsigned int cmd_count = 0;
     m_commandListLock.lock();
-    cmd_count = (unsigned int)m_commands.size();
+    unsigned int cmd_count = static_cast<unsigned int>(m_commands.size());
     m_commandListLock.unlock();
 
     if (cmd_count == 0)

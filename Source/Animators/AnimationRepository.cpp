@@ -23,7 +23,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Animators, AnimationRepository, ISystemService);
 
-AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemService(manager)
+AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemService(manager), m_constructingAnimatorRuid()
 {
     m_needTick = false;
     m_isAnimatorCurrentBuilding = false;
@@ -205,7 +205,7 @@ void AnimationRepository::OnBuildAnimationAssetFailed(const Frameworks::IEventPt
 void AnimationRepository::OnAnimatorBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    Ruid ruid_in_event;
+    Ruid ruid_in_event{};
     auto ev_model = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt, IEvent>(e);
     if (ev_model)
     {
@@ -218,7 +218,7 @@ void AnimationRepository::OnAnimatorBuilt(const Frameworks::IEventPtr& e)
 void AnimationRepository::OnBuildAnimatorFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    Ruid ruid_in_event;
+    Ruid ruid_in_event{};
     std::string err_msg;
     auto ev_model = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed, IEvent>(e);
     if (ev_model)

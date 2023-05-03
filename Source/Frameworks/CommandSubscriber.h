@@ -17,7 +17,11 @@ namespace Enigma::Frameworks
     public:
         CommandSubscriber();
         CommandSubscriber(const CommandHandler& handler);
+        CommandSubscriber(const CommandSubscriber&) = delete;
+        CommandSubscriber(CommandSubscriber&&) = delete;
         virtual ~CommandSubscriber();
+        CommandSubscriber& operator=(const CommandSubscriber&) = delete;
+        CommandSubscriber& operator=(CommandSubscriber&&) = delete;
 
         virtual void HandleCommand(const ICommandPtr& e);
 

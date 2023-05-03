@@ -46,9 +46,9 @@ void AnimationAssetBuilder::BuildAnimationAsset(const std::shared_ptr<AnimationA
         EventPublisher::Post(std::make_shared<AnimationAssetBuilt>(policy->Name(),
             m_repository->QueryAnimationAsset(policy->RttiName(), policy->Name())));
     }
-    else if (policy->GetDto())
+    else if (auto dto = policy->GetDto())
     {
-        CreateFromDto(policy->Name(), policy->GetDto().value());
+        CreateFromDto(policy->Name(), dto.value());
     }
     else if (policy->GetDeserializer())
     {

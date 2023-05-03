@@ -37,8 +37,10 @@ namespace Enigma::Frameworks
     public:
         ServiceManager();
         ServiceManager(const ServiceManager&) = delete;
+        ServiceManager(ServiceManager&&) = delete;
         virtual ~ServiceManager();
         ServiceManager& operator=(const ServiceManager&) = delete;
+        ServiceManager& operator=(ServiceManager&&) = delete;
 
         void RegisterSystemService(const std::shared_ptr<ISystemService>& service);
         void UnregisterSystemService(const Rtti& service_type);
@@ -65,6 +67,7 @@ namespace Enigma::Frameworks
     protected:
         struct ServiceStateRecord
         {
+            ServiceStateRecord() : m_state(ServiceState::Invalid), m_service(nullptr), m_isRegistered(false) {};
             ServiceState m_state;
             std::shared_ptr<ISystemService> m_service;
             bool m_isRegistered;

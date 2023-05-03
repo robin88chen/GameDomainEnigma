@@ -17,7 +17,11 @@ namespace Enigma::Frameworks
     public:
         EventSubscriber();
         EventSubscriber(const EventHandler& handler);
+        EventSubscriber(const EventSubscriber&) = delete;
+        EventSubscriber(EventSubscriber&&) = delete;
         virtual ~EventSubscriber();
+        EventSubscriber& operator=(const EventSubscriber&) = delete;
+        EventSubscriber& operator=(EventSubscriber&&) = delete;
 
         virtual void HandleEvent(const IEventPtr& e);
 

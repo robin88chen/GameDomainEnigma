@@ -20,7 +20,7 @@ SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op)
     m_skinNodeIndexMapping = op.m_skinNodeIndexMapping;
 }
 
-SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op)
+SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op) noexcept
 {
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_boneNodeNames = std::move(op.m_boneNodeNames);
@@ -34,6 +34,7 @@ SkinAnimationOperator::~SkinAnimationOperator()
 
 SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOperator& op)
 {
+    if (this == &op) return *this;
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
     m_boneNodeNames = op.m_boneNodeNames;
     m_nodeOffsets = op.m_nodeOffsets;
@@ -41,7 +42,7 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOpera
     return *this;
 }
 
-SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& op)
+SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& op) noexcept
 {
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_boneNodeNames = std::move(op.m_boneNodeNames);

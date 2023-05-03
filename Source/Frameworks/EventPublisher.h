@@ -30,8 +30,10 @@ namespace Enigma::Frameworks
     public:
         EventPublisher(ServiceManager* manager);
         EventPublisher(const EventPublisher&) = delete;
+        EventPublisher(EventPublisher&&) = delete;
         virtual ~EventPublisher() override;
         EventPublisher& operator=(const EventPublisher&) = delete;
+        EventPublisher& operator=(EventPublisher&&) = delete;
 
         virtual ServiceResult OnTick() override;
         virtual ServiceResult OnTerm() override;

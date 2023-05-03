@@ -24,9 +24,8 @@ ServiceResult EventPublisher::OnTick()
 {
     assert(m_thisPublisher);
 
-    unsigned int ev_count = 0;
     m_eventListLock.lock();
-    ev_count = (unsigned int)m_events.size();
+    unsigned int ev_count = static_cast<unsigned int>(m_events.size());
     m_eventListLock.unlock();
 
     if (ev_count == 0)

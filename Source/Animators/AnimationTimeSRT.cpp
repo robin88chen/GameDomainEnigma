@@ -189,7 +189,7 @@ Vector3 AnimationTimeSRT::CalculateScaleKey(float offset_time)
 {
     assert(!m_scaleKeyVector.empty());
 
-    unsigned int count = (unsigned int)m_scaleKeyVector.size();
+    unsigned int count = static_cast<unsigned int>(m_scaleKeyVector.size());
     if (offset_time <= m_scaleKeyVector[0].m_time) return m_scaleKeyVector[0].m_vecKey;
     if (offset_time >= m_scaleKeyVector[count - 1].m_time) return m_scaleKeyVector[count - 1].m_vecKey;
 
@@ -201,7 +201,7 @@ Vector3 AnimationTimeSRT::CalculateScaleKey(float offset_time)
     while (r >= l)
     {
         unsigned int m = (l + r) >> 1;
-        assert((m >= 0) && (m < count));
+        assert(m < count);
         if (m_scaleKeyVector[m].m_time <= offset_time)
         {
             if ((m < count - 1) && (m_scaleKeyVector[m + 1].m_time > offset_time))  // off-time在m~m+1範圍內
@@ -247,11 +247,9 @@ Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
 {
     assert(!m_rotationKeyVector.empty());
 
-    unsigned int count = (unsigned int)m_rotationKeyVector.size();
+    unsigned int count = static_cast<unsigned int>(m_rotationKeyVector.size());
     if (offset_time <= m_rotationKeyVector[0].m_time) return m_rotationKeyVector[0].m_qtKey;
     if (offset_time >= m_rotationKeyVector[count - 1].m_time) return m_rotationKeyVector[count - 1].m_qtKey;
-
-    Quaternion ret;
 
     // 二元搜尋
     unsigned int l = 0;
@@ -259,7 +257,7 @@ Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
     while (r >= l)
     {
         unsigned int m = (l + r) >> 1;
-        assert((m >= 0) && (m < count));
+        assert(m < count);
         if (m_rotationKeyVector[m].m_time <= offset_time)
         {
             if ((m < count - 1) && (m_rotationKeyVector[m + 1].m_time > offset_time))  // off-time在m~m+1範圍內
@@ -305,7 +303,7 @@ Vector3 AnimationTimeSRT::CalculateTranslateKey(float offset_time)
 {
     assert(!m_translateKeyVector.empty());
 
-    unsigned int count = (unsigned int)m_translateKeyVector.size();
+    unsigned int count = static_cast<unsigned int>(m_translateKeyVector.size());
     if (offset_time <= m_translateKeyVector[0].m_time) return m_translateKeyVector[0].m_vecKey;
     if (offset_time >= m_translateKeyVector[count - 1].m_time) return m_translateKeyVector[count - 1].m_vecKey;
 
@@ -317,7 +315,7 @@ Vector3 AnimationTimeSRT::CalculateTranslateKey(float offset_time)
     while (r >= l)
     {
         unsigned int m = (l + r) >> 1;
-        assert((m >= 0) && (m < count));
+        assert(m < count);
         if (m_translateKeyVector[m].m_time <= offset_time)
         {
             if ((m < count - 1) && (m_translateKeyVector[m + 1].m_time > offset_time))  // off-time在m~m+1範圍內

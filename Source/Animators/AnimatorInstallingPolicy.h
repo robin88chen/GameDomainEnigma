@@ -18,7 +18,6 @@ namespace Enigma::Animators
     {
     public:
         AnimatorInstallingPolicy() = default;
-        virtual ~AnimatorInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;

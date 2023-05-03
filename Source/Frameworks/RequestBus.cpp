@@ -24,7 +24,7 @@ ServiceResult RequestBus::OnTick()
 {
     assert(m_thisBus);
 
-    unsigned int req_count = 0;
+    unsigned int req_count;
     {
         std::lock_guard locker{ m_requestListLock };
         req_count = static_cast<unsigned int>(m_requests.size());

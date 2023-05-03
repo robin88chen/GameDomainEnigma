@@ -20,10 +20,10 @@ namespace Enigma::Animators
     public:
         SkinAnimationOperator();
         SkinAnimationOperator(const SkinAnimationOperator& op);
-        SkinAnimationOperator(SkinAnimationOperator&& op);
+        SkinAnimationOperator(SkinAnimationOperator&& op) noexcept;
         ~SkinAnimationOperator();
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
-        SkinAnimationOperator& operator=(SkinAnimationOperator&& op);
+        SkinAnimationOperator& operator=(SkinAnimationOperator&& op) noexcept;
 
         SkinOperatorDto SerializeDto();
 

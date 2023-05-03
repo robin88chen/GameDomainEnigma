@@ -1,5 +1,4 @@
 ﻿#include "RttiDerivingMap.h"
-#include <cassert>
 
 using namespace Enigma::Frameworks;
 

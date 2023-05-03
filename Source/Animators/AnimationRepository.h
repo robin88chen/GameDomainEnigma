@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   AnimationAssetRepository.h
+ * \file   AnimationRepository.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATION_ASSET_REPOSITORY_H
-#define _ANIMATION_ASSET_REPOSITORY_H
+#ifndef _ANIMATION_REPOSITORY_H
+#define _ANIMATION_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
@@ -91,4 +91,4 @@ namespace Enigma::Animators
     };
 }
 
-#endif // _ANIMATION_ASSET_REPOSITORY_H
+#endif // _ANIMATION_REPOSITORY_H

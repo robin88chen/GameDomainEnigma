@@ -5,10 +5,9 @@ using duration = std::chrono::duration<float>;
 
 using namespace Enigma::Frameworks;
 
-Timer::Timer()
+Timer::Timer() : m_scale(1.0f), m_frameStep(0.0f), m_isForceStepped(false), m_isTimerStopped(true), m_totalTime(duration(0.0f)), m_currElapseTime(duration(0.0f))
 {
-    Reset();
-    m_isTimerStopped = true;
+       Reset();
 }
 
 Timer::~Timer()

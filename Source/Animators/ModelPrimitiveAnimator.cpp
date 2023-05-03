@@ -25,7 +25,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
     m_isOnPlay = false;
 }
 
-ModelPrimitiveAnimator::ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) : Animator()
+ModelPrimitiveAnimator::ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) : Animator(ani)
 {
     m_animationAsset = ani.m_animationAsset;
     m_meshNodeMapping = ani.m_meshNodeMapping;
@@ -45,6 +45,8 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 
 ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAnimator& ani)
 {
+    if (this == &ani) return *this;
+    Animator::operator=(ani);
     m_animationAsset = ani.m_animationAsset;
     m_meshNodeMapping = ani.m_meshNodeMapping;
     m_skinAnimOperators = ani.m_skinAnimOperators;

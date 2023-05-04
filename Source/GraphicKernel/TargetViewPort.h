@@ -1,5 +1,5 @@
 ﻿/********************************************************************
- * \file   TragetViewPort.h
+ * \file   TargetViewPort.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen

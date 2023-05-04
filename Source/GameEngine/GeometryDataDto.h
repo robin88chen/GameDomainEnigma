@@ -1,23 +1,20 @@
 ﻿/*********************************************************************
- * \file   GeometryDataContract.h
+ * \file   GeometryDataDto.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
-#ifndef _GEOMETRY_DATA_CONTRACT_H
-#define _GEOMETRY_DATA_CONTRACT_H
+#ifndef _GEOMETRY_DATA_DTO_H
+#define _GEOMETRY_DATA_DTO_H
 
 #include <string>
 #include <vector>
 #include <optional>
-#include <array>
 #include "MathLib/Vector3.h"
 #include "MathLib/Vector4.h"
 #include "MathLib/Vector2.h"
 #include "GenericDto.h"
-#include "Frameworks/ExtentTypesDefine.h"
-#include "GraphicKernel/VertexDescription.h"
 
 namespace Enigma::Engine
 {
@@ -45,7 +42,7 @@ namespace Enigma::Engine
     class GeometryDataDto
     {
     public:
-        GeometryDataDto() = default;
+        GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0) {};
 
         static GeometryDataDto FromGenericDto(const GenericDto& dto);
         GenericDto ToGenericDto();
@@ -125,4 +122,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // _GEOMETRY_DATA_CONTRACT_H
+#endif // _GEOMETRY_DATA_DTO_H

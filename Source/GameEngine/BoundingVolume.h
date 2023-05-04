@@ -35,11 +35,11 @@ namespace Enigma::Engine
         BoundingVolume(const MathLib::Box3& box);
         BoundingVolume(const MathLib::Sphere3& sphere);
         BoundingVolume(const BoundingVolume&);
-        BoundingVolume(BoundingVolume&&);
+        BoundingVolume(BoundingVolume&&) noexcept;
         ~BoundingVolume();
 
         BoundingVolume& operator=(const BoundingVolume&);
-        BoundingVolume& operator=(BoundingVolume&&);
+        BoundingVolume& operator=(BoundingVolume&&) noexcept;
 
         BoundingVolumeDto SerializeDto() const;
 

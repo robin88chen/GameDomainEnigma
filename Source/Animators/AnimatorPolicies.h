@@ -8,7 +8,6 @@
 #ifndef _ANIMATOR_POLICIES_H
 #define _ANIMATOR_POLICIES_H
 
-#include "GameEngine/DtoDeserializer.h"
 #include "Renderer/ModelPrimitive.h"
 #include "AnimatorDtos.h"
 #include <memory>
@@ -22,8 +21,8 @@ namespace Enigma::Animators
     public:
         ModelAnimatorPolicy() : m_ruid(Frameworks::Ruid::Generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.GetName()) {}
         ModelAnimatorPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled, const std::shared_ptr<AnimationAssetPolicy>& asset_policy)
-            : m_ruid(Frameworks::Ruid::Generate()), m_controlledPrimitive(controlled),
-                m_assetPolicy(asset_policy), m_assetFactory(Engine::Animator::TYPE_RTTI.GetName()) {}
+            : m_ruid(Frameworks::Ruid::Generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.GetName()),
+                m_controlledPrimitive(controlled), m_assetPolicy(asset_policy)  {}
 
         [[nodiscard]] const Frameworks::Ruid& GetRuid() const { return m_ruid; }
         [[nodiscard]] const Engine::FactoryDesc& AssetFactoryDesc() const { return m_assetFactory; }

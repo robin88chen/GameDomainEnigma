@@ -149,17 +149,17 @@ BoxBV::FlagBits BoxBV::PointInsideFlags(const MathLib::Vector3& pos)
     float d = diff.Dot(m_box.Axis(0));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(0)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(0)))
     {
-        flags.set((size_t)Axis::x);
+        flags.set(static_cast<size_t>(Axis::x));
     }
     d = diff.Dot(m_box.Axis(1));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(1)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(1)))
     {
-        flags.set((size_t)Axis::y);
+        flags.set(static_cast<size_t>(Axis::y));
     }
     d = diff.Dot(m_box.Axis(2));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(2)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(2)))
     {
-        flags.set((size_t)Axis::z);
+        flags.set(static_cast<size_t>(Axis::z));
     }
 
     return flags;

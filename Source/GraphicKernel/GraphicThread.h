@@ -22,8 +22,10 @@ namespace Enigma::Graphics
     public:
         GraphicThread();
         GraphicThread(const GraphicThread&) = delete;
+        GraphicThread(GraphicThread&&) = delete;
         virtual ~GraphicThread();
         GraphicThread& operator=(const GraphicThread&) = delete;
+        GraphicThread& operator=(GraphicThread&&) = delete;
 
         std::thread::id GetThreadId();
         /**

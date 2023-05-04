@@ -64,7 +64,7 @@ void GraphicThread::ThreadProcedure()
             m_self->m_tasks.pop_front();
         }
         t();*/
-        bool is_task_empty = false;
+        bool is_task_empty;
         {
             std::lock_guard<std::mutex> locker{ m_self->m_taskLocker };
             is_task_empty = m_self->m_tasks.empty();

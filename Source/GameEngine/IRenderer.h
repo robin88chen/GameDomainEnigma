@@ -16,8 +16,12 @@ namespace Enigma::Engine
     class IRenderer : public std::enable_shared_from_this<IRenderer>
     {
     public:
-        IRenderer(const std::string& name) : m_name(name) {};
+        IRenderer(const std::string& name) : m_name(name), m_stampBitMask(0) {};
+        IRenderer(const IRenderer&) = delete;
+        IRenderer(IRenderer&&) = delete;
         virtual ~IRenderer() {};
+        IRenderer& operator=(const IRenderer&) = delete;
+        IRenderer& operator=(IRenderer&&) = delete;
 
         /** get renderer's name */
         const std::string& GetName() { return m_name; };

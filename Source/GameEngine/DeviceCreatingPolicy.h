@@ -17,7 +17,6 @@ namespace Enigma::Engine
     {
     public:
         DeviceCreatingPolicy(const Graphics::DeviceRequiredBits& rqb, void* hwnd) : m_rqb(rqb), m_hwnd(hwnd) {}
-        virtual ~DeviceCreatingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;

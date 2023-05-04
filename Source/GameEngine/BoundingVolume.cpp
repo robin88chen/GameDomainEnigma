@@ -10,13 +10,13 @@ BoundingVolume::BoundingVolume()
 
 BoundingVolume::BoundingVolume(const BoundingVolumeDto& dto)
 {
-    if (dto.Box())
+    if (auto box = dto.Box())
     {
-        m_bv = std::make_unique<BoxBV>(dto.Box().value());
+        m_bv = std::make_unique<BoxBV>(box.value());
     }
-    else if (dto.Sphere())
+    else if (auto sphere = dto.Sphere())
     {
-        m_bv = std::make_unique<SphereBV>(dto.Sphere().value());
+        m_bv = std::make_unique<SphereBV>(sphere.value());
     }
 }
 
@@ -32,17 +32,17 @@ BoundingVolume::BoundingVolume(const MathLib::Sphere3& sphere)
 
 BoundingVolume::BoundingVolume(const BoundingVolume& bv)
 {
-    if (bv.BoundingBox3())
+    if (auto box = bv.BoundingBox3())
     {
-        m_bv = std::make_unique<BoxBV>(bv.BoundingBox3().value());
+        m_bv = std::make_unique<BoxBV>(box.value());
     }
-    else if (bv.BoundingSphere3())
+    else if (auto sphere = bv.BoundingSphere3())
     {
-        m_bv = std::make_unique<SphereBV>(bv.BoundingSphere3().value());
+        m_bv = std::make_unique<SphereBV>(sphere.value());
     }
 }
 
-BoundingVolume::BoundingVolume(BoundingVolume&& bv)
+BoundingVolume::BoundingVolume(BoundingVolume&& bv) noexcept
 {
     if (bv.m_bv)
     {
@@ -56,19 +56,19 @@ BoundingVolume::~BoundingVolume()
 
 BoundingVolume& BoundingVolume::operator=(const BoundingVolume& bv)
 {
-    if (bv.BoundingBox3())
+    if (auto box = bv.BoundingBox3())
     {
-        m_bv = std::make_unique<BoxBV>(bv.BoundingBox3().value());
+        m_bv = std::make_unique<BoxBV>(box.value());
     }
-    else if (bv.BoundingSphere3())
+    else if (auto sphere = bv.BoundingSphere3())
     {
-        m_bv = std::make_unique<SphereBV>(bv.BoundingSphere3().value());
+        m_bv = std::make_unique<SphereBV>(sphere.value());
     }
 
     return *this;
 }
 
-BoundingVolume& BoundingVolume::operator=(BoundingVolume&& bv)
+BoundingVolume& BoundingVolume::operator=(BoundingVolume&& bv) noexcept
 {
     if (bv.m_bv)
     {

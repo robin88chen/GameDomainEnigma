@@ -34,7 +34,7 @@ EffectPass::EffectPass(const EffectPass& pass)
     m_variables = pass.m_variables;
 }
 
-EffectPass::EffectPass(EffectPass&& pass)
+EffectPass::EffectPass(EffectPass&& pass) noexcept
 {
     m_name = std::move(pass.m_name);
     m_shader = std::move(pass.m_shader);
@@ -59,6 +59,7 @@ EffectPass::~EffectPass()
 
 EffectPass& EffectPass::operator=(const EffectPass& pass)
 {
+    if (this == &pass) return *this;
     m_name = pass.m_name;
     m_shader = pass.m_shader;
     m_samplers = pass.m_samplers;

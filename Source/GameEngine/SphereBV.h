@@ -19,8 +19,10 @@ namespace Enigma::Engine
     public:
         SphereBV(const MathLib::Sphere3&);
         SphereBV(const SphereBV&) = default;
-        virtual ~SphereBV();
+        SphereBV(SphereBV&&) = default;
+        virtual ~SphereBV() override;
         SphereBV& operator=(const SphereBV&) = default;
+        SphereBV& operator=(SphereBV&&) = default;
 
         virtual void CreateFromTransform(const MathLib::Matrix4& mx, const std::unique_ptr<GenericBV>& source) override;
         virtual void Copy(const std::unique_ptr<GenericBV>& source) override;

@@ -105,8 +105,8 @@ namespace Enigma::Graphics
         int DiffuseColorOffset(ColorNumeric type) const;
         int SpecularColorOffset() const { return m_specularOffset; }
         int SpecularColorOffset(ColorNumeric type) const;
-        int TextureCoordOffset(int stage) const;
-        int TextureCoordSize(int stage) const;
+        int TextureCoordOffset(unsigned stage) const;
+        int TextureCoordSize(unsigned stage) const;
         int TangentOffset() const;
         int BiNormalOffset() const { return m_biNormalOffset; }
         int BlendWeightCount() const { return m_blendWeightCount; }

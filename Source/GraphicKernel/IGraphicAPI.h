@@ -59,6 +59,7 @@ namespace Enigma::Graphics
     public:
         enum class APIVersion
         {
+            API_Unknown,
             API_Dx9,
             API_Dx11,
             API_EGL,
@@ -142,7 +143,7 @@ namespace Enigma::Graphics
         //@{
         void DoCreatingDevice(const Frameworks::ICommandPtr& c);
         void DoCleaningDevice(const Frameworks::ICommandPtr& c);
-		
+        
         void DoBeginningScene(const Frameworks::ICommandPtr& c);
         void DoEndingScene(const Frameworks::ICommandPtr& c);
         void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
@@ -159,7 +160,7 @@ namespace Enigma::Graphics
         void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
         void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
         void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
-		void DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c);
+        void DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c);
 
         void DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c);
         void DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c);
@@ -208,10 +209,10 @@ namespace Enigma::Graphics
             int baseVertexOffset);
         //@}
 
-    	virtual error FlipBackSurface() = 0;
+        virtual error FlipBackSurface() = 0;
         virtual future_error AsyncFlipBackSurface();
 
-    	/** @name back / depth surface */
+        /** @name back / depth surface */
         //@{
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
@@ -241,13 +242,11 @@ namespace Enigma::Graphics
         //@{ 
         /** create vertex shader
         @param name shader name
-        @param shader out shader interface
         */
         virtual error CreateVertexShader(const std::string& name) = 0;
         virtual future_error AsyncCreateVertexShader(const std::string& name);
         /** create pixel shader
         @param name shader name
-        @param shader out shader interface
         */
         virtual error CreatePixelShader(const std::string& name) = 0;
         virtual future_error AsyncCreatePixelShader(const std::string& name);
@@ -255,7 +254,6 @@ namespace Enigma::Graphics
         /** create shader program
         @param vtx_shader vertex shader
         @param pix_shader pixel shader
-        @param program out shader program interface
         */
         virtual error CreateShaderProgram(const std::string& name,
             const IVertexShaderPtr& vtx_shader, const IPixelShaderPtr& pix_shader, const IVertexDeclarationPtr& vtx_decl) = 0;

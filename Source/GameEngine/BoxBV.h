@@ -19,13 +19,13 @@ namespace Enigma::Engine
     {
     public:
         enum class Axis { x, y, z, count  };
-        using FlagBits = std::bitset<(size_t)Axis::count>;
+        using FlagBits = std::bitset<static_cast<size_t>(Axis::count)>;
 
     public:
         BoxBV(const MathLib::Box3&);
         BoxBV(const BoxBV&) = default;
         BoxBV(BoxBV&&) = default;
-        virtual ~BoxBV();
+        virtual ~BoxBV() override;
         BoxBV& operator=(const BoxBV&) = default;
         BoxBV& operator=(BoxBV&&) = default;
 

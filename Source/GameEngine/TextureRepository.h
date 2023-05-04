@@ -11,8 +11,6 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Texture.h"
-#include "TextureLoadingPolicies.h"
-#include "Frameworks/Command.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/RequestSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -32,7 +30,7 @@ namespace Enigma::Engine
         TextureRepository(Frameworks::ServiceManager* srv_manager);
         TextureRepository(const TextureRepository&) = delete;
         TextureRepository(TextureRepository&&) = delete;
-        ~TextureRepository();
+        ~TextureRepository() override;
         TextureRepository& operator=(const TextureRepository&) = delete;
         TextureRepository& operator=(TextureRepository&&) = delete;
 
@@ -62,7 +60,7 @@ namespace Enigma::Engine
 
         TextureLoader* m_loader;
         std::queue<std::shared_ptr<RequestLoadTexture>> m_requests;
-        Frameworks::Ruid m_currentRequiestRuid;
+        Frameworks::Ruid m_currentRequestRuid;
         bool m_isCurrentLoading;
         std::mutex m_requestsLock;
     };

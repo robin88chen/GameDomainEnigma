@@ -45,7 +45,7 @@ namespace Enigma::Engine
     public:
         EffectPass(const std::string& name, const Graphics::IShaderProgramPtr& program, const EffectPassStates& states);
         EffectPass(const EffectPass& pass);
-        EffectPass(EffectPass&& pass);
+        EffectPass(EffectPass&& pass) noexcept;
         ~EffectPass();
 
         EffectPass& operator=(const EffectPass& pass);

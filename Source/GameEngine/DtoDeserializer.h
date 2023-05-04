@@ -18,7 +18,11 @@ namespace Enigma::Engine
     {
     public:
         IDtoDeserializer() = default;
+        IDtoDeserializer(const IDtoDeserializer&) = delete;
+        IDtoDeserializer(IDtoDeserializer&&) = delete;
         virtual ~IDtoDeserializer() = default;
+        IDtoDeserializer& operator=(const IDtoDeserializer&) = delete;
+        IDtoDeserializer& operator=(IDtoDeserializer&&) = delete;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
     };

@@ -40,7 +40,7 @@ namespace Enigma::Engine
         ShaderRepository(Frameworks::ServiceManager* srv_mngr);
         ShaderRepository(const ShaderRepository&) = delete;
         ShaderRepository(ShaderRepository&&) = delete;
-        virtual ~ShaderRepository();
+        virtual ~ShaderRepository() override;
         ShaderRepository& operator=(const ShaderRepository&) = delete;
         ShaderRepository& operator=(ShaderRepository&&) = delete;
 

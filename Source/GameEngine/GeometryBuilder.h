@@ -39,7 +39,7 @@ namespace Enigma::Engine
     protected:
         GeometryRepository* m_hostRepository;
         Frameworks::Ruid m_ruidDeserializing;
-        Frameworks::Ruid m_ruidContracting;
+        Frameworks::Ruid m_ruidInstancing;
         GeometryDataPolicy m_policy;
 
         Frameworks::EventSubscriberPtr m_onDtoDeserialized;

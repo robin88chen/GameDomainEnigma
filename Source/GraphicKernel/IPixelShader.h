@@ -8,7 +8,6 @@
 #ifndef PIXEL_SHADER_INTERFACE_H
 #define PIXEL_SHADER_INTERFACE_H
 
-#include "Frameworks/ExtentTypesDefine.h"
 #include <memory>
 #include <string>
 #include <system_error>

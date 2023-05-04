@@ -197,6 +197,8 @@ VertexDescription VertexFormatCode::CalculateVertexSize()
         }
         //num_elements += 6;
         break;
+    default:
+        break;
     }
 
     if (m_fvfCode & NORMAL)
@@ -251,7 +253,7 @@ VertexDescription VertexFormatCode::CalculateVertexSize()
         {
             desc.m_texCoordOffset[stage] = offset;
             desc.m_texCoordSize[stage] = m_texCoordSize[stage];
-            size += (m_texCoordSize[stage] * sizeof(float));
+            size += static_cast<int>(m_texCoordSize[stage] * sizeof(float));
             offset += m_texCoordSize[stage];
             if (m_texCoordSize[stage] > 0) num_elements++;
         }
@@ -379,7 +381,7 @@ void VertexFormatCode::FromString(const std::string& fvf_string)
                 int count = c - '0';
                 if ((count > 0) && (count <= 8))
                 {
-                    m_texCount = (unsigned int)count;
+                    m_texCount = static_cast<unsigned int>(count);
                     char* p = &token[4];
                     if (*p == '(')
                     {
@@ -389,7 +391,7 @@ void VertexFormatCode::FromString(const std::string& fvf_string)
                             int tex_size = *p - '0';
                             if ((tex_size > 0) && (tex_size <= 4))
                             {
-                                m_texCoordSize[ti] = (unsigned char)tex_size;
+                                m_texCoordSize[ti] = static_cast<unsigned char>(tex_size);
                             }
                             else
                             {
@@ -435,6 +437,7 @@ std::string VertexFormatCode::ToString() const
     case XYZB3: ret = "xyzb3"; break;
     case XYZB4: ret = "xyzb4"; break;
     case XYZB5: ret = "xyzb5"; break;
+    default: assert("invalid position mask" == 0); // C1430
     }
 
     if (m_fvfCode & NORMAL) ret += "_nor";
@@ -519,13 +522,13 @@ int VertexDescription::SpecularColorOffset(ColorNumeric type) const
     return -1;
 }
 
-int VertexDescription::TextureCoordOffset(int stage) const
+int VertexDescription::TextureCoordOffset(unsigned stage) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     return m_texCoordOffset[stage];
 }
 
-int VertexDescription::TextureCoordSize(int stage) const
+int VertexDescription::TextureCoordSize(unsigned stage) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     return m_texCoordSize[stage];

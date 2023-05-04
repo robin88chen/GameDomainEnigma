@@ -1,8 +1,6 @@
 ﻿#include "IGraphicAPI.h"
 #include "GraphicThread.h"
 #include "GraphicAssetStash.h"
-#include "IVertexShader.h"
-#include "IVertexDeclaration.h"
 #include "GraphicCommands.h"
 #include "MathLib/ColorRGBA.h"
 #include "Frameworks/CommandBus.h"
@@ -14,7 +12,7 @@ using namespace Enigma::Graphics;
 
 IGraphicAPI* IGraphicAPI::m_instance = nullptr;
 
-IGraphicAPI::IGraphicAPI(AsyncType async)
+IGraphicAPI::IGraphicAPI(AsyncType async) : m_wnd(nullptr), m_apiVersion(APIVersion::API_Unknown), m_boundTopology(PrimitiveTopology::Topology_Undefine)
 {
     assert(!m_instance);
     m_instance = this;
@@ -61,14 +59,14 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
 
-	m_doClearing =
+    m_doClearing =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoClearing(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::ClearSurface), m_doClearing);
     m_doFlipping =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoFlipping(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
 
-	m_doCreatingPrimarySurface =
+    m_doCreatingPrimarySurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPrimarySurface(c); });
     Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingBackSurface =
@@ -165,7 +163,7 @@ void IGraphicAPI::UnsubscribeHandlers()
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
     m_doFlipping = nullptr;
 
-	Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
+    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingPrimarySurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
     m_doCreatingBackSurface = nullptr;

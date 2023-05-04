@@ -24,7 +24,7 @@ Enigma::Engine::RenderBufferSignature::RenderBufferSignature(const RenderBufferS
     m_indexCapacity = signature.m_indexCapacity;
 }
 
-Enigma::Engine::RenderBufferSignature::RenderBufferSignature(RenderBufferSignature&& signature)
+Enigma::Engine::RenderBufferSignature::RenderBufferSignature(RenderBufferSignature&& signature) noexcept
 {
     m_name = std::move(signature.m_name);
     m_topology = signature.m_topology;
@@ -45,7 +45,7 @@ Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::op
     return *this;
 }
 
-Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::operator=(RenderBufferSignature&& signature)
+Enigma::Engine::RenderBufferSignature& Enigma::Engine::RenderBufferSignature::operator=(RenderBufferSignature&& signature) noexcept
 {
     m_name = std::move(signature.m_name);
     m_topology = signature.m_topology;

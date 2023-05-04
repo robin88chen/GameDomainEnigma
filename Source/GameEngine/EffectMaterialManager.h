@@ -33,7 +33,7 @@ namespace Enigma::Engine
             const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer);
         EffectMaterialManager(const EffectMaterialManager&) = delete;
         EffectMaterialManager(EffectMaterialManager&&) = delete;
-        virtual ~EffectMaterialManager();
+        virtual ~EffectMaterialManager() override;
         EffectMaterialManager& operator=(const EffectMaterialManager&) = delete;
         EffectMaterialManager& operator=(EffectMaterialManager&&) = delete;
 

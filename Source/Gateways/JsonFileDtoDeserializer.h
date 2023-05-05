@@ -17,7 +17,6 @@ namespace Enigma::Gateways
     {
     public:
         JsonFileDtoDeserializer();
-        ~JsonFileDtoDeserializer() override;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
     };

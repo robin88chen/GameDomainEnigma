@@ -15,12 +15,7 @@ using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 
-AsyncJsonFileEffectProfileDeserializer::AsyncJsonFileEffectProfileDeserializer()
-{
-
-}
-
-AsyncJsonFileEffectProfileDeserializer::~AsyncJsonFileEffectProfileDeserializer()
+AsyncJsonFileEffectProfileDeserializer::AsyncJsonFileEffectProfileDeserializer() : m_ruid()
 {
 
 }

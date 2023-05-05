@@ -13,11 +13,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
 using namespace Enigma::FileSystem;
 
-AsyncJsonFileDtoDeserializer::AsyncJsonFileDtoDeserializer() : IDtoDeserializer()
-{
-}
-
-AsyncJsonFileDtoDeserializer::~AsyncJsonFileDtoDeserializer()
+AsyncJsonFileDtoDeserializer::AsyncJsonFileDtoDeserializer() : IDtoDeserializer(), m_ruid()
 {
 }
 

@@ -19,7 +19,7 @@ namespace Enigma::InputHandlers
     {
     public:
         InputHandlerInstallingPolicy() = default;
-        virtual ~InputHandlerInstallingPolicy() override = default;
+
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 

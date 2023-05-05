@@ -35,7 +35,6 @@ namespace Enigma::InputHandlers
         };
     public:
         MouseInputEvent(const MouseInputParameters& param) : m_param(param) {}
-        virtual ~MouseInputEvent() override = default;
 
         MouseInputParameters m_param;
     };

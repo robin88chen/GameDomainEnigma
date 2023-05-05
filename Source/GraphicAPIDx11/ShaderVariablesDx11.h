@@ -102,7 +102,7 @@ namespace Enigma::Devices
         ShaderVariableDx11_Base& operator=(ShaderVariableDx11_Base&&) = delete;
 
         //virtual void BindCustomFloatData(float* data, unsigned int dataFloatCount, unsigned int varCount = 0) override {};
-        virtual void SetValue(std::any) override { };
+        virtual void SetValue(std::any) override { }
         virtual void SetValues(std::any, unsigned int) override { }
 
         virtual error Apply() override { return Graphics::ErrorCode::ok; }

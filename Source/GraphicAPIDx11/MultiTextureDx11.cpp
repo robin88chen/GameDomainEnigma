@@ -160,7 +160,7 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
         ID3D11ShaderResourceView* d3dResource = nullptr;
 
         SRDesc.Format = ConvertGraphicFormatToDXGI(bbDx11->GetSliceFormat(i));
-        SRDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+        SRDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         SRDesc.Texture2D.MostDetailedMip = 0;
         SRDesc.Texture2D.MipLevels = 1;
         HRESULT hr = device->CreateShaderResourceView(bbDx11->GetD3DSurface(i), &SRDesc, &d3dResource);
@@ -214,7 +214,7 @@ error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib:
     tex_desc.SampleDesc.Quality = 0;
     tex_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     tex_desc.Usage = D3D11_USAGE_DEFAULT;
-    tex_desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+    tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     tex_desc.CPUAccessFlags = 0;
     tex_desc.MiscFlags = 0;
     tex_desc.MipLevels = 1;

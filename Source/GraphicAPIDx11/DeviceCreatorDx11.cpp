@@ -61,7 +61,7 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     UINT width = rc.right - rc.left;
     UINT height = rc.bottom - rc.top;
 
-    UINT createDeviceFlags = 0; //D3D10_CREATE_DEVICE_SINGLETHREADED;
+    UINT createDeviceFlags = 0; //D3D11_CREATE_DEVICE_SINGLETHREADED;
 #ifdef _DEBUG
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
     //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
@@ -208,7 +208,7 @@ error DeviceCreatorDx11::EnumerateDevices(AdapterDx11::AdapterInfo* adapterInfo)
     const D3D_DRIVER_TYPE devTypeArray[] =
     {
         D3D_DRIVER_TYPE_HARDWARE,
-        //D3D10_DRIVER_TYPE_REFERENCE,
+        //D3D_DRIVER_TYPE_REFERENCE,
     };
     const UINT devTypeArrayCount = sizeof(devTypeArray) / sizeof(devTypeArray[0]);
 
@@ -223,11 +223,11 @@ error DeviceCreatorDx11::EnumerateDevices(AdapterDx11::AdapterInfo* adapterInfo)
         // Call D3D10CreateDevice to ensure that this is a D3D11 device.
         ID3D11Device* d3dDevice = NULL;
         IDXGIAdapter1* adapter = NULL;
-        if (devTypeArray[iDeviceType] == D3D10_DRIVER_TYPE_HARDWARE)
+        if (devTypeArray[iDeviceType] == D3D_DRIVER_TYPE_HARDWARE)
             adapter = adapterInfo->m_dxgiAdapter;
-        UINT createDeviceFlags = 0; //D3D10_CREATE_DEVICE_SINGLETHREADED;
+        UINT createDeviceFlags = 0; //D3D11_CREATE_DEVICE_SINGLETHREADED;
 #ifdef _DEBUG
-        createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
+        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
         HRESULT hr = D3D11CreateDevice(adapter, devTypeArray[iDeviceType], 0, createDeviceFlags,
             NULL, 0, D3D11_SDK_VERSION, &d3dDevice, NULL, NULL);
@@ -237,7 +237,7 @@ error DeviceCreatorDx11::EnumerateDevices(AdapterDx11::AdapterInfo* adapterInfo)
             continue;
         }
 
-        if (devTypeArray[iDeviceType] != D3D10_DRIVER_TYPE_HARDWARE)
+        if (devTypeArray[iDeviceType] != D3D_DRIVER_TYPE_HARDWARE)
         {
             IDXGIDevice* pDXGIDev = NULL;
             hr = d3dDevice->QueryInterface(__uuidof(IDXGIDevice), (LPVOID*)&pDXGIDev);

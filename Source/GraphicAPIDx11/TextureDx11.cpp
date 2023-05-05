@@ -46,7 +46,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension& dimension, c
     tex_desc.SampleDesc.Quality = 0;
     tex_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     tex_desc.Usage = D3D11_USAGE_DEFAULT;
-    tex_desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+    tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     tex_desc.CPUAccessFlags = 0;
     tex_desc.MiscFlags = 0;
     tex_desc.MipLevels = 1;
@@ -207,14 +207,14 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     ID3D11Resource* d3dSrcResource;
     m_d3dTextureResource->GetResource(&d3dSrcResource);
 
-    D3D10_BOX boxSrc;
+    D3D11_BOX boxSrc;
     boxSrc.left = rcSrc.Left();
     boxSrc.top = rcSrc.Top();
     boxSrc.right = rcSrc.Right();
     boxSrc.bottom = rcSrc.Bottom();
     boxSrc.front = 0;
     boxSrc.back = 1;
-    deviceContext->CopySubresourceRegion(targetTex, 0, 0, 0, 0, d3dSrcResource, 0, (const D3D11_BOX*)&boxSrc);
+    deviceContext->CopySubresourceRegion(targetTex, 0, 0, 0, 0, d3dSrcResource, 0, reinterpret_cast<const D3D11_BOX*>(&boxSrc));
     d3dSrcResource->Release();
 
     D3D11_MAPPED_SUBRESOURCE mapped_tex_data;
@@ -227,7 +227,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
         return ErrorCode::dxTextureMapping;
     }
     m_retrievedBuff.resize(rcSrc.Height() * rcSrc.Width() * 4);
-    if (mapped_tex_data.RowPitch == (unsigned int)rcSrc.Width() * 4)
+    if (mapped_tex_data.RowPitch == static_cast<unsigned int>(rcSrc.Width()) * 4)
     {
         size_t buff_size = m_retrievedBuff.size();
         memcpy(&m_retrievedBuff[0], mapped_tex_data.pData, buff_size);
@@ -242,8 +242,8 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
         for (int i = 0; i < height; i++)
         {
             memcpy(dest_buf, src_buf, dest_pitch);
-            src_buf = (void*)((size_t)src_buf + mapped_tex_data.RowPitch);
-            dest_buf = (void*)((size_t)dest_buf + dest_pitch);
+            src_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(src_buf) + mapped_tex_data.RowPitch);
+            dest_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(dest_buf) + dest_pitch);
         }
     }
     deviceContext->Unmap(targetTex, 0);
@@ -456,7 +456,7 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     ID3D11ShaderResourceView* d3dResource = NULL;
 
     SRDesc.Format = ConvertGraphicFormatToDXGI(back_surf->GetFormat());
-    SRDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+    SRDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     SRDesc.Texture2D.MostDetailedMip = 0;
     SRDesc.Texture2D.MipLevels = 1;
     HRESULT hr = device->CreateShaderResourceView(bbDx11->GetD3DSurface(), &SRDesc, &d3dResource);

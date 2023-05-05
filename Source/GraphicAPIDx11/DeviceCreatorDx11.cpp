@@ -15,7 +15,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 const char* DXGIFormatToString(DXGI_FORMAT format);
 
-DeviceCreatorDx11::DeviceCreatorDx11()
+DeviceCreatorDx11::DeviceCreatorDx11() : m_d3dDriverType(D3D_DRIVER_TYPE_UNKNOWN)
 {
     m_wnd = 0;
     m_dxgiFactory = nullptr;
@@ -34,7 +34,7 @@ error DeviceCreatorDx11::Initialize(HWND hwnd, const Graphics::DeviceRequiredBit
     m_wnd = hwnd;
     m_deviceRqb = rqb;
 
-    HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&m_dxgiFactory));
+    HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&m_dxgiFactory));
     if (FAILED(hr))
     {
         return ErrorCode::dxgiInitialize;
@@ -82,7 +82,7 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     UINT numFeatureLevels = 1;
     for (UINT i = 0; i < maxFeatureLevels; ++i, ++numFeatureLevels)
     {
-        if (m_deviceRqb.m_featureLevel == featureLevels[i])
+        if (static_cast<D3D_FEATURE_LEVEL>(m_deviceRqb.m_featureLevel) == featureLevels[i])
         {
             break;
         }
@@ -96,7 +96,7 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     UINT numDriverTypes = sizeof(driverTypes) / sizeof(driverTypes[0]);
 
     DXGI_SWAP_CHAIN_DESC* sd = &swapChain->m_currentDesc;
-    ZeroMemory(sd, sizeof(sd));
+    ZeroMemory(sd, sizeof(DXGI_SWAP_CHAIN_DESC));
     sd->BufferCount = 1; // 2;
     sd->BufferDesc.Width = width;
     sd->BufferDesc.Height = height;
@@ -109,8 +109,8 @@ error DeviceCreatorDx11::CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx1
     sd->SampleDesc.Quality = 0;
     sd->Windowed = TRUE;
 
-    D3D_FEATURE_LEVEL featureLevelGot;
-    HRESULT hr;
+    D3D_FEATURE_LEVEL featureLevelGot = D3D_FEATURE_LEVEL_1_0_CORE;
+    HRESULT hr = S_OK;
     for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
     {
         m_d3dDriverType = driverTypes[driverTypeIndex];
@@ -182,10 +182,10 @@ error DeviceCreatorDx11::BuildDeviceList(AdapterDx11* adapter)
         adapterInfo->m_adapterOrdinal = i;
         dxgiAdapter->GetDesc1(&adapterInfo->m_desc);
         unsigned int wlen = lstrlenW(adapterInfo->m_desc.Description);
-        int mblen = WideCharToMultiByte(CP_ACP, 0, adapterInfo->m_desc.Description, wlen, NULL, 0, NULL, NULL);
+        int mblen = WideCharToMultiByte(CP_ACP, 0, adapterInfo->m_desc.Description, static_cast<int>(wlen), NULL, 0, NULL, NULL);
         char* description = menew char[mblen + 8];
         memset(description, 0, mblen + 8);
-        WideCharToMultiByte(CP_ACP, 0, adapterInfo->m_desc.Description, wlen, description, mblen + 8, NULL, NULL);
+        WideCharToMultiByte(CP_ACP, 0, adapterInfo->m_desc.Description, static_cast<int>(wlen), description, mblen + 8, NULL, NULL);
         adapterInfo->m_uniqueDescription = menew char[mblen + 32];
         sprintf_s(adapterInfo->m_uniqueDescription, mblen + 32, "%s (#%d)", description, i);
         medelete[] description;

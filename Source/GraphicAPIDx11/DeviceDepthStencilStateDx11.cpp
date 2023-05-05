@@ -86,28 +86,20 @@ D3D11_COMPARISON_FUNC DeviceDepthStencilStateDx11::CompareFuncByData(DepthStenci
     {
     case DepthStencilData::CompareFunc::Never:
         return D3D11_COMPARISON_NEVER;
-        break;
     case DepthStencilData::CompareFunc::Less:
         return D3D11_COMPARISON_LESS;
-        break;
     case DepthStencilData::CompareFunc::Equal:
         return D3D11_COMPARISON_EQUAL;
-        break;
     case DepthStencilData::CompareFunc::LessEqual:
         return D3D11_COMPARISON_LESS_EQUAL;
-        break;
     case DepthStencilData::CompareFunc::Greater:
         return D3D11_COMPARISON_GREATER;
-        break;
     case DepthStencilData::CompareFunc::NotEqual:
         return D3D11_COMPARISON_NOT_EQUAL;
-        break;
     case DepthStencilData::CompareFunc::GreaterEqual:
         return D3D11_COMPARISON_GREATER_EQUAL;
-        break;
     case DepthStencilData::CompareFunc::Always:
         return D3D11_COMPARISON_ALWAYS;
-        break;
     }
     return D3D11_COMPARISON_NEVER;
 }
@@ -127,28 +119,20 @@ D3D11_STENCIL_OP DeviceDepthStencilStateDx11::OpCodeByData(DepthStencilData::Ste
     {
     case DepthStencilData::StencilOpCode::Keep:
         return D3D11_STENCIL_OP_KEEP;
-        break;
     case DepthStencilData::StencilOpCode::Zero:
         return D3D11_STENCIL_OP_ZERO;
-        break;
     case DepthStencilData::StencilOpCode::Replace:
         return D3D11_STENCIL_OP_REPLACE;
-        break;
     case DepthStencilData::StencilOpCode::Incr_Sat:
         return D3D11_STENCIL_OP_INCR_SAT;
-        break;
     case DepthStencilData::StencilOpCode::Decr_Sat:
         return D3D11_STENCIL_OP_DECR_SAT;
-        break;
     case DepthStencilData::StencilOpCode::Invert:
         return D3D11_STENCIL_OP_INVERT;
-        break;
     case DepthStencilData::StencilOpCode::Incr:
         return D3D11_STENCIL_OP_INCR;
-        break;
     case DepthStencilData::StencilOpCode::Decr:
         return D3D11_STENCIL_OP_DECR;
-        break;
     }
     return D3D11_STENCIL_OP_KEEP;
 }

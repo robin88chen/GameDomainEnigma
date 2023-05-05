@@ -35,8 +35,12 @@ namespace Enigma::Devices
             char* m_uniqueDescription;
             std::vector<DXGI_MODE_DESC> m_displayModeDescList;
 
-            OutputInfo() : m_adapterOrdinal(0), m_outputOrdinal(0), m_dxgiOutput(nullptr), m_uniqueDescription(nullptr) {};
-            ~OutputInfo() { SAFE_RELEASE(m_dxgiOutput); SAFE_DELETE_ARRAY(m_uniqueDescription); };
+            OutputInfo() : m_adapterOrdinal(0), m_outputOrdinal(0), m_dxgiOutput(nullptr), m_uniqueDescription(nullptr) {}
+            OutputInfo(const OutputInfo&) = delete;
+            OutputInfo(OutputInfo&&) = delete;
+            ~OutputInfo() { SAFE_RELEASE(m_dxgiOutput); SAFE_DELETE_ARRAY(m_uniqueDescription); }
+            OutputInfo& operator=(const OutputInfo&) = delete;
+            OutputInfo& operator=(OutputInfo&&) = delete;
         };
 
         struct AdapterInfo
@@ -48,28 +52,32 @@ namespace Enigma::Devices
             std::vector<DeviceInfo*> m_deviceInfoList;
             std::vector<OutputInfo*> m_outputInfoList;
 
-            AdapterInfo() : m_dxgiAdapter(nullptr), m_adapterOrdinal(0), m_uniqueDescription(nullptr) {};
+            AdapterInfo() : m_dxgiAdapter(nullptr), m_adapterOrdinal(0), m_uniqueDescription(nullptr) {}
+            AdapterInfo(const AdapterInfo&) = delete;
+            AdapterInfo(AdapterInfo&&) = delete;
             ~AdapterInfo()
             {
                 ClearList();
                 SAFE_DELETE_ARRAY(m_uniqueDescription);
                 SAFE_RELEASE(m_dxgiAdapter);
             }
+            AdapterInfo& operator=(const AdapterInfo&) = delete;
+            AdapterInfo& operator=(AdapterInfo&&) = delete;
             void ClearList()
             {
-                if (m_deviceInfoList.size())
+                if (!m_deviceInfoList.empty())
                 {
-                    for (unsigned int i = 0; i < (unsigned int)m_deviceInfoList.size(); i++)
+                    for (auto& i : m_deviceInfoList)
                     {
-                        SAFE_DELETE(m_deviceInfoList[i]);
+                        SAFE_DELETE(i);
                     }
                     m_deviceInfoList.clear();
                 }
-                if (m_outputInfoList.size())
+                if (!m_outputInfoList.empty())
                 {
-                    for (unsigned int i = 0; i < (unsigned int)m_outputInfoList.size(); i++)
+                    for (auto& i : m_outputInfoList)
                     {
-                        SAFE_DELETE(m_outputInfoList[i]);
+                        SAFE_DELETE(i);
                     }
                     m_outputInfoList.clear();
                 }
@@ -79,11 +87,13 @@ namespace Enigma::Devices
     public:
         AdapterDx11();
         AdapterDx11(const AdapterDx11&) = delete;
+        AdapterDx11(AdapterDx11&&) = delete;
         ~AdapterDx11();
         AdapterDx11& operator=(const AdapterDx11&) = delete;
+        AdapterDx11& operator=(AdapterDx11&&) = delete;
 
-        unsigned int GetAdapterCount() { return (unsigned int)m_adapterInfoList.size(); };
-        unsigned int GetCurrentAdapterIndex() { return m_currentAdapterIndex; };
+        unsigned int GetAdapterCount() { return static_cast<unsigned int>(m_adapterInfoList.size()); }
+        unsigned int GetCurrentAdapterIndex() { return m_currentAdapterIndex; }
         void SelectAdapter(unsigned int index);
         AdapterInfo* GetSelectedAdapterInfo();
 

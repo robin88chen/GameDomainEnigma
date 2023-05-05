@@ -22,11 +22,11 @@ namespace Enigma::Devices
         TextureDx11(const std::string& name);
         TextureDx11(const TextureDx11&) = delete;
         TextureDx11(TextureDx11&&) = delete;
-        virtual ~TextureDx11();
+        virtual ~TextureDx11() override;
         TextureDx11& operator=(const TextureDx11&) = delete;
         TextureDx11& operator=(TextureDx11&&) = delete;
 
-        ID3D11ShaderResourceView* GetD3DResourceView() const { return m_d3dTextureResource; };
+        ID3D11ShaderResourceView* GetD3DResourceView() const { return m_d3dTextureResource; }
 
     protected:
         virtual error CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff) override;
@@ -36,7 +36,7 @@ namespace Enigma::Devices
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) override;
         virtual error UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf) override;
 
-    	error CreateFromScratchImage(DirectX::ScratchImage& scratchImage);
+        error CreateFromScratchImage(DirectX::ScratchImage& scratchImage);
         //void CreateCubeTextureFromScratchImage(DirectX::ScratchImage& scratchImage);
 
     protected:

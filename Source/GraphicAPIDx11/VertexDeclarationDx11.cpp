@@ -106,6 +106,8 @@ std::tuple<D3D11_INPUT_ELEMENT_DESC*, unsigned int> VertexDeclarationDx11::Creat
         case 4:
             input_layout[element_idx].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
             break;
+            default:
+                assert(false);
         }
         input_layout[element_idx].InputSlot = 0;
         input_layout[element_idx].AlignedByteOffset = vertex_desc.WeightOffset() * sizeof(float);

@@ -21,7 +21,7 @@ namespace Enigma::Devices
         DeviceAlphaBlendStateDx11(const std::string& name);
         DeviceAlphaBlendStateDx11(const DeviceAlphaBlendStateDx11&) = delete;
         DeviceAlphaBlendStateDx11(DeviceAlphaBlendStateDx11&&) = delete;
-        virtual ~DeviceAlphaBlendStateDx11();
+        virtual ~DeviceAlphaBlendStateDx11() override;
         DeviceAlphaBlendStateDx11& operator=(const DeviceAlphaBlendStateDx11&) = delete;
         DeviceAlphaBlendStateDx11& operator=(DeviceAlphaBlendStateDx11&&) = delete;
 

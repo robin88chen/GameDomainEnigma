@@ -1,5 +1,4 @@
 ﻿#include "SwapChainDx11.h"
-#include <memory>
 #include <cassert>
 #include "Platforms/MemoryMacro.h"
 #include "GraphicKernel/GraphicErrors.h"

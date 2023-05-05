@@ -22,8 +22,10 @@ namespace Enigma::Devices
         MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
             unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt);
         MultiBackSurfaceDx11(const MultiBackSurfaceDx11&) = delete;
-        virtual ~MultiBackSurfaceDx11();
+        MultiBackSurfaceDx11(MultiBackSurfaceDx11&&) = delete;
+        virtual ~MultiBackSurfaceDx11() override;
         MultiBackSurfaceDx11& operator=(const MultiBackSurfaceDx11&) = delete;
+        MultiBackSurfaceDx11& operator=(MultiBackSurfaceDx11&&) = delete;
 
         virtual error Resize(const MathLib::Dimension& dimension) override;
 

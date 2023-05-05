@@ -69,13 +69,10 @@ D3D11_FILL_MODE DeviceRasterizerStateDx11::FillModeByData(RasterizerStateData::F
     {
     case RasterizerStateData::FillMode::Fill:
         return D3D11_FILL_SOLID;
-        break;
     case RasterizerStateData::FillMode::Wireframe:
         return D3D11_FILL_WIREFRAME;
-        break;
     case RasterizerStateData::FillMode::Point:
         return D3D11_FILL_SOLID;
-        break;
     }
     return D3D11_FILL_SOLID;
 }
@@ -86,13 +83,10 @@ D3D11_CULL_MODE DeviceRasterizerStateDx11::CullModeByData(RasterizerStateData::B
     {
     case RasterizerStateData::BackfaceCullMode::Cull_None:
         return D3D11_CULL_NONE;
-        break;
     case RasterizerStateData::BackfaceCullMode::Cull_CCW:
         return D3D11_CULL_BACK;  // always cull backface
-        break;
     case RasterizerStateData::BackfaceCullMode::Cull_CW:
         return D3D11_CULL_BACK; // always cull backface
-        break;
     }
     return D3D11_CULL_BACK;
 }
@@ -103,27 +97,24 @@ BOOL DeviceRasterizerStateDx11::BackfaceWiseByData(RasterizerStateData::Backface
     {
     case RasterizerStateData::BackfaceCullMode::Cull_None:
         return FALSE;
-        break;
     case RasterizerStateData::BackfaceCullMode::Cull_CCW:
         return FALSE;
-        break;
     case RasterizerStateData::BackfaceCullMode::Cull_CW:
         return TRUE;
-        break;
     }
     return FALSE;
 }
 
 int DeviceRasterizerStateDx11::PixeledDepthBiasByData(float bias)
 {
-    int bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
+    unsigned bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
     if ((bits == 16) || (bits == 24)) // D16UNORM, D24UNORM
     {
-        return (int)(bias * (float)pow(2, bits));
+        return static_cast<int>(bias * static_cast<float>(pow(2, bits)));
     }
     else if (bits == 32) // D32F
     {
-        return (int)(bias / (float)pow(2, exp(1.0f) - 23.0f));
+        return static_cast<int>(bias / static_cast<float>(pow(2, exp(1.0f) - 23.0f)));
     }
     return 0;
 }

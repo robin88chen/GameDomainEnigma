@@ -23,11 +23,11 @@ namespace Enigma::Devices
         PixelShaderDx11(const std::string& name);
         PixelShaderDx11(const PixelShaderDx11&) = delete;
         PixelShaderDx11(PixelShaderDx11&&) = delete;
-        virtual ~PixelShaderDx11();
+        virtual ~PixelShaderDx11() override;
         PixelShaderDx11& operator=(const PixelShaderDx11&) = delete;
         PixelShaderDx11& operator=(PixelShaderDx11&&) = delete;
 
-        ID3D11PixelShader* GetD3DShader() const { return m_d3dShader; };
+        ID3D11PixelShader* GetD3DShader() const { return m_d3dShader; }
         ID3D11ShaderReflection* GetD3DShaderReflection() const { return m_d3dShaderReflect; }
 
         const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }

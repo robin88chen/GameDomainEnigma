@@ -22,8 +22,10 @@ namespace Enigma::Devices
         BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
             const Graphics::GraphicFormat& fmt);
         BackSurfaceDx11(const BackSurfaceDx11&) = delete;
-        virtual ~BackSurfaceDx11();
+        BackSurfaceDx11(BackSurfaceDx11&&) = delete;
+        virtual ~BackSurfaceDx11() override;
         BackSurfaceDx11& operator=(const BackSurfaceDx11&) = delete;
+        BackSurfaceDx11& operator=(BackSurfaceDx11&&) = delete;
 
         virtual error Resize(const MathLib::Dimension& dimension) override;
 

@@ -65,7 +65,7 @@ error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
         return ErrorCode::d3dDeviceNullPointer;
     }
 
-    D3D11_BOX d3dBox = { 0, 0, 0, (unsigned int)dataVertex.size(), 1, 1 };
+    D3D11_BOX d3dBox = { 0, 0, 0, static_cast<unsigned int>(dataVertex.size()), 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataVertex[0], 0, 0);
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
@@ -91,7 +91,7 @@ error VertexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 
     unsigned int byte_offset = buffer.vtx_offset * m_sizeofVertex;
     unsigned int byte_length = buffer.vtx_count * m_sizeofVertex;
-    if (byte_length > (unsigned int)buffer.data.size()) byte_length = (unsigned int)buffer.data.size();
+    if (byte_length > static_cast<unsigned int>(buffer.data.size())) byte_length = static_cast<unsigned int>(buffer.data.size());
 
     D3D11_BOX d3dBox = { byte_offset, 0, 0, byte_length + byte_offset, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &(buffer.data[0]), 0, 0);

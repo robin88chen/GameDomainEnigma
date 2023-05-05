@@ -21,13 +21,13 @@ namespace Enigma::Devices
         IndexBufferDx11(const std::string& name);
         IndexBufferDx11(const IndexBufferDx11&) = delete;
         IndexBufferDx11(IndexBufferDx11&&) = delete;
-        virtual ~IndexBufferDx11();
+        virtual ~IndexBufferDx11() override;
         IndexBufferDx11& operator=(const IndexBufferDx11&) = delete;
         IndexBufferDx11& operator=(IndexBufferDx11&&) = delete;
 
         virtual error Create(unsigned int sizeBuffer) override;
 
-        ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; };
+        ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; }
 
     protected:
         virtual error UpdateBuffer(const uint_buffer& dataIndex) override;

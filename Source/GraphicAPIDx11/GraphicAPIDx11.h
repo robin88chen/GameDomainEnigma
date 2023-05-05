@@ -38,7 +38,7 @@ namespace Enigma::Devices
 
         ID3D11Texture2D* GetPrimaryD3DBackbuffer();
 
-        ID3D11Device* GetD3DDevice() { return m_d3dDevice; };
+        ID3D11Device* GetD3DDevice() { return m_d3dDevice; }
         ID3D11DeviceContext* GetD3DDeviceContext() { return m_d3dDeviceContext; }
         SwapChainDx11* GetSwapChain() { return m_swapChain; }
 

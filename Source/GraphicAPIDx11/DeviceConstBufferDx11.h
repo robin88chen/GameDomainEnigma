@@ -23,7 +23,7 @@ namespace Enigma::Devices
         DeviceConstBufferDx11(const std::string& name);
         DeviceConstBufferDx11(const DeviceConstBufferDx11&) = delete;
         DeviceConstBufferDx11(DeviceConstBufferDx11&&) = delete;
-        virtual ~DeviceConstBufferDx11();
+        virtual ~DeviceConstBufferDx11() override;
         DeviceConstBufferDx11& operator=(const DeviceConstBufferDx11&) = delete;
         DeviceConstBufferDx11& operator=(DeviceConstBufferDx11&&) = delete;
 

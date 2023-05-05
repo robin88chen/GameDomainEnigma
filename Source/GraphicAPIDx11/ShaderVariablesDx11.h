@@ -30,18 +30,18 @@ namespace Enigma::Devices
             const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount);
         ShaderVariableDx11_Resource(const ShaderVariableDx11_Resource&) = delete;
         ShaderVariableDx11_Resource(ShaderVariableDx11_Resource&&) = delete;
-        virtual ~ShaderVariableDx11_Resource();
+        virtual ~ShaderVariableDx11_Resource() override;
         ShaderVariableDx11_Resource& operator=(const ShaderVariableDx11_Resource&) = delete;
         ShaderVariableDx11_Resource& operator=(ShaderVariableDx11_Resource&&) = delete;
 
         //virtual void BindCustomFloatData(float* data, unsigned int dataFloatCount, unsigned int varCount = 0) override {};
-        virtual void SetValue(std::any) override { };
-        virtual void SetValues(std::any, unsigned int) override { };
+        virtual void SetValue(std::any) override { }
+        virtual void SetValues(std::any, unsigned int) override { }
 
-        virtual Graphics::IShaderVariablePtr GetChildVariableByName(const std::string&) { return nullptr; };
-        virtual Graphics::IShaderVariablePtr GetChildVariableBySemantic(const std::string&) { return nullptr; };
-        virtual unsigned int GetChildVariableCount() { return 0; };
-        virtual Graphics::IShaderVariablePtr GetChildVariableByIndex(unsigned int) { return nullptr; };
+        virtual Graphics::IShaderVariablePtr GetChildVariableByName(const std::string&) { return nullptr; }
+        virtual Graphics::IShaderVariablePtr GetChildVariableBySemantic(const std::string&) { return nullptr; }
+        virtual unsigned int GetChildVariableCount() { return 0; }
+        virtual Graphics::IShaderVariablePtr GetChildVariableByIndex(unsigned int) { return nullptr; }
 
     protected:
         VarOwner m_varOf;
@@ -56,7 +56,7 @@ namespace Enigma::Devices
             const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount);
         ShaderVariableDx11_ConstBuffer(const ShaderVariableDx11_ConstBuffer&) = delete;
         ShaderVariableDx11_ConstBuffer(ShaderVariableDx11_ConstBuffer&&) = delete;
-        virtual ~ShaderVariableDx11_ConstBuffer();
+        virtual ~ShaderVariableDx11_ConstBuffer() override;
         ShaderVariableDx11_ConstBuffer& operator=(const ShaderVariableDx11_ConstBuffer&) = delete;
         ShaderVariableDx11_ConstBuffer& operator=(ShaderVariableDx11_ConstBuffer&&) = delete;
 
@@ -70,11 +70,11 @@ namespace Enigma::Devices
         virtual unsigned int GetChildVariableCount() override;
         virtual Graphics::IShaderVariablePtr GetChildVariableByIndex(unsigned int index) override;
 
-        void SetDirty() { m_isDirty = true; };
+        void SetDirty() { m_isDirty = true; }
 
-        unsigned char* GetDataBuff() { if (m_constBuffer) return m_constBuffer->GetDataBuffer(); return nullptr; };
+        unsigned char* GetDataBuff() { if (m_constBuffer) return m_constBuffer->GetDataBuffer(); return nullptr; }
 
-        unsigned int GetBindPoint() { return m_bindPoint; };
+        unsigned int GetBindPoint() { return m_bindPoint; }
         virtual error Apply() override;
         /** device const buffer dx11 會用保存的 data buffer 給 async functor, value 不會跑掉 */
         virtual future_error AsyncApply() override;
@@ -97,15 +97,15 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner);
         ShaderVariableDx11_Base(const ShaderVariableDx11_Base&) = delete;
         ShaderVariableDx11_Base(ShaderVariableDx11_Base&&) = delete;
-        virtual ~ShaderVariableDx11_Base();
+        virtual ~ShaderVariableDx11_Base() override;
         ShaderVariableDx11_Base& operator=(const ShaderVariableDx11_Base&) = delete;
         ShaderVariableDx11_Base& operator=(ShaderVariableDx11_Base&&) = delete;
 
         //virtual void BindCustomFloatData(float* data, unsigned int dataFloatCount, unsigned int varCount = 0) override {};
         virtual void SetValue(std::any) override { };
-        virtual void SetValues(std::any, unsigned int) override { };
+        virtual void SetValues(std::any, unsigned int) override { }
 
-        virtual error Apply() override { return Graphics::ErrorCode::ok; };
+        virtual error Apply() override { return Graphics::ErrorCode::ok; }
 
     protected:
         std::weak_ptr<ShaderVariableDx11_ConstBuffer> m_owner;
@@ -118,7 +118,7 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Float(const ShaderVariableDx11_Float&) = delete;
         ShaderVariableDx11_Float(ShaderVariableDx11_Float&&) = delete;
-        virtual ~ShaderVariableDx11_Float();
+        virtual ~ShaderVariableDx11_Float() override;
         ShaderVariableDx11_Float& operator=(const ShaderVariableDx11_Float&) = delete;
         ShaderVariableDx11_Float& operator=(ShaderVariableDx11_Float&&) = delete;
 
@@ -138,7 +138,7 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Int(const ShaderVariableDx11_Int&) = delete;
         ShaderVariableDx11_Int(ShaderVariableDx11_Int&&) = delete;
-        virtual ~ShaderVariableDx11_Int();
+        virtual ~ShaderVariableDx11_Int() override;
         ShaderVariableDx11_Int& operator=(const ShaderVariableDx11_Int&) = delete;
         ShaderVariableDx11_Int& operator=(ShaderVariableDx11_Int&&) = delete;
 
@@ -158,7 +158,7 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Boolean(const ShaderVariableDx11_Boolean&) = delete;
         ShaderVariableDx11_Boolean(ShaderVariableDx11_Boolean&&) = delete;
-        virtual ~ShaderVariableDx11_Boolean();
+        virtual ~ShaderVariableDx11_Boolean() override;
         ShaderVariableDx11_Boolean& operator=(const ShaderVariableDx11_Boolean&) = delete;
         ShaderVariableDx11_Boolean& operator=(ShaderVariableDx11_Boolean&&) = delete;
 
@@ -178,7 +178,7 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements, bool isColumnMajor);
         ShaderVariableDx11_Matrix(const ShaderVariableDx11_Matrix&) = delete;
         ShaderVariableDx11_Matrix(ShaderVariableDx11_Matrix&&) = delete;
-        virtual ~ShaderVariableDx11_Matrix();
+        virtual ~ShaderVariableDx11_Matrix() override;
         ShaderVariableDx11_Matrix& operator=(const ShaderVariableDx11_Matrix&) = delete;
         ShaderVariableDx11_Matrix& operator=(ShaderVariableDx11_Matrix&&) = delete;
 
@@ -199,7 +199,7 @@ namespace Enigma::Devices
             const std::shared_ptr<ShaderVariableDx11_ConstBuffer>& owner, unsigned int offset, unsigned int elements);
         ShaderVariableDx11_Vector(const ShaderVariableDx11_Vector&) = delete;
         ShaderVariableDx11_Vector(ShaderVariableDx11_Vector&&) = delete;
-        virtual ~ShaderVariableDx11_Vector();
+        virtual ~ShaderVariableDx11_Vector() override;
         ShaderVariableDx11_Vector& operator=(const ShaderVariableDx11_Vector&) = delete;
         ShaderVariableDx11_Vector& operator=(ShaderVariableDx11_Vector&&) = delete;
 
@@ -218,7 +218,7 @@ namespace Enigma::Devices
             const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount);
         ShaderVariableDx11_Texture(const ShaderVariableDx11_Texture&) = delete;
         ShaderVariableDx11_Texture(ShaderVariableDx11_Texture&&) = delete;
-        virtual ~ShaderVariableDx11_Texture();
+        virtual ~ShaderVariableDx11_Texture() override;
         ShaderVariableDx11_Texture& operator=(const ShaderVariableDx11_Texture&) = delete;
         ShaderVariableDx11_Texture& operator=(ShaderVariableDx11_Texture&&) = delete;
 
@@ -241,7 +241,7 @@ namespace Enigma::Devices
             const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount);
         ShaderVariableDx11_Sampler(const ShaderVariableDx11_Sampler&) = delete;
         ShaderVariableDx11_Sampler(ShaderVariableDx11_Sampler&&) = delete;
-        virtual ~ShaderVariableDx11_Sampler();
+        virtual ~ShaderVariableDx11_Sampler() override;
         ShaderVariableDx11_Sampler& operator=(const ShaderVariableDx11_Sampler&) = delete;
         ShaderVariableDx11_Sampler& operator=(ShaderVariableDx11_Sampler&&) = delete;
 

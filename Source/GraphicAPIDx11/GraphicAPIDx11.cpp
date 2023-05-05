@@ -31,7 +31,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 static D3D11_PRIMITIVE_TOPOLOGY ConvertTopologyD3D11(Enigma::Graphics::PrimitiveTopology pt)
 {
-    return (D3D11_PRIMITIVE_TOPOLOGY)pt;
+    return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(pt);
 }
 
 GraphicAPIDx11::GraphicAPIDx11(AsyncType async) : IGraphicAPI(async)
@@ -61,7 +61,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
     m_adapter = menew AdapterDx11();
     m_swapChain = menew SwapChainDx11();
     m_creator = menew DeviceCreatorDx11();
-    m_creator->Initialize((HWND)m_wnd, rqb);
+    m_creator->Initialize(static_cast<HWND>(m_wnd), rqb);
     m_creator->BuildDeviceList(m_adapter);
 
     SAFE_RELEASE(m_d3dDevice);

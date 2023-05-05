@@ -186,7 +186,7 @@ void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)
         if (!index) return;
         auto it = m_builtPassStates.find(pass_name);
         if (it == m_builtPassStates.end()) return;
-        if (auto s = it->second.m_samplers) s.value()[*index] = ev->GetState();
+        if (auto& s = it->second.m_samplers) s.value()[*index] = ev->GetState();
         TryBuildEffectPass(pass_name);
     }
 }

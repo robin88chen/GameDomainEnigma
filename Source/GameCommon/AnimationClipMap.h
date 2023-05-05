@@ -45,7 +45,11 @@ namespace Enigma::GameCommon
     public:
         AnimationClipMap() = default;
         AnimationClipMap(const Engine::GenericDto& o);
-        ~AnimationClipMap() = default;
+        AnimationClipMap(const AnimationClipMap&) = default;
+        AnimationClipMap(AnimationClipMap&&) = default;
+        virtual ~AnimationClipMap() = default;
+        AnimationClipMap& operator=(const AnimationClipMap&) = default;
+        AnimationClipMap& operator=(AnimationClipMap&&) = default;
 
         Engine::GenericDto SerializeDto() const;
 

@@ -19,7 +19,7 @@ using namespace Enigma::InputHandlers;
 
 DEFINE_RTTI(GameCommon, GameCameraService, ISystemService);
 
-#define WHEEL_THRESHOLD 120
+#define WHEEL_THRESHOLD 120.0f
 
 GameCameraService::GameCameraService(ServiceManager* mngr,
                                      const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
@@ -189,7 +189,7 @@ void GameCameraService::OnTargetResized(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->GetRenderTarget() == nullptr) return;
     if (!ev->GetRenderTarget()->IsPrimary()) return;
-    ChangeAspectRatio((float)ev->GetDimension().m_width / (float)ev->GetDimension().m_height);
+    ChangeAspectRatio(static_cast<float>(ev->GetDimension().m_width) / static_cast<float>(ev->GetDimension().m_height));
 }
 
 void GameCameraService::OnMouseRightBtnDrag(const Frameworks::IEventPtr& e)
@@ -198,7 +198,7 @@ void GameCameraService::OnMouseRightBtnDrag(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseRightButtonDrag, IEvent>(e);
     if (!ev) return;
-    CameraSphereRotate(ev->m_param.m_deltaX * 0.003f, ev->m_param.m_deltaY * 0.003f);
+    CameraSphereRotate(static_cast<float>(ev->m_param.m_deltaX) * 0.003f, static_cast<float>(ev->m_param.m_deltaY) * 0.003f);
 #endif
 }
 
@@ -208,7 +208,7 @@ void GameCameraService::OnMouseWheel(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseWheeled, IEvent>(e);
     if (!ev) return;
-    float delta_dist = (float)(ev->m_param.m_deltaWheel / WHEEL_THRESHOLD) * 0.5f;
+    float delta_dist = (static_cast<float>(ev->m_param.m_deltaWheel) / WHEEL_THRESHOLD) * 0.5f;
     CameraZoom(delta_dist);
 #endif
 }

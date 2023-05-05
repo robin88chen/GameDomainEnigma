@@ -19,7 +19,7 @@ namespace Enigma::GameCommon
     {
     public:
         GameCameraInstallingPolicy(const SceneGraph::CameraDto& dto) : m_cameraDto(dto) {}
-        virtual ~GameCameraInstallingPolicy() override = default;
+
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 
@@ -31,7 +31,7 @@ namespace Enigma::GameCommon
     public:
         GameSceneInstallingPolicy(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
             : m_sceneRootName(scene_root_name), m_portalManagedName(portal_managed_name) {}
-        virtual ~GameSceneInstallingPolicy() override = default;
+
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 
@@ -43,7 +43,7 @@ namespace Enigma::GameCommon
     {
     public:
         AnimatedPawnInstallingPolicy() = default;
-        virtual ~AnimatedPawnInstallingPolicy() override = default;
+
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
     };

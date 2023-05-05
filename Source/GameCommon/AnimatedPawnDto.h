@@ -17,7 +17,6 @@ namespace Enigma::GameCommon
     public:
         AnimatedPawnDto() = default;
         AnimatedPawnDto(const SceneGraph::PawnDto& dto);
-        virtual ~AnimatedPawnDto() = default;
 
         Engine::GenericDto& TheAnimationClipMapDto() { return m_animationClipMapDto; }
         [[nodiscard]] const Engine::GenericDto& TheAnimationClipMapDto() const { return m_animationClipMapDto; }

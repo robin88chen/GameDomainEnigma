@@ -19,7 +19,7 @@ namespace Enigma::GameCommon
     public:
         SceneRendererInstallingPolicy(const std::string& renderer_name, const std::string& target_name, bool is_primary)
             : m_rendererName(renderer_name), m_targetName(target_name), m_isPrimary(is_primary) {}
-        virtual ~SceneRendererInstallingPolicy() override = default;
+
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 

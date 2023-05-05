@@ -133,13 +133,13 @@ void ReplaceAvatarMaterial::OnCompileEffectResponse(const IResponsePtr& r)
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
-    : m_meshName(mesh_name), m_textureDto(texture_dto)
+    : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
 {
     m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o)
+ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : m_requsetRuid()
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
     m_meshName = dto.MeshName();

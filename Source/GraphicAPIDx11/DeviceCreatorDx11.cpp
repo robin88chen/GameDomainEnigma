@@ -240,7 +240,7 @@ error DeviceCreatorDx11::EnumerateDevices(AdapterDx11::AdapterInfo* adapterInfo)
         if (devTypeArray[iDeviceType] != D3D_DRIVER_TYPE_HARDWARE)
         {
             IDXGIDevice* pDXGIDev = NULL;
-            hr = d3dDevice->QueryInterface(__uuidof(IDXGIDevice), (LPVOID*)&pDXGIDev);
+            hr = d3dDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<LPVOID*>(&pDXGIDev));
             if (SUCCEEDED(hr) && pDXGIDev)
             {
                 IDXGIAdapter* dxgiAdapter0;
@@ -290,10 +290,10 @@ error DeviceCreatorDx11::EnumerateOutputs(AdapterDx11::AdapterInfo* adapterInfo)
             dxgiOutput->GetDesc(&outputInfo->m_desc);
 
             unsigned int wlen = lstrlenW(outputInfo->m_desc.DeviceName);
-            int mblen = WideCharToMultiByte(CP_ACP, 0, outputInfo->m_desc.DeviceName, wlen, NULL, 0, NULL, NULL);
+            int mblen = WideCharToMultiByte(CP_ACP, 0, outputInfo->m_desc.DeviceName, static_cast<int>(wlen), NULL, 0, NULL, NULL);
             char* description = menew char[mblen + 8];
             memset(description, 0, mblen + 8);
-            WideCharToMultiByte(CP_ACP, 0, outputInfo->m_desc.DeviceName, wlen, description, mblen + 8, NULL, NULL);
+            WideCharToMultiByte(CP_ACP, 0, outputInfo->m_desc.DeviceName, static_cast<int>(wlen), description, mblen + 8, NULL, NULL);
             outputInfo->m_uniqueDescription = menew char[mblen + 32];
             sprintf_s(outputInfo->m_uniqueDescription, mblen + 32, "%s (#%d)", description, iOutput);
             medelete[] description;
@@ -315,7 +315,7 @@ error DeviceCreatorDx11::EnumerateOutputs(AdapterDx11::AdapterInfo* adapterInfo)
 
 error DeviceCreatorDx11::EnumerateDisplayModes(AdapterDx11::OutputInfo* outputInfo)
 {
-    HRESULT hr = S_OK;
+    HRESULT hr;
     const DXGI_FORMAT allowedAdapterFormatArray[] =
     {
         DXGI_FORMAT_R8G8B8A8_UNORM,         //This is preferred mode
@@ -405,7 +405,7 @@ error DeviceCreatorDx11::EnumerateDisplayModes(AdapterDx11::OutputInfo* outputIn
 
         if (SUCCEEDED(hr))
         {
-            unsigned int cur_size = (unsigned int)outputInfo->m_displayModeDescList.size();
+            unsigned int cur_size = static_cast<unsigned int>(outputInfo->m_displayModeDescList.size());
             outputInfo->m_displayModeDescList.resize(cur_size + numModes);
             memcpy_s(&(outputInfo->m_displayModeDescList[cur_size]), numModes * sizeof(DXGI_MODE_DESC), descs, numModes * sizeof(DXGI_MODE_DESC));
         }

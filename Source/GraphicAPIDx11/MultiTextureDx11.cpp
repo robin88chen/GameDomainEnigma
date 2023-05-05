@@ -207,8 +207,8 @@ error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib:
 
     D3D11_TEXTURE2D_DESC tex_desc;
     ZeroMemory(&tex_desc, sizeof(tex_desc));
-    tex_desc.Width = (unsigned int)dimension.m_width;
-    tex_desc.Height = (unsigned int)dimension.m_height;
+    tex_desc.Width = static_cast<unsigned int>(dimension.m_width);
+    tex_desc.Height = static_cast<unsigned int>(dimension.m_height);
     tex_desc.ArraySize = 1;
     tex_desc.SampleDesc.Count = 1;
     tex_desc.SampleDesc.Quality = 0;

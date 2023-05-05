@@ -446,7 +446,7 @@ void ShaderVariableDx11_Matrix::SetValues(std::any data_array, unsigned int coun
     if (count > m_numElements) count = m_numElements;
     try
     {
-        const MathLib::Matrix4* values = nullptr;
+        const MathLib::Matrix4* values;
         std::vector<MathLib::Matrix4> mx_vector;
         if (data_array.type() == typeid(std::vector<MathLib::Matrix4>))
         {

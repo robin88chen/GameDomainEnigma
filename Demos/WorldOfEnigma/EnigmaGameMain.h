@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
  * \file   EnigmaGameMain.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
-#ifndef _ENIGMA_GAME_MAIN_H
-#define _ENIGMA_GAME_MAIN_H
+#ifndef ENIGMA_GAME_MAIN_H
+#define ENIGMA_GAME_MAIN_H
 
 #include <string>
 #include "AppConfiguration.h"
@@ -20,14 +20,18 @@ namespace EnigmaGame
     public:
         static inline std::string MediaPathName = "APK_PATH";
     public:
-        EnigmaGameMain(const std::string app_name);
-        ~EnigmaGameMain() override;
+        EnigmaGameMain(const std::string& app_name);
+        EnigmaGameMain(const EnigmaGameMain&) = delete;
+        EnigmaGameMain(EnigmaGameMain&&) = delete;
+        ~EnigmaGameMain() override = default;
+        EnigmaGameMain& operator=(const EnigmaGameMain&) = delete;
+        EnigmaGameMain& operator=(EnigmaGameMain&&) = delete;
 
-        virtual void InitializeMountPaths() override;
-        virtual void InstallEngine() override final;
-        virtual void ShutdownEngine() override final;
-        virtual void FrameUpdate() override;
-        virtual void RenderFrame() override;
+        void InitializeMountPaths() override;
+        void InstallEngine() final;
+        void ShutdownEngine() final;
+        void FrameUpdate() override;
+        void RenderFrame() override;
 
     private:
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
@@ -36,4 +40,4 @@ namespace EnigmaGame
     };
 }
 
-#endif // _ENIGMA_GAME_MAIN_H
+#endif // ENIGMA_GAME_MAIN_H

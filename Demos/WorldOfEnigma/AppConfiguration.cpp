@@ -16,12 +16,15 @@ std::string TOKEN_CAMERA = "Camera";
 
 void AppConfiguration::LoadConfig()
 {
-    Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(Enigma::FileSystem::Filename("app.cfg"), "rb");
-    size_t file_size = iFile->Size();
-    auto read_buf = iFile->Read(0, file_size);
+    const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(Enigma::FileSystem::Filename("app.cfg"), "rb");
+    const size_t file_size = iFile->Size();
+    const auto read_buf = iFile->Read(0, file_size);
     Enigma::FileSystem::FileSystem::Instance()->CloseFile(iFile);
-    auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
-    m_configDto = dtos[0];
+    if (read_buf)
+    {
+        const auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+        m_configDto = dtos[0];
+    }
 }
 
 std::string AppConfiguration::GetMediaPathId() const

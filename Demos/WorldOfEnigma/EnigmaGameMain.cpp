@@ -15,12 +15,7 @@
 
 using namespace EnigmaGame;
 
-EnigmaGameMain::EnigmaGameMain(const std::string app_name) : AppDelegate(app_name)
-{
-
-}
-
-EnigmaGameMain::~EnigmaGameMain()
+EnigmaGameMain::EnigmaGameMain(const std::string& app_name) : AppDelegate(app_name)
 {
 
 }
@@ -31,8 +26,8 @@ void EnigmaGameMain::InitializeMountPaths()
 
     if (Enigma::FileSystem::FileSystem::Instance())
     {
-        auto path = std::filesystem::current_path();
-        auto mediaPath = path / "../../../Media/";
+        const auto path = std::filesystem::current_path();
+        const auto mediaPath = path / "../../../Media/";
         Enigma::FileSystem::FileSystem::Instance()->AddMountPath(std::make_shared<Enigma::FileSystem::StdMountPath>(mediaPath.string(), m_appConfig.GetMediaPathId()));
         Enigma::FileSystem::FileSystem::Instance()->AddMountPath(std::make_shared<Enigma::FileSystem::StdMountPath>(path.string(), m_appConfig.GetDataPathId()));
     }

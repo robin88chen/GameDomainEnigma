@@ -2,7 +2,6 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include <windows.h>
 #include <tchar.h>
-#include <assert.h>
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -11,7 +10,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 {
     meInitMemoryCheck();
     //_CrtSetBreakAlloc(40098);
-    EnigmaGame::EnigmaGameMain* app = menew EnigmaGame::EnigmaGameMain("World Of Enigma");
+    const auto app = menew EnigmaGame::EnigmaGameMain("World Of Enigma");
     app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
     RECT rc;
     GetClientRect(app->GetWnd(), &rc);

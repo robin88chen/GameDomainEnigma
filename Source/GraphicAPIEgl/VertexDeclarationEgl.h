@@ -32,7 +32,7 @@ namespace Enigma::Devices
         VertexDeclarationEgl(const std::string& name, const std::string& data_vertex_format);
         VertexDeclarationEgl(const VertexDeclarationEgl&) = delete;
         VertexDeclarationEgl(VertexDeclarationEgl&&) = delete;
-        virtual ~VertexDeclarationEgl();
+        virtual ~VertexDeclarationEgl() override;
         VertexDeclarationEgl& operator=(const VertexDeclarationEgl&) = delete;
         VertexDeclarationEgl& operator=(VertexDeclarationEgl&&) = delete;
 

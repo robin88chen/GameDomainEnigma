@@ -61,10 +61,8 @@ GLenum DeviceRasterizerStateEgl::FrontFaceWiseByData(RasterizerStateData::Backfa
     {
     case RasterizerStateData::BackfaceCullMode::Cull_CCW:
         return GL_CW;
-        break;
     case RasterizerStateData::BackfaceCullMode::Cull_CW:
         return GL_CCW;
-        break;
     default:
         break;
     }
@@ -73,14 +71,14 @@ GLenum DeviceRasterizerStateEgl::FrontFaceWiseByData(RasterizerStateData::Backfa
 
 float DeviceRasterizerStateEgl::PixeledDepthBiasByData(float bias) const
 {
-    int bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
+    unsigned bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
     if ((bits == 16) || (bits == 24)) // D16UNORM, D24UNORM
     {
-        return (bias * (float)pow(2, bits));
+        return (bias * static_cast<float>(pow(2, bits)));
     }
     else if (bits == 32) // D32F
     {
-        return (bias / (float)pow(2, exp(1.0f) - 23.0f));
+        return (bias / static_cast<float>(pow(2, exp(1.0f) - 23.0f)));
     }
     return 0.0f;
 }

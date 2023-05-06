@@ -23,7 +23,7 @@ namespace Enigma::Devices
         DeviceDepthStencilStateEgl(const std::string& name);
         DeviceDepthStencilStateEgl(const DeviceDepthStencilStateEgl&) = delete;
         DeviceDepthStencilStateEgl(DeviceDepthStencilStateEgl&&) = delete;
-        virtual ~DeviceDepthStencilStateEgl();
+        virtual ~DeviceDepthStencilStateEgl() override;
         DeviceDepthStencilStateEgl& operator=(const DeviceDepthStencilStateEgl&) = delete;
         DeviceDepthStencilStateEgl& operator=(DeviceDepthStencilStateEgl&&) = delete;
 

@@ -45,7 +45,7 @@ void DepthStencilSurfaceEgl::MakeBackSurfaceRelated(const Graphics::IBackSurface
     {
         glGenRenderbuffers(1, &m_frameBufferHandle);
         glBindRenderbuffer(GL_RENDERBUFFER, m_frameBufferHandle);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_dimension.m_width, m_dimension.m_height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height));
     }
     glBindFramebuffer(GL_FRAMEBUFFER, bb->GetFrameBufferHandle());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_frameBufferHandle);

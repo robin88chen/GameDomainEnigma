@@ -24,7 +24,7 @@ namespace Enigma::Devices
             const Graphics::GraphicFormat& fmt, bool primary);
         BackSurfaceEgl(const BackSurfaceEgl&) = delete;
         BackSurfaceEgl(BackSurfaceEgl&&) = delete;
-        virtual ~BackSurfaceEgl();
+        virtual ~BackSurfaceEgl() override;
 
         BackSurfaceEgl& operator=(const BackSurfaceEgl&) = delete;
         BackSurfaceEgl& operator=(BackSurfaceEgl&&) = delete;

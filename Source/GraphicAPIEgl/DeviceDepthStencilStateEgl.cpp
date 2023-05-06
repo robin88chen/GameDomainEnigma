@@ -61,9 +61,9 @@ error DeviceDepthStencilStateEgl::BindToDevice()
     }
     glDepthFunc(m_depthFunc);
     glStencilMask(m_data.m_stencilWriteMask);
-    glStencilFuncSeparate(GL_FRONT, m_frontFaceStencilFunc, m_data.m_stencilRefValue, m_data.m_stencilReadMask);
+    glStencilFuncSeparate(GL_FRONT, m_frontFaceStencilFunc, static_cast<GLint>(m_data.m_stencilRefValue), m_data.m_stencilReadMask);
     glStencilOpSeparate(GL_FRONT, m_frontFaceFailOp, m_frontFaceZFailOp, m_frontFacePassOp);
-    glStencilFuncSeparate(GL_BACK, m_backFaceStencilFunc, m_data.m_stencilRefValue, m_data.m_stencilReadMask);
+    glStencilFuncSeparate(GL_BACK, m_backFaceStencilFunc, static_cast<GLint>(m_data.m_stencilRefValue), m_data.m_stencilReadMask);
     glStencilOpSeparate(GL_BACK, m_backFaceFailOp, m_backFaceZFailOp, m_backFacePassOp);
     return ErrorCode::ok;
 }
@@ -74,30 +74,20 @@ GLenum DeviceDepthStencilStateEgl::ToCmpFunc(DepthStencilData::CompareFunc f)
     {
     case DepthStencilData::CompareFunc::Never:
         return GL_NEVER;
-        break;
     case DepthStencilData::CompareFunc::Less:
         return GL_LESS;
-        break;
     case DepthStencilData::CompareFunc::Equal:
         return GL_EQUAL;
-        break;
     case DepthStencilData::CompareFunc::LessEqual:
         return GL_LEQUAL;
-        break;
     case DepthStencilData::CompareFunc::Greater:
         return GL_GREATER;
-        break;
     case DepthStencilData::CompareFunc::NotEqual:
         return GL_NOTEQUAL;
-        break;
     case DepthStencilData::CompareFunc::GreaterEqual:
         return GL_GEQUAL;
-        break;
     case DepthStencilData::CompareFunc::Always:
         return GL_ALWAYS;
-        break;
-    default:
-        break;
     }
     return GL_NEVER;
 }
@@ -108,28 +98,20 @@ GLenum DeviceDepthStencilStateEgl::ToStencilOp(DepthStencilData::StencilOpCode o
     {
     case DepthStencilData::StencilOpCode::Keep:
         return GL_KEEP;
-        break;
     case DepthStencilData::StencilOpCode::Zero:
         return GL_ZERO;
-        break;
     case DepthStencilData::StencilOpCode::Replace:
         return GL_REPLACE;
-        break;
     case DepthStencilData::StencilOpCode::Incr_Sat:
         return GL_INCR_WRAP;
-        break;
     case DepthStencilData::StencilOpCode::Decr_Sat:
         return GL_DECR_WRAP;
-        break;
     case DepthStencilData::StencilOpCode::Invert:
         return GL_INVERT;
-        break;
     case DepthStencilData::StencilOpCode::Incr:
         return GL_INCR;
-        break;
     case DepthStencilData::StencilOpCode::Decr:
         return GL_DECR;
-        break;
     }
     return GL_KEEP;
 }

@@ -46,17 +46,17 @@ void ShaderVariableEgl_Matrix::SetValue(std::any data)
         if (m_dimension == 4)
         {
             MathLib::Matrix4 mx = std::any_cast<MathLib::Matrix4>(data);
-            memcpy(&m_values[0], (float*)mx, m_dimension * m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(mx), m_dimension * m_dimension * sizeof(float));
         }
         if (m_dimension == 3)
         {
             MathLib::Matrix3 mx = std::any_cast<MathLib::Matrix3>(data);
-            memcpy(&m_values[0], (float*)mx, m_dimension * m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(mx), m_dimension * m_dimension * sizeof(float));
         }
         if (m_dimension == 2)
         {
             MathLib::Matrix2 mx = std::any_cast<MathLib::Matrix2>(data);
-            memcpy(&m_values[0], (float*)mx, m_dimension * m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(mx), m_dimension * m_dimension * sizeof(float));
         }
     }
     catch (const std::bad_any_cast& e)
@@ -126,15 +126,15 @@ error ShaderVariableEgl_Matrix::Apply()
     if (loc < 0) return ErrorCode::shaderVarLocation;
     if (m_dimension == 4)
     {
-        glUniformMatrix4fv(loc, m_numElements, GL_FALSE, &m_values[0]);
+        glUniformMatrix4fv(loc, static_cast<GLsizei>(m_numElements), GL_FALSE, &m_values[0]);
     }
     else if (m_dimension == 3)
     {
-        glUniformMatrix3fv(loc, m_numElements, GL_FALSE, &m_values[0]);
+        glUniformMatrix3fv(loc, static_cast<GLsizei>(m_numElements), GL_FALSE, &m_values[0]);
     }
     else if (m_dimension == 2)
     {
-        glUniformMatrix2fv(loc, m_numElements, GL_FALSE, &m_values[0]);
+        glUniformMatrix2fv(loc, static_cast<GLsizei>(m_numElements), GL_FALSE, &m_values[0]);
     }
     return ErrorCode::ok;
 }
@@ -196,7 +196,7 @@ error ShaderVariableEgl_Texture::Apply()
         glActiveTexture(GL_TEXTURE0 + m_bindSlot);
         glBindTexture(GL_TEXTURE_2D, tex_egl->GetTextureHandle(m_indexMultiTexture.value()));
     }
-    glUniform1i(loc, m_bindSlot);
+    glUniform1i(loc, static_cast<GLint>(m_bindSlot));
     return ErrorCode::ok;
 }
 
@@ -260,17 +260,17 @@ void ShaderVariableEgl_Vector::SetValue(std::any data)
         if (m_dimension == 4)
         {
             MathLib::Vector4 vec = std::any_cast<MathLib::Vector4>(data);
-            memcpy(&m_values[0], (float*)vec, m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
         }
         if (m_dimension == 3)
         {
             MathLib::Vector3 vec = std::any_cast<MathLib::Vector3>(data);
-            memcpy(&m_values[0], (float*)vec, m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
         }
         if (m_dimension == 2)
         {
             MathLib::Vector2 vec = std::any_cast<MathLib::Vector2>(data);
-            memcpy(&m_values[0], (float*)vec, m_dimension * sizeof(float));
+            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
         }
     }
     catch (const std::bad_any_cast& e)
@@ -340,15 +340,15 @@ error ShaderVariableEgl_Vector::Apply()
     if (loc < 0) return ErrorCode::shaderVarLocation;
     if (m_dimension == 4)
     {
-        glUniform4fv(loc, m_numElements, &m_values[0]);
+        glUniform4fv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     else if (m_dimension == 3)
     {
-        glUniform3fv(loc, m_numElements, &m_values[0]);
+        glUniform3fv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     else if (m_dimension == 2)
     {
-        glUniform2fv(loc, m_numElements, &m_values[0]);
+        glUniform2fv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     return ErrorCode::ok;
 }
@@ -389,7 +389,7 @@ void ShaderVariableEgl_Boolean::SetValues(std::any data_array, unsigned count)
         if (data_array.type() == typeid(std::vector<bool>))
         {
             auto bs = std::any_cast<std::vector<bool>>(data_array);
-            for (int i = 0; i < count; i++)
+            for (unsigned i = 0; i < count; i++)
             {
                 m_values[i] = bs[i] ? 1 : 0;
             }
@@ -397,7 +397,7 @@ void ShaderVariableEgl_Boolean::SetValues(std::any data_array, unsigned count)
         else
         {
             auto bs = std::any_cast<bool*>(data_array);
-            for (int i = 0; i < count; i++)
+            for (unsigned i = 0; i < count; i++)
             {
                 m_values[i] = bs[i] ? 1 : 0;
             }
@@ -420,7 +420,7 @@ error ShaderVariableEgl_Boolean::Apply()
     }
     else
     {
-        glUniform1iv(loc, m_numElements, &m_values[0]);
+        glUniform1iv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     return ErrorCode::ok;
 }
@@ -485,7 +485,7 @@ error ShaderVariableEgl_Float::Apply()
     }
     else
     {
-        glUniform1fv(loc, m_numElements, &m_values[0]);
+        glUniform1fv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     return ErrorCode::ok;
 }
@@ -550,7 +550,7 @@ error ShaderVariableEgl_Int::Apply()
     }
     else
     {
-        glUniform1iv(loc, m_numElements, &m_values[0]);
+        glUniform1iv(loc, static_cast<GLsizei>(m_numElements), &m_values[0]);
     }
     return ErrorCode::ok;
 }

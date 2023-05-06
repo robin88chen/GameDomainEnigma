@@ -35,7 +35,7 @@ error IndexBufferEgl::Create(unsigned sizeBuffer)
     glGenBuffers(1, &m_bufferHandle);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferHandle);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_bufferSize, 0, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)m_bufferSize, 0, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
@@ -57,7 +57,7 @@ error IndexBufferEgl::UpdateBuffer(const uint_buffer& dataIndex)
         return ErrorCode::bufferSize;
     }
 
-    void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, dataSize, GL_MAP_WRITE_BIT);
+    void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, (GLsizeiptr)dataSize, GL_MAP_WRITE_BIT);
     if (!buff)
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
@@ -87,7 +87,7 @@ error IndexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
         return ErrorCode::bufferSize;
     }
 
-    void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, buffer.idx_offset * sizeof(unsigned int), dataSize, GL_MAP_WRITE_BIT);
+    void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, (GLintptr)(buffer.idx_offset * sizeof(unsigned int)), (GLsizeiptr)dataSize, GL_MAP_WRITE_BIT);
     if (!buff)
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));

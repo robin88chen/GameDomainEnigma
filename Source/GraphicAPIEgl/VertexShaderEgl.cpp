@@ -47,7 +47,7 @@ error VertexShaderEgl::CompileCode(const std::string& code, const std::string& p
         glGetShaderiv(m_shader, GL_INFO_LOG_LENGTH, &infoLogLen);
         if (infoLogLen > 0)
         {
-            GLchar* infoLog = (GLchar*)malloc(infoLogLen);
+            GLchar* infoLog = static_cast<GLchar*>(malloc(infoLogLen));
             if (infoLog)
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);

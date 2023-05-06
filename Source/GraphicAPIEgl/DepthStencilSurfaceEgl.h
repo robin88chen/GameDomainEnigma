@@ -26,7 +26,7 @@ namespace Enigma::Devices
         DepthStencilSurfaceEgl(const std::string& name, const std::shared_ptr<DepthStencilSurfaceEgl>& shared_depth);
         DepthStencilSurfaceEgl(const DepthStencilSurfaceEgl&) = delete;
         DepthStencilSurfaceEgl(DepthStencilSurfaceEgl&&) = delete;
-        virtual ~DepthStencilSurfaceEgl();
+        virtual ~DepthStencilSurfaceEgl() override;
 
         DepthStencilSurfaceEgl& operator=(const DepthStencilSurfaceEgl&) = delete;
         DepthStencilSurfaceEgl& operator=(DepthStencilSurfaceEgl&&) = delete;

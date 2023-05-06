@@ -23,7 +23,7 @@ namespace Enigma::Devices
         MultiTextureEgl(const std::string& name);
         MultiTextureEgl(const MultiTextureEgl&) = delete;
         MultiTextureEgl(MultiTextureEgl&&) = delete;
-        virtual ~MultiTextureEgl();
+        virtual ~MultiTextureEgl() override;
         MultiTextureEgl& operator=(const MultiTextureEgl&) = delete;
         MultiTextureEgl& operator=(MultiTextureEgl&&) = delete;
 
@@ -34,7 +34,7 @@ namespace Enigma::Devices
 
         GLuint GetTextureHandle(unsigned int idx) const;
         const std::vector<GLuint>& GetTextureHandlesArray() const;
-        unsigned int GetTextureHandleCount() const { return (unsigned int)m_textures.size(); };
+        unsigned int GetTextureHandleCount() const { return (unsigned int)m_textures.size(); }
 
     protected:
         virtual error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,

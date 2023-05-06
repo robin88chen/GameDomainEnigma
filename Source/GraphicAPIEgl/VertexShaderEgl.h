@@ -23,11 +23,11 @@ namespace Enigma::Devices
         VertexShaderEgl(const std::string& name);
         VertexShaderEgl(const VertexShaderEgl&) = delete;
         VertexShaderEgl(VertexShaderEgl&&) = delete;
-        virtual ~VertexShaderEgl();
+        virtual ~VertexShaderEgl() override;
         VertexShaderEgl& operator=(const VertexShaderEgl&) = delete;
         VertexShaderEgl& operator=(VertexShaderEgl&&) = delete;
 
-        GLuint GetShader() const { return m_shader; };
+        GLuint GetShader() const { return m_shader; }
 
         std::string GetVarSemantic(const std::string& var_name);
         std::string GetSamplerStateName(const std::string& tex_var_name);

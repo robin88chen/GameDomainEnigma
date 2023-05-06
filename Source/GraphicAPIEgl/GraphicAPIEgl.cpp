@@ -32,7 +32,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt);
 
-GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI(AsyncType::NotAsyncDevice)
+GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI(AsyncType::NotAsyncDevice), m_surfaceDimension{ 1, 1 }
 {
     m_apiVersion = APIVersion::API_EGL;
     m_fmtBackSurface = m_fmtDepthSurface = Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_UNKNOWN);
@@ -40,16 +40,16 @@ GraphicAPIEgl::GraphicAPIEgl() : IGraphicAPI(AsyncType::NotAsyncDevice)
 
 GraphicAPIEgl::~GraphicAPIEgl()
 {
-    
+
 }
 
 error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     m_wnd = hwnd;
     m_deviceRequiredBits = rqb;
-    const char* versionStr = (const char*)glGetString(GL_VERSION);
+    const char* versionStr = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     Debug::Printf("Version %s", versionStr);
-    const char* extentStr = (const char*)glGetString(GL_EXTENSIONS);
+    const char* extentStr = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
     Debug::Printf("Extensions %s", extentStr);
     return ErrorCode::ok;
 }
@@ -84,7 +84,7 @@ void GraphicAPIEgl::CleanupDeviceObjects()
 
 error GraphicAPIEgl::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
-    glDrawArrays(PrimitiveTopologyToGL(m_boundTopology), vertexOffset, vertexCount);
+    glDrawArrays(PrimitiveTopologyToGL(m_boundTopology), static_cast<GLint>(vertexOffset), static_cast<GLsizei>(vertexCount));
     return ErrorCode::ok;
 }
 
@@ -92,7 +92,7 @@ error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCo
 {
     // GLES 3.0 才有
     glDrawRangeElements(PrimitiveTopologyToGL(m_boundTopology), baseVertexOffset, baseVertexOffset + vertexCount - 1,
-        indexCount, GL_UNSIGNED_INT, 0);
+        static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
     return ErrorCode::ok;
 }
 
@@ -184,7 +184,7 @@ error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
         glDepthMask(GL_TRUE);
         glClearDepthf(depth_value);
         glStencilMask(0xff);
-        glClearStencil(stencil_value);
+        glClearStencil(static_cast<GLint>(stencil_value));
     }
     glClear(mask);
     return ErrorCode::ok;
@@ -221,8 +221,8 @@ error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
     if (m_boundViewPort == vp) return ErrorCode::ok;
     m_boundViewPort = vp;
 
-    glViewport(m_boundViewPort.X(), m_boundViewPort.Y(),
-        m_boundViewPort.Width(), m_boundViewPort.Height());
+    glViewport(static_cast<GLint>(m_boundViewPort.X()), static_cast<GLint>(m_boundViewPort.Y()),
+        static_cast<GLsizei>(m_boundViewPort.Width()), static_cast<GLsizei>(m_boundViewPort.Height()));
     glDepthRangef(m_boundViewPort.MinZ(), m_boundViewPort.MaxZ());
 
     return ErrorCode::ok;
@@ -365,7 +365,7 @@ error GraphicAPIEgl::CreateMultiTexture(const std::string& tex_name)
 
 error GraphicAPIEgl::BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl)
 {
-    // Each generic vertex attribute array is initially disabled and isn't accessed 
+    // Each generic vertex attribute array is initially disabled and isn't accessed
     // when glDrawElements, glDrawRangeElements, glDrawArrays, glMultiDrawArrays, or glMultiDrawElements is called.
     // 呼叫 glDraw之後，就會失效，所以，每次Draw之前都要Bind, 不能 cache
     if ((m_boundVertexDecl == vertexDecl) && (m_boundVertexDecl != nullptr))
@@ -479,11 +479,11 @@ error GraphicAPIEgl::BindVertexDeclarationEgl(const std::shared_ptr<VertexDeclar
         glEnableVertexAttribArray(i);
         if (layouts[i].m_type == GL_FLOAT)
         {
-            glVertexAttribPointer(i, layouts[i].m_size, layouts[i].m_type, GL_FALSE, vertex_size, (const GLvoid*)layouts[i].m_position);
+            glVertexAttribPointer(i, layouts[i].m_size, layouts[i].m_type, GL_FALSE, vertex_size, reinterpret_cast<const GLvoid*>(layouts[i].m_position));
         }
         else if (layouts[i].m_type == GL_UNSIGNED_INT)
         {
-            glVertexAttribIPointer(i, layouts[i].m_size, layouts[i].m_type, vertex_size, (const GLvoid*)layouts[i].m_position);
+            glVertexAttribIPointer(i, layouts[i].m_size, layouts[i].m_type, vertex_size, reinterpret_cast<const GLvoid*>(layouts[i].m_position));
         }
     }
     return ErrorCode::ok;
@@ -511,28 +511,23 @@ GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt)
     {
         return GL_LINES;
     }
-    break;
-    case Enigma::Graphics::PrimitiveTopology::Topology_LineStrip:
+        case Enigma::Graphics::PrimitiveTopology::Topology_LineStrip:
     {
         return GL_LINE_STRIP;
     }
-    break;
-    case Enigma::Graphics::PrimitiveTopology::Topology_PointList:
+        case Enigma::Graphics::PrimitiveTopology::Topology_PointList:
     {
         return GL_POINTS;
     }
-    break;
-    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleList:
+        case Enigma::Graphics::PrimitiveTopology::Topology_TriangleList:
     {
         return GL_TRIANGLES;
     }
-    break;
-    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleStrip:
+        case Enigma::Graphics::PrimitiveTopology::Topology_TriangleStrip:
     {
         return GL_TRIANGLE_STRIP;
     }
-    break;
-    default:
+        default:
         break;
     }
     return GL_TRIANGLES;

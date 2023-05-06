@@ -23,11 +23,11 @@ namespace Enigma::Devices
         PixelShaderEgl(const std::string& name);
         PixelShaderEgl(const PixelShaderEgl&) = delete;
         PixelShaderEgl(PixelShaderEgl&&) = delete;
-        virtual ~PixelShaderEgl();
+        virtual ~PixelShaderEgl() override;
         PixelShaderEgl& operator=(const PixelShaderEgl&) = delete;
         PixelShaderEgl& operator=(PixelShaderEgl&&) = delete;
 
-        GLuint GetShader() const { return m_shader; };
+        GLuint GetShader() const { return m_shader; }
 
         std::string GetVarSemantic(const std::string& var_name);
         std::string GetSamplerStateName(const std::string& tex_var_name);

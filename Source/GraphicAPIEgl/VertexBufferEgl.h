@@ -23,7 +23,7 @@ namespace Enigma::Devices
         VertexBufferEgl(const std::string& name);
         VertexBufferEgl(const VertexBufferEgl&) = delete;
         VertexBufferEgl(VertexBufferEgl&&) = delete;
-        virtual ~VertexBufferEgl();
+        virtual ~VertexBufferEgl() override;
         VertexBufferEgl& operator=(const VertexBufferEgl&) = delete;
         VertexBufferEgl& operator=(VertexBufferEgl&&) = delete;
 

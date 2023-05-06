@@ -22,7 +22,7 @@ namespace Enigma::Devices
         DeviceAlphaBlendStateEgl(const std::string& name);
         DeviceAlphaBlendStateEgl(const DeviceAlphaBlendStateEgl&) = delete;
         DeviceAlphaBlendStateEgl(DeviceAlphaBlendStateEgl&&) = delete;
-        virtual ~DeviceAlphaBlendStateEgl();
+        virtual ~DeviceAlphaBlendStateEgl() override;
         DeviceAlphaBlendStateEgl& operator=(const DeviceAlphaBlendStateEgl&) = delete;
         DeviceAlphaBlendStateEgl& operator=(DeviceAlphaBlendStateEgl&&) = delete;
 

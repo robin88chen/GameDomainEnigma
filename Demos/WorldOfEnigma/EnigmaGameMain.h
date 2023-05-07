@@ -9,12 +9,13 @@
 #define ENIGMA_GAME_MAIN_H
 
 #include <string>
-#include "AppConfiguration.h"
 #include "Application/AppDelegateWin32.h"
 #include "GameCommon/SceneRendererService.h"
 
 namespace EnigmaGame
 {
+    class AppConfiguration;
+
     class EnigmaGameMain : public Enigma::Application::AppDelegate
     {
     public:
@@ -36,7 +37,7 @@ namespace EnigmaGame
     private:
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
 
-        AppConfiguration m_appConfig;
+        std::unique_ptr<AppConfiguration> m_appConfig;
     };
 }
 

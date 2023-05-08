@@ -1,16 +1,14 @@
 ﻿/*********************************************************************
  * \file   RenderBufferSignature.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
 #ifndef RENDER_BUFFER_SIGNATURE_H
 #define RENDER_BUFFER_SIGNATURE_H
 
-#include "GraphicKernel/IVertexDeclaration.h"
 #include "GraphicKernel/GraphicAPITypes.h"
-#include <memory>
 #include <string>
 
 namespace Enigma::Engine
@@ -19,13 +17,13 @@ namespace Enigma::Engine
     {
     public:
         RenderBufferSignature();
-        RenderBufferSignature(const std::string& name, Graphics::PrimitiveTopology pt, 
+        RenderBufferSignature(const std::string& name, Graphics::PrimitiveTopology pt,
             unsigned int vertexCapa, unsigned int idxCapa);
         RenderBufferSignature(const RenderBufferSignature& signature);
-        RenderBufferSignature(RenderBufferSignature&& signature);
+        RenderBufferSignature(RenderBufferSignature&& signature) noexcept;
         ~RenderBufferSignature();
         RenderBufferSignature& operator=(const RenderBufferSignature& signature);
-        RenderBufferSignature& operator=(RenderBufferSignature&& signature);
+        RenderBufferSignature& operator=(RenderBufferSignature&& signature) noexcept;
 
         bool operator==(const RenderBufferSignature& signature) const;
         bool operator!=(const RenderBufferSignature& signature) const;

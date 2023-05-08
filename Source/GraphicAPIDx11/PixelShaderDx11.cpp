@@ -61,9 +61,9 @@ error PixelShaderDx11::CompileCode(const std::string& code, const std::string& p
     }
     SAFE_RELEASE(errorBuf);
     hr = graphic->GetD3DDevice()->CreatePixelShader(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), NULL, &m_d3dShader);
-    GUID guid = IID_ID3D11ShaderReflection;
+    //GUID guid = IID_ID3D11ShaderReflection;
     D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
-        (void**)&m_d3dShaderReflect);
+        reinterpret_cast<void**>(&m_d3dShaderReflect));
     SAFE_RELEASE(outBuf);
 
     ParseSemanticTable(code);

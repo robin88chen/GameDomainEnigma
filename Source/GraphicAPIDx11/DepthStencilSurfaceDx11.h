@@ -21,8 +21,10 @@ namespace Enigma::Devices
         DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* buff);
         DepthStencilSurfaceDx11(const std::string& name, const std::shared_ptr<DepthStencilSurfaceDx11>& depthDx11);
         DepthStencilSurfaceDx11(const DepthStencilSurfaceDx11&) = delete;
-        virtual ~DepthStencilSurfaceDx11();
+        DepthStencilSurfaceDx11(DepthStencilSurfaceDx11&&) = delete;
+        virtual ~DepthStencilSurfaceDx11() override;
         DepthStencilSurfaceDx11& operator=(const DepthStencilSurfaceDx11&) = delete;
+        DepthStencilSurfaceDx11& operator=(DepthStencilSurfaceDx11&&) = delete;
 
         virtual error Resize(const MathLib::Dimension& dimension) override;
 

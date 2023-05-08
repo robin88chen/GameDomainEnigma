@@ -66,7 +66,7 @@ namespace Enigma::Frameworks
     class Rtti
     {
     public:
-        Rtti() {}
+        Rtti() : m_base(nullptr) {}
         Rtti(const std::string& name);
         Rtti(const std::string& name, const Rtti* base_rtti);
         Rtti(const Rtti& rhs) = delete;

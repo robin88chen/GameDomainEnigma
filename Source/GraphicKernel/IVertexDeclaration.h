@@ -36,7 +36,7 @@ namespace Enigma::Graphics
         /** is vertex format matched? */
         virtual bool IsMatched(const std::string& data_vertex_format, const IVertexShaderPtr& vtx_shader) = 0;
 
-        unsigned int SizeofDataVertex() const { return (unsigned int)m_dataVertexFormatDesc.TotalVertexSize(); };
+        unsigned int SizeofDataVertex() const { return static_cast<unsigned int>(m_dataVertexFormatDesc.TotalVertexSize()); };
 
     protected:
         std::string m_name;

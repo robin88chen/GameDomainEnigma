@@ -1,5 +1,4 @@
 ﻿#include "RenderablePrimitivePolicies.h"
-#include <cassert>
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;

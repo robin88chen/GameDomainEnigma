@@ -51,7 +51,7 @@ namespace Enigma::InputHandlers
         };
     public:
         WinKeyboardInputEvent(const WinKeyboardInputParameters& param) : m_param(param) {};
-        virtual ~WinKeyboardInputEvent() override = default;
+
         WinKeyboardInputParameters m_param;
     };
     /** keyboard char message */

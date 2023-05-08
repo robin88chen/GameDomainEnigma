@@ -32,7 +32,7 @@ ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim)
     ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
 }
 
-ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim)
+ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept
 {
     m_name = std::move(prim.m_name);
     m_bound = std::move(prim.m_bound);
@@ -60,7 +60,7 @@ ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
     return *this;
 }
 
-ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim)
+ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
 {
     m_name = std::move(prim.m_name);
     m_nodeTree = std::move(prim.m_nodeTree);
@@ -147,20 +147,20 @@ error ModelPrimitive::InsertToRendererWithTransformUpdating(const std::shared_pt
     if (mesh_count == 0) return ErrorCode::ok; // no mesh primitive
     if (mesh_count == 1)
     {
-        if (GetMeshPrimitive(0))
+        if (auto node = GetCachedMeshNode(0))
         {
-            Matrix4 mx = mxWorld * GetCachedMeshNode(0).value().get().GetRootRefTransform();
-            GetMeshPrimitive(0)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
+            Matrix4 mx = mxWorld * node.value().get().GetRootRefTransform();
+            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
         }
     }
     else
     {
         for (unsigned int i = 0; i < mesh_count; i++)
         {
-            if (GetMeshPrimitive(i))
+            if (auto node = GetCachedMeshNode(i))
             {
-                Matrix4 mx = mxWorld * GetCachedMeshNode(i).value().get().GetRootRefTransform();
-                GetMeshPrimitive(i)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
+                Matrix4 mx = mxWorld * node.value().get().GetRootRefTransform();
+                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
             }
         }
     }
@@ -204,18 +204,18 @@ void ModelPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
 
     if (mesh_count == 1)
     {
-        if (GetMeshPrimitive(0))
+        if (auto node = GetCachedMeshNode(0))
         {
-            GetMeshPrimitive(0)->UpdateWorldTransform(mxWorld * GetCachedMeshNode(0).value().get().GetRootRefTransform());
+            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->UpdateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
         }
     }
     else
     {
         for (unsigned int i = 0; i < mesh_count; i++)
         {
-            if (GetMeshPrimitive(i))
+            if (auto node = GetCachedMeshNode(i))
             {
-                GetMeshPrimitive(i)->UpdateWorldTransform(mxWorld * GetCachedMeshNode(i).value().get().GetRootRefTransform());
+                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->UpdateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
             }
         }
     }

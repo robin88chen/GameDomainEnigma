@@ -40,6 +40,7 @@ EffectVariable::~EffectVariable()
 
 EffectVariable& EffectVariable::operator=(const EffectVariable& var)
 {
+    if (this == &var) return *this;
     m_shaderVariable = var.m_shaderVariable;
     m_name = var.m_name;
     m_semantic = var.m_semantic;

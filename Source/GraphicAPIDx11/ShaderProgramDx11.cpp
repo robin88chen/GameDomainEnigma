@@ -11,7 +11,6 @@
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
-#include <d3dcompiler.h>
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -66,7 +65,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramDx11::GetVariableBySemantic(co
 unsigned int ShaderProgramDx11::GetVariableCount()
 {
     if (m_variables.empty()) return 0;
-    unsigned int total = (unsigned int)m_variables.size();
+    unsigned int total = static_cast<unsigned int>(m_variables.size());
     for (auto var : m_variables)
     {
         if (var)
@@ -81,7 +80,7 @@ Enigma::Graphics::IShaderVariablePtr ShaderProgramDx11::GetVariableByIndex(unsig
 {
     if (m_variables.empty()) return nullptr;
     if (index < m_variables.size()) return m_variables[index];
-    unsigned int iter_idx = (unsigned int)m_variables.size();
+    unsigned int iter_idx = static_cast<unsigned int>(m_variables.size());
     unsigned int parent_idx = 0;
     while (parent_idx < m_variables.size())
     {

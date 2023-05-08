@@ -22,7 +22,7 @@ namespace Enigma::Devices
         TextureEgl(const std::string& name);
         TextureEgl(const TextureEgl&) = delete;
         TextureEgl(TextureEgl&&) = delete;
-        virtual ~TextureEgl();
+        virtual ~TextureEgl() override;
         TextureEgl& operator=(const TextureEgl&) = delete;
         TextureEgl& operator=(TextureEgl&&) = delete;
 

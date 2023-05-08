@@ -19,11 +19,6 @@ JsonFileEffectProfileDeserializer::JsonFileEffectProfileDeserializer()
 
 }
 
-JsonFileEffectProfileDeserializer::~JsonFileEffectProfileDeserializer()
-{
-
-}
-
 void JsonFileEffectProfileDeserializer::InvokeDeserialize(const Ruid& ruid_deserializing, const std::string& param)
 {
     m_gateway.Cleanup();

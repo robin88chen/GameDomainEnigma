@@ -28,7 +28,7 @@ namespace Enigma::Renderer
         ~RenderPack();
 
         RenderPack& operator=(const RenderPack& pack);
-        RenderPack& operator=(RenderPack&& pack);
+        RenderPack& operator=(RenderPack&& pack) noexcept;
         bool operator==(const RenderPack& p) const;
         bool operator!=(const RenderPack& p) const;
 

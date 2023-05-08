@@ -21,7 +21,7 @@ namespace Enigma::Graphics
         IMultiTexture(const std::string& name);
         IMultiTexture(const IMultiTexture&) = delete;
         IMultiTexture(IMultiTexture&&) = delete;
-        virtual ~IMultiTexture();
+        virtual ~IMultiTexture() override;
         IMultiTexture& operator=(const IMultiTexture&) = delete;
         IMultiTexture& operator=(IMultiTexture&&) = delete;
 

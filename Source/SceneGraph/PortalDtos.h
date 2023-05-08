@@ -26,7 +26,7 @@ namespace Enigma::SceneGraph
     class PortalDto : public SpatialDto
     {
     public:
-        PortalDto() = default;
+        PortalDto() : m_isOpen(false) {};
         PortalDto(const SpatialDto& spatial_dto);
 
         [[nodiscard]] const std::string& AdjacentZoneNodeName() const { return m_adjacentZoneNodeName; }

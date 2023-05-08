@@ -16,7 +16,7 @@ namespace Enigma::Engine
 {
     using error = std::error_code;
 
-	class EffectTechnique
+    class EffectTechnique
     {
     public:
         EffectTechnique(const std::string& name, const std::vector<EffectPass>& passes);
@@ -30,7 +30,7 @@ namespace Enigma::Engine
         const std::string& GetName() { return m_name; }
 
         void AddPass(const EffectPass& pass);
-        unsigned int GetPassCount() { return (unsigned int)m_effectPasses.size(); };
+        unsigned int GetPassCount() { return static_cast<unsigned int>(m_effectPasses.size()); };
         EffectPass& GetPassByIndex(unsigned int index);
         const EffectPass& GetPassByIndex(unsigned int index) const;
 

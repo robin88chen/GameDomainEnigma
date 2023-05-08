@@ -2,7 +2,6 @@
 #include "SystemService.h"
 #include "SystemServiceEvents.h"
 #include "EventPublisher.h"
-#include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Frameworks;
 
@@ -130,9 +129,9 @@ void ServiceManager::RunOnce()
 
         if (result == ServiceResult::Complete)
         {
-            unsigned int state = (unsigned int)((*iterService).m_state);
+            unsigned int state = static_cast<unsigned int>((*iterService).m_state);
             state++;
-            (*iterService).m_state = (ServiceState)(state);
+            (*iterService).m_state = static_cast<ServiceState>(state);
         }
         if (tempMinState > (*iterService).m_state) tempMinState = (*iterService).m_state;
     }
@@ -203,9 +202,9 @@ void ServiceManager::RunForState(ServiceState st)
 
         if (result == ServiceResult::Complete)
         {
-            unsigned int state = (unsigned int)((*iterService).m_state);
+            unsigned int state = static_cast<unsigned int>((*iterService).m_state);
             state++;
-            (*iterService).m_state = (ServiceState)(state);
+            (*iterService).m_state = static_cast<ServiceState>(state);
         }
         if (tempMinState > (*iterService).m_state) tempMinState = (*iterService).m_state;
     }

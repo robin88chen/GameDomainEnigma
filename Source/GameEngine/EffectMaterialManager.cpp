@@ -18,7 +18,7 @@ using namespace Enigma::Engine;
 DEFINE_RTTI(Engine, EffectMaterialManager, ISystemService);
 
 EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr)
+    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr), m_currentCompilingRuid()
 {
     m_effectDeserializer = effect_deserializer;
     m_needTick = false;

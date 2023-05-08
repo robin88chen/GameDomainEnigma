@@ -20,8 +20,10 @@ namespace Enigma::Engine
     public:
         TimerService(Frameworks::ServiceManager* manager);
         TimerService(const TimerService&) = delete;
-        virtual ~TimerService();
+        TimerService(TimerService&&) = delete;
+        virtual ~TimerService() override;
         TimerService& operator=(const TimerService&) = delete;
+        TimerService& operator=(TimerService&&) = delete;
 
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTick() override;

@@ -48,7 +48,7 @@ error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_bu
         }
     }
     SAFE_DELETE_ARRAY(m_d3dTextureResources);
-    m_resourceViewCount = (unsigned int)img_buffs.size();
+    m_resourceViewCount = static_cast<unsigned int>(img_buffs.size());
 
     m_d3dTextureResources = new ID3D11ShaderResourceView * [m_resourceViewCount];
     memset(m_d3dTextureResources, 0, m_resourceViewCount * sizeof(ID3D11ShaderResourceView*));
@@ -112,7 +112,7 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
 
         DirectX::Blob blob;
         DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
-        byte_buffer write_buff = make_data_buffer((unsigned char*)blob.GetBufferPointer(), blob.GetBufferSize());
+        byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
         size_t write_bytes = files[i]->Write(0, write_buff);
         if (write_bytes != write_buff.size()) return ErrorCode::saveTextureFile;
     }
@@ -160,7 +160,7 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
         ID3D11ShaderResourceView* d3dResource = nullptr;
 
         SRDesc.Format = ConvertGraphicFormatToDXGI(bbDx11->GetSliceFormat(i));
-        SRDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+        SRDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         SRDesc.Texture2D.MostDetailedMip = 0;
         SRDesc.Texture2D.MipLevels = 1;
         HRESULT hr = device->CreateShaderResourceView(bbDx11->GetD3DSurface(i), &SRDesc, &d3dResource);
@@ -194,7 +194,7 @@ error MultiTextureDx11::CreateFromScratchImage(unsigned index, DirectX::ScratchI
     img_buff.resize(scratchImage.GetPixelsSize());
     memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
     return CreateOneFromSystemMemory(index,
-        MathLib::Dimension{ (unsigned int)scratchImage.GetMetadata().width, (unsigned int)scratchImage.GetMetadata().height },
+        MathLib::Dimension{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
         img_buff);
 }
 
@@ -207,14 +207,14 @@ error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib:
 
     D3D11_TEXTURE2D_DESC tex_desc;
     ZeroMemory(&tex_desc, sizeof(tex_desc));
-    tex_desc.Width = (unsigned int)dimension.m_width;
-    tex_desc.Height = (unsigned int)dimension.m_height;
+    tex_desc.Width = static_cast<unsigned int>(dimension.m_width);
+    tex_desc.Height = static_cast<unsigned int>(dimension.m_height);
     tex_desc.ArraySize = 1;
     tex_desc.SampleDesc.Count = 1;
     tex_desc.SampleDesc.Quality = 0;
     tex_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     tex_desc.Usage = D3D11_USAGE_DEFAULT;
-    tex_desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+    tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     tex_desc.CPUAccessFlags = 0;
     tex_desc.MiscFlags = 0;
     tex_desc.MipLevels = 1;

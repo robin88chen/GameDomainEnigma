@@ -21,7 +21,7 @@ SkinMeshPrimitive::SkinMeshPrimitive(const SkinMeshPrimitive& skin) : MeshPrimit
     m_ownerNodeRootRefTransform = skin.m_ownerNodeRootRefTransform;
 }
 
-SkinMeshPrimitive::SkinMeshPrimitive(SkinMeshPrimitive&& skin) : MeshPrimitive(skin)
+SkinMeshPrimitive::SkinMeshPrimitive(SkinMeshPrimitive&& skin) noexcept : MeshPrimitive(std::move(static_cast<MeshPrimitive&>(skin)))
 {
     m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);
     m_ownerNodeRootRefTransform = std::move(skin.m_ownerNodeRootRefTransform);
@@ -40,7 +40,7 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(const SkinMeshPrimitive& skin)
     return *this;
 }
 
-SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin)
+SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexcept
 {
     MeshPrimitive::operator=(skin);
     m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);

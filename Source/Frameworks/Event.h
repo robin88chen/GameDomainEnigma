@@ -17,8 +17,10 @@ namespace Enigma::Frameworks
     public:
         IEvent() {};
         IEvent(const IEvent&) = delete;
+        IEvent(IEvent&&) = delete;
         virtual ~IEvent() {};
         IEvent& operator=(const IEvent&) = delete;
+        IEvent& operator=(IEvent&&) = delete;
         virtual const std::type_info& TypeInfo() { return typeid(*this); };  ///< 實作層的 type info
     };
     using IEventPtr = std::shared_ptr<IEvent>;

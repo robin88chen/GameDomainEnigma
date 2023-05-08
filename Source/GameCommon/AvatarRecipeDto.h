@@ -1,5 +1,5 @@
 ﻿/*********************************************************************
- * \file   AvatarRecipieDto.h
+ * \file   AvatarRecipeDto.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
@@ -17,14 +17,17 @@ namespace Enigma::GameCommon
     {
     public:
         AvatarRecipeDto() = default;
+        AvatarRecipeDto(const AvatarRecipeDto&) = default;
+        AvatarRecipeDto(AvatarRecipeDto&&) = default;
         virtual ~AvatarRecipeDto() = default;
+        AvatarRecipeDto& operator=(const AvatarRecipeDto&) = default;
+        AvatarRecipeDto& operator=(AvatarRecipeDto&&) = default;
     };
 
     class AvatarRecipeReplaceMaterialDto : public AvatarRecipeDto
     {
     public:
         AvatarRecipeReplaceMaterialDto() = default;
-        virtual ~AvatarRecipeReplaceMaterialDto() = default;
 
         std::string& OldMaterialName() { return m_oldMaterialName; }
         [[nodiscard]] const std::string& OldMaterialName() const { return m_oldMaterialName; }
@@ -43,7 +46,7 @@ namespace Enigma::GameCommon
     {
     public:
         AvatarRecipeChangeTextureDto() = default;
-        virtual ~AvatarRecipeChangeTextureDto() = default;
+
         std::string& MeshName() { return m_meshName; }
         [[nodiscard]] const std::string& MeshName() const { return m_meshName; }
         Engine::TextureMappingDto& TextureDto() { return m_textureDto; }

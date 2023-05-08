@@ -10,7 +10,6 @@
 
 #include "GameEngine/GenericDto.h"
 #include "MathLib/Matrix4.h"
-#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/GeometryDataDto.h"
 #include "GameEngine/FactoryDesc.h"

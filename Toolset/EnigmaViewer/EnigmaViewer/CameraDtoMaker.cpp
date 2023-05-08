@@ -1,4 +1,5 @@
 ﻿#include "CameraDtoMaker.h"
+#include "MathLib/MathGlobal.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;

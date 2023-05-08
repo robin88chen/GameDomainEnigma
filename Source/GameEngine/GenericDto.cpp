@@ -6,9 +6,8 @@ std::string TOKEN_RTTI = "Rtti";
 std::string TOKEN_TOP_LEVEL = "TopLevel";
 std::string TOKEN_NAME = "Name";
 
-GenericDto::GenericDto()
+GenericDto::GenericDto() : m_ruid(Frameworks::Ruid::Generate())
 {
-    m_ruid = Frameworks::Ruid::Generate();
 }
 
 GenericDto::~GenericDto()

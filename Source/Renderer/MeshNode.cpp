@@ -39,7 +39,7 @@ MeshNode::MeshNode(const MeshNode& node)
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
 
-MeshNode::MeshNode(MeshNode&& node)
+MeshNode::MeshNode(MeshNode&& node) noexcept
 {
     m_name = std::move(node.m_name);
     m_mxT_PosTransform = std::move(node.m_mxT_PosTransform);
@@ -57,6 +57,7 @@ MeshNode::~MeshNode()
 
 MeshNode& MeshNode::operator=(const MeshNode& node)
 {
+    if (this == &node) return *this;
     m_name = node.m_name;
     m_mxT_PosTransform = node.m_mxT_PosTransform;
     m_mxLocalTransform = node.m_mxLocalTransform;
@@ -77,7 +78,7 @@ MeshNode& MeshNode::operator=(const MeshNode& node)
     return *this;
 }
 
-MeshNode& MeshNode::operator=(MeshNode&& node)
+MeshNode& MeshNode::operator=(MeshNode&& node) noexcept
 {
     m_name = std::move(node.m_name);
     m_mxT_PosTransform = std::move(node.m_mxT_PosTransform);

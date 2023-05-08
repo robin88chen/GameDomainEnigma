@@ -19,6 +19,7 @@ namespace Enigma::Frameworks
     public:
         Ruid() = default;
         Ruid(std::uint64_t first, std::uint64_t second) : m_first(first), m_second(second) {}
+        ~Ruid() = default;
         Ruid(const Ruid&) = default;
         Ruid(Ruid&&) = default;
 

@@ -29,10 +29,10 @@ namespace Enigma::Engine
     public:
         EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
         EffectMaterial(const EffectMaterial&);
-        EffectMaterial(EffectMaterial&&);
+        EffectMaterial(EffectMaterial&&) noexcept;
         virtual ~EffectMaterial();
         EffectMaterial& operator=(const EffectMaterial&);
-        EffectMaterial& operator=(EffectMaterial&&);
+        EffectMaterial& operator=(EffectMaterial&&) noexcept;
 
         GenericDto SerializeDto();
 

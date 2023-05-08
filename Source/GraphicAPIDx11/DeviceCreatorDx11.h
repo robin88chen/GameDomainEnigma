@@ -26,11 +26,13 @@ namespace Enigma::Devices
     public:
         DeviceCreatorDx11();
         DeviceCreatorDx11(const DeviceCreatorDx11&) = delete;
+        DeviceCreatorDx11(DeviceCreatorDx11&&) = delete;
         ~DeviceCreatorDx11();
         DeviceCreatorDx11& operator=(const DeviceCreatorDx11&) = delete;
+        DeviceCreatorDx11& operator=(DeviceCreatorDx11&&) = delete;
 
         error Initialize(HWND hwnd, const Graphics::DeviceRequiredBits& rqb);
-        IDXGIFactory* GetDxgiFactory() { return m_dxgiFactory; };
+        IDXGIFactory* GetDxgiFactory() { return m_dxgiFactory; }
 
         error BuildDeviceList(AdapterDx11* adapter);
         error CreateWindowedDevice(AdapterDx11* adapter, SwapChainDx11* swapChain,

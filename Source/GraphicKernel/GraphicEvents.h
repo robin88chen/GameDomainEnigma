@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GraphicEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -470,7 +470,7 @@ namespace Enigma::Graphics
     public:
         DeviceInputLayoutCreated(const std::string& name) :
             m_name(name) {};
-        const std::string& GetVertexDeclarationrame() { return m_name; }
+        const std::string& GetVertexDeclarationName() { return m_name; }
     private:
         std::string m_name;
     };

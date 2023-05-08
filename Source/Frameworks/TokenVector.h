@@ -23,8 +23,7 @@ using TokenVector = std::vector<std::string>;
 //@{
 /** 將字串分解成token
   @param src 來源字串
-  @param sep 分解記號
-  @param token_vec 傳回結果 */
+  @param sep 分解記號 */
 extern TokenVector En_Split_Token(const std::string& src, const std::string& sep);
 
 #endif // TOKEN_VECTOR_H

@@ -120,7 +120,7 @@ namespace Enigma::Engine
         /** get texture coord array */
         std::vector<float> GetTexture1DCoordArray(unsigned int stage, unsigned int count);
         std::vector<float> GetTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
-        /** set texture coord array @param count : count of data in array ( vtx count * 3 ) */
+        /** set texture coord array */
         error SetTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
         /** get texture coord array */
         std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int stage, unsigned int count);

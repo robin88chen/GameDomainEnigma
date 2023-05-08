@@ -47,15 +47,15 @@ TextureCoordDto TextureCoordDto::FromGenericDto(const GenericDto& dto)
     TextureCoordDto coords;
     if (dto.HasValue(TOKEN_2D_COORDS))
     {
-        coords.m_2dCoords = dto.TryGetValue<std::vector<Vector2>>(TOKEN_2D_COORDS).value();
+       if (auto v = dto.TryGetValue<std::vector<Vector2>>(TOKEN_2D_COORDS)) coords.m_2dCoords = v.value();
     }
     else if (dto.HasValue(TOKEN_1D_COORDS))
     {
-        coords.m_1dCoords = dto.TryGetValue<std::vector<float>>(TOKEN_1D_COORDS).value();
+        if (auto v = dto.TryGetValue<std::vector<float>>(TOKEN_1D_COORDS)) coords.m_1dCoords = v.value();
     }
     else if (dto.HasValue(TOKEN_3D_COORDS))
     {
-        coords.m_3dCoords = dto.TryGetValue<std::vector<Vector3>>(TOKEN_3D_COORDS).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector3>>(TOKEN_3D_COORDS)) coords.m_3dCoords = v.value();
     }
     return coords;
 }
@@ -82,58 +82,58 @@ GenericDto TextureCoordDto::ToGenericDto()
 GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
-    geometry.m_name = dto.TryGetValue<std::string>(TOKEN_NAME).value();
-    geometry.m_vertexFormat = dto.TryGetValue<std::string>(TOKEN_VERTEX_FORMAT).value();
-    geometry.m_segments = dto.TryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS).value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) geometry.m_name = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_VERTEX_FORMAT)) geometry.m_vertexFormat = v.value();
+    if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS)) geometry.m_segments = v.value();
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
-        geometry.m_position3s = dto.TryGetValue<std::vector<Vector3>>(TOKEN_POSITIONS_3).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector3>>(TOKEN_POSITIONS_3)) geometry.m_position3s = v.value();
     }
     if (dto.HasValue(TOKEN_POSITIONS_4))
     {
-        geometry.m_position4s = dto.TryGetValue<std::vector<Vector4>>(TOKEN_POSITIONS_4).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector4>>(TOKEN_POSITIONS_4)) geometry.m_position4s = v.value();
     }
     if (dto.HasValue(TOKEN_NORMALS))
     {
-        geometry.m_normals = dto.TryGetValue<std::vector<Vector3>>(TOKEN_NORMALS).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector3>>(TOKEN_NORMALS)) geometry.m_normals = v.value();
     }
     if (dto.HasValue(TOKEN_DIFFUSE_COLORS))
     {
-        geometry.m_diffuseColors = dto.TryGetValue<std::vector<Vector4>>(TOKEN_DIFFUSE_COLORS).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector4>>(TOKEN_DIFFUSE_COLORS)) geometry.m_diffuseColors = v.value();
     }
     if (dto.HasValue(TOKEN_SPECULAR_COLORS))
     {
-        geometry.m_specularColors = dto.TryGetValue<std::vector<Vector4>>(TOKEN_SPECULAR_COLORS).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector4>>(TOKEN_SPECULAR_COLORS)) geometry.m_specularColors = v.value();
     }
     for (auto& token_tex_coord : TOKEN_TEX_COORDS)
     {
         if (dto.HasValue(token_tex_coord))
         {
-            geometry.m_texCoords.emplace_back(dto.TryGetValue<GenericDto>(token_tex_coord).value());
+            if (auto v = dto.TryGetValue<GenericDto>(token_tex_coord)) geometry.m_texCoords.emplace_back(v.value());
         }
     }
     if (dto.HasValue(TOKEN_PALETTE_INDICES))
     {
-        geometry.m_paletteIndices = dto.TryGetValue<std::vector<unsigned>>(TOKEN_PALETTE_INDICES).value();
+        if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_PALETTE_INDICES)) geometry.m_paletteIndices = v.value();
     }
     if (dto.HasValue(TOKEN_WEIGHTS))
     {
-        geometry.m_weights = dto.TryGetValue<std::vector<float>>(TOKEN_WEIGHTS).value();
+        if (auto v = dto.TryGetValue<std::vector<float>>(TOKEN_WEIGHTS)) geometry.m_weights = v.value();
     }
     if (dto.HasValue(TOKEN_TANGENTS))
     {
-        geometry.m_tangents = dto.TryGetValue<std::vector<Vector4>>(TOKEN_TANGENTS).value();
+        if (auto v = dto.TryGetValue<std::vector<Vector4>>(TOKEN_TANGENTS)) geometry.m_tangents = v.value();
     }
     if (dto.HasValue(TOKEN_INDICES))
     {
-        geometry.m_indices = dto.TryGetValue<std::vector<unsigned>>(TOKEN_INDICES).value();
+        if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_INDICES)) geometry.m_indices = v.value();
     }
-    geometry.m_vtxCapacity = dto.TryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY).value();
-    geometry.m_idxCapacity = dto.TryGetValue<unsigned>(TOKEN_INDEX_CAPACITY).value();
-    geometry.m_vtxUsedCount = dto.TryGetValue<unsigned>(TOKEN_VERTEX_USED_COUNT).value();
-    geometry.m_idxUsedCount = dto.TryGetValue<unsigned>(TOKEN_INDEX_USED_COUNT).value();
-    geometry.m_topology = dto.TryGetValue<unsigned>(TOKEN_TOPOLOGY).value();
-    geometry.m_geometryBound = dto.TryGetValue<GenericDto>(TOKEN_GEOMETRY_BOUND).value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY)) geometry.m_vtxCapacity = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_CAPACITY)) geometry.m_idxCapacity = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_USED_COUNT)) geometry.m_vtxUsedCount = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_USED_COUNT)) geometry.m_idxUsedCount = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_TOPOLOGY)) geometry.m_topology = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_GEOMETRY_BOUND)) geometry.m_geometryBound = v.value();
 
     return geometry;
 }

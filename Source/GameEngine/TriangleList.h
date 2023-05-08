@@ -24,7 +24,7 @@ namespace Enigma::Engine
         TriangleList(const GenericDto& o);
         TriangleList(const TriangleList&) = delete;
         TriangleList(TriangleList&&) = delete;
-        virtual ~TriangleList();
+        virtual ~TriangleList() override;
         TriangleList& operator=(const TriangleList&) = delete;
         TriangleList& operator=(TriangleList&&) = delete;
 

@@ -28,7 +28,7 @@ error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffe
     if (FATAL_LOG_EXPR(dataBuffer.size() > m_vertexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
     if (m_indexBuffer)
     {
-        unsigned int dataSize = (unsigned int)indexBuffer.size() * sizeof(unsigned int);
+        unsigned int dataSize = static_cast<unsigned int>(indexBuffer.size()) * sizeof(unsigned int);
         if (FATAL_LOG_EXPR(dataSize > m_indexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
     }
     m_vertexBuffer->Update(dataBuffer);
@@ -43,7 +43,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     if (FATAL_LOG_EXPR(vtxBuffer.data.size() > m_vertexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
     if ((m_indexBuffer) && (idxBuffer))
     {
-        unsigned int dataSize = (unsigned int)idxBuffer.value().data.size() * sizeof(unsigned int);
+        unsigned int dataSize = static_cast<unsigned int>(idxBuffer.value().data.size()) * sizeof(unsigned int);
         if (FATAL_LOG_EXPR(dataSize > m_indexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
     }
     m_vertexBuffer->RangedUpdate(vtxBuffer);
@@ -70,7 +70,7 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
     if (m_indexBuffer)
     {
         Graphics::IGraphicAPI::Instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
-            segment.m_startIdx, segment.m_startVtx);
+            segment.m_startIdx, static_cast<int>(segment.m_startVtx));
     }
     else
     {
@@ -83,7 +83,7 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         if (m_indexBuffer)
         {
             Graphics::IGraphicAPI::Instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
-                segment.m_startIdx, segment.m_startVtx);
+                segment.m_startIdx, static_cast<int>(segment.m_startVtx));
         }
         else
         {

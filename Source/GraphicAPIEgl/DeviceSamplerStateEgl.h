@@ -25,7 +25,7 @@ namespace Enigma::Devices
         DeviceSamplerStateEgl(const std::string& name);
         DeviceSamplerStateEgl(const DeviceSamplerStateEgl&) = delete;
         DeviceSamplerStateEgl(DeviceSamplerStateEgl&&) = delete;
-        virtual ~DeviceSamplerStateEgl();
+        virtual ~DeviceSamplerStateEgl() override;
         DeviceSamplerStateEgl& operator=(const DeviceSamplerStateEgl&) = delete;
         DeviceSamplerStateEgl& operator=(DeviceSamplerStateEgl&&) = delete;
 

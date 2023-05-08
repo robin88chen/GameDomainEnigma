@@ -92,8 +92,8 @@ D3D11_FILTER DeviceSamplerStateDx11::FilterByData()
     if (m_data.m_minFilter == SamplerStateData::Filter::Linear) _min = 0x10;
     if (m_data.m_magFilter == SamplerStateData::Filter::Linear) _mag = 0x04;
     if (m_data.m_mipFilter == SamplerStateData::Filter::Linear) _mip = 0x01;
-    if (m_data.m_cmpFunc != SamplerStateData::CompareFunc::Never) return (D3D11_FILTER)(_min + _mag + _mip + 0x80);
-    return (D3D11_FILTER)(_min + _mag + _mip);
+    if (m_data.m_cmpFunc != SamplerStateData::CompareFunc::Never) return static_cast<D3D11_FILTER>(_min + _mag + _mip + 0x80);
+    return static_cast<D3D11_FILTER>(_min + _mag + _mip);
 }
 
 D3D11_TEXTURE_ADDRESS_MODE DeviceSamplerStateDx11::AddressModeByData(SamplerStateData::AddressMode mode)
@@ -107,5 +107,5 @@ D3D11_TEXTURE_ADDRESS_MODE DeviceSamplerStateDx11::AddressModeByData(SamplerStat
 
 D3D11_COMPARISON_FUNC DeviceSamplerStateDx11::CompareFuncByData()
 {
-    return D3D11_COMPARISON_FUNC(m_data.m_cmpFunc);
+    return static_cast<D3D11_COMPARISON_FUNC>(m_data.m_cmpFunc);
 }

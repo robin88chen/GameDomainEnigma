@@ -21,13 +21,13 @@ namespace Enigma::Devices
         VertexBufferDx11(const std::string& name);
         VertexBufferDx11(const VertexBufferDx11&) = delete;
         VertexBufferDx11(VertexBufferDx11&&) = delete;
-        virtual ~VertexBufferDx11();
+        virtual ~VertexBufferDx11() override;
         VertexBufferDx11& operator=(const VertexBufferDx11&) = delete;
         VertexBufferDx11& operator=(VertexBufferDx11&&) = delete;
 
         virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
 
-        ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; };
+        ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; }
 
     protected:
         virtual error UpdateBuffer(const byte_buffer& dataVertex) override;

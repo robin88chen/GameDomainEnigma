@@ -23,7 +23,7 @@ GenericDto PortalZoneNodeDto::ToGenericDto()
     return dto;
 }
 
-PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
+PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_isOpen(false)
 {
 }
 

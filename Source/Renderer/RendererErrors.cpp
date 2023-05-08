@@ -1,4 +1,6 @@
 ﻿#include "RendererErrors.h"
+#include <string>
+#include <system_error>
 
 using namespace Enigma::Renderer;
 

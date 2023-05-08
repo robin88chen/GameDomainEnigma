@@ -139,7 +139,7 @@ void ShaderProgramEgl::LinkShaders()
         glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLen);
         if (infoLogLen)
         {
-            GLchar* infoLog = (GLchar*)malloc(infoLogLen);
+            GLchar* infoLog = static_cast<GLchar*>(malloc(infoLogLen));
             if (infoLog)
             {
                 glGetProgramInfoLog(m_program, infoLogLen, NULL, infoLog);
@@ -230,14 +230,14 @@ void ShaderProgramEgl::AppendShaderVariable(const std::string& name, const std::
     }
     else if ((type == GL_FLOAT_VEC2) || (type == GL_FLOAT_VEC3) || (type == GL_FLOAT_VEC4))
     {
-        int dimension = (unsigned int)type - (unsigned int)GL_FLOAT_VEC2 + 2;
+        int dimension = (unsigned int)type - static_cast<unsigned int>(GL_FLOAT_VEC2) + 2;
         Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Vector(
             m_program, name, semantic, dimension, elements) };
         m_variableArray.push_back(shader_var);
     }
     else if ((type == GL_FLOAT_MAT2) || (type == GL_FLOAT_MAT3) || (type == GL_FLOAT_MAT4))
     {
-        int dimension = (unsigned int)type - (unsigned int)GL_FLOAT_MAT2 + 2;
+        int dimension = (unsigned int)type - static_cast<unsigned int>(GL_FLOAT_MAT2) + 2;
         Graphics::IShaderVariablePtr shader_var = Graphics::IShaderVariablePtr{ menew ShaderVariableEgl_Matrix(
             m_program, name, semantic, dimension, elements) };
         m_variableArray.push_back(shader_var);

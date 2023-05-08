@@ -15,7 +15,7 @@
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
-GeometryBuilder::GeometryBuilder(GeometryRepository* host)
+GeometryBuilder::GeometryBuilder(GeometryRepository* host) : m_ruidDeserializing(), m_ruidInstancing()
 {
     m_hostRepository = host;
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoDeserialized(e); });
@@ -45,9 +45,9 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
         EventPublisher::Post(std::make_shared<GeometryDataBuilt>(policy.Name(),
             m_hostRepository->QueryGeometryData(policy.Name())));
     }
-    else if (policy.GetDto())
+    else if (auto p = policy.GetDto())
     {
-        CreateFromDto(policy.Name(), policy.GetDto().value());
+        CreateFromDto(policy.Name(), p.value());
     }
     else if (policy.GetDeserializer())
     {
@@ -63,7 +63,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
 void GeometryBuilder::CreateFromDto(const std::string& name, const GenericDto& dto)
 {
     assert(m_hostRepository);
-    m_ruidContracting = dto.GetId();
+    m_ruidInstancing = dto.GetId();
     CommandBus::Post(std::make_shared<InvokeDtoFactory>(dto));
 }
 
@@ -95,6 +95,6 @@ void GeometryBuilder::OnDtoGeometryCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
-    if (ev->GetDto().GetId() != m_ruidContracting) return;
+    if (ev->GetDto().GetId() != m_ruidInstancing) return;
     EventPublisher::Post(std::make_shared<GeometryDataBuilt>(m_policy.Name(), ev->GetGeometryData()));
 }

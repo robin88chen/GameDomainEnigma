@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectCompilingProfileDeserializer.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -18,7 +18,11 @@ namespace Enigma::Engine
     {
     public:
         IEffectCompilingProfileDeserializer() = default;
+        IEffectCompilingProfileDeserializer(const IEffectCompilingProfileDeserializer&) = delete;
+        IEffectCompilingProfileDeserializer(IEffectCompilingProfileDeserializer&&) = delete;
         virtual ~IEffectCompilingProfileDeserializer() = default;
+        IEffectCompilingProfileDeserializer& operator=(const IEffectCompilingProfileDeserializer&) = delete;
+        IEffectCompilingProfileDeserializer& operator=(IEffectCompilingProfileDeserializer&&) = delete;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
     };

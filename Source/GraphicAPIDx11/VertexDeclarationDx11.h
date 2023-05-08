@@ -25,14 +25,14 @@ namespace Enigma::Devices
             const Graphics::VertexFormatCode& shader_fmt_code);
         VertexDeclarationDx11(const VertexDeclarationDx11&) = delete;
         VertexDeclarationDx11(VertexDeclarationDx11&&) = delete;
-        virtual ~VertexDeclarationDx11();
+        virtual ~VertexDeclarationDx11() override;
         VertexDeclarationDx11& operator=(const VertexDeclarationDx11&) = delete;
         VertexDeclarationDx11& operator=(VertexDeclarationDx11&&) = delete;
 
         virtual bool IsMatched(const std::string& data_vertex_format, const Graphics::IVertexShaderPtr& vtx_shader) override;
 
         error CreateD3DInputLayout(ID3D11Device* device);
-        ID3D11InputLayout* GetD3DInputLayout() const { return m_d3dInputLayout; };
+        ID3D11InputLayout* GetD3DInputLayout() const { return m_d3dInputLayout; }
 
         void FillShaderVertexFormat(const std::shared_ptr<VertexShaderDx11>& shader);
 

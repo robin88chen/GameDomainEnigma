@@ -17,7 +17,11 @@ namespace Enigma::Frameworks
     public:
         ResponseSubscriber();
         ResponseSubscriber(const ResponseHandler& handler);
+        ResponseSubscriber(const ResponseSubscriber&) = delete;
+        ResponseSubscriber(ResponseSubscriber&&) = delete;
         virtual ~ResponseSubscriber();
+        ResponseSubscriber& operator=(const ResponseSubscriber&) = delete;
+        ResponseSubscriber& operator=(ResponseSubscriber&&) = delete;
 
         virtual void HandleResponse(const IResponsePtr& r);
 

@@ -31,7 +31,7 @@ using ErrorCode = Enigma::Graphics::ErrorCode;
 
 static D3D11_PRIMITIVE_TOPOLOGY ConvertTopologyD3D11(Enigma::Graphics::PrimitiveTopology pt)
 {
-    return (D3D11_PRIMITIVE_TOPOLOGY)pt;
+    return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(pt);
 }
 
 GraphicAPIDx11::GraphicAPIDx11(AsyncType async) : IGraphicAPI(async)
@@ -61,7 +61,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
     m_adapter = menew AdapterDx11();
     m_swapChain = menew SwapChainDx11();
     m_creator = menew DeviceCreatorDx11();
-    m_creator->Initialize((HWND)m_wnd, rqb);
+    m_creator->Initialize(static_cast<HWND>(m_wnd), rqb);
     m_creator->BuildDeviceList(m_adapter);
 
     SAFE_RELEASE(m_d3dDevice);
@@ -154,7 +154,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
@@ -190,7 +190,7 @@ error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, c
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name, 
+error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& from_depth)
 {
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
@@ -204,8 +204,8 @@ error GraphicAPIDx11::ShareDepthStencilSurface(const std::string& depth_name,
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface, 
-    const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color, 
+error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
+    const Graphics::IDepthStencilSurfacePtr& depth_surface, const MathLib::ColorRGBA& color,
     float depth_value, unsigned int stencil_value)
 {
     error er = ErrorCode::ok;
@@ -229,7 +229,7 @@ error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface
     return er;
 }
 
-error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface, 
+error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surface,
     const Graphics::IDepthStencilSurfacePtr& depth_surface)
 {
     bool isMultiSurface = false;
@@ -258,12 +258,12 @@ error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
     m_boundViewPort = vp;
 
     D3D11_VIEWPORT d3dvp;
-    d3dvp.Width = (FLOAT)m_boundViewPort.Width();
-    d3dvp.Height = (FLOAT)m_boundViewPort.Height();
+    d3dvp.Width = static_cast<FLOAT>(m_boundViewPort.Width());
+    d3dvp.Height = static_cast<FLOAT>(m_boundViewPort.Height());
     d3dvp.MinDepth = m_boundViewPort.MinZ();
     d3dvp.MaxDepth = m_boundViewPort.MaxZ();
-    d3dvp.TopLeftX = (FLOAT)m_boundViewPort.X();
-    d3dvp.TopLeftY = (FLOAT)m_boundViewPort.Y();
+    d3dvp.TopLeftX = static_cast<FLOAT>(m_boundViewPort.X());
+    d3dvp.TopLeftY = static_cast<FLOAT>(m_boundViewPort.Y());
     m_d3dDeviceContext->RSSetViewports(1, &d3dvp);
     return ErrorCode::ok;
 }
@@ -580,7 +580,7 @@ error GraphicAPIDx11::ClearDepthStencilSurface(const Graphics::IDepthStencilSurf
         auto depth_dx11 = std::dynamic_pointer_cast<DepthStencilSurfaceDx11, Graphics::IDepthStencilSurface>(depth_surface);
         if (!depth_dx11) return ErrorCode::dynamicCastSurface;
         m_d3dDeviceContext->ClearDepthStencilView(
-            depth_dx11->GetD3DDepthView(), (D3D11_CLEAR_FLAG)flag, depth_value, (UINT8)stencil_value);
+            depth_dx11->GetD3DDepthView(), (D3D11_CLEAR_FLAG)flag, depth_value, static_cast<UINT8>(stencil_value));
     }
     return ErrorCode::ok;
 }
@@ -644,10 +644,10 @@ error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back
 void GraphicAPIDx11::AddDebugInfoFilter()
 {
     ID3D11Debug* d3dDebug = nullptr;
-    if (SUCCEEDED(m_d3dDevice->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
+    if (SUCCEEDED(m_d3dDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug))))
     {
         ID3D11InfoQueue* d3dInfoQueue = nullptr;
-        if (SUCCEEDED(d3dDebug->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)&d3dInfoQueue)))
+        if (SUCCEEDED(d3dDebug->QueryInterface(__uuidof(ID3D11InfoQueue), reinterpret_cast<void**>(&d3dInfoQueue))))
         {
 
             D3D11_MESSAGE_ID hide[] =
@@ -672,7 +672,7 @@ ID3D11Texture2D* GraphicAPIDx11::GetPrimaryD3DBackbuffer()
 {
     if (FATAL_LOG_EXPR((!m_swapChain) || (!m_swapChain->GetDXGIObject()))) return nullptr;
     ID3D11Texture2D* back_surface;
-    HRESULT hr = m_swapChain->GetDXGIObject()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&back_surface);
+    HRESULT hr = m_swapChain->GetDXGIObject()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&back_surface));
     if (FAILED(hr))
     {
         return nullptr;
@@ -723,6 +723,7 @@ DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& fo
 
 unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt)
 {
+    //todo : 數量太多，有需要再加
     switch (fmt)
     {
     case DXGI_FORMAT_UNKNOWN:               return Enigma::Graphics::GraphicFormat::FMT_UNKNOWN;

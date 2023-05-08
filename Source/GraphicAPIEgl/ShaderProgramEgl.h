@@ -24,7 +24,7 @@ namespace Enigma::Devices
             const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl);
         ShaderProgramEgl(const ShaderProgramEgl&) = delete;
         ShaderProgramEgl(ShaderProgramEgl&&) = delete;
-        virtual ~ShaderProgramEgl();
+        virtual ~ShaderProgramEgl() override;
         ShaderProgramEgl& operator=(const ShaderProgramEgl&) = delete;
         ShaderProgramEgl& operator=(ShaderProgramEgl&&) = delete;
 

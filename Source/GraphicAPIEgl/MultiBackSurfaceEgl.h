@@ -24,7 +24,7 @@ namespace Enigma::Devices
             unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt);
         MultiBackSurfaceEgl(const MultiBackSurfaceEgl&) = delete;
         MultiBackSurfaceEgl(MultiBackSurfaceEgl&&) = delete;
-        virtual ~MultiBackSurfaceEgl();
+        virtual ~MultiBackSurfaceEgl() override;
 
         MultiBackSurfaceEgl& operator=(const MultiBackSurfaceEgl&) = delete;
         MultiBackSurfaceEgl& operator=(MultiBackSurfaceEgl&&) = delete;

@@ -48,8 +48,6 @@ error DeviceAlphaBlendStateEgl::CreateFromData(const BlendStateData& data)
         m_blendOp = GL_FUNC_ADD;
     }
     break;
-    default:
-        break;
     }
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::AlphaBlendStateResourceCreated>(m_name));

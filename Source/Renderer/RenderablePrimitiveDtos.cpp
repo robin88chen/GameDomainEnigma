@@ -23,7 +23,6 @@ static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
-static std::string TOKEN_ROOT_REF_TRANSFORM = "RootRefTransform";
 static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";

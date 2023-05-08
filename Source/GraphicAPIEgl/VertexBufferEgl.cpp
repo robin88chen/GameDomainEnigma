@@ -35,7 +35,7 @@ error VertexBufferEgl::Create(unsigned sizeofVertex, unsigned sizeBuffer)
     glGenBuffers(1, &m_bufferHandle);
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
 
-    glBufferData(GL_ARRAY_BUFFER, m_bufferSize, 0, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)m_bufferSize, 0, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
@@ -55,7 +55,7 @@ error VertexBufferEgl::UpdateBuffer(const byte_buffer& dataVertex)
         return ErrorCode::bufferSize;
     }
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
-    void* buff = glMapBufferRange(GL_ARRAY_BUFFER, 0, dataVertex.size(), GL_MAP_WRITE_BIT);
+    void* buff = glMapBufferRange(GL_ARRAY_BUFFER, 0, (GLsizeiptr)dataVertex.size(), GL_MAP_WRITE_BIT);
     if (!buff)
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
@@ -84,8 +84,8 @@ error VertexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
-    void* buff = glMapBufferRange(GL_ARRAY_BUFFER, buffer.vtx_offset * m_sizeofVertex,
-        buffer.data.size(), GL_MAP_WRITE_BIT);
+    void* buff = glMapBufferRange(GL_ARRAY_BUFFER, (GLintptr)(buffer.vtx_offset * m_sizeofVertex),
+        (GLsizeiptr)buffer.data.size(), GL_MAP_WRITE_BIT);
     if (!buff)
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));

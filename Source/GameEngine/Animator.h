@@ -26,10 +26,10 @@ namespace Enigma::Engine
     public:
         Animator();
         Animator(const Animator& ani);
-        Animator(Animator&& ani);
+        Animator(Animator&& ani) noexcept;
         virtual ~Animator();
         Animator& operator=(const Animator&);
-        Animator& operator=(Animator&&);
+        Animator& operator=(Animator&&) noexcept;
 
         /** animation update
         @return has update something or not */

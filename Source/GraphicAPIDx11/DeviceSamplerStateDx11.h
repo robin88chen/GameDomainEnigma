@@ -23,7 +23,7 @@ namespace Enigma::Devices
         DeviceSamplerStateDx11(const std::string& name);
         DeviceSamplerStateDx11(const DeviceSamplerStateDx11&) = delete;
         DeviceSamplerStateDx11(DeviceSamplerStateDx11&&) = delete;
-        virtual ~DeviceSamplerStateDx11();
+        virtual ~DeviceSamplerStateDx11() override;
         DeviceSamplerStateDx11& operator=(const DeviceSamplerStateDx11&) = delete;
         DeviceSamplerStateDx11& operator=(DeviceSamplerStateDx11&&) = delete;
 

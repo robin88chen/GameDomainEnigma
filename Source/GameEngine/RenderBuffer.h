@@ -13,7 +13,6 @@
 #include "GeometrySegment.h"
 #include "GraphicKernel/IVertexBuffer.h"
 #include "GraphicKernel/IIndexBuffer.h"
-#include "MathLib/Matrix4.h"
 #include <system_error>
 #include <optional>
 

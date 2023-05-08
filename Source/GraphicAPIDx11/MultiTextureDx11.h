@@ -22,7 +22,7 @@ namespace Enigma::Devices
         MultiTextureDx11(const std::string& name);
         MultiTextureDx11(const MultiTextureDx11&) = delete;
         MultiTextureDx11(MultiTextureDx11&&) = delete;
-        virtual ~MultiTextureDx11();
+        virtual ~MultiTextureDx11() override;
         MultiTextureDx11& operator=(const MultiTextureDx11&) = delete;
         MultiTextureDx11& operator=(MultiTextureDx11&&) = delete;
 

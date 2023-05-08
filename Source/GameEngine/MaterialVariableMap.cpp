@@ -28,7 +28,7 @@ constexpr const char* SEMANTIC_POINT_LIGHT_COUNT = "PointLightCount";
 
 MaterialVariableMap* MaterialVariableMap::m_instance = nullptr;
 
-MaterialVariableMap::MaterialVariableMap()
+MaterialVariableMap::MaterialVariableMap() : m_countPointLightInfo(0)
 {
     m_instance = this;
     InitializeFunctionMap();
@@ -172,7 +172,7 @@ void MaterialVariableMap::AssignPointLightAttenuation(EffectVariable& var)
 void MaterialVariableMap::AssignPointLightCount(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue((int)(m_instance->m_countPointLightInfo));
+    var.AssignValue(static_cast<int>(m_instance->m_countPointLightInfo));
 }
 
 void MaterialVariableMap::AssignViewPortDimension(EffectVariable& var)
@@ -244,7 +244,7 @@ void MaterialVariableMap::UseViewPortDimension(const Enigma::Graphics::TargetVie
 void MaterialVariableMap::UseViewPortDimension(unsigned int width, unsigned int height, float min_z, float max_z)
 {
     assert(m_instance);
-    m_instance->m_vecViewPortDimension = Vector4((float)width, (float)height, min_z, max_z);
+    m_instance->m_vecViewPortDimension = Vector4(static_cast<float>(width), static_cast<float>(height), min_z, max_z);
 }
 
 void MaterialVariableMap::InitializeFunctionMap()

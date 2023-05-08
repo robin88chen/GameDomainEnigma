@@ -5,6 +5,7 @@
 #include "CameraFrustumEvents.h"
 #include "MathLib/Ray3.h"
 #include "MathLib/IntrRay3Plane3.h"
+#include "MathLib/MathGlobal.h"
 #include "Frameworks/EventPublisher.h"
 #include <cassert>
 #include <memory>

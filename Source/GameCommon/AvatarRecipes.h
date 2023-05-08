@@ -1,5 +1,5 @@
 ﻿/*********************************************************************
- * \file   AvatarRecipies.h
+ * \file   AvatarRecipes.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
@@ -20,7 +20,11 @@ namespace Enigma::GameCommon
         DECLARE_EN_RTTI_OF_BASE;
     public:
         AvatarRecipe() = default;
+        AvatarRecipe(const AvatarRecipe&) = delete;
+        AvatarRecipe(AvatarRecipe&&) = delete;
         virtual ~AvatarRecipe() = default;
+        AvatarRecipe& operator=(const AvatarRecipe&) = delete;
+        AvatarRecipe& operator=(AvatarRecipe&&) = delete;
 
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
         virtual Engine::GenericDto SerializeDto() const = 0;
@@ -34,7 +38,11 @@ namespace Enigma::GameCommon
     public:
         ReplaceAvatarMaterial(const std::string& old_material_name, const Engine::EffectMaterialDto& new_material_dto);
         ReplaceAvatarMaterial(const Engine::GenericDto& o);
+        ReplaceAvatarMaterial(const ReplaceAvatarMaterial&) = delete;
+        ReplaceAvatarMaterial(ReplaceAvatarMaterial&&) = delete;
         virtual ~ReplaceAvatarMaterial() override;
+        ReplaceAvatarMaterial& operator=(const ReplaceAvatarMaterial&) = delete;
+        ReplaceAvatarMaterial& operator=(ReplaceAvatarMaterial&&) = delete;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
         Engine::GenericDto SerializeDto() const override;
@@ -59,7 +67,12 @@ namespace Enigma::GameCommon
     public:
         ChangeAvatarTexture(const std::string& mesh_name, const Engine::TextureMappingDto& texture_dto);
         ChangeAvatarTexture(const Engine::GenericDto& o);
+        ChangeAvatarTexture(const ChangeAvatarTexture&) = delete;
+        ChangeAvatarTexture(ChangeAvatarTexture&&) = delete;
         virtual ~ChangeAvatarTexture() override;
+        ChangeAvatarTexture& operator=(const ChangeAvatarTexture&) = delete;
+        ChangeAvatarTexture& operator=(ChangeAvatarTexture&&) = delete;
+
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
         Engine::GenericDto SerializeDto() const override;
 

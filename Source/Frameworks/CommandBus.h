@@ -30,8 +30,10 @@ namespace Enigma::Frameworks
     public:
         CommandBus(ServiceManager* manager);
         CommandBus(const CommandBus&) = delete;
+        CommandBus(CommandBus&&) = delete;
         virtual ~CommandBus() override;
         CommandBus& operator=(const CommandBus&) = delete;
+        CommandBus& operator=(CommandBus&&) = delete;
 
         virtual ServiceResult OnTick() override;
         virtual ServiceResult OnTerm() override;

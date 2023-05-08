@@ -22,12 +22,14 @@ namespace Enigma::Devices
     public:
         SwapChainDx11(void);
         SwapChainDx11(const SwapChainDx11&) = delete;
+        SwapChainDx11(SwapChainDx11&&) = delete;
         ~SwapChainDx11(void);
         SwapChainDx11& operator=(const SwapChainDx11&) = delete;
+        SwapChainDx11& operator=(SwapChainDx11&&) = delete;
 
         void ToggleFullscreen(bool full_screen);
 
-        IDXGISwapChain* GetDXGIObject() { return m_dxgiSwapChain; };
+        IDXGISwapChain* GetDXGIObject() { return m_dxgiSwapChain; }
 
         error Present();
 

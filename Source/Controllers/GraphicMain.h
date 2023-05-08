@@ -23,8 +23,10 @@ namespace Enigma::Controllers
     public:
         GraphicMain();
         GraphicMain(const GraphicMain&) = delete;
+        GraphicMain(GraphicMain&&) = delete;
         ~GraphicMain();
         GraphicMain& operator=(const GraphicMain&) = delete;
+        GraphicMain& operator=(GraphicMain&&) = delete;
 
         /** get singleton instance */
         static GraphicMain* Instance();

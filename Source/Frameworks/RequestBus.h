@@ -29,8 +29,10 @@ namespace Enigma::Frameworks
     public:
         RequestBus(ServiceManager* manager);
         RequestBus(const RequestBus&) = delete;
+        RequestBus(RequestBus&&) = delete;
         virtual ~RequestBus() override;
         RequestBus& operator=(const RequestBus&) = delete;
+        RequestBus& operator=(RequestBus&&) = delete;
 
         virtual ServiceResult OnTick() override;
         virtual ServiceResult OnTerm() override;

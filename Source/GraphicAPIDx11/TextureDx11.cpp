@@ -46,7 +46,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension& dimension, c
     tex_desc.SampleDesc.Quality = 0;
     tex_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     tex_desc.Usage = D3D11_USAGE_DEFAULT;
-    tex_desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+    tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     tex_desc.CPUAccessFlags = 0;
     tex_desc.MiscFlags = 0;
     tex_desc.MipLevels = 1;
@@ -207,14 +207,14 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     ID3D11Resource* d3dSrcResource;
     m_d3dTextureResource->GetResource(&d3dSrcResource);
 
-    D3D10_BOX boxSrc;
+    D3D11_BOX boxSrc;
     boxSrc.left = rcSrc.Left();
     boxSrc.top = rcSrc.Top();
     boxSrc.right = rcSrc.Right();
     boxSrc.bottom = rcSrc.Bottom();
     boxSrc.front = 0;
     boxSrc.back = 1;
-    deviceContext->CopySubresourceRegion(targetTex, 0, 0, 0, 0, d3dSrcResource, 0, (const D3D11_BOX*)&boxSrc);
+    deviceContext->CopySubresourceRegion(targetTex, 0, 0, 0, 0, d3dSrcResource, 0, reinterpret_cast<const D3D11_BOX*>(&boxSrc));
     d3dSrcResource->Release();
 
     D3D11_MAPPED_SUBRESOURCE mapped_tex_data;
@@ -226,8 +226,8 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
             m_name, ErrorCode::dxTextureMapping));
         return ErrorCode::dxTextureMapping;
     }
-    m_retrievedBuff.resize(rcSrc.Height() * rcSrc.Width() * 4);
-    if (mapped_tex_data.RowPitch == (unsigned int)rcSrc.Width() * 4)
+    m_retrievedBuff.resize(static_cast<size_t>(rcSrc.Height()) * rcSrc.Width() * 4);
+    if (mapped_tex_data.RowPitch == static_cast<unsigned int>(rcSrc.Width()) * 4)
     {
         size_t buff_size = m_retrievedBuff.size();
         memcpy(&m_retrievedBuff[0], mapped_tex_data.pData, buff_size);
@@ -242,8 +242,9 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
         for (int i = 0; i < height; i++)
         {
             memcpy(dest_buf, src_buf, dest_pitch);
-            src_buf = (void*)((size_t)src_buf + mapped_tex_data.RowPitch);
-            dest_buf = (void*)((size_t)dest_buf + dest_pitch);
+            //todo: 有機會的話，測試修改
+            src_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(src_buf) + mapped_tex_data.RowPitch);
+            dest_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(dest_buf) + dest_pitch);
         }
     }
     deviceContext->Unmap(targetTex, 0);
@@ -328,7 +329,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
             m_name, ErrorCode::dxTextureMapping));
         return ErrorCode::dxTextureMapping;
     }
-    if (mapped.RowPitch == (unsigned int)rcDest.Width() * 4)
+    if (mapped.RowPitch == static_cast<unsigned int>(rcDest.Width()) * 4)
     {
         memcpy(mapped.pData, &img_buff[0], img_buff.size());
     }
@@ -338,12 +339,13 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
         int width = rcDest.Width();
         int src_pitch = width << 2;
         void* dest_buf = mapped.pData;
-        void* src_buf = (void*)&img_buff[0];
+        void* src_buf = (void*)(&img_buff[0]);
         for (int i = 0; i < height; i++)
         {
             memcpy(dest_buf, src_buf, src_pitch);
-            dest_buf = (void*)((size_t)dest_buf + mapped.RowPitch);
-            src_buf = (void*)((size_t)src_buf + src_pitch);
+            //todo: 有機會的話，測試修改
+            dest_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(dest_buf) + mapped.RowPitch);
+            src_buf = reinterpret_cast<void*>(reinterpret_cast<size_t>(src_buf) + src_pitch);
         }
     }
     deviceContext->Unmap(mappingTex, 0);
@@ -412,7 +414,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
 
     DirectX::Blob blob;
     DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
-    byte_buffer write_buff = make_data_buffer((unsigned char*)blob.GetBufferPointer(), blob.GetBufferSize());
+    byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
     size_t write_bytes = file->Write(0, write_buff);
     if (write_bytes != write_buff.size())
     {
@@ -456,7 +458,7 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     ID3D11ShaderResourceView* d3dResource = NULL;
 
     SRDesc.Format = ConvertGraphicFormatToDXGI(back_surf->GetFormat());
-    SRDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+    SRDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     SRDesc.Texture2D.MostDetailedMip = 0;
     SRDesc.Texture2D.MipLevels = 1;
     HRESULT hr = device->CreateShaderResourceView(bbDx11->GetD3DSurface(), &SRDesc, &d3dResource);
@@ -481,7 +483,7 @@ error TextureDx11::CreateFromScratchImage(DirectX::ScratchImage& scratchImage)
         img_buff.resize(scratchImage.GetPixelsSize());
         memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
         return CreateFromSystemMemory(
-            MathLib::Dimension{ (unsigned int)scratchImage.GetMetadata().width, (unsigned int)scratchImage.GetMetadata().height },
+            MathLib::Dimension{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
             img_buff);
     }
     else

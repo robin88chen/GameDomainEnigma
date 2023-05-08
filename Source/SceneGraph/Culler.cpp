@@ -46,6 +46,7 @@ Culler::~Culler()
 
 Culler& Culler::operator=(const Culler& culler)
 {
+    if (this == &culler) return *this;
     m_isEnableOuterClipping = culler.m_isEnableOuterClipping;
     m_camera = culler.m_camera;
     m_countCullerPlane = culler.m_countCullerPlane;

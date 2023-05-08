@@ -13,7 +13,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 
-ModelPrimitiveBuilder::ModelPrimitiveBuilder()
+ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
 {
     m_meshBuilder = menew MeshPrimitiveBuilder();
     m_onMeshPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnMeshPrimitiveBuilt(e); });
@@ -58,20 +58,20 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
         node.SetT_PosTransform(node_dto.LocalT_PosTransform());
         node.SetLocalTransform(node_dto.LocalT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
-        if (node_dto.ParentIndexInArray())
+        if (auto v = node_dto.ParentIndexInArray())
         {
-            node.SetParentIndexInArray(node_dto.ParentIndexInArray().value());
+            node.SetParentIndexInArray(v.value());
         }
-        if (node_dto.TheMeshPrimitive())
+        if (auto prim = node_dto.TheMeshPrimitive())
         {
-            if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
+            if (prim.value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
             {
-                PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
+                PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(prim.value()).
                     ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
-            else if (node_dto.TheMeshPrimitive().value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
+            else if (prim.value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
             {
-                PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(node_dto.TheMeshPrimitive().value()).
+                PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(prim.value()).
                     ConvertToPolicy(m_policy->TheDtoDeserializer()));
             }
         }
@@ -102,9 +102,9 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
 void ModelPrimitiveBuilder::TryBuildAnimator()
 {
     if (!m_policy) return;
-    if (m_policy->TheModelAnimator())
+    if (auto ani = m_policy->TheModelAnimator())
     {
-        m_animatorPolicy = m_policy->TheModelAnimator()->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
+        m_animatorPolicy = ani->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
         CommandBus::Post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
     }
     else
@@ -135,8 +135,11 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
             auto index = m_builtPrimitive->GetMeshNodeTree().FindMeshNodeIndex(meta.m_nodeName);
             if (index)
             {
-                m_builtPrimitive->GetMeshNodeTree().GetMeshNode(index.value()).value().get().SetMeshPrimitive(mesh_prim);
-                has_mesh_built = true;
+                if (auto node = m_builtPrimitive->GetMeshNodeTree().GetMeshNode(index.value()))
+                {
+                    node.value().get().SetMeshPrimitive(mesh_prim);
+                    has_mesh_built = true;
+                }
             }
             break;
         }

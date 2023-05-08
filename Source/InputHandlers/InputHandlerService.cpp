@@ -112,12 +112,9 @@ void InputHandlerService::ProcessWinMouseMiddleButtonUp(int x, int y, const Mous
 void InputHandlerService::ProcessWinMouseMove(int x, int y, const MouseKeyFlags& keyFlags)
 {
     bool drag_flag = false;
-    if ((x - m_dragMouseParam.m_dragBeginX > 10) || (m_dragMouseParam.m_dragBeginX - x > 10)
+    if (((x - m_dragMouseParam.m_dragBeginX > 10) || (m_dragMouseParam.m_dragBeginX - x > 10)
         || (y - m_dragMouseParam.m_dragBeginY > 10) || (m_dragMouseParam.m_dragBeginY - y > 10))
-    {
-        drag_flag = true;
-    }
-    else if (m_dragMouseParam.m_isDraging)
+        || (m_dragMouseParam.m_isDraging))
     {
         drag_flag = true;
     }
@@ -177,7 +174,7 @@ void InputHandlerService::ProcessWinKeyChar(char ch, int /*repeat*/)
         wait_tail = false;
         cch[2] = 0;
         unsigned char utf8ch[4] = { 0, 0, 0, 0 };
-        TextConverter::LocalStringToUtf8((char*)cch, 2, (char*)utf8ch, 4);
+        TextConverter::LocalStringToUtf8(reinterpret_cast<char*>(cch), 2, reinterpret_cast<char*>(utf8ch), 4);
         EventPublisher::Send(std::make_shared<WinKeyboardCharInput>(
             WinKeyboardInputEvent::WinKeyboardInputParameters(utf8ch, 0)));
     }
@@ -194,14 +191,14 @@ void InputHandlerService::ProcessWinKeyPressDown(unsigned int vk, unsigned int k
 {
     EventPublisher::Send(std::make_shared<WinKeyboardPressingDown>(
         WinKeyboardInputEvent::WinKeyboardInputParameters(
-            (WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey)vk, keyFlags)));
+            static_cast<WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey>(vk), keyFlags)));
 }
 
 void InputHandlerService::ProcessWinKeyPressUp(unsigned int vk, unsigned int keyFlags)
 {
     EventPublisher::Send(std::make_shared<WinKeyboardPressingUp>(
         WinKeyboardInputEvent::WinKeyboardInputParameters(
-            (WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey)vk, keyFlags)));
+            static_cast<WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey>(vk), keyFlags)));
 }
 
 void InputHandlerService::DetectAsyncKeyPress()
@@ -211,12 +208,12 @@ void InputHandlerService::DetectAsyncKeyPress()
         bool hasGotKey = false;
         for (unsigned int i = 0; i < m_asyncKeyArray.size(); i++)
         {
-            if (GetAsyncKeyState(m_asyncKeyArray[i]) < 0)
+            if (GetAsyncKeyState(static_cast<int>(m_asyncKeyArray[i])) < 0)
             {
                 hasGotKey = true;
                 EventPublisher::Send(std::make_shared<WinKeyboardAsyncPressed>(
                     WinKeyboardInputEvent::WinKeyboardInputParameters(
-                        (WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey)m_asyncKeyArray[i], 0)));
+                        static_cast<WinKeyboardInputEvent::WinKeyboardInputParameters::VirtualKey>(m_asyncKeyArray[i]), 0)));
             }
         }
         if (hasGotKey)

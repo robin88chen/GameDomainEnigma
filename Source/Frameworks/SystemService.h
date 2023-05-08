@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SystemService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -29,6 +29,7 @@ namespace Enigma::Frameworks
     public:
         ISystemService(ServiceManager*);
         ISystemService(const ISystemService&) = delete;
+        ISystemService(ISystemService&&) = delete;
         virtual ~ISystemService();
         ISystemService& operator=(const ISystemService&) = delete;
         ISystemService& operator=(ISystemService&&) = delete;

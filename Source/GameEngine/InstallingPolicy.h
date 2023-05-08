@@ -19,7 +19,11 @@ namespace Enigma::Engine
     {
     public:
         InstallingPolicy() = default;
+        InstallingPolicy(const InstallingPolicy&) = delete;
+        InstallingPolicy(InstallingPolicy&&) = delete;
         virtual ~InstallingPolicy() = default;
+        InstallingPolicy& operator=(const InstallingPolicy&) = delete;
+        InstallingPolicy& operator=(InstallingPolicy&&) = delete;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) = 0;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) = 0;

@@ -34,10 +34,10 @@ namespace Enigma::Renderer
     public:
         MeshPrimitive(const std::string& name);
         MeshPrimitive(const MeshPrimitive&);
-        MeshPrimitive(MeshPrimitive&&);
+        MeshPrimitive(MeshPrimitive&&) noexcept;
         ~MeshPrimitive() override;
         MeshPrimitive& operator=(const MeshPrimitive&);
-        MeshPrimitive& operator=(MeshPrimitive&&);
+        MeshPrimitive& operator=(MeshPrimitive&&) noexcept;
 
         virtual Engine::GenericDto SerializeDto() override;
 

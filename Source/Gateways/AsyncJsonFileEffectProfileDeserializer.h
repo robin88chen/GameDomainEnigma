@@ -18,7 +18,6 @@ namespace Enigma::Gateways
     {
     public:
         AsyncJsonFileEffectProfileDeserializer();
-        ~AsyncJsonFileEffectProfileDeserializer() override;
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
 

@@ -34,57 +34,57 @@ GeometryData::GeometryData(const GenericDto& o) : m_factoryDesc(o.GetRtti())
             dto.Segments()[i + 2], dto.Segments()[i + 3]);
     }
     m_topology = static_cast<PrimitiveTopology>(dto.Topology());
-    if (dto.Position3s())
+    if (auto pos3 = dto.Position3s())
     {
-        SetPosition3Array(dto.Position3s().value());
+        SetPosition3Array(pos3.value());
     }
-    if (dto.Position4s())
+    if (auto pos4 = dto.Position4s())
     {
-        SetPosition4Array(dto.Position4s().value());
+        SetPosition4Array(pos4.value());
     }
-    if (dto.Normals())
+    if (auto nor = dto.Normals())
     {
-        SetVertexNormalArray(dto.Normals().value());
+        SetVertexNormalArray(nor.value());
     }
-    if (dto.DiffuseColors())
+    if (auto diff = dto.DiffuseColors())
     {
-        SetDiffuseColorArray(dto.DiffuseColors().value());
+        SetDiffuseColorArray(diff.value());
     }
-    if (dto.SpecularColors())
+    if (auto spe = dto.SpecularColors())
     {
-        SetSpecularColorArray(dto.SpecularColors().value());
+        SetSpecularColorArray(spe.value());
     }
     for (unsigned i = 0; i < dto.TextureCoords().size(); i++)
     {
         TextureCoordDto coord = TextureCoordDto::FromGenericDto(dto.TextureCoords()[i]);
-        if (coord.Texture2DCoords())
+        if (auto tex2 = coord.Texture2DCoords())
         {
-            SetTexture2DCoordArray(i, coord.Texture2DCoords().value());
+            SetTexture2DCoordArray(i, tex2.value());
         }
-        else if (coord.Texture1DCoords())
+        else if (auto tex1 = coord.Texture1DCoords())
         {
-            SetTexture1DCoordArray(i, coord.Texture1DCoords().value());
+            SetTexture1DCoordArray(i, tex1.value());
         }
-        else if (coord.Texture3DCoords())
+        else if (auto tex3 = coord.Texture3DCoords())
         {
-            SetTexture3DCoordArray(i, coord.Texture3DCoords().value());
+            SetTexture3DCoordArray(i, tex3.value());
         }
     }
-    if (dto.PaletteIndices())
+    if (auto pal = dto.PaletteIndices())
     {
-        SetPaletteIndexArray(dto.PaletteIndices().value());
+        SetPaletteIndexArray(pal.value());
     }
-    if (dto.Weights())
+    if (auto w = dto.Weights())
     {
-        SetTotalSkinWeightArray(dto.Weights().value());
+        SetTotalSkinWeightArray(w.value());
     }
-    if (dto.Tangents())
+    if (auto t = dto.Tangents())
     {
-        SetVertexTangentArray(dto.Tangents().value());
+        SetVertexTangentArray(t.value());
     }
-    if (dto.Indices())
+    if (auto idx = dto.Indices())
     {
-        SetIndexArray(dto.Indices().value());
+        SetIndexArray(idx.value());
     }
     m_geometryBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.GeometryBound()));
 }
@@ -190,7 +190,7 @@ error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string
 
     if (vtx_capa)
     {
-        m_vertexMemory.resize(vtx_capa * m_vertexDesc.TotalVertexSize());
+        m_vertexMemory.resize(static_cast<size_t>(vtx_capa) * m_vertexDesc.TotalVertexSize());
     }
     if (idx_capa)
     {
@@ -214,7 +214,7 @@ error GeometryData::ReSizeVertexMemoryCapacity(unsigned vtx_capa, unsigned idx_c
 {
     if (vtx_capa)
     {
-        m_vertexMemory.resize(vtx_capa * m_vertexDesc.TotalVertexSize());
+        m_vertexMemory.resize(static_cast<size_t>(vtx_capa) * m_vertexDesc.TotalVertexSize());
         m_vtxCapacity = vtx_capa;
     }
     if (idx_capa)
@@ -471,7 +471,7 @@ error GeometryData::SetTexture3DCoordArray(unsigned stage, const std::vector<Mat
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     return SetVertexMemoryDataArray(0, m_vertexDesc.TextureCoordOffset(stage), m_vertexDesc.TextureCoordSize(stage), 3,
-        (const float*)(&uvws[0]), static_cast<unsigned>(uvws.size()), false);
+        reinterpret_cast<const float*>(&uvws[0]), static_cast<unsigned>(uvws.size()), false);
 }
 
 std::vector<Vector3> GeometryData::GetTexture3DCoordArray(unsigned stage, unsigned count)
@@ -534,7 +534,7 @@ std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned vtx_count)
 std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned offset, unsigned vtx_count)
 {
     std::vector<float> weights;
-    weights.resize(vtx_count * m_vertexDesc.BlendWeightCount());
+    weights.resize(static_cast<size_t>(vtx_count) * m_vertexDesc.BlendWeightCount());
     GetVertexMemoryDataArray(offset, m_vertexDesc.WeightOffset(),
         m_vertexDesc.BlendWeightCount(), m_vertexDesc.BlendWeightCount(), &weights[0], vtx_count, false);
     return weights;
@@ -641,7 +641,7 @@ error GeometryData::SetVertexMemoryData(unsigned vtxIndex, int elementOffset, in
     {
         if ((srcDimension == 3) && (elementDimension == 4))
         {
-            float* mem = (float*)(&m_vertexMemory[(base_idx + 3) * sizeof(float)]);
+            float* mem = reinterpret_cast<float*>(&m_vertexMemory[(base_idx + 3) * sizeof(float)]);
             *mem = 1.0f;
         }
     }
@@ -660,21 +660,21 @@ error GeometryData::GetVertexMemoryDataArray(unsigned start, int elementOffset, 
 
     if (elementOffset < 0)
     {
-        memset(dest, 0, count * destDimension * sizeof(float));
+        memset(dest, 0, static_cast<size_t>(count) * destDimension * sizeof(float));
         return ErrorCode::ok;
     }
 
     unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int pos_count = m_vtxUsedCount - start;
     if (count < pos_count) pos_count = count;
-    float* src = (float*)&m_vertexMemory[(elementOffset + step * start) * sizeof(float)];
+    float* src = reinterpret_cast<float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
     int cp_dimension = destDimension;
     if (cp_dimension > elementDimension) cp_dimension = elementDimension;
     bool set_vec4 = false;
     if ((isPos) && (destDimension == 4) && (elementDimension == 3)) set_vec4 = true;
     for (unsigned int i = 0; i < pos_count; i++)
     {
-        memcpy(&dest[i * destDimension], src, cp_dimension * sizeof(float));
+        memcpy(&dest[static_cast<size_t>(i) * destDimension], src, cp_dimension * sizeof(float));
         if (set_vec4) dest[i * destDimension + 3] = 1.0f;
         src += step;
     }
@@ -696,14 +696,14 @@ error GeometryData::SetVertexMemoryDataArray(unsigned start, int elementOffset, 
     unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int pos_count = m_vtxUsedCount - start;
     if (count < pos_count) pos_count = count;
-    float* dst = (float*)&m_vertexMemory[(elementOffset + step * start) * sizeof(float)];
+    float* dst = reinterpret_cast<float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
     int cp_dimension = srcDimension;
     if (cp_dimension > elementDimension) cp_dimension = elementDimension;
     bool get_vec4 = false;
     if ((isPos) && (srcDimension == 3) && (elementDimension == 4)) get_vec4 = true;
     for (unsigned int i = 0; i < pos_count; i++)
     {
-        memcpy(dst, &src[i * srcDimension], cp_dimension * sizeof(float));
+        memcpy(dst, &src[static_cast<size_t>(i) * srcDimension], cp_dimension * sizeof(float));
         if (get_vec4) dst[3] = 1.0f;
         dst += step;
     }

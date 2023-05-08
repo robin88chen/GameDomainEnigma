@@ -1,12 +1,12 @@
 ﻿/********************************************************************
- * \file   ApplicationEvents.h
+ * \file   ControllerEvents.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
-#ifndef APPLICATION_EVENTS_H
-#define APPLICATION_EVENTS_H
+#ifndef CONTROLLER_EVENTS_H
+#define CONTROLLER_EVENTS_H
 
 #include "Frameworks/Event.h"
 #include "Renderer/RendererManager.h"
@@ -37,4 +37,4 @@ namespace Enigma::Controllers
 }
 
 
-#endif // APPLICATION_EVENTS_H
+#endif // CONTROLLER_EVENTS_H

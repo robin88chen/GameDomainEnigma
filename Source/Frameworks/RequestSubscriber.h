@@ -17,7 +17,11 @@ namespace Enigma::Frameworks
     public:
         RequestSubscriber();
         RequestSubscriber(const RequestHandler& handler);
+        RequestSubscriber(const RequestSubscriber&) = delete;
+        RequestSubscriber(RequestSubscriber&&) = delete;
         virtual ~RequestSubscriber();
+        RequestSubscriber& operator=(const RequestSubscriber&) = delete;
+        RequestSubscriber& operator=(RequestSubscriber&&) = delete;
 
         virtual void HandleRequest(const IRequestPtr& r);
 

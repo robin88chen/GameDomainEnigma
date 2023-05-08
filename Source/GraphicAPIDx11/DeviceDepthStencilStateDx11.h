@@ -21,7 +21,7 @@ namespace Enigma::Devices
         DeviceDepthStencilStateDx11(const std::string& name);
         DeviceDepthStencilStateDx11(const DeviceDepthStencilStateDx11&) = delete;
         DeviceDepthStencilStateDx11(DeviceDepthStencilStateDx11&&) = delete;
-        virtual ~DeviceDepthStencilStateDx11();
+        virtual ~DeviceDepthStencilStateDx11() override;
         DeviceDepthStencilStateDx11& operator=(const DeviceDepthStencilStateDx11&) = delete;
         DeviceDepthStencilStateDx11& operator=(DeviceDepthStencilStateDx11&&) = delete;
 

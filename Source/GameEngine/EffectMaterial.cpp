@@ -27,7 +27,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_
     MappingAutoVariables();
 }
 
-EffectMaterial::EffectMaterial(EffectMaterial&& eff) : m_factoryDesc(eff.TheFactoryDesc())
+EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.TheFactoryDesc())
 {
     m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
@@ -47,6 +47,7 @@ EffectMaterial::~EffectMaterial()
 
 EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 {
+    if (this == &eff) return *this;
     m_factoryDesc = eff.m_factoryDesc;
     m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
@@ -57,7 +58,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
     return *this;
 }
 
-EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff)
+EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
 {
     m_factoryDesc = std::move(eff.m_factoryDesc);
     m_name = std::move(eff.m_name);

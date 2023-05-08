@@ -17,8 +17,10 @@ namespace Enigma::Graphics
     public:
         IMultiBackSurface(const std::string& name);
         IMultiBackSurface(const IMultiBackSurface&) = delete;
-        virtual ~IMultiBackSurface();
+        IMultiBackSurface(IMultiBackSurface&&) = delete;
+        virtual ~IMultiBackSurface() override;
         IMultiBackSurface& operator=(const IMultiBackSurface&) = delete;
+        IMultiBackSurface& operator=(IMultiBackSurface&&) = delete;
 
         virtual error Resize(const MathLib::Dimension& dimension) override = 0;
 

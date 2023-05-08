@@ -23,7 +23,7 @@ namespace Enigma::Devices
         IndexBufferEgl(const std::string& name);
         IndexBufferEgl(const IndexBufferEgl&) = delete;
         IndexBufferEgl(IndexBufferEgl&&) = delete;
-        virtual ~IndexBufferEgl();
+        virtual ~IndexBufferEgl() override;
         IndexBufferEgl& operator=(const IndexBufferEgl&) = delete;
         IndexBufferEgl& operator=(IndexBufferEgl&&) = delete;
 

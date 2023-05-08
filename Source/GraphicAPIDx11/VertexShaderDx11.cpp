@@ -3,7 +3,6 @@
 #include "VertexDeclarationDx11.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "GraphicKernel/IVertexDeclaration.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "Frameworks/StringFormat.h"
 #include "Frameworks/TokenVector.h"
@@ -61,13 +60,13 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
         return ErrorCode::compileShader;
     }
     SAFE_RELEASE(errorBuf);
-    m_shaderByteCode = make_data_buffer((unsigned char*)outBuf->GetBufferPointer(), outBuf->GetBufferSize());
+    m_shaderByteCode = make_data_buffer(static_cast<unsigned char*>(outBuf->GetBufferPointer()), outBuf->GetBufferSize());
 
     hr = graphic->GetD3DDevice()->CreateVertexShader(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), nullptr, &m_d3dShader);
-    GUID guid = IID_ID3D11ShaderReflection;
+    //GUID guid = IID_ID3D11ShaderReflection;
 
     D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
-        (void**)&m_d3dShaderReflect);
+        reinterpret_cast<void**>(&m_d3dShaderReflect));
     SAFE_RELEASE(outBuf);
 
     ParseSemanticTable(code);
@@ -118,6 +117,8 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
                     | Graphics::VertexFormatCode::XYZB4;
             break;
+            default:
+                break;
         }
     }
     else if (semantic_name == VertexDeclarationDx11::m_boneIndexSemanticName)
@@ -150,6 +151,8 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
                     | Graphics::VertexFormatCode::XYZB5;
             break;
+            default:
+                break;
         }
         m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::LASTBETA_UBYTE4;
     }

@@ -25,12 +25,12 @@ namespace Enigma::Devices
         ShaderVariableEgl_Base(GLuint program, const std::string& name, const std::string& semantic);
         ShaderVariableEgl_Base(const ShaderVariableEgl_Base&) = delete;
         ShaderVariableEgl_Base(ShaderVariableEgl_Base&&) = delete;
-        virtual ~ShaderVariableEgl_Base();
+        virtual ~ShaderVariableEgl_Base() override;
         ShaderVariableEgl_Base& operator=(const ShaderVariableEgl_Base&) = delete;
         ShaderVariableEgl_Base& operator=(ShaderVariableEgl_Base&&) = delete;
 
-        virtual void SetValue(std::any data) override {};
-        virtual void SetValues(std::any data_array, unsigned int count) override {};
+        virtual void SetValue(std::any data) override {}
+        virtual void SetValues(std::any data_array, unsigned int count) override {}
     protected:
         GLuint m_program;
     };
@@ -42,7 +42,7 @@ namespace Enigma::Devices
             unsigned int dimension, unsigned int elements);
         ShaderVariableEgl_Matrix(const ShaderVariableEgl_Matrix&) = delete;
         ShaderVariableEgl_Matrix(ShaderVariableEgl_Matrix&&) = delete;
-        virtual ~ShaderVariableEgl_Matrix();
+        virtual ~ShaderVariableEgl_Matrix() override;
         ShaderVariableEgl_Matrix& operator=(const ShaderVariableEgl_Matrix&) = delete;
         ShaderVariableEgl_Matrix& operator=(ShaderVariableEgl_Matrix&&) = delete;
 
@@ -63,7 +63,7 @@ namespace Enigma::Devices
         ShaderVariableEgl_Texture(GLuint program, const std::string& name, const std::string& semantic, unsigned int bindSlot);
         ShaderVariableEgl_Texture(const ShaderVariableEgl_Texture&) = delete;
         ShaderVariableEgl_Texture(ShaderVariableEgl_Texture&&) = delete;
-        virtual ~ShaderVariableEgl_Texture();
+        virtual ~ShaderVariableEgl_Texture() override;
         ShaderVariableEgl_Texture& operator=(const ShaderVariableEgl_Texture&) = delete;
         ShaderVariableEgl_Texture& operator=(ShaderVariableEgl_Texture&&) = delete;
 
@@ -83,7 +83,7 @@ namespace Enigma::Devices
         ShaderVariableEgl_Sampler(GLuint program, const std::string& name, const std::string& semantic, unsigned int bindSlot);
         ShaderVariableEgl_Sampler(const ShaderVariableEgl_Sampler&) = delete;
         ShaderVariableEgl_Sampler(ShaderVariableEgl_Sampler&&) = delete;
-        virtual ~ShaderVariableEgl_Sampler();
+        virtual ~ShaderVariableEgl_Sampler() override;
         ShaderVariableEgl_Sampler& operator=(const ShaderVariableEgl_Sampler&) = delete;
         ShaderVariableEgl_Sampler& operator=(ShaderVariableEgl_Sampler&&) = delete;
 
@@ -103,7 +103,7 @@ namespace Enigma::Devices
             unsigned int dimension, unsigned int elements);
         ShaderVariableEgl_Vector(const ShaderVariableEgl_Vector&) = delete;
         ShaderVariableEgl_Vector(ShaderVariableEgl_Vector&&) = delete;
-        virtual ~ShaderVariableEgl_Vector();
+        virtual ~ShaderVariableEgl_Vector() override;
         ShaderVariableEgl_Vector& operator=(const ShaderVariableEgl_Vector&) = delete;
         ShaderVariableEgl_Vector& operator=(ShaderVariableEgl_Vector&&) = delete;
 
@@ -122,7 +122,7 @@ namespace Enigma::Devices
         ShaderVariableEgl_Boolean(GLuint program, const std::string& name, const std::string& semantic, unsigned int elements);
         ShaderVariableEgl_Boolean(const ShaderVariableEgl_Boolean&) = delete;
         ShaderVariableEgl_Boolean(ShaderVariableEgl_Boolean&&) = delete;
-        virtual ~ShaderVariableEgl_Boolean();
+        virtual ~ShaderVariableEgl_Boolean() override;
         ShaderVariableEgl_Boolean& operator=(const ShaderVariableEgl_Boolean&) = delete;
         ShaderVariableEgl_Boolean& operator=(ShaderVariableEgl_Boolean&&) = delete;
 
@@ -141,7 +141,7 @@ namespace Enigma::Devices
         ShaderVariableEgl_Float(GLuint program, const std::string& name, const std::string& semantic, unsigned int elements);
         ShaderVariableEgl_Float(const ShaderVariableEgl_Float&) = delete;
         ShaderVariableEgl_Float(ShaderVariableEgl_Float&&) = delete;
-        virtual ~ShaderVariableEgl_Float();
+        virtual ~ShaderVariableEgl_Float() override;
         ShaderVariableEgl_Float& operator=(const ShaderVariableEgl_Float&) = delete;
         ShaderVariableEgl_Float& operator=(ShaderVariableEgl_Float&&) = delete;
 
@@ -158,9 +158,9 @@ namespace Enigma::Devices
     {
     public:
         ShaderVariableEgl_Int(GLuint program, const std::string& name, const std::string& semantic, unsigned int elements);
-        ShaderVariableEgl_Int(const ShaderVariableEgl_Boolean&) = delete;
-        ShaderVariableEgl_Int(ShaderVariableEgl_Boolean&&) = delete;
-        virtual ~ShaderVariableEgl_Int();
+        ShaderVariableEgl_Int(const ShaderVariableEgl_Int&) = delete;
+        ShaderVariableEgl_Int(ShaderVariableEgl_Int&&) = delete;
+        virtual ~ShaderVariableEgl_Int() override;
         ShaderVariableEgl_Int& operator=(const ShaderVariableEgl_Int&) = delete;
         ShaderVariableEgl_Int& operator=(ShaderVariableEgl_Int&&) = delete;
 

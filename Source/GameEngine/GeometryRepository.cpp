@@ -1,6 +1,5 @@
 ﻿#include "GeometryRepository.h"
 #include "TriangleList.h"
-#include "GeometryDataDto.h"
 #include "GeometryDataEvents.h"
 #include "GeometryDataPolicy.h"
 #include "GeometryBuilder.h"

@@ -25,7 +25,7 @@ static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
 static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
-SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName())
+SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
 }
 
@@ -34,15 +34,15 @@ SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
     SpatialDto spatial_dto;
     spatial_dto.TheFactoryDesc() = dto.GetRtti();
     spatial_dto.m_isTopLevel = dto.IsTopLevel();
-    spatial_dto.m_name = dto.TryGetValue<std::string>(TOKEN_NAME).value();
-    spatial_dto.m_localTransform = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM).value();
-    spatial_dto.m_worldTransform = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM).value();
-    spatial_dto.m_graphDepth = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH).value();
-    spatial_dto.m_modelBound = dto.TryGetValue<GenericDto>(TOKEN_MODEL_BOUND).value();
-    spatial_dto.m_worldBound = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND).value();
-    spatial_dto.m_cullingMode = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE).value();
-    spatial_dto.m_spatialFlag = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG).value();
-    spatial_dto.m_notifyFlag = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG).value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) spatial_dto.Name() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) spatial_dto.LocalTransform() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) spatial_dto.WorldTransform() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) spatial_dto.GraphDepth() = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_MODEL_BOUND)) spatial_dto.ModelBound() = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) spatial_dto.WorldBound() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE)) spatial_dto.CullingMode() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) spatial_dto.SpatialFlag() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) spatial_dto.NotifyFlag() = v.value();
     return spatial_dto;
 }
 
@@ -70,7 +70,7 @@ NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
 {
     NodeDto node_dto(SpatialDto::FromGenericDto(dto));
-    node_dto.m_childNames = dto.TryGetValue<std::vector<std::string>>(TOKEN_CHILD_NAMES).value();
+    if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_CHILD_NAMES)) node_dto.m_childNames = v.value();
     return node_dto;
 }
 
@@ -89,7 +89,7 @@ LightDto::LightDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     LightDto light_dto(SpatialDto::FromGenericDto(dto));
-    light_dto.m_lightInfo = dto.TryGetValue<GenericDto>(TOKEN_LIGHT_INFO).value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_LIGHT_INFO)) light_dto.m_lightInfo = v.value();
     return light_dto;
 }
 

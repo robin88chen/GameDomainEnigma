@@ -14,7 +14,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Engine, TextureRepository, ISystemService);
 
-TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
+TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager), m_currentRequestRuid()
 {
     m_needTick = false;
     m_isCurrentLoading = false;
@@ -53,7 +53,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
     }
     assert(m_loader);
     auto r = m_requests.front();
-    m_currentRequiestRuid = r->GetRuid();
+    m_currentRequestRuid = r->GetRuid();
     m_loader->LoadTexture(r->GetPolicy());
     m_requests.pop();
     m_isCurrentLoading = true;
@@ -105,7 +105,7 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_textureMapLock };
     m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
     m_isCurrentLoading = false;
-    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
 }
 
 void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
@@ -117,7 +117,7 @@ void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n",
         ev->GetTextureName().c_str(), ev->GetError().message().c_str());
     m_isCurrentLoading = false;
-    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequiestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
+    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
 }
 
 void TextureRepository::DoLoadingTexture(const Frameworks::IRequestPtr& r)

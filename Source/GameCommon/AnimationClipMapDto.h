@@ -18,7 +18,6 @@ namespace Enigma::GameCommon
     {
     public:
         AnimationClipMapDto() = default;
-        virtual ~AnimationClipMapDto() = default;
 
         std::vector<std::string>& AnimNames() { return m_animNames; }
         [[nodiscard]] const std::vector<std::string>& AnimNames() const { return m_animNames; }

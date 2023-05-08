@@ -8,10 +8,9 @@
 
 using namespace Enigma::Graphics;
 
-ITexture::ITexture(const std::string& name)
+ITexture::ITexture(const std::string& name) : m_dimension{1, 1}
 {
     m_name = name;
-    m_dimension = MathLib::Dimension{ 1, 1 };
     m_format = GraphicFormat::FMT_UNKNOWN;
     m_isCubeTexture = false;
 }

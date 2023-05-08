@@ -9,12 +9,12 @@ Animator::Animator() : m_isListened(false)
 
 }
 
-Animator::Animator(const Animator& ani) : m_isListened(false)
+Animator::Animator(const Animator& ani) : m_isListened(ani.m_isListened)
 {
 
 }
 
-Animator::Animator(Animator&& ani) : m_isListened(false)
+Animator::Animator(Animator&& ani) noexcept : m_isListened(ani.m_isListened)
 {
 
 }
@@ -29,7 +29,7 @@ Animator& Animator::operator=(const Animator&)
     return *this;
 }
 
-Animator& Animator::operator=(Animator&&)
+Animator& Animator::operator=(Animator&&) noexcept
 {
     return *this;
 }

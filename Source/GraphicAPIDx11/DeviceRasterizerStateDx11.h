@@ -21,7 +21,7 @@ namespace Enigma::Devices
         DeviceRasterizerStateDx11(const std::string& name);
         DeviceRasterizerStateDx11(const DeviceRasterizerStateDx11&) = delete;
         DeviceRasterizerStateDx11(DeviceRasterizerStateDx11&&) = delete;
-        virtual ~DeviceRasterizerStateDx11();
+        virtual ~DeviceRasterizerStateDx11() override;
         DeviceRasterizerStateDx11& operator=(const DeviceRasterizerStateDx11&) = delete;
         DeviceRasterizerStateDx11& operator=(DeviceRasterizerStateDx11&&) = delete;
 

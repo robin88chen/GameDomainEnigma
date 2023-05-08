@@ -37,6 +37,7 @@ SpatialLinkageResolver::~SpatialLinkageResolver()
 
 SpatialLinkageResolver& SpatialLinkageResolver::operator=(const SpatialLinkageResolver& resolver)
 {
+    if (this == &resolver) return *this;
     m_query = resolver.m_query;
     m_linkageResolverTable = resolver.m_linkageResolverTable;
     m_onFactorySpatialCreated =

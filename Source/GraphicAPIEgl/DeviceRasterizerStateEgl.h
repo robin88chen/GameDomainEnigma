@@ -23,7 +23,7 @@ namespace Enigma::Devices
         DeviceRasterizerStateEgl(const std::string& name);
         DeviceRasterizerStateEgl(const DeviceRasterizerStateEgl&) = delete;
         DeviceRasterizerStateEgl(DeviceRasterizerStateEgl&&) = delete;
-        virtual ~DeviceRasterizerStateEgl();
+        virtual ~DeviceRasterizerStateEgl() override;
         DeviceRasterizerStateEgl& operator=(const DeviceRasterizerStateEgl&) = delete;
         DeviceRasterizerStateEgl& operator=(DeviceRasterizerStateEgl&&) = delete;
 

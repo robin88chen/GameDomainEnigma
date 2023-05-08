@@ -26,7 +26,7 @@ namespace Enigma::Engine
         GenericDtoFactories(Frameworks::ServiceManager* srv_mngr);
         GenericDtoFactories(const GenericDtoFactories&) = delete;
         GenericDtoFactories(GenericDtoFactories&&) = delete;
-        ~GenericDtoFactories();
+        ~GenericDtoFactories() override;
         GenericDtoFactories& operator=(const GenericDtoFactories&) = delete;
         GenericDtoFactories& operator=(GenericDtoFactories&&) = delete;
 

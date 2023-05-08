@@ -39,35 +39,35 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
     unsigned int element_idx = 0;
     if (vertex_desc.PositionOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.PositionOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.PositionOffset() * sizeof(float));
         m_layouts[element_idx].m_size = vertex_desc.PositionDimension();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
     if (vertex_desc.WeightOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.WeightOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.WeightOffset() * sizeof(float));
         m_layouts[element_idx].m_size = vertex_desc.BlendWeightCount();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
     if (vertex_desc.PaletteIndexOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.PaletteIndexOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.PaletteIndexOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 1;
         m_layouts[element_idx].m_type = GL_UNSIGNED_INT;
         element_idx++;
     }
     if (vertex_desc.NormalOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.NormalOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.NormalOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 3;
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
     if (vertex_desc.DiffuseColorOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.DiffuseColorOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.DiffuseColorOffset() * sizeof(float));
         if (vertex_desc.DiffuseColorDimension() == 1)
         {
             m_layouts[element_idx].m_size = 1;
@@ -82,7 +82,7 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
     }
     if (vertex_desc.SpecularColorOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.SpecularColorOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.SpecularColorOffset() * sizeof(float));
         if (vertex_desc.SpecularColorDimension() == 1)
         {
             m_layouts[element_idx].m_size = 1;
@@ -97,14 +97,14 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
     }
     if (vertex_desc.TangentOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.TangentOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.TangentOffset() * sizeof(float));
         m_layouts[element_idx].m_size = vertex_desc.TangentDimension();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
     if (vertex_desc.BiNormalOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = vertex_desc.BiNormalOffset() * sizeof(float);
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.BiNormalOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 3;
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
@@ -113,7 +113,7 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
     {
         if (vertex_desc.TextureCoordOffset(ti) >= 0)
         {
-            m_layouts[element_idx].m_position = vertex_desc.TextureCoordOffset(ti) * sizeof(float);
+            m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.TextureCoordOffset(ti) * sizeof(float));
             m_layouts[element_idx].m_size = vertex_desc.TextureCoordSize(ti);
             m_layouts[element_idx].m_type = GL_FLOAT;
             element_idx++;

@@ -49,7 +49,7 @@ error IndexBufferDx11::UpdateBuffer(const uint_buffer& dataIndex)
 {
     assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataIndex.empty());
-    unsigned int dataSize = (unsigned int)dataIndex.size() * sizeof(unsigned int);
+    unsigned int dataSize = static_cast<unsigned int>(dataIndex.size()) * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
@@ -75,7 +75,7 @@ error IndexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
     assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
-    unsigned int dataSize = (unsigned int)buffer.data.size() * sizeof(unsigned int);
+    unsigned int dataSize = static_cast<unsigned int>(buffer.data.size()) * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
     {
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
@@ -92,9 +92,9 @@ error IndexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 
     unsigned int byte_offset = buffer.idx_offset * sizeof(unsigned int);
     unsigned int byte_length = buffer.idx_count * sizeof(unsigned int);
-    if (byte_length > (unsigned int)buffer.data.size() * sizeof(unsigned int))
+    if (byte_length > static_cast<unsigned int>(buffer.data.size()) * sizeof(unsigned int))
     {
-        byte_length = (unsigned int)buffer.data.size() * sizeof(unsigned int);
+        byte_length = static_cast<unsigned int>(buffer.data.size()) * sizeof(unsigned int);
     }
 
     D3D11_BOX d3dBox = { byte_offset, 0, 0, byte_offset + byte_length, 1, 1 };

@@ -18,7 +18,6 @@ namespace Enigma::Renderer
     {
     public:
         RenderSystemInstallingPolicy() = default;
-        virtual ~RenderSystemInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
@@ -28,7 +27,6 @@ namespace Enigma::Renderer
     {
     public:
         RendererInstallingPolicy() = default;
-        virtual ~RendererInstallingPolicy() override = default;
     };;
 
     class DefaultRendererInstallingPolicy : public RendererInstallingPolicy
@@ -36,7 +34,6 @@ namespace Enigma::Renderer
     public:
         DefaultRendererInstallingPolicy(const std::string& renderer_name, const std::string& primary_target_name)
             : m_rendererName(renderer_name), m_primaryTargetName(primary_target_name) {}
-        virtual ~DefaultRendererInstallingPolicy() override = default;
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;

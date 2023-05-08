@@ -32,7 +32,7 @@ namespace Enigma::Engine
         RenderBufferRepository(Frameworks::ServiceManager* srv_manager);
         RenderBufferRepository(const RenderBufferRepository&) = delete;
         RenderBufferRepository(RenderBufferRepository&&) = delete;
-        ~RenderBufferRepository();
+        ~RenderBufferRepository() override;
         RenderBufferRepository& operator=(RenderBufferRepository&) = delete;
         RenderBufferRepository& operator=(RenderBufferRepository&&) = delete;
 

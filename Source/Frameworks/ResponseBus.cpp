@@ -24,7 +24,7 @@ ServiceResult ResponseBus::OnTick()
 {
     assert(m_thisBus);
 
-    unsigned int resp_count = 0;
+    unsigned int resp_count;
     {
         std::lock_guard locker{ m_responseListLock };
         resp_count = static_cast<unsigned int>(m_responses.size());

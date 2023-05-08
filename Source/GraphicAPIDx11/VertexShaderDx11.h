@@ -10,7 +10,6 @@
 
 #include "GraphicKernel/IVertexShader.h"
 #include "GraphicKernel/IShaderVariable.h"
-#include "GraphicKernel/IVertexDeclaration.h"
 #include "GraphicKernel/VertexDescription.h"
 #include <d3d11.h>
 #include <D3D11Shader.h>
@@ -25,15 +24,15 @@ namespace Enigma::Devices
         VertexShaderDx11(const std::string& name);
         VertexShaderDx11(const VertexShaderDx11&) = delete;
         VertexShaderDx11(VertexShaderDx11&&) = delete;
-        virtual ~VertexShaderDx11();
+        virtual ~VertexShaderDx11() override;
         VertexShaderDx11& operator=(const VertexShaderDx11&) = delete;
         VertexShaderDx11& operator=(VertexShaderDx11&&) = delete;
 
-        ID3D11VertexShader* GetD3DShader() const { return m_d3dShader; };
+        ID3D11VertexShader* GetD3DShader() const { return m_d3dShader; }
         ID3D11ShaderReflection* GetD3DShaderReflection() const { return m_d3dShaderReflect; }
 
-        const Graphics::VertexFormatCode& GetShaderVertexFormat() const { return m_shaderVertexFormat; };
-        const byte_buffer& GetShaderSignatureBytes() const { return m_shaderByteCode; };
+        const Graphics::VertexFormatCode& GetShaderVertexFormat() const { return m_shaderVertexFormat; }
+        const byte_buffer& GetShaderSignatureBytes() const { return m_shaderByteCode; }
 
         const Graphics::IShaderVariable::SemanticNameTable& GetSemanticTable() const { return m_semanticTable; }
     protected:

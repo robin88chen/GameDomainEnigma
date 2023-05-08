@@ -25,6 +25,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
@@ -40,6 +42,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />

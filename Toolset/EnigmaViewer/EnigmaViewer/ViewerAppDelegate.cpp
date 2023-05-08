@@ -28,6 +28,7 @@
 #include "GameCommon/AvatarRecipes.h"
 #include <memory>
 #include <Gateways/DtoJsonGateway.h>
+#include "GameCommon/GameLightCommands.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -142,8 +143,9 @@ void ViewerAppDelegate::InstallEngine()
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
+    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn });
+        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn, game_light_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }
@@ -263,6 +265,7 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
             }
         }
     }
+    CommandBus::Post(std::make_shared<CreateAmbientLight>("amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)

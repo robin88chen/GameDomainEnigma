@@ -323,10 +323,12 @@ void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
     if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetBackSurfaceName()))
     {
         m_backSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IBackSurfacePtr>(ev->GetBackSurfaceName());
+        m_backSurfaceName = ev->GetBackSurfaceName();
     }
     if (Graphics::IGraphicAPI::Instance()->HasGraphicAsset(ev->GetDepthSurfaceName()))
     {
         m_depthStencilSurface = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IDepthStencilSurfacePtr>(ev->GetDepthSurfaceName());
+        m_depthSurfaceName = ev->GetDepthSurfaceName();
     }
     if (Graphics::IGraphicAPI::Instance()->UseAsync())
     {
@@ -404,6 +406,7 @@ void RenderTarget::OnBackSurfaceResized(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<Graphics::BackSurfaceResized, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetSurfaceName() != m_backSurfaceName) return;
+    m_dimension = m_backSurface->GetDimension();
     m_resizingBits |= Resizing::BackSurfaceBit;
     if (m_resizingBits.all())
     {
@@ -429,7 +432,7 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
 void RenderTarget::DoChangingViewPort(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    ChangeTargetViewPort* cmd = dynamic_cast<ChangeTargetViewPort*>(c.get());
+    const auto cmd = std::dynamic_pointer_cast<ChangeTargetViewPort, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (cmd->GetRenderTargetName() != m_name) return;
     SetViewPort(cmd->GetViewPort());
@@ -438,7 +441,7 @@ void RenderTarget::DoChangingViewPort(const Frameworks::ICommandPtr& c)
 void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    ChangeTargetClearingProperty* cmd = dynamic_cast<ChangeTargetClearingProperty*>(c.get());
+    const auto cmd = std::dynamic_pointer_cast<ChangeTargetClearingProperty, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (cmd->GetRenderTargetName() != m_name) return;
     ChangeClearingProperty(cmd->GetProperty());

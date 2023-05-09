@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "SceneGraph/Node.h"
 
 namespace Enigma::GameCommon
 {
@@ -28,10 +29,13 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        void CreateAmbientLight(const std::string& lightName, const MathLib::ColorRGBA& colorLight) const;
-        void CreateSunLight(const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const;
+        void CreateAmbientLight(const std::shared_ptr<SceneGraph::Node>& parent, 
+            const std::string& lightName, const MathLib::ColorRGBA& colorLight) const;
+        void CreateSunLight(const std::shared_ptr<SceneGraph::Node>& parent, 
+            const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const;
 
-        void CreatePointLight(const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color) const;
+        void CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
+            const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color) const;
 
     protected:
         void DoCreatingAmbientLight(const Frameworks::ICommandPtr& command) const;

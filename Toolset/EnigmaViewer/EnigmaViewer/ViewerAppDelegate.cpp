@@ -265,7 +265,7 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
             }
         }
     }
-    CommandBus::Post(std::make_shared<CreateAmbientLight>("amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(scene_service->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)

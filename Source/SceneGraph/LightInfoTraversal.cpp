@@ -88,6 +88,7 @@ void LightInfoTraversal::QueryNextRequest()
             lighting_state.SetAmbientLightColor((*iter).m_lightInfo.GetLightColor());
             break;
         case LightInfo::LightType::SunLight:
+        case LightInfo::LightType::Directional:  //todo : if we want directional light, separate it from sun light
             lighting_state.SetSunLight((*iter).m_lightInfo.GetLightDirection(), (*iter).m_lightInfo.GetLightColor());
             break;
         case LightInfo::LightType::Point:

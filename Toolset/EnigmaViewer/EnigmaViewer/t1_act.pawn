@@ -57,7 +57,7 @@
         },
         "SpatialFlag": {
             "Type": "Uint32",
-            "Value": 33
+            "Value": 1
         },
         "PawnPrimitive": {
             "Type": "DataObject",

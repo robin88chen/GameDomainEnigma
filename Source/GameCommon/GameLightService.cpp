@@ -55,7 +55,7 @@ void GameLightService::CreateSunLight(const std::shared_ptr<SceneGraph::Node>& p
     const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const
 {
     assert(!m_sceneGraphRepository.expired());
-    LightInfo info(LightInfo::LightType::Directional);
+    LightInfo info(LightInfo::LightType::SunLight);
     info.SetLightColor(colorLight);
     info.SetLightDirection(dirLight);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);

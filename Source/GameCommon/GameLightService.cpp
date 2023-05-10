@@ -25,7 +25,20 @@ ServiceResult GameLightService::OnInit()
     CommandBus::Subscribe(typeid(GameCommon::CreateSunLight), m_doCreatingSunLight);
     m_doCreatingPointLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingPointLight(c); });
     CommandBus::Subscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
-
+    m_doChangingLightColor = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightColor(c); });
+    CommandBus::Subscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
+    m_doChangingLightDirection = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightDirection(c); });
+    CommandBus::Subscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
+    m_doChangingLightPosition = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightPosition(c); });
+    CommandBus::Subscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
+    m_doChangingLightAttenuation = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAttenuation(c); });
+    CommandBus::Subscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
+    m_doChangingLightRange = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightRange(c); });
+    CommandBus::Subscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
+    m_doChangingLightEnable = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAbility(c); });
+    CommandBus::Subscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
+    m_doChangingLightDisable = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAbility(c); });
+    CommandBus::Subscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
     return ServiceResult::Complete;
 }
 
@@ -37,6 +50,20 @@ ServiceResult GameLightService::OnTerm()
     m_doCreatingSunLight = nullptr;
     CommandBus::Unsubscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
     m_doCreatingPointLight = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
+    m_doChangingLightColor = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
+    m_doChangingLightDirection = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
+    m_doChangingLightPosition = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
+    m_doChangingLightAttenuation = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
+    m_doChangingLightRange = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
+    m_doChangingLightEnable = nullptr;
+    CommandBus::Unsubscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
+    m_doChangingLightDisable = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -95,5 +122,78 @@ void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& comma
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreatePointLight, ICommand>(command);
     if (!cmd) return;
     CreatePointLight(cmd->GetParent(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor());
+}
+
+void GameLightService::DoChangingLightPosition(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<GameCommon::ChangeLightPos, ICommand>(command);
+    if (!cmd) return;
+    const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
+    if (!light) return;
+    light->SetLightPosition(cmd->GetPos());
+}
+
+void GameLightService::DoChangingLightDirection(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<GameCommon::ChangeLightDir, ICommand>(command);
+    if (!cmd) return;
+    const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
+    if (!light) return;
+    light->SetLightDirection(cmd->GetDir());
+}
+
+void GameLightService::DoChangingLightColor(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<GameCommon::ChangeLightColor, ICommand>(command);
+    if (!cmd) return;
+    const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
+    if (!light) return;
+    light->SetLightColor(cmd->GetColor());
+}
+
+void GameLightService::DoChangingLightAttenuation(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<GameCommon::ChangeLightAttenuation, ICommand>(command);
+    if (!cmd) return;
+    const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
+    if (!light) return;
+    light->SetLightAttenuation(MathLib::Vector3(cmd->GetConstant(), cmd->GetLinear(), cmd->GetQuadratic()));
+}
+
+void GameLightService::DoChangingLightRange(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<GameCommon::ChangeLightRange, ICommand>(command);
+    if (!cmd) return;
+    const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
+    if (!light) return;
+    light->SetLightRange(cmd->GetRange());
+}
+
+void GameLightService::DoChangingLightAbility(const Frameworks::ICommandPtr& command) const
+{
+    assert(!m_sceneGraphRepository.expired());
+    if (!command) return;
+    if (const auto cmd_enable = std::dynamic_pointer_cast<GameCommon::EnableLight, ICommand>(command))
+    {
+        const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd_enable->GetLightName());
+        if (!light) return;
+        if (!light->IsEnable()) light->SetEnable(true);
+    }
+    else if (const auto cmd_disable = std::dynamic_pointer_cast<GameCommon::DisableLight, ICommand>(command))
+    {
+        const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd_disable->GetLightName());
+        if (!light) return;
+        if (light->IsEnable()) light->SetEnable(false);
+    }
 }
 

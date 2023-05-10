@@ -73,6 +73,7 @@ void MainForm::Initialize()
     m_timer->start();
     events().destroy([this] { this->Finalize(); });
 
+    m_renderPanel->SubscribeHandlers();
     m_outputPanel->SubscribeHandlers();
     m_modelInfoPanel->SubscribeHandlers();
     m_animationInfoPanel->SubscribeHandlers();
@@ -152,6 +153,7 @@ void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::Finalize()
 {
+    if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->UnsubscribeHandlers();
     if (m_animationInfoPanel) m_animationInfoPanel->UnsubscribeHandlers();

@@ -26,6 +26,14 @@ namespace Enigma::GameCommon
     protected:
         SceneGraph::CameraDto m_cameraDto;
     };
+    class GameLightInstallingPolicy : public Engine::InstallingPolicy
+    {
+    public:
+        GameLightInstallingPolicy() = default;
+
+        virtual error Install(Frameworks::ServiceManager* service_manager) override;
+        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+    };
     class GameSceneInstallingPolicy : public Engine::InstallingPolicy
     {
     public:

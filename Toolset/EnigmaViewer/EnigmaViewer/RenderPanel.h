@@ -11,6 +11,7 @@
 #include "nana/gui.hpp"
 #include "nana/gui/widgets/form.hpp"
 #include "nana/gui/widgets/button.hpp"
+#include "Frameworks/EventSubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -26,9 +27,17 @@ namespace EnigmaViewer
         void OnMouseWheel(const nana::arg_wheel& arg);
 
         void OnResized(const nana::arg_resized& arg);
+
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
+    private:
+        void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+
     private:
         bool m_isDraging;
         nana::point m_lastPos;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     };
 }
 

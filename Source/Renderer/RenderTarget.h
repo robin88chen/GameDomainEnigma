@@ -175,7 +175,7 @@ namespace Enigma::Renderer
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {
             BackSurfaceBit = 0x01,
-            DepthSurfaceBit = 0x10
+            DepthSurfaceBit = 0x02
         };
         using ResizingBits = std::bitset<static_cast<size_t>(ResizingBitIndex::Count)>;
         ResizingBits m_resizingBits;

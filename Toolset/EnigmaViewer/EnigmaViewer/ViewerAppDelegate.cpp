@@ -28,6 +28,8 @@
 #include "GameCommon/AvatarRecipes.h"
 #include <memory>
 #include <Gateways/DtoJsonGateway.h>
+#include "GameCommon/GameLightCommands.h"
+#include "GameCommon/GameSceneEvents.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -117,6 +119,8 @@ void ViewerAppDelegate::InstallEngine()
 {
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
+    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
 
     m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
     CommandBus::Subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
@@ -142,8 +146,9 @@ void ViewerAppDelegate::InstallEngine()
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
+    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn });
+        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn, game_light_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }
@@ -158,6 +163,8 @@ void ViewerAppDelegate::ShutdownEngine()
 
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    m_onSceneGraphRootCreated = nullptr;
 
     CommandBus::Unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
     m_doChangingMeshTexture = nullptr;
@@ -263,6 +270,15 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
             }
         }
     }
+}
+
+void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.0, 1.2, 1.2, 1.0)));
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)

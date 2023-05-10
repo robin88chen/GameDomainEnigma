@@ -48,6 +48,7 @@ namespace EnigmaViewer
 
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
         void DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
@@ -66,6 +67,7 @@ namespace EnigmaViewer
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
 
         Enigma::Frameworks::CommandSubscriberPtr m_doChangingMeshTexture;
         Enigma::Frameworks::CommandSubscriberPtr m_doAddingAnimationClip;

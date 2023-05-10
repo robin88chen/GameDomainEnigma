@@ -199,7 +199,7 @@ void DaeParser::ComposeModelPrimitiveDto()
     m_pawn.WorldTransform() = Matrix4::IDENTITY;
     m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
     m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)

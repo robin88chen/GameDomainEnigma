@@ -128,7 +128,7 @@ namespace Enigma::Renderer
         void InitViewPortSize();
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            RenderTargetClearFlag flag = RenderTargetClearFlag::BothBuffer) const;
+            RenderTargetClearingBits flag = RenderTargetClear::BothBuffer) const;
 
         void SetViewPort(const Graphics::TargetViewPort& vp);
 

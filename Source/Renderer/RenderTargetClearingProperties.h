@@ -8,23 +8,25 @@
 #ifndef _RENDER_TARGET_CLEARING_PROPERTIES_H
 #define _RENDER_TARGET_CLEARING_PROPERTIES_H
 
+#include <bitset>
 #include "MathLib/ColorRGBA.h"
 #include <optional>
 
 namespace Enigma::Renderer
 {
-    enum class RenderTargetClearFlag
+    enum RenderTargetClear
     {
         ColorBuffer = 0x01,
         DepthBuffer = 0x02,
         BothBuffer = 0x03,
     };
+    using RenderTargetClearingBits = std::bitset<static_cast<size_t>(2)>;
     struct RenderTargetClearingProperty
     {
         MathLib::ColorRGBA m_color;
         float m_depth;
         unsigned int m_stencil;
-        RenderTargetClearFlag m_flag;
+        RenderTargetClearingBits m_clearingBits;
     };
 
     struct RenderTargetClearChangingProperty
@@ -32,7 +34,7 @@ namespace Enigma::Renderer
         std::optional<MathLib::ColorRGBA> m_color;
         std::optional<float> m_depth;
         std::optional<unsigned int> m_stencil;
-        std::optional<RenderTargetClearFlag> m_flag;
+        std::optional<RenderTargetClearingBits> m_clearingBits;
     };
 }
 

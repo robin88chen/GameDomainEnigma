@@ -79,7 +79,7 @@ namespace Enigma::Renderer
         const std::optional<MathLib::ColorRGBA>& GetClearingColor() const { return m_prop.m_color; }
         const std::optional<float>& GetClearingDepth() const { return m_prop.m_depth; }
         const std::optional<unsigned int>& GetClearingStencil() const { return m_prop.m_stencil; }
-        const std::optional<RenderTargetClearFlag>& GetClearingFlag() const { return m_prop.m_flag; }
+        const std::optional<RenderTargetClearingBits>& GetClearingBits() const { return m_prop.m_clearingBits; }
 
     private:
         std::string m_name;

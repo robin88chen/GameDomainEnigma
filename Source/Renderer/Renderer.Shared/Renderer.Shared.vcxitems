@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />

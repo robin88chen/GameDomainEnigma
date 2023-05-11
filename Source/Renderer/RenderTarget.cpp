@@ -25,7 +25,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary) : m_dim
     m_renderTargetTexture = nullptr;
 
     m_gbufferDepthMapIndex = 0;
-    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClearFlag::BothBuffer };
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
 
     m_resizingBits.reset();
 
@@ -45,7 +45,7 @@ RenderTarget::RenderTarget(const std::string& name) : m_dimension{ 0, 0 }
     m_renderTargetTexture = nullptr;
 
     m_gbufferDepthMapIndex = 0;
-    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClearFlag::BothBuffer };
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
 
     SubscribeHandler();
 }
@@ -138,13 +138,13 @@ error RenderTarget::BindViewPort()
     return ErrorCode::ok;
 }
 
-error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearFlag flag) const
+error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value, RenderTargetClearingBits flag) const
 {
     if (!m_backSurface) return ErrorCode::nullBackSurface;
 
     Graphics::IGraphicAPI::Instance()->Clear(
-        (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::ColorBuffer)) ? m_backSurface : nullptr,
-        (static_cast<int>(flag) & static_cast<int>(RenderTargetClearFlag::DepthBuffer)) ? m_depthStencilSurface : nullptr,
+        (flag.test(RenderTargetClear::ColorBuffer)) ? m_backSurface : nullptr,
+        (flag.test(RenderTargetClear::DepthBuffer)) ? m_depthStencilSurface : nullptr,
         color, depth_value, stencil_value);
     //Frameworks::CommandBus::Post(std::make_shared<Graphics::ClearSurface>(
       //  ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
@@ -156,7 +156,7 @@ error RenderTarget::Clear(const MathLib::ColorRGBA& color, float depth_value, un
 error RenderTarget::Clear()
 {
     return Clear(m_clearingProperty.m_color, m_clearingProperty.m_depth,
-        m_clearingProperty.m_stencil, m_clearingProperty.m_flag);
+        m_clearingProperty.m_stencil, m_clearingProperty.m_clearingBits);
 }
 
 error RenderTarget::Flip() const
@@ -181,9 +181,9 @@ error RenderTarget::ChangeClearingProperty(const RenderTargetClearChangingProper
     {
         m_clearingProperty.m_stencil = prop.m_stencil.value();
     }
-    if (prop.m_flag)
+    if (prop.m_clearingBits)
     {
-        m_clearingProperty.m_flag = prop.m_flag.value();
+        m_clearingProperty.m_clearingBits = prop.m_clearingBits.value();
     }
     Frameworks::EventPublisher::Post(std::make_shared<TargetClearingPropertyChanged>(shared_from_this(), m_clearingProperty));
 

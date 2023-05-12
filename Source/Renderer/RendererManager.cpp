@@ -133,6 +133,27 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
     return ErrorCode::ok;
 }
 
+error RendererManager::InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer)
+{
+    IRendererPtr render = GetRenderer(name);
+    if (render)
+    {
+        // render already exist
+        return ErrorCode::rendererAlreadyExist;
+    }
+    m_renderers.emplace(name, renderer);
+    assert(m_renderers.size() <= 32);
+    unsigned int stamp = 1;
+    while (m_accumulateRendererStamp & stamp)
+    {
+               stamp = stamp << 1;
+    }
+    m_accumulateRendererStamp |= stamp;
+    renderer->SetStampBitMask(stamp);
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(renderer->GetName(), renderer));
+    return ErrorCode::ok;
+}
+
 error RendererManager::DestroyRenderer(const std::string& name)
 {
     const IRendererPtr render = GetRenderer(name);

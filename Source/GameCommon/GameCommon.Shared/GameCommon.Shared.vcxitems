@@ -21,6 +21,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />
@@ -29,6 +31,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
   </ItemGroup>
@@ -39,11 +42,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />
   </ItemGroup>

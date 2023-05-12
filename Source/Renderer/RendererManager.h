@@ -50,6 +50,8 @@ namespace Enigma::Renderer
         error CreateRenderer(const std::string& name);
         /** create custom renderer */
         error CreateCustomRenderer(const std::string& type_name, const std::string& name);
+        /** insert renderer */
+        error InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer);
 
         /** destroy renderer by name : remove from map, & destroy  */
         error DestroyRenderer(const std::string& name);

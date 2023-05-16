@@ -11,6 +11,9 @@
 #include "SceneRendererService.h"
 #include "Renderer/MeshPrimitive.h"
 #include "SceneGraph/SpatialRenderState.h"
+#include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/LightInfo.h"
+#include "SceneGraph/SceneGraphEvents.h"
 #include <memory>
 #include <unordered_map>
 
@@ -41,6 +44,18 @@ namespace Enigma::GameCommon
 
     private:
         Renderer::RenderTargetPtr CreateGBuffer(unsigned int width, unsigned int height, const Graphics::IDepthStencilSurfacePtr& depth) const;
+
+        void CreateAmbientLightQuad(const SceneGraph::LightInfo& lit);
+        void CreateSunLightQuad(const SceneGraph::LightInfo& lit);
+        void CreatePointLightVolume(const SceneGraph::LightInfo& lit);
+        void DeletePointLightVolume(const std::string& name);
+        void UpdateAmbientLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+
+        void OnLightInfoCreated(const Frameworks::IEventPtr& e);
+        void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
+        void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
 
     private:
         std::unique_ptr<DeferredRendererServiceConfiguration> m_configuration;

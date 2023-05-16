@@ -276,6 +276,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h">
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
+      <Filter>DTOs\Geometry Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h">
+      <Filter>DTOs\Effect Dto</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -400,6 +406,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp">
+      <Filter>DTOs\Geometry Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
+      <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

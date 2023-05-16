@@ -32,6 +32,10 @@ namespace Enigma::GameCommon
         const std::string& GbufferDepthName() const;
         std::string& GbufferDepthName();
 
+        const std::string& GbufferDiffuseSemantic() const;
+        std::string& GbufferDiffuseSemantic();
+        const std::string& GbufferDepthSemantic() const;
+        std::string& GbufferDepthSemantic();
     protected:
         std::string m_ambientPassFxFileName;
         std::string m_sunLightPassFxFileName;
@@ -41,6 +45,9 @@ namespace Enigma::GameCommon
         std::string m_gbufferTargetName;
         std::string m_gbufferSurfaceName;
         std::string m_gbufferDepthName;
+
+        std::string m_gbufferDiffuseSemantic;
+        std::string m_gbufferDepthSemantic;
     };
 }
 

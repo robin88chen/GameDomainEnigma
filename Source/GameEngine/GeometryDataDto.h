@@ -116,9 +116,6 @@ namespace Enigma::Engine
 
         static TriangleListDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
-
-    protected:
-        std::vector<std::string> m_childNames;
     };
 }
 

@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectRequests.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
@@ -86,6 +88,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp" />
@@ -117,6 +120,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />

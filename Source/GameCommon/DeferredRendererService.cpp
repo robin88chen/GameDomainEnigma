@@ -4,10 +4,18 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/DeferredRenderer.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/Light.h"
+#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/StandardGeometryDtoHelper.h"
+#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderer/RenderablePrimitiveRequests.h"
+#include "Frameworks/RequestBus.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
+using namespace Enigma::Engine;
 
 using error = std::error_code;
 
@@ -110,4 +118,86 @@ RenderTargetPtr DeferredRendererService::CreateGBuffer(unsigned width, unsigned 
         gbuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), depth);
     }
     return gbuffer;
+}
+
+void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoCreated, Frameworks::IEvent>(e);
+    if ((!ev) || (!ev->GetLight())) return;
+    if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
+    {
+        CreateAmbientLightQuad(ev->GetLight()->Info());
+    }
+    else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
+    {
+        CreateSunLightQuad(ev->GetLight()->Info());
+    }
+    else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Point)
+    {
+        CreatePointLightVolume(ev->GetLight()->Info());
+    }
+}
+
+void DeferredRendererService::OnLightInfoDeleted(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoDeleted, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
+    {
+        m_ambientLightQuad = nullptr;
+    }
+    else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
+    {
+        m_sunLightQuad = nullptr;
+    }
+    else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Point)
+    {
+        DeletePointLightVolume(ev->GetLightName());
+    }
+}
+
+void DeferredRendererService::OnLightInfoUpdated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoUpdated, Frameworks::IEvent>(e);
+    if ((!ev) || (!ev->GetLight())) return;
+    if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
+    {
+        UpdateAmbientLightQuad(ev->GetLight()->Info(), ev->GetNotifyCode());
+    }
+    else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
+    {
+        UpdateSunLightQuad(ev->GetLight()->Info(), ev->GetNotifyCode());
+    }
+    else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Point)
+    {
+        UpdatePointLightVolume(ev->GetLight()->Info(), ev->GetNotifyCode());
+    }
+}
+
+void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo& lit)
+{
+    std::string quad_geo_name = std::string("deferred_ambient_quad.geo");
+    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
+        .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+    EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientPassFxFileName());
+    eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
+
+    EffectTextureMapDtoHelper tex_dto_helper;
+    tex_dto_helper.TextureMapping("", "", m_configuration->GbufferTargetName(), 1, m_configuration->GbufferDiffuseSemantic())
+        .TextureMapping("", "", m_configuration->GbufferTargetName(), 3, m_configuration->GbufferDepthSemantic());
+
+    MeshPrimitiveDto mesh_dto;
+    mesh_dto.Name() = quad_geo_name;
+    mesh_dto.GeometryName() = quad_geo_name;
+    mesh_dto.TheGeometry() = quad_dto_helper.ToGenericDto();
+    mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
+    mesh_dto.TextureMaps().emplace_back(tex_dto_helper.ToGenericDto());
+
+    auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
+    auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
+    RequestBus::Post(request);
 }

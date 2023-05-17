@@ -10,12 +10,16 @@
 #include "GameEngine/StandardGeometryDtoHelper.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Renderer/RenderablePrimitiveRequests.h"
+#include "Renderer/RenderablePrimitiveResponses.h"
+#include "Frameworks/EventPublisher.h"
 #include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
+using namespace Enigma::SceneGraph;
 
 using error = std::error_code;
 
@@ -41,11 +45,31 @@ DeferredRendererService::~DeferredRendererService()
 
 ServiceResult DeferredRendererService::OnInit()
 {
+    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
+    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
+    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
+
+    m_onBuildPrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto e) { OnBuildPrimitiveResponse(e); });
+    ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
+
     return SceneRendererService::OnInit();
 }
 
 ServiceResult DeferredRendererService::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
+    m_onLightInfoCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
+    m_onLightInfoDeleted = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
+    m_onLightInfoUpdated = nullptr;
+
+    ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
+    m_onBuildPrimitiveResponse = nullptr;
+
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
     m_lightVolumes.clear();
@@ -96,6 +120,18 @@ void DeferredRendererService::DestroySceneRenderSystem(const std::string& render
     m_rendererManager.lock()->DestroyRenderTarget(target_name);
     m_rendererManager.lock()->DestroyRenderTarget(m_configuration->GbufferTargetName());
     m_rendererManager.lock()->DestroyRenderer(renderer_name);
+}
+
+void DeferredRendererService::PrepareGameScene()
+{
+    if (!m_renderer.expired())
+    {
+        if (m_ambientLightQuad) m_ambientLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
+            MathLib::Matrix4::IDENTITY, m_ambientQuadRenderState.ToLightingState());
+        if (m_sunLightQuad) m_sunLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
+            MathLib::Matrix4::IDENTITY, m_sunLightQuadRenderState.ToLightingState());
+    }
+    SceneRendererService::PrepareGameScene();
 }
 
 RenderTargetPtr DeferredRendererService::CreateGBuffer(unsigned width, unsigned height, const Graphics::IDepthStencilSurfacePtr& depth) const
@@ -177,6 +213,17 @@ void DeferredRendererService::OnLightInfoUpdated(const Frameworks::IEventPtr& e)
     }
 }
 
+void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
+{
+    if (!r) return;
+    const auto res = std::dynamic_pointer_cast<Renderer::BuildRenderablePrimitiveResponse, Frameworks::IResponse>(r);
+    if (!res) return;
+    if (res->GetRequestRuid() == m_ambientQuadRequester)
+    {
+        m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
+    }
+}
+
 void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo& lit)
 {
     std::string quad_geo_name = std::string("deferred_ambient_quad.geo");
@@ -199,5 +246,36 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
 
     auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
     auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
+    m_ambientQuadRequester = request->GetRuid();
     RequestBus::Post(request);
+}
+
+void DeferredRendererService::CreateSunLightQuad(const SceneGraph::LightInfo& lit)
+{
+
+}
+
+void DeferredRendererService::CreatePointLightVolume(const SceneGraph::LightInfo& lit)
+{
+
+}
+
+void DeferredRendererService::DeletePointLightVolume(const std::string& name)
+{
+
+}
+
+void DeferredRendererService::UpdateAmbientLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+{
+
+}
+
+void DeferredRendererService::UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+{
+
+}
+
+void DeferredRendererService::UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+{
+
 }

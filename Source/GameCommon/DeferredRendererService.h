@@ -14,6 +14,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/LightInfo.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "Frameworks/ResponseSubscriber.h"
 #include <memory>
 #include <unordered_map>
 
@@ -42,6 +43,8 @@ namespace Enigma::GameCommon
         virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary) override;
         virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
+        virtual void PrepareGameScene() override;
+
     private:
         Renderer::RenderTargetPtr CreateGBuffer(unsigned int width, unsigned int height, const Graphics::IDepthStencilSurfacePtr& depth) const;
 
@@ -57,6 +60,8 @@ namespace Enigma::GameCommon
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
 
+        void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& response);
+
     private:
         std::unique_ptr<DeferredRendererServiceConfiguration> m_configuration;
 
@@ -67,6 +72,14 @@ namespace Enigma::GameCommon
 
         using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
+
+        Frameworks::EventSubscriberPtr m_onLightInfoCreated;
+        Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
+        Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
+
+        Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
+
+        Frameworks::Ruid m_ambientQuadRequester;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

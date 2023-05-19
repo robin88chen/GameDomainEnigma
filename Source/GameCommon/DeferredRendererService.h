@@ -56,6 +56,7 @@ namespace Enigma::GameCommon
         void UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
+        void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
@@ -73,6 +74,7 @@ namespace Enigma::GameCommon
         using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
 
+        Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;

@@ -14,6 +14,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/RequestBus.h"
 #include "Frameworks/ResponseBus.h"
+#include "Renderer/RendererEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -45,6 +46,8 @@ DeferredRendererService::~DeferredRendererService()
 
 ServiceResult DeferredRendererService::OnInit()
 {
+    m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
+    EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
@@ -60,6 +63,8 @@ ServiceResult DeferredRendererService::OnInit()
 
 ServiceResult DeferredRendererService::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    m_onPrimaryRenderTargetCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
@@ -99,17 +104,6 @@ void DeferredRendererService::CreateSceneRenderSystem(const std::string& rendere
     if (primaryTarget)
     {
         m_renderer.lock()->SetRenderTarget(primaryTarget);
-    }
-
-    auto [width, height] = primaryTarget->GetDimension();
-
-    // create GBuffer to substitute
-    RenderTargetPtr gbuffer = CreateGBuffer(width, height, primaryTarget->GetDepthStencilSurface());
-    if (FATAL_LOG_EXPR(!gbuffer)) return;
-
-    if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
-    {
-        deferRender->AttachGBufferTarget(gbuffer);
     }
 }
 
@@ -154,6 +148,26 @@ RenderTargetPtr DeferredRendererService::CreateGBuffer(unsigned width, unsigned 
         gbuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), depth);
     }
     return gbuffer;
+}
+
+void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Renderer::PrimaryRenderTargetCreated, Frameworks::IEvent>(e);
+    if (!ev) return;
+    auto primaryTarget = ev->GetRenderTarget();
+    if (!primaryTarget) return;
+
+    auto [width, height] = primaryTarget->GetDimension();
+
+    // create GBuffer to substitute
+    RenderTargetPtr gbuffer = CreateGBuffer(width, height, primaryTarget->GetDepthStencilSurface());
+    if (FATAL_LOG_EXPR(!gbuffer)) return;
+
+    if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
+    {
+        deferRender->AttachGBufferTarget(gbuffer);
+    }
 }
 
 void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)

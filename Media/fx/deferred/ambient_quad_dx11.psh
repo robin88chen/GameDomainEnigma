@@ -1,0 +1,28 @@
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic Ambient AmbientLight
+Texture2D GBufferDiffuseTexture : GBufferDiffuseMap;
+float4 Ambient : AmbientLight;
+SamplerState DiffuseMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+struct PS_INPUT
+{
+	float4 Pos : SV_POSITION;
+	float2 Coord : TEXCOORD0;
+	float2 ProjPos : TEXCOORD1;
+};
+struct PS_OUTPUT
+{
+	float4 Color : SV_TARGET0;
+};
+
+PS_OUTPUT ps_main(PS_INPUT input)
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+	float4 outputColor = GBufferDiffuseTexture.Sample( DiffuseMapSampler, input.Coord );
+    output.Color = outputColor * Ambient;
+	return output;
+};

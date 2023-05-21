@@ -18,6 +18,8 @@ namespace Enigma::GameCommon
 
         const std::string& AmbientPassFxFileName() const;
         std::string& AmbientPassFxFileName();
+        const std::string& AmbientEffectName() const;
+        std::string& AmbientEffectName();
         const std::string& SunLightPassFxFileName() const;
         std::string& SunLightPassFxFileName();
         const std::string& LightVolumePassFxFileName() const;
@@ -38,6 +40,7 @@ namespace Enigma::GameCommon
         std::string& GbufferDepthSemantic();
     protected:
         std::string m_ambientPassFxFileName;
+        std::string m_ambientEffectName;
         std::string m_sunLightPassFxFileName;
         std::string m_lightVolumePassFxFileName;
 

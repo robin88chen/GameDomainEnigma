@@ -8,7 +8,7 @@
 #ifndef _EFFECT_TEXTURE_MAP_POLICY_H
 #define _EFFECT_TEXTURE_MAP_POLICY_H
 
-#include "TextureLoadingPolicies.h"
+#include "TexturePolicies.h"
 #include <string>
 #include <optional>
 #include <tuple>

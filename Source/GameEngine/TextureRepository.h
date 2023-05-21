@@ -15,6 +15,7 @@
 #include "Frameworks/RequestSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
 #include "TextureRequests.h"
+#include "TexturePolicies.h"
 #include <queue>
 
 namespace Enigma::Engine
@@ -52,6 +53,7 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::RequestSubscriberPtr m_doLoadingTexture;
+        Frameworks::RequestSubscriberPtr m_doCreatingTexture;
 
         using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
@@ -59,9 +61,10 @@ namespace Enigma::Engine
         std::recursive_mutex m_textureMapLock;
 
         TextureLoader* m_loader;
-        std::queue<std::shared_ptr<RequestLoadTexture>> m_requests;
+        std::queue<std::shared_ptr<RequestLoadTexture>> m_loadRequests;
+        std::queue<std::shared_ptr<RequestCreateTexture>> m_createRequests;
         Frameworks::Ruid m_currentRequestRuid;
-        bool m_isCurrentLoading;
+        TexturePolicy::JobType m_currentJob;
         std::mutex m_requestsLock;
     };
 }

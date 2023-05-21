@@ -18,7 +18,7 @@ EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::stri
 EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::string& filename_at_path)
 {
     FileSystem::Filename fn(filename_at_path);
-    return FilenameAtPath(fn.GetFileName(), fn.GetMountPathID());
+    return FilenameAtPath(fn.GetSubPathFileName(), fn.GetMountPathID());
 }
 
 GenericDto EffectMaterialDtoHelper::ToGenericDto()

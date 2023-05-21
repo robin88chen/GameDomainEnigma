@@ -44,6 +44,7 @@ public:
     virtual void RenderFrame() override;
 
 protected:
+    void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
@@ -59,6 +60,7 @@ private:
 protected:
     std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
 
+    Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;

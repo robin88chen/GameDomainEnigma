@@ -75,7 +75,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoadingPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h" />

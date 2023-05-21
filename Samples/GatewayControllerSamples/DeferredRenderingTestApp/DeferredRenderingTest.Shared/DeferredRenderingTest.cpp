@@ -24,6 +24,8 @@
 #include "GameCommon/SceneRendererService.h"
 #include "GameCommon/GameSceneService.h"
 #include "GameCommon/DeferredRendererServiceConfiguration.h"
+#include "GameCommon/GameSceneEvents.h"
+#include "GameCommon/GameLightCommands.h"
 //#include "PrimitiveMeshMaker.h"
 //#include "SceneGraphMaker.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
@@ -83,6 +85,8 @@ void DeferredRenderingTest::InstallEngine()
 {
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
+    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
 
     assert(m_graphicMain);
 
@@ -97,7 +101,8 @@ void DeferredRenderingTest::InstallEngine()
             .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
             .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
     auto deferred_config = std::make_unique<DeferredRendererServiceConfiguration>();
-    deferred_config->AmbientPassFxFileName() = "fx/DeferredShadingAmbientPass.efx";
+    deferred_config->AmbientEffectName() = "DeferredShadingAmbientPass";
+    deferred_config->AmbientPassFxFileName() = "fx/DeferredShadingAmbientPass.efx@APK_PATH";
     deferred_config->DeferredRendererTechniqueName() = "DeferredRenderer";
     deferred_config->GbufferTargetName() = "gbuffer_target";
     deferred_config->GbufferSurfaceName() = "gbuffer_surface";
@@ -106,8 +111,9 @@ void DeferredRenderingTest::InstallEngine()
     deferred_config->GbufferDepthSemantic() = "GBufferDepthMap";
     auto deferred_renderer_policy = stdext::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, std::move(deferred_config));
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
+    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy });
+        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, game_light_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
 #if TARGET_PLATFORM == PLATFORM_ANDROID
     ApplicationBridge::InitInputHandler(input_handler_policy->GetInputHandler());
@@ -130,6 +136,8 @@ void DeferredRenderingTest::ShutdownEngine()
 
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    m_onSceneGraphRootCreated = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -147,6 +155,15 @@ void DeferredRenderingTest::RenderFrame()
         m_sceneRendererService.lock()->RenderGameScene();
         m_sceneRendererService.lock()->Flip();
     }
+}
+
+void DeferredRenderingTest::OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.0, 1.2, 1.2, 1.0)));
 }
 
 void DeferredRenderingTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)

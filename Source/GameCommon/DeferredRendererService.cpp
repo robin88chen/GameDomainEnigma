@@ -101,9 +101,10 @@ void DeferredRendererService::CreateSceneRenderSystem(const std::string& rendere
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(rendererManager->GetRenderer(renderer_name));
     m_renderer.lock()->SelectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
-    if (primaryTarget)
+    m_renderer.lock()->SetRenderTarget(primaryTarget);
+    if (primaryTarget->GetBackSurface() && primaryTarget->GetDepthStencilSurface())
     {
-        m_renderer.lock()->SetRenderTarget(primaryTarget);
+        CreateGBuffer(primaryTarget);
     }
 }
 
@@ -128,10 +129,14 @@ void DeferredRendererService::PrepareGameScene()
     SceneRendererService::PrepareGameScene();
 }
 
-RenderTargetPtr DeferredRendererService::CreateGBuffer(unsigned width, unsigned height, const Graphics::IDepthStencilSurfacePtr& depth) const
+void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& primary_target) const
 {
+    assert(primary_target);
     assert(!m_rendererManager.expired());
     assert(m_configuration);
+
+    auto [width, height] = primary_target->GetDimension();
+
     m_rendererManager.lock()->CreateRenderTarget(m_configuration->GbufferTargetName(), RenderTarget::PrimaryType::NotPrimary);
     RenderTargetPtr gbuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (gbuffer)
@@ -145,9 +150,12 @@ RenderTargetPtr DeferredRendererService::CreateGBuffer(unsigned width, unsigned 
         };
         gbuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, formats);
         gbuffer->SetGBufferDepthMapIndex(3);
-        gbuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), depth);
+        gbuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
-    return gbuffer;
+    if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
+    {
+        deferRender->AttachGBufferTarget(gbuffer);
+    }
 }
 
 void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e)
@@ -158,16 +166,7 @@ void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEv
     auto primaryTarget = ev->GetRenderTarget();
     if (!primaryTarget) return;
 
-    auto [width, height] = primaryTarget->GetDimension();
-
-    // create GBuffer to substitute
-    RenderTargetPtr gbuffer = CreateGBuffer(width, height, primaryTarget->GetDepthStencilSurface());
-    if (FATAL_LOG_EXPR(!gbuffer)) return;
-
-    if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
-    {
-        deferRender->AttachGBufferTarget(gbuffer);
-    }
+    CreateGBuffer(primaryTarget);
 }
 
 void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
@@ -244,7 +243,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientPassFxFileName());
+    EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
     eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
     EffectTextureMapDtoHelper tex_dto_helper;

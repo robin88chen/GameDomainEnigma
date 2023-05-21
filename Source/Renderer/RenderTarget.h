@@ -12,6 +12,7 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/ResponseSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
@@ -145,6 +146,7 @@ namespace Enigma::Renderer
         void DoChangingViewPort(const Frameworks::ICommandPtr& c);
         void DoChangingClearingProperty(const Frameworks::ICommandPtr& c);
         //@}
+        void OnCreateTextureResponse(const Frameworks::IResponsePtr& r);
 
     protected:
         bool m_isPrimary;
@@ -171,6 +173,8 @@ namespace Enigma::Renderer
 
         Frameworks::CommandSubscriberPtr m_doChangingViewPort;
         Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
+
+        Frameworks::ResponseSubscriberPtr m_onCreateTextureResponse;
 
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {

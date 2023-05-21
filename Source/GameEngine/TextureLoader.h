@@ -8,7 +8,7 @@
 #ifndef TEXTURE_LOADER_H
 #define TEXTURE_LOADER_H
 
-#include "TextureLoadingPolicies.h"
+#include "TexturePolicies.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Texture.h"
 

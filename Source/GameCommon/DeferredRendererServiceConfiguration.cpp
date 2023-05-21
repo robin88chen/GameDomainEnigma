@@ -14,6 +14,17 @@ const std::string& DeferredRendererServiceConfiguration::AmbientPassFxFileName()
     return m_ambientPassFxFileName;
 }
 
+std::string& DeferredRendererServiceConfiguration::AmbientEffectName()
+{
+    return m_ambientEffectName;
+}
+
+const std::string& DeferredRendererServiceConfiguration::AmbientEffectName() const
+{
+    assert(!m_ambientEffectName.empty());
+    return m_ambientEffectName;
+}
+
 std::string& DeferredRendererServiceConfiguration::SunLightPassFxFileName()
 {
     return m_sunLightPassFxFileName;

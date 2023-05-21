@@ -1,14 +1,14 @@
 ﻿/*********************************************************************
  * \file   TextureRequests.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
 #ifndef _TEXTURE_REQUESTS_H
 #define _TEXTURE_REQUESTS_H
 
-#include "TextureLoadingPolicies.h"
+#include "TexturePolicies.h"
 #include "Frameworks/Request.h"
 
 namespace Enigma::Engine
@@ -17,6 +17,15 @@ namespace Enigma::Engine
     {
     public:
         RequestLoadTexture(const TexturePolicy& policy) : m_policy(policy) {}
+        const TexturePolicy& GetPolicy() { return m_policy; }
+
+    private:
+        TexturePolicy m_policy;
+    };
+    class RequestCreateTexture : public Frameworks::IRequest
+    {
+    public:
+        RequestCreateTexture(const TexturePolicy& policy) : m_policy(policy) {}
         const TexturePolicy& GetPolicy() { return m_policy; }
 
     private:

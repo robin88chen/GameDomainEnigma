@@ -1,0 +1,35 @@
+{
+	"Name" : "DeferredShadingAmbientPass",
+	"VertexShaderList" : [
+	{"Name" : "light_pass_vs", "API" : "dx9", "File" : "fx/deferred/quad.vsh@APK_PATH", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "light_pass_vs", "API" : "dx11", "File" : "fx/deferred/quad_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "light_pass_vs", "API" : "egl", "File" : "fx/deferred/quad_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "light_pass_ps", "API" : "dx9", "File" : "fx/deferred/ambient_quad.psh@APK_PATH", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "light_pass_ps", "API" : "dx11", "File" : "fx/deferred/ambient_quad_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "light_pass_ps", "API" : "egl", "File" : "fx/deferred/ambient_quad_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "DiffuseMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "None"}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false, "DepthWrite" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{ "Name" : "amb_light_pass", "Program" : "amb_light_pass", "VertexShader" : "light_pass_vs", "PixelShader" : "light_pass_ps", 
+			"SamplerState" : [{ "Sampler" : "DiffuseMapSampler", "Var" : "DiffuseMapSampler"}],
+			"BlendState" : "blendDisable",
+			"DepthState" : "depthDisable" }
+		]
+	}
+	]
+}

@@ -46,7 +46,7 @@ namespace Enigma::GameCommon
         virtual void PrepareGameScene() override;
 
     private:
-        Renderer::RenderTargetPtr CreateGBuffer(unsigned int width, unsigned int height, const Graphics::IDepthStencilSurfacePtr& depth) const;
+        void CreateGBuffer(const Renderer::RenderTargetPtr& primary_target) const;
 
         void CreateAmbientLightQuad(const SceneGraph::LightInfo& lit);
         void CreateSunLightQuad(const SceneGraph::LightInfo& lit);

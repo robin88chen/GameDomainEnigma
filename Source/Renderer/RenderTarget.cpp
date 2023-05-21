@@ -11,6 +11,12 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
+#include "GameEngine/Texture.h"
+#include "GraphicKernel/ITexture.h"
+#include "GameEngine/TextureRequests.h"
+#include "Frameworks/RequestBus.h"
+#include "Frameworks/ResponseBus.h"
+#include "GameEngine/TextureResponses.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -208,10 +214,10 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     // 好...來...因為back buffer surface實際上已經重新create了,
     // 所以這裡頭的shader resource view要重新綁定
     //todo : render target texture
-    /*if (m_renderTargetTexture)
+    if (m_renderTargetTexture)
     {
-        m_renderTargetTexture->GetDeviceTexture()->UseAsBackSurface(m_backSurface);
-    }*/
+        m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface);
+    }
     if (m_depthStencilSurface)
     {
         Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeDepthSurface>(m_depthStencilSurface->GetName(), dimension));
@@ -271,6 +277,10 @@ void RenderTarget::SubscribeHandler()
     m_doChangingClearingProperty =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
     Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+
+    m_onCreateTextureResponse = std::make_shared<Frameworks::ResponseSubscriber>(
+        [=](auto r) { this->OnCreateTextureResponse(r); });
+    Frameworks::ResponseBus::Subscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
 }
 
 void RenderTarget::UnsubscribeHandler()
@@ -293,11 +303,17 @@ void RenderTarget::UnsubscribeHandler()
     m_doChangingViewPort = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
     m_doChangingClearingProperty = nullptr;
+
+    Frameworks::ResponseBus::Unsubscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
+    m_onCreateTextureResponse = nullptr;
 }
 
 void RenderTarget::CreateRenderTargetTexture()
 {
-    //todo : render target texture
+    if (m_isPrimary) return;
+    if (!m_backSurface) return;
+    Frameworks::RequestBus::Post(std::make_shared<Engine::RequestCreateTexture>(
+        Engine::TexturePolicy{ m_backSurface->GetName(), m_backSurface->GetDimension() }));
 }
 
 void RenderTarget::InitViewPortSize()
@@ -445,4 +461,15 @@ void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (cmd->GetRenderTargetName() != m_name) return;
     ChangeClearingProperty(cmd->GetProperty());
+}
+
+void RenderTarget::OnCreateTextureResponse(const Frameworks::IResponsePtr& r)
+{
+    if (!r) return;
+    const auto res = std::dynamic_pointer_cast<Engine::CreateTextureResponse, Frameworks::IResponse>(r);
+    if (!res) return;
+    if (!m_backSurface) return;
+    if (res->GetName() != m_backSurface->GetName()) return;
+    m_renderTargetTexture = res->GetTexture();
+    m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface);
 }

@@ -206,6 +206,7 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
     m_builtPrimitive->ChangeEffectMaterial(m_builtEffects);
     m_builtPrimitive->ChangeTextureMap(m_builtTextures);
     m_builtPrimitive->CreateRenderElements();
+    m_builtPrimitive->RenderListID() = m_policy->RenderListId();
     EventPublisher::Post(std::make_shared<MeshPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
 }
 

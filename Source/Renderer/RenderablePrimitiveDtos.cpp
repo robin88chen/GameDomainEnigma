@@ -22,6 +22,7 @@ static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
 static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
+static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
 static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
@@ -29,7 +30,7 @@ static std::string TOKEN_MESH_NODES = "MeshNodes";
 static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
 
-MeshPrimitiveDto::MeshPrimitiveDto() : m_geometryFactory(GeometryData::TYPE_RTTI.GetName())
+MeshPrimitiveDto::MeshPrimitiveDto() : m_geometryFactory(GeometryData::TYPE_RTTI.GetName()), m_renderListID(Renderer::RenderListID::Scene)
 {
 }
 
@@ -54,6 +55,7 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
             mesh.TextureMaps().emplace_back(tex_dto);
         }
     }
+    if (const auto v = dto.TryGetValue<unsigned>(TOKEN_RENDER_LIST_ID)) mesh.RenderListID() = static_cast<Renderer::RenderListID>(v.value());
     return mesh;
 }
 
@@ -70,6 +72,7 @@ GenericDto MeshPrimitiveDto::ToGenericDto()
     dto.AddOrUpdate(TOKEN_GEOMETRY_FACTORY, m_geometryFactory);
     dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
+    dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
     return dto;
 }
 
@@ -96,6 +99,7 @@ std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std
     {
         policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
     }
+    policy->RenderListId() = m_renderListID;
     return policy;
 }
 

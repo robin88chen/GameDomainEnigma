@@ -41,6 +41,7 @@ DeferredRendererService::~DeferredRendererService()
     m_configuration = nullptr;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
+    m_gBuffer = nullptr;
     m_lightVolumes.clear();
 }
 
@@ -48,6 +49,8 @@ ServiceResult DeferredRendererService::OnInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    m_onGBufferTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGBufferTextureCreated(e); });
+    EventPublisher::Subscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
@@ -65,6 +68,8 @@ ServiceResult DeferredRendererService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
+    m_onGBufferTextureCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
@@ -77,6 +82,7 @@ ServiceResult DeferredRendererService::OnTerm()
 
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
+    m_gBuffer = nullptr;
     m_lightVolumes.clear();
 
     return SceneRendererService::OnTerm();
@@ -122,14 +128,14 @@ void DeferredRendererService::PrepareGameScene()
     if (!m_renderer.expired())
     {
         if (m_ambientLightQuad) m_ambientLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
-            MathLib::Matrix4::IDENTITY, m_ambientQuadRenderState.ToLightingState());
+            MathLib::Matrix4::IDENTITY, m_ambientQuadLightingState);
         if (m_sunLightQuad) m_sunLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
             MathLib::Matrix4::IDENTITY, m_sunLightQuadRenderState.ToLightingState());
     }
     SceneRendererService::PrepareGameScene();
 }
 
-void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& primary_target) const
+void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& primary_target)
 {
     assert(primary_target);
     assert(!m_rendererManager.expired());
@@ -138,8 +144,8 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     auto [width, height] = primary_target->GetDimension();
 
     m_rendererManager.lock()->CreateRenderTarget(m_configuration->GbufferTargetName(), RenderTarget::PrimaryType::NotPrimary);
-    RenderTargetPtr gbuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
-    if (gbuffer)
+    m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
+    if (m_gBuffer)
     {
         const std::vector<Graphics::GraphicFormat> formats =
         {
@@ -148,14 +154,15 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
             Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_A16B16G16R16F),     // specular material r,g,b, & shininess
             Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_R32F),          // depth
         };
-        gbuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, formats);
-        gbuffer->SetGBufferDepthMapIndex(3);
-        gbuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
+        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, formats);
+        m_gBuffer->SetGBufferDepthMapIndex(3);
+        m_gBuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
     {
-        deferRender->AttachGBufferTarget(gbuffer);
+        deferRender->AttachGBufferTarget(m_gBuffer);
     }
+    if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
 }
 
 void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e)
@@ -167,6 +174,15 @@ void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEv
     if (!primaryTarget) return;
 
     CreateGBuffer(primaryTarget);
+}
+
+void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Renderer::RenderTargetTextureCreated, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetRenderTarget() != m_gBuffer) return;
+    if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
 }
 
 void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
@@ -234,6 +250,7 @@ void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IRespon
     if (res->GetRequestRuid() == m_ambientQuadRequester)
     {
         m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
+        BindGBufferToLightingQuadMesh(m_ambientLightQuad);
     }
 }
 
@@ -246,21 +263,24 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
     eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
-    EffectTextureMapDtoHelper tex_dto_helper;
-    tex_dto_helper.TextureMapping("", "", m_configuration->GbufferTargetName(), 1, m_configuration->GbufferDiffuseSemantic())
-        .TextureMapping("", "", m_configuration->GbufferTargetName(), 3, m_configuration->GbufferDepthSemantic());
+    //EffectTextureMapDtoHelper tex_dto_helper;
+    //tex_dto_helper.TextureMapping("", "", m_configuration->GbufferTargetName(), 1, m_configuration->GbufferDiffuseSemantic())
+      //  .TextureMapping("", "", m_configuration->GbufferTargetName(), 3, m_configuration->GbufferDepthSemantic());
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.Name() = quad_geo_name;
     mesh_dto.GeometryName() = quad_geo_name;
     mesh_dto.TheGeometry() = quad_dto_helper.ToGenericDto();
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto_helper.ToGenericDto());
+    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    //mesh_dto.TextureMaps().emplace_back(tex_dto_helper.ToGenericDto());
 
     auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
     auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
     m_ambientQuadRequester = request->GetRuid();
     RequestBus::Post(request);
+
+    m_ambientQuadLightingState.SetAmbientLightColor(lit.GetLightColor());
 }
 
 void DeferredRendererService::CreateSunLightQuad(const SceneGraph::LightInfo& lit)
@@ -291,4 +311,19 @@ void DeferredRendererService::UpdatePointLightVolume(const SceneGraph::LightInfo
 void DeferredRendererService::UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
 
+}
+
+void DeferredRendererService::BindGBufferToLightingQuadMesh(const Renderer::MeshPrimitivePtr& mesh)
+{
+    assert(m_configuration);
+    if (!mesh) return;
+    if (!m_gBuffer) return;
+    if (!m_gBuffer->GetRenderTargetTexture()) return;
+
+    EffectTextureMap::EffectTextures textures = {
+        { m_configuration->GbufferNormalSemantic(), m_gBuffer->GetRenderTargetTexture(), 0 },
+        { m_configuration->GbufferDiffuseSemantic(), m_gBuffer->GetRenderTargetTexture(), 1 },
+        { m_configuration->GbufferSpecularSemantic(), m_gBuffer->GetRenderTargetTexture(), 2 },
+        { m_configuration->GbufferDepthSemantic(), m_gBuffer->GetRenderTargetTexture(), 3 } };
+    mesh->ChangeTextureMap({ textures });
 }

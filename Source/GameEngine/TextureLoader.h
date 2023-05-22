@@ -54,14 +54,20 @@ namespace Enigma::Engine
         void OnTextureCreated(const Enigma::Frameworks::IEventPtr& e);
         void OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e);
         void OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e);
+        void OnTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e);
+        void OnTextureCreateResourceFailed(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         TextureRepository* m_hostRepository;
         TexturePolicy m_policy;
 
         Enigma::Frameworks::EventSubscriberPtr m_onTextureCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onMultiTextureCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTextureImageLoaded;
         Enigma::Frameworks::EventSubscriberPtr m_onTextureLoadImageFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onTextureResourceCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onMultiTextureResourceCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onTextureCreateResourceFailed;
     };
 }
 

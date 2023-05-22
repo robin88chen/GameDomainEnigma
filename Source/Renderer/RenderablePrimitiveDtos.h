@@ -14,6 +14,7 @@
 #include "GameEngine/GeometryDataDto.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
+#include "Renderer.h"
 #include <memory>
 #include <vector>
 
@@ -45,6 +46,8 @@ namespace Enigma::Renderer
         std::vector<Engine::GenericDto>& Effects() { return m_effects; }
         [[nodiscard]] const std::vector<Engine::GenericDto>& TextureMaps() const { return m_textureMaps; }
         std::vector<Engine::GenericDto>& TextureMaps() { return m_textureMaps; }
+        [[nodiscard]] Renderer::RenderListID RenderListID() const { return m_renderListID; }
+        Renderer::RenderListID& RenderListID() { return m_renderListID; }
 
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -58,6 +61,7 @@ namespace Enigma::Renderer
         Engine::FactoryDesc m_geometryFactory;
         std::vector<Engine::GenericDto> m_effects;
         std::vector<Engine::GenericDto> m_textureMaps;
+        Renderer::RenderListID m_renderListID;
     };
 
     class SkinMeshPrimitiveDto : public MeshPrimitiveDto

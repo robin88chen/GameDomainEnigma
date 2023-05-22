@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   IMultiTexture.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -25,6 +25,18 @@ namespace Enigma::Graphics
         IMultiTexture& operator=(const IMultiTexture&) = delete;
         IMultiTexture& operator=(IMultiTexture&&) = delete;
 
+        virtual void MultiLoad(const std::vector<byte_buffer>& img_buffs);
+        virtual void MultiLoad(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
+        virtual void MultiSave(const std::vector<FileSystem::IFilePtr>& files);
+        virtual void MultiSave(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
+
+        virtual void MultiCreate(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
+
+        virtual bool IsMultiTexture() override { return true; }
+
+    protected:
+        virtual error CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;
+
         virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) = 0;
         virtual future_error AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs);
 
@@ -41,7 +53,7 @@ namespace Enigma::Graphics
         virtual future_error AsyncSaveTextureImages(const std::vector<std::string>& filenames,
             const std::vector<std::string>& pathids);
 
-        virtual bool IsMultiTexture() override { return true; }
+    protected:
         //! not supported funcs
         //virtual er_code CreateAsCubeTexture(unsigned char* img_buffs[6], unsigned int buff_sizes[6])
           //  override final {
@@ -52,6 +64,10 @@ namespace Enigma::Graphics
             return ErrorCode::notImplement;
         };
         virtual error LoadTextureImage(const byte_buffer&) override final
+        {
+            return ErrorCode::notImplement;
+        };
+        virtual error LoadTextureImage(const std::string& filename, const std::string& pathid) override final
         {
             return ErrorCode::notImplement;
         };
@@ -67,9 +83,10 @@ namespace Enigma::Graphics
         {
             return ErrorCode::notImplement;
         };
-
-    protected:
-        virtual error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension&, const byte_buffer&) = 0;
+        virtual error SaveTextureImage(const std::string& filename, const std::string& pathid) override final
+        {
+            return ErrorCode::notImplement;
+        };
     };
     using IMultiTexturePtr = std::shared_ptr<IMultiTexture>;
     using IMultiTextureWeak = std::weak_ptr<IMultiTexture>;

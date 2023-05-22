@@ -37,7 +37,7 @@ namespace Enigma::Engine
         virtual const Graphics::GraphicFormat& GetFormat();
         virtual const MathLib::Dimension& GetDimension();
         virtual bool IsCubeTexture();
-        virtual bool IsMultiTexture() { return false; }
+        virtual bool IsMultiTexture() { return m_texture ? m_texture->IsMultiTexture() : false; }
 
     protected:
         FactoryDesc m_factoryDesc;

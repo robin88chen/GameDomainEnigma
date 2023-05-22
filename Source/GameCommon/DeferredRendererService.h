@@ -46,7 +46,7 @@ namespace Enigma::GameCommon
         virtual void PrepareGameScene() override;
 
     private:
-        void CreateGBuffer(const Renderer::RenderTargetPtr& primary_target) const;
+        void CreateGBuffer(const Renderer::RenderTargetPtr& primary_target);
 
         void CreateAmbientLightQuad(const SceneGraph::LightInfo& lit);
         void CreateSunLightQuad(const SceneGraph::LightInfo& lit);
@@ -56,7 +56,10 @@ namespace Enigma::GameCommon
         void UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
+        void BindGBufferToLightingQuadMesh(const Renderer::MeshPrimitivePtr& mesh);
+
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
+        void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
@@ -68,13 +71,16 @@ namespace Enigma::GameCommon
 
         Renderer::MeshPrimitivePtr m_ambientLightQuad;
         Renderer::MeshPrimitivePtr m_sunLightQuad;
-        SceneGraph::SpatialRenderState m_ambientQuadRenderState;
+        Engine::RenderLightingState m_ambientQuadLightingState;
         SceneGraph::SpatialRenderState m_sunLightQuadRenderState;
 
         using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
 
+        Renderer::RenderTargetPtr m_gBuffer;
+
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
+        Frameworks::EventSubscriberPtr m_onGBufferTextureCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;

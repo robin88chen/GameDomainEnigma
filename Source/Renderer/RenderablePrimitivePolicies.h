@@ -61,6 +61,8 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& TextureDtos() const { return m_textureDtos; }
         std::vector<Engine::EffectTextureMapDto>& TextureDtos() { return m_textureDtos; }
+        [[nodiscard]] const Renderer::RenderListID& RenderListId() const { return m_renderListId; }
+        Renderer::RenderListID& RenderListId() { return m_renderListId; }
 
         //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
@@ -69,6 +71,7 @@ namespace Enigma::Renderer
         Engine::GeometryDataPolicy m_geometryPolicy;
         std::vector<Engine::EffectMaterialDto> m_effectDtos;
         std::vector<Engine::EffectTextureMapDto> m_textureDtos;
+        Renderer::RenderListID m_renderListId;
     };
 
     class SkinMeshPrimitivePolicy : public MeshPrimitivePolicy

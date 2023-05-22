@@ -91,6 +91,17 @@ const std::string& DeferredRendererServiceConfiguration::GbufferDepthName() cons
     return m_gbufferDepthName;
 }
 
+std::string& DeferredRendererServiceConfiguration::GbufferNormalSemantic()
+{
+       return m_gbufferNormalSemantic;
+}
+
+const std::string& DeferredRendererServiceConfiguration::GbufferNormalSemantic() const
+{
+    assert(!m_gbufferNormalSemantic.empty());
+    return m_gbufferNormalSemantic;
+}
+
 std::string& DeferredRendererServiceConfiguration::GbufferDiffuseSemantic()
 {
    return m_gbufferDiffuseSemantic;
@@ -100,6 +111,17 @@ const std::string& DeferredRendererServiceConfiguration::GbufferDiffuseSemantic(
 {
     assert(!m_gbufferDiffuseSemantic.empty());
     return m_gbufferDiffuseSemantic;
+}
+
+std::string& DeferredRendererServiceConfiguration::GbufferSpecularSemantic()
+{
+       return m_gbufferSpecularSemantic;
+}
+
+const std::string& DeferredRendererServiceConfiguration::GbufferSpecularSemantic() const
+{
+       assert(!m_gbufferSpecularSemantic.empty());
+    return m_gbufferSpecularSemantic;
 }
 
 std::string& DeferredRendererServiceConfiguration::GbufferDepthSemantic()

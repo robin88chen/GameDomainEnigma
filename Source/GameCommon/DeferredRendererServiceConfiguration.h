@@ -34,10 +34,15 @@ namespace Enigma::GameCommon
         const std::string& GbufferDepthName() const;
         std::string& GbufferDepthName();
 
+        const std::string& GbufferNormalSemantic() const;
+        std::string& GbufferNormalSemantic();
         const std::string& GbufferDiffuseSemantic() const;
         std::string& GbufferDiffuseSemantic();
+        const std::string& GbufferSpecularSemantic() const;
+        std::string& GbufferSpecularSemantic();
         const std::string& GbufferDepthSemantic() const;
         std::string& GbufferDepthSemantic();
+
     protected:
         std::string m_ambientPassFxFileName;
         std::string m_ambientEffectName;
@@ -49,7 +54,9 @@ namespace Enigma::GameCommon
         std::string m_gbufferSurfaceName;
         std::string m_gbufferDepthName;
 
+        std::string m_gbufferNormalSemantic;
         std::string m_gbufferDiffuseSemantic;
+        std::string m_gbufferSpecularSemantic;
         std::string m_gbufferDepthSemantic;
     };
 }

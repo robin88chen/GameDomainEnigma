@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MultiTextureEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -27,9 +27,6 @@ namespace Enigma::Devices
         MultiTextureEgl& operator=(const MultiTextureEgl&) = delete;
         MultiTextureEgl& operator=(MultiTextureEgl&&) = delete;
 
-        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
-        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
-
         virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf) override;
 
         GLuint GetTextureHandle(unsigned int idx) const;
@@ -37,8 +34,12 @@ namespace Enigma::Devices
         unsigned int GetTextureHandleCount() const { return (unsigned int)m_textures.size(); }
 
     protected:
-        virtual error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
-            const byte_buffer& buff) override;
+        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
+        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
+
+        virtual error CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
+        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
+            const byte_buffer& buff);
     protected:
         std::vector<GLuint> m_textures;
     };

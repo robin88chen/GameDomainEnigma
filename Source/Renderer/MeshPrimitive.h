@@ -17,6 +17,7 @@
 #include <string>
 #include <memory>
 #include <system_error>
+#include <vector>
 
 namespace Enigma::Renderer
 {
@@ -55,6 +56,10 @@ namespace Enigma::Renderer
         unsigned GetTextureMapCount() const;
         /** change specify semantic texture */
         void ChangeTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple);
+        /** bind specify semantic texture, append new if semantic not existed */
+        void BindTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple);
+        /** bind specify semantic texture, append new if semantic not existed */
+        void BindTextures(const Engine::EffectTextureMap::EffectTextures& texture_tuples);
 
         /** update render buffer */
         error UpdateRenderBuffer();

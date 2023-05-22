@@ -313,7 +313,7 @@ void RenderTarget::CreateRenderTargetTexture()
     if (m_isPrimary) return;
     if (!m_backSurface) return;
     Frameworks::RequestBus::Post(std::make_shared<Engine::RequestCreateTexture>(
-        Engine::TexturePolicy{ m_backSurface->GetName(), m_backSurface->GetDimension() }));
+        Engine::TexturePolicy{ m_backSurface->GetName(), m_backSurface->GetDimension(), m_backSurface->GetSurfaceCount() }));
 }
 
 void RenderTarget::InitViewPortSize()
@@ -472,4 +472,5 @@ void RenderTarget::OnCreateTextureResponse(const Frameworks::IResponsePtr& r)
     if (res->GetName() != m_backSurface->GetName()) return;
     m_renderTargetTexture = res->GetTexture();
     m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface);
+    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), res->GetName()));
 }

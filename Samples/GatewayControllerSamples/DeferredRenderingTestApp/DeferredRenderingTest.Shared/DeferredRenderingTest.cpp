@@ -107,7 +107,9 @@ void DeferredRenderingTest::InstallEngine()
     deferred_config->GbufferTargetName() = "gbuffer_target";
     deferred_config->GbufferSurfaceName() = "gbuffer_surface";
     deferred_config->GbufferDepthName() = "gbuffer_depth";
+    deferred_config->GbufferNormalSemantic() = "GBufferNormalMap";
     deferred_config->GbufferDiffuseSemantic() = "GBufferDiffuseMap";
+    deferred_config->GbufferSpecularSemantic() = "GBufferSpecularMap";
     deferred_config->GbufferDepthSemantic() = "GBufferDepthMap";
     auto deferred_renderer_policy = stdext::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, std::move(deferred_config));
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);

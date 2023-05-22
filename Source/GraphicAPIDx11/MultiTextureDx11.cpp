@@ -32,6 +32,32 @@ MultiTextureDx11::~MultiTextureDx11()
     SAFE_DELETE_ARRAY(m_d3dTextureResources);
 }
 
+error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+{
+    assert(count == buffs.size());
+    if ((m_d3dTextureResources) && (m_resourceViewCount > 0))
+    {
+        for (unsigned int i = 0; i < m_resourceViewCount; i++)
+        {
+            SAFE_RELEASE(m_d3dTextureResources[i]);
+        }
+    }
+    SAFE_DELETE_ARRAY(m_d3dTextureResources);
+    m_resourceViewCount = count;
+
+    m_d3dTextureResources = new ID3D11ShaderResourceView * [m_resourceViewCount];
+    memset(m_d3dTextureResources, 0, m_resourceViewCount * sizeof(ID3D11ShaderResourceView*));
+
+    error er;
+    for (unsigned i = 0; i < count; i++)
+    {
+        er = CreateOneFromSystemMemory(i, dimension, buffs[i]);
+        if (er) return er;
+    }
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
+    return er;
+}
+
 error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     assert(!img_buffs.empty());

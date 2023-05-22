@@ -24,22 +24,23 @@ namespace Enigma::Engine
             Create
         };
     public:
-        TexturePolicy() : m_jobType(JobType::None) {};
+        TexturePolicy() : m_jobType(JobType::None), m_surfaceCount(0) {};
         TexturePolicy(const std::string& name, const std::string& filename, const std::string& path_id)
-            : m_jobType(JobType::Load), m_name(name), m_filename(filename), m_pathId(path_id)  {};
-        TexturePolicy(const std::string& name, const FileSystem::Filename& filename) : m_jobType(JobType::Load), m_name(name)
+            : m_jobType(JobType::Load), m_name(name), m_filename(filename), m_pathId(path_id), m_surfaceCount(1)  {};
+        TexturePolicy(const std::string& name, const FileSystem::Filename& filename) : m_jobType(JobType::Load), m_name(name), m_surfaceCount(1)
         {
             m_filename = filename.GetSubPathFileName();
             m_pathId = filename.GetMountPathID();
         };
-        TexturePolicy(const std::string& name, const MathLib::Dimension& dimension)
-            : m_jobType(JobType::Create), m_name(name), m_dimension(dimension)  {};
+        TexturePolicy(const std::string& name, const MathLib::Dimension& dimension, unsigned surface_count)
+            : m_jobType(JobType::Create), m_name(name), m_dimension(dimension), m_surfaceCount(surface_count)  {};
 
         const std::string& GetName() const { return m_name; };
         const std::string& GetFileName() const { return m_filename; };
         const std::string& GetPathID() const { return m_pathId; };
         const MathLib::Dimension& GetDimension() const { return m_dimension; };
         const JobType& GetJobType() const { return m_jobType; };
+        const unsigned& GetSurfaceCount() const { return m_surfaceCount; };
 
     protected:
         JobType m_jobType;
@@ -47,6 +48,7 @@ namespace Enigma::Engine
         std::string m_filename;
         std::string m_pathId;
         MathLib::Dimension m_dimension;
+        unsigned m_surfaceCount;
     };
 }
 

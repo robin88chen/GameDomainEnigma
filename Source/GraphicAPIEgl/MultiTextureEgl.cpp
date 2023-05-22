@@ -24,6 +24,19 @@ MultiTextureEgl::~MultiTextureEgl()
     }
 }
 
+error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+{
+    assert(count == buffs.size());
+    error er;
+    for (unsigned i = 0; i < count; i++)
+    {
+        er = CreateOneFromSystemMemory(i, dimension, buffs[i]);
+        if (er) return er;
+    }
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
+    return er;
+}
+
 error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     assert(!img_buffs.empty());

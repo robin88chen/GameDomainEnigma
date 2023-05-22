@@ -47,7 +47,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
 
 Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
 {
-    if (m_currentJob == TexturePolicy::JobType::None) return Frameworks::ServiceResult::Pendding;
+    if (m_currentJob != TexturePolicy::JobType::None) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_requestsLock };
     if ((m_loadRequests.empty()) && (m_createRequests.empty()))
     {

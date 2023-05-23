@@ -52,6 +52,7 @@ protected:
     void OnBuildPawnPrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
 
 private:
+    void CreateCubePawn();
     void RetrieveDtoCreatedModel();
     void InsertDtoCreatedModelToRenderer();
 

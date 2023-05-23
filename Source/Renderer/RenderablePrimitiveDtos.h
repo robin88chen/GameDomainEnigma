@@ -50,7 +50,7 @@ namespace Enigma::Renderer
         Renderer::RenderListID& RenderListID() { return m_renderListID; }
 
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
 
         std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
 

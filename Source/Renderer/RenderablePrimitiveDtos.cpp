@@ -59,7 +59,7 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
     return mesh;
 }
 
-GenericDto MeshPrimitiveDto::ToGenericDto()
+GenericDto MeshPrimitiveDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(FactoryDesc(MeshPrimitive::TYPE_RTTI.GetName()));

@@ -119,7 +119,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     auto factory = m_factories.find(dto.GetRtti().GetRttiName());
     if (factory == m_factories.end())
     {
-        Debug::Printf("Can't find dto factory of %s", dto.GetRtti().GetRttiName().c_str());
+        Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
     if (Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.GetName()))
@@ -140,7 +140,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     }
     else
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.GetRtti().GetRttiName().c_str());
     }
 }
 
@@ -148,7 +148,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
 {
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.GetName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
     std::shared_ptr<Node> node;
@@ -176,7 +176,7 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Light::TYPE_RTTI.GetName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
     assert(!m_host->HasLight(dto.GetName()));
@@ -188,7 +188,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.GetName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
     assert(!m_host->HasPawn(dto.GetName()));
@@ -205,7 +205,7 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Portal::TYPE_RTTI.GetName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
     assert(!m_host->HasPortal(dto.GetName()));

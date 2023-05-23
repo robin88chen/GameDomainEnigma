@@ -6,6 +6,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/RequestBus.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "SceneGraph/SceneGraphEvents.h"
@@ -26,6 +27,11 @@
 #include "GameCommon/DeferredRendererServiceConfiguration.h"
 #include "GameCommon/GameSceneEvents.h"
 #include "GameCommon/GameLightCommands.h"
+#include "GameEngine/StandardGeometryDtoHelper.h"
+#include "GameEngine/EffectDtoHelper.h"
+#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderer/RenderablePrimitiveRequests.h"
+#include "SceneGraph/SceneGraphDtos.h"
 //#include "PrimitiveMeshMaker.h"
 //#include "SceneGraphMaker.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
@@ -87,6 +93,8 @@ void DeferredRenderingTest::InstallEngine()
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
     EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     assert(m_graphicMain);
 
@@ -135,11 +143,14 @@ void DeferredRenderingTest::InstallEngine()
 void DeferredRenderingTest::ShutdownEngine()
 {
     m_sceneRoot = nullptr;
+    m_pawn = nullptr;
 
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnPrimitiveBuilt = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -164,8 +175,10 @@ void DeferredRenderingTest::OnSceneGraphRootCreated(const Enigma::Frameworks::IE
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.0, 1.2, 1.2, 1.0)));
+    m_sceneRoot = ev->GetSceneRoot();
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.0f, 1.2f, 1.2f, 1.0f)));
+    CreateCubePawn();
 }
 
 void DeferredRenderingTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
@@ -175,9 +188,35 @@ void DeferredRenderingTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPt
     if (!ev) return;
     auto top_spatials = ev->GetTopLevelSpatial();
     if (top_spatials.empty()) return;
-    auto outside_node = std::dynamic_pointer_cast<PortalZoneNode, Spatial>(top_spatials[0]);
-    if (!outside_node) return;
-    auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
-    if (!scene_service) return;
-    error er = scene_service->AttachOutsideZone(outside_node);
+    m_pawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
+    if (m_sceneRoot) m_sceneRoot->AttachChild(m_pawn, Matrix4::IDENTITY);
+}
+
+void DeferredRenderingTest::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
+    if (!ev) return;
+    ev->GetPawn()->GetPrimitive()->SelectVisualTechnique("Default");
+}
+
+void DeferredRenderingTest::CreateCubePawn()
+{
+    PawnDtoHelper pawn_dto("cube_pawn");
+    MeshPrimitiveDto mesh_dto;
+    CubeDtoHelper cube_dto("cube");
+    cube_dto.FacedCube(Vector3::ZERO, Vector3(1.0f, 1.0f, 1.0f)).FacedNormal().FacedTextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
+    EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
+    mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
+    EffectTextureMapDtoHelper tex_dto;
+    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "DiffuseMap");
+    mesh_dto.Name() = "cube_mesh";
+    mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
+    mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    mesh_dto.GeometryName() = "cube";
+    mesh_dto.TheGeometry() = cube_dto.ToGenericDto();
+
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent);
+    auto dtos = { pawn_dto.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("cube_pawn", dtos));
 }

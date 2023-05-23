@@ -119,6 +119,7 @@ void TextureLoader::OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetTextureName() != m_policy.GetName()) return;
+    if (m_policy.GetJobType() != TexturePolicy::JobType::Load) return;
     Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.GetName());
     if (!dev_tex)
     {
@@ -157,6 +158,7 @@ void TextureLoader::OnTextureResourceCreated(const Enigma::Frameworks::IEventPtr
     }
     else return;
     if (tex_name != m_policy.GetName()) return;
+    if (m_policy.GetJobType() != TexturePolicy::JobType::Create) return;
     Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.GetName());
     if (!dev_tex)
     {

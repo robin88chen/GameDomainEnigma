@@ -36,6 +36,17 @@ const std::string& DeferredRendererServiceConfiguration::SunLightPassFxFileName(
     return m_sunLightPassFxFileName;
 }
 
+std::string& DeferredRendererServiceConfiguration::SunLightEffectName()
+{
+    return m_sunLightEffectName;
+}
+
+const std::string& DeferredRendererServiceConfiguration::SunLightEffectName() const
+{
+    assert(!m_sunLightEffectName.empty());
+    return m_sunLightEffectName;
+}
+
 std::string& DeferredRendererServiceConfiguration::LightVolumePassFxFileName()
 {
     return m_lightVolumePassFxFileName;

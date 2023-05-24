@@ -130,7 +130,7 @@ void DeferredRendererService::PrepareGameScene()
         if (m_ambientLightQuad) m_ambientLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
             MathLib::Matrix4::IDENTITY, m_ambientQuadLightingState);
         if (m_sunLightQuad) m_sunLightQuad->InsertToRendererWithTransformUpdating(m_renderer.lock(),
-            MathLib::Matrix4::IDENTITY, m_sunLightQuadRenderState.ToLightingState());
+            MathLib::Matrix4::IDENTITY, m_sunLightQuadLightingState);
     }
     SceneRendererService::PrepareGameScene();
 }
@@ -163,6 +163,7 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
         deferRender->AttachGBufferTarget(m_gBuffer);
     }
     if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
+    if (m_sunLightQuad) BindGBufferToLightingQuadMesh(m_sunLightQuad);
 }
 
 void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e)
@@ -183,6 +184,7 @@ void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPt
     if (!ev) return;
     if (ev->GetRenderTarget() != m_gBuffer) return;
     if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
+    if (m_sunLightQuad) BindGBufferToLightingQuadMesh(m_sunLightQuad);
 }
 
 void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
@@ -252,6 +254,11 @@ void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IRespon
         m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
         BindGBufferToLightingQuadMesh(m_ambientLightQuad);
     }
+    else if (res->GetRequestRuid() == m_sunLightQuadRequester)
+    {
+        m_sunLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
+        BindGBufferToLightingQuadMesh(m_sunLightQuad);
+    }
 }
 
 void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo& lit)
@@ -263,17 +270,12 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
     eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
-    //EffectTextureMapDtoHelper tex_dto_helper;
-    //tex_dto_helper.TextureMapping("", "", m_configuration->GbufferTargetName(), 1, m_configuration->GbufferDiffuseSemantic())
-      //  .TextureMapping("", "", m_configuration->GbufferTargetName(), 3, m_configuration->GbufferDepthSemantic());
-
     MeshPrimitiveDto mesh_dto;
     mesh_dto.Name() = quad_geo_name;
     mesh_dto.GeometryName() = quad_geo_name;
     mesh_dto.TheGeometry() = quad_dto_helper.ToGenericDto();
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-    //mesh_dto.TextureMaps().emplace_back(tex_dto_helper.ToGenericDto());
 
     auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
     auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
@@ -285,7 +287,26 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
 
 void DeferredRendererService::CreateSunLightQuad(const SceneGraph::LightInfo& lit)
 {
+    std::string quad_geo_name = std::string("deferred_sunlight_quad.geo");
+    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
+        .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+    EffectMaterialDtoHelper eff_dto_helper(m_configuration->SunLightEffectName());
+    eff_dto_helper.FilenameAtPath(m_configuration->SunLightPassFxFileName());
 
+    MeshPrimitiveDto mesh_dto;
+    mesh_dto.Name() = quad_geo_name;
+    mesh_dto.GeometryName() = quad_geo_name;
+    mesh_dto.TheGeometry() = quad_dto_helper.ToGenericDto();
+    mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
+    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+
+    auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
+    auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
+    m_sunLightQuadRequester = request->GetRuid();
+    RequestBus::Post(request);
+
+    m_sunLightQuadLightingState.SetSunLight(lit.GetLightDirection(), lit.GetLightColor());
 }
 
 void DeferredRendererService::CreatePointLightVolume(const SceneGraph::LightInfo& lit)

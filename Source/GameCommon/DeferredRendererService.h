@@ -72,7 +72,7 @@ namespace Enigma::GameCommon
         Renderer::MeshPrimitivePtr m_ambientLightQuad;
         Renderer::MeshPrimitivePtr m_sunLightQuad;
         Engine::RenderLightingState m_ambientQuadLightingState;
-        SceneGraph::SpatialRenderState m_sunLightQuadRenderState;
+        Engine::RenderLightingState m_sunLightQuadLightingState;
 
         using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
@@ -88,6 +88,7 @@ namespace Enigma::GameCommon
         Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
 
         Frameworks::Ruid m_ambientQuadRequester;
+        Frameworks::Ruid m_sunLightQuadRequester;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

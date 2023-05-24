@@ -111,6 +111,8 @@ void DeferredRenderingTest::InstallEngine()
     auto deferred_config = std::make_unique<DeferredRendererServiceConfiguration>();
     deferred_config->AmbientEffectName() = "DeferredShadingAmbientPass";
     deferred_config->AmbientPassFxFileName() = "fx/DeferredShadingAmbientPass.efx@APK_PATH";
+    deferred_config->SunLightEffectName() = "DeferredShadingSunLightPass";
+    deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingSunLightPass.efx@APK_PATH";
     deferred_config->DeferredRendererTechniqueName() = "DeferredRenderer";
     deferred_config->GbufferTargetName() = "gbuffer_target";
     deferred_config->GbufferSurfaceName() = "gbuffer_surface";
@@ -176,8 +178,8 @@ void DeferredRenderingTest::OnSceneGraphRootCreated(const Enigma::Frameworks::IE
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
     m_sceneRoot = ev->GetSceneRoot();
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.0f, 1.2f, 1.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.8f, 0.8f, 0.8f, 1.0f)));
     CreateCubePawn();
 }
 
@@ -209,7 +211,7 @@ void DeferredRenderingTest::CreateCubePawn()
     EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
     mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
     EffectTextureMapDtoHelper tex_dto;
-    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "DiffuseMap");
+    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "DiffuseMap");
     mesh_dto.Name() = "cube_mesh";
     mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
     mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());

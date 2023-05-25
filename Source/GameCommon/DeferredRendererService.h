@@ -12,7 +12,7 @@
 #include "Renderer/MeshPrimitive.h"
 #include "SceneGraph/SpatialRenderState.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneGraph/LightInfo.h"
+#include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "Frameworks/ResponseSubscriber.h"
 #include <memory>
@@ -48,21 +48,24 @@ namespace Enigma::GameCommon
     private:
         void CreateGBuffer(const Renderer::RenderTargetPtr& primary_target);
 
-        void CreateAmbientLightQuad(const SceneGraph::LightInfo& lit);
-        void CreateSunLightQuad(const SceneGraph::LightInfo& lit);
-        void CreatePointLightVolume(const SceneGraph::LightInfo& lit);
+        void CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
+        void CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
+        void CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
         void DeletePointLightVolume(const std::string& name);
-        void UpdateAmbientLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
-        void UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
-        void UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
-        void BindGBufferToLightingQuadMesh(const Renderer::MeshPrimitivePtr& mesh);
+        void BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh);
+        void BindGBufferToLightVolume(const std::shared_ptr<LightVolumePawn>& volume);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
         void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
+        void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
         void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& response);
 
@@ -84,6 +87,8 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
+        Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
 
         Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   StandardGeometryDtoHelper.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -49,6 +49,27 @@ namespace Enigma::Engine
     protected:
         TriangleListDto m_dto;
         Graphics::VertexFormatCode m_format;
+    };
+
+    class SphereDtoHelper
+    {
+    public:
+        SphereDtoHelper(const std::string& name);
+        SphereDtoHelper& Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks);
+        SphereDtoHelper& Normal();
+        SphereDtoHelper& TextureCoord();
+        SphereDtoHelper& SphereBound();
+        SphereDtoHelper& BoxBound();
+
+        GenericDto ToGenericDto();
+
+    protected:
+        TriangleListDto m_dto;
+        Graphics::VertexFormatCode m_format;
+        MathLib::Vector3 m_center;
+        float m_radius;
+        std::vector<MathLib::Vector3> m_normals;  //< pre-calculated normals
+        std::vector<MathLib::Vector2> m_tex_coords; //< pre-calculated texture coordinates
     };
 }
 

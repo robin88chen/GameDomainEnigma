@@ -26,6 +26,8 @@ namespace Enigma::GameCommon
         std::string& SunLightEffectName();
         const std::string& LightVolumePassFxFileName() const;
         std::string& LightVolumePassFxFileName();
+        const std::string& LightVolumeEffectName() const;
+        std::string& LightVolumeEffectName();
 
         const std::string& DeferredRendererTechniqueName() const;
         std::string& DeferredRendererTechniqueName();
@@ -51,6 +53,7 @@ namespace Enigma::GameCommon
         std::string m_sunLightPassFxFileName;
         std::string m_sunLightEffectName;
         std::string m_lightVolumePassFxFileName;
+        std::string m_lightVolumeEffectName;
 
         std::string m_deferredRendererTechniqueName;
         std::string m_gbufferTargetName;

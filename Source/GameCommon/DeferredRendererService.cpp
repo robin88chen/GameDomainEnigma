@@ -1,6 +1,9 @@
 ﻿#include "DeferredRendererService.h"
 #include "DeferredRendererServiceConfiguration.h"
+#include "GameSceneService.h"
+#include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/DeferredRenderer.h"
@@ -15,6 +18,8 @@
 #include "Frameworks/RequestBus.h"
 #include "Frameworks/ResponseBus.h"
 #include "Renderer/RendererEvents.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphDtoHelper.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -25,6 +30,10 @@ using namespace Enigma::SceneGraph;
 using error = std::error_code;
 
 DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
+
+//!  samples 的數量太少，光球的 poly 太粗，會導致算出的受光亮面偏移
+#define SPHERE_STACKS 40
+#define SPHERE_SLICES 80
 
 DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
@@ -57,6 +66,10 @@ ServiceResult DeferredRendererService::OnInit()
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     m_onBuildPrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto e) { OnBuildPrimitiveResponse(e); });
     ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
@@ -76,6 +89,10 @@ ServiceResult DeferredRendererService::OnTerm()
     m_onLightInfoDeleted = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnPrimitiveBuilt = nullptr;
 
     ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
     m_onBuildPrimitiveResponse = nullptr;
@@ -162,8 +179,12 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     {
         deferRender->AttachGBufferTarget(m_gBuffer);
     }
-    if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
-    if (m_sunLightQuad) BindGBufferToLightingQuadMesh(m_sunLightQuad);
+    if (m_ambientLightQuad) BindGBufferToLightingMesh(m_ambientLightQuad);
+    if (m_sunLightQuad) BindGBufferToLightingMesh(m_sunLightQuad);
+    for (auto& light : m_lightVolumes)
+    {
+        BindGBufferToLightVolume(light.second);
+    }
 }
 
 void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e)
@@ -183,8 +204,12 @@ void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<Renderer::RenderTargetTextureCreated, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetRenderTarget() != m_gBuffer) return;
-    if (m_ambientLightQuad) BindGBufferToLightingQuadMesh(m_ambientLightQuad);
-    if (m_sunLightQuad) BindGBufferToLightingQuadMesh(m_sunLightQuad);
+    if (m_ambientLightQuad) BindGBufferToLightingMesh(m_ambientLightQuad);
+    if (m_sunLightQuad) BindGBufferToLightingMesh(m_sunLightQuad);
+    for (auto& light : m_lightVolumes)
+    {
+        BindGBufferToLightVolume(light.second);
+    }
 }
 
 void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
@@ -194,15 +219,15 @@ void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
     if ((!ev) || (!ev->GetLight())) return;
     if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
     {
-        CreateAmbientLightQuad(ev->GetLight()->Info());
+        CreateAmbientLightQuad(ev->GetLight());
     }
     else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
     {
-        CreateSunLightQuad(ev->GetLight()->Info());
+        CreateSunLightQuad(ev->GetLight());
     }
     else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Point)
     {
-        CreatePointLightVolume(ev->GetLight()->Info());
+        CreatePointLightVolume(ev->GetLight());
     }
 }
 
@@ -232,16 +257,43 @@ void DeferredRendererService::OnLightInfoUpdated(const Frameworks::IEventPtr& e)
     if ((!ev) || (!ev->GetLight())) return;
     if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
     {
-        UpdateAmbientLightQuad(ev->GetLight()->Info(), ev->GetNotifyCode());
+        UpdateAmbientLightQuad(ev->GetLight(), ev->GetNotifyCode());
     }
     else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
     {
-        UpdateSunLightQuad(ev->GetLight()->Info(), ev->GetNotifyCode());
+        UpdateSunLightQuad(ev->GetLight(), ev->GetNotifyCode());
     }
     else if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Point)
     {
-        UpdatePointLightVolume(ev->GetLight()->Info(), ev->GetNotifyCode());
+        UpdatePointLightVolume(ev->GetLight(), ev->GetNotifyCode());
     }
+}
+
+void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::FactorySceneGraphBuilt, Frameworks::IEvent>(e);
+    if (!ev) return;
+    auto top_spatials = ev->GetTopLevelSpatial();
+    if (top_spatials.empty()) return;
+    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Spatial>(top_spatials[0]);
+    if (!pawn) return;
+    if ((!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneRoot()))
+    {
+        m_sceneService.lock()->GetSceneRoot()->AttachChild(pawn, pawn->GetLocalTransform());
+    }
+    m_lightVolumes.insert_or_assign(ev->GetSceneGraphId(), pawn);
+    BindGBufferToLightVolume(pawn);
+}
+
+void DeferredRendererService::OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::PawnPrimitiveBuilt, Frameworks::IEvent>(e);
+    if (!ev) return;
+    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Pawn>(ev->GetPawn());
+    if (!pawn) return;
+    BindGBufferToLightVolume(pawn);
 }
 
 void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
@@ -252,17 +304,18 @@ void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IRespon
     if (res->GetRequestRuid() == m_ambientQuadRequester)
     {
         m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
-        BindGBufferToLightingQuadMesh(m_ambientLightQuad);
+        BindGBufferToLightingMesh(m_ambientLightQuad);
     }
     else if (res->GetRequestRuid() == m_sunLightQuadRequester)
     {
         m_sunLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
-        BindGBufferToLightingQuadMesh(m_sunLightQuad);
+        BindGBufferToLightingMesh(m_sunLightQuad);
     }
 }
 
-void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo& lit)
+void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
+    assert(lit);
     std::string quad_geo_name = std::string("deferred_ambient_quad.geo");
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
@@ -282,11 +335,12 @@ void DeferredRendererService::CreateAmbientLightQuad(const SceneGraph::LightInfo
     m_ambientQuadRequester = request->GetRuid();
     RequestBus::Post(request);
 
-    m_ambientQuadLightingState.SetAmbientLightColor(lit.GetLightColor());
+    m_ambientQuadLightingState.SetAmbientLightColor(lit->GetLightColor());
 }
 
-void DeferredRendererService::CreateSunLightQuad(const SceneGraph::LightInfo& lit)
+void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
+    assert(lit);
     std::string quad_geo_name = std::string("deferred_sunlight_quad.geo");
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
@@ -306,12 +360,30 @@ void DeferredRendererService::CreateSunLightQuad(const SceneGraph::LightInfo& li
     m_sunLightQuadRequester = request->GetRuid();
     RequestBus::Post(request);
 
-    m_sunLightQuadLightingState.SetSunLight(lit.GetLightDirection(), lit.GetLightColor());
+    m_sunLightQuadLightingState.SetSunLight(lit->GetLightDirection(), lit->GetLightColor());
 }
 
-void DeferredRendererService::CreatePointLightVolume(const SceneGraph::LightInfo& lit)
+void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit)
 {
+    assert(lit);
+    std::string vol_geo_name = "deferred_" + lit->GetSpatialName() + "_lit_volume.geo";
+    SphereDtoHelper sphere_dto_helper(vol_geo_name);
+    sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
+    EffectMaterialDtoHelper eff_dto_helper(m_configuration->LightVolumeEffectName());
+    eff_dto_helper.FilenameAtPath(m_configuration->LightVolumePassFxFileName());
 
+    MeshPrimitiveDto mesh_dto;
+    mesh_dto.Name() = vol_geo_name;
+    mesh_dto.GeometryName() = vol_geo_name;
+    mesh_dto.TheGeometry() = sphere_dto_helper.ToGenericDto();
+    mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
+    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+
+    PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_volume");
+    pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.GetName())).MeshPrimitive(mesh_dto)
+        .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true).LocalTransform(lit->GetLocalTransform());
+    auto dtos = { pawn_helper.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
 }
 
 void DeferredRendererService::DeletePointLightVolume(const std::string& name)
@@ -319,22 +391,22 @@ void DeferredRendererService::DeletePointLightVolume(const std::string& name)
 
 }
 
-void DeferredRendererService::UpdateAmbientLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+void DeferredRendererService::UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
 
 }
 
-void DeferredRendererService::UpdatePointLightVolume(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+void DeferredRendererService::UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
 
 }
 
-void DeferredRendererService::UpdateSunLightQuad(const SceneGraph::LightInfo& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
+void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
 
 }
 
-void DeferredRendererService::BindGBufferToLightingQuadMesh(const Renderer::MeshPrimitivePtr& mesh)
+void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh)
 {
     assert(m_configuration);
     if (!mesh) return;
@@ -347,4 +419,11 @@ void DeferredRendererService::BindGBufferToLightingQuadMesh(const Renderer::Mesh
         { m_configuration->GbufferSpecularSemantic(), m_gBuffer->GetRenderTargetTexture(), 2 },
         { m_configuration->GbufferDepthSemantic(), m_gBuffer->GetRenderTargetTexture(), 3 } };
     mesh->ChangeTextureMap({ textures });
+}
+
+void DeferredRendererService::BindGBufferToLightVolume(const std::shared_ptr<LightVolumePawn>& volume)
+{
+    if (!volume) return;
+    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(volume->GetPrimitive());
+    if (mesh) BindGBufferToLightingMesh(mesh);
 }

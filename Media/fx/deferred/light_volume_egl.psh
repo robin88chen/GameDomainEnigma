@@ -1,0 +1,66 @@
+#version 300 es
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic GBufferNormalTexture GBufferNormalMap
+//semantic GBufferSpecularTexture GBufferSpecularMap
+//semantic GBufferDepthTexture GBufferDepthMap
+//semantic View View
+//semantic TangentFov TangentFov
+//semantic LightPos[0] PointLightPosition
+//semantic LightColor[0] PointLightColor
+//semantic LightAtten[0] PointLightAttenuation
+//sampler_state DiffuseMapSampler GBufferDiffuseTexture
+//sampler_state NormalMapSampler GBufferNormalTexture
+//sampler_state SpecularMapSampler GBufferSpecularTexture
+//sampler_state DepthMapSampler GBufferDepthTexture
+precision highp float;
+uniform sampler2D GBufferDiffuseTexture;
+uniform sampler2D GBufferNormalTexture;
+uniform sampler2D GBufferSpecularTexture;
+uniform sampler2D GBufferDepthTexture;
+uniform mat4 View;
+uniform vec4 TangentFov;
+uniform vec4 LightPos[4];  // 一次處理一個光源，所以只有 index 0 用到，也就是 light volume 自己的光
+uniform vec4 LightColor[4];
+uniform vec4 LightAtten[4];
+in vec2 vTexCo;
+in vec2 vProjPos;
+out vec4 outColor;
+
+float SampleDepth(vec2 texco)
+{
+	vec4 depth_vec = texture(GBufferDepthTexture, texco);
+	// must use highp uint
+	highp uint r = uint(roundEven(depth_vec.r * 255.0f));
+	highp uint g = uint(roundEven(depth_vec.g * 255.0f));
+	highp uint b = uint(roundEven(depth_vec.b * 255.0f));
+	highp uint a = uint(roundEven(depth_vec.a * 255.0f));
+	highp uint depth_uint = (r << 24) + (g << 16) + (b << 8) + (a);
+	//if ((r == 255u) && (g == 255u)) depth_uint = uint(0);
+    if ((r == 0u) && (g == 0u) && (b == 0u)) return 0.0f; // depth_uint = uint(0);
+	float depth_view = uintBitsToFloat(depth_uint);
+    return depth_view;
+}
+
+void main()
+{
+    vec4 diffuse = texture(GBufferDiffuseTexture, vTexCo);
+	vec4 spec_texcolor = texture(GBufferSpecularTexture, vTexCo);
+    vec3 nor = texture(GBufferNormalTexture, vTexCo).xyz;
+    float pos_z = SampleDepth(vTexCo);
+
+	vec4 view_space_pos = vec4( vProjPos.x * TangentFov.x * pos_z, vProjPos.y * TangentFov.y * pos_z,
+                                pos_z, 1.0 );
+   	vec4 light_pos= vec4(LightPos[0].x, LightPos[0].y, LightPos[0].z, 1.0 ) * View;
+    vec3 lit_dir = (light_pos - view_space_pos).xyz;
+	float dist = length ( lit_dir );
+	float light_att = LightAtten[0].x + dist * LightAtten[0].y + dist * dist * LightAtten[0].z;
+	if (light_att <= 0.0001f) light_att = 1.0f;
+	lit_dir = normalize ( lit_dir );
+
+	float range_ratio = ( LightPos[0].w > dist ) ? ((LightPos[0].w - dist) / LightPos[0].w) : 0.0;
+	    //if ( dist < LightPos[0].w ) diffuse += ( LightColor[0] * range_ratio / light_att * saturate ( dot ( nor, lit_dir ) ) );
+	vec4 liting_color = ( LightColor[0]  * range_ratio / light_att * clamp ( dot ( nor, lit_dir ), 0.0f, 1.0f ) );
+    
+    outColor = liting_color * diffuse;
+}
+

@@ -63,6 +63,7 @@ namespace Enigma::SceneGraph
     public:
         PawnDtoHelper(const std::string& name);
 
+        PawnDtoHelper& Factory(const Engine::FactoryDesc& factory);
         PawnDtoHelper& LocalTransform(const MathLib::Matrix4& local_transform);
         PawnDtoHelper& WorldTransform(const MathLib::Matrix4& world_transform);
         PawnDtoHelper& ModelBound(const Engine::BoundingVolume& model_bound);

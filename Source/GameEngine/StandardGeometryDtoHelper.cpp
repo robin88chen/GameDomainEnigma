@@ -3,6 +3,7 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "MathLib/ContainmentBox3.h"
+#include "MathLib/MathGlobal.h"
 
 using namespace Enigma::Engine;
 
@@ -57,7 +58,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::TextureCoord(const MathLib::Vector2& l
     tex_dto.Texture2DCoords() = texcoords;
     m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = m_dto.TextureCoords().size();
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
@@ -66,16 +67,16 @@ GenericDto SquareQuadDtoHelper::ToGenericDto()
     assert(m_dto.Position3s() || m_dto.Position4s());
     m_dto.VertexFormat() = m_format.ToString();
     m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (m_dto.Position3s())
+    if (auto& pos3 = m_dto.Position3s())
     {
-        MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(m_dto.Position3s().value()[0]), static_cast<unsigned>(m_dto.Position3s().value().size()));
-        auto bb = BoundingVolume{ box };
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
+        const auto bb = BoundingVolume{ box };
         m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
     }
-    else if (m_dto.Position4s())
+    else if (auto& pos4 = m_dto.Position4s())
     {
-        MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(m_dto.Position4s().value()[0]), static_cast<unsigned>(m_dto.Position4s().value().size()));
-        auto bb = BoundingVolume{ box };
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
+        const auto bb = BoundingVolume{ box };
         m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
     }
     return m_dto.ToGenericDto();
@@ -240,7 +241,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, 
     tex_dto.Texture2DCoords() = texcoords;
     m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = m_dto.TextureCoords().size();
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
@@ -276,7 +277,7 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector2& left_bot
     tex_dto.Texture2DCoords() = texcoords;
     m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = m_dto.TextureCoords().size();
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
@@ -296,7 +297,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector3& left_bottom_f
     tex_dto.Texture3DCoords() = texcoords;
     m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = m_dto.TextureCoords().size();
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
@@ -340,7 +341,7 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector3& left_bot
     tex_dto.Texture3DCoords() = texcoords;
     m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = m_dto.TextureCoords().size();
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
@@ -349,17 +350,229 @@ GenericDto CubeDtoHelper::ToGenericDto()
     assert(m_dto.Position3s() || m_dto.Position4s());
     m_dto.VertexFormat() = m_format.ToString();
     m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (m_dto.Position3s())
+    if (auto& pos = m_dto.Position3s())
     {
-        MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(m_dto.Position3s().value()[0]), static_cast<unsigned>(m_dto.Position3s().value().size()));
-        auto bb = BoundingVolume{ box };
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos.value()[0]), static_cast<unsigned>(pos.value().size()));
+        const auto bb = BoundingVolume{ box };
         m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
     }
-    else if (m_dto.Position4s())
+    else if (auto& pos4 = m_dto.Position4s())
     {
-        MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(m_dto.Position4s().value()[0]), static_cast<unsigned>(m_dto.Position4s().value().size()));
-        auto bb = BoundingVolume{ box };
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
+        const auto bb = BoundingVolume{ box };
         m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
     }
     return m_dto.ToGenericDto();
 }
+
+SphereDtoHelper::SphereDtoHelper(const std::string& name)
+{
+    m_radius = 1.0f;
+    m_dto.Name() = name;
+    const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
+    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+}
+
+SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
+{
+    m_center = center;
+    m_radius = radius;
+
+    // copy from WildMagic5, StandardMesh::Sphere
+    // 原程式是右手座標系的, 要改左手, z軸改為y軸, 三角形頂點順序調整
+    // 座標位置加上sphere center
+    if (stacks < 4) stacks = 4;
+    unsigned int zsm1 = stacks - 1, zsm2 = stacks - 2, zsm3 = stacks - 3;
+    int rsp1 = slices + 1;
+    int numVertices = static_cast<int>(zsm2) * rsp1 + 2;
+    int numTriangles = 2 * static_cast<int>(zsm2) * slices;
+    int numIndices = 3 * numTriangles;
+
+    std::vector<MathLib::Vector3> vecPos(numVertices);
+    std::vector<MathLib::Vector3> vecNor(numVertices);
+    std::vector<MathLib::Vector2> uvTex(numVertices);
+    uint_buffer vtxIndex(numIndices);
+
+    // Generate geometry.
+    float invRS = 1.0f / static_cast<float>(slices);
+    float zFactor = 2.0f / static_cast<float>(zsm1);
+    unsigned int r, z, zStart, i;
+    MathLib::Vector2 tcoord;
+
+    // Generate points on the unit circle to be used in computing the mesh
+    // points on a cylinder slice.
+    std::vector<float> sn;
+    sn.resize(rsp1);
+    std::vector<float> cs;
+    cs.resize(rsp1);
+    for (r = 0; r < static_cast<unsigned>(slices); ++r)
+    {
+        float angle = MathLib::Math::TWO_PI * invRS * static_cast<float>(r);
+        cs[r] = std::cos(angle);
+        sn[r] = std::sin(angle);
+    }
+    sn[slices] = sn[0];
+    cs[slices] = cs[0];
+
+    // Generate the cylinder itself.
+    for (z = 1, i = 0; z < zsm1; ++z)
+    {
+        float zFraction = -1.0f + zFactor * static_cast<float>(z);  // in (-1,1)
+        float zValue = radius * zFraction;
+
+        // Compute center of slice.
+        MathLib::Vector3 sliceCenter(0.0f, zValue, 0.0f);
+
+        // Compute radius of slice.
+        float sliceRadius = std::sqrt(std::fabs(radius * radius - zValue * zValue));
+
+        // Compute slice vertices with duplication at endpoint.
+        MathLib::Vector3 normal;
+        int save = static_cast<int>(i);
+        for (r = 0; r < static_cast<unsigned>(slices); ++r)
+        {
+            float radialFraction = static_cast<float>(r) * invRS;  // in [0,1)
+            MathLib::Vector3 radial(sn[r], 0.0f, cs[r]);
+
+            vecPos[i] = sliceCenter + sliceRadius * radial;
+
+            // 球的中心點在(0,0,0), normal 就跟位置是一樣的
+            normal = vecPos[i];
+            vecNor[i] = normal.Normalize();
+            vecPos[i] += center;
+
+            tcoord[0] = radialFraction;
+            tcoord[1] = 0.5f * (zFraction + 1.0f);
+            uvTex[i] = tcoord;
+
+            ++i;
+        }
+
+        vecPos[i] = vecPos[save];
+        vecNor[i] = vecNor[save];
+
+        tcoord[0] = 1.0f;
+        tcoord[1] = 0.5f * (zFraction + 1.0f);
+        uvTex[i] = tcoord;
+
+        ++i;
+    }
+
+    // south pole
+    vecPos[i] = MathLib::Vector3(0.0f, -radius, 0.0f);
+    vecNor[i] = MathLib::Vector3(0.0f, -1.0f, 0.0f);
+    vecPos[i] += center;
+
+    tcoord = MathLib::Vector2(0.5f, 0.5f);
+    uvTex[i] = tcoord;
+
+    ++i;
+
+    // north pole
+    vecPos[i] = MathLib::Vector3(0.0f, radius, 0.0f);
+    vecNor[i] = MathLib::Vector3(0.0f, 1.0f, 0.0f);
+    vecPos[i] += center;
+
+    tcoord = MathLib::Vector2(0.5f, 1.0f);
+    uvTex[i] = tcoord;
+
+    ++i;
+
+    // Generate indices.
+    unsigned int* indices = &vtxIndex[0];
+    for (z = 0, zStart = 0; z < zsm3; ++z)
+    {
+        unsigned int i0 = zStart;
+        unsigned int i1 = i0 + 1;
+        zStart += rsp1;
+        unsigned int i2 = zStart;
+        unsigned int i3 = i2 + 1;
+        for (i = 0; i < static_cast<unsigned>(slices); ++i, indices += 6)
+        {
+            indices[0] = i0++;
+            indices[1] = i2;
+            indices[2] = i1;
+            indices[3] = i1++;
+            indices[4] = i2++;
+            indices[5] = i3++;
+        }
+    }
+
+    // south pole triangles
+    int numVerticesM2 = numVertices - 2;
+    for (i = 0; i < static_cast<unsigned>(slices); ++i, indices += 3)
+    {
+        indices[0] = i;
+        indices[2] = i + 1;
+        indices[1] = numVerticesM2;
+    }
+
+    // north pole triangles
+    int numVerticesM1 = numVertices - 1, offset = static_cast<int>(zsm3) * rsp1;
+    for (i = 0; i < static_cast<unsigned>(slices); ++i, indices += 3)
+    {
+        indices[0] = i + offset;
+        indices[2] = numVerticesM1;
+        indices[1] = i + 1 + offset;
+    }
+
+    m_dto.Position3s() = vecPos;
+    m_dto.Indices() = vtxIndex;
+    m_dto.Segments() = { 0, static_cast<unsigned>(numVertices), 0, static_cast<unsigned>(numIndices) };
+    m_dto.VertexUsedCount() = static_cast<unsigned>(numVertices);
+    m_dto.IndexUsedCount() = static_cast<unsigned>(numIndices);
+    m_dto.VertexCapacity() = static_cast<unsigned>(numVertices);
+    m_dto.IndexCapacity() = static_cast<unsigned>(numIndices);
+    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+
+    m_normals = vecNor;
+    m_tex_coords = uvTex;
+
+    return *this;
+}
+
+SphereDtoHelper& SphereDtoHelper::Normal()
+{
+    m_dto.Normals() = m_normals;
+    m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+    return *this;
+}
+
+SphereDtoHelper& SphereDtoHelper::TextureCoord()
+{
+    size_t tex_stage_count = m_dto.TextureCoords().size();
+    TextureCoordDto tex_dto;
+    tex_dto.Texture2DCoords() = m_tex_coords;
+    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_format.m_texCoordSize[tex_stage_count] = 2;
+    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    return *this;
+}
+
+SphereDtoHelper& SphereDtoHelper::SphereBound()
+{
+    const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
+    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+    return *this;
+}
+
+SphereDtoHelper& SphereDtoHelper::BoxBound()
+{
+    MathLib::Box3 box;
+    box.Center() = m_center;
+    box.Extent(0) = m_radius;
+    box.Extent(1) = m_radius;
+    box.Extent(2) = m_radius;
+
+    const auto bb = BoundingVolume{ box };
+    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+    return *this;
+}
+
+GenericDto SphereDtoHelper::ToGenericDto()
+{
+    m_dto.VertexFormat() = m_format.ToString();
+    m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
+    return m_dto.ToGenericDto();
+}
+

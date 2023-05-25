@@ -58,6 +58,17 @@ const std::string& DeferredRendererServiceConfiguration::LightVolumePassFxFileNa
     return m_lightVolumePassFxFileName;
 }
 
+std::string& DeferredRendererServiceConfiguration::LightVolumeEffectName()
+{
+    return m_lightVolumeEffectName;
+}
+
+const std::string& DeferredRendererServiceConfiguration::LightVolumeEffectName() const
+{
+    assert(!m_lightVolumeEffectName.empty());
+    return m_lightVolumeEffectName;
+}
+
 std::string& DeferredRendererServiceConfiguration::DeferredRendererTechniqueName()
 {
     return m_deferredRendererTechniqueName;

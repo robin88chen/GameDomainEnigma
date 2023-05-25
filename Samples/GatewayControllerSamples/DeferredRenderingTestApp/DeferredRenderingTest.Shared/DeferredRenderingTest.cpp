@@ -113,6 +113,8 @@ void DeferredRenderingTest::InstallEngine()
     deferred_config->AmbientPassFxFileName() = "fx/DeferredShadingAmbientPass.efx@APK_PATH";
     deferred_config->SunLightEffectName() = "DeferredShadingSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingSunLightPass.efx@APK_PATH";
+    deferred_config->LightVolumeEffectName() = "DeferredShadingLightVolume";
+    deferred_config->LightVolumePassFxFileName() = "fx/DeferredShadingLightVolume.efx@APK_PATH";
     deferred_config->DeferredRendererTechniqueName() = "DeferredRenderer";
     deferred_config->GbufferTargetName() = "gbuffer_target";
     deferred_config->GbufferSurfaceName() = "gbuffer_surface";
@@ -180,6 +182,7 @@ void DeferredRenderingTest::OnSceneGraphRootCreated(const Enigma::Frameworks::IE
     m_sceneRoot = ev->GetSceneRoot();
     CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
     CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.8f, 0.8f, 0.8f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreatePointLight>(ev->GetSceneRoot(), Matrix4::IDENTITY, "point_lit", Vector3(1.0f, 1.0f, 1.0f), ColorRGBA(0.0f, 1.0f, 1.0f, 1.0f)));
     CreateCubePawn();
 }
 

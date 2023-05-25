@@ -158,6 +158,12 @@ PawnDtoHelper::PawnDtoHelper(const std::string& name)
     m_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
 }
 
+PawnDtoHelper& PawnDtoHelper::Factory(const Engine::FactoryDesc& factory)
+{
+    m_dto.TheFactoryDesc() = factory;
+    return *this;
+}
+
 PawnDtoHelper& PawnDtoHelper::LocalTransform(const MathLib::Matrix4& local_transform)
 {
     m_dto.LocalTransform() = local_transform;

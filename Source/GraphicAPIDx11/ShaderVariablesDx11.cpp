@@ -509,9 +509,21 @@ void ShaderVariableDx11_Vector::SetValue(std::any data)
     if (m_owner.expired()) return;
     try
     {
+        float* values;
+        MathLib::Vector4 vec;
+        if (data.type() == typeid(MathLib::Vector4))
+        {
+            vec = std::any_cast<MathLib::Vector4>(data);
+            values = static_cast<float*>(vec);
+        }
+        else
+        {
+            values = std::any_cast<float*>(data);
+        }
+        assert(values);
         MathLib::Vector4 value = std::any_cast<MathLib::Vector4>(data);
         unsigned char* dest = m_owner.lock()->GetDataBuff() + m_offset;
-        memcpy_s(dest, sizeof(MathLib::Vector4), &value, sizeof(MathLib::Vector4));
+        memcpy_s(dest, sizeof(MathLib::Vector4), values, sizeof(MathLib::Vector4));
         m_owner.lock()->SetDirty();
     }
     catch (const std::bad_any_cast& e)

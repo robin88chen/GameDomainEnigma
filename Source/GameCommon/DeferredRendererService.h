@@ -10,11 +10,11 @@
 
 #include "SceneRendererService.h"
 #include "Renderer/MeshPrimitive.h"
-#include "SceneGraph/SpatialRenderState.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "Frameworks/ResponseSubscriber.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include <memory>
 #include <unordered_map>
 
@@ -30,6 +30,7 @@ namespace Enigma::GameCommon
         DeferredRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
             const std::shared_ptr<GameCameraService>& camera_service,
             const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
+            const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
             std::unique_ptr<DeferredRendererServiceConfiguration> configuration);
         DeferredRendererService(const DeferredRendererService&) = delete;
         DeferredRendererService(DeferredRendererService&&) = delete;
@@ -71,6 +72,7 @@ namespace Enigma::GameCommon
 
     private:
         std::unique_ptr<DeferredRendererServiceConfiguration> m_configuration;
+        std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
         Renderer::MeshPrimitivePtr m_ambientLightQuad;
         Renderer::MeshPrimitivePtr m_sunLightQuad;

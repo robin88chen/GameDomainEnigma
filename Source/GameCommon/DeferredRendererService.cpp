@@ -38,9 +38,11 @@ DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
 DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
+    const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
     std::unique_ptr<DeferredRendererServiceConfiguration> configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager)
 {
     m_configuration = std::move(configuration);
+    m_sceneGraphRepository = scene_graph_repository;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
 }
@@ -282,6 +284,10 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     {
         m_sceneService.lock()->GetSceneRoot()->AttachChild(pawn, pawn->GetLocalTransform());
     }
+    if (!m_sceneGraphRepository.expired())
+    {
+        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(ev->GetSceneGraphId()));
+    }
     m_lightVolumes.insert_or_assign(ev->GetSceneGraphId(), pawn);
     BindGBufferToLightVolume(pawn);
 }
@@ -294,6 +300,7 @@ void DeferredRendererService::OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& 
     auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Pawn>(ev->GetPawn());
     if (!pawn) return;
     BindGBufferToLightVolume(pawn);
+    pawn->NotifySpatialRenderStateChanged();
 }
 
 void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)

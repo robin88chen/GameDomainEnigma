@@ -181,8 +181,9 @@ void DeferredRenderingTest::OnSceneGraphRootCreated(const Enigma::Frameworks::IE
     if (!ev) return;
     m_sceneRoot = ev->GetSceneRoot();
     CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.8f, 0.8f, 0.8f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreatePointLight>(ev->GetSceneRoot(), Matrix4::IDENTITY, "point_lit", Vector3(1.0f, 1.0f, 1.0f), ColorRGBA(0.0f, 1.0f, 1.0f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f)));
+    auto mx = Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
+    CommandBus::Post(std::make_shared<CreatePointLight>(ev->GetSceneRoot(), mx, "point_lit", Vector3(2.0f, 2.0f, 2.0f), ColorRGBA(1.0f, 0.0f, 1.0f, 1.0f), 3.50f));
     CreateCubePawn();
 }
 
@@ -193,6 +194,7 @@ void DeferredRenderingTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPt
     if (!ev) return;
     auto top_spatials = ev->GetTopLevelSpatial();
     if (top_spatials.empty()) return;
+    if (ev->GetSceneGraphId() != "cube_pawn") return;
     m_pawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
     if (m_sceneRoot) m_sceneRoot->AttachChild(m_pawn, Matrix4::IDENTITY);
 }

@@ -35,7 +35,7 @@ namespace Enigma::GameCommon
             const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const;
 
         void CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
-            const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color) const;
+            const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range) const;
 
     protected:
         void DoCreatingAmbientLight(const Frameworks::ICommandPtr& command) const;

@@ -36,8 +36,9 @@ error DeferredRendererInstallingPolicy::Install(Frameworks::ServiceManager* serv
     auto scene_service = service_manager->GetSystemServiceAs<GameSceneService>();
     auto camera_service = service_manager->GetSystemServiceAs<GameCameraService>();
     auto render_manager = service_manager->GetSystemServiceAs<Renderer::RendererManager>();
+    auto scene_graph_repo = service_manager->GetSystemServiceAs<SceneGraph::SceneGraphRepository>();
     auto deferred_renderer_service = std::make_shared<DeferredRendererService>(service_manager,
-               scene_service, camera_service, render_manager, std::move(m_config));
+               scene_service, camera_service, render_manager, scene_graph_repo, std::move(m_config));
     service_manager->RegisterSystemService(deferred_renderer_service);
     service_manager->InsertHashAsService(SceneRendererService::TYPE_RTTI, deferred_renderer_service);
 

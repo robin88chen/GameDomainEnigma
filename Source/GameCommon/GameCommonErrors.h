@@ -16,6 +16,7 @@ namespace Enigma::GameCommon
     {
         ok = 0,
         nullPortalManagement,
+        nullHostLight,
     };
     class ErrorCategory : public std::error_category
     {

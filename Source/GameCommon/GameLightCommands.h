@@ -52,14 +52,15 @@ namespace Enigma::GameCommon
     {
     public:
         CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
-            const std::string& lightName, const MathLib::Vector3& pos, const MathLib::ColorRGBA& color)
-            : m_parent(parent), m_mxLocal(mxLocal), m_lightName(lightName), m_pos(pos), m_color(color) {}
+            const std::string& lightName, const MathLib::Vector3& pos, const MathLib::ColorRGBA& color, float range)
+            : m_parent(parent), m_mxLocal(mxLocal), m_lightName(lightName), m_pos(pos), m_color(color), m_range(range) {}
 
         std::shared_ptr<SceneGraph::Node> GetParent() const { return m_parent.lock(); }
         const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocal; }
         const std::string& GetLightName() const { return m_lightName; }
         const MathLib::Vector3& GetPos() const { return m_pos; }
         const MathLib::ColorRGBA& GetColor() const { return m_color; }
+        float GetRange() const { return m_range; }
 
     protected:
         std::weak_ptr<SceneGraph::Node> m_parent;
@@ -67,6 +68,7 @@ namespace Enigma::GameCommon
         std::string m_lightName;
         MathLib::Vector3 m_pos;
         MathLib::ColorRGBA m_color;
+        float m_range;
     };
     //------------------------------------------------------------------
     class ChangeLightColor : public Frameworks::ICommand

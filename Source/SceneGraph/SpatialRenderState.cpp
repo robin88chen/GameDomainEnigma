@@ -11,10 +11,22 @@ using namespace Enigma::Frameworks;
 
 SpatialRenderState::SpatialRenderState() : m_requestRuid()
 {
+    m_onLightingStateResponse = nullptr;
+}
+
+SpatialRenderState::SpatialRenderState(const Engine::RenderLightingState& lightingState) : m_requestRuid()
+{
+    m_lightingState = lightingState;
+    m_onLightingStateResponse = nullptr;
 }
 
 SpatialRenderState::~SpatialRenderState()
 {
+    if (m_onLightingStateResponse)
+    {
+        ResponseBus::Unsubscribe(typeid(SpatialLightInfoResponse), m_onLightingStateResponse);
+        m_onLightingStateResponse = nullptr;
+    }
 }
 
 void SpatialRenderState::QueryLightingState(const MathLib::Vector3& spatialPos)
@@ -34,8 +46,6 @@ void SpatialRenderState::OnLightingStateResponse(const Frameworks::IResponsePtr&
     auto res = std::dynamic_pointer_cast<SpatialLightInfoResponse, IResponse>(r);
     if (!res) return;
     if (res->GetRequestRuid() != m_requestRuid) return;
-    ResponseBus::Unsubscribe(typeid(SpatialLightInfoResponse), m_onLightingStateResponse);
-    m_onLightingStateResponse = nullptr;
 
     if (!res->GetErrorCode()) m_lightingState = res->GetLightingState();
 }

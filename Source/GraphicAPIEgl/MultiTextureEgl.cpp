@@ -26,6 +26,7 @@ MultiTextureEgl::~MultiTextureEgl()
 
 error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
+    Platforms::Debug::Printf("GLES CreateFromSystemMemories");
     assert(count == buffs.size());
     error er;
     for (unsigned i = 0; i < count; i++)
@@ -140,6 +141,7 @@ const std::vector<GLuint>& MultiTextureEgl::GetTextureHandlesArray() const
 error MultiTextureEgl::CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
                                                  const byte_buffer& buff)
 {
+    Platforms::Debug::Printf("GLES Create One FromSystemMemories");
     if (FATAL_LOG_EXPR((m_textures.empty()) || (index >= m_textures.size()))) return ErrorCode::nullEglTexture;
     glBindTexture(GL_TEXTURE_2D, m_textures[index]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(dimension.m_width), static_cast<GLsizei>(dimension.m_height), 0, GL_RGBA, GL_UNSIGNED_BYTE, &buff[0]);

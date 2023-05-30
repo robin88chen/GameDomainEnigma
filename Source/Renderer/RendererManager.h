@@ -77,6 +77,8 @@ namespace Enigma::Renderer
         void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const;
+        void DoChangingViewPort(const Frameworks::ICommandPtr& c) const;
+        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c) const;
 
     protected:
         Frameworks::CommandSubscriberPtr m_doCreatingRenderer;
@@ -84,6 +86,8 @@ namespace Enigma::Renderer
         Frameworks::CommandSubscriberPtr m_doCreatingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doDestroyingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
+        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
+        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
 
         using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;

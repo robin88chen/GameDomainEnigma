@@ -31,6 +31,11 @@ namespace Enigma::GameCommon
 
         const std::string& DeferredRendererTechniqueName() const;
         std::string& DeferredRendererTechniqueName();
+        const std::string& VisualTechniqueNameForCameraDefault() const;
+        std::string& VisualTechniqueNameForCameraDefault();
+        const std::string& VisualTechniqueNameForCameraInside() const;
+        std::string& VisualTechniqueNameForCameraInside();
+
         const std::string& GbufferTargetName() const;
         std::string& GbufferTargetName();
         const std::string& GbufferSurfaceName() const;
@@ -56,6 +61,8 @@ namespace Enigma::GameCommon
         std::string m_lightVolumeEffectName;
 
         std::string m_deferredRendererTechniqueName;
+        std::string m_visualTechniqueNameForCameraDefault;
+        std::string m_visualTechniqueNameForCameraInside;
         std::string m_gbufferTargetName;
         std::string m_gbufferSurfaceName;
         std::string m_gbufferDepthName;

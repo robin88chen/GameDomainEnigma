@@ -80,6 +80,27 @@ const std::string& DeferredRendererServiceConfiguration::DeferredRendererTechniq
     return m_deferredRendererTechniqueName;
 }
 
+std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraDefault()
+{
+    return m_visualTechniqueNameForCameraDefault;
+}
+
+const std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraDefault() const
+{
+    assert(!m_visualTechniqueNameForCameraDefault.empty());
+    return m_visualTechniqueNameForCameraDefault;
+}
+
+std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraInside()
+{
+    return m_visualTechniqueNameForCameraInside;
+}
+
+const std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraInside() const
+{
+    assert(!m_visualTechniqueNameForCameraInside.empty());
+    return m_visualTechniqueNameForCameraInside;
+}
 std::string& DeferredRendererServiceConfiguration::GbufferTargetName()
 {
     return m_gbufferTargetName;

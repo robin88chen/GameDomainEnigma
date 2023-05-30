@@ -109,7 +109,7 @@ namespace Enigma::Graphics
     {
     public:
         CreatePrimarySurface(const std::string& back_name, const std::string& depth_name)
-    		: m_backName(back_name), m_depthName(depth_name) {};
+            : m_backName(back_name), m_depthName(depth_name) {};
         const std::string& GetBacksurfaceName() const { return m_backName; }
         const std::string& GetDepthsurfaceName() const { return m_depthName; }
     private:
@@ -134,7 +134,7 @@ namespace Enigma::Graphics
     public:
         CreateMultiBacksurface(const std::string& back_name, const MathLib::Dimension& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts)
-    			: m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
+                : m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
         const std::string& GetBacksurfaceName() const { return m_backName; }
         const MathLib::Dimension& GetDimension() const { return m_dimension; }
         unsigned int GetSurfaceCount() const { return m_buffCount; }
@@ -162,7 +162,7 @@ namespace Enigma::Graphics
     {
     public:
         ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth)
-    	: m_depthName(depth_name), m_fromDepth(from_depth) {};
+        : m_depthName(depth_name), m_fromDepth(from_depth) {};
         const std::string& GetDepthStencilSurfaceName() const { return m_depthName; }
         const IDepthStencilSurfacePtr& GetSourceDepth() const { return m_fromDepth; }
     private:
@@ -171,7 +171,7 @@ namespace Enigma::Graphics
     };
 
     /** resize surface */
-    class ResizeBackSurface : public Frameworks::ICommand
+    /*class ResizeBackSurface : public Frameworks::ICommand
     {
     public:
         ResizeBackSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
@@ -190,7 +190,7 @@ namespace Enigma::Graphics
     private:
         std::string m_name;
         MathLib::Dimension m_dimension;
-    };
+    };*/
 
     /** create shaders */
     class CreateVertexShader : public Frameworks::ICommand

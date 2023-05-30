@@ -208,7 +208,7 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
         isCurrentBound = true;
         Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(nullptr, nullptr));
     }
-    Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeBackSurface>(m_backSurface->GetName(), dimension));
+    m_backSurface->ResizeSurface(dimension);
     m_dimension = m_backSurface->GetDimension();
 
     // 好...來...因為back buffer surface實際上已經重新create了,
@@ -220,7 +220,7 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     }
     if (m_depthStencilSurface)
     {
-        Frameworks::CommandBus::Post(std::make_shared<Graphics::ResizeDepthSurface>(m_depthStencilSurface->GetName(), dimension));
+        m_depthStencilSurface->ResizeSurface(dimension);
     }
     if (isCurrentBound)
     {
@@ -271,13 +271,6 @@ void RenderTarget::SubscribeHandler()
         [=](auto e) { this->OnDepthSurfaceResized(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
 
-    m_doChangingViewPort =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
-    m_doChangingClearingProperty =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
-
     m_onCreateTextureResponse = std::make_shared<Frameworks::ResponseSubscriber>(
         [=](auto r) { this->OnCreateTextureResponse(r); });
     Frameworks::ResponseBus::Subscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
@@ -298,11 +291,6 @@ void RenderTarget::UnsubscribeHandler()
     m_onBackSurfaceResized = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
     m_onDepthSurfaceResized = nullptr;
-
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
-    m_doChangingViewPort = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
-    m_doChangingClearingProperty = nullptr;
 
     Frameworks::ResponseBus::Unsubscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
     m_onCreateTextureResponse = nullptr;
@@ -443,24 +431,6 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
         InitViewPortSize();
         Frameworks::EventPublisher::Post(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
     }
-}
-
-void RenderTarget::DoChangingViewPort(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<ChangeTargetViewPort, Frameworks::ICommand>(c);
-    if (!cmd) return;
-    if (cmd->GetRenderTargetName() != m_name) return;
-    SetViewPort(cmd->GetViewPort());
-}
-
-void RenderTarget::DoChangingClearingProperty(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<ChangeTargetClearingProperty, Frameworks::ICommand>(c);
-    if (!cmd) return;
-    if (cmd->GetRenderTargetName() != m_name) return;
-    ChangeClearingProperty(cmd->GetProperty());
 }
 
 void RenderTarget::OnCreateTextureResponse(const Frameworks::IResponsePtr& r)

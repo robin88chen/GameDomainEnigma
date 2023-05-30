@@ -61,6 +61,8 @@ namespace Enigma::GameCommon
         void BindGBufferToLightVolume(const std::shared_ptr<LightVolumePawn>& volume);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
+        void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
+        void OnSceneGraphChanged(const Frameworks::IEventPtr& e);
         void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
@@ -69,6 +71,11 @@ namespace Enigma::GameCommon
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
         void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& response);
+
+        std::shared_ptr<LightVolumePawn> FindLightVolume(const std::string& name);
+
+        void CheckLightVolumeBackfaceCulling(const std::string& lit_name);
+        void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
     private:
         std::unique_ptr<DeferredRendererServiceConfiguration> m_configuration;
@@ -85,6 +92,8 @@ namespace Enigma::GameCommon
         Renderer::RenderTargetPtr m_gBuffer;
 
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
+        Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
+        Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
         Frameworks::EventSubscriberPtr m_onGBufferTextureCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;

@@ -209,11 +209,11 @@ error Spatial::SetLocalTransform(const MathLib::Matrix4& mx)
     return _UpdateLocalTransform(mx);
 }
 
-void Spatial::ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::shared_ptr<Node>& new_parent_node)
+void Spatial::ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option)
 {
     Vector3 vecLocalPos = vecWorldPos;
     NodePtr targetParentNode = std::dynamic_pointer_cast<Node, Spatial>(GetParent());
-    if (new_parent_node) targetParentNode = new_parent_node;  // if New Parent Node is 0, we no change parent node
+    if (new_parent_option) targetParentNode = new_parent_option.value();  // if New Parent Node is null opt, we no change parent node
     if (targetParentNode) // 有parent node, 取得local pos
     {
         Matrix4 mxNewParentWorldInv = targetParentNode->GetWorldTransform().Inverse();
@@ -226,7 +226,14 @@ void Spatial::ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
     {
         NodePtr node = std::dynamic_pointer_cast<Node, Spatial>(GetParent());
         if (node) node->DetachChild(ThisSpatial());
-        if (targetParentNode) targetParentNode->AttachChild(ThisSpatial(), mxNewLocalTransform);
+        if (targetParentNode)
+        {
+            targetParentNode->AttachChild(ThisSpatial(), mxNewLocalTransform);
+        }
+        else
+        {
+            SetLocalTransform(mxNewLocalTransform);
+        }
     }
     else
     {

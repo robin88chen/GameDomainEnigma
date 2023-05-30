@@ -1,5 +1,6 @@
 ﻿#include "DeferredRendererService.h"
 #include "DeferredRendererServiceConfiguration.h"
+#include "GameCameraEvents.h"
 #include "GameSceneService.h"
 #include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
@@ -20,6 +21,7 @@
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
+#include "GameCommon/GameCameraService.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -45,6 +47,8 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     m_sceneGraphRepository = scene_graph_repository;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
+    LightVolumePawn::SetDefaultVisualTech(m_configuration->VisualTechniqueNameForCameraDefault());
+    LightVolumePawn::SetInsideVisualTech(m_configuration->VisualTechniqueNameForCameraInside());
 }
 
 DeferredRendererService::~DeferredRendererService()
@@ -60,6 +64,10 @@ ServiceResult DeferredRendererService::OnInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
+    EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
     m_onGBufferTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGBufferTextureCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
@@ -83,6 +91,10 @@ ServiceResult DeferredRendererService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    m_onGameCameraUpdated = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
+    m_onSceneGraphChanged = nullptr;
     EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onGBufferTextureCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
@@ -200,6 +212,33 @@ void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEv
     CreateGBuffer(primaryTarget);
 }
 
+void DeferredRendererService::OnGameCameraUpdated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<GameCommon::GameCameraUpdated, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (!ev->GetCamera()) return;
+    for (auto& kv : m_lightVolumes)
+    {
+        CheckLightVolumeBackfaceCulling(kv.second, ev->GetCamera());
+    }
+}
+
+void DeferredRendererService::OnSceneGraphChanged(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::SceneGraphChanged, Frameworks::IEvent>(e);
+    if ((!ev) || (ev->GetChild())) return;
+    // 抓light entity 被 attach 的訊息來改變 light volume 的 parent
+    if (!ev->GetChild()->TypeInfo().IsDerived(Light::TYPE_RTTI)) return;
+    if (ev->GetNotifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
+    const auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
+    if (!light) return;
+    const auto lightVolume = FindLightVolume(light->GetSpatialName());
+    auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetParentNode());
+    if (lightVolume) lightVolume->ChangeWorldPosition(lightVolume->GetWorldPosition(), parent_node);
+}
+
 void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
@@ -290,6 +329,7 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     }
     m_lightVolumes.insert_or_assign(ev->GetSceneGraphId(), pawn);
     BindGBufferToLightVolume(pawn);
+    CheckLightVolumeBackfaceCulling(ev->GetSceneGraphId());
 }
 
 void DeferredRendererService::OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e)
@@ -301,6 +341,7 @@ void DeferredRendererService::OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& 
     if (!pawn) return;
     BindGBufferToLightVolume(pawn);
     pawn->NotifySpatialRenderStateChanged();
+    CheckLightVolumeBackfaceCulling(pawn->GetHostLightName());
 }
 
 void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
@@ -395,22 +436,60 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
 
 void DeferredRendererService::DeletePointLightVolume(const std::string& name)
 {
-
+    if (const auto it = m_lightVolumes.find(name); it != m_lightVolumes.end())
+    {
+        const auto& pawn = it->second;
+        pawn->DetachFromParent();
+        m_lightVolumes.erase(it);
+    }
 }
 
 void DeferredRendererService::UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
-
+    assert(lit);
+    if (notify != LightInfoUpdated::NotifyCode::Color) return;
+    m_ambientQuadLightingState.SetAmbientLightColor(lit->GetLightColor());
 }
 
 void DeferredRendererService::UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
+    assert(lit);
+    if (lit->Info().GetLightType() != LightInfo::LightType::Point) return;
+    const auto& volume = FindLightVolume(lit->GetSpatialName());
+    if (notify == LightInfoUpdated::NotifyCode::Position)
+    {
+        volume->ChangeWorldPosition(lit->GetLightPosition(), std::nullopt);
+    }
+    else if (notify == LightInfoUpdated::NotifyCode::Range)
+    {
+        volume->SetLocalUniformScale(lit->GetLightRange());
+    }
+    else if (notify == LightInfoUpdated::NotifyCode::Enable)
+    {
+        if (lit->Info().IsEnable())
+        {
+            volume->RemoveSpatialFlag(Spatial::Spatial_Hide);
+        }
+        else
+        {
+            volume->AddSpatialFlag(Spatial::Spatial_Hide);
+        }
+    }
+    else if (notify == LightInfoUpdated::NotifyCode::Color)
+    {
+        volume->NotifySpatialRenderStateChanged();
+    }
 
+    CheckLightVolumeBackfaceCulling(lit->GetSpatialName());
 }
 
 void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
-
+    assert(lit);
+    if ((notify == LightInfoUpdated::NotifyCode::Color) || (notify == LightInfoUpdated::NotifyCode::Direction))
+    {
+        m_sunLightQuadLightingState.SetSunLight(lit->GetLightDirection(), lit->GetLightColor());
+    }
 }
 
 void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh)
@@ -433,4 +512,40 @@ void DeferredRendererService::BindGBufferToLightVolume(const std::shared_ptr<Lig
     if (!volume) return;
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(volume->GetPrimitive());
     if (mesh) BindGBufferToLightingMesh(mesh);
+}
+
+std::shared_ptr<LightVolumePawn> DeferredRendererService::FindLightVolume(const std::string& name)
+{
+    if (const auto it = m_lightVolumes.find(name); it != m_lightVolumes.end())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
+void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::string& lit_name)
+{
+    auto lit_vol = FindLightVolume(lit_name);
+    if (!lit_vol) return;
+    if (m_cameraService.expired()) return;
+    auto camera = m_cameraService.lock()->GetPrimaryCamera();
+    if (!camera) return;
+    CheckLightVolumeBackfaceCulling(lit_vol, camera);
+}
+
+void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol,
+    const std::shared_ptr<SceneGraph::Camera>& cam)
+{
+    if (!lit_vol) return;
+    if (!cam) return;
+    const BoundingVolume& bv = lit_vol->GetWorldBound();
+    if (bv.IsEmpty()) return;
+    if (bv.PointInside(cam->GetLocation()))
+    {
+        lit_vol->ToggleCameraInside(true);
+    }
+    else
+    {
+        lit_vol->ToggleCameraInside(false);
+    }
 }

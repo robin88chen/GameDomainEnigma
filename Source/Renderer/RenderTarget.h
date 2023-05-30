@@ -84,6 +84,7 @@ namespace Enigma::Renderer
         /** get depth stencil buffer */
         Graphics::IDepthStencilSurfacePtr GetDepthStencilSurface() { return m_depthStencilSurface; };
 
+        void SetViewPort(const Graphics::TargetViewPort& vp);
         /** get viewport */
         const Graphics::TargetViewPort& GetViewPort();
 
@@ -118,6 +119,7 @@ namespace Enigma::Renderer
         void SetGBufferDepthMapIndex(unsigned int index);
         //@}
 
+
     protected:
         void SubscribeHandler();
         void UnsubscribeHandler();
@@ -130,9 +132,7 @@ namespace Enigma::Renderer
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
             RenderTargetClearingBits flag = RenderTargetClear::BothBuffer) const;
-
-        void SetViewPort(const Graphics::TargetViewPort& vp);
-
+        
         /** @name event handler */
         //@{
         void OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e);
@@ -140,11 +140,6 @@ namespace Enigma::Renderer
         void OnDepthSurfaceCreated(const Frameworks::IEventPtr& e);
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
-        //@}
-        /** @name command handler */
-        //@{
-        void DoChangingViewPort(const Frameworks::ICommandPtr& c);
-        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c);
         //@}
         void OnCreateTextureResponse(const Frameworks::IResponsePtr& r);
 
@@ -170,9 +165,6 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onDepthSurfaceCreated;
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
-
-        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
-        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
 
         Frameworks::ResponseSubscriberPtr m_onCreateTextureResponse;
 

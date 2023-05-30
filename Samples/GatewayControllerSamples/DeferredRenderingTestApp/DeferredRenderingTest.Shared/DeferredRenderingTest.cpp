@@ -116,6 +116,8 @@ void DeferredRenderingTest::InstallEngine()
     deferred_config->LightVolumeEffectName() = "DeferredShadingLightVolume";
     deferred_config->LightVolumePassFxFileName() = "fx/DeferredShadingLightVolume.efx@APK_PATH";
     deferred_config->DeferredRendererTechniqueName() = "DeferredRenderer";
+    deferred_config->VisualTechniqueNameForCameraDefault() = "Default";
+    deferred_config->VisualTechniqueNameForCameraInside() = "Inside";
     deferred_config->GbufferTargetName() = "gbuffer_target";
     deferred_config->GbufferSurfaceName() = "gbuffer_surface";
     deferred_config->GbufferDepthName() = "gbuffer_depth";

@@ -52,6 +52,13 @@ Enigma::Frameworks::ServiceResult RendererManager::OnInit()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
     Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
 
+    m_doChangingViewPort =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    m_doChangingClearingProperty =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
+    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -69,6 +76,11 @@ Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
 
     Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
     m_doResizingPrimaryTarget = nullptr;
+
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    m_doChangingViewPort = nullptr;
+    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+    m_doChangingClearingProperty = nullptr;
 
     ClearAllRenderer();
     ClearAllRenderTarget();
@@ -270,4 +282,24 @@ void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
     DestroyRenderTarget(cmd->GetRenderTargetName());
+}
+
+void RendererManager::DoChangingViewPort(const Frameworks::ICommandPtr& c) const
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ChangeTargetViewPort, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    if (!target) return;
+    target->SetViewPort(cmd->GetViewPort());
+}
+
+void RendererManager::DoChangingClearingProperty(const Frameworks::ICommandPtr& c) const
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ChangeTargetClearingProperty, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    if (!target) return;
+    target->ChangeClearingProperty(cmd->GetProperty());
 }

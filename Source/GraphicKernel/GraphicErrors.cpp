@@ -30,6 +30,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::createDepthSurfaceFail: return "Create depth surface fail";
     case ErrorCode::dynamicCastSurface: return "Dynamic cast to device surface fail";
     case ErrorCode::nullBackSurface: return "null back surface";
+    case ErrorCode::surfaceNotBound: return "surface not bound";
 
     case ErrorCode::deviceCreateTexture: return "Device create texture fail";
     case ErrorCode::dxLoadTexture: return "Dx Load Texture fail";

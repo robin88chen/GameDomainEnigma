@@ -80,6 +80,7 @@ error Renderer::BeginScene()
     if (!m_target.expired())
     {
         m_target.lock()->Bind();
+        m_target.lock()->Clear();
         m_target.lock()->BindViewPort();
         Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
     }
@@ -102,6 +103,7 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
     if (!m_target.expired())
     {
         m_target.lock()->Bind();
+        m_target.lock()->Clear();
         m_target.lock()->BindViewPort();
         Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
     }

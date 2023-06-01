@@ -28,6 +28,14 @@ error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension& dimens
 {
     Platforms::Debug::Printf("GLES CreateFromSystemMemories");
     assert(count == buffs.size());
+    if (!m_textures.empty())
+    {
+        glDeleteTextures(static_cast<int>(m_textures.size()), &m_textures[0]);
+        m_textures.clear();
+    }
+
+    m_textures.resize(count);
+    glGenTextures(static_cast<GLsizei>(count), &m_textures[0]);
     error er;
     for (unsigned i = 0; i < count; i++)
     {
@@ -91,6 +99,7 @@ error MultiTextureEgl::SaveTextureImages(const std::vector<FileSystem::IFilePtr>
 
 error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf)
 {
+    Platforms::Debug::Printf("GLES Multi-Texture Use as backsurface");
     MultiBackSurfaceEgl* bb = dynamic_cast<MultiBackSurfaceEgl*>(back_surf.get());
     assert(bb);
     m_dimension = bb->GetDimension();

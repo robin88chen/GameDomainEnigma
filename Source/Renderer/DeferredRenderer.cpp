@@ -52,6 +52,7 @@ error DeferredRenderer::BeginScene()
     if (!m_gbufferTarget.expired())
     {
         m_gbufferTarget.lock()->Bind();
+        m_gbufferTarget.lock()->Clear();
         m_gbufferTarget.lock()->BindViewPort();
         Engine::MaterialVariableMap::UseViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
     }
@@ -74,6 +75,7 @@ error DeferredRenderer::BeginScene(const MathLib::Vector3& camera_loc, const Mat
     if (!m_gbufferTarget.expired())
     {
         m_gbufferTarget.lock()->Bind();
+        m_gbufferTarget.lock()->Clear();
         m_gbufferTarget.lock()->BindViewPort();
         Engine::MaterialVariableMap::UseViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
     }
@@ -96,6 +98,7 @@ error DeferredRenderer::DrawScene()
             {
                 error er_bind = m_target.lock()->Bind();
                 if (er_bind) return er_bind;
+                m_target.lock()->Clear();
                 er_bind = m_target.lock()->BindViewPort();
                 if (er_bind) return er_bind;
                 Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());

@@ -173,6 +173,9 @@ error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
     unsigned stencil_value)
 {
     assert(back_surface);
+    // 檢查是不是 bounded
+    if ((m_boundBackSurface != back_surface) || (m_boundDepthSurface != depth_surface)) return ErrorCode::surfaceNotBound;
+
     GLbitfield mask = GL_COLOR_BUFFER_BIT;
     // clear 之前，要先把 mask 設好，不然不會清 (很大的 trick)
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);

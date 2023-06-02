@@ -16,6 +16,7 @@ constexpr const char* SEMANTIC_FACE_TO_CAMERA_WORLD = "FaceToCameraWorld";
 constexpr const char* SEMANTIC_VIEW_PROJECTION = "ViewProjection";
 constexpr const char* SEMANTIC_WORLD_VIEW_PROJECTION = "WorldViewProjection";
 constexpr const char* SEMANTIC_WORLD_VIEW_PROJECTION_INVERSE = "WorldViewProjectionInv";
+constexpr const char* SEMANTIC_WORLD_VIEW_INVERSE_TRANSPOSE = "WorldViewInvTranspose";
 constexpr const char* SEMANTIC_TANGENT_FOV = "TangentFov";
 constexpr const char* SEMANTIC_AMBIENT_LIGHT = "AmbientLight";
 constexpr const char* SEMANTIC_SUN_LIGHT_COLOR = "SunLightColor";
@@ -106,25 +107,31 @@ void MaterialVariableMap::AssignFaceToCameraWorldTransform(EffectVariable& var)
 void MaterialVariableMap::AssignCameraViewProjectionTransform(EffectVariable& var)
 {
     assert(m_instance);
-    Matrix4 vp;
-    vp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform;
+    Matrix4 vp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform;
     var.AssignValue(vp);
 }
 
 void MaterialVariableMap::AssignWorldViewProjectionTransform(EffectVariable& var)
 {
     assert(m_instance);
-    Matrix4 wvp;
-    wvp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform * m_instance->m_mxWorldTransform;
+    Matrix4 wvp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform * m_instance->m_mxWorldTransform;
     var.AssignValue(wvp);
 }
 
 void MaterialVariableMap::AssignWorldViewProjectionInverseTransform(EffectVariable& var)
 {
     assert(m_instance);
-    Matrix4 wvpInv;
-    wvpInv = m_instance->m_mxWorldInvTransform * m_instance->m_mxViewInvTransform * m_instance->m_mxProjInvTransform;
+    Matrix4 wvpInv = m_instance->m_mxWorldInvTransform * m_instance->m_mxViewInvTransform * m_instance->
+        m_mxProjInvTransform;
     var.AssignValue(wvpInv);
+}
+
+void MaterialVariableMap::AssignWorldViewInverseTransposeMatrix(EffectVariable& var)
+{
+    assert(m_instance);
+    Matrix4 wvInvTrans = m_instance->m_mxWorldInvTransform * m_instance->m_mxViewInvTransform;
+    wvInvTrans = wvInvTrans.Transpose();
+    var.AssignValue(wvInvTrans);
 }
 
 void MaterialVariableMap::AssignFrustumTangentFov(EffectVariable& var)
@@ -259,6 +266,7 @@ void MaterialVariableMap::InitializeFunctionMap()
     m_assignFuncMap.emplace(SEMANTIC_VIEW_PROJECTION, AssignCameraViewProjectionTransform);
     m_assignFuncMap.emplace(SEMANTIC_WORLD_VIEW_PROJECTION, AssignWorldViewProjectionTransform);
     m_assignFuncMap.emplace(SEMANTIC_WORLD_VIEW_PROJECTION_INVERSE, AssignWorldViewProjectionInverseTransform);
+    m_assignFuncMap.emplace(SEMANTIC_WORLD_VIEW_INVERSE_TRANSPOSE, AssignWorldViewInverseTransposeMatrix);
     m_assignFuncMap.emplace(SEMANTIC_TANGENT_FOV, AssignFrustumTangentFov);
     m_assignFuncMap.emplace(SEMANTIC_VIEW_PORT_DIMENSION, AssignViewPortDimension);
     m_assignFuncMap.emplace(SEMANTIC_AMBIENT_LIGHT, AssignAmbientLightColor);

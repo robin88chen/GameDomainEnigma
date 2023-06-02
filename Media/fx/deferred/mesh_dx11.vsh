@@ -1,9 +1,11 @@
 //semantic World World
 //semantic View View
 //semantic Projection Projection
+//semantic wvInvTranspose WorldViewInvTranspose
 matrix World : World;
 matrix View : View;
 matrix Projection : Projection;
+matrix wvInvTranspose : WorldViewInvTranspose;
 struct VS_INPUT
 {
 	float4 Pos : POSITION;
@@ -13,7 +15,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;
-	float3 Nor : TEXCOORD0;
+	float3 Nor : TEXCOORD0;  // view space normal
 	float2 Coord : TEXCOORD1;
 	float Depth : TEXCOORD2;
 };
@@ -25,8 +27,7 @@ VS_OUTPUT vs_main(const VS_INPUT v)
     o.Depth = o.Pos.z;
     o.Pos = mul( o.Pos, Projection );
 	o.Coord = v.Coord;
-	o.Nor = mul( v.Nor, World);
-    o.Nor = mul( o.Nor, View);
+	o.Nor = mul( v.Nor, wvInvTranspose);
 	return o;
 };
 

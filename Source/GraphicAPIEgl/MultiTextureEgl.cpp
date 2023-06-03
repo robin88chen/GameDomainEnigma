@@ -117,7 +117,14 @@ error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     for (unsigned int i = 0; i < m_textures.size(); i++)
     {
         glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        if (i == 0)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height), 0, GL_RGBA, GL_FLOAT, nullptr);
+        }
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        }
         //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
         // 這幾個Texture Parameter 是必要的。同時，因為這個 Texture 並沒有 MipMap, 所以在 Texture Parameter &
         // Sampler Parameter 中，Mip Filter 要為 None.

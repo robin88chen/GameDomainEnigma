@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LightVolumePawn.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -28,7 +28,7 @@ namespace Enigma::GameCommon
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
         void SetHostLight(const std::shared_ptr<SceneGraph::Light>& light);
-        const std::string& GetHostLightName() const { return m_hostLight.expired() ? "" : m_hostLight.lock()->GetSpatialName(); }
+        std::string GetHostLightName() const { return m_hostLight.expired() ? "" : m_hostLight.lock()->GetSpatialName(); }
 
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
         void ToggleCameraInside(bool is_inside);

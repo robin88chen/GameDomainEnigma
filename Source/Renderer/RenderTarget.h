@@ -14,6 +14,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/ResponseSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
+#include "GraphicKernel/RenderTextureUsage.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -57,8 +58,8 @@ namespace Enigma::Renderer
             Count
         };
     public:
-        RenderTarget(const std::string& name, PrimaryType primary);
-        RenderTarget(const std::string& name);
+        RenderTarget(const std::string& name, PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
+        RenderTarget(const std::string& name, const std::vector<Graphics::RenderTextureUsage>& usages);
         RenderTarget(const RenderTarget&) = delete;
         RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
@@ -112,14 +113,6 @@ namespace Enigma::Renderer
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
 
-        /** @name depth map info */
-        //@{
-        bool HasGBufferDepthMap() const;
-        unsigned int GetGBufferDepthMapIndex() const;
-        void SetGBufferDepthMapIndex(unsigned int index);
-        //@}
-
-
     protected:
         void SubscribeHandler();
         void UnsubscribeHandler();
@@ -148,6 +141,7 @@ namespace Enigma::Renderer
 
         std::string m_name;
         MathLib::Dimension m_dimension;
+        std::vector<Graphics::RenderTextureUsage> m_usages;
 
         Graphics::IBackSurfacePtr m_backSurface;
         std::string m_backSurfaceName;

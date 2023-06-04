@@ -535,3 +535,69 @@ GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt)
     }
     return GL_TRIANGLES;
 }
+
+GLint GraphicFormatToGLSizedFormat(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        {
+            return GL_RGBA8;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_RGB8;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        {
+            return GL_RGBA16F;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_R32F;
+        }
+    }
+    return GL_RGBA8;
+}
+
+GLenum GraphicFormatToGLFormat(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        {
+            return GL_RGBA;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_RGB;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_RED;
+        }
+    }
+    return GL_RGBA;
+}
+
+GLenum GraphicFormatToGLPixelType(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_UNSIGNED_BYTE;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_FLOAT;
+        }
+    }
+    return GL_UNSIGNED_BYTE;
+}

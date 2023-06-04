@@ -152,7 +152,7 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
     return ErrorCode::ok;
 }
 
-error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf)
+error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);

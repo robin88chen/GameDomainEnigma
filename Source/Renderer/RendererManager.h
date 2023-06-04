@@ -59,7 +59,7 @@ namespace Enigma::Renderer
         Engine::IRendererPtr GetRenderer(const std::string& name) const;
 
         /** create render target */
-        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary);
+        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
 
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);

@@ -2,6 +2,13 @@
 #include <cassert>
 
 using namespace Enigma::GameCommon;
+using namespace Enigma::Graphics;
+
+DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
+{
+    m_gbufferUsages = { RenderTextureUsage::Normal, RenderTextureUsage::Albedo, RenderTextureUsage::Specular, RenderTextureUsage::Depth };
+    m_gbufferFormats = { GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_R32F };
+}
 
 std::string& DeferredRendererServiceConfiguration::AmbientPassFxFileName()
 {
@@ -132,6 +139,28 @@ const std::string& DeferredRendererServiceConfiguration::GbufferDepthName() cons
 {
     assert(!m_gbufferDepthName.empty());
     return m_gbufferDepthName;
+}
+
+std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::GbufferUsages()
+{
+    return m_gbufferUsages;
+}
+
+const std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::GbufferUsages() const
+{
+    assert(!m_gbufferUsages.empty());
+    return m_gbufferUsages;
+}
+
+std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::GbufferFormats()
+{
+    return m_gbufferFormats;
+}
+
+const std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::GbufferFormats() const
+{
+    assert(!m_gbufferFormats.empty());
+    return m_gbufferFormats;
 }
 
 std::string& DeferredRendererServiceConfiguration::GbufferNormalSemantic()

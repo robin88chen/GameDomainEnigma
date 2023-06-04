@@ -24,11 +24,13 @@ using namespace Enigma::Renderer;
 const std::string primary_back_surface_name = "primary_back_surface";
 const std::string primary_depth_surface_name = "primary_depth_surface";
 
-RenderTarget::RenderTarget(const std::string& name, PrimaryType primary) : m_dimension{ 1, 1 }
+RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, 
+    const std::vector<Graphics::RenderTextureUsage>& usages) : m_dimension{ 1, 1 }
 {
     m_isPrimary = primary == PrimaryType::IsPrimary;
     m_name = name;
     m_renderTargetTexture = nullptr;
+    m_usages = usages;
 
     m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
@@ -44,11 +46,13 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary) : m_dim
     }
 }
 
-RenderTarget::RenderTarget(const std::string& name) : m_dimension{ 1, 1 }
+RenderTarget::RenderTarget(const std::string& name, const std::vector<Graphics::RenderTextureUsage>& usages)
+    : m_dimension{ 1, 1 }
 {
     m_isPrimary = false;
     m_name = name;
     m_renderTargetTexture = nullptr;
+    m_usages = usages;
 
     m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
@@ -216,7 +220,7 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     //todo : render target texture
     if (m_renderTargetTexture)
     {
-        m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface);
+        m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
     }
     if (m_depthStencilSurface)
     {
@@ -228,26 +232,6 @@ error RenderTarget::Resize(const MathLib::Dimension& dimension)
     }
 
     return ErrorCode::ok;
-}
-
-bool RenderTarget::HasGBufferDepthMap() const
-{
-    if (!m_backSurface) return false;
-    if (!m_backSurface->IsMultiSurface()) return false;
-    if (m_gbufferDepthMapIndex == 0) return false;
-    return true;
-}
-
-unsigned RenderTarget::GetGBufferDepthMapIndex() const
-{
-    return m_gbufferDepthMapIndex;
-}
-
-void RenderTarget::SetGBufferDepthMapIndex(unsigned index)
-{
-    if (!m_backSurface) return;
-    if (!m_backSurface->IsMultiSurface()) return;
-    m_gbufferDepthMapIndex = index;
 }
 
 void RenderTarget::SubscribeHandler()
@@ -441,6 +425,6 @@ void RenderTarget::OnCreateTextureResponse(const Frameworks::IResponsePtr& r)
     if (!m_backSurface) return;
     if (res->GetName() != m_backSurface->GetName()) return;
     m_renderTargetTexture = res->GetTexture();
-    m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface);
+    m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
     Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), res->GetName()));
 }

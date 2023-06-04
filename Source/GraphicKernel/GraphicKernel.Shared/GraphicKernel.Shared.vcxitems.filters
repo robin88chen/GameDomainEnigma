@@ -129,6 +129,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VertexDescription.h">
       <Filter>Shaders\Vertex Declaration</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTextureUsage.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">

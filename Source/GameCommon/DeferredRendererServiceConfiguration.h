@@ -8,13 +8,16 @@
 #ifndef DEFERRED_RENDERER_SERVICE_CONFIGURATION_H
 #define DEFERRED_RENDERER_SERVICE_CONFIGURATION_H
 #include <string>
+#include <vector>
+#include "GraphicKernel/RenderTextureUsage.h"
+#include "GraphicKernel/GraphicAPITypes.h"
 
 namespace Enigma::GameCommon
 {
     class DeferredRendererServiceConfiguration
     {
     public:
-        DeferredRendererServiceConfiguration() = default;
+        DeferredRendererServiceConfiguration();
 
         const std::string& AmbientPassFxFileName() const;
         std::string& AmbientPassFxFileName();
@@ -43,6 +46,11 @@ namespace Enigma::GameCommon
         const std::string& GbufferDepthName() const;
         std::string& GbufferDepthName();
 
+        const std::vector<Graphics::RenderTextureUsage>& GbufferUsages() const;
+        std::vector<Graphics::RenderTextureUsage>& GbufferUsages();
+        const std::vector<Graphics::GraphicFormat>& GbufferFormats() const;
+        std::vector<Graphics::GraphicFormat>& GbufferFormats();
+
         const std::string& GbufferNormalSemantic() const;
         std::string& GbufferNormalSemantic();
         const std::string& GbufferDiffuseSemantic() const;
@@ -66,6 +74,9 @@ namespace Enigma::GameCommon
         std::string m_gbufferTargetName;
         std::string m_gbufferSurfaceName;
         std::string m_gbufferDepthName;
+
+        std::vector<Graphics::RenderTextureUsage> m_gbufferUsages;
+        std::vector<Graphics::GraphicFormat> m_gbufferFormats;
 
         std::string m_gbufferNormalSemantic;
         std::string m_gbufferDiffuseSemantic;

@@ -39,6 +39,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexDeclaration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IVertexShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTextureUsage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VertexDescription.h" />
   </ItemGroup>

@@ -131,7 +131,7 @@ void DeferredRendererService::CreateSceneRenderSystem(const std::string& rendere
     RenderTargetPtr primaryTarget = rendererManager->GetPrimaryRenderTarget();
     if (!primaryTarget)
     {
-        rendererManager->CreateRenderTarget(target_name, RenderTarget::PrimaryType::IsPrimary);
+        rendererManager->CreateRenderTarget(target_name, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
         primaryTarget = rendererManager->GetPrimaryRenderTarget();
     }
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
@@ -174,19 +174,12 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
 
     auto [width, height] = primary_target->GetDimension();
 
-    m_rendererManager.lock()->CreateRenderTarget(m_configuration->GbufferTargetName(), RenderTarget::PrimaryType::NotPrimary);
+    m_rendererManager.lock()->CreateRenderTarget(m_configuration->GbufferTargetName(), RenderTarget::PrimaryType::NotPrimary,
+        m_configuration->GbufferUsages());
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (m_gBuffer)
     {
-        const std::vector<Graphics::GraphicFormat> formats =
-        {
-            Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_A16B16G16R16F),  // normal
-            Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_A16B16G16R16F),     // diffuse material
-            Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_A16B16G16R16F),     // specular material r,g,b, & shininess
-            Graphics::GraphicFormat(Graphics::GraphicFormat::FMT_R32F),          // depth
-        };
-        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, formats);
-        m_gBuffer->SetGBufferDepthMapIndex(3);
+        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, m_configuration->GbufferFormats());
         m_gBuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))

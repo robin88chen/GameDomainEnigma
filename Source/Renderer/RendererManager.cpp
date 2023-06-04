@@ -187,14 +187,14 @@ IRendererPtr RendererManager::GetRenderer(const std::string& name) const
     return it->second;
 }
 
-error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary)
+error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     if (auto target_check = GetRenderTarget(name))
     {
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
     }
-    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary) };
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, primary, usages) };
     m_renderTargets.emplace(name, target);
 
     if (primary == RenderTarget::PrimaryType::IsPrimary)
@@ -273,7 +273,7 @@ void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType());
+    CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType(), cmd->GetUsages());
 }
 
 void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)

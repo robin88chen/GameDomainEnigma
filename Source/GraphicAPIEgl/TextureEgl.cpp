@@ -13,6 +13,10 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
+extern GLint GraphicFormatToGLSizedFormat(const Enigma::Graphics::GraphicFormat& fmt);
+extern GLenum GraphicFormatToGLFormat(const Enigma::Graphics::GraphicFormat& fmt);
+extern GLenum GraphicFormatToGLPixelType(const Enigma::Graphics::GraphicFormat& fmt);
+
 TextureEgl::TextureEgl(const std::string& name) : ITexture(name)
 {
     m_texture = 0;
@@ -144,7 +148,7 @@ error TextureEgl::SaveTextureImage(const FileSystem::IFilePtr& file)
     return ErrorCode::ok;
 }
 
-error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf)
+error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     assert(m_texture != 0);
     BackSurfaceEgl* bb = dynamic_cast<BackSurfaceEgl*>(back_surf.get());
@@ -154,7 +158,9 @@ error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     unsigned int data_size = dimension.m_width * dimension.m_height * 4;
     byte_buffer data;
     data.resize(data_size);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>(dimension.m_width), static_cast<GLsizei>(dimension.m_height), 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GraphicFormatToGLSizedFormat(m_format),
+        static_cast<GLsizei>(dimension.m_width), static_cast<GLsizei>(dimension.m_height),
+        0, GraphicFormatToGLFormat(m_format), GraphicFormatToGLPixelType(m_format), &data[0]);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
     // 這幾個Texture Parameter 是必要的。同時，因為這個 Texture 並沒有 MipMap, 所以在 Texture Parameter &
     // Sampler Parameter 中，Mip Filter 要為 None.

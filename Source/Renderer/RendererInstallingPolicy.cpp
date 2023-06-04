@@ -29,7 +29,7 @@ error DefaultRendererInstallingPolicy::Install(Frameworks::ServiceManager* servi
     assert(manager);
     error er = manager->CreateRenderer(m_rendererName);
     if (er) return er;
-    er = manager->CreateRenderTarget(m_primaryTargetName, RenderTarget::PrimaryType::IsPrimary);
+    er = manager->CreateRenderTarget(m_primaryTargetName, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
     return er;
 }
 

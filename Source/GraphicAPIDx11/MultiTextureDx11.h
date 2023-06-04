@@ -26,7 +26,7 @@ namespace Enigma::Devices
         MultiTextureDx11& operator=(const MultiTextureDx11&) = delete;
         MultiTextureDx11& operator=(MultiTextureDx11&&) = delete;
 
-        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf) override;
+        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&) override;
 
         //virtual void LoadImageDimension(const std::string& filename, const std::string& path_id) override;
 

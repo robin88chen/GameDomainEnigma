@@ -46,7 +46,8 @@ void main()
     vec4 diffuse = texture(GBufferDiffuseTexture, vTexCo);
 	vec4 spec_texcolor = texture(GBufferSpecularTexture, vTexCo);
     vec3 nor = texture(GBufferNormalTexture, vTexCo).xyz;
-    float pos_z = SampleDepth(vTexCo);
+    //float pos_z = SampleDepth(vTexCo);
+    float pos_z = texture(GBufferDepthTexture, vTexCo).r;
 
 	vec4 view_space_pos = vec4( vProjPos.x * TangentFov.x * pos_z, vProjPos.y * TangentFov.y * pos_z,
                                 pos_z, 1.0 );

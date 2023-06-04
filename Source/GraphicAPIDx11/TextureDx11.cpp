@@ -427,7 +427,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     return ErrorCode::ok;
 }
 
-error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf)
+error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);

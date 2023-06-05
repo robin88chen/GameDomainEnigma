@@ -302,6 +302,15 @@ void RenderTarget::SetViewPort(const Graphics::TargetViewPort& vp)
     Frameworks::EventPublisher::Post(std::make_shared<TargetViewPortChanged>(shared_from_this(), m_viewPort));
 }
 
+std::optional<unsigned> RenderTarget::FindRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const
+{
+    for (unsigned i = 0; i < m_usages.size(); ++i)
+    {
+        if (m_usages[i] == usage) return i;
+    }
+    return std::nullopt;
+}
+
 void RenderTarget::OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
 {
     if (!m_isPrimary) return;

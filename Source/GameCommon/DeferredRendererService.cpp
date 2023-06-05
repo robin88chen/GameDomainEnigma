@@ -5,7 +5,6 @@
 #include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
 #include "Frameworks/CommandBus.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/DeferredRenderer.h"
 #include "SceneGraph/SceneGraphEvents.h"
@@ -179,7 +178,8 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (m_gBuffer)
     {
-        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, 4, m_configuration->GbufferFormats());
+        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, m_configuration->GbufferFormats().size(),
+            m_configuration->GbufferFormats());
         m_gBuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
@@ -493,10 +493,10 @@ void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrim
     if (!m_gBuffer->GetRenderTargetTexture()) return;
 
     EffectTextureMap::EffectTextures textures = {
-        { m_configuration->GbufferNormalSemantic(), m_gBuffer->GetRenderTargetTexture(), 0 },
-        { m_configuration->GbufferDiffuseSemantic(), m_gBuffer->GetRenderTargetTexture(), 1 },
-        { m_configuration->GbufferSpecularSemantic(), m_gBuffer->GetRenderTargetTexture(), 2 },
-        { m_configuration->GbufferDepthSemantic(), m_gBuffer->GetRenderTargetTexture(), 3 } };
+        { m_configuration->GbufferNormalSemantic(), m_gBuffer->GetRenderTargetTexture(), m_gBuffer->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
+        { m_configuration->GbufferDiffuseSemantic(), m_gBuffer->GetRenderTargetTexture(), m_gBuffer->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
+        { m_configuration->GbufferSpecularSemantic(), m_gBuffer->GetRenderTargetTexture(), m_gBuffer->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
+        { m_configuration->GbufferDepthSemantic(), m_gBuffer->GetRenderTargetTexture(), m_gBuffer->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
     mesh->ChangeTextureMap({ textures });
 }
 

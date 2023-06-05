@@ -113,6 +113,8 @@ namespace Enigma::Renderer
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
 
+        std::optional<unsigned> FindRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
+
     protected:
         void SubscribeHandler();
         void UnsubscribeHandler();
@@ -125,7 +127,7 @@ namespace Enigma::Renderer
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
             RenderTargetClearingBits flag = RenderTargetClear::BothBuffer) const;
-        
+
         /** @name event handler */
         //@{
         void OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e);

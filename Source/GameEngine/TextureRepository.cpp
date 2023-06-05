@@ -17,7 +17,7 @@ DEFINE_RTTI(Engine, TextureRepository, ISystemService);
 TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager), m_currentRequestRuid()
 {
     m_needTick = false;
-    m_isCurrentLoading = false;
+    m_currentJob = TexturePolicy::JobType::None;
     m_loader = new TextureLoader(this);
 }
 
@@ -38,25 +38,39 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     m_doLoadingTexture =
         std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
     Frameworks::RequestBus::Subscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
+    m_doCreatingTexture =
+        std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
+    Frameworks::RequestBus::Subscribe(typeid(RequestCreateTexture), m_doCreatingTexture);
 
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
 {
-    if (m_isCurrentLoading) return Frameworks::ServiceResult::Pendding;
+    if (m_currentJob != TexturePolicy::JobType::None) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_requestsLock };
-    if (m_requests.empty())
+    if ((m_loadRequests.empty()) && (m_createRequests.empty()))
     {
         m_needTick = false;
         return Frameworks::ServiceResult::Pendding;
     }
     assert(m_loader);
-    auto r = m_requests.front();
-    m_currentRequestRuid = r->GetRuid();
-    m_loader->LoadTexture(r->GetPolicy());
-    m_requests.pop();
-    m_isCurrentLoading = true;
+    if (!m_loadRequests.empty())
+    {
+        auto r = m_loadRequests.front();
+        m_currentRequestRuid = r->GetRuid();
+        m_loader->LoadTexture(r->GetPolicy());
+        m_loadRequests.pop();
+        m_currentJob = TexturePolicy::JobType::Load;
+    }
+    else if (!m_createRequests.empty())
+    {
+        auto r = m_createRequests.front();
+        m_currentRequestRuid = r->GetRuid();
+        m_loader->LoadTexture(r->GetPolicy());
+        m_createRequests.pop();
+        m_currentJob = TexturePolicy::JobType::Create;
+    }
     return Frameworks::ServiceResult::Pendding;
 }
 
@@ -69,6 +83,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
 
     Frameworks::RequestBus::Unsubscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
     m_doLoadingTexture = nullptr;
+    Frameworks::RequestBus::Unsubscribe(typeid(RequestCreateTexture), m_doCreatingTexture);
+    m_doCreatingTexture = nullptr;
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -104,8 +120,15 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     if (!ev) return;
     std::lock_guard locker{ m_textureMapLock };
     m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
-    m_isCurrentLoading = false;
-    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
+    if (m_currentJob == TexturePolicy::JobType::Load)
+    {
+        Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
+    }
+    else if (m_currentJob == TexturePolicy::JobType::Create)
+    {
+        Frameworks::ResponseBus::Post(std::make_shared<CreateTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture(), ErrorCode::ok));
+    }
+    m_currentJob = TexturePolicy::JobType::None;
 }
 
 void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
@@ -116,16 +139,40 @@ void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n",
         ev->GetTextureName().c_str(), ev->GetError().message().c_str());
-    m_isCurrentLoading = false;
-    Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
+    if (m_currentJob == TexturePolicy::JobType::Load)
+    {
+        Frameworks::ResponseBus::Post(std::make_shared<LoadTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
+    }
+    else if (m_currentJob == TexturePolicy::JobType::Create)
+    {
+        Frameworks::ResponseBus::Post(std::make_shared<CreateTextureResponse>(m_currentRequestRuid, ev->GetTextureName(), nullptr, ev->GetError()));
+    }
+    else
+    {
+        assert(false);
+    }
+    m_currentJob = TexturePolicy::JobType::None;
 }
 
 void TextureRepository::DoLoadingTexture(const Frameworks::IRequestPtr& r)
 {
     if (!r) return;
-    auto req = std::dynamic_pointer_cast<RequestLoadTexture, Frameworks::IRequest>(r);
-    if (!req) return;
-    std::lock_guard locker{ m_requestsLock };
-    m_requests.push(req);
-    m_needTick = true;
+    if (auto req = std::dynamic_pointer_cast<RequestLoadTexture, Frameworks::IRequest>(r))
+    {
+        if (!req) return;
+        std::lock_guard locker{ m_requestsLock };
+        m_loadRequests.push(req);
+        m_needTick = true;
+    }
+    else if (auto req = std::dynamic_pointer_cast<RequestCreateTexture, Frameworks::IRequest>(r))
+    {
+        if (!req) return;
+        std::lock_guard locker{ m_requestsLock };
+        m_createRequests.push(req);
+        m_needTick = true;
+    }
+    else
+    {
+        assert(false);
+    }
 }

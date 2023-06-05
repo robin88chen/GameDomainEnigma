@@ -90,12 +90,13 @@ void GameLightService::CreateSunLight(const std::shared_ptr<SceneGraph::Node>& p
 }
 
 void GameLightService::CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
-    const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color) const
+    const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range) const
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Point);
     info.SetLightColor(color);
     info.SetLightPosition(vecPos);
+    info.SetLightRange(range);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (parent) parent->AttachChild(light, mxLocal);
 }
@@ -121,7 +122,7 @@ void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& comma
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreatePointLight, ICommand>(command);
     if (!cmd) return;
-    CreatePointLight(cmd->GetParent(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor());
+    CreatePointLight(cmd->GetParent(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor(), cmd->GetRange());
 }
 
 void GameLightService::DoChangingLightPosition(const Frameworks::ICommandPtr& command) const

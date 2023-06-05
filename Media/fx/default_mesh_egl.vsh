@@ -8,10 +8,18 @@ layout(location = 2) in vec2 texco;
 uniform mat4 World;
 uniform mat4 View;
 uniform mat4 Projection;
+out vec3 vNor;
 out vec2 vTexCo;
+out vec4 vWorldPos;
 void main() {
 	vec4 tpos = vec4(pos, 1.0) * World;
+	vWorldPos = tpos;
 	tpos = tpos * View;
 	gl_Position = tpos * Projection;
     vTexCo = texco;
+    mat4 nmx = World;
+    nmx = inverse(nmx);
+    nmx = transpose(nmx);
+    vec4 tnor = vec4(nor, 0.0) * nmx;
+    vNor = normalize(tnor.xyz);
 }

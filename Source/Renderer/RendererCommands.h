@@ -40,13 +40,17 @@ namespace Enigma::Renderer
     class CreateRenderTarget : public Frameworks::ICommand
     {
     public:
-        CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary)
-            : m_name(name), m_primary(primary) {}
+        CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, 
+            const std::vector<Graphics::RenderTextureUsage>& usages)
+                : m_name(name), m_primary(primary), m_usages(usages) {}
         const std::string& GetRenderTargetName() { return m_name; }
         RenderTarget::PrimaryType GetPrimaryType() const { return m_primary; }
+        const std::vector<Graphics::RenderTextureUsage>& GetUsages() const { return m_usages; }
+
     private:
         std::string m_name;
         RenderTarget::PrimaryType m_primary;
+        std::vector<Graphics::RenderTextureUsage> m_usages;
     };
     class DestroyRenderTarget : public Frameworks::ICommand
     {
@@ -79,7 +83,7 @@ namespace Enigma::Renderer
         const std::optional<MathLib::ColorRGBA>& GetClearingColor() const { return m_prop.m_color; }
         const std::optional<float>& GetClearingDepth() const { return m_prop.m_depth; }
         const std::optional<unsigned int>& GetClearingStencil() const { return m_prop.m_stencil; }
-        const std::optional<RenderTargetClearFlag>& GetClearingFlag() const { return m_prop.m_flag; }
+        const std::optional<RenderTargetClearingBits>& GetClearingBits() const { return m_prop.m_clearingBits; }
 
     private:
         std::string m_name;

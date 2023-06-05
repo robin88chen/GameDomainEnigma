@@ -1,0 +1,61 @@
+{
+	"Name" : "DeferredShadingLightVolume",
+	"VertexShaderList" : [
+	{"Name" : "deferred_light_volume_vs", "API" : "dx9", "File" : "fx/deferred/light_volume.vsh@APK_PATH", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz"},
+	{"Name" : "deferred_light_volume_vs", "API" : "dx11", "File" : "fx/deferred/light_volume_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz"},
+	{"Name" : "deferred_light_volume_vs", "API" : "egl", "File" : "fx/deferred/light_volume_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "deferred_light_volume_ps", "API" : "dx9", "File" : "fx/deferred/light_volume.psh@APK_PATH", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_light_volume_ps", "API" : "dx11", "File" : "fx/deferred/light_volume_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_light_volume_ps", "API" : "egl", "File" : "fx/deferred/light_volume_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "DiffuseMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "None"},
+    {"Name" : "NormalMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"},
+    {"Name" : "SpecularMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"},
+    {"Name" : "DepthMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"}
+    ],
+	"BlendStateList" : [
+	{"Name" : "blendAdditive", "BlendTypes" : ["Additive"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"RasterizerStateList" : [
+		{"Name" : "rasDefault", "CullMode" : "CW"},
+		{"Name" : "rasInside", "CullMode" : "CCW"}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false, "DepthWrite" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{ "Name" : "deferred_light_vol_default", "Program" : "deferred_light_vol", "VertexShader" : "deferred_light_volume_vs", "PixelShader" : "deferred_light_volume_ps", 
+            "SamplerState" : [{ "Sampler" : "DiffuseMapSampler", "Var" : "DiffuseMapSampler"},
+                { "Sampler" : "NormalMapSampler", "Var" : "NormalMapSampler"},
+                { "Sampler" : "SpecularMapSampler", "Var" : "SpecularMapSampler"},
+                { "Sampler" : "DepthMapSampler", "Var" : "DepthMapSampler"}],
+			"BlendState" : "blendAdditive",
+			"DepthState" : "depthDisable",
+			"RasterizerState" : "rasDefault" }
+		]
+	},
+	{"Name" : "DeferredRenderer/Inside",
+		"EffectPassArray" : [
+		{  "Name" : "deferred_light_vol_inside", "Program" : "deferred_light_vol", "VertexShader" : "deferred_light_volume_vs", "PixelShader" : "deferred_light_volume_ps", 
+            "SamplerState" : [{ "Sampler" : "DiffuseMapSampler", "Var" : "DiffuseMapSampler"},
+                { "Sampler" : "NormalMapSampler", "Var" : "NormalMapSampler"},
+                { "Sampler" : "SpecularMapSampler", "Var" : "SpecularMapSampler"},
+                { "Sampler" : "DepthMapSampler", "Var" : "DepthMapSampler"}],
+			"BlendState" : "blendAdditive",
+			"DepthState" : "depthDisable",
+			"RasterizerState" : "rasInside" }
+		]
+	}
+	]
+}

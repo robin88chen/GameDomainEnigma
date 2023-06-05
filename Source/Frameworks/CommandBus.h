@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CommandBus.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -19,14 +19,14 @@
 namespace Enigma::Frameworks
 {
     class IEvent;
-    /** message service */
+    /** command bus */
     class CommandBus : public ISystemService
     {
         DECLARE_RTTI;
     public:
         using CommandList = std::list<ICommandPtr>;
-        using SubscriberList = std::list<CommandSubscriberPtr>;
-        using CommandSubscriberMap = std::unordered_map<std::type_index, SubscriberList>;
+        /** one command must has only one subscriber */
+        using CommandSubscriberMap = std::unordered_map<std::type_index, CommandSubscriberPtr>;
     public:
         CommandBus(ServiceManager* manager);
         CommandBus(const CommandBus&) = delete;
@@ -52,7 +52,7 @@ namespace Enigma::Frameworks
         void CleanupAllCommands();
 
     protected:
-        void InvokeHandlers(const ICommandPtr& e, const SubscriberList& subscribers);
+        void InvokeHandler(const ICommandPtr& e, const CommandSubscriberPtr& subscriber);
 
     protected:
         static CommandBus* m_thisBus;

@@ -54,6 +54,7 @@ namespace Enigma::Engine
         static void AssignCameraViewProjectionTransform(EffectVariable& var);
         static void AssignWorldViewProjectionTransform(EffectVariable& var);
         static void AssignWorldViewProjectionInverseTransform(EffectVariable& var);
+        static void AssignWorldViewInverseTransposeMatrix(EffectVariable& var);
         static void AssignFrustumTangentFov(EffectVariable& var);
         /*static void AssignEffectTexture(EffectVariable& var);
         static void AssignBoneAnimationMatrix(EffectVariable& var);*/
@@ -105,6 +106,7 @@ namespace Enigma::Engine
         MathLib::Matrix4 m_mxProjInvTransform;
         MathLib::Matrix4 m_mxWorldTransform;
         MathLib::Matrix4 m_mxWorldInvTransform;
+        MathLib::Matrix4 m_mxWorldViewInvTranspose; //< for normal transform
         MathLib::Vector4 m_vecTangentFov;  //< tan(fovx) & tan(fovy), projection 與 view space 轉換計算要用
         MathLib::Matrix4 m_mxFaceToCameraWorldTransform;  //< Face to Camera world transform
 

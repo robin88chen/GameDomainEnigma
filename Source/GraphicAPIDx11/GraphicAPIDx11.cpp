@@ -209,6 +209,7 @@ error GraphicAPIDx11::ClearSurface(const Graphics::IBackSurfacePtr& back_surface
     float depth_value, unsigned int stencil_value)
 {
     error er = ErrorCode::ok;
+    if ((m_boundBackSurface != back_surface) || (m_boundDepthSurface != depth_surface)) return ErrorCode::surfaceNotBound;
     if (back_surface)
     {
         if (!back_surface->IsMultiSurface())

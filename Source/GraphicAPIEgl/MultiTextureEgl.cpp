@@ -12,6 +12,10 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
+extern GLint GraphicFormatToGLSizedFormat(const Enigma::Graphics::GraphicFormat& fmt);
+extern GLenum GraphicFormatToGLFormat(const Enigma::Graphics::GraphicFormat& fmt);
+extern GLenum GraphicFormatToGLPixelType(const Enigma::Graphics::GraphicFormat& fmt);
+
 MultiTextureEgl::MultiTextureEgl(const std::string& name) : IMultiTexture(name)
 {
 }
@@ -22,6 +26,27 @@ MultiTextureEgl::~MultiTextureEgl()
     {
         glDeleteTextures(static_cast<int>(m_textures.size()), &m_textures[0]);
     }
+}
+
+error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+{
+    assert(count == buffs.size());
+    if (!m_textures.empty())
+    {
+        glDeleteTextures(static_cast<int>(m_textures.size()), &m_textures[0]);
+        m_textures.clear();
+    }
+
+    m_textures.resize(count);
+    glGenTextures(static_cast<GLsizei>(count), &m_textures[0]);
+    error er;
+    for (unsigned i = 0; i < count; i++)
+    {
+        er = CreateOneFromSystemMemory(i, dimension, buffs[i]);
+        if (er) return er;
+    }
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
+    return er;
 }
 
 error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
@@ -75,7 +100,7 @@ error MultiTextureEgl::SaveTextureImages(const std::vector<FileSystem::IFilePtr>
     return ErrorCode::notImplement;
 }
 
-error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf)
+error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     MultiBackSurfaceEgl* bb = dynamic_cast<MultiBackSurfaceEgl*>(back_surf.get());
     assert(bb);
@@ -94,7 +119,8 @@ error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     for (unsigned int i = 0; i < m_textures.size(); i++)
     {
         glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GraphicFormatToGLSizedFormat(bb->GetSliceFormat(i)), static_cast<GLsizei>(m_dimension.m_width), static_cast<GLsizei>(m_dimension.m_height),
+            0, GraphicFormatToGLFormat(bb->GetSliceFormat(i)), GraphicFormatToGLPixelType(bb->GetSliceFormat(i)), nullptr);
         //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
         // 這幾個Texture Parameter 是必要的。同時，因為這個 Texture 並沒有 MipMap, 所以在 Texture Parameter &
         // Sampler Parameter 中，Mip Filter 要為 None.

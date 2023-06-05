@@ -142,15 +142,15 @@ error ITexture::SaveTextureImage(const std::string& filename, const std::string&
     return er;
 }
 
-void ITexture::AsBackSurface(const IBackSurfacePtr& back_surf)
+void ITexture::AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {
         IGraphicAPI::Instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), back_surf, this]() -> error { return UseAsBackSurface(back_surf); });
+            PushTask([lifetime = shared_from_this(), back_surf, usages, this]() -> error { return UseAsBackSurface(back_surf, usages); });
     }
     else
     {
-        UseAsBackSurface(back_surf);
+        UseAsBackSurface(back_surf, usages);
     }
 }

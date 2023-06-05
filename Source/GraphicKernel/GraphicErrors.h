@@ -34,6 +34,7 @@ namespace Enigma::Graphics
         createDepthSurfaceFail,
         dynamicCastSurface,
         nullBackSurface,
+        surfaceNotBound,
 
         deviceCreateTexture = 1201,
         dxLoadTexture,

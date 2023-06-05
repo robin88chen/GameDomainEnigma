@@ -27,7 +27,7 @@ void RenderLightingState::SetSunLight(const MathLib::Vector3& dir, const MathLib
 }
 
 void RenderLightingState::SetPointLightArray(const std::vector<MathLib::Vector4>& positions,
-    std::vector<MathLib::ColorRGBA>& colors, std::vector<MathLib::Vector4>& attenuations)
+    const std::vector<MathLib::ColorRGBA>& colors, const std::vector<MathLib::Vector4>& attenuations)
 {
     m_lightPositions = positions;
     m_lightColors = colors;

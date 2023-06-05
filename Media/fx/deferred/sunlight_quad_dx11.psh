@@ -1,0 +1,80 @@
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic GBufferNormalTexture GBufferNormalMap
+//semantic GBufferSpecularTexture GBufferSpecularMap
+//semantic GBufferDepthTexture GBufferDepthMap
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic View View
+//semantic ViewInv ViewInv
+//semantic TangentFov TangentFov
+Texture2D GBufferDiffuseTexture : GBufferDiffuseMap;
+Texture2D GBufferNormalTexture : GBufferNormalMap;
+Texture2D GBufferSpecularTexture : GBufferSpecularMap;
+Texture2D GBufferDepthTexture : GBufferDepthMap;
+float4 Ambient : AmbientLight;
+float4 SunColor : SunLightColor;
+float4 SunDir : SunLightDirection;
+matrix View : View;
+matrix ViewInv : ViewInv;
+float4 TangentFov : TangentFov;
+SamplerState DiffuseMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState NormalMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState SpecularMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState DepthMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+struct PS_INPUT
+{
+	float4 Pos : SV_POSITION;
+	float2 Coord : TEXCOORD0;
+    float2 ProjPos : TEXCOORD1;
+};
+struct PS_OUTPUT
+{
+	float4 Color : SV_TARGET0;
+};
+
+PS_OUTPUT ps_main(PS_INPUT input)
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+
+	float4 diffuse = GBufferDiffuseTexture.Sample( DiffuseMapSampler, input.Coord );
+	float4 spec_texcolor = GBufferSpecularTexture.Sample( SpecularMapSampler, input.Coord );
+	float3 nor = GBufferNormalTexture.Sample( NormalMapSampler, input.Coord );
+	float pos_z = GBufferDepthTexture.Sample( DepthMapSampler, input.Coord );
+
+	float4 view_space_pos = float4( input.ProjPos.x * TangentFov.x * pos_z, input.ProjPos.y * TangentFov.y * pos_z,
+                                pos_z, 1.0 );
+	float4 world_pos = mul(view_space_pos, ViewInv);
+	float spec_power = spec_texcolor.a;
+	spec_texcolor.a = 0;
+	float3 sun_dir = mul ( SunDir.xyz, View );
+	sun_dir = normalize( sun_dir );
+	float3 H = normalize ( sun_dir + float3(0, 0, -1) ); // in view space, view dir is -z
+	float cos_th = saturate ( dot ( nor, H ) );
+	float specular_coef = (cos_th <= 0.0f) ? 0.0f : pow ( cos_th, spec_power );
+	
+    float4 color = ( diffuse * saturate ( dot ( sun_dir, nor ) ) 
+                    + ( spec_texcolor * specular_coef ) ) * SunColor;
+
+    output.Color = color;
+	return output;
+};

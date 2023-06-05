@@ -11,6 +11,7 @@
 #include "GraphicAPITypes.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "Frameworks/ExtentTypesDefine.h"
+#include "RenderTextureUsage.h"
 #include <memory>
 #include <system_error>
 
@@ -48,12 +49,12 @@ namespace Enigma::Graphics
         virtual void Save(const FileSystem::IFilePtr& file);
         virtual void Save(const std::string& filename, const std::string& pathid);
 
-    	virtual void Create(const MathLib::Dimension& dimension, const byte_buffer& buff);
+        virtual void Create(const MathLib::Dimension& dimension, const byte_buffer& buff);
 
-    	virtual void Retrieve(const MathLib::Rect& rcSrc);
-    	virtual void Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);
+        virtual void Retrieve(const MathLib::Rect& rcSrc);
+        virtual void Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);
 
-        virtual void AsBackSurface(const IBackSurfacePtr& back_surf);
+        virtual void AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
         
         virtual const GraphicFormat& GetFormat() { return m_format; };
         virtual const MathLib::Dimension& GetDimension() { return m_dimension; };
@@ -70,7 +71,7 @@ namespace Enigma::Graphics
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
         virtual error SaveTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error UseAsBackSurface(const IBackSurfacePtr& back_surf) = 0;
+        virtual error UseAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
 
     protected:
         std::string m_name;

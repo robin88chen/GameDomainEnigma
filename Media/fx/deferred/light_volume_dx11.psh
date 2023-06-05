@@ -1,0 +1,78 @@
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic GBufferNormalTexture GBufferNormalMap
+//semantic GBufferSpecularTexture GBufferSpecularMap
+//semantic GBufferDepthTexture GBufferDepthMap
+//semantic View View
+//semantic TangentFov TangentFov
+//semantic LightPos PointLightPosition
+//semantic LightColor PointLightColor
+//semantic LightAtten PointLightAttenuation
+Texture2D GBufferDiffuseTexture : GBufferDiffuseMap;
+Texture2D GBufferNormalTexture : GBufferNormalMap;
+Texture2D GBufferSpecularTexture : GBufferSpecularMap;
+Texture2D GBufferDepthTexture : GBufferDepthMap;
+matrix View : View;
+float4 TangentFov : TangentFov;
+float4 LightPos[4] : PointLightPosition;  // 一次處理一個光源，所以只有 index 0 用到，也就是 light volume 自己的光
+float4 LightColor[4] : PointLightColor;
+float4 LightAtten[4] : PointLightAttenuation;
+SamplerState DiffuseMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState NormalMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState SpecularMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState DepthMapSampler
+{
+	Filter = MIN_MAG_LINEAR_MIP_NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+struct PS_INPUT
+{
+	float4 Pos : SV_POSITION;
+	float2 Coord : TEXCOORD0;
+    float2 ProjPos : TEXCOORD1;
+};
+struct PS_OUTPUT
+{
+	float4 Color : SV_TARGET0;
+};
+
+PS_OUTPUT ps_main(PS_INPUT input)
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+
+	float4 diffuse = GBufferDiffuseTexture.Sample( DiffuseMapSampler, input.Coord );
+	float4 spec_texcolor = GBufferSpecularTexture.Sample( SpecularMapSampler, input.Coord );
+	float3 nor = GBufferNormalTexture.Sample( NormalMapSampler, input.Coord );
+	float pos_z = GBufferDepthTexture.Sample( DepthMapSampler, input.Coord );
+
+	float4 view_space_pos = float4( input.ProjPos.x * TangentFov.x * pos_z, input.ProjPos.y * TangentFov.y * pos_z,
+                                pos_z, 1.0 );
+   	float4 light_pos= mul( float4(LightPos[0].x, LightPos[0].y, LightPos[0].z, 1.0 ), View );
+    float3 lit_dir = (light_pos - view_space_pos).xyz;
+	float dist = length ( lit_dir );
+	float light_att = LightAtten[0].x + dist * LightAtten[0].y + dist * dist * LightAtten[0].z;
+	if (light_att == 0) light_att = 1;
+	lit_dir = normalize ( lit_dir );
+
+	float range_ratio = ( LightPos[0].w > dist ) ? ((LightPos[0].w - dist) / LightPos[0].w) : 0.0;
+	    //if ( dist < LightPos[0].w ) diffuse += ( LightColor[0] * range_ratio / light_att * saturate ( dot ( nor, lit_dir ) ) );
+	float4 liting_color = ( LightColor[0]  * range_ratio / light_att * saturate ( dot ( nor, lit_dir ) ) );
+    
+    output.Color = liting_color * diffuse;
+	return output;
+};

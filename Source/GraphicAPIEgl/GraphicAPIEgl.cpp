@@ -173,6 +173,9 @@ error GraphicAPIEgl::ClearSurface(const Graphics::IBackSurfacePtr& back_surface,
     unsigned stencil_value)
 {
     assert(back_surface);
+    // 檢查是不是 bounded
+    if ((m_boundBackSurface != back_surface) || (m_boundDepthSurface != depth_surface)) return ErrorCode::surfaceNotBound;
+
     GLbitfield mask = GL_COLOR_BUFFER_BIT;
     // clear 之前，要先把 mask 設好，不然不會清 (很大的 trick)
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -531,4 +534,70 @@ GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt)
         break;
     }
     return GL_TRIANGLES;
+}
+
+GLint GraphicFormatToGLSizedFormat(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        {
+            return GL_RGBA8;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_RGB8;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        {
+            return GL_RGBA16F;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_R32F;
+        }
+    }
+    return GL_RGBA8;
+}
+
+GLenum GraphicFormatToGLFormat(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        {
+            return GL_RGBA;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_RGB;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_RED;
+        }
+    }
+    return GL_RGBA;
+}
+
+GLenum GraphicFormatToGLPixelType(const Enigma::Graphics::GraphicFormat& fmt)
+{
+    switch (fmt.fmt)
+    {
+        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+        {
+            return GL_UNSIGNED_BYTE;
+        }
+        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+        case Enigma::Graphics::GraphicFormat::FMT_R32F:
+        {
+            return GL_FLOAT;
+        }
+    }
+    return GL_UNSIGNED_BYTE;
 }

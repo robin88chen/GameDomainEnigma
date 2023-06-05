@@ -45,7 +45,7 @@ namespace Enigma::Engine
         std::string m_name;
         std::string m_semantic;
         std::any m_value;
-        unsigned int m_valueCount;
+        std::optional<unsigned> m_valueCount;
         VariableValueAssignFunc m_assign;
     };
 }

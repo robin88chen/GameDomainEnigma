@@ -76,6 +76,7 @@ namespace Enigma::Graphics
         void FromString(const std::string& fvf_string);
         /** Make String From Code */
         std::string ToString() const;
+        //todo : format code 常數物件；與實作脫離的格式名稱字串 (ex: "PositionNormalSingleUV")
     };
 
     class VertexDescription

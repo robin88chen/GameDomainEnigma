@@ -134,6 +134,15 @@ namespace Enigma::Graphics
         std::string m_name;
         std::error_code m_error;
     };
+    class MultiTextureResourceFromMemoryCreated : public Frameworks::IEvent
+    {
+    public:
+        MultiTextureResourceFromMemoryCreated(const std::string& texture_name) :
+            m_textureName(texture_name) {};
+        const std::string& GetTextureName() { return m_textureName; }
+    private:
+        std::string m_textureName;
+    };
     class TextureResourceImageLoaded : public Frameworks::IEvent
     {
     public:

@@ -78,9 +78,9 @@ namespace Enigma::SceneGraph
         Spatial& operator=(Spatial&&) = delete;
 
         virtual Engine::GenericDto SerializeDto();
-        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {};
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
 
-        const std::string& GetSpatialName() const { return m_name; };
+        const std::string& GetSpatialName() const { return m_name; }
 
         const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
@@ -88,7 +88,7 @@ namespace Enigma::SceneGraph
         //@{
         void LinkParent(const std::shared_ptr<Spatial>& parent);
         std::shared_ptr<Spatial> GetParent() const;
-        unsigned int GetGraphDepth() { return m_graphDepth; };
+        unsigned int GetGraphDepth() { return m_graphDepth; }
         void DetachFromParent();  ///< parent should not call this function, it will be recursive forever!!
         //@}
 
@@ -100,21 +100,21 @@ namespace Enigma::SceneGraph
         /** on cull visible, used by culler, for compute visible set (recursive calling)  */
         virtual error OnCullingVisible(Culler* culler, bool noCull) = 0;
         /** on complete not visible, only for top spatial, will not recursive */
-        virtual void OnCullingCompleteNotVisible(Culler*) {};
+        virtual void OnCullingCompleteNotVisible(Culler*) {}
         //@}
         /** is renderable object?? */
-        virtual bool IsRenderable() { return false; };
+        virtual bool IsRenderable() { return false; }
         /** insert spatial object to renderer */
-        virtual error InsertToRenderer(const Engine::IRendererPtr&) { return error{}; };
+        virtual error InsertToRenderer(const Engine::IRendererPtr&) { return error{}; }
 
         /** get world transform */
-        MathLib::Matrix4& GetWorldTransform() { return m_mxWorldTransform; };
+        MathLib::Matrix4& GetWorldTransform() { return m_mxWorldTransform; }
         /** get local transform */
-        MathLib::Matrix4& GetLocalTransform() { return m_mxLocalTransform; };
+        MathLib::Matrix4& GetLocalTransform() { return m_mxLocalTransform; }
         /** get model bound */
-        const Engine::BoundingVolume& GetModelBound() { return m_modelBound; };
+        const Engine::BoundingVolume& GetModelBound() { return m_modelBound; }
         /** get world bound */
-        const Engine::BoundingVolume& GetWorldBound() { return m_worldBound; };
+        const Engine::BoundingVolume& GetWorldBound() { return m_worldBound; }
         /** get parent world transform */
         MathLib::Matrix4 GetParentWorldTransform() const;
 
@@ -139,25 +139,25 @@ namespace Enigma::SceneGraph
         /** @name get local position attribute */
         //@{
         /** get local position */
-        MathLib::Vector3& GetLocalPosition() { return m_vecLocalPosition; };
+        MathLib::Vector3& GetLocalPosition() { return m_vecLocalPosition; }
         /** get local rotation matrix */
-        MathLib::Matrix3& GetLocalRotation() { return m_mxLocalRotation; };
+        MathLib::Matrix3& GetLocalRotation() { return m_mxLocalRotation; }
         /** get local rotation quaternion */
-        MathLib::Quaternion& GetLocalQuaternion() { return m_qtLocalQuaternion; };
+        MathLib::Quaternion& GetLocalQuaternion() { return m_qtLocalQuaternion; }
         /** get local rotation euler angle */
-        MathLib::Vector3& GetLocalEulerAngle() { return m_vecLocalEulerAngle; };
+        MathLib::Vector3& GetLocalEulerAngle() { return m_vecLocalEulerAngle; }
         /** get local scale */
-        MathLib::Vector3& GetLocalScale() { return m_vecLocalScale; };
+        MathLib::Vector3& GetLocalScale() { return m_vecLocalScale; }
         //@}
 
         /** @name get world position attribute */
         //@{
         /** get world position */
-        MathLib::Vector3& GetWorldPosition() { return m_vecWorldPosition; };
+        MathLib::Vector3& GetWorldPosition() { return m_vecWorldPosition; }
         //@}
 
         /** change world position, and attach to new parent node */
-        virtual void ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::shared_ptr<Node>& new_parent_node);
+        virtual void ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option);
 
         /** @name scene traveler */
         //@{
@@ -168,7 +168,7 @@ namespace Enigma::SceneGraph
         /** culling mode, default is dynamic */
         void SetCullingMode(CullingMode mode);
         /** get culling mode */
-        CullingMode GetCullingMode() { return m_cullingMode; };
+        CullingMode GetCullingMode() { return m_cullingMode; }
 
         /** add spatial flag */
         void AddSpatialFlag(SpatialFlags flag)
@@ -181,7 +181,7 @@ namespace Enigma::SceneGraph
             m_spatialFlags &= (~flag);
         }
         /** get spatial flag */
-        SpatialFlags GetSpatialFlag() { return m_spatialFlags; };
+        SpatialFlags GetSpatialFlag() { return m_spatialFlags; }
         /** test spatial flag */
         bool TestSpatialFlag(SpatialFlags flag)
         {
@@ -212,19 +212,19 @@ namespace Enigma::SceneGraph
         void AddNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags |= flag;
-        };
+        }
         /** remove spatial notify flag */
         void RemoveNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags &= (~flag);
-        };
+        }
         /** get spatial notify flag */
         NotifyFlags GetNotifyFlag() { return m_notifyFlags; };
         /** test spatial notify flag */
         bool TestNotifyFlag(NotifyFlags flag)
         {
             return (m_notifyFlags & flag).any();
-        };
+        }
 
         std::shared_ptr<Spatial> ThisSpatial()
         {

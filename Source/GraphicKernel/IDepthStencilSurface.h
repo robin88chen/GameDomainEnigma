@@ -12,7 +12,6 @@
 #include <system_error>
 #include "GraphicAPITypes.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Graphics
@@ -42,9 +41,9 @@ namespace Enigma::Graphics
         /// Graphic API Egl need this to bind surfaces together
         virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};
 
-    protected:
-        void DoResizing(const Frameworks::ICommandPtr& c);
+        virtual void ResizeSurface(const MathLib::Dimension& dimension);
 
+    protected:
         virtual error Resize(const MathLib::Dimension& dimension) = 0;
         virtual future_error AsyncResize(const MathLib::Dimension& dimension);
 
@@ -53,7 +52,6 @@ namespace Enigma::Graphics
         MathLib::Dimension m_dimension;
 
         GraphicFormat m_format;
-        Frameworks::CommandSubscriberPtr m_doResizing;
     };
     using IDepthStencilSurfacePtr = std::shared_ptr<IDepthStencilSurface>;
     using IDepthStencilSurfaceWeak = std::weak_ptr<IDepthStencilSurface>;

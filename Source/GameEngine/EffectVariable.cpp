@@ -8,7 +8,7 @@ EffectVariable::EffectVariable(const Graphics::IShaderVariablePtr& shader_variab
     m_shaderVariable = shader_variable;
     m_name = m_shaderVariable->GetVariableName();
     m_semantic = m_shaderVariable->GetVariableSemantic();
-    m_valueCount = 0;
+    m_valueCount = std::nullopt;
     m_assign = nullptr;
 }
 
@@ -72,7 +72,6 @@ bool EffectVariable::operator==(const EffectVariable& var)
 void EffectVariable::AssignValue(std::any value)
 {
     m_value = std::move(value);
-    m_valueCount = 1;
 }
 
 void EffectVariable::AssignValues(std::any value_array, unsigned value_count)
@@ -85,14 +84,14 @@ void EffectVariable::Commit()
 {
     if (m_assign) m_assign(*this);
     if (!m_shaderVariable) return;
-    if (m_valueCount == 0) return;
-    if (m_valueCount == 1)
+    if (!m_value.has_value()) return;
+    if (!m_valueCount)
     {
         m_shaderVariable->SetValue(m_value);
     }
     else
     {
-        m_shaderVariable->SetValues(m_value, m_valueCount);
+        m_shaderVariable->SetValues(m_value, m_valueCount.value());
     }
 }
 

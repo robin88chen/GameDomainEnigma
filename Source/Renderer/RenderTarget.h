@@ -12,7 +12,9 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/ResponseSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
+#include "GraphicKernel/RenderTextureUsage.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -56,8 +58,8 @@ namespace Enigma::Renderer
             Count
         };
     public:
-        RenderTarget(const std::string& name, PrimaryType primary);
-        RenderTarget(const std::string& name);
+        RenderTarget(const std::string& name, PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
+        RenderTarget(const std::string& name, const std::vector<Graphics::RenderTextureUsage>& usages);
         RenderTarget(const RenderTarget&) = delete;
         RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
@@ -83,6 +85,7 @@ namespace Enigma::Renderer
         /** get depth stencil buffer */
         Graphics::IDepthStencilSurfacePtr GetDepthStencilSurface() { return m_depthStencilSurface; };
 
+        void SetViewPort(const Graphics::TargetViewPort& vp);
         /** get viewport */
         const Graphics::TargetViewPort& GetViewPort();
 
@@ -110,12 +113,7 @@ namespace Enigma::Renderer
         /** resize target */
         error Resize(const MathLib::Dimension& dimension);
 
-        /** @name depth map info */
-        //@{
-        bool HasGBufferDepthMap() const;
-        unsigned int GetGBufferDepthMapIndex() const;
-        void SetGBufferDepthMapIndex(unsigned int index);
-        //@}
+        std::optional<unsigned> FindRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
 
     protected:
         void SubscribeHandler();
@@ -128,9 +126,7 @@ namespace Enigma::Renderer
         void InitViewPortSize();
 
         error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
-            RenderTargetClearFlag flag = RenderTargetClearFlag::BothBuffer) const;
-
-        void SetViewPort(const Graphics::TargetViewPort& vp);
+            RenderTargetClearingBits flag = RenderTargetClear::BothBuffer) const;
 
         /** @name event handler */
         //@{
@@ -140,17 +136,14 @@ namespace Enigma::Renderer
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
-        /** @name command handler */
-        //@{
-        void DoChangingViewPort(const Frameworks::ICommandPtr& c);
-        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c);
-        //@}
+        void OnCreateTextureResponse(const Frameworks::IResponsePtr& r);
 
     protected:
         bool m_isPrimary;
 
         std::string m_name;
         MathLib::Dimension m_dimension;
+        std::vector<Graphics::RenderTextureUsage> m_usages;
 
         Graphics::IBackSurfacePtr m_backSurface;
         std::string m_backSurfaceName;
@@ -169,8 +162,7 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
 
-        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
-        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
+        Frameworks::ResponseSubscriberPtr m_onCreateTextureResponse;
 
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {

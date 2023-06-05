@@ -50,6 +50,8 @@ namespace Enigma::Renderer
         error CreateRenderer(const std::string& name);
         /** create custom renderer */
         error CreateCustomRenderer(const std::string& type_name, const std::string& name);
+        /** insert renderer */
+        error InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer);
 
         /** destroy renderer by name : remove from map, & destroy  */
         error DestroyRenderer(const std::string& name);
@@ -57,7 +59,7 @@ namespace Enigma::Renderer
         Engine::IRendererPtr GetRenderer(const std::string& name) const;
 
         /** create render target */
-        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary);
+        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
 
         /** destroy render target by name : remove from map, & destroy  */
         error DestroyRenderTarget(const std::string& name);
@@ -75,6 +77,8 @@ namespace Enigma::Renderer
         void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
         void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const;
+        void DoChangingViewPort(const Frameworks::ICommandPtr& c) const;
+        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c) const;
 
     protected:
         Frameworks::CommandSubscriberPtr m_doCreatingRenderer;
@@ -82,6 +86,8 @@ namespace Enigma::Renderer
         Frameworks::CommandSubscriberPtr m_doCreatingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doDestroyingRenderTarget;
         Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
+        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
+        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
 
         using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;

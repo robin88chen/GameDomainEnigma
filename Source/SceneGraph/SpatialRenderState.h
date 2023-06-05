@@ -19,6 +19,7 @@ namespace Enigma::SceneGraph
         SpatialRenderState();
         SpatialRenderState(const SpatialRenderState&) = default;
         SpatialRenderState(SpatialRenderState&&) = default;
+        SpatialRenderState(const Engine::RenderLightingState& lightingState);
         ~SpatialRenderState();
         SpatialRenderState& operator=(const SpatialRenderState&) = default;
         SpatialRenderState& operator=(SpatialRenderState&&) = default;

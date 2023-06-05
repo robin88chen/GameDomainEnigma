@@ -1,0 +1,18 @@
+#version 300 es
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic Ambient AmbientLight
+//sampler_state DiffuseMapSampler GBufferDiffuseTexture
+precision highp float;
+uniform sampler2D GBufferDiffuseTexture;
+uniform vec4 Ambient;                 
+in vec2 vTexCo;
+in vec2 vProjPos;
+out vec4 outColor;
+
+void main()
+{
+    vec4 color = texture(GBufferDiffuseTexture, vTexCo);
+    
+	outColor = color * Ambient;
+}
+

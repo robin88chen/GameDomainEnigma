@@ -167,6 +167,31 @@ void MeshPrimitive::ChangeTexture(const Engine::EffectTextureMap::EffectTextureT
     BindPrimitiveEffectTexture();
 }
 
+void MeshPrimitive::BindTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple)
+{
+    if (m_textures.empty()) return;
+    LoosePrimitiveEffectTexture();
+    for (auto& tm : m_textures)
+    {
+        tm.BindTexture(tuple);
+    }
+    BindPrimitiveEffectTexture();
+}
+
+void MeshPrimitive::BindTextures(const EffectTextureMap::EffectTextures& texture_tuples)
+{
+    if (m_textures.empty()) return;
+    LoosePrimitiveEffectTexture();
+    for (auto& tm : m_textures)
+    {
+        for (auto& tuple : texture_tuples)
+        {
+            tm.BindTexture(tuple);
+        }
+    }
+    BindPrimitiveEffectTexture();
+}
+
 error MeshPrimitive::UpdateRenderBuffer()
 {
     assert(m_geometry);

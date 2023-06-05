@@ -259,18 +259,42 @@ void ShaderVariableEgl_Vector::SetValue(std::any data)
     {
         if (m_dimension == 4)
         {
-            MathLib::Vector4 vec = std::any_cast<MathLib::Vector4>(data);
-            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            if (data.type() == typeid(MathLib::Vector4))
+            {
+                auto vec = std::any_cast<MathLib::Vector4>(data);
+                memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            }
+            else
+            {
+                float* vec = std::any_cast<float*>(data);
+                memcpy(&m_values[0], vec, m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 3)
         {
-            MathLib::Vector3 vec = std::any_cast<MathLib::Vector3>(data);
-            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            if (data.type() == typeid(MathLib::Vector3))
+            {
+                auto vec = std::any_cast<MathLib::Vector3>(data);
+                memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            }
+            else
+            {
+                float* vec = std::any_cast<float*>(data);
+                memcpy(&m_values[0], vec, m_dimension * sizeof(float));
+            }
         }
         if (m_dimension == 2)
         {
-            MathLib::Vector2 vec = std::any_cast<MathLib::Vector2>(data);
-            memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            if (data.type() == typeid(MathLib::Vector2))
+            {
+                auto vec = std::any_cast<MathLib::Vector2>(data);
+                memcpy(&m_values[0], static_cast<float*>(vec), m_dimension * sizeof(float));
+            }
+            else
+            {
+                float* vec = std::any_cast<float*>(data);
+                memcpy(&m_values[0], vec, m_dimension * sizeof(float));
+            }
         }
     }
     catch (const std::bad_any_cast& e)

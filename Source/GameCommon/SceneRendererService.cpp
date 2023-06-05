@@ -58,7 +58,7 @@ void SceneRendererService::CreateSceneRenderSystem(const std::string& renderer_n
     assert(!m_rendererManager.expired());
     error er = m_rendererManager.lock()->CreateRenderer(renderer_name);
     if (er) return;
-    er = m_rendererManager.lock()->CreateRenderTarget(target_name, is_primary ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary);
+    er = m_rendererManager.lock()->CreateRenderTarget(target_name, is_primary ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
     if (er) return;
     auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
     auto target = m_rendererManager.lock()->GetRenderTarget(target_name);

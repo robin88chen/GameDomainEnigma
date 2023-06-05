@@ -1,0 +1,68 @@
+#version 300 es
+//semantic GBufferDiffuseTexture GBufferDiffuseMap
+//semantic GBufferNormalTexture GBufferNormalMap
+//semantic GBufferSpecularTexture GBufferSpecularMap
+//semantic GBufferDepthTexture GBufferDepthMap
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic View View
+//semantic ViewInv ViewInv
+//semantic TangentFov TangentFov
+//sampler_state DiffuseMapSampler GBufferDiffuseTexture
+//sampler_state NormalMapSampler GBufferNormalTexture
+//sampler_state SpecularMapSampler GBufferSpecularTexture
+//sampler_state DepthMapSampler GBufferDepthTexture
+precision highp float;
+uniform sampler2D GBufferDiffuseTexture;
+uniform sampler2D GBufferNormalTexture;
+uniform sampler2D GBufferSpecularTexture;
+uniform sampler2D GBufferDepthTexture;
+uniform vec4 SunColor;                 
+uniform vec4 SunDir;                 
+uniform mat4 View;
+uniform mat4 ViewInv;
+uniform vec4 TangentFov;
+in vec2 vTexCo;
+in vec2 vProjPos;
+out vec4 outColor;
+
+float SampleDepth(vec2 texco)
+{
+	vec4 depth_vec = texture(GBufferDepthTexture, texco);
+	// must use highp uint
+	highp uint r = uint(roundEven(depth_vec.r * 255.0f));
+	highp uint g = uint(roundEven(depth_vec.g * 255.0f));
+	highp uint b = uint(roundEven(depth_vec.b * 255.0f));
+	highp uint a = uint(roundEven(depth_vec.a * 255.0f));
+	highp uint depth_uint = (r << 24) + (g << 16) + (b << 8) + (a);
+	//if ((r == 255u) && (g == 255u)) depth_uint = uint(0);
+    if ((r == 0u) && (g == 0u) && (b == 0u)) return 0.0f; // depth_uint = uint(0);
+	float depth_view = uintBitsToFloat(depth_uint);
+    return depth_view;
+}
+
+void main()
+{
+    vec4 diffuse = texture(GBufferDiffuseTexture, vTexCo);
+	vec4 spec_texcolor = texture(GBufferSpecularTexture, vTexCo);
+    vec3 nor = texture(GBufferNormalTexture, vTexCo).xyz;
+    //float pos_z = SampleDepth(vTexCo);
+    float pos_z = texture(GBufferDepthTexture, vTexCo).r;
+
+	vec4 view_space_pos = vec4( vProjPos.x * TangentFov.x * pos_z, vProjPos.y * TangentFov.y * pos_z,
+                                pos_z, 1.0 );
+	vec4 world_pos = view_space_pos * ViewInv;
+	float spec_power = spec_texcolor.a;
+	spec_texcolor.a = 0.0f;
+    vec3 sun_dir = (vec4(SunDir.xyz, 0.0) * View).xyz;
+	sun_dir = normalize( sun_dir );
+	vec3 H = normalize ( sun_dir + vec3(0.0f, 0.0f, -1.0f) ); // in view space, view dir is -z
+	float cos_th = clamp ( dot ( nor, H ), 0.0f, 1.0f );
+	float specular_coef = (cos_th <= 0.0f) ? 0.0f : pow ( cos_th, spec_power );
+	
+    vec4 color = ( diffuse * clamp ( dot ( sun_dir, nor ), 0.0f, 1.0f ) 
+                    + ( spec_texcolor * specular_coef ) ) * SunColor;
+
+    outColor = color;
+}
+

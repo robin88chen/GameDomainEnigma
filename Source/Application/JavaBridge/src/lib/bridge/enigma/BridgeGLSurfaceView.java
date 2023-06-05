@@ -141,7 +141,7 @@ public class BridgeGLSurfaceView extends GLSurfaceView {
     }
 
     protected void initView() {
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(3);
     }
 
     public void setGraphicBridgeRenderer(final ApplicationBridgeRenderer renderer) {

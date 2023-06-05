@@ -10,6 +10,7 @@ std::string ErrorCategory::message(int err) const
     {
     case ErrorCode::ok: return "OK";
     case ErrorCode::nullPortalManagement: return "Null portal management";
+    case ErrorCode::nullHostLight: return "Null host light";
     }
     return "Unknown";
 }

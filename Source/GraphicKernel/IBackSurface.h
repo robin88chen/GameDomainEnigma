@@ -11,7 +11,6 @@
 #include "GraphicAPITypes.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 #include <system_error>
 
@@ -39,9 +38,10 @@ namespace Enigma::Graphics
 
         virtual bool IsMultiSurface() { return false; }
         virtual unsigned int GetSurfaceCount() { return 1; };
-    protected:
-        void DoResizing(const Frameworks::ICommandPtr& c);
 
+        virtual void ResizeSurface(const MathLib::Dimension& dimension);
+
+    protected:
         virtual error Resize(const MathLib::Dimension& dimension) = 0;
         virtual future_error AsyncResize(const MathLib::Dimension& dimension);
 
@@ -50,7 +50,6 @@ namespace Enigma::Graphics
         bool m_isPrimary;
         MathLib::Dimension m_dimension;
         GraphicFormat m_format;
-        Frameworks::CommandSubscriberPtr m_doResizing;
     };
     using IBackSurfacePtr = std::shared_ptr<IBackSurface>;
     using IBackSurfaceWeak = std::weak_ptr<IBackSurface>;

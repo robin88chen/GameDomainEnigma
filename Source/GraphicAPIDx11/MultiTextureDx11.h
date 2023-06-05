@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MultiTextureDx11.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -26,10 +26,7 @@ namespace Enigma::Devices
         MultiTextureDx11& operator=(const MultiTextureDx11&) = delete;
         MultiTextureDx11& operator=(MultiTextureDx11&&) = delete;
 
-        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
-        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
-
-        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf) override;
+        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&) override;
 
         //virtual void LoadImageDimension(const std::string& filename, const std::string& path_id) override;
 
@@ -38,9 +35,12 @@ namespace Enigma::Devices
         unsigned int GetResourceViewCount() const;
 
     protected:
+        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
+        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
+        virtual error CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
         error CreateFromScratchImage(unsigned int index, DirectX::ScratchImage& scratchImage);
-        virtual error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
-            const byte_buffer& buff) override;
+        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
+            const byte_buffer& buff);
 
     protected:
         ID3D11ShaderResourceView** m_d3dTextureResources;

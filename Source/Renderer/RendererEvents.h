@@ -113,6 +113,18 @@ namespace Enigma::Renderer
         std::weak_ptr<RenderTarget> m_target;
         RenderTargetClearingProperty m_clearing;
     };
+    class RenderTargetTextureCreated : public Frameworks::IEvent
+    {
+    public:
+        RenderTargetTextureCreated(const std::shared_ptr<RenderTarget>& target, const std::string texture_name) :
+            m_target{ target }, m_textureName(texture_name) {}
+        [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const std::string& GetTextureName() const { return m_textureName; }
+
+    private:
+        std::weak_ptr<RenderTarget> m_target;
+        std::string m_textureName;
+    };
 }
 
 #endif // RENDERER_EVENTS_H

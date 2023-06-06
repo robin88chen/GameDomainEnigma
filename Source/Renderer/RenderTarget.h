@@ -154,8 +154,6 @@ namespace Enigma::Renderer
         Graphics::TargetViewPort m_viewPort;
         RenderTargetClearingProperty m_clearingProperty;
 
-        unsigned int m_gbufferDepthMapIndex;
-
         Frameworks::EventSubscriberPtr m_onPrimarySurfaceCreated;
         Frameworks::EventSubscriberPtr m_onBackSurfaceCreated;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceCreated;

@@ -17,6 +17,7 @@ namespace Enigma::Graphics
         Normal,
         Specular,
         Depth,
+        ShadowMap,
     };
 }
 

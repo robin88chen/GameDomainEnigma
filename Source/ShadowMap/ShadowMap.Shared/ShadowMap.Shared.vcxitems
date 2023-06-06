@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7879da1d-39af-4818-93cf-a514e7c78f4a}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SunLightCamera.cpp" />
+  </ItemGroup>
+</Project>

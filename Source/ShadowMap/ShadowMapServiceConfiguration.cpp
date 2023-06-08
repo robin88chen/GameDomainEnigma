@@ -10,6 +10,8 @@ ShadowMapServiceConfiguration::ShadowMapServiceConfiguration()
     m_shadowMapSurfaceName = "ShadowMapSurface";
     m_shadowMapDepthName = "ShadowMapDepth";
     m_sunLightCameraName = "SunLightCamera";
+    m_lightViewProjSemantic = "LightViewProj";
+    m_shadowMapSemantic = "ShadowMap";
 }
 
 const std::string& ShadowMapServiceConfiguration::ShadowMapTechniqueName() const
@@ -66,4 +68,26 @@ const std::string& ShadowMapServiceConfiguration::SunLightCameraName() const
 std::string& ShadowMapServiceConfiguration::SunLightCameraName()
 {
     return m_sunLightCameraName;
+}
+
+const std::string& ShadowMapServiceConfiguration::LightViewProjSemantic() const
+{
+    assert(!m_lightViewProjSemantic.empty());
+    return m_lightViewProjSemantic;
+}
+
+std::string& ShadowMapServiceConfiguration::LightViewProjSemantic()
+{
+    return m_lightViewProjSemantic;
+}
+
+const std::string& ShadowMapServiceConfiguration::ShadowMapSemantic() const
+{
+    assert(!m_shadowMapSemantic.empty());
+    return m_shadowMapSemantic;
+}
+
+std::string& ShadowMapServiceConfiguration::ShadowMapSemantic()
+{
+    return m_shadowMapSemantic;
 }

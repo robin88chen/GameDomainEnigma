@@ -7,6 +7,12 @@
     <Filter Include="ShadowMapService">
       <UniqueIdentifier>{0e3b2f0f-df72-4283-a789-9e4096c5e0c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BoundFilter">
+      <UniqueIdentifier>{4081bfb6-eb64-4119-9c61-7dcee4fb6404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{e441c99a-0f97-4243-9be3-9add81531e5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h">
@@ -18,6 +24,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.h">
       <Filter>ShadowMapService</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.h">
+      <Filter>BoundFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.h">
+      <Filter>BoundFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SunLightCamera.cpp">
@@ -28,6 +43,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.cpp">
       <Filter>ShadowMapService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.cpp">
+      <Filter>BoundFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.cpp">
+      <Filter>BoundFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.cpp">
+      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #define _SUN_LIGHT_CAMERA_H
 
 #include "SceneGraph/Camera.h"
+#include "SceneGraph/Culler.h"
 
 namespace Enigma::ShadowMap
 {
@@ -26,9 +27,26 @@ namespace Enigma::ShadowMap
         void SetSunLightDir(const MathLib::Vector3& sun_dir);
         void SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
 
+        void CalcLightCameraSystemMatrix(SceneGraph::Culler* culler);
+
+        const MathLib::Matrix4& GetLightViewProjMatrix() const { return m_mxLightViewProj; };
+
+    protected:
+        void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
+        void CalcLightCameraFrustum();
+        std::array<MathLib::Vector3, 3> CalcLightCameraFrame() const;
+        std::array<MathLib::Vector3, 8> CalcViewerFrustumCorner() const;
+        void CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
+
     protected:
         MathLib::Vector3 m_sunDir;
         std::weak_ptr<Camera> m_viewerCamera;
+
+        float m_effectiveViewerNearZ;  ///< 有效範圍的近平面
+        float m_effectiveViewerFarZ;    ///< 有效範圍的遠平面
+        MathLib::Matrix4 m_mxLightViewProj;
+        MathLib::Matrix4 m_mxSceneCrop; ///< 場景投影縮放
+        MathLib::Matrix4 m_mxProjSceneCrop; ///< 合併縮放的投影矩陣
     };
 }
 

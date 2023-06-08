@@ -46,8 +46,14 @@ namespace Enigma::ShadowMap
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
+        void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
         void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit);
+
+        void BindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
+        void BindShadowMapToMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+
+        void AssignLightViewProjectionTransform(Engine::EffectVariable& var);
 
     protected:
         std::unique_ptr<ShadowMapServiceConfiguration> m_configuration;
@@ -56,12 +62,14 @@ namespace Enigma::ShadowMap
         std::weak_ptr<GameCommon::GameCameraService> m_cameraService;
         std::weak_ptr<Renderer::RendererManager> m_rendererManager;
         std::weak_ptr<Renderer::Renderer> m_renderer;
+        std::weak_ptr<Renderer::RenderTarget> m_shadowMapRenderTarget;
 
         std::shared_ptr<SunLightCamera> m_sunLightCamera;
 
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
+        Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
     };
 }
 

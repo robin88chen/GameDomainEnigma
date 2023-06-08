@@ -40,6 +40,9 @@
     <Filter Include="Installing">
       <UniqueIdentifier>{5d4c5d57-c9e4-49a9-b825-7cd36a651139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderableBoundFilter">
+      <UniqueIdentifier>{229f3bbb-1de2-44a5-826f-e1c26eafb48d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -114,6 +117,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h">
+      <Filter>RenderableBoundFilter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -172,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp">
+      <Filter>RenderableBoundFilter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

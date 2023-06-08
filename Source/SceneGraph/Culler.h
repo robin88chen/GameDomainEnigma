@@ -62,7 +62,7 @@ namespace Enigma::SceneGraph
         virtual void Insert(const std::shared_ptr<Spatial>& obj);
 
         unsigned int GetPlaneQuantity() const { return m_countCullerPlane; };
-        const MathLib::Plane3* GetPlanes() const { return m_clipPlanes; };
+        const std::vector<MathLib::Plane3>& GetPlanes() const { return m_clipPlanes; };
 
         void UpdateFrustumPlanes();
 
@@ -90,11 +90,11 @@ namespace Enigma::SceneGraph
         PlaneActivationBits m_planeActivations;
 
         unsigned int m_countCullerPlane;
-        MathLib::Plane3 m_clipPlanes[CULLER_MAX_PLANE_QUANTITY];
+        std::vector<MathLib::Plane3> m_clipPlanes;
 
         bool m_isEnableOuterClipping; ///< default is false
         /// for calculating un-visible spatial
-        MathLib::Plane3 m_outerClipPlanes[CULLER_MAX_PLANE_QUANTITY];
+        std::vector<MathLib::Plane3> m_outerClipPlanes;
         /// 將 clip-plane 的原點往後挪，frustum 就會相對比較大, default = 2.0f
         float m_outerClipShiftZ;
 

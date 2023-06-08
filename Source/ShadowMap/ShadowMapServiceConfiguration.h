@@ -32,12 +32,20 @@ namespace Enigma::ShadowMap
         const std::string& SunLightCameraName() const;
         std::string& SunLightCameraName();
 
+        const std::string& LightViewProjSemantic() const;
+        std::string& LightViewProjSemantic();
+
+        const std::string& ShadowMapSemantic() const;
+        std::string& ShadowMapSemantic();
+
     protected:
         std::string m_shadowMapTechniqueName;
         MathLib::Dimension m_shadowMapDimension;
         std::string m_shadowMapSurfaceName;
         std::string m_shadowMapDepthName;
         std::string m_sunLightCameraName;
+        std::string m_lightViewProjSemantic;
+        std::string m_shadowMapSemantic;
     };
 }
 

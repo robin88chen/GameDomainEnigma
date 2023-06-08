@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveRequests.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
@@ -47,6 +48,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp" />

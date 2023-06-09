@@ -16,6 +16,8 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Renderer;
 
+DEFINE_RTTI(ShadowMap, ShadowMapService, ISystemService);
+
 ShadowMapService::ShadowMapService(ServiceManager* manager, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
     const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
     const std::shared_ptr<RendererManager>& renderer_manager, std::unique_ptr<ShadowMapServiceConfiguration> configuration)

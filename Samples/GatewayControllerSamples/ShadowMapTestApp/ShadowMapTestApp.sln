@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapTest.Shared", "ShadowMapTest.Shared\ShadowMapTest.Shared.vcxitems", "{703C51DD-3A0E-4946-A15D-0065F95F2651}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadowMapTest.Win32", "ShadowMapTest.Win32\ShadowMapTest.Win32.vcxproj", "{FB5EDF4E-3126-432D-81B4-56420300B3C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Debug|x64.ActiveCfg = Debug|x64
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Debug|x64.Build.0 = Debug|x64
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Debug|x86.ActiveCfg = Debug|Win32
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Debug|x86.Build.0 = Debug|Win32
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Release|x64.ActiveCfg = Release|x64
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Release|x64.Build.0 = Release|x64
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Release|x86.ActiveCfg = Release|Win32
+		{FB5EDF4E-3126-432D-81B4-56420300B3C8}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C77D6C7F-E3F4-49C9-B52F-41F3021BF247}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ShadowMapTest.Shared\ShadowMapTest.Shared.vcxitems*{703c51dd-3a0e-4946-a15d-0065f95f2651}*SharedItemsImports = 9
+		ShadowMapTest.Shared\ShadowMapTest.Shared.vcxitems*{fb5edf4e-3126-432d-81b4-56420300b3c8}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

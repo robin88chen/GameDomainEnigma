@@ -46,6 +46,10 @@ namespace Enigma::Graphics
             m_isRequiresFullscreen = false;
             m_featureLevel = FeatureLevel_9_1;
         }
+        Graphics::GraphicFormat GetDepthFormat() const
+        {
+            return Graphics::GraphicFormat::FMT_D24S8;
+        }
     };
 }
 

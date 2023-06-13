@@ -41,7 +41,7 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary) override;
+        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
         virtual void PrepareGameScene() override;

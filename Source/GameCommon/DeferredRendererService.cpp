@@ -40,7 +40,7 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
     const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
-    std::unique_ptr<DeferredRendererServiceConfiguration> configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager)
+    std::unique_ptr<DeferredRendererServiceConfiguration> configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, nullptr)
 {
     m_configuration = std::move(configuration);
     m_sceneGraphRepository = scene_graph_repository;
@@ -118,7 +118,7 @@ ServiceResult DeferredRendererService::OnTerm()
     return SceneRendererService::OnTerm();
 }
 
-void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary)
+void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);

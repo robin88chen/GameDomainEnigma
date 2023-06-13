@@ -1,0 +1,63 @@
+#version 300 es
+#define SMAP_SIZE 512
+#define SHADOW_EPSILON 0.000005f
+//semantic DiffuseTexture DiffuseMap
+//semantic ShadowTexture ShadowMap
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic LightViewProj LightViewProj
+precision highp float;
+//sampler_state samLinear DiffuseTexture
+//sampler_state samShadow ShadowTexture
+uniform sampler2D ShadowTexture;
+uniform sampler2D DiffuseTexture;
+uniform vec4 Ambient;
+uniform vec4 SunColor;
+uniform vec4 SunDir;
+uniform mat4 LightViewProj;
+in vec3 vNor;
+in vec2 vTexCo;
+in vec4 vWorldPos;
+out vec4 outColor;
+
+vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
+{
+	vec4 diffuse = Ambient;
+	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, SunDir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+	return diffuse;
+}
+float CalcShadowDecay(vec4 light_proj)
+{
+    vec2 ShadowTexC = 0.5 * light_proj.xy / light_proj.w + vec2( 0.5, 0.5 );
+    //ShadowTexC.y = 1.0f - ShadowTexC.y;
+	vec4 depth_vec = texture(ShadowTexture, ShadowTexC);
+	// must use highp uint
+	highp uint r = uint(roundEven(depth_vec.r * 255.0f));
+	highp uint g = uint(roundEven(depth_vec.g * 255.0f));
+	highp uint b = uint(roundEven(depth_vec.b * 255.0f));
+	highp uint a = uint(roundEven(depth_vec.a * 255.0f));
+	highp uint depth_uint = (r << 24) + (g << 16) + (b << 8) + (a);
+	//if ((r == 255u) && (g == 255u)) depth_uint = uint(0);
+    if ((r == 255u) && (g == 0u) && (b == 0u)) return 1.0f; // depth_uint = uint(0);
+	float depth_value = uintBitsToFloat(depth_uint);
+	float lightAmount = 1.0f;
+	if (depth_value + SHADOW_EPSILON < light_proj.z / light_proj.w)
+	{
+		lightAmount = 0.5;
+	}
+    return lightAmount;
+}
+
+void main() {
+    outColor = texture(DiffuseTexture, vTexCo);
+    vec4 diffuse = CommonDiffuseLighting(vWorldPos, vNor, 1.0f);
+	vec4 lightProj = vWorldPos * LightViewProj;
+    if ( ( lightProj.x < -1.0f ) || ( lightProj.y < -1.0f ) || ( lightProj.x > 1.0f ) || (lightProj.y > 1.0f ) )
+	{
+		outColor = outColor * diffuse;
+		return;
+	}
+
+    outColor = outColor * diffuse * CalcShadowDecay(lightProj);
+}

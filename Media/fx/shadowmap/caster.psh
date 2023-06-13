@@ -1,0 +1,10 @@
+struct PS_INPUT
+{
+	float4 Pos : POSITION;
+	float2 Depth : TEXCOORD0;
+};
+float4 ps_main(PS_INPUT input) : COLOR0
+{
+	float4 outputColor = input.Depth.x / input.Depth.y;
+	return outputColor;
+};

@@ -6,8 +6,27 @@ using namespace Enigma::Graphics;
 
 DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
 {
+    m_ambientEffectName = "DeferredShadingAmbientPass";
+    m_ambientPassFxFileName = "fx/DeferredShadingAmbientPass.efx@APK_PATH";
+    m_sunLightEffectName = "DeferredShadingSunLightPass";
+    m_sunLightPassFxFileName = "fx/DeferredShadingSunLightPass.efx@APK_PATH";
+    m_lightVolumeEffectName = "DeferredShadingLightVolume";
+    m_lightVolumePassFxFileName = "fx/DeferredShadingLightVolume.efx@APK_PATH";
+
+    m_deferredRendererTechniqueName = "DeferredRenderer";
+    m_visualTechniqueNameForCameraDefault = "Default";
+    m_visualTechniqueNameForCameraInside = "Inside";
+    m_gbufferTargetName = "gbuffer_target";
+    m_gbufferSurfaceName = "gbuffer_surface";
+    m_gbufferDepthName = "gbuffer_depth";
+
     m_gbufferUsages = { RenderTextureUsage::Normal, RenderTextureUsage::Albedo, RenderTextureUsage::Specular, RenderTextureUsage::Depth };
     m_gbufferFormats = { GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_A16B16G16R16F, GraphicFormat::FMT_R32F };
+
+    m_gbufferNormalSemantic = "GBufferNormalMap";
+    m_gbufferDiffuseSemantic = "GBufferDiffuseMap";
+    m_gbufferSpecularSemantic = "GBufferSpecularMap";
+    m_gbufferDepthSemantic = "GBufferDepthMap";
 }
 
 std::string& DeferredRendererServiceConfiguration::AmbientPassFxFileName()

@@ -20,6 +20,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bo
     positions.emplace_back(MathLib::Vector3(right_top.X(), right_top.Y(), left_bottom.Z()));
     positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
     m_dto.Position3s() = positions;
+    m_normal = MathLib::Vector3(0, 0, 1);
     uint_buffer indices =
     {
         0,1,2, 0,2,3
@@ -34,13 +35,37 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bo
     return *this;
 }
 
+SquareQuadDtoHelper& SquareQuadDtoHelper::XZQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
+{
+    std::vector<MathLib::Vector3> positions;
+    positions.emplace_back(left_bottom);
+    positions.emplace_back(MathLib::Vector3(left_bottom.X(), left_bottom.Y(), right_top.Z()));
+    positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), right_top.Z()));
+    positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
+    m_dto.Position3s() = positions;
+    m_normal = MathLib::Vector3(0, 1, 0);
+    uint_buffer indices =
+    {
+        0,1,2, 0,2,3
+    };
+    m_dto.Indices() = indices;
+    m_dto.Segments() = { 0, 4, 0, 6 };
+    m_dto.VertexUsedCount() = 4;
+    m_dto.IndexUsedCount() = 6;
+    m_dto.VertexCapacity() = 4;
+    m_dto.IndexCapacity() = 6;
+    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    return *this;
+
+}
+
 SquareQuadDtoHelper& SquareQuadDtoHelper::Normal()
 {
     std::vector<MathLib::Vector3> normals;
-    normals.emplace_back(MathLib::Vector3(0, 0, 1));
-    normals.emplace_back(MathLib::Vector3(0, 0, 1));
-    normals.emplace_back(MathLib::Vector3(0, 0, 1));
-    normals.emplace_back(MathLib::Vector3(0, 0, 1));
+    normals.emplace_back(m_normal);
+    normals.emplace_back(m_normal);
+    normals.emplace_back(m_normal);
+    normals.emplace_back(m_normal);
     m_dto.Normals() = normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;

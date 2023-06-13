@@ -10,6 +10,7 @@
 
 #include "GameEngine/InstallingPolicy.h"
 #include "DeferredRendererServiceConfiguration.h"
+#include "SceneRendererServiceConfiguration.h"
 
 namespace Enigma::GameCommon
 {
@@ -18,8 +19,8 @@ namespace Enigma::GameCommon
     class SceneRendererInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        SceneRendererInstallingPolicy(const std::string& renderer_name, const std::string& target_name, bool is_primary)
-            : m_rendererName(renderer_name), m_targetName(target_name), m_isPrimary(is_primary) {}
+        SceneRendererInstallingPolicy(const std::string& renderer_name, const std::string& target_name, std::unique_ptr<SceneRendererServiceConfiguration> config)
+            : m_rendererName(renderer_name), m_targetName(target_name), m_config(std::move(config)) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
@@ -27,7 +28,7 @@ namespace Enigma::GameCommon
     protected:
         std::string m_rendererName;
         std::string m_targetName;
-        bool m_isPrimary;
+        std::unique_ptr<SceneRendererServiceConfiguration> m_config;
     };
 
     class DeferredRendererInstallingPolicy : public Engine::InstallingPolicy

@@ -21,6 +21,7 @@ namespace Enigma::Engine
     public:
         SquareQuadDtoHelper(const std::string& name);
         SquareQuadDtoHelper& XYQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
+        SquareQuadDtoHelper& XZQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
         SquareQuadDtoHelper& Normal();
         SquareQuadDtoHelper& TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
 
@@ -28,6 +29,7 @@ namespace Enigma::Engine
 
     protected:
         TriangleListDto m_dto;
+        MathLib::Vector3 m_normal;
         Graphics::VertexFormatCode m_format;
     };
 

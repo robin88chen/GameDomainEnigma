@@ -53,7 +53,7 @@ namespace Enigma::ShadowMap
         void BindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
         void BindShadowMapToMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
 
-        void AssignLightViewProjectionTransform(Engine::EffectVariable& var);
+        static void AssignLightViewProjectionTransform(Engine::EffectVariable& var);
 
     protected:
         std::unique_ptr<ShadowMapServiceConfiguration> m_configuration;
@@ -65,6 +65,7 @@ namespace Enigma::ShadowMap
         std::weak_ptr<Renderer::RenderTarget> m_shadowMapRenderTarget;
 
         std::shared_ptr<SunLightCamera> m_sunLightCamera;
+        static MathLib::Matrix4 m_lightViewProjectionTransform;
 
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;

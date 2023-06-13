@@ -181,7 +181,7 @@ void ShadowMapTest::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
     else if (ev->GetSceneGraphId() == "cube_pawn")
     {
         m_cube = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
-        Matrix4 mx = Matrix4::MakeTranslateTransform(0.0f, 1.0f, 0.0f);
+        Matrix4 mx = Matrix4::MakeTranslateTransform(0.0f, 1.2f, 0.0f);
         if (m_sceneRoot) m_sceneRoot->AttachChild(m_cube, mx);
     }
 }

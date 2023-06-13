@@ -255,3 +255,8 @@ void SunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorl
         0.0f, 0.0f, 0.0f, 1.0f);
     m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum->GetProjectionTransform();
 }
+
+const Matrix4& SunLightCamera::GetProjectionTransform()
+{
+    return m_mxProjSceneCrop;
+}

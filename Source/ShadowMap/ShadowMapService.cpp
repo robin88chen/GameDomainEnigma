@@ -18,6 +18,8 @@ using namespace Enigma::Renderer;
 
 DEFINE_RTTI(ShadowMap, ShadowMapService, ISystemService);
 
+Enigma::MathLib::Matrix4 ShadowMapService::m_lightViewProjectionTransform;
+
 ShadowMapService::ShadowMapService(ServiceManager* manager, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
     const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
     const std::shared_ptr<RendererManager>& renderer_manager, std::unique_ptr<ShadowMapServiceConfiguration> configuration)
@@ -45,7 +47,7 @@ ServiceResult ShadowMapService::OnInit()
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), [=](auto v) { AssignLightViewProjectionTransform(v); });
+    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
     return ServiceResult::Complete;
 }
 
@@ -54,6 +56,7 @@ ServiceResult ShadowMapService::OnTick()
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
         m_sunLightCamera->CalcLightCameraSystemMatrix(m_sceneService.lock()->GetSceneCuller());
+        m_lightViewProjectionTransform = m_sunLightCamera->GetLightViewProjMatrix();
     }
     return ServiceResult::Pendding;
 }
@@ -210,8 +213,5 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
 
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)
 {
-    if (m_sunLightCamera)
-    {
-        var.AssignValue(m_sunLightCamera->GetLightViewProjMatrix());
-    }
+    var.AssignValue(m_lightViewProjectionTransform);
 }

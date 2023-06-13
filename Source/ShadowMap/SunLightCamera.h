@@ -30,6 +30,7 @@ namespace Enigma::ShadowMap
         void CalcLightCameraSystemMatrix(SceneGraph::Culler* culler);
 
         const MathLib::Matrix4& GetLightViewProjMatrix() const { return m_mxLightViewProj; };
+        virtual const MathLib::Matrix4& GetProjectionTransform() override;
 
     protected:
         void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);

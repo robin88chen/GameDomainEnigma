@@ -24,23 +24,16 @@ out vec4 outColor;
 vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
 {
 	vec4 diffuse = Ambient;
-	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, SunDir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+	vec3 sun_dir = vec3(SunDir.x, SunDir.y, SunDir.z);
+	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, sun_dir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
 	return diffuse;
 }
 float CalcShadowDecay(vec4 light_proj)
 {
     vec2 ShadowTexC = 0.5 * light_proj.xy / light_proj.w + vec2( 0.5, 0.5 );
     //ShadowTexC.y = 1.0f - ShadowTexC.y;
-	vec4 depth_vec = texture(ShadowTexture, ShadowTexC);
-	// must use highp uint
-	highp uint r = uint(roundEven(depth_vec.r * 255.0f));
-	highp uint g = uint(roundEven(depth_vec.g * 255.0f));
-	highp uint b = uint(roundEven(depth_vec.b * 255.0f));
-	highp uint a = uint(roundEven(depth_vec.a * 255.0f));
-	highp uint depth_uint = (r << 24) + (g << 16) + (b << 8) + (a);
-	//if ((r == 255u) && (g == 255u)) depth_uint = uint(0);
-    if ((r == 255u) && (g == 0u) && (b == 0u)) return 1.0f; // depth_uint = uint(0);
-	float depth_value = uintBitsToFloat(depth_uint);
+	//vec4 depth_vec = texture(ShadowTexture, ShadowTexC);
+    float depth_value = texture(ShadowTexture, ShadowTexC).r;
 	float lightAmount = 1.0f;
 	if (depth_value + SHADOW_EPSILON < light_proj.z / light_proj.w)
 	{

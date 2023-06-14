@@ -2,19 +2,7 @@
 #pragma debug(on)
 precision highp float;
 in vec2 vDepth;
-layout (location = 0) out vec4 outColor;
+layout (location = 0) out float outColor;
 void main() {
-	float depth = vDepth.x / vDepth.y;
-	// store the float value to bytes...
-	highp uint depth_int = floatBitsToUint(depth);
-	highp uint r = (depth_int & 0xff000000u) >> 24;
-	highp uint g = (depth_int & 0x00ff0000u) >> 16;
-	highp uint b = (depth_int & 0x0000ff00u) >> 8;
-	highp uint a = (depth_int & 0x000000ffu);
-	
-	outColor.r = float(r) / 255.0f;
-	outColor.g = float(g) / 255.0f;
-	outColor.b = float(b) / 255.0f;
-	outColor.a = float(a) / 255.0f;
-	//outColor.r = vDepth.x / vDepth.y;
+	outColor = vDepth.x / vDepth.y;
 }

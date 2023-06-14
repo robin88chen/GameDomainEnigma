@@ -25,6 +25,9 @@
 #include "GameEngine/EffectDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+#include "Application/ApplicationBridge.h"
+#endif
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;

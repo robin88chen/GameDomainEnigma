@@ -17,7 +17,7 @@ error SceneRendererInstallingPolicy::Install(Frameworks::ServiceManager* service
     auto camera_service = service_manager->GetSystemServiceAs<GameCameraService>();
     auto render_manager = service_manager->GetSystemServiceAs<Renderer::RendererManager>();
     auto scene_renderer_service = std::make_shared<SceneRendererService>(service_manager,
-        scene_service, camera_service, render_manager, std::move(m_config));
+        scene_service, camera_service, render_manager, m_config);
     service_manager->RegisterSystemService(scene_renderer_service);
     scene_renderer_service->CreateSceneRenderSystem(m_rendererName, m_targetName);
     return error();
@@ -38,7 +38,7 @@ error DeferredRendererInstallingPolicy::Install(Frameworks::ServiceManager* serv
     auto render_manager = service_manager->GetSystemServiceAs<Renderer::RendererManager>();
     auto scene_graph_repo = service_manager->GetSystemServiceAs<SceneGraph::SceneGraphRepository>();
     auto deferred_renderer_service = std::make_shared<DeferredRendererService>(service_manager,
-               scene_service, camera_service, render_manager, scene_graph_repo, std::move(m_config));
+               scene_service, camera_service, render_manager, scene_graph_repo, m_config);
     service_manager->RegisterSystemService(deferred_renderer_service);
     service_manager->InsertHashAsService(SceneRendererService::TYPE_RTTI, deferred_renderer_service);
 

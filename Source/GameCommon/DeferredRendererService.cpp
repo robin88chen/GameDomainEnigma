@@ -40,9 +40,9 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
     const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
-    std::unique_ptr<DeferredRendererServiceConfiguration> configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, nullptr)
+    const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
 {
-    m_configuration = std::move(configuration);
+    m_configuration = configuration;
     m_sceneGraphRepository = scene_graph_repository;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;

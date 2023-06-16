@@ -14,6 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.h" />
@@ -22,6 +26,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.cpp" />

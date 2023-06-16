@@ -11,10 +11,11 @@
 #include <vector>
 #include "GraphicKernel/RenderTextureUsage.h"
 #include "GraphicKernel/GraphicAPITypes.h"
+#include "SceneRendererServiceConfiguration.h"
 
 namespace Enigma::GameCommon
 {
-    class DeferredRendererServiceConfiguration
+    class DeferredRendererServiceConfiguration : public SceneRendererServiceConfiguration
     {
     public:
         DeferredRendererServiceConfiguration();

@@ -22,11 +22,11 @@ Enigma::MathLib::Matrix4 ShadowMapService::m_lightViewProjectionTransform;
 
 ShadowMapService::ShadowMapService(ServiceManager* manager, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
     const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager, std::unique_ptr<ShadowMapServiceConfiguration> configuration)
+    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<ShadowMapServiceConfiguration>& configuration)
     : ISystemService(manager)
 {
     m_needTick = true;
-    m_configuration = std::move(configuration);
+    m_configuration = configuration;
     m_sceneService = scene_service;
     m_cameraService = camera_service;
     m_rendererManager = renderer_manager;
@@ -34,6 +34,7 @@ ShadowMapService::ShadowMapService(ServiceManager* manager, const std::shared_pt
 
 ShadowMapService::~ShadowMapService()
 {
+    m_configuration = nullptr;
 }
 
 ServiceResult ShadowMapService::OnInit()
@@ -63,6 +64,8 @@ ServiceResult ShadowMapService::OnTick()
 
 ServiceResult ShadowMapService::OnTerm()
 {
+    m_sunLightCamera = nullptr;
+
     EventPublisher::Unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);

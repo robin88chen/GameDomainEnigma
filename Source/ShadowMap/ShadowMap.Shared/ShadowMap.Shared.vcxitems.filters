@@ -13,6 +13,9 @@
     <Filter Include="Installing">
       <UniqueIdentifier>{e441c99a-0f97-4243-9be3-9add81531e5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ShadowMapService\Renderer">
+      <UniqueIdentifier>{4b3573f1-3692-44ab-b993-39b12d0af7bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h">
@@ -33,6 +36,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.h">
       <Filter>Installing</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.h">
+      <Filter>SunLightCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.h">
+      <Filter>ShadowMapService\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SunLightCamera.cpp">
@@ -52,6 +67,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.cpp">
+      <Filter>SunLightCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.cpp">
+      <Filter>ShadowMapService\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.cpp">
+      <Filter>ShadowMapService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.cpp">
+      <Filter>ShadowMapService</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

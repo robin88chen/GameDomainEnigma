@@ -20,9 +20,9 @@ DEFINE_RTTI(GameCommon, SceneRendererService, ISystemService);
 
 SceneRendererService::SceneRendererService(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
     const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager, std::unique_ptr<SceneRendererServiceConfiguration> config) : ISystemService(mngr)
+    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config) : ISystemService(mngr)
 {
-    m_config = std::move(config);
+    m_config = config;
     m_sceneService = scene_service;
     m_cameraService = camera_service;
     m_rendererManager = renderer_manager;

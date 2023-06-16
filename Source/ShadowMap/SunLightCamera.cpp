@@ -13,7 +13,8 @@ DEFINE_RTTI(ShadowMap, SunLightCamera, Camera);
 
 SunLightCamera::SunLightCamera(const std::string& name) : Camera(name, GraphicCoordSys::LeftHand)
 {
-
+    m_effectiveViewerNearZ = 0.1f;
+    m_effectiveViewerFarZ = 10.0f;
 }
 
 SunLightCamera::~SunLightCamera()

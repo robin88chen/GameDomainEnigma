@@ -26,7 +26,7 @@ namespace Enigma::GameCommon
     public:
         SceneRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
             const std::shared_ptr<GameCameraService>& camera_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, std::unique_ptr<SceneRendererServiceConfiguration> config);
+            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config);
         SceneRendererService(const SceneRendererService&) = delete;
         SceneRendererService(SceneRendererService&&) = delete;
         virtual ~SceneRendererService() override;
@@ -49,8 +49,10 @@ namespace Enigma::GameCommon
         void OnPrimaryCameraCreated(const Frameworks::IEventPtr& e);
         void OnPrimaryTargetCreated(const Frameworks::IEventPtr& e);
 
+    private:
+        std::shared_ptr<SceneRendererServiceConfiguration> m_config;
+
     protected:
-        std::unique_ptr<SceneRendererServiceConfiguration> m_config;
         std::weak_ptr<GameSceneService> m_sceneService;
         std::weak_ptr<GameCameraService> m_cameraService;
         std::weak_ptr<Renderer::RendererManager> m_rendererManager;

@@ -64,5 +64,6 @@ void InstallingPolicyList::MakeOrderMap()
     m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(GameCommon::DeferredRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(ShadowMap::ShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
+    m_orderMap[typeid(ShadowMap::CascadeShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(GameCommon::AnimatedPawnInstallingPolicy)] = OrderOfGamePawnsInstalling;
 }

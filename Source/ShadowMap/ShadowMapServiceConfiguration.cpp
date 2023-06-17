@@ -12,6 +12,9 @@ ShadowMapServiceConfiguration::ShadowMapServiceConfiguration()
     m_sunLightCameraName = "SunLightCamera";
     m_lightViewProjSemantic = "LightViewProj";
     m_shadowMapSemantic = "ShadowMap";
+    m_shadowMapDimensionSemantic = "ShadowMapSliceDimension";
+    m_shadowMapDepthBias = 0.005f;
+    m_shadowMapDensity = 0.75f;
 }
 
 const std::string& ShadowMapServiceConfiguration::ShadowMapTechniqueName() const
@@ -90,4 +93,37 @@ const std::string& ShadowMapServiceConfiguration::ShadowMapSemantic() const
 std::string& ShadowMapServiceConfiguration::ShadowMapSemantic()
 {
     return m_shadowMapSemantic;
+}
+
+const std::string& ShadowMapServiceConfiguration::ShadowMapDimensionSemantic() const
+{
+    assert(!m_shadowMapDimensionSemantic.empty());
+    return m_shadowMapDimensionSemantic;
+}
+
+std::string& ShadowMapServiceConfiguration::ShadowMapDimensionSemantic()
+{
+    return m_shadowMapDimensionSemantic;
+}
+
+float ShadowMapServiceConfiguration::ShadowMapDepthBias() const
+{
+    assert(m_shadowMapDepthBias >= 0.0f);
+    return m_shadowMapDepthBias;
+}
+
+float& ShadowMapServiceConfiguration::ShadowMapDepthBias()
+{
+       return m_shadowMapDepthBias;
+}
+
+float ShadowMapServiceConfiguration::ShadowMapDensity() const
+{
+    assert(m_shadowMapDensity >= 0.0f);
+    return m_shadowMapDensity;
+}
+
+float& ShadowMapServiceConfiguration::ShadowMapDensity()
+{
+    return m_shadowMapDensity;
 }

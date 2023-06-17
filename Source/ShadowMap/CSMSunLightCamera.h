@@ -36,6 +36,10 @@ namespace Enigma::ShadowMap
         const MathLib::Matrix4& GetLightProjectionTransform(unsigned int index) const;
         const MathLib::Vector3& GetLightCameraLocation(unsigned int index) const;
 
+        const std::vector<MathLib::Matrix4>& GetLightViewProjectionTransforms() const { return m_mxLightViewProjs; };
+        const std::vector<float>& GetLightFrustaDistances() const { return m_lightFrustaDistances; };
+        const std::vector<MathLib::Matrix4>& GetTextureCoordTransforms() const { return m_mxTexCoordTransforms; };
+
     protected:
         void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
         void CalcLightCameraFrustum();

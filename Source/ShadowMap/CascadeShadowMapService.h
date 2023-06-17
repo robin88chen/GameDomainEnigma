@@ -37,12 +37,30 @@ namespace Enigma::ShadowMap
         virtual void CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
+    protected:
+        virtual void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit) override;
+        virtual void DeleteSunLightCamera() override;
+        virtual void UpdateSunLightDirection(const MathLib::Vector3& dir) override;
+
+    private:
+        static void AssignLightViewProjectionTransforms(Engine::EffectVariable& var);
+        static void AssignCascadeDistances(Engine::EffectVariable& var);
+        static void AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var);
+        static void AssignSliceCount(Engine::EffectVariable& var);
+        static void AssignSliceDimension(Engine::EffectVariable& var);
+        static void AssignFaceLightThreshold(Engine::EffectVariable& var);
+
     private:
         std::shared_ptr<CascadeShadowMapServiceConfiguration> m_configuration;
         std::shared_ptr<CSMSunLightCamera> m_sunLightCamera;
         //todo: backface culling 是做什麼的??
         //std::shared_ptr<Graphics::IDeviceRasterizerState> m_backfaceCullingState;
         //bool m_isRenderBackFace;
+
+        static inline std::vector<MathLib::Matrix4> m_cascadeLightViewProjections;
+        static inline std::vector<float> m_cascadeDistances;
+        static inline std::vector<MathLib::Matrix4> m_cascadeTextureCoordTransforms;
+        static inline float m_faceLightThreshold = 0.02f;
     };
 }
 

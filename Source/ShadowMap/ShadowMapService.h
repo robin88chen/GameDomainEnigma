@@ -43,21 +43,30 @@ namespace Enigma::ShadowMap
         virtual void RenderShadowScene();
 
     protected:
+        void SubscribeEvents();
+        void UnsubscribeEvents();
+
         void OnLightInfoCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
-        void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit);
+        virtual void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit);
+        virtual void DeleteSunLightCamera();
+        virtual void UpdateSunLightDirection(const MathLib::Vector3& dir);
 
         void BindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
         void BindShadowMapToMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
 
+        static void AssignShadowMapDimension(Engine::EffectVariable& var);
+
+    private:
         static void AssignLightViewProjectionTransform(Engine::EffectVariable& var);
 
     private:
         std::shared_ptr<ShadowMapServiceConfiguration> m_configuration;
         std::shared_ptr<SunLightCamera> m_sunLightCamera;
+        static inline MathLib::Matrix4 m_lightViewProjectionTransform;
 
     protected:
         std::weak_ptr<GameCommon::GameSceneService> m_sceneService;
@@ -66,7 +75,8 @@ namespace Enigma::ShadowMap
         std::weak_ptr<Renderer::Renderer> m_renderer;
         std::weak_ptr<Renderer::RenderTarget> m_shadowMapRenderTarget;
 
-        static MathLib::Matrix4 m_lightViewProjectionTransform;
+        static inline MathLib::Vector4 m_shadowMapDimensionBiasDensity =
+        { 512.0f, 512.0f, 0.005f, 0.75f };      //< width, height, depth bias, shadow density; 靜態變數不能用 union
 
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;

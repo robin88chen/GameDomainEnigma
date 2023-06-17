@@ -99,7 +99,7 @@ void ShadowMapTest::InstallEngine()
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
     auto input_handler_policy = std::make_shared<InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
-        CameraDtoHelper("camera").EyePosition(Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Vector3::UNIT_Y)
+        CameraDtoHelper("camera").EyePosition(Vector3(-10.0f, 10.0f, -10.0f)).LookAt(Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Vector3::UNIT_Y)
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
     auto shadow_map_config = std::make_unique<ShadowMapServiceConfiguration>();

@@ -38,6 +38,14 @@ namespace Enigma::ShadowMap
         const std::string& ShadowMapSemantic() const;
         std::string& ShadowMapSemantic();
 
+        const std::string& ShadowMapDimensionSemantic() const;
+        std::string& ShadowMapDimensionSemantic();
+
+        float ShadowMapDepthBias() const;
+        float& ShadowMapDepthBias();
+        float ShadowMapDensity() const;
+        float& ShadowMapDensity();
+
     protected:
         std::string m_shadowMapTechniqueName;
         MathLib::Dimension m_shadowMapDimension;
@@ -46,6 +54,9 @@ namespace Enigma::ShadowMap
         std::string m_sunLightCameraName;
         std::string m_lightViewProjSemantic;
         std::string m_shadowMapSemantic;
+        std::string m_shadowMapDimensionSemantic;
+        float m_shadowMapDepthBias;
+        float m_shadowMapDensity;
     };
 }
 

@@ -18,8 +18,6 @@ using namespace Enigma::Renderer;
 
 DEFINE_RTTI(ShadowMap, ShadowMapService, ISystemService);
 
-Enigma::MathLib::Matrix4 ShadowMapService::m_lightViewProjectionTransform;
-
 ShadowMapService::ShadowMapService(ServiceManager* manager, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
     const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
     const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<ShadowMapServiceConfiguration>& configuration)
@@ -39,16 +37,9 @@ ShadowMapService::~ShadowMapService()
 
 ServiceResult ShadowMapService::OnInit()
 {
-    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
-    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
-    EventPublisher::Subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
-    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-
+    SubscribeEvents();
     Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
+    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
     return ServiceResult::Complete;
 }
 
@@ -66,6 +57,24 @@ ServiceResult ShadowMapService::OnTerm()
 {
     m_sunLightCamera = nullptr;
 
+    UnsubscribeEvents();
+    return ServiceResult::Complete;
+}
+
+void ShadowMapService::SubscribeEvents()
+{
+    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
+    EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
+    EventPublisher::Subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
+    EventPublisher::Subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+}
+
+void ShadowMapService::UnsubscribeEvents()
+{
     EventPublisher::Unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
@@ -74,8 +83,6 @@ ServiceResult ShadowMapService::OnTerm()
     m_onLightInfoUpdated = nullptr;
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
-
-    return ServiceResult::Complete;
 }
 
 void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
@@ -98,6 +105,11 @@ void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name
     {
         m_renderer.lock()->SetAssociatedCamera(m_sunLightCamera);
     }
+
+    m_shadowMapDimensionBiasDensity[0] = m_configuration->ShadowMapDimension().m_width;
+    m_shadowMapDimensionBiasDensity[1] = m_configuration->ShadowMapDimension().m_height;
+    m_shadowMapDimensionBiasDensity[2] = m_configuration->ShadowMapDepthBias();
+    m_shadowMapDimensionBiasDensity[3] = m_configuration->ShadowMapDensity();
 }
 
 void ShadowMapService::DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
@@ -140,11 +152,7 @@ void ShadowMapService::OnLightInfoDeleted(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
     if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
-    if (!m_renderer.expired())
-    {
-        m_renderer.lock()->SetAssociatedCamera(nullptr);
-    }
-    m_sunLightCamera = nullptr;
+    DeleteSunLightCamera();
 }
 
 void ShadowMapService::OnLightInfoUpdated(const IEventPtr& e)
@@ -153,10 +161,7 @@ void ShadowMapService::OnLightInfoUpdated(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<LightInfoUpdated, IEvent>(e);
     if ((!ev) || (!ev->GetLight())) return;
     if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
-    if (m_sunLightCamera)
-    {
-        m_sunLightCamera->SetSunLightDir(ev->GetLight()->GetLightDirection());
-    }
+    UpdateSunLightDirection(ev->GetLight()->GetLightDirection());
 }
 
 void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
@@ -185,6 +190,23 @@ void ShadowMapService::CreateSunLightCamera(const std::shared_ptr<Light>& lit)
     if (!m_renderer.expired())
     {
         m_renderer.lock()->SetAssociatedCamera(m_sunLightCamera);
+    }
+}
+
+void ShadowMapService::DeleteSunLightCamera()
+{
+    if (!m_renderer.expired())
+    {
+        m_renderer.lock()->SetAssociatedCamera(nullptr);
+    }
+    m_sunLightCamera = nullptr;
+}
+
+void ShadowMapService::UpdateSunLightDirection(const MathLib::Vector3& dir)
+{
+    if (m_sunLightCamera)
+    {
+        m_sunLightCamera->SetSunLightDir(dir);
     }
 }
 
@@ -217,4 +239,9 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)
 {
     var.AssignValue(m_lightViewProjectionTransform);
+}
+
+void ShadowMapService::AssignShadowMapDimension(Engine::EffectVariable& var)
+{
+    var.AssignValue(m_shadowMapDimensionBiasDensity);
 }

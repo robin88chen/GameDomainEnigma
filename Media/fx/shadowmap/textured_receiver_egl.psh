@@ -1,12 +1,11 @@
 #version 300 es
-#define SMAP_SIZE 512
-#define SHADOW_EPSILON 0.000005f
 //semantic DiffuseTexture DiffuseMap
 //semantic ShadowTexture ShadowMap
 //semantic Ambient AmbientLight
 //semantic SunColor SunLightColor
 //semantic SunDir SunLightDirection
 //semantic LightViewProj LightViewProj
+//semantic ShadowMapSliceDimension ShadowMapSliceDimension
 precision highp float;
 //sampler_state samLinear DiffuseTexture
 //sampler_state samShadow ShadowTexture
@@ -16,6 +15,11 @@ uniform vec4 Ambient;
 uniform vec4 SunColor;
 uniform vec4 SunDir;
 uniform mat4 LightViewProj;
+uniform vec4 ShadowMapSliceDimension;
+#define ShadowMapSliceWidth 	ShadowMapSliceDimension.x
+#define ShadowMapSliceHeight 	ShadowMapSliceDimension.y
+#define ShadowDepthBias			ShadowMapSliceDimension.z
+#define ShadowMapDensity		ShadowMapSliceDimension.w
 in vec3 vNor;
 in vec2 vTexCo;
 in vec4 vWorldPos;
@@ -35,9 +39,9 @@ float CalcShadowDecay(vec4 light_proj)
 	//vec4 depth_vec = texture(ShadowTexture, ShadowTexC);
     float depth_value = texture(ShadowTexture, ShadowTexC).r;
 	float lightAmount = 1.0f;
-	if (depth_value + SHADOW_EPSILON < light_proj.z / light_proj.w)
+	if (depth_value + 0.000005f < light_proj.z / light_proj.w)
 	{
-		lightAmount = 0.5;
+		lightAmount = ShadowMapDensity;
 	}
     return lightAmount;
 }

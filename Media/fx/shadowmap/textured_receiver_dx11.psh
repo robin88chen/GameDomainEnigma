@@ -1,17 +1,21 @@
-#define SMAP_SIZE 512
-#define SHADOW_EPSILON 0.000005f
 //semantic DiffuseTexture DiffuseMap
 //semantic ShadowTexture ShadowMap
 //semantic Ambient AmbientLight
 //semantic SunColor SunLightColor
 //semantic SunDir SunLightDirection
 //semantic LightViewProj LightViewProj
+//semantic ShadowMapSliceDimension ShadowMapSliceDimension
 matrix LightViewProj : LightViewProj;
 Texture2D DiffuseTexture : DiffuseMap;
 Texture2D ShadowTexture : ShadowMap;
 float4 Ambient : AmbientLight;
 float4 SunColor : SunLightColor;
 float4 SunDir : SunLightDirection;
+float4 ShadowMapSliceDimension : ShadowMapSliceDimension;
+#define ShadowMapSliceWidth 	ShadowMapSliceDimension.x
+#define ShadowMapSliceHeight 	ShadowMapSliceDimension.y
+#define ShadowDepthBias			ShadowMapSliceDimension.z
+#define ShadowMapDensity		ShadowMapSliceDimension.w
 SamplerState samLinear
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -52,7 +56,7 @@ PS_OUTPUT ps_main(PS_INPUT input) : COLOR0
     ShadowTexC.y = 1.0f - ShadowTexC.y;
 
     // transform to texel space
-    float2 texelpos = SMAP_SIZE * ShadowTexC;
+    float2 texelpos = float2(ShadowMapSliceWidth, ShadowMapSliceHeight) * ShadowTexC;
     // Determine the lerp amounts           
     float2 lerps = frac( texelpos );
 
@@ -65,7 +69,7 @@ PS_OUTPUT ps_main(PS_INPUT input) : COLOR0
 	}
 	else
 	{
-		sourceval = (shadow_depth + SHADOW_EPSILON) < (lightProj.z / lightProj.w) ? 0.5f: 1.0f;
+		sourceval = (shadow_depth + ShadowDepthBias) < (lightProj.z / lightProj.w) ? ShadowMapDensity : 1.0f;
 	}
 	
 	output.Color = outputColor * diffuse * sourceval;

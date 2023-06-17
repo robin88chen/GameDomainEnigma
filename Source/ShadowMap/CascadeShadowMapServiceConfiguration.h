@@ -24,9 +24,20 @@ namespace Enigma::ShadowMap
         const std::string& BackfaceCullingStateName() const;
         std::string& BackfaceCullingStateName();
 
+        const std::string& CascadeDistanceSemantic() const;
+        std::string& CascadeDistanceSemantic();
+        const std::string& CascadeTextureCoordTransformSemantic() const;
+        std::string& CascadeTextureCoordTransformSemantic();
+        const std::string& CascadeSliceCountSemantic() const;
+        std::string& CascadeSliceCountSemantic();
+
     protected:
         unsigned m_frustaPartitionCount;
         std::string m_backfaceCullingStateName;
+
+        std::string m_cascadeDistanceSemantic;
+        std::string m_cascadeTextureCoordTransformSemantic;
+        std::string m_cascadeSliceCountSemantic;
     };
 }
 

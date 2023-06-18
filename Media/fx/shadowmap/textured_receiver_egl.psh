@@ -7,6 +7,7 @@
 //semantic LightViewProj LightViewProj
 //semantic ShadowMapSliceDimension ShadowMapSliceDimension
 precision highp float;
+precision highp sampler2D;
 //sampler_state samLinear DiffuseTexture
 //sampler_state samShadow ShadowTexture
 uniform sampler2D ShadowTexture;
@@ -38,8 +39,9 @@ float CalcShadowDecay(vec4 light_proj)
     //ShadowTexC.y = 1.0f - ShadowTexC.y;
 	//vec4 depth_vec = texture(ShadowTexture, ShadowTexC);
     float depth_value = texture(ShadowTexture, ShadowTexC).r;
+    if (depth_value == 1.0f) return 1.0f;
 	float lightAmount = 1.0f;
-	if (depth_value + 0.000005f < light_proj.z / light_proj.w)
+	if (depth_value + ShadowDepthBias < light_proj.z / light_proj.w)
 	{
 		lightAmount = ShadowMapDensity;
 	}

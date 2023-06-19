@@ -47,24 +47,16 @@ vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light
 }
 float SampleDepthValue(vec2 texc)
 {
-	vec4 depth_vec = texture(ShadowTextureAtlas, texc);
-	// must use highp uint
-	highp uint r = uint(roundEven(depth_vec.r * 255.0f));
-	highp uint g = uint(roundEven(depth_vec.g * 255.0f));
-	highp uint b = uint(roundEven(depth_vec.b * 255.0f));
-	highp uint a = uint(roundEven(depth_vec.a * 255.0f));
-	highp uint depth_uint = (r << 24) + (g << 16) + (b << 8) + (a);
-	//if ((r == 255u) && (g == 255u)) depth_uint = uint(0);
-    if ((r == 255u) && (g == 0u) && (b == 0u)) return 1.0f; // depth_uint = uint(0);
-	float depth_value = uintBitsToFloat(depth_uint);
+    float depth_value = texture(ShadowTextureAtlas, texc).r;
+    if (depth_value == 1.0f) return 1.0f;
 	return depth_value;
 }
 
 float CalcShadowDecay(in int index, in vec4 light_proj)
 {
-    if ( ( light_proj.x < -1.0f ) || ( light_proj.y < -1.0f ) || ( light_proj.x > 1.0f ) || (light_proj.y > 1.0f ) )
+    if ( ( light_proj.x < -1.0f ) || ( light_proj.y < -1.0f ) || ( light_proj.x > 1.0f ) || (light_proj.y > 1.0f ) || (light_proj.z > 1.0f) || (light_proj.z < 0.0f))
 	{
-	  return 0.0f;
+	  return 1.0f;
 	}
     vec2 ShadowTexC = 0.5 * light_proj.xy / light_proj.w + vec2( 0.5, 0.5 );
 	ShadowTexC.x = (ShadowTexC.x + float(index)) / float(ShadowMapSliceCount);

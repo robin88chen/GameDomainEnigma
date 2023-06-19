@@ -29,7 +29,10 @@
 	{"Name" : "shadowmap/caster", "API" : "egl", "File" : "fx/shadowmap/caster_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
 	{"Name" : "shadowmap/textured_receiver", "API" : "dx9", "File" : "fx/shadowmap/textured_receiver.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
 	{"Name" : "shadowmap/textured_receiver", "API" : "dx11", "File" : "fx/shadowmap/textured_receiver_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
-	{"Name" : "shadowmap/textured_receiver", "API" : "egl", "File" : "fx/shadowmap/textured_receiver_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	{"Name" : "shadowmap/textured_receiver", "API" : "egl", "File" : "fx/shadowmap/textured_receiver_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "csm/textured_receiver", "API" : "dx9", "File" : "fx/shadowmap/textured_csm_receiver.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "csm/textured_receiver", "API" : "dx11", "File" : "fx/shadowmap/textured_csm_receiver_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "csm/textured_receiver", "API" : "egl", "File" : "fx/shadowmap/textured_csm_receiver_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
 	],
 	"SamplerStateList" : [
 	{"Name" : "samLinear", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", "MagFilter" : "Linear"},
@@ -66,6 +69,11 @@
 	{"Name" : "Primary/ShadowMapReceiver",
 		"EffectPassArray" : [
 		{"Name" : "shadowmap_receiver", "Program" : "shadowmap_receiver", "VertexShader" : "default_mesh", "PixelShader" : "shadowmap/textured_receiver", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
+		]
+	},
+	{"Name" : "Primary/CSMReceiver",
+		"EffectPassArray" : [
+		{"Name" : "csm_receiver", "Program" : "csm_receiver", "VertexShader" : "default_mesh", "PixelShader" : "csm/textured_receiver", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
 		]
 	}
 	]

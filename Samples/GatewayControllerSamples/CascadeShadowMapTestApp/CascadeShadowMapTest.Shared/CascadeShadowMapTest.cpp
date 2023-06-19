@@ -102,8 +102,8 @@ void CascadeShadowMapTest::InstallEngine()
         CameraDtoHelper("camera").EyePosition(Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Vector3::UNIT_Y)
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
-    auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
-    auto shadowmap_policy = std::make_shared<ShadowMapInstallingPolicy>(ShadowMapRendererName, ShadowMapTargetName, shadow_map_config);
+    auto shadow_map_config = std::make_shared<CascadeShadowMapServiceConfiguration>();
+    auto shadowmap_policy = std::make_shared<CascadeShadowMapInstallingPolicy>(ShadowMapRendererName, ShadowMapTargetName, shadow_map_config);
     auto primary_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, primary_render_config);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
@@ -196,7 +196,7 @@ void CascadeShadowMapTest::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEvent
     if (!ev) return;
     if (ev->GetPawn() == m_floor)
     {
-        ev->GetPawn()->GetPrimitive()->SelectVisualTechnique("ShadowMapReceiver");
+        ev->GetPawn()->GetPrimitive()->SelectVisualTechnique("CSMReceiver");
     }
     else
     {

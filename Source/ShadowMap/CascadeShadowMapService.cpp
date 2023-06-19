@@ -47,7 +47,7 @@ ServiceResult CascadeShadowMapService::OnTick()
     {
         m_sunLightCamera->CalcLightCameraSystemMatrix(m_sceneService.lock()->GetSceneCuller());
         m_cascadeLightViewProjections = m_sunLightCamera->GetLightViewProjectionTransforms();
-        m_cascadeDistances = m_sunLightCamera->GetLightFrustaDistances();
+        m_cascadeDistances = m_sunLightCamera->LightFrustaDistanceToVector4();
         m_cascadeTextureCoordTransforms = m_sunLightCamera->GetTextureCoordTransforms();
     }
     return ServiceResult::Pendding;
@@ -114,7 +114,7 @@ void CascadeShadowMapService::DestroyShadowRenderSystem(const std::string& rende
 void CascadeShadowMapService::CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(!m_cameraService.expired());
-    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(m_configuration->SunLightCameraName());
+    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(m_configuration->SunLightCameraName(), m_configuration->FrustaPartitionCount());
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
     if (lit) vecSunDir = lit->GetLightDirection();
     m_sunLightCamera->SetSunLightDir(vecSunDir);
@@ -160,7 +160,7 @@ void CascadeShadowMapService::AssignLightViewProjectionTransforms(Engine::Effect
 
 void CascadeShadowMapService::AssignCascadeDistances(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_cascadeDistances, static_cast<unsigned>(m_cascadeDistances.size()));
+    var.AssignValue(m_cascadeDistances);
 }
 
 void CascadeShadowMapService::AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var)
@@ -170,15 +170,15 @@ void CascadeShadowMapService::AssignCascadeTextureCoordTransforms(Engine::Effect
 
 void CascadeShadowMapService::AssignSliceCount(Engine::EffectVariable& var)
 {
-    var.AssignValue(static_cast<unsigned>(m_cascadeDistances.size()));
+    var.AssignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
 }
 
 void CascadeShadowMapService::AssignSliceDimension(Engine::EffectVariable& var)
 {
-    
+
 }
 
 void CascadeShadowMapService::AssignFaceLightThreshold(Engine::EffectVariable& var)
 {
-    
+
 }

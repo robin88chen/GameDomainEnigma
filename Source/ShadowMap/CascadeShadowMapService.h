@@ -58,7 +58,7 @@ namespace Enigma::ShadowMap
         //bool m_isRenderBackFace;
 
         static inline std::vector<MathLib::Matrix4> m_cascadeLightViewProjections;
-        static inline std::vector<float> m_cascadeDistances;
+        static inline MathLib::Vector4 m_cascadeDistances;
         static inline std::vector<MathLib::Matrix4> m_cascadeTextureCoordTransforms;
         static inline float m_faceLightThreshold = 0.02f;
     };

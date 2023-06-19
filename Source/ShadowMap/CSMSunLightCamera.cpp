@@ -353,3 +353,15 @@ const Vector3& CSMSunLightCamera::GetLightCameraLocation(unsigned int index) con
     assert(index < m_partitionCount);
     return m_vecLightCameraLocations[index];
 }
+
+Vector4 CSMSunLightCamera::LightFrustaDistanceToVector4() const
+{
+    Vector4 vecLightFrustaDistance = Vector4::ZERO;
+    unsigned count = m_partitionCount;
+    if (count > 4) count = 4;
+    for (unsigned int i = 0; i < count; i++)
+    {
+        vecLightFrustaDistance[i] = m_lightFrustaDistances[i];
+    }
+    return vecLightFrustaDistance;
+}

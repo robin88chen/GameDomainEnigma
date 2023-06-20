@@ -169,7 +169,7 @@ void MultiBackSurfaceDx11::CreateD3DRenderTarget(ID3D11Device* device,
     }
 }
 
-error MultiBackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension& dimension, 
+error MultiBackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension& dimension,
     unsigned int buff_count, const std::vector<Graphics::GraphicFormat>& fmt)
 {
     assert(device);

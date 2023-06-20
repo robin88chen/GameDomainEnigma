@@ -591,6 +591,9 @@ error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& bac
 {
     assert(m_d3dDeviceContext);
     if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
+    // simply check dimensions of back & depth surface
+    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->GetDimension() != depth_surface->GetDimension()))))
+        return ErrorCode::surfaceDimensionsNotMatch;
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
     if (m_boundBackSurface == nullptr)
@@ -618,6 +621,9 @@ error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back
 {
     assert(m_d3dDeviceContext);
     if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
+    // simply check dimensions of back & depth surface
+    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->GetDimension() != depth_surface->GetDimension()))))
+        return ErrorCode::surfaceDimensionsNotMatch;
     unsigned int bound_sourface_count = 1;
     if (m_boundBackSurface) bound_sourface_count = m_boundBackSurface->GetSurfaceCount();
     m_boundBackSurface = back_surface;

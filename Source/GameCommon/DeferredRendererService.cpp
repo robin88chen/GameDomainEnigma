@@ -62,6 +62,8 @@ ServiceResult DeferredRendererService::OnInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    m_onPrimaryRenderTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetResized(e); });
+    EventPublisher::Subscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
     m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
     EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
@@ -89,6 +91,8 @@ ServiceResult DeferredRendererService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
+    m_onPrimaryRenderTargetResized = nullptr;
     EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onGameCameraUpdated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
@@ -202,6 +206,17 @@ void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEv
     if (!primaryTarget) return;
 
     CreateGBuffer(primaryTarget);
+}
+
+void DeferredRendererService::OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Renderer::RenderTargetResized, Frameworks::IEvent>(e);
+    if (!ev) return;
+    const auto target = ev->GetRenderTarget();
+    if ((!target) || (!target->IsPrimary())) return;
+
+    if ((m_gBuffer) && (m_gBuffer->GetDimension() != target->GetDimension())) m_gBuffer->Resize(target->GetDimension());
 }
 
 void DeferredRendererService::OnGameCameraUpdated(const Frameworks::IEventPtr& e)

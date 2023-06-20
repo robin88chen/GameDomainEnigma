@@ -32,6 +32,14 @@ namespace Enigma::MathLib
     {
         unsigned int m_width;
         unsigned int m_height;
+        bool operator==(const Dimension& rhs) const
+        {
+            return m_width == rhs.m_width && m_height == rhs.m_height;
+        }
+        bool operator!=(const Dimension& rhs) const
+        {
+            return !(*this == rhs);
+        }
     };
 }
 #endif // !_ALGEBRA_BASIC_TYPES_H

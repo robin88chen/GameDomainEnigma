@@ -61,6 +61,7 @@ namespace Enigma::GameCommon
         void BindGBufferToLightVolume(const std::shared_ptr<LightVolumePawn>& volume);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
+        void OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
         void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphChanged(const Frameworks::IEventPtr& e);
         void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
@@ -92,6 +93,7 @@ namespace Enigma::GameCommon
         Renderer::RenderTargetPtr m_gBuffer;
 
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
+        Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetResized;
         Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
         Frameworks::EventSubscriberPtr m_onGBufferTextureCreated;

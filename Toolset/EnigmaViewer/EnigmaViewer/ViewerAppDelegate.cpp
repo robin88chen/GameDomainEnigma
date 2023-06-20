@@ -146,13 +146,15 @@ void ViewerAppDelegate::InstallEngine()
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
-    auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
-    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
+    auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
+    auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
+    //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
+    //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, scene_renderer_policy, game_scene_policy, animated_pawn, game_light_policy });
+        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }

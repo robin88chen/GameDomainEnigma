@@ -14,7 +14,7 @@
 	{"Name" : "textured_mesh", "API" : "egl", "File" : "fx/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
 	{"Name" : "deferred/textured_mesh", "API" : "dx9", "File" : "fx/deferred/textured_mesh.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
 	{"Name" : "deferred/textured_mesh", "API" : "dx11", "File" : "fx/deferred/textured_mesh_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
-	{"Name" : "deferred/texture_mesh", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred/textured_mesh", "API" : "egl", "File" : "fx/deferred/textured_mesh_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
 	{"Name" : "textured_mesh_intersect", "API" : "dx9", "File" : "fx/textured_mesh_intersect.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
 	{"Name" : "textured_mesh_intersect", "API" : "dx11", "File" : "fx/textured_mesh_intersect_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
 	{"Name" : "textured_mesh_intersect", "API" : "egl", "File" : "fx/textured_mesh_intersect_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},

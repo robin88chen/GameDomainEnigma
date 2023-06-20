@@ -3,6 +3,7 @@
 //semantic View View
 //semantic Projection Projection
 //semantic BoneAnimation[0] BoneMatrix
+//semantic wvInvTranspose WorldViewInvTranspose
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec4 weight;
 layout(location = 2) in uint bone_idx;
@@ -11,6 +12,7 @@ layout(location = 4) in vec2 texco;
 uniform mat4 World;
 uniform mat4 View;
 uniform mat4 Projection;
+uniform mat4 wvInvTranspose;
 uniform mat4 BoneAnimation[16];
 out vec3 vNor;
 out vec2 vTexCo;
@@ -41,9 +43,11 @@ void main() {
     Depth = tpos.z;
 	gl_Position = tpos * Projection;
     vTexCo = texco;
-    mat4 nmx = mx * World;
-    nmx = inverse(nmx);
-    nmx = transpose(nmx);
-    vec4 tnor = vec4(nor, 0.0) * nmx;
+    vec4 tnor = vec4(nor, 0.0) * mx;
+    tnor = tnor * wvInvTranspose;
+    //mat4 nmx = mx * World;
+    //nmx = inverse(nmx);
+    //nmx = transpose(nmx);
+    //vec4 tnor = vec4(nor, 0.0) * nmx;
     vNor = normalize(tnor.xyz);
 }

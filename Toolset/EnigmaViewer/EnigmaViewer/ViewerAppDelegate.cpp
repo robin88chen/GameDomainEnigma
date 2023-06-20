@@ -254,6 +254,7 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!ev) return;
     m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
     if (!m_pawn) return;
+    m_pawn->GetPrimitive()->SelectVisualTechnique("Default");
     m_pawn->BakeAvatarRecipes();
     CommandBus::Post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
@@ -285,6 +286,8 @@ void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     if (!ev) return;
     CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
     CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
+    CommandBus::Post(std::make_shared<CreatePointLight>(ev->GetSceneRoot(), mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)

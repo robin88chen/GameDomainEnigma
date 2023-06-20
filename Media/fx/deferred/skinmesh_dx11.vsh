@@ -2,9 +2,11 @@
 //semantic View View
 //semantic Projection Projection
 //semantic BoneAnimation BoneMatrix
+//semantic wvInvTranspose WorldViewInvTranspose
 matrix World : World;
 matrix View : View;
 matrix Projection : Projection;
+matrix wvInvTranspose : WorldViewInvTranspose;
 matrix BoneAnimation[25] : BoneMatrix;
 struct VS_INPUT
 {
@@ -50,7 +52,8 @@ VS_OUTPUT vs_main(const VS_INPUT v)
     o.Pos = mul( o.Pos, Projection );
 	o.Coord = v.Coord;
 	o.Nor = mul( v.Nor, mx);
-	o.Nor = mul( o.Nor, World);
+	//o.Nor = mul( o.Nor, World);
+	o.Nor = mul( o.Nor, wvInvTranspose);
 	return o;
 };
 

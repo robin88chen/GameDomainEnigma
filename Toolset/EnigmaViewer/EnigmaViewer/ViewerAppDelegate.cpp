@@ -14,7 +14,6 @@
 #include "GameCommon/SceneRendererInstallingPolicy.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
-#include "CameraDtoMaker.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
@@ -30,6 +29,7 @@
 #include <Gateways/DtoJsonGateway.h>
 #include "GameCommon/GameLightCommands.h"
 #include "GameCommon/GameSceneEvents.h"
+#include "SceneGraph/SceneGraphDtoHelper.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -142,8 +142,12 @@ void ViewerAppDelegate::InstallEngine()
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDtoMaker::MakeCameraDto());
-    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, true);
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
+        CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
+        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
+        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
+    auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
+    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
@@ -277,8 +281,8 @@ void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.8, 0.2, 0.2, 1.0)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.0, 1.2, 1.2, 1.0)));
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)

@@ -134,7 +134,6 @@
   <ItemGroup>
     <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
-    <ClInclude Include="CameraDtoMaker.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
@@ -151,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
-    <ClCompile Include="CameraDtoMaker.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />

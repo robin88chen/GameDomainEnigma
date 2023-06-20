@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SunLightCamera">
+      <UniqueIdentifier>{ceb2e24a-d262-4a21-8955-280c20fa9aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShadowMapService">
+      <UniqueIdentifier>{0e3b2f0f-df72-4283-a789-9e4096c5e0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoundFilter">
+      <UniqueIdentifier>{4081bfb6-eb64-4119-9c61-7dcee4fb6404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{e441c99a-0f97-4243-9be3-9add81531e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShadowMapService\Renderer">
+      <UniqueIdentifier>{4b3573f1-3692-44ab-b993-39b12d0af7bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h">
+      <Filter>SunLightCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapService.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.h">
+      <Filter>BoundFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.h">
+      <Filter>BoundFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.h">
+      <Filter>SunLightCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.h">
+      <Filter>ShadowMapService\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SunLightCamera.cpp">
+      <Filter>SunLightCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapService.cpp">
+      <Filter>ShadowMapService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.cpp">
+      <Filter>ShadowMapService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowableBoundFilter.cpp">
+      <Filter>BoundFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowCasterBoundFilter.cpp">
+      <Filter>BoundFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CSMSunLightCamera.cpp">
+      <Filter>SunLightCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapRenderer.cpp">
+      <Filter>ShadowMapService\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapService.cpp">
+      <Filter>ShadowMapService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.cpp">
+      <Filter>ShadowMapService</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -32,7 +32,6 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary,
     m_renderTargetTexture = nullptr;
     m_usages = usages;
 
-    m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
 
     m_resizingBits.reset();
@@ -54,7 +53,6 @@ RenderTarget::RenderTarget(const std::string& name, const std::vector<Graphics::
     m_renderTargetTexture = nullptr;
     m_usages = usages;
 
-    m_gbufferDepthMapIndex = 0;
     m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
 
     SubscribeHandler();

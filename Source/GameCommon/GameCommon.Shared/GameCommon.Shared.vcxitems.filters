@@ -93,6 +93,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h">
       <Filter>DeferredRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.h">
+      <Filter>SceneRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.cpp">
       <Filter>DeferredRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.cpp">
+      <Filter>SceneRenderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

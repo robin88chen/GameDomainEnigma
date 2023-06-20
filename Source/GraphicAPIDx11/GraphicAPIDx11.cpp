@@ -57,6 +57,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
 {
     Platforms::Debug::Printf("create dx11 device in thread %d\n", std::this_thread::get_id());
     m_deviceRequiredBits = rqb;
+    m_fmtDepthSurface = m_deviceRequiredBits.GetDepthFormat();
     m_wnd = hwnd;
     m_adapter = menew AdapterDx11();
     m_swapChain = menew SwapChainDx11();
@@ -144,7 +145,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     {
         auto dimension = back_surface->GetDimension();
         Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
-            menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, Graphics::GraphicFormat::FMT_D24S8 } };
+            menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, m_fmtDepthSurface } };
         SetDepthSurfaceFormat(depth_surface->GetFormat());
         m_stash->Add(depth_name, depth_surface);
     }

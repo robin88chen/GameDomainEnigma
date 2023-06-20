@@ -228,6 +228,7 @@ error DeviceCreatorDx11::EnumerateDevices(AdapterDx11::AdapterInfo* adapterInfo)
         UINT createDeviceFlags = 0; //D3D11_CREATE_DEVICE_SINGLETHREADED;
 #ifdef _DEBUG
         createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+        //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
 #endif
         HRESULT hr = D3D11CreateDevice(adapter, devTypeArray[iDeviceType], 0, createDeviceFlags,
             NULL, 0, D3D11_SDK_VERSION, &d3dDevice, NULL, NULL);

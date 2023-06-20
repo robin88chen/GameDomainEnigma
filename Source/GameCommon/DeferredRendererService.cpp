@@ -28,7 +28,6 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 
-using error = std::error_code;
 
 DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
 
@@ -40,9 +39,9 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
     const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
-    std::unique_ptr<DeferredRendererServiceConfiguration> configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager)
+    const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
 {
-    m_configuration = std::move(configuration);
+    m_configuration = configuration;
     m_sceneGraphRepository = scene_graph_repository;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
@@ -118,7 +117,7 @@ ServiceResult DeferredRendererService::OnTerm()
     return SceneRendererService::OnTerm();
 }
 
-void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary)
+void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);
@@ -178,7 +177,7 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (m_gBuffer)
     {
-        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, m_configuration->GbufferFormats().size(),
+        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
             m_configuration->GbufferFormats());
         m_gBuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }

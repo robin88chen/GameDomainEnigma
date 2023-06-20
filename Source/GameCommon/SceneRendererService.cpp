@@ -14,14 +14,13 @@ using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 
-using error = std::error_code;
-
 DEFINE_RTTI(GameCommon, SceneRendererService, ISystemService);
 
 SceneRendererService::SceneRendererService(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
     const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager) : ISystemService(mngr)
+    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config) : ISystemService(mngr)
 {
+    m_config = config;
     m_sceneService = scene_service;
     m_cameraService = camera_service;
     m_rendererManager = renderer_manager;
@@ -53,14 +52,16 @@ ServiceResult SceneRendererService::OnTerm()
     return ServiceResult::Complete;
 }
 
-void SceneRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary)
+void SceneRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
+    assert(m_config);
     assert(!m_rendererManager.expired());
     error er = m_rendererManager.lock()->CreateRenderer(renderer_name);
     if (er) return;
-    er = m_rendererManager.lock()->CreateRenderTarget(target_name, is_primary ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
+    er = m_rendererManager.lock()->CreateRenderTarget(target_name, m_config->IsPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
     if (er) return;
     auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
+    renderer->SelectRendererTechnique(m_config->PrimaryRendererTechniqueName());
     auto target = m_rendererManager.lock()->GetRenderTarget(target_name);
     std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->SetRenderTarget(target);
     m_renderer = renderer;

@@ -1,0 +1,122 @@
+#version 300 es
+#define SMAP_SIZE 512
+#define SHADOW_EPSILON 0.000005f
+//semantic DiffuseTexture DiffuseMap
+//semantic ShadowTextureAtlas ShadowMap
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic LightViewProj[0] LightViewProj
+//semantic LightFrustaDistance LightFrustaDistance
+//semantic ShadowMapSliceDimension ShadowMapSliceDimension
+//semantic ShadowMapSliceCount ShadowMapSliceCount
+//semantic FaceLightThreshold FaceLightThreshold
+//semantic ShadowMapCoordTransform[0] ShadowMapTexCoordTransform
+//semantic View View
+precision highp float;
+//sampler_state samLinear DiffuseTexture
+//sampler_state samShadow ShadowTextureAtlas
+uniform mat4 LightViewProj[4];
+uniform sampler2D ShadowTextureAtlas;
+uniform sampler2D DiffuseTexture;
+uniform vec4 Ambient;
+uniform vec4 SunColor;
+uniform vec4 SunDir;
+uniform vec4 LightFrustaDistance;
+uniform vec4 ShadowMapSliceDimension;
+uniform int ShadowMapSliceCount;
+uniform float FaceLightThreshold;
+uniform mat4 ShadowMapCoordTransform[4];
+uniform mat4 View;
+in vec3 vNor;
+in vec2 vTexCo;
+in vec4 vWorldPos;
+out vec4 outColor;
+
+#define ShadowMapSliceWidth 	ShadowMapSliceDimension.x
+#define ShadowMapSliceHeight 	ShadowMapSliceDimension.y
+#define ShadowDepthBias			ShadowMapSliceDimension.z
+#define ShadowMapDensity		ShadowMapSliceDimension.w
+
+vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
+{
+	vec4 diffuse = Ambient;
+	vec3 sun_dir = vec3(SunDir.x, SunDir.y, SunDir.z);
+	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, sun_dir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+	return diffuse;
+}
+float SampleDepthValue(vec2 texc)
+{
+    float depth_value = texture(ShadowTextureAtlas, texc).r;
+    if (depth_value == 1.0f) return 1.0f;
+	return depth_value;
+}
+
+float CalcShadowDecay(in int index, in vec4 light_proj)
+{
+    if ( ( light_proj.x < -1.0f ) || ( light_proj.y < -1.0f ) || ( light_proj.x > 1.0f ) || (light_proj.y > 1.0f ) || (light_proj.z > 1.0f) || (light_proj.z < 0.0f))
+	{
+	  return 1.0f;
+	}
+    vec2 ShadowTexC = 0.5 * light_proj.xy / light_proj.w + vec2( 0.5, 0.5 );
+	ShadowTexC.x = (ShadowTexC.x + float(index)) / float(ShadowMapSliceCount);
+
+    vec2 texelpos = vec2(ShadowMapSliceWidth * float(ShadowMapSliceCount), ShadowMapSliceHeight) * ShadowTexC;
+    // Determine the lerp amounts           
+    vec2 lerps = fract( texelpos );
+
+    //read in bilerp stamp, doing the shadow checks
+	float map_width = ShadowMapSliceWidth * float(ShadowMapSliceCount);
+	float delta_w = 1.0f / map_width;
+	float delta_h = 1.0f / ShadowMapSliceHeight;
+	float depth_limit = light_proj.z / light_proj.w - ShadowDepthBias;
+    float sourcevals[4] = float[4]( 0.0f, 0.0f, 0.0f, 0.0f );
+	float val = SampleDepthValue(ShadowTexC);
+	sourcevals[0] = 1.0f;
+	if ( val < depth_limit ) sourcevals[0] = 0.0f;
+	val = SampleDepthValue(ShadowTexC + vec2(delta_w, 0.0f));
+	sourcevals[1] = 1.0f;
+	if ( val < depth_limit ) sourcevals[1] = 0.0f;
+	val = SampleDepthValue(ShadowTexC + vec2(0.0f, delta_h));
+	sourcevals[2] = 1.0f;
+	if ( val < depth_limit ) sourcevals[2] = 0.0f;
+	val = SampleDepthValue( ShadowTexC + vec2(delta_w, delta_h));
+	sourcevals[3] = 1.0f;
+	if ( val < depth_limit ) sourcevals[3] = 0.0f;
+	
+	//float LightAmount = 1.0;
+	//if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) LightAmount = 0.0;
+	    // lerp between the shadow values to calculate our light amount
+    float lightAmount = mix( mix( sourcevals[0], sourcevals[1], lerps.x ),
+                            mix( sourcevals[2], sourcevals[3], lerps.x ),
+                            lerps.y ); 
+    return lightAmount;
+}
+
+float CalculateLightAmount(in float viewer_pos, in vec4 light_proj0 )
+{
+	if ( ShadowMapSliceCount == 0 ) return 1.0f;  // don't have shadow map
+	
+	//vec4 compare_light = vec4 ( viewer_pos, viewer_pos, viewer_pos, viewer_pos ) > LightFrustaDistance;
+	vec4 compare_light = step( LightFrustaDistance, vec4 ( viewer_pos, viewer_pos, viewer_pos, viewer_pos ));
+	float sm_index_f = dot ( compare_light, vec4( 1.0f, 1.0f, 1.0f, 0.0f ) );
+	int sm_index = int(sm_index_f);
+	vec4 light_projN = light_proj0 * ShadowMapCoordTransform[sm_index];
+	float light_amount = CalcShadowDecay( sm_index, light_projN );
+	return light_amount;
+}
+
+float BlendShadowDensity( in float light_amount )
+{
+	return light_amount * ( 1.0f - ShadowMapDensity ) + ShadowMapDensity;
+}
+
+void main() {
+    outColor = texture(DiffuseTexture, vTexCo);
+    vec4 diffuse = CommonDiffuseLighting(vWorldPos, vNor, 1.0f);
+	vec4 lightProj = vWorldPos * LightViewProj[0];
+    vec4 viewerPos = vWorldPos * View;
+	float LightAmount = CalculateLightAmount ( viewerPos.z, lightProj );
+	LightAmount = BlendShadowDensity ( LightAmount );
+	outColor = outColor * diffuse * LightAmount;
+}

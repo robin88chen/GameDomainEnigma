@@ -65,7 +65,9 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
     hr = graphic->GetD3DDevice()->CreateVertexShader(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), nullptr, &m_d3dShader);
     //GUID guid = IID_ID3D11ShaderReflection;
 
-    D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
+    //D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
+      //  reinterpret_cast<void**>(&m_d3dShaderReflect));
+    D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), IID_ID3D11ShaderReflection,
         reinterpret_cast<void**>(&m_d3dShaderReflect));
     SAFE_RELEASE(outBuf);
 

@@ -12,6 +12,7 @@
 #include "Renderer/RendererManager.h"
 #include "Renderer/Renderer.h"
 #include "Frameworks/EventSubscriber.h"
+#include "SceneRendererServiceConfiguration.h"
 #include <memory>
 
 namespace Enigma::GameCommon
@@ -25,7 +26,7 @@ namespace Enigma::GameCommon
     public:
         SceneRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
             const std::shared_ptr<GameCameraService>& camera_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager);
+            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config);
         SceneRendererService(const SceneRendererService&) = delete;
         SceneRendererService(SceneRendererService&&) = delete;
         virtual ~SceneRendererService() override;
@@ -35,7 +36,7 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary);
+        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
         virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
 
         virtual void PrepareGameScene();
@@ -47,6 +48,9 @@ namespace Enigma::GameCommon
 
         void OnPrimaryCameraCreated(const Frameworks::IEventPtr& e);
         void OnPrimaryTargetCreated(const Frameworks::IEventPtr& e);
+
+    private:
+        std::shared_ptr<SceneRendererServiceConfiguration> m_config;
 
     protected:
         std::weak_ptr<GameSceneService> m_sceneService;

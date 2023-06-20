@@ -7,6 +7,7 @@
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "GameCommon/SceneRendererInstallingPolicy.h"
+#include "ShadowMap/ShadowMapInstallingPolicies.h"
 
 using namespace Enigma::Controllers;
 
@@ -23,6 +24,7 @@ constexpr std::uint16_t OrderOfGameLightInstalling = 500;
 constexpr std::uint16_t OrderOfGameSceneInstalling = 510;
 
 constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
+constexpr std::uint16_t OrderOfShadowMapInstalling = 610;
 
 constexpr std::uint16_t OrderOfGamePawnsInstalling = 700;
 
@@ -61,5 +63,7 @@ void InstallingPolicyList::MakeOrderMap()
     m_orderMap[typeid(GameCommon::GameSceneInstallingPolicy)] = OrderOfGameSceneInstalling;
     m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(GameCommon::DeferredRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
+    m_orderMap[typeid(ShadowMap::ShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
+    m_orderMap[typeid(ShadowMap::CascadeShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(GameCommon::AnimatedPawnInstallingPolicy)] = OrderOfGamePawnsInstalling;
 }

@@ -1,0 +1,8 @@
+#version 300 es
+#pragma debug(on)
+precision highp float;
+in vec2 vDepth;
+layout (location = 0) out float outColor;
+void main() {
+	outColor = vDepth.x / vDepth.y;
+}

@@ -14,6 +14,8 @@ Culler::Culler(const std::shared_ptr<Camera>& camera)
     m_camera = camera;
     m_countCullerPlane = static_cast<size_t>(CullerPlane::Count);
     m_planeActivations.set();
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
     UpdateFrustumPlanes();
     m_outerClipShiftZ = 2.0f;
 }
@@ -26,6 +28,8 @@ Culler::Culler(const Culler& culler)
     m_planeActivations = culler.m_planeActivations;
     m_outerClipShiftZ = culler.m_outerClipShiftZ;
     m_visibleSet = culler.m_visibleSet;
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
     UpdateFrustumPlanes();
 }
 
@@ -37,6 +41,8 @@ Culler::Culler(Culler&& culler) noexcept
     m_planeActivations = std::move(culler.m_planeActivations);
     m_outerClipShiftZ = culler.m_outerClipShiftZ;
     m_visibleSet = std::move(culler.m_visibleSet);
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
     UpdateFrustumPlanes();
 }
 
@@ -53,6 +59,8 @@ Culler& Culler::operator=(const Culler& culler)
     m_planeActivations = culler.m_planeActivations;
     m_outerClipShiftZ = culler.m_outerClipShiftZ;
     m_visibleSet = culler.m_visibleSet;
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
     UpdateFrustumPlanes();
     return *this;
 }
@@ -65,6 +73,8 @@ Culler& Culler::operator=(Culler&& culler) noexcept
     m_planeActivations = std::move(culler.m_planeActivations);
     m_outerClipShiftZ = culler.m_outerClipShiftZ;
     m_visibleSet = std::move(culler.m_visibleSet);
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
     UpdateFrustumPlanes();
     return *this;
 }
@@ -324,12 +334,15 @@ void Culler::PushAdditionalPlane(const MathLib::Plane3& plane)
 {
     if (m_countCullerPlane < CULLER_MAX_PLANE_QUANTITY)
     {
-        m_clipPlanes[m_countCullerPlane] = plane;
-        m_countCullerPlane++;
+        m_clipPlanes.push_back(plane);
+        m_outerClipPlanes.push_back(plane);
+        m_countCullerPlane = static_cast<unsigned>(m_clipPlanes.size());
     }
 }
 
 void Culler::RemoveAdditionalPlane()
 {
     m_countCullerPlane = static_cast<size_t>(CullerPlane::Count);
+    m_clipPlanes.resize(m_countCullerPlane);
+    m_outerClipPlanes.resize(m_countCullerPlane);
 }

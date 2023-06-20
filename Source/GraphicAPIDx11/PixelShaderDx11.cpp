@@ -14,7 +14,7 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-// 這個 IID 是新版的, 正確的 GUID 在 dxguid.lib 裡, d3dcompiler.lib 裡是舊的, 
+// 這個 IID 是新版的, 正確的 GUID 在 dxguid.lib 裡, d3dcompiler.lib 裡是舊的,
 // 但為了避免錯誤, 還是重新定義一個
 //DEFINE_GUID(Fix_IID_ID3D11ShaderReflection, 0x8d536ca1, 0x0cca, 0x4956, 0xa8, 0x37, 0x78, 0x69, 0x63, 0x75, 0x55, 0x84);
 EXTERN_C const GUID DECLSPEC_SELECTANY Fix_IID_ID3D11ShaderReflection
@@ -62,7 +62,9 @@ error PixelShaderDx11::CompileCode(const std::string& code, const std::string& p
     SAFE_RELEASE(errorBuf);
     hr = graphic->GetD3DDevice()->CreatePixelShader(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), NULL, &m_d3dShader);
     //GUID guid = IID_ID3D11ShaderReflection;
-    D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
+    //D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), Fix_IID_ID3D11ShaderReflection,
+      //  reinterpret_cast<void**>(&m_d3dShaderReflect));
+    D3DReflect(outBuf->GetBufferPointer(), outBuf->GetBufferSize(), IID_ID3D11ShaderReflection,
         reinterpret_cast<void**>(&m_d3dShaderReflect));
     SAFE_RELEASE(outBuf);
 

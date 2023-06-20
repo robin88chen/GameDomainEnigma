@@ -34,6 +34,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.cpp" />
@@ -52,5 +53,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.cpp" />
   </ItemGroup>
 </Project>

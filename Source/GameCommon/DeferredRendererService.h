@@ -31,7 +31,7 @@ namespace Enigma::GameCommon
             const std::shared_ptr<GameCameraService>& camera_service,
             const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
             const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
-            std::unique_ptr<DeferredRendererServiceConfiguration> configuration);
+            const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration);
         DeferredRendererService(const DeferredRendererService&) = delete;
         DeferredRendererService(DeferredRendererService&&) = delete;
         virtual ~DeferredRendererService() override;
@@ -41,7 +41,7 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name, bool is_primary) override;
+        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
         virtual void PrepareGameScene() override;
@@ -78,7 +78,7 @@ namespace Enigma::GameCommon
         void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
     private:
-        std::unique_ptr<DeferredRendererServiceConfiguration> m_configuration;
+        std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
         Renderer::MeshPrimitivePtr m_ambientLightQuad;

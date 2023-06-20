@@ -13,9 +13,8 @@ DEFINE_RTTI(GameCommon, LightVolumePawn, Pawn);
 std::string LightVolumePawn::m_tokenDefaultVisualTech = "Default";
 std::string LightVolumePawn::m_tokenInsideVisualTech = "Inside";
 
-LightVolumePawn::LightVolumePawn(const std::string& name) : Pawn(name)
+LightVolumePawn::LightVolumePawn(const std::string& name) : Pawn(name), m_isCameraInside(false)
 {
-
 }
 
 LightVolumePawn::LightVolumePawn(const Engine::GenericDto& o) : Pawn(o)

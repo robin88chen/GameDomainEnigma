@@ -74,6 +74,7 @@ void Pawn::SetPrimitive(const Engine::PrimitivePtr& prim)
     }
 
     _UpdateBoundData();
+    _PropagateSpatialRenderState();
 }
 
 void Pawn::CalculateModelBound(bool axis_align)

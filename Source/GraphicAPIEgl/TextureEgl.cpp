@@ -153,6 +153,7 @@ error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     assert(m_texture != 0);
     BackSurfaceEgl* bb = dynamic_cast<BackSurfaceEgl*>(back_surf.get());
     assert(bb);
+    m_format = bb->GetFormat();
     MathLib::Dimension dimension = bb->GetDimension();
     glBindTexture(GL_TEXTURE_2D, m_texture);
     unsigned int data_size = dimension.m_width * dimension.m_height * 4;

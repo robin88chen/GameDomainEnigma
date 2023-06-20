@@ -237,7 +237,7 @@ void ShaderVariableDx11_Float::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to float : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to float : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Float::SetValues(std::any data_array, unsigned int count)
@@ -265,7 +265,7 @@ void ShaderVariableDx11_Float::SetValues(std::any data_array, unsigned int count
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to float array : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to float array : %s", m_name.c_str(), m_semantic.c_str(), data_array.type().name(), e.what());
     }
 }
 
@@ -297,7 +297,7 @@ void ShaderVariableDx11_Int::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to int : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to int : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Int::SetValues(std::any data_array, unsigned int count)
@@ -325,7 +325,7 @@ void ShaderVariableDx11_Int::SetValues(std::any data_array, unsigned int count)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to int array : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to int array : %s", m_name.c_str(), m_semantic.c_str(), data_array.type().name(), e.what());
     }
 }
 
@@ -360,7 +360,7 @@ void ShaderVariableDx11_Boolean::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to bool : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to bool : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Boolean::SetValues(std::any data_array, unsigned int count)
@@ -392,7 +392,7 @@ void ShaderVariableDx11_Boolean::SetValues(std::any data_array, unsigned int cou
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to bool array : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to bool array : %s", m_name.c_str(), m_semantic.c_str(), data_array.type().name(), e.what());
     }
 }
 
@@ -436,7 +436,7 @@ void ShaderVariableDx11_Matrix::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix4 : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to matrix4 : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Matrix::SetValues(std::any data_array, unsigned int count)
@@ -484,7 +484,7 @@ void ShaderVariableDx11_Matrix::SetValues(std::any data_array, unsigned int coun
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to matrix4 array : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to matrix4 array : %s", m_name.c_str(), m_semantic.c_str(), data_array.type().name(), e.what());
     }
 }
 
@@ -528,7 +528,7 @@ void ShaderVariableDx11_Vector::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector4 : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to vector4 : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Vector::SetValues(std::any data_array, unsigned int count)
@@ -556,7 +556,7 @@ void ShaderVariableDx11_Vector::SetValues(std::any data_array, unsigned int coun
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to vector4 array : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to vector4 array : %s", m_name.c_str(), m_semantic.c_str(), data_array.type().name(), e.what());
     }
 }
 //----------------------------------------------------------------------------
@@ -582,7 +582,7 @@ void ShaderVariableDx11_Texture::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to texture : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to texture : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 
@@ -678,7 +678,7 @@ void ShaderVariableDx11_Sampler::SetValue(std::any data)
     }
     catch (const std::bad_any_cast& e)
     {
-        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast to sampler : %s", m_name.c_str(), m_semantic.c_str(), e.what());
+        Platforms::Debug::ErrorPrintf("variable %s(%s) bad any cast (%s) to sampler : %s", m_name.c_str(), m_semantic.c_str(), data.type().name(), e.what());
     }
 }
 void ShaderVariableDx11_Sampler::SetValues(std::any data_array, unsigned int count)

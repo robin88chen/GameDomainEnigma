@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DeviceRequiredBits.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -44,7 +44,11 @@ namespace Enigma::Graphics
             m_usesHardwareVP = true;
             m_isRequiresWindowed = false;
             m_isRequiresFullscreen = false;
-            m_featureLevel = FeatureLevel_9_1;
+            m_featureLevel = FeatureLevel_11_0;
+        }
+        Graphics::GraphicFormat GetDepthFormat() const
+        {
+            return Graphics::GraphicFormat::FMT_D24S8;
         }
     };
 }

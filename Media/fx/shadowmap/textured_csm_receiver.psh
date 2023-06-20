@@ -1,0 +1,136 @@
+#define SMAP_SIZE 512
+#define SHADOW_EPSILON 0.000005f
+//semantic DiffuseTexture DiffuseMap
+//semantic ShadowTextureAtlas ShadowMap
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic LightViewProj LightViewProj
+//semantic LightFrustaDistance LightFrustaDistance
+//semantic ShadowMapSliceDimension ShadowMapSliceDimension
+//semantic ShadowMapSliceCount ShadowMapSliceCount
+//semantic FaceLightThreshold FaceLightThreshold
+//semantic ShadowMapCoordTransform ShadowMapTexCoordTransform
+//semantic View View
+matrix LightViewProj[4] : LightViewProj;
+Texture2D DiffuseTexture : DiffuseMap;
+Texture2D ShadowTextureAtlas : ShadowMap;
+float4 Ambient : AmbientLight;
+float4 SunColor : SunLightColor;
+float4 SunDir : SunLightDirection;
+float4 LightFrustaDistance : LightFrustaDistance;
+float4 ShadowMapSliceDimension : ShadowMapSliceDimension;
+int ShadowMapSliceCount : ShadowMapSliceCount;
+float FaceLightThreshold : FaceLightThreshold;
+matrix ShadowMapCoordTransform[4] : ShadowMapTexCoordTransform;
+matrix View : View;
+
+#define ShadowMapSliceWidth 	ShadowMapSliceDimension.x
+#define ShadowMapSliceHeight 	ShadowMapSliceDimension.y
+#define ShadowDepthBias			ShadowMapSliceDimension.z
+#define ShadowMapDensity		ShadowMapSliceDimension.w
+
+SamplerState samLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState ShadowMapCmpSampler
+{
+  Filter = MIN_MAG_LINEAR_MIP_POINT;
+  AddressU = Border;
+  AddressV = Border;
+  BorderColor = float4(0,0,0,0);
+};
+struct PS_INPUT
+{
+	float4 Pos : POSITION;
+	float3 Nor : TEXCOORD0;
+	float2 Coord : TEXCOORD1;
+	float4 WorldPos : TEXCOORD2;
+};
+struct PS_OUTPUT
+{
+	float4 Color : COLOR0;
+};
+
+float4 CommonDiffuseLighting( in float4 world_pos, in float3 world_nor, in float light_amount = 1.0 )
+{
+	float4 diffuse = Ambient;
+	diffuse += ( ( SunColor * saturate ( dot ( world_nor, SunDir ) ) ) * light_amount * ( 1 - Ambient ) );
+	return diffuse;
+}
+
+float SamplingLightAmountFromShadowMap( in int index, in float4 LightProj )
+{
+    if ( ( LightProj.x < -1.0f ) || ( LightProj.y < -1.0f ) || ( LightProj.x > 1.0f ) || (LightProj.y > 1.0f ) )
+	{
+	  return 0.0f;
+	}
+	
+    float2 ShadowTexC = float2 ( 0.5f, -0.5f ) * ( LightProj.xy / LightProj.w ) + float2( 0.5, 0.5 );
+	ShadowTexC.x = (ShadowTexC.x + index)/(float)ShadowMapSliceCount;
+
+    // transform to texel space
+    float2 texelpos = float2(ShadowMapSliceWidth * (float)ShadowMapSliceCount, ShadowMapSliceHeight) * ShadowTexC;
+    // Determine the lerp amounts           
+    float2 lerps = frac( texelpos );
+
+    //read in bilerp stamp, doing the shadow checks
+    float sourcevals[4] = { 0.0, 0.0, 0.0, 0.0 };
+	float val = ShadowTextureAtlas.Sample( ShadowMapCmpSampler, ShadowTexC ).r;
+	sourcevals[0] = 1.0;
+	if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) sourcevals[0] = 0.0;
+	val = ShadowTextureAtlas.Sample( ShadowMapCmpSampler, ShadowTexC + float2(1.0/(ShadowMapSliceWidth * (float)ShadowMapSliceCount), 0)).r;
+	sourcevals[1] = 1.0;
+	if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) sourcevals[1] = 0.0;
+	val = ShadowTextureAtlas.Sample( ShadowMapCmpSampler, ShadowTexC + float2(0, 1.0/ShadowMapSliceHeight)).r;
+	sourcevals[2] = 1.0;
+	if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) sourcevals[2] = 0.0;
+	val = ShadowTextureAtlas.Sample( ShadowMapCmpSampler, ShadowTexC + float2(1.0/(ShadowMapSliceWidth * (float)ShadowMapSliceCount), 1.0/ShadowMapSliceHeight)).r;
+	sourcevals[3] = 1.0;
+	if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) sourcevals[3] = 0.0;
+	
+	//float LightAmount = 1.0;
+	//if ( val < (LightProj.z / LightProj.w - ShadowDepthBias) ) LightAmount = 0.0;
+	    // lerp between the shadow values to calculate our light amount
+    float LightAmount = lerp( lerp( sourcevals[0], sourcevals[1], lerps.x ),
+                            lerp( sourcevals[2], sourcevals[3], lerps.x ),
+                            lerps.y ); 
+	return LightAmount;
+}
+
+float CalculateLightAmount( in float viewer_pos, in float4 light_proj0 )
+{
+	if ( ShadowMapSliceCount == 0 ) return 1.0f;  // don't have shadow map
+	
+	float4 compare_light = float4 ( viewer_pos, viewer_pos, viewer_pos, viewer_pos ) > LightFrustaDistance;
+	float sm_index_f = dot ( compare_light, float4( 1.0f, 1.0f, 1.0f, 0.0f ) );
+	int sm_index = ( int ) sm_index_f;
+	float4 light_projN = mul ( light_proj0, ShadowMapCoordTransform[sm_index] );
+	float light_amount = SamplingLightAmountFromShadowMap( sm_index, light_projN );
+	return light_amount;
+}
+
+float BlendShadowDensity( in float light_amount )
+{
+	return light_amount * ( 1.0f - ShadowMapDensity ) + ShadowMapDensity;
+}
+
+PS_OUTPUT ps_main(PS_INPUT input) : COLOR0
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+	float4 outputColor = DiffuseTexture.Sample(samLinear, input.Coord);
+	float4 diffuse = CommonDiffuseLighting(input.WorldPos, input.Nor);
+	float4 lightProj = mul ( input.WorldPos, LightViewProj[0] );
+	float4 viewerPos = mul ( input.WorldPos, View);
+	float LightAmount = CalculateLightAmount ( viewerPos.z, lightProj );
+	LightAmount = BlendShadowDensity ( LightAmount );
+	
+	output.Color = outputColor * diffuse * LightAmount;
+	//outputColor.a = 1;
+	//clip( outputColor.a - 0.01f );
+
+	return output;
+};

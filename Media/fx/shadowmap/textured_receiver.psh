@@ -1,0 +1,76 @@
+#define SMAP_SIZE 512
+#define SHADOW_EPSILON 0.000005f
+//semantic DiffuseTexture DiffuseMap
+//semantic ShadowTexture ShadowMap
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+//semantic LightViewProj LightViewProj
+matrix LightViewProj : LightViewProj;
+Texture2D DiffuseTexture : DiffuseMap;
+Texture2D ShadowTexture : ShadowMap;
+float4 Ambient : AmbientLight;
+float4 SunColor : SunLightColor;
+float4 SunDir : SunLightDirection;
+SamplerState samLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+struct PS_INPUT
+{
+	float4 Pos : POSITION;
+	float3 Nor : TEXCOORD0;
+	float2 Coord : TEXCOORD1;
+	float4 WorldPos : TEXCOORD2;
+};
+struct PS_OUTPUT
+{
+	float4 Color : COLOR0;
+};
+
+float4 CommonDiffuseLighting( in float4 world_pos, in float3 world_nor, in float light_amount = 1.0 )
+{
+	float4 diffuse = Ambient;
+	diffuse += ( ( SunColor * saturate ( dot ( world_nor, SunDir ) ) ) * light_amount * ( 1 - Ambient ) );
+	return diffuse;
+}
+
+PS_OUTPUT ps_main(PS_INPUT input) : COLOR0
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+	float4 outputColor = DiffuseTexture.Sample(samLinear, input.Coord);
+	float4 diffuse = CommonDiffuseLighting(input.WorldPos, input.Nor);
+	float4 lightProj = mul ( input.WorldPos, LightViewProj );
+    if ( ( lightProj.x < -1.0f ) || ( lightProj.y < -1.0f ) || ( lightProj.x > 1.0f ) || (lightProj.y > 1.0f ) )
+	{
+		output.Color = outputColor * diffuse;
+		return output;
+	}
+    float2 ShadowTexC = 0.5 * lightProj.xy / lightProj.w + float2( 0.5, 0.5 );
+    ShadowTexC.y = 1.0f - ShadowTexC.y;
+
+    // transform to texel space
+    float2 texelpos = SMAP_SIZE * ShadowTexC;
+    // Determine the lerp amounts           
+    float2 lerps = frac( texelpos );
+
+    //read in bilerp stamp, doing the shadow checks
+	float shadow_depth = (ShadowTexture.Sample( samLinear, ShadowTexC)).x;
+    float sourceval;
+	if (shadow_depth == 1.0f)
+	{
+		sourceval = 1.0f;
+	}
+	else
+	{
+		sourceval = (shadow_depth + SHADOW_EPSILON) < (lightProj.z / lightProj.w) ? 0.5f: 1.0f;
+	}
+	
+	output.Color = outputColor * diffuse * sourceval;
+	//outputColor.a = 1;
+	//clip( outputColor.a - 0.01f );
+
+	return output;
+};

@@ -12,7 +12,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneGraph/SceneGraphDtos.h"
+#include "SceneGraph/CameraFrustumDtos.h"
 
 namespace Enigma::GameCommon
 {

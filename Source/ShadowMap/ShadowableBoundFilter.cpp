@@ -7,10 +7,6 @@ ShadowableBoundFilter::ShadowableBoundFilter() : RenderableBoundFilter()
 {
 }
 
-ShadowableBoundFilter::~ShadowableBoundFilter()
-{
-}
-
 bool ShadowableBoundFilter::FilterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial)
 {
     if (RenderableBoundFilter::FilterOutSpatial(spatial)) return true;

@@ -96,7 +96,7 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     };
     std::vector<Triangle3> boxTriangles;
     boxTriangles.resize(12);
-    for (unsigned int face = 0; face < 12; face++)
+    for (size_t face = 0; face < 12; face++)
     {
         boxTriangles[face].Vector(0) = vecCropBox[nFaceIndex[face * 3]];
         boxTriangles[face].Vector(1) = vecCropBox[nFaceIndex[face * 3 + 1]];

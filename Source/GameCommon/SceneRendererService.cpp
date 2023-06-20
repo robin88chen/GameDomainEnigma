@@ -14,8 +14,6 @@ using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 
-using error = std::error_code;
-
 DEFINE_RTTI(GameCommon, SceneRendererService, ISystemService);
 
 SceneRendererService::SceneRendererService(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,

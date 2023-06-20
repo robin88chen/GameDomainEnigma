@@ -28,7 +28,6 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 
-using error = std::error_code;
 
 DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
 
@@ -178,7 +177,7 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (m_gBuffer)
     {
-        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, m_configuration->GbufferFormats().size(),
+        m_gBuffer->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
             m_configuration->GbufferFormats());
         m_gBuffer->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }

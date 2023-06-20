@@ -9,7 +9,6 @@
 #define CASCADE_SHADOWMAP_SERVICE_CONFIGURATION_H
 
 #include "ShadowMapServiceConfiguration.h"
-#include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::ShadowMap
 {

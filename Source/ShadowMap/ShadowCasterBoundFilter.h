@@ -17,7 +17,6 @@ namespace Enigma::ShadowMap
     {
     public:
         ShadowCasterBoundFilter();
-        virtual ~ShadowCasterBoundFilter();
 
         virtual bool FilterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial) override;
     };

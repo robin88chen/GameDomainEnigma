@@ -12,6 +12,7 @@
 #include "nana/gui/widgets/form.hpp"
 #include "nana/gui/widgets/button.hpp"
 #include "Frameworks/EventSubscriber.h"
+#include "InputHandlers/InputHandlerService.h"
 
 namespace EnigmaViewer
 {
@@ -30,6 +31,8 @@ namespace EnigmaViewer
 
         void SubscribeHandlers();
         void UnsubscribeHandlers();
+
+        void InitInputHandler(const std::shared_ptr<Enigma::InputHandlers::InputHandlerService>& input_handler) { m_inputHandler = input_handler; }
     private:
         void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
@@ -38,6 +41,7 @@ namespace EnigmaViewer
         nana::point m_lastPos;
 
         Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+        std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
     };
 }
 

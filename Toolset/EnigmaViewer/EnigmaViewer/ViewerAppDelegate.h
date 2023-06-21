@@ -46,6 +46,8 @@ namespace EnigmaViewer
         void SavePawnFile(const std::filesystem::path& filepath);
         void LoadPawnFile(const std::filesystem::path& filepath);
 
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> GetInputHandler() const { return m_inputHandler.lock(); }
+
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);

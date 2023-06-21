@@ -67,6 +67,9 @@
     <ClInclude Include="AnimationClipInfoItem.h">
       <Filter>Forms\Custom Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="DaeParserConfiguration.h">
+      <Filter>Dae Parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -104,6 +107,9 @@
       <Filter>Dae Parser</Filter>
     </ClCompile>
     <ClCompile Include="pugixml.cpp">
+      <Filter>Dae Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeParserConfiguration.cpp">
       <Filter>Dae Parser</Filter>
     </ClCompile>
   </ItemGroup>

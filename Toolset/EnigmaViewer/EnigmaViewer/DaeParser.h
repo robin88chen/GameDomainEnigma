@@ -16,6 +16,7 @@
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
 #include "GameCommon/AnimatedPawnDto.h"
+#include "DaeParserConfiguration.h"
 #include "pugixml.hpp"
 #include <string>
 #include <optional>
@@ -85,6 +86,7 @@ namespace EnigmaViewer
         void ComposeModelPrimitiveDto();
 
     private:
+        DaeParserConfiguration m_config;
         std::weak_ptr<Enigma::Engine::GeometryRepository> m_geometryRepository;
 
         std::string m_filename;

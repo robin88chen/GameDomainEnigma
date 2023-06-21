@@ -17,6 +17,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "ShadowMap/ShadowMapService.h"
 #include <filesystem>
 
 namespace EnigmaViewer
@@ -67,6 +68,7 @@ namespace EnigmaViewer
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+        std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;

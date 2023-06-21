@@ -30,6 +30,8 @@
 #include "GameCommon/GameLightCommands.h"
 #include "GameCommon/GameSceneEvents.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
+#include "ShadowMap/ShadowMapServiceConfiguration.h"
+#include "ShadowMap/ShadowMapInstallingPolicies.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -44,6 +46,8 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::GameCommon;
 using namespace Enigma::Gateways;
 using namespace Enigma::Frameworks;
+using namespace Enigma::ShadowMap;
+using namespace Enigma::MathLib;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -153,10 +157,13 @@ void ViewerAppDelegate::InstallEngine()
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
+    auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
+    auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy });
+        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
+    m_shadowMapService = m_graphicMain->GetSystemServiceAs<ShadowMapService>();
 }
 
 void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
@@ -193,11 +200,13 @@ void ViewerAppDelegate::FrameUpdate()
 
 void ViewerAppDelegate::PrepareRender()
 {
+    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
     if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->PrepareGameScene();
 }
 
 void ViewerAppDelegate::RenderFrame()
 {
+    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->RenderShadowScene();
     if (!m_sceneRenderer.expired())
     {
         m_sceneRenderer.lock()->RenderGameScene();

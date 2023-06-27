@@ -137,6 +137,7 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     ParseAnimations(collada_root);
 
     ComposeModelPrimitiveDto();
+    m_pawn.IsTopLevel() = true;
     /*if ((m_model) && (m_animation))
     {
         ModelPrimitiveAnimatorPtr model_anim = ModelPrimitiveAnimatorPtr{ menew ModelPrimitiveAnimator() };

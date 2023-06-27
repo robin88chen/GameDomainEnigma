@@ -52,11 +52,16 @@ namespace EnigmaViewer
     protected:
         void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
         void DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
         void DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void DoPlayingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void DoChangingAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
+
+        void OnViewingPawnPrimitiveBuilt();
+        void OnFloorPrimitiveBuilt();
+        void CreateFloorReceiver();
 
     protected:
         HWND m_hwnd;
@@ -72,6 +77,7 @@ namespace EnigmaViewer
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
         Enigma::Frameworks::CommandSubscriberPtr m_doChangingMeshTexture;
         Enigma::Frameworks::CommandSubscriberPtr m_doAddingAnimationClip;
@@ -79,7 +85,9 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_doPlayingAnimationClip;
         Enigma::Frameworks::CommandSubscriberPtr m_doChangingAnimationTimeValue;
 
+        std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
+        std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
     };
 }
 

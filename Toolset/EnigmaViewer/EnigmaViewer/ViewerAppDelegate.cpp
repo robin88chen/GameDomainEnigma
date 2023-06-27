@@ -32,6 +32,8 @@
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
+#include "GameEngine/StandardGeometryDtoHelper.h"
+#include "GameEngine/EffectDtoHelper.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -53,6 +55,8 @@ std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
 std::string SceneRootName = "_SceneRoot_";
 std::string PortalManagementName = "_PortalManagement_";
+std::string ViewingPawnName = "_ViewingPawn_";
+std::string FloorReceiverName = "_Floor_";
 
 ViewerAppDelegate::ViewerAppDelegate()
 {
@@ -125,6 +129,8 @@ void ViewerAppDelegate::InstallEngine()
     EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
     EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
 
     m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
     CommandBus::Subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
@@ -151,6 +157,8 @@ void ViewerAppDelegate::InstallEngine()
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
+    deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
+    deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
@@ -173,11 +181,15 @@ void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 void ViewerAppDelegate::ShutdownEngine()
 {
     m_pawn = nullptr;
+    m_sceneRoot = nullptr;
+    m_floor = nullptr;
 
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onSceneGraphBuilt = nullptr;
 
     CommandBus::Unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
     m_doChangingMeshTexture = nullptr;
@@ -227,7 +239,7 @@ void ViewerAppDelegate::OnTimerElapsed()
 void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
 {
     CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", std::vector{ pawn_dto.ToGenericDto() }));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.ToGenericDto() }));
 }
 
 void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
@@ -253,7 +265,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
     auto read_buf = iFile->Read(0, file_size);
     FileSystem::Instance()->CloseFile(iFile);
     auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("viewing_pawn", dtos));
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }
 
 void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
@@ -261,15 +273,23 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Pawn>(ev->GetPawn());
-    if (!m_pawn) return;
+    if (ev->GetPawn() == m_pawn)
+    {
+        OnViewingPawnPrimitiveBuilt();
+    }
+    else if (ev->GetPawn() == m_floor)
+    {
+        OnFloorPrimitiveBuilt();
+    }
+}
+
+void ViewerAppDelegate::OnViewingPawnPrimitiveBuilt()
+{
     m_pawn->GetPrimitive()->SelectVisualTechnique("Default");
     m_pawn->BakeAvatarRecipes();
     CommandBus::Post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
     auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
-    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-    error er = scene_service->GetSceneRoot()->AttachChild(m_pawn, mx);
     auto prim = m_pawn->GetPrimitive();
     if (prim)
     {
@@ -288,15 +308,42 @@ void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
     }
 }
 
+void ViewerAppDelegate::OnFloorPrimitiveBuilt()
+{
+    m_floor->GetPrimitive()->SelectVisualTechnique("ShadowMapReceiver");
+}
+
 void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(ev->GetSceneRoot(), "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(ev->GetSceneRoot(), "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    m_sceneRoot = ev->GetSceneRoot();
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(m_sceneRoot, "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(m_sceneRoot, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-    CommandBus::Post(std::make_shared<CreatePointLight>(ev->GetSceneRoot(), mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    CommandBus::Post(std::make_shared<CreatePointLight>(m_sceneRoot, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    CreateFloorReceiver();
+}
+
+void ViewerAppDelegate::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    if (!ev) return;
+    auto top_spatials = ev->GetTopLevelSpatial();
+    if (top_spatials.empty()) return;
+    if (ev->GetSceneGraphId() == FloorReceiverName)
+    {
+        m_floor = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
+        if (m_sceneRoot) m_sceneRoot->AttachChild(m_floor, Matrix4::IDENTITY);
+    }
+    else if (ev->GetSceneGraphId() == ViewingPawnName)
+    {
+        m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Spatial>(top_spatials[0]);
+        Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
+        if (m_sceneRoot) m_sceneRoot->AttachChild(m_pawn, mx);
+    }
 }
 
 void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
@@ -376,4 +423,25 @@ void ViewerAppDelegate::DoChangingAnimationTimeValue(const Enigma::Frameworks::I
         Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->GetNewName(), cmd->GetClip());
         m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
     }
+}
+
+void ViewerAppDelegate::CreateFloorReceiver()
+{
+    PawnDtoHelper pawn_dto(FloorReceiverName);
+    MeshPrimitiveDto mesh_dto;
+    SquareQuadDtoHelper floor_dto("floor");
+    floor_dto.XZQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).Normal().TextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
+    EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
+    mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
+    EffectTextureMapDtoHelper tex_dto;
+    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "DiffuseMap");
+    mesh_dto.Name() = "floor_mesh";
+    mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
+    mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    mesh_dto.GeometryName() = "floor";
+    mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
+
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | Spatial::Spatial_ShadowReceiver);
+    auto dtos = { pawn_dto.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

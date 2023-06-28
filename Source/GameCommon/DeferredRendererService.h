@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DeferredRendererService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -70,8 +70,8 @@ namespace Enigma::GameCommon
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-
-        void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& response);
+        void OnLightVolumeBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial);
+        void OnLightVolumePrimitiveBuilt(const std::shared_ptr<SceneGraph::Pawn>& volume);
 
         std::shared_ptr<LightVolumePawn> FindLightVolume(const std::string& name);
 
@@ -86,6 +86,8 @@ namespace Enigma::GameCommon
         Renderer::MeshPrimitivePtr m_sunLightQuad;
         Engine::RenderLightingState m_ambientQuadLightingState;
         Engine::RenderLightingState m_sunLightQuadLightingState;
+        std::shared_ptr<SceneGraph::Pawn> m_ambientLightPawn;
+        std::shared_ptr<SceneGraph::Pawn> m_sunLightPawn;
 
         using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
@@ -102,11 +104,6 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
-
-        Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
-
-        Frameworks::Ruid m_ambientQuadRequester;
-        Frameworks::Ruid m_sunLightQuadRequester;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

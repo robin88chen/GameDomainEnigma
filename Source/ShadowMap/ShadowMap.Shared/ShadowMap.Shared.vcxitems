@@ -23,6 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapInstallingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShadowMapServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialShadowFlags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SunLightCamera.h" />
   </ItemGroup>
   <ItemGroup>

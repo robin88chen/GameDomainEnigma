@@ -433,7 +433,7 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
 
     PawnDtoHelper pawn_helper(DeferredSunLightQuadName);
     pawn_helper.MeshPrimitive(mesh_dto)
-        .SpatialFlags(Spatial::Spatial_BelongToParent | Spatial::Spatial_ShadowReceiver).TopLevel(true);
+        .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true);
     auto dtos = { pawn_helper.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(DeferredSunLightQuadName, dtos));
 

@@ -1,6 +1,7 @@
 ﻿#include "ShadowMapService.h"
 #include "ShadowMapServiceConfiguration.h"
 #include "SunLightCamera.h"
+#include "SpatialShadowFlags.h"
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraph/Spatial.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -124,7 +125,7 @@ void ShadowMapService::PrepareShadowScene()
     if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneCuller()))
     {
         m_renderer.lock()->PrepareScene(m_sceneService.lock()->GetSceneCuller()->GetVisibleSet(),
-            Spatial::SpatialBit::Spatial_ShadowCaster);
+            SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster);
     }
 }
 
@@ -169,8 +170,8 @@ void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if ((!ev) || (!ev->GetPawn())) return;
-    if ((ev->GetPawn()->TestSpatialFlag(Spatial::SpatialBit::Spatial_ShadowCaster))
-        || (ev->GetPawn()->TestSpatialFlag(Spatial::SpatialBit::Spatial_ShadowReceiver)))
+    if ((ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
+        || (ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
     {
         BindShadowMapToPawn(ev->GetPawn());
     }

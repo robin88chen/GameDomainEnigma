@@ -12,6 +12,7 @@
 #include "GraphicKernel/RenderTextureUsage.h"
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "SceneRendererServiceConfiguration.h"
+#include "SceneGraph/Spatial.h"
 
 namespace Enigma::GameCommon
 {
@@ -61,6 +62,9 @@ namespace Enigma::GameCommon
         const std::string& GbufferDepthSemantic() const;
         std::string& GbufferDepthSemantic();
 
+        const SceneGraph::Spatial::SpatialFlags& SunLightSpatialFlags() const;
+        SceneGraph::Spatial::SpatialFlags& SunLightSpatialFlags();
+
     protected:
         std::string m_ambientPassFxFileName;
         std::string m_ambientEffectName;
@@ -83,6 +87,8 @@ namespace Enigma::GameCommon
         std::string m_gbufferDiffuseSemantic;
         std::string m_gbufferSpecularSemantic;
         std::string m_gbufferDepthSemantic;
+
+        SceneGraph::Spatial::SpatialFlags m_sunLightSpatialFlags;
     };
 }
 

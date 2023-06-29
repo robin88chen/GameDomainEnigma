@@ -48,6 +48,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CascadeShadowMapServiceConfiguration.h">
       <Filter>ShadowMapService</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialShadowFlags.h">
+      <Filter>ShadowMapService</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SunLightCamera.cpp">

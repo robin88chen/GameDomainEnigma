@@ -14,6 +14,7 @@
 #include "Animators/AnimatorDtos.h"
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
+#include "ShadowMap/SpatialShadowFlags.h"
 #include <sstream>
 
 using namespace EnigmaViewer;
@@ -26,6 +27,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Animators;
 using namespace Enigma::GameCommon;
+using namespace Enigma::ShadowMap;
 
 #define TOKEN_SCENE "scene"
 #define TOKEN_INSTANCE_SCENE "instance_visual_scene"
@@ -195,7 +197,7 @@ void DaeParser::ComposeModelPrimitiveDto()
     m_pawn.WorldTransform() = Matrix4::IDENTITY;
     m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
     m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_ShadowCaster);
+    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowCaster);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)

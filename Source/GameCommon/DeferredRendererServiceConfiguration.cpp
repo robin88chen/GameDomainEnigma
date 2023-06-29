@@ -27,6 +27,8 @@ DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
     m_gbufferDiffuseSemantic = "GBufferDiffuseMap";
     m_gbufferSpecularSemantic = "GBufferSpecularMap";
     m_gbufferDepthSemantic = "GBufferDepthMap";
+
+    m_sunLightSpatialFlags = SceneGraph::Spatial::Spatial_BelongToParent;
 }
 
 std::string& DeferredRendererServiceConfiguration::AmbientPassFxFileName()
@@ -225,3 +227,14 @@ const std::string& DeferredRendererServiceConfiguration::GbufferDepthSemantic() 
     assert(!m_gbufferDepthSemantic.empty());
     return m_gbufferDepthSemantic;
 }
+
+Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::SunLightSpatialFlags()
+{
+    return m_sunLightSpatialFlags;
+}
+
+const Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::SunLightSpatialFlags() const
+{
+    return m_sunLightSpatialFlags;
+}
+

@@ -48,14 +48,14 @@ namespace Enigma::SceneGraph
             Spatial_None = 0x00,
             Spatial_BelongToParent = 0x01,  ///< parent負責刪除
             Spatial_Hide = 0x02,
-            Spatial_ShadowCaster = 0x04,
-            Spatial_ShadowReceiver = 0x08,
-            Spatial_ReflectionPlane = 0x10,
-            Spatial_Unlit = 0x20,  ///< 不受光的物件, 可以不用計算lighting render state
-            Spatial_LightVolume = 0x40,
+            Spatial_Unlit = 0x04,  ///< 不受光的物件, 可以不用計算lighting render state
+            //Spatial_ShadowCaster = 0x10,  // move into shadow map module
+            //Spatial_ShadowReceiver = 0x20, // move into shadow map module
+            //Spatial_ReflectionPlane = 0x??,
+            //Spatial_LightVolume = 0x??,
             Spatial_FullOpen = 0xff,
         };
-        using SpatialFlags = std::bitset<7>;
+        using SpatialFlags = std::bitset<16>;
 
         enum NotifyBit  ///< 是否需要送出訊息的旗標, 有需要傳出訊息的物件才設定
         {

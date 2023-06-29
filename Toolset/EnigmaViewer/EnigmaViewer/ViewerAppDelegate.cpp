@@ -32,6 +32,7 @@
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
+#include "ShadowMap/SpatialShadowFlags.h"
 #include "GameEngine/StandardGeometryDtoHelper.h"
 #include "GameEngine/EffectDtoHelper.h"
 
@@ -159,6 +160,7 @@ void ViewerAppDelegate::InstallEngine()
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
+    deferred_config->SunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
@@ -441,7 +443,7 @@ void ViewerAppDelegate::CreateFloorReceiver()
     mesh_dto.GeometryName() = "floor";
     mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
 
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | Spatial::Spatial_ShadowReceiver);
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

@@ -73,6 +73,7 @@ void MainForm::Initialize()
     m_timer->start();
     events().destroy([this] { this->Finalize(); });
 
+    m_renderPanel->InitInputHandler(m_appDelegate->GetInputHandler());
     m_renderPanel->SubscribeHandlers();
     m_outputPanel->SubscribeHandlers();
     m_modelInfoPanel->SubscribeHandlers();

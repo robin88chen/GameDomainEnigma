@@ -35,6 +35,9 @@ DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
 #define SPHERE_STACKS 40
 #define SPHERE_SLICES 80
 
+std::string DeferredSunLightQuadName = "_deferred_sun_light_quad_";
+std::string DeferredAmbientLightQuadName = "_deferred_ambient_light_quad_";
+
 DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
@@ -54,6 +57,8 @@ DeferredRendererService::~DeferredRendererService()
     m_configuration = nullptr;
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
+    m_ambientLightPawn = nullptr;
+    m_sunLightPawn = nullptr;
     m_gBuffer = nullptr;
     m_lightVolumes.clear();
 }
@@ -62,6 +67,8 @@ ServiceResult DeferredRendererService::OnInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    m_onPrimaryRenderTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetResized(e); });
+    EventPublisher::Subscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
     m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
     EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
@@ -79,9 +86,6 @@ ServiceResult DeferredRendererService::OnInit()
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
-    m_onBuildPrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto e) { OnBuildPrimitiveResponse(e); });
-    ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
-
     return SceneRendererService::OnInit();
 }
 
@@ -89,6 +93,8 @@ ServiceResult DeferredRendererService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
+    m_onPrimaryRenderTargetResized = nullptr;
     EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onGameCameraUpdated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
@@ -106,11 +112,10 @@ ServiceResult DeferredRendererService::OnTerm()
     EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
-    ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
-    m_onBuildPrimitiveResponse = nullptr;
-
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
+    m_ambientLightPawn = nullptr;
+    m_sunLightPawn = nullptr;
     m_gBuffer = nullptr;
     m_lightVolumes.clear();
 
@@ -204,6 +209,17 @@ void DeferredRendererService::OnPrimaryRenderTargetCreated(const Frameworks::IEv
     CreateGBuffer(primaryTarget);
 }
 
+void DeferredRendererService::OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Renderer::RenderTargetResized, Frameworks::IEvent>(e);
+    if (!ev) return;
+    const auto target = ev->GetRenderTarget();
+    if ((!target) || (!target->IsPrimary())) return;
+
+    if ((m_gBuffer) && (m_gBuffer->GetDimension() != target->GetDimension())) m_gBuffer->Resize(target->GetDimension());
+}
+
 void DeferredRendererService::OnGameCameraUpdated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
@@ -271,10 +287,12 @@ void DeferredRendererService::OnLightInfoDeleted(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
     {
+        m_ambientLightPawn = nullptr;
         m_ambientLightQuad = nullptr;
     }
     else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
     {
+        m_sunLightPawn = nullptr;
         m_sunLightQuad = nullptr;
     }
     else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Point)
@@ -309,7 +327,23 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     auto top_spatials = ev->GetTopLevelSpatial();
     if (top_spatials.empty()) return;
-    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Spatial>(top_spatials[0]);
+    if (ev->GetSceneGraphId() == DeferredSunLightQuadName)
+    {
+        m_sunLightPawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
+    }
+    else if (ev->GetSceneGraphId() == DeferredAmbientLightQuadName)
+    {
+        m_ambientLightPawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
+    }
+    else
+    {
+        OnLightVolumeBuilt(ev->GetSceneGraphId(), top_spatials[0]);
+    }
+}
+
+void DeferredRendererService::OnLightVolumeBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial)
+{
+    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Spatial>(spatial);
     if (!pawn) return;
     if ((!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneRoot()))
     {
@@ -317,40 +351,41 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     }
     if (!m_sceneGraphRepository.expired())
     {
-        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(ev->GetSceneGraphId()));
+        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
     }
-    m_lightVolumes.insert_or_assign(ev->GetSceneGraphId(), pawn);
+    m_lightVolumes.insert_or_assign(lit_name, pawn);
     BindGBufferToLightVolume(pawn);
-    CheckLightVolumeBackfaceCulling(ev->GetSceneGraphId());
+    CheckLightVolumeBackfaceCulling(lit_name);
 }
 
-void DeferredRendererService::OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+void DeferredRendererService::OnPawnPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<SceneGraph::PawnPrimitiveBuilt, Frameworks::IEvent>(e);
-    if (!ev) return;
-    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Pawn>(ev->GetPawn());
+    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
+    if ((!ev) || (!ev->GetPawn())) return;
+    if (ev->GetPawn() == m_sunLightPawn)
+    {
+        m_sunLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPawn()->GetPrimitive());
+        BindGBufferToLightingMesh(m_sunLightQuad);
+    }
+    else if (ev->GetPawn() == m_ambientLightPawn)
+    {
+        m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPawn()->GetPrimitive());
+        BindGBufferToLightingMesh(m_ambientLightQuad);
+    }
+    else
+    {
+        OnLightVolumePrimitiveBuilt(ev->GetPawn());
+    }
+}
+
+void DeferredRendererService::OnLightVolumePrimitiveBuilt(const std::shared_ptr<Pawn>& volume)
+{
+    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Pawn>(volume);
     if (!pawn) return;
     BindGBufferToLightVolume(pawn);
     pawn->NotifySpatialRenderStateChanged();
     CheckLightVolumeBackfaceCulling(pawn->GetHostLightName());
-}
-
-void DeferredRendererService::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
-{
-    if (!r) return;
-    const auto res = std::dynamic_pointer_cast<Renderer::BuildRenderablePrimitiveResponse, Frameworks::IResponse>(r);
-    if (!res) return;
-    if (res->GetRequestRuid() == m_ambientQuadRequester)
-    {
-        m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
-        BindGBufferToLightingMesh(m_ambientLightQuad);
-    }
-    else if (res->GetRequestRuid() == m_sunLightQuadRequester)
-    {
-        m_sunLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(res->GetPrimitive());
-        BindGBufferToLightingMesh(m_sunLightQuad);
-    }
 }
 
 void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
@@ -370,10 +405,11 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
-    auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
-    m_ambientQuadRequester = request->GetRuid();
-    RequestBus::Post(request);
+    PawnDtoHelper pawn_helper(DeferredAmbientLightQuadName);
+    pawn_helper.MeshPrimitive(mesh_dto)
+        .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true);
+    auto dtos = { pawn_helper.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(DeferredAmbientLightQuadName, dtos));
 
     m_ambientQuadLightingState.SetAmbientLightColor(lit->GetLightColor());
 }
@@ -381,7 +417,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
 void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = std::string("deferred_sunlight_quad.geo");
+    std::string quad_geo_name = DeferredSunLightQuadName + ".geo";
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
@@ -395,10 +431,11 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    auto mesh_policy = mesh_dto.ConvertToPolicy(nullptr);
-    auto request = std::make_shared<Renderer::RequestBuildRenderablePrimitive>(mesh_policy);
-    m_sunLightQuadRequester = request->GetRuid();
-    RequestBus::Post(request);
+    PawnDtoHelper pawn_helper(DeferredSunLightQuadName);
+    pawn_helper.MeshPrimitive(mesh_dto)
+        .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true);
+    auto dtos = { pawn_helper.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(DeferredSunLightQuadName, dtos));
 
     m_sunLightQuadLightingState.SetSunLight(lit->GetLightDirection(), lit->GetLightColor());
 }

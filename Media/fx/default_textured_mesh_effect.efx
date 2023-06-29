@@ -71,6 +71,11 @@
 		{"Name" : "shadowmap_receiver", "Program" : "shadowmap_receiver", "VertexShader" : "default_mesh", "PixelShader" : "shadowmap/textured_receiver", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
 		]
 	},
+	{"Name" : "DeferredRenderer/ShadowMapReceiver",
+		"EffectPassArray" : [
+		{"Name" : "deferred_shadowmap_receiver", "Program" : "deferred_shadowmap_receiver", "VertexShader" : "deferred/mesh", "PixelShader" : "deferred/textured_mesh", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }
+		]
+	},
 	{"Name" : "Primary/CSMReceiver",
 		"EffectPassArray" : [
 		{"Name" : "csm_receiver", "Program" : "csm_receiver", "VertexShader" : "default_mesh", "PixelShader" : "csm/textured_receiver", "SamplerState" : [{ "Sampler" : "samLinear", "Var" : "samLinear"}, { "Sampler" : "samShadow", "Var" : "samShadow"}] }

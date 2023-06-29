@@ -1,0 +1,48 @@
+{
+	"Name" : "DeferredShadingWithShadowSunLightPass",
+	"VertexShaderList" : [
+	{"Name" : "deferred_quad_vs", "API" : "dx9", "File" : "fx/deferred/quad.vsh@APK_PATH", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "deferred_quad_vs", "API" : "dx11", "File" : "fx/deferred/quad_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "deferred_quad_vs", "API" : "egl", "File" : "fx/deferred/quad_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "deferred_sunlight_quad_ps", "API" : "dx9", "File" : "fx/deferred/sunlight_quad.psh@APK_PATH", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_sunlight_quad_ps", "API" : "dx11", "File" : "fx/deferred/sunlight_quad_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_sunlight_quad_ps", "API" : "egl", "File" : "fx/deferred/sunlight_quad_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_sunlight_quad_with_sm_ps", "API" : "dx11", "File" : "fx/deferred/sunlight_quad_with_sm_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"}
+	],
+	"SamplerStateList" : [
+	{"Name" : "DiffuseMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "None"},
+    {"Name" : "NormalMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"},
+    {"Name" : "SpecularMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"},
+ 	{"Name" : "ShadowMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "Linear"},
+    {"Name" : "DepthMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"}
+    ],
+	"BlendStateList" : [
+	{"Name" : "blendAdditive", "BlendTypes" : ["Additive"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false, "DepthWrite" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{ "Name" : "sun_light_pass_with_sm", "Program" : "sun_light_pass_with_sm","VertexShader" : "deferred_quad_vs", "PixelShader" : "deferred_sunlight_quad_with_sm_ps", 
+            "SamplerState" : [{ "Sampler" : "DiffuseMapSampler", "Var" : "DiffuseMapSampler"},
+                { "Sampler" : "NormalMapSampler", "Var" : "NormalMapSampler"},
+                { "Sampler" : "SpecularMapSampler", "Var" : "SpecularMapSampler"},
+                { "Sampler" : "ShadowMapSampler", "Var" : "ShadowMapSampler"},
+                { "Sampler" : "DepthMapSampler", "Var" : "DepthMapSampler"}],
+			"BlendState" : "blendAdditive",
+			"DepthState" : "depthDisable" }
+		]
+	}
+	]
+}

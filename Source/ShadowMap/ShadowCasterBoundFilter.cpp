@@ -1,4 +1,5 @@
 ﻿#include "ShadowCasterBoundFilter.h"
+#include "SpatialShadowFlags.h"
 
 using namespace Enigma::ShadowMap;
 using namespace Enigma::SceneGraph;
@@ -11,6 +12,6 @@ bool ShadowCasterBoundFilter::FilterOutSpatial(const std::shared_ptr<SceneGraph:
 {
     if (RenderableBoundFilter::FilterOutSpatial(spatial)) return true;
     // 保留可render 的 caster
-    if (spatial->TestSpatialFlag(Spatial::SpatialBit::Spatial_ShadowCaster)) return false;
+    if (spatial->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster)) return false;
     return true;
 }

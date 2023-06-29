@@ -14,6 +14,7 @@
 #include "Animators/AnimatorDtos.h"
 #include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
+#include "ShadowMap/SpatialShadowFlags.h"
 #include <sstream>
 
 using namespace EnigmaViewer;
@@ -26,6 +27,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Animators;
 using namespace Enigma::GameCommon;
+using namespace Enigma::ShadowMap;
 
 #define TOKEN_SCENE "scene"
 #define TOKEN_INSTANCE_SCENE "instance_visual_scene"
@@ -88,12 +90,6 @@ using namespace Enigma::GameCommon;
 #define SUFFIX_SAMPLER "-sampler"
 #define SUFFIX_ANIM_TRANSFORM "/transform"
 
-#define DEFAULT_COLOR_MESH_EFFECT_FILENAME "fx/default_color_mesh_effect.efx"
-#define DEFAULT_COLOR_MESH_EFFECT_NAME "default_color_mesh_effect"
-#define DEFAULT_TEXTURED_MESH_EFFECT_FILENAME "fx/default_textured_mesh_effect.efx"
-#define DEFAULT_TEXTURED_MESH_EFFECT_NAME "default_textured_mesh_effect"
-#define DEFAULT_TEXTURED_SKIN_MESH_EFFECT_FILENAME "fx/default_textured_skinmesh_effect.efx"
-#define DEFAULT_TEXTURED_SKIN_MESH_EFFECT_NAME "default_textured_skinmesh_effect"
 #define DIFFUSE_MAP_SEMANTIC "DiffuseMap"
 
 #define MAX_WEIGHT_COUNT 4
@@ -101,6 +97,7 @@ using namespace Enigma::GameCommon;
 DaeParser::DaeParser(const std::shared_ptr<GeometryRepository>& geometry_repository)
 {
     m_geometryRepository = geometry_repository;
+    m_config.LoadConfig();
 }
 
 DaeParser::~DaeParser()
@@ -142,6 +139,7 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     ParseAnimations(collada_root);
 
     ComposeModelPrimitiveDto();
+    m_pawn.IsTopLevel() = true;
     /*if ((m_model) && (m_animation))
     {
         ModelPrimitiveAnimatorPtr model_anim = ModelPrimitiveAnimatorPtr{ menew ModelPrimitiveAnimator() };
@@ -199,7 +197,7 @@ void DaeParser::ComposeModelPrimitiveDto()
     m_pawn.WorldTransform() = Matrix4::IDENTITY;
     m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
     m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent);
+    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowCaster);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)
@@ -418,11 +416,11 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
         //dto.TheGeometry() = geo_dto;
         if (texmap_filename.empty())
         {
-            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_COLOR_MESH_EFFECT_NAME, DEFAULT_COLOR_MESH_EFFECT_FILENAME).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).ToGenericDto());
         }
         else
         {
-            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_TEXTURED_SKIN_MESH_EFFECT_NAME, DEFAULT_TEXTURED_SKIN_MESH_EFFECT_FILENAME).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedSkinMeshEffectName(), m_config.DefaultTexturedSkinMeshEffectFilename()).ToGenericDto());
             dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).ToGenericDto());
         }
         mesh_node.TheMeshPrimitive() = dto.ToGenericDto();
@@ -436,11 +434,11 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
         //dto.TheGeometry() = geo_dto;
         if (texmap_filename.empty())
         {
-            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_COLOR_MESH_EFFECT_NAME, DEFAULT_COLOR_MESH_EFFECT_FILENAME).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).ToGenericDto());
         }
         else
         {
-            dto.Effects().emplace_back(MakeMaterialDto(DEFAULT_TEXTURED_MESH_EFFECT_NAME, DEFAULT_TEXTURED_MESH_EFFECT_FILENAME).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedMeshEffectName(), m_config.DefaultTexturedMeshEffectFilename()).ToGenericDto());
             dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).ToGenericDto());
         }
         mesh_node.TheMeshPrimitive() = dto.ToGenericDto();

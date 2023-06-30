@@ -16,9 +16,11 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
   </ItemGroup>
 </Project>

@@ -4,6 +4,9 @@
     <Filter Include="Geometry">
       <UniqueIdentifier>{9dd8895f-dc5d-4347-9525-cf6c70dc8d10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{5ff9c3d8-7b19-4e53-b339-ebc30fa670c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h">
@@ -12,6 +15,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h">
       <Filter>Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
@@ -19,6 +25,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp">
       <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp">
+      <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

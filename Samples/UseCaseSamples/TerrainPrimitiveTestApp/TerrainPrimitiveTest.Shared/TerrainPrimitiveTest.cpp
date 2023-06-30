@@ -8,12 +8,14 @@
 #include "Renderer/RendererEvents.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "GameEngine/EngineInstallingPolicy.h"
+#include "SceneGraph/SceneGraphDtoHelper.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Gateways;
+using namespace Enigma::SceneGraph;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -66,10 +68,15 @@ void TerrainPrimitiveTest::InstallEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto default_render_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, default_render_policy });
+    CameraDto camera_dto = CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
+        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
+        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto();
+    m_camera = std::make_shared<Camera>(camera_dto);
 }
 
 void TerrainPrimitiveTest::ShutdownEngine()
 {
+    m_camera = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
 
@@ -102,7 +109,7 @@ void TerrainPrimitiveTest::OnRendererCreated(const Enigma::Frameworks::IEventPtr
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
     m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
-    //m_renderer->SetAssociatedCamera(m_camera);
+    m_renderer->SetAssociatedCamera(m_camera);
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
 }
 

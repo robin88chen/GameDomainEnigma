@@ -58,7 +58,7 @@ protected:
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     //Enigma::Renderer::MeshPrimitivePtr m_mesh;
     //bool m_isPrefabBuilt;
-    //std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
+    std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };
 
 

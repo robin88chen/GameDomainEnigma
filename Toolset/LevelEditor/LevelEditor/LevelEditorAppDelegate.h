@@ -11,6 +11,8 @@
 #include <windows.h>
 #include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
+#include "GameCommon/SceneRendererService.h"
+#include "InputHandlers/InputHandlerService.h"
 
 namespace LevelEditor
 {
@@ -41,6 +43,8 @@ namespace LevelEditor
         std::string m_mediaRootPath;
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
+        std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
+        std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
     };
 }
 

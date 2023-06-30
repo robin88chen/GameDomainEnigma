@@ -200,6 +200,7 @@ namespace Enigma::Engine
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
         GeometryDataDto SerializeGeometryDto();
+        void DeserializeGeometryDto(const GeometryDataDto& dto);
 
     protected:
         FactoryDesc m_factoryDesc;

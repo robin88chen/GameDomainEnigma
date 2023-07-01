@@ -16,11 +16,20 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveRequests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp" />
   </ItemGroup>
 </Project>

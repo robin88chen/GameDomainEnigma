@@ -103,14 +103,13 @@ void RenderablePrimitiveBuilder::BuildRenderablePrimitive(const Ruid& requester_
     assert(m_meshBuilder);
     assert(m_modelBuilder);
     m_buildingRuid = requester_ruid;
-    auto& p = *policy;
-    if (typeid(p) == typeid(MeshPrimitivePolicy))
+    if (auto p = std::dynamic_pointer_cast<MeshPrimitivePolicy, RenderablePrimitivePolicy>(policy))
     {
-        m_meshBuilder->BuildMeshPrimitive(m_buildingRuid, std::dynamic_pointer_cast<MeshPrimitivePolicy, RenderablePrimitivePolicy>(policy));
+        m_meshBuilder->BuildMeshPrimitive(m_buildingRuid, p);
     }
-    else if (typeid(p) == typeid(ModelPrimitivePolicy))
+    else if (auto p = std::dynamic_pointer_cast<ModelPrimitivePolicy, RenderablePrimitivePolicy>(policy))
     {
-        m_modelBuilder->BuildModelPrimitive(m_buildingRuid, std::dynamic_pointer_cast<ModelPrimitivePolicy, RenderablePrimitivePolicy>(policy));
+        m_modelBuilder->BuildModelPrimitive(m_buildingRuid, p);
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿#include "RenderablePrimitivePolicies.h"
+#include "SkinMeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -11,6 +12,16 @@ MeshPrimitivePolicy::MeshPrimitivePolicy() : RenderablePrimitivePolicy(), m_geom
 MeshPrimitivePolicy::~MeshPrimitivePolicy()
 {
 
+}
+
+std::shared_ptr<MeshPrimitive> MeshPrimitivePolicy::CreatePrimitive() const
+{
+    return std::make_shared<MeshPrimitive>(m_name);
+}
+
+std::shared_ptr<MeshPrimitive> SkinMeshPrimitivePolicy::CreatePrimitive() const
+{
+    return std::make_shared<SkinMeshPrimitive>(m_name);
 }
 
 /*const EffectTextureMapPolicy::TextureTuplePolicy& MeshPrimitivePolicy::GetTextureTuplePolicy(

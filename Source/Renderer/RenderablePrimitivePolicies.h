@@ -64,6 +64,7 @@ namespace Enigma::Renderer
         [[nodiscard]] const Renderer::RenderListID& RenderListId() const { return m_renderListId; }
         Renderer::RenderListID& RenderListId() { return m_renderListId; }
 
+        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const;
         //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
     protected:
@@ -84,6 +85,8 @@ namespace Enigma::Renderer
         ~SkinMeshPrimitivePolicy() = default;
         SkinMeshPrimitivePolicy& operator=(const SkinMeshPrimitivePolicy&) = default;
         SkinMeshPrimitivePolicy& operator=(SkinMeshPrimitivePolicy&&) = default;
+
+        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const override;
     };
 
     class ModelPrimitivePolicy : public RenderablePrimitivePolicy

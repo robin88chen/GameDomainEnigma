@@ -9,7 +9,6 @@
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/FactoryCommands.h"
 #include "GeometryCommands.h"
 
 using namespace Enigma::Engine;
@@ -22,13 +21,13 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
-    CommandBus::Post(std::make_shared<RegisterDtoFactory>(TriangleList::TYPE_RTTI.GetName(),
-        [=](auto o) { this->GeometryFactory(o); }));
+    CommandBus::Post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.GetName(),
+        [=](auto o) { return std::make_shared<TriangleList>(o); }));
 }
 
 GeometryRepository::~GeometryRepository()
 {
-    CommandBus::Post(std::make_shared<UnRegisterDtoFactory>(TriangleList::TYPE_RTTI.GetName()));
+    CommandBus::Post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.GetName()));
     SAFE_DELETE(m_builder);
 }
 
@@ -98,31 +97,13 @@ error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)
     return ErrorCode::ok;
 }
 
-std::shared_ptr<GeometryData> GeometryRepository::Create(const GenericDto& dto)
+void GeometryRepository::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
 {
-    if (dto.GetRtti().GetRttiName() == TriangleList::TYPE_RTTI.GetName())
-    {
-        return CreateTriangleList(dto);
-    }
-    return nullptr;
-}
-
-std::shared_ptr<GeometryData> GeometryRepository::CreateTriangleList(const GenericDto& dto)
-{
-    if (HasGeometryData(dto.GetName())) return QueryGeometryData(dto.GetName());
-    std::shared_ptr<GeometryData> geometry = std::make_shared<TriangleList>(dto);
-    return geometry;
-}
-
-void GeometryRepository::GeometryFactory(const GenericDto& dto)
-{
-    if (dto.GetRtti().GetRttiName() != TriangleList::TYPE_RTTI.GetName())
-    {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.GetRtti().GetRttiName().c_str());
-        return;
-    }
-    auto geometry = Create(dto);
-    EventPublisher::Post(std::make_shared<FactoryGeometryCreated>(dto, geometry));
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
+    if (!ev) return;
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(ev->GetDto().GetName(), ev->GetGeometryData());
 }
 
 void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)
@@ -130,8 +111,8 @@ void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
-    std::lock_guard locker{ m_geometryLock };
-    m_geometries.insert_or_assign(ev->GetName(), ev->GetGeometryData());
+    //std::lock_guard locker{ m_geometryLock };
+    //m_geometries.insert_or_assign(ev->GetName(), ev->GetGeometryData());
     m_isCurrentBuilding = false;
 }
 

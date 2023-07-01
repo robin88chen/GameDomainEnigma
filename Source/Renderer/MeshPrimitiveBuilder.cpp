@@ -1,7 +1,6 @@
 ﻿#include <memory>
 #include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
-#include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/RequestBus.h"
@@ -59,15 +58,8 @@ void MeshPrimitiveBuilder::BuildMeshPrimitive(const Frameworks::Ruid& ruid, cons
 {
     m_buildingRuid = ruid;
     m_policy = policy;
-    auto& p = *policy;
-    if (typeid(p) == typeid(MeshPrimitivePolicy))
-    {
-        m_builtPrimitive = std::make_shared<MeshPrimitive>(m_policy->Name());
-    }
-    else if (typeid(p) == typeid(SkinMeshPrimitivePolicy))
-    {
-        m_builtPrimitive = std::make_shared<SkinMeshPrimitive>(m_policy->Name());
-    }
+
+    m_builtPrimitive = m_policy->CreatePrimitive();
 
     m_originalGeometryDesc = m_policy->GeometryFactoryDesc();
     m_builtGeometry = nullptr;

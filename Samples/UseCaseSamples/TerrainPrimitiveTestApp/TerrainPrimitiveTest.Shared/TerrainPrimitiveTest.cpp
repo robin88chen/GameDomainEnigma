@@ -16,6 +16,9 @@
 #include "Renderer/RenderablePrimitiveRequests.h"
 #include "Terrain/TerrainPrimitivePolicy.h"
 #include "Terrain/TerrainInstallingPolicy.h"
+#include "GameEngine/EffectDtoHelper.h"
+#include "Renderer/RenderablePrimitiveResponses.h"
+#include "Frameworks/ResponseBus.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
@@ -69,6 +72,8 @@ void TerrainPrimitiveTest::InstallEngine()
     EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->OnRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    m_onBuildRenderablePrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto r) { OnBuildRenderablePrimitiveResponse(r); });
+    ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildRenderablePrimitiveResponse);
 
     assert(m_graphicMain);
 
@@ -92,9 +97,17 @@ void TerrainPrimitiveTest::InstallEngine()
     terrain_geometry_dto.MaxTextureCoordinate() = Vector2(1.0f, 1.0f);
 
     TerrainPrimitiveDto terrain_dto;
+    EffectMaterialDtoHelper mat_dto("TerrainMesh");
+    mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
+    EffectTextureMapDtoHelper tex_dto;
+    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "TextureLayer0");
+    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
+    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
     terrain_dto.GeometryName() = "terrain_geo";
     terrain_dto.TheGeometry() = terrain_geometry_dto.ToGenericDto();
-    RequestBus::Post(std::make_shared<Enigma::Renderer::RequestBuildRenderablePrimitive>(terrain_dto.ConvertToPolicy(std::make_shared<Enigma::Gateways::JsonFileDtoDeserializer>())));
+    auto request = std::make_shared<Enigma::Renderer::RequestBuildRenderablePrimitive>(terrain_dto.ConvertToPolicy(std::make_shared<Enigma::Gateways::JsonFileDtoDeserializer>()));
+    m_ruidBuildRequester = request->GetRuid();
+    RequestBus::Post(request);
 }
 
 void TerrainPrimitiveTest::ShutdownEngine()
@@ -102,11 +115,14 @@ void TerrainPrimitiveTest::ShutdownEngine()
     m_camera = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
+    m_terrain = nullptr;
 
     EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
+    ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildRenderablePrimitiveResponse);
+    m_onBuildRenderablePrimitiveResponse = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
 }
@@ -114,6 +130,10 @@ void TerrainPrimitiveTest::ShutdownEngine()
 void TerrainPrimitiveTest::FrameUpdate()
 {
     AppDelegate::FrameUpdate();
+    if ((m_renderer) && (m_terrain))
+    {
+        m_terrain->InsertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
+    }
 }
 
 void TerrainPrimitiveTest::RenderFrame()
@@ -143,4 +163,12 @@ void TerrainPrimitiveTest::OnRenderTargetCreated(const Enigma::Frameworks::IEven
     if (!ev) return;
     m_renderTarget = ev->GetRenderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+}
+
+void TerrainPrimitiveTest::OnBuildRenderablePrimitiveResponse(const Enigma::Frameworks::IResponsePtr& r)
+{
+    if (!r) return;
+    const auto rsp = std::dynamic_pointer_cast<BuildRenderablePrimitiveResponse, IResponse>(r);
+    if ((!rsp) || (rsp->GetRequestRuid() != m_ruidBuildRequester)) return;
+    m_terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive());
 }

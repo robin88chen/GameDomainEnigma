@@ -1,0 +1,78 @@
+//semantic TextureLayer0 TextureLayer0
+//semantic TextureLayer1 TextureLayer1
+//semantic TextureLayer2 TextureLayer2
+//semantic TextureLayer3 TextureLayer3
+//semantic AlphaLayer AlphaLayer
+Texture2D TextureLayer0 : TextureLayer0;
+Texture2D TextureLayer1 : TextureLayer1;
+Texture2D TextureLayer2 : TextureLayer2;
+Texture2D TextureLayer3 : TextureLayer3;
+Texture2D AlphaLayer : AlphaLayer;
+SamplerState samplerLayer0
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState samplerLayer1
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState samplerLayer2
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState samplerLayer3
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+SamplerState samplerAlpha
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
+struct PS_INPUT
+{
+	float4 Pos : SV_POSITION;
+	float3 Nor : TEXCOORD0;
+	float2 Coord : TEXCOORD1;
+	float2 AlphaCoord : TEXCOORD2;
+    float Depth : TEXCOORD3;
+};
+struct PS_OUTPUT
+{
+	float4 Normal : SV_TARGET0;
+	float4 Diffuse : SV_TARGET1;
+	float4 Specular : SV_TARGET2;
+	float Depth : SV_TARGET3;
+};
+
+float4 CombineTextureColor( float2 UV0, float2 AlphaUV )
+{
+	float4 texColor0 = TextureLayer0.Sample(samplerLayer0, UV0 );
+	float4 texColor1 = TextureLayer1.Sample(samplerLayer1, UV0 );
+	float4 texColor2 = TextureLayer2.Sample(samplerLayer2, UV0 );
+	float4 texColor3 = TextureLayer3.Sample(samplerLayer3, UV0 );
+	float4 texAlpha  = AlphaLayer.Sample(samplerAlpha, AlphaUV );
+	float4 texCombineColor = lerp ( texColor0, texColor1, texAlpha.x );
+	texCombineColor = lerp ( texCombineColor, texColor2, texAlpha.y );
+	texCombineColor = lerp ( texCombineColor, texColor3, texAlpha.z );
+	return texCombineColor;
+}
+
+PS_OUTPUT ps_main(PS_INPUT input)
+{
+ 	PS_OUTPUT output = (PS_OUTPUT)0;
+    output.Normal.xyz = input.Nor;
+	output.Diffuse = CombineTextureColor( input.Coord, input.AlphaCoord );
+    output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    output.Depth = input.Depth;
+	return output;
+};

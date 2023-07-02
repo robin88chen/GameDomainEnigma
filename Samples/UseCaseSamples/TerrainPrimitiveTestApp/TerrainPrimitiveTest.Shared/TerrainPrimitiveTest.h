@@ -25,6 +25,9 @@
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectMaterialManager.h"
+#include "Frameworks/ResponseSubscriber.h"
+#include "Terrain/TerrainPrimitive.h"
+#include "Frameworks/ruid.h"
 
 class TerrainPrimitiveTest : public Enigma::Application::AppDelegate
 {
@@ -43,20 +46,19 @@ public:
     virtual void RenderFrame() override;
 
 protected:
-    //void OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    //void OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void OnBuildRenderablePrimitiveResponse(const Enigma::Frameworks::IResponsePtr& r);
 
 protected:
-    //Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
-    //Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+    Enigma::Frameworks::ResponseSubscriberPtr m_onBuildRenderablePrimitiveResponse;
 
+    Enigma::Frameworks::Ruid m_ruidBuildRequester;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
-    //Enigma::Renderer::MeshPrimitivePtr m_mesh;
+    std::shared_ptr<Enigma::Terrain::TerrainPrimitive> m_terrain;
     //bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };

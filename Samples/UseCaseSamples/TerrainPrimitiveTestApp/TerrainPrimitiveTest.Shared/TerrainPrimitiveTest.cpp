@@ -101,6 +101,10 @@ void TerrainPrimitiveTest::InstallEngine()
     mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
     EffectTextureMapDtoHelper tex_dto;
     tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "TextureLayer0");
+    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "TextureLayer1");
+    tex_dto.TextureMapping("image/two.png", "APK_PATH", "two", std::nullopt, "TextureLayer2");
+    tex_dto.TextureMapping("image/three.png", "APK_PATH", "three", std::nullopt, "TextureLayer3");
+    tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
     terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
     terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
     terrain_dto.GeometryName() = "terrain_geo";

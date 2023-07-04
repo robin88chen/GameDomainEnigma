@@ -16,6 +16,12 @@
     <Filter Include="RequestResponse">
       <UniqueIdentifier>{2292faf0-5183-4090-b4ee-f601860b7246}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pawn">
+      <UniqueIdentifier>{3cf4c682-f4ab-42aa-a693-8cd7ee6bc652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DtoHelper">
+      <UniqueIdentifier>{15e3fd43-ed8c-4da7-83fc-a2c3c112bd39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h">
@@ -42,6 +48,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveRequests.h">
       <Filter>RequestResponse</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h">
+      <Filter>Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h">
+      <Filter>Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.h">
+      <Filter>DtoHelper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
@@ -64,6 +79,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp">
+      <Filter>Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp">
+      <Filter>Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp">
+      <Filter>DtoHelper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

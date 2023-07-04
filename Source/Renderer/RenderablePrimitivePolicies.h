@@ -13,6 +13,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/DtoDeserializer.h"
+#include "GameEngine/GenericPolicy.h"
 #include "Animators/AnimatorDtos.h"
 #include <string>
 #include <vector>
@@ -20,13 +21,13 @@
 
 namespace Enigma::Renderer
 {
-    class RenderablePrimitivePolicy
+    class RenderablePrimitivePolicy : public Engine::GenericPolicy
     {
     public:
         RenderablePrimitivePolicy() = default;
         RenderablePrimitivePolicy(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy(RenderablePrimitivePolicy&&) = default;
-        virtual ~RenderablePrimitivePolicy() = default;
+        virtual ~RenderablePrimitivePolicy() override = default;
         RenderablePrimitivePolicy& operator=(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy& operator=(RenderablePrimitivePolicy&&) = default;
 

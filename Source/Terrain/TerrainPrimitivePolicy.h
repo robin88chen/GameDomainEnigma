@@ -16,6 +16,7 @@ namespace Enigma::Terrain
     {
     public:
         TerrainPrimitivePolicy();
+        TerrainPrimitivePolicy(const MeshPrimitivePolicy& policy);
         TerrainPrimitivePolicy(const TerrainPrimitivePolicy&) = default;
         TerrainPrimitivePolicy(TerrainPrimitivePolicy&&) = default;
         TerrainPrimitivePolicy& operator=(const TerrainPrimitivePolicy&) = default;

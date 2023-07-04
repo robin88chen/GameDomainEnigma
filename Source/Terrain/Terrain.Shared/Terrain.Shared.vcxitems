@@ -14,9 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h" />
@@ -24,9 +27,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveRequests.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp" />

@@ -10,6 +10,7 @@
 #include "MeshNodeTree.h"
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
+#include "GameEngine/GenericPolicy.h"
 #include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Renderer;
@@ -73,10 +74,11 @@ GenericDto MeshPrimitiveDto::ToGenericDto() const
     dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
+    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });  // 務必要抓 this 內容，否則不能保證 this 存在
     return dto;
 }
 
-std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+std::shared_ptr<GenericPolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
 {
     auto policy = std::make_shared<MeshPrimitivePolicy>();
     policy->Name() = m_name;
@@ -112,16 +114,17 @@ SkinMeshPrimitiveDto SkinMeshPrimitiveDto::FromGenericDto(const Engine::GenericD
     return MeshPrimitiveDto::FromGenericDto(dto);
 }
 
-GenericDto SkinMeshPrimitiveDto::ToGenericDto()
+GenericDto SkinMeshPrimitiveDto::ToGenericDto() const
 {
     GenericDto dto = MeshPrimitiveDto::ToGenericDto();
     dto.AddRtti(FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName()));
+    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });
     return dto;
 }
 
-std::shared_ptr<SkinMeshPrimitivePolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+std::shared_ptr<GenericPolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
 {
-    auto mesh_policy = MeshPrimitiveDto::ConvertToPolicy(deserializer);
+    auto mesh_policy = std::dynamic_pointer_cast<MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::ConvertToPolicy(deserializer));
     return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
@@ -136,7 +139,7 @@ MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
     return node;
 }
 
-GenericDto MeshNodeDto::ToGenericDto()
+GenericDto MeshNodeDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(FactoryDesc(MeshNode::TYPE_RTTI.GetName()));
@@ -161,7 +164,7 @@ MeshNodeTreeDto MeshNodeTreeDto::FromGenericDto(const GenericDto& dto)
     return tree;
 }
 
-GenericDto MeshNodeTreeDto::ToGenericDto()
+GenericDto MeshNodeTreeDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(FactoryDesc(MeshNodeTree::TYPE_RTTI.GetName()));
@@ -178,17 +181,18 @@ ModelPrimitiveDto ModelPrimitiveDto::FromGenericDto(const GenericDto& dto)
     return model;
 }
 
-GenericDto ModelPrimitiveDto::ToGenericDto()
+GenericDto ModelPrimitiveDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
     if (m_animatorDto) dto.AddOrUpdate(TOKEN_MODEL_ANIMATOR, m_animatorDto.value());
+    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });
     return dto;
 }
 
-std::shared_ptr<ModelPrimitivePolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+std::shared_ptr<GenericPolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
 {
     auto policy = std::make_shared<ModelPrimitivePolicy>();
     policy->Name() = m_name;

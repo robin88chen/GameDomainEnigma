@@ -13,12 +13,17 @@
 #include "Terrain/TerrainPrimitiveDto.h"
 #include "Terrain/TerrainGeometryDto.h"
 #include "Frameworks/RequestBus.h"
+#include "Frameworks/CommandBus.h"
 #include "Renderer/RenderablePrimitiveRequests.h"
 #include "Terrain/TerrainPrimitivePolicy.h"
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "GameEngine/EffectDtoHelper.h"
 #include "Renderer/RenderablePrimitiveResponses.h"
 #include "Frameworks/ResponseBus.h"
+#include "Terrain/TerrainPawn.h"
+#include "Terrain/TerrainDtoHelper.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphInstallingPolicy.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
@@ -82,36 +87,15 @@ void TerrainPrimitiveTest::InstallEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto default_render_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, default_render_policy, terrain_policy });
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, default_render_policy, terrain_policy,
+        scene_graph_policy });
     CameraDto camera_dto = CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto();
     m_camera = std::make_shared<Camera>(camera_dto);
-    TerrainGeometryDto terrain_geometry_dto;
-    terrain_geometry_dto.Name() = "terrain_geo";
-    terrain_geometry_dto.NumRows() = 10;
-    terrain_geometry_dto.NumCols() = 10;
-    terrain_geometry_dto.MinPosition() = Vector3(-5.0f, 0.0f, -5.0f);
-    terrain_geometry_dto.MaxPosition() = Vector3(5.0f, 0.0f, 5.0f);
-    terrain_geometry_dto.MinTextureCoordinate() = Vector2(0.0f, 0.0f);
-    terrain_geometry_dto.MaxTextureCoordinate() = Vector2(1.0f, 1.0f);
-
-    TerrainPrimitiveDto terrain_dto;
-    EffectMaterialDtoHelper mat_dto("TerrainMesh");
-    mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
-    EffectTextureMapDtoHelper tex_dto;
-    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "TextureLayer0");
-    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "TextureLayer1");
-    tex_dto.TextureMapping("image/two.png", "APK_PATH", "two", std::nullopt, "TextureLayer2");
-    tex_dto.TextureMapping("image/three.png", "APK_PATH", "three", std::nullopt, "TextureLayer3");
-    tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
-    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
-    terrain_dto.GeometryName() = "terrain_geo";
-    terrain_dto.TheGeometry() = terrain_geometry_dto.ToGenericDto();
-    auto request = std::make_shared<Enigma::Renderer::RequestBuildRenderablePrimitive>(terrain_dto.ConvertToPolicy(std::make_shared<Enigma::Gateways::JsonFileDtoDeserializer>()));
-    m_ruidBuildRequester = request->GetRuid();
-    RequestBus::Post(request);
+    //RequestBuildTerrainPrimitive();
+    RequestBuildTerrainPawn();
 }
 
 void TerrainPrimitiveTest::ShutdownEngine()
@@ -173,6 +157,78 @@ void TerrainPrimitiveTest::OnBuildRenderablePrimitiveResponse(const Enigma::Fram
 {
     if (!r) return;
     const auto rsp = std::dynamic_pointer_cast<BuildRenderablePrimitiveResponse, IResponse>(r);
-    if ((!rsp) || (rsp->GetRequestRuid() != m_ruidBuildRequester)) return;
-    m_terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive());
+    if (!rsp) return;
+    if (rsp->GetRequestRuid() == m_ruidBuildRequester)
+    {
+        m_terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive());
+    }
+    else if (auto terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive()))
+    {
+        m_terrain = terrain;
+    }
+}
+
+void TerrainPrimitiveTest::RequestBuildTerrainPrimitive()
+{
+    TerrainGeometryDto terrain_geometry_dto;
+    terrain_geometry_dto.Name() = "terrain_geo";
+    terrain_geometry_dto.NumRows() = 10;
+    terrain_geometry_dto.NumCols() = 10;
+    terrain_geometry_dto.MinPosition() = Vector3(-5.0f, 0.0f, -5.0f);
+    terrain_geometry_dto.MaxPosition() = Vector3(5.0f, 0.0f, 5.0f);
+    terrain_geometry_dto.MinTextureCoordinate() = Vector2(0.0f, 0.0f);
+    terrain_geometry_dto.MaxTextureCoordinate() = Vector2(1.0f, 1.0f);
+
+    TerrainPrimitiveDto terrain_dto;
+    EffectMaterialDtoHelper mat_dto("TerrainMesh");
+    mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
+    EffectTextureMapDtoHelper tex_dto;
+    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "TextureLayer0");
+    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "TextureLayer1");
+    tex_dto.TextureMapping("image/two.png", "APK_PATH", "two", std::nullopt, "TextureLayer2");
+    tex_dto.TextureMapping("image/three.png", "APK_PATH", "three", std::nullopt, "TextureLayer3");
+    tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
+    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
+    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    terrain_dto.GeometryName() = "terrain_geo";
+    terrain_dto.TheGeometry() = terrain_geometry_dto.ToGenericDto();
+    GenericDto dto = terrain_dto.ToGenericDto();
+    //auto request = std::make_shared<Enigma::Renderer::RequestBuildRenderablePrimitive>(std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(
+      //  terrain_dto.ConvertToPolicy(std::make_shared<Enigma::Gateways::JsonFileDtoDeserializer>())));
+    auto request = std::make_shared<Enigma::Renderer::RequestBuildRenderablePrimitive>(std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(
+        dto.ConvertToPolicy(std::make_shared<Enigma::Gateways::JsonFileDtoDeserializer>())));
+    m_ruidBuildRequester = request->GetRuid();
+    RequestBus::Post(request);
+}
+
+void TerrainPrimitiveTest::RequestBuildTerrainPawn()
+{
+    TerrainGeometryDto terrain_geometry_dto;
+    terrain_geometry_dto.Name() = "terrain_geo";
+    terrain_geometry_dto.NumRows() = 10;
+    terrain_geometry_dto.NumCols() = 10;
+    terrain_geometry_dto.MinPosition() = Vector3(-5.0f, 0.0f, -5.0f);
+    terrain_geometry_dto.MaxPosition() = Vector3(5.0f, 0.0f, 5.0f);
+    terrain_geometry_dto.MinTextureCoordinate() = Vector2(0.0f, 0.0f);
+    terrain_geometry_dto.MaxTextureCoordinate() = Vector2(1.0f, 1.0f);
+
+    TerrainPrimitiveDto terrain_dto;
+    terrain_dto.Name() = "terrain";
+    EffectMaterialDtoHelper mat_dto("TerrainMesh");
+    mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
+    EffectTextureMapDtoHelper tex_dto;
+    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "TextureLayer0");
+    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "TextureLayer1");
+    tex_dto.TextureMapping("image/two.png", "APK_PATH", "two", std::nullopt, "TextureLayer2");
+    tex_dto.TextureMapping("image/three.png", "APK_PATH", "three", std::nullopt, "TextureLayer3");
+    tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
+    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
+    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    terrain_dto.GeometryName() = "terrain_geo";
+    terrain_dto.TheGeometry() = terrain_geometry_dto.ToGenericDto();
+    TerrainPawnDtoHelper pawn_dto("TerrainName");
+    pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto);
+
+    std::vector<GenericDto> dtos = { pawn_dto.ToGenericDto() };
+    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", dtos));
 }

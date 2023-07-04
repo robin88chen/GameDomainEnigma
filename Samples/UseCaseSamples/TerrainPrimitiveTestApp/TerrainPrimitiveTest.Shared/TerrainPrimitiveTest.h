@@ -50,6 +50,9 @@ protected:
     void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void OnBuildRenderablePrimitiveResponse(const Enigma::Frameworks::IResponsePtr& r);
 
+    void RequestBuildTerrainPrimitive();
+    void RequestBuildTerrainPawn();
+
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;

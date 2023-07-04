@@ -1,4 +1,5 @@
 ﻿#include "GenericDto.h"
+#include "GenericPolicy.h"
 
 using namespace Enigma::Engine;
 
@@ -51,6 +52,16 @@ std::string GenericDto::GetName() const
    return Get<std::string>(TOKEN_NAME);
 }
 
+void GenericDto::SetPolicyConverter(GenericPolicyConverter converter)
+{
+    m_converter = converter;
+}
+
+GenericPolicyConverter GenericDto::GetPolicyConverter() const
+{
+    return m_converter;
+}
+
 void GenericDto::AsTopLevel(bool is_top)
 {
     AddOrUpdate(TOKEN_TOP_LEVEL, is_top);
@@ -60,4 +71,10 @@ bool GenericDto::IsTopLevel() const
 {
     if (!HasValue(TOKEN_TOP_LEVEL)) return false;
     return Get<bool>(TOKEN_TOP_LEVEL);
+}
+
+std::shared_ptr<GenericPolicy> GenericDto::ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>& d) const
+{
+    if (m_converter) return m_converter(d);
+    return nullptr;
 }

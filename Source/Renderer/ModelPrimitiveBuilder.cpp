@@ -64,16 +64,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
         }
         if (auto prim = node_dto.TheMeshPrimitive())
         {
-            if (prim.value().GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
-            {
-                PushInnerMesh(node_dto.Name(), MeshPrimitiveDto::FromGenericDto(prim.value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
-            }
-            else if (prim.value().GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
-            {
-                PushInnerMesh(node_dto.Name(), SkinMeshPrimitiveDto::FromGenericDto(prim.value()).
-                    ConvertToPolicy(m_policy->TheDtoDeserializer()));
-            }
+            PushInnerMesh(node_dto.Name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }

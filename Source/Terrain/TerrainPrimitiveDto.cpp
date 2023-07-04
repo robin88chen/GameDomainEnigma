@@ -1,7 +1,8 @@
 ﻿#include "TerrainPrimitiveDto.h"
 #include "TerrainGeometry.h"
+#include "TerrainPrimitive.h"
 #include "TerrainPrimitivePolicy.h"
-#include "GameEngine/GeometryDataPolicy.h"
+#include "Renderer/RenderablePrimitivePolicies.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Engine;
@@ -21,32 +22,13 @@ TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto
 Enigma::Engine::GenericDto TerrainPrimitiveDto::ToGenericDto() const
 {
     Engine::GenericDto dto = MeshPrimitiveDto::ToGenericDto();
+    dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()));
+    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });
     return dto;
 }
 
-std::shared_ptr<TerrainPrimitivePolicy> TerrainPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+std::shared_ptr<GenericPolicy> TerrainPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
 {
-    auto policy = std::make_shared<TerrainPrimitivePolicy>();
-    policy->Name() = m_name;
-    policy->TheDtoDeserializer() = deserializer;
-    if (m_geometry)
-    {
-        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value());
-        policy->GeometryFactoryDesc() = m_geometry.value().GetRtti();
-    }
-    else
-    {
-        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometryFactory.GetResourceFilename(), deserializer);
-        policy->GeometryFactoryDesc() = m_geometryFactory;
-    }
-    for (auto& eff : m_effects)
-    {
-        policy->EffectDtos().emplace_back(EffectMaterialDto::FromGenericDto(eff));
-    }
-    for (auto& tex : m_textureMaps)
-    {
-        policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
-    }
-    policy->RenderListId() = m_renderListID;
-    return policy;
+    auto mesh_policy = std::dynamic_pointer_cast<Renderer::MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::ConvertToPolicy(deserializer));
+    return std::make_shared<TerrainPrimitivePolicy>(*mesh_policy);
 }

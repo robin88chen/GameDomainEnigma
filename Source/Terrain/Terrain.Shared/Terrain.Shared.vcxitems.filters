@@ -7,14 +7,8 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{5ff9c3d8-7b19-4e53-b339-ebc30fa670c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Primitive\Builder">
-      <UniqueIdentifier>{0fac3f6d-0996-4a67-84e2-7c7f156d4966}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{1ad4c21a-fcb5-48e3-90a8-59bb2200313d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RequestResponse">
-      <UniqueIdentifier>{2292faf0-5183-4090-b4ee-f601860b7246}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pawn">
       <UniqueIdentifier>{3cf4c682-f4ab-42aa-a693-8cd7ee6bc652}</UniqueIdentifier>
@@ -39,14 +33,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h">
       <Filter>Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.h">
-      <Filter>Primitive\Builder</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h">
       <Filter>Installing</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveRequests.h">
-      <Filter>RequestResponse</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h">
       <Filter>Pawn</Filter>
@@ -73,9 +61,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp">
       <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveBuilder.cpp">
-      <Filter>Primitive\Builder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp">
       <Filter>Installing</Filter>

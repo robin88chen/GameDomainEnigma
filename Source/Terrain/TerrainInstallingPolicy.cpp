@@ -1,6 +1,5 @@
 ﻿#include "TerrainInstallingPolicy.h"
 #include "Frameworks/ServiceManager.h"
-#include "TerrainPrimitiveBuilder.h"
 #include "Renderer/RendererErrors.h"
 #include "TerrainGeometry.h"
 #include "Frameworks/CommandBus.h"
@@ -19,7 +18,6 @@ error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manag
         [](auto o) { return new TerrainPawn(o); }));
     Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::RegisterGeometryDtoFactory>(
            TerrainGeometry::TYPE_RTTI.GetName(), [](auto dto) { return std::make_shared<TerrainGeometry>(dto); }));
-    service_manager->RegisterSystemService(std::make_shared<TerrainPrimitiveBuilder>(service_manager));
     return ErrorCode::ok;
 }
 
@@ -28,6 +26,5 @@ error TerrainInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_mana
     assert(service_manager);
     Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.GetName()));
     Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::UnRegisterGeometryDtoFactory>(TerrainGeometry::TYPE_RTTI.GetName()));
-    service_manager->ShutdownSystemService(TerrainPrimitiveBuilder::TYPE_RTTI);
     return ErrorCode::ok;
 }

@@ -2,6 +2,7 @@
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
+#include "Platforms/AndroidBridge.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Frameworks/EventPublisher.h"
@@ -24,6 +25,9 @@
 #include "Terrain/TerrainDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
+#if TARGET_PLATFORM == PLATFORM_ANDROID
+#include "Application/ApplicationBridge.h"
+#endif
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;

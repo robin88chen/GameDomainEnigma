@@ -90,7 +90,7 @@ MeshNode& MeshNode::operator=(MeshNode&& node) noexcept
     return *this;
 }
 
-GenericDto MeshNode::SerializeDto()
+GenericDto MeshNode::SerializeDto() const
 {
     MeshNodeDto dto;
     dto.Name() = m_name;

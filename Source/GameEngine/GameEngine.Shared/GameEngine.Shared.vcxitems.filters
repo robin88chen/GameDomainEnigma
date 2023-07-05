@@ -282,6 +282,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

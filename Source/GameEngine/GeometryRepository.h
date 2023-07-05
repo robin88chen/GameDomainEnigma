@@ -51,10 +51,7 @@ namespace Enigma::Engine
         error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        std::shared_ptr<GeometryData> Create(const GenericDto& dto);
-        std::shared_ptr<GeometryData> CreateTriangleList(const GenericDto& dto);
-        void GeometryFactory(const GenericDto& dto);
-
+        void OnFactoryGeometryCreated(const Frameworks::IEventPtr& e);
         void OnGeometryBuilt(const Frameworks::IEventPtr& e);
         void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
         void DoBuildingGeometry(const Frameworks::ICommandPtr& c);

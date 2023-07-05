@@ -13,6 +13,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/DtoDeserializer.h"
+#include "GameEngine/GenericPolicy.h"
 #include "Animators/AnimatorDtos.h"
 #include <string>
 #include <vector>
@@ -20,13 +21,13 @@
 
 namespace Enigma::Renderer
 {
-    class RenderablePrimitivePolicy
+    class RenderablePrimitivePolicy : public Engine::GenericPolicy
     {
     public:
         RenderablePrimitivePolicy() = default;
         RenderablePrimitivePolicy(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy(RenderablePrimitivePolicy&&) = default;
-        virtual ~RenderablePrimitivePolicy() = default;
+        virtual ~RenderablePrimitivePolicy() override = default;
         RenderablePrimitivePolicy& operator=(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy& operator=(RenderablePrimitivePolicy&&) = default;
 
@@ -64,6 +65,7 @@ namespace Enigma::Renderer
         [[nodiscard]] const Renderer::RenderListID& RenderListId() const { return m_renderListId; }
         Renderer::RenderListID& RenderListId() { return m_renderListId; }
 
+        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const;
         //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
     protected:
@@ -84,6 +86,8 @@ namespace Enigma::Renderer
         ~SkinMeshPrimitivePolicy() = default;
         SkinMeshPrimitivePolicy& operator=(const SkinMeshPrimitivePolicy&) = default;
         SkinMeshPrimitivePolicy& operator=(SkinMeshPrimitivePolicy&&) = default;
+
+        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const override;
     };
 
     class ModelPrimitivePolicy : public RenderablePrimitivePolicy

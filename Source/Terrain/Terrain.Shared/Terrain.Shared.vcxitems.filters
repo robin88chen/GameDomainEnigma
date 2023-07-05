@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{9dd8895f-dc5d-4347-9525-cf6c70dc8d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{5ff9c3d8-7b19-4e53-b339-ebc30fa670c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{1ad4c21a-fcb5-48e3-90a8-59bb2200313d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pawn">
+      <UniqueIdentifier>{3cf4c682-f4ab-42aa-a693-8cd7ee6bc652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DtoHelper">
+      <UniqueIdentifier>{15e3fd43-ed8c-4da7-83fc-a2c3c112bd39}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h">
+      <Filter>Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h">
+      <Filter>Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.h">
+      <Filter>DtoHelper</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp">
+      <Filter>Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp">
+      <Filter>Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp">
+      <Filter>DtoHelper</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

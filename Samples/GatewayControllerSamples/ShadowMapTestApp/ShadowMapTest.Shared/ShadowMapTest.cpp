@@ -25,6 +25,7 @@
 #include "GameEngine/EffectDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "ShadowMap/SpatialShadowFlags.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
@@ -220,7 +221,7 @@ void ShadowMapTest::CreateFloorReceiver() const
     mesh_dto.GeometryName() = "floor";
     mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
 
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | Spatial::Spatial_ShadowReceiver);
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>("floor_receiver", dtos));
 }
@@ -241,7 +242,7 @@ void ShadowMapTest::CreateCubePawn() const
     mesh_dto.GeometryName() = "cube";
     mesh_dto.TheGeometry() = cube_dto.ToGenericDto();
 
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | Spatial::Spatial_ShadowCaster | Spatial::Spatial_ShadowReceiver);
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowCaster | SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>("cube_pawn", dtos));
 }

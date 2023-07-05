@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GeometryCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -13,6 +13,8 @@
 
 namespace Enigma::Engine
 {
+    class GeometryData;
+
     class BuildGeometryData : public Frameworks::ICommand
     {
     public:
@@ -21,6 +23,31 @@ namespace Enigma::Engine
 
     private:
         GeometryDataPolicy m_policy;
+    };
+    using GeometryDtoFactory = std::function<std::shared_ptr<GeometryData> (const Engine::GenericDto& dto)>;
+
+    class RegisterGeometryDtoFactory : public Frameworks::ICommand
+    {
+    public:
+        RegisterGeometryDtoFactory(const std::string& rtti, const GeometryDtoFactory& factory)
+            : m_rtti(rtti), m_factory(factory) {}
+
+        const std::string& GetRtti() const { return m_rtti; }
+        const GeometryDtoFactory& GetFactory() { return m_factory; }
+
+    private:
+        std::string m_rtti;
+        GeometryDtoFactory m_factory;
+    };
+    class UnRegisterGeometryDtoFactory : public Frameworks::ICommand
+    {
+    public:
+        UnRegisterGeometryDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
+
+        const std::string& GetRtti() const { return m_rtti; }
+
+    private:
+        std::string m_rtti;
     };
 }
 

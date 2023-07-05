@@ -309,20 +309,9 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
 
 std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
 {
-    if (primitive_dto.GetRtti().GetRttiName() == ModelPrimitive::TYPE_RTTI.GetName())
+    if (auto p = primitive_dto.ConvertToPolicy(m_dtoDeserializer))
     {
-        ModelPrimitiveDto model = ModelPrimitiveDto::FromGenericDto(primitive_dto);
-        return model.ConvertToPolicy(m_dtoDeserializer);
-    }
-    else if (primitive_dto.GetRtti().GetRttiName() == MeshPrimitive::TYPE_RTTI.GetName())
-    {
-        MeshPrimitiveDto mesh = MeshPrimitiveDto::FromGenericDto(primitive_dto);
-        return mesh.ConvertToPolicy(m_dtoDeserializer);
-    }
-    else if (primitive_dto.GetRtti().GetRttiName() == SkinMeshPrimitive::TYPE_RTTI.GetName())
-    {
-        SkinMeshPrimitiveDto mesh = SkinMeshPrimitiveDto::FromGenericDto(primitive_dto);
-        return mesh.ConvertToPolicy(m_dtoDeserializer);
+        return std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(p);
     }
     else
     {

@@ -1,0 +1,68 @@
+{
+	"Name" : "TerrainMesh",
+	"VertexShaderList" : [
+	{"Name" : "terrain_mesh", "API" : "dx9", "File" : "fx/terrain_mesh_dx9.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex2(2,2)"},
+	{"Name" : "terrain_mesh", "API" : "dx11", "File" : "fx/terrain_mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex2(2,2)"},
+	{"Name" : "terrain_mesh", "API" : "egl", "File" : "fx/terrain_mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex2(2,2)"},
+	{"Name" : "deferred_terrain_mesh", "API" : "dx9", "File" : "fx/deferred/terrain_mesh_dx9.vsh@APK_PATH", "Profile" : "vs_2_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex2(2,2)"},
+	{"Name" : "deferred_terrain_mesh", "API" : "dx11", "File" : "fx/deferred/terrain_mesh_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_nor_tex2(2,2)"},
+	{"Name" : "deferred_terrain_mesh", "API" : "egl", "File" : "fx/deferred/terrain_mesh_egl.vsh@APK_PATH", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_nor_tex2(2,2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "terrain_alpha_textured", "API" : "dx9", "File" : "fx/terrain_alpha_textured_dx9.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "terrain_alpha_textured", "API" : "dx11", "File" : "fx/terrain_alpha_textured_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "terrain_alpha_textured", "API" : "egl", "File" : "fx/terrain_alpha_textured_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""},
+	{"Name" : "deferred_terrain_alpha_textured", "API" : "dx9", "File" : "fx/deferred/terrain_alpha_textured_dx9.psh@APK_PATH", "Profile" : "ps_2_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_terrain_alpha_textured", "API" : "dx11", "File" : "fx/deferred/terrain_alpha_textured_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_terrain_alpha_textured", "API" : "egl", "File" : "fx/deferred/terrain_alpha_textured_egl.psh@APK_PATH", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "samplerAlpha", "AddressU" : "Clamp", "AddressV" : "Clamp", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "Linear"},
+	{"Name" : "samplerLayer0", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear",
+	 	"MagFilter" : "Linear", "MipFilter" : "Linear"},
+	{"Name" : "samplerLayer1", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear",
+		"MagFilter" : "Linear", "MipFilter" : "Linear"},
+	{"Name" : "samplerLayer2", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear",
+		"MagFilter" : "Linear", "MipFilter" : "Linear"},
+	{"Name" : "samplerLayer3", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear",
+		"MagFilter" : "Linear", "MipFilter" : "Linear"}
+	],
+	"RasterizerStateList" : [
+	{"Name" : "rasWireframe", "FillMode" : "Wireframe"},
+	{"Name" : "rasFill", "FillMode" : "Fill", "CullMode" : "None"},
+	{"Name" : "rasFillBias", "FillMode" : "Wireframe", "DepthBias" : -0.5001}
+	],
+	"BlendStateList" : [
+	{"Name" : "blendDisable", "BlendTypes" : ["Disable"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "Primary/Default",
+		"EffectPassArray" : [
+		{"Name" : "terrain_mesh", "Program" : "terrain_mesh", "VertexShader" : "terrain_mesh", "PixelShader" : "terrain_alpha_textured", 
+			"SamplerState" : [{ "Sampler" : "samplerAlpha", "Var" : "samplerAlpha"},
+				{ "Sampler" : "samplerLayer0", "Var" : "samplerLayer0"},
+				{ "Sampler" : "samplerLayer1", "Var" : "samplerLayer1"},
+				{ "Sampler" : "samplerLayer2", "Var" : "samplerLayer2"},
+				{ "Sampler" : "samplerLayer3", "Var" : "samplerLayer3"}],
+			"BlendState" : "blendOpaque" }
+		]
+	},
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"Name" : "deferred_terrain_mesh", "Program" : "deferred_terrain_mesh", "VertexShader" : "deferred_terrain_mesh", "PixelShader" : "deferred_terrain_alpha_textured", 
+			"SamplerState" : [{ "Sampler" : "samplerAlpha", "Var" : "samplerAlpha"},
+				{ "Sampler" : "samplerLayer0", "Var" : "samplerLayer0"},
+				{ "Sampler" : "samplerLayer1", "Var" : "samplerLayer1"},
+				{ "Sampler" : "samplerLayer2", "Var" : "samplerLayer2"},
+				{ "Sampler" : "samplerLayer3", "Var" : "samplerLayer3"}],
+			"BlendState" : "blendOpaque" }
+		]
+	}
+	]
+}

@@ -1,0 +1,54 @@
+#version 300 es
+//semantic TextureLayer0 TextureLayer0
+//semantic TextureLayer1 TextureLayer1
+//semantic TextureLayer2 TextureLayer2
+//semantic TextureLayer3 TextureLayer3
+//semantic AlphaLayer AlphaLayer
+//semantic Ambient AmbientLight
+//semantic SunColor SunLightColor
+//semantic SunDir SunLightDirection
+precision mediump float;
+//sampler_state samplerLayer0 TextureLayer0
+//sampler_state samplerLayer1 TextureLayer1
+//sampler_state samplerLayer2 TextureLayer2
+//sampler_state samplerLayer3 TextureLayer3
+//sampler_state samplerAlpha AlphaLayer
+uniform sampler2D TextureLayer0;
+uniform sampler2D TextureLayer1;
+uniform sampler2D TextureLayer2;
+uniform sampler2D TextureLayer3;
+uniform sampler2D AlphaLayer;
+
+uniform vec4 Ambient;
+uniform vec4 SunColor;
+uniform vec3 SunDir;
+in vec3 vNor;
+in vec2 vTexCo;
+in vec2 vAlphaCo;
+in vec4 vWorldPos;
+out vec4 outColor;
+
+vec4 CommonDiffuseLighting( in vec4 world_pos, in vec3 world_nor, in float light_amount )
+{
+	vec4 diffuse = Ambient;
+	diffuse = diffuse + ( ( SunColor * clamp ( dot ( world_nor, SunDir ), 0.0f, 1.0f ) ) * light_amount * ( vec4(1.0, 1.0, 1.0, 1.0) - Ambient ) );
+	return diffuse;
+}
+vec4 CombineTextureColor( vec2 UV0, vec2 AlphaUV )
+{
+	vec4 texColor0 = texture( TextureLayer0, UV0 );
+	vec4 texColor1 = texture( TextureLayer1, UV0 );
+	vec4 texColor2 = texture( TextureLayer2, UV0 );
+	vec4 texColor3 = texture( TextureLayer3, UV0 );
+	vec4 texAlpha = texture( AlphaLayer, AlphaUV );
+	vec4 texCombineColor = mix ( texColor0, texColor1, texAlpha.x );
+	texCombineColor = mix ( texCombineColor, texColor2, texAlpha.y );
+	texCombineColor = mix ( texCombineColor, texColor3, texAlpha.z );
+	return texCombineColor;
+}
+
+void main() {
+	vec4 texCombineColor = CombineTextureColor( vTexCo, vAlphaCo );
+    vec4 diffuse = CommonDiffuseLighting(vWorldPos, vNor, 1.0f);
+    outColor = texCombineColor * diffuse;
+}

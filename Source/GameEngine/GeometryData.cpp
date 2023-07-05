@@ -26,67 +26,7 @@ GeometryData::GeometryData(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
     m_name = o.GetName();
     GeometryDataDto dto = GeometryDataDto::FromGenericDto(o);
-    CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),
-                         dto.IndexCapacity(), dto.IndexUsedCount());
-    for (unsigned i = 0; i < dto.Segments().size(); i += 4)
-    {
-        m_geoSegmentVector.emplace_back(dto.Segments()[i], dto.Segments()[i + 1],
-            dto.Segments()[i + 2], dto.Segments()[i + 3]);
-    }
-    m_topology = static_cast<PrimitiveTopology>(dto.Topology());
-    if (auto pos3 = dto.Position3s())
-    {
-        SetPosition3Array(pos3.value());
-    }
-    if (auto pos4 = dto.Position4s())
-    {
-        SetPosition4Array(pos4.value());
-    }
-    if (auto nor = dto.Normals())
-    {
-        SetVertexNormalArray(nor.value());
-    }
-    if (auto diff = dto.DiffuseColors())
-    {
-        SetDiffuseColorArray(diff.value());
-    }
-    if (auto spe = dto.SpecularColors())
-    {
-        SetSpecularColorArray(spe.value());
-    }
-    for (unsigned i = 0; i < dto.TextureCoords().size(); i++)
-    {
-        TextureCoordDto coord = TextureCoordDto::FromGenericDto(dto.TextureCoords()[i]);
-        if (auto tex2 = coord.Texture2DCoords())
-        {
-            SetTexture2DCoordArray(i, tex2.value());
-        }
-        else if (auto tex1 = coord.Texture1DCoords())
-        {
-            SetTexture1DCoordArray(i, tex1.value());
-        }
-        else if (auto tex3 = coord.Texture3DCoords())
-        {
-            SetTexture3DCoordArray(i, tex3.value());
-        }
-    }
-    if (auto pal = dto.PaletteIndices())
-    {
-        SetPaletteIndexArray(pal.value());
-    }
-    if (auto w = dto.Weights())
-    {
-        SetTotalSkinWeightArray(w.value());
-    }
-    if (auto t = dto.Tangents())
-    {
-        SetVertexTangentArray(t.value());
-    }
-    if (auto idx = dto.Indices())
-    {
-        SetIndexArray(idx.value());
-    }
-    m_geometryBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.GeometryBound()));
+    DeserializeGeometryDto(dto);
 }
 
 GeometryData::~GeometryData()
@@ -176,6 +116,71 @@ GeometryDataDto GeometryData::SerializeGeometryDto()
     dto.GeometryBound() = m_geometryBound.SerializeDto().ToGenericDto();
 
     return dto;
+}
+
+void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)
+{
+    CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),
+        dto.IndexCapacity(), dto.IndexUsedCount());
+    for (unsigned i = 0; i < dto.Segments().size(); i += 4)
+    {
+        m_geoSegmentVector.emplace_back(dto.Segments()[i], dto.Segments()[i + 1],
+            dto.Segments()[i + 2], dto.Segments()[i + 3]);
+    }
+    m_topology = static_cast<PrimitiveTopology>(dto.Topology());
+    if (auto pos3 = dto.Position3s())
+    {
+        SetPosition3Array(pos3.value());
+    }
+    if (auto pos4 = dto.Position4s())
+    {
+        SetPosition4Array(pos4.value());
+    }
+    if (auto nor = dto.Normals())
+    {
+        SetVertexNormalArray(nor.value());
+    }
+    if (auto diff = dto.DiffuseColors())
+    {
+        SetDiffuseColorArray(diff.value());
+    }
+    if (auto spe = dto.SpecularColors())
+    {
+        SetSpecularColorArray(spe.value());
+    }
+    for (unsigned i = 0; i < dto.TextureCoords().size(); i++)
+    {
+        TextureCoordDto coord = TextureCoordDto::FromGenericDto(dto.TextureCoords()[i]);
+        if (auto tex2 = coord.Texture2DCoords())
+        {
+            SetTexture2DCoordArray(i, tex2.value());
+        }
+        else if (auto tex1 = coord.Texture1DCoords())
+        {
+            SetTexture1DCoordArray(i, tex1.value());
+        }
+        else if (auto tex3 = coord.Texture3DCoords())
+        {
+            SetTexture3DCoordArray(i, tex3.value());
+        }
+    }
+    if (auto pal = dto.PaletteIndices())
+    {
+        SetPaletteIndexArray(pal.value());
+    }
+    if (auto w = dto.Weights())
+    {
+        SetTotalSkinWeightArray(w.value());
+    }
+    if (auto t = dto.Tangents())
+    {
+        SetVertexTangentArray(t.value());
+    }
+    if (auto idx = dto.Indices())
+    {
+        SetIndexArray(idx.value());
+    }
+    m_geometryBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.GeometryBound()));
 }
 
 RenderBufferSignature GeometryData::MakeRenderBufferSignature() const

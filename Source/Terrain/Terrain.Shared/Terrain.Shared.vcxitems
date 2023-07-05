@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{1a8acb8e-79dc-4bab-82fc-e85374fd2f02}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp" />
+  </ItemGroup>
+</Project>

@@ -10,6 +10,7 @@
 
 #include "FactoryDesc.h"
 #include "Frameworks/ruid.h"
+#include "GenericPolicy.h"
 #include <string>
 #include <any>
 #include <optional>
@@ -54,6 +55,9 @@ namespace Enigma::Engine
         void AddName(const std::string& name);
         std::string GetName() const;
 
+        GenericPolicyConverter GetPolicyConverter() const;
+        void SetPolicyConverter(GenericPolicyConverter converter);
+
         /** Remove key value data */
         void Remove(const std::string& attribute);
 
@@ -91,6 +95,7 @@ namespace Enigma::Engine
             return std::any_cast<T>(m_values.at(attribute));
         }
 
+        std::shared_ptr<GenericPolicy> ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>&) const;
         AttributeValues::iterator begin() { return m_values.begin(); }
         AttributeValues::const_iterator begin() const { return m_values.begin(); }
         AttributeValues::iterator end() { return m_values.end(); }
@@ -99,6 +104,7 @@ namespace Enigma::Engine
     private:
         Frameworks::Ruid m_ruid; // run-time uniform id
         AttributeValues m_values;
+        GenericPolicyConverter m_converter;
     };
 }
 

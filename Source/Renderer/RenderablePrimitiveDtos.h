@@ -52,7 +52,7 @@ namespace Enigma::Renderer
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto() const;
 
-        std::shared_ptr<MeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
+        std::shared_ptr<Engine::GenericPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&) const;
 
     protected:
         std::string m_name;
@@ -76,8 +76,8 @@ namespace Enigma::Renderer
         SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
 
         static SkinMeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
-        std::shared_ptr<SkinMeshPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
+        Engine::GenericDto ToGenericDto() const;
+        std::shared_ptr<Engine::GenericPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&) const;
     };
 
     class MeshNodeDto
@@ -102,7 +102,7 @@ namespace Enigma::Renderer
         std::optional<unsigned>& ParentIndexInArray() { return m_parentIndexInArray; }
 
         static MeshNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
 
     protected:
         std::string m_name;
@@ -126,7 +126,7 @@ namespace Enigma::Renderer
         std::vector<Engine::GenericDto>& MeshNodes() { return m_nodeDtos; }
 
         static MeshNodeTreeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
 
     protected:
         std::vector<Engine::GenericDto> m_nodeDtos;
@@ -150,9 +150,9 @@ namespace Enigma::Renderer
         std::optional<Engine::GenericDto>& TheAnimator() { return m_animatorDto; }
 
         static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
 
-        std::shared_ptr<ModelPrimitivePolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&);
+        std::shared_ptr<Engine::GenericPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>&) const;
 
     protected:
         std::string m_name;

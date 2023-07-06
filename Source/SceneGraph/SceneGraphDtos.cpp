@@ -27,6 +27,11 @@ static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
+    m_localTransform = Matrix4::IDENTITY;
+    m_worldTransform = Matrix4::IDENTITY;
+    BoundingVolume bv{ Box3::UNIT_BOX };
+    m_modelBound = bv.SerializeDto().ToGenericDto();
+    m_worldBound = bv.SerializeDto().ToGenericDto();
 }
 
 SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)

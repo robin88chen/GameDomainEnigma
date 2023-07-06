@@ -14,6 +14,10 @@
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
+#include "WorldMap/WorldMapInstallingPolicy.h"
+#include "WorldMap/WorldMapDto.h"
+#include "WorldMap/WorldMapCommands.h"
+#include "Frameworks/CommandBus.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -28,6 +32,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::GameCommon;
 using namespace Enigma::Animators;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::WorldMap;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -111,7 +116,8 @@ void EditorAppDelegate::InstallEngine()
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
         .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
         .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy });
+    auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
 }
@@ -149,4 +155,12 @@ void EditorAppDelegate::OnTimerElapsed()
 
     PrepareRender();
     RenderFrame();
+}
+
+void EditorAppDelegate::CreateWorldMap(const std::string& map_name)
+{
+    WorldMapDto world_map_dto;
+    world_map_dto.Name() = map_name;
+    world_map_dto.IsTopLevel() = true;
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
 }

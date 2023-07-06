@@ -36,6 +36,8 @@ namespace LevelEditor
 
         void OnTimerElapsed();
 
+        void CreateWorldMap(const std::string& map_name);
+
     protected:
         HWND m_hwnd;
         bool m_hasLogFile;

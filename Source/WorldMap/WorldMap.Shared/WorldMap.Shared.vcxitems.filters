@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="WorldMap">
+      <UniqueIdentifier>{8d0835e4-9656-4584-b3d0-260186184aa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{5cb83f02-6ac3-4512-8d89-45bccba6e503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands &amp; Events">
+      <UniqueIdentifier>{40071ac0-0545-4ed1-8d73-ae51bedcd6e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{c3d476fb-a3c9-4392-8960-92a218d681df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h">
+      <Filter>WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h">
+      <Filter>WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">
+      <Filter>WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp">
+      <Filter>WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -160,12 +160,12 @@ void MainForm::InitTools()
 
 void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    close();
 }
 
 void MainForm::OnCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    m_appDelegate->CreateWorldMap("world1");
 }
 
 void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)

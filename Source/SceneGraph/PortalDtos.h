@@ -20,7 +20,7 @@ namespace Enigma::SceneGraph
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
         static PortalZoneNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
     };
 
     class PortalDto : public SpatialDto

@@ -19,6 +19,9 @@
     <Filter Include="Events &amp; Commands">
       <UniqueIdentifier>{e4d2a328-4aaf-44d6-851b-330ed49a7144}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EditorServices">
+      <UniqueIdentifier>{2fe6ea78-3b72-4ce4-bfe9-3aa8fa729be5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -55,6 +58,12 @@
     <ClCompile Include="OutputPanel.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="AppConfiguration.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -90,6 +99,12 @@
     </ClInclude>
     <ClInclude Include="LevelEditorCommands.h">
       <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="AppConfiguration.h">
+      <Filter>AppDelegate</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

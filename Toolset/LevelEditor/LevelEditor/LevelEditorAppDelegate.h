@@ -17,6 +17,8 @@
 
 namespace LevelEditor
 {
+    class AppConfiguration;
+
     class EditorAppDelegate
     {
     public:
@@ -49,6 +51,8 @@ namespace LevelEditor
         bool m_hasLogFile;
 
         std::string m_mediaRootPath;
+
+        std::unique_ptr<AppConfiguration> m_appConfig;
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;

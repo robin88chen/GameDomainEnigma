@@ -30,6 +30,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h" />

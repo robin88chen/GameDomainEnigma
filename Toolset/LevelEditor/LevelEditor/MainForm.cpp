@@ -58,6 +58,9 @@ void MainForm::InitSubPanels()
     InitializeGraphics();
 
     get_place().collocate();
+
+    if (m_sceneGraphPanel) m_sceneGraphPanel->SubscribeHandlers();
+    if (m_outputPanel) m_outputPanel->SubscribeHandlers();
 }
 
 void MainForm::InitializeGraphics()
@@ -73,6 +76,12 @@ void MainForm::InitializeGraphics()
 
 void MainForm::FinalizeGraphics()
 {
+    if (m_sceneGraphPanel)
+    {
+        m_sceneGraphPanel->Finalize();
+        m_sceneGraphPanel->UnsubscribeHandlers();
+    }
+    if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }
 

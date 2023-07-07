@@ -13,6 +13,7 @@
 #include "Controllers/GraphicMain.h"
 #include "GameCommon/SceneRendererService.h"
 #include "InputHandlers/InputHandlerService.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace LevelEditor
 {
@@ -39,6 +40,11 @@ namespace LevelEditor
         void CreateWorldMap(const std::string& map_name);
 
     protected:
+        void OnSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+
+    protected:
         HWND m_hwnd;
         bool m_hasLogFile;
 
@@ -47,6 +53,12 @@ namespace LevelEditor
         Enigma::Controllers::GraphicMain* m_graphicMain;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+
+        std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
     };
 }
 

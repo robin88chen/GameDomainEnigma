@@ -168,6 +168,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.h">
       <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">

@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelEditorAppDelegate.h" />
+    <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="pch.h" />

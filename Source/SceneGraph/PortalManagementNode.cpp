@@ -7,6 +7,8 @@
 #include "ContainingPortalZoneFinder.h"
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
+#include "PortalCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -19,16 +21,22 @@ PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
     m_factoryDesc = FactoryDesc(TYPE_RTTI.GetName());
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
+    m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
+    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
 }
 
 PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
 {
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
+    m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
+    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
 }
 
 PortalManagementNode::~PortalManagementNode()
 {
+    Frameworks::CommandBus::Unsubscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    m_doAttachingOutsideZone = nullptr;
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
 }
@@ -92,4 +100,13 @@ error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
         er = Node::OnCullingVisible(culler, noCull);
     }
     return er;
+}
+
+void PortalManagementNode::DoAttachingOutsideZone(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<AttachPortalOutsideZone, Frameworks::ICommand>(c);
+    if (!cmd) return;
+    AttachChild(cmd->GetZone(), Matrix4::IDENTITY);
+    AttachOutsideZone(cmd->GetZone());
 }

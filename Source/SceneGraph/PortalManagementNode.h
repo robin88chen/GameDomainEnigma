@@ -13,6 +13,7 @@
 #define _PORTAL_MANAGEMENTNODE_H
 
 #include "Node.h"
+#include "Frameworks/CommandSubscriber.h"
 
 namespace Enigma::SceneGraph
 {
@@ -39,8 +40,13 @@ namespace Enigma::SceneGraph
         virtual error OnCullingVisible(Culler* culler, bool noCull) override;
 
     protected:
+        void DoAttachingOutsideZone(const Frameworks::ICommandPtr& c);
+
+    protected:
         std::shared_ptr<PortalZoneNode> m_outsideZone;
         std::shared_ptr<PortalZoneNode> m_cachedStartZone;
+
+        Frameworks::CommandSubscriberPtr m_doAttachingOutsideZone;
     };
 }
 

@@ -30,6 +30,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapEvents.h">
+      <Filter>Commands &amp; Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">

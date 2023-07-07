@@ -3,8 +3,11 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "WorldMapCommands.h"
+#include "WorldMapEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "Frameworks/LazyStatus.h"
+#include "SceneGraph/PortalCommands.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -13,7 +16,7 @@ DEFINE_RTTI(WorldMap, WorldMapService, ISystemService);
 
 std::string WORLD_MAP_TAG = "world_map";
 
-WorldMapService::WorldMapService(Frameworks::ServiceManager* mngr) : ISystemService(mngr)
+WorldMapService::WorldMapService(ServiceManager* mngr) : ISystemService(mngr)
 {
     m_needTick = false;
 }
@@ -43,7 +46,7 @@ ServiceResult WorldMapService::OnTerm()
     return ServiceResult::Complete;
 }
 
-void WorldMapService::DoCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c)
+void WorldMapService::DoCreatingEmptyWorldMap(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
@@ -52,10 +55,16 @@ void WorldMapService::DoCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c)
     CommandBus::Post(std::make_shared<SceneGraph::BuildSceneGraph>(WORLD_MAP_TAG, dtos));
 }
 
-void WorldMapService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
+void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneGraph::FactorySceneGraphBuilt, IEvent>(e);
     if ((!ev) || (ev->GetSceneGraphId() != WORLD_MAP_TAG)) return;
     m_world = std::dynamic_pointer_cast<WorldMap, SceneGraph::Spatial>(ev->GetTopLevelSpatial()[0]);
+    if (!m_world.expired())
+    {
+        m_world.lock()->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);  // empty world map is ready
+        EventPublisher::Post(std::make_shared<WorldMapCreated>(m_world.lock()->GetName(), m_world.lock()));
+        CommandBus::Post(std::make_shared<SceneGraph::AttachPortalOutsideZone>(m_world.lock()));
+    }
 }

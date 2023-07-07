@@ -16,6 +16,9 @@
     <Filter Include="Forms\Custom Widgets">
       <UniqueIdentifier>{0cb909bf-fd8b-489c-850c-e4e41f922b60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events &amp; Commands">
+      <UniqueIdentifier>{e4d2a328-4aaf-44d6-851b-330ed49a7144}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="OutputPanel.h">
       <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorCommands.h">
+      <Filter>Events &amp; Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

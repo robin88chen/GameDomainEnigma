@@ -9,6 +9,7 @@
 #include "GameCommon/SceneRendererInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "Terrain/TerrainInstallingPolicy.h"
+#include "WorldMap/WorldMapInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
 
@@ -18,6 +19,7 @@ constexpr std::uint16_t OrderOfAnimatorInstalling = 20;
 constexpr std::uint16_t OrderOfRenderSystemInstalling = 30;
 constexpr std::uint16_t OrderOfSceneGraphInstalling = 40;
 constexpr std::uint16_t OrderOfTerrainInstalling = 45;
+constexpr std::uint16_t OrderOfWorldMapInstalling = 46;
 constexpr std::uint16_t OrderOfDefaultRendererInstalling = 50;
 constexpr std::uint16_t OrderOfInputHandlerInstalling = 60;
 
@@ -60,6 +62,7 @@ void InstallingPolicyList::MakeOrderMap()
     m_orderMap[typeid(Renderer::DefaultRendererInstallingPolicy)] = OrderOfDefaultRendererInstalling;
     m_orderMap[typeid(SceneGraph::SceneGraphInstallingPolicy)] = OrderOfSceneGraphInstalling;
     m_orderMap[typeid(Terrain::TerrainInstallingPolicy)] = OrderOfTerrainInstalling;
+    m_orderMap[typeid(WorldMap::WorldMapInstallingPolicy)] = OrderOfWorldMapInstalling;
     m_orderMap[typeid(InputHandlers::InputHandlerInstallingPolicy)] = OrderOfInputHandlerInstalling;
     m_orderMap[typeid(GameCommon::GameCameraInstallingPolicy)] = OrderOfGameCameraInstalling;
     m_orderMap[typeid(GameCommon::GameLightInstallingPolicy)] = OrderOfGameLightInstalling;

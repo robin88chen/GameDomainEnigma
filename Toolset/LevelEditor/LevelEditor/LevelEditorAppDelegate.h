@@ -39,8 +39,7 @@ namespace LevelEditor
 
         void OnTimerElapsed();
 
-        void CreateWorldMap(const std::string& map_name);
-
+        const std::unique_ptr<AppConfiguration>& GetAppConfig() const { return m_appConfig; };
     protected:
         void OnSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);

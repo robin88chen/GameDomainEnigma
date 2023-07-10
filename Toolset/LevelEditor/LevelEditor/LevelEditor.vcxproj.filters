@@ -58,11 +58,14 @@
     <ClCompile Include="OutputPanel.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
-    <ClCompile Include="WorldEditService.cpp">
+    <ClCompile Include="WorldEditConsole.cpp">
       <Filter>EditorServices</Filter>
     </ClCompile>
     <ClCompile Include="AppConfiguration.cpp">
       <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateNewWorldDlg.cpp">
+      <Filter>Forms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,11 +103,14 @@
     <ClInclude Include="LevelEditorCommands.h">
       <Filter>Events &amp; Commands</Filter>
     </ClInclude>
-    <ClInclude Include="WorldEditService.h">
+    <ClInclude Include="WorldEditConsole.h">
       <Filter>EditorServices</Filter>
     </ClInclude>
     <ClInclude Include="AppConfiguration.h">
       <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateNewWorldDlg.h">
+      <Filter>Forms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ namespace LevelEditor
     class SpatialInspectorPanel;
     class TerrainToolPanel;
     class OutputPanel;
+    class WorldEditConsole;
 
     class MainForm : public nana::form
     {
@@ -95,6 +96,8 @@ namespace LevelEditor
         SpatialInspectorPanel* m_spatialInspectorPanel;
         TerrainToolPanel* m_terrainToolPanel;
         OutputPanel* m_outputPanel;
+
+        std::weak_ptr<WorldEditConsole> m_worldConsole;
     };
 }
 

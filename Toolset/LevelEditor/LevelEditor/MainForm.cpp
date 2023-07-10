@@ -1,4 +1,5 @@
 ﻿#include "MainForm.h"
+#include "CreateNewWorldDlg.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
 #include "LevelEditorAppDelegate.h"
@@ -7,6 +8,8 @@
 #include "SpatialInspectorToolPanel.h"
 #include "TerrainToolPanel.h"
 #include "OutputPanel.h"
+#include "WorldEditConsole.h"
+#include "AppConfiguration.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -72,10 +75,17 @@ void MainForm::InitializeGraphics()
     m_timer->elapse([this] { m_appDelegate->OnTimerElapsed(); });
     m_timer->start();
     events().destroy([this] { this->FinalizeGraphics(); });
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr));
+    m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
+    m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName());
 }
 
 void MainForm::FinalizeGraphics()
 {
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
+
     if (m_sceneGraphPanel)
     {
         m_sceneGraphPanel->Finalize();
@@ -174,7 +184,7 @@ void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 {
-    m_appDelegate->CreateWorldMap("world1");
+    nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock()));
 }
 
 void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)

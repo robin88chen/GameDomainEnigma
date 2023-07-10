@@ -1,24 +1,24 @@
 ﻿/*********************************************************************
- * \file   WorldEditService.h
+ * \file   WorldEditConsole.h
  * \brief  
  * 
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
-#ifndef WORLD_EDIT_SERVICE_H
-#define WORLD_EDIT_SERVICE_H
+#ifndef WORLD_EDIT_CONSOLE_H
+#define WORLD_EDIT_CONSOLE_H
 
 #include "Frameworks/ServiceManager.h"
 #include <filesystem>
 
 namespace LevelEditor
 {
-    class WorldEditService : public Enigma::Frameworks::ISystemService
+    class WorldEditConsole : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr);
-        virtual ~WorldEditService() override;
+        WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr);
+        virtual ~WorldEditConsole() override;
 
         virtual Enigma::Frameworks::ServiceResult OnInit() override;
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
@@ -26,11 +26,11 @@ namespace LevelEditor
         void SetWorldMapRootFolder(const std::filesystem::path& folder);
 
         // check world files
-        //bool CheckWorldMapFiles(const std::string& world_name);
+        bool CheckWorldMapFiles(const std::string& world_name);
         // delete world files
-        //void DeleteWorldMapFiles(const std::string& world_name);
+        void DeleteWorldMapFiles(const std::string& world_name);
         // create world map directory & files
-        //void CreateWorldMapFiles(const std::string& world_name) const;
+        void CreateWorldMapFiles(const std::string& world_name) const;
 
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
@@ -55,4 +55,4 @@ namespace LevelEditor
     };
 }
 
-#endif // WORLD_EDIT_SERVICE_H
+#endif // WORLD_EDIT_CONSOLE_H

@@ -27,7 +27,6 @@
 #include "LevelEditorCommands.h"
 #include "WorldMap/WorldMapEvents.h"
 #include "WorldMap/WorldMap.h"
-#include "WorldEditService.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -146,10 +145,6 @@ void EditorAppDelegate::InstallEngine()
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
-
-    auto world_editor = std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager());
-    m_graphicMain->GetServiceManager()->RegisterSystemService(world_editor);
-    world_editor->SetWorldMapRootFolder(m_appConfig->GetWorldMapRootFolderName());
 }
 
 void EditorAppDelegate::ShutdownEngine()
@@ -162,7 +157,6 @@ void EditorAppDelegate::ShutdownEngine()
     m_onWorldMapCreated = nullptr;
 
     assert(m_graphicMain);
-    m_graphicMain->GetServiceManager()->UnregisterSystemService(WorldEditService::TYPE_RTTI);
     m_graphicMain->ShutdownRenderEngine();
 }
 
@@ -193,14 +187,6 @@ void EditorAppDelegate::OnTimerElapsed()
 
     PrepareRender();
     RenderFrame();
-}
-
-void EditorAppDelegate::CreateWorldMap(const std::string& map_name)
-{
-    WorldMapDto world_map_dto;
-    world_map_dto.Name() = map_name;
-    world_map_dto.IsTopLevel() = true;
-    CommandBus::Post(std::make_shared<CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
 }
 
 void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)

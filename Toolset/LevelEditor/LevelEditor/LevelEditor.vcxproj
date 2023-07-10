@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppConfiguration.cpp" />
+    <ClCompile Include="CreateNewWorldDlg.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
@@ -147,10 +148,11 @@
     <ClCompile Include="SchemeColorDef.cpp" />
     <ClCompile Include="SpatialInspectorToolPanel.cpp" />
     <ClCompile Include="TerrainToolPanel.cpp" />
-    <ClCompile Include="WorldEditService.cpp" />
+    <ClCompile Include="WorldEditConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppConfiguration.h" />
+    <ClInclude Include="CreateNewWorldDlg.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="MainForm.h" />
@@ -163,7 +165,7 @@
     <ClInclude Include="SchemeColorDef.h" />
     <ClInclude Include="SpatialInspectorToolPanel.h" />
     <ClInclude Include="TerrainToolPanel.h" />
-    <ClInclude Include="WorldEditService.h" />
+    <ClInclude Include="WorldEditConsole.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

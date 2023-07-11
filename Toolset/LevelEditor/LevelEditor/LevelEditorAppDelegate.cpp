@@ -27,6 +27,7 @@
 #include "LevelEditorCommands.h"
 #include "WorldMap/WorldMapEvents.h"
 #include "WorldMap/WorldMap.h"
+#include "WorldEditService.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -145,6 +146,7 @@ void EditorAppDelegate::InstallEngine()
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager()));
 }
 
 void EditorAppDelegate::ShutdownEngine()
@@ -157,6 +159,7 @@ void EditorAppDelegate::ShutdownEngine()
     m_onWorldMapCreated = nullptr;
 
     assert(m_graphicMain);
+    m_graphicMain->GetServiceManager()->UnregisterSystemService(WorldEditService::TYPE_RTTI);
     m_graphicMain->ShutdownRenderEngine();
 }
 

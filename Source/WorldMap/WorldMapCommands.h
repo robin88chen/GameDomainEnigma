@@ -10,6 +10,8 @@
 
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
+#include "Terrain/TerrainPawn.h"
+#include "MathLib/Matrix4.h"
 
 namespace Enigma::WorldMap
 {
@@ -22,6 +24,18 @@ namespace Enigma::WorldMap
 
     protected:
         Engine::GenericDto m_dto;
+    };
+    class AttachTerrainToWorldMap : public Frameworks::ICommand
+    {
+    public:
+        AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform) : m_terrain(terrain), m_local(local_transform) {}
+
+        const std::shared_ptr<Terrain::TerrainPawn>& GetTerrain() const { return m_terrain; }
+        const MathLib::Matrix4& GetLocalTransform() const { return m_local; }
+
+    protected:
+        std::shared_ptr<Terrain::TerrainPawn> m_terrain;
+        MathLib::Matrix4 m_local;
     };
 }
 

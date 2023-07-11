@@ -11,6 +11,9 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/Node.h"
+#include "SceneGraph/SceneGraphRepository.h"
+#include "Terrain/TerrainPawn.h"
 
 namespace Enigma::WorldMap
 {
@@ -19,7 +22,7 @@ namespace Enigma::WorldMap
     {
         DECLARE_EN_RTTI;
     public:
-        WorldMapService(Frameworks::ServiceManager* mngr);
+        WorldMapService(Frameworks::ServiceManager* mngr, const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository);
         WorldMapService(const WorldMapService& other) = delete;
         WorldMapService(WorldMapService&& other) noexcept = delete;
         WorldMapService& operator=(const WorldMapService& other) = delete;
@@ -30,13 +33,21 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult OnTerm() override;
 
     protected:
+        void AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
+
         void DoCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c);
+        void DoAttachingTerrain(const Frameworks::ICommandPtr& c);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<WorldMap> m_world;
+        std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
+
+        typedef std::list<SceneGraph::NodePtr> QuadRootList;
+        QuadRootList m_listQuadRoot;
 
         Frameworks::CommandSubscriberPtr m_doCreatingWorldMap;
+        Frameworks::CommandSubscriberPtr m_doAttachingTerrain;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;  // check world map is created
     };
 }

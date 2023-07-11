@@ -7,7 +7,7 @@
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
 
-Rtti WorldEditConsole::TYPE_RTTI{"LevelEditor.WorldEditService", &ISystemService::TYPE_RTTI};
+Rtti WorldEditConsole::TYPE_RTTI{"LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI};
 
 WorldEditConsole::WorldEditConsole(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {

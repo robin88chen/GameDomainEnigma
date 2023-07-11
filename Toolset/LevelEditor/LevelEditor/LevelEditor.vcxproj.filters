@@ -22,6 +22,9 @@
     <Filter Include="EditorServices">
       <UniqueIdentifier>{2fe6ea78-3b72-4ce4-bfe9-3aa8fa729be5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{5d03fe07-e5ff-482e-aca4-a8e4e3d081b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -67,6 +70,18 @@
     <ClCompile Include="CreateNewWorldDlg.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="AddTerrainDialog.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -111,6 +126,18 @@
     </ClInclude>
     <ClInclude Include="CreateNewWorldDlg.h">
       <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="AddTerrainDialog.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUtilities.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

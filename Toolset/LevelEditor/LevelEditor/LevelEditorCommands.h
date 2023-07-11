@@ -10,6 +10,7 @@
 
 #include "Frameworks/Command.h"
 #include "SceneGraph/Spatial.h"
+#include "GameEngine/GenericDto.h"
 #include <vector>
 
 namespace LevelEditor
@@ -35,6 +36,17 @@ namespace LevelEditor
 
     protected:
         std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>> m_flattenedSpatial;
+    };
+
+    class CreateNewTerrain : public Enigma::Frameworks::ICommand
+    {
+    public:
+        CreateNewTerrain(const Enigma::Engine::GenericDto& dto) : m_dto(dto) {}
+
+        const Enigma::Engine::GenericDto& GetDto() const { return m_dto; }
+
+    protected:
+        Enigma::Engine::GenericDto m_dto;
     };
 }
 

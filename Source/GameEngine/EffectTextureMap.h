@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectTextureMap.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -35,7 +35,7 @@ namespace Enigma::Engine
         EffectTextureMap& operator=(const EffectTextureMap&) = default;
         EffectTextureMap& operator=(EffectTextureMap&&) = default;
 
-        GenericDto SerializeDto();
+        GenericDto SerializeDto() const;
 
         error BindTexture(const EffectTextureTuple& tuple);
         error ChangeTexture(const EffectTextureTuple& tuple);

@@ -12,10 +12,14 @@ TerrainPrimitiveDto::TerrainPrimitiveDto() : MeshPrimitiveDto()
     m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
 }
 
+TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto) : MeshPrimitiveDto(dto)
+{
+    m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+}
+
 TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPrimitiveDto terrain_dto;
-    terrain_dto.MeshPrimitiveDto::FromGenericDto(dto);
+    TerrainPrimitiveDto terrain_dto(MeshPrimitiveDto::FromGenericDto(dto));
     return terrain_dto;
 }
 

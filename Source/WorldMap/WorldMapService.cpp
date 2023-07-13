@@ -10,6 +10,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraph/PortalCommands.h"
 #include "SceneGraph/VisibilityManagedNode.h"
+#include "SceneGraph/EnumDerivedSpatials.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -55,6 +56,22 @@ ServiceResult WorldMapService::OnTerm()
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
     return ServiceResult::Complete;
+}
+
+std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeTerrains() const
+{
+    assert(!m_world.expired());
+
+    std::vector<Engine::GenericDto> dtos;
+    EnumDerivedSpatials enumTerrain(TerrainPawn::TYPE_RTTI);
+    m_world.lock()->VisitBy(&enumTerrain);
+    if (enumTerrain.GetSpatials().empty()) return dtos;
+
+    for (auto& terrain : enumTerrain.GetSpatials())
+    {
+        dtos.push_back(terrain->SerializeDto());
+    }
+    return dtos;
 }
 
 void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,

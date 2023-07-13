@@ -34,28 +34,15 @@ GeometryData::~GeometryData()
 
 }
 
-GenericDto GeometryData::SerializeDto()
+GenericDto GeometryData::SerializeDto() const
 {
     return SerializeGeometryDto().ToGenericDto();
 }
 
-GeometryDataDto GeometryData::SerializeGeometryDto()
+GeometryDataDto GeometryData::SerializeGeometryDto() const
 {
     GeometryDataDto dto;
-    dto.Name() = m_name;
-    dto.VertexFormat() = m_vertexFormatCode.ToString();
-    dto.VertexCapacity() = m_vtxCapacity;
-    dto.VertexUsedCount() = m_vtxUsedCount;
-    dto.IndexCapacity() = m_idxCapacity;
-    dto.IndexUsedCount() = m_idxUsedCount;
-    for (unsigned i = 0; i < m_geoSegmentVector.size(); i++)
-    {
-        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
-        dto.Segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
-        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
-        dto.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
-    }
-    dto.Topology() = static_cast<unsigned>(m_topology);
+    SerializeNonVertexAttributes(dto);
     if (m_vertexDesc.HasPosition3())
     {
         dto.Position3s() = GetPosition3Array(m_vtxUsedCount);
@@ -113,15 +100,34 @@ GeometryDataDto GeometryData::SerializeGeometryDto()
     {
         dto.Indices() = GetIndexMemory();
     }
-    dto.GeometryBound() = m_geometryBound.SerializeDto().ToGenericDto();
 
     return dto;
+}
+
+void GeometryData::SerializeNonVertexAttributes(GeometryDataDto& dto) const
+{
+    dto.Name() = m_name;
+    dto.VertexFormat() = m_vertexFormatCode.ToString();
+    dto.VertexCapacity() = m_vtxCapacity;
+    dto.VertexUsedCount() = m_vtxUsedCount;
+    dto.IndexCapacity() = m_idxCapacity;
+    dto.IndexUsedCount() = m_idxUsedCount;
+    for (unsigned i = 0; i < m_geoSegmentVector.size(); i++)
+    {
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
+        dto.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
+    }
+    dto.Topology() = static_cast<unsigned>(m_topology);
+    dto.GeometryBound() = m_geometryBound.SerializeDto().ToGenericDto();
 }
 
 void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)
 {
     CreateVertexCapacity(dto.VertexFormat(), dto.VertexCapacity(), dto.VertexUsedCount(),
         dto.IndexCapacity(), dto.IndexUsedCount());
+    m_geoSegmentVector.clear();
     for (unsigned i = 0; i < dto.Segments().size(); i += 4)
     {
         m_geoSegmentVector.emplace_back(dto.Segments()[i], dto.Segments()[i + 1],
@@ -206,6 +212,7 @@ error GeometryData::CreateVertexCapacity(const std::string& vertex_format_string
     m_vtxUsedCount = vtx_count;
     m_idxUsedCount = idx_count;
 
+    m_geoSegmentVector.clear();
     m_geoSegmentVector.push_back(GeometrySegment());
     m_geoSegmentVector[0].m_startVtx = 0;
     m_geoSegmentVector[0].m_vtxCount = m_vtxUsedCount;
@@ -264,12 +271,12 @@ Vector4 GeometryData::GetPosition4(unsigned vtxIndex)
     return pos;
 }
 
-std::vector<Vector3> GeometryData::GetPosition3Array(unsigned count)
+std::vector<Vector3> GeometryData::GetPosition3Array(unsigned count) const
 {
     return GetPosition3Array(0, count);
 }
 
-std::vector<Vector3> GeometryData::GetPosition3Array(unsigned offset, unsigned count)
+std::vector<Vector3> GeometryData::GetPosition3Array(unsigned offset, unsigned count) const
 {
     std::vector<Vector3> positions;
     positions.resize(count);
@@ -278,12 +285,12 @@ std::vector<Vector3> GeometryData::GetPosition3Array(unsigned offset, unsigned c
     return positions;
 }
 
-std::vector<Vector4> GeometryData::GetPosition4Array(unsigned count)
+std::vector<Vector4> GeometryData::GetPosition4Array(unsigned count) const
 {
     return GetPosition4Array(0, count);
 }
 
-std::vector<Vector4> GeometryData::GetPosition4Array(unsigned offset, unsigned count)
+std::vector<Vector4> GeometryData::GetPosition4Array(unsigned offset, unsigned count) const
 {
     std::vector<Vector4> positions;
     positions.resize(count);
@@ -326,7 +333,7 @@ error GeometryData::SetPosition4Array(unsigned offset, const std::vector<MathLib
         m_vertexDesc.PositionDimension(), 4, reinterpret_cast<const float*>(&positions[0]), static_cast<unsigned>(positions.size()), true);
 }
 
-Vector3 GeometryData::GetVertexNormal(unsigned vtxIndex)
+Vector3 GeometryData::GetVertexNormal(unsigned vtxIndex) const
 {
     Vector3 nor;
     GetVertexMemoryData(vtxIndex, m_vertexDesc.NormalOffset(), 3, 3, (float*)nor, false);
@@ -338,12 +345,12 @@ error GeometryData::SetVertexNormal(unsigned vtxIndex, const MathLib::Vector3& n
     return SetVertexMemoryData(vtxIndex, m_vertexDesc.NormalOffset(), 3, 3, (const float*)nor, false);
 }
 
-std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned count)
+std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned count) const
 {
     return GetVertexNormalArray(0, count);
 }
 
-std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned offset, unsigned count)
+std::vector<Vector3> GeometryData::GetVertexNormalArray(unsigned offset, unsigned count) const
 {
     std::vector<Vector3> normals;
     normals.resize(count);
@@ -384,12 +391,12 @@ error GeometryData::SetDiffuseColorArray(unsigned offset, const std::vector<Math
         m_vertexDesc.DiffuseColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
 }
 
-std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count)
+std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count) const
 {
     return GetDiffuseColorArray(type, 0, count);
 }
 
-std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count)
+std::vector<Vector4> GeometryData::GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count) const
 {
     std::vector<Vector4> colors;
     colors.resize(count);
@@ -409,12 +416,12 @@ error GeometryData::SetSpecularColorArray(unsigned offset, const std::vector<Mat
         m_vertexDesc.SpecularColorDimension(), 4, reinterpret_cast<const float*>(&colors[0]), static_cast<unsigned>(colors.size()), false);
 }
 
-std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count)
+std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned count) const
 {
     return GetSpecularColorArray(type, 0, count);
 }
 
-std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count)
+std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned offset, unsigned count) const
 {
     std::vector<Vector4> colors;
     colors.resize(count);
@@ -423,7 +430,7 @@ std::vector<Vector4> GeometryData::GetSpecularColorArray(Graphics::VertexDescrip
     return colors;
 }
 
-std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned offset, unsigned stage, unsigned count)
+std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned offset, unsigned stage, unsigned count) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     std::vector<Vector2> uvs;
@@ -433,7 +440,7 @@ std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned offset, unsig
     return uvs;
 }
 
-std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned stage, unsigned count)
+std::vector<Vector2> GeometryData::GetTexture2DCoordArray(unsigned stage, unsigned count) const
 {
     return GetTexture2DCoordArray(0, stage, count);
 }
@@ -457,7 +464,7 @@ error GeometryData::SetTexture1DCoordArray(unsigned stage, const std::vector<flo
         (const float*)(&us[0]), static_cast<unsigned>(us.size()), false);
 }
 
-std::vector<float> GeometryData::GetTexture1DCoordArray(unsigned offset, unsigned stage, unsigned count)
+std::vector<float> GeometryData::GetTexture1DCoordArray(unsigned offset, unsigned stage, unsigned count) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     std::vector<float> us;
@@ -467,7 +474,7 @@ std::vector<float> GeometryData::GetTexture1DCoordArray(unsigned offset, unsigne
     return us;
 }
 
-std::vector<float> GeometryData::GetTexture1DCoordArray(unsigned stage, unsigned count)
+std::vector<float> GeometryData::GetTexture1DCoordArray(unsigned stage, unsigned count) const
 {
     return GetTexture1DCoordArray(0, stage, count);
 }
@@ -479,12 +486,12 @@ error GeometryData::SetTexture3DCoordArray(unsigned stage, const std::vector<Mat
         reinterpret_cast<const float*>(&uvws[0]), static_cast<unsigned>(uvws.size()), false);
 }
 
-std::vector<Vector3> GeometryData::GetTexture3DCoordArray(unsigned stage, unsigned count)
+std::vector<Vector3> GeometryData::GetTexture3DCoordArray(unsigned stage, unsigned count) const
 {
     return GetTexture3DCoordArray(0, stage, count);
 }
 
-std::vector<Vector3> GeometryData::GetTexture3DCoordArray(unsigned offset, unsigned stage, unsigned count)
+std::vector<Vector3> GeometryData::GetTexture3DCoordArray(unsigned offset, unsigned stage, unsigned count) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     std::vector<Vector3> uvws;
@@ -500,12 +507,12 @@ error GeometryData::SetPaletteIndexArray(const std::vector<unsigned>& palette_ar
         reinterpret_cast<const float*>(&palette_array[0]), static_cast<unsigned>(palette_array.size()), false);
 }
 
-std::vector<unsigned> GeometryData::GetPaletteIndexArray(unsigned count)
+std::vector<unsigned> GeometryData::GetPaletteIndexArray(unsigned count) const
 {
     return GetPaletteIndexArray(0, count);
 }
 
-std::vector<unsigned> GeometryData::GetPaletteIndexArray(unsigned offset, unsigned count)
+std::vector<unsigned> GeometryData::GetPaletteIndexArray(unsigned offset, unsigned count) const
 {
     std::vector<unsigned> indices;
     indices.resize(count);
@@ -531,12 +538,12 @@ error GeometryData::SetTotalSkinWeightArray(const std::vector<float>& weight_arr
     return ErrorCode::ok;
 }
 
-std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned vtx_count)
+std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned vtx_count) const
 {
     return GetTotalSkinWeightArray(0, vtx_count);
 }
 
-std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned offset, unsigned vtx_count)
+std::vector<float> GeometryData::GetTotalSkinWeightArray(unsigned offset, unsigned vtx_count) const
 {
     std::vector<float> weights;
     weights.resize(static_cast<size_t>(vtx_count) * m_vertexDesc.BlendWeightCount());
@@ -551,12 +558,12 @@ error GeometryData::SetVertexTangentArray(const std::vector<MathLib::Vector4>& t
         reinterpret_cast<const float*>(&tangents[0]), static_cast<unsigned>(tangents.size()), false);
 }
 
-std::vector<Vector4> GeometryData::GetVertexTangentArray(unsigned count)
+std::vector<Vector4> GeometryData::GetVertexTangentArray(unsigned count) const
 {
     return GetVertexTangentArray(0, count);
 }
 
-std::vector<Vector4> GeometryData::GetVertexTangentArray(unsigned offset, unsigned count)
+std::vector<Vector4> GeometryData::GetVertexTangentArray(unsigned offset, unsigned count) const
 {
     std::vector<Vector4> tangents;
     tangents.resize(count);
@@ -577,7 +584,7 @@ error GeometryData::SetIndexArray(const std::vector<unsigned>& idx_ary)
     return ErrorCode::ok;
 }
 
-IVertexBuffer::ranged_buffer GeometryData::GetRangedVertexMemory(unsigned offset, unsigned count)
+IVertexBuffer::ranged_buffer GeometryData::GetRangedVertexMemory(unsigned offset, unsigned count) const
 {
     unsigned int byte_offset = offset * m_vertexDesc.TotalVertexSize();
     unsigned int byte_count = count * m_vertexDesc.TotalVertexSize();
@@ -587,7 +594,7 @@ IVertexBuffer::ranged_buffer GeometryData::GetRangedVertexMemory(unsigned offset
     return { offset, count, buffer };
 }
 
-IIndexBuffer::ranged_buffer GeometryData::GetRangedIndexMemory(unsigned offset, unsigned count)
+IIndexBuffer::ranged_buffer GeometryData::GetRangedIndexMemory(unsigned offset, unsigned count) const
 {
     uint_buffer buffer;
     buffer.resize(count);
@@ -596,7 +603,7 @@ IIndexBuffer::ranged_buffer GeometryData::GetRangedIndexMemory(unsigned offset, 
 }
 
 error GeometryData::GetVertexMemoryData(unsigned vtxIndex, int elementOffset, int elementDimension,
-    int destDimension, float* dest, bool isPos)
+    int destDimension, float* dest, bool isPos) const
 {
     assert(dest);
 
@@ -655,7 +662,7 @@ error GeometryData::SetVertexMemoryData(unsigned vtxIndex, int elementOffset, in
 }
 
 error GeometryData::GetVertexMemoryDataArray(unsigned start, int elementOffset, int elementDimension,
-    int destDimension, float* dest, unsigned count, bool isPos)
+    int destDimension, float* dest, unsigned count, bool isPos) const
 {
     assert(dest);
     assert(count > 0);
@@ -672,7 +679,7 @@ error GeometryData::GetVertexMemoryDataArray(unsigned start, int elementOffset, 
     unsigned int step = m_vertexDesc.TotalVertexSize() / sizeof(float);
     unsigned int pos_count = m_vtxUsedCount - start;
     if (count < pos_count) pos_count = count;
-    float* src = reinterpret_cast<float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
+    const float* src = reinterpret_cast<const float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
     int cp_dimension = destDimension;
     if (cp_dimension > elementDimension) cp_dimension = elementDimension;
     bool set_vec4 = false;

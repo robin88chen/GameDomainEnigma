@@ -44,7 +44,7 @@ namespace Enigma::Engine
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
 
-        virtual GenericDto SerializeDto() = 0;
+        virtual GenericDto SerializeDto() const = 0;
 
         /** insert to renderer */
         virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,

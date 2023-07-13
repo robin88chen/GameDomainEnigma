@@ -82,9 +82,7 @@ GenericDto TextureCoordDto::ToGenericDto()
 GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) geometry.m_name = v.value();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_VERTEX_FORMAT)) geometry.m_vertexFormat = v.value();
-    if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS)) geometry.m_segments = v.value();
+    geometry.DeserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
         if (auto v = dto.TryGetValue<std::vector<Vector3>>(TOKEN_POSITIONS_3)) geometry.m_position3s = v.value();
@@ -128,12 +126,6 @@ GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
     {
         if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_INDICES)) geometry.m_indices = v.value();
     }
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY)) geometry.m_vtxCapacity = v.value();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_CAPACITY)) geometry.m_idxCapacity = v.value();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_USED_COUNT)) geometry.m_vtxUsedCount = v.value();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_USED_COUNT)) geometry.m_idxUsedCount = v.value();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_TOPOLOGY)) geometry.m_topology = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_GEOMETRY_BOUND)) geometry.m_geometryBound = v.value();
 
     return geometry;
 }
@@ -141,10 +133,8 @@ GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 GenericDto GeometryDataDto::ToGenericDto() const
 {
     GenericDto dto;
+    SerializeNonVertexAttributesToGenericDto(dto);
     dto.AddRtti(FactoryDesc(GeometryData::TYPE_RTTI.GetName()));
-    dto.AddOrUpdate(TOKEN_NAME, m_name);
-    dto.AddOrUpdate(TOKEN_VERTEX_FORMAT, m_vertexFormat);
-    dto.AddOrUpdate(TOKEN_SEGMENTS, m_segments);
     if (m_position3s)
     {
         dto.AddOrUpdate(TOKEN_POSITIONS_3, m_position3s.value());
@@ -185,14 +175,34 @@ GenericDto GeometryDataDto::ToGenericDto() const
     {
         dto.AddOrUpdate(TOKEN_INDICES, m_indices.value());
     }
+
+    return dto;
+}
+
+void GeometryDataDto::DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto)
+{
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) m_name = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_VERTEX_FORMAT)) m_vertexFormat = v.value();
+    if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS)) m_segments = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY)) m_vtxCapacity = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_CAPACITY)) m_idxCapacity = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_USED_COUNT)) m_vtxUsedCount = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_INDEX_USED_COUNT)) m_idxUsedCount = v.value();
+    if (auto v = dto.TryGetValue<unsigned>(TOKEN_TOPOLOGY)) m_topology = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_GEOMETRY_BOUND)) m_geometryBound = v.value();
+}
+
+void GeometryDataDto::SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const
+{
+    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_VERTEX_FORMAT, m_vertexFormat);
+    dto.AddOrUpdate(TOKEN_SEGMENTS, m_segments);
     dto.AddOrUpdate(TOKEN_VERTEX_CAPACITY, m_vtxCapacity);
     dto.AddOrUpdate(TOKEN_INDEX_CAPACITY, m_idxCapacity);
     dto.AddOrUpdate(TOKEN_VERTEX_USED_COUNT, m_vtxUsedCount);
     dto.AddOrUpdate(TOKEN_INDEX_USED_COUNT, m_idxUsedCount);
     dto.AddOrUpdate(TOKEN_TOPOLOGY, m_topology);
     dto.AddOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound);
-
-    return dto;
 }
 
 TriangleListDto::TriangleListDto(const GeometryDataDto& geometry_dto) : GeometryDataDto(geometry_dto)

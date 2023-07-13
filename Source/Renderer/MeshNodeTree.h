@@ -27,7 +27,7 @@ namespace Enigma::Renderer
         MeshNodeTree& operator=(const MeshNodeTree& tree);
         MeshNodeTree& operator=(MeshNodeTree&& tree) noexcept;
 
-        Engine::GenericDto SerializeDto();
+        Engine::GenericDto SerializeDto() const;
 
         std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name) const;
         /** add mesh node to tree

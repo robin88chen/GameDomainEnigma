@@ -9,12 +9,12 @@ DEFINE_RTTI(Terrain, TerrainPawn, Pawn);
 
 TerrainPawn::TerrainPawn(const std::string& name) : Pawn(name)
 {
-    
+
 }
 
 TerrainPawn::TerrainPawn(const GenericDto& o) : Pawn(o)
 {
-    
+
 }
 
 TerrainPawn::~TerrainPawn()
@@ -24,7 +24,6 @@ TerrainPawn::~TerrainPawn()
 
 GenericDto TerrainPawn::SerializeDto()
 {
-    TerrainPawnDto dto;
-    dto.PawnDto::FromGenericDto(Pawn::SerializeDto());
+    TerrainPawnDto dto(SerializePawnDto());
     return dto.ToGenericDto();
 }

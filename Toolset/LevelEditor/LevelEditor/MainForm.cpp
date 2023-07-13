@@ -1,4 +1,6 @@
 ﻿#include "MainForm.h"
+#include "FileSystem/FileSystem.h"
+#include "Platforms/PlatformLayer.h"
 #include "AddTerrainDialog.h"
 #include "CreateNewWorldDlg.h"
 #include "Platforms/MemoryMacro.h"
@@ -11,9 +13,15 @@
 #include "OutputPanel.h"
 #include "WorldEditConsole.h"
 #include "AppConfiguration.h"
+#include "WorldMap/WorldMapService.h"
+#include "Gateways/DtoJsonGateway.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
+using namespace Enigma::WorldMap;
+using namespace Enigma::Gateways;
+using namespace Enigma::Engine;
+using namespace Enigma::FileSystem;
 using namespace std::chrono_literals;
 
 MainForm::MainForm() : nana::form()
@@ -201,7 +209,14 @@ void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
+    auto dtos = world->SerializeTerrains();
+    std::string json = DtoJsonGateway::Serialize(dtos);
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("test_terrain"), "w+b");
+    if (FATAL_LOG_EXPR(!iFile)) return;
+    iFile->Write(0, convert_to_buffer(json));
+    FileSystem::Instance()->CloseFile(iFile);
 }
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)

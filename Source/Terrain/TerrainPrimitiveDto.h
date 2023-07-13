@@ -18,6 +18,7 @@ namespace Enigma::Terrain
     {
     public:
         TerrainPrimitiveDto();
+        TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto);
         TerrainPrimitiveDto(const TerrainPrimitiveDto&) = default;
         TerrainPrimitiveDto(TerrainPrimitiveDto&&) = default;
         TerrainPrimitiveDto& operator=(const TerrainPrimitiveDto&) = default;

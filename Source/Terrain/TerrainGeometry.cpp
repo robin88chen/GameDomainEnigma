@@ -35,9 +35,10 @@ TerrainGeometry::~TerrainGeometry()
 {
 }
 
-GenericDto TerrainGeometry::SerializeDto()
+GenericDto TerrainGeometry::SerializeDto() const
 {
     TerrainGeometryDto dto;
+    SerializeNonVertexAttributes(dto);
     dto.Name() = m_name;
     dto.NumRows() = m_numRows;
     dto.NumCols() = m_numCols;

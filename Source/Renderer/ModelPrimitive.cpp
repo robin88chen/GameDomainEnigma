@@ -72,7 +72,7 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
     return *this;
 }
 
-GenericDto ModelPrimitive::SerializeDto()
+GenericDto ModelPrimitive::SerializeDto() const
 {
     ModelPrimitiveDto dto;
     dto.Name() = m_name;

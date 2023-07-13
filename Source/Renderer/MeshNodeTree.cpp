@@ -38,7 +38,7 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
     return *this;
 }
 
-GenericDto MeshNodeTree::SerializeDto()
+GenericDto MeshNodeTree::SerializeDto() const
 {
     MeshNodeTreeDto dto;
     for (auto& node : m_meshNodes)

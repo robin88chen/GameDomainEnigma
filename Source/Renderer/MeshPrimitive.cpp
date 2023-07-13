@@ -104,12 +104,12 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
     return *this;
 }
 
-GenericDto MeshPrimitive::SerializeDto()
+GenericDto MeshPrimitive::SerializeDto() const
 {
     return SerializeMeshDto().ToGenericDto();
 }
 
-MeshPrimitiveDto MeshPrimitive::SerializeMeshDto()
+MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
 {
     MeshPrimitiveDto dto;
     dto.Name() = m_name;

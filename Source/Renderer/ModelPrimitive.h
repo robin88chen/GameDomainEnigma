@@ -31,7 +31,7 @@ namespace Enigma::Renderer
         ModelPrimitive& operator=(const ModelPrimitive& prim);
         ModelPrimitive& operator=(ModelPrimitive&& prim) noexcept;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto SerializeDto() const override;
 
         const std::string& GetName() const { return m_name; }
 

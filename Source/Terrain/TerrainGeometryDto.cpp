@@ -95,7 +95,6 @@ BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
 {
     assert((m_numRows != 0) && (m_numCols != 0));
     if (FATAL_LOG_EXPR(!m_heightMap)) return BoundingVolume();
-    Vector3 terrain_size = m_maxPosition - m_minPosition;
     const float_buffer heights = m_heightMap.value();
     float min_height = heights[0];
     float max_height = heights[0];
@@ -113,7 +112,7 @@ BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
 TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     TerrainGeometryDto terrain_dto;
-    terrain_dto.TriangleListDto::FromGenericDto(dto);
+    terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
@@ -126,7 +125,8 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
 
 GenericDto TerrainGeometryDto::ToGenericDto() const
 {
-    GenericDto dto = TriangleListDto::ToGenericDto();
+    GenericDto dto;
+    SerializeNonVertexAttributesToGenericDto(dto);
     dto.AddRtti(FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName()));
     dto.AddOrUpdate(TOKEN_NUM_ROWS, m_numRows);
     dto.AddOrUpdate(TOKEN_NUM_COLS, m_numCols);

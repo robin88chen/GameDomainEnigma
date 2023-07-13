@@ -40,7 +40,7 @@ namespace Enigma::Engine
         GeometryData& operator=(const GeometryData&) = delete;
         GeometryData& operator=(GeometryData&&) = delete;
 
-        virtual GenericDto SerializeDto();
+        virtual GenericDto SerializeDto() const;
 
         const std::string& GetName() { return m_name; }
 
@@ -67,10 +67,10 @@ namespace Enigma::Engine
         /** get position */
         MathLib::Vector4 GetPosition4(unsigned int vtxIndex);
         /** get position array */
-        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int count);
-        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int offset, unsigned int count);
-        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int count);
-        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int offset, unsigned int count);
+        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int count) const;
+        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int count) const;
+        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int offset, unsigned int count) const;
         /** set position */
         error SetPosition3(unsigned int vtxIndex, const MathLib::Vector3& position);
         /** set position */
@@ -83,12 +83,12 @@ namespace Enigma::Engine
         error SetPosition4Array(unsigned int offset, const std::vector<MathLib::Vector4>& positions);
 
         /** get vertex normal */
-        MathLib::Vector3 GetVertexNormal(unsigned int vtxIndex);
+        MathLib::Vector3 GetVertexNormal(unsigned int vtxIndex) const;
         /** set vertex normal */
         error SetVertexNormal(unsigned int vtxIndex, const MathLib::Vector3& nor);
         /** get vertex normal array */
-        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int count);
-        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int offset, unsigned int count);
+        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int count) const;
+        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int offset, unsigned int count) const;
         /** set vertex normal array */
         error SetVertexNormalArray(const std::vector<MathLib::Vector3>& normals);
         error SetVertexNormalArray(unsigned int offset, const std::vector<MathLib::Vector3>& normals);
@@ -100,85 +100,85 @@ namespace Enigma::Engine
         error SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& color);
         error SetDiffuseColorArray(unsigned int offset, const std::vector<MathLib::ColorRGBA>& color);
         /** get diffuse color */
-        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count);
-        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count);
+        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
+        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
         /** set specular color */
         error SetSpecularColorArray(const std::vector<MathLib::Vector4>& color);
         error SetSpecularColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
         /** get specular color */
-        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count);
-        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count);
+        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
+        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
 
         /** set texture coord array */
         error SetTexture2DCoordArray(unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
         error SetTexture2DCoordArray(unsigned int offset, unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
         /** get texture coord array */
-        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int stage, unsigned int count);
-        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
+        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
         /** set texture coord array */
         error SetTexture1DCoordArray(unsigned int stage, const std::vector<float>& us);
         /** get texture coord array */
-        std::vector<float> GetTexture1DCoordArray(unsigned int stage, unsigned int count);
-        std::vector<float> GetTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
+        std::vector<float> GetTexture1DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<float> GetTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
         /** set texture coord array */
         error SetTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
         /** get texture coord array */
-        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int stage, unsigned int count);
-        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int offset, unsigned int stage, unsigned int count);
+        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
 
         /** set palette index array */
         error SetPaletteIndexArray(const std::vector<unsigned int>& palette_array);
         /** get palette index array */
-        std::vector<unsigned> GetPaletteIndexArray(unsigned int count);
-        std::vector<unsigned> GetPaletteIndexArray(unsigned int offset, unsigned int count);
+        std::vector<unsigned> GetPaletteIndexArray(unsigned int count) const;
+        std::vector<unsigned> GetPaletteIndexArray(unsigned int offset, unsigned int count) const;
         /** set skin weight array */
         error SetSkinWeightArray(unsigned int weight_idx, const std::vector<float>& weight_array);
         /** set total skin weight array, array size : vtx count * blend weight count */
         error SetTotalSkinWeightArray(const std::vector<float>& weight_array);
         /** get total skin weight array, array size : vtx count * blend weight count */
-        std::vector<float> GetTotalSkinWeightArray(unsigned int vtx_count);
-        std::vector<float> GetTotalSkinWeightArray(unsigned int offset, unsigned int vtx_count);
+        std::vector<float> GetTotalSkinWeightArray(unsigned int vtx_count) const;
+        std::vector<float> GetTotalSkinWeightArray(unsigned int offset, unsigned int vtx_count) const;
         /** set vertex tangent array */
         error SetVertexTangentArray(const std::vector<MathLib::Vector4>& tangent);
         /** get vertex tangent array */
-        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int count);
-        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int offset, unsigned int count);
+        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int count) const;
+        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int offset, unsigned int count) const;
 
         /** set index array */
         error SetIndexArray(const std::vector<unsigned int>& idx_ary);
 
         /** get primitive type */
-        Graphics::PrimitiveTopology GetPrimitiveTopology() { return m_topology; };
+        Graphics::PrimitiveTopology GetPrimitiveTopology() const { return m_topology; };
 
         /** get vertex format string */
-        std::string GetVertexFormatString() { return m_vertexFormatCode.ToString(); };
+        std::string GetVertexFormatString() const { return m_vertexFormatCode.ToString(); };
 
         /** get vertex memory */
-        const byte_buffer& GetVertexMemory() { return m_vertexMemory; };
+        const byte_buffer& GetVertexMemory() const { return m_vertexMemory; };
         /** get ranged vertex memory */
-        Graphics::IVertexBuffer::ranged_buffer GetRangedVertexMemory(unsigned int offset, unsigned int count);
+        Graphics::IVertexBuffer::ranged_buffer GetRangedVertexMemory(unsigned int offset, unsigned int count) const;
         /** get index memory */
-        const uint_buffer& GetIndexMemory() { return m_indexMemory; };
+        const uint_buffer& GetIndexMemory() const { return m_indexMemory; };
         /** get ranged index memory */
-        Graphics::IIndexBuffer::ranged_buffer GetRangedIndexMemory(unsigned int offset, unsigned int count);
+        Graphics::IIndexBuffer::ranged_buffer GetRangedIndexMemory(unsigned int offset, unsigned int count) const;
 
         /** get vertex capacity */
-        unsigned int GetVertexCapacity() { return m_vtxCapacity; };
+        unsigned int GetVertexCapacity() const { return m_vtxCapacity; };
         /** get index capacity */
-        unsigned int GetIndexCapacity() { return m_idxCapacity; };
+        unsigned int GetIndexCapacity() const { return m_idxCapacity; };
 
         /** get used vertex count */
-        unsigned int GetUsedVertexCount() { return m_vtxUsedCount; };
+        unsigned int GetUsedVertexCount() const { return m_vtxUsedCount; };
         /** get used index count */
-        unsigned int GetUsedIndexCount() { return m_idxUsedCount; };
+        unsigned int GetUsedIndexCount() const { return m_idxUsedCount; };
 
         /** size of vertex (in byte) */
-        unsigned int SizeofVertex() { return m_vertexDesc.TotalVertexSize(); };
+        unsigned int SizeofVertex() const { return m_vertexDesc.TotalVertexSize(); };
 
         /** get geometry segment */
         const GeometrySegment& GetSegment(unsigned int index) const;
         /** get geometry segment count */
-        unsigned int GetSegmentCount() { return static_cast<unsigned int>(m_geoSegmentVector.size()); };
+        unsigned int GetSegmentCount() const { return static_cast<unsigned int>(m_geoSegmentVector.size()); };
         /** get geometry segment vector */
         const GeometrySegmentVector& GetSegmentVector() const { return m_geoSegmentVector; };
         /** change segment */
@@ -189,18 +189,20 @@ namespace Enigma::Engine
         /** calculate bounding volume */
         void CalculateBoundingVolume(bool axis_align);
         /** get bounding volume */
-        const BoundingVolume& GetBoundingVolume() { return m_geometryBound; };
+        const BoundingVolume& GetBoundingVolume() const { return m_geometryBound; };
 
     protected:
-        error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos);
+        error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos) const;
         error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);
         error GetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
-            int destDimension, float* dest, unsigned int count, bool isPos);
+            int destDimension, float* dest, unsigned int count, bool isPos) const;
         error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
-        GeometryDataDto SerializeGeometryDto();
+        GeometryDataDto SerializeGeometryDto() const;
         void DeserializeGeometryDto(const GeometryDataDto& dto);
+
+        void SerializeNonVertexAttributes(GeometryDataDto& dto) const;
 
     protected:
         FactoryDesc m_factoryDesc;

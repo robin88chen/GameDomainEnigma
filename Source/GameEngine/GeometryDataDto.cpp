@@ -138,7 +138,7 @@ GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
     return geometry;
 }
 
-GenericDto GeometryDataDto::ToGenericDto()
+GenericDto GeometryDataDto::ToGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(FactoryDesc(GeometryData::TYPE_RTTI.GetName()));
@@ -204,7 +204,7 @@ TriangleListDto TriangleListDto::FromGenericDto(const Engine::GenericDto& dto)
     return TriangleListDto(GeometryDataDto::FromGenericDto(dto));
 }
 
-GenericDto TriangleListDto::ToGenericDto()
+GenericDto TriangleListDto::ToGenericDto() const
 {
     GenericDto dto = GeometryDataDto::ToGenericDto();
     dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.GetName()));

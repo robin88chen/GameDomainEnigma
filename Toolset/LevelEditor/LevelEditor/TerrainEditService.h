@@ -9,6 +9,8 @@
 #define TERRAIN_EDIT_SERVICE_H
 
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace LevelEditor
 {
@@ -26,8 +28,16 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult OnInit() override;
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
 
+    protected:
+        void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
+
+    protected:
+        Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
     };
 }
 

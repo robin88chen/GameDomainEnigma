@@ -1,4 +1,5 @@
 ﻿#include "MainForm.h"
+#include "AddTerrainDialog.h"
 #include "CreateNewWorldDlg.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
@@ -64,6 +65,11 @@ void MainForm::InitSubPanels()
 
     if (m_sceneGraphPanel) m_sceneGraphPanel->SubscribeHandlers();
     if (m_outputPanel) m_outputPanel->SubscribeHandlers();
+    if (m_renderPanel)
+    {
+        m_renderPanel->InitInputHandler(m_appDelegate->GetInputHandler());
+        m_renderPanel->SubscribeHandlers();
+    }
 }
 
 void MainForm::InitializeGraphics()
@@ -86,6 +92,7 @@ void MainForm::FinalizeGraphics()
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
 
+    if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_sceneGraphPanel)
     {
         m_sceneGraphPanel->Finalize();
@@ -199,7 +206,7 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::API::modal_window(AddTerrainDialog(*this));
 }
 
 void MainForm::OnAddEnviromentLightCommand(const nana::menu::item_proxy& menu_item)

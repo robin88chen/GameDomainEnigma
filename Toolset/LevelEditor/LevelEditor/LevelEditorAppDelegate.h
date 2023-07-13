@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LevelEditorAppDelegate.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -40,6 +40,8 @@ namespace LevelEditor
         void OnTimerElapsed();
 
         const std::unique_ptr<AppConfiguration>& GetAppConfig() const { return m_appConfig; };
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> GetInputHandler() const { return m_inputHandler.lock(); };
+
     protected:
         void OnSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);

@@ -8,6 +8,10 @@
 #ifndef RENDER_PANEL_H
 #define RENDER_PANEL_H
 
+#include <Frameworks/EventSubscriber.h>
+
+#include "Frameworks/Event.h"
+#include "InputHandlers/InputHandlerService.h"
 #include "nana/gui.hpp"
 #include "nana/gui/widgets/form.hpp"
 #include "nana/gui/widgets/button.hpp"
@@ -28,6 +32,17 @@ namespace LevelEditor
         void OnMouseWheel(const nana::arg_wheel& arg);
 
         void OnResized(const nana::arg_resized& arg);
+
+        void SubscribeHandlers();
+        void UnsubscribeHandlers();
+
+        void InitInputHandler(const std::shared_ptr<Enigma::InputHandlers::InputHandlerService>& input_handler) { m_inputHandler = input_handler; }
+    private:
+        void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+
+    private:
+        Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+        std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
     };
 }
 

@@ -124,7 +124,7 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
     return terrain_dto;
 }
 
-GenericDto TerrainGeometryDto::ToGenericDto()
+GenericDto TerrainGeometryDto::ToGenericDto() const
 {
     GenericDto dto = TriangleListDto::ToGenericDto();
     dto.AddRtti(FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName()));

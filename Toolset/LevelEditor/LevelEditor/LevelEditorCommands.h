@@ -10,7 +10,9 @@
 
 #include "Frameworks/Command.h"
 #include "SceneGraph/Spatial.h"
+#include "Terrain/TerrainGeometryDto.h"
 #include "GameEngine/GenericDto.h"
+#include "TerrainEditService.h"
 #include <vector>
 
 namespace LevelEditor
@@ -41,12 +43,21 @@ namespace LevelEditor
     class CreateNewTerrain : public Enigma::Frameworks::ICommand
     {
     public:
-        CreateNewTerrain(const Enigma::Engine::GenericDto& dto) : m_dto(dto) {}
+        CreateNewTerrain(const std::string& name, const Enigma::Terrain::TerrainGeometryDto& geometry_dto,
+            const std::array<std::string, TerrainEditService::TextureLayerNum> layer_textures,
+            const Enigma::MathLib::Vector3& local_pos)
+                : m_name(name), m_geometryDto(geometry_dto), m_layerTextures(layer_textures), m_localPos(local_pos) {}
 
-        const Enigma::Engine::GenericDto& GetDto() const { return m_dto; }
+        const std::string& GetName() const { return m_name; }
+        const Enigma::Terrain::TerrainGeometryDto& GetGeometryDto() const { return m_geometryDto; }
+        const std::array<std::string, TerrainEditService::TextureLayerNum>& GetLayerTextures() const { return m_layerTextures; }
+        const Enigma::MathLib::Vector3& GetLocalPos() const { return m_localPos; }
 
     protected:
-        Enigma::Engine::GenericDto m_dto;
+        std::string m_name;
+        Enigma::Terrain::TerrainGeometryDto m_geometryDto;
+        std::array<std::string, TerrainEditService::TextureLayerNum> m_layerTextures;
+        Enigma::MathLib::Vector3 m_localPos;
     };
 }
 

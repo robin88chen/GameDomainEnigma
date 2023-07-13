@@ -31,7 +31,7 @@ namespace Enigma::Terrain
         TerrainPawnDtoHelper& GraphDepth(unsigned graph_depth);
         TerrainPawnDtoHelper& TerrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto);
 
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
 
     private:
         TerrainPawnDto m_dto;

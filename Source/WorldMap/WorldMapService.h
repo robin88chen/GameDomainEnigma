@@ -43,7 +43,7 @@ namespace Enigma::WorldMap
         std::weak_ptr<WorldMap> m_world;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
-        typedef std::list<SceneGraph::NodePtr> QuadRootList;
+        typedef std::list<std::weak_ptr<SceneGraph::Node>> QuadRootList;
         QuadRootList m_listQuadRoot;
 
         Frameworks::CommandSubscriberPtr m_doCreatingWorldMap;

@@ -84,7 +84,7 @@ TerrainPawnDtoHelper& TerrainPawnDtoHelper::TerrainPrimitive(const TerrainPrimit
     return *this;
 }
 
-Enigma::Engine::GenericDto TerrainPawnDtoHelper::ToGenericDto()
+Enigma::Engine::GenericDto TerrainPawnDtoHelper::ToGenericDto() const
 {
     return m_dto.ToGenericDto();
 }

@@ -28,6 +28,8 @@
 #include "WorldMap/WorldMapEvents.h"
 #include "WorldMap/WorldMap.h"
 #include "WorldEditService.h"
+#include "TerrainEditService.h"
+#include "Terrain/TerrainInstallingPolicy.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -44,6 +46,11 @@ using namespace Enigma::Animators;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
+using namespace Enigma::MathLib;
+using namespace Enigma::InputHandlers;
+using namespace Enigma::GameCommon;
+using namespace Enigma::WorldMap;
+using namespace Enigma::Terrain;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -143,10 +150,12 @@ void EditorAppDelegate::InstallEngine()
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDto::FromGenericDto(m_appConfig->GetCameraDto()));
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy });
+    auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager()));
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
 }
 
 void EditorAppDelegate::ShutdownEngine()
@@ -159,6 +168,7 @@ void EditorAppDelegate::ShutdownEngine()
     m_onWorldMapCreated = nullptr;
 
     assert(m_graphicMain);
+    m_graphicMain->GetServiceManager()->UnregisterSystemService(TerrainEditService::TYPE_RTTI);
     m_graphicMain->GetServiceManager()->UnregisterSystemService(WorldEditService::TYPE_RTTI);
     m_graphicMain->ShutdownRenderEngine();
 }

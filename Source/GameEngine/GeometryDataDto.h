@@ -45,7 +45,7 @@ namespace Enigma::Engine
         GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0) {};
 
         static GeometryDataDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        GenericDto ToGenericDto() const;
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -115,7 +115,7 @@ namespace Enigma::Engine
         TriangleListDto(const GeometryDataDto& geometry_dto);
 
         static TriangleListDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
     };
 }
 

@@ -25,11 +25,6 @@ std::vector<std::string> cellPerUVCandidates =
     "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048", "4096"
 };
 
-std::array<std::string, TerrainEditService::TextureLayerNum> layerSemantics =
-{
-    "TextureLayer0", "TextureLayer1", "TextureLayer2", "TextureLayer3"
-};
-
 #define PRESET_MIN_VERTEX   "-1024.0, 0.0, -1024.0"
 #define PRESET_MAX_VERTEX   "1024.0, 0.0, 1024.0"
 #define PRESET_MIN_UV   "0.0, 0.0"
@@ -45,11 +40,11 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner) : form(owner, nana::API::
     m_terrainNameInputBox = new nana::textbox(*this, "Name");
     get_place()["create_prompt"] << *m_terrainNamePrompt << *m_terrainNameInputBox;
 
-    m_cellColumnsPrompt = menew nana::label(*this, "Cell Num X : ");
+    m_cellColumnsPrompt = menew nana::label(*this, "Cell Columns : ");
     (*m_cellColumnsPrompt).text_align(nana::align::right);
     m_cellColumnsCombo = menew nana::combox{ *this };
     m_cellColumnsCombo->events().text_changed([this](const nana::arg_combox& a) { this->OnCellNumCellPerUVComboTextChanged(a); });
-    m_cellRowsPrompt = menew nana::label(*this, "Cell Num Z : ");
+    m_cellRowsPrompt = menew nana::label(*this, "Cell Rows : ");
     (*m_cellRowsPrompt).text_align(nana::align::right);
     m_cellRowsCombo = menew nana::combox{ *this };
     m_cellRowsCombo->events().text_changed([this](const nana::arg_combox& a) { this->OnCellNumCellPerUVComboTextChanged(a); });
@@ -154,30 +149,10 @@ void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
     if (std::tie(terrain_geometry_dto.MaxPosition(), isParseOk) = ParseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
     if (std::tie(terrain_geometry_dto.MinTextureCoordinate(), isParseOk) = ParseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
     if (std::tie(terrain_geometry_dto.MaxTextureCoordinate(), isParseOk) = ParseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
-
-    Terrain::TerrainPrimitiveDto terrain_dto;
-    terrain_dto.Name() = terrainName;
-    Engine::EffectMaterialDtoHelper mat_dto("TerrainMesh");
-    mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
-    Engine::EffectTextureMapDtoHelper tex_dto;
-    for (unsigned i = 0; i < TerrainEditService::TextureLayerNum; i++)
-    {
-        if (m_layerTextureFilenames[i].empty()) continue;
-        tex_dto.TextureMapping(m_layerTextureFilenames[i], "APK_PATH", m_layerTextureFilenames[i], std::nullopt, layerSemantics[i]);
-    }
-    tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
-    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
-    terrain_dto.GeometryName() = terrainName + "_geo";
-    terrain_dto.TheGeometry() = terrain_geometry_dto.ToGenericDto();
     MathLib::Vector3 terrainLocalPos;
     if (std::tie(terrainLocalPos, isParseOk) = ParseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
-    MathLib::Matrix4 mxLocal;
-    mxLocal.MakeTranslateTransform(terrainLocalPos);
-    Terrain::TerrainPawnDtoHelper pawn_dto("TerrainPawn");
-    pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto).LocalTransform(mxLocal);
 
-    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(pawn_dto.ToGenericDto()));
+    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(terrainName, terrain_geometry_dto, m_layerTextureFilenames, terrainLocalPos));
 
     close();
 }

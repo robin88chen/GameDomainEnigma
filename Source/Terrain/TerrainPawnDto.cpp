@@ -17,7 +17,6 @@ TerrainPawnDto TerrainPawnDto::FromGenericDto(const Engine::GenericDto& dto)
 Enigma::Engine::GenericDto TerrainPawnDto::ToGenericDto() const
 {
     Engine::GenericDto dto = PawnDto::ToGenericDto();
-    dto.AddRtti(Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.GetName()));
     return dto;
 }
 

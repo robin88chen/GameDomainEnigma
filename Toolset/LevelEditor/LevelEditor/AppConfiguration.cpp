@@ -14,6 +14,7 @@ std::string TOKEN_SCENE_ROOT_NAME = "SceneRootName";
 std::string TOKEN_PORTAL_MANAGEMENT_NAME = "PortalManagementName";
 std::string TOKEN_CAMERA = "Camera";
 std::string TOKEN_WORLD_MAP_ROOT_FOLDER = "WorldMapRootFolder";
+std::string TOKEN_WORLD_MAP_PATH_ID = "WorldMapPathID";
 
 void AppConfiguration::LoadConfig()
 {
@@ -81,5 +82,12 @@ std::string AppConfiguration::GetWorldMapRootFolderName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_WORLD_MAP_ROOT_FOLDER)) return v.value();
+    return "";
+}
+
+std::string AppConfiguration::GetWorldMapPathId() const
+{
+    assert(!m_configDto.IsEmpty());
+    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_WORLD_MAP_PATH_ID)) return v.value();
     return "";
 }

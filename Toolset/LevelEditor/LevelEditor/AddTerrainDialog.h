@@ -18,10 +18,12 @@
 
 namespace LevelEditor
 {
+    class WorldEditConsole;
+
     class AddTerrainDialog : public nana::form
     {
     public:
-        AddTerrainDialog(nana::window owner);
+        AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit);
         virtual ~AddTerrainDialog();
 
         void OnOkButton(const nana::arg_click& arg);
@@ -62,6 +64,8 @@ namespace LevelEditor
         std::array<std::string, TerrainEditService::TextureLayerNum> m_layerTextureFilenames;
         //nana::textbox* m_rootNodePrompt;
         //nana::textbox* m_rootNodeNameInputBox;
+
+        std::weak_ptr<WorldEditConsole> m_worldEdit;
     };
 }
 

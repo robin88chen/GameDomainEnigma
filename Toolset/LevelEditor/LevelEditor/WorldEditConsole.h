@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   WorldEditConsole.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -23,15 +23,16 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult OnInit() override;
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
 
-        void SetWorldMapRootFolder(const std::filesystem::path& folder);
+        void SetWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id);
 
         // check world files
         bool CheckWorldMapFiles(const std::string& world_name);
         // delete world files
         void DeleteWorldMapFiles(const std::string& world_name);
         // create world map directory & files
-        void CreateWorldMapFiles(const std::string& world_name) const;
+        void CreateWorldMapFiles(const std::string& world_name);
 
+        const std::string& GetCurrentWorldName() const { return m_currentWorldName; }
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
 
@@ -47,6 +48,7 @@ namespace LevelEditor
         //void OnEditorModeSelected(EditorModeSelectedMessage* msg);
     private:
         std::filesystem::path m_mapFileRootPath;
+        std::string m_currentWorldName;
 
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;

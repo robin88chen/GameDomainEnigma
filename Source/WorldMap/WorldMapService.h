@@ -32,7 +32,8 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        std::vector<Engine::GenericDto> SerializeTerrains() const;
+        std::vector<Engine::GenericDto> SerializeTerrains(const std::string& to_world_path_id) const;
+        std::vector<Engine::GenericDto> SerializeQuadNodes() const;
 
     protected:
         void AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);

@@ -10,6 +10,7 @@
 #include "Frameworks/CommandBus.h"
 #include "LevelEditorCommands.h"
 #include "Frameworks/StringFormat.h"
+#include "WorldEditConsole.h"
 #include <cstdlib>
 #include <MathLib/Matrix4.h>
 
@@ -31,8 +32,10 @@ std::vector<std::string> cellPerUVCandidates =
 #define PRESET_MAX_UV   "1.0, 1.0"
 #define PRESET_LOCAL_POS "0.0, 0.0, 0.0"
 
-AddTerrainDialog::AddTerrainDialog(nana::window owner) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
+AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
 {
+    m_worldEdit = world_edit;
+
     caption("Add New Terrain");
     get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><cell_prompt margin=[10,20]><min_vtx_prompt margin=[10,20]><max_vtx_prompt margin=[10,20]><min_uv_prompt margin=[10,20]><max_uv_prompt margin=[10,20]><local_pos_prompt margin=[10,20]><cell_uv_prompt margin=[10,20]><texture_btns weight=84 arrange=[64,64,64,64] margin=[10,20] gap=10><><buttons margin=[10,40] gap=10><>");
     m_terrainNamePrompt = menew nana::label(*this, "Terrain Name : ");
@@ -139,6 +142,7 @@ AddTerrainDialog::~AddTerrainDialog()
 void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
+    terrainName = m_worldEdit.lock()->GetCurrentWorldName() + "/" + terrainName;
     Terrain::TerrainGeometryDto terrain_geometry_dto;
     terrain_geometry_dto.Name() = terrainName + "_geo";
     char* endptr = nullptr;

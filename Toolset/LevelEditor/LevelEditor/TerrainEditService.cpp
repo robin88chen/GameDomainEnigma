@@ -80,7 +80,7 @@ void TerrainEditService::DoCreatingNewTerrain(const Enigma::Frameworks::ICommand
     terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
     terrain_dto.GeometryName() = cmd->GetGeometryDto().Name();
     Matrix4 mxLocal = Matrix4::MakeTranslateTransform(cmd->GetLocalPos());
-    TerrainPawnDtoHelper pawn_dto("TerrainPawn");
+    TerrainPawnDtoHelper pawn_dto(cmd->GetName());
     pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto).LocalTransform(mxLocal);
 
     std::vector<GenericDto> dtos = { pawn_dto.ToGenericDto() };

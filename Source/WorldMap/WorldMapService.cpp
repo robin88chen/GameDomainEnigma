@@ -58,7 +58,7 @@ ServiceResult WorldMapService::OnTerm()
     return ServiceResult::Complete;
 }
 
-std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeTerrains() const
+std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeTerrains(const std::string& to_world_path_id) const
 {
     assert(!m_world.expired());
 
@@ -69,7 +69,24 @@ std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeTerrains() con
 
     for (auto& terrain : enumTerrain.GetSpatials())
     {
+        terrain->TheFactoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", to_world_path_id);
         dtos.push_back(terrain->SerializeDto());
+    }
+    return dtos;
+}
+
+std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeQuadNodes() const
+{
+    assert(!m_world.expired());
+
+    std::vector<Engine::GenericDto> dtos;
+    EnumDerivedSpatials enumNode(VisibilityManagedNode::TYPE_RTTI);
+    m_world.lock()->VisitBy(&enumNode);
+    if (enumNode.GetSpatials().empty()) return dtos;
+
+    for (auto& node : enumNode.GetSpatials())
+    {
+        dtos.push_back(node->SerializeDto());
     }
     return dtos;
 }

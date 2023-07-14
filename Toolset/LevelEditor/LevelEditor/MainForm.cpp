@@ -92,7 +92,7 @@ void MainForm::InitializeGraphics()
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr));
     m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
-    m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName());
+    m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
 }
 
 void MainForm::FinalizeGraphics()
@@ -211,9 +211,9 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
-    auto dtos = world->SerializeTerrains();
+    auto dtos = world->SerializeTerrains(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
     std::string json = DtoJsonGateway::Serialize(dtos);
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("test_terrain"), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
     if (FATAL_LOG_EXPR(!iFile)) return;
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
@@ -221,7 +221,7 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(AddTerrainDialog(*this));
+    nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock()));
 }
 
 void MainForm::OnAddEnviromentLightCommand(const nana::menu::item_proxy& menu_item)

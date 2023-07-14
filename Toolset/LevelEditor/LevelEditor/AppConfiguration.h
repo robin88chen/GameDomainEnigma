@@ -27,6 +27,7 @@ namespace LevelEditor
         std::string GetPortalManagementName() const;
 
         std::string GetWorldMapRootFolderName() const;
+        std::string GetWorldMapPathId() const;
 
         Enigma::Engine::GenericDto GetCameraDto() const;
     private:

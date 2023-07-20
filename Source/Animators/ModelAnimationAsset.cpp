@@ -31,7 +31,7 @@ ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
     ModelAnimationAssetDto dto;
     dto.Name() = m_name;
     std::vector<std::string> names;
-    std::vector<GenericDto> srts;
+    GenericDtoCollection srts;
     for (auto& key : m_meshNodeKeyArray)
     {
         names.emplace_back(key.m_meshNodeName);

@@ -11,6 +11,8 @@
 #include "SceneGraph/PortalCommands.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include "SceneGraph/EnumDerivedSpatials.h"
+#include "SceneGraph/SceneFlattenTraversal.h"
+#include "SceneGraph/Spatial.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -58,37 +60,29 @@ ServiceResult WorldMapService::OnTerm()
     return ServiceResult::Complete;
 }
 
-std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeTerrains(const std::string& to_world_path_id) const
+std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::SerializeQuadNodeGraphs() const
 {
     assert(!m_world.expired());
 
-    std::vector<Engine::GenericDto> dtos;
-    EnumDerivedSpatials enumTerrain(TerrainPawn::TYPE_RTTI);
-    m_world.lock()->VisitBy(&enumTerrain);
-    if (enumTerrain.GetSpatials().empty()) return dtos;
-
-    for (auto& terrain : enumTerrain.GetSpatials())
-    {
-        terrain->TheFactoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", to_world_path_id);
-        dtos.push_back(terrain->SerializeDto());
-    }
-    return dtos;
-}
-
-std::vector<Enigma::Engine::GenericDto> WorldMapService::SerializeQuadNodes() const
-{
-    assert(!m_world.expired());
-
-    std::vector<Engine::GenericDto> dtos;
+    std::vector<Engine::GenericDtoCollection> collections;
     EnumDerivedSpatials enumNode(VisibilityManagedNode::TYPE_RTTI);
     m_world.lock()->VisitBy(&enumNode);
-    if (enumNode.GetSpatials().empty()) return dtos;
+    if (enumNode.GetSpatials().empty()) return collections;
 
     for (auto& node : enumNode.GetSpatials())
     {
-        dtos.push_back(node->SerializeDto());
+        SceneGraph::SceneFlattenTraversal flatten;
+        node->VisitBy(&flatten);
+        if (flatten.GetSpatials().empty()) continue;
+        Engine::GenericDtoCollection collection;
+        for (auto& sp : flatten.GetSpatials())
+        {
+            collection.push_back(sp->SerializeDto());
+        }
+        collection[0].AsTopLevel(true);
+        collections.push_back(collection);
     }
-    return dtos;
+    return collections;
 }
 
 void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
@@ -100,7 +94,7 @@ void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     std::string node_name = terrain->GetSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
     quadRootNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
-    quadRootNode->TheFactoryDesc().ClaimAsDeferred();
+    quadRootNode->TheFactoryDesc().ClaimAsDeferred(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_world.lock()->AttachChild(quadRootNode, local_transform);
     m_listQuadRoot.push_back(quadRootNode);

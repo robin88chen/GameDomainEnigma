@@ -27,8 +27,8 @@ namespace Enigma::Animators
         std::optional<Engine::GenericDto>& AnimationAssetDto() { return m_animationAssetDto; }
         [[nodiscard]] const Engine::FactoryDesc& AssetFactoryDesc() const { return m_assetFactory; }
         Engine::FactoryDesc& AssetFactoryDesc() { return m_assetFactory; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& SkinOperators() const { return m_skinOperators; }
-        std::vector<Engine::GenericDto>& SkinOperators() { return m_skinOperators; }
+        [[nodiscard]] const Engine::GenericDtoCollection& SkinOperators() const { return m_skinOperators; }
+        Engine::GenericDtoCollection& SkinOperators() { return m_skinOperators; }
 
         static ModelAnimatorDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -40,7 +40,7 @@ namespace Enigma::Animators
         std::string m_assetName;
         std::optional<Engine::GenericDto> m_animationAssetDto;
         Engine::FactoryDesc m_assetFactory;
-        std::vector<Engine::GenericDto> m_skinOperators;
+        Engine::GenericDtoCollection m_skinOperators;
     };
 
     class SkinOperatorDto

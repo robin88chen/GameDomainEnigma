@@ -56,15 +56,15 @@ namespace Enigma::Animators
 
         [[nodiscard]] const std::vector<std::string>& MeshNodeNames() const { return m_meshNodeNames; }
         std::vector<std::string>& MeshNodeNames() { return m_meshNodeNames; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& TimeSRTs() const { return m_timeSrtDtos; }
-        std::vector<Engine::GenericDto>& TimeSRTs() { return m_timeSrtDtos; }
+        [[nodiscard]] const Engine::GenericDtoCollection& TimeSRTs() const { return m_timeSrtDtos; }
+        Engine::GenericDtoCollection& TimeSRTs() { return m_timeSrtDtos; }
 
         static ModelAnimationAssetDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
     protected:
         std::vector<std::string> m_meshNodeNames;
-        std::vector<Engine::GenericDto> m_timeSrtDtos;
+        Engine::GenericDtoCollection m_timeSrtDtos;
     };
 }
 

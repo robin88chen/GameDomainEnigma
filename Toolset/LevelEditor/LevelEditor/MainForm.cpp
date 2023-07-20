@@ -211,12 +211,18 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
-    auto dtos = world->SerializeTerrains(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
-    std::string json = DtoJsonGateway::Serialize(dtos);
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    auto collections = world->SerializeQuadNodeGraphs();
+    for (auto& dtos : collections)
+    {
+        auto desc = dtos[0].GetRtti();
+        desc.ClaimAsInstanced(desc.GetPrefab(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
+        dtos[0].AddRtti(desc);
+        std::string json = DtoJsonGateway::Serialize(dtos);
+        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
+        if (FATAL_LOG_EXPR(!iFile)) return;
+        iFile->Write(0, convert_to_buffer(json));
+        FileSystem::Instance()->CloseFile(iFile);
+    }
 }
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)

@@ -214,7 +214,7 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, portal));
 }
 
-void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos)
+void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const GenericDtoCollection& dtos)
 {
     m_isCurrentBuilding = true;
     if (m_resolver) m_resolver->ClearResolvers();
@@ -226,7 +226,7 @@ void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const
     }
 }
 
-void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos)
+void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const GenericDtoCollection& dtos)
 {
     if (!sub_root) return;
     m_isCurrentBuilding = true;

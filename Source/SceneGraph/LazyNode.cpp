@@ -22,7 +22,8 @@ LazyNode::~LazyNode()
 GenericDto LazyNode::SerializeDto()
 {
     NodeDto node_dto(SerializeSpatialDto());  // 基本的 spatial data
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
+    if ((m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced))
     {
         for (auto child : m_childList)
         {

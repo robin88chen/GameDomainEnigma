@@ -65,8 +65,8 @@ namespace Enigma::Engine
         std::optional<std::vector<MathLib::Vector4>>& DiffuseColors() { return m_diffuseColors; }
         [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> SpecularColors() const { return m_specularColors; }
         std::optional<std::vector<MathLib::Vector4>>& SpecularColors() { return m_specularColors; }
-        [[nodiscard]] const std::vector<GenericDto>& TextureCoords() const { return m_texCoords; }
-        std::vector<GenericDto>& TextureCoords() { return m_texCoords; }
+        [[nodiscard]] const GenericDtoCollection& TextureCoords() const { return m_texCoords; }
+        GenericDtoCollection& TextureCoords() { return m_texCoords; }
         [[nodiscard]] std::optional<std::vector<unsigned>> PaletteIndices() const { return m_paletteIndices; }
         std::optional<std::vector<unsigned>>& PaletteIndices() { return m_paletteIndices; }
         [[nodiscard]] std::optional<std::vector<float>> Weights() const { return m_weights; }
@@ -97,7 +97,7 @@ namespace Enigma::Engine
         std::optional<std::vector<MathLib::Vector3>> m_normals;
         std::optional<std::vector<MathLib::Vector4>> m_diffuseColors;
         std::optional<std::vector<MathLib::Vector4>> m_specularColors;
-        std::vector<GenericDto> m_texCoords;
+        GenericDtoCollection m_texCoords;
         std::optional<std::vector<unsigned>> m_paletteIndices;
         std::optional<std::vector<float>> m_weights;
         std::optional<std::vector<MathLib::Vector4>> m_tangents;

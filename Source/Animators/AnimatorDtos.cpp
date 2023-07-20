@@ -25,7 +25,7 @@ ModelAnimatorDto ModelAnimatorDto::FromGenericDto(const GenericDto& dto)
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_ASSET_OBJECT)) model.AnimationAssetDto() = v.value();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_ANIMATION_NAME)) model.AssetName() = v.value();
     if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_ANIMATION_FACTORY)) model.AssetFactoryDesc() = v.value();
-    if (auto v = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_SKIN_OPERATORS)) model.SkinOperators() = v.value();
+    if (auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_SKIN_OPERATORS)) model.SkinOperators() = v.value();
     return model;
 }
 

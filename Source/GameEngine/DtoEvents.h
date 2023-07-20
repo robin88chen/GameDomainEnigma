@@ -17,13 +17,13 @@ namespace Enigma::Engine
     class GenericDtoDeserialized : public Frameworks::IEvent
     {
     public:
-        GenericDtoDeserialized(const Frameworks::Ruid& ruid, const std::vector<GenericDto>& dtos) :
+        GenericDtoDeserialized(const Frameworks::Ruid& ruid, const GenericDtoCollection& dtos) :
             m_ruid(ruid), m_dtos(dtos) {};
         const Frameworks::Ruid& GetRuid() { return m_ruid; }
-        const std::vector<GenericDto>& GetDtos() { return m_dtos; }
+        const GenericDtoCollection& GetDtos() { return m_dtos; }
     private:
         Frameworks::Ruid m_ruid;
-        std::vector<GenericDto> m_dtos;
+        GenericDtoCollection m_dtos;
     };
     class DeserializeDtoFailed : public Frameworks::IEvent
     {

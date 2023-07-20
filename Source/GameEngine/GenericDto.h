@@ -106,6 +106,7 @@ namespace Enigma::Engine
         AttributeValues m_values;
         GenericPolicyConverter m_converter;
     };
+    using GenericDtoCollection = std::vector<GenericDto>;
 }
 
 #endif // GENERIC_DTO_H

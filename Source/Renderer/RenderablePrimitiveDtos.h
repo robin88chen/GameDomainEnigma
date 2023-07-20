@@ -42,10 +42,10 @@ namespace Enigma::Renderer
         std::optional<Engine::GenericDto>& TheGeometry() { return m_geometry; }
         [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactory; }
         Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactory; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& Effects() const { return m_effects; }
-        std::vector<Engine::GenericDto>& Effects() { return m_effects; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& TextureMaps() const { return m_textureMaps; }
-        std::vector<Engine::GenericDto>& TextureMaps() { return m_textureMaps; }
+        [[nodiscard]] const Engine::GenericDtoCollection& Effects() const { return m_effects; }
+        Engine::GenericDtoCollection& Effects() { return m_effects; }
+        [[nodiscard]] const Engine::GenericDtoCollection& TextureMaps() const { return m_textureMaps; }
+        Engine::GenericDtoCollection& TextureMaps() { return m_textureMaps; }
         [[nodiscard]] Renderer::RenderListID RenderListID() const { return m_renderListID; }
         Renderer::RenderListID& RenderListID() { return m_renderListID; }
 
@@ -59,8 +59,8 @@ namespace Enigma::Renderer
         std::string m_geometryName;
         std::optional<Engine::GenericDto> m_geometry;
         Engine::FactoryDesc m_geometryFactory;
-        std::vector<Engine::GenericDto> m_effects;
-        std::vector<Engine::GenericDto> m_textureMaps;
+        Engine::GenericDtoCollection m_effects;
+        Engine::GenericDtoCollection m_textureMaps;
         Renderer::RenderListID m_renderListID;
     };
 
@@ -122,14 +122,14 @@ namespace Enigma::Renderer
         MeshNodeTreeDto& operator=(const MeshNodeTreeDto&) = default;
         MeshNodeTreeDto& operator=(MeshNodeTreeDto&&) = default;
 
-        [[nodiscard]] const std::vector<Engine::GenericDto>& MeshNodes() const { return m_nodeDtos; }
-        std::vector<Engine::GenericDto>& MeshNodes() { return m_nodeDtos; }
+        [[nodiscard]] const Engine::GenericDtoCollection& MeshNodes() const { return m_nodeDtos; }
+        Engine::GenericDtoCollection& MeshNodes() { return m_nodeDtos; }
 
         static MeshNodeTreeDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto() const;
 
     protected:
-        std::vector<Engine::GenericDto> m_nodeDtos;
+        Engine::GenericDtoCollection m_nodeDtos;
     };
 
     class ModelPrimitiveDto

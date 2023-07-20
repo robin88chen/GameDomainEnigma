@@ -42,14 +42,14 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_NAME)) mesh.GeometryName() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.TheGeometry() = v.value();
     if (const auto v = dto.TryGetValue<FactoryDesc>(TOKEN_GEOMETRY_FACTORY)) mesh.GeometryFactoryDesc() = v.value();
-    if (const auto ary = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_EFFECTS))
+    if (const auto ary = dto.TryGetValue<GenericDtoCollection>(TOKEN_EFFECTS))
     {
         for (auto& eff_dto : ary.value())
         {
             mesh.Effects().emplace_back(eff_dto);
         }
     }
-    if (const auto ary = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_TEXTURE_MAPS))
+    if (const auto ary = dto.TryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPS))
     {
         for (auto& tex_dto : ary.value())
         {
@@ -160,7 +160,7 @@ GenericDto MeshNodeDto::ToGenericDto() const
 MeshNodeTreeDto MeshNodeTreeDto::FromGenericDto(const GenericDto& dto)
 {
     MeshNodeTreeDto tree;
-    if (const auto v = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_MESH_NODES)) tree.MeshNodes() = v.value();
+    if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_MESH_NODES)) tree.MeshNodes() = v.value();
     return tree;
 }
 

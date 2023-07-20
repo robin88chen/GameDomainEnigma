@@ -59,8 +59,8 @@ namespace Enigma::SceneGraph
     private:
         void DoBuildingSceneGraph(const Frameworks::ICommandPtr& c);
         void BuildNextSceneGraph();
-        void BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos);
-        void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const std::vector<Engine::GenericDto>& dtos);
+        void BuildSceneGraph(const std::string& scene_graph_id, const Engine::GenericDtoCollection& dtos);
+        void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const Engine::GenericDtoCollection& dtos);
 
         void SpatialFactory(const Engine::GenericDto& dto);
 

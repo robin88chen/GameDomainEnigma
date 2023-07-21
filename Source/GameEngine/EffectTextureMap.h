@@ -44,6 +44,8 @@ namespace Enigma::Engine
         const EffectTextureTuple& GetEffectTextureTuple(unsigned index);
         const unsigned int GetCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
 
+        bool IsAllResourceTexture() const;
+
         /// merge texture sets to target map, with respect to same semantic
         void MergeTextureSetTo(EffectTextureMap& targetMap);
 

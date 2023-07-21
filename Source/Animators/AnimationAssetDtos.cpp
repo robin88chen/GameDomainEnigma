@@ -29,9 +29,19 @@ GenericDto AnimationTimeSRTDto::ToGenericDto()
     return dto;
 }
 
+AnimationAssetDto::AnimationAssetDto() : m_factoryDesc(AnimationAsset::TYPE_RTTI.GetName())
+{
+}
+
+ModelAnimationAssetDto::ModelAnimationAssetDto() : AnimationAssetDto()
+{
+    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());
+}
+
 ModelAnimationAssetDto ModelAnimationAssetDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     ModelAnimationAssetDto model;
+    model.m_factoryDesc = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.Name() = v.value();
     if (const auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) model.MeshNodeNames() = v.value();
     if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_TIME_SRTS)) model.TimeSRTs() = v.value();
@@ -41,7 +51,7 @@ ModelAnimationAssetDto ModelAnimationAssetDto::FromGenericDto(const Engine::Gene
 GenericDto ModelAnimationAssetDto::ToGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName()));
+    dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_MESH_NODE_NAMES, m_meshNodeNames);
     dto.AddOrUpdate(TOKEN_TIME_SRTS, m_timeSrtDtos);

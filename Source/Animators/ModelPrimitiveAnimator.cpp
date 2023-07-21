@@ -15,6 +15,7 @@ DEFINE_RTTI(Animators, ModelPrimitiveAnimator, Animator);
 
 ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
 {
+    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.GetName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
@@ -62,6 +63,7 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
 {
     ModelAnimatorDto dto;
     if (!m_animationAsset) return dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.AssetName() = m_animationAsset->GetName();
     dto.AssetFactoryDesc() = m_animationAsset->TheFactoryDesc();
     if ((m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)

@@ -7,6 +7,8 @@ std::string TOKEN_RTTI = "Rtti";
 std::string TOKEN_TOP_LEVEL = "TopLevel";
 std::string TOKEN_NAME = "Name";
 
+std::unordered_map<std::string, GenericPolicyConverter> GenericDto::m_converters;
+
 GenericDto::GenericDto() : m_ruid(Frameworks::Ruid::Generate())
 {
 }
@@ -52,7 +54,7 @@ std::string GenericDto::GetName() const
    return Get<std::string>(TOKEN_NAME);
 }
 
-void GenericDto::SetPolicyConverter(GenericPolicyConverter converter)
+/*void GenericDto::SetPolicyConverter(GenericPolicyConverter converter)
 {
     m_converter = converter;
 }
@@ -60,7 +62,7 @@ void GenericDto::SetPolicyConverter(GenericPolicyConverter converter)
 GenericPolicyConverter GenericDto::GetPolicyConverter() const
 {
     return m_converter;
-}
+}*/
 
 void GenericDto::AsTopLevel(bool is_top)
 {
@@ -75,6 +77,19 @@ bool GenericDto::IsTopLevel() const
 
 std::shared_ptr<GenericPolicy> GenericDto::ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>& d) const
 {
-    if (m_converter) return m_converter(d);
+    if (!HasValue(TOKEN_RTTI)) return nullptr;
+    auto it = m_converters.find(GetRtti().GetRttiName());
+    if (it == m_converters.end()) return nullptr;
+    if (it->second) return it->second(*this, d);
     return nullptr;
+}
+
+void GenericDto::RegisterConverter(const std::string& rtti, const GenericPolicyConverter& converter)
+{
+    m_converters.insert_or_assign(rtti, converter);
+}
+
+void GenericDto::UnregisterConverter(const std::string& rtti)
+{
+    m_converters.erase(rtti);
 }

@@ -11,6 +11,7 @@
 #include "Renderer/SkinMeshPrimitive.h"
 #include "Renderer/ModelPrimitive.h"
 #include "AnimatorDtos.h"
+#include "GameEngine/FactoryDesc.h"
 
 namespace Enigma::Animators
 {
@@ -27,6 +28,9 @@ namespace Enigma::Animators
 
         SkinOperatorDto SerializeDto();
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        
         void LinkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
         void CalculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
         void LinkNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
@@ -41,6 +45,7 @@ namespace Enigma::Animators
         void ReLinkClonedSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim);
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         std::weak_ptr<Renderer::SkinMeshPrimitive> m_skinMeshPrim;
         std::vector<std::string> m_boneNodeNames;
         std::vector<MathLib::Matrix4> m_nodeOffsets;

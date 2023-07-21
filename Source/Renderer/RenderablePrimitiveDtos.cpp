@@ -74,34 +74,34 @@ GenericDto MeshPrimitiveDto::ToGenericDto() const
     dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
-    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });  // 務必要抓 this 內容，否則不能保證 this 存在
     return dto;
 }
 
-std::shared_ptr<GenericPolicy> MeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
+std::shared_ptr<GenericPolicy> MeshPrimitiveDto::MeshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
+    MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::FromGenericDto(dto);
     auto policy = std::make_shared<MeshPrimitivePolicy>();
-    policy->Name() = m_name;
+    policy->Name() = mesh_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
-    if (m_geometry)
+    if (mesh_dto.m_geometry)
     {
-        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometry.value());
-        policy->GeometryFactoryDesc() = m_geometry.value().GetRtti();
+        policy->GeometryPolicy() = GeometryDataPolicy(mesh_dto.m_geometryName, mesh_dto.m_geometry.value());
+        policy->GeometryFactoryDesc() = mesh_dto.m_geometry.value().GetRtti();
     }
     else
     {
-        policy->GeometryPolicy() = GeometryDataPolicy(m_geometryName, m_geometryFactory.GetResourceFilename(), deserializer);
-        policy->GeometryFactoryDesc() = m_geometryFactory;
+        policy->GeometryPolicy() = GeometryDataPolicy(mesh_dto.m_geometryName, mesh_dto.m_geometryFactory.GetResourceFilename(), deserializer);
+        policy->GeometryFactoryDesc() = mesh_dto.m_geometryFactory;
     }
-    for (auto& eff : m_effects)
+    for (auto& eff : mesh_dto.m_effects)
     {
         policy->EffectDtos().emplace_back(EffectMaterialDto::FromGenericDto(eff));
     }
-    for (auto& tex : m_textureMaps)
+    for (auto& tex : mesh_dto.m_textureMaps)
     {
         policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
     }
-    policy->RenderListId() = m_renderListID;
+    policy->RenderListId() = mesh_dto.m_renderListID;
     return policy;
 }
 
@@ -118,13 +118,12 @@ GenericDto SkinMeshPrimitiveDto::ToGenericDto() const
 {
     GenericDto dto = MeshPrimitiveDto::ToGenericDto();
     dto.AddRtti(FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName()));
-    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });
     return dto;
 }
 
-std::shared_ptr<GenericPolicy> SkinMeshPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
+std::shared_ptr<GenericPolicy> SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    auto mesh_policy = std::dynamic_pointer_cast<MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::ConvertToPolicy(deserializer));
+    auto mesh_policy = std::dynamic_pointer_cast<MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::MeshDtoConvertToPolicy(dto, deserializer));
     return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
@@ -188,19 +187,19 @@ GenericDto ModelPrimitiveDto::ToGenericDto() const
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
     if (m_animatorDto) dto.AddOrUpdate(TOKEN_MODEL_ANIMATOR, m_animatorDto.value());
-    dto.SetPolicyConverter([=, *this](auto d) { return ConvertToPolicy(d); });
     return dto;
 }
 
-std::shared_ptr<GenericPolicy> ModelPrimitiveDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) const
+std::shared_ptr<GenericPolicy> ModelPrimitiveDto::ModelDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
+    ModelPrimitiveDto model_dto = ModelPrimitiveDto::FromGenericDto(dto);
     auto policy = std::make_shared<ModelPrimitivePolicy>();
-    policy->Name() = m_name;
+    policy->Name() = model_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(m_nodeTreeDto);
-    if ((m_animatorDto) && (m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
+    policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(model_dto.m_nodeTreeDto);
+    if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
     {
-        policy->TheModelAnimator() = ModelAnimatorDto::FromGenericDto(m_animatorDto.value());
+        policy->TheModelAnimator() = ModelAnimatorDto::FromGenericDto(model_dto.m_animatorDto.value());
     }
     return policy;
 }

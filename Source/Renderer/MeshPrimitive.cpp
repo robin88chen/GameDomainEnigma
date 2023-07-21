@@ -129,6 +129,7 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
     }
     for (auto& tex : m_textures)
     {
+        if (!tex.IsAllResourceTexture()) continue;
         dto.TextureMaps().emplace_back(tex.SerializeDto());
     }
     return dto;

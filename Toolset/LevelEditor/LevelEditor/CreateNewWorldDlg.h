@@ -29,8 +29,8 @@ namespace LevelEditor
         nana::button* m_cancelButton;
         nana::label* m_namePrompt;
         nana::textbox* m_nameInputBox;
-        //nana::label* m_rootNodePrompt;
-        //nana::textbox* m_rootNodeNameInputBox;
+        nana::label* m_folderNamePrompt;
+        nana::textbox* m_folderNameInputBox;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;
     };

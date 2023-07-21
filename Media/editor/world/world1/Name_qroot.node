@@ -61,7 +61,7 @@
         },
         "ChildNames": {
             "Type": "StringArray",
-            "Value": []
+            "Value": ["world1/Name"]
         }
     }, {
         "LocalTransform": {

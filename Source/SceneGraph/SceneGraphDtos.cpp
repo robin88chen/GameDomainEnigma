@@ -168,7 +168,7 @@ VisibilityManagedNodeDto VisibilityManagedNodeDto::FromGenericDto(const Engine::
     return node_dto;
 }
 
-GenericDto VisibilityManagedNodeDto::ToGenericDto()
+GenericDto VisibilityManagedNodeDto::ToGenericDto() const
 {
     GenericDto dto = LazyNodeDto::ToGenericDto();
     return dto;

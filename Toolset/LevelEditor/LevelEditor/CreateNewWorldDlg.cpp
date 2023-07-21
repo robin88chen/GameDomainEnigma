@@ -15,15 +15,15 @@ CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<W
 {
     m_worldEditor = world_editor;
     caption("Create New World");
-    get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><node_name_prompt arrange=[40%,variable] margin=[10,20]><><buttons margin=[10,40] gap=10><>");
+    get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><folder_name_prompt arrange=[40%,variable] margin=[10,20]><><buttons margin=[10,40] gap=10><>");
     m_namePrompt = menew nana::label(*this, "World Map Name : ");
     (*m_namePrompt).text_align(nana::align::right);
     m_nameInputBox = menew nana::textbox(*this, "");
     get_place()["create_prompt"] << *m_namePrompt << *m_nameInputBox;
-    //m_rootNodePrompt = menew nana::label(*this, "Map Root Node Name : ");
-    //(*m_rootNodePrompt).text_align(nana::align::right);
-    //m_rootNodeNameInputBox = menew nana::textbox(*this, "");
-    //get_place()["node_name_prompt"] << *m_rootNodePrompt << *m_rootNodeNameInputBox;
+    m_folderNamePrompt = menew nana::label(*this, "World Folder Name : ");
+    (*m_folderNamePrompt).text_align(nana::align::right);
+    m_folderNameInputBox = menew nana::textbox(*this, "");
+    get_place()["folder_name_prompt"] << *m_folderNamePrompt << *m_folderNameInputBox;
     m_okButton = menew nana::button(*this, "OK");
     m_okButton->events().click([this](const nana::arg_click& a) { this->OnOkButton(a); });
     m_cancelButton = menew nana::button(*this, "Cancel");
@@ -36,8 +36,8 @@ CreateNewWorldDlg::~CreateNewWorldDlg()
 {
     SAFE_DELETE(m_namePrompt);
     SAFE_DELETE(m_nameInputBox);
-    //SAFE_DELETE(m_rootNodePrompt);
-    //SAFE_DELETE(m_rootNodeNameInputBox);
+    SAFE_DELETE(m_folderNamePrompt);
+    SAFE_DELETE(m_folderNameInputBox);
     SAFE_DELETE(m_okButton);
     SAFE_DELETE(m_cancelButton);
 }
@@ -45,7 +45,8 @@ CreateNewWorldDlg::~CreateNewWorldDlg()
 void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
 {
     if (FATAL_LOG_EXPR(m_worldEditor.expired())) return;
-    if (const bool world_file_exist = m_worldEditor.lock()->CheckWorldMapFiles(m_nameInputBox->text()); world_file_exist)
+    std::string folder_name = m_folderNameInputBox->text();
+    if (const bool world_file_exist = m_worldEditor.lock()->CheckWorldMapFiles(folder_name); world_file_exist)
     {
         nana::msgbox mb(*this, "Create New World Map", nana::msgbox::yes_no);
         mb << "Delete Exist World Map Files?";
@@ -56,17 +57,17 @@ void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
         }
         else
         {
-            m_worldEditor.lock()->DeleteWorldMapFiles(m_nameInputBox->text());
+            m_worldEditor.lock()->DeleteWorldMapFiles(folder_name);
         }
     }
 
     std::string world_name = m_nameInputBox->text();
-    //std::string root_node_name = world_name + "." + m_rootNodeNameInputBox->text();
     WorldMap::WorldMapDto world_map_dto;
     world_map_dto.Name() = world_name;
     world_map_dto.IsTopLevel() = true;
+    world_map_dto.TheFactoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
     Frameworks::CommandBus::Post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
-    m_worldEditor.lock()->CreateWorldMapFiles(world_name);
+    m_worldEditor.lock()->CreateWorldMapFiles(folder_name);
 
     close();
 }

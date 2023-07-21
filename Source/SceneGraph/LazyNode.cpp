@@ -39,6 +39,16 @@ GenericDto LazyNode::SerializeDto()
     }
 }
 
+GenericDto LazyNode::SerializeAsLaziness()
+{
+    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(SerializeSpatialDto()));
+    GenericDto dto = lazy_node_dto.ToGenericDto();
+    FactoryDesc factory_desc = m_factoryDesc;
+    factory_desc.ClaimAsDeferred(); // serialize as deferred
+    dto.AddRtti(factory_desc);
+    return dto;
+}
+
 bool LazyNode::CanVisited()
 {
     return m_lazyStatus.IsReady() || m_lazyStatus.IsGhost();

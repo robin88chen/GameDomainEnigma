@@ -215,10 +215,25 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
     for (auto& dtos : collections)
     {
         auto desc = dtos[0].GetRtti();
-        desc.ClaimAsInstanced(desc.GetPrefab(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
+        desc.PathId(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
         dtos[0].AddRtti(desc);
         std::string json = DtoJsonGateway::Serialize(dtos);
         IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
+        if (FATAL_LOG_EXPR(!iFile)) return;
+        iFile->Write(0, convert_to_buffer(json));
+        FileSystem::Instance()->CloseFile(iFile);
+    }
+    auto collect = world->SerializeWorldMap();
+    if (!collect.empty())
+    {
+        for (auto& d : collect)
+        {
+            auto desc = d.GetRtti();
+            desc.PathId(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
+            d.AddRtti(desc);
+        }
+        std::string json = DtoJsonGateway::Serialize(collect);
+        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(collect[0].GetRtti().GetPrefab()), "w+b");
         if (FATAL_LOG_EXPR(!iFile)) return;
         iFile->Write(0, convert_to_buffer(json));
         FileSystem::Instance()->CloseFile(iFile);

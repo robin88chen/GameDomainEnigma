@@ -85,6 +85,19 @@ std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::SerializeQuad
     return collections;
 }
 
+Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
+{
+    assert(!m_world.expired());
+    Engine::GenericDtoCollection collection;
+    collection.push_back(m_world.lock()->SerializeDto());
+    for (auto node : m_listQuadRoot)
+    {
+        if (node.expired()) continue;
+        collection.push_back(node.lock()->SerializeAsLaziness());
+    }
+    return collection;
+}
+
 void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
     const Matrix4& local_transform)
 {
@@ -94,7 +107,7 @@ void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     std::string node_name = terrain->GetSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
     quadRootNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
-    quadRootNode->TheFactoryDesc().ClaimAsDeferred(node_name + ".node");
+    quadRootNode->TheFactoryDesc().ClaimAsInstanced(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_world.lock()->AttachChild(quadRootNode, local_transform);
     m_listQuadRoot.push_back(quadRootNode);

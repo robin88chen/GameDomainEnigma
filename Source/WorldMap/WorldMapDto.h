@@ -14,7 +14,8 @@ namespace Enigma::WorldMap
     class WorldMapDto : public SceneGraph::PortalZoneNodeDto
     {
     public:
-        WorldMapDto() = default;
+        WorldMapDto();
+        WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_dto);
 
         //const std::string& Name() const { return m_name; }
         //std::string& Name() { return m_name; }

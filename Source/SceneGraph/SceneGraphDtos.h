@@ -136,7 +136,7 @@ namespace Enigma::SceneGraph
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
 
         static VisibilityManagedNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
     };
 }
 

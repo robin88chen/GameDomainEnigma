@@ -29,6 +29,8 @@ namespace Enigma::WorldMap
 
         const std::string& GetName() const { return m_name; };
 
+        virtual Engine::GenericDto SerializeDto() override;
+
         void SetPortalRootNode(const std::shared_ptr<SceneGraph::PortalManagementNode>& root);
 
         std::shared_ptr<SceneGraph::PortalManagementNode> GetPortalRootNode() const { return m_portalRootNode.lock(); };

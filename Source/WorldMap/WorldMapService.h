@@ -11,7 +11,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneGraph/Node.h"
+#include "SceneGraph/LazyNode.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Terrain/TerrainPawn.h"
 
@@ -33,6 +33,7 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult OnTerm() override;
 
         std::vector<Engine::GenericDtoCollection> SerializeQuadNodeGraphs() const;
+        Engine::GenericDtoCollection SerializeWorldMap() const;
 
     protected:
         void AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
@@ -45,7 +46,7 @@ namespace Enigma::WorldMap
         std::weak_ptr<WorldMap> m_world;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
-        typedef std::list<std::weak_ptr<SceneGraph::Node>> QuadRootList;
+        typedef std::list<std::weak_ptr<SceneGraph::LazyNode>> QuadRootList;
         QuadRootList m_listQuadRoot;
 
         Frameworks::CommandSubscriberPtr m_doCreatingWorldMap;

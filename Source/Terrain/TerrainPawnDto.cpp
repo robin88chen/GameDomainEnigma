@@ -6,6 +6,7 @@ using namespace Enigma::Terrain;
 
 TerrainPawnDto::TerrainPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
+    m_factoryDesc = Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.GetName());
 }
 
 TerrainPawnDto TerrainPawnDto::FromGenericDto(const Engine::GenericDto& dto)

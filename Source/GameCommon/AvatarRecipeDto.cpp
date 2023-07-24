@@ -13,6 +13,11 @@ AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.GetNa
 {
 }
 
+AvatarRecipeReplaceMaterialDto::AvatarRecipeReplaceMaterialDto() : AvatarRecipeDto()
+{
+    m_factoryDesc = Engine::FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.GetName());
+}
+
 AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeReplaceMaterialDto recipe;
@@ -24,10 +29,15 @@ AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::FromGenericDto(co
 GenericDto AvatarRecipeReplaceMaterialDto::ToGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.GetName()));
+    dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_OLD_MATERIAL_NAME, m_oldMaterialName);
     dto.AddOrUpdate(TOKEN_NEW_MATERIAL_DTO, m_newMaterialDto.ToGenericDto());
     return dto;
+}
+
+AvatarRecipeChangeTextureDto::AvatarRecipeChangeTextureDto() : AvatarRecipeDto()
+{
+    m_factoryDesc = Engine::FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName());
 }
 
 AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -41,7 +51,7 @@ AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::FromGenericDto(const 
 GenericDto AvatarRecipeChangeTextureDto::ToGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName()));
+    dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_MESH_NAME, m_meshName);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.ToGenericDto());
     return dto;

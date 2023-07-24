@@ -33,7 +33,7 @@ namespace Enigma::GameCommon
     class AvatarRecipeReplaceMaterialDto : public AvatarRecipeDto
     {
     public:
-        AvatarRecipeReplaceMaterialDto() = default;
+        AvatarRecipeReplaceMaterialDto();
 
         std::string& OldMaterialName() { return m_oldMaterialName; }
         [[nodiscard]] const std::string& OldMaterialName() const { return m_oldMaterialName; }
@@ -51,7 +51,7 @@ namespace Enigma::GameCommon
     class AvatarRecipeChangeTextureDto : public AvatarRecipeDto
     {
     public:
-        AvatarRecipeChangeTextureDto() = default;
+        AvatarRecipeChangeTextureDto();
 
         std::string& MeshName() { return m_meshName; }
         [[nodiscard]] const std::string& MeshName() const { return m_meshName; }

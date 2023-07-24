@@ -1,4 +1,14 @@
 [{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Engine.TriangleList",
+                "PrefabFilename": ""
+            }
+        },
         "Name": {
             "Type": "String",
             "Value": "mb2011_zup.k_headtop"
@@ -39,16 +49,6 @@
         "Topology": {
             "Type": "Uint32",
             "Value": 4
-        },
-        "Rtti": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 0,
-                "ResourceName": "",
-                "ResourceFilename": "",
-                "RttiName": "En.Engine.TriangleList",
-                "PrefabFilename": ""
-            }
         },
         "Positions3": {
             "Type": "Vector3Array",

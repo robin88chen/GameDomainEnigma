@@ -19,17 +19,24 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        AvatarRecipe() = default;
+        AvatarRecipe();
+        AvatarRecipe(const Engine::GenericDto& o);
         AvatarRecipe(const AvatarRecipe&) = delete;
         AvatarRecipe(AvatarRecipe&&) = delete;
         virtual ~AvatarRecipe() = default;
         AvatarRecipe& operator=(const AvatarRecipe&) = delete;
         AvatarRecipe& operator=(AvatarRecipe&&) = delete;
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
         virtual Engine::GenericDto SerializeDto() const = 0;
 
         static std::shared_ptr<AvatarRecipe> CreateFromGenericDto(const Engine::GenericDto& dto);
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class ReplaceAvatarMaterial : public AvatarRecipe

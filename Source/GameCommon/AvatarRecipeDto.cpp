@@ -9,6 +9,10 @@ static std::string TOKEN_NEW_MATERIAL_DTO = "NewMaterialDto";
 static std::string TOKEN_MESH_NAME = "MeshName";
 static std::string TOKEN_TEXTURE_MAPPING_DTO = "TextureMappingDto";
 
+AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.GetName())
+{
+}
+
 AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeReplaceMaterialDto recipe;

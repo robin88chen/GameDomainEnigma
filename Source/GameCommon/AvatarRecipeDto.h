@@ -16,12 +16,18 @@ namespace Enigma::GameCommon
     class AvatarRecipeDto
     {
     public:
-        AvatarRecipeDto() = default;
+        AvatarRecipeDto();
         AvatarRecipeDto(const AvatarRecipeDto&) = default;
         AvatarRecipeDto(AvatarRecipeDto&&) = default;
         virtual ~AvatarRecipeDto() = default;
         AvatarRecipeDto& operator=(const AvatarRecipeDto&) = default;
         AvatarRecipeDto& operator=(AvatarRecipeDto&&) = default;
+
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class AvatarRecipeReplaceMaterialDto : public AvatarRecipeDto

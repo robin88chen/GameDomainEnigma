@@ -26,7 +26,7 @@ TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto
 Enigma::Engine::GenericDto TerrainPrimitiveDto::ToGenericDto() const
 {
     Engine::GenericDto dto = MeshPrimitiveDto::ToGenericDto();
-    dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()));
+    //dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()));
     return dto;
 }
 

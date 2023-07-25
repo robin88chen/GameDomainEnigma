@@ -2,6 +2,7 @@
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryData.h"
 #include "TriangleList.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
@@ -217,7 +218,7 @@ TriangleListDto::TriangleListDto() : GeometryDataDto()
 
 TriangleListDto::TriangleListDto(const GeometryDataDto& geometry_dto) : GeometryDataDto(geometry_dto)
 {
-    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TriangleList::TYPE_RTTI.GetName()));
 }
 
 TriangleListDto TriangleListDto::FromGenericDto(const Engine::GenericDto& dto)

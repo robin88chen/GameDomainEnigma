@@ -14,7 +14,7 @@ namespace Enigma::Terrain
     class TerrainPawnDto : public SceneGraph::PawnDto
     {
     public:
-        TerrainPawnDto() = default;
+        TerrainPawnDto();
         TerrainPawnDto(const SceneGraph::PawnDto& dto);
 
         static TerrainPawnDto FromGenericDto(const Engine::GenericDto& dto);

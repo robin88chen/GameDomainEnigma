@@ -17,7 +17,7 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
-Camera::Camera(const std::string& name, GraphicCoordSys hand)
+Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.GetName())
 {
     m_name = name;
     m_handSys = hand;
@@ -28,7 +28,7 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand)
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const CameraDto& dto)
+Camera::Camera(const CameraDto& dto) : m_factoryDesc(dto.TheFactoryDesc())
 {
     m_name = dto.Name();
     m_handSys = dto.HandSystem();
@@ -45,6 +45,7 @@ Camera::~Camera()
 GenericDto Camera::SerializeDto()
 {
     CameraDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.HandSystem() = m_handSys;
     dto.EyePosition() = m_vecLocation;

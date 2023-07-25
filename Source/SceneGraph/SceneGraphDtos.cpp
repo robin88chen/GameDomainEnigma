@@ -1,5 +1,4 @@
 ﻿#include "SceneGraphDtos.h"
-
 #include "LazyNode.h"
 #include "Node.h"
 #include "GameEngine/BoundingVolumeDto.h"
@@ -9,6 +8,7 @@
 #include "SceneGraphPolicies.h"
 #include "VisibilityManagedNode.h"
 #include "GameEngine/DtoDeserializer.h"
+#include <cassert>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -78,7 +78,7 @@ NodeDto::NodeDto() : SpatialDto()
 
 NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
-    m_factoryDesc = FactoryDesc(Node::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.GetName()));
 }
 
 NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
@@ -103,7 +103,7 @@ LightDto::LightDto() : SpatialDto()
 
 LightDto::LightDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
-    m_factoryDesc = FactoryDesc(Light::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.GetName()));
 }
 
 LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -128,7 +128,7 @@ PawnDto::PawnDto() : SpatialDto(), m_primitiveFactory(Primitive::TYPE_RTTI.GetNa
 
 PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
 {
-    m_factoryDesc = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.GetName()));
 }
 
 PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -166,7 +166,7 @@ LazyNodeDto::LazyNodeDto() : NodeDto()
 
 LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 {
-    m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LazyNode::TYPE_RTTI.GetName()));
 }
 
 LazyNodeDto LazyNodeDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -188,7 +188,7 @@ VisibilityManagedNodeDto::VisibilityManagedNodeDto() : LazyNodeDto()
 
 VisibilityManagedNodeDto::VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
 {
-    m_factoryDesc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.GetName()));
 }
 
 VisibilityManagedNodeDto VisibilityManagedNodeDto::FromGenericDto(const Engine::GenericDto& dto)

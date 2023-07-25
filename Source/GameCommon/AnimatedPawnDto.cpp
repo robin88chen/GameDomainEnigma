@@ -1,5 +1,6 @@
 ﻿#include "AnimatedPawnDto.h"
 #include "AnimatedPawn.h"
+#include <cassert>
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -14,7 +15,7 @@ AnimatedPawnDto::AnimatedPawnDto() : PawnDto()
 
 AnimatedPawnDto::AnimatedPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
-    m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), AnimatedPawn::TYPE_RTTI.GetName()));
 }
 
 AnimatedPawnDto AnimatedPawnDto::FromGenericDto(const Engine::GenericDto& dto)

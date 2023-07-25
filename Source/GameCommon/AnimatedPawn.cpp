@@ -14,13 +14,13 @@ DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 
 AnimatedPawn::AnimatedPawn(const std::string& name) : Pawn(name)
 {
-
+    m_factoryDesc = FactoryDesc(AnimatedPawn::TYPE_RTTI.GetName());
 }
 
 AnimatedPawn::AnimatedPawn(const Engine::GenericDto& o) : Pawn(o)
 {
     AnimatedPawnDto dto = AnimatedPawnDto::FromGenericDto(o);
-    m_animationClipMap = AnimationClipMap(dto.TheAnimationClipMapDto());
+    if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
     for (auto& avatar_dto : dto.AvatarRecipeDtos())
     {
         m_avatarRecipeList.push_back(AvatarRecipe::CreateFromGenericDto(avatar_dto));

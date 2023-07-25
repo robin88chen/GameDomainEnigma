@@ -37,6 +37,9 @@ namespace Enigma::SceneGraph
         Camera& operator=(const Camera&) = delete;
         Camera& operator=(Camera&&) = delete;
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         Engine::GenericDto SerializeDto();
 
         const std::string& GetName() const { return m_name; }
@@ -79,6 +82,7 @@ namespace Enigma::SceneGraph
 
     protected:
         std::string m_name;
+        Engine::FactoryDesc m_factoryDesc;
         GraphicCoordSys m_handSys;
 
         MathLib::Matrix4 m_mxViewTransform;    ///< view transform matrix

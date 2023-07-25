@@ -16,18 +16,24 @@ namespace Enigma::GameCommon
     class AvatarRecipeDto
     {
     public:
-        AvatarRecipeDto() = default;
+        AvatarRecipeDto();
         AvatarRecipeDto(const AvatarRecipeDto&) = default;
         AvatarRecipeDto(AvatarRecipeDto&&) = default;
         virtual ~AvatarRecipeDto() = default;
         AvatarRecipeDto& operator=(const AvatarRecipeDto&) = default;
         AvatarRecipeDto& operator=(AvatarRecipeDto&&) = default;
+
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class AvatarRecipeReplaceMaterialDto : public AvatarRecipeDto
     {
     public:
-        AvatarRecipeReplaceMaterialDto() = default;
+        AvatarRecipeReplaceMaterialDto();
 
         std::string& OldMaterialName() { return m_oldMaterialName; }
         [[nodiscard]] const std::string& OldMaterialName() const { return m_oldMaterialName; }
@@ -45,7 +51,7 @@ namespace Enigma::GameCommon
     class AvatarRecipeChangeTextureDto : public AvatarRecipeDto
     {
     public:
-        AvatarRecipeChangeTextureDto() = default;
+        AvatarRecipeChangeTextureDto();
 
         std::string& MeshName() { return m_meshName; }
         [[nodiscard]] const std::string& MeshName() const { return m_meshName; }

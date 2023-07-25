@@ -24,7 +24,7 @@
         },
         "TopLevel": {
             "Type": "Boolean",
-            "Value": false
+            "Value": true
         },
         "Name": {
             "Type": "String",
@@ -57,7 +57,7 @@
         },
         "SpatialFlag": {
             "Type": "Uint32",
-            "Value": 33
+            "Value": 17
         },
         "PawnPrimitive": {
             "Type": "DataObject",
@@ -113,6 +113,10 @@
                                     "MeshPrimitiveObject": {
                                         "Type": "DataObject",
                                         "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
                                             "Rtti": {
                                                 "Type": "FactoryDesc",
                                                 "Value": {
@@ -197,6 +201,10 @@
                                                     "RttiName": "En.Renderer.MeshPrimitive",
                                                     "PrefabFilename": ""
                                                 }
+                                            },
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
                                             },
                                             "Name": {
                                                 "Type": "String",
@@ -364,6 +372,10 @@
                                                     "RttiName": "En.Renderer.MeshPrimitive",
                                                     "PrefabFilename": ""
                                                 }
+                                            },
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
                                             },
                                             "Name": {
                                                 "Type": "String",
@@ -710,6 +722,10 @@
                                     "MeshPrimitiveObject": {
                                         "Type": "DataObject",
                                         "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
                                             "Rtti": {
                                                 "Type": "FactoryDesc",
                                                 "Value": {
@@ -1317,6 +1333,10 @@
                                     "MeshPrimitiveObject": {
                                         "Type": "DataObject",
                                         "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
                                             "Rtti": {
                                                 "Type": "FactoryDesc",
                                                 "Value": {

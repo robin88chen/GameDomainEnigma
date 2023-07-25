@@ -8,7 +8,7 @@ DEFINE_RTTI(Terrain, TerrainGeometry, TriangleList);
 
 TerrainGeometry::TerrainGeometry(const std::string& name) : TriangleList(name)
 {
-
+    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
 }
 
 TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)

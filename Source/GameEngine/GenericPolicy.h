@@ -11,6 +11,7 @@
 #include <memory>
 #include <functional>
 #include "DtoDeserializer.h"
+#include "GenericDto.h"
 
 namespace Enigma::Engine
 {
@@ -26,7 +27,7 @@ namespace Enigma::Engine
         GenericPolicy& operator=(const GenericPolicy&) = default;
         GenericPolicy& operator=(GenericPolicy&&) = default;
     };
-    using GenericPolicyConverter = std::function<std::shared_ptr<GenericPolicy>(const std::shared_ptr<IDtoDeserializer>&)>;
+    using GenericPolicyConverter = std::function<std::shared_ptr<GenericPolicy>(const GenericDto&, const std::shared_ptr<IDtoDeserializer>&)>;
 }
 
 #endif // GENERIC_POLICY_H

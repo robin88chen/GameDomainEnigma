@@ -40,19 +40,23 @@ namespace Enigma::Animators
     class AnimationAssetDto
     {
     public:
-        AnimationAssetDto() = default;
+        AnimationAssetDto();
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
     protected:
         std::string m_name;
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class ModelAnimationAssetDto : public AnimationAssetDto
     {
     public:
-        ModelAnimationAssetDto() = default;
+        ModelAnimationAssetDto();
 
         [[nodiscard]] const std::vector<std::string>& MeshNodeNames() const { return m_meshNodeNames; }
         std::vector<std::string>& MeshNodeNames() { return m_meshNodeNames; }

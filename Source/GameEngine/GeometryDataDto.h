@@ -42,12 +42,15 @@ namespace Enigma::Engine
     class GeometryDataDto
     {
     public:
-        GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0) {};
+        GeometryDataDto();
 
         static GeometryDataDto FromGenericDto(const GenericDto& dto);
         GenericDto ToGenericDto() const;
         void DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto);
         void SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const;
+
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -89,6 +92,7 @@ namespace Enigma::Engine
         GenericDto& GeometryBound() { return m_geometryBound; }
 
     protected:
+        FactoryDesc m_factoryDesc;
         std::string m_name;
         std::string m_vertexFormat;
         std::vector<unsigned> m_segments;
@@ -113,7 +117,7 @@ namespace Enigma::Engine
     class TriangleListDto : public GeometryDataDto
     {
     public:
-        TriangleListDto() = default;
+        TriangleListDto();
         TriangleListDto(const GeometryDataDto& geometry_dto);
 
         static TriangleListDto FromGenericDto(const Engine::GenericDto& dto);

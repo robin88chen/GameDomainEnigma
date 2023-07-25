@@ -1392,11 +1392,11 @@
                                                             "Value": [{
                                                                     "TextureName": {
                                                                         "Type": "String",
-                                                                        "Value": "mb20110804.png"
+                                                                        "Value": "mb20110807.png"
                                                                     },
                                                                     "Filename": {
                                                                         "Type": "String",
-                                                                        "Value": "image/mb20110804.png@APK_PATH"
+                                                                        "Value": "image/mb20110807.png@APK_PATH"
                                                                     },
                                                                     "PathId": {
                                                                         "Type": "String",
@@ -1538,11 +1538,11 @@
                         "Value": {
                             "TextureName": {
                                 "Type": "String",
-                                "Value": "mb20110804.png"
+                                "Value": "mb20110807.png"
                             },
                             "Filename": {
                                 "Type": "String",
-                                "Value": "image/mb20110804.png"
+                                "Value": "image/mb20110807.png"
                             },
                             "PathId": {
                                 "Type": "String",

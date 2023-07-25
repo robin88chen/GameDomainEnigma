@@ -14,7 +14,8 @@ WorldMapDto::WorldMapDto() : PortalZoneNodeDto()
 WorldMapDto::WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_dto)
     : PortalZoneNodeDto(portal_zone_node_dto)
 {
-    m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), WorldMap::TYPE_RTTI.GetName()));
+    //m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName());
 }
 
 WorldMapDto WorldMapDto::FromGenericDto(const Engine::GenericDto& dto)

@@ -18,13 +18,15 @@ static std::string TOKEN_MIN_TEXTURE_COORDINATE = "MinTextureCoordinate";
 static std::string TOKEN_MAX_TEXTURE_COORDINATE = "MaxTextureCoordinate";
 static std::string TOKEN_HEIGHT_MAP = "HeightMap";
 
-TerrainGeometryDto::TerrainGeometryDto()
+TerrainGeometryDto::TerrainGeometryDto() : TriangleListDto()
 {
+    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
     m_numRows = m_numCols = 1;
 }
 
 TerrainGeometryDto::TerrainGeometryDto(const TriangleListDto& triangle_dto) : TriangleListDto(triangle_dto)
 {
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainGeometry::TYPE_RTTI.GetName()));
     m_numRows = m_numCols = 1;
 }
 
@@ -113,6 +115,7 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
 {
     TerrainGeometryDto terrain_dto;
     terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
+    terrain_dto.TheFactoryDesc() = dto.GetRtti();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
@@ -127,7 +130,7 @@ GenericDto TerrainGeometryDto::ToGenericDto() const
 {
     GenericDto dto;
     SerializeNonVertexAttributesToGenericDto(dto);
-    dto.AddRtti(FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName()));
+    dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NUM_ROWS, m_numRows);
     dto.AddOrUpdate(TOKEN_NUM_COLS, m_numCols);
     dto.AddOrUpdate(TOKEN_MIN_POSITION, m_minPosition);

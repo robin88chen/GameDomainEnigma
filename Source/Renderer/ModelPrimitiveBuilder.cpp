@@ -9,6 +9,7 @@
 #include "Animators/AnimatorCommands.h"
 #include "Animators/AnimatorEvents.h"
 #include "Animators/ModelPrimitiveAnimator.h"
+#include "GameEngine/FactoryCommands.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -24,10 +25,14 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     EventPublisher::Subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
     EventPublisher::Subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::Subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
+
+    CommandBus::Post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.GetName(), ModelPrimitiveDto::ModelDtoConvertToPolicy));
 }
 
 ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
 {
+    CommandBus::Post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.GetName()));
+
     EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
     EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
     EventPublisher::Unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);

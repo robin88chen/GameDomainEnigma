@@ -18,6 +18,14 @@ DEFINE_RTTI_OF_BASE(GameCommon, AvatarRecipe);
 DEFINE_RTTI(GameCommon, ReplaceAvatarMaterial, AvatarRecipe);
 DEFINE_RTTI(GameCommon, ChangeAvatarTexture, AvatarRecipe);
 
+AvatarRecipe::AvatarRecipe() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.GetName())
+{
+}
+
+AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.GetRtti())
+{
+}
+
 std::shared_ptr<AvatarRecipe> AvatarRecipe::CreateFromGenericDto(const Engine::GenericDto& dto)
 {
     std::string type = dto.GetRtti().GetRttiName();
@@ -32,14 +40,16 @@ std::shared_ptr<AvatarRecipe> AvatarRecipe::CreateFromGenericDto(const Engine::G
     return nullptr;
 }
 
+
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_name, const EffectMaterialDto& new_material_dto)
     : m_oldMaterialName(old_material_name), m_newMaterialDto(new_material_dto)
 {
+    m_factoryDesc = FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.GetName());
     m_onCompileEffectResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnCompileEffectResponse(r); });
     ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectResponse);
 }
 
-ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o)
+ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::FromGenericDto(o);
     m_oldMaterialName = dto.OldMaterialName();
@@ -58,6 +68,7 @@ ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 GenericDto ReplaceAvatarMaterial::SerializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.OldMaterialName() = m_oldMaterialName;
     dto.NewMaterialDto() = m_newMaterialDto;
     return dto.ToGenericDto();
@@ -135,11 +146,12 @@ void ReplaceAvatarMaterial::OnCompileEffectResponse(const IResponsePtr& r)
 ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
     : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
 {
+    m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName());
     m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : m_requsetRuid()
+ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
     m_meshName = dto.MeshName();
@@ -157,6 +169,7 @@ ChangeAvatarTexture::~ChangeAvatarTexture()
 GenericDto ChangeAvatarTexture::SerializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.MeshName() = m_meshName;
     dto.TextureDto() = m_textureDto;
     return dto.ToGenericDto();

@@ -2,6 +2,7 @@
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryData.h"
 #include "TriangleList.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
@@ -79,9 +80,14 @@ GenericDto TextureCoordDto::ToGenericDto()
 }
 
 //-----------------------------------------------------------------------------------
+GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
+{
+}
+
 GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
+    geometry.TheFactoryDesc() = dto.GetRtti();
     geometry.DeserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
@@ -133,8 +139,8 @@ GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 GenericDto GeometryDataDto::ToGenericDto() const
 {
     GenericDto dto;
+    dto.AddRtti(m_factoryDesc);
     SerializeNonVertexAttributesToGenericDto(dto);
-    dto.AddRtti(FactoryDesc(GeometryData::TYPE_RTTI.GetName()));
     if (m_position3s)
     {
         dto.AddOrUpdate(TOKEN_POSITIONS_3, m_position3s.value());
@@ -205,8 +211,14 @@ void GeometryDataDto::SerializeNonVertexAttributesToGenericDto(GenericDto& dto) 
     dto.AddOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound);
 }
 
+TriangleListDto::TriangleListDto() : GeometryDataDto()
+{
+    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.GetName());
+}
+
 TriangleListDto::TriangleListDto(const GeometryDataDto& geometry_dto) : GeometryDataDto(geometry_dto)
 {
+    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TriangleList::TYPE_RTTI.GetName()));
 }
 
 TriangleListDto TriangleListDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -217,7 +229,7 @@ TriangleListDto TriangleListDto::FromGenericDto(const Engine::GenericDto& dto)
 GenericDto TriangleListDto::ToGenericDto() const
 {
     GenericDto dto = GeometryDataDto::ToGenericDto();
-    dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.GetName()));
+    //dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.GetName()));
 
     return dto;
 }

@@ -106,6 +106,7 @@ GeometryDataDto GeometryData::SerializeGeometryDto() const
 
 void GeometryData::SerializeNonVertexAttributes(GeometryDataDto& dto) const
 {
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.VertexFormat() = m_vertexFormatCode.ToString();
     dto.VertexCapacity() = m_vtxCapacity;

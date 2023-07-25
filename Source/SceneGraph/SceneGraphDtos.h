@@ -70,7 +70,7 @@ namespace Enigma::SceneGraph
     class NodeDto : public SpatialDto
     {
     public:
-        NodeDto() = default;
+        NodeDto();
         NodeDto(const SpatialDto& spatial_dto);
 
         const std::vector<std::string>& ChildNames() const { return m_childNames; }
@@ -86,7 +86,7 @@ namespace Enigma::SceneGraph
     class LightDto : public SpatialDto
     {
     public:
-        LightDto() = default;
+        LightDto();
         LightDto(const SpatialDto& spatial_dto);
 
         [[nodiscard]] Engine::GenericDto LightInfo() const { return m_lightInfo; }
@@ -122,7 +122,7 @@ namespace Enigma::SceneGraph
     class LazyNodeDto : public NodeDto
     {
     public:
-        LazyNodeDto() = default;
+        LazyNodeDto();
         LazyNodeDto(const NodeDto& node_dto);
 
         static LazyNodeDto FromGenericDto(const Engine::GenericDto& dto);
@@ -132,7 +132,7 @@ namespace Enigma::SceneGraph
     class VisibilityManagedNodeDto : public LazyNodeDto
     {
     public:
-        VisibilityManagedNodeDto() = default;
+        VisibilityManagedNodeDto();
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
 
         static VisibilityManagedNodeDto FromGenericDto(const Engine::GenericDto& dto);

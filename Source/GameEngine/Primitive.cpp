@@ -4,7 +4,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Engine, Primitive);
 
-Primitive::Primitive()
+Primitive::Primitive() : m_factoryDesc(Primitive::TYPE_RTTI.GetName())
 {
     m_mxPrimitiveWorld = MathLib::Matrix4::IDENTITY;
     m_primitiveFlags = 0;

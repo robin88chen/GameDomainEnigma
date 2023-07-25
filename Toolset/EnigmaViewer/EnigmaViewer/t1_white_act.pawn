@@ -1392,11 +1392,11 @@
                                                             "Value": [{
                                                                     "TextureName": {
                                                                         "Type": "String",
-                                                                        "Value": "mb20110804.png"
+                                                                        "Value": "mb20110803.png"
                                                                     },
                                                                     "Filename": {
                                                                         "Type": "String",
-                                                                        "Value": "image/mb20110804.png@APK_PATH"
+                                                                        "Value": "image/mb20110803.png@APK_PATH"
                                                                     },
                                                                     "PathId": {
                                                                         "Type": "String",
@@ -1496,23 +1496,23 @@
                 },
                 "AnimationNames": {
                     "Type": "StringArray",
-                    "Value": []
+                    "Value": ["stand", "walk"]
                 },
                 "StartOffsets": {
                     "Type": "FloatArray",
-                    "Value": []
+                    "Value": [0.0, 1.0]
                 },
                 "DivideIndices": {
                     "Type": "Uint32Array",
-                    "Value": []
+                    "Value": [0, 0]
                 },
                 "LoopTimes": {
                     "Type": "FloatArray",
-                    "Value": []
+                    "Value": [1.0, 2.0]
                 },
                 "WarpModes": {
                     "Type": "Uint32Array",
-                    "Value": []
+                    "Value": [0, 0]
                 }
             }
         },
@@ -1538,11 +1538,11 @@
                         "Value": {
                             "TextureName": {
                                 "Type": "String",
-                                "Value": "mb20110804.png"
+                                "Value": "mb20110803.png"
                             },
                             "Filename": {
                                 "Type": "String",
-                                "Value": "image/mb20110804.png"
+                                "Value": "image/mb20110803.png"
                             },
                             "PathId": {
                                 "Type": "String",

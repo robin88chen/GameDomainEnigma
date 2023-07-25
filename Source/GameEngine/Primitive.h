@@ -44,6 +44,9 @@ namespace Enigma::Engine
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
 
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         virtual GenericDto SerializeDto() const = 0;
 
         /** insert to renderer */
@@ -90,6 +93,7 @@ namespace Enigma::Engine
         }
 
     protected:
+        FactoryDesc m_factoryDesc;
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;

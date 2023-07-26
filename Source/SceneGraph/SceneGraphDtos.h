@@ -107,8 +107,8 @@ namespace Enigma::SceneGraph
 
         [[nodiscard]] const std::optional<Engine::GenericDto>& ThePrimitive() const { return m_primitive; }
         std::optional<Engine::GenericDto>& ThePrimitive() { return m_primitive; }
-        [[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
-        Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
+        //[[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
+        //Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
 
         static PawnDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto() const;
@@ -116,7 +116,8 @@ namespace Enigma::SceneGraph
         std::shared_ptr<PawnPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
         std::optional<Engine::GenericDto> m_primitive;
-        Engine::FactoryDesc m_primitiveFactory;
+        //todo : prefab support
+        //Engine::FactoryDesc m_primitiveFactory;
     };
 
     class LazyNodeDto : public NodeDto

@@ -9,12 +9,13 @@ using namespace Enigma::Engine;
 
 TerrainPrimitiveDto::TerrainPrimitiveDto() : MeshPrimitiveDto()
 {
+    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName());
     m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
 }
 
 TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto) : MeshPrimitiveDto(dto)
 {
-    m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
 }
 
 TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)

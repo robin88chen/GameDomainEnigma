@@ -26,7 +26,7 @@ static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_CHILD_NAMES = "ChildNames";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
-static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
+//static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
@@ -121,12 +121,12 @@ GenericDto LightDto::ToGenericDto() const
     return dto;
 }
 
-PawnDto::PawnDto() : SpatialDto(), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
+PawnDto::PawnDto() : SpatialDto()
 {
     m_factoryDesc = FactoryDesc(Pawn::TYPE_RTTI.GetName());
 }
 
-PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_primitiveFactory(Primitive::TYPE_RTTI.GetName())
+PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
     assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.GetName()));
 }
@@ -135,7 +135,7 @@ PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     PawnDto pawn_dto(SpatialDto::FromGenericDto(dto));
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_PAWN_PRIMITIVE)) pawn_dto.m_primitive = v.value();
-    if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) pawn_dto.m_primitiveFactory = v.value();
+    //if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) pawn_dto.m_primitiveFactory = v.value();
     return pawn_dto;
 }
 
@@ -143,7 +143,7 @@ GenericDto PawnDto::ToGenericDto() const
 {
     GenericDto dto = SpatialDto::ToGenericDto();
     if (m_primitive) dto.AddOrUpdate(TOKEN_PAWN_PRIMITIVE, m_primitive.value());
-    dto.AddOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
+    //dto.AddOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
 }
 
@@ -153,10 +153,12 @@ std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engin
     {
         return std::make_shared<PawnPolicy>(m_name, m_primitive.value());
     }
-    else
+    //todo : prefab support
+    /*else
     {
         return std::make_shared<PawnPolicy>(m_name, m_primitiveFactory.GetPrefab(), deserializer);
-    }
+    }*/
+    return nullptr;
 }
 
 LazyNodeDto::LazyNodeDto() : NodeDto()

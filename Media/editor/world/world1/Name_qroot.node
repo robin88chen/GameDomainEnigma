@@ -124,27 +124,17 @@
             "Type": "Uint32",
             "Value": 5
         },
-        "PrimitiveFactory": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 0,
-                "ResourceName": "",
-                "ResourceFilename": "",
-                "RttiName": "En.Engine.Primitive",
-                "PrefabFilename": ""
-            }
-        },
         "PawnPrimitive": {
             "Type": "DataObject",
             "Value": {
                 "Rtti": {
                     "Type": "FactoryDesc",
                     "Value": {
-                        "InstanceType": 0,
+                        "InstanceType": 3,
                         "ResourceName": "",
                         "ResourceFilename": "",
                         "RttiName": "En.Terrain.TerrainPrimitive",
-                        "PrefabFilename": ""
+                        "PrefabFilename": "world1/Name.terrain"
                     }
                 },
                 "RenderListId": {

@@ -17,7 +17,7 @@
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "WorldMap/WorldMapInstallingPolicy.h"
-#include "WorldMap/WorldMapDto.h"
+#include "WorldMap/WorldMapService.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphEvents.h"
@@ -48,8 +48,6 @@ using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
 using namespace Enigma::MathLib;
 using namespace Enigma::InputHandlers;
-using namespace Enigma::GameCommon;
-using namespace Enigma::WorldMap;
 using namespace Enigma::Terrain;
 
 std::string PrimaryTargetName = "primary_target";
@@ -154,7 +152,7 @@ void EditorAppDelegate::InstallEngine()
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
-    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager()));
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
 }
 

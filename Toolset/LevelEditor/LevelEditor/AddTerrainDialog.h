@@ -23,7 +23,7 @@ namespace LevelEditor
     class AddTerrainDialog : public nana::form
     {
     public:
-        AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit);
+        AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit, const std::string& media_path_id);
         virtual ~AddTerrainDialog();
 
         void OnOkButton(const nana::arg_click& arg);
@@ -66,6 +66,7 @@ namespace LevelEditor
         //nana::textbox* m_rootNodeNameInputBox;
 
         std::weak_ptr<WorldEditConsole> m_worldEdit;
+        std::string m_mediaPathId;
     };
 }
 

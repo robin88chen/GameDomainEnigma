@@ -13,11 +13,13 @@
 
 namespace LevelEditor
 {
+    class WorldEditService;
+
     class WorldEditConsole : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr);
+        WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service);
         virtual ~WorldEditConsole() override;
 
         virtual Enigma::Frameworks::ServiceResult OnInit() override;
@@ -41,6 +43,9 @@ namespace LevelEditor
         @return picked terrain and picked position on terrain */
         //std::tuple<Enigma::TerrainEntityPtr, Enigma::Vector3> PickingTerrainOnWorldMap(const Enigma::Vector2& clip_pos);
 
+        void SaveWorldMap();
+        void LoadWorldMap(const std::filesystem::path& map_filepath);
+
     private:
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);
         //void OnAsyncKeyReleased(const Enigma::IMessagePtr& m);
@@ -49,7 +54,9 @@ namespace LevelEditor
     private:
         std::filesystem::path m_mapFileRootPath;
         std::string m_currentWorldName;
+        std::string m_worldMapPathId;
 
+        std::weak_ptr<WorldEditService> m_worldEditService;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;
 

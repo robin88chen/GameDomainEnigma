@@ -1,4 +1,6 @@
 ﻿#include "MainForm.h"
+#include "FileSystem/StdMountPath.h"
+#include "Frameworks/CommandBus.h"
 #include "FileSystem/FileSystem.h"
 #include "Platforms/PlatformLayer.h"
 #include "AddTerrainDialog.h"
@@ -13,8 +15,13 @@
 #include "OutputPanel.h"
 #include "WorldEditConsole.h"
 #include "AppConfiguration.h"
+#include "EditorUtilities.h"
+#include "LevelEditorCommands.h"
+#include "WorldEditService.h"
 #include "WorldMap/WorldMapService.h"
 #include "Gateways/DtoJsonGateway.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "nana/gui/filebox.hpp"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -90,7 +97,8 @@ void MainForm::InitializeGraphics()
     m_timer->start();
     events().destroy([this] { this->FinalizeGraphics(); });
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
-    srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr));
+    auto world_edit = std::dynamic_pointer_cast<WorldEditService, Enigma::Frameworks::ISystemService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
+    srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
     m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
     m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
 }
@@ -204,45 +212,30 @@ void MainForm::OnCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 {
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
 
+    nana::filebox fb(handle(), true);
+    fb.add_filter({ {"World File(*.wld)", "*.wld"} }).title("Load World");
+    if (auto paths = fb.show(); !paths.empty())
+    {
+        if (!m_worldConsole.expired())
+        {
+            m_worldConsole.lock()->LoadWorldMap(paths[0]);
+        }
+    }
 }
 
 void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
-    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
-    auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
-    auto collections = world->SerializeQuadNodeGraphs();
-    for (auto& dtos : collections)
-    {
-        auto desc = dtos[0].GetRtti();
-        desc.PathId(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
-        dtos[0].AddRtti(desc);
-        std::string json = DtoJsonGateway::Serialize(dtos);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
-        if (FATAL_LOG_EXPR(!iFile)) return;
-        iFile->Write(0, convert_to_buffer(json));
-        FileSystem::Instance()->CloseFile(iFile);
-    }
-    auto collect = world->SerializeWorldMap();
-    if (!collect.empty())
-    {
-        for (auto& d : collect)
-        {
-            auto desc = d.GetRtti();
-            desc.PathId(m_appDelegate->GetAppConfig()->GetWorldMapPathId());
-            d.AddRtti(desc);
-        }
-        std::string json = DtoJsonGateway::Serialize(collect);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(collect[0].GetRtti().GetPrefab()), "w+b");
-        if (FATAL_LOG_EXPR(!iFile)) return;
-        iFile->Write(0, convert_to_buffer(json));
-        FileSystem::Instance()->CloseFile(iFile);
-    }
+    assert(!m_worldConsole.expired());
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Save World File..."));
+    m_worldConsole.lock()->SaveWorldMap();
 }
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock()));
+    nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock(), m_appDelegate->GetAppConfig()->GetMediaPathId()));
 }
 
 void MainForm::OnAddEnviromentLightCommand(const nana::menu::item_proxy& menu_item)

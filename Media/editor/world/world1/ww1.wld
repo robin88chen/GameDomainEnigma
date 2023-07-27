@@ -26,13 +26,13 @@
             "Type": "Boolean",
             "Value": true
         },
-        "NotifyFlag": {
-            "Type": "Uint32",
-            "Value": 0
-        },
         "Name": {
             "Type": "String",
             "Value": "ww1"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -91,13 +91,13 @@
             "Type": "Boolean",
             "Value": false
         },
-        "Name": {
-            "Type": "String",
-            "Value": "world1/Name_qroot"
-        },
         "NotifyFlag": {
             "Type": "Uint32",
             "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "world1/Name_qroot"
         },
         "WorldTransform": {
             "Type": "Matrix4",

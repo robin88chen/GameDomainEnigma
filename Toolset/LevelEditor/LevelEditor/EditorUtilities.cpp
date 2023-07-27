@@ -22,9 +22,9 @@ void LevelEditor::PasteTextureImageToButton(const std::string& filepath, nana::b
     btn->set_bground(bground);
 }
 
-std::string LevelEditor::ImagePathCombinePathID(const std::filesystem::path& path)
+std::string LevelEditor::FilePathCombinePathID(const std::filesystem::path& path, const std::string& path_id)
 {
-    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::Instance()->GetMountPathsWithPathID("APK_PATH");
+    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::Instance()->GetMountPathsWithPathID(path_id);
     if (mount_paths.empty()) return path.filename().string();
     std::filesystem::path parent_path = path.parent_path().parent_path(); // 暫時只往上一層尋找
     for (auto mp : mount_paths)

@@ -32,9 +32,10 @@ std::vector<std::string> cellPerUVCandidates =
 #define PRESET_MAX_UV   "1.0, 1.0"
 #define PRESET_LOCAL_POS "0.0, 0.0, 0.0"
 
-AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
+AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit, const std::string& media_path_id) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
 {
     m_worldEdit = world_edit;
+    m_mediaPathId = media_path_id;
 
     caption("Add New Terrain");
     get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><cell_prompt margin=[10,20]><min_vtx_prompt margin=[10,20]><max_vtx_prompt margin=[10,20]><min_uv_prompt margin=[10,20]><max_uv_prompt margin=[10,20]><local_pos_prompt margin=[10,20]><cell_uv_prompt margin=[10,20]><texture_btns weight=84 arrange=[64,64,64,64] margin=[10,20] gap=10><><buttons margin=[10,40] gap=10><>");
@@ -184,7 +185,7 @@ void AddTerrainDialog::OnTextureLayerButton(const nana::arg_click& arg)
     if (auto paths = fb.show(); !paths.empty())
     {
         PasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
-        std::string path_string = ImagePathCombinePathID(paths[0]);
+        std::string path_string = FilePathCombinePathID(paths[0], m_mediaPathId);
         m_layerTextureFilenames[btn_idx] = path_string;
     }
 }

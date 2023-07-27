@@ -16,7 +16,7 @@
 namespace LevelEditor
 {
     void PasteTextureImageToButton(const std::string& filepath, nana::button* btn, const unsigned int btn_size);
-    std::string ImagePathCombinePathID(const std::filesystem::path& path);
+    std::string FilePathCombinePathID(const std::filesystem::path& path, const std::string& path_id);
     std::tuple<Enigma::MathLib::Vector3, bool> ParseTextToVector3(const std::string& value);
     std::tuple<Enigma::MathLib::Vector2, bool> ParseTextToVector2(const std::string& value);
 }

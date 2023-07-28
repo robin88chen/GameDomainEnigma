@@ -40,6 +40,8 @@ ServiceResult WorldMapService::OnInit()
 {
     m_doCreatingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingEmptyWorldMap(c); });
     CommandBus::Subscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
+    m_doDeserializingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoDeserializingWorldMap(c); });
+    CommandBus::Subscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
     m_doAttachingTerrain = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingTerrain(c); });
     CommandBus::Subscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
 
@@ -52,6 +54,8 @@ ServiceResult WorldMapService::OnTerm()
 {
     CommandBus::Unsubscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
     m_doCreatingWorldMap = nullptr;
+    CommandBus::Unsubscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
+    m_doDeserializingWorldMap = nullptr;
     CommandBus::Unsubscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
     m_doAttachingTerrain = nullptr;
 
@@ -98,6 +102,11 @@ Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
     return collection;
 }
 
+void WorldMapService::DeserializeWorldMap(const Engine::GenericDtoCollection& graph)
+{
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
+}
+
 void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
     const Matrix4& local_transform)
 {
@@ -120,6 +129,14 @@ void WorldMapService::DoCreatingEmptyWorldMap(const ICommandPtr& c)
     if (!cmd) return;
     std::vector<Engine::GenericDto> dtos = { cmd->GetDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
+}
+
+void WorldMapService::DoDeserializingWorldMap(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<Enigma::WorldMap::DeserializeWorldMap, ICommand>(c);
+    if (!cmd) return;
+    DeserializeWorldMap(cmd->GetGraph());
 }
 
 void WorldMapService::DoAttachingTerrain(const ICommandPtr& c)

@@ -1,14 +1,12 @@
 ﻿#include "WorldEditService.h"
-
-#include <Frameworks/CommandBus.h>
-#include <SceneGraph/SceneGraphCommands.h>
+#include "Frameworks/CommandBus.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "WorldMap/WorldMapCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
 
 Rtti WorldEditService::TYPE_RTTI{"LevelEditor.WorldEditService", &ISystemService::TYPE_RTTI};
-
-std::string LoadingWorldTag = "_LoadingWorld_";
 
 WorldEditService::WorldEditService(ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapService>& map) : ISystemService(srv_mngr)
 {
@@ -18,7 +16,7 @@ WorldEditService::WorldEditService(ServiceManager* srv_mngr, const std::shared_p
 
 WorldEditService::~WorldEditService()
 {
-    
+
 }
 
 ServiceResult WorldEditService::OnInit()
@@ -56,5 +54,5 @@ std::tuple<Enigma::Engine::GenericDtoCollection, std::vector<Enigma::Engine::Gen
 
 void WorldEditService::DeserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto)
 {
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<Enigma::SceneGraph::BuildSceneGraph>(LoadingWorldTag, world_map_dto));
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<Enigma::WorldMap::DeserializeWorldMap>(world_map_dto));
 }

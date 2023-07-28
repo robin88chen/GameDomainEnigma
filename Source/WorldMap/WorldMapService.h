@@ -35,10 +35,13 @@ namespace Enigma::WorldMap
         std::vector<Engine::GenericDtoCollection> SerializeQuadNodeGraphs() const;
         Engine::GenericDtoCollection SerializeWorldMap() const;
 
+        void DeserializeWorldMap(const Engine::GenericDtoCollection& graph);
+
     protected:
         void AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
 
         void DoCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c);
+        void DoDeserializingWorldMap(const Frameworks::ICommandPtr& c);
         void DoAttachingTerrain(const Frameworks::ICommandPtr& c);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
 
@@ -50,6 +53,7 @@ namespace Enigma::WorldMap
         QuadRootList m_listQuadRoot;
 
         Frameworks::CommandSubscriberPtr m_doCreatingWorldMap;
+        Frameworks::CommandSubscriberPtr m_doDeserializingWorldMap;
         Frameworks::CommandSubscriberPtr m_doAttachingTerrain;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;  // check world map is created
     };

@@ -25,6 +25,16 @@ namespace Enigma::WorldMap
     protected:
         Engine::GenericDto m_dto;
     };
+    class DeserializeWorldMap : public Frameworks::ICommand
+    {
+    public:
+        DeserializeWorldMap(const Engine::GenericDtoCollection& graph) : m_graph(graph) {}
+
+        const Engine::GenericDtoCollection& GetGraph() const { return m_graph; }
+
+    protected:
+        Engine::GenericDtoCollection m_graph;
+    };
     class AttachTerrainToWorldMap : public Frameworks::ICommand
     {
     public:

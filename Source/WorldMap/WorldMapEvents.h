@@ -25,6 +25,18 @@ namespace Enigma::WorldMap
         std::string m_name;
         std::shared_ptr<WorldMap> m_world;
     };
+    class WorldMapDeserialized : public Frameworks::IEvent
+    {
+    public:
+        WorldMapDeserialized(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
+
+        const std::string& GetName() const { return m_name; }
+        const std::shared_ptr<WorldMap>& GetWorld() const { return m_world; }
+
+    protected:
+        std::string m_name;
+        std::shared_ptr<WorldMap> m_world;
+    };
 }
 
 #endif // WORLD_MAP_EVENTS_H

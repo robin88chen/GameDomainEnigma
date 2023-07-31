@@ -2,10 +2,7 @@
 #include "nana/gui/filebox.hpp"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
-#include "Terrain/TerrainGeometryDto.h"
-#include "Terrain/TerrainPrimitiveDto.h"
 #include "Terrain/TerrainDtoHelper.h"
-#include "GameEngine/EffectDtoHelper.h"
 #include "EditorUtilities.h"
 #include "Frameworks/CommandBus.h"
 #include "LevelEditorCommands.h"
@@ -144,20 +141,25 @@ void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
     terrainName = m_worldEdit.lock()->GetCurrentWorldName() + "/" + terrainName;
-    Terrain::TerrainGeometryDto terrain_geometry_dto;
-    terrain_geometry_dto.Name() = terrainName + "_geo";
     char* endptr = nullptr;
-    terrain_geometry_dto.NumRows() = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);
-    terrain_geometry_dto.NumCols() = std::strtol(m_cellColumnsCombo->caption().c_str(), &endptr, 10);
+    unsigned rows, cols;
+    rows = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);
+    cols = std::strtol(m_cellColumnsCombo->caption().c_str(), &endptr, 10);
+    if ((rows == 0) || (cols == 0)) return;
     bool isParseOk;
-    if (std::tie(terrain_geometry_dto.MinPosition(), isParseOk) = ParseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
-    if (std::tie(terrain_geometry_dto.MaxPosition(), isParseOk) = ParseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
-    if (std::tie(terrain_geometry_dto.MinTextureCoordinate(), isParseOk) = ParseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
-    if (std::tie(terrain_geometry_dto.MaxTextureCoordinate(), isParseOk) = ParseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
+    MathLib::Vector3 minVertexPos, maxVertexPos;
+    MathLib::Vector2 minUV, maxUV;
+    if (std::tie(minVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
+    if (std::tie(minUV, isParseOk) = ParseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxUV, isParseOk) = ParseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
     MathLib::Vector3 terrainLocalPos;
     if (std::tie(terrainLocalPos, isParseOk) = ParseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
-    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(terrainName, terrain_geometry_dto, m_layerTextureFilenames, terrainLocalPos));
+    Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
+    terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
+
+    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos));
 
     close();
 }

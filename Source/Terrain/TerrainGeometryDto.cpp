@@ -96,14 +96,18 @@ unsigned TerrainGeometryDto::CalculateGeometryIndexCount() const
 BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
 {
     assert((m_numRows != 0) && (m_numCols != 0));
-    if (FATAL_LOG_EXPR(!m_heightMap)) return BoundingVolume();
-    const float_buffer heights = m_heightMap.value();
-    float min_height = heights[0];
-    float max_height = heights[0];
-    for (unsigned vi = 1; vi < m_vtxUsedCount; vi++)
+    float min_height = 0.0f;
+    float max_height = 1.0f;
+    if (m_heightMap)
     {
-        if (heights[vi] < min_height) min_height = heights[vi];
-        if (heights[vi] > max_height) max_height = heights[vi];
+        const float_buffer heights = m_heightMap.value();
+        min_height = heights[0];
+        max_height = heights[0];
+        for (unsigned vi = 1; vi < m_vtxUsedCount; vi++)
+        {
+            if (heights[vi] < min_height) min_height = heights[vi];
+            if (heights[vi] > max_height) max_height = heights[vi];
+        }
     }
     const Vector3 box_corner[2] = { Vector3(m_minPosition.X(), min_height, m_minPosition.Z()),
         Vector3(m_maxPosition.X(), max_height, m_maxPosition.Z()) };

@@ -8,13 +8,36 @@
 #ifndef TERRAIN_DTO_HELPER_H
 #define TERRAIN_DTO_HELPER_H
 
+#include "TerrainGeometryDto.h"
 #include "TerrainPawnDto.h"
 #include "GameEngine/BoundingVolume.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "TerrainPrimitiveDto.h"
+#include "Frameworks/ExtentTypesDefine.h"
 
 namespace Enigma::Terrain
 {
+    class TerrainGeometryDtoHelper
+    {
+    public:
+        TerrainGeometryDtoHelper(const std::string& name);
+
+        TerrainGeometryDtoHelper& NumRows(unsigned num_rows);
+        TerrainGeometryDtoHelper& NumCols(unsigned num_cols);
+        TerrainGeometryDtoHelper& MinPosition(const MathLib::Vector3& min_position);
+        TerrainGeometryDtoHelper& MaxPosition(const MathLib::Vector3& max_position);
+        TerrainGeometryDtoHelper& MinTextureCoordinate(const MathLib::Vector2& min_texture_coordinate);
+        TerrainGeometryDtoHelper& MaxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate);
+        TerrainGeometryDtoHelper& HeightMap(const float_buffer& height_map);
+
+        Engine::GenericDto ToGenericDto() const;
+        TerrainGeometryDto ToDto() const;
+
+    private:
+        TerrainGeometryDto m_dto;
+        Engine::BoundingVolume m_geometryBound;
+    };
+
     class TerrainPawnDtoHelper
     {
     public:

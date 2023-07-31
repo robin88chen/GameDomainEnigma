@@ -40,11 +40,11 @@ namespace Enigma::Terrain
         std::optional<float_buffer>& HeightMap() { return m_heightMap; }
 
         void ConvertGeometryVertices();
+        Engine::BoundingVolume CalculateGeometryBounding();
 
     protected:
         unsigned CalculateGeometryVertexCount() const;
         unsigned CalculateGeometryIndexCount() const;
-        Engine::BoundingVolume CalculateGeometryBounding();
 
     protected:
         unsigned m_numRows;

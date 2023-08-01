@@ -1,8 +1,7 @@
 ﻿#include "MainForm.h"
-#include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
 #include "FileSystem/FileSystem.h"
-#include "Platforms/PlatformLayer.h"
 #include "AddTerrainDialog.h"
 #include "CreateNewWorldDlg.h"
 #include "Platforms/MemoryMacro.h"
@@ -15,12 +14,12 @@
 #include "OutputPanel.h"
 #include "WorldEditConsole.h"
 #include "AppConfiguration.h"
-#include "EditorUtilities.h"
 #include "LevelEditorCommands.h"
 #include "WorldEditService.h"
+#include "TerrainEditConsole.h"
 #include "WorldMap/WorldMapService.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "SceneGraph/SceneGraphCommands.h"
+#include "LevelEditorEvents.h"
 #include "nana/gui/filebox.hpp"
 
 using namespace LevelEditor;
@@ -42,6 +41,7 @@ MainForm::MainForm() : nana::form()
     m_spatialInspectorPanel = nullptr;
     m_terrainToolPanel = nullptr;
     m_outputPanel = nullptr;
+    m_editorMode = EditorMode::Cursor;
 }
 
 MainForm::~MainForm()
@@ -99,6 +99,7 @@ void MainForm::InitializeGraphics()
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService, Enigma::Frameworks::ISystemService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
     srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
+    srv_mngr->RegisterSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
     m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
     m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
 }
@@ -107,6 +108,7 @@ void MainForm::FinalizeGraphics()
 {
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
+    srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
 
     if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_sceneGraphPanel)
@@ -270,7 +272,28 @@ void MainForm::OnGodModeChanged(bool enabled)
 
 void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
 {
-
+    switch (arg.button)
+    {
+    case static_cast<size_t>(ToolIndex::ToolCursor):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Cursor));
+        break;
+    case static_cast<size_t>(ToolIndex::ToolTerrain):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Terrain));
+        break;
+    case static_cast<size_t>(ToolIndex::ToolEntity):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Pawn));
+        break;
+    /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolRotateEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolScaleEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolGodMode):
+        break;*/
+    default:
+        break;
+    }
 }
 
 void MainForm::OnSelectZoneNode(const nana::toolbar::item_proxy& drop_down_item, const std::string& node_name)

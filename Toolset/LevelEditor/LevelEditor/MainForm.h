@@ -14,6 +14,7 @@
 #include "nana/gui/timer.hpp"
 #include "nana/gui/widgets/toolbar.hpp"
 #include "nana/gui/widgets/label.hpp"
+#include "EditorModes.h"
 
 namespace LevelEditor
 {
@@ -98,6 +99,8 @@ namespace LevelEditor
         OutputPanel* m_outputPanel;
 
         std::weak_ptr<WorldEditConsole> m_worldConsole;
+
+        EditorMode m_editorMode;
     };
 }
 

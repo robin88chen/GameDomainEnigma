@@ -1,0 +1,43 @@
+{
+	"Name" : "DeferredShadingDecalGeometry",
+	"VertexShaderList" : [
+	{"Name" : "deferred_decal_geometry_vs", "API" : "dx9", "File" : "fx/deferred/decal_geometry_dx9.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "deferred_decal_geometry_vs", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "deferred_decal_geometry_vs", "API" : "egl", "File" : "fx/deferred/light_volume_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_tex1(2)"}
+	],
+	"PixelShaderList" : [
+	{"Name" : "deferred_decal_geometry_ps", "API" : "dx9", "File" : "fx/deferred/decal_geometry_dx9.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_decal_geometry_ps", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_decal_geometry_ps", "API" : "egl", "File" : "fx/deferred/light_volume_egl.psh", "Profile" : "", "Entry" : ""}
+	],
+	"SamplerStateList" : [
+	{"Name" : "DecalMapSampler", "AddressU" : "Border", "AddressV" : "Border", "AddressW" : "Border", "MinFilter" : "Linear", 
+		"MagFilter" : "Linear", "MipFilter" : "None", "BorderColor" : "0.0, 0.0, 0.0, 0.0"},
+     {"Name" : "DepthMapSampler", "AddressU" : "Wrap", "AddressV" : "Wrap", "AddressW" : "Wrap", "MinFilter" : "Linear", 
+        "MagFilter" : "Linear", "MipFilter" : "None"}
+    ],
+	"BlendStateList" : [
+	{"Name" : "blendAdditive", "BlendTypes" : ["Additive"]},
+	{"Name" : "blendOpaque", "BlendTypes" : ["Opaque"]},
+	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
+	],
+	"RasterizerStateList" : [
+		{"Name" : "rasDefault", "CullMode" : "cw"},
+		{"Name" : "rasInside", "CullMode" : "ccw"}
+	],
+	"DepthStateList" : [
+	{"Name" : "depthDisable", "DepthTest" : false, "DepthWrite" : false}
+	],
+	"TechniqueList" : [
+	{"Name" : "DeferredRenderer/Default",
+		"EffectPassArray" : [
+		{"Name" : "deferred_decal_geometry", "Program" : "deferred_decal_geometry", "VertexShader" : "deferred_decal_geometry_vs", "PixelShader" : "deferred_decal_geometry_ps", 
+            "SamplerState" : [{ "Sampler" : "DecalMapSampler", "Var" : "DecalMapSampler"},
+                { "Sampler" : "DepthMapSampler", "Var" : "DepthMapSampler"}],
+			"BlendState" : "blendTransparent",
+			"DepthState" : "depthDisable",
+			"RasterizerState" : "rasDefault" }
+		]
+	}
+	]
+}

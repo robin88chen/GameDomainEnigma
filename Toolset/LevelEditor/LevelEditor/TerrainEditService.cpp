@@ -19,7 +19,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::WorldMap;
 
-Rtti TerrainEditService::TYPE_RTTI{"LevelEditor.TerrainEditService", & ISystemService::TYPE_RTTI};
+Rtti TerrainEditService::TYPE_RTTI{"LevelEditor.TerrainEditService", &ISystemService::TYPE_RTTI};
 
 std::array<std::string, TerrainEditService::TextureLayerNum> layerSemantics =
 {

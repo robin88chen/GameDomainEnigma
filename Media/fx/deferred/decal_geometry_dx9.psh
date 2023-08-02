@@ -1,0 +1,50 @@
+//semantic GBufferDepthTexture GBufferDepthMap
+//semantic DecalTexture DecalMap
+//semantic WorldInv WorldInv
+//semantic ViewInv ViewInv
+//semantic TangentFov TangentFov
+Texture2D GBufferDepthTexture : GBufferDepthMap;
+Texture2D DecalTexture : DecalMap;
+matrix WorldInv : WorldInv;
+matrix ViewInv : ViewInv;
+float4 TangentFov : TangentFov;
+
+SamplerState DepthMapSampler
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+SamplerState DecalMapSampler
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Border;
+    AddressV = Border;
+	BorderColor = float4(0.0, 0.0, 0.0, 0.0);
+};
+
+struct PS_INPUT
+{
+	float4 Pos : POSITION;
+	float2 Coord : TEXCOORD0;
+    float2 ProjPos : TEXCOORD1;
+};
+struct PS_OUTPUT
+{
+	float4 Color : COLOR0;
+};
+
+PS_OUTPUT ps_main(PS_INPUT input)
+{
+	PS_OUTPUT output = (PS_OUTPUT)0;
+
+	float pos_z = GBufferDepthTexture.Sample( DepthMapSampler, input.Coord );
+	//clip ( pos_z - input.ProjPos.z );
+	float4 view_space_pos = float4( input.ProjPos.x * TangentFov.x * pos_z, input.ProjPos.y * TangentFov.y * pos_z, pos_z, 1.0 );
+	float4 world_space_pos = mul( view_space_pos, ViewInv );
+	float4 decal_space_pos = mul( world_space_pos, WorldInv );
+	float2 texcoord = decal_space_pos.xz * 0.5 + 0.5;
+	
+	output.Color = DecalTexture.Sample( DecalMapSampler, texcoord );
+	return output;
+};

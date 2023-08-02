@@ -11,6 +11,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/Pawn.h"
 
 namespace LevelEditor
 {
@@ -31,11 +32,17 @@ namespace LevelEditor
     protected:
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
+        void CreateBrushPawn();
 
     protected:
         bool m_isEnabled;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_brush;
+
         //Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
     };
 }
 

@@ -276,12 +276,15 @@ void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
     {
     case static_cast<size_t>(ToolIndex::ToolCursor):
         Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Cursor));
+        m_editorMode = EditorMode::Cursor;
         break;
     case static_cast<size_t>(ToolIndex::ToolTerrain):
         Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Terrain));
+        m_editorMode = EditorMode::Terrain;
         break;
     case static_cast<size_t>(ToolIndex::ToolEntity):
         Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Pawn));
+        m_editorMode = EditorMode::Pawn;
         break;
     /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
         break;

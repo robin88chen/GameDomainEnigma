@@ -6,8 +6,10 @@
 #include "SceneGraph/FindSpatialByName.h"
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "GameCameraEvents.h"
 #include "GameSceneEvents.h"
+#include "GameSceneCommands.h"
 #include "GameCommonErrors.h"
 
 using namespace Enigma::GameCommon;
@@ -34,9 +36,14 @@ GameSceneService::~GameSceneService()
 ServiceResult GameSceneService::OnInit()
 {
     m_onCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraCreated(e); });
-    m_onCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
     EventPublisher::Subscribe(typeid(GameCameraCreated), m_onCameraCreated);
+    m_onCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
     EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
+
+    m_doAttachingSceneRootChild = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingSceneRootChild(c); });
+    CommandBus::Subscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
+    m_doAttachingNodeChild = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingNodeChild(c); });
+    CommandBus::Subscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
 
     return ServiceResult::Complete;
 }
@@ -54,9 +61,13 @@ ServiceResult GameSceneService::OnTick()
 ServiceResult GameSceneService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onCameraCreated);
-    EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
     m_onCameraCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
     m_onCameraUpdated = nullptr;
+    CommandBus::Unsubscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
+    m_doAttachingSceneRootChild = nullptr;
+    CommandBus::Unsubscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
+    m_doAttachingNodeChild = nullptr;
 
     DestroyRootScene();
     DestroySceneCuller();
@@ -142,5 +153,48 @@ void GameSceneService::OnGameCameraUpdated(const IEventPtr& e)
     if (m_culler->GetCamera() == ev->GetCamera())
     {
         m_culler->UpdateFrustumPlanes();
+    }
+}
+
+void GameSceneService::DoAttachingSceneRootChild(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<AttachSceneRootChild, ICommand>(c);
+    if (!cmd) return;
+    if (!cmd->GetChild()) return;
+    if (!m_sceneRoot)
+    {
+        EventPublisher::Post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), ErrorCode::nullSceneRoot));
+        return;
+    }
+    if (error er = m_sceneRoot->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
+    {
+        EventPublisher::Post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), er));
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<SceneRootChildAttached>(cmd->GetChild()));
+    }
+}
+
+void GameSceneService::DoAttachingNodeChild(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<AttachNodeChild, ICommand>(c);
+    if (!cmd) return;
+    if (!cmd->GetChild()) return;
+    auto node = std::dynamic_pointer_cast<Node, Spatial>(FindSpatialByName(cmd->GetNodeName()));
+    if (!node)
+    {
+        EventPublisher::Post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), ErrorCode::nodeNotFound));
+        return;
+    }
+    if (error er = node->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
+    {
+        EventPublisher::Post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), er));
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<SceneNodeChildAttached>(cmd->GetNodeName(), cmd->GetChild()));
     }
 }

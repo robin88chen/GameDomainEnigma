@@ -17,6 +17,8 @@ namespace Enigma::GameCommon
         ok = 0,
         nullPortalManagement,
         nullHostLight,
+        nullSceneRoot,
+        nodeNotFound,
     };
     class ErrorCategory : public std::error_category
     {

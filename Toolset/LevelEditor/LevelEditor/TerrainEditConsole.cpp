@@ -10,6 +10,7 @@
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "GameCommon/GameSceneCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -98,4 +99,5 @@ void TerrainEditConsole::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& 
     auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(ev->GetTopLevelSpatial().front());
     m_brush = pawn;
     CommandBus::Post(std::make_shared<OutputMessage>("Brush Pawn Created"));
+    CommandBus::Post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, Enigma::MathLib::Matrix4::IDENTITY));
 }

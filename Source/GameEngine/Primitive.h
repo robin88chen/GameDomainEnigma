@@ -44,7 +44,10 @@ namespace Enigma::Engine
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
 
-        virtual GenericDto SerializeDto() = 0;
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
+        virtual GenericDto SerializeDto() const = 0;
 
         /** insert to renderer */
         virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
@@ -90,6 +93,7 @@ namespace Enigma::Engine
         }
 
     protected:
+        FactoryDesc m_factoryDesc;
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;

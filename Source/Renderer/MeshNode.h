@@ -25,6 +25,9 @@ namespace Enigma::Renderer
         MeshNode& operator=(const MeshNode& node);
         MeshNode& operator=(MeshNode&& node) noexcept;
 
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         Engine::GenericDto SerializeDto() const;
 
         const std::string& GetName() const { return m_name; }
@@ -41,6 +44,7 @@ namespace Enigma::Renderer
         void SetParentIndexInArray(unsigned idx);
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         std::string m_name;
         MathLib::Matrix4 m_mxT_PosTransform; ///< mesh node local original T-Pos transform
         MathLib::Matrix4 m_mxLocalTransform;   ///< mesh node local transform (reference: parent node)

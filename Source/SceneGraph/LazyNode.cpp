@@ -22,7 +22,8 @@ LazyNode::~LazyNode()
 GenericDto LazyNode::SerializeDto()
 {
     NodeDto node_dto(SerializeSpatialDto());  // 基本的 spatial data
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
+    if ((m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced))
     {
         for (auto child : m_childList)
         {
@@ -36,6 +37,16 @@ GenericDto LazyNode::SerializeDto()
     {
         return node_dto.ToGenericDto();
     }
+}
+
+GenericDto LazyNode::SerializeAsLaziness()
+{
+    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(SerializeSpatialDto()));
+    GenericDto dto = lazy_node_dto.ToGenericDto();
+    FactoryDesc factory_desc = m_factoryDesc;
+    factory_desc.ClaimAsDeferred(); // serialize as deferred
+    dto.AddRtti(factory_desc);
+    return dto;
 }
 
 bool LazyNode::CanVisited()

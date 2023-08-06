@@ -1,6 +1,8 @@
 ﻿#include "LevelEditorAppDelegate.h"
+#include "AppConfiguration.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "FileSystem/FileSystem.h"
+#include "FileSystem/StdMountPath.h"
 #include "Platforms/MemoryMacro.h"
 #include "GraphicAPIDx11/GraphicAPIDx11.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
@@ -14,6 +16,20 @@
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
+#include "WorldMap/WorldMapInstallingPolicy.h"
+#include "WorldMap/WorldMapService.h"
+#include "WorldMap/WorldMapCommands.h"
+#include "Frameworks/CommandBus.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "Frameworks/EventPublisher.h"
+#include "GameCommon/GameSceneEvents.h"
+#include "SceneGraph/SceneFlattenTraversal.h"
+#include "LevelEditorCommands.h"
+#include "WorldMap/WorldMapEvents.h"
+#include "WorldMap/WorldMap.h"
+#include "WorldEditService.h"
+#include "TerrainEditService.h"
+#include "Terrain/TerrainInstallingPolicy.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -28,6 +44,11 @@ using namespace Enigma::Gateways;
 using namespace Enigma::GameCommon;
 using namespace Enigma::Animators;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::WorldMap;
+using namespace Enigma::Frameworks;
+using namespace Enigma::MathLib;
+using namespace Enigma::InputHandlers;
+using namespace Enigma::Terrain;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -88,6 +109,16 @@ void EditorAppDelegate::Finalize()
 
 void EditorAppDelegate::InitializeMountPaths()
 {
+    m_appConfig = std::make_unique<AppConfiguration>();
+    m_appConfig->LoadConfig();
+
+    if (FileSystem::Instance())
+    {
+        const auto path = std::filesystem::current_path();
+        const auto mediaPath = path / "../../../Media/";
+        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), m_appConfig->GetMediaPathId()));
+        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), m_appConfig->GetDataPathId()));
+    }
 }
 
 void EditorAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
@@ -96,29 +127,47 @@ void EditorAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void EditorAppDelegate::InstallEngine()
 {
+    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
+    EventPublisher::Subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { OnSceneRootCreated(e); });
+    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { OnWorldMapCreated(e); });
+    EventPublisher::Subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
-    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
+    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>());
+    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_appConfig->GetSceneRootName(), m_appConfig->GetPortalManagementName());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
-        CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
-        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy });
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDto::FromGenericDto(m_appConfig->GetCameraDto()));
+    auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
+    auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
 }
 
 void EditorAppDelegate::ShutdownEngine()
 {
+    EventPublisher::Unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    m_onSceneGraphChanged = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    m_onSceneRootCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    m_onWorldMapCreated = nullptr;
+
     assert(m_graphicMain);
+    m_graphicMain->GetServiceManager()->UnregisterSystemService(TerrainEditService::TYPE_RTTI);
+    m_graphicMain->GetServiceManager()->UnregisterSystemService(WorldEditService::TYPE_RTTI);
     m_graphicMain->ShutdownRenderEngine();
 }
 
@@ -149,4 +198,39 @@ void EditorAppDelegate::OnTimerElapsed()
 
     PrepareRender();
     RenderFrame();
+}
+
+void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
+    if (!ev) return;
+    if (m_sceneRoot.expired()) return;
+    SceneFlattenTraversal traversal;
+    m_sceneRoot.lock()->VisitBy(&traversal);
+    CommandBus::Post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+}
+
+void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::Post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->GetSpatialName()));
+    m_sceneRoot = ev->GetSceneRoot();
+    SceneFlattenTraversal traversal;
+    m_sceneRoot.lock()->VisitBy(&traversal);
+    CommandBus::Post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+}
+
+void EditorAppDelegate::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<WorldMapCreated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::Post(std::make_shared<OutputMessage>("world map created : " + ev->GetName()));
+    if (!m_sceneRoot.expired())
+    {
+        m_sceneRoot.lock()->AttachChild(ev->GetWorld(), Enigma::MathLib::Matrix4::IDENTITY);
+    }
 }

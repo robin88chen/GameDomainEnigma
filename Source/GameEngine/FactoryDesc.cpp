@@ -85,3 +85,33 @@ FactoryDesc& FactoryDesc::ClaimFromResource(const std::string& name, const std::
     }
     return *this;
 }
+
+FactoryDesc& FactoryDesc::PathId(const std::string& path_id)
+{
+    if (path_id.empty()) return *this;
+    if (!m_resourceFilename.empty())
+    {
+        auto pos = m_resourceFilename.find_last_of('@');
+        if (pos != std::string::npos)
+        {
+            m_resourceFilename = m_resourceFilename.substr(0, pos) + "@" + path_id;
+        }
+        else
+        {
+            m_resourceFilename = m_resourceFilename + "@" + path_id;
+        }
+    }
+    if (!m_prefab_deferredFilename.empty())
+    {
+        auto pos = m_prefab_deferredFilename.find_last_of('@');
+        if (pos != std::string::npos)
+        {
+            m_prefab_deferredFilename = m_prefab_deferredFilename.substr(0, pos) + "@" + path_id;
+        }
+        else
+        {
+            m_prefab_deferredFilename = m_prefab_deferredFilename + "@" + path_id;
+        }
+    }
+    return *this;
+}

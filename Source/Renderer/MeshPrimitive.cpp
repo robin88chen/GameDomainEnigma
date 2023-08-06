@@ -20,6 +20,7 @@ DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
 MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
 {
+    m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.GetName());
     m_name = name;
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
@@ -31,6 +32,7 @@ MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
 
 MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
 {
+    m_factoryDesc = mesh.m_factoryDesc;
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
     m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
@@ -49,6 +51,7 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
 
 MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive()
 {
+    m_factoryDesc = std::move(mesh.m_factoryDesc);
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
     m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
@@ -72,6 +75,7 @@ MeshPrimitive::~MeshPrimitive()
 MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 {
     if (this == &mesh) return *this;
+    m_factoryDesc = mesh.m_factoryDesc;
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
     m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
@@ -91,6 +95,7 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 
 MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
 {
+    m_factoryDesc = std::move(mesh.m_factoryDesc);
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
     m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
@@ -104,14 +109,15 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
     return *this;
 }
 
-GenericDto MeshPrimitive::SerializeDto()
+GenericDto MeshPrimitive::SerializeDto() const
 {
     return SerializeMeshDto().ToGenericDto();
 }
 
-MeshPrimitiveDto MeshPrimitive::SerializeMeshDto()
+MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
 {
     MeshPrimitiveDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     if (m_geometry)
     {
@@ -129,6 +135,7 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto()
     }
     for (auto& tex : m_textures)
     {
+        if (!tex.IsAllResourceTexture()) continue;
         dto.TextureMaps().emplace_back(tex.SerializeDto());
     }
     return dto;

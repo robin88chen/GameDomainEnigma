@@ -17,7 +17,7 @@ PortalZoneNodeDto PortalZoneNodeDto::FromGenericDto(const Engine::GenericDto& dt
     return node_dto;
 }
 
-GenericDto PortalZoneNodeDto::ToGenericDto()
+GenericDto PortalZoneNodeDto::ToGenericDto() const
 {
     GenericDto dto = LazyNodeDto::ToGenericDto();
     return dto;

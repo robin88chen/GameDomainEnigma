@@ -27,7 +27,10 @@ namespace Enigma::Renderer
         MeshNodeTree& operator=(const MeshNodeTree& tree);
         MeshNodeTree& operator=(MeshNodeTree&& tree) noexcept;
 
-        Engine::GenericDto SerializeDto();
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
+        Engine::GenericDto SerializeDto() const;
 
         std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name) const;
         /** add mesh node to tree
@@ -43,6 +46,7 @@ namespace Enigma::Renderer
         void UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal);
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         std::vector<MeshNode> m_meshNodes;
     };
 }

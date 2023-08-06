@@ -11,6 +11,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::ok: return "OK";
     case ErrorCode::nullPortalManagement: return "Null portal management";
     case ErrorCode::nullHostLight: return "Null host light";
+    case ErrorCode::nullSceneRoot: return "Null scene root";
+    case ErrorCode::nodeNotFound: return "Node not found";
     }
     return "Unknown";
 }

@@ -1,4 +1,5 @@
 ﻿#include "TerrainPrimitive.h"
+#include "TerrainPrimitiveDto.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Renderer;
@@ -7,7 +8,7 @@ DEFINE_RTTI(Terrain, TerrainPrimitive, MeshPrimitive);
 
 TerrainPrimitive::TerrainPrimitive(const std::string& name) : MeshPrimitive(name)
 {
-
+    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()).ClaimAsInstanced(name + ".terrain");
 }
 
 TerrainPrimitive::~TerrainPrimitive()
@@ -35,8 +36,9 @@ TerrainPrimitive& TerrainPrimitive::operator=(TerrainPrimitive&& t) noexcept
     return *this;
 }
 
-Enigma::Engine::GenericDto TerrainPrimitive::SerializeDto()
+Enigma::Engine::GenericDto TerrainPrimitive::SerializeDto() const
 {
-    return MeshPrimitive::SerializeDto();
+    TerrainPrimitiveDto dto(SerializeMeshDto());
+    return dto.ToGenericDto();
 }
 

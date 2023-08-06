@@ -14,6 +14,7 @@
 #include "nana/gui/timer.hpp"
 #include "nana/gui/widgets/toolbar.hpp"
 #include "nana/gui/widgets/label.hpp"
+#include "EditorModes.h"
 
 namespace LevelEditor
 {
@@ -23,6 +24,7 @@ namespace LevelEditor
     class SpatialInspectorPanel;
     class TerrainToolPanel;
     class OutputPanel;
+    class WorldEditConsole;
 
     class MainForm : public nana::form
     {
@@ -95,6 +97,10 @@ namespace LevelEditor
         SpatialInspectorPanel* m_spatialInspectorPanel;
         TerrainToolPanel* m_terrainToolPanel;
         OutputPanel* m_outputPanel;
+
+        std::weak_ptr<WorldEditConsole> m_worldConsole;
+
+        EditorMode m_editorMode;
     };
 }
 

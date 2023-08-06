@@ -40,7 +40,7 @@ namespace Enigma::Renderer
         MeshPrimitive& operator=(const MeshPrimitive&);
         MeshPrimitive& operator=(MeshPrimitive&&) noexcept;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto SerializeDto() const override;
 
         const std::string& GetName() const { return m_name; }
         /** get geometry data */
@@ -105,7 +105,7 @@ namespace Enigma::Renderer
         //@}
 
     protected:
-        MeshPrimitiveDto SerializeMeshDto();
+        MeshPrimitiveDto SerializeMeshDto() const;
 
         void CleanupGeometry();
 

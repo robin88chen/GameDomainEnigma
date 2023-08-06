@@ -1,4 +1,9 @@
 ﻿#include "MainForm.h"
+#include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
+#include "FileSystem/FileSystem.h"
+#include "AddTerrainDialog.h"
+#include "CreateNewWorldDlg.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
 #include "LevelEditorAppDelegate.h"
@@ -7,9 +12,22 @@
 #include "SpatialInspectorToolPanel.h"
 #include "TerrainToolPanel.h"
 #include "OutputPanel.h"
+#include "WorldEditConsole.h"
+#include "AppConfiguration.h"
+#include "LevelEditorCommands.h"
+#include "WorldEditService.h"
+#include "TerrainEditConsole.h"
+#include "WorldMap/WorldMapService.h"
+#include "Gateways/DtoJsonGateway.h"
+#include "LevelEditorEvents.h"
+#include "nana/gui/filebox.hpp"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
+using namespace Enigma::WorldMap;
+using namespace Enigma::Gateways;
+using namespace Enigma::Engine;
+using namespace Enigma::FileSystem;
 using namespace std::chrono_literals;
 
 MainForm::MainForm() : nana::form()
@@ -23,6 +41,7 @@ MainForm::MainForm() : nana::form()
     m_spatialInspectorPanel = nullptr;
     m_terrainToolPanel = nullptr;
     m_outputPanel = nullptr;
+    m_editorMode = EditorMode::Cursor;
 }
 
 MainForm::~MainForm()
@@ -58,6 +77,14 @@ void MainForm::InitSubPanels()
     InitializeGraphics();
 
     get_place().collocate();
+
+    if (m_sceneGraphPanel) m_sceneGraphPanel->SubscribeHandlers();
+    if (m_outputPanel) m_outputPanel->SubscribeHandlers();
+    if (m_renderPanel)
+    {
+        m_renderPanel->InitInputHandler(m_appDelegate->GetInputHandler());
+        m_renderPanel->SubscribeHandlers();
+    }
 }
 
 void MainForm::InitializeGraphics()
@@ -69,10 +96,27 @@ void MainForm::InitializeGraphics()
     m_timer->elapse([this] { m_appDelegate->OnTimerElapsed(); });
     m_timer->start();
     events().destroy([this] { this->FinalizeGraphics(); });
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    auto world_edit = std::dynamic_pointer_cast<WorldEditService, Enigma::Frameworks::ISystemService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
+    srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
+    srv_mngr->RegisterSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
+    m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
+    m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
 }
 
 void MainForm::FinalizeGraphics()
 {
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
+    srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
+
+    if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
+    if (m_sceneGraphPanel)
+    {
+        m_sceneGraphPanel->Finalize();
+        m_sceneGraphPanel->UnsubscribeHandlers();
+    }
+    if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }
 
@@ -160,27 +204,40 @@ void MainForm::InitTools()
 
 void MainForm::OnCloseCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    close();
 }
 
 void MainForm::OnCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock()));
 }
 
 void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 {
+    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
+    auto world = srv_mngr->GetSystemServiceAs<WorldMapService>();
 
+    nana::filebox fb(handle(), true);
+    fb.add_filter({ {"World File(*.wld)", "*.wld"} }).title("Load World");
+    if (auto paths = fb.show(); !paths.empty())
+    {
+        if (!m_worldConsole.expired())
+        {
+            m_worldConsole.lock()->LoadWorldMap(paths[0]);
+        }
+    }
 }
 
 void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    assert(!m_worldConsole.expired());
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Save World File..."));
+    m_worldConsole.lock()->SaveWorldMap();
 }
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock(), m_appDelegate->GetAppConfig()->GetMediaPathId()));
 }
 
 void MainForm::OnAddEnviromentLightCommand(const nana::menu::item_proxy& menu_item)
@@ -215,7 +272,31 @@ void MainForm::OnGodModeChanged(bool enabled)
 
 void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
 {
-
+    switch (arg.button)
+    {
+    case static_cast<size_t>(ToolIndex::ToolCursor):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Cursor));
+        m_editorMode = EditorMode::Cursor;
+        break;
+    case static_cast<size_t>(ToolIndex::ToolTerrain):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Terrain));
+        m_editorMode = EditorMode::Terrain;
+        break;
+    case static_cast<size_t>(ToolIndex::ToolEntity):
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Pawn));
+        m_editorMode = EditorMode::Pawn;
+        break;
+    /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolRotateEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolScaleEntity):
+        break;
+    case static_cast<size_t>(ToolIndex::ToolGodMode):
+        break;*/
+    default:
+        break;
+    }
 }
 
 void MainForm::OnSelectZoneNode(const nana::toolbar::item_proxy& drop_down_item, const std::string& node_name)

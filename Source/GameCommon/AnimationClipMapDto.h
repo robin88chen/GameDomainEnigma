@@ -17,8 +17,10 @@ namespace Enigma::GameCommon
     class AnimationClipMapDto
     {
     public:
-        AnimationClipMapDto() = default;
+        AnimationClipMapDto();
 
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
         std::vector<std::string>& AnimNames() { return m_animNames; }
         [[nodiscard]] const std::vector<std::string>& AnimNames() const { return m_animNames; }
         std::vector<float>& StartOffsets() { return m_startOffsets; }
@@ -34,6 +36,7 @@ namespace Enigma::GameCommon
         Engine::GenericDto ToGenericDto() const;
 
     private:
+        Engine::FactoryDesc m_factoryDesc;
         std::vector<std::string> m_animNames;
         std::vector<float> m_startOffsets;
         std::vector<float> m_loopTimes;

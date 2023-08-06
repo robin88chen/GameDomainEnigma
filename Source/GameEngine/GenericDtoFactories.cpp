@@ -21,6 +21,12 @@ GenericDtoFactories::GenericDtoFactories(ServiceManager* srv_mngr) : ISystemServ
     m_doInvokingDtoFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoInvokingDtoFactory(c); });
     CommandBus::Subscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
+    m_doRegisteringConverter =
+        std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringConverter(c); });
+    CommandBus::Subscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
+    m_doUnRegisteringConverter =
+        std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringConverter(c); });
+    CommandBus::Subscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
 }
 
 GenericDtoFactories::~GenericDtoFactories()
@@ -31,6 +37,10 @@ GenericDtoFactories::~GenericDtoFactories()
     m_doUnRegisteringFactory = nullptr;
     CommandBus::Unsubscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
     m_doInvokingDtoFactory = nullptr;
+    CommandBus::Unsubscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
+    m_doRegisteringConverter = nullptr;
+    CommandBus::Unsubscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
+    m_doUnRegisteringConverter = nullptr;
 }
 
 void GenericDtoFactories::RegisterFactory(const std::string& rtti, const DtoFactory& factory)
@@ -78,3 +88,18 @@ void GenericDtoFactories::DoInvokingDtoFactory(const ICommandPtr& c)
     InvokeFactory(cmd->GetDto());
 }
 
+void GenericDtoFactories::DoRegisteringConverter(const ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<RegisterDtoPolicyConverter, ICommand>(c);
+    if (!cmd) return;
+    GenericDto::RegisterConverter(cmd->GetRtti(), cmd->GetPolicyConverter());
+}
+
+void GenericDtoFactories::DoUnRegisteringConverter(const ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<UnRegisterDtoPolicyConverter, ICommand>(c);
+    if (!cmd) return;
+    GenericDto::UnregisterConverter(cmd->GetRtti());
+}

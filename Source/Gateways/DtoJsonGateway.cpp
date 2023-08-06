@@ -50,7 +50,7 @@ using namespace Enigma::MathLib;
 
 //------------------------------------------------------------------------
 static GenericDto DeserializeDto(const rapidjson::Value& value);
-static std::vector<GenericDto> DeserializeDtoArray(const rapidjson::Value& value);
+static GenericDtoCollection DeserializeDtoArray(const rapidjson::Value& value);
 static void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const rapidjson::Value& value);
 static FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value);
 static std::uint64_t DeserializeUInt64(const rapidjson::Value& value);
@@ -74,7 +74,7 @@ static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& valu
 static std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value);
 //------------------------------------------------------------------------
 static rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator);
-static rapidjson::Value SerializeDtoArray(const std::vector<GenericDto>& dtos, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value SerializeDtoArray(const GenericDtoCollection& dtos, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeUInt64(const std::uint64_t n);
@@ -97,9 +97,9 @@ static rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, 
 static rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeMatrix4Array(const std::vector<Matrix4>& mxs, rapidjson::MemoryPoolAllocator<>& allocator);
 
-std::vector<GenericDto> DtoJsonGateway::Deserialize(const std::string& json)
+GenericDtoCollection DtoJsonGateway::Deserialize(const std::string& json)
 {
-    std::vector<GenericDto> dtos;
+    GenericDtoCollection dtos;
     rapidjson::Document json_doc;
     json_doc.Parse<0>(json.c_str());
     if (FATAL_LOG_EXPR(json_doc.HasParseError()))
@@ -122,7 +122,7 @@ std::vector<GenericDto> DtoJsonGateway::Deserialize(const std::string& json)
     return dtos;
 }
 
-std::string DtoJsonGateway::Serialize(const std::vector<GenericDto>& dtos)
+std::string DtoJsonGateway::Serialize(const GenericDtoCollection& dtos)
 {
     if (dtos.empty()) return "";
     rapidjson::Document json_doc;
@@ -152,9 +152,9 @@ GenericDto DeserializeDto(const rapidjson::Value& value_ob)
     return dto;
 }
 
-std::vector<GenericDto> DeserializeDtoArray(const rapidjson::Value& value)
+GenericDtoCollection DeserializeDtoArray(const rapidjson::Value& value)
 {
-    std::vector<GenericDto> dtos;
+    GenericDtoCollection dtos;
     if (!value.IsArray()) return dtos;
     auto values = value.GetArray();
     for (auto json_it = values.Begin(); json_it != values.End(); ++json_it)
@@ -430,7 +430,7 @@ rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAlloca
     return json;
 }
 
-rapidjson::Value SerializeDtoArray(const std::vector<GenericDto>& dtos, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value SerializeDtoArray(const GenericDtoCollection& dtos, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
     for (auto& o : dtos)
@@ -449,11 +449,11 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
             SerializeDto(std::any_cast<GenericDto>(any_ob), allocator), allocator);
     }
-    else if (any_ob.type() == typeid(std::vector<GenericDto>))
+    else if (any_ob.type() == typeid(GenericDtoCollection))
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(DATA_OBJECT_ARRAY_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
-            SerializeDtoArray(std::any_cast<std::vector<GenericDto>>(any_ob), allocator), allocator);
+            SerializeDtoArray(std::any_cast<GenericDtoCollection>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(FactoryDesc))
     {

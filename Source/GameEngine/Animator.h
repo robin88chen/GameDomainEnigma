@@ -10,6 +10,7 @@
 
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Timer.h"
+#include "FactoryDesc.h"
 #include <memory>
 
 namespace Enigma::Engine
@@ -45,8 +46,12 @@ namespace Enigma::Engine
         bool IsListened() { return m_isListened; };
         void SetListened(bool flag) { m_isListened = flag; };
 
+        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
     protected:
         bool m_isListened;
+        FactoryDesc m_factoryDesc;
     };
     using AnimatorPtr = std::shared_ptr<Animator>;
 }

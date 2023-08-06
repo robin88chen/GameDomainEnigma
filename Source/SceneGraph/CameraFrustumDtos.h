@@ -24,6 +24,9 @@ namespace Enigma::SceneGraph
         CameraDto& operator=(const CameraDto&) = default;
         CameraDto& operator=(CameraDto&&) = default;
 
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
         std::string& Name() { return m_name; }
         [[nodiscard]] const std::string& Name() const { return m_name; }
         SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
@@ -41,6 +44,7 @@ namespace Enigma::SceneGraph
         Engine::GenericDto ToGenericDto();
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         std::string m_name;
         SceneGraph::GraphicCoordSys m_handSys;
         MathLib::Vector3 m_eyePosition;
@@ -58,6 +62,9 @@ namespace Enigma::SceneGraph
         ~FrustumDto() = default;
         FrustumDto& operator=(const FrustumDto&) = default;
         FrustumDto& operator=(FrustumDto&&) = default;
+
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         std::string& Name() { return m_name; }
         [[nodiscard]] const std::string& Name() const { return m_name; }
@@ -83,6 +90,7 @@ namespace Enigma::SceneGraph
         Engine::GenericDto ToGenericDto();
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         std::string m_name;
         SceneGraph::GraphicCoordSys m_handSys;
         Frustum::ProjectionType m_projectionType;

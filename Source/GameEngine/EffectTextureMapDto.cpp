@@ -42,7 +42,7 @@ EffectTextureMapPolicy::TextureTuplePolicy TextureMappingDto::ConvertToPolicy()
 EffectTextureMapDto EffectTextureMapDto::FromGenericDto(const GenericDto& dto)
 {
     EffectTextureMapDto effect;
-    if (const auto v = dto.TryGetValue<std::vector<GenericDto>>(TOKEN_TEXTURE_MAPPINGS))
+    if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
     {
         for (auto& mapping_dto : v.value())
         {
@@ -54,7 +54,7 @@ EffectTextureMapDto EffectTextureMapDto::FromGenericDto(const GenericDto& dto)
 
 GenericDto EffectTextureMapDto::ToGenericDto()
 {
-    std::vector<GenericDto> mappings;
+    GenericDtoCollection mappings;
     for (auto& tex : m_textureMappings)
     {
         mappings.emplace_back(tex.ToGenericDto());

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LevelEditorAppDelegate.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -13,9 +13,12 @@
 #include "Controllers/GraphicMain.h"
 #include "GameCommon/SceneRendererService.h"
 #include "InputHandlers/InputHandlerService.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace LevelEditor
 {
+    class AppConfiguration;
+
     class EditorAppDelegate
     {
     public:
@@ -36,15 +39,31 @@ namespace LevelEditor
 
         void OnTimerElapsed();
 
+        const std::unique_ptr<AppConfiguration>& GetAppConfig() const { return m_appConfig; };
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> GetInputHandler() const { return m_inputHandler.lock(); };
+
+    protected:
+        void OnSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+
     protected:
         HWND m_hwnd;
         bool m_hasLogFile;
 
         std::string m_mediaRootPath;
 
+        std::unique_ptr<AppConfiguration> m_appConfig;
+
         Enigma::Controllers::GraphicMain* m_graphicMain;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+
+        std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
     };
 }
 

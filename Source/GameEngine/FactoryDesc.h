@@ -38,7 +38,7 @@ namespace Enigma::Engine
         FactoryDesc& ClaimAsInstanced(const std::string& filename, const std::string& path_id = "");
         FactoryDesc& ClaimAsResourceAsset(const std::string& name, const std::string& filename, const std::string& path_id = "");
         FactoryDesc& ClaimFromResource(const std::string& name, const std::string& filename, const std::string& path_id = "");
-
+        FactoryDesc& PathId(const std::string& path_id);
         /** Claim as native without change file name */
         FactoryDesc& ClaimAsNative() { return ClaimAsNative(""); }
         /** Claim as instanced without change file name */

@@ -8,11 +8,11 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI_OF_BASE(Animators, SkinAnimationOperator);
 
-SkinAnimationOperator::SkinAnimationOperator()
+SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.GetName())
 {
 }
 
-SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op)
+SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : m_factoryDesc(op.m_factoryDesc)
 {
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
     m_boneNodeNames = op.m_boneNodeNames;
@@ -20,7 +20,7 @@ SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op)
     m_skinNodeIndexMapping = op.m_skinNodeIndexMapping;
 }
 
-SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op) noexcept
+SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op) noexcept : m_factoryDesc(op.m_factoryDesc)
 {
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_boneNodeNames = std::move(op.m_boneNodeNames);
@@ -35,6 +35,7 @@ SkinAnimationOperator::~SkinAnimationOperator()
 SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOperator& op)
 {
     if (this == &op) return *this;
+    m_factoryDesc = op.m_factoryDesc;
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
     m_boneNodeNames = op.m_boneNodeNames;
     m_nodeOffsets = op.m_nodeOffsets;
@@ -44,6 +45,7 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOpera
 
 SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& op) noexcept
 {
+    m_factoryDesc = op.m_factoryDesc;
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_boneNodeNames = std::move(op.m_boneNodeNames);
     m_nodeOffsets = std::move(op.m_nodeOffsets);
@@ -54,6 +56,7 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
 SkinOperatorDto SkinAnimationOperator::SerializeDto()
 {
     SkinOperatorDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->GetName();
     dto.BoneNodeNames() = m_boneNodeNames;
     dto.NodeOffsets() = m_nodeOffsets;

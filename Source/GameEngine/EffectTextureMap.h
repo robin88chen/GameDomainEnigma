@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectTextureMap.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -35,7 +35,7 @@ namespace Enigma::Engine
         EffectTextureMap& operator=(const EffectTextureMap&) = default;
         EffectTextureMap& operator=(EffectTextureMap&&) = default;
 
-        GenericDto SerializeDto();
+        GenericDto SerializeDto() const;
 
         error BindTexture(const EffectTextureTuple& tuple);
         error ChangeTexture(const EffectTextureTuple& tuple);
@@ -43,6 +43,8 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> GetTexture(unsigned index);
         const EffectTextureTuple& GetEffectTextureTuple(unsigned index);
         const unsigned int GetCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
+
+        bool IsAllResourceTexture() const;
 
         /// merge texture sets to target map, with respect to same semantic
         void MergeTextureSetTo(EffectTextureMap& targetMap);

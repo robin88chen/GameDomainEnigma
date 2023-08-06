@@ -168,6 +168,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.h">
       <Filter>DTO &amp; Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -265,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.cpp">
       <Filter>DTO &amp; Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp">
+      <Filter>Scene Traveler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

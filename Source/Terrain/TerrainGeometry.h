@@ -24,7 +24,7 @@ namespace Enigma::Terrain
         TerrainGeometry(TerrainGeometry&&) = delete;
         TerrainGeometry& operator=(TerrainGeometry&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto SerializeDto() const override;
 
     protected:
         unsigned m_numRows;

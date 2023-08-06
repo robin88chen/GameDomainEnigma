@@ -40,31 +40,35 @@ namespace Enigma::Animators
     class AnimationAssetDto
     {
     public:
-        AnimationAssetDto() = default;
+        AnimationAssetDto();
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+
     protected:
         std::string m_name;
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class ModelAnimationAssetDto : public AnimationAssetDto
     {
     public:
-        ModelAnimationAssetDto() = default;
+        ModelAnimationAssetDto();
 
         [[nodiscard]] const std::vector<std::string>& MeshNodeNames() const { return m_meshNodeNames; }
         std::vector<std::string>& MeshNodeNames() { return m_meshNodeNames; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& TimeSRTs() const { return m_timeSrtDtos; }
-        std::vector<Engine::GenericDto>& TimeSRTs() { return m_timeSrtDtos; }
+        [[nodiscard]] const Engine::GenericDtoCollection& TimeSRTs() const { return m_timeSrtDtos; }
+        Engine::GenericDtoCollection& TimeSRTs() { return m_timeSrtDtos; }
 
         static ModelAnimationAssetDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
 
     protected:
         std::vector<std::string> m_meshNodeNames;
-        std::vector<Engine::GenericDto> m_timeSrtDtos;
+        Engine::GenericDtoCollection m_timeSrtDtos;
     };
 }
 

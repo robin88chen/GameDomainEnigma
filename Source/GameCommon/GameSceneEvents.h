@@ -14,6 +14,7 @@
 
 namespace Enigma::GameCommon
 {
+    using error = std::error_code;
     class SceneRootCreated : public Frameworks::IEvent
     {
     public:
@@ -33,6 +34,54 @@ namespace Enigma::GameCommon
 
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_managementNode;
+    };
+    //-----------------------------------------------------------------------------------
+    class SceneRootChildAttached : public Frameworks::IEvent
+    {
+    public:
+        SceneRootChildAttached(const std::shared_ptr<SceneGraph::Spatial>& child) : m_child(child) {}
+
+        std::shared_ptr<SceneGraph::Spatial> GetChild() const { return m_child.lock(); }
+    protected:
+        std::weak_ptr<SceneGraph::Spatial> m_child;
+    };
+    class AttachSceneRootChildFailed : public Frameworks::IEvent
+    {
+    public:
+        AttachSceneRootChildFailed(const std::string& child_name, error er) : m_childName(child_name), m_error(er) {}
+
+        const std::string& GetChildName() const { return m_childName; }
+        error GetError() const { return m_error; }
+
+    protected:
+        std::string m_childName;
+        error m_error;
+    };
+    class SceneNodeChildAttached : public Frameworks::IEvent
+    {
+    public:
+        SceneNodeChildAttached(const std::string& node_name, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeName(node_name), m_child(child) {}
+
+        const std::string& GetNodeName() const { return m_nodeName; }
+        std::shared_ptr<SceneGraph::Spatial> GetChild() const { return m_child.lock(); }
+
+    protected:
+        std::string m_nodeName;
+        std::weak_ptr<SceneGraph::Spatial> m_child;
+    };
+    class AttachSceneNodeChildFailed : public Frameworks::IEvent
+    {
+    public:
+        AttachSceneNodeChildFailed(const std::string& node_name, const std::string& child_name, error er) : m_nodeName(node_name), m_childName(child_name), m_error(er) {}
+
+        const std::string& GetNodeName() const { return m_nodeName; }
+        const std::string& GetChildName() const { return m_childName; }
+        error GetError() const { return m_error; }
+
+    protected:
+        std::string m_nodeName;
+        std::string m_childName;
+        error m_error;
     };
 }
 

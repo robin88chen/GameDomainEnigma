@@ -22,15 +22,15 @@ namespace Enigma::SceneGraph
     class BuildSceneGraph : public Frameworks::ICommand
     {
     public:
-        BuildSceneGraph(const std::string& scene_graph_id, const std::vector<Engine::GenericDto>& dtos)
+        BuildSceneGraph(const std::string& scene_graph_id, const Engine::GenericDtoCollection& dtos)
             : m_id(scene_graph_id), m_dtos(dtos) {}
 
         const std::string& GetSceneGraphId() { return m_id; }
-        const std::vector<Engine::GenericDto>& GetDtos() { return m_dtos; }
+        const Engine::GenericDtoCollection& GetDtos() { return m_dtos; }
 
     protected:
         std::string m_id;
-        std::vector<Engine::GenericDto> m_dtos;
+        Engine::GenericDtoCollection m_dtos;
     };
 
     class InstanceLazyNode : public Frameworks::ICommand
@@ -47,15 +47,15 @@ namespace Enigma::SceneGraph
     class InPlaceBuildSceneGraph : public Frameworks::ICommand
     {
     public:
-        InPlaceBuildSceneGraph(const std::shared_ptr<Node>& owner_node, const std::vector<Engine::GenericDto>& dtos)
+        InPlaceBuildSceneGraph(const std::shared_ptr<Node>& owner_node, const Engine::GenericDtoCollection& dtos)
             : m_ownerNode(owner_node), m_dtos(dtos) {}
 
         const std::shared_ptr<Node>& GetOwnerNode() { return m_ownerNode; }
-        const std::vector<Engine::GenericDto>& GetDtos() { return m_dtos; }
+        const Engine::GenericDtoCollection& GetDtos() { return m_dtos; }
 
     protected:
         std::shared_ptr<Node> m_ownerNode;
-        std::vector<Engine::GenericDto> m_dtos;
+        Engine::GenericDtoCollection m_dtos;
     };
     //--------------------------------------------------------------------------------
     using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;

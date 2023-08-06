@@ -27,8 +27,11 @@ namespace Enigma::Animators
         std::optional<Engine::GenericDto>& AnimationAssetDto() { return m_animationAssetDto; }
         [[nodiscard]] const Engine::FactoryDesc& AssetFactoryDesc() const { return m_assetFactory; }
         Engine::FactoryDesc& AssetFactoryDesc() { return m_assetFactory; }
-        [[nodiscard]] const std::vector<Engine::GenericDto>& SkinOperators() const { return m_skinOperators; }
-        std::vector<Engine::GenericDto>& SkinOperators() { return m_skinOperators; }
+        [[nodiscard]] const Engine::GenericDtoCollection& SkinOperators() const { return m_skinOperators; }
+        Engine::GenericDtoCollection& SkinOperators() { return m_skinOperators; }
+
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         static ModelAnimatorDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto();
@@ -40,13 +43,17 @@ namespace Enigma::Animators
         std::string m_assetName;
         std::optional<Engine::GenericDto> m_animationAssetDto;
         Engine::FactoryDesc m_assetFactory;
-        std::vector<Engine::GenericDto> m_skinOperators;
+        Engine::GenericDtoCollection m_skinOperators;
+        Engine::FactoryDesc m_factoryDesc;
     };
 
     class SkinOperatorDto
     {
     public:
-        SkinOperatorDto() = default;
+        SkinOperatorDto();
+
+        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::optional<std::string>& SkinMeshName() const { return m_skinMeshName; }
         std::optional<std::string>& SkinMeshName() { return m_skinMeshName; }
@@ -61,6 +68,7 @@ namespace Enigma::Animators
         Engine::GenericDto ToGenericDto();
 
     private:
+        Engine::FactoryDesc m_factoryDesc;
         std::optional<std::string> m_skinMeshName;
         std::optional<std::string> m_skinMeshNodeName;
         std::vector<std::string> m_boneNodeNames;

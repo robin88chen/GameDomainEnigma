@@ -25,7 +25,7 @@ namespace Enigma::Renderer
         SkinMeshPrimitive& operator=(const SkinMeshPrimitive&);
         SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) noexcept;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto SerializeDto() const override;
 
         void BindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }

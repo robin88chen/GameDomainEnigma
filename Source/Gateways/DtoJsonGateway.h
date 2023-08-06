@@ -19,8 +19,8 @@ namespace Enigma::Gateways
     class DtoJsonGateway
     {
     public:
-        static std::vector<Engine::GenericDto> Deserialize(const std::string& json);
-        static std::string Serialize(const std::vector<Engine::GenericDto>& contracts);
+        static Engine::GenericDtoCollection Deserialize(const std::string& json);
+        static std::string Serialize(const Engine::GenericDtoCollection& contracts);
     };
 }
 

@@ -132,6 +132,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddTerrainDialog.cpp" />
+    <ClCompile Include="AppConfiguration.cpp" />
+    <ClCompile Include="CreateNewWorldDlg.cpp" />
+    <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
@@ -145,10 +149,21 @@
     <ClCompile Include="SceneGraphPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
     <ClCompile Include="SpatialInspectorToolPanel.cpp" />
+    <ClCompile Include="TerrainEditConsole.cpp" />
+    <ClCompile Include="TerrainEditService.cpp" />
     <ClCompile Include="TerrainToolPanel.cpp" />
+    <ClCompile Include="WorldEditConsole.cpp" />
+    <ClCompile Include="WorldEditService.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddTerrainDialog.h" />
+    <ClInclude Include="AppConfiguration.h" />
+    <ClInclude Include="CreateNewWorldDlg.h" />
+    <ClInclude Include="EditorModes.h" />
+    <ClInclude Include="EditorUtilities.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
+    <ClInclude Include="LevelEditorCommands.h" />
+    <ClInclude Include="LevelEditorEvents.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="pch.h" />
@@ -158,7 +173,11 @@
     <ClInclude Include="SceneGraphPanel.h" />
     <ClInclude Include="SchemeColorDef.h" />
     <ClInclude Include="SpatialInspectorToolPanel.h" />
+    <ClInclude Include="TerrainEditConsole.h" />
+    <ClInclude Include="TerrainEditService.h" />
     <ClInclude Include="TerrainToolPanel.h" />
+    <ClInclude Include="WorldEditConsole.h" />
+    <ClInclude Include="WorldEditService.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

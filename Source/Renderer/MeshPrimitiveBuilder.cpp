@@ -1,6 +1,7 @@
 ﻿#include <memory>
 #include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
+#include "SkinMeshPrimitive.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/RequestBus.h"
@@ -13,6 +14,7 @@
 #include "GameEngine/EffectResponses.h"
 #include "GameEngine/TextureRequests.h"
 #include "GameEngine/TextureResponses.h"
+#include "GameEngine/FactoryCommands.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -33,11 +35,17 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryDa
     ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectMaterialResponse);
     m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
+
+    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.GetName(), MeshPrimitiveDto::MeshDtoConvertToPolicy));
+    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.GetName(), SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy));
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 {
     m_policy = nullptr;
+
+    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.GetName()));
+    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.GetName()));
 
     EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
     m_onGeometryDataBuilt = nullptr;

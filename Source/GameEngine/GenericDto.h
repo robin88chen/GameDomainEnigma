@@ -55,8 +55,8 @@ namespace Enigma::Engine
         void AddName(const std::string& name);
         std::string GetName() const;
 
-        GenericPolicyConverter GetPolicyConverter() const;
-        void SetPolicyConverter(GenericPolicyConverter converter);
+        //GenericPolicyConverter GetPolicyConverter() const;
+        //void SetPolicyConverter(GenericPolicyConverter converter);
 
         /** Remove key value data */
         void Remove(const std::string& attribute);
@@ -95,6 +95,9 @@ namespace Enigma::Engine
             return std::any_cast<T>(m_values.at(attribute));
         }
 
+        static void RegisterConverter(const std::string& rtti, const GenericPolicyConverter& converter);
+        static void UnregisterConverter(const std::string& rtti);
+
         std::shared_ptr<GenericPolicy> ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>&) const;
         AttributeValues::iterator begin() { return m_values.begin(); }
         AttributeValues::const_iterator begin() const { return m_values.begin(); }
@@ -104,8 +107,9 @@ namespace Enigma::Engine
     private:
         Frameworks::Ruid m_ruid; // run-time uniform id
         AttributeValues m_values;
-        GenericPolicyConverter m_converter;
+        static std::unordered_map<std::string, GenericPolicyConverter> m_converters;
     };
+    using GenericDtoCollection = std::vector<GenericDto>;
 }
 
 #endif // GENERIC_DTO_H

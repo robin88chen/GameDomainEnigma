@@ -191,7 +191,7 @@ void DaeParser::ComposeModelPrimitiveDto()
 
     BoundingVolume unit_bv(Box3::UNIT_BOX);
     m_pawn.ThePrimitive() = m_model.ToGenericDto();
-    m_pawn.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    //m_pawn.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
     m_pawn.Name() = m_filename;
     m_pawn.LocalTransform() = Matrix4::IDENTITY;
     m_pawn.WorldTransform() = Matrix4::IDENTITY;

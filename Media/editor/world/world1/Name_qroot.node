@@ -1,0 +1,306 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 3,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.VisibilityManagedNode",
+                "PrefabFilename": "world1/Name_qroot.node@WorldMaps"
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": true
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "world1/Name_qroot"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 3
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 5
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": ["world1/Name"]
+        }
+    }, {
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Terrain.TerrainPawn",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 0.5, 1024.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "world1/Name"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 0.5, 1024.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 5
+        },
+        "PawnPrimitive": {
+            "Type": "DataObject",
+            "Value": {
+                "RenderListId": {
+                    "Type": "Uint32",
+                    "Value": 1
+                },
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 3,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Terrain.TerrainPrimitive",
+                        "PrefabFilename": "world1/Name.terrain"
+                    }
+                },
+                "Name": {
+                    "Type": "String",
+                    "Value": "world1/Name"
+                },
+                "GeometryName": {
+                    "Type": "String",
+                    "Value": "world1/Name"
+                },
+                "Effects": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 4,
+                                    "ResourceName": "TerrainMesh",
+                                    "ResourceFilename": "fx/TerrainMesh.efx@APK_PATH",
+                                    "RttiName": "En.Engine.EffectMaterial",
+                                    "PrefabFilename": "TerrainMesh"
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "TerrainMesh"
+                            }
+                        }]
+                },
+                "RawGeometry": {
+                    "Type": "DataObject",
+                    "Value": {
+                        "Name": {
+                            "Type": "String",
+                            "Value": "world1/Name"
+                        },
+                        "VertexFormat": {
+                            "Type": "String",
+                            "Value": "xyz_nor_tex2(2,2)"
+                        },
+                        "IndexCapacity": {
+                            "Type": "Uint32",
+                            "Value": 384
+                        },
+                        "Segments": {
+                            "Type": "Uint32Array",
+                            "Value": [0, 81, 0, 384]
+                        },
+                        "GeometryBound": {
+                            "Type": "DataObject",
+                            "Value": {
+                                "BoxBV": {
+                                    "Type": "Box3",
+                                    "Value": [0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 0.5, 1024.0]
+                                }
+                            }
+                        },
+                        "VertexCapacity": {
+                            "Type": "Uint32",
+                            "Value": 81
+                        },
+                        "VertexUsedCount": {
+                            "Type": "Uint32",
+                            "Value": 81
+                        },
+                        "IndexUsedCount": {
+                            "Type": "Uint32",
+                            "Value": 384
+                        },
+                        "Topology": {
+                            "Type": "Uint32",
+                            "Value": 4
+                        },
+                        "MinPosition": {
+                            "Type": "Vector3",
+                            "Value": [-1024.0, 0.0, -1024.0]
+                        },
+                        "Rtti": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 0,
+                                "ResourceName": "",
+                                "ResourceFilename": "",
+                                "RttiName": "En.Terrain.TerrainGeometry",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "NumRows": {
+                            "Type": "Uint32",
+                            "Value": 8
+                        },
+                        "MaxTextureCoordinate": {
+                            "Type": "Vector2",
+                            "Value": [1.0, 1.0]
+                        },
+                        "NumCols": {
+                            "Type": "Uint32",
+                            "Value": 8
+                        },
+                        "MaxPosition": {
+                            "Type": "Vector3",
+                            "Value": [1024.0, 0.0, 1024.0]
+                        },
+                        "MinTextureCoordinate": {
+                            "Type": "Vector2",
+                            "Value": [8.0, 8.0]
+                        }
+                    }
+                },
+                "GeometryFactory": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Terrain.TerrainGeometry",
+                        "PrefabFilename": ""
+                    }
+                },
+                "TextureMaps": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureName": {
+                                            "Type": "String",
+                                            "Value": "image/du011.png"
+                                        },
+                                        "Filename": {
+                                            "Type": "String",
+                                            "Value": "image/du011.png@APK_PATH"
+                                        },
+                                        "PathId": {
+                                            "Type": "String",
+                                            "Value": ""
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "TextureLayer0"
+                                        }
+                                    }, {
+                                        "TextureName": {
+                                            "Type": "String",
+                                            "Value": "splat"
+                                        },
+                                        "Filename": {
+                                            "Type": "String",
+                                            "Value": "splat.png@DataPath"
+                                        },
+                                        "PathId": {
+                                            "Type": "String",
+                                            "Value": ""
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "AlphaLayer"
+                                        }
+                                    }]
+                            }
+                        }]
+                }
+            }
+        }
+    }]

@@ -16,6 +16,15 @@
     <Filter Include="Forms\Custom Widgets">
       <UniqueIdentifier>{0cb909bf-fd8b-489c-850c-e4e41f922b60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events &amp; Commands">
+      <UniqueIdentifier>{e4d2a328-4aaf-44d6-851b-330ed49a7144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorServices">
+      <UniqueIdentifier>{2fe6ea78-3b72-4ce4-bfe9-3aa8fa729be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{5d03fe07-e5ff-482e-aca4-a8e4e3d081b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -52,6 +61,30 @@
     <ClCompile Include="OutputPanel.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="AppConfiguration.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateNewWorldDlg.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="AddTerrainDialog.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -84,6 +117,39 @@
     </ClInclude>
     <ClInclude Include="OutputPanel.h">
       <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorCommands.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="AppConfiguration.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateNewWorldDlg.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="AddTerrainDialog.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUtilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorEvents.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorModes.h">
+      <Filter>EditorServices</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

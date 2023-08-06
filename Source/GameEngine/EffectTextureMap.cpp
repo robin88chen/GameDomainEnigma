@@ -29,20 +29,21 @@ EffectTextureMap::~EffectTextureMap()
     m_effectTextures.clear();
 }
 
-GenericDto EffectTextureMap::SerializeDto()
+GenericDto EffectTextureMap::SerializeDto() const
 {
     EffectTextureMapDto dto;
     for (auto& tex : m_effectTextures)
     {
-        TextureMappingDto mapping;
-        mapping.Semantic() = std::get<std::string>(tex);
         if (auto& t = std::get<std::shared_ptr<Texture>>(tex))
         {
+            if (t->TheFactoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
+            TextureMappingDto mapping;
+            mapping.Semantic() = std::get<std::string>(tex);
             mapping.TextureName() = t->TheFactoryDesc().GetResourceName();
             mapping.Filename() = t->TheFactoryDesc().GetResourceFilename();
+            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.ArrayIndex() = v.value();
+            dto.TextureMappings().emplace_back(mapping);
         }
-        if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.ArrayIndex() = v.value();
-        dto.TextureMappings().emplace_back(mapping);
     }
     return dto.ToGenericDto();
 }
@@ -86,6 +87,18 @@ const EffectTextureMap::EffectTextureTuple& EffectTextureMap::GetEffectTextureTu
 {
     assert(index < m_effectTextures.size());
     return m_effectTextures[index];
+}
+
+bool EffectTextureMap::IsAllResourceTexture() const
+{
+    for (auto& tuple : m_effectTextures)
+    {
+        if (auto tex = std::get<std::shared_ptr<Texture>>(tuple); !tex)
+        {
+            if (tex->TheFactoryDesc().GetResourceName().empty()) return false;
+        }
+    }
+    return true;
 }
 
 void EffectTextureMap::MergeTextureSetTo(EffectTextureMap& targetMap)

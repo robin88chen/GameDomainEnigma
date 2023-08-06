@@ -6,17 +6,17 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderer, MeshNodeTree);
 
-MeshNodeTree::MeshNodeTree()
+MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.GetName())
 {
     m_meshNodes.clear();
 }
 
-MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree)
+MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.TheFactoryDesc())
 {
     m_meshNodes = tree.m_meshNodes;
 }
 
-MeshNodeTree::MeshNodeTree(MeshNodeTree&& tree) noexcept
+MeshNodeTree::MeshNodeTree(MeshNodeTree&& tree) noexcept : m_factoryDesc(std::move(tree.m_factoryDesc))
 {
     m_meshNodes = std::move(tree.m_meshNodes);
 }
@@ -28,19 +28,22 @@ MeshNodeTree::~MeshNodeTree()
 
 MeshNodeTree& MeshNodeTree::operator=(const MeshNodeTree& tree)
 {
+    m_factoryDesc = tree.m_factoryDesc;
     m_meshNodes = tree.m_meshNodes;
     return *this;
 }
 
 MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
 {
+    m_factoryDesc = std::move(tree.m_factoryDesc);
     m_meshNodes = std::move(tree.m_meshNodes);
     return *this;
 }
 
-GenericDto MeshNodeTree::SerializeDto()
+GenericDto MeshNodeTree::SerializeDto() const
 {
     MeshNodeTreeDto dto;
+    dto.TheFactoryDesc() = m_factoryDesc;
     for (auto& node : m_meshNodes)
     {
         dto.MeshNodes().emplace_back(node.SerializeDto());

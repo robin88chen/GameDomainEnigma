@@ -47,7 +47,29 @@ namespace Enigma::Engine
     private:
         GenericDto m_dto;
     };
-}
+    class RegisterDtoPolicyConverter : public Frameworks::ICommand
+    {
+    public:
+        RegisterDtoPolicyConverter(const std::string& rtti, const GenericPolicyConverter& converter)
+            : m_rtti(rtti), m_converter(converter) {}
 
+        const std::string& GetRtti() const { return m_rtti; }
+        const GenericPolicyConverter& GetPolicyConverter() { return m_converter; }
+
+    private:
+        std::string m_rtti;
+        GenericPolicyConverter m_converter;
+    };
+    class UnRegisterDtoPolicyConverter : public Frameworks::ICommand
+    {
+    public:
+        UnRegisterDtoPolicyConverter(const std::string& rtti) : m_rtti(rtti) {}
+
+        const std::string& GetRtti() const { return m_rtti; }
+
+    private:
+        std::string m_rtti;
+    };
+}
 
 #endif // _FACTORY_COMMANDS_H

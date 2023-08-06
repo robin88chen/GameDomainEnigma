@@ -42,10 +42,15 @@ namespace Enigma::Engine
     class GeometryDataDto
     {
     public:
-        GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0) {};
+        GeometryDataDto();
 
         static GeometryDataDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        GenericDto ToGenericDto() const;
+        void DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto);
+        void SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const;
+
+        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -63,8 +68,8 @@ namespace Enigma::Engine
         std::optional<std::vector<MathLib::Vector4>>& DiffuseColors() { return m_diffuseColors; }
         [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> SpecularColors() const { return m_specularColors; }
         std::optional<std::vector<MathLib::Vector4>>& SpecularColors() { return m_specularColors; }
-        [[nodiscard]] const std::vector<GenericDto>& TextureCoords() const { return m_texCoords; }
-        std::vector<GenericDto>& TextureCoords() { return m_texCoords; }
+        [[nodiscard]] const GenericDtoCollection& TextureCoords() const { return m_texCoords; }
+        GenericDtoCollection& TextureCoords() { return m_texCoords; }
         [[nodiscard]] std::optional<std::vector<unsigned>> PaletteIndices() const { return m_paletteIndices; }
         std::optional<std::vector<unsigned>>& PaletteIndices() { return m_paletteIndices; }
         [[nodiscard]] std::optional<std::vector<float>> Weights() const { return m_weights; }
@@ -87,6 +92,7 @@ namespace Enigma::Engine
         GenericDto& GeometryBound() { return m_geometryBound; }
 
     protected:
+        FactoryDesc m_factoryDesc;
         std::string m_name;
         std::string m_vertexFormat;
         std::vector<unsigned> m_segments;
@@ -95,7 +101,7 @@ namespace Enigma::Engine
         std::optional<std::vector<MathLib::Vector3>> m_normals;
         std::optional<std::vector<MathLib::Vector4>> m_diffuseColors;
         std::optional<std::vector<MathLib::Vector4>> m_specularColors;
-        std::vector<GenericDto> m_texCoords;
+        GenericDtoCollection m_texCoords;
         std::optional<std::vector<unsigned>> m_paletteIndices;
         std::optional<std::vector<float>> m_weights;
         std::optional<std::vector<MathLib::Vector4>> m_tangents;
@@ -111,11 +117,11 @@ namespace Enigma::Engine
     class TriangleListDto : public GeometryDataDto
     {
     public:
-        TriangleListDto() = default;
+        TriangleListDto();
         TriangleListDto(const GeometryDataDto& geometry_dto);
 
         static TriangleListDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto ToGenericDto() const;
     };
 }
 

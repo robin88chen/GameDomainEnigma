@@ -28,6 +28,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />

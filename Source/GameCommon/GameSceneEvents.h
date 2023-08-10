@@ -83,6 +83,28 @@ namespace Enigma::GameCommon
         std::string m_childName;
         error m_error;
     };
+    //--------------------------------------------------------------------------
+    class SceneSpatialDeleted : public Frameworks::IEvent
+    {
+    public:
+        SceneSpatialDeleted(const std::string& spatial_name) : m_spatialName(spatial_name) {}
+
+        const std::string& GetSpatialName() const { return m_spatialName; }
+    protected:
+        std::string m_spatialName;
+    };
+    class DeleteSceneSpatialFailed : public Frameworks::IEvent
+    {
+    public:
+        DeleteSceneSpatialFailed(const std::string& spatial_name, error er) : m_spatialName(spatial_name), m_error(er) {}
+
+        const std::string& GetSpatialName() const { return m_spatialName; }
+        error GetError() const { return m_error; }
+
+    protected:
+        std::string m_spatialName;
+        error m_error;
+    };
 }
 
 #endif // _GAME_SCENE_EVENTS_H

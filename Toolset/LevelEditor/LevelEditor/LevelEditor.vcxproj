@@ -137,6 +137,7 @@
     <ClCompile Include="CreateNewWorldDlg.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
+    <ClCompile Include="LightEditService.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="OutputPanel.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="LevelEditorEvents.h" />
+    <ClInclude Include="LightEditService.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="pch.h" />

@@ -1,8 +1,12 @@
 ﻿#include "GameLightService.h"
 #include "SceneGraph/LightInfo.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
 #include "GameLightCommands.h"
+#include "GameLightEvents.h"
 #include "SceneGraph/Light.h"
+#include "GameSceneCommands.h"
+#include "GameSceneEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -39,6 +43,10 @@ ServiceResult GameLightService::OnInit()
     CommandBus::Subscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
     m_doChangingLightDisable = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAbility(c); });
     CommandBus::Subscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
+
+    m_onSceneNodeChildAttached = std::make_shared<EventSubscriber>([=](auto e) { OnSceneNodeChildAttached(e); });
+    EventPublisher::Subscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+
     return ServiceResult::Complete;
 }
 
@@ -65,31 +73,40 @@ ServiceResult GameLightService::OnTerm()
     CommandBus::Unsubscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
     m_doChangingLightDisable = nullptr;
 
+    EventPublisher::Unsubscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+    m_onSceneNodeChildAttached = nullptr;
+
     return ServiceResult::Complete;
 }
 
-void GameLightService::CreateAmbientLight(const std::shared_ptr<SceneGraph::Node>& parent,
-    const std::string& lightName, const MathLib::ColorRGBA& colorLight) const
+void GameLightService::CreateAmbientLight(const std::string& parent_name, const std::string& lightName,
+    const MathLib::ColorRGBA& colorLight) const
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Ambient);
     info.SetLightColor(colorLight);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
-    if (parent) parent->AttachChild(light, MathLib::Matrix4::IDENTITY);
+    if (!parent_name.empty())
+    {
+        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
+    }
 }
 
-void GameLightService::CreateSunLight(const std::shared_ptr<SceneGraph::Node>& parent,
-    const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const
+void GameLightService::CreateSunLight(const std::string& parent_name, const std::string& lightName,
+    const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::SunLight);
     info.SetLightColor(colorLight);
     info.SetLightDirection(dirLight);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
-    if (parent) parent->AttachChild(light, MathLib::Matrix4::IDENTITY);
+    if (!parent_name.empty())
+    {
+        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
+    }
 }
 
-void GameLightService::CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
+void GameLightService::CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal,
     const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range) const
 {
     assert(!m_sceneGraphRepository.expired());
@@ -98,7 +115,10 @@ void GameLightService::CreatePointLight(const std::shared_ptr<SceneGraph::Node>&
     info.SetLightPosition(vecPos);
     info.SetLightRange(range);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
-    if (parent) parent->AttachChild(light, mxLocal);
+    if (!parent_name.empty())
+    {
+        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, mxLocal));
+    }
 }
 
 void GameLightService::DoCreatingAmbientLight(const Frameworks::ICommandPtr& c) const
@@ -106,7 +126,7 @@ void GameLightService::DoCreatingAmbientLight(const Frameworks::ICommandPtr& c) 
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreateAmbientLight, ICommand>(c);
     if (!cmd) return;
-    CreateAmbientLight(cmd->GetParent(), cmd->GetLightName(), cmd->GetColor());
+    CreateAmbientLight(cmd->GetParentName(), cmd->GetLightName(), cmd->GetColor());
 }
 
 void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command) const
@@ -114,7 +134,7 @@ void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreateSunLight, ICommand>(command);
     if (!cmd) return;
-    CreateSunLight(cmd->GetParent(), cmd->GetLightName(), cmd->GetDir(), cmd->GetColor());
+    CreateSunLight(cmd->GetParentName(), cmd->GetLightName(), cmd->GetDir(), cmd->GetColor());
 }
 
 void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& command) const
@@ -122,7 +142,7 @@ void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& comma
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreatePointLight, ICommand>(command);
     if (!cmd) return;
-    CreatePointLight(cmd->GetParent(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor(), cmd->GetRange());
+    CreatePointLight(cmd->GetParentName(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor(), cmd->GetRange());
 }
 
 void GameLightService::DoChangingLightPosition(const Frameworks::ICommandPtr& command) const
@@ -198,3 +218,38 @@ void GameLightService::DoChangingLightAbility(const Frameworks::ICommandPtr& com
     }
 }
 
+void GameLightService::DoDeletingLight(const Frameworks::ICommandPtr& command) const
+{
+    if (!command) return;
+    const auto cmd = std::dynamic_pointer_cast<DeleteLight, ICommand>(command);
+    if (!cmd) return;
+    CommandBus::Post(std::make_shared<DeleteSceneSpatial>(cmd->GetLightName()));
+}
+
+void GameLightService::OnSceneNodeChildAttached(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneNodeChildAttached, IEvent>(e);
+    if ((!ev) || (!ev->GetChild())) return;
+    auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
+    if (!light) return;
+    auto light_name = light->GetSpatialName();
+    if (const auto it = m_pendingLightNames.find(light_name); it != m_pendingLightNames.end())
+    {
+        EventPublisher::Post(std::make_shared<GameLightCreated>(light));
+        m_pendingLightNames.erase(it);
+    }
+}
+
+void GameLightService::OnAttachSceneNodeChildFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<AttachSceneNodeChildFailed, IEvent>(e);
+    if (!ev) return;
+    auto child_name = ev->GetChildName();
+    if (auto it = m_pendingLightNames.find(child_name); it != m_pendingLightNames.end())
+    {
+        EventPublisher::Post(std::make_shared<CreateGameLightFailed>(child_name, ev->GetError()));
+        m_pendingLightNames.erase(it);
+    }
+}

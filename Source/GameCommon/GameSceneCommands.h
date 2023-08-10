@@ -39,6 +39,16 @@ namespace Enigma::GameCommon
         std::shared_ptr<SceneGraph::Spatial> m_child;
         MathLib::Matrix4 m_localTransform;
     };
+    class DeleteSceneSpatial : public Frameworks::ICommand
+    {
+    public:
+        DeleteSceneSpatial(const std::string& name) : m_name(name) {}
+
+        const std::string& GetName() const { return m_name; }
+
+    protected:
+        std::string m_name;
+    };
 }
 
 #endif // GAME_SCENE_COMMANDS_H

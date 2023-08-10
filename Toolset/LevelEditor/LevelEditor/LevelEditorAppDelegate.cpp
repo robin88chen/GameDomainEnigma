@@ -30,6 +30,8 @@
 #include "WorldEditService.h"
 #include "TerrainEditService.h"
 #include "Terrain/TerrainInstallingPolicy.h"
+#include "ShadowMap/ShadowMapInstallingPolicies.h"
+#include "ShadowMap/SpatialShadowFlags.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -49,6 +51,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::MathLib;
 using namespace Enigma::InputHandlers;
 using namespace Enigma::Terrain;
+using namespace Enigma::ShadowMap;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -139,8 +142,13 @@ void EditorAppDelegate::InstallEngine()
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
-    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
+    auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
+    deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
+    deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
+    deferred_config->SunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
+    auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
+    //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
+    //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>());
@@ -149,9 +157,13 @@ void EditorAppDelegate::InstallEngine()
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDto::FromGenericDto(m_appConfig->GetCameraDto()));
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, scene_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy });
+    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
+    auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
+    auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
+    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
+    m_shadowMapService = m_graphicMain->GetSystemServiceAs<ShadowMapService>();
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
 }
@@ -178,11 +190,13 @@ void EditorAppDelegate::FrameUpdate()
 
 void EditorAppDelegate::PrepareRender()
 {
+    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
     if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->PrepareGameScene();
 }
 
 void EditorAppDelegate::RenderFrame()
 {
+    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->RenderShadowScene();
     if (!m_sceneRenderer.expired())
     {
         m_sceneRenderer.lock()->RenderGameScene();

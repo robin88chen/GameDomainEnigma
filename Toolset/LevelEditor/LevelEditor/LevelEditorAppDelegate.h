@@ -14,6 +14,7 @@
 #include "GameCommon/SceneRendererService.h"
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
+#include "ShadowMap/ShadowMapService.h"
 
 namespace LevelEditor
 {
@@ -58,6 +59,7 @@ namespace LevelEditor
         Enigma::Controllers::GraphicMain* m_graphicMain;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+        std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
 

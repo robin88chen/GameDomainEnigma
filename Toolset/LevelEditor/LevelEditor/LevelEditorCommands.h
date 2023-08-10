@@ -59,6 +59,17 @@ namespace LevelEditor
         std::array<std::string, TerrainEditService::TextureLayerNum> m_layerTextures;
         Enigma::MathLib::Vector3 m_localPos;
     };
+
+    class CreateEnvironmentLight : public Enigma::Frameworks::ICommand
+    {
+    public:
+        CreateEnvironmentLight(const std::string& world_name) : m_worldName(world_name) {}
+
+        const std::string& GetWorldName() const { return m_worldName; }
+
+    protected:
+        std::string m_worldName;
+    };
 }
 
 #endif // LEVEL_EDITOR_COMMANDS_H

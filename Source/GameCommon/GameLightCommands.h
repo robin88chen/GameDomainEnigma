@@ -18,32 +18,31 @@ namespace Enigma::GameCommon
     class CreateAmbientLight : public Frameworks::ICommand
     {
     public:
-        CreateAmbientLight(const std::shared_ptr<SceneGraph::Node>& parent,
-            const std::string& lightName, const MathLib::ColorRGBA& color) : m_parent(parent), m_lightName(lightName), m_color(color) {}
+        CreateAmbientLight(const std::string& parent_name, const std::string& lightName, const MathLib::ColorRGBA& color)
+            : m_parentName(parent_name), m_lightName(lightName), m_color(color) {}
 
-        std::shared_ptr<SceneGraph::Node> GetParent() const { return m_parent.lock(); }
+        const std::string& GetParentName() const { return m_parentName; }
         const std::string& GetLightName() const { return m_lightName; }
         const MathLib::ColorRGBA& GetColor() const { return m_color; }
 
     protected:
-        std::weak_ptr<SceneGraph::Node> m_parent;
+        std::string m_parentName;
         std::string m_lightName;
         MathLib::ColorRGBA m_color;
     };
     class CreateSunLight : public Frameworks::ICommand
     {
     public:
-        CreateSunLight(const std::shared_ptr<SceneGraph::Node>& parent,
-            const std::string& lightName, const MathLib::Vector3& dir, const MathLib::ColorRGBA& color)
-            : m_parent(parent), m_lightName(lightName), m_dir(dir), m_color(color) {}
+        CreateSunLight(const std::string& parent_name, const std::string& lightName, const MathLib::Vector3& dir, const MathLib::ColorRGBA& color)
+            : m_parentName(parent_name), m_lightName(lightName), m_dir(dir), m_color(color) {}
 
-        std::shared_ptr<SceneGraph::Node> GetParent() const { return m_parent.lock(); }
+        const std::string& GetParentName() const { return m_parentName; }
         const std::string& GetLightName() const { return m_lightName; }
         const MathLib::Vector3& GetDir() const { return m_dir; }
         const MathLib::ColorRGBA& GetColor() const { return m_color; }
 
     protected:
-        std::weak_ptr<SceneGraph::Node> m_parent;
+        std::string m_parentName;
         std::string m_lightName;
         MathLib::Vector3 m_dir;
         MathLib::ColorRGBA m_color;
@@ -51,11 +50,11 @@ namespace Enigma::GameCommon
     class CreatePointLight : public Frameworks::ICommand
     {
     public:
-        CreatePointLight(const std::shared_ptr<SceneGraph::Node>& parent, const MathLib::Matrix4& mxLocal,
-            const std::string& lightName, const MathLib::Vector3& pos, const MathLib::ColorRGBA& color, float range)
-            : m_parent(parent), m_mxLocal(mxLocal), m_lightName(lightName), m_pos(pos), m_color(color), m_range(range) {}
+        CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal, const std::string& lightName,
+            const MathLib::Vector3& pos, const MathLib::ColorRGBA& color, float range)
+            : m_parentName(parent_name), m_mxLocal(mxLocal), m_lightName(lightName), m_pos(pos), m_color(color), m_range(range) {}
 
-        std::shared_ptr<SceneGraph::Node> GetParent() const { return m_parent.lock(); }
+        const std::string& GetParentName() const { return m_parentName; }
         const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocal; }
         const std::string& GetLightName() const { return m_lightName; }
         const MathLib::Vector3& GetPos() const { return m_pos; }
@@ -63,7 +62,7 @@ namespace Enigma::GameCommon
         float GetRange() const { return m_range; }
 
     protected:
-        std::weak_ptr<SceneGraph::Node> m_parent;
+        std::string m_parentName;
         MathLib::Matrix4 m_mxLocal;
         std::string m_lightName;
         MathLib::Vector3 m_pos;
@@ -152,6 +151,16 @@ namespace Enigma::GameCommon
     {
     public:
         DisableLight(const std::string& light_name)
+            : m_lightName(light_name) {}
+        const std::string& GetLightName() const { return m_lightName; }
+
+    protected:
+        std::string m_lightName;
+    };
+    class DeleteLight : public Frameworks::ICommand
+    {
+    public:
+        DeleteLight(const std::string& light_name)
             : m_lightName(light_name) {}
         const std::string& GetLightName() const { return m_lightName; }
 

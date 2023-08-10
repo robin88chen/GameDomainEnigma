@@ -99,6 +99,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneCommands.h">
       <Filter>GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightEvents.h">
+      <Filter>GameLight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">

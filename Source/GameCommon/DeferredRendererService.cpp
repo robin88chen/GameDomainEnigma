@@ -1,6 +1,8 @@
 ﻿#include "DeferredRendererService.h"
 #include "DeferredRendererServiceConfiguration.h"
 #include "GameCameraEvents.h"
+#include "GameLightEvents.h"
+#include "GameSceneCommands.h"
 #include "GameSceneService.h"
 #include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
@@ -75,8 +77,8 @@ ServiceResult DeferredRendererService::OnInit()
     EventPublisher::Subscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
     m_onGBufferTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGBufferTextureCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
-    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
+    m_onGameLightCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameLightCreated(e); });
+    EventPublisher::Subscribe(typeid(GameLightCreated), m_onGameLightCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
@@ -101,8 +103,8 @@ ServiceResult DeferredRendererService::OnTerm()
     m_onSceneGraphChanged = nullptr;
     EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onGBufferTextureCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoCreated), m_onLightInfoCreated);
-    m_onLightInfoCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(GameLightCreated), m_onGameLightCreated);
+    m_onGameLightCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
@@ -112,6 +114,9 @@ ServiceResult DeferredRendererService::OnTerm()
     EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
+    assert(m_ambientLightPawn == nullptr);
+    assert(m_sunLightPawn == nullptr);
+    assert(m_lightVolumes.empty());
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
     m_ambientLightPawn = nullptr;
@@ -261,11 +266,15 @@ void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPt
     }
 }
 
-void DeferredRendererService::OnLightInfoCreated(const Frameworks::IEventPtr& e)
+void DeferredRendererService::OnGameLightCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoCreated, Frameworks::IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<GameLightCreated, Frameworks::IEvent>(e);
     if ((!ev) || (!ev->GetLight())) return;
+    SceneGraphLightPawnMeta meta;
+    if (ev->GetLight()->GetParent()) meta.m_parentNodeName = ev->GetLight()->GetParent()->GetSpatialName();
+    meta.m_localTransform = ev->GetLight()->GetLocalTransform();
+    m_buildingLightPawns.insert({ ev->GetLight()->GetSpatialName(), meta });
     if (ev->GetLight()->Info().GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
     {
         CreateAmbientLightQuad(ev->GetLight());
@@ -297,8 +306,9 @@ void DeferredRendererService::OnLightInfoDeleted(const Frameworks::IEventPtr& e)
     }
     else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Point)
     {
-        DeletePointLightVolume(ev->GetLightName());
+        RemovePointLightVolume(ev->GetLightName());
     }
+    CommandBus::Post(std::make_shared<DeleteSceneSpatial>(ev->GetLightName()));
 }
 
 void DeferredRendererService::OnLightInfoUpdated(const Frameworks::IEventPtr& e)
@@ -327,6 +337,7 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     auto top_spatials = ev->GetTopLevelSpatial();
     if (top_spatials.empty()) return;
+    if (!top_spatials[0]) return;
     if (ev->GetSceneGraphId() == DeferredSunLightQuadName)
     {
         m_sunLightPawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
@@ -338,6 +349,14 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     else
     {
         OnLightVolumeBuilt(ev->GetSceneGraphId(), top_spatials[0]);
+    }
+    if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->GetSpatialName()); lit != m_buildingLightPawns.end())
+    {
+        if (!lit->second.m_parentNodeName.empty())
+        {
+            CommandBus::Post(std::make_shared<AttachNodeChild>(lit->second.m_parentNodeName, top_spatials[0], lit->second.m_localTransform));
+        }
+        m_buildingLightPawns.erase(lit);
     }
 }
 
@@ -463,12 +482,10 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
 }
 
-void DeferredRendererService::DeletePointLightVolume(const std::string& name)
+void DeferredRendererService::RemovePointLightVolume(const std::string& name)
 {
     if (const auto it = m_lightVolumes.find(name); it != m_lightVolumes.end())
     {
-        const auto& pawn = it->second;
-        pawn->DetachFromParent();
         m_lightVolumes.erase(it);
     }
 }

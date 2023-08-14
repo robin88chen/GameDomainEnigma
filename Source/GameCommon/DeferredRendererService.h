@@ -78,6 +78,8 @@ namespace Enigma::GameCommon
         void CheckLightVolumeBackfaceCulling(const std::string& lit_name);
         void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
+        void ClearAllLightPawns();
+
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;

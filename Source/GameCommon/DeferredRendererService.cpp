@@ -57,12 +57,8 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
 DeferredRendererService::~DeferredRendererService()
 {
     m_configuration = nullptr;
-    m_ambientLightQuad = nullptr;
-    m_sunLightQuad = nullptr;
-    m_ambientLightPawn = nullptr;
-    m_sunLightPawn = nullptr;
     m_gBuffer = nullptr;
-    m_lightVolumes.clear();
+    ClearAllLightPawns();
 }
 
 ServiceResult DeferredRendererService::OnInit()
@@ -114,17 +110,19 @@ ServiceResult DeferredRendererService::OnTerm()
     EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
-    assert(m_ambientLightPawn == nullptr);
-    assert(m_sunLightPawn == nullptr);
-    assert(m_lightVolumes.empty());
+    m_gBuffer = nullptr;
+    ClearAllLightPawns();
+
+    return SceneRendererService::OnTerm();
+}
+
+void DeferredRendererService::ClearAllLightPawns()
+{
     m_ambientLightQuad = nullptr;
     m_sunLightQuad = nullptr;
     m_ambientLightPawn = nullptr;
     m_sunLightPawn = nullptr;
-    m_gBuffer = nullptr;
     m_lightVolumes.clear();
-
-    return SceneRendererService::OnTerm();
 }
 
 void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)

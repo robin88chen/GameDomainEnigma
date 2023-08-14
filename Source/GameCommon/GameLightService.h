@@ -31,16 +31,16 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        void CreateAmbientLight(const std::string& parent_name, const std::string& lightName, const MathLib::ColorRGBA& colorLight) const;
-        void CreateSunLight(const std::string& parent_name, const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const;
+        void CreateAmbientLight(const std::string& parent_name, const std::string& lightName, const MathLib::ColorRGBA& colorLight);
+        void CreateSunLight(const std::string& parent_name, const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight);
 
-        void CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal, const std::string& lightName, 
-            const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range) const;
+        void CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal, const std::string& lightName,
+            const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range);
 
     protected:
-        void DoCreatingAmbientLight(const Frameworks::ICommandPtr& command) const;
-        void DoCreatingSunLight(const Frameworks::ICommandPtr& command) const;
-        void DoCreatingPointLight(const Frameworks::ICommandPtr& command) const;
+        void DoCreatingAmbientLight(const Frameworks::ICommandPtr& command);
+        void DoCreatingSunLight(const Frameworks::ICommandPtr& command);
+        void DoCreatingPointLight(const Frameworks::ICommandPtr& command);
         void DoChangingLightColor(const Frameworks::ICommandPtr& command) const;
         void DoChangingLightDirection(const Frameworks::ICommandPtr& command) const;
         void DoChangingLightPosition(const Frameworks::ICommandPtr& command) const;

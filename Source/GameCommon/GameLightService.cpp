@@ -80,7 +80,7 @@ ServiceResult GameLightService::OnTerm()
 }
 
 void GameLightService::CreateAmbientLight(const std::string& parent_name, const std::string& lightName,
-    const MathLib::ColorRGBA& colorLight) const
+    const MathLib::ColorRGBA& colorLight)
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Ambient);
@@ -88,12 +88,13 @@ void GameLightService::CreateAmbientLight(const std::string& parent_name, const 
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
+        m_pendingLightNames.insert(lightName);
         CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
 void GameLightService::CreateSunLight(const std::string& parent_name, const std::string& lightName,
-    const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight) const
+    const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight)
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::SunLight);
@@ -102,12 +103,13 @@ void GameLightService::CreateSunLight(const std::string& parent_name, const std:
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
+        m_pendingLightNames.insert(lightName);
         CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
 void GameLightService::CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal,
-    const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range) const
+    const std::string& lightName, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range)
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Point);
@@ -117,11 +119,12 @@ void GameLightService::CreatePointLight(const std::string& parent_name, const Ma
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
+        m_pendingLightNames.insert(lightName);
         CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, mxLocal));
     }
 }
 
-void GameLightService::DoCreatingAmbientLight(const Frameworks::ICommandPtr& c) const
+void GameLightService::DoCreatingAmbientLight(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreateAmbientLight, ICommand>(c);
@@ -129,7 +132,7 @@ void GameLightService::DoCreatingAmbientLight(const Frameworks::ICommandPtr& c) 
     CreateAmbientLight(cmd->GetParentName(), cmd->GetLightName(), cmd->GetColor());
 }
 
-void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command) const
+void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command)
 {
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreateSunLight, ICommand>(command);
@@ -137,7 +140,7 @@ void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command
     CreateSunLight(cmd->GetParentName(), cmd->GetLightName(), cmd->GetDir(), cmd->GetColor());
 }
 
-void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& command) const
+void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& command)
 {
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreatePointLight, ICommand>(command);

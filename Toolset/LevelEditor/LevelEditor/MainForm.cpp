@@ -137,7 +137,7 @@ void MainForm::InitMenu()
     map_menu.append("Create New Map", [this](auto item) { OnCreateWorldMapCommand(item); });
     map_menu.append_splitter();
     map_menu.append("Add Terrain", [this](auto item) { OnAddTerrainCommand(item); });
-    map_menu.append("Add Environment Light", [this](auto item) { OnAddEnviromentLightCommand(item); });
+    map_menu.append("Add Environment Light", [this](auto item) { OnAddEnvironmentLightCommand(item); });
 
     nana::menu& portal_menu = m_menubar->push_back("&Portal");
     portal_menu.append("Create Zone Node...", [this](auto item) { OnCreateZoneNodeCommand(item); });
@@ -240,9 +240,10 @@ void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
     nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock(), m_appDelegate->GetAppConfig()->GetMediaPathId()));
 }
 
-void MainForm::OnAddEnviromentLightCommand(const nana::menu::item_proxy& menu_item)
+void MainForm::OnAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Add Environment Light..."));
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->GetCurrentWorldName()));
 }
 
 void MainForm::OnSelectEntity(const nana::toolbar::item_proxy& drop_down_item, const std::string& entity_name)

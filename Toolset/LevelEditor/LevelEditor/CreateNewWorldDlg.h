@@ -12,6 +12,7 @@
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/checkbox.hpp>
 
 namespace LevelEditor
 {
@@ -31,6 +32,7 @@ namespace LevelEditor
         nana::textbox* m_nameInputBox;
         nana::label* m_folderNamePrompt;
         nana::textbox* m_folderNameInputBox;
+        nana::checkbox* m_deleteExistFolderCheckBox;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;
     };

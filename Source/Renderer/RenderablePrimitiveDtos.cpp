@@ -31,6 +31,7 @@ static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";
 static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
+static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
 MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.GetName()), m_geometryFactory(GeometryData::TYPE_RTTI.GetName()), m_renderListID(Renderer::RenderListID::Scene)
 {
@@ -59,6 +60,7 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
         }
     }
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_RENDER_LIST_ID)) mesh.RenderListID() = static_cast<Renderer::RenderListID>(v.value());
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_VISUAL_TECHNIQUE_SELECTION)) mesh.VisualTechniqueSelection() = v.value();
     return mesh;
 }
 
@@ -76,6 +78,10 @@ GenericDto MeshPrimitiveDto::ToGenericDto() const
     dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
+    if (!m_visualTechniqueSelection.empty())
+    {
+        dto.AddOrUpdate(TOKEN_VISUAL_TECHNIQUE_SELECTION, m_visualTechniqueSelection);
+    }
     return dto;
 }
 
@@ -104,6 +110,7 @@ std::shared_ptr<GenericPolicy> MeshPrimitiveDto::MeshDtoConvertToPolicy(const Ge
         policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
     }
     policy->RenderListId() = mesh_dto.m_renderListID;
+    policy->VisualTechniqueSelection() = mesh_dto.m_visualTechniqueSelection;
     return policy;
 }
 

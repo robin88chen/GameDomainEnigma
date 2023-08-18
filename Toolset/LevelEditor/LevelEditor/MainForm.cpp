@@ -72,6 +72,8 @@ void MainForm::InitSubPanels()
     get_place().field("main_tools") << *m_toolbar;
     InitTools();
     m_statusCameraZone = menew nana::label(*this, "Camera Zone : ");
+    m_statusCameraZone->scheme().foreground = UISchemeColors::FOREGROUND;
+    m_statusCameraZone->scheme().background = UISchemeColors::BACKGROUND;
     get_place().field("statuspanel") << *m_statusCameraZone;
 
     InitializeGraphics();

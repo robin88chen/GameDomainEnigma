@@ -67,6 +67,7 @@ void TerrainEditService::DoCreatingNewTerrain(const Enigma::Frameworks::ICommand
     TerrainPrimitiveDto terrain_dto;
     terrain_dto.Name() = cmd->GetName();
     terrain_dto.TheGeometry() = cmd->GetGeometryDto().ToGenericDto();
+    terrain_dto.VisualTechniqueSelection() = "Default";
     EffectMaterialDtoHelper mat_dto("TerrainMesh");
     mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
     EffectTextureMapDtoHelper tex_dto;

@@ -52,7 +52,7 @@ namespace Enigma::GameCommon
         void CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
-        void DeletePointLightVolume(const std::string& name);
+        void RemovePointLightVolume(const std::string& name);
         void UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
@@ -65,7 +65,7 @@ namespace Enigma::GameCommon
         void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphChanged(const Frameworks::IEventPtr& e);
         void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
-        void OnLightInfoCreated(const Frameworks::IEventPtr& e);
+        void OnGameLightCreated(const Frameworks::IEventPtr& e);
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
@@ -78,28 +78,38 @@ namespace Enigma::GameCommon
         void CheckLightVolumeBackfaceCulling(const std::string& lit_name);
         void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
+        void InsertLightPawnBuildingMeta(const std::string& pawn_name, const std::shared_ptr<SceneGraph::Light>& lit);
+
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
-        Renderer::MeshPrimitivePtr m_ambientLightQuad;
-        Renderer::MeshPrimitivePtr m_sunLightQuad;
+        std::weak_ptr<Renderer::MeshPrimitive> m_ambientLightQuad;
+        std::weak_ptr<Renderer::MeshPrimitive> m_sunLightQuad;
         Engine::RenderLightingState m_ambientQuadLightingState;
         Engine::RenderLightingState m_sunLightQuadLightingState;
-        std::shared_ptr<SceneGraph::Pawn> m_ambientLightPawn;
-        std::shared_ptr<SceneGraph::Pawn> m_sunLightPawn;
+        std::weak_ptr<SceneGraph::Pawn> m_ambientLightPawn;
+        std::weak_ptr<SceneGraph::Pawn> m_sunLightPawn;
 
-        using LightVolumeMap = std::unordered_map<std::string, std::shared_ptr<LightVolumePawn>>;
+        using LightVolumeMap = std::unordered_map<std::string, std::weak_ptr<LightVolumePawn>>;
         LightVolumeMap m_lightVolumes;
 
-        Renderer::RenderTargetPtr m_gBuffer;
+        struct SceneGraphLightPawnMeta
+        {
+            std::string m_parentNodeName;
+            MathLib::Matrix4 m_localTransform;
+        };
+        using SceneGraphLightPawnMetaMap = std::unordered_map<std::string, SceneGraphLightPawnMeta>;
+        SceneGraphLightPawnMetaMap m_buildingLightPawns;
+
+        std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
 
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetResized;
         Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
         Frameworks::EventSubscriberPtr m_onGBufferTextureCreated;
-        Frameworks::EventSubscriberPtr m_onLightInfoCreated;
+        Frameworks::EventSubscriberPtr m_onGameLightCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;

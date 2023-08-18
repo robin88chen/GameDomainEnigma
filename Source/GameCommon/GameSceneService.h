@@ -63,6 +63,7 @@ namespace Enigma::GameCommon
         void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
         void DoAttachingSceneRootChild(const Frameworks::ICommandPtr& c);
         void DoAttachingNodeChild(const Frameworks::ICommandPtr& c);
+        void DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
@@ -75,6 +76,7 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
         Frameworks::CommandSubscriberPtr m_doAttachingSceneRootChild;
         Frameworks::CommandSubscriberPtr m_doAttachingNodeChild;
+        Frameworks::CommandSubscriberPtr m_doDeletingSceneSpatial;
     };
 }
 

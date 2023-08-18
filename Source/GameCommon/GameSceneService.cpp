@@ -1,4 +1,7 @@
 ﻿#include "GameSceneService.h"
+
+#include <execution>
+
 #include "GameCameraService.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "SceneGraph/Node.h"
@@ -197,4 +200,26 @@ void GameSceneService::DoAttachingNodeChild(const Frameworks::ICommandPtr& c)
     {
         EventPublisher::Post(std::make_shared<SceneNodeChildAttached>(cmd->GetNodeName(), cmd->GetChild()));
     }
+}
+
+void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<DeleteSceneSpatial, ICommand>(c);
+    if (!cmd) return;
+    auto spatial = FindSpatialByName(cmd->GetName());
+    if (!spatial)
+    {
+        EventPublisher::Post(std::make_shared<DeleteSceneSpatialFailed>(cmd->GetName(), ErrorCode::spatialNotFound));
+        return;
+    }
+    if (const auto parent = spatial->GetParent())
+    {
+        if (const auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(parent))
+        {
+            parent_node->DetachChild(spatial);
+        }
+    }
+    spatial = nullptr;
+    EventPublisher::Post(std::make_shared<SceneSpatialDeleted>(cmd->GetName()));
 }

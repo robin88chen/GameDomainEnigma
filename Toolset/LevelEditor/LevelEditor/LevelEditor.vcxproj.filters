@@ -85,6 +85,9 @@
     <ClCompile Include="TerrainEditConsole.cpp">
       <Filter>EditorServices</Filter>
     </ClCompile>
+    <ClCompile Include="LightEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -149,6 +152,9 @@
       <Filter>Events &amp; Commands</Filter>
     </ClInclude>
     <ClInclude Include="EditorModes.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="LightEditService.h">
       <Filter>EditorServices</Filter>
     </ClInclude>
   </ItemGroup>

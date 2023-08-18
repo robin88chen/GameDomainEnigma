@@ -9,6 +9,7 @@
 #define WORLD_EDIT_CONSOLE_H
 
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/EventSubscriber.h"
 #include <filesystem>
 
 namespace LevelEditor
@@ -28,13 +29,14 @@ namespace LevelEditor
         void SetWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id);
 
         // check world files
-        bool CheckWorldMapFiles(const std::string& world_name);
+        bool CheckWorldMapFolder(const std::string& world_folder);
         // delete world files
-        void DeleteWorldMapFiles(const std::string& world_name);
+        void DeleteWorldMapFolder(const std::string& world_folder);
         // create world map directory & files
-        void CreateWorldMapFiles(const std::string& world_name);
+        void CreateWorldMapFolder(const std::string& world_folder);
 
         const std::string& GetCurrentWorldName() const { return m_currentWorldName; }
+        const std::string& GetCurrentWorldFolder() const { return m_currentWorldFolder; }
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
 
@@ -47,6 +49,7 @@ namespace LevelEditor
         void LoadWorldMap(const std::filesystem::path& map_filepath);
 
     private:
+        void OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);
         //void OnAsyncKeyReleased(const Enigma::IMessagePtr& m);
 
@@ -54,9 +57,13 @@ namespace LevelEditor
     private:
         std::filesystem::path m_mapFileRootPath;
         std::string m_currentWorldName;
+        std::string m_currentWorldFolder;
         std::string m_worldMapPathId;
 
         std::weak_ptr<WorldEditService> m_worldEditService;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;
 

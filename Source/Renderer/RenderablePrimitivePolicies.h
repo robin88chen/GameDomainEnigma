@@ -64,6 +64,8 @@ namespace Enigma::Renderer
         std::vector<Engine::EffectTextureMapDto>& TextureDtos() { return m_textureDtos; }
         [[nodiscard]] const Renderer::RenderListID& RenderListId() const { return m_renderListId; }
         Renderer::RenderListID& RenderListId() { return m_renderListId; }
+        [[nodiscard]] const std::string& VisualTechniqueSelection() const { return m_visualTechniqueSelection; }
+        std::string& VisualTechniqueSelection() { return m_visualTechniqueSelection; }
 
         virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const;
         //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
@@ -74,6 +76,7 @@ namespace Enigma::Renderer
         std::vector<Engine::EffectMaterialDto> m_effectDtos;
         std::vector<Engine::EffectTextureMapDto> m_textureDtos;
         Renderer::RenderListID m_renderListId;
+        std::string m_visualTechniqueSelection;
     };
 
     class SkinMeshPrimitivePolicy : public MeshPrimitivePolicy

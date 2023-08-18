@@ -13,6 +13,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullHostLight: return "Null host light";
     case ErrorCode::nullSceneRoot: return "Null scene root";
     case ErrorCode::nodeNotFound: return "Node not found";
+    case ErrorCode::spatialNotFound: return "Spatial not found";
     }
     return "Unknown";
 }

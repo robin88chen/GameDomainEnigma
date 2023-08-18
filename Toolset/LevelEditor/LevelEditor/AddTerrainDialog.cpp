@@ -140,7 +140,7 @@ AddTerrainDialog::~AddTerrainDialog()
 void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
-    terrainName = m_worldEdit.lock()->GetCurrentWorldName() + "/" + terrainName;
+    terrainName = m_worldEdit.lock()->GetCurrentWorldFolder() + "/" + terrainName;
     char* endptr = nullptr;
     unsigned rows, cols;
     rows = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);

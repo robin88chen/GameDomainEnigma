@@ -322,10 +322,10 @@ void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
     m_sceneRoot = ev->GetSceneRoot();
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(m_sceneRoot, "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(m_sceneRoot, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateAmbientLight>(SceneRootName, "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::Post(std::make_shared<CreateSunLight>(SceneRootName, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-    CommandBus::Post(std::make_shared<CreatePointLight>(m_sceneRoot, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    CommandBus::Post(std::make_shared<CreatePointLight>(SceneRootName, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
     CreateFloorReceiver();
 }
 

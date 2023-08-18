@@ -51,6 +51,8 @@ namespace Enigma::Renderer
         Engine::GenericDtoCollection& TextureMaps() { return m_textureMaps; }
         [[nodiscard]] Renderer::RenderListID RenderListID() const { return m_renderListID; }
         Renderer::RenderListID& RenderListID() { return m_renderListID; }
+        [[nodiscard]] const std::string& VisualTechniqueSelection() const { return m_visualTechniqueSelection; }
+        std::string& VisualTechniqueSelection() { return m_visualTechniqueSelection; }
 
         static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto ToGenericDto() const;
@@ -66,6 +68,7 @@ namespace Enigma::Renderer
         Engine::GenericDtoCollection m_effects;
         Engine::GenericDtoCollection m_textureMaps;
         Renderer::RenderListID m_renderListID;
+        std::string m_visualTechniqueSelection;
     };
 
     class SkinMeshPrimitiveDto : public MeshPrimitiveDto

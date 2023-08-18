@@ -19,6 +19,7 @@ namespace Enigma::GameCommon
         nullHostLight,
         nullSceneRoot,
         nodeNotFound,
+        spatialNotFound,
     };
     class ErrorCategory : public std::error_category
     {

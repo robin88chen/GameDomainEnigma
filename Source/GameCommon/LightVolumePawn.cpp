@@ -8,16 +8,16 @@ using namespace Enigma::Engine;
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
 
-DEFINE_RTTI(GameCommon, LightVolumePawn, Pawn);
+DEFINE_RTTI(GameCommon, LightVolumePawn, LightingPawn);
 
 std::string LightVolumePawn::m_tokenDefaultVisualTech = "Default";
 std::string LightVolumePawn::m_tokenInsideVisualTech = "Inside";
 
-LightVolumePawn::LightVolumePawn(const std::string& name) : Pawn(name), m_isCameraInside(false)
+LightVolumePawn::LightVolumePawn(const std::string& name) : LightingPawn(name), m_isCameraInside(false)
 {
 }
 
-LightVolumePawn::LightVolumePawn(const Engine::GenericDto& o) : Pawn(o)
+LightVolumePawn::LightVolumePawn(const Engine::GenericDto& o) : LightingPawn(o)
 {
 
 }
@@ -25,11 +25,6 @@ LightVolumePawn::LightVolumePawn(const Engine::GenericDto& o) : Pawn(o)
 LightVolumePawn::~LightVolumePawn()
 {
 
-}
-
-void LightVolumePawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
-{
-    m_hostLight = light;
 }
 
 void LightVolumePawn::ToggleCameraInside(bool is_inside)

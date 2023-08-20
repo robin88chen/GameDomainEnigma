@@ -20,6 +20,7 @@
 
 namespace Enigma::GameCommon
 {
+    class LightingPawn;
     class LightVolumePawn;
     class DeferredRendererServiceConfiguration;
 
@@ -52,13 +53,14 @@ namespace Enigma::GameCommon
         void CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
-        void RemovePointLightVolume(const std::string& name);
+        void RemoveLightingPawn(const std::string& name);
         void UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
         void BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh);
-        void BindGBufferToLightVolume(const std::shared_ptr<LightVolumePawn>& volume);
+        void BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
+        //void BindGBufferToLightQuad(const std::shared_ptr<LightQuadPawn>& quad);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
         void OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
@@ -71,9 +73,10 @@ namespace Enigma::GameCommon
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void OnLightVolumeBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial);
-        void OnLightVolumePrimitiveBuilt(const std::shared_ptr<SceneGraph::Pawn>& volume);
+        void OnLightQuadBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial);
+        void OnLightingPawnPrimitiveBuilt(const std::shared_ptr<LightingPawn>& lighting_pawn);
 
-        std::shared_ptr<LightVolumePawn> FindLightVolume(const std::string& name);
+        std::shared_ptr<LightingPawn> FindLightingPawn(const std::string& name);
 
         void CheckLightVolumeBackfaceCulling(const std::string& lit_name);
         void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
@@ -88,11 +91,11 @@ namespace Enigma::GameCommon
         std::weak_ptr<Renderer::MeshPrimitive> m_sunLightQuad;
         Engine::RenderLightingState m_ambientQuadLightingState;
         Engine::RenderLightingState m_sunLightQuadLightingState;
-        std::weak_ptr<SceneGraph::Pawn> m_ambientLightPawn;
-        std::weak_ptr<SceneGraph::Pawn> m_sunLightPawn;
+        //std::weak_ptr<LightQuadPawn> m_ambientLightPawn;
+        //std::weak_ptr<LightQuadPawn> m_sunLightPawn;
 
-        using LightVolumeMap = std::unordered_map<std::string, std::weak_ptr<LightVolumePawn>>;
-        LightVolumeMap m_lightVolumes;
+        using LightingPawnMap = std::unordered_map<std::string, std::weak_ptr<LightingPawn>>;
+        LightingPawnMap m_lightingPawns;
 
         struct SceneGraphLightPawnMeta
         {

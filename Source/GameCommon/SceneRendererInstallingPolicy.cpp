@@ -6,6 +6,7 @@
 #include "Renderer/RendererManager.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "LightVolumePawn.h"
+#include "LightQuadPawn.h"
 #include "Frameworks/CommandBus.h"
 
 using namespace Enigma::GameCommon;
@@ -44,6 +45,8 @@ error DeferredRendererInstallingPolicy::Install(Frameworks::ServiceManager* serv
 
     Frameworks::CommandBus::Post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.GetName(),
         [=](auto dto) { return new LightVolumePawn(dto); }));
+    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.GetName(),
+        [=](auto dto) { return new LightQuadPawn(dto); }));
     deferred_renderer_service->CreateSceneRenderSystem(m_rendererName, m_targetName);
     return error();
 }
@@ -52,6 +55,7 @@ error DeferredRendererInstallingPolicy::Shutdown(Frameworks::ServiceManager* ser
 {
     assert(service_manager);
     Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.GetName()));
+    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.GetName()));
     service_manager->RemoveHashAsService(SceneRendererService::TYPE_RTTI);
     service_manager->ShutdownSystemService(DeferredRendererService::TYPE_RTTI);
     return error();

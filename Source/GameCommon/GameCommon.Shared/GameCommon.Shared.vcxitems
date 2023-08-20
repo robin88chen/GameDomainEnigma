@@ -33,6 +33,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneService.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
@@ -52,6 +54,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonInstallingPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameSceneService.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />

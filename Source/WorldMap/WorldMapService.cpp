@@ -11,6 +11,7 @@
 #include "SceneGraph/PortalCommands.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include "SceneGraph/EnumDerivedSpatials.h"
+#include "SceneGraph/EnumNonDerivedSpatials.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
 #include "SceneGraph/Spatial.h"
 
@@ -75,6 +76,7 @@ std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::SerializeQuad
 
     for (auto& node : enumNode.GetSpatials())
     {
+        //todo : if quad node has portal node child, then need serialize portal node
         SceneGraph::SceneFlattenTraversal flatten;
         node->VisitBy(&flatten);
         if (flatten.GetSpatials().empty()) continue;
@@ -98,6 +100,17 @@ Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
     {
         if (node.expired()) continue;
         collection.push_back(node.lock()->SerializeAsLaziness());
+    }
+    for (const auto& child : m_world.lock()->GetChildList())
+    {
+        if (!child) continue;
+        EnumNonDerivedSpatials enumSpatials(LazyNode::TYPE_RTTI);
+        child->VisitBy(&enumSpatials);
+        for (const auto& spatial : enumSpatials.GetSpatials())
+        {
+            if (!spatial) continue;
+            collection.push_back(spatial->SerializeDto());
+        }
     }
     return collection;
 }

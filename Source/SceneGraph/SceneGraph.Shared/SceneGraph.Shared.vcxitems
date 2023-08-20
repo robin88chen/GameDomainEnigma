@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumNonDerivedSpatials.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h" />
@@ -62,6 +63,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumNonDerivedSpatials.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp" />

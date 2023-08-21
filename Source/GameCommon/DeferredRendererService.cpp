@@ -18,8 +18,6 @@
 #include "Renderer/RenderablePrimitiveRequests.h"
 #include "Renderer/RenderablePrimitiveResponses.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/RequestBus.h"
-#include "Frameworks/ResponseBus.h"
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
@@ -150,13 +148,6 @@ void DeferredRendererService::DestroySceneRenderSystem(const std::string& render
 
 void DeferredRendererService::PrepareGameScene()
 {
-    if (!m_renderer.expired())
-    {
-        //if (!m_ambientLightQuad.expired()) m_ambientLightQuad.lock()->InsertToRendererWithTransformUpdating(m_renderer.lock(),
-          //  MathLib::Matrix4::IDENTITY, m_ambientQuadLightingState);
-        //if (!m_sunLightQuad.expired()) m_sunLightQuad.lock()->InsertToRendererWithTransformUpdating(m_renderer.lock(),
-          //  MathLib::Matrix4::IDENTITY, m_sunLightQuadLightingState);
-    }
     SceneRendererService::PrepareGameScene();
 }
 
@@ -181,8 +172,6 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     {
         deferRender->AttachGBufferTarget(m_gBuffer.lock());
     }
-    //if (!m_ambientLightPawn.expired()) BindGBufferToLightQuad(m_ambientLightPawn.lock());
-    //if (!m_sunLightPawn.expired()) BindGBufferToLightQuad(m_sunLightPawn.lock());
     for (auto& light : m_lightingPawns)
     {
         if (!light.second.expired()) BindGBufferToLightingPawn(light.second.lock());
@@ -249,8 +238,6 @@ void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<Renderer::RenderTargetTextureCreated, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetRenderTarget() != m_gBuffer.lock()) return;
-    //if (!m_ambientLightPawn.expired()) BindGBufferToLightQuad(m_ambientLightPawn.lock());
-    //if (!m_sunLightPawn.expired()) BindGBufferToLightQuad(m_sunLightPawn.lock());
     for (auto& light : m_lightingPawns)
     {
         if (!light.second.expired()) BindGBufferToLightingPawn(light.second.lock());
@@ -282,20 +269,6 @@ void DeferredRendererService::OnLightInfoDeleted(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoDeleted, Frameworks::IEvent>(e);
     if (!ev) return;
     RemoveLightingPawn(ev->GetLightName());
-    /*if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Ambient)
-    {
-        m_ambientLightPawn.reset();
-        //m_ambientLightQuad.reset();
-    }
-    else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::SunLight)
-    {
-        m_sunLightPawn.reset();
-        //m_sunLightQuad.reset();
-    }
-    else if (ev->GetLightType() == SceneGraph::LightInfo::LightType::Point)
-    {
-        RemovePointLightVolume(ev->GetLightName());
-    }*/
     CommandBus::Post(std::make_shared<DeleteSceneSpatial>(ev->GetLightName()));
 }
 
@@ -326,15 +299,9 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     auto top_spatials = ev->GetTopLevelSpatial();
     if (top_spatials.empty()) return;
     if (!top_spatials[0]) return;
-    if (auto pawn = std::dynamic_pointer_cast<LightQuadPawn, Spatial>(top_spatials[0]))
-    {
-        OnLightQuadBuilt(ev->GetSceneGraphId(), top_spatials[0]);
-        //m_sunLightPawn = std::dynamic_pointer_cast<LightQuadPawn, Spatial>(top_spatials[0]);
-    }
-    else
-    {
-        OnLightVolumeBuilt(ev->GetSceneGraphId(), top_spatials[0]);
-    }
+    auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(top_spatials[0]);
+    if (!lighting_pawn) return;
+    OnLightingPawnBuilt(ev->GetSceneGraphId(), lighting_pawn);
     if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->GetSpatialName()); lit != m_buildingLightPawns.end())
     {
         if (!lit->second.m_parentNodeName.empty())
@@ -345,46 +312,16 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     }
 }
 
-void DeferredRendererService::OnLightVolumeBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial)
+void DeferredRendererService::OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
-    auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Spatial>(spatial);
-    if (!pawn) return;
-    /*if ((!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneRoot()))
-    {
-        m_sceneService.lock()->GetSceneRoot()->AttachChild(pawn, pawn->GetLocalTransform());
-    }*/
+    if (!lighting_pawn) return;
     if (!m_sceneGraphRepository.expired())
     {
-        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
+        lighting_pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
     }
-    m_lightingPawns.insert_or_assign(lit_name, pawn);
-    BindGBufferToLightingPawn(pawn);
+    m_lightingPawns.insert_or_assign(lit_name, lighting_pawn);
+    BindGBufferToLightingPawn(lighting_pawn);
     CheckLightVolumeBackfaceCulling(lit_name);
-}
-
-void DeferredRendererService::OnLightQuadBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial)
-{
-    auto pawn = std::dynamic_pointer_cast<LightQuadPawn, Spatial>(spatial);
-    if (!pawn) return;
-    if (!m_sceneGraphRepository.expired())
-    {
-        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
-    }
-    m_lightingPawns.insert_or_assign(lit_name, pawn);
-    BindGBufferToLightingPawn(pawn);
-    /*if (lit_name.find("sun") != std::string::npos)
-    {
-        m_sunLightPawn = pawn;
-    }
-    else if (lit_name.find("amb") != std::string::npos)
-    {
-        m_ambientLightPawn = pawn;
-    }
-    if (!m_sceneGraphRepository.expired())
-    {
-        pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
-    }
-    BindGBufferToLightQuad(pawn);*/
 }
 
 void DeferredRendererService::OnPawnPrimitiveBuilt(const IEventPtr& e)
@@ -395,36 +332,6 @@ void DeferredRendererService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Pawn>(ev->GetPawn());
     if (!lighting_pawn) return;
     BindGBufferToLightingPawn(lighting_pawn);
-    lighting_pawn->NotifySpatialRenderStateChanged();
-    CheckLightVolumeBackfaceCulling(lighting_pawn->GetHostLightName());
-
-    //OnLightingPawnPrimitiveBuilt(lighting_pawn);
-    /*if ((!m_sunLightPawn.expired()) && (ev->GetPawn() == m_sunLightPawn.lock()))
-    {
-        BindGBufferToLightQuad(m_sunLightPawn.lock());
-        m_sunLightPawn.lock()->NotifySpatialRenderStateChanged();
-        //m_sunLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPawn()->GetPrimitive());
-        //if (!m_sunLightQuad.expired()) BindGBufferToLightingMesh(m_sunLightQuad.lock());
-    }
-    else if ((!m_ambientLightPawn.expired()) && (ev->GetPawn() == m_ambientLightPawn.lock()))
-    {
-        BindGBufferToLightQuad(m_ambientLightPawn.lock());
-        m_ambientLightPawn.lock()->NotifySpatialRenderStateChanged();
-        //m_ambientLightQuad = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->GetPawn()->GetPrimitive());
-        //if (!m_ambientLightQuad.expired()) BindGBufferToLightingMesh(m_ambientLightQuad.lock());
-    }
-    else
-    {
-        OnLightVolumePrimitiveBuilt(ev->GetPawn());
-    }*/
-}
-
-void DeferredRendererService::OnLightingPawnPrimitiveBuilt(const std::shared_ptr<LightingPawn>& lighting_pawn)
-{
-    /*auto pawn = std::dynamic_pointer_cast<LightVolumePawn, Pawn>(volume);
-    if (!pawn) return;
-    BindGBufferToLightVolume(pawn);*/
-    if (!lighting_pawn) return;
     lighting_pawn->NotifySpatialRenderStateChanged();
     CheckLightVolumeBackfaceCulling(lighting_pawn->GetHostLightName());
 }
@@ -454,7 +361,6 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
-    m_ambientQuadLightingState.SetAmbientLightColor(lit->GetLightColor());
 }
 
 void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
@@ -482,7 +388,6 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
-    m_sunLightQuadLightingState.SetSunLight(lit->GetLightDirection(), lit->GetLightColor());
 }
 
 void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit)
@@ -534,7 +439,6 @@ void DeferredRendererService::UpdateAmbientLightQuad(const std::shared_ptr<Scene
     const auto& pawn = FindLightingPawn(lit->GetSpatialName());
     if (!pawn) return;
     pawn->NotifySpatialRenderStateChanged();
-    //m_ambientQuadLightingState.SetAmbientLightColor(lit->GetLightColor());
 }
 
 void DeferredRendererService::UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
@@ -578,7 +482,6 @@ void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGrap
     if ((notify == LightInfoUpdated::NotifyCode::Color) || (notify == LightInfoUpdated::NotifyCode::Direction))
     {
         pawn->NotifySpatialRenderStateChanged();
-        //m_sunLightQuadLightingState.SetSunLight(lit->GetLightDirection(), lit->GetLightColor());
     }
 }
 
@@ -603,13 +506,6 @@ void DeferredRendererService::BindGBufferToLightingPawn(const std::shared_ptr<Li
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(lighting_pawn->GetPrimitive());
     if (mesh) BindGBufferToLightingMesh(mesh);
 }
-
-/*void DeferredRendererService::BindGBufferToLightQuad(const std::shared_ptr<LightQuadPawn>& quad)
-{
-    if (!quad) return;
-    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(quad->GetPrimitive());
-    if (mesh) BindGBufferToLightingMesh(mesh);
-}*/
 
 std::shared_ptr<LightingPawn> DeferredRendererService::FindLightingPawn(const std::string& name)
 {

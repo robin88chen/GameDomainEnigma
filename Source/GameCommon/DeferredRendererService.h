@@ -13,7 +13,6 @@
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphEvents.h"
-#include "Frameworks/ResponseSubscriber.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include <memory>
 #include <unordered_map>
@@ -60,7 +59,6 @@ namespace Enigma::GameCommon
 
         void BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh);
         void BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
-        //void BindGBufferToLightQuad(const std::shared_ptr<LightQuadPawn>& quad);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
         void OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
@@ -72,9 +70,8 @@ namespace Enigma::GameCommon
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnLightVolumeBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial);
-        void OnLightQuadBuilt(const std::string& lit_name, const std::shared_ptr<SceneGraph::Spatial>& spatial);
-        void OnLightingPawnPrimitiveBuilt(const std::shared_ptr<LightingPawn>& lighting_pawn);
+
+        void OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
 
         std::shared_ptr<LightingPawn> FindLightingPawn(const std::string& name);
 
@@ -86,13 +83,6 @@ namespace Enigma::GameCommon
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
-
-        std::weak_ptr<Renderer::MeshPrimitive> m_ambientLightQuad;
-        std::weak_ptr<Renderer::MeshPrimitive> m_sunLightQuad;
-        Engine::RenderLightingState m_ambientQuadLightingState;
-        Engine::RenderLightingState m_sunLightQuadLightingState;
-        //std::weak_ptr<LightQuadPawn> m_ambientLightPawn;
-        //std::weak_ptr<LightQuadPawn> m_sunLightPawn;
 
         using LightingPawnMap = std::unordered_map<std::string, std::weak_ptr<LightingPawn>>;
         LightingPawnMap m_lightingPawns;

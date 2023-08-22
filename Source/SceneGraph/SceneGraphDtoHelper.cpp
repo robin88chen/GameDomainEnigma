@@ -221,6 +221,11 @@ PawnDtoHelper& PawnDtoHelper::MeshPrimitive(const Renderer::MeshPrimitiveDto& me
     return *this;
 }
 
+PawnDto PawnDtoHelper::ToPawnDto()
+{
+    return m_dto;
+}
+
 Enigma::Engine::GenericDto PawnDtoHelper::ToGenericDto()
 {
     return m_dto.ToGenericDto();

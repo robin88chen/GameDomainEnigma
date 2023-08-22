@@ -26,6 +26,8 @@ namespace Enigma::GameCommon
         LightVolumePawn& operator=(const LightVolumePawn&) = delete;
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
+        virtual Engine::GenericDto SerializeDto() override;
+
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
         void ToggleCameraInside(bool is_inside);
 

@@ -31,6 +31,9 @@
     <Filter Include="DeferredRenderer">
       <UniqueIdentifier>{fdeae38d-0251-4410-b7e3-bb9e97e894a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DeferredRenderer\LightingPawn">
+      <UniqueIdentifier>{47be7dc8-208d-43e9-90b2-163c11363b25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h">
@@ -87,9 +90,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.h">
       <Filter>DeferredRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h">
-      <Filter>DeferredRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h">
       <Filter>DeferredRenderer</Filter>
     </ClInclude>
@@ -102,11 +102,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightEvents.h">
       <Filter>GameLight</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h">
-      <Filter>DeferredRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h">
-      <Filter>DeferredRenderer</Filter>
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,20 +158,23 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp">
       <Filter>DeferredRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp">
-      <Filter>DeferredRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.cpp">
       <Filter>DeferredRenderer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.cpp">
       <Filter>SceneRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp">
-      <Filter>DeferredRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp">
-      <Filter>DeferredRenderer</Filter>
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

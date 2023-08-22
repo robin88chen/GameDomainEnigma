@@ -30,7 +30,6 @@ namespace Enigma::GameCommon
         DeferredRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
             const std::shared_ptr<GameCameraService>& camera_service,
             const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
-            const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
             const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration);
         DeferredRendererService(const DeferredRendererService&) = delete;
         DeferredRendererService(DeferredRendererService&&) = delete;
@@ -69,6 +68,7 @@ namespace Enigma::GameCommon
         void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
         void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void OnLightingPawnCreated(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
         void OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
@@ -82,7 +82,6 @@ namespace Enigma::GameCommon
 
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
-        std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
         using LightingPawnMap = std::unordered_map<std::string, std::weak_ptr<LightingPawn>>;
         LightingPawnMap m_lightingPawns;
@@ -106,6 +105,7 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Frameworks::EventSubscriberPtr m_onLightingPawnCreated;
         Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
     };
 }

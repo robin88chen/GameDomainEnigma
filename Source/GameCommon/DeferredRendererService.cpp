@@ -22,6 +22,7 @@
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "GameCommon/GameCameraService.h"
+#include "LightingPawnDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -42,11 +43,9 @@ std::string DeferredAmbientLightQuadName = "_deferred_ambient_light_quad_";
 DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
-    const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository,
     const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
 {
     m_configuration = configuration;
-    m_sceneGraphRepository = scene_graph_repository;
     LightVolumePawn::SetDefaultVisualTech(m_configuration->VisualTechniqueNameForCameraDefault());
     LightVolumePawn::SetInsideVisualTech(m_configuration->VisualTechniqueNameForCameraInside());
 }
@@ -77,6 +76,8 @@ ServiceResult DeferredRendererService::OnInit()
     EventPublisher::Subscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onLightingPawnCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightingPawnCreated(e); });
+    EventPublisher::Subscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
@@ -103,6 +104,8 @@ ServiceResult DeferredRendererService::OnTerm()
     m_onLightInfoUpdated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
+    m_onLightingPawnCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
@@ -301,7 +304,6 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!top_spatials[0]) return;
     auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(top_spatials[0]);
     if (!lighting_pawn) return;
-    OnLightingPawnBuilt(ev->GetSceneGraphId(), lighting_pawn);
     if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->GetSpatialName()); lit != m_buildingLightPawns.end())
     {
         if (!lit->second.m_parentNodeName.empty())
@@ -312,13 +314,19 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     }
 }
 
+void DeferredRendererService::OnLightingPawnCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, Frameworks::IEvent>(e);
+    if (!ev) return;
+    auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(ev->GetSpatial());
+    if (!lighting_pawn) return;
+    OnLightingPawnBuilt(lighting_pawn->GetHostLightName(), lighting_pawn);
+}
+
 void DeferredRendererService::OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
     if (!lighting_pawn) return;
-    if (!m_sceneGraphRepository.expired())
-    {
-        lighting_pawn->SetHostLight(m_sceneGraphRepository.lock()->QueryLight(lit_name));
-    }
     m_lightingPawns.insert_or_assign(lit_name, lighting_pawn);
     BindGBufferToLightingPawn(lighting_pawn);
     CheckLightVolumeBackfaceCulling(lit_name);
@@ -357,7 +365,9 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     pawn_helper.MeshPrimitive(mesh_dto)
         .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true)
         .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.GetName()));
-    auto pawn_dto = pawn_helper.ToGenericDto();
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
@@ -384,7 +394,9 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     pawn_helper.MeshPrimitive(mesh_dto)
         .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true)
         .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.GetName()));
-    auto pawn_dto = pawn_helper.ToGenericDto();
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
@@ -409,7 +421,9 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_volume");
     pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.GetName())).MeshPrimitive(mesh_dto)
         .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true).LocalTransform(lit->GetLocalTransform());
-    auto pawn_dto = pawn_helper.ToGenericDto();
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);

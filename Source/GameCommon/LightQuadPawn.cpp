@@ -2,6 +2,7 @@
 #include "GameCommonErrors.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
+#include "LightingPawnDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
@@ -20,6 +21,13 @@ LightQuadPawn::LightQuadPawn(const Engine::GenericDto& o) : LightingPawn(o)
 
 LightQuadPawn::~LightQuadPawn()
 {
+}
+
+GenericDto LightQuadPawn::SerializeDto()
+{
+    LightingPawnDto dto(SerializePawnDto());
+    dto.HostLightName() = GetHostLightName();
+    return dto.ToGenericDto();
 }
 
 error LightQuadPawn::_UpdateSpatialRenderState()

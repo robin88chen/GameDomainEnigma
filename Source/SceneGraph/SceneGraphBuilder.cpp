@@ -181,6 +181,7 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     }
     assert(!m_host->HasLight(dto.GetName()));
     auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+    light->ResolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
@@ -198,6 +199,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     {
         BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn, prim.value()));
     }
+    pawn->ResolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }
 

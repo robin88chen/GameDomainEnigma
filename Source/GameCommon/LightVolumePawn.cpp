@@ -1,6 +1,7 @@
 ﻿#include "LightVolumePawn.h"
 #include "Renderer/MeshPrimitive.h"
 #include "GameCommonErrors.h"
+#include "LightingPawnDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -25,6 +26,13 @@ LightVolumePawn::LightVolumePawn(const Engine::GenericDto& o) : LightingPawn(o)
 LightVolumePawn::~LightVolumePawn()
 {
 
+}
+
+GenericDto LightVolumePawn::SerializeDto()
+{
+    LightingPawnDto dto(SerializePawnDto());
+    dto.HostLightName() = GetHostLightName();
+    return dto.ToGenericDto();
 }
 
 void LightVolumePawn::ToggleCameraInside(bool is_inside)

@@ -138,6 +138,8 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
         if (!tex.IsAllResourceTexture()) continue;
         dto.TextureMaps().emplace_back(tex.SerializeDto());
     }
+    dto.RenderListID() = m_renderListID;
+    dto.VisualTechniqueSelection() = m_selectedVisualTech;
     return dto;
 }
 

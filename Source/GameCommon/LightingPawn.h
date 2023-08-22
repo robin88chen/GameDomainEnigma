@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   LightingPawn.h
  * \brief  base class for light quad & light volume
  *
@@ -25,6 +25,8 @@ namespace Enigma::GameCommon
         virtual ~LightingPawn() override;
         LightingPawn& operator=(const LightingPawn&) = delete;
         LightingPawn& operator=(LightingPawn&&) = delete;
+
+        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void SetHostLight(const std::shared_ptr<SceneGraph::Light>& light);
         std::string GetHostLightName() const { return m_hostLight.expired() ? "" : m_hostLight.lock()->GetSpatialName(); }

@@ -18,7 +18,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },
@@ -47,7 +47,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },
@@ -61,7 +61,72 @@
         },
         "ChildNames": {
             "Type": "StringArray",
-            "Value": ["ww2_amb_lit", "ww2_sun_lit", "_deferred_ambient_light_quad_", "_deferred_sun_light_quad_"]
+            "Value": ["ww2_amb_lit", "ww2_sun_lit", "ww2_amb_lit_lit_quad", "ww2_sun_lit_lit_quad", "world2/Name_qroot"]
+        }
+    }, {
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 2,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.VisibilityManagedNode",
+                "PrefabFilename": "world2/Name_qroot.node@WorldMaps"
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "world2/Name_qroot"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 3
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 5
+        },
+        "ChildNames": {
+            "Type": "StringArray",
+            "Value": []
         }
     }, {
         "LocalTransform": {
@@ -91,13 +156,13 @@
             "Type": "Boolean",
             "Value": false
         },
-        "Name": {
-            "Type": "String",
-            "Value": "ww2_amb_lit"
-        },
         "NotifyFlag": {
             "Type": "Uint32",
             "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "ww2_amb_lit"
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -135,17 +200,17 @@
                     "Type": "ColorRGBA",
                     "Value": [0.20000000298023224, 0.20000000298023224, 0.20000000298023224, 1.0]
                 },
-                "LightPosition": {
-                    "Type": "Vector3",
-                    "Value": [0.0, 0.0, 0.0]
+                "LightIsEnable": {
+                    "Type": "Boolean",
+                    "Value": true
                 },
                 "LightRange": {
                     "Type": "Float",
                     "Value": 10.0
                 },
-                "LightIsEnable": {
-                    "Type": "Boolean",
-                    "Value": true
+                "LightPosition": {
+                    "Type": "Vector3",
+                    "Value": [0.0, 0.0, 0.0]
                 },
                 "LightDirection": {
                     "Type": "Vector3",
@@ -185,13 +250,13 @@
             "Type": "Boolean",
             "Value": false
         },
-        "NotifyFlag": {
-            "Type": "Uint32",
-            "Value": 0
-        },
         "Name": {
             "Type": "String",
             "Value": "ww2_sun_lit"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -229,17 +294,17 @@
                     "Type": "ColorRGBA",
                     "Value": [0.6000000238418579, 0.6000000238418579, 0.6000000238418579, 1.0]
                 },
-                "LightIsEnable": {
-                    "Type": "Boolean",
-                    "Value": true
+                "LightPosition": {
+                    "Type": "Vector3",
+                    "Value": [0.0, 0.0, 0.0]
                 },
                 "LightRange": {
                     "Type": "Float",
                     "Value": 10.0
                 },
-                "LightPosition": {
-                    "Type": "Vector3",
-                    "Value": [0.0, 0.0, 0.0]
+                "LightIsEnable": {
+                    "Type": "Boolean",
+                    "Value": true
                 },
                 "LightDirection": {
                     "Type": "Vector3",
@@ -262,7 +327,7 @@
                 "InstanceType": 0,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.Pawn",
+                "RttiName": "En.GameCommon.LightQuadPawn",
                 "PrefabFilename": ""
             }
         },
@@ -275,17 +340,21 @@
                 }
             }
         },
+        "HostLightName": {
+            "Type": "String",
+            "Value": "ww2_amb_lit"
+        },
         "TopLevel": {
             "Type": "Boolean",
             "Value": false
         },
-        "Name": {
-            "Type": "String",
-            "Value": "_deferred_ambient_light_quad_"
-        },
         "NotifyFlag": {
             "Type": "Uint32",
             "Value": 0
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "ww2_amb_lit_lit_quad"
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -327,15 +396,15 @@
                 },
                 "RenderListId": {
                     "Type": "Uint32",
-                    "Value": 1
+                    "Value": 4
                 },
                 "Name": {
                     "Type": "String",
-                    "Value": "deferred_ambient_quad.geo"
+                    "Value": "ww2_amb_lit_lit_quad.geo"
                 },
                 "GeometryName": {
                     "Type": "String",
-                    "Value": "deferred_ambient_quad.geo"
+                    "Value": "ww2_amb_lit_lit_quad.geo"
                 },
                 "RawGeometry": {
                     "Type": "DataObject",
@@ -352,7 +421,7 @@
                         },
                         "Name": {
                             "Type": "String",
-                            "Value": "deferred_ambient_quad.geo"
+                            "Value": "ww2_amb_lit_lit_quad.geo"
                         },
                         "VertexFormat": {
                             "Type": "String",
@@ -461,7 +530,7 @@
                 "InstanceType": 0,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.Pawn",
+                "RttiName": "En.GameCommon.LightQuadPawn",
                 "PrefabFilename": ""
             }
         },
@@ -474,6 +543,10 @@
                 }
             }
         },
+        "HostLightName": {
+            "Type": "String",
+            "Value": "ww2_sun_lit"
+        },
         "TopLevel": {
             "Type": "Boolean",
             "Value": false
@@ -484,7 +557,7 @@
         },
         "Name": {
             "Type": "String",
-            "Value": "_deferred_sun_light_quad_"
+            "Value": "ww2_sun_lit_lit_quad"
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -514,10 +587,6 @@
         "PawnPrimitive": {
             "Type": "DataObject",
             "Value": {
-                "RenderListId": {
-                    "Type": "Uint32",
-                    "Value": 1
-                },
                 "Rtti": {
                     "Type": "FactoryDesc",
                     "Value": {
@@ -528,32 +597,17 @@
                         "PrefabFilename": ""
                     }
                 },
+                "RenderListId": {
+                    "Type": "Uint32",
+                    "Value": 4
+                },
                 "Name": {
                     "Type": "String",
-                    "Value": "_deferred_sun_light_quad_.geo"
+                    "Value": "ww2_sun_lit_lit_quad.geo"
                 },
                 "GeometryName": {
                     "Type": "String",
-                    "Value": "_deferred_sun_light_quad_.geo"
-                },
-                "Effects": {
-                    "Type": "DataObjectArray",
-                    "Value": [{
-                            "Rtti": {
-                                "Type": "FactoryDesc",
-                                "Value": {
-                                    "InstanceType": 4,
-                                    "ResourceName": "DeferredShadingWithShadowSunLightPass",
-                                    "ResourceFilename": "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH",
-                                    "RttiName": "En.Engine.EffectMaterial",
-                                    "PrefabFilename": "DeferredShadingWithShadowSunLightPass"
-                                }
-                            },
-                            "Name": {
-                                "Type": "String",
-                                "Value": "DeferredShadingWithShadowSunLightPass"
-                            }
-                        }]
+                    "Value": "ww2_sun_lit_lit_quad.geo"
                 },
                 "RawGeometry": {
                     "Type": "DataObject",
@@ -570,7 +624,7 @@
                         },
                         "Name": {
                             "Type": "String",
-                            "Value": "_deferred_sun_light_quad_.geo"
+                            "Value": "ww2_sun_lit_lit_quad.geo"
                         },
                         "VertexFormat": {
                             "Type": "String",
@@ -580,6 +634,10 @@
                             "Type": "Uint32",
                             "Value": 6
                         },
+                        "Segments": {
+                            "Type": "Uint32Array",
+                            "Value": [0, 4, 0, 6]
+                        },
                         "GeometryBound": {
                             "Type": "DataObject",
                             "Value": {
@@ -588,10 +646,6 @@
                                     "Value": [0.0, 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0000011920928955078125]
                                 }
                             }
-                        },
-                        "Segments": {
-                            "Type": "Uint32Array",
-                            "Value": [0, 4, 0, 6]
                         },
                         "VertexCapacity": {
                             "Type": "Uint32",
@@ -627,6 +681,25 @@
                             "Value": [0, 1, 2, 0, 2, 3]
                         }
                     }
+                },
+                "Effects": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 4,
+                                    "ResourceName": "DeferredShadingWithShadowSunLightPass",
+                                    "ResourceFilename": "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH",
+                                    "RttiName": "En.Engine.EffectMaterial",
+                                    "PrefabFilename": "DeferredShadingWithShadowSunLightPass"
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "DeferredShadingWithShadowSunLightPass"
+                            }
+                        }]
                 },
                 "GeometryFactory": {
                     "Type": "FactoryDesc",

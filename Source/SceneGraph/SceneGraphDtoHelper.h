@@ -74,6 +74,7 @@ namespace Enigma::SceneGraph
         PawnDtoHelper& GraphDepth(unsigned graph_depth);
         PawnDtoHelper& MeshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto);
 
+        PawnDto ToPawnDto();
         Engine::GenericDto ToGenericDto();
 
     private:

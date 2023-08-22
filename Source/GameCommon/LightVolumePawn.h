@@ -8,14 +8,13 @@
 #ifndef LIGHT_VOLUME_PAWN_H
 #define LIGHT_VOLUME_PAWN_H
 
-#include "SceneGraph/Pawn.h"
-#include "SceneGraph/Light.h"
+#include "LightingPawn.h"
 
 namespace Enigma::GameCommon
 {
     using error = std::error_code;
 
-    class LightVolumePawn : public SceneGraph::Pawn
+    class LightVolumePawn : public LightingPawn
     {
         DECLARE_EN_RTTI;
     public:
@@ -27,8 +26,7 @@ namespace Enigma::GameCommon
         LightVolumePawn& operator=(const LightVolumePawn&) = delete;
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
-        void SetHostLight(const std::shared_ptr<SceneGraph::Light>& light);
-        std::string GetHostLightName() const { return m_hostLight.expired() ? "" : m_hostLight.lock()->GetSpatialName(); }
+        virtual Engine::GenericDto SerializeDto() override;
 
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
         void ToggleCameraInside(bool is_inside);
@@ -43,7 +41,6 @@ namespace Enigma::GameCommon
         static const std::string& GetInsideVisualTech() { return m_tokenInsideVisualTech; }
 
     protected:
-        std::weak_ptr<SceneGraph::Light> m_hostLight;
         bool m_isCameraInside;
         static std::string m_tokenDefaultVisualTech;
         static std::string m_tokenInsideVisualTech;

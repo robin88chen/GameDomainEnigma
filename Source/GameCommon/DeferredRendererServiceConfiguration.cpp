@@ -28,7 +28,7 @@ DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
     m_gbufferSpecularSemantic = "GBufferSpecularMap";
     m_gbufferDepthSemantic = "GBufferDepthMap";
 
-    m_sunLightSpatialFlags = SceneGraph::Spatial::Spatial_BelongToParent;
+    m_sunLightSpatialFlags = SceneGraph::Spatial::Spatial_None;
 }
 
 std::string& DeferredRendererServiceConfiguration::AmbientPassFxFileName()

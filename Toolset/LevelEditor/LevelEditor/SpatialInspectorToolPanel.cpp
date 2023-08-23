@@ -5,6 +5,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "LevelEditorEvents.h"
 #include "Frameworks/StringFormat.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "EditorUtilities.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -140,18 +142,85 @@ void SpatialInspectorPanel::UnsubscribeHandlers()
 
 void SpatialInspectorPanel::OnPropertyChanged(const nana::arg_propertygrid& arg)
 {
+    auto pos = arg.item.pos();
+    switch (pos.cat)
+    {
+    case static_cast<size_t>(CategoryIndex::Attributes):
+        OnAttributePropertiesChanged(pos.item, arg.item.value());
+        break;
+    case static_cast<size_t>(CategoryIndex::LocalSpatial):
+        OnLocalSpatialPropertiesChanged(pos.item, arg.item.value());
+        break;
+    case static_cast<size_t>(CategoryIndex::WorldSpatial):
+        OnWorldSpatialPropertiesChanged(pos.item, arg.item.value());
+        break;
+    default:
+        break;
+    }
 }
 
 void SpatialInspectorPanel::OnAttributePropertiesChanged(size_t index, const std::string& value)
 {
+    if (m_selectedSpatial.expired()) return;
+    switch (index)
+    {
+    case static_cast<size_t>(AttributePropertyIndex::ModelName):
+        break;
+    case static_cast<size_t>(AttributePropertyIndex::Visibility):
+        if (value == "true")
+        {
+            m_selectedSpatial.lock()->RemoveSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
+        }
+        else
+        {
+            m_selectedSpatial.lock()->AddSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
+        }
+        break;
+    }
 }
 
 void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const std::string& value)
 {
+    if (m_selectedSpatial.expired()) return;
+    switch (index)
+    {
+    case static_cast<size_t>(SpatialPropertyIndex::Position):
+        if (auto [pos, isParseOk] = ParseTextToVector3(value); isParseOk)
+        {
+            m_selectedSpatial.lock()->SetLocalPosition(pos);
+        }
+        break;
+    case static_cast<size_t>(SpatialPropertyIndex::Rotation):
+        if (auto [rot, isParseOk] = ParseTextToVector3(value); isParseOk)
+        {
+            m_selectedSpatial.lock()->SetLocalEulerAngle(rot);
+        }
+        break;
+    case static_cast<size_t>(SpatialPropertyIndex::Scale):
+        if (auto [scale, isParseOk] = ParseTextToVector3(value); isParseOk)
+        {
+            m_selectedSpatial.lock()->SetLocalScale(scale);
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const std::string& value)
 {
+    if (m_selectedSpatial.expired()) return;
+    switch (index)
+    {
+    case static_cast<size_t>(SpatialPropertyIndex::Position):
+        if (auto [pos, isParseOk] = ParseTextToVector3(value); isParseOk)
+        {
+            m_selectedSpatial.lock()->ChangeWorldPosition(pos, std::nullopt);
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial)

@@ -26,7 +26,7 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.Get
 
     m_cullingMode = CullingMode::Dynamic;
 
-    m_spatialFlags = Spatial_BelongToParent | Spatial_Unlit; // 預設是不受光的...entity再打開
+    m_spatialFlags = Spatial_Unlit; // 預設是不受光的...entity再打開
 
     m_vecLocalPosition = Vector3::ZERO;
     m_vecLocalScale = Vector3(1.0f, 1.0f, 1.0f);
@@ -42,7 +42,7 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.Get
 
     m_vecWorldPosition = Vector3::ZERO;
 
-    m_notifyFlags = Notify_None;
+    m_notifyFlags = Notify_All;
 }
 
 Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
@@ -253,6 +253,7 @@ void Spatial::SetCullingMode(CullingMode mode)
     if (m_cullingMode != mode)
     {
         m_cullingMode = mode;
+        has_changed = true;
     }
     if ((TestNotifyFlag(Notify_CullMode)) && (has_changed))
     {
@@ -329,4 +330,26 @@ error Spatial::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
     _UpdateSpatialRenderState();
     return ErrorCode::ok;
+}
+
+void Spatial::AddSpatialFlag(SpatialFlags flag)
+{
+    const bool visible_before = TestSpatialFlag(SpatialBit::Spatial_Hide);
+    m_spatialFlags |= flag;
+    const bool visible_after = TestSpatialFlag(SpatialBit::Spatial_Hide);
+    if ((visible_before != visible_after) && (TestNotifyFlag(Notify_Visibility)))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
+    }
+}
+
+void Spatial::RemoveSpatialFlag(SpatialFlags flag)
+{
+    const bool visible_before = TestSpatialFlag(SpatialBit::Spatial_Hide);
+    m_spatialFlags &= (~flag);
+    const bool visible_after = TestSpatialFlag(SpatialBit::Spatial_Hide);
+    if ((visible_before != visible_after) && (TestNotifyFlag(Notify_Visibility)))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
+    }
 }

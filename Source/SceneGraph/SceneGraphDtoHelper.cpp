@@ -82,8 +82,8 @@ SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
     m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
     m_dto.GraphDepth() = 0;
     m_dto.CullingMode() = static_cast<unsigned>(Spatial::CullingMode::Dynamic);
-    m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_None);
-    m_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_All);
+    m_dto.SpatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
 }
 
 SpatialDtoHelper& SpatialDtoHelper::LocalTransform(const MathLib::Matrix4& local_transform)
@@ -154,8 +154,8 @@ PawnDtoHelper::PawnDtoHelper(const std::string& name)
     m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
     m_dto.GraphDepth() = 0;
     m_dto.CullingMode() = static_cast<unsigned>(Spatial::CullingMode::Dynamic);
-    m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_None);
-    m_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
+    m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_All);
+    m_dto.SpatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
 }
 
 PawnDtoHelper& PawnDtoHelper::Factory(const Engine::FactoryDesc& factory)

@@ -12,7 +12,7 @@
 #include "nana/gui/place.hpp"
 #include "propertygrid/propertygrid.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneGraph/spatial.h"
+#include "SceneGraph/Spatial.h"
 
 namespace LevelEditor
 {

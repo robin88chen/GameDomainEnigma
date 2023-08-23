@@ -70,8 +70,7 @@ void TerrainEditConsole::CreateBrushPawn()
     mesh_dto.RenderListID() = Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(BRUSH_SPHERE_TAG);
-    pawn_helper.MeshPrimitive(mesh_dto)
-        .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true);
+    pawn_helper.MeshPrimitive(mesh_dto).TopLevel(true);
     auto dtos = { pawn_helper.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));
 }

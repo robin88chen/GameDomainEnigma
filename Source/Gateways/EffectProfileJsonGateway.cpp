@@ -309,19 +309,19 @@ EffectProfileJsonGateway::SamplerStateGatewayMeta EffectProfileJsonGateway::Dese
     SamplerStateGatewayMeta meta;
     meta.m_name = state[NAME_TOKEN].GetString();
     if (state.HasMember(ADDRESS_U_TOKEN))
-        meta.m_stateData.m_addressModeU = m_addressModeReference.at(state[ADDRESS_U_TOKEN].GetString());
+        meta.m_stateData.m_addressModeU = DeReferenceAddressMode(state[ADDRESS_U_TOKEN].GetString());
     if (state.HasMember(ADDRESS_V_TOKEN))
-        meta.m_stateData.m_addressModeV = m_addressModeReference.at(state[ADDRESS_V_TOKEN].GetString());
+        meta.m_stateData.m_addressModeV = DeReferenceAddressMode(state[ADDRESS_V_TOKEN].GetString());
     if (state.HasMember(ADDRESS_W_TOKEN))
-        meta.m_stateData.m_addressModeW = m_addressModeReference.at(state[ADDRESS_W_TOKEN].GetString());
+        meta.m_stateData.m_addressModeW = DeReferenceAddressMode(state[ADDRESS_W_TOKEN].GetString());
     if (state.HasMember(MAG_FILTER_TOKEN))
-        meta.m_stateData.m_magFilter = m_filterReference.at(state[MAG_FILTER_TOKEN].GetString());
+        meta.m_stateData.m_magFilter = DeReferenceFilter(state[MAG_FILTER_TOKEN].GetString());
     if (state.HasMember(MIN_FILTER_TOKEN))
-        meta.m_stateData.m_minFilter = m_filterReference.at(state[MIN_FILTER_TOKEN].GetString());
+        meta.m_stateData.m_minFilter = DeReferenceFilter(state[MIN_FILTER_TOKEN].GetString());
     if (state.HasMember(MIP_FILTER_TOKEN))
-        meta.m_stateData.m_mipFilter = m_filterReference.at(state[MIP_FILTER_TOKEN].GetString());
+        meta.m_stateData.m_mipFilter = DeReferenceFilter(state[MIP_FILTER_TOKEN].GetString());
     if (state.HasMember(COMPARE_FUNC_TOKEN))
-        meta.m_stateData.m_cmpFunc = m_samplerCompReference.at(state[COMPARE_FUNC_TOKEN].GetString());
+        meta.m_stateData.m_cmpFunc = DeReferenceSamplerCompareFunc(state[COMPARE_FUNC_TOKEN].GetString());
     if (state.HasMember(BORDER_COLOR_TOKEN))
         meta.m_stateData.m_borderColor = DeserializeColorRGBA(state[BORDER_COLOR_TOKEN]);
     if (state.HasMember(ANISOTROPIC_TOKEN))
@@ -336,6 +336,39 @@ EffectProfileJsonGateway::SamplerStateGatewayMeta EffectProfileJsonGateway::Dese
     return meta;
 }
 
+Enigma::Graphics::IDeviceSamplerState::SamplerStateData::Filter EffectProfileJsonGateway::DeReferenceFilter(const std::string& filter) const
+{
+    if (m_filterReference.find(filter) == m_filterReference.end())
+    {
+        std::string ss = string_format("filter %s is not a valid filter", filter.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceSamplerState::SamplerStateData::Filter::None;
+    }
+    return m_filterReference.at(filter);
+}
+
+Enigma::Graphics::IDeviceSamplerState::SamplerStateData::AddressMode EffectProfileJsonGateway::DeReferenceAddressMode(const std::string& address_mode) const
+{
+    if (m_addressModeReference.find(address_mode) == m_addressModeReference.end())
+    {
+        std::string ss = string_format("address mode %s is not a valid address mode", address_mode.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceSamplerState::SamplerStateData::AddressMode::Clamp;
+    }
+    return m_addressModeReference.at(address_mode);
+}
+
+Enigma::Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc EffectProfileJsonGateway::DeReferenceSamplerCompareFunc(const std::string& compare_func) const
+{
+    if (m_samplerCompReference.find(compare_func) == m_samplerCompReference.end())
+    {
+        std::string ss = string_format("compare func %s is not a valid sampler compare func", compare_func.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc::Never;
+    }
+    return m_samplerCompReference.at(compare_func);
+}
+
 EffectProfileJsonGateway::RasterizerStateGatewayMeta EffectProfileJsonGateway::DeserializeRasterizerStateMeta(const rapidjson::Value& state) const
 {
     assert(!state.IsNull());
@@ -343,9 +376,9 @@ EffectProfileJsonGateway::RasterizerStateGatewayMeta EffectProfileJsonGateway::D
     RasterizerStateGatewayMeta meta;
     meta.m_name = state[NAME_TOKEN].GetString();
     if (state.HasMember(FILLMODE_TOKEN))
-        meta.m_stateData.m_fillMode = m_fillModeReference.at(state[FILLMODE_TOKEN].GetString());
+        meta.m_stateData.m_fillMode = DeReferenceFillMode(state[FILLMODE_TOKEN].GetString());
     if (state.HasMember(CULLMODE_TOKEN))
-        meta.m_stateData.m_cullMode = m_cullModeReference.at(state[CULLMODE_TOKEN].GetString());
+        meta.m_stateData.m_cullMode = DeReferenceCullMode(state[CULLMODE_TOKEN].GetString());
     if (state.HasMember(DEPTH_BIAS_TOKEN))
         meta.m_stateData.m_depthBias = state[DEPTH_BIAS_TOKEN].GetFloat();
     if (state.HasMember(DEPTH_BIAS_CLAMP_TOKEN))
@@ -354,6 +387,28 @@ EffectProfileJsonGateway::RasterizerStateGatewayMeta EffectProfileJsonGateway::D
         meta.m_stateData.m_slopeScaledDepthBias = state[SLOPE_SCALE_DEPTH_BIAS_TOKEN].GetFloat();
 
     return meta;
+}
+
+Enigma::Graphics::IDeviceRasterizerState::RasterizerStateData::FillMode EffectProfileJsonGateway::DeReferenceFillMode(const std::string& fill_mode) const
+{
+    if (m_fillModeReference.find(fill_mode) == m_fillModeReference.end())
+    {
+        std::string ss = string_format("fill mode %s is not a valid fill mode", fill_mode.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceRasterizerState::RasterizerStateData::FillMode::Fill;
+    }
+    return m_fillModeReference.at(fill_mode);
+}
+
+Enigma::Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode EffectProfileJsonGateway::DeReferenceCullMode(const std::string& cull_mode) const
+{
+    if (m_cullModeReference.find(cull_mode) == m_cullModeReference.end())
+    {
+        std::string ss = string_format("cull mode %s is not a valid cull mode", cull_mode.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode::Cull_None;
+    }
+    return m_cullModeReference.at(cull_mode);
 }
 
 EffectProfileJsonGateway::BlendStateGatewayMeta EffectProfileJsonGateway::DeserializeBlendStateMeta(const rapidjson::Value& state) const
@@ -370,11 +425,22 @@ EffectProfileJsonGateway::BlendStateGatewayMeta EffectProfileJsonGateway::Deseri
     }
     for (unsigned int i = 0; i < state[BLEND_TYPES_TOKEN].Capacity(); i++)
     {
-        meta.m_stateData.m_blendType[i] = m_blendTypeReference.at(state[BLEND_TYPES_TOKEN][i].GetString());
+        meta.m_stateData.m_blendType[i] = DeReferenceBlendType(state[BLEND_TYPES_TOKEN][i].GetString());
     }
     meta.m_stateData.m_isMultiBlendTarget = state[BLEND_TYPES_TOKEN].Capacity() > 1;
 
     return meta;
+}
+
+Enigma::Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType EffectProfileJsonGateway::DeReferenceBlendType(const std::string& blend_type) const
+{
+    if (m_blendTypeReference.find(blend_type) == m_blendTypeReference.end())
+    {
+        std::string ss = string_format("blend type %s is not a valid blend type", blend_type.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType::Blend_Opaque;
+    }
+    return m_blendTypeReference.at(blend_type);
 }
 
 EffectProfileJsonGateway::DepthStateGatewayMeta EffectProfileJsonGateway::DeserializeDepthStateMeta(const rapidjson::Value& state) const
@@ -405,7 +471,7 @@ EffectProfileJsonGateway::DepthStateGatewayMeta EffectProfileJsonGateway::Deseri
     }
     if (state.HasMember(DEPTH_FUNC_TOKEN))
     {
-        meta.m_stateData.m_depthCompare = m_depthCompReference.at(state[DEPTH_FUNC_TOKEN].GetString());
+        meta.m_stateData.m_depthCompare = DeReferenceDepthCompareFunc(state[DEPTH_FUNC_TOKEN].GetString());
     }
     if (state.HasMember(STENCIL_REF_VALUE_TOKEN))
     {
@@ -421,6 +487,17 @@ EffectProfileJsonGateway::DepthStateGatewayMeta EffectProfileJsonGateway::Deseri
     }
 
     return meta;
+}
+
+Enigma::Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc EffectProfileJsonGateway::DeReferenceDepthCompareFunc(const std::string& compare_func) const
+{
+    if (m_depthCompReference.find(compare_func) == m_depthCompReference.end())
+    {
+        std::string ss = string_format("depth compare func %s is not a valid depth compare func", compare_func.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc::Always;
+    }
+    return m_depthCompReference.at(compare_func);
 }
 
 EffectTechniqueProfile EffectProfileJsonGateway::DeserializeTechniqueProfile(const rapidjson::Value& tech) const
@@ -590,19 +667,30 @@ Enigma::Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData Effe
     Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData data;
     if (value.HasMember(STENCIL_FUNC_TOKEN))
     {
-        data.m_compare = m_depthCompReference.at(value[STENCIL_FUNC_TOKEN].GetString());
+        data.m_compare = DeReferenceDepthCompareFunc(value[STENCIL_FUNC_TOKEN].GetString());
     }
     if (value.HasMember(STENCIL_FAIL_TOKEN))
     {
-        data.m_failOp = m_stencilOpReference.at(value[STENCIL_FAIL_TOKEN].GetString());
+        data.m_failOp = DeReferenceStencilOpCode(value[STENCIL_FAIL_TOKEN].GetString());
     }
     if (value.HasMember(STENCIL_PASS_TOKEN))
     {
-        data.m_passOp = m_stencilOpReference.at(value[STENCIL_PASS_TOKEN].GetString());
+        data.m_passOp = DeReferenceStencilOpCode(value[STENCIL_PASS_TOKEN].GetString());
     }
     if (value.HasMember(STENCIL_DEPTH_FAIL_TOKEN))
     {
-        data.m_depthFailOp = m_stencilOpReference.at(value[STENCIL_DEPTH_FAIL_TOKEN].GetString());
+        data.m_depthFailOp = DeReferenceStencilOpCode(value[STENCIL_DEPTH_FAIL_TOKEN].GetString());
     }
     return data;
+}
+
+Enigma::Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode EffectProfileJsonGateway::DeReferenceStencilOpCode(const std::string& op_code) const
+{
+    if (m_stencilOpReference.find(op_code) == m_stencilOpReference.end())
+    {
+        std::string ss = string_format("can't find stencil op code %s", op_code.c_str());
+        LOG(Info, ss);
+        return Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode::Keep;
+    }
+    return m_stencilOpReference.at(op_code);
 }

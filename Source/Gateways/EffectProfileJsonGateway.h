@@ -99,7 +99,14 @@ namespace Enigma::Gateways
 
         MathLib::ColorRGBA DeserializeColorRGBA(const rapidjson::Value& value) const;
         Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpData DeserializeStencilOp(const rapidjson::Value& value) const;
-
+        Graphics::IDeviceSamplerState::SamplerStateData::Filter DeReferenceFilter(const std::string& filter) const;
+        Graphics::IDeviceSamplerState::SamplerStateData::AddressMode DeReferenceAddressMode(const std::string& address_mode) const;
+        Graphics::IDeviceSamplerState::SamplerStateData::CompareFunc DeReferenceSamplerCompareFunc(const std::string& compare_func) const;
+        Graphics::IDeviceRasterizerState::RasterizerStateData::FillMode DeReferenceFillMode(const std::string& fill_mode) const;
+        Graphics::IDeviceRasterizerState::RasterizerStateData::BackfaceCullMode DeReferenceCullMode(const std::string& cull_mode) const;
+        Graphics::IDeviceAlphaBlendState::BlendStateData::BlendType DeReferenceBlendType(const std::string& blend_type) const;
+        Graphics::IDeviceDepthStencilState::DepthStencilData::CompareFunc DeReferenceDepthCompareFunc(const std::string& compare_func) const;
+        Graphics::IDeviceDepthStencilState::DepthStencilData::StencilOpCode DeReferenceStencilOpCode(const std::string& op_code) const;
     private:
         const std::unordered_map<std::string, Graphics::IGraphicAPI::APIVersion> m_apiReference {
             {"dx9", Graphics::IGraphicAPI::APIVersion::API_Dx9}, {"dx11", Graphics::IGraphicAPI::APIVersion::API_Dx11},

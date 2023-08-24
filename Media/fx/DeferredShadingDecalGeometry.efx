@@ -2,12 +2,12 @@
 	"Name" : "DeferredShadingDecalGeometry",
 	"VertexShaderList" : [
 	{"Name" : "deferred_decal_geometry_vs", "API" : "dx9", "File" : "fx/deferred/decal_geometry_dx9.vsh", "Profile" : "vs_3_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
-	{"Name" : "deferred_decal_geometry_vs", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.vsh", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
+	{"Name" : "deferred_decal_geometry_vs", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.vsh@APK_PATH", "Profile" : "vs_4_0", "Entry" : "vs_main", "VtxDecl" : "xyz_tex1(2)"},
 	{"Name" : "deferred_decal_geometry_vs", "API" : "egl", "File" : "fx/deferred/light_volume_egl.vsh", "Profile" : "", "Entry" : "", "VtxDecl" : "xyz_tex1(2)"}
 	],
 	"PixelShaderList" : [
 	{"Name" : "deferred_decal_geometry_ps", "API" : "dx9", "File" : "fx/deferred/decal_geometry_dx9.psh", "Profile" : "ps_3_0", "Entry" : "ps_main"},
-	{"Name" : "deferred_decal_geometry_ps", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.psh", "Profile" : "ps_4_0", "Entry" : "ps_main"},
+	{"Name" : "deferred_decal_geometry_ps", "API" : "dx11", "File" : "fx/deferred/decal_geometry_dx11.psh@APK_PATH", "Profile" : "ps_4_0", "Entry" : "ps_main"},
 	{"Name" : "deferred_decal_geometry_ps", "API" : "egl", "File" : "fx/deferred/light_volume_egl.psh", "Profile" : "", "Entry" : ""}
 	],
 	"SamplerStateList" : [
@@ -22,8 +22,8 @@
 	{"Name" : "blendTransparent", "BlendTypes" : ["Transparent"]}
 	],
 	"RasterizerStateList" : [
-		{"Name" : "rasDefault", "CullMode" : "cw"},
-		{"Name" : "rasInside", "CullMode" : "ccw"}
+		{"Name" : "rasDefault", "CullMode" : "CW"},
+		{"Name" : "rasInside", "CullMode" : "CCW"}
 	],
 	"DepthStateList" : [
 	{"Name" : "depthDisable", "DepthTest" : false, "DepthWrite" : false}

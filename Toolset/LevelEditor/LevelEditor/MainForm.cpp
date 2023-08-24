@@ -87,6 +87,7 @@ void MainForm::InitSubPanels()
         m_renderPanel->InitInputHandler(m_appDelegate->GetInputHandler());
         m_renderPanel->SubscribeHandlers();
     }
+    if (m_spatialInspectorPanel) m_spatialInspectorPanel->SubscribeHandlers();
 }
 
 void MainForm::InitializeGraphics()
@@ -112,6 +113,7 @@ void MainForm::FinalizeGraphics()
     srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
     srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
 
+    if (m_spatialInspectorPanel) m_spatialInspectorPanel->UnsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_sceneGraphPanel)
     {

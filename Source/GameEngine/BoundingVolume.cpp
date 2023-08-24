@@ -83,6 +83,12 @@ BoundingVolumeDto BoundingVolume::SerializeDto() const
     return BoundingVolumeDto{ BoundingBox3(), BoundingSphere3() };
 }
 
+Enigma::MathLib::Vector3 BoundingVolume::Center() const
+{
+    if (m_bv) return m_bv->GetCenterPos();
+    return MathLib::Vector3::ZERO;
+}
+
 BoundingVolume BoundingVolume::CreateFromTransform(const BoundingVolume& source_bv, const MathLib::Matrix4& mx)
 {
     BoundingVolume bv(source_bv); // will make bv & source_bv have same implement BV type

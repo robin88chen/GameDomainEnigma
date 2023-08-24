@@ -363,7 +363,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
 
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_quad");
     pawn_helper.MeshPrimitive(mesh_dto)
-        .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true)
+        .TopLevel(true)
         .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.GetName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
@@ -420,7 +420,7 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
 
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_volume");
     pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.GetName())).MeshPrimitive(mesh_dto)
-        .SpatialFlags(Spatial::Spatial_BelongToParent).TopLevel(true).LocalTransform(lit->GetLocalTransform());
+        .TopLevel(true).LocalTransform(lit->GetLocalTransform());
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();

@@ -43,6 +43,8 @@ namespace Enigma::Engine
 
         BoundingVolumeDto SerializeDto() const;
 
+        MathLib::Vector3 Center() const;
+
         static BoundingVolume CreateFromTransform(const BoundingVolume& source_bv, const MathLib::Matrix4& mx);
         void Merge(const MathLib::Matrix4& to_mx, const BoundingVolume& to_bv);
 

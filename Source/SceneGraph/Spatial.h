@@ -46,7 +46,7 @@ namespace Enigma::SceneGraph
         enum SpatialBit
         {
             Spatial_None = 0x00,
-            Spatial_BelongToParent = 0x01,  ///< parent負責刪除
+            //Spatial_BelongToParent = 0x01,  ///< parent負責刪除, ==> 沒什麼用處, 刪掉
             Spatial_Hide = 0x02,
             Spatial_Unlit = 0x04,  ///< 不受光的物件, 可以不用計算lighting render state
             //Spatial_ShadowCaster = 0x10,  // move into shadow map module
@@ -65,6 +65,7 @@ namespace Enigma::SceneGraph
             Notify_Visibility = 0x04,
             Notify_CullMode = 0x08,
             Notify_RenderState = 0x10,
+            Notify_All = 0xff,
         };
         using NotifyFlags = std::bitset<5>;
 
@@ -171,15 +172,9 @@ namespace Enigma::SceneGraph
         CullingMode GetCullingMode() { return m_cullingMode; }
 
         /** add spatial flag */
-        void AddSpatialFlag(SpatialFlags flag)
-        {
-            m_spatialFlags |= flag;
-        }
+        void AddSpatialFlag(SpatialFlags flag);
         /** remove spatial flag */
-        void RemoveSpatialFlag(SpatialFlags flag)
-        {
-            m_spatialFlags &= (~flag);
-        }
+        void RemoveSpatialFlag(SpatialFlags flag);
         /** get spatial flag */
         SpatialFlags GetSpatialFlag() { return m_spatialFlags; }
         /** test spatial flag */
@@ -266,7 +261,8 @@ namespace Enigma::SceneGraph
 
         SpatialFlags m_spatialFlags;  ///< default: "belong to parent"
 
-        NotifyFlags m_notifyFlags;  ///< post message when location/bound/visibility... has changed, default is none
+        //todo : 先全開，之後再看效能決定要不要減少
+        NotifyFlags m_notifyFlags;  ///< post message when location/bound/visibility... has changed, default is all
     };
 
     using SpatialPtr = std::shared_ptr<Spatial>;

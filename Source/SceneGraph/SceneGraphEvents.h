@@ -50,6 +50,11 @@ namespace Enigma::SceneGraph
     public:
         SpatialRenderStateChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
     };
+    class SpatialVisibilityChanged : public SceneGraphEvent
+    {
+    public:
+        SpatialVisibilityChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+    };
     class SceneGraphChanged : public SceneGraphEvent
     {
     public:

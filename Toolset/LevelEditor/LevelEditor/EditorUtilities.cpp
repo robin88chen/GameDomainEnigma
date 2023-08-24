@@ -61,3 +61,14 @@ std::tuple<MathLib::Vector2, bool> LevelEditor::ParseTextToVector2(const std::st
     return { vec, true };
 }
 
+std::tuple<MathLib::ColorRGBA, bool> LevelEditor::ParseTextToColorRGBA(const std::string& value)
+{
+    TokenVector tokens = En_Split_Token(value, ", ");
+    if (tokens.size() < 4) return { MathLib::ColorRGBA::WHITE, false };
+    MathLib::ColorRGBA color;
+    for (unsigned int i = 0; i < 4; i++)
+    {
+        color[i] = (float)std::atof(tokens[i].c_str());
+    }
+    return { color, true };
+}

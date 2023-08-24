@@ -13,6 +13,7 @@
 #include "propertygrid/propertygrid.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Spatial.h"
+#include "SceneGraph/Light.h"
 
 namespace LevelEditor
 {
@@ -31,16 +32,19 @@ namespace LevelEditor
 
     private:
         void OnPropertyChanged(const nana::arg_propertygrid& arg);
+        void OnLightPropertyChanged(const nana::arg_propertygrid& arg);
         void OnAttributePropertiesChanged(size_t index, const std::string& value);
         void OnLocalSpatialPropertiesChanged(size_t index, const std::string& value);
         void OnWorldSpatialPropertiesChanged(size_t index, const std::string& value);
 
         void ShowSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
+        void ShowLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light);
 
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
     private:
         MainForm* m_mainForm;
         nana::propertygrid* m_properties;
+        nana::propertygrid* m_lightProperties;
         nana::place* m_place;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;

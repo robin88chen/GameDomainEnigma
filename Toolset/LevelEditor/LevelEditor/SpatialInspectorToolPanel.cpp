@@ -7,6 +7,7 @@
 #include "Frameworks/StringFormat.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "EditorUtilities.h"
+#include "SceneGraph/Light.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -29,6 +30,10 @@ using namespace Enigma::Engine;
 #define TAG_AXIS_2 "Axis 2"
 #define TAG_AXIS_3 "Axis 3"
 #define TAG_EXTENT "Extent"
+#define TAG_LIGHT "Light"
+#define TAG_COLOR "Color"
+#define TAG_DIRECTION "Direction"
+#define TAG_INTENSITY "Intensity"
 
 enum class CategoryIndex
 {
@@ -37,7 +42,12 @@ enum class CategoryIndex
     LocalSpatial,
     LocalBoundingBox,
     WorldSpatial,
-    WorldBoundingBox
+    WorldBoundingBox,
+};
+enum class LightCategoryIndex
+{
+    Empty,
+    Light,
 };
 enum class AttributePropertyIndex
 {
@@ -59,16 +69,25 @@ enum class BoundingBoxPropertyIndex
     Axis3,
     Size,
 };
+enum class LightPropertyIndex
+{
+    Color,
+    Direction,
+    Position,
+    Intensity,
+};
 
 SpatialInspectorPanel::SpatialInspectorPanel(const nana::window& wd) : panel<false>{ wd }
 {
     m_place = nullptr;
     m_properties = nullptr;
+    m_lightProperties = nullptr;
 }
 
 SpatialInspectorPanel::~SpatialInspectorPanel()
 {
     SAFE_DELETE(m_properties);
+    SAFE_DELETE(m_lightProperties);
     SAFE_DELETE(m_place);
 }
 
@@ -76,15 +95,21 @@ void SpatialInspectorPanel::Initialize(MainForm* form)
 {
     m_mainForm = form;
     m_place = menew nana::place{ *this };
-    m_place->div("margin=[4,4,4,4] vert<property>");
+    m_place->div("margin=[4,4,4,4] vert<property height=60%><light_property>");
 
     m_properties = new nana::propertygrid{ *this };
     UISchemeColors::ApplySchemaColors(m_properties->scheme());
     m_properties->ibox_show(false);
+    m_lightProperties = new nana::propertygrid{ *this };
+    UISchemeColors::ApplySchemaColors(m_lightProperties->scheme());
+    m_lightProperties->ibox_show(false);
     m_place->field("property") << *m_properties;
+    m_place->field("light_property") << *m_lightProperties;
     auto cat_attr = m_properties->append(TAG_ATTRIBUTES);
-    cat_attr.append(std::make_unique<nana::pg_string>(TAG_SPATIAL_NAME, "name"));
-    cat_attr.append(std::make_unique<nana::pg_string>(TAG_MODEL_NAME, "model"));
+    auto it = cat_attr.append(std::make_unique<nana::pg_string>(TAG_SPATIAL_NAME, "name"));
+    dynamic_cast<nana::pg_string*>(it._m_pgitem())->editable(false);
+    it = cat_attr.append(std::make_unique<nana::pg_string>(TAG_MODEL_NAME, "model"));
+    dynamic_cast<nana::pg_string*>(it._m_pgitem())->editable(false);
     cat_attr.append(std::make_unique<nana::pg_check>(TAG_VISIBLE, false));
 
     auto cat_spatial = m_properties->append(TAG_LOCAL_SPATIAL);
@@ -93,7 +118,7 @@ void SpatialInspectorPanel::Initialize(MainForm* form)
     cat_spatial.append(std::make_unique<nana::pg_string>(TAG_SCALE, "1, 1, 1"));
 
     auto cat_local_bb = m_properties->append(TAG_LOCAL_BOUNDING);
-    auto it = cat_local_bb.append(std::make_unique<nana::pg_string>(TAG_CENTER, "0, 0, 0"));
+    it = cat_local_bb.append(std::make_unique<nana::pg_string>(TAG_CENTER, "0, 0, 0"));
     dynamic_cast<nana::pg_string*>(it._m_pgitem())->editable(false);
     it = cat_local_bb.append(std::make_unique<nana::pg_string>(TAG_AXIS_1, "1, 0, 0"));
     dynamic_cast<nana::pg_string*>(it._m_pgitem())->editable(false);
@@ -119,7 +144,14 @@ void SpatialInspectorPanel::Initialize(MainForm* form)
     it = cat_world_bb.append(std::make_unique<nana::pg_string>(TAG_EXTENT, "1, 1, 1"));
     dynamic_cast<nana::pg_string*>(it._m_pgitem())->editable(false);
 
+    auto cat_light = m_lightProperties->append(TAG_LIGHT);
+    cat_light.append(std::make_unique<nana::pg_string>(TAG_COLOR, "1, 1, 1, 1"));
+    cat_light.append(std::make_unique<nana::pg_string>(TAG_DIRECTION, "1, 0, 0"));
+    cat_light.append(std::make_unique<nana::pg_string>(TAG_POSITION, "0, 0, 0"));
+    cat_light.append(std::make_unique<nana::pg_string>(TAG_INTENSITY, "1"));
+
     m_properties->events().property_changed([this](auto arg) {this->OnPropertyChanged(arg); });
+    m_lightProperties->events().property_changed([this](auto arg) {this->OnLightPropertyChanged(arg); });
     m_place->collocate();
 }
 
@@ -156,6 +188,36 @@ void SpatialInspectorPanel::OnPropertyChanged(const nana::arg_propertygrid& arg)
         break;
     default:
         break;
+    }
+}
+
+void SpatialInspectorPanel::OnLightPropertyChanged(const nana::arg_propertygrid& arg)
+{
+    if (m_selectedSpatial.expired()) return;
+    auto light = std::dynamic_pointer_cast<Enigma::SceneGraph::Light>(m_selectedSpatial.lock());
+    if (!light) return;
+    auto pos = arg.item.pos();
+    if (pos.cat != static_cast<size_t>(LightCategoryIndex::Light)) return;
+    size_t index = pos.item;
+    const std::string& value = arg.item.value();
+    switch (index)
+    {
+        case static_cast<size_t>(LightPropertyIndex::Color):
+            if (auto [color, isParseOk] = ParseTextToColorRGBA(value); isParseOk)
+            {
+                light->SetLightColor(color);
+            }
+            break;
+        case static_cast<size_t>(LightPropertyIndex::Direction):
+            if (auto [dir, isParseOk] = ParseTextToVector3(value); isParseOk)
+            {
+                light->SetLightDirection(dir);
+            }
+            break;
+        case static_cast<size_t>(LightPropertyIndex::Intensity):
+            float range = std::strtof(value.c_str(), nullptr);
+            if (range != HUGE_VALF) light->SetLightRange(range);
+            break;
     }
 }
 
@@ -205,6 +267,7 @@ void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const 
     default:
         break;
     }
+    ShowSpatialProperties(m_selectedSpatial.lock());
 }
 
 void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const std::string& value)
@@ -221,6 +284,7 @@ void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const 
     default:
         break;
     }
+    ShowSpatialProperties(m_selectedSpatial.lock());
 }
 
 void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial)
@@ -320,6 +384,46 @@ void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::
             std::string s = string_format("%6.2f, %6.2f, %6.2f", extent[0], extent[1], extent[2]);
             item.value(s);
         }
+    }
+
+    ShowLightProperties(std::dynamic_pointer_cast<Enigma::SceneGraph::Light>(spatial));
+}
+
+void SpatialInspectorPanel::ShowLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light)
+{
+    if (!light)
+    {
+        m_lightProperties->enabled(false);
+        return;
+    }
+    m_lightProperties->enabled(true);
+    Enigma::SceneGraph::LightInfo::LightType lit_type = light->Info().GetLightType();
+    if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_COLOR); item != nullptr)
+    {
+        ColorRGBA color = light->GetLightColor();
+        std::string s = string_format("%5.2f, %5.2f, %5.2f, %5.2f", color.R(), color.G(), color.B(), color.A());
+        item.value(s);
+    }
+    if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_DIRECTION); item != nullptr)
+    {
+        Vector3 dir = light->GetLightDirection();
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", dir.X(), dir.Y(), dir.Z());
+        item.value(s);
+        item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::SunLight || lit_type == Enigma::SceneGraph::LightInfo::LightType::Directional);
+    }
+    if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_POSITION); item != nullptr)
+    {
+        Vector3 pos = light->GetLightPosition();
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        item.value(s);
+        item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::Point);
+    }
+    if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_INTENSITY); item != nullptr)
+    {
+        float range = light->GetLightRange();
+        std::string s = string_format("%8.3f", range);
+        item.value(s);
+        item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::Point);
     }
 }
 

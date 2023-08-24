@@ -12,6 +12,7 @@
 #include <nana/gui/widgets/button.hpp>
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
+#include "MathLib/ColorRGBA.h"
 
 namespace LevelEditor
 {
@@ -19,6 +20,7 @@ namespace LevelEditor
     std::string FilePathCombinePathID(const std::filesystem::path& path, const std::string& path_id);
     std::tuple<Enigma::MathLib::Vector3, bool> ParseTextToVector3(const std::string& value);
     std::tuple<Enigma::MathLib::Vector2, bool> ParseTextToVector2(const std::string& value);
+    std::tuple<Enigma::MathLib::ColorRGBA, bool> ParseTextToColorRGBA(const std::string& value);
 }
 
 

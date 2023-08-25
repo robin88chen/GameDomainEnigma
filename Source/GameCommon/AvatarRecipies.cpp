@@ -217,5 +217,5 @@ void ChangeAvatarTexture::OnLoadTextureResponse(const Frameworks::IResponsePtr& 
     if (res->GetRequestRuid() != m_requsetRuid) return;
     if (res->GetErrorCode()) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->ChangeTexture({ m_textureDto.Semantic(), res->GetTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), res->GetTexture(), m_textureDto.ArrayIndex() });
 }

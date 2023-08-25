@@ -165,29 +165,29 @@ unsigned MeshPrimitive::GetTextureMapCount() const
     return static_cast<unsigned>(m_textures.size());
 }
 
-void MeshPrimitive::ChangeTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple)
+void MeshPrimitive::ChangeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
     if (m_textures.empty()) return;
     LoosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
-        tm.ChangeTexture(tuple);
+        tm.ChangeSemanticTexture(tuple);
     }
     BindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::BindTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple)
+void MeshPrimitive::BindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
     if (m_textures.empty()) return;
     LoosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
-        tm.BindTexture(tuple);
+        tm.BindSemanticTexture(tuple);
     }
     BindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::BindTextures(const EffectTextureMap::EffectTextures& texture_tuples)
+void MeshPrimitive::BindSegmentTextures(const EffectTextureMap::SegmentEffectTextures& texture_tuples)
 {
     if (m_textures.empty()) return;
     LoosePrimitiveEffectTexture();
@@ -195,7 +195,7 @@ void MeshPrimitive::BindTextures(const EffectTextureMap::EffectTextures& texture
     {
         for (auto& tuple : texture_tuples)
         {
-            tm.BindTexture(tuple);
+            tm.BindSemanticTexture(tuple);
         }
     }
     BindPrimitiveEffectTexture();
@@ -307,7 +307,7 @@ void MeshPrimitive::ChangeTextureMapInSegment(unsigned index, const Engine::Effe
     BindSegmentEffectTexture(index);
 }
 
-void MeshPrimitive::ChangeTextureMap(const TextureMapList& tex_maps)
+void MeshPrimitive::ChangeTextureMaps(const TextureMapList& tex_maps)
 {
     LoosePrimitiveEffectTexture();
     m_textures.clear();
@@ -351,7 +351,7 @@ void MeshPrimitive::BindPrimitiveEffectTexture()
         if (*eff_iter == nullptr) continue;
         for (unsigned i = 0; i < (*tex_iter).GetCount(); i++)
         {
-            auto& eff_tex_set = (*tex_iter).GetEffectTextureTuple(i);
+            auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
             if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
             // 改直接指定
             (*eff_iter)->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
@@ -379,7 +379,7 @@ void MeshPrimitive::LoosePrimitiveEffectTexture()
         if (*eff_iter == nullptr) continue;
         for (unsigned i = 0; i < (*tex_iter).GetCount(); i++)
         {
-            auto& eff_tex_set = (*tex_iter).GetEffectTextureTuple(i);
+            auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
             // 改直接指定
             (*eff_iter)->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
             /*(*eff_iter)->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
@@ -398,7 +398,7 @@ void MeshPrimitive::BindSegmentEffectTexture(unsigned index)
     if (m_effects[index] == nullptr) return;
     for (unsigned i = 0; i < m_textures[index].GetCount(); i++)
     {
-        auto& eff_tex_set = (m_textures[index]).GetEffectTextureTuple(i);
+        auto& eff_tex_set = (m_textures[index]).GetEffectSemanticTextureTuple(i);
         if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
         // 改直接指定
         m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
@@ -419,7 +419,7 @@ void MeshPrimitive::LooseSegmentEffectTexture(unsigned index)
     if (m_effects[index] == nullptr) return;
     for (unsigned i = 0; i < m_textures[index].GetCount(); i++)
     {
-        auto& eff_tex_set = m_textures[index].GetEffectTextureTuple(i);
+        auto& eff_tex_set = m_textures[index].GetEffectSemanticTextureTuple(i);
         // 改直接指定
         m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{nullptr, std::nullopt});
         /*m_effects[index]->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),

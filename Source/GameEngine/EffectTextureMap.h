@@ -23,12 +23,12 @@ namespace Enigma::Engine
     class EffectTextureMap
     {
     public:
-        using EffectTextureTuple = std::tuple<std::string, std::shared_ptr<Texture>, std::optional<unsigned>>;
-        using EffectTextures = std::vector<EffectTextureTuple>;
+        using EffectSemanticTextureTuple = std::tuple<std::string, std::shared_ptr<Texture>, std::optional<unsigned>>;
+        using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
     public:
         EffectTextureMap();
-        EffectTextureMap(const EffectTextureTuple& tuple);
-        EffectTextureMap(const EffectTextures& textures);
+        EffectTextureMap(const EffectSemanticTextureTuple& tuple);
+        EffectTextureMap(const SegmentEffectTextures& textures);
         EffectTextureMap(const EffectTextureMap&) = default;
         EffectTextureMap(EffectTextureMap&&) = default;
         virtual ~EffectTextureMap();
@@ -37,11 +37,11 @@ namespace Enigma::Engine
 
         GenericDto SerializeDto() const;
 
-        error BindTexture(const EffectTextureTuple& tuple);
-        error ChangeTexture(const EffectTextureTuple& tuple);
+        error BindSemanticTexture(const EffectSemanticTextureTuple& tuple);
+        error ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple);
         unsigned AppendTextureSemantic(const std::string& semantic);  ///< return index
         std::shared_ptr<Texture> GetTexture(unsigned index);
-        const EffectTextureTuple& GetEffectTextureTuple(unsigned index);
+        const EffectSemanticTextureTuple& GetEffectSemanticTextureTuple(unsigned index);
         const unsigned int GetCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
 
         bool IsAllResourceTexture() const;
@@ -53,7 +53,7 @@ namespace Enigma::Engine
         std::optional<unsigned> GetTextureIndexBySemantic(const std::string& semantic);
 
     protected:
-        EffectTextures m_effectTextures;
+        SegmentEffectTextures m_effectTextures;
     };
 }
 

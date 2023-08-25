@@ -184,7 +184,7 @@ void MeshPrimitiveBuilder::OnLoadTextureResponse(const Frameworks::IResponsePtr&
     const unsigned tuple_idx = std::get<1>(found_idx.value());
     auto semantic = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
     auto array_idx = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
-    m_builtTextures[tex_idx].ChangeTexture({ semantic, res->GetTexture(), array_idx });
+    m_builtTextures[tex_idx].ChangeSemanticTexture({ semantic, res->GetTexture(), array_idx });
     TryCompletingMesh();
 }
 
@@ -204,7 +204,7 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
         }
     }
     m_builtPrimitive->ChangeEffectMaterial(m_builtEffects);
-    m_builtPrimitive->ChangeTextureMap(m_builtTextures);
+    m_builtPrimitive->ChangeTextureMaps(m_builtTextures);
     m_builtPrimitive->CreateRenderElements();
     m_builtPrimitive->RenderListID() = m_policy->RenderListId();
     m_builtPrimitive->SelectVisualTechnique(m_policy->VisualTechniqueSelection());

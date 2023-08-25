@@ -33,6 +33,7 @@ namespace LevelEditor
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
 
         void CreateBrushPawn();
 
@@ -43,6 +44,7 @@ namespace LevelEditor
         //Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
     };
 }
 

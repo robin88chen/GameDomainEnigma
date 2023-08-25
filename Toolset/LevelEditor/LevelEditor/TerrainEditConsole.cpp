@@ -6,11 +6,11 @@
 #include "GameEngine/StandardGeometryDtoHelper.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "GameCommon/GameSceneCommands.h"
+#include "GameCommon/DeferredRenderingCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -41,6 +41,9 @@ ServiceResult TerrainEditConsole::OnInit()
     EventPublisher::Subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
+    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+
     return ServiceResult::Complete;
 }
 
@@ -50,6 +53,9 @@ ServiceResult TerrainEditConsole::OnTerm()
     m_onEditorModeChanged = nullptr;
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnPrimitiveBuilt = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -99,4 +105,14 @@ void TerrainEditConsole::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& 
     m_brush = pawn;
     CommandBus::Post(std::make_shared<OutputMessage>("Brush Pawn Created"));
     CommandBus::Post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, Enigma::MathLib::Matrix4::IDENTITY));
+}
+
+void TerrainEditConsole::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (m_brush.expired()) return;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
+    if (!ev) return;
+    if (ev->GetPawn() != m_brush.lock()) return;
+    CommandBus::Post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->GetPawn()));
 }

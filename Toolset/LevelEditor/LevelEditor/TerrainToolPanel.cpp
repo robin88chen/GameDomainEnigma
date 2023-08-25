@@ -1,11 +1,17 @@
 ﻿#include "TerrainToolPanel.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
+#include "LevelEditorUiEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace LevelEditor;
 
 constexpr int max_brush_size = 20;
 constexpr unsigned int max_density_value = 20;
+
+constexpr size_t terrain_edit_mode_raise_height = 1;
+constexpr size_t terrain_edit_mode_lower_height = 2;
+constexpr size_t terrain_edit_mode_paint_texture = 3;
 
 TerrainToolPanel::TerrainToolPanel(const nana::window& wd) : panel<false>{ wd }
 {
@@ -33,7 +39,7 @@ TerrainToolPanel::~TerrainToolPanel()
     SAFE_DELETE(m_textureDensityLabel);
 }
 
-void TerrainToolPanel::Initialize(MainForm* form)
+void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
 {
     m_mainForm = form;
     m_place = menew nana::place{ *this };
@@ -41,6 +47,24 @@ void TerrainToolPanel::Initialize(MainForm* form)
 
     m_toolbar = menew nana::toolbar(*this);
     UISchemeColors::ApplySchemaColors(m_toolbar->scheme());
+    m_toolbar->append(nana::toolbar::tools::toggle, "Raise Terrain Height",
+        nana::paint::image("icons/raise_height.bmp")).toggle_group("brush_type")
+        .answerer([this](const nana::toolbar::item_proxy& it)
+            {
+                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Raise);
+            });
+    m_toolbar->append(nana::toolbar::tools::toggle, "Lower Terrain Height",
+        nana::paint::image("icons/lower_height.bmp")).toggle_group("brush_type")
+        .answerer([this](const nana::toolbar::item_proxy& it)
+            {
+                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Lower);
+            });
+    m_toolbar->append(nana::toolbar::tools::toggle, "Paint Texture Layer",
+        nana::paint::image("icons/texture_brush.bmp")).toggle_group("brush_type")
+        .answerer([this](const nana::toolbar::item_proxy& it)
+            {
+                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Paint);
+            });
     m_place->field("toolbar").fasten(*m_toolbar);
 
     m_terrainName = menew nana::label(*this, "Terrain Name");
@@ -70,6 +94,15 @@ void TerrainToolPanel::Initialize(MainForm* form)
     m_textureDensity->events().value_changed([this](const nana::arg_slider& a) { this->OnLayerDensityChanged(a); });
     m_place->field("texture_density") << *m_textureDensityLabel << *m_textureDensity;
 
+    m_textureLayerButtons.resize(texture_btn_count);
+    for (unsigned i = 0; i < texture_btn_count; i++)
+    {
+        m_textureLayerButtons[i] = menew nana::button(*this, nana::rectangle(nana::size(64, 64)));
+        m_textureLayerButtons[i]->enable_pushed(true);
+        m_textureLayerButtons[i]->events().click([=](const nana::arg_click& a) { this->OnTextureLayerButton(a, i); });
+        m_place->field("texture_btns") << *m_textureLayerButtons[i];
+    }
+
     m_place->collocate();
 }
 
@@ -80,10 +113,17 @@ void TerrainToolPanel::SetTerrainName(const std::string& name)
 
 void TerrainToolPanel::OnBrushSizeChanged(const nana::arg_spinbox& arg)
 {
+    if (!m_brushSizeSpin) return;
+    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
 }
 
 void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
 {
+    if ((m_brushHeight) && (!m_brushHeight->text().empty()))
+    {
+        auto height = static_cast<float>(m_brushHeight->to_double());
+        Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushHeightChanged>(height));
+    }
 }
 
 void TerrainToolPanel::OnLayerDensityChanged(const nana::arg_slider& arg)
@@ -94,3 +134,7 @@ void TerrainToolPanel::OnTextureLayerButton(const nana::arg_click& arg, unsigned
 {
 }
 
+void TerrainToolPanel::OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
+{
+    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainEditToolSelected>(tool));
+}

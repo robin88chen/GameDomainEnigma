@@ -16,6 +16,7 @@
 #include "AppConfiguration.h"
 #include "LevelEditorCommands.h"
 #include "WorldEditService.h"
+#include "TerrainEditService.h"
 #include "TerrainEditConsole.h"
 #include "WorldMap/WorldMapService.h"
 #include "Gateways/DtoJsonGateway.h"
@@ -164,7 +165,7 @@ void MainForm::InitPanels()
     get_place().field("toolsframe").fasten(*m_spatialInspectorPanel);
     m_tabbar->append("Inspector", *m_spatialInspectorPanel);
     m_terrainToolPanel = menew TerrainToolPanel{ *this };
-    m_terrainToolPanel->Initialize(this);
+    m_terrainToolPanel->Initialize(this, TerrainEditService::TextureLayerNum);
     get_place().field("toolsframe").fasten(*m_terrainToolPanel);
     m_tabbar->append("Terrain", *m_terrainToolPanel);
 

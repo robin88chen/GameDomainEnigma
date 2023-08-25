@@ -157,5 +157,8 @@
     <ClInclude Include="LightEditService.h">
       <Filter>EditorServices</Filter>
     </ClInclude>
+    <ClInclude Include="LevelEditorUiEvents.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

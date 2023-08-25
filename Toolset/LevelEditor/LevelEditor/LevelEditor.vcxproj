@@ -165,6 +165,7 @@
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="LevelEditorEvents.h" />
+    <ClInclude Include="LevelEditorUiEvents.h" />
     <ClInclude Include="LightEditService.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />

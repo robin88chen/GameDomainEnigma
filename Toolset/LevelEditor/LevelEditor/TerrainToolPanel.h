@@ -15,6 +15,8 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/slider.hpp>
+#include <nana/gui/widgets/button.hpp>
+#include "LevelEditorUiEvents.h"
 
 namespace LevelEditor
 {
@@ -25,7 +27,7 @@ namespace LevelEditor
         TerrainToolPanel(const nana::window& wd);
         virtual ~TerrainToolPanel();
 
-        void Initialize(MainForm* form);
+        void Initialize(MainForm* form, unsigned texture_btn_count);
         void SetTerrainName(const std::string& name);
 
     private:
@@ -33,6 +35,7 @@ namespace LevelEditor
         void OnBrushHeightChanged(const nana::arg_textbox& arg);
         void OnLayerDensityChanged(const nana::arg_slider& arg);
         void OnTextureLayerButton(const nana::arg_click& arg, unsigned int index);
+        void OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool);
 
     private:
         MainForm* m_mainForm;
@@ -45,6 +48,7 @@ namespace LevelEditor
         nana::label* m_brushHeightLabel;
         nana::slider* m_textureDensity;
         nana::label* m_textureDensityLabel;
+        std::vector<nana::button*> m_textureLayerButtons;
     };
 }
 

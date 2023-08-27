@@ -12,6 +12,7 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Pawn.h"
+#include "GraphicKernel/TargetViewPort.h"
 
 namespace LevelEditor
 {

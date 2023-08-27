@@ -185,3 +185,4 @@ void TerrainEditConsole::OnTerrainToolSelected(const Enigma::Frameworks::IEventP
     }
     CommandBus::Post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
 }
+

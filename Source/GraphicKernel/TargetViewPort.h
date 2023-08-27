@@ -1,12 +1,13 @@
 ﻿/********************************************************************
  * \file   TargetViewPort.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
 #ifndef TARGET_VIEWPORT_H
 #define TARGET_VIEWPORT_H
+#include <tuple>
 
 namespace Enigma::Graphics
 {
@@ -38,6 +39,8 @@ namespace Enigma::Graphics
         inline float& MaxZ() { return m_maxZ; };
 
         bool operator==(const TargetViewPort& vp);
+
+        std::tuple<float, float> ViewportXYToClippingXY(float x, float y) const;
 
     private:
         unsigned int m_x;

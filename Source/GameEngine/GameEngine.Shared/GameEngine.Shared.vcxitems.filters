@@ -79,6 +79,9 @@
     <Filter Include="Events &amp; Response">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Intersect">
+      <UniqueIdentifier>{47ac7be6-0a7d-4a65-9752-d8105c263d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -285,6 +288,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
       <Filter>DTOs</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -415,6 +427,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
       <Filter>DTOs\Effect Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
+      <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
+      <Filter>Intersect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

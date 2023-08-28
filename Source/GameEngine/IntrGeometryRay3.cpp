@@ -1,7 +1,8 @@
-#include "IntrGeometryRay3.h"
+ï»¿#include "IntrGeometryRay3.h"
 #include "IntrBVRay3.h"
 #include "IntrGeometryCache.h"
 #include "TriangleList.h"
+#include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -28,15 +29,15 @@ const GeometryDataPtr& IntrGeometryRay3::GetGeometry()
     return m_geometry;
 }
 
-bool IntrGeometryRay3::Test(IntersectorCache* last_result)
+Intersector::Result IntrGeometryRay3::Test(IntersectorCache* last_result)
 {
-    if (!m_geometry) return false;
+    if (!m_geometry) return { false, last_result };
     // test bounding volume first
     if (!m_geometry->GetBoundingVolume().IsEmpty())
     {
         IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
-        bool res = intr_bv.Test(nullptr);
-        if (!res) return res;
+        auto res = intr_bv.Test(nullptr);
+        if (!res.m_hasIntersect) return { false, last_result };
     }
 
     // test for triangle list
@@ -49,18 +50,18 @@ bool IntrGeometryRay3::Test(IntersectorCache* last_result)
         }
         return TestForTriangleList(geo_cache);
     }
-    return false;
+    return { false, last_result };
 }
 
-bool IntrGeometryRay3::Find(IntersectorCache* last_result)
+Intersector::Result IntrGeometryRay3::Find(IntersectorCache* last_result)
 {
-    if (!m_geometry) return false;
+    if (!m_geometry) return { false, last_result };
     // test bounding volume first
     if (!m_geometry->GetBoundingVolume().IsEmpty())
     {
         IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
-        bool res = intr_bv.Test(nullptr);
-        if (!res) return res;
+        auto res = intr_bv.Test(nullptr);
+        if (!res.m_hasIntersect) return { false, last_result };
     }
 
     // test for triangle list
@@ -73,7 +74,7 @@ bool IntrGeometryRay3::Find(IntersectorCache* last_result)
         }
         return FindForTriangleList(geo_cache);
     }
-    return false;
+    return { false, last_result };
 }
 
 size_t IntrGeometryRay3::GetQuantity() const
@@ -103,13 +104,13 @@ const std::vector<float>& IntrGeometryRay3::GetParamArray() const
     return m_tParams;
 }
 
-bool IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo_cache)
+Intersector::Result IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo_cache)
 {
     TriangleListPtr tri_list = std::dynamic_pointer_cast<TriangleList, GeometryData>(m_geometry);
-    if (!tri_list) return false;
+    if (!tri_list) return { false, geo_cache };
 
     unsigned int tri_count = tri_list->GetTriangleCount();
-    if (tri_count <= 0) return false;
+    if (tri_count <= 0) return { false, geo_cache };
 
     unsigned int start_index = 0;
     if (geo_cache) start_index = geo_cache->GetElementCachedIndex();
@@ -119,7 +120,7 @@ bool IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo_cache)
     if (backward_count > forward_count) test_total = backward_count * 2;
 
     Vector3 triangle[3];
-    for (unsigned int i = 1; i < test_total; i++) // ±q1¶}©l¡A¥[´î0¬O¤@¼Ëªº
+    for (unsigned int i = 1; i < test_total; i++) // å¾ž1é–‹å§‹ï¼ŒåŠ æ¸›0æ˜¯ä¸€æ¨£çš„
     {
         int tri_index;
         if (i & 0x01)
@@ -136,23 +137,24 @@ bool IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo_cache)
         if (const_cast<Ray3&>(m_ray).TestIntersectTriangle(triangle)) continue;
 
         // if we got here, we found intersection
+        if (geo_cache == nullptr) geo_cache = menew IntrGeometryCache();
         if (geo_cache) geo_cache->SetElementCachedIndex(tri_index);
-        return true;
+        return { true, geo_cache };
     }
 
-    return false;
+    return { false, geo_cache };
 }
 
-bool IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
+Intersector::Result IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
 {
     m_tParams.clear();
     m_points.clear();
 
     TriangleListPtr tri_list = std::dynamic_pointer_cast<TriangleList, GeometryData>(m_geometry);
-    if (!tri_list) return false;
+    if (!tri_list) return { false, geo_cache };
 
     unsigned int tri_count = tri_list->GetTriangleCount();
-    if (tri_count <= 0) return false;
+    if (tri_count <= 0) return { false, geo_cache };
 
     unsigned int start_index = 0;
     if (geo_cache) start_index = geo_cache->GetElementCachedIndex();
@@ -165,7 +167,7 @@ bool IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
     unsigned int result_count = 0;
 
     Vector3 triangle[3];
-    for (unsigned int i = 1; i < test_total; i++) // ±q1¶}©l¡A¥[´î0¬O¤@¼Ëªº
+    for (unsigned int i = 1; i < test_total; i++) // å¾ž1é–‹å§‹ï¼ŒåŠ æ¸›0æ˜¯ä¸€æ¨£çš„
     {
         int tri_index;
         if (i & 0x01)
@@ -184,12 +186,13 @@ bool IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
 
         // if we got here, we found intersection
         m_tParams.emplace_back(t);
+        if (geo_cache == nullptr) geo_cache = menew IntrGeometryCache();
         if (geo_cache) geo_cache->SetElementCachedIndex(tri_index);
         result_count++;
         if (result_count >= req_result_total) break;
     }
 
-    if (m_tParams.empty()) return false;
+    if (m_tParams.empty()) return { false, geo_cache };
     sort(m_tParams.begin(), m_tParams.end());
 
     m_points.resize(m_tParams.size());
@@ -198,5 +201,5 @@ bool IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
         m_points[i] = m_tParams[i] * m_ray.Direction() + m_ray.Origin();
     }
 
-    return true;
+    return { true, geo_cache };
 }

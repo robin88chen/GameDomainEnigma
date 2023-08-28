@@ -27,8 +27,8 @@ namespace Enigma::Engine
         const BoundingVolume& GetBV() const;
 
         // static test-intersection query
-        virtual bool Test(MathLib::IntersectorCache* last_result) override;
-        virtual bool Find(MathLib::IntersectorCache* last_result) override;
+        virtual Result Test(MathLib::IntersectorCache* last_result) override;
+        virtual Result Find(MathLib::IntersectorCache* last_result) override;
 
         // the intersection set
         size_t GetQuantity() const;

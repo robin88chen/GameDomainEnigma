@@ -22,7 +22,7 @@ const Box3& IntrRay3Box3::GetBox() const
     return m_box;
 }
 
-bool IntrRay3Box3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrRay3Box3::Test(IntersectorCache* /*last_result*/)
 {
     /** RayOBB intersection, form Real-time Rendering p574 */
     float tmin = -Math::MAX_FLOAT;
@@ -46,10 +46,10 @@ bool IntrRay3Box3::Test(IntersectorCache* /*last_result*/)
             if (t1 > tmin) tmin = t1;
             if (t2 < tmax) tmax = t2;
 
-            if (tmin > tmax) return false;
-            if (tmax < 0.0f) return false;
+            if (tmin > tmax) return { false, nullptr };
+            if (tmax < 0.0f) return { false, nullptr };
         }
-        else if ((-e - m_box.Extent(i) > 0.0f) || (-e + m_box.Extent(i) < 0.0f)) return false; // 射線與slab plane是平行的，所以要確認射線的原點是否在兩slab plane中間
+        else if ((-e - m_box.Extent(i) > 0.0f) || (-e + m_box.Extent(i) < 0.0f)) return { false, nullptr }; // 射線與slab plane是平行的，所以要確認射線的原點是否在兩slab plane中間
     }
 
     if (tmin > 0.0f)
@@ -64,12 +64,12 @@ bool IntrRay3Box3::Test(IntersectorCache* /*last_result*/)
         m_tParam[m_quantity] = tmax;
         m_quantity++;
     }
-    if (m_quantity == 0) return false;
+    if (m_quantity == 0) return { false, nullptr };
     //assert(m_iQuantity);  // 至少要有一個
-    return true;
+    return { true, nullptr };
 }
 
-bool IntrRay3Box3::Find(IntersectorCache* last_result)
+Intersector::Result IntrRay3Box3::Find(IntersectorCache* last_result)
 {
     // 因為沒有多少運算上的差異，所以直接呼叫Test
     return Test(last_result);

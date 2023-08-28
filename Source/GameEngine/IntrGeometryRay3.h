@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   IntrGeometryRay3.h
  * \brief  
  * 
@@ -29,8 +29,8 @@ namespace Enigma::Engine
         const GeometryDataPtr& GetGeometry();
 
         // static test-intersection query
-        virtual bool Test(MathLib::IntersectorCache* last_result) override;
-        virtual bool Find(MathLib::IntersectorCache* last_result) override;
+        virtual Result Test(MathLib::IntersectorCache* last_result) override;
+        virtual Result Find(MathLib::IntersectorCache* last_result) override;
 
         // the intersection set
         size_t GetQuantity() const;
@@ -41,8 +41,8 @@ namespace Enigma::Engine
         const std::vector<float>& GetParamArray() const;
 
     private:
-        bool TestForTriangleList(IntrGeometryCache* geo_cache);
-        bool FindForTriangleList(IntrGeometryCache* geo_cache);
+        Result TestForTriangleList(IntrGeometryCache* geo_cache);
+        Result FindForTriangleList(IntrGeometryCache* geo_cache);
 
     private:
         // the objects to intersect

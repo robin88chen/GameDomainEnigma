@@ -22,15 +22,23 @@ namespace Enigma::MathLib
     class Intersector
     {
     public:
+        struct Result
+        {
+            Result(bool has_intr, IntersectorCache* cache) : m_hasIntersect(has_intr), m_cache(cache) {}
+
+            bool m_hasIntersect;
+            IntersectorCache* m_cache;
+        };
+    public:
         virtual ~Intersector();
 
         /** Static intersection queries.  The default implementations return 'false'. */
-        virtual bool Test(IntersectorCache* last_result);
+        virtual Result Test(IntersectorCache* last_result);
 
         /** Static intersection queries.  The default implementations call Test() (return 'false').
          Produces a set of intersection.  The derived class is responsible for providing access to that set, since the nature
          of the set is dependent on the object types. */
-        virtual bool Find(IntersectorCache* last_result);
+        virtual Result Find(IntersectorCache* last_result);
 
         /** Intersection Type -- information about the intersection set */
         enum class IntersectionType

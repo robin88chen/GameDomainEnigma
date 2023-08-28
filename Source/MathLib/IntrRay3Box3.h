@@ -27,8 +27,8 @@ namespace Enigma::MathLib
         const Box3& GetBox() const;
 
         // static test-intersection query
-        virtual bool Test(IntersectorCache* last_result) override;
-        virtual bool Find(IntersectorCache* last_result) override;
+        virtual Result Test(IntersectorCache* last_result) override;
+        virtual Result Find(IntersectorCache* last_result) override;
 
         // the intersection set
         int GetQuantity() const;

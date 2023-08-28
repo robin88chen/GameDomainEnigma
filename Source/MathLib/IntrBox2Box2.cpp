@@ -18,7 +18,7 @@ const Box2& IntrBox2Box2::GetBox1() const
     return m_box1;
 }
 
-bool IntrBox2Box2::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox2Box2::Test(IntersectorCache* /*last_result*/)
 {
     // convenience variables
     const Vector2* axisA = m_box0.Axis();
@@ -37,7 +37,7 @@ bool IntrBox2Box2::Test(IntersectorCache* /*last_result*/)
     absADotD = fabs(axisA[0].Dot(vecD));
     sum = extentA[0] + extentB[0] * absADotB[0][0] + extentB[1] * absADotB[0][1];
     if (absADotD > sum)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A1
     absADotB[1][0] = fabs(axisA[1].Dot(axisB[0]));
@@ -45,19 +45,19 @@ bool IntrBox2Box2::Test(IntersectorCache* /*last_result*/)
     absADotD = fabs(axisA[1].Dot(vecD));
     sum = extentA[1] + extentB[0] * absADotB[1][0] + extentB[1] * absADotB[1][1];
     if (absADotD > sum)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*B0
     absADotD = fabs(axisB[0].Dot(vecD));
     sum = extentB[0] + extentA[0] * absADotB[0][0] + extentA[1] * absADotB[1][0];
     if (absADotD > sum)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*B1
     absADotD = fabs(axisB[1].Dot(vecD));
     sum = extentB[1] + extentA[0] * absADotB[0][1] + extentA[1] * absADotB[1][1];
     if (absADotD > sum)
-        return false;
+        return { false, nullptr };
 
-    return true;
+    return { true, nullptr };
 }

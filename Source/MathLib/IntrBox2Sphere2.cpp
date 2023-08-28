@@ -18,7 +18,7 @@ const Sphere2& IntrBox2Sphere2::GetSphere() const
     return m_sphere;
 }
 
-bool IntrBox2Sphere2::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox2Sphere2::Test(IntersectorCache* /*last_result*/)
 {
     // Test for intersection in the coordinate system of the box by
     // transforming the sphere into that coordinate system.
@@ -29,5 +29,5 @@ bool IntrBox2Sphere2::Test(IntersectorCache* /*last_result*/)
     float dx = ax - m_box.Extent(0);
     float dy = ay - m_box.Extent(1);
 
-    return ((dx <= m_sphere.Radius()) && (dy <= m_sphere.Radius()));
+    return { ((dx <= m_sphere.Radius()) && (dy <= m_sphere.Radius())), nullptr };
 }

@@ -12,14 +12,14 @@ Intersector::~Intersector()
 {
 }
 
-bool Intersector::Test(IntersectorCache* /*last_result*/)
+Intersector::Result Intersector::Test(IntersectorCache* /*last_result*/)
 {
     // stub for derived class
     assert(false);
-    return false;
+    return { false, nullptr };
 }
 
-bool Intersector::Find(IntersectorCache* last_result)
+Intersector::Result Intersector::Find(IntersectorCache* last_result)
 {
     return Test(last_result);
 }

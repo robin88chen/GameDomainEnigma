@@ -27,24 +27,24 @@ const BoundingVolume& IntrBVRay3::GetBV() const
     return m_bv;
 }
 
-bool IntrBVRay3::Test(IntersectorCache*)
+Intersector::Result IntrBVRay3::Test(IntersectorCache*)
 {
     if (auto box = m_bv.BoundingBox3())
     {
         IntrRay3Box3 intr_box(m_ray, *box);
-        bool res = intr_box.Test(nullptr);
+        auto res = intr_box.Test(nullptr);
         return res;
     }
     if (auto sphere = m_bv.BoundingSphere3())
     {
         IntrRay3Sphere3 intr_sphere(m_ray, *sphere);
-        bool res = intr_sphere.Test(nullptr);
+        auto res = intr_sphere.Test(nullptr);
         return res;
     }
-    return false;
+    return { false, nullptr };
 }
 
-bool IntrBVRay3::Find(IntersectorCache*)
+Intersector::Result IntrBVRay3::Find(IntersectorCache*)
 {
     m_points.clear();
     m_tParams.clear();
@@ -52,8 +52,8 @@ bool IntrBVRay3::Find(IntersectorCache*)
     if (auto box = m_bv.BoundingBox3())
     {
         IntrRay3Box3 intr_box(m_ray, *box);
-        bool res = intr_box.Find(nullptr);
-        if (res)
+        auto res = intr_box.Find(nullptr);
+        if (res.m_hasIntersect)
         {
             for (int i = 0; i < intr_box.GetQuantity(); i++)
             {
@@ -66,8 +66,8 @@ bool IntrBVRay3::Find(IntersectorCache*)
     if (auto sphere = m_bv.BoundingSphere3())
     {
         IntrRay3Sphere3 intr_sphere(m_ray, *sphere);
-        bool res = intr_sphere.Find(0);
-        if (res)
+        auto res = intr_sphere.Find(0);
+        if (res.m_hasIntersect)
         {
             for (int i = 0; i < intr_sphere.GetQuantity(); i++)
             {
@@ -77,7 +77,7 @@ bool IntrBVRay3::Find(IntersectorCache*)
         }
         return res;
     }
-    return false;
+    return { false, nullptr };
 }
 
 size_t IntrBVRay3::GetQuantity() const

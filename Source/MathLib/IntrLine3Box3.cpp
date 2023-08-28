@@ -22,7 +22,7 @@ const Box3& IntrLine3Box3::GetBox() const
     return m_box;
 }
 
-bool IntrLine3Box3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrLine3Box3::Test(IntersectorCache* /*last_result*/)
 {
     /** algorism from 3D game engine architecture p.520~p.521 & wildmagic code */
     /** 有點複雜的理論，還跟Minkowski difference有關 */
@@ -37,7 +37,7 @@ bool IntrLine3Box3::Test(IntersectorCache* /*last_result*/)
     rhs = m_box.Extent(1) * AWdU[2] + m_box.Extent(2) * AWdU[1];
     if (AWxDdU[0] > rhs)
     {
-        return false;
+        return { false, nullptr };
     }
 
     AWdU[0] = fabs(m_line.Direction().Dot(m_box.Axis(0)));
@@ -45,20 +45,20 @@ bool IntrLine3Box3::Test(IntersectorCache* /*last_result*/)
     rhs = m_box.Extent(0) * AWdU[2] + m_box.Extent(2) * AWdU[0];
     if (AWxDdU[1] > rhs)
     {
-        return false;
+        return { false, nullptr };
     }
 
     AWxDdU[2] = fabs(WxD.Dot(m_box.Axis(2)));
     rhs = m_box.Extent(0) * AWdU[1] + m_box.Extent(1) * AWdU[0];
     if (AWxDdU[2] > rhs)
     {
-        return false;
+        return { false, nullptr };
     }
 
-    return true;
+    return { true, nullptr };
 }
 
-bool IntrLine3Box3::Find(IntersectorCache* /*last_result*/)
+Intersector::Result IntrLine3Box3::Find(IntersectorCache* /*last_result*/)
 {
     float t0 = -Math::MAX_FLOAT, t1 = Math::MAX_FLOAT;
 
@@ -105,7 +105,7 @@ bool IntrLine3Box3::Find(IntersectorCache* /*last_result*/)
         m_quantity = 0;
     }
 
-    return (m_quantity != 0);
+    return { (m_quantity != 0), nullptr };
 }
 
 bool IntrLine3Box3::Clip(float denom, float numer, float& t0, float& t1)

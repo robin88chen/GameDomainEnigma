@@ -21,32 +21,32 @@ const Sphere3& IntrRay3Sphere3::GetSphere() const
     return m_sphere;
 }
 
-bool IntrRay3Sphere3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrRay3Sphere3::Test(IntersectorCache* /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.Origin();
     float s = l.Dot(m_ray.Direction());
     float sq_l = l.SquaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
-    if ((s < 0.0f) && (sq_l > sq_r)) return false;
+    if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
 
     float sq_m = sq_l - s * s;
-    if (sq_m > sq_r) return false;
+    if (sq_m > sq_r) return { false, nullptr };
 
-    return true;
+    return { true, nullptr };
 }
 
-bool IntrRay3Sphere3::Find(IntersectorCache* /*last_result*/)
+Intersector::Result IntrRay3Sphere3::Find(IntersectorCache* /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.Origin();
     float s = l.Dot(m_ray.Direction());
     float sq_l = l.SquaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
-    if ((s < 0.0f) && (sq_l > sq_r)) return false;
+    if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
 
     float sq_m = sq_l - s * s;
-    if (sq_m > sq_r) return false;
+    if (sq_m > sq_r) return { false, nullptr };
 
     float q = sqrt(sq_r - sq_m);
     if (sq_l > sq_r)
@@ -63,7 +63,7 @@ bool IntrRay3Sphere3::Find(IntersectorCache* /*last_result*/)
         m_tParam[0] = s + q;
         m_point[0] = m_tParam[0] * m_ray.Direction() + m_ray.Origin();
     }
-    return true;
+    return { true, nullptr };
 }
 
 int IntrRay3Sphere3::GetQuantity() const

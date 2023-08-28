@@ -55,13 +55,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />
@@ -116,6 +119,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />

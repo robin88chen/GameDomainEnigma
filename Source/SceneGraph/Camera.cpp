@@ -154,7 +154,7 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     Plane3 horz_plane(Vector3::UNIT_Y, loc);
     Ray3 dir_ray(vecLookAt, -dir);
     IntrRay3Plane3 intr(dir_ray, horz_plane);
-    auto res = intr.Find(0);
+    auto res = intr.Find(nullptr);
     if (!res.m_hasIntersect) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
     error er = ChangeCameraFrame(new_loc, std::nullopt, std::nullopt);

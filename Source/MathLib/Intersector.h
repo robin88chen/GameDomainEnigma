@@ -24,6 +24,7 @@ namespace Enigma::MathLib
     public:
         struct Result
         {
+            Result() : m_hasIntersect(false), m_cache(nullptr) {}
             Result(bool has_intr, IntersectorCache* cache) : m_hasIntersect(has_intr), m_cache(cache) {}
 
             bool m_hasIntersect;

@@ -15,12 +15,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveRequests.h" />
@@ -46,8 +49,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />

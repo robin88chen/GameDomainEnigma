@@ -1,7 +1,7 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   IntrGeometryCache.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -16,15 +16,10 @@ namespace Enigma::Engine
     {
     public:
         IntrGeometryCache() : m_cachedIndex{ 0 }, m_requiredResultCount{ 0 } {};
-        IntrGeometryCache(const IntrGeometryCache&) = default;
-        IntrGeometryCache(IntrGeometryCache&&) = default;
-        virtual ~IntrGeometryCache() {};
-        IntrGeometryCache& operator=(const IntrGeometryCache&) = default;
-        IntrGeometryCache& operator=(IntrGeometryCache&&) = default;
 
-        unsigned int GetElementCachedIndex() { return m_cachedIndex; };
+        unsigned int GetElementCachedIndex() const { return m_cachedIndex; };
         void SetElementCachedIndex(unsigned int index) { m_cachedIndex = index; };
-        unsigned int GetRequiredResultCount() { return m_requiredResultCount; };
+        unsigned int GetRequiredResultCount() const { return m_requiredResultCount; };
         void SetRequiredResultCount(unsigned int count) { m_requiredResultCount = count; };
     private:
         unsigned int m_cachedIndex;

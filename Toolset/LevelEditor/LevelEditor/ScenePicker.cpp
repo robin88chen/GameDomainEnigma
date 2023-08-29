@@ -3,6 +3,7 @@
 #include "GameEngine/IntrBVRay3.h"
 #include "Platforms/PlatformLayer.h"
 #include "GameEngine/IntrPrimitiveRay3.h"
+#include "Terrain/TerrainPawn.h"
 #include <algorithm>
 
 using namespace LevelEditor;
@@ -31,7 +32,7 @@ SceneTraveler::TravelResult ScenePicker::TravelTo(const SpatialPtr& spatial)
     {
         PushNodeRecord(spatial);
     }
-    else if ((m_filter & FilterFlag::Pick_Pawn) && (spatial->TypeInfo().IsDerived(Pawn::TYPE_RTTI)))
+    else if ((m_filter & FilterFlag::Pick_Pawn) && (Enigma::Frameworks::Rtti::IsExactlyOrDerivedFrom(spatial->TypeInfo().GetName(), Enigma::Terrain::TerrainPawn::TYPE_RTTI.GetName())))
     {
         bool test_result = PushPawnRecord(spatial);
         if (!test_result) return TravelResult::TestFail;
@@ -97,6 +98,7 @@ bool ScenePicker::PushPawnRecord(const SpatialPtr& spatial)
 {
     auto pawn = std::dynamic_pointer_cast<Pawn>(spatial);
     if (!pawn) return false;
+    if (!pawn->GetPrimitive()) return false;
 
     IntrPrimitiveRay3 intrPrim(pawn->GetPrimitive(), m_pickerRay);
     auto prim_find_res = intrPrim.Find(nullptr);

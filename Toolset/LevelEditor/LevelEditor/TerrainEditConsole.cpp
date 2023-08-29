@@ -1,4 +1,8 @@
 ﻿#include "TerrainEditConsole.h"
+
+#include <Frameworks/StringFormat.h>
+
+#include "LevelEditorAppDelegate.h"
 #include "LevelEditorEvents.h"
 #include "LevelEditorCommands.h"
 #include "Frameworks/EventPublisher.h"
@@ -195,5 +199,8 @@ void TerrainEditConsole::OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr&
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneCursorMoved>(e);
     if (!ev) return;
+    if (!ev->GetHoveredPawn()) return;
+    auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
+    OutputDebugString(msg.c_str());
     if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
 }

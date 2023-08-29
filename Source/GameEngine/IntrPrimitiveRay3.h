@@ -50,7 +50,7 @@ namespace Enigma::Engine
         size_t GetQuantity() const;
         const MathLib::Vector3& GetPoint(unsigned int i) const;
         float GetRayT(unsigned int i) const;
-        const std::shared_ptr<Primitive>& GetResultPrimitive(unsigned int i) const;
+        std::shared_ptr<Primitive> GetResultPrimitive(unsigned int i) const;
 
         const std::vector<ResultRecord>& GetResultRecord() const;
 

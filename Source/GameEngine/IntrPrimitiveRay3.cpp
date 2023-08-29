@@ -20,7 +20,7 @@ IntrPrimitiveRay3::IntrPrimitiveRay3(const std::shared_ptr<Primitive>& primitive
 {
     assert(m_primitive);
     m_intersectionType = IntersectionType::POINT;
-    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(m_primitive->TypeInfo().GetName());
+    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(m_primitive->TypeInfo());
 }
 
 IntrPrimitiveRay3::~IntrPrimitiveRay3()
@@ -75,7 +75,7 @@ float IntrPrimitiveRay3::GetRayT(unsigned int i) const
     return m_resultRecords[i].m_tParam;
 }
 
-const std::shared_ptr<Primitive>& IntrPrimitiveRay3::GetResultPrimitive(unsigned int i) const
+std::shared_ptr<Primitive> IntrPrimitiveRay3::GetResultPrimitive(unsigned int i) const
 {
     assert(i < m_resultRecords.size());
     return m_resultRecords[i].m_primitive.lock();

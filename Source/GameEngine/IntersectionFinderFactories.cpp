@@ -1,4 +1,5 @@
 #include "IntersectionFinderFactories.h"
+#include <algorithm>
 
 using namespace Enigma::Engine;
 
@@ -6,9 +7,9 @@ std::unordered_map<std::string, PrimitiveRay3IntersectionFinderCreator> Primitiv
 
 PrimitiveRay3IntersectionFinder* PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(const Frameworks::Rtti& primitive_rtti)
 {
-    if (m_creators.find(primitive_rtti.GetName()) != m_creators.end())
+    if (auto it = std::find_if(m_creators.begin(), m_creators.end(), [&primitive_rtti](const auto& pair) { return Frameworks::Rtti::IsExactlyOrDerivedFrom(primitive_rtti.GetName(), pair.first); }); it != m_creators.end())
     {
-        return m_creators[primitive_rtti.GetName()]();
+        return it->second();
     }
     return nullptr;
 }

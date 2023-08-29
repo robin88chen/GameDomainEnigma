@@ -51,6 +51,8 @@ ServiceResult TerrainEditConsole::OnInit()
     EventPublisher::Subscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
     m_onTerrainToolSelected = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainToolSelected(e); });
     EventPublisher::Subscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
+    m_onSceneCursorMoved = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorMoved(e); });
+    EventPublisher::Subscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
 
     return ServiceResult::Complete;
 }
@@ -68,6 +70,8 @@ ServiceResult TerrainEditConsole::OnTerm()
     m_onTerrainBrushSizeChanged = nullptr;
     EventPublisher::Unsubscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
     m_onTerrainToolSelected = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
+    m_onSceneCursorMoved = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -186,3 +190,10 @@ void TerrainEditConsole::OnTerrainToolSelected(const Enigma::Frameworks::IEventP
     CommandBus::Post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
 }
 
+void TerrainEditConsole::OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneCursorMoved>(e);
+    if (!ev) return;
+    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+}

@@ -11,6 +11,7 @@
 #include "Frameworks/Event.h"
 #include "EditorModes.h"
 #include "SceneGraph/Spatial.h"
+#include "SceneGraph/Pawn.h"
 
 namespace LevelEditor
 {
@@ -43,6 +44,18 @@ namespace LevelEditor
     protected:
         std::shared_ptr<Enigma::SceneGraph::Spatial> m_spatial;
         PickedFrom m_from;
+    };
+    class SceneCursorMoved : public Enigma::Frameworks::IEvent
+    {
+    public:
+        SceneCursorMoved(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn) : m_pos(pos), m_hoveredPawn(hovered_pawn) {}
+
+        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
+        const std::shared_ptr<Enigma::SceneGraph::Pawn>& GetHoveredPawn() const { return m_hoveredPawn.lock(); }
+
+    protected:
+        Enigma::MathLib::Vector3 m_pos;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
     };
 }
 

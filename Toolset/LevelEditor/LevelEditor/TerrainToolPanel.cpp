@@ -37,6 +37,10 @@ TerrainToolPanel::~TerrainToolPanel()
     SAFE_DELETE(m_brushHeightLabel);
     SAFE_DELETE(m_textureDensity);
     SAFE_DELETE(m_textureDensityLabel);
+    for (auto& btn : m_textureLayerButtons)
+    {
+        SAFE_DELETE(btn);
+    }
 }
 
 void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)

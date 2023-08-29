@@ -57,3 +57,31 @@ Intersector::Result IntrPrimitiveRay3::Find(IntersectorCache* last_result)
     sort(m_resultRecords.begin(), m_resultRecords.end(), compare_result);
     return result;
 }
+
+size_t IntrPrimitiveRay3::GetQuantity() const
+{
+    return m_resultRecords.size();
+}
+
+const Vector3& IntrPrimitiveRay3::GetPoint(unsigned int i) const
+{
+    assert(i < m_resultRecords.size());
+    return m_resultRecords[i].m_vecPoint;
+}
+
+float IntrPrimitiveRay3::GetRayT(unsigned int i) const
+{
+    assert(i < m_resultRecords.size());
+    return m_resultRecords[i].m_tParam;
+}
+
+const std::shared_ptr<Primitive>& IntrPrimitiveRay3::GetResultPrimitive(unsigned int i) const
+{
+    assert(i < m_resultRecords.size());
+    return m_resultRecords[i].m_primitive.lock();
+}
+
+const std::vector<IntrPrimitiveRay3::ResultRecord>& IntrPrimitiveRay3::GetResultRecord() const
+{
+    return m_resultRecords;
+}

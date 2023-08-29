@@ -2,6 +2,7 @@
 #include "SceneGraph/Pawn.h"
 #include "GameEngine/IntrBVRay3.h"
 #include "Platforms/PlatformLayer.h"
+#include "GameEngine/IntrPrimitiveRay3.h"
 #include <algorithm>
 
 using namespace LevelEditor;
@@ -23,8 +24,8 @@ SceneTraveler::TravelResult ScenePicker::TravelTo(const SpatialPtr& spatial)
     if ((!spatial) || (spatial->GetWorldBound().IsEmpty())) return TravelResult::InterruptError;
 
     IntrBVRay3 intrBV(spatial->GetWorldBound(), m_pickerRay);
-    bool bv_test_res = intrBV.Test(0);
-    if (!bv_test_res) return TravelResult::TestFail;  // no intersection
+    auto bv_test_res = intrBV.Test(nullptr);
+    if (!bv_test_res.m_hasIntersect) return TravelResult::TestFail;  // no intersection
 
     if ((m_filter & FilterFlag::Pick_Node) && (spatial->TypeInfo().IsDerived(Node::TYPE_RTTI)))
     {
@@ -98,8 +99,8 @@ bool ScenePicker::PushPawnRecord(const SpatialPtr& spatial)
     if (!pawn) return false;
 
     IntrPrimitiveRay3 intrPrim(pawn->GetPrimitive(), m_pickerRay);
-    bool prim_find_res = intrPrim.Find(0);
-    if (!prim_find_res) return false;
+    auto prim_find_res = intrPrim.Find(nullptr);
+    if (!prim_find_res.m_hasIntersect) return false;
 
     // copy result point
     if (intrPrim.GetQuantity())

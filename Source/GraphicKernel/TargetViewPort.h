@@ -7,7 +7,8 @@
  *********************************************************************/
 #ifndef TARGET_VIEWPORT_H
 #define TARGET_VIEWPORT_H
-#include <tuple>
+
+#include "MathLib/Vector2.h"
 
 namespace Enigma::Graphics
 {
@@ -40,7 +41,7 @@ namespace Enigma::Graphics
 
         bool operator==(const TargetViewPort& vp);
 
-        std::tuple<float, float> ViewportXYToClippingXY(float x, float y) const;
+        MathLib::Vector2 ViewportPositionToClippingPosition(const MathLib::Vector2& vp_pos) const;
 
     private:
         unsigned int m_x;

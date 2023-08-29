@@ -82,6 +82,9 @@
     <Filter Include="Intersect">
       <UniqueIdentifier>{47ac7be6-0a7d-4a65-9752-d8105c263d46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Intersect\IntersectionFinder">
+      <UniqueIdentifier>{4f93cc7f-2492-456c-a6c6-96f937ec8754}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -297,6 +300,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
       <Filter>Intersect</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.h">
+      <Filter>Intersect\IntersectionFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h">
+      <Filter>Intersect\IntersectionFinder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -433,6 +445,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
       <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp">
+      <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp">
+      <Filter>Intersect\IntersectionFinder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

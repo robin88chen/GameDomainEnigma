@@ -11,6 +11,9 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
+#include "SceneGraph/Pawn.h"
+#include "SceneGraph/Camera.h"
+#include "SceneGraph/Node.h"
 
 namespace LevelEditor
 {
@@ -29,13 +32,21 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
 
     protected:
+        void OnGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void OnTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnMouseMoved(const Enigma::Frameworks::IEventPtr& e);
 
+        std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> PickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
+
     protected:
+        Enigma::Frameworks::EventSubscriberPtr m_onGameCameraCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTargetViewportChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseMoved;
 
+        std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
+        std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         Enigma::Graphics::TargetViewPort m_targetViewport;
     };
 }

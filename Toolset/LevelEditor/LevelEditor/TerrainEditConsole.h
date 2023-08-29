@@ -46,6 +46,7 @@ namespace LevelEditor
         void OnTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnTerrainBrushHeightChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnTerrainToolSelected(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e);
 
         void CreateBrushPawn();
 
@@ -54,6 +55,7 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_brush;
 
         //Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorMoved;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;

@@ -1,7 +1,4 @@
 ﻿#include "TerrainEditConsole.h"
-
-#include <Frameworks/StringFormat.h>
-
 #include "LevelEditorAppDelegate.h"
 #include "LevelEditorEvents.h"
 #include "LevelEditorCommands.h"

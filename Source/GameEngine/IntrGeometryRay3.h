@@ -13,6 +13,8 @@
 #include "GeometryData.h"
 #include <vector>
 
+#include "IntrGeometryCache.h"
+
 namespace Enigma::Engine
 {
     class IntrGeometryCache;
@@ -29,8 +31,8 @@ namespace Enigma::Engine
         const GeometryDataPtr& GetGeometry();
 
         // static test-intersection query
-        virtual Result Test(MathLib::IntersectorCache* last_result) override;
-        virtual Result Find(MathLib::IntersectorCache* last_result) override;
+        virtual Result Test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
+        virtual Result Find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
 
         // the intersection set
         size_t GetQuantity() const;
@@ -41,8 +43,8 @@ namespace Enigma::Engine
         const std::vector<float>& GetParamArray() const;
 
     private:
-        Result TestForTriangleList(IntrGeometryCache* geo_cache);
-        Result FindForTriangleList(IntrGeometryCache* geo_cache);
+        Result TestForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
+        Result FindForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
 
     private:
         // the objects to intersect

@@ -19,7 +19,7 @@ const Box3& IntrBox3Box3::GetBox1() const
     return m_box1;
 }
 
-Intersector::Result IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox3Box3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // Cutoff for cosine of angles between box axes.  This is used to catch
     // the cases when at least one pair of axes are parallel.  If this happens,

@@ -18,7 +18,7 @@ const Plane3& IntrBox3Plane3::GetPlane() const
     return m_plane;
 }
 
-Intersector::Result IntrBox3Plane3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox3Plane3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     if (PlaneSideTest() == Plane3::SideOfPlane::Overlap) return { true, nullptr };
     return { false, nullptr };

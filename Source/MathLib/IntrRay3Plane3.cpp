@@ -20,7 +20,7 @@ const Plane3& IntrRay3Plane3::GetPlane() const
     return m_plane;
 }
 
-Intersector::Result IntrRay3Plane3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrRay3Plane3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     float e = m_plane.Normal().Dot(m_ray.Direction());
     if ((e <= Math::Epsilon()) && (e >= -Math::Epsilon())) return { false, nullptr };
@@ -32,10 +32,10 @@ Intersector::Result IntrRay3Plane3::Test(IntersectorCache* /*last_result*/)
     return { true, nullptr };
 }
 
-Intersector::Result IntrRay3Plane3::Find(IntersectorCache* last_result)
+Intersector::Result IntrRay3Plane3::Find(std::unique_ptr<IntersectorCache> last_result)
 {
     // 因為沒有多少運算上的差異，所以直接呼叫Test
-    return Test(last_result);
+    return Test(std::move(last_result));
 }
 
 int IntrRay3Plane3::GetQuantity() const

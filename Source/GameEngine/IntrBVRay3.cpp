@@ -27,7 +27,7 @@ const BoundingVolume& IntrBVRay3::GetBV() const
     return m_bv;
 }
 
-Intersector::Result IntrBVRay3::Test(IntersectorCache*)
+Intersector::Result IntrBVRay3::Test(std::unique_ptr<IntersectorCache>)
 {
     if (auto box = m_bv.BoundingBox3())
     {
@@ -44,7 +44,7 @@ Intersector::Result IntrBVRay3::Test(IntersectorCache*)
     return { false, nullptr };
 }
 
-Intersector::Result IntrBVRay3::Find(IntersectorCache*)
+Intersector::Result IntrBVRay3::Find(std::unique_ptr<IntersectorCache>)
 {
     m_points.clear();
     m_tParams.clear();

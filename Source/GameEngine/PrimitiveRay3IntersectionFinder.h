@@ -23,9 +23,9 @@ namespace Enigma::Engine
         PrimitiveRay3IntersectionFinder() {};
         virtual ~PrimitiveRay3IntersectionFinder() {};
 
-        virtual MathLib::Intersector::Result Test(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const = 0;
+        virtual MathLib::Intersector::Result Test(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const = 0;
         virtual std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
-            Find(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const = 0;
+            Find(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const = 0;
     };
 }
 

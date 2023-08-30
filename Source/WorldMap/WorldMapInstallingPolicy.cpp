@@ -25,6 +25,6 @@ error WorldMapInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_man
 {
     assert(service_manager);
     Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(WorldMap::TYPE_RTTI.GetName()));
-    service_manager->ShutdownSystemService(WorldMapService::TYPE_RTTI.GetName());
+    service_manager->ShutdownSystemService(WorldMapService::TYPE_RTTI);
     return ErrorCode::ok;
 }

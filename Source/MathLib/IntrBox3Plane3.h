@@ -25,7 +25,7 @@ namespace Enigma::MathLib
         const Plane3& GetPlane() const;
 
         // static test-intersection query
-        virtual Result Test(IntersectorCache* last_result) override;
+        virtual Result Test(std::unique_ptr<IntersectorCache> last_result) override;
 
         /// plane side test, 1 : positive side, -1 : negative side, 0 : overlap
         Plane3::SideOfPlane PlaneSideTest();

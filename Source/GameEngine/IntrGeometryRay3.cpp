@@ -3,6 +3,7 @@
 #include "IntrGeometryCache.h"
 #include "TriangleList.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include "Frameworks/unique_ptr_dynamic_cast.hpp"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -29,52 +30,52 @@ const GeometryDataPtr& IntrGeometryRay3::GetGeometry()
     return m_geometry;
 }
 
-Intersector::Result IntrGeometryRay3::Test(IntersectorCache* last_result)
+Intersector::Result IntrGeometryRay3::Test(std::unique_ptr<IntersectorCache> last_result)
 {
-    if (!m_geometry) return { false, last_result };
+    if (!m_geometry) return { false, std::move(last_result) };
     // test bounding volume first
     if (!m_geometry->GetBoundingVolume().IsEmpty())
     {
         IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
         auto res = intr_bv.Test(nullptr);
-        if (!res.m_hasIntersect) return { false, last_result };
+        if (!res.m_hasIntersect) return { false, std::move(last_result) };
     }
 
     // test for triangle list
     if (m_geometry->GetPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
     {
-        IntrGeometryCache* geo_cache = nullptr;
+        std::unique_ptr<IntrGeometryCache> geo_cache = nullptr;
         if (last_result)
         {
-            geo_cache = dynamic_cast<IntrGeometryCache*>(last_result);
+            geo_cache = stdext::dynamic_pointer_cast<IntrGeometryCache>(std::move(last_result));
         }
-        return TestForTriangleList(geo_cache);
+        return TestForTriangleList(std::move(geo_cache));
     }
-    return { false, last_result };
+    return { false, std::move(last_result) };
 }
 
-Intersector::Result IntrGeometryRay3::Find(IntersectorCache* last_result)
+Intersector::Result IntrGeometryRay3::Find(std::unique_ptr<IntersectorCache> last_result)
 {
-    if (!m_geometry) return { false, last_result };
+    if (!m_geometry) return { false, std::move(last_result) };
     // test bounding volume first
     if (!m_geometry->GetBoundingVolume().IsEmpty())
     {
         IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
         auto res = intr_bv.Test(nullptr);
-        if (!res.m_hasIntersect) return { false, last_result };
+        if (!res.m_hasIntersect) return { false, std::move(last_result) };
     }
 
     // test for triangle list
     if (m_geometry->GetPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
     {
-        IntrGeometryCache* geo_cache = nullptr;
+        std::unique_ptr<IntrGeometryCache> geo_cache = nullptr;
         if (last_result)
         {
-            geo_cache = dynamic_cast<IntrGeometryCache*>(last_result);
+            geo_cache = stdext::dynamic_pointer_cast<IntrGeometryCache>(std::move(last_result));
         }
-        return FindForTriangleList(geo_cache);
+        return FindForTriangleList(std::move(geo_cache));
     }
-    return { false, last_result };
+    return { false, std::move(last_result) };
 }
 
 size_t IntrGeometryRay3::GetQuantity() const
@@ -104,13 +105,13 @@ const std::vector<float>& IntrGeometryRay3::GetParamArray() const
     return m_tParams;
 }
 
-Intersector::Result IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo_cache)
+Intersector::Result IntrGeometryRay3::TestForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache)
 {
     TriangleListPtr tri_list = std::dynamic_pointer_cast<TriangleList, GeometryData>(m_geometry);
-    if (!tri_list) return { false, geo_cache };
+    if (!tri_list) return { false, std::move(geo_cache) };
 
     unsigned int tri_count = tri_list->GetTriangleCount();
-    if (tri_count <= 0) return { false, geo_cache };
+    if (tri_count <= 0) return { false, std::move(geo_cache) };
 
     unsigned int start_index = 0;
     if (geo_cache) start_index = geo_cache->GetElementCachedIndex();
@@ -137,24 +138,24 @@ Intersector::Result IntrGeometryRay3::TestForTriangleList(IntrGeometryCache* geo
         if (const_cast<Ray3&>(m_ray).TestIntersectTriangle(triangle)) continue;
 
         // if we got here, we found intersection
-        if (geo_cache == nullptr) geo_cache = menew IntrGeometryCache();
+        if (geo_cache == nullptr) geo_cache = std::make_unique<IntrGeometryCache>();
         if (geo_cache) geo_cache->SetElementCachedIndex(tri_index);
-        return { true, geo_cache };
+        return { true, std::move(geo_cache) };
     }
 
-    return { false, geo_cache };
+    return { false, std::move(geo_cache) };
 }
 
-Intersector::Result IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo_cache)
+Intersector::Result IntrGeometryRay3::FindForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache)
 {
     m_tParams.clear();
     m_points.clear();
 
     TriangleListPtr tri_list = std::dynamic_pointer_cast<TriangleList, GeometryData>(m_geometry);
-    if (!tri_list) return { false, geo_cache };
+    if (!tri_list) return { false, std::move(geo_cache) };
 
     unsigned int tri_count = tri_list->GetTriangleCount();
-    if (tri_count <= 0) return { false, geo_cache };
+    if (tri_count <= 0) return { false, std::move(geo_cache) };
 
     unsigned int start_index = 0;
     if (geo_cache) start_index = geo_cache->GetElementCachedIndex();
@@ -186,13 +187,13 @@ Intersector::Result IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo
 
         // if we got here, we found intersection
         m_tParams.emplace_back(t);
-        if (geo_cache == nullptr) geo_cache = menew IntrGeometryCache();
+        if (geo_cache == nullptr) geo_cache = std::make_unique<IntrGeometryCache>();
         if (geo_cache) geo_cache->SetElementCachedIndex(tri_index);
         result_count++;
         if (result_count >= req_result_total) break;
     }
 
-    if (m_tParams.empty()) return { false, geo_cache };
+    if (m_tParams.empty()) return { false, std::move(geo_cache) };
     sort(m_tParams.begin(), m_tParams.end());
 
     m_points.resize(m_tParams.size());
@@ -201,5 +202,5 @@ Intersector::Result IntrGeometryRay3::FindForTriangleList(IntrGeometryCache* geo
         m_points[i] = m_tParams[i] * m_ray.Direction() + m_ray.Origin();
     }
 
-    return { true, geo_cache };
+    return { true, std::move(geo_cache) };
 }

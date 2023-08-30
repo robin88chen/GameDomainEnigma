@@ -21,7 +21,7 @@ const Sphere3& IntrLine3Sphere3::GetSphere() const
     return m_sphere;
 }
 
-Intersector::Result IntrLine3Sphere3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrLine3Sphere3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     Vector3 diff = m_line.Origin() - m_sphere.Center();
     float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();
@@ -30,7 +30,7 @@ Intersector::Result IntrLine3Sphere3::Test(IntersectorCache* /*last_result*/)
     return { discr >= 0.0f, nullptr };
 }
 
-Intersector::Result IntrLine3Sphere3::Find(IntersectorCache* /*last_result*/)
+Intersector::Result IntrLine3Sphere3::Find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     Vector3 diff = m_line.Origin() - m_sphere.Center();
     float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();

@@ -24,14 +24,14 @@ namespace Enigma::Renderer
 
         static void RegisterFactory();
 
-        virtual MathLib::Intersector::Result Test(const std::shared_ptr<Engine::Primitive>& primitive, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const override;
+        virtual MathLib::Intersector::Result Test(const std::shared_ptr<Engine::Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const override;
         virtual std::tuple<std::vector<Engine::IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
-            Find(const std::shared_ptr<Engine::Primitive>& primitive, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const override;
+            Find(const std::shared_ptr<Engine::Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const override;
 
     private:
-        MathLib::Intersector::Result TestMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const;
+        MathLib::Intersector::Result TestMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
         std::tuple<std::vector<Engine::IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
-            FindMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, MathLib::IntersectorCache* cache) const;
+            FindMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
     };
 }
 

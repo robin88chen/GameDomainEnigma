@@ -1,4 +1,5 @@
 ﻿#include "Rtti.h"
+#include <cassert>
 
 using namespace Enigma::Frameworks;
 
@@ -9,6 +10,7 @@ Rtti::Rtti(const std::string& name)
     m_name = name;
     m_base = nullptr;
     if (!m_valueMap) m_valueMap = std::make_unique<std::unordered_map<std::string, const Rtti*>>();
+    assert(m_valueMap->find(name) == m_valueMap->end());
     m_valueMap->insert_or_assign(name, this);
 }
 
@@ -17,6 +19,7 @@ Rtti::Rtti(const std::string& name, const Rtti* base_rtti)
     m_name = name;
     m_base = base_rtti;
     if (!m_valueMap) m_valueMap = std::make_unique<std::unordered_map<std::string, const Rtti*>>();
+    assert(m_valueMap->find(name) == m_valueMap->end());
     m_valueMap->insert_or_assign(name, this);
 }
 

@@ -34,6 +34,7 @@ namespace LevelEditor
 
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
+        static std::array<std::string, TextureLayerNum> LayerSemantics;
 
     protected:
         Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;

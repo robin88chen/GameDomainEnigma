@@ -1,17 +1,21 @@
 ﻿#include "TerrainToolPanel.h"
+#include "EditorUtilities.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
 #include "LevelEditorUiEvents.h"
+#include "LevelEditorEvents.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/StringFormat.h"
+#include "Terrain/TerrainPawn.h"
+#include "Terrain/TerrainPrimitive.h"
+#include "FileSystem/FileSystem.h"
+#include "GameEngine/Texture.h"
+#include "TerrainEditService.h"
 
 using namespace LevelEditor;
 
 constexpr int max_brush_size = 20;
 constexpr unsigned int max_density_value = 20;
-
-constexpr size_t terrain_edit_mode_raise_height = 1;
-constexpr size_t terrain_edit_mode_lower_height = 2;
-constexpr size_t terrain_edit_mode_paint_texture = 3;
 
 TerrainToolPanel::TerrainToolPanel(const nana::window& wd) : panel<false>{ wd }
 {
@@ -95,6 +99,9 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
     m_textureDensity = menew nana::slider{ *this };
     UISchemeColors::ApplySchemaColors(m_textureDensity->scheme());
     m_textureDensity->maximum(max_density_value);
+    m_textureDensity->vernier([this](unsigned int maximum, unsigned int value)
+        { return string_format("%6.2f", SlideValueToDensity(value)); });
+    m_textureDensity->value(10);
     m_textureDensity->events().value_changed([this](const nana::arg_slider& a) { this->OnLayerDensityChanged(a); });
     m_place->field("texture_density") << *m_textureDensityLabel << *m_textureDensity;
 
@@ -108,6 +115,18 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
     }
 
     m_place->collocate();
+}
+
+void TerrainToolPanel::SubscribeHandlers()
+{
+    m_onPickedSpatialChanged = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
+    Enigma::Frameworks::EventPublisher::Subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+}
+
+void TerrainToolPanel::UnsubscribeHandlers()
+{
+    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    m_onPickedSpatialChanged = nullptr;
 }
 
 void TerrainToolPanel::SetTerrainName(const std::string& name)
@@ -132,13 +151,57 @@ void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
 
 void TerrainToolPanel::OnLayerDensityChanged(const nana::arg_slider& arg)
 {
+    if (!m_textureDensity) return;
+    auto density = SlideValueToDensity(m_textureDensity->value());
+    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushDensityChanged>(density));
 }
 
 void TerrainToolPanel::OnTextureLayerButton(const nana::arg_click& arg, unsigned int index)
 {
+    if (index >= m_textureLayerButtons.size()) return;
+    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainPaintingLayerChanged>(index));
 }
 
 void TerrainToolPanel::OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
 {
     Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainEditToolSelected>(tool));
+}
+
+unsigned int TerrainToolPanel::DensityToSlideValue(float density) const
+{
+    int v = static_cast<int>(density * 10.0f + 10.0f);
+    return (unsigned int)std::clamp(v, 0, static_cast<int>(max_density_value));
+}
+
+float TerrainToolPanel::SlideValueToDensity(unsigned int value) const
+{
+    return (static_cast<float>(value) - 10.0f) / 10.0f;
+}
+
+void TerrainToolPanel::RefreshTextureLayerButtons(const Enigma::Engine::EffectTextureMap& texture_map)
+{
+    for (unsigned int i = 0; i < TerrainEditService::LayerSemantics.size(); i++)
+    {
+        auto semantic_tex = texture_map.FindSemanticTexture(TerrainEditService::LayerSemantics[i]);
+        if (!semantic_tex) continue;
+        auto tex = std::get<std::shared_ptr<Enigma::Engine::Texture>>(*semantic_tex);
+        if (!tex) continue;
+        Enigma::FileSystem::Filename filename(tex->TheFactoryDesc().GetResourceFilename());
+        std::string filepath = Enigma::FileSystem::FileSystem::Instance()->GetStdioFullPath(filename.GetSubPathFileName(), filename.GetMountPathID());
+        PasteTextureImageToButton(filepath, m_textureLayerButtons[i], 64);
+        m_textureLayerButtons[i]->focus();
+    }
+}
+
+void TerrainToolPanel::OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
+    if (!ev) return;
+    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->GetSpatial());
+    if (!terrain) return;
+    auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->GetPrimitive());
+    if (!terrain_prim) return;
+    SetTerrainName(terrain->GetSpatialName());
+    RefreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
 }

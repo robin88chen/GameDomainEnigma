@@ -35,6 +35,12 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::OnInit()
     EventPublisher::Subscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onMouseMoved = std::make_shared<EventSubscriber>([=](auto e) { OnMouseMoved(e); });
     EventPublisher::Subscribe(typeid(MouseMoved), m_onMouseMoved);
+    m_onMouseLeftButtonDown = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftButtonDown(e); });
+    EventPublisher::Subscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
+    m_onMouseLeftButtonUp = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftButtonUp(e); });
+    EventPublisher::Subscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
+    m_onMouseLeftDragged = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftDragged(e); });
+    EventPublisher::Subscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
 
     return ServiceResult::Complete;
 }
@@ -49,6 +55,12 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::OnTerm()
     m_onTargetViewportChanged = nullptr;
     EventPublisher::Unsubscribe(typeid(MouseMoved), m_onMouseMoved);
     m_onMouseMoved = nullptr;
+    EventPublisher::Unsubscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
+    m_onMouseLeftButtonDown = nullptr;
+    EventPublisher::Unsubscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
+    m_onMouseLeftButtonUp = nullptr;
+    EventPublisher::Unsubscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
+    m_onMouseLeftDragged = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -87,6 +99,48 @@ void EditorSceneConsole::OnMouseMoved(const Enigma::Frameworks::IEventPtr& e)
     if (pickedPawn)
     {
         EventPublisher::Post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn));
+    }
+}
+
+void EditorSceneConsole::OnMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<MouseLeftButtonDown>(e);
+    if (!ev) return;
+    auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
+        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+    auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
+    if (pickedPawn)
+    {
+        EventPublisher::Post(std::make_shared<SceneCursorPressedDown>(picked_pos, pickedPawn));
+    }
+}
+
+void EditorSceneConsole::OnMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<MouseLeftButtonUp>(e);
+    if (!ev) return;
+    auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
+        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+    auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
+    if (pickedPawn)
+    {
+        EventPublisher::Post(std::make_shared<SceneCursorPressUp>(picked_pos, pickedPawn));
+    }
+}
+
+void EditorSceneConsole::OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<MouseLeftButtonDrag>(e);
+    if (!ev) return;
+    auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
+        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+    auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
+    if (pickedPawn)
+    {
+        EventPublisher::Post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn));
     }
 }
 

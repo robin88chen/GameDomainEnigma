@@ -90,6 +90,7 @@ void MainForm::InitSubPanels()
         m_renderPanel->SubscribeHandlers();
     }
     if (m_spatialInspectorPanel) m_spatialInspectorPanel->SubscribeHandlers();
+    if (m_terrainToolPanel) m_terrainToolPanel->SubscribeHandlers();
 }
 
 void MainForm::InitializeGraphics()
@@ -117,6 +118,7 @@ void MainForm::FinalizeGraphics()
     srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
     srv_mngr->UnregisterSystemService(EditorSceneConsole::TYPE_RTTI);
 
+    if (m_terrainToolPanel) m_terrainToolPanel->UnsubscribeHandlers();
     if (m_spatialInspectorPanel) m_spatialInspectorPanel->UnsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_sceneGraphPanel)

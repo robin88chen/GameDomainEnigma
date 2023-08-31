@@ -21,7 +21,7 @@ using namespace Enigma::WorldMap;
 
 Rtti TerrainEditService::TYPE_RTTI{"LevelEditor.TerrainEditService", &ISystemService::TYPE_RTTI};
 
-std::array<std::string, TerrainEditService::TextureLayerNum> layerSemantics =
+std::array<std::string, TerrainEditService::TextureLayerNum> TerrainEditService::LayerSemantics =
 {
     "TextureLayer0", "TextureLayer1", "TextureLayer2", "TextureLayer3"
 };
@@ -74,7 +74,7 @@ void TerrainEditService::DoCreatingNewTerrain(const Enigma::Frameworks::ICommand
     for (unsigned i = 0; i < TerrainEditService::TextureLayerNum; i++)
     {
         if (cmd->GetLayerTextures()[i].empty()) continue;
-        tex_dto.TextureMapping(cmd->GetLayerTextures()[i], "APK_PATH", cmd->GetLayerTextures()[i], std::nullopt, layerSemantics[i]);
+        tex_dto.TextureMapping(cmd->GetLayerTextures()[i], "APK_PATH", cmd->GetLayerTextures()[i], std::nullopt, LayerSemantics[i]);
     }
     tex_dto.TextureMapping("splat.png", "DataPath", "splat", std::nullopt, "AlphaLayer");
     terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());

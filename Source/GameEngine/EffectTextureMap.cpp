@@ -83,10 +83,25 @@ std::shared_ptr<Texture> EffectTextureMap::GetTexture(unsigned index)
     return std::get<std::shared_ptr<Texture>>(m_effectTextures[index]);
 }
 
+std::shared_ptr<Texture> EffectTextureMap::GetTexture(unsigned index) const
+{
+    if (index >= m_effectTextures.size()) return nullptr;
+    return std::get<std::shared_ptr<Texture>>(m_effectTextures[index]);
+}
+
 const EffectTextureMap::EffectSemanticTextureTuple& EffectTextureMap::GetEffectSemanticTextureTuple(unsigned index)
 {
     assert(index < m_effectTextures.size());
     return m_effectTextures[index];
+}
+
+std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::FindSemanticTexture(const std::string& semantic) const
+{
+    for (auto& tuple : m_effectTextures)
+    {
+        if (std::get<std::string>(tuple) == semantic) return tuple;
+    }
+    return std::nullopt;
 }
 
 bool EffectTextureMap::IsAllResourceTexture() const

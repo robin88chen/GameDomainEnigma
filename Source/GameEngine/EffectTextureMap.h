@@ -41,8 +41,10 @@ namespace Enigma::Engine
         error ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple);
         unsigned AppendTextureSemantic(const std::string& semantic);  ///< return index
         std::shared_ptr<Texture> GetTexture(unsigned index);
+        std::shared_ptr<Texture> GetTexture(unsigned index) const;
         const EffectSemanticTextureTuple& GetEffectSemanticTextureTuple(unsigned index);
         const unsigned int GetCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
+        std::optional<EffectSemanticTextureTuple> FindSemanticTexture(const std::string& semantic) const;
 
         bool IsAllResourceTexture() const;
 

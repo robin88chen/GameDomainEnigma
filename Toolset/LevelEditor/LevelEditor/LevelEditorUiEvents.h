@@ -31,6 +31,26 @@ namespace LevelEditor
     private:
         float m_height;
     };
+    class TerrainBrushDensityChanged : public Enigma::Frameworks::IEvent
+    {
+    public:
+        TerrainBrushDensityChanged(float density) : m_density(density) {}
+
+        float GetDensity() const { return m_density; }
+
+    private:
+        float m_density;
+    };
+    class TerrainPaintingLayerChanged : public Enigma::Frameworks::IEvent
+    {
+        public:
+        TerrainPaintingLayerChanged(unsigned layer) : m_layer(layer) {}
+
+        unsigned GetLayer() const { return m_layer; }
+
+    private:
+        unsigned m_layer;
+    };
     class TerrainEditToolSelected : public Enigma::Frameworks::IEvent
     {
     public:

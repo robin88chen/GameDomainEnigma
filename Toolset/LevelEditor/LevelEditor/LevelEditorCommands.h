@@ -70,6 +70,40 @@ namespace LevelEditor
     protected:
         std::string m_worldName;
     };
+
+    //--------------------------------------------------------------------------------
+    class MoveUpTerrainVertex : public Enigma::Frameworks::ICommand
+    {
+    public:
+        MoveUpTerrainVertex(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float brush_height)
+            : m_brushPos(brush_pos), m_brushSize(brush_size), m_brushHeight(brush_height) {}
+
+        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
+        float GetBrushSize() const { return m_brushSize; }
+        float GetBrushHeight() const { return m_brushHeight; }
+
+    protected:
+        Enigma::MathLib::Vector3 m_brushPos;
+        float m_brushSize;
+        float m_brushHeight;
+    };
+    class PaintTerrainTextureLayer : public Enigma::Frameworks::ICommand
+    {
+    public:
+        PaintTerrainTextureLayer(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float brush_density, int texture_layer_index)
+            : m_brushPos(brush_pos), m_brushSize(brush_size), m_brushDensity(brush_density), m_textureLayerIndex(texture_layer_index) {}
+
+        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
+        float GetBrushSize() const { return m_brushSize; }
+        float GetBrushDensity() const { return m_brushDensity; }
+        int GetTextureLayerIndex() const { return m_textureLayerIndex; }
+
+    protected:
+        Enigma::MathLib::Vector3 m_brushPos;
+        float m_brushSize;
+        float m_brushDensity;
+        int m_textureLayerIndex;
+    };
 }
 
 #endif // LEVEL_EDITOR_COMMANDS_H

@@ -1,5 +1,6 @@
 ﻿#include "TerrainGeometry.h"
 #include "TerrainGeometryDto.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Engine;
@@ -53,6 +54,28 @@ GenericDto TerrainGeometry::SerializeDto() const
     return dto.ToGenericDto();
 }
 
+void TerrainGeometry::UpdateHeightMapToVertexMemory()
+{
+    assert(m_numRows > 0 && m_numCols > 0);
+    if (FATAL_LOG_EXPR(m_heightMap.empty())) return;
+    //todo : check performance later
+    for (unsigned i = 0; i < m_heightMap.size(); i++)
+    {
+        SetPosition3(i, GetPosition3(i) + MathLib::Vector3(0.0f, m_heightMap[i], 0.0f));
+    }
+}
+
+void TerrainGeometry::RangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count)
+{
+    assert(m_numRows > 0 && m_numCols > 0);
+    if (FATAL_LOG_EXPR(m_heightMap.empty())) return;
+    //todo : check performance later
+    for (unsigned i = offset; i < offset + count; i++)
+    {
+        SetPosition3(i, GetPosition3(i) + MathLib::Vector3(0.0f, m_heightMap[i], 0.0f));
+    }
+}
+
 Enigma::MathLib::Dimension<float> TerrainGeometry::GetCellDimension() const
 {
     assert(m_numCols > 0 && m_numRows > 0);
@@ -61,4 +84,10 @@ Enigma::MathLib::Dimension<float> TerrainGeometry::GetCellDimension() const
     cell_dimension.m_height = (m_maxPosition.Z() - m_minPosition.Z()) / static_cast<float>(m_numRows);
 
     return cell_dimension;
+}
+
+void TerrainGeometry::ChangeHeight(unsigned idx, float new_height)
+{
+    assert(idx < m_heightMap.size());
+    m_heightMap[idx] = new_height;
 }

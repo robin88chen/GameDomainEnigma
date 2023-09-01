@@ -27,8 +27,16 @@ namespace Enigma::Terrain
 
         virtual Engine::GenericDto SerializeDto() const override;
 
-        MathLib::Dimension<float> GetCellDimension() const;
+        void UpdateHeightMapToVertexMemory();
+        void RangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);
 
+        MathLib::Dimension<float> GetCellDimension() const;
+        unsigned GetNumRows() const { return m_numRows; }
+        unsigned GetNumCols() const { return m_numCols; }
+        const MathLib::Vector3& GetMinPosition() const { return m_minPosition; }
+        const MathLib::Vector3& GetMaxPosition() const { return m_maxPosition; }
+        const float_buffer& GetHeightMap() const { return m_heightMap; }
+        void ChangeHeight(unsigned idx, float new_height);
     protected:
         unsigned m_numRows;
         unsigned m_numCols;

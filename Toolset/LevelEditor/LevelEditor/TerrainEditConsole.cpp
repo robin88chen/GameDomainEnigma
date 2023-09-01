@@ -33,6 +33,7 @@ TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr) : ISystemServic
     m_currMode = TerrainEditMode::Mode_Unknown;
     m_brushSize = 1;
     m_brushDensity = 0.0f;
+    m_brushHeight = 0.3f;
 }
 
 TerrainEditConsole::~TerrainEditConsole()
@@ -266,4 +267,5 @@ void TerrainEditConsole::OnSceneCursorDragged(const Enigma::Frameworks::IEventPt
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
     if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+    SendTerrainEditCommand(0.1f);
 }

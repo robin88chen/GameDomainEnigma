@@ -24,7 +24,7 @@ using namespace Enigma::Renderer;
 const std::string primary_back_surface_name = "primary_back_surface";
 const std::string primary_depth_surface_name = "primary_depth_surface";
 
-RenderTarget::RenderTarget(const std::string& name, PrimaryType primary, 
+RenderTarget::RenderTarget(const std::string& name, PrimaryType primary,
     const std::vector<Graphics::RenderTextureUsage>& usages) : m_dimension{ 1, 1 }
 {
     m_isPrimary = primary == PrimaryType::IsPrimary;
@@ -91,7 +91,7 @@ future_error RenderTarget::AsyncInitialize()
         ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
 }
 
-error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     m_backSurfaceName = back_name;
@@ -100,7 +100,7 @@ error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib:
     return ErrorCode::ok;
 }
 
-error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     m_backSurfaceName = back_name;
@@ -109,7 +109,7 @@ error RenderTarget::InitMultiBackSurface(const std::string& back_name, const Mat
     return ErrorCode::ok;
 }
 
-error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     m_depthSurfaceName = depth_name;
@@ -198,7 +198,7 @@ error RenderTarget::ChangeClearingProperty(const RenderTargetClearChangingProper
     return ErrorCode::ok;
 }
 
-error RenderTarget::Resize(const MathLib::Dimension& dimension)
+error RenderTarget::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     if (FATAL_LOG_EXPR(!m_backSurface)) return ErrorCode::nullBackSurface;
     bool isCurrentBound = false;

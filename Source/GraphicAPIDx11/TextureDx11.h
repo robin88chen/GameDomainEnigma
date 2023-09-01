@@ -29,7 +29,7 @@ namespace Enigma::Devices
         ID3D11ShaderResourceView* GetD3DResourceView() const { return m_d3dTextureResource; }
 
     protected:
-        virtual error CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff) override;
+        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
         virtual error LoadTextureImage(const byte_buffer& img_buff) override;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) override;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;

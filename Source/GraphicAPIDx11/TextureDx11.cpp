@@ -25,7 +25,7 @@ TextureDx11::~TextureDx11()
     SAFE_RELEASE(m_d3dTextureResource);
 }
 
-error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
+error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);
@@ -483,7 +483,7 @@ error TextureDx11::CreateFromScratchImage(DirectX::ScratchImage& scratchImage)
         img_buff.resize(scratchImage.GetPixelsSize());
         memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
         return CreateFromSystemMemory(
-            MathLib::Dimension{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
+            MathLib::Dimension<unsigned>{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
             img_buff);
     }
     else

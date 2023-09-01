@@ -19,7 +19,7 @@ ITexture::~ITexture()
 {
 }
 
-void ITexture::Create(const MathLib::Dimension& dimension, const byte_buffer& buff)
+void ITexture::Create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {

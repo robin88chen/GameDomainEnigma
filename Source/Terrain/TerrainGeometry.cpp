@@ -52,3 +52,13 @@ GenericDto TerrainGeometry::SerializeDto() const
     }
     return dto.ToGenericDto();
 }
+
+Enigma::MathLib::Dimension<float> TerrainGeometry::GetCellDimension() const
+{
+    assert(m_numCols > 0 && m_numRows > 0);
+    MathLib::Dimension<float> cell_dimension;
+    cell_dimension.m_width = (m_maxPosition.X() - m_minPosition.X()) / static_cast<float>(m_numCols);
+    cell_dimension.m_height = (m_maxPosition.Z() - m_minPosition.Z()) / static_cast<float>(m_numRows);
+
+    return cell_dimension;
+}

@@ -68,7 +68,7 @@ void ApplicationBridge::OnRendererSurfaceCreate(int width, int height, int* attr
         return;
     }
     graphic->SetFormat(attribs);
-    graphic->SetDimension(MathLib::Dimension{ (unsigned int)width, (unsigned int)height });
+    graphic->SetDimension(MathLib::Dimension<unsigned>{ (unsigned int)width, (unsigned int)height });
     if (m_onRendererSurfaceCreate)
     {
         m_onRendererSurfaceCreate(width, height, attribs);
@@ -83,7 +83,7 @@ void ApplicationBridge::OnRendererSurfaceSizeChanged(int width, int height)
         Debug::ErrorPrintf("GraphicAPI EGL cast fail");
         return;
     }
-    graphic->SetDimension(MathLib::Dimension{ (unsigned int)width, (unsigned int)height });
+    graphic->SetDimension(MathLib::Dimension<unsigned>{ (unsigned int)width, (unsigned int)height });
     if (m_onRendererSurfaceSizeChanged)
     {
         m_onRendererSurfaceSizeChanged(width, height);

@@ -53,11 +53,11 @@ namespace Enigma::Devices
             int baseVertexOffset) override;
         virtual error FlipBackSurface() override;
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, unsigned int buff_count,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension, unsigned int buff_count,
             const std::vector<Graphics::GraphicFormat>& fmts) override;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt) override;
         virtual error ShareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& from_depth) override;

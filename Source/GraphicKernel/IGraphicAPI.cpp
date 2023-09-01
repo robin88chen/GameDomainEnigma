@@ -169,7 +169,7 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doCreatingBackSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingMultiBackSurface = nullptr;
-        
+
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
     m_doCreatingDepthSurface = nullptr;
     Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
@@ -265,7 +265,7 @@ void IGraphicAPI::Draw(unsigned indexCount, unsigned vertexCount, unsigned index
     }
 }
 
-void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface, 
+void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
     const MathLib::ColorRGBA& color, float depth_value, unsigned stencil_value)
 {
     if (UseAsync())
@@ -766,28 +766,28 @@ future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_
     return m_workerThread->PushTask([=]() -> error { return this->CreatePrimaryBackSurface(back_name, depth_name); });
 }
 
-future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     const GraphicFormat& fmt)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->CreateBackSurface(back_name, dimension, fmt); });
 }
 
-future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, 
+future_error IGraphicAPI::AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     unsigned buff_count, const std::vector<GraphicFormat>& fmts)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->CreateBackSurface(back_name, dimension, buff_count, fmts); });
 }
 
-future_error IGraphicAPI::AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+future_error IGraphicAPI::AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
     const GraphicFormat& fmt)
 {
     return m_workerThread->PushTask([=]() -> error
         { return this->CreateDepthStencilSurface(depth_name, dimension, fmt); });
 }
 
-future_error IGraphicAPI::AsyncShareDepthStencilSurface(const std::string& depth_name, 
+future_error IGraphicAPI::AsyncShareDepthStencilSurface(const std::string& depth_name,
     const IDepthStencilSurfacePtr& from_depth)
 {
     return m_workerThread->PushTask([=]() -> error

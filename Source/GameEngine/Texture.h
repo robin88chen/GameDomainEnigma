@@ -35,7 +35,7 @@ namespace Enigma::Engine
         const Graphics::ITexturePtr& GetDeviceTexture() { return m_texture; }
 
         virtual const Graphics::GraphicFormat& GetFormat();
-        virtual const MathLib::Dimension& GetDimension();
+        virtual const MathLib::Dimension<unsigned>& GetDimension();
         virtual bool IsCubeTexture();
         virtual bool IsMultiTexture() { return m_texture ? m_texture->IsMultiTexture() : false; }
 

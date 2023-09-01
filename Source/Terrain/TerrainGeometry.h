@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainGeometry.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -9,6 +9,7 @@
 #define TERRAIN_GEOMETRY_H
 
 #include "GameEngine/TriangleList.h"
+#include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Terrain
 {
@@ -25,6 +26,8 @@ namespace Enigma::Terrain
         TerrainGeometry& operator=(TerrainGeometry&&) = delete;
 
         virtual Engine::GenericDto SerializeDto() const override;
+
+        MathLib::Dimension<float> GetCellDimension() const;
 
     protected:
         unsigned m_numRows;

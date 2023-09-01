@@ -48,13 +48,13 @@ namespace Enigma::Graphics
     class BackSurfaceResized : public Frameworks::IEvent
     {
     public:
-        BackSurfaceResized(const std::string& back_name, const MathLib::Dimension& dimension) :
+        BackSurfaceResized(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension) :
             m_backSurfaceName(back_name), m_dimension(dimension) {};
         const std::string& GetSurfaceName() const { return m_backSurfaceName; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
     private:
         std::string m_backSurfaceName;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
     };
     class MultiBackSurfaceCreated : public Frameworks::IEvent
     {
@@ -77,13 +77,13 @@ namespace Enigma::Graphics
     class DepthSurfaceResized : public Frameworks::IEvent
     {
     public:
-        DepthSurfaceResized(const std::string& depth_name, const MathLib::Dimension& dimension) :
+        DepthSurfaceResized(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension) :
             m_depthSurfaceName(depth_name), m_dimension(dimension) {};
         const std::string& GetSurfaceName() const { return m_depthSurfaceName; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
     private:
         std::string m_depthSurfaceName;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
     };
     class DepthSurfaceShared : public Frameworks::IEvent
     {

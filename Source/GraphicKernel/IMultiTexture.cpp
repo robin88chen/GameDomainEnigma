@@ -13,7 +13,7 @@ IMultiTexture::~IMultiTexture()
 {
 }
 
-void IMultiTexture::MultiCreate(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+void IMultiTexture::MultiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {

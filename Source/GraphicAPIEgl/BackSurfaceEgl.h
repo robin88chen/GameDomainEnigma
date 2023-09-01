@@ -20,7 +20,7 @@ namespace Enigma::Devices
     class BackSurfaceEgl : public Graphics::IBackSurface
     {
     public:
-        BackSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension, 
+        BackSurfaceEgl(const std::string& name, const MathLib::Dimension<unsigned>& dimension, 
             const Graphics::GraphicFormat& fmt, bool primary);
         BackSurfaceEgl(const BackSurfaceEgl&) = delete;
         BackSurfaceEgl(BackSurfaceEgl&&) = delete;
@@ -29,11 +29,11 @@ namespace Enigma::Devices
         BackSurfaceEgl& operator=(const BackSurfaceEgl&) = delete;
         BackSurfaceEgl& operator=(BackSurfaceEgl&&) = delete;
 
-        virtual error Resize(const MathLib::Dimension& dimension) override;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override;
         GLuint GetFrameBufferHandle() const { return m_frameBufferHandle; }
 
     protected:
-        void CreateFrameBufferTexture(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        void CreateFrameBufferTexture(const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
 
     protected:
         GLuint m_frameBufferHandle;

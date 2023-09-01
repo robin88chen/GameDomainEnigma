@@ -40,7 +40,7 @@ namespace Enigma::Renderer
     class CreateRenderTarget : public Frameworks::ICommand
     {
     public:
-        CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, 
+        CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
             const std::vector<Graphics::RenderTextureUsage>& usages)
                 : m_name(name), m_primary(primary), m_usages(usages) {}
         const std::string& GetRenderTargetName() { return m_name; }
@@ -92,11 +92,11 @@ namespace Enigma::Renderer
     class ResizePrimaryRenderTarget : public Frameworks::ICommand
     {
     public:
-        ResizePrimaryRenderTarget(const MathLib::Dimension& dimension) : m_dimension(dimension) {}
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        ResizePrimaryRenderTarget(const MathLib::Dimension<unsigned>& dimension) : m_dimension(dimension) {}
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
 
     private:
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
     };
 }
 

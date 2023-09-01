@@ -118,7 +118,7 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
@@ -130,7 +130,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     unsigned buff_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     Debug::Printf("create multi back surface in thread %d\n", std::this_thread::get_id());
@@ -142,7 +142,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+error GraphicAPIEgl::CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
@@ -466,7 +466,7 @@ void GraphicAPIEgl::SetFormat(int* attrb)
     }
 }
 
-void GraphicAPIEgl::SetDimension(const MathLib::Dimension& dim)
+void GraphicAPIEgl::SetDimension(const MathLib::Dimension<unsigned>& dim)
 {
     m_surfaceDimension = dim;
 }

@@ -47,14 +47,14 @@ namespace Enigma::Renderer
     class RenderTargetResized : public Frameworks::IEvent
     {
     public:
-        RenderTargetResized(const std::shared_ptr<RenderTarget>& target, const MathLib::Dimension& dimension) :
+        RenderTargetResized(const std::shared_ptr<RenderTarget>& target, const MathLib::Dimension<unsigned>& dimension) :
             m_target(target), m_dimension(dimension) {};
         [[nodiscard]] std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        [[nodiscard]] const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
     };
     class PrimaryRenderTargetCreated : public Frameworks::IEvent
     {

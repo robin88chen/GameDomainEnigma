@@ -31,7 +31,7 @@ TextureEgl::~TextureEgl()
     }
 }
 
-error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
+error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     if (m_texture != 0)
     {
@@ -82,7 +82,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
             return ErrorCode::eglLoadTexture;
         }
 
-        CreateFromSystemMemory(MathLib::Dimension{ image.width, image.height }, raw_buffer);
+        CreateFromSystemMemory(MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
         png_image_free(&image);
 
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));

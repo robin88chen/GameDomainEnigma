@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   BackSurfaceDx11.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -19,7 +19,7 @@ namespace Enigma::Devices
     {
     public:
         BackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D* tex, bool primary);
-        BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+        BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt);
         BackSurfaceDx11(const BackSurfaceDx11&) = delete;
         BackSurfaceDx11(BackSurfaceDx11&&) = delete;
@@ -27,14 +27,14 @@ namespace Enigma::Devices
         BackSurfaceDx11& operator=(const BackSurfaceDx11&) = delete;
         BackSurfaceDx11& operator=(BackSurfaceDx11&&) = delete;
 
-        virtual error Resize(const MathLib::Dimension& dimension) override;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override;
 
         ID3D11RenderTargetView* GetD3DRenderTarget() { return m_d3dRenderTarget; }
         ID3D11Texture2D* GetD3DSurface() { return m_d3dSurface; }
 
     protected:
         void CreateD3DRenderTarget(ID3D11Device* device, ID3D11Texture2D* texBackbuffer);
-        error Create(ID3D11Device* device, const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        error Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
 
     protected:
         ID3D11Texture2D* m_d3dSurface;

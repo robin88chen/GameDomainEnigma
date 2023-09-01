@@ -32,7 +32,7 @@ MultiTextureDx11::~MultiTextureDx11()
     SAFE_DELETE_ARRAY(m_d3dTextureResources);
 }
 
-error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     assert(count == buffs.size());
     if ((m_d3dTextureResources) && (m_resourceViewCount > 0))
@@ -220,11 +220,11 @@ error MultiTextureDx11::CreateFromScratchImage(unsigned index, DirectX::ScratchI
     img_buff.resize(scratchImage.GetPixelsSize());
     memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
     return CreateOneFromSystemMemory(index,
-        MathLib::Dimension{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
+        MathLib::Dimension<unsigned>{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
         img_buff);
 }
 
-error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib::Dimension& dimension, const byte_buffer& buff)
+error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);

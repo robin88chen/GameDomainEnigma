@@ -30,7 +30,7 @@ error SwapChainDx11::Present()
     return ErrorCode::ok;
 }
 
-error SwapChainDx11::ResizeBackSurfaces(const MathLib::Dimension& dimension)
+error SwapChainDx11::ResizeBackSurfaces(const MathLib::Dimension<unsigned>& dimension)
 {
     assert(m_dxgiSwapChain);
     HRESULT hr = m_dxgiSwapChain->ResizeBuffers(m_currentDesc.BufferCount, dimension.m_width, dimension.m_height,

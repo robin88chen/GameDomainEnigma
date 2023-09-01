@@ -32,13 +32,13 @@ namespace Enigma::Engine
             m_filename = filename.GetSubPathFileName();
             m_pathId = filename.GetMountPathID();
         };
-        TexturePolicy(const std::string& name, const MathLib::Dimension& dimension, unsigned surface_count)
+        TexturePolicy(const std::string& name, const MathLib::Dimension<unsigned>& dimension, unsigned surface_count)
             : m_jobType(JobType::Create), m_name(name), m_dimension(dimension), m_surfaceCount(surface_count)  {};
 
         const std::string& GetName() const { return m_name; };
         const std::string& GetFileName() const { return m_filename; };
         const std::string& GetPathID() const { return m_pathId; };
-        const MathLib::Dimension& GetDimension() const { return m_dimension; };
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };
         const JobType& GetJobType() const { return m_jobType; };
         const unsigned& GetSurfaceCount() const { return m_surfaceCount; };
 
@@ -47,7 +47,7 @@ namespace Enigma::Engine
         std::string m_name;
         std::string m_filename;
         std::string m_pathId;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         unsigned m_surfaceCount;
     };
 }

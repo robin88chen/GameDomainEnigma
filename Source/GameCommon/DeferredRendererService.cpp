@@ -175,7 +175,7 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (!m_gBuffer.expired())
     {
-        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
+        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
             m_configuration->GbufferFormats());
         m_gBuffer.lock()->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }

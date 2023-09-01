@@ -26,7 +26,7 @@ namespace Enigma::Devices
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
         
         void SetFormat(int* attrb);
-        void SetDimension(const MathLib::Dimension& dim);
+        void SetDimension(const MathLib::Dimension<unsigned>& dim);
 
         /** vertex / index buffer egl 需要 call */
         virtual error BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer, Graphics::PrimitiveTopology pt) override;
@@ -43,11 +43,11 @@ namespace Enigma::Devices
             int baseVertexOffset) override;
         virtual error FlipBackSurface() override;
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt) override;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension, unsigned int buff_count,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension, unsigned int buff_count,
             const std::vector<Graphics::GraphicFormat>& fmts) override;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt) override;
         virtual error ShareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& from_depth) override;
@@ -82,7 +82,7 @@ namespace Enigma::Devices
         error BindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl);
         error UnBindVertexDeclarationEgl(const std::shared_ptr<VertexDeclarationEgl>& vtxDecl);
     protected:
-        MathLib::Dimension m_surfaceDimension;
+        MathLib::Dimension<unsigned> m_surfaceDimension;
     };
 }
 #endif // GRAPHIC_API_EGL_H

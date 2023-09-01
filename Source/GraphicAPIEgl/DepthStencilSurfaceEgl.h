@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DepthStencilSurfaceEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -21,7 +21,7 @@ namespace Enigma::Devices
     class DepthStencilSurfaceEgl : public Graphics::IDepthStencilSurface
     {
     public:
-        DepthStencilSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension,
+        DepthStencilSurfaceEgl(const std::string& name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt);
         DepthStencilSurfaceEgl(const std::string& name, const std::shared_ptr<DepthStencilSurfaceEgl>& shared_depth);
         DepthStencilSurfaceEgl(const DepthStencilSurfaceEgl&) = delete;
@@ -32,7 +32,7 @@ namespace Enigma::Devices
         DepthStencilSurfaceEgl& operator=(DepthStencilSurfaceEgl&&) = delete;
 
         virtual void MakeBackSurfaceRelated(const Graphics::IBackSurfacePtr& back_surf) override;
-        virtual error Resize(const MathLib::Dimension& dimension) override;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override;
         GLuint GetFrameBufferHandle() const { return m_frameBufferHandle; }
 
     protected:

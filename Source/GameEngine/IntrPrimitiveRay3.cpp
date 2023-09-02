@@ -81,6 +81,11 @@ std::shared_ptr<Primitive> IntrPrimitiveRay3::GetResultPrimitive(unsigned int i)
     return m_resultRecords[i].m_primitive.lock();
 }
 
+void IntrPrimitiveRay3::SetRequiredResultCount(unsigned count)
+{
+    if (m_intersectionFinder) m_intersectionFinder->SetRequiredResultCount(count);
+}
+
 const std::vector<IntrPrimitiveRay3::ResultRecord>& IntrPrimitiveRay3::GetResultRecord() const
 {
     return m_resultRecords;

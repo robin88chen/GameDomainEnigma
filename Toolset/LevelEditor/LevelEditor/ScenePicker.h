@@ -14,6 +14,7 @@
 #include "MathLib/Ray3.h"
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Node.h"
+#include "MathLib/IntersectorCache.h"
 #include <vector>
 #include <optional>
 
@@ -68,6 +69,7 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::vector<PickerRecord> m_pickRecords;
         FilterFlag m_filter;
+        std::unordered_map<std::string, std::unique_ptr<Enigma::MathLib::IntersectorCache>> m_intersectorCache;
     };
 };
 

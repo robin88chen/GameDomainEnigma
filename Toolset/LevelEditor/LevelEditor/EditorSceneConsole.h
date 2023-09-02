@@ -14,6 +14,7 @@
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Node.h"
+#include "ScenePicker.h"
 
 namespace LevelEditor
 {
@@ -54,6 +55,8 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         Enigma::Graphics::TargetViewPort m_targetViewport;
+
+        ScenePicker m_scenePicker;
     };
 }
 #endif // EDITOR_SCENE_CONSOLE_H

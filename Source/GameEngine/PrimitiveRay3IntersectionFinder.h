@@ -26,6 +26,10 @@ namespace Enigma::Engine
         virtual MathLib::Intersector::Result Test(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const = 0;
         virtual std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
             Find(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const = 0;
+
+        void SetRequiredResultCount(unsigned count) { m_requiredResultCount = count; };
+    protected:
+        unsigned m_requiredResultCount;
     };
 }
 

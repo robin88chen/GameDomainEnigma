@@ -1,6 +1,7 @@
 ﻿#include "MeshPrimitiveRay3IntersectionFinder.h"
 #include "GameEngine/IntersectionFinderFactories.h"
 #include "GameEngine/IntrGeometryRay3.h"
+#include "GameEngine/IntrGeometryCache.h"
 #include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
@@ -32,14 +33,25 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::Test(const std::shared_
 {
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(primitive);
     if (!mesh) return { false, std::move(cache) };
+    if (cache == nullptr)
+    {
+        auto geo_cache = std::make_unique<IntrGeometryCache>();
+        geo_cache->SetRequiredResultCount(m_requiredResultCount);
+        cache = std::move(geo_cache);
+    }
     return TestMesh(mesh, ray, std::move(cache));
 }
 
-std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::Find(const std::shared_ptr<Primitive>& primitive, const
-    Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
+std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::Find(const std::shared_ptr<Primitive>& primitive, const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
 {
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(primitive);
     if (!mesh) return { std::vector<IntrPrimitiveRay3::ResultRecord>{}, Intersector::Result(false, std::move(cache)) };
+    if (cache == nullptr)
+    {
+        auto geo_cache = std::make_unique<IntrGeometryCache>();
+        geo_cache->SetRequiredResultCount(m_requiredResultCount);
+        cache = std::move(geo_cache);
+    }
     return FindMesh(mesh, ray, std::move(cache));
 }
 

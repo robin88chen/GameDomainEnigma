@@ -52,6 +52,8 @@ namespace Enigma::Engine
         float GetRayT(unsigned int i) const;
         std::shared_ptr<Primitive> GetResultPrimitive(unsigned int i) const;
 
+        void SetRequiredResultCount(unsigned count);
+
         const std::vector<ResultRecord>& GetResultRecord() const;
 
     private:

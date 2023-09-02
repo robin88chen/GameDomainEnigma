@@ -57,6 +57,8 @@ using namespace Enigma::ShadowMap;
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
 
+using namespace std::chrono_literals;
+
 EditorAppDelegate::EditorAppDelegate()
 {
     m_hasLogFile = false;
@@ -215,6 +217,7 @@ void EditorAppDelegate::OnTimerElapsed()
 
     PrepareRender();
     RenderFrame();
+    std::this_thread::sleep_for(30us);
 }
 
 void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)

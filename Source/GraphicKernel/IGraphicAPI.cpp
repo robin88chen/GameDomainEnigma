@@ -17,7 +17,8 @@ IGraphicAPI::IGraphicAPI(AsyncType async) : m_wnd(nullptr), m_apiVersion(APIVers
     assert(!m_instance);
     m_instance = this;
     m_async = async;
-    m_workerThread = new GraphicThread{};
+    m_workerThread = nullptr;
+    if (m_async == AsyncType::UseAsyncDevice) m_workerThread = new GraphicThread{};
     m_stash = new AssetStash{};
     SubscribeHandlers();
 }

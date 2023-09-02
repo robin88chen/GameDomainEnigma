@@ -101,9 +101,17 @@ bool ScenePicker::PushPawnRecord(const SpatialPtr& spatial)
     if (!pawn->GetPrimitive()) return false;
 
     IntrPrimitiveRay3 intrPrim(pawn->GetPrimitive(), m_pickerRay);
-    auto prim_find_res = intrPrim.Find(nullptr);
-    if (!prim_find_res.m_hasIntersect) return false;
+    intrPrim.SetRequiredResultCount(1);
+    std::unique_ptr<IntersectorCache> cache = nullptr;
+    if (m_intersectorCache.find(pawn->GetSpatialName()) != m_intersectorCache.end())
+    {
+        cache = std::move(m_intersectorCache.at(pawn->GetSpatialName()));
+    }
 
+    auto prim_find_res = intrPrim.Find(std::move(cache));
+
+    if (!prim_find_res.m_hasIntersect) return false;
+    m_intersectorCache.insert_or_assign(pawn->GetSpatialName(), std::move(prim_find_res.m_cache));
     // copy result point
     if (intrPrim.GetQuantity())
     {

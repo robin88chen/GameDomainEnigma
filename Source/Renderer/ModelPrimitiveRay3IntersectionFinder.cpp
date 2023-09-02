@@ -35,6 +35,12 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::Test(const std::shared
 {
     auto model = std::dynamic_pointer_cast<ModelPrimitive>(primitive);
     if (!model) return { false, std::move(cache) };
+    if (cache == nullptr)
+    {
+        auto model_cache = std::make_unique<IntrModelPrimitiveCache>();
+        model_cache->SetRequiredResultCount(m_requiredResultCount);
+        cache = std::move(model_cache);
+    }
     return TestModel(model, ray, std::move(cache));
 }
 
@@ -43,6 +49,12 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
 {
     auto model = std::dynamic_pointer_cast<ModelPrimitive>(primitive);
     if (!model) return { std::vector<IntrPrimitiveRay3::ResultRecord>{}, Intersector::Result(false, std::move(cache)) };
+    if (cache == nullptr)
+    {
+        auto model_cache = std::make_unique<IntrModelPrimitiveCache>();
+        model_cache->SetRequiredResultCount(m_requiredResultCount);
+        cache = std::move(model_cache);
+    }
     return FindModel(model, ray, std::move(cache));
 }
 

@@ -54,6 +54,8 @@ ServiceResult TerrainEditService::OnInit()
     CommandBus::Subscribe(typeid(PaintTerrainTextureLayer), m_doPaintingTerrainLayer);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
+    EventPublisher::Subscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
 
     return ServiceResult::Complete;
 }
@@ -68,6 +70,8 @@ ServiceResult TerrainEditService::OnTerm()
     m_doPaintingTerrainLayer = nullptr;
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
+    m_onPickedSpatialChanged = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -83,27 +87,26 @@ void TerrainEditService::MoveUpTerrainVertexByBrush(const Vector3& brush_pos, fl
 
     m_isHeightMapDirty = true;
     auto cell_dimension = terrain_geo->GetCellDimension();
-    float dh = height;
-    float sphere_radius = 0.5f * (dh * dh + brush_size * brush_size) / dh;
-    int brush_step_x = static_cast<int>(std::ceilf(sphere_radius / cell_dimension.m_width));
-    int brush_step_z = static_cast<int>(std::ceilf(sphere_radius / cell_dimension.m_height));
+    // use ellipsoid to calculate heights
+    // x^2 / a^2 + y^2 / b^2 + z^2 / c^2 = 1
+    float sqr_a = brush_size * brush_size;
+    float sqr_b = height * height;
+    float sqr_c = brush_size * brush_size;
+    int brush_step_x = static_cast<int>(std::floorf(brush_size / cell_dimension.m_width));
+    int brush_step_z = static_cast<int>(std::floorf(brush_size / cell_dimension.m_height));
     for (int ix = -brush_step_x; ix <= brush_step_x; ix++)
     {
         for (int iz = -brush_step_z; iz <= brush_step_z; iz++)
         {
-            if (ix * ix + iz * iz > brush_step_x * brush_step_z) continue; // diagonal distance over brush radius
-
-            float hh = height;
-            float sqr_b = (static_cast<float>(ix) * cell_dimension.m_width * static_cast<float>(ix) * cell_dimension.m_width) +
-                (static_cast<float>(iz) * cell_dimension.m_height * static_cast<float>(iz) * cell_dimension.m_height);
-            if (sqr_b > sphere_radius * sphere_radius) continue; // distance over brush radius
-            float r1 = std::sqrtf(sphere_radius * sphere_radius - sqr_b);
-            if (sphere_radius < 0.0f) r1 = -r1;
-            hh = height - (sphere_radius - r1);
-            Vector3 vtx_pos = Vector3(brush_pos.X() + static_cast<float>(ix) * cell_dimension.m_width,
-                brush_pos.Y(),
-                brush_pos.Z() + static_cast<float>(iz) * cell_dimension.m_height);
-            MoveUpTerrainVertex(terrain_geo, vtx_pos, hh);
+            float x = static_cast<float>(ix) * cell_dimension.m_width;
+            float z = static_cast<float>(iz) * cell_dimension.m_height;
+            float sqr_xz = x * x / sqr_a + z * z / sqr_c;
+            if (sqr_xz > 1.0f) continue; // outside of ellipsoid
+            float sqr_y = sqr_b * (1.0f - sqr_xz);
+            float y = std::sqrtf(sqr_y);
+            if (height < 0.0f) y = -y;
+            Vector3 vtx_pos = Vector3(brush_pos.X() + x, brush_pos.Y(), brush_pos.Z() + z);
+            MoveUpTerrainVertex(terrain_geo, vtx_pos, y);
         }
     }
     CommitHeightMapUpdated(terrain_prim, terrain_geo);
@@ -124,8 +127,8 @@ void TerrainEditService::MoveUpTerrainVertex(const std::shared_ptr<TerrainGeomet
     unsigned cell_x = (unsigned)((local_pick_pos.X() - geo_min_pos.X()) / cell_dimension.m_width + 0.5f);
     unsigned cell_z = (unsigned)((local_pick_pos.Z() - geo_min_pos.Z()) / cell_dimension.m_height + 0.5f);
 
-    unsigned num_rows = terrain_geometry->GetNumRows();
-    unsigned vtxIndex = cell_z * (num_rows + 1) + cell_x;
+    unsigned num_cols = terrain_geometry->GetNumCols();
+    unsigned vtxIndex = cell_z * (num_cols + 1) + cell_x;
     terrain_geometry->ChangeHeight(vtxIndex, terrain_geometry->GetHeightMap()[vtxIndex] + height);
     if (m_dirtyVtxMinIndex > vtxIndex) m_dirtyVtxMinIndex = vtxIndex;
     if (m_dirtyVtxMaxIndex < vtxIndex) m_dirtyVtxMaxIndex = vtxIndex;

@@ -25,6 +25,11 @@ TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)
     {
         m_heightMap = dto.HeightMap().value();
     }
+    else
+    {
+        m_heightMap = std::vector<float>((m_numRows + 1) * (m_numCols + 1));
+        std::memset(m_heightMap.data(), 0, m_heightMap.size() * sizeof(float));
+    }
     if (!dto.Position3s())
     {
         dto.ConvertGeometryVertices();
@@ -61,7 +66,9 @@ void TerrainGeometry::UpdateHeightMapToVertexMemory()
     //todo : check performance later
     for (unsigned i = 0; i < m_heightMap.size(); i++)
     {
-        SetPosition3(i, GetPosition3(i) + MathLib::Vector3(0.0f, m_heightMap[i], 0.0f));
+        auto pos = GetPosition3(i);
+        pos.Y() = m_heightMap[i];
+        SetPosition3(i, pos);
     }
 }
 
@@ -72,7 +79,9 @@ void TerrainGeometry::RangedUpdateHeightMapToVertexMemory(unsigned offset, unsig
     //todo : check performance later
     for (unsigned i = offset; i < offset + count; i++)
     {
-        SetPosition3(i, GetPosition3(i) + MathLib::Vector3(0.0f, m_heightMap[i], 0.0f));
+        auto pos = GetPosition3(i);
+        pos.Y() = m_heightMap[i];
+        SetPosition3(i, pos);
     }
 }
 

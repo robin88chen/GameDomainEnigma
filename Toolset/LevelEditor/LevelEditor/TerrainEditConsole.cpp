@@ -65,6 +65,8 @@ ServiceResult TerrainEditConsole::OnInit()
     EventPublisher::Subscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
     m_onSceneCursorDragged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorDragged(e); });
     EventPublisher::Subscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
+    m_onSceneCursorPressed = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorPressed(e); });
+    EventPublisher::Subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
 
     return ServiceResult::Complete;
 }
@@ -93,6 +95,8 @@ ServiceResult TerrainEditConsole::OnTerm()
     m_onSceneCursorMoved = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
     m_onSceneCursorDragged = nullptr;
+    EventPublisher::Unsubscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
+    m_onSceneCursorPressed = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -267,5 +271,15 @@ void TerrainEditConsole::OnSceneCursorDragged(const Enigma::Frameworks::IEventPt
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
     if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
-    SendTerrainEditCommand(0.1f);
+    SendTerrainEditCommand(0.01f);
+}
+
+void TerrainEditConsole::OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneCursorPressed>(e);
+    if (!ev) return;
+    if (!ev->GetPickedPawn()) return;
+    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+    SendTerrainEditCommand(1.0f);
 }

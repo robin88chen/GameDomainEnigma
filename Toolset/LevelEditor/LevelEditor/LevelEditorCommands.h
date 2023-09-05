@@ -104,6 +104,16 @@ namespace LevelEditor
         float m_brushDensity;
         int m_textureLayerIndex;
     };
+    class CompleteTerrainEditOperation : public Enigma::Frameworks::ICommand
+    {
+    public:
+        CompleteTerrainEditOperation(const Enigma::MathLib::Vector3& brush_pos) : m_brushPos(brush_pos) {}
+
+        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
+
+    protected:
+        Enigma::MathLib::Vector3 m_brushPos;
+    };
 }
 
 #endif // LEVEL_EDITOR_COMMANDS_H

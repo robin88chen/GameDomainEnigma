@@ -116,22 +116,16 @@ void TerrainEditService::MoveUpTerrainVertex(const std::shared_ptr<TerrainGeomet
 {
     if (m_pickedTerrain.expired()) return;
     if (terrain_geometry == nullptr) return;
-    auto cell_dimension = terrain_geometry->GetCellDimension();
 
     Matrix4 world_inv = m_pickedTerrain.lock()->GetWorldTransform().Inverse();
     Vector3 local_pick_pos = world_inv.TransformCoord(picking_pos);
 
-    auto geo_max_pos = terrain_geometry->GetMaxPosition();
-    auto geo_min_pos = terrain_geometry->GetMinPosition();
+    auto [cell_x, cell_z] = terrain_geometry->LocateCell(local_pick_pos);
 
-    unsigned cell_x = (unsigned)((local_pick_pos.X() - geo_min_pos.X()) / cell_dimension.m_width + 0.5f);
-    unsigned cell_z = (unsigned)((local_pick_pos.Z() - geo_min_pos.Z()) / cell_dimension.m_height + 0.5f);
-
-    unsigned num_cols = terrain_geometry->GetNumCols();
-    unsigned vtxIndex = cell_z * (num_cols + 1) + cell_x;
-    terrain_geometry->ChangeHeight(vtxIndex, terrain_geometry->GetHeightMap()[vtxIndex] + height);
-    if (m_dirtyVtxMinIndex > vtxIndex) m_dirtyVtxMinIndex = vtxIndex;
-    if (m_dirtyVtxMaxIndex < vtxIndex) m_dirtyVtxMaxIndex = vtxIndex;
+    terrain_geometry->ChangeHeight(cell_x, cell_z, terrain_geometry->GetHeight(cell_x, cell_z) + height);
+    auto vtx_idx = terrain_geometry->ConvertVertexIndex(cell_x, cell_z);
+    if (m_dirtyVtxMinIndex > vtx_idx) m_dirtyVtxMinIndex = vtx_idx;
+    if (m_dirtyVtxMaxIndex < vtx_idx) m_dirtyVtxMaxIndex = vtx_idx;
 }
 
 void TerrainEditService::CommitHeightMapUpdated(const std::shared_ptr<TerrainPrimitive>& terrain_primitive,
@@ -143,6 +137,7 @@ void TerrainEditService::CommitHeightMapUpdated(const std::shared_ptr<TerrainPri
     if (m_dirtyVtxMaxIndex < m_dirtyVtxMinIndex) return;
 
     terrain_geometry->RangedUpdateHeightMapToVertexMemory(m_dirtyVtxMinIndex, m_dirtyVtxMaxIndex - m_dirtyVtxMinIndex + 1);
+    terrain_geometry->RangedUpdateVertexNormals(m_dirtyVtxMinIndex, m_dirtyVtxMaxIndex - m_dirtyVtxMinIndex + 1);
     terrain_primitive->RangedUpdateRenderBuffer(m_dirtyVtxMinIndex, m_dirtyVtxMaxIndex - m_dirtyVtxMinIndex + 1, std::nullopt, std::nullopt);
     m_dirtyVtxMaxIndex = std::numeric_limits<unsigned int>::min();
     m_dirtyVtxMinIndex = std::numeric_limits<unsigned int>::max();
@@ -191,6 +186,11 @@ void TerrainEditService::DoPaintingTerrainLayer(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<PaintTerrainTextureLayer, ICommand>(c);
     if (!cmd) return;
+}
+
+void TerrainEditService::DoCompletingEditOperation(const ICommandPtr& c)
+{
+
 }
 
 void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)

@@ -36,6 +36,7 @@ namespace LevelEditor
         void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void DoMovingUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
         void DoPaintingTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
+        void DoCompletingEditOperation(const Enigma::Frameworks::ICommandPtr& c);
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
@@ -53,6 +54,7 @@ namespace LevelEditor
         Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
         Enigma::Frameworks::CommandSubscriberPtr m_doMovingUpTerrainVertex;
         Enigma::Frameworks::CommandSubscriberPtr m_doPaintingTerrainLayer;
+        Enigma::Frameworks::CommandSubscriberPtr m_doCompletingEditOperation;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 

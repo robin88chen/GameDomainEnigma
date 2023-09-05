@@ -29,6 +29,8 @@ namespace Enigma::Terrain
 
         void UpdateHeightMapToVertexMemory();
         void RangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);
+        void UpdateVertexNormals();
+        void RangedUpdateVertexNormals(unsigned offset, unsigned count);
 
         MathLib::Dimension<float> GetCellDimension() const;
         unsigned GetNumRows() const { return m_numRows; }
@@ -36,7 +38,14 @@ namespace Enigma::Terrain
         const MathLib::Vector3& GetMinPosition() const { return m_minPosition; }
         const MathLib::Vector3& GetMaxPosition() const { return m_maxPosition; }
         const float_buffer& GetHeightMap() const { return m_heightMap; }
-        void ChangeHeight(unsigned idx, float new_height);
+        float GetHeight(unsigned x, unsigned z) const;
+        void ChangeHeight(unsigned x, unsigned z, float new_height);
+
+        unsigned ConvertVertexIndex(unsigned x, unsigned z) const;
+        std::tuple<unsigned, unsigned> RevertVertexIndex(unsigned index) const;
+
+        std::tuple<unsigned, unsigned> LocateCell(const MathLib::Vector3& position) const;
+
     protected:
         unsigned m_numRows;
         unsigned m_numCols;

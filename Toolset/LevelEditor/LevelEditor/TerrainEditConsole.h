@@ -51,6 +51,7 @@ namespace LevelEditor
         void OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e);
 
         void CreateBrushPawn();
         void SendTerrainEditCommand(float elapse_time);
@@ -63,6 +64,7 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorMoved;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorDragged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorPressed;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorReleased;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;

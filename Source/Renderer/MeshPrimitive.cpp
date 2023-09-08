@@ -429,3 +429,17 @@ void MeshPrimitive::LooseSegmentEffectTexture(unsigned index)
             });*/
     }
 }
+
+std::shared_ptr<Texture> MeshPrimitive::FindTextureBySemantic(const std::string& semantic) const
+{
+    for (auto& eff_tex : m_textures)
+    {
+        auto tex_tuple = eff_tex.FindSemanticTexture(semantic);
+        if (!tex_tuple) continue;
+        if (auto tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
+        {
+            return tex;
+        }
+    }
+    return nullptr;
+}

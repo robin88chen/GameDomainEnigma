@@ -38,6 +38,7 @@ GenericDto EffectTextureMap::SerializeDto() const
         {
             if (t->TheFactoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
             TextureMappingDto mapping;
+            mapping.JobType() = TexturePolicy::JobType::Load;
             mapping.Semantic() = std::get<std::string>(tex);
             mapping.TextureName() = t->TheFactoryDesc().GetResourceName();
             mapping.Filename() = t->TheFactoryDesc().GetResourceFilename();

@@ -26,6 +26,8 @@ namespace Enigma::Engine
         TextureMappingDto& operator=(const TextureMappingDto&) = default;
         TextureMappingDto& operator=(TextureMappingDto&&) = default;
 
+        [[nodiscard]] TexturePolicy::JobType JobType() const { return m_jobType; }
+        TexturePolicy::JobType& JobType() { return m_jobType; }
         [[nodiscard]] const std::string& TextureName() const { return m_textureName; }
         std::string& TextureName() { return m_textureName; }
         [[nodiscard]] const std::string& Filename() const { return m_filename; }
@@ -36,6 +38,10 @@ namespace Enigma::Engine
         std::string& Semantic() { return m_semantic; }
         [[nodiscard]] std::optional<unsigned> ArrayIndex() const { return m_arrayIndex; }
         std::optional<unsigned>& ArrayIndex() { return m_arrayIndex; }
+        [[nodiscard]] const MathLib::Dimension<unsigned>& Dimension() const { return m_dimension; }
+        MathLib::Dimension<unsigned>& Dimension() { return m_dimension; }
+        [[nodiscard]] unsigned SurfaceCount() const { return m_scurfaceCount; }
+        unsigned& SurfaceCount() { return m_scurfaceCount; }
 
         static TextureMappingDto FromGenericDto(const GenericDto& dto);
         GenericDto ToGenericDto() const;
@@ -43,11 +49,14 @@ namespace Enigma::Engine
         EffectTextureMapPolicy::TextureTuplePolicy ConvertToPolicy();
 
     protected:
+        TexturePolicy::JobType m_jobType;
         std::string m_textureName;
         std::string m_filename;
         std::string m_pathId;
         std::string m_semantic;
         std::optional<unsigned> m_arrayIndex;
+        MathLib::Dimension<unsigned> m_dimension;
+        unsigned m_scurfaceCount;
     };
 
     class EffectTextureMapDto

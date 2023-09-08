@@ -170,21 +170,35 @@ void MeshPrimitiveBuilder::OnLoadTextureResponse(const Frameworks::IResponsePtr&
 {
     if (!m_policy) return;
     if (!r) return;
-    const auto res = std::dynamic_pointer_cast<LoadTextureResponse, IResponse>(r);
-    if (!res) return;
-    const auto found_idx = FindLoadingTextureIndex(res->GetName());
-    if (!found_idx) return;
-    if (res->GetErrorCode())
+    std::string tex_name;
+    std::error_code err;
+    std::shared_ptr<Texture> tex_loaded;
+    if (const auto res = std::dynamic_pointer_cast<LoadTextureResponse, IResponse>(r))
     {
-        EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), res->GetErrorCode()));
+        tex_name = res->GetName();
+        err = res->GetErrorCode();
+        tex_loaded = res->GetTexture();
+    }
+    else if (const auto res = std::dynamic_pointer_cast<CreateTextureResponse, IResponse>(r))
+    {
+        tex_name = res->GetName();
+        err = res->GetErrorCode();
+        tex_loaded = res->GetTexture();
+    }
+    if (err)
+    {
+        EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), err));
         return;
     }
+    if (tex_name.empty()) return;
+    const auto found_idx = FindLoadingTextureIndex(tex_name);
+    if (!found_idx) return;
 
     const unsigned tex_idx = std::get<0>(found_idx.value());
     const unsigned tuple_idx = std::get<1>(found_idx.value());
     auto semantic = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
     auto array_idx = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
-    m_builtTextures[tex_idx].ChangeSemanticTexture({ semantic, res->GetTexture(), array_idx });
+    m_builtTextures[tex_idx].ChangeSemanticTexture({ semantic, tex_loaded, array_idx });
     TryCompletingMesh();
 }
 

@@ -104,6 +104,8 @@ namespace Enigma::Renderer
         void CreateRenderElements();
         //@}
 
+        std::shared_ptr<Engine::Texture> FindTextureBySemantic(const std::string& semantic) const;
+
     protected:
         MeshPrimitiveDto SerializeMeshDto() const;
 

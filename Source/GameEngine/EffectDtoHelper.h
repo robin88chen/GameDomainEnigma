@@ -34,6 +34,8 @@ namespace Enigma::Engine
 
         EffectTextureMapDtoHelper& TextureMapping(const std::string& filename, const std::string& path_id,
             const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic);
+        EffectTextureMapDtoHelper& TextureMapping(const MathLib::Dimension<unsigned>& dimension, unsigned surface_count,
+            const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic);
 
         GenericDto ToGenericDto();
 

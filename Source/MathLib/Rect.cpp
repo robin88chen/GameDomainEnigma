@@ -18,7 +18,17 @@ int Rect::Left() const
     return m_left;
 }
 
+int& Rect::Left()
+{
+    return m_left;
+}
+
 int Rect::Top() const
+{
+    return m_top;
+}
+
+int& Rect::Top()
 {
     return m_top;
 }
@@ -28,7 +38,17 @@ int Rect::Right() const
     return m_right;
 }
 
+int& Rect::Right()
+{
+    return m_right;
+}
+
 int Rect::Bottom() const
+{
+    return m_bottom;
+}
+
+int& Rect::Bottom()
 {
     return m_bottom;
 }

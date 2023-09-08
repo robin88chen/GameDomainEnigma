@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainEditService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -15,6 +15,7 @@
 #include "Terrain/TerrainPawn.h"
 #include "Terrain/TerrainGeometry.h"
 #include "Terrain/TerrainPrimitive.h"
+#include "MathLib/Rect.h"
 
 namespace LevelEditor
 {
@@ -38,29 +39,40 @@ namespace LevelEditor
         void DoPaintingTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
         void DoCompletingEditOperation(const Enigma::Frameworks::ICommandPtr& c);
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
         void MoveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
         void MoveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
         void CommitHeightMapUpdated(const std::shared_ptr<Enigma::Terrain::TerrainPrimitive>& terrain_primitive, const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry);
 
+        void PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density);
+        void PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density);
+        void AddLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density);
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
         static std::array<std::string, TextureLayerNum> LayerSemantics;
 
     protected:
         std::weak_ptr<Enigma::Terrain::TerrainPawn> m_pickedTerrain;
+        std::unordered_map<std::string, std::weak_ptr<Enigma::Engine::Texture>> m_splatTextures;
+        std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;
 
         Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
         Enigma::Frameworks::CommandSubscriberPtr m_doMovingUpTerrainVertex;
         Enigma::Frameworks::CommandSubscriberPtr m_doPaintingTerrainLayer;
         Enigma::Frameworks::CommandSubscriberPtr m_doCompletingEditOperation;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 
         bool m_isHeightMapDirty;
         unsigned m_dirtyVtxMinIndex;
         unsigned m_dirtyVtxMaxIndex;
+        byte_buffer m_alphaTexels;
+        Enigma::MathLib::Rect m_alphaRect;
+        byte_buffer m_dirtyAlphaTexels;
+        Enigma::MathLib::Rect m_dirtyAlphaRect;
     };
 }
 

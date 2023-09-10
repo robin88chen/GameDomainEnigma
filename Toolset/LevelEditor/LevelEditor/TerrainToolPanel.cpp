@@ -112,6 +112,10 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
         m_textureLayerButtons[i]->enable_pushed(true);
         m_textureLayerButtons[i]->events().click([=](const nana::arg_click& a) { this->OnTextureLayerButton(a, i); });
         m_place->field("texture_btns") << *m_textureLayerButtons[i];
+        if (i == 0)
+        {
+            m_textureLayerButtons[i]->focus();
+        }
     }
 
     m_place->collocate();

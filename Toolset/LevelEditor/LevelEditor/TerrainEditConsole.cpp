@@ -34,6 +34,7 @@ TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr) : ISystemServic
     m_brushSize = 1;
     m_brushDensity = 0.0f;
     m_brushHeight = 0.3f;
+    m_layerIndex = 0;
 }
 
 TerrainEditConsole::~TerrainEditConsole()

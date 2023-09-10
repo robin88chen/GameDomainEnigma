@@ -10,6 +10,7 @@
 
 #include "TexturePolicies.h"
 #include "Frameworks/Request.h"
+#include "MathLib/Rect.h"
 
 namespace Enigma::Engine
 {
@@ -30,6 +31,17 @@ namespace Enigma::Engine
 
     private:
         TexturePolicy m_policy;
+    };
+    class RequestRetrieveTextureImage : public Frameworks::IRequest
+    {
+    public:
+        RequestRetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect) : m_name(name), m_imageRect(image_rect) {}
+        const std::string& GetTextureName() { return m_name; }
+        const MathLib::Rect& GetImageRect() { return m_imageRect; }
+
+    private:
+        std::string m_name;
+        MathLib::Rect m_imageRect;
     };
 }
 

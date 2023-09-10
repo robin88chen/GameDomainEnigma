@@ -7,7 +7,7 @@
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 {
     meInitMemoryCheck();
-    //_CrtSetBreakAlloc(2022);
+    //_CrtSetBreakAlloc(10545);
     LevelEditor::MainForm form;
     form.InitSubPanels();
     form.caption("Enigma Level Editor");

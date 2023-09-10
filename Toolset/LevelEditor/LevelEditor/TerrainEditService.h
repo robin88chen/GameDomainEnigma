@@ -8,7 +8,6 @@
 #ifndef TERRAIN_EDIT_SERVICE_H
 #define TERRAIN_EDIT_SERVICE_H
 
-
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -16,6 +15,7 @@
 #include "Terrain/TerrainGeometry.h"
 #include "Terrain/TerrainPrimitive.h"
 #include "MathLib/Rect.h"
+#include "Frameworks/ResponseSubscriber.h"
 
 namespace LevelEditor
 {
@@ -42,6 +42,8 @@ namespace LevelEditor
         void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
+        void OnRetrieveTextureImageResponse(const Enigma::Frameworks::IResponsePtr& r);
+
         void MoveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
         void MoveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
         void CommitHeightMapUpdated(const std::shared_ptr<Enigma::Terrain::TerrainPrimitive>& terrain_primitive, const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry);
@@ -66,11 +68,14 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 
+        Enigma::Frameworks::ResponseSubscriberPtr m_onRetrieveTextureImageResponse;
+
         bool m_isHeightMapDirty;
         unsigned m_dirtyVtxMinIndex;
         unsigned m_dirtyVtxMaxIndex;
         byte_buffer m_alphaTexels;
         Enigma::MathLib::Rect m_alphaRect;
+        Enigma::Frameworks::Ruid m_retrieveTextureImageRuid;
         byte_buffer m_dirtyAlphaTexels;
         Enigma::MathLib::Rect m_dirtyAlphaRect;
     };

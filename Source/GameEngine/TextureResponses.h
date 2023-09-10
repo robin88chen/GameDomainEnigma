@@ -42,6 +42,20 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> m_texture;
         std::error_code m_error;
     };
+    class RetrieveTextureImageResponse : public Frameworks::IResponse
+    {
+    public:
+        RetrieveTextureImageResponse(const Frameworks::Ruid& request_ruid, const std::string& name, const byte_buffer& image_buff, std::error_code er)
+            : IResponse(request_ruid), m_name(name), m_imageBuff(image_buff), m_error(er) {};
+
+        const std::string& GetName() { return m_name; }
+        const byte_buffer& GetImageBuffer() { return m_imageBuff; }
+        std::error_code GetErrorCode() const { return m_error; }
+    private:
+        std::string m_name;
+        byte_buffer m_imageBuff;
+        std::error_code m_error;
+    };
 }
 
 #endif // _TEXTURE_RESPONSES_H

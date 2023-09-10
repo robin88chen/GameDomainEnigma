@@ -309,7 +309,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h">
       <Filter>Intersect\IntersectionFinder</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageRetriever.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures</Filter>
     </ClInclude>
   </ItemGroup>
@@ -455,7 +455,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp">
       <Filter>Intersect\IntersectionFinder</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageRetriever.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>

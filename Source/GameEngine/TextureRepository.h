@@ -23,7 +23,7 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class TextureLoader;
-    class TextureImageRetriever;
+    class TextureImageUpdater;
 
     class TextureRepository : public Frameworks::ISystemService
     {
@@ -50,19 +50,25 @@ namespace Enigma::Engine
         void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
         void OnTextureImageRetrieved(const Frameworks::IEventPtr& e);
         void OnRetrieveTextureImageFailed(const Frameworks::IEventPtr& e);
+        void OnTextureImageUpdated(const Frameworks::IEventPtr& e);
+        void OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e);
 
         void DoLoadingTexture(const Frameworks::IRequestPtr& r);
         void DoRetrievingTextureImage(const Frameworks::IRequestPtr& r);
+        void DoUpdatingTextureImage(const Frameworks::IRequestPtr& r);
 
     private:
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
         Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
+        Frameworks::EventSubscriberPtr m_onTextureImageUpdated;
+        Frameworks::EventSubscriberPtr m_onUpdateTextureImageFailed;
 
         Frameworks::RequestSubscriberPtr m_doLoadingTexture;
         Frameworks::RequestSubscriberPtr m_doCreatingTexture;
         Frameworks::RequestSubscriberPtr m_doRetrievingTextureImage;
+        Frameworks::RequestSubscriberPtr m_doUpdatingTextureImage;
 
         using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
@@ -70,10 +76,11 @@ namespace Enigma::Engine
         std::recursive_mutex m_textureMapLock;
 
         TextureLoader* m_loader;
-        TextureImageRetriever* m_retriever;
+        TextureImageUpdater* m_updater;
         std::queue<std::shared_ptr<RequestLoadTexture>> m_loadRequests;
         std::queue<std::shared_ptr<RequestCreateTexture>> m_createRequests;
         std::queue<std::shared_ptr<RequestRetrieveTextureImage>> m_retrieveRequests;
+        std::queue<std::shared_ptr<RequestUpdateTextureImage>> m_updateRequests;
         Frameworks::Ruid m_currentRequestRuid;
         TexturePolicy::JobType m_currentJob;
         bool m_currentRequesting;

@@ -37,11 +37,24 @@ namespace Enigma::Engine
     public:
         RequestRetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect) : m_name(name), m_imageRect(image_rect) {}
         const std::string& GetTextureName() { return m_name; }
-        const MathLib::Rect& GetImageRect() { return m_imageRect; }
+        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
 
     private:
         std::string m_name;
         MathLib::Rect m_imageRect;
+    };
+    class RequestUpdateTextureImage : public Frameworks::IRequest
+    {
+    public:
+        RequestUpdateTextureImage(const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff) : m_name(name), m_imageRect(image_rect), m_imageBuff(image_buff) {}
+        const std::string& GetTextureName() { return m_name; }
+        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
+        const byte_buffer& GetImageBuffer() const { return m_imageBuff; }
+
+    private:
+        std::string m_name;
+        MathLib::Rect m_imageRect;
+        byte_buffer m_imageBuff;
     };
 }
 

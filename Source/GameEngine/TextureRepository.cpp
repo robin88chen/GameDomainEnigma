@@ -1,6 +1,6 @@
 ﻿#include "TextureRepository.h"
 #include "TextureLoader.h"
-#include "TextureImageRetriever.h"
+#include "TextureImageUpdater.h"
 #include "Platforms/MemoryMacro.h"
 #include "TextureRequests.h"
 #include "TextureResponses.h"
@@ -21,13 +21,13 @@ TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager) : 
     m_currentJob = TexturePolicy::JobType::None;
     m_currentRequesting = false;
     m_loader = new TextureLoader(this);
-    m_retriever = new TextureImageRetriever(this);
+    m_updater = new TextureImageUpdater(this);
 }
 
 TextureRepository::~TextureRepository()
 {
     SAFE_DELETE(m_loader);
-    SAFE_DELETE(m_retriever);
+    SAFE_DELETE(m_updater);
 }
 
 Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
@@ -40,10 +40,16 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     Frameworks::EventPublisher::Subscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
     m_onTextureImageRetrieved =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureImageRetrieved(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(TextureImageRetriever::TextureImageRetrieved), m_onTextureImageRetrieved);
+    Frameworks::EventPublisher::Subscribe(typeid(TextureImageUpdater::TextureImageRetrieved), m_onTextureImageRetrieved);
     m_onRetrieveTextureImageFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRetrieveTextureImageFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(TextureImageRetriever::RetrieveTextureFailed), m_onRetrieveTextureImageFailed);
+    Frameworks::EventPublisher::Subscribe(typeid(TextureImageUpdater::RetrieveTextureFailed), m_onRetrieveTextureImageFailed);
+    m_onTextureImageUpdated =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureImageUpdated(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(TextureImageUpdater::TextureImageUpdated), m_onTextureImageUpdated);
+    m_onUpdateTextureImageFailed =
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnUpdateTextureImageFailed(c); });
+    Frameworks::EventPublisher::Subscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
 
     m_doLoadingTexture =
         std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
@@ -54,6 +60,9 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     m_doRetrievingTextureImage =
         std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoRetrievingTextureImage(c); });
     Frameworks::RequestBus::Subscribe(typeid(RequestRetrieveTextureImage), m_doRetrievingTextureImage);
+    m_doUpdatingTextureImage =
+        std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoUpdatingTextureImage(c); });
+    Frameworks::RequestBus::Subscribe(typeid(RequestUpdateTextureImage), m_doUpdatingTextureImage);
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -63,7 +72,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
     if (m_currentRequesting) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_requestsLock };
     assert(m_loader);
-    assert(m_retriever);
+    assert(m_updater);
     if (!m_loadRequests.empty())
     {
         auto r = m_loadRequests.front();
@@ -86,8 +95,16 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
     {
         auto r = m_retrieveRequests.front();
         m_currentRequestRuid = r->GetRuid();
-        m_retriever->RetrieveTextureImage(r->GetTextureName(), r->GetImageRect());
+        m_updater->RetrieveTextureImage(r->GetTextureName(), r->GetImageRect());
         m_retrieveRequests.pop();
+        m_currentRequesting = true;
+    }
+    else if (!m_updateRequests.empty())
+    {
+        auto r = m_updateRequests.front();
+        m_currentRequestRuid = r->GetRuid();
+        m_updater->UpdateTextureImage(r->GetTextureName(), r->GetImageRect(), r->GetImageBuffer());
+        m_updateRequests.pop();
         m_currentRequesting = true;
     }
     else
@@ -103,10 +120,14 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
     m_onTextureLoaded = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
     m_onLoadTextureFailed = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageRetriever::TextureImageRetrieved), m_onTextureImageRetrieved);
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageUpdater::TextureImageRetrieved), m_onTextureImageRetrieved);
     m_onTextureImageRetrieved = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageRetriever::RetrieveTextureFailed), m_onRetrieveTextureImageFailed);
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageUpdater::RetrieveTextureFailed), m_onRetrieveTextureImageFailed);
     m_onRetrieveTextureImageFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageUpdater::TextureImageUpdated), m_onTextureImageUpdated);
+    m_onTextureImageUpdated = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
+    m_onUpdateTextureImageFailed = nullptr;
 
     Frameworks::RequestBus::Unsubscribe(typeid(RequestLoadTexture), m_doLoadingTexture);
     m_doLoadingTexture = nullptr;
@@ -114,6 +135,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
     m_doCreatingTexture = nullptr;
     Frameworks::RequestBus::Unsubscribe(typeid(RequestRetrieveTextureImage), m_doRetrievingTextureImage);
     m_doRetrievingTextureImage = nullptr;
+    Frameworks::RequestBus::Unsubscribe(typeid(RequestUpdateTextureImage), m_doUpdatingTextureImage);
+    m_doUpdatingTextureImage = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -180,9 +203,9 @@ void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
 
 void TextureRepository::OnTextureImageRetrieved(const Frameworks::IEventPtr& e)
 {
-    assert(m_retriever);
+    assert(m_updater);
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<TextureImageRetriever::TextureImageRetrieved, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageRetrieved, Frameworks::IEvent>(e);
     if (!ev) return;
     Frameworks::ResponseBus::Post(std::make_shared<RetrieveTextureImageResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetImageBuffer(), ErrorCode::ok));
     m_currentRequesting = false;
@@ -190,11 +213,31 @@ void TextureRepository::OnTextureImageRetrieved(const Frameworks::IEventPtr& e)
 
 void TextureRepository::OnRetrieveTextureImageFailed(const Frameworks::IEventPtr& e)
 {
-    assert(m_retriever);
+    assert(m_updater);
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<TextureImageRetriever::RetrieveTextureFailed, Frameworks::IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<TextureImageUpdater::RetrieveTextureFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Frameworks::ResponseBus::Post(std::make_shared<RetrieveTextureImageResponse>(m_currentRequestRuid, ev->GetTextureName(), byte_buffer{}, ev->GetError()));
+    m_currentRequesting = false;
+}
+
+void TextureRepository::OnTextureImageUpdated(const Frameworks::IEventPtr& e)
+{
+    assert(m_updater);
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageUpdated, Frameworks::IEvent>(e);
+    if (!ev) return;
+    Frameworks::ResponseBus::Post(std::make_shared<UpdateTextureImageResponse>(m_currentRequestRuid, ev->GetTextureName(), ErrorCode::ok));
+    m_currentRequesting = false;
+}
+
+void TextureRepository::OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e)
+{
+    assert(m_updater);
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<TextureImageUpdater::UpdateTextureFailed, Frameworks::IEvent>(e);
+    if (!ev) return;
+    Frameworks::ResponseBus::Post(std::make_shared<UpdateTextureImageResponse>(m_currentRequestRuid, ev->GetTextureName(), ev->GetError()));
     m_currentRequesting = false;
 }
 
@@ -236,3 +279,17 @@ void TextureRepository::DoRetrievingTextureImage(const Frameworks::IRequestPtr& 
     }
 }
 
+void TextureRepository::DoUpdatingTextureImage(const Frameworks::IRequestPtr& r)
+{
+    if (!r) return;
+    if (auto req = std::dynamic_pointer_cast<RequestUpdateTextureImage, Frameworks::IRequest>(r))
+    {
+        std::lock_guard locker{ m_requestsLock };
+        m_updateRequests.push(req);
+        m_needTick = true;
+    }
+    else
+    {
+        assert(false);
+    }
+}

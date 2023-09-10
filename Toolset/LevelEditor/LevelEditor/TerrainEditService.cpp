@@ -47,10 +47,10 @@ TerrainEditService::TerrainEditService(ServiceManager* srv_mngr) : ISystemServic
     m_isHeightMapDirty = false;
     m_dirtyVtxMaxIndex = std::numeric_limits<unsigned int>::min();
     m_dirtyVtxMinIndex = std::numeric_limits<unsigned int>::max();
-    m_dirtyAlphaRect.Left() = std::numeric_limits<unsigned int>::max();
-    m_dirtyAlphaRect.Right() = std::numeric_limits<unsigned int>::min();
-    m_dirtyAlphaRect.Top() = std::numeric_limits<unsigned int>::max();
-    m_dirtyAlphaRect.Bottom() = std::numeric_limits<unsigned int>::min();
+    m_dirtyAlphaRect.Left() = std::numeric_limits<int>::max();
+    m_dirtyAlphaRect.Right() = std::numeric_limits<int>::min();
+    m_dirtyAlphaRect.Top() = std::numeric_limits<int>::max();
+    m_dirtyAlphaRect.Bottom() = std::numeric_limits<int>::min();
     m_alphaRect = { 0, 0, 0, 0 };
 }
 
@@ -200,7 +200,7 @@ void TerrainEditService::PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3
             PaintTerrainLayer(vtx_pos, layer_idx, y);
         }
     }
-    CommitHeightMapUpdated(terrain_prim, terrain_geo);
+    CommitAlphaTexelUpdated();
 }
 
 void TerrainEditService::PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density)
@@ -231,15 +231,61 @@ void TerrainEditService::PaintTerrainLayer(const Enigma::MathLib::Vector3& picki
     if (texel_z >= tex_dimension.m_height) return;
     texel_z = (tex_dimension.m_height - 1) - texel_z;  // invert texel z, bcz texcoord is y-down
     if (m_dirtyAlphaRect.Left() > static_cast<int>(texel_x)) m_dirtyAlphaRect.Left() = static_cast<int>(texel_x);
-    if (m_dirtyAlphaRect.Right() < static_cast<int>(texel_x)) m_dirtyAlphaRect.Right() = static_cast<int>(texel_x);
+    if (m_dirtyAlphaRect.Right() < static_cast<int>(texel_x + 1)) m_dirtyAlphaRect.Right() = static_cast<int>(texel_x + 1);
     if (m_dirtyAlphaRect.Top() > static_cast<int>(texel_z)) m_dirtyAlphaRect.Top() = static_cast<int>(texel_z);
-    if (m_dirtyAlphaRect.Bottom() < static_cast<int>(texel_z)) m_dirtyAlphaRect.Bottom() = static_cast<int>(texel_z);
+    if (m_dirtyAlphaRect.Bottom() < static_cast<int>(texel_z + 1)) m_dirtyAlphaRect.Bottom() = static_cast<int>(texel_z + 1);
     AddLayerAlpha(texel_x, texel_z, layer_idx, static_cast<int>(density * 255));
 }
 
 void TerrainEditService::AddLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density)
 {
+    if (m_alphaTexels.empty()) return;
+    if (m_pickedSplatTexture.expired()) return;
 
+    auto dimension = m_pickedSplatTexture.lock()->GetDimension();
+    unsigned int texel_base_index = (texel_y * dimension.m_width + texel_x) * TextureLayerNum;
+    if (layer_idx == 0)
+    {
+        m_alphaTexels[texel_base_index] = 0;
+        m_alphaTexels[texel_base_index + 1] = 0;
+        m_alphaTexels[texel_base_index + 2] = 0;
+        m_alphaTexels[texel_base_index + 3] = 0;
+    }
+    else
+    {
+        unsigned int index = texel_base_index + layer_idx - 1;
+        if (index >= m_alphaTexels.size()) return;
+        int src_alpha = (int)(m_alphaTexels[index]);
+        src_alpha += density;
+        if (src_alpha < 0) src_alpha = 0;
+        if (src_alpha > 255) src_alpha = 255;
+        m_alphaTexels[index] = static_cast<unsigned char>(src_alpha);
+    }
+}
+
+void TerrainEditService::CommitAlphaTexelUpdated()
+{
+    if (m_pickedSplatTexture.expired()) return;
+    if (m_alphaTexels.empty()) return;
+    if (m_dirtyAlphaRect.Left() > m_dirtyAlphaRect.Right()) return;
+    if (m_dirtyAlphaRect.Top() > m_dirtyAlphaRect.Bottom()) return;
+    unsigned int start_x = m_dirtyAlphaRect.Left();
+    unsigned int width = m_dirtyAlphaRect.Width();
+    unsigned int start_z = m_dirtyAlphaRect.Top();
+    unsigned int height = m_dirtyAlphaRect.Height();
+    m_dirtyAlphaTexels.resize(width * height * TextureLayerNum);
+    for (unsigned int z = start_z; z < start_z + height; z++)
+    {
+        unsigned int src_idx = (z * m_alphaRect.Width() + start_x) * TextureLayerNum;
+        unsigned int dest_idx = (z - start_z) * width * TextureLayerNum;
+        std::memcpy(&m_dirtyAlphaTexels[dest_idx], &m_alphaTexels[src_idx],
+            width * TextureLayerNum);
+    }
+    RequestBus::Post(std::make_shared<RequestUpdateTextureImage>(m_pickedSplatTexture.lock()->GetName(), m_dirtyAlphaRect, m_dirtyAlphaTexels));
+    m_dirtyAlphaRect.Left() = std::numeric_limits<int>::max();
+    m_dirtyAlphaRect.Right() = std::numeric_limits<int>::min();
+    m_dirtyAlphaRect.Top() = std::numeric_limits<int>::max();
+    m_dirtyAlphaRect.Bottom() = std::numeric_limits<int>::min();
 }
 
 void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)

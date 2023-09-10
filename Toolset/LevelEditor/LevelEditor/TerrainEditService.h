@@ -51,6 +51,7 @@ namespace LevelEditor
         void PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density);
         void PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density);
         void AddLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density);
+        void CommitAlphaTexelUpdated();
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
         static std::array<std::string, TextureLayerNum> LayerSemantics;

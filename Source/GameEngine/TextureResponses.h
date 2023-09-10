@@ -56,6 +56,18 @@ namespace Enigma::Engine
         byte_buffer m_imageBuff;
         std::error_code m_error;
     };
+    class UpdateTextureImageResponse : public Frameworks::IResponse
+    {
+    public:
+        UpdateTextureImageResponse(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
+            : IResponse(request_ruid), m_name(name), m_error(er) {};
+
+        const std::string& GetName() { return m_name; }
+        std::error_code GetErrorCode() const { return m_error; }
+    private:
+        std::string m_name;
+        std::error_code m_error;
+    };
 }
 
 #endif // _TEXTURE_RESPONSES_H

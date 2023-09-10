@@ -81,7 +81,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageRetriever.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
@@ -134,7 +134,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageRetriever.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp" />

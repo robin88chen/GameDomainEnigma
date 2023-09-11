@@ -48,6 +48,9 @@ ServiceResult WorldMapService::OnInit()
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onLazyNodeInstanced = std::make_shared<EventSubscriber>([=](auto e) { OnLazyNodeInstanced(e); });
+    EventPublisher::Subscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
+
     return ServiceResult::Complete;
 }
 
@@ -62,6 +65,9 @@ ServiceResult WorldMapService::OnTerm()
 
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
+    m_onLazyNodeInstanced = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -95,7 +101,9 @@ Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
 {
     assert(!m_world.expired());
     Engine::GenericDtoCollection collection;
-    collection.push_back(m_world.lock()->SerializeDto());
+    auto world_dto = m_world.lock()->SerializeDto();
+    world_dto.AsTopLevel(true);
+    collection.push_back(world_dto);
     for (auto node : m_listQuadRoot)
     {
         if (node.expired()) continue;
@@ -171,5 +179,16 @@ void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
         m_world.lock()->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);  // empty world map is ready
         EventPublisher::Post(std::make_shared<WorldMapCreated>(m_world.lock()->GetName(), m_world.lock()));
         CommandBus::Post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
+    }
+}
+
+void WorldMapService::OnLazyNodeInstanced(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<LazyNodeInstanced, IEvent>(e);
+    if ((!ev) || (!ev->GetNode())) return;
+    if (ev->GetNode()->GetParent() == m_world.lock())
+    {
+        m_listQuadRoot.push_back(ev->GetNode());
     }
 }

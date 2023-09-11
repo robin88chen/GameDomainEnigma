@@ -295,6 +295,9 @@ void TerrainEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventP
     const auto ev = std::dynamic_pointer_cast<SceneCursorReleased>(e);
     if (!ev) return;
     if (!ev->GetPickedPawn()) return;
-    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
-    CommandBus::Post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->GetWorldPosition()));
+    if (!m_brush.expired())
+    {
+        m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+        CommandBus::Post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->GetWorldPosition()));
+    }
 }

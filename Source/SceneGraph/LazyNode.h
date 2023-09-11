@@ -27,7 +27,7 @@ namespace Enigma::SceneGraph
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        //virtual Engine::GenericDto SerializeDto() override;  // use node's implementation
         virtual Engine::GenericDto SerializeAsLaziness();
 
         virtual bool CanVisited() override;

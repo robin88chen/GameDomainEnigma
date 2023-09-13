@@ -1,12 +1,14 @@
 ﻿/*********************************************************************
  * \file   Event.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
 #ifndef EVENT_H
 #define EVENT_H
+
+#include "ruid.h"
 #include <functional>
 #include <memory>
 
@@ -22,6 +24,22 @@ namespace Enigma::Frameworks
         IEvent& operator=(const IEvent&) = delete;
         IEvent& operator=(IEvent&&) = delete;
         virtual const std::type_info& TypeInfo() { return typeid(*this); };  ///< 實作層的 type info
+    };
+
+    class IResponseEvent : public IEvent
+    {
+    public:
+        IResponseEvent(const Ruid& request_ruid) : m_ruid(request_ruid) {};
+        IResponseEvent(const IResponseEvent&) = delete;
+        IResponseEvent(IResponseEvent&&) = delete;
+        virtual ~IResponseEvent() {};
+        IResponseEvent& operator=(const IResponseEvent&) = delete;
+        IResponseEvent& operator=(IResponseEvent&&) = delete;
+
+        const Ruid& GetRequestRuid() const { return m_ruid; }
+
+    protected:
+        Ruid m_ruid;
     };
     using IEventPtr = std::shared_ptr<IEvent>;
     using EventHandler = std::function<void(const IEventPtr&)>;

@@ -10,8 +10,8 @@
 #include "GameEngine/GeometryDataEvents.h"
 #include "GameEngine/RenderBufferCommands.h"
 #include "GameEngine/RenderBufferEvents.h"
-#include "GameEngine/EffectRequests.h"
-#include "GameEngine/EffectResponses.h"
+#include "GameEngine/EffectCommands.h"
+#include "GameEngine/EffectEvents.h"
 #include "GameEngine/TextureRequests.h"
 #include "GameEngine/TextureResponses.h"
 #include "GameEngine/FactoryCommands.h"
@@ -31,8 +31,11 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryDa
     m_onBuildRenderBufferFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildRenderBufferFailed(e); });
     EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
 
-    m_onCompileEffectMaterialResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnCompileEffectMaterialResponse(r); });
-    ResponseBus::Subscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectMaterialResponse);
+    m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
+    EventPublisher::Subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
+    m_onCompileEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompileEffectMaterialFailed(e); });
+    EventPublisher::Subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+
     m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
     ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
 
@@ -56,8 +59,11 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
     EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
     m_onBuildRenderBufferFailed = nullptr;
 
-    ResponseBus::Unsubscribe(typeid(CompileEffectMaterialResponse), m_onCompileEffectMaterialResponse);
-    m_onCompileEffectMaterialResponse = nullptr;
+    EventPublisher::Unsubscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
+    m_onEffectMaterialCompiled = nullptr;
+    EventPublisher::Unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    m_onCompileEffectMaterialFailed = nullptr;
+
     ResponseBus::Unsubscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
     m_onLoadTextureResponse = nullptr;
 }
@@ -125,7 +131,7 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     m_builtEffects.resize(m_policy->EffectDtos().size());
     for (auto& dto : m_policy->EffectDtos())
     {
-        RequestBus::Post(std::make_shared<RequestCompileEffectMaterial>(dto));
+        CommandBus::Post(std::make_shared<CompileEffectMaterial>(dto));
     }
     m_builtTextures.resize(m_policy->TextureDtos().size());
     for (unsigned i = 0; i < m_policy->TextureDtos().size(); i++)
@@ -149,21 +155,25 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
     EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
-void MeshPrimitiveBuilder::OnCompileEffectMaterialResponse(const Frameworks::IResponsePtr& r)
+void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
     if (!m_policy) return;
-    if (!r) return;
-    const auto res = std::dynamic_pointer_cast<CompileEffectMaterialResponse, IResponse>(r);
-    if (!res) return;
-    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(res->GetName());
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled>(e);
+    if (!ev) return;
+    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetName());
     if (!found_idx) return;
-    if (res->GetErrorCode())
-    {
-        EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), res->GetErrorCode()));
-        return;
-    }
-    m_builtEffects[found_idx.value()] = res->GetEffect();
+    m_builtEffects[found_idx.value()] = ev->GetEffect();
     TryCompletingMesh();
+}
+
+void MeshPrimitiveBuilder::OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
+{
+    if (!m_policy) return;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed>(e);
+    if (!ev) return;
+    EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
 void MeshPrimitiveBuilder::OnLoadTextureResponse(const Frameworks::IResponsePtr& r)

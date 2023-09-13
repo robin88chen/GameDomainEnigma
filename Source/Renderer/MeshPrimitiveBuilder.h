@@ -68,7 +68,8 @@ namespace Enigma::Renderer
         void OnRenderBufferBuilt(const Frameworks::IEventPtr& e);
         void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
 
-        void OnCompileEffectMaterialResponse(const Frameworks::IResponsePtr& e);
+        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
+        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
         void OnLoadTextureResponse(const Frameworks::IResponsePtr& e);
 
         void TryCompletingMesh();
@@ -92,7 +93,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
 
-        Frameworks::ResponseSubscriberPtr m_onCompileEffectMaterialResponse;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
+        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
         Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
     };
 }

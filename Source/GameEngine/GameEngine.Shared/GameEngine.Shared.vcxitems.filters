@@ -270,10 +270,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectRequests.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
       <Filter>Commands &amp; Requests</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectResponses.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">

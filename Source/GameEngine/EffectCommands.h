@@ -1,22 +1,22 @@
 ﻿/*********************************************************************
- * \file   EffectRequests.h
- * \brief  effect requests
+ * \file   EffectCommands.h
+ * \brief  effect commands
  *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
-#ifndef _EFFECT_REQUESTS_H
-#define _EFFECT_REQUESTS_H
+#ifndef _EFFECT_COMMANDS_H
+#define _EFFECT_COMMANDS_H
 
-#include "Frameworks/Request.h"
+#include "Frameworks/Command.h"
 #include "EffectMaterialDto.h"
 
 namespace Enigma::Engine
 {
-    class RequestCompileEffectMaterial : public Frameworks::IRequest
+    class CompileEffectMaterial : public Frameworks::IRequestCommand
     {
     public:
-        RequestCompileEffectMaterial(const EffectMaterialDto& dto) : m_dto(dto) {}
+        CompileEffectMaterial(const EffectMaterialDto& dto) : m_dto(dto) {}
 
         const EffectMaterialDto& GetDto() const { return m_dto; }
 
@@ -25,4 +25,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // _EFFECT_REQUESTS_H
+#endif // _EFFECT_COMMANDS_H

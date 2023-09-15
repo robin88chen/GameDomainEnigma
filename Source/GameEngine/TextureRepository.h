@@ -12,9 +12,9 @@
 #include "Frameworks/ServiceManager.h"
 #include "Texture.h"
 #include "Frameworks/Event.h"
-#include "Frameworks/RequestSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
-#include "TextureRequests.h"
+#include "TextureCommands.h"
 #include "TexturePolicies.h"
 #include <queue>
 
@@ -53,9 +53,11 @@ namespace Enigma::Engine
         void OnTextureImageUpdated(const Frameworks::IEventPtr& e);
         void OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e);
 
-        void DoLoadingTexture(const Frameworks::IRequestPtr& r);
-        void DoRetrievingTextureImage(const Frameworks::IRequestPtr& r);
-        void DoUpdatingTextureImage(const Frameworks::IRequestPtr& r);
+        void DoLoadingTexture(const Frameworks::ICommandPtr& c);
+        void DoRetrievingTextureImage(const Frameworks::ICommandPtr& c);
+        void DoUpdatingTextureImage(const Frameworks::ICommandPtr& c);
+
+        void InvokeRequest(const std::shared_ptr<Frameworks::IRequestCommand>& request);
 
     private:
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
@@ -65,10 +67,10 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onTextureImageUpdated;
         Frameworks::EventSubscriberPtr m_onUpdateTextureImageFailed;
 
-        Frameworks::RequestSubscriberPtr m_doLoadingTexture;
-        Frameworks::RequestSubscriberPtr m_doCreatingTexture;
-        Frameworks::RequestSubscriberPtr m_doRetrievingTextureImage;
-        Frameworks::RequestSubscriberPtr m_doUpdatingTextureImage;
+        Frameworks::CommandSubscriberPtr m_doLoadingTexture;
+        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
+        Frameworks::CommandSubscriberPtr m_doRetrievingTextureImage;
+        Frameworks::CommandSubscriberPtr m_doUpdatingTextureImage;
 
         using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
@@ -77,10 +79,7 @@ namespace Enigma::Engine
 
         TextureLoader* m_loader;
         TextureImageUpdater* m_updater;
-        std::queue<std::shared_ptr<RequestLoadTexture>> m_loadRequests;
-        std::queue<std::shared_ptr<RequestCreateTexture>> m_createRequests;
-        std::queue<std::shared_ptr<RequestRetrieveTextureImage>> m_retrieveRequests;
-        std::queue<std::shared_ptr<RequestUpdateTextureImage>> m_updateRequests;
+        std::queue<std::shared_ptr<Frameworks::IRequestCommand>> m_requests;
         Frameworks::Ruid m_currentRequestRuid;
         TexturePolicy::JobType m_currentJob;
         bool m_currentRequesting;

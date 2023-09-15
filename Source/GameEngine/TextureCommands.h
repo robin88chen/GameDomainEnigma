@@ -1,41 +1,41 @@
 ﻿/*********************************************************************
- * \file   TextureRequests.h
+ * \file   TextureCommands.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
-#ifndef _TEXTURE_REQUESTS_H
-#define _TEXTURE_REQUESTS_H
+#ifndef _TEXTURE_COMMANDS_H
+#define _TEXTURE_COMMANDS_H
 
 #include "TexturePolicies.h"
-#include "Frameworks/Request.h"
+#include "Frameworks/Command.h"
 #include "MathLib/Rect.h"
 
 namespace Enigma::Engine
 {
-    class RequestLoadTexture : public Frameworks::IRequest
+    class LoadTexture : public Frameworks::IRequestCommand
     {
     public:
-        RequestLoadTexture(const TexturePolicy& policy) : m_policy(policy) {}
+        LoadTexture(const TexturePolicy& policy) : m_policy(policy) {}
         const TexturePolicy& GetPolicy() { return m_policy; }
 
     private:
         TexturePolicy m_policy;
     };
-    class RequestCreateTexture : public Frameworks::IRequest
+    class CreateTexture : public Frameworks::IRequestCommand
     {
     public:
-        RequestCreateTexture(const TexturePolicy& policy) : m_policy(policy) {}
+        CreateTexture(const TexturePolicy& policy) : m_policy(policy) {}
         const TexturePolicy& GetPolicy() { return m_policy; }
 
     private:
         TexturePolicy m_policy;
     };
-    class RequestRetrieveTextureImage : public Frameworks::IRequest
+    class RetrieveTextureImage : public Frameworks::IRequestCommand
     {
     public:
-        RequestRetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect) : m_name(name), m_imageRect(image_rect) {}
+        RetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect) : m_name(name), m_imageRect(image_rect) {}
         const std::string& GetTextureName() { return m_name; }
         const MathLib::Rect& GetImageRect() const { return m_imageRect; }
 
@@ -43,10 +43,10 @@ namespace Enigma::Engine
         std::string m_name;
         MathLib::Rect m_imageRect;
     };
-    class RequestUpdateTextureImage : public Frameworks::IRequest
+    class UpdateTextureImage : public Frameworks::IRequestCommand
     {
     public:
-        RequestUpdateTextureImage(const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff) : m_name(name), m_imageRect(image_rect), m_imageBuff(image_buff) {}
+        UpdateTextureImage(const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff) : m_name(name), m_imageRect(image_rect), m_imageBuff(image_buff) {}
         const std::string& GetTextureName() { return m_name; }
         const MathLib::Rect& GetImageRect() const { return m_imageRect; }
         const byte_buffer& GetImageBuffer() const { return m_imageBuff; }
@@ -58,4 +58,4 @@ namespace Enigma::Engine
     };
 }
 
-#endif // _TEXTURE_REQUESTS_H
+#endif // _TEXTURE_COMMANDS_H

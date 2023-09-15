@@ -73,9 +73,6 @@
     <Filter Include="Installing Policies">
       <UniqueIdentifier>{171f8bf3-2c18-4b14-845d-280a052fdb61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Commands &amp; Requests">
-      <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events &amp; Response">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,9 @@
     </Filter>
     <Filter Include="Intersect\IntersectionFinder">
       <UniqueIdentifier>{4f93cc7f-2492-456c-a6c6-96f937ec8754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +100,7 @@
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h">
       <Filter>Shader</Filter>
@@ -151,7 +151,7 @@
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h">
       <Filter>Textures</Filter>
@@ -232,10 +232,10 @@
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
       <Filter>Effect Material\Effect Compiler</Filter>
@@ -271,15 +271,15 @@
       <Filter>Installing Policies</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">
-      <Filter>Commands &amp; Requests</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
+      <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events &amp; Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">

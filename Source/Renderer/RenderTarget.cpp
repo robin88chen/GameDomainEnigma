@@ -1,7 +1,6 @@
 ﻿#include "RenderTarget.h"
 #include "RendererErrors.h"
 #include "RendererEvents.h"
-#include "RendererCommands.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/IDepthStencilSurface.h"
 #include "GraphicKernel/IBackSurface.h"
@@ -13,10 +12,8 @@
 #include "Platforms/PlatformLayer.h"
 #include "GameEngine/Texture.h"
 #include "GraphicKernel/ITexture.h"
-#include "GameEngine/TextureRequests.h"
-#include "Frameworks/RequestBus.h"
-#include "Frameworks/ResponseBus.h"
-#include "GameEngine/TextureResponses.h"
+#include "GameEngine/TextureCommands.h"
+#include "GameEngine/TextureEvents.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -88,7 +85,7 @@ error RenderTarget::Initialize()
 future_error RenderTarget::AsyncInitialize()
 {
     return Graphics::IGraphicAPI::Instance()->GetGraphicThread()
-        ->PushTask([lifetime = shared_from_this(), this] () -> error { return Initialize(); });
+        ->PushTask([lifetime = shared_from_this(), this]() -> error { return Initialize(); });
 }
 
 error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
@@ -253,9 +250,10 @@ void RenderTarget::SubscribeHandler()
         [=](auto e) { this->OnDepthSurfaceResized(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
 
-    m_onCreateTextureResponse = std::make_shared<Frameworks::ResponseSubscriber>(
-        [=](auto r) { this->OnCreateTextureResponse(r); });
-    Frameworks::ResponseBus::Subscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
+    m_onTextureCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureCreated(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Engine::TextureCreated), m_onTextureCreated);
+    m_onCreateTextureFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCreateTextureFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Engine::CreateTextureFailed), m_onCreateTextureFailed);
 }
 
 void RenderTarget::UnsubscribeHandler()
@@ -274,15 +272,17 @@ void RenderTarget::UnsubscribeHandler()
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
     m_onDepthSurfaceResized = nullptr;
 
-    Frameworks::ResponseBus::Unsubscribe(typeid(Engine::CreateTextureResponse), m_onCreateTextureResponse);
-    m_onCreateTextureResponse = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Engine::TextureCreated), m_onTextureCreated);
+    m_onTextureCreated = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Engine::CreateTextureFailed), m_onCreateTextureFailed);
+    m_onCreateTextureFailed = nullptr;
 }
 
 void RenderTarget::CreateRenderTargetTexture()
 {
     if (m_isPrimary) return;
     if (!m_backSurface) return;
-    Frameworks::RequestBus::Post(std::make_shared<Engine::RequestCreateTexture>(
+    Frameworks::CommandBus::Post(std::make_shared<Engine::CreateTexture>(
         Engine::TexturePolicy{ m_backSurface->GetName(), m_backSurface->GetDimension(), m_backSurface->GetSurfaceCount() }));
 }
 
@@ -424,14 +424,24 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderTarget::OnCreateTextureResponse(const Frameworks::IResponsePtr& r)
+void RenderTarget::OnTextureCreated(const Frameworks::IEventPtr& e)
 {
-    if (!r) return;
-    const auto res = std::dynamic_pointer_cast<Engine::CreateTextureResponse, Frameworks::IResponse>(r);
-    if (!res) return;
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Engine::TextureCreated>(e);
+    if (!ev) return;
     if (!m_backSurface) return;
-    if (res->GetName() != m_backSurface->GetName()) return;
-    m_renderTargetTexture = res->GetTexture();
+    if (ev->GetName() != m_backSurface->GetName()) return;
+    m_renderTargetTexture = ev->GetTexture();
     m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
-    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), res->GetName()));
+    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->GetName()));
+}
+
+void RenderTarget::OnCreateTextureFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Engine::CreateTextureFailed>(e);
+    if (!ev) return;
+    if (!m_backSurface) return;
+    if (ev->GetName() != m_backSurface->GetName()) return;
+    Frameworks::EventPublisher::Post(std::make_shared<CreateRenderTargetTextureFailed>(ev->GetName(), ev->GetErrorCode()));
 }

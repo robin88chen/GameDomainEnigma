@@ -125,6 +125,18 @@ namespace Enigma::Renderer
         std::weak_ptr<RenderTarget> m_target;
         std::string m_textureName;
     };
+    class CreateRenderTargetTextureFailed : public Frameworks::IEvent
+    {
+    public:
+        CreateRenderTargetTextureFailed(const std::string texture_name, std::error_code err) :
+            m_textureName(texture_name), m_err(err) {}
+        [[nodiscard]] const std::string& GetTextureName() const { return m_textureName; }
+        [[nodiscard]] const std::error_code& GetErrorCode() const { return m_err; }
+
+    private:
+        std::string m_textureName;
+        std::error_code m_err;
+    };
 }
 
 #endif // RENDERER_EVENTS_H

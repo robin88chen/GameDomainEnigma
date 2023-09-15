@@ -85,8 +85,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>

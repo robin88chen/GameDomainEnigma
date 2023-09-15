@@ -10,9 +10,7 @@
 
 #include "RenderTargetClearingProperties.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/ResponseSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "GraphicKernel/RenderTextureUsage.h"
 #include "MathLib/AlgebraBasicTypes.h"
@@ -136,7 +134,8 @@ namespace Enigma::Renderer
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
-        void OnCreateTextureResponse(const Frameworks::IResponsePtr& r);
+        void OnTextureCreated(const Frameworks::IEventPtr& e);
+        void OnCreateTextureFailed(const Frameworks::IEventPtr& e);
 
     protected:
         bool m_isPrimary;
@@ -160,7 +159,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
 
-        Frameworks::ResponseSubscriberPtr m_onCreateTextureResponse;
+        Frameworks::EventSubscriberPtr m_onTextureCreated;
+        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
 
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {

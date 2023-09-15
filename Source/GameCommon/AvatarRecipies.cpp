@@ -2,12 +2,11 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandBus.h"
-#include "Frameworks/RequestBus.h"
 #include "Frameworks/ResponseBus.h"
 #include "GameEngine/EffectCommands.h"
 #include "GameEngine/EffectEvents.h"
-#include "GameEngine/TextureRequests.h"
-#include "GameEngine/TextureResponses.h"
+#include "GameEngine/TextureCommands.h"
+#include "GameEngine/TextureEvents.h"
 #include "Renderer/ModelPrimitive.h"
 #include "AvatarRecipeDto.h"
 #include "Platforms/PlatformLayer.h"
@@ -164,8 +163,10 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
     : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName());
-    m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
-    ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
+    m_onTextureLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureLoaded(e); });
+    EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
+    EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
@@ -173,14 +174,17 @@ ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRe
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
     m_meshName = dto.MeshName();
     m_textureDto = dto.TextureDto();
-    m_onLoadTextureResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnLoadTextureResponse(r); });
-    ResponseBus::Subscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
+    EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
+    EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
-    ResponseBus::Unsubscribe(typeid(LoadTextureResponse), m_onLoadTextureResponse);
-    m_onLoadTextureResponse = nullptr;
+    EventPublisher::Unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    m_onTextureLoaded = nullptr;
+    EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    m_onLoadTextureFailed = nullptr;
 }
 
 GenericDto ChangeAvatarTexture::SerializeDto() const
@@ -220,19 +224,28 @@ void ChangeAvatarTexture::ChangeMeshTexture(const MeshPrimitivePtr& mesh)
     if (m_meshName.empty()) return;
     if (m_textureDto.TextureName().empty()) return;
     auto policy = m_textureDto.ConvertToPolicy();
-    auto req = std::make_shared<RequestLoadTexture>(std::get<TexturePolicy>(policy));
+    auto req = std::make_shared<LoadTexture>(std::get<TexturePolicy>(policy));
     m_requsetRuid = req->GetRuid();
     m_mesh = mesh;
-    RequestBus::Post(req);
+    CommandBus::Post(req);
 }
 
-void ChangeAvatarTexture::OnLoadTextureResponse(const Frameworks::IResponsePtr& r)
+void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
-    if (!r) return;
-    auto res = std::dynamic_pointer_cast<LoadTextureResponse, IResponse>(r);
-    if (!res) return;
-    if (res->GetRequestRuid() != m_requsetRuid) return;
-    if (res->GetErrorCode()) return;
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<TextureLoaded>(e);
+    if (!ev) return;
+    if (ev->GetRequestRuid() != m_requsetRuid) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), res->GetTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
 }
+
+void ChangeAvatarTexture::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<LoadTextureFailed>(e);
+    if (!ev) return;
+    if (ev->GetRequestRuid() != m_requsetRuid) return;
+    Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+}
+

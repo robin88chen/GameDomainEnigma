@@ -13,7 +13,6 @@
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/ResponseSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
 #include "MeshPrimitive.h"
 #include <memory>
@@ -70,7 +69,8 @@ namespace Enigma::Renderer
 
         void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
         void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void OnLoadTextureResponse(const Frameworks::IResponsePtr& e);
+        void OnTextureLoadedOrCreated(const Frameworks::IEventPtr& e);
+        void OnLoadOrCreateTextureFailed(const Frameworks::IEventPtr& e);
 
         void TryCompletingMesh();
 
@@ -95,7 +95,10 @@ namespace Enigma::Renderer
 
         Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
         Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
-        Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
+        Frameworks::EventSubscriberPtr m_onTextureLoaded;
+        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureCreated;
+        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
     };
 }
 

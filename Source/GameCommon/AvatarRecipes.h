@@ -88,12 +88,14 @@ namespace Enigma::GameCommon
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
-        void OnLoadTextureResponse(const Frameworks::IResponsePtr& r);
+        void OnTextureLoaded(const Frameworks::IEventPtr& e);
+        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
-        Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
+        Frameworks::EventSubscriberPtr m_onTextureLoaded;
+        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
         Frameworks::Ruid m_requsetRuid;
     };

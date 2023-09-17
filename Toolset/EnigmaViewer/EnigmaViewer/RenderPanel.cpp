@@ -110,7 +110,7 @@ void RenderPanel::OnMouseWheel(const nana::arg_wheel& arg)
 void RenderPanel::OnResized(const nana::arg_resized& arg)
 {
     // hmm... decouple from renderer and render target, depend on more stable framework service, that's better!!
-    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension{ arg.width, arg.height }));
+    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ arg.width, arg.height }));
 }
 
 void RenderPanel::SubscribeHandlers()
@@ -130,6 +130,6 @@ void RenderPanel::OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension{ size().width, size().height }));
+    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ size().width, size().height }));
     CommandBus::Post(std::make_shared<ChangeTargetViewPort>("primary_target", Enigma::Graphics::TargetViewPort{ 0, 0, size().width, size().height }));
 }

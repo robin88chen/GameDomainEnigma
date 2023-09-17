@@ -57,7 +57,7 @@
         },
         "SpatialFlag": {
             "Type": "Uint32",
-            "Value": 17
+            "Value": 16
         },
         "PawnPrimitive": {
             "Type": "DataObject",
@@ -144,6 +144,10 @@
                                                     "RttiName": "En.Engine.TriangleList",
                                                     "PrefabFilename": ""
                                                 }
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
                                             },
                                             "Effects": {
                                                 "Type": "DataObjectArray",
@@ -242,6 +246,10 @@
                                                             "Value": "default_color_mesh_effect"
                                                         }
                                                     }]
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
                                             },
                                             "TextureMaps": {
                                                 "Type": "DataObjectArray",
@@ -413,6 +421,10 @@
                                                             "Value": "default_color_mesh_effect"
                                                         }
                                                     }]
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
                                             },
                                             "TextureMaps": {
                                                 "Type": "DataObjectArray",
@@ -754,6 +766,10 @@
                                                     "PrefabFilename": ""
                                                 }
                                             },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
                                             "Effects": {
                                                 "Type": "DataObjectArray",
                                                 "Value": [{
@@ -779,6 +795,10 @@
                                                         "TextureMappings": {
                                                             "Type": "DataObjectArray",
                                                             "Value": [{
+                                                                    "JobType": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 1
+                                                                    },
                                                                     "TextureName": {
                                                                         "Type": "String",
                                                                         "Value": "image/mb20110700.png"
@@ -786,6 +806,14 @@
                                                                     "Filename": {
                                                                         "Type": "String",
                                                                         "Value": "image/mb20110700.png@APK_PATH"
+                                                                    },
+                                                                    "SurfaceCount": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 3435973836
+                                                                    },
+                                                                    "Dimension": {
+                                                                        "Type": "Uint32Array",
+                                                                        "Value": [3435973836, 3435973836]
                                                                     },
                                                                     "PathId": {
                                                                         "Type": "String",
@@ -1365,6 +1393,10 @@
                                                     "PrefabFilename": ""
                                                 }
                                             },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
                                             "Effects": {
                                                 "Type": "DataObjectArray",
                                                 "Value": [{
@@ -1390,6 +1422,10 @@
                                                         "TextureMappings": {
                                                             "Type": "DataObjectArray",
                                                             "Value": [{
+                                                                    "JobType": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 1
+                                                                    },
                                                                     "TextureName": {
                                                                         "Type": "String",
                                                                         "Value": "image/mb20110801.png"
@@ -1401,6 +1437,14 @@
                                                                     "PathId": {
                                                                         "Type": "String",
                                                                         "Value": ""
+                                                                    },
+                                                                    "Dimension": {
+                                                                        "Type": "Uint32Array",
+                                                                        "Value": [3435973836, 3435973836]
+                                                                    },
+                                                                    "SurfaceCount": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 3435973836
                                                                     },
                                                                     "Semantic": {
                                                                         "Type": "String",
@@ -1469,16 +1513,6 @@
                         }
                     }
                 }
-            }
-        },
-        "PrimitiveFactory": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 0,
-                "ResourceName": "",
-                "ResourceFilename": "",
-                "RttiName": "En.Engine.Primitive",
-                "PrefabFilename": ""
             }
         },
         "AnimClipMap": {

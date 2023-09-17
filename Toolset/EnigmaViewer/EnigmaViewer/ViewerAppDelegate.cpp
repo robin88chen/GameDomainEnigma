@@ -356,6 +356,7 @@ void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommand
     if (!cmd) return;
     if (!m_pawn) return;
     TextureMappingDto tex_dto;
+    tex_dto.JobType() = TexturePolicy::JobType::Load;
     tex_dto.Filename() = "image/" + cmd->GetTextureFilename();
     tex_dto.TextureName() = cmd->GetTextureFilename();
     tex_dto.PathId() = "APK_PATH";
@@ -444,7 +445,7 @@ void ViewerAppDelegate::CreateFloorReceiver()
     mesh_dto.GeometryName() = "floor";
     mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
 
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowReceiver);
+    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

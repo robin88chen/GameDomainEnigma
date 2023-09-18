@@ -18,10 +18,8 @@
 #include "LevelEditorEvents.h"
 #include "MathLib/MathGlobal.h"
 #include "GameEngine/Texture.h"
-#include "Frameworks/RequestBus.h"
-#include "GameEngine/TextureRequests.h"
-#include "Frameworks/ResponseBus.h"
-#include "GameEngine/TextureResponses.h"
+#include "GameEngine/TextureCommands.h"
+#include "GameEngine/TextureEvents.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -74,8 +72,10 @@ ServiceResult TerrainEditService::OnInit()
     m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
     EventPublisher::Subscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
 
-    m_onRetrieveTextureImageResponse = std::make_shared<ResponseSubscriber>([=](auto r) { OnRetrieveTextureImageResponse(r); });
-    ResponseBus::Subscribe(typeid(RetrieveTextureImageResponse), m_onRetrieveTextureImageResponse);
+    m_onTextureImageRetrieved = std::make_shared<EventSubscriber>([=](auto e) { OnTextureImageRetrieved(e); });
+    EventPublisher::Subscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
+    m_onRetrieveTextureImageFailed = std::make_shared<EventSubscriber>([=](auto e) { OnRetrieveTextureImageFailed(e); });
+    EventPublisher::Subscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
 
     return ServiceResult::Complete;
 }
@@ -95,8 +95,10 @@ ServiceResult TerrainEditService::OnTerm()
     EventPublisher::Unsubscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 
-    ResponseBus::Unsubscribe(typeid(RetrieveTextureImageResponse), m_onRetrieveTextureImageResponse);
-    m_onRetrieveTextureImageResponse = nullptr;
+    EventPublisher::Unsubscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
+    m_onTextureImageRetrieved = nullptr;
+    EventPublisher::Unsubscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
+    m_onRetrieveTextureImageFailed = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -281,7 +283,7 @@ void TerrainEditService::CommitAlphaTexelUpdated()
         std::memcpy(&m_dirtyAlphaTexels[dest_idx], &m_alphaTexels[src_idx],
             width * TextureLayerNum);
     }
-    RequestBus::Post(std::make_shared<RequestUpdateTextureImage>(m_pickedSplatTexture.lock()->GetName(), m_dirtyAlphaRect, m_dirtyAlphaTexels));
+    CommandBus::Post(std::make_shared<UpdateTextureImage>(m_pickedSplatTexture.lock()->GetName(), m_dirtyAlphaRect, m_dirtyAlphaTexels));
     m_dirtyAlphaRect.Left() = std::numeric_limits<int>::max();
     m_dirtyAlphaRect.Right() = std::numeric_limits<int>::min();
     m_dirtyAlphaRect.Top() = std::numeric_limits<int>::max();
@@ -380,20 +382,26 @@ void TerrainEditService::OnPickedSpatialChanged(const IEventPtr& e)
     }
     if (m_pickedSplatTexture.expired()) return;
     m_alphaRect = { 0, 0, static_cast<int>(m_pickedSplatTexture.lock()->GetDimension().m_width), static_cast<int>(m_pickedSplatTexture.lock()->GetDimension().m_height) };
-    auto request = std::make_shared<RequestRetrieveTextureImage>(m_pickedSplatTexture.lock()->GetName(), m_alphaRect);
-    m_retrieveTextureImageRuid = request->GetRuid();
-    RequestBus::Post(request);
+    CommandBus::Post(std::make_shared<RetrieveTextureImage>(m_pickedSplatTexture.lock()->GetName(), m_alphaRect));
 }
 
-void TerrainEditService::OnRetrieveTextureImageResponse(const Enigma::Frameworks::IResponsePtr& r)
+void TerrainEditService::OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e)
 {
-    if (!r) return;
-    const auto res = std::dynamic_pointer_cast<RetrieveTextureImageResponse, IResponse>(r);
-    if (!res) return;
-    if (res->GetRequestRuid() != m_retrieveTextureImageRuid) return;
-    if (res->GetErrorCode())
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<TextureImageRetrieved, IEvent>(e);
+    if (!ev) return;
+    if (m_pickedSplatTexture.expired()) return;
+    if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
+    m_alphaTexels = ev->GetImageBuffer();
+}
+
+void TerrainEditService::OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RetrieveTextureImageFailed, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetErrorCode())
     {
-        CommandBus::Post(std::make_shared<OutputMessage>(string_format("Retrieve splat texture image failed %s", res->GetErrorCode().message().c_str())));
+        CommandBus::Post(std::make_shared<OutputMessage>(string_format("Retrieve splat texture %s image failed %s", ev->GetName().c_str(), ev->GetErrorCode().message().c_str())));
     }
-    m_alphaTexels = res->GetImageBuffer();
 }

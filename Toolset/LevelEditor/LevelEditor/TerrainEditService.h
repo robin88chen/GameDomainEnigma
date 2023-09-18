@@ -15,7 +15,6 @@
 #include "Terrain/TerrainGeometry.h"
 #include "Terrain/TerrainPrimitive.h"
 #include "MathLib/Rect.h"
-#include "Frameworks/ResponseSubscriber.h"
 
 namespace LevelEditor
 {
@@ -42,7 +41,8 @@ namespace LevelEditor
         void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
-        void OnRetrieveTextureImageResponse(const Enigma::Frameworks::IResponsePtr& r);
+        void OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
+        void OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void MoveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
         void MoveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
@@ -69,7 +69,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 
-        Enigma::Frameworks::ResponseSubscriberPtr m_onRetrieveTextureImageResponse;
+        Enigma::Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
+        Enigma::Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
 
         bool m_isHeightMapDirty;
         unsigned m_dirtyVtxMinIndex;

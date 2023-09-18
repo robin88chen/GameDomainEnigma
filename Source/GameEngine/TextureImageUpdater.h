@@ -11,12 +11,12 @@
 #include "Frameworks/EventSubscriber.h"
 #include <string>
 #include <system_error>
-
 #include "RenderBuffer.h"
 #include "MathLib/Rect.h"
 
 namespace Enigma::Engine
 {
+    class Texture;
     class TextureRepository;
     class TextureImageUpdater
     {
@@ -71,8 +71,8 @@ namespace Enigma::Engine
         TextureImageUpdater& operator=(const TextureImageUpdater&) = delete;
         TextureImageUpdater& operator=(TextureImageUpdater&&) = delete;
 
-        void RetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect);
-        void UpdateTextureImage(const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff);
+        void RetrieveTextureImage(const std::shared_ptr<Texture>& target_texture, const std::string& name, const MathLib::Rect& image_rect);
+        void UpdateTextureImage(const std::shared_ptr<Texture>& target_texture, const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff);
 
     private:
         void OnResourceImageRetrieved(const Enigma::Frameworks::IEventPtr& e);

@@ -250,7 +250,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     deviceContext->Unmap(targetTex, 0);
     targetTex->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(m_name, rcSrc));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(shared_from_this(), m_name, rcSrc));
     return ErrorCode::ok;
 }
 
@@ -364,7 +364,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     mappingTex->Release();
     d3dResource->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
     return ErrorCode::ok;
 }
 

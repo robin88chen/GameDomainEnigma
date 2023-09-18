@@ -31,6 +31,10 @@ TextureLoader::TextureLoader(TextureRepository* host)
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::MultiTextureResourceFromMemoryCreated), m_onMultiTextureResourceCreated);
     m_onTextureCreateResourceFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureCreateResourceFailed(e); });
     Frameworks::EventPublisher::Subscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
+    m_onTextureImageSaved = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureImageSaved(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
+    m_onTextureSaveImageFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureSaveImageFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
 }
 
 TextureLoader::~TextureLoader()
@@ -49,6 +53,10 @@ TextureLoader::~TextureLoader()
     m_onMultiTextureResourceCreated = nullptr;
     Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
     m_onTextureCreateResourceFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
+    m_onTextureImageSaved = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
+    m_onTextureSaveImageFailed = nullptr;
 }
 
 void TextureLoader::LoadTexture(const TexturePolicy& policy)
@@ -70,6 +78,24 @@ void TextureLoader::LoadTexture(const TexturePolicy& policy)
             Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateTexture>(m_policy.GetName()));
         }
     }
+}
+
+void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file)
+{
+    assert(file);
+    if (!target_texture)
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
+        return;
+    }
+    if (!target_texture->GetDeviceTexture())
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
+        return;
+    }
+    m_savingTextureName = name;
+    m_savingDeviceTextureName = target_texture->GetDeviceTexture()->GetName();
+    target_texture->GetDeviceTexture()->Save(file);
 }
 
 void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -181,3 +207,20 @@ void TextureLoader::OnTextureCreateResourceFailed(const Enigma::Frameworks::IEve
     Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(m_policy.GetName(), ev->GetError()));
 }
 
+void TextureLoader::OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageSaved, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetTextureName() != m_savingDeviceTextureName) return;
+    Frameworks::EventPublisher::Post(std::make_shared<TextureSaved>(m_savingTextureName));
+}
+
+void TextureLoader::OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceSaveImageFailed, Frameworks::IEvent>(e);
+    if (!ev) return;
+    if (ev->GetTextureName() != m_savingDeviceTextureName) return;
+    Frameworks::EventPublisher::Post(std::make_shared<SaveTextureFailed>(m_savingTextureName, ev->GetError()));
+}

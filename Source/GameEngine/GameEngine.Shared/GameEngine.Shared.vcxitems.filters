@@ -73,9 +73,6 @@
     <Filter Include="Installing Policies">
       <UniqueIdentifier>{171f8bf3-2c18-4b14-845d-280a052fdb61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events &amp; Response">
-      <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Intersect">
       <UniqueIdentifier>{47ac7be6-0a7d-4a65-9752-d8105c263d46}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,9 @@
     </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +97,7 @@
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h">
       <Filter>Commands</Filter>
@@ -148,7 +148,7 @@
       <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h">
       <Filter>Commands</Filter>
@@ -208,7 +208,7 @@
       <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
       <Filter>Geometry Repository</Filter>
@@ -229,7 +229,7 @@
       <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
       <Filter>Commands</Filter>
@@ -274,13 +274,13 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
       <Filter>DTOs\Geometry Dto</Filter>

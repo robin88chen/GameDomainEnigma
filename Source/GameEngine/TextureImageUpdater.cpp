@@ -25,11 +25,10 @@ TextureImageUpdater::~TextureImageUpdater()
     m_onResourceImageUpdated = nullptr;
 }
 
-void TextureImageUpdater::RetrieveTextureImage(const std::string& name, const MathLib::Rect& image_rect)
+void TextureImageUpdater::RetrieveTextureImage(const std::shared_ptr<Texture>& target_tex, const std::string& name, const MathLib::Rect& image_rect)
 {
     m_targetTextureName = name;
     m_targetTextureRect = image_rect;
-    auto target_tex = m_hostRepository->QueryTexture(m_targetTextureName);
     if ((target_tex) && target_tex->GetDeviceTexture())
     {
         target_tex->GetDeviceTexture()->Retrieve(m_targetTextureRect);
@@ -40,11 +39,10 @@ void TextureImageUpdater::RetrieveTextureImage(const std::string& name, const Ma
     }
 }
 
-void TextureImageUpdater::UpdateTextureImage(const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff)
+void TextureImageUpdater::UpdateTextureImage(const std::shared_ptr<Texture>& target_tex, const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff)
 {
     m_targetTextureName = name;
     m_targetTextureRect = image_rect;
-    auto target_tex = m_hostRepository->QueryTexture(m_targetTextureName);
     if ((target_tex) && target_tex->GetDeviceTexture())
     {
         target_tex->GetDeviceTexture()->Update(m_targetTextureRect, image_buff);
@@ -61,9 +59,9 @@ void TextureImageUpdater::OnResourceImageRetrieved(const Enigma::Frameworks::IEv
     const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageRetrieved, IEvent>(e);
     if (!ev) return;
     if (ev->GetTextureName() != m_targetTextureName) return;
-    auto target_tex = m_hostRepository->QueryTexture(m_targetTextureName);
-    if ((!target_tex) || (!target_tex->GetDeviceTexture())) return;
-    EventPublisher::Post(std::make_shared<TextureImageRetrieved>(m_targetTextureName, target_tex->GetDeviceTexture()->GetRetrievedBuffer()));
+    auto target_tex = ev->GetTargetTexture();
+    if (!target_tex) return;
+    EventPublisher::Post(std::make_shared<TextureImageRetrieved>(m_targetTextureName, target_tex->GetRetrievedBuffer()));
 }
 
 void TextureImageUpdater::OnResourceImageUpdated(const Enigma::Frameworks::IEventPtr& e)
@@ -72,7 +70,7 @@ void TextureImageUpdater::OnResourceImageUpdated(const Enigma::Frameworks::IEven
     const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageUpdated, IEvent>(e);
     if (!ev) return;
     if (ev->GetTextureName() != m_targetTextureName) return;
-    auto target_tex = m_hostRepository->QueryTexture(m_targetTextureName);
-    if ((!target_tex) || (!target_tex->GetDeviceTexture())) return;
+    auto target_tex = ev->GetTargetTexture();
+    if (!target_tex) return;
     EventPublisher::Post(std::make_shared<TextureImageUpdated>(m_targetTextureName));
 }

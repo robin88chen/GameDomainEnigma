@@ -18,6 +18,7 @@ namespace Enigma::Graphics
     class IDeviceRasterizerState;
     class IDeviceAlphaBlendState;
     class IDeviceDepthStencilState;
+    class ITexture;
 
     //------------------------ Device --------------------//
     class DeviceCreated : public Frameworks::IEvent
@@ -208,11 +209,13 @@ namespace Enigma::Graphics
     class TextureResourceImageRetrieved : public Frameworks::IEvent
     {
     public:
-        TextureResourceImageRetrieved(const std::string& texture_name, const MathLib::Rect& rc) :
-            m_textureName(texture_name), m_imageRect(rc) {};
+        TextureResourceImageRetrieved(const std::shared_ptr<ITexture>& target_tex, const std::string& texture_name, const MathLib::Rect& rc) :
+            m_targetTexture(target_tex), m_textureName(texture_name), m_imageRect(rc) {};
+        std::shared_ptr<ITexture> GetTargetTexture() const { return m_targetTexture.lock(); }
         const std::string& GetTextureName() { return m_textureName; }
         const MathLib::Rect& GetImageRect() const { return m_imageRect; }
     private:
+        std::weak_ptr<ITexture> m_targetTexture;
         std::string m_textureName;
         MathLib::Rect m_imageRect;
     };
@@ -230,11 +233,13 @@ namespace Enigma::Graphics
     class TextureResourceImageUpdated : public Frameworks::IEvent
     {
     public:
-        TextureResourceImageUpdated(const std::string& texture_name, const MathLib::Rect& rc) :
-            m_textureName(texture_name), m_imageRect(rc) {};
+        TextureResourceImageUpdated(const std::shared_ptr<ITexture>& target_tex, const std::string& texture_name, const MathLib::Rect& rc) :
+            m_targetTexture(target_tex), m_textureName(texture_name), m_imageRect(rc) {};
+        std::shared_ptr<ITexture> GetTargetTexture() const { return m_targetTexture.lock(); }
         const std::string& GetTextureName() { return m_textureName; }
         const MathLib::Rect& GetImageRect() const { return m_imageRect; }
     private:
+        std::weak_ptr<ITexture> m_targetTexture;
         std::string m_textureName;
         MathLib::Rect m_imageRect;
     };

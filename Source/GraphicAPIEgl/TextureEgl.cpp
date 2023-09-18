@@ -118,7 +118,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
         GL_RGBA, GL_UNSIGNED_BYTE, &img_buff[0]);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
 
     return ErrorCode::ok;
 }

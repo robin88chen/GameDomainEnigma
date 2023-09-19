@@ -15,6 +15,7 @@
 #include "Terrain/TerrainGeometry.h"
 #include "Terrain/TerrainPrimitive.h"
 #include "MathLib/Rect.h"
+#include "FileSystem/IFile.h"
 
 namespace LevelEditor
 {
@@ -37,10 +38,14 @@ namespace LevelEditor
         void DoMovingUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
         void DoPaintingTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
         void DoCompletingEditOperation(const Enigma::Frameworks::ICommandPtr& c);
+        void DoSavingSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
+
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
+        void OnSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e);
+        void OnSaveSplatTextureFailed(const Enigma::Frameworks::IEventPtr& e);
         void OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
         void OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
@@ -65,10 +70,14 @@ namespace LevelEditor
         Enigma::Frameworks::CommandSubscriberPtr m_doMovingUpTerrainVertex;
         Enigma::Frameworks::CommandSubscriberPtr m_doPaintingTerrainLayer;
         Enigma::Frameworks::CommandSubscriberPtr m_doCompletingEditOperation;
+        Enigma::Frameworks::CommandSubscriberPtr m_doSavingSplatTexture;
+
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 
+        Enigma::Frameworks::EventSubscriberPtr m_onSplatTextureSaved;
+        Enigma::Frameworks::EventSubscriberPtr m_onSaveSplatTextureFailed;
         Enigma::Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
         Enigma::Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
 
@@ -80,6 +89,8 @@ namespace LevelEditor
         Enigma::Frameworks::Ruid m_retrieveTextureImageRuid;
         byte_buffer m_dirtyAlphaTexels;
         Enigma::MathLib::Rect m_dirtyAlphaRect;
+
+        Enigma::FileSystem::IFilePtr m_savingSplatTextureFile;
     };
 }
 

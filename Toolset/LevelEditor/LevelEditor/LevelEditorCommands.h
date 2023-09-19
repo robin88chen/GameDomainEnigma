@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LevelEditorCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -113,6 +113,15 @@ namespace LevelEditor
 
     protected:
         Enigma::MathLib::Vector3 m_brushPos;
+    };
+    class SaveTerrainSplatTexture : public Enigma::Frameworks::ICommand
+    {
+    public:
+        SaveTerrainSplatTexture(const std::string& path_id) : m_pathId(path_id) {}
+
+        const std::string& GetPathId() const { return m_pathId; }
+    protected:
+        std::string m_pathId;
     };
 }
 

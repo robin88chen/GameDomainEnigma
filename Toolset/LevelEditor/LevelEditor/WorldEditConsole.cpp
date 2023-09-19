@@ -84,6 +84,7 @@ void WorldEditConsole::CreateWorldMapFolder(const std::string& folder_name)
 void WorldEditConsole::SaveWorldMap()
 {
     assert(!m_worldEditService.expired());
+    CommandBus::Post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
     auto [map_graph, node_graphs] = m_worldEditService.lock()->SerializeWorldMapAndNodeGraphs(m_worldMapPathId);
     if (!map_graph.empty())
     {

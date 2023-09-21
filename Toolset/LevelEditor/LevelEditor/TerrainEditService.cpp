@@ -37,7 +37,7 @@ std::array<std::string, TerrainEditService::TextureLayerNum> TerrainEditService:
 };
 
 const std::string NEW_TERRAIN_TAG = "_new_terrain_";
-const std::string SPLAT_TEXTURE_PREFIX = "_splat_";
+const std::string SPLAT_TEXTURE_POSTFIX = "_splat";
 const std::string ALPHA_TEXTURE_SEMANTIC = "AlphaLayer";
 
 TerrainEditService::TerrainEditService(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
@@ -322,7 +322,7 @@ void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)
         if (cmd->GetLayerTextures()[i].empty()) continue;
         tex_dto.TextureMapping(cmd->GetLayerTextures()[i], "APK_PATH", cmd->GetLayerTextures()[i], std::nullopt, LayerSemantics[i]);
     }
-    auto splat_texture_name = SPLAT_TEXTURE_PREFIX + cmd->GetName();
+    auto splat_texture_name = cmd->GetName() + SPLAT_TEXTURE_POSTFIX;
     tex_dto.TextureMapping(Enigma::MathLib::Dimension<unsigned>{512, 512}, 1, splat_texture_name, std::nullopt, ALPHA_TEXTURE_SEMANTIC);
     terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
     terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
@@ -376,10 +376,10 @@ void TerrainEditService::DoSavingSplatTexture(const Enigma::Frameworks::ICommand
         CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
-    std::string terrain_name = m_pickedTerrain.lock()->TheFactoryDesc().GetPrefab();
-    std::string splat_texture_resouce_name = terrain_name + "_" + m_pickedSplatTexture.lock()->GetName();
+    //std::string terrain_name = m_pickedTerrain.lock()->GetSpatialName();
+    std::string splat_texture_resouce_name = m_pickedSplatTexture.lock()->GetName();
     m_pickedSplatTexture.lock()->TheFactoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", cmd->GetPathId());
-    m_savingSplatTextureFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), "wb");
+    m_savingSplatTextureFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), "w+b");
     CommandBus::Post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_savingSplatTextureFile));
 }
 

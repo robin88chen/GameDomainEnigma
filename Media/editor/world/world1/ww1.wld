@@ -61,7 +61,7 @@
         },
         "ChildNames": {
             "Type": "StringArray",
-            "Value": ["world1/Name_qroot", "ww1_amb_lit", "ww1_sun_lit", "ww1_amb_lit_lit_quad", "ww1_sun_lit_lit_quad"]
+            "Value": ["ww1_amb_lit", "ww1_sun_lit", "ww1_amb_lit_lit_quad", "ww1_sun_lit_lit_quad", "world1/Name_qroot"]
         }
     }, {
         "LocalTransform": {

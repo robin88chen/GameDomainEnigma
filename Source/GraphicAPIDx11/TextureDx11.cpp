@@ -8,6 +8,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "MathLib/Rect.h"
 #include "FileSystem/IFile.h"
+#include "FileSystem/Filename.h"
+#include "DirectXTex.h"
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -413,7 +415,23 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     }
 
     DirectX::Blob blob;
-    DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
+    FileSystem::Filename filename(file->GetFullPath());
+    if (filename.GetExt() == ".png")
+    {
+        const DirectX::Image* img = resultImage.GetImage(0, 0, 0);
+        hr = DirectX::SaveToWICMemory(*img, DirectX::WIC_FLAGS_NONE, GetWICCodec(DirectX::WIC_CODEC_PNG), blob);
+    }
+    else
+    {
+        hr = DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
+
+    }
+    if (FATAL_LOG_EXPR(FAILED(hr)))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+            m_name, ErrorCode::dxSaveTexture));
+        return ErrorCode::dxSaveTexture;
+    }
     byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
     size_t write_bytes = file->Write(0, write_buff);
     if (write_bytes != write_buff.size())

@@ -78,26 +78,22 @@ void Filename::SplitPath(const std::string& str)
     m_filename = m_fname + m_ext;
 }
 
-std::string Filename::GetFullPath()
+std::string Filename::GetFullPath() const
 {
     return m_drive + m_dir + m_fname + m_ext;
 }
 
-std::string Filename::GetPath()
+std::string Filename::GetPath() const
 {
     return m_drive + m_dir;
 }
 
-std::string Filename::GetMountPathID()
-{
-    return m_pathID;
-}
 const std::string& Filename::GetMountPathID() const
 {
     return m_pathID;
 }
 
-std::string Filename::GetFullFileNameAtPath()
+std::string Filename::GetFullFileNameAtPath() const
 {
     if (HasPathID())
     {
@@ -106,7 +102,7 @@ std::string Filename::GetFullFileNameAtPath()
     return GetFullPath();
 }
 
-std::string Filename::GetFileNameAtPath()
+std::string Filename::GetFileNameAtPath() const
 {
     if (HasPathID())
     {
@@ -124,7 +120,7 @@ const std::string& Filename::GetSubPathFileName() const
     return m_subPathFilename;
 }
 
-std::string Filename::GetSubPathFileNameAtPath()
+std::string Filename::GetSubPathFileNameAtPath() const
 {
     if (!HasPathID())
     {
@@ -189,30 +185,26 @@ void Filename::SetMountPathID(const std::string& path_id)
     m_pathID = path_id;
 }
 
-std::string Filename::GetDir()
+const std::string& Filename::GetDir() const
 {
     return m_dir;
 }
 
-std::string Filename::GetDrive()
+const std::string& Filename::GetDrive() const
 {
     return m_drive;
 }
 
-std::string Filename::GetExt()
+const std::string& Filename::GetExt() const
 {
     return m_ext;
 }
 
-std::string Filename::GetBaseFileName()
+const std::string& Filename::GetBaseFileName() const
 {
     return m_fname;
 }
 
-std::string Filename::GetFileName()
-{
-    return m_filename;
-}
 const std::string& Filename::GetFileName() const
 {
     return m_filename;

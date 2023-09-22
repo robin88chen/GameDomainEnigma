@@ -16,7 +16,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::FileSystem;
 using namespace Enigma::WorldMap;
 
-Rtti WorldEditConsole::TYPE_RTTI{"LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI};
+Rtti WorldEditConsole::TYPE_RTTI{ "LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI };
 
 WorldEditConsole::WorldEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service) : ISystemService(srv_mngr)
 {

@@ -81,6 +81,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
         Enigma::Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
 
+        std::string m_terrainPathId;
+
         bool m_isHeightMapDirty;
         unsigned m_dirtyVtxMinIndex;
         unsigned m_dirtyVtxMaxIndex;

@@ -309,6 +309,7 @@ void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateNewTerrain, ICommand>(c);
     if (!cmd) return;
+    m_terrainPathId = cmd->GetAssetPathId();
 
     TerrainPrimitiveDto terrain_dto;
     terrain_dto.Name() = cmd->GetName();
@@ -376,9 +377,6 @@ void TerrainEditService::DoSavingSplatTexture(const Enigma::Frameworks::ICommand
         CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
-    //std::string terrain_name = m_pickedTerrain.lock()->GetSpatialName();
-    std::string splat_texture_resouce_name = m_pickedSplatTexture.lock()->GetName();
-    m_pickedSplatTexture.lock()->TheFactoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", cmd->GetPathId());
     m_savingSplatTextureFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), "w+b");
     CommandBus::Post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_savingSplatTextureFile));
 }
@@ -391,6 +389,7 @@ void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)
     if (ev->GetSceneGraphId() != NEW_TERRAIN_TAG) return;
     auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!terrain) return;
+    terrain->TheFactoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", m_terrainPathId);
     CommandBus::Post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
 }
 
@@ -403,8 +402,11 @@ void TerrainEditService::OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEven
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<TerrainPrimitive>(terrain->GetPrimitive());
     if (!terrain_prim) return;
+    terrain_prim->TheFactoryDesc().ClaimAsInstanced(terrain_prim->GetName() + ".terrain", m_terrainPathId);
     auto splat_texture = terrain_prim->FindTextureBySemantic(ALPHA_TEXTURE_SEMANTIC);
     if (!splat_texture) return;
+    std::string splat_texture_resouce_name = splat_texture->GetName();
+    splat_texture->TheFactoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
     m_splatTextures.insert_or_assign(terrain->GetSpatialName(), splat_texture);
 }
 

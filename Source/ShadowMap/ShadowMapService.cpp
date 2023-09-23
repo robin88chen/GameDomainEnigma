@@ -152,7 +152,7 @@ void ShadowMapService::OnLightInfoDeleted(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
-    if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
+    if (ev->GetLightType() != LightInfo::LightType::SunLight) return;
     DeleteSunLightCamera();
 }
 

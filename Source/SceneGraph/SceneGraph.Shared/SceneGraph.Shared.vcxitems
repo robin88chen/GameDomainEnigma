@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h" />

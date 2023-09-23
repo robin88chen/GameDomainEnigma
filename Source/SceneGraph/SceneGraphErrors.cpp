@@ -18,6 +18,9 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::unsupportPawnPrimitive: return "Unsupport pawn primitive";
     case ErrorCode::invalidChangingCamera: return "Invalid changing camera";
     case ErrorCode::emptyLightQueryResult: return "Empty light query result";
+    case ErrorCode::cameraNotFound: return "Camera not found";
+    case ErrorCode::frustumNotFound: return "Frustum not found";
+    case ErrorCode::sceneRepositoryFailed: return "Scene repository failed";
     }
     return "Unknown";
 }

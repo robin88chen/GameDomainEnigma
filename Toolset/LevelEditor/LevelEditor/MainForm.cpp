@@ -23,6 +23,7 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "LevelEditorEvents.h"
 #include "nana/gui/filebox.hpp"
+#include "FrustumInfoDialog.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -153,6 +154,9 @@ void MainForm::InitMenu()
     portal_menu.append("Create Zone Node...", [this](auto item) { OnCreateZoneNodeCommand(item); });
     portal_menu.append("Add Portal...", [this](auto item) { OnAddPortalCommand(item); });
 
+    nana::menu& option_menu = m_menubar->push_back("&Options");
+    option_menu.append("Camera Frustum", [this](auto item) { OnCameraFrustumCommand(item); });
+
     get_place().field("menubar") << *m_menubar;
 }
 
@@ -281,6 +285,11 @@ void MainForm::OnGodModeChanged(bool enabled)
 
 }
 
+void MainForm::OnCameraFrustumCommand(const nana::menu::item_proxy& menu_item)
+{
+    nana::API::modal_window(FrustumInfoDialog(*this, m_appDelegate->GetAppConfig()->GetFrustumName()));
+}
+
 void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
 {
     switch (arg.button)
@@ -297,14 +306,14 @@ void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
         Enigma::Frameworks::EventPublisher::Post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Pawn));
         m_editorMode = EditorMode::Pawn;
         break;
-    /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
-        break;
-    case static_cast<size_t>(ToolIndex::ToolRotateEntity):
-        break;
-    case static_cast<size_t>(ToolIndex::ToolScaleEntity):
-        break;
-    case static_cast<size_t>(ToolIndex::ToolGodMode):
-        break;*/
+        /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
+            break;
+        case static_cast<size_t>(ToolIndex::ToolRotateEntity):
+            break;
+        case static_cast<size_t>(ToolIndex::ToolScaleEntity):
+            break;
+        case static_cast<size_t>(ToolIndex::ToolGodMode):
+            break;*/
     default:
         break;
     }

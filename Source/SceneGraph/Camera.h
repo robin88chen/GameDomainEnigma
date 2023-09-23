@@ -13,6 +13,7 @@
 #include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
 #include "MathLib/Matrix4.h"
+#include "Frameworks/EventSubscriber.h"
 #include <memory>
 #include <string>
 #include <system_error>
@@ -20,7 +21,6 @@
 
 namespace Enigma::SceneGraph
 {
-    class CameraDto;
     class Frustum;
     using error = std::error_code;
     using FrustumPtr = std::shared_ptr<Frustum>;
@@ -30,7 +30,7 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI_OF_BASE;
     public:
         Camera(const std::string& name, GraphicCoordSys hand);
-        Camera(const CameraDto& dto);
+        Camera(const Engine::GenericDto& dto);
         Camera(const Camera&) = delete;
         Camera(Camera&&) = delete;
         virtual ~Camera();
@@ -67,6 +67,7 @@ namespace Enigma::SceneGraph
         error SetCullingFrustum(const FrustumPtr& frustum);
         /** get frustum */
         FrustumPtr GetCullingFrustum() { return m_cullingFrustum; };
+        const std::string& GetCullingFrustumName() const { return m_cullingFrustumName; }
 
         /** get view transform */
         virtual const MathLib::Matrix4& GetViewTransform() { return m_mxViewTransform; };
@@ -80,6 +81,9 @@ namespace Enigma::SceneGraph
     protected:
         virtual void _UpdateViewTransform();
 
+        void OnFrustumCreated(const Frameworks::IEventPtr& e);
+        void OnCreateFrustumFailed(const Frameworks::IEventPtr& e);
+
     protected:
         std::string m_name;
         Engine::FactoryDesc m_factoryDesc;
@@ -88,12 +92,15 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4 m_mxViewTransform;    ///< view transform matrix
 
         FrustumPtr m_cullingFrustum; ///< frustum of this camera, create/destroy with camera, can be changed by application
-
+        std::string m_cullingFrustumName;
         MathLib::Vector3 m_vecLocation;
         MathLib::Vector3 m_vecEyeToLookAt;
         MathLib::Vector3 m_vecUp;
         MathLib::Vector3 m_vecRight;
         MathLib::Vector3 m_vecCameraForward;
+
+        Frameworks::EventSubscriberPtr m_onFrustumCreated;
+        Frameworks::EventSubscriberPtr m_onCreateFrustumFailed;
     };
 }
 

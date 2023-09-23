@@ -137,6 +137,7 @@
     <ClCompile Include="CreateNewWorldDlg.cpp" />
     <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
+    <ClCompile Include="FrustumInfoDialog.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="LightEditService.cpp" />
     <ClCompile Include="MainApplication.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="EditorModes.h" />
     <ClInclude Include="EditorSceneConsole.h" />
     <ClInclude Include="EditorUtilities.h" />
+    <ClInclude Include="FrustumInfoDialog.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="LevelEditorEvents.h" />

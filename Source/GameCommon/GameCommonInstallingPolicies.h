@@ -18,13 +18,13 @@ namespace Enigma::GameCommon
     class GameCameraInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        GameCameraInstallingPolicy(const SceneGraph::CameraDto& dto) : m_cameraDto(dto) {}
+        GameCameraInstallingPolicy(const Engine::GenericDto& dto) : m_cameraDto(dto) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
-        SceneGraph::CameraDto m_cameraDto;
+        Engine::GenericDto m_cameraDto;
     };
     class GameLightInstallingPolicy : public Engine::InstallingPolicy
     {

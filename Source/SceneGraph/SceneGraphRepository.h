@@ -13,6 +13,7 @@
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -50,17 +51,19 @@ namespace Enigma::SceneGraph
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
+        virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
         void SetCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys GetCoordinateSystem();
 
         std::shared_ptr<Camera> CreateCamera(const std::string& name);
-        std::shared_ptr<Camera> CreateCamera(const CameraDto& dto);
+        std::shared_ptr<Camera> CreateCamera(const Engine::GenericDto& dto);
         bool HasCamera(const std::string& name);
         std::shared_ptr<Camera> QueryCamera(const std::string& name);
 
         std::shared_ptr<Frustum> CreateFrustum(const std::string& name, Frustum::ProjectionType proj);
+        std::shared_ptr<Frustum> CreateFrustum(const Engine::GenericDto& dto);
         bool HasFrustum(const std::string& name);
         std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
@@ -84,6 +87,12 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
     private:
+        void DoQueryingCamera(const Frameworks::ICommandPtr& c);
+        void DoQueryingFrustum(const Frameworks::ICommandPtr& c);
+        void DoCreatingCamera(const Frameworks::ICommandPtr& c);
+        void DoCreatingFrustum(const Frameworks::ICommandPtr& c);
+
+    private:
         GraphicCoordSys m_handSystem;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
@@ -103,6 +112,11 @@ namespace Enigma::SceneGraph
         std::recursive_mutex m_portalMapLock;
 
         SceneGraphBuilder* m_builder;
+
+        Frameworks::CommandSubscriberPtr m_doQueryingCamera;
+        Frameworks::CommandSubscriberPtr m_doQueryingFrustum;
+        Frameworks::CommandSubscriberPtr m_doCreatingCamera;
+        Frameworks::CommandSubscriberPtr m_doCreatingFrustum;
     };
 }
 

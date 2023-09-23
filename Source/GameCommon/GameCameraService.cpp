@@ -9,6 +9,8 @@
 #include "Renderer/RenderTarget.h"
 #include "InputHandlers/MouseInputEvents.h"
 #include "InputHandlers/GestureInputEvents.h"
+#include "SceneGraph/CameraFrustumEvents.h"
+#include "GameCommonErrors.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -37,18 +39,22 @@ GameCameraService::~GameCameraService()
 
 ServiceResult GameCameraService::OnInit()
 {
+    m_onFrustumCreated = std::make_shared<EventSubscriber>([=](auto e) { OnCameraFrustumCreated(e); });
+    EventPublisher::Subscribe(typeid(FrustumCreated), m_onFrustumCreated);
+    m_onCreateFrustumFailed = std::make_shared<EventSubscriber>([=](auto e) { OnCreateCameraFrustumFailed(e); });
+    EventPublisher::Subscribe(typeid(CreateFrustumFailed), m_onCreateFrustumFailed);
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
-    m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
-    m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
-    m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
-    m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
     EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
 #if TARGET_PLATFORM == PLATFORM_WIN32
+    m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
     EventPublisher::Subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
     EventPublisher::Subscribe(typeid(MouseWheeled), m_onMouseWheel);
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
+    m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
     EventPublisher::Subscribe(typeid(GestureScroll), m_onGestureScroll);
+    m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
     EventPublisher::Subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
     return ServiceResult::Complete;
@@ -56,32 +62,38 @@ ServiceResult GameCameraService::OnInit()
 
 ServiceResult GameCameraService::OnTerm()
 {
+    EventPublisher::Unsubscribe(typeid(FrustumCreated), m_onFrustumCreated);
+    m_onFrustumCreated = nullptr;
+    EventPublisher::Unsubscribe(typeid(CreateFrustumFailed), m_onCreateFrustumFailed);
+    m_onCreateFrustumFailed = nullptr;
     EventPublisher::Unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
+    m_onTargetResized = nullptr;
 #if TARGET_PLATFORM == PLATFORM_WIN32
     EventPublisher::Unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    m_onRightBtnDrag = nullptr;
     EventPublisher::Unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
+    m_onMouseWheel = nullptr;
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
     EventPublisher::Unsubscribe(typeid(GestureScroll), m_onGestureScroll);
-    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
-#endif
-    m_onTargetResized = nullptr;
-    m_onRightBtnDrag = nullptr;
-    m_onMouseWheel = nullptr;
     m_onGestureScroll = nullptr;
+    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
     m_onGestureScale = nullptr;
+#endif
 
     m_primaryCamera = nullptr;
 
     return ServiceResult::Complete;
 }
 
-void GameCameraService::CreatePrimaryCamera(const CameraDto& dto)
+void GameCameraService::CreatePrimaryCamera(const Engine::GenericDto& dto)
 {
     assert(!m_sceneGraphRepository.expired());
     m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(dto);
-
-    EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
+    if (m_primaryCamera->GetCullingFrustum())
+    {
+        EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
+    }
 }
 
 void GameCameraService::CameraZoom(float dist)
@@ -180,6 +192,31 @@ Ray3 GameCameraService::GetPickerRay(float clip_space_x, float clip_space_y)
     ray_dir.NormalizeSelf();
 
     return Ray3(m_primaryCamera->GetLocation(), ray_dir);
+}
+
+void GameCameraService::OnCameraFrustumCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::FrustumCreated, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetName() != m_primaryCamera->GetCullingFrustumName()) return;
+    if (ev->GetFrustum())
+    {
+        EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<CreateGameCameraFailed>(ev->GetName(), ErrorCode::nullFrustum));
+    }
+}
+
+void GameCameraService::OnCreateCameraFrustumFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::CreateFrustumFailed, IEvent>(e);
+    if (!ev) return;
+    if (ev->GetName() != m_primaryCamera->GetCullingFrustumName()) return;
+    EventPublisher::Post(std::make_shared<CreateGameCameraFailed>(ev->GetName(), ev->GetError()));
 }
 
 void GameCameraService::OnTargetResized(const Frameworks::IEventPtr& e)

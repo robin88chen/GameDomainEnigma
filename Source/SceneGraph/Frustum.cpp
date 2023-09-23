@@ -48,17 +48,18 @@ Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType p
     }
 }
 
-Frustum::Frustum(const FrustumDto& dto)
+Frustum::Frustum(const GenericDto& dto)
 {
-    m_name = dto.Name();
-    m_handCoord = dto.HandSystem();
-    m_projectionType = dto.ProjectionType();
-    m_fov = dto.Fov();
-    m_nearPlaneZ = dto.NearPlaneZ();
-    m_farPlaneZ = dto.FarPlaneZ();
-    m_aspectRatio = dto.AspectRatio();
-    m_nearWidth = dto.NearWidth();
-    m_nearHeight = dto.NearHeight();
+    FrustumDto frustum_dto = FrustumDto::FromGenericDto(dto);
+    m_name = frustum_dto.Name();
+    m_handCoord = frustum_dto.HandSystem();
+    m_projectionType = frustum_dto.ProjectionType();
+    m_fov = frustum_dto.Fov();
+    m_nearPlaneZ = frustum_dto.NearPlaneZ();
+    m_farPlaneZ = frustum_dto.FarPlaneZ();
+    m_aspectRatio = frustum_dto.AspectRatio();
+    m_nearWidth = frustum_dto.NearWidth();
+    m_nearHeight = frustum_dto.NearHeight();
     if (m_handCoord == GraphicCoordSys::LeftHand)
     {
         if (m_projectionType == ProjectionType::Perspective)

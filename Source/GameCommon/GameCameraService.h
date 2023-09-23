@@ -30,7 +30,7 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
-        void CreatePrimaryCamera(const SceneGraph::CameraDto& dto);
+        void CreatePrimaryCamera(const Engine::GenericDto& dto);
         const std::shared_ptr<SceneGraph::Camera>& GetPrimaryCamera() const { return m_primaryCamera; }
 
         /** @name camera operations */
@@ -52,6 +52,9 @@ namespace Enigma::GameCommon
         MathLib::Ray3 GetPickerRay(float clip_space_x, float clip_space_y);
 
     protected:
+        void OnCameraFrustumCreated(const Frameworks::IEventPtr& e);
+        void OnCreateCameraFrustumFailed(const Frameworks::IEventPtr& e);
+
         void OnTargetResized(const Frameworks::IEventPtr& e);
         void OnMouseRightBtnDrag(const Frameworks::IEventPtr& e);
         void OnMouseWheel(const Frameworks::IEventPtr& e);
@@ -61,6 +64,9 @@ namespace Enigma::GameCommon
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
         std::shared_ptr<SceneGraph::Camera> m_primaryCamera;
+
+        Frameworks::EventSubscriberPtr m_onFrustumCreated;
+        Frameworks::EventSubscriberPtr m_onCreateFrustumFailed;
 
         Frameworks::EventSubscriberPtr m_onTargetResized;
         Frameworks::EventSubscriberPtr m_onRightBtnDrag;

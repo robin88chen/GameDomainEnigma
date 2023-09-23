@@ -19,7 +19,6 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
-    class FrustumDto;
 
     /** Frustum class */
     class Frustum : public std::enable_shared_from_this<Frustum>
@@ -35,7 +34,7 @@ namespace Enigma::SceneGraph
 
     public:
         Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj);
-        Frustum(const FrustumDto& dto);
+        Frustum(const Engine::GenericDto& dto);
         Frustum(const Frustum&) = delete;
         Frustum(Frustum&&) = delete;
         virtual ~Frustum();

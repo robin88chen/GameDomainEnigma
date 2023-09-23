@@ -177,6 +177,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumNonDerivedSpatials.h">
       <Filter>Scene Traveler</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">

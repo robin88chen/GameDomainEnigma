@@ -157,7 +157,7 @@ void EditorAppDelegate::InstallEngine()
         std::make_shared<JsonFileDtoDeserializer>());
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_appConfig->GetSceneRootName(), m_appConfig->GetPortalManagementName());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDto::FromGenericDto(m_appConfig->GetCameraDto()));
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->GetCameraDto());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();

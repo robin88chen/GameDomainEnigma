@@ -23,6 +23,17 @@ namespace Enigma::GameCommon
     protected:
         std::weak_ptr<SceneGraph::Camera> m_camera;
     };
+    class CreateGameCameraFailed : public Frameworks::IEvent
+    {
+    public:
+        CreateGameCameraFailed(const std::string& name, std::error_code err) : m_name(name), m_err(err) {}
+        const std::string& GetName() const { return m_name; }
+        std::error_code GetError() const { return m_err; }
+    protected:
+        std::string m_name;
+        std::error_code m_err;
+    };
+
     class GameCameraUpdated : public Frameworks::IEvent
     {
     public:

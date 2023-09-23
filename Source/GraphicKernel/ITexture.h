@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ITexture.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -49,15 +49,15 @@ namespace Enigma::Graphics
         virtual void Save(const FileSystem::IFilePtr& file);
         virtual void Save(const std::string& filename, const std::string& pathid);
 
-        virtual void Create(const MathLib::Dimension& dimension, const byte_buffer& buff);
+        virtual void Create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
 
         virtual void Retrieve(const MathLib::Rect& rcSrc);
         virtual void Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);
 
         virtual void AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
-        
+
         virtual const GraphicFormat& GetFormat() { return m_format; };
-        virtual const MathLib::Dimension& GetDimension() { return m_dimension; };
+        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
         const byte_buffer& GetRetrievedBuffer() { return m_retrievedBuff; }
         virtual bool IsCubeTexture() { return m_isCubeTexture; }
 
@@ -66,7 +66,7 @@ namespace Enigma::Graphics
     protected:
         virtual error LoadTextureImage(const byte_buffer& img_buff) = 0;
         virtual error LoadTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff) = 0;
+        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
@@ -76,7 +76,7 @@ namespace Enigma::Graphics
     protected:
         std::string m_name;
         bool m_isCubeTexture;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
 
         GraphicFormat m_format;
 

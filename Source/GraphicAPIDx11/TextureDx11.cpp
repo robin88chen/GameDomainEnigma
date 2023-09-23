@@ -8,6 +8,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "MathLib/Rect.h"
 #include "FileSystem/IFile.h"
+#include "FileSystem/Filename.h"
+#include "DirectXTex.h"
 
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
@@ -25,7 +27,7 @@ TextureDx11::~TextureDx11()
     SAFE_RELEASE(m_d3dTextureResource);
 }
 
-error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
+error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(api_dx11);
@@ -250,7 +252,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     deviceContext->Unmap(targetTex, 0);
     targetTex->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(m_name, rcSrc));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(shared_from_this(), m_name, rcSrc));
     return ErrorCode::ok;
 }
 
@@ -364,7 +366,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     mappingTex->Release();
     d3dResource->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
     return ErrorCode::ok;
 }
 
@@ -413,7 +415,23 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     }
 
     DirectX::Blob blob;
-    DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
+    FileSystem::Filename filename(file->GetFullPath());
+    if (filename.GetExt() == ".png")
+    {
+        const DirectX::Image* img = resultImage.GetImage(0, 0, 0);
+        hr = DirectX::SaveToWICMemory(*img, DirectX::WIC_FLAGS_NONE, GetWICCodec(DirectX::WIC_CODEC_PNG), blob);
+    }
+    else
+    {
+        hr = DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
+
+    }
+    if (FATAL_LOG_EXPR(FAILED(hr)))
+    {
+        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+            m_name, ErrorCode::dxSaveTexture));
+        return ErrorCode::dxSaveTexture;
+    }
     byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
     size_t write_bytes = file->Write(0, write_buff);
     if (write_bytes != write_buff.size())
@@ -483,7 +501,7 @@ error TextureDx11::CreateFromScratchImage(DirectX::ScratchImage& scratchImage)
         img_buff.resize(scratchImage.GetPixelsSize());
         memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
         return CreateFromSystemMemory(
-            MathLib::Dimension{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
+            MathLib::Dimension<unsigned>{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
             img_buff);
     }
     else

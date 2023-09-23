@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MultiBackSurfaceEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -20,7 +20,7 @@ namespace Enigma::Devices
     class MultiBackSurfaceEgl : public Graphics::IMultiBackSurface
     {
     public:
-        MultiBackSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension,
+        MultiBackSurfaceEgl(const std::string& name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt);
         MultiBackSurfaceEgl(const MultiBackSurfaceEgl&) = delete;
         MultiBackSurfaceEgl(MultiBackSurfaceEgl&&) = delete;
@@ -29,11 +29,11 @@ namespace Enigma::Devices
         MultiBackSurfaceEgl& operator=(const MultiBackSurfaceEgl&) = delete;
         MultiBackSurfaceEgl& operator=(MultiBackSurfaceEgl&&) = delete;
 
-        virtual error Resize(const MathLib::Dimension& dimension) override;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override;
         GLuint GetFrameBufferHandle() const { return m_frameBufferHandle; }
 
     protected:
-        void CreateFrameBufferTexture(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt);
+        void CreateFrameBufferTexture(const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
 
     protected:
         GLuint m_frameBufferHandle;

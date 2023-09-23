@@ -1,13 +1,15 @@
 ﻿/*********************************************************************
  * \file   AlgebraBasicTypes.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
 
 #ifndef _ALGEBRA_BASIC_TYPES_H
 #define _ALGEBRA_BASIC_TYPES_H
+
+#include <type_traits>
 
 namespace Enigma::MathLib
 {
@@ -28,10 +30,10 @@ namespace Enigma::MathLib
         False,
         True
     };
-    struct Dimension
+    template<typename T, typename = typename std::enable_if<std::is_scalar<T>::value, T>::type> struct Dimension
     {
-        unsigned int m_width;
-        unsigned int m_height;
+        T m_width;
+        T m_height;
         bool operator==(const Dimension& rhs) const
         {
             return m_width == rhs.m_width && m_height == rhs.m_height;

@@ -16,7 +16,9 @@
 #include "AppConfiguration.h"
 #include "LevelEditorCommands.h"
 #include "WorldEditService.h"
+#include "TerrainEditService.h"
 #include "TerrainEditConsole.h"
+#include "EditorSceneConsole.h"
 #include "WorldMap/WorldMapService.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "LevelEditorEvents.h"
@@ -88,6 +90,7 @@ void MainForm::InitSubPanels()
         m_renderPanel->SubscribeHandlers();
     }
     if (m_spatialInspectorPanel) m_spatialInspectorPanel->SubscribeHandlers();
+    if (m_terrainToolPanel) m_terrainToolPanel->SubscribeHandlers();
 }
 
 void MainForm::InitializeGraphics()
@@ -103,6 +106,7 @@ void MainForm::InitializeGraphics()
     auto world_edit = std::dynamic_pointer_cast<WorldEditService, Enigma::Frameworks::ISystemService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
     srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
     srv_mngr->RegisterSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
+    srv_mngr->RegisterSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
     m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
     m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
 }
@@ -112,7 +116,9 @@ void MainForm::FinalizeGraphics()
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
     srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
     srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
+    srv_mngr->UnregisterSystemService(EditorSceneConsole::TYPE_RTTI);
 
+    if (m_terrainToolPanel) m_terrainToolPanel->UnsubscribeHandlers();
     if (m_spatialInspectorPanel) m_spatialInspectorPanel->UnsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->UnsubscribeHandlers();
     if (m_sceneGraphPanel)
@@ -164,7 +170,7 @@ void MainForm::InitPanels()
     get_place().field("toolsframe").fasten(*m_spatialInspectorPanel);
     m_tabbar->append("Inspector", *m_spatialInspectorPanel);
     m_terrainToolPanel = menew TerrainToolPanel{ *this };
-    m_terrainToolPanel->Initialize(this);
+    m_terrainToolPanel->Initialize(this, TerrainEditService::TextureLayerNum);
     get_place().field("toolsframe").fasten(*m_terrainToolPanel);
     m_tabbar->append("Terrain", *m_terrainToolPanel);
 

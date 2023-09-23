@@ -13,7 +13,7 @@ IDepthStencilSurface::~IDepthStencilSurface()
 {
 }
 
-void IDepthStencilSurface::ResizeSurface(const MathLib::Dimension& dimension)
+void IDepthStencilSurface::ResizeSurface(const MathLib::Dimension<unsigned>& dimension)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {
@@ -25,7 +25,7 @@ void IDepthStencilSurface::ResizeSurface(const MathLib::Dimension& dimension)
     }
 }
 
-future_error IDepthStencilSurface::AsyncResize(const MathLib::Dimension& dimension)
+future_error IDepthStencilSurface::AsyncResize(const MathLib::Dimension<unsigned>& dimension)
 {
     return IGraphicAPI::Instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), dimension = dimension, this]() -> error { return Resize(dimension); });

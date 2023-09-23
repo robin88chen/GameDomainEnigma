@@ -22,7 +22,7 @@ namespace Enigma::Graphics
         IMultiBackSurface& operator=(const IMultiBackSurface&) = delete;
         IMultiBackSurface& operator=(IMultiBackSurface&&) = delete;
 
-        virtual error Resize(const MathLib::Dimension& dimension) override = 0;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override = 0;
 
         GraphicFormat GetSliceFormat(unsigned int index);
         virtual unsigned int GetSurfaceCount() override;

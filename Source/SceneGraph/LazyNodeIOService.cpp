@@ -119,6 +119,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!m_in_placeNode) return;
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
     m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
+    m_in_placeNode->TheFactoryDesc().ClaimAsInstanced();
     EventPublisher::Post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
 }

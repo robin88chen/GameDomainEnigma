@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   IBackSurface.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -32,23 +32,23 @@ namespace Enigma::Graphics
 
         const std::string& GetName() { return m_name; }
         virtual const GraphicFormat& GetFormat() { return m_format; };
-        virtual const MathLib::Dimension& GetDimension() { return m_dimension; };
+        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
 
         virtual bool IsPrimary() { return m_isPrimary; }
 
         virtual bool IsMultiSurface() { return false; }
         virtual unsigned int GetSurfaceCount() { return 1; };
 
-        virtual void ResizeSurface(const MathLib::Dimension& dimension);
+        virtual void ResizeSurface(const MathLib::Dimension<unsigned>& dimension);
 
     protected:
-        virtual error Resize(const MathLib::Dimension& dimension) = 0;
-        virtual future_error AsyncResize(const MathLib::Dimension& dimension);
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) = 0;
+        virtual future_error AsyncResize(const MathLib::Dimension<unsigned>& dimension);
 
     protected:
         std::string m_name;
         bool m_isPrimary;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         GraphicFormat m_format;
     };
     using IBackSurfacePtr = std::shared_ptr<IBackSurface>;

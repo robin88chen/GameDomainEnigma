@@ -36,3 +36,10 @@ bool TargetViewPort::operator==(const TargetViewPort& vp)
 
     return true;
 }
+
+Enigma::MathLib::Vector2 TargetViewPort::ViewportPositionToClippingPosition(const MathLib::Vector2& vp_pos) const
+{
+    float clipping_x = (2.0f * vp_pos.X()) / static_cast<float>(m_width) - 1.0f;
+    float clipping_y = (-2.0f * vp_pos.Y()) / static_cast<float>(m_height) + 1.0f;
+    return { clipping_x, clipping_y };
+}

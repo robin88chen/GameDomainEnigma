@@ -155,7 +155,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
@@ -167,7 +167,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
     unsigned buff_count, const std::vector<Graphics::GraphicFormat>& fmts)
 {
     Platforms::Debug::Printf("create back surface in thread %d\n", std::this_thread::get_id());
@@ -179,7 +179,7 @@ error GraphicAPIDx11::CreateBackSurface(const std::string& back_name, const Math
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+error GraphicAPIDx11::CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     Platforms::Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());

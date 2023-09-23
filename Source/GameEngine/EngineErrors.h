@@ -30,6 +30,8 @@ namespace Enigma::Engine
         invalidArrayIndex = 301,
         nullMemoryBuffer,
         zeroVertexSize,
+
+        targetTextureNotExists = 401,
     };
     class ErrorCategory : public std::error_category
     {

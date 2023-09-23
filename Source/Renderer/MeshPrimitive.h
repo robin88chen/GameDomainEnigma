@@ -55,11 +55,11 @@ namespace Enigma::Renderer
         /** get texture map size */
         unsigned GetTextureMapCount() const;
         /** change specify semantic texture */
-        void ChangeTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple);
+        void ChangeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
         /** bind specify semantic texture, append new if semantic not existed */
-        void BindTexture(const Engine::EffectTextureMap::EffectTextureTuple& tuple);
+        void BindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
         /** bind specify semantic texture, append new if semantic not existed */
-        void BindTextures(const Engine::EffectTextureMap::EffectTextures& texture_tuples);
+        void BindSegmentTextures(const Engine::EffectTextureMap::SegmentEffectTextures& texture_tuples);
 
         /** update render buffer */
         error UpdateRenderBuffer();
@@ -97,12 +97,14 @@ namespace Enigma::Renderer
         /** change segment's texture map */
         void ChangeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map);
         /** change primitive's texture map */
-        void ChangeTextureMap(const TextureMapList& tex_maps);
+        void ChangeTextureMaps(const TextureMapList& tex_maps);
         /** resize texture map list */
         void ResizeTextureMapVector(unsigned new_size) { m_textures.resize(new_size); };
         /** create render elements */
         void CreateRenderElements();
         //@}
+
+        std::shared_ptr<Engine::Texture> FindTextureBySemantic(const std::string& semantic) const;
 
     protected:
         MeshPrimitiveDto SerializeMeshDto() const;

@@ -173,7 +173,7 @@ void AppDelegate::Run()
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
     Frameworks::CommandBus::Post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
-        MathLib::Dimension{(unsigned)w, (unsigned)h}));
+        MathLib::Dimension<unsigned>{(unsigned)w, (unsigned)h}));
 }
 
 LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

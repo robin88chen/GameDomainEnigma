@@ -1,6 +1,6 @@
 ﻿/********************************************************************
  * \file   Intersector.h
- * \brief  
+ * \brief
     Intersector Base Class
     在這個架構中，我們將幾何圖形的資料與交點計算分開。這個基礎類別
     是所有交點計算的基底。
@@ -13,24 +13,35 @@
 #ifndef _MATH_INTERSECTOR_H
 #define _MATH_INTERSECTOR_H
 
+#include "IntersectorCache.h"
+#include <memory>
+
 namespace Enigma::MathLib
 {
-    class IntersectorCache;
     /** Math Lib Intersector \n
       Intersector Base Class, abstract class
     */
     class Intersector
     {
     public:
+        struct Result
+        {
+            Result() : m_hasIntersect(false), m_cache(nullptr) {}
+            Result(bool has_intr, std::unique_ptr<IntersectorCache> cache) : m_hasIntersect(has_intr), m_cache(std::move(cache)) {}
+
+            bool m_hasIntersect;
+            std::unique_ptr<IntersectorCache> m_cache;
+        };
+    public:
         virtual ~Intersector();
 
         /** Static intersection queries.  The default implementations return 'false'. */
-        virtual bool Test(IntersectorCache* last_result);
+        virtual Result Test(std::unique_ptr<IntersectorCache> last_result);
 
         /** Static intersection queries.  The default implementations call Test() (return 'false').
          Produces a set of intersection.  The derived class is responsible for providing access to that set, since the nature
          of the set is dependent on the object types. */
-        virtual bool Find(IntersectorCache* last_result);
+        virtual Result Find(std::unique_ptr<IntersectorCache> last_result);
 
         /** Intersection Type -- information about the intersection set */
         enum class IntersectionType

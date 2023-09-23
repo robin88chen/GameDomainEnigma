@@ -114,6 +114,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h">
       <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h">
+      <Filter>DeferredRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">

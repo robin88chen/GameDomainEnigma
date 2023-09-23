@@ -28,14 +28,14 @@ std::string& ShadowMapServiceConfiguration::ShadowMapTechniqueName()
     return m_shadowMapTechniqueName;
 }
 
-const Enigma::MathLib::Dimension& ShadowMapServiceConfiguration::ShadowMapDimension() const
+const Enigma::MathLib::Dimension<unsigned>& ShadowMapServiceConfiguration::ShadowMapDimension() const
 {
     assert(m_shadowMapDimension.m_width > 0);
     assert(m_shadowMapDimension.m_height > 0);
     return m_shadowMapDimension;
 }
 
-Enigma::MathLib::Dimension& ShadowMapServiceConfiguration::ShadowMapDimension()
+Enigma::MathLib::Dimension<unsigned>& ShadowMapServiceConfiguration::ShadowMapDimension()
 {
     return m_shadowMapDimension;
 }

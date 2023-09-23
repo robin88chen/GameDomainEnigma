@@ -12,12 +12,21 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Pawn.h"
+#include "GraphicKernel/TargetViewPort.h"
 
 namespace LevelEditor
 {
     class TerrainEditConsole : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
+    public:
+        enum class TerrainEditMode
+        {
+            Mode_Unknown = 0,
+            Mode_RaiseHeight,
+            Mode_LowerHeight,
+            Mode_PaintTexture,
+        };
     public:
         TerrainEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr);
         TerrainEditConsole(const TerrainEditConsole&) = delete;
@@ -33,16 +42,43 @@ namespace LevelEditor
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainBrushHeightChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainBrushDensityChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainPaintingLayerChanged(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainToolSelected(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e);
+        void OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e);
 
         void CreateBrushPawn();
+        void SendTerrainEditCommand(float elapse_time);
 
     protected:
         bool m_isEnabled;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_brush;
 
         //Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorMoved;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorDragged;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorPressed;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorReleased;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushSizeChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushHeightChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushDensityChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainPaintingLayerChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainToolSelected;
+
+        TerrainEditMode m_currMode;
+        unsigned m_brushSize;
+        float m_brushHeight;
+        float m_brushDensity;
+        unsigned m_layerIndex;
     };
 }
 

@@ -21,6 +21,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::invalidArrayIndex: return "Invalid array index";
     case ErrorCode::nullMemoryBuffer: return "Null memory buffer";
     case ErrorCode::zeroVertexSize: return "Zero vertex size";
+    case ErrorCode::targetTextureNotExists: return "Target texture not exists";
     }
     return "Unknown";
 }

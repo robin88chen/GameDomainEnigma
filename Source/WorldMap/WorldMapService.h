@@ -44,6 +44,7 @@ namespace Enigma::WorldMap
         void DoDeserializingWorldMap(const Frameworks::ICommandPtr& c);
         void DoAttachingTerrain(const Frameworks::ICommandPtr& c);
         void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void OnLazyNodeInstanced(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<WorldMap> m_world;
@@ -56,6 +57,7 @@ namespace Enigma::WorldMap
         Frameworks::CommandSubscriberPtr m_doDeserializingWorldMap;
         Frameworks::CommandSubscriberPtr m_doAttachingTerrain;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;  // check world map is created
+        Frameworks::EventSubscriberPtr m_onLazyNodeInstanced;
     };
 }
 

@@ -21,8 +21,8 @@ namespace Enigma::ShadowMap
         const std::string& ShadowMapTechniqueName() const;
         std::string& ShadowMapTechniqueName();
 
-        const MathLib::Dimension& ShadowMapDimension() const;
-        MathLib::Dimension& ShadowMapDimension();
+        const MathLib::Dimension<unsigned>& ShadowMapDimension() const;
+        MathLib::Dimension<unsigned>& ShadowMapDimension();
 
         const std::string& ShadowMapSurfaceName() const;
         std::string& ShadowMapSurfaceName();
@@ -48,7 +48,7 @@ namespace Enigma::ShadowMap
 
     protected:
         std::string m_shadowMapTechniqueName;
-        MathLib::Dimension m_shadowMapDimension;
+        MathLib::Dimension<unsigned> m_shadowMapDimension;
         std::string m_shadowMapSurfaceName;
         std::string m_shadowMapDepthName;
         std::string m_sunLightCameraName;

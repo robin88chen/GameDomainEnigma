@@ -2,6 +2,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "MathLib/ContainmentBox3.h"
 #include "MathLib/MathGlobal.h"
+#include "SphereBV.h"
 #include <cassert>
 #include <cmath>
 
@@ -19,18 +20,40 @@ BoxBV::~BoxBV()
 void BoxBV::CreateFromTransform(const MathLib::Matrix4& mx, const std::unique_ptr<GenericBV>& source)
 {
     if (FATAL_LOG_EXPR(!source)) return;
-    BoxBV* box_bv = dynamic_cast<BoxBV*>(source.get());
-    if (FATAL_LOG_EXPR(!box_bv)) return;
+    MathLib::Vector3 center;
+    MathLib::Vector3 axis[3];
+    MathLib::Vector3 extent;
+    if (BoxBV* box_bv = dynamic_cast<BoxBV*>(source.get()))
+    {
+        center = box_bv->m_box.Center();
+        for (int i = 0; i < 3; i++)
+        {
+            axis[i] = box_bv->m_box.Axis(i);
+            extent[i] = box_bv->m_box.Extent(i);
+        }
+    }
+    else if (SphereBV* sphere_bv = dynamic_cast<SphereBV*>(source.get()))
+    {
+        center = sphere_bv->GetSphere().Center();
+        axis[0] = MathLib::Vector3::UNIT_X;
+        axis[1] = MathLib::Vector3::UNIT_Y;
+        axis[2] = MathLib::Vector3::UNIT_Z;
+        extent[0] = extent[1] = extent[2] = sphere_bv->GetSphere().Radius();
+    }
+    else
+    {
+        assert(false);
+    }
 
     m_box = { MathLib::Box3::UNIT_BOX };
 
-    m_box.Center() = mx.TransformCoord(box_bv->m_box.Center());
+    m_box.Center() = mx.TransformCoord(center);
     for (int i = 0; i < 3; i++)
     {
-        m_box.Axis(i) = mx.TransformVector(box_bv->m_box.Axis(i));
+        m_box.Axis(i) = mx.TransformVector(axis[i]);
         float len = m_box.Axis(i).Length();
         m_box.Axis(i).NormalizeSelf();
-        m_box.Extent(i) = len * box_bv->m_box.Extent(i);
+        m_box.Extent(i) = len * extent[i];
     }
 }
 

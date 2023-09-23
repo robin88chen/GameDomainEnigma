@@ -36,20 +36,20 @@ namespace Enigma::Graphics
         /** get buffer format */
         virtual const GraphicFormat& GetFormat() { return m_format; };
         /** get dimension */
-        virtual const MathLib::Dimension& GetDimension() { return m_dimension; }
+        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; }
         
         /// Graphic API Egl need this to bind surfaces together
         virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};
 
-        virtual void ResizeSurface(const MathLib::Dimension& dimension);
+        virtual void ResizeSurface(const MathLib::Dimension<unsigned>& dimension);
 
     protected:
-        virtual error Resize(const MathLib::Dimension& dimension) = 0;
-        virtual future_error AsyncResize(const MathLib::Dimension& dimension);
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) = 0;
+        virtual future_error AsyncResize(const MathLib::Dimension<unsigned>& dimension);
 
     protected:
         std::string m_name;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
 
         GraphicFormat m_format;
     };

@@ -3,6 +3,11 @@
 #include "RenderablePrimitiveBuilder.h"
 #include "RenderTarget.h"
 #include "RendererErrors.h"
+#include "ModelPrimitiveRay3IntersectionFinder.h"
+#include "MeshPrimitiveRay3IntersectionFinder.h"
+#include "GameEngine/IntersectionFinderFactories.h"
+#include "MeshPrimitive.h"
+#include "ModelPrimitive.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -12,6 +17,9 @@ error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_
     assert(service_manager);
     service_manager->RegisterSystemService(std::make_shared<RendererManager>(service_manager));
     service_manager->RegisterSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager));
+
+    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.GetName(), ModelPrimitiveRay3IntersectionFinder::Create);
+    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.GetName(), MeshPrimitiveRay3IntersectionFinder::Create);
     return ErrorCode::ok;
 }
 

@@ -12,16 +12,16 @@ Intersector::~Intersector()
 {
 }
 
-bool Intersector::Test(IntersectorCache* /*last_result*/)
+Intersector::Result Intersector::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // stub for derived class
     assert(false);
-    return false;
+    return { false, nullptr };
 }
 
-bool Intersector::Find(IntersectorCache* last_result)
+Intersector::Result Intersector::Find(std::unique_ptr<IntersectorCache> last_result)
 {
-    return Test(last_result);
+    return Test(std::move(last_result));
 }
 
 Intersector::IntersectionType Intersector::GetIntersectionType() const

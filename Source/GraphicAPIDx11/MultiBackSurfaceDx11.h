@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MultiBackSurfaceDx11.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -19,7 +19,7 @@ namespace Enigma::Devices
     {
     public:
         MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, ID3D11Texture2D** tex, unsigned int buffer_count);  // not support for primary BB
-        MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+        MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt);
         MultiBackSurfaceDx11(const MultiBackSurfaceDx11&) = delete;
         MultiBackSurfaceDx11(MultiBackSurfaceDx11&&) = delete;
@@ -27,7 +27,7 @@ namespace Enigma::Devices
         MultiBackSurfaceDx11& operator=(const MultiBackSurfaceDx11&) = delete;
         MultiBackSurfaceDx11& operator=(MultiBackSurfaceDx11&&) = delete;
 
-        virtual error Resize(const MathLib::Dimension& dimension) override;
+        virtual error Resize(const MathLib::Dimension<unsigned>& dimension) override;
 
         ID3D11Texture2D* GetD3DSurface(unsigned int index);
         ID3D11Texture2D** GetD3DSurfaceArray();
@@ -40,7 +40,7 @@ namespace Enigma::Devices
 
     protected:
         void CreateD3DRenderTarget(ID3D11Device* device, ID3D11Texture2D** texBackbuffer, unsigned int buff_count);
-        error Create(ID3D11Device* device, const MathLib::Dimension& dimension,
+        error Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<Graphics::GraphicFormat>& fmt);
 
     protected:

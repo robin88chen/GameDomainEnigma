@@ -15,14 +15,16 @@
 #include "GameEngine/EffectDtoHelper.h"
 #include "GameEngine/StandardGeometryDtoHelper.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
-#include "Renderer/RenderablePrimitiveRequests.h"
 #include "Renderer/RenderablePrimitiveResponses.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "GameCommon/GameCameraService.h"
 #include "LightingPawnDto.h"
+#include "DeferredRenderingCommands.h"
+#include "Renderer/ModelPrimitive.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -81,6 +83,9 @@ ServiceResult DeferredRendererService::OnInit()
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
+    m_doBindingGBuffer = std::make_shared<CommandSubscriber>([=](auto c) { DoBindingGBuffer(c); });
+    CommandBus::Subscribe(typeid(BindGBuffer), m_doBindingGBuffer);
+
     return SceneRendererService::OnInit();
 }
 
@@ -108,6 +113,9 @@ ServiceResult DeferredRendererService::OnTerm()
     m_onLightingPawnCreated = nullptr;
     EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
+
+    CommandBus::Unsubscribe(typeid(BindGBuffer), m_doBindingGBuffer);
+    m_doBindingGBuffer = nullptr;
 
     m_lightingPawns.clear();
 
@@ -167,7 +175,7 @@ void DeferredRendererService::CreateGBuffer(const Renderer::RenderTargetPtr& pri
     m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
     if (!m_gBuffer.expired())
     {
-        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
+        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
             m_configuration->GbufferFormats());
         m_gBuffer.lock()->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
@@ -344,6 +352,29 @@ void DeferredRendererService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     CheckLightVolumeBackfaceCulling(lighting_pawn->GetHostLightName());
 }
 
+void DeferredRendererService::DoBindingGBuffer(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<BindGBuffer>(c);
+    if (!cmd) return;
+    if ((!cmd->GetPawn()) || (!cmd->GetPawn()->GetPrimitive())) return;
+    if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(cmd->GetPawn()->GetPrimitive()))
+    {
+        const auto mesh_count = model->GetMeshPrimitiveCount();
+        for (unsigned i = 0; i < mesh_count; i++)
+        {
+            if (auto mesh = model->GetMeshPrimitive(i))
+            {
+                BindGBufferToLightingMesh(mesh);
+            }
+        }
+    }
+    else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(cmd->GetPawn()->GetPrimitive()))
+    {
+        BindGBufferToLightingMesh(mesh);
+    }
+}
+
 void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(lit);
@@ -506,12 +537,19 @@ void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrim
     if (m_gBuffer.expired()) return;
     if (!m_gBuffer.lock()->GetRenderTargetTexture()) return;
 
-    EffectTextureMap::EffectTextures textures = {
+    EffectTextureMap::SegmentEffectTextures textures = {
         { m_configuration->GbufferNormalSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
         { m_configuration->GbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
         { m_configuration->GbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
         { m_configuration->GbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
-    mesh->ChangeTextureMap({ textures });
+    if (mesh->GetTextureMapCount() != 0)
+    {
+        mesh->BindSegmentTextures(textures);
+    }
+    else
+    {
+        mesh->ChangeTextureMaps({ textures });
+    }
 }
 
 void DeferredRendererService::BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& lighting_pawn)

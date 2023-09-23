@@ -88,6 +88,12 @@
     <ClCompile Include="LightEditService.cpp">
       <Filter>EditorServices</Filter>
     </ClCompile>
+    <ClCompile Include="EditorSceneConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenePicker.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -157,5 +163,17 @@
     <ClInclude Include="LightEditService.h">
       <Filter>EditorServices</Filter>
     </ClInclude>
+    <ClInclude Include="LevelEditorUiEvents.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSceneConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePicker.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" />
   </ItemGroup>
 </Project>

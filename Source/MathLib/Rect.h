@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   Rect.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -14,14 +14,19 @@ namespace Enigma::MathLib
     class Rect
     {
     public:
+        Rect() = default;
         Rect(int left, int top, int right, int bottom);
 
         /** @name  attribute */
         //@{
         int Left() const;
+        int& Left();
         int Top() const;
+        int& Top();
         int Right() const;
+        int& Right();
         int Bottom() const;
+        int& Bottom();
         int Width() const;
         int Height() const;
         //@}

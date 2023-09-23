@@ -12,9 +12,9 @@
 #include "Frameworks/ServiceManager.h"
 #include "Texture.h"
 #include "Frameworks/Event.h"
-#include "Frameworks/RequestSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
-#include "TextureRequests.h"
+#include "TextureCommands.h"
 #include "TexturePolicies.h"
 #include <queue>
 
@@ -23,6 +23,7 @@ namespace Enigma::Engine
     using error = std::error_code;
 
     class TextureLoader;
+    class TextureImageUpdater;
 
     class TextureRepository : public Frameworks::ISystemService
     {
@@ -47,13 +48,35 @@ namespace Enigma::Engine
     private:
         void OnTextureLoaded(const Frameworks::IEventPtr& e);
         void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
-        void DoLoadingTexture(const Frameworks::IRequestPtr& r);
+        void OnTextureSaved(const Frameworks::IEventPtr& e);
+        void OnSaveTextureFailed(const Frameworks::IEventPtr& e);
+        void OnTextureImageRetrieved(const Frameworks::IEventPtr& e);
+        void OnRetrieveTextureImageFailed(const Frameworks::IEventPtr& e);
+        void OnTextureImageUpdated(const Frameworks::IEventPtr& e);
+        void OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e);
+
+        void DoLoadingTexture(const Frameworks::ICommandPtr& c);
+        void DoSavingTexture(const Frameworks::ICommandPtr& c);
+        void DoRetrievingTextureImage(const Frameworks::ICommandPtr& c);
+        void DoUpdatingTextureImage(const Frameworks::ICommandPtr& c);
+
+        void InvokeRequest(const std::shared_ptr<Frameworks::IRequestCommand>& request);
 
     private:
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
-        Frameworks::RequestSubscriberPtr m_doLoadingTexture;
-        Frameworks::RequestSubscriberPtr m_doCreatingTexture;
+        Frameworks::EventSubscriberPtr m_onTextureSaved;
+        Frameworks::EventSubscriberPtr m_onSaveTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
+        Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
+        Frameworks::EventSubscriberPtr m_onTextureImageUpdated;
+        Frameworks::EventSubscriberPtr m_onUpdateTextureImageFailed;
+
+        Frameworks::CommandSubscriberPtr m_doLoadingTexture;
+        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
+        Frameworks::CommandSubscriberPtr m_doSavingTexture;
+        Frameworks::CommandSubscriberPtr m_doRetrievingTextureImage;
+        Frameworks::CommandSubscriberPtr m_doUpdatingTextureImage;
 
         using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
 
@@ -61,10 +84,11 @@ namespace Enigma::Engine
         std::recursive_mutex m_textureMapLock;
 
         TextureLoader* m_loader;
-        std::queue<std::shared_ptr<RequestLoadTexture>> m_loadRequests;
-        std::queue<std::shared_ptr<RequestCreateTexture>> m_createRequests;
+        TextureImageUpdater* m_updater;
+        std::queue<std::shared_ptr<Frameworks::IRequestCommand>> m_requests;
         Frameworks::Ruid m_currentRequestRuid;
         TexturePolicy::JobType m_currentJob;
+        bool m_currentRequesting;
         std::mutex m_requestsLock;
     };
 }

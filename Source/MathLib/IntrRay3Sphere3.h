@@ -27,8 +27,8 @@ namespace Enigma::MathLib
         const Sphere3& GetSphere() const;
 
         // static test-intersection query
-        virtual bool Test(IntersectorCache* last_result) override;
-        virtual bool Find(IntersectorCache* last_result) override;
+        virtual Result Test(std::unique_ptr<IntersectorCache> last_result) override;
+        virtual Result Find(std::unique_ptr<IntersectorCache> last_result) override;
 
         // the intersection set
         int GetQuantity() const;

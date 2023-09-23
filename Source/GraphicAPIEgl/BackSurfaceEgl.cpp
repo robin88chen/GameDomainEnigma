@@ -9,7 +9,7 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-BackSurfaceEgl::BackSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension, 
+BackSurfaceEgl::BackSurfaceEgl(const std::string& name, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt, bool primary) : IBackSurface(name, primary)
 {
     m_dimension = dimension;
@@ -30,14 +30,14 @@ BackSurfaceEgl::~BackSurfaceEgl()
     }
 }
 
-error BackSurfaceEgl::Resize(const MathLib::Dimension& dimension)
+error BackSurfaceEgl::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     m_dimension = dimension;
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
     return ErrorCode::ok;
 }
 
-void BackSurfaceEgl::CreateFrameBufferTexture(const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt)
+void BackSurfaceEgl::CreateFrameBufferTexture(const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt)
 {
     glGenFramebuffers(1, &m_frameBufferHandle);
 }

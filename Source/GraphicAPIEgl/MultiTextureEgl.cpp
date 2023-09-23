@@ -28,7 +28,7 @@ MultiTextureEgl::~MultiTextureEgl()
     }
 }
 
-error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     assert(count == buffs.size());
     if (!m_textures.empty())
@@ -84,7 +84,7 @@ error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buf
                 return ErrorCode::eglLoadTexture;
             }
 
-            CreateOneFromSystemMemory(i, MathLib::Dimension{ image.width, image.height }, raw_buffer);
+            CreateOneFromSystemMemory(i, MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
             png_image_free(&image);
         }
     }
@@ -150,7 +150,7 @@ const std::vector<GLuint>& MultiTextureEgl::GetTextureHandlesArray() const
     return m_textures;
 }
 
-error MultiTextureEgl::CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
+error MultiTextureEgl::CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
                                                  const byte_buffer& buff)
 {
     if (FATAL_LOG_EXPR((m_textures.empty()) || (index >= m_textures.size()))) return ErrorCode::nullEglTexture;

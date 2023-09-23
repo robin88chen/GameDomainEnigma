@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterialManager.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -14,8 +14,8 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/RequestSubscriber.h"
-#include "EffectRequests.h"
+#include "Frameworks/CommandSubscriber.h"
+#include "EffectCommands.h"
 #include <unordered_map>
 #include <mutex>
 #include <queue>
@@ -50,10 +50,10 @@ namespace Enigma::Engine
         //error CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
-        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void OnCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e);
+        void OnCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
 
-        void DoCompilingEffectMaterial(const Frameworks::IRequestPtr& r);
+        void DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c);
 
         /** release effect material source */
         void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
@@ -63,17 +63,17 @@ namespace Enigma::Engine
     private:
         std::shared_ptr<IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onCompilerEffectMaterialCompiled;
+        Frameworks::EventSubscriberPtr m_onCompilerCompileEffectMaterialFailed;
 
-        Frameworks::RequestSubscriberPtr m_doCompilingEffectMaterial;
+        Frameworks::CommandSubscriberPtr m_doCompilingEffectMaterial;
 
         typedef std::unordered_map<std::string, std::shared_ptr<EffectMaterialSource>> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;
         std::recursive_mutex m_sourceMapLock;
 
         EffectCompiler* m_compiler;
-        std::queue<std::shared_ptr<RequestCompileEffectMaterial>> m_requests;
+        std::queue<std::shared_ptr<CompileEffectMaterial>> m_requests;
         Frameworks::Ruid m_currentCompilingRuid;
         std::string m_currentCompilingEffectName;
         bool m_isCurrentCompiling;

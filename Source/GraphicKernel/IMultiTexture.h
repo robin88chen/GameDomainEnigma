@@ -30,12 +30,12 @@ namespace Enigma::Graphics
         virtual void MultiSave(const std::vector<FileSystem::IFilePtr>& files);
         virtual void MultiSave(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
 
-        virtual void MultiCreate(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
+        virtual void MultiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
 
         virtual bool IsMultiTexture() override { return true; }
 
     protected:
-        virtual error CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;
+        virtual error CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;
 
         virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) = 0;
         virtual future_error AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs);
@@ -59,7 +59,7 @@ namespace Enigma::Graphics
           //  override final {
             //return ER_NOT_IMPLEMENT;
         //};
-        virtual error CreateFromSystemMemory(const MathLib::Dimension&, const byte_buffer&) override final
+        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>&, const byte_buffer&) override final
         {
             return ErrorCode::notImplement;
         };

@@ -24,7 +24,7 @@ MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device
 
     m_formatArray.resize(buffer_count);
     m_surfaceCount = buffer_count;
-    m_dimension = MathLib::Dimension{ 0, 0 };
+    m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     m_d3dSurfaceArray = memalloc(ID3D11Texture2D*, buffer_count);
     assert(m_d3dSurfaceArray);
     for (unsigned int bi = 0; bi < buffer_count; bi++)
@@ -44,14 +44,14 @@ MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device
     CreateD3DRenderTarget(device, tex, buffer_count);
 }
 
-MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension& dimension,
+MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     unsigned int buffer_count, const std::vector<Graphics::GraphicFormat>& fmt) : IMultiBackSurface(name)
 {
     assert(device);
     assert(buffer_count > 1);
     m_formatArray.resize(buffer_count);
     m_surfaceCount = buffer_count;
-    m_dimension = MathLib::Dimension{ 0, 0 };
+    m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     m_d3dSurfaceArray = nullptr;
     m_d3dRenderTargetArray = nullptr;
     Create(device, dimension, buffer_count, fmt);
@@ -66,7 +66,7 @@ MultiBackSurfaceDx11::~MultiBackSurfaceDx11()
     SAFE_FREE(m_d3dSurfaceArray);
 }
 
-error MultiBackSurfaceDx11::Resize(const MathLib::Dimension& dimension)
+error MultiBackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     if (FATAL_LOG_EXPR(m_isPrimary)) return ErrorCode::resizeBackSurfaceFail;
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
@@ -169,7 +169,7 @@ void MultiBackSurfaceDx11::CreateD3DRenderTarget(ID3D11Device* device,
     }
 }
 
-error MultiBackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension& dimension,
+error MultiBackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     unsigned int buff_count, const std::vector<Graphics::GraphicFormat>& fmt)
 {
     assert(device);

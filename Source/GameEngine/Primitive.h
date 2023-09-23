@@ -63,6 +63,9 @@ namespace Enigma::Engine
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) = 0;
 
+        /** get current world transform */
+        virtual const MathLib::Matrix4& GetPrimitiveWorldTransform() { return m_mxPrimitiveWorld; };
+
         /** select visual technique */
         virtual void SelectVisualTechnique(const std::string& techniqueName) { m_selectedVisualTech = techniqueName; };
         /** get selected visual technique */

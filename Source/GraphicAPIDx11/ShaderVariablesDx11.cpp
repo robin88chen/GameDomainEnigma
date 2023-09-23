@@ -636,7 +636,7 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
     }
     else
     {
-        Platforms::Debug::ErrorPrintf("apply texture variable %s(%s) fail", m_name.c_str(), m_semantic.c_str());
+        //Platforms::Debug::ErrorPrintf("apply texture variable %s(%s) fail\n", m_name.c_str(), m_semantic.c_str());
         return ErrorCode::applyTextureVariable;
     }
     /*ID3D11Resource* d3dResource;

@@ -119,43 +119,43 @@ namespace Enigma::Graphics
     class CreateBacksurface : public Frameworks::ICommand
     {
     public:
-        CreateBacksurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        CreateBacksurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt) : m_backName(back_name), m_dimension(dimension), m_fmt(fmt) {};
         const std::string& GetBacksurfaceName() const { return m_backName; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
         const GraphicFormat& GetFormat() const { return m_fmt; }
     private:
         std::string m_backName;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         GraphicFormat m_fmt;
     };
     class CreateMultiBacksurface : public Frameworks::ICommand
     {
     public:
-        CreateMultiBacksurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        CreateMultiBacksurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts)
                 : m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
         const std::string& GetBacksurfaceName() const { return m_backName; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
         unsigned int GetSurfaceCount() const { return m_buffCount; }
         const std::vector<GraphicFormat>& GetFormats() const { return m_fmts; }
     private:
         std::string m_backName;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         unsigned int m_buffCount;
         std::vector<GraphicFormat> m_fmts;
     };
     class CreateDepthStencilSurface : public Frameworks::ICommand
     {
     public:
-        CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt) : m_depthName(depth_name), m_dimension(dimension), m_fmt(fmt) {};
         const std::string& GetDepthStencilSurfaceName() const { return m_depthName; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
         const GraphicFormat& GetFormat() const { return m_fmt; }
     private:
         std::string m_depthName;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         GraphicFormat m_fmt;
     };
     class ShareDepthStencilSurface : public Frameworks::ICommand
@@ -212,7 +212,7 @@ namespace Enigma::Graphics
     class CreateShaderProgram : public Frameworks::ICommand
     {
     public:
-        CreateShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader, 
+        CreateShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader,
             const IPixelShaderPtr& pixel_shader, const IVertexDeclarationPtr& vtx_decl)
             : m_name(name), m_vtxShader(vtx_shader), m_pixelShader(pixel_shader), m_vtxDecl(vtx_decl) {};
         const std::string& GetName() const { return m_name; }

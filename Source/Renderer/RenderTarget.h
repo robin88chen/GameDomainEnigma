@@ -10,9 +10,7 @@
 
 #include "RenderTargetClearingProperties.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/ResponseSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "GraphicKernel/RenderTextureUsage.h"
 #include "MathLib/AlgebraBasicTypes.h"
@@ -67,16 +65,16 @@ namespace Enigma::Renderer
         RenderTarget& operator=(RenderTarget&&) = delete;
 
         /** init Back-Buffer */
-        error InitBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        error InitBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt);
-        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
 
         /** get back buffer interface */
         Graphics::IBackSurfacePtr GetBackSurface() { return m_backSurface; };
 
         /** init DepthStencil Buffer */
-        error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt);
         /** share DepthStencil Buffer */
         error ShareDepthStencilSurface(const std::string& depth_name,
@@ -105,13 +103,13 @@ namespace Enigma::Renderer
         const std::string& GetName() { return m_name; };
 
         /** get dimension. */
-        const MathLib::Dimension& GetDimension() const { return m_dimension; };
+        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };
 
         /** get render target texture */
         Engine::TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
 
         /** resize target */
-        error Resize(const MathLib::Dimension& dimension);
+        error Resize(const MathLib::Dimension<unsigned>& dimension);
 
         std::optional<unsigned> FindRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
 
@@ -136,13 +134,14 @@ namespace Enigma::Renderer
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
-        void OnCreateTextureResponse(const Frameworks::IResponsePtr& r);
+        void OnTextureCreated(const Frameworks::IEventPtr& e);
+        void OnCreateTextureFailed(const Frameworks::IEventPtr& e);
 
     protected:
         bool m_isPrimary;
 
         std::string m_name;
-        MathLib::Dimension m_dimension;
+        MathLib::Dimension<unsigned> m_dimension;
         std::vector<Graphics::RenderTextureUsage> m_usages;
 
         Graphics::IBackSurfacePtr m_backSurface;
@@ -160,7 +159,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
 
-        Frameworks::ResponseSubscriberPtr m_onCreateTextureResponse;
+        Frameworks::EventSubscriberPtr m_onTextureCreated;
+        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
 
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {

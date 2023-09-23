@@ -73,10 +73,16 @@
     <Filter Include="Installing Policies">
       <UniqueIdentifier>{171f8bf3-2c18-4b14-845d-280a052fdb61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Commands &amp; Requests">
+    <Filter Include="Intersect">
+      <UniqueIdentifier>{47ac7be6-0a7d-4a65-9752-d8105c263d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersect\IntersectionFinder">
+      <UniqueIdentifier>{4f93cc7f-2492-456c-a6c6-96f937ec8754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands">
       <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events &amp; Response">
+    <Filter Include="Events">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -91,10 +97,10 @@
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderBuildingPolicies.h">
       <Filter>Shader</Filter>
@@ -142,10 +148,10 @@
       <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h">
       <Filter>Textures</Filter>
@@ -202,7 +208,7 @@
       <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
       <Filter>Geometry Repository</Filter>
@@ -223,13 +229,13 @@
       <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h">
-      <Filter>Events &amp; Response</Filter>
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
-      <Filter>Commands &amp; Requests</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
       <Filter>Effect Material\Effect Compiler</Filter>
@@ -264,17 +270,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectRequests.h">
-      <Filter>Commands &amp; Requests</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
+      <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectResponses.h">
-      <Filter>Events &amp; Response</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRequests.h">
-      <Filter>Commands &amp; Requests</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h">
+      <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResponses.h">
-      <Filter>Events &amp; Response</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
       <Filter>DTOs\Geometry Dto</Filter>
@@ -284,6 +290,27 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
       <Filter>DTOs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h">
+      <Filter>Intersect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.h">
+      <Filter>Intersect\IntersectionFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h">
+      <Filter>Intersect\IntersectionFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
+      <Filter>Textures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +442,21 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
       <Filter>DTOs\Effect Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
+      <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
+      <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp">
+      <Filter>Intersect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp">
+      <Filter>Intersect\IntersectionFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
+      <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -34,10 +34,25 @@ EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const std::
        const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;
+    tex.JobType() = TexturePolicy::JobType::Load;
     tex.Filename() = filename;
     tex.Semantic() = semantic;
     tex.TextureName() = tex_name;
     tex.PathId() = path_id;
+    if (array_index) tex.ArrayIndex() = array_index.value();
+    m_dto.TextureMappings().emplace_back(tex);
+    return *this;
+}
+
+EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const MathLib::Dimension<unsigned>& dimension, 
+    unsigned surface_count, const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic)
+{
+    TextureMappingDto tex;
+    tex.JobType() = TexturePolicy::JobType::Create;
+    tex.Dimension() = dimension;
+    tex.SurfaceCount() = surface_count;
+    tex.Semantic() = semantic;
+    tex.TextureName() = tex_name;
     if (array_index) tex.ArrayIndex() = array_index.value();
     m_dto.TextureMappings().emplace_back(tex);
     return *this;

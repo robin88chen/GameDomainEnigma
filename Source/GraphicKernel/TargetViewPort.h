@@ -1,12 +1,14 @@
 ﻿/********************************************************************
  * \file   TargetViewPort.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
 #ifndef TARGET_VIEWPORT_H
 #define TARGET_VIEWPORT_H
+
+#include "MathLib/Vector2.h"
 
 namespace Enigma::Graphics
 {
@@ -38,6 +40,8 @@ namespace Enigma::Graphics
         inline float& MaxZ() { return m_maxZ; };
 
         bool operator==(const TargetViewPort& vp);
+
+        MathLib::Vector2 ViewportPositionToClippingPosition(const MathLib::Vector2& vp_pos) const;
 
     private:
         unsigned int m_x;

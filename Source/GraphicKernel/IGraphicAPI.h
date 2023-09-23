@@ -215,22 +215,22 @@ namespace Enigma::Graphics
         /** @name back / depth surface */
         //@{
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt) = 0;
-        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts) = 0;
-        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        virtual error CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt) = 0;
         virtual error ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth) = 0;
         virtual error ClearSurface(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value) = 0;
         virtual future_error AsyncCreatePrimaryBackSurface(
             const std::string& back_name, const std::string& depth_name);
-        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt);
-        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension& dimension,
+        virtual future_error AsyncCreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts);
-        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension& dimension,
+        virtual future_error AsyncCreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
             const GraphicFormat& fmt);
         virtual future_error AsyncShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth);
         virtual future_error AsyncClearSurface(

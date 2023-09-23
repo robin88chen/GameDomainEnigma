@@ -27,10 +27,10 @@ namespace Enigma::MathLib
         const Sphere3& GetSphere() const;
 
         // test-intersection query
-        virtual bool Test(IntersectorCache* last_result) override;
+        virtual Result Test(std::unique_ptr<IntersectorCache> last_result) override;
 
         // find-intersection query
-        virtual bool Find(IntersectorCache* last_result) override;
+        virtual Result Find(std::unique_ptr<IntersectorCache> last_result) override;
         int GetQuantity() const;
         const Vector3& GetPoint(int i) const;
         float GetLineT(int i) const;

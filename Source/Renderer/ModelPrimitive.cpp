@@ -17,6 +17,7 @@ DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
 ModelPrimitive::ModelPrimitive(const std::string& name) : Primitive()
 {
+    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName());
     m_name = name;
     m_meshPrimitiveIndexCache.clear();
 }

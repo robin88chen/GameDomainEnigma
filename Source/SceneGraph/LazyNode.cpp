@@ -19,7 +19,7 @@ LazyNode::~LazyNode()
 {
 }
 
-GenericDto LazyNode::SerializeDto()
+/*GenericDto LazyNode::SerializeDto()
 {
     NodeDto node_dto(SerializeSpatialDto());  // 基本的 spatial data
     if ((m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
@@ -37,7 +37,7 @@ GenericDto LazyNode::SerializeDto()
     {
         return node_dto.ToGenericDto();
     }
-}
+}*/
 
 GenericDto LazyNode::SerializeAsLaziness()
 {

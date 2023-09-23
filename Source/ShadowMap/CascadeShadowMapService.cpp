@@ -77,7 +77,7 @@ void CascadeShadowMapService::CreateShadowRenderSystem(const std::string& render
     m_shadowMapDimensionBiasDensity[2] = m_configuration->ShadowMapDepthBias();
     m_shadowMapDimensionBiasDensity[3] = m_configuration->ShadowMapDensity();
 
-    MathLib::Dimension fullDimension{ m_configuration->ShadowMapDimension().m_width* m_configuration->FrustaPartitionCount(),
+    MathLib::Dimension<unsigned> fullDimension{ m_configuration->ShadowMapDimension().m_width* m_configuration->FrustaPartitionCount(),
         m_configuration->ShadowMapDimension().m_height };
     TargetViewPort fullViewPort(0, 0, fullDimension.m_width, fullDimension.m_height);
     Engine::IRendererPtr renderer = std::make_shared<CascadeShadowMapRenderer>(renderer_name);

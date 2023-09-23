@@ -14,12 +14,12 @@ extern DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFor
 extern unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt);
 
 DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11Device* device,
-    const MathLib::Dimension& dimension, const Graphics::GraphicFormat& fmt) : IDepthStencilSurface(name)
+    const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt) : IDepthStencilSurface(name)
 {
     assert(device);
     m_d3dSurface = nullptr;
     m_d3dDepthView = nullptr;
-    m_dimension = MathLib::Dimension{ 0, 0 };
+    m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     Create(device, dimension, fmt);
     if (m_d3dSurface) CreateD3DDepthView(device);
 }
@@ -29,7 +29,7 @@ DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11
 {
     m_d3dSurface = buff;
     m_d3dDepthView = nullptr;
-    m_dimension = MathLib::Dimension{ 0, 0 };
+    m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     if (m_d3dSurface)
     {
         D3D11_TEXTURE2D_DESC desc;
@@ -58,7 +58,7 @@ DepthStencilSurfaceDx11::~DepthStencilSurfaceDx11()
     SAFE_RELEASE(m_d3dDepthView);
 }
 
-error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension& dimension)
+error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
     assert(graphic);
@@ -75,7 +75,7 @@ error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension& dimension)
     return er;
 }
 
-error DepthStencilSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension& dimension, 
+error DepthStencilSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     assert(device);

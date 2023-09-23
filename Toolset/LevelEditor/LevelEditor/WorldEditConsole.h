@@ -37,6 +37,7 @@ namespace LevelEditor
 
         const std::string& GetCurrentWorldName() const { return m_currentWorldName; }
         const std::string& GetCurrentWorldFolder() const { return m_currentWorldFolder; }
+        const std::string& GetWorldMapPathId() const { return m_worldMapPathId; }
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
 

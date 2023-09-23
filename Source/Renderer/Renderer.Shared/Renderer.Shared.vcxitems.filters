@@ -43,6 +43,9 @@
     <Filter Include="RenderableBoundFilter">
       <UniqueIdentifier>{229f3bbb-1de2-44a5-826f-e1c26eafb48d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderable Primitives\Intersection">
+      <UniqueIdentifier>{bac101d5-00e8-4b9f-894b-14e1534632c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
@@ -120,6 +123,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h">
       <Filter>RenderableBoundFilter</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h">
+      <Filter>Renderable Primitives\Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h">
+      <Filter>Renderable Primitives\Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h">
+      <Filter>Renderable Primitives\Intersection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">
@@ -181,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp">
       <Filter>RenderableBoundFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp">
+      <Filter>Renderable Primitives\Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp">
+      <Filter>Renderable Primitives\Intersection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,6 +14,7 @@
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 #include <unordered_map>
 
@@ -71,6 +72,8 @@ namespace Enigma::GameCommon
         void OnLightingPawnCreated(const Frameworks::IEventPtr& e);
         void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
+        void DoBindingGBuffer(const Frameworks::ICommandPtr& c);
+
         void OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
 
         std::shared_ptr<LightingPawn> FindLightingPawn(const std::string& name);
@@ -107,6 +110,8 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Frameworks::EventSubscriberPtr m_onLightingPawnCreated;
         Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+
+        Frameworks::CommandSubscriberPtr m_doBindingGBuffer;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

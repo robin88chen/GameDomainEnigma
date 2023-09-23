@@ -135,6 +135,7 @@
     <ClCompile Include="AddTerrainDialog.cpp" />
     <ClCompile Include="AppConfiguration.cpp" />
     <ClCompile Include="CreateNewWorldDlg.cpp" />
+    <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="LightEditService.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="propertygrid\propertygrid.cpp" />
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SceneGraphPanel.cpp" />
+    <ClCompile Include="ScenePicker.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
     <ClCompile Include="SpatialInspectorToolPanel.cpp" />
     <ClCompile Include="TerrainEditConsole.cpp" />
@@ -161,10 +163,12 @@
     <ClInclude Include="AppConfiguration.h" />
     <ClInclude Include="CreateNewWorldDlg.h" />
     <ClInclude Include="EditorModes.h" />
+    <ClInclude Include="EditorSceneConsole.h" />
     <ClInclude Include="EditorUtilities.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
     <ClInclude Include="LevelEditorEvents.h" />
+    <ClInclude Include="LevelEditorUiEvents.h" />
     <ClInclude Include="LightEditService.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />
@@ -173,6 +177,7 @@
     <ClInclude Include="propertygrid\propertygrid.h" />
     <ClInclude Include="RenderPanel.h" />
     <ClInclude Include="SceneGraphPanel.h" />
+    <ClInclude Include="ScenePicker.h" />
     <ClInclude Include="SchemeColorDef.h" />
     <ClInclude Include="SpatialInspectorToolPanel.h" />
     <ClInclude Include="TerrainEditConsole.h" />
@@ -180,6 +185,9 @@
     <ClInclude Include="TerrainToolPanel.h" />
     <ClInclude Include="WorldEditConsole.h" />
     <ClInclude Include="WorldEditService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -197,7 +197,7 @@ void DaeParser::ComposeModelPrimitiveDto()
     m_pawn.WorldTransform() = Matrix4::IDENTITY;
     m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
     m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowCaster);
+    m_pawn.SpatialFlag() = static_cast<unsigned>(SpatialShadowFlags::Spatial_ShadowCaster);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)
@@ -1247,6 +1247,7 @@ EffectTextureMapDto DaeParser::MakeEffectTextureMapDto(const std::string& filena
 {
     EffectTextureMapDto dto;
     TextureMappingDto tex;
+    tex.JobType() = TexturePolicy::JobType::Load;
     tex.Filename() = filename;
     tex.Semantic() = semantic;
     tex.TextureName() = tex_name;

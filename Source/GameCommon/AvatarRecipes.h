@@ -12,6 +12,7 @@
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace Enigma::GameCommon
 {
@@ -57,14 +58,16 @@ namespace Enigma::GameCommon
     private:
         void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
 
-        void OnCompileEffectResponse(const Frameworks::IResponsePtr& r);
+        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
+        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::weak_ptr<Engine::Primitive> m_primitive;
         std::string m_oldMaterialName;
         Engine::EffectMaterialDto m_newMaterialDto;
 
-        Frameworks::ResponseSubscriberPtr m_onCompileEffectResponse;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
+        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
         using ChangeSpecifyMaterial = std::function<void(const std::shared_ptr<Engine::EffectMaterial>&)>;
         std::unordered_map<Frameworks::Ruid, ChangeSpecifyMaterial, Frameworks::Ruid::HashFunc> m_changeSpecifyMaterialMap;
     };
@@ -85,12 +88,14 @@ namespace Enigma::GameCommon
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
-        void OnLoadTextureResponse(const Frameworks::IResponsePtr& r);
+        void OnTextureLoaded(const Frameworks::IEventPtr& e);
+        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
-        Frameworks::ResponseSubscriberPtr m_onLoadTextureResponse;
+        Frameworks::EventSubscriberPtr m_onTextureLoaded;
+        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
         Frameworks::Ruid m_requsetRuid;
     };

@@ -31,7 +31,7 @@ TextureEgl::~TextureEgl()
     }
 }
 
-error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension& dimension, const byte_buffer& buff)
+error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     if (m_texture != 0)
     {
@@ -82,7 +82,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
             return ErrorCode::eglLoadTexture;
         }
 
-        CreateFromSystemMemory(MathLib::Dimension{ image.width, image.height }, raw_buffer);
+        CreateFromSystemMemory(MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
         png_image_free(&image);
 
         Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
@@ -118,7 +118,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
         GL_RGBA, GL_UNSIGNED_BYTE, &img_buff[0]);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(m_name, rcDest));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
 
     return ErrorCode::ok;
 }

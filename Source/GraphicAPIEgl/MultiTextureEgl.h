@@ -37,8 +37,8 @@ namespace Enigma::Devices
         virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
         virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
 
-        virtual error CreateFromSystemMemories(const MathLib::Dimension& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
-        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension& dimension,
+        virtual error CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
+        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
             const byte_buffer& buff);
     protected:
         std::vector<GLuint> m_textures;

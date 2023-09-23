@@ -33,7 +33,7 @@ namespace Enigma::Devices
 
         error Present();
 
-        error ResizeBackSurfaces(const MathLib::Dimension& dimension);
+        error ResizeBackSurfaces(const MathLib::Dimension<unsigned>& dimension);
 
     protected:
         friend DeviceCreatorDx11;

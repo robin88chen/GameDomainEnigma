@@ -16,7 +16,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::FileSystem;
 using namespace Enigma::WorldMap;
 
-Rtti WorldEditConsole::TYPE_RTTI{"LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI};
+Rtti WorldEditConsole::TYPE_RTTI{ "LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI };
 
 WorldEditConsole::WorldEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service) : ISystemService(srv_mngr)
 {
@@ -84,6 +84,7 @@ void WorldEditConsole::CreateWorldMapFolder(const std::string& folder_name)
 void WorldEditConsole::SaveWorldMap()
 {
     assert(!m_worldEditService.expired());
+    CommandBus::Post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
     auto [map_graph, node_graphs] = m_worldEditService.lock()->SerializeWorldMapAndNodeGraphs(m_worldMapPathId);
     if (!map_graph.empty())
     {

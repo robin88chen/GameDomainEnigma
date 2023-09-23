@@ -17,7 +17,7 @@ Texture::~Texture()
     m_texture = nullptr;
 }
 
-const Enigma::MathLib::Dimension& Texture::GetDimension()
+const Enigma::MathLib::Dimension<unsigned>& Texture::GetDimension()
 {
     assert(m_texture);
     return m_texture->GetDimension();

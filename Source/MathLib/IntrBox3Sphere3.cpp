@@ -18,7 +18,7 @@ const Sphere3& IntrBox3Sphere3::GetSphere() const
     return m_sphere;
 }
 
-bool IntrBox3Sphere3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox3Sphere3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // Test for intersection in the coordinate system of the box by
     // transforming the sphere into that coordinate system.
@@ -38,12 +38,12 @@ bool IntrBox3Sphere3::Test(IntersectorCache* /*last_result*/)
             if (az <= m_box.Extent(2))
             {
                 // sphere center inside box
-                return true;
+                return { true, nullptr };
             }
             else
             {
                 // potential sphere-face intersection with face z
-                return dz <= m_sphere.Radius();
+                return { dz <= m_sphere.Radius(), nullptr };
             }
         }
         else
@@ -51,14 +51,14 @@ bool IntrBox3Sphere3::Test(IntersectorCache* /*last_result*/)
             if (az <= m_box.Extent(2))
             {
                 // potential sphere-face intersection with face y
-                return dy <= m_sphere.Radius();
+                return { dy <= m_sphere.Radius(), nullptr };
             }
             else
             {
                 // potential sphere-edge intersection with edge formed
                 // by faces y and z
                 float sqrRadius = m_sphere.Radius() * m_sphere.Radius();
-                return dy * dy + dz * dz <= sqrRadius;
+                return { dy * dy + dz * dz <= sqrRadius, nullptr };
             }
         }
     }
@@ -69,14 +69,14 @@ bool IntrBox3Sphere3::Test(IntersectorCache* /*last_result*/)
             if (az <= m_box.Extent(2))
             {
                 // potential sphere-face intersection with face x
-                return dx <= m_sphere.Radius();
+                return { dx <= m_sphere.Radius(), nullptr };
             }
             else
             {
                 // potential sphere-edge intersection with edge formed
                 // by faces x and z
                 float sqrRadius = m_sphere.Radius() * m_sphere.Radius();
-                return dx * dx + dz * dz <= sqrRadius;
+                return { dx * dx + dz * dz <= sqrRadius, nullptr };
             }
         }
         else
@@ -86,14 +86,14 @@ bool IntrBox3Sphere3::Test(IntersectorCache* /*last_result*/)
                 // potential sphere-edge intersection with edge formed
                 // by faces x and y
                 float sqrRadius = m_sphere.Radius() * m_sphere.Radius();
-                return dx * dx + dy * dy <= sqrRadius;
+                return { dx * dx + dy * dy <= sqrRadius, nullptr };
             }
             else
             {
                 // potential sphere-vertex intersection at corner formed
                 // by faces x,y,z
                 float sqrRadius = m_sphere.Radius() * m_sphere.Radius();
-                return dx * dx + dy * dy + dz * dz <= sqrRadius;
+                return { dx * dx + dy * dy + dz * dz <= sqrRadius, nullptr };
             }
         }
     }

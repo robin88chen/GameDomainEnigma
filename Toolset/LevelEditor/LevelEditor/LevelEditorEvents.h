@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LevelEditorEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -11,6 +11,7 @@
 #include "Frameworks/Event.h"
 #include "EditorModes.h"
 #include "SceneGraph/Spatial.h"
+#include "SceneGraph/Pawn.h"
 
 namespace LevelEditor
 {
@@ -43,6 +44,54 @@ namespace LevelEditor
     protected:
         std::shared_ptr<Enigma::SceneGraph::Spatial> m_spatial;
         PickedFrom m_from;
+    };
+    class SceneCursorMoved : public Enigma::Frameworks::IEvent
+    {
+    public:
+        SceneCursorMoved(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn) : m_pos(pos), m_hoveredPawn(hovered_pawn) {}
+
+        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
+
+    protected:
+        Enigma::MathLib::Vector3 m_pos;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
+    };
+    class SceneCursorPressed : public Enigma::Frameworks::IEvent
+    {
+    public:
+        SceneCursorPressed(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn) : m_pos(pos), m_pickedPawn(picked_pawn) {}
+
+        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
+
+    protected:
+        Enigma::MathLib::Vector3 m_pos;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_pickedPawn;
+    };
+    class SceneCursorReleased : public Enigma::Frameworks::IEvent
+    {
+    public:
+        SceneCursorReleased(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn) : m_pos(pos), m_pickedPawn(picked_pawn) {}
+
+        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
+
+    protected:
+        Enigma::MathLib::Vector3 m_pos;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_pickedPawn;
+    };
+    class SceneCursorDragged : public Enigma::Frameworks::IEvent
+    {
+    public:
+        SceneCursorDragged(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn) : m_pos(pos), m_hoveredPawn(hovered_pawn) {}
+
+        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
+
+    protected:
+        Enigma::MathLib::Vector3 m_pos;
+        std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
     };
 }
 

@@ -19,7 +19,7 @@ const Box3& IntrBox3Box3::GetBox1() const
     return m_box1;
 }
 
-bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
+Intersector::Result IntrBox3Box3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // Cutoff for cosine of angles between box axes.  This is used to catch
     // the cases when at least one pair of axes are parallel.  If this happens,
@@ -57,7 +57,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[0][0] + extentB[1] * absC[0][1] + extentB[2] * absC[0][2];
     radius01 = extentA[0] + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A1
     for (i = 0; i < 3; i++)
@@ -72,7 +72,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[1][0] + extentB[1] * absC[1][1] + extentB[2] * absC[1][2];
     radius01 = extentA[1] + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A2
     for (i = 0; i < 3; i++)
@@ -87,34 +87,34 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[2][0] + extentB[1] * absC[2][1] + extentB[2] * absC[2][2];
     radius01 = extentA[2] + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*B0
     radius = fabs(axisB[0].Dot(vecD));
     radius0 = extentA[0] * absC[0][0] + extentA[1] * absC[1][0] + extentA[2] * absC[2][0];
     radius01 = radius0 + extentB[0];
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*B1
     radius = fabs(axisB[1].Dot(vecD));
     radius0 = extentA[0] * absC[0][1] + extentA[1] * absC[1][1] + extentA[2] * absC[2][1];
     radius01 = radius0 + extentB[1];
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*B2
     radius = fabs(axisB[2].Dot(vecD));
     radius0 = extentA[0] * absC[0][2] + extentA[1] * absC[1][2] + extentA[2] * absC[2][2];
     radius01 = radius0 + extentB[2];
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // At least one pair of box axes was parallel, so the separation is
     // effectively in 2D where checking the "edge" normals is sufficient for
     // the separation of the boxes.
     if (isExistsParallelPair)
-        return true;
+        return { true, nullptr };
 
     // axis C0+t*A0xB0
     radius = fabs(axDotD[2] * mxC[1][0] - axDotD[1] * mxC[2][0]);
@@ -122,7 +122,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[1] * absC[0][2] + extentB[2] * absC[0][1];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A0xB1
     radius = fabs(axDotD[2] * mxC[1][1] - axDotD[1] * mxC[2][1]);
@@ -130,7 +130,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[0][2] + extentB[2] * absC[0][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A0xB2
     radius = fabs(axDotD[2] * mxC[1][2] - axDotD[1] * mxC[2][2]);
@@ -138,7 +138,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[0][1] + extentB[1] * absC[0][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A1xB0
     radius = fabs(axDotD[0] * mxC[2][0] - axDotD[2] * mxC[0][0]);
@@ -146,7 +146,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[1] * absC[1][2] + extentB[2] * absC[1][1];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A1xB1
     radius = fabs(axDotD[0] * mxC[2][1] - axDotD[2] * mxC[0][1]);
@@ -154,7 +154,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[1][2] + extentB[2] * absC[1][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A1xB2
     radius = fabs(axDotD[0] * mxC[2][2] - axDotD[2] * mxC[0][2]);
@@ -162,7 +162,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[1][1] + extentB[1] * absC[1][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A2xB0
     radius = fabs(axDotD[1] * mxC[0][0] - axDotD[0] * mxC[1][0]);
@@ -170,7 +170,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[1] * absC[2][2] + extentB[2] * absC[2][1];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A2xB1
     radius = fabs(axDotD[1] * mxC[0][1] - axDotD[0] * mxC[1][1]);
@@ -178,7 +178,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[2][2] + extentB[2] * absC[2][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
     // axis C0+t*A2xB2
     radius = fabs(axDotD[1] * mxC[0][2] - axDotD[0] * mxC[1][2]);
@@ -186,7 +186,7 @@ bool IntrBox3Box3::Test(IntersectorCache* /*last_result*/)
     radius1 = extentB[0] * absC[2][1] + extentB[1] * absC[2][0];
     radius01 = radius0 + radius1;
     if (radius > radius01)
-        return false;
+        return { false, nullptr };
 
-    return true;
+    return { true, nullptr };
 }

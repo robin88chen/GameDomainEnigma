@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainEditService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -11,6 +11,11 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Terrain/TerrainPawn.h"
+#include "Terrain/TerrainGeometry.h"
+#include "Terrain/TerrainPrimitive.h"
+#include "MathLib/Rect.h"
+#include "FileSystem/IFile.h"
 
 namespace LevelEditor
 {
@@ -30,14 +35,64 @@ namespace LevelEditor
 
     protected:
         void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
-        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void DoMovingUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
+        void DoPaintingTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
+        void DoCompletingEditOperation(const Enigma::Frameworks::ICommandPtr& c);
+        void DoSavingSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
 
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+
+        void OnSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e);
+        void OnSaveSplatTextureFailed(const Enigma::Frameworks::IEventPtr& e);
+        void OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
+        void OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e);
+
+        void MoveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
+        void MoveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
+        void CommitHeightMapUpdated(const std::shared_ptr<Enigma::Terrain::TerrainPrimitive>& terrain_primitive, const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry);
+
+        void PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density);
+        void PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density);
+        void AddLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density);
+        void CommitAlphaTexelUpdated();
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
+        static std::array<std::string, TextureLayerNum> LayerSemantics;
 
     protected:
+        std::weak_ptr<Enigma::Terrain::TerrainPawn> m_pickedTerrain;
+        std::unordered_map<std::string, std::weak_ptr<Enigma::Engine::Texture>> m_splatTextures;
+        std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;
+
         Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
+        Enigma::Frameworks::CommandSubscriberPtr m_doMovingUpTerrainVertex;
+        Enigma::Frameworks::CommandSubscriberPtr m_doPaintingTerrainLayer;
+        Enigma::Frameworks::CommandSubscriberPtr m_doCompletingEditOperation;
+        Enigma::Frameworks::CommandSubscriberPtr m_doSavingSplatTexture;
+
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onSplatTextureSaved;
+        Enigma::Frameworks::EventSubscriberPtr m_onSaveSplatTextureFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
+        Enigma::Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
+
+        std::string m_terrainPathId;
+
+        bool m_isHeightMapDirty;
+        unsigned m_dirtyVtxMinIndex;
+        unsigned m_dirtyVtxMaxIndex;
+        byte_buffer m_alphaTexels;
+        Enigma::MathLib::Rect m_alphaRect;
+        Enigma::Frameworks::Ruid m_retrieveTextureImageRuid;
+        byte_buffer m_dirtyAlphaTexels;
+        Enigma::MathLib::Rect m_dirtyAlphaRect;
+
+        Enigma::FileSystem::IFilePtr m_savingSplatTextureFile;
     };
 }
 

@@ -152,7 +152,7 @@ void ShadowMapService::OnLightInfoDeleted(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
-    if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
+    if (ev->GetLightType() != LightInfo::LightType::SunLight) return;
     DeleteSunLightCamera();
 }
 
@@ -234,7 +234,7 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
     if (!mesh) return;
     if (m_shadowMapRenderTarget.expired()) return;
 
-    mesh->BindTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
+    mesh->BindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
 }
 
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)

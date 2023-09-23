@@ -2,13 +2,12 @@
 #include "EffectMaterialSource.h"
 #include "EffectMaterial.h"
 #include "EffectCompiler.h"
-#include "EffectResponses.h"
+#include "EffectEvents.h"
 #include "EngineErrors.h"
-#include "EffectRequests.h"
+#include "EffectCommands.h"
 #include "EffectMaterialDto.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/RequestBus.h"
-#include "Frameworks/ResponseBus.h"
+#include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
@@ -37,18 +36,18 @@ EffectMaterialManager::~EffectMaterialManager()
 
 Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
 {
-    m_onEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnEffectMaterialCompiled(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnCompileEffectMaterialFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    m_onCompilerEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerEffectMaterialCompiled(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
+    m_onCompilerCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerCompileEffectMaterialFailed(e); });
+    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
 
-    m_doCompilingEffectMaterial = std::make_shared<Frameworks::RequestSubscriber>([=](auto c) { this->DoCompilingEffectMaterial(c); });
-    Frameworks::RequestBus::Subscribe(typeid(RequestCompileEffectMaterial), m_doCompilingEffectMaterial);
+    m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCompilingEffectMaterial(c); });
+    Frameworks::CommandBus::Subscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
 
     EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
-    {
-        ReleaseEffectMaterialSource(eff);
-    };
+        {
+            ReleaseEffectMaterialSource(eff);
+        };
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -74,12 +73,12 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
 
 Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTerm()
 {
-    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onEffectMaterialCompiled = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
-    m_onCompileEffectMaterialFailed = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
+    m_onCompilerEffectMaterialCompiled = nullptr;
+    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
+    m_onCompilerCompileEffectMaterialFailed = nullptr;
 
-    Frameworks::RequestBus::Unsubscribe(typeid(RequestCompileEffectMaterial), m_doCompilingEffectMaterial);
+    Frameworks::CommandBus::Unsubscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
     m_doCompilingEffectMaterial = nullptr;
 
     return Frameworks::ServiceResult::Complete;
@@ -107,7 +106,7 @@ EffectMaterialPtr EffectMaterialManager::QueryEffectMaterial(const std::string& 
     return ErrorCode::ok;
 }*/
 
-void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr& e)
+void EffectMaterialManager::OnCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
     assert(m_compiler);
     if (!e) return;
@@ -122,30 +121,30 @@ void EffectMaterialManager::OnEffectMaterialCompiled(const Frameworks::IEventPtr
         source->LinkSource();
         m_sourceMaterials.insert_or_assign(ev->GetName(), source);
     }
-    Frameworks::ResponseBus::Post(std::make_shared<CompileEffectMaterialResponse>(
-        m_currentCompilingRuid, ev->GetName(), QueryEffectMaterial(ev->GetName()), ErrorCode::ok));
+    Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
+        m_currentCompilingRuid, ev->GetName(), QueryEffectMaterial(ev->GetName())));
     m_isCurrentCompiling = false;
 }
 
-void EffectMaterialManager::OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
+void EffectMaterialManager::OnCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EffectCompiler::CompileEffectMaterialFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
         ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
-    Frameworks::ResponseBus::Post(std::make_shared<CompileEffectMaterialResponse>(
-        m_currentCompilingRuid, ev->GetName(), nullptr, ev->GetErrorCode()));
+    Frameworks::EventPublisher::Post(std::make_shared<Engine::CompileEffectMaterialFailed>(
+        m_currentCompilingRuid, ev->GetName(), ev->GetErrorCode()));
     m_isCurrentCompiling = false;
 }
 
-void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::IRequestPtr& r)
+void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c)
 {
-    if (!r) return;
-    auto req = std::dynamic_pointer_cast<RequestCompileEffectMaterial, Frameworks::IRequest>(r);
-    if (!req) return;
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<CompileEffectMaterial>(c);
+    if (!cmd) return;
     std::lock_guard locker{ m_requestLock };
-    m_requests.push(req);
+    m_requests.push(cmd);
     m_needTick = true;
     //CompileEffectMaterial(cmd->GetPolicy());
 }

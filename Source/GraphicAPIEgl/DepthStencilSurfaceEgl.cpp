@@ -11,7 +11,7 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-DepthStencilSurfaceEgl::DepthStencilSurfaceEgl(const std::string& name, const MathLib::Dimension& dimension, 
+DepthStencilSurfaceEgl::DepthStencilSurfaceEgl(const std::string& name, const MathLib::Dimension<unsigned>& dimension, 
     const Graphics::GraphicFormat& fmt) : IDepthStencilSurface(name)
 {
     m_dimension = dimension;
@@ -51,7 +51,7 @@ void DepthStencilSurfaceEgl::MakeBackSurfaceRelated(const Graphics::IBackSurface
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_frameBufferHandle);
 }
 
-error DepthStencilSurfaceEgl::Resize(const MathLib::Dimension& dimension)
+error DepthStencilSurfaceEgl::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     m_dimension = dimension;
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));

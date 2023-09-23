@@ -45,21 +45,19 @@ namespace Enigma::FileSystem
         /** The mount path id */
         void SetMountPathID(const std::string& path_id);
 
-        std::string GetDir();  ///< Optional directory path, including trailing slash. Forward slashes ( / ), backslashes ( \ ), or both may be used.
-        std::string GetDrive(); ///< Optional drive letter, followed by a colon (:)
-        std::string GetExt(); ///< Optional filename extension, including leading period (.)
-        std::string GetBaseFileName(); ///< Base filename (no extension)
-        std::string GetFileName(); ///< filename (with extension)
+        const std::string& GetDir() const;  ///< Optional directory path, including trailing slash. Forward slashes ( / ), backslashes ( \ ), or both may be used.
+        const std::string& GetDrive() const; ///< Optional drive letter, followed by a colon (:)
+        const std::string& GetExt() const; ///< Optional filename extension, including leading period (.)
+        const std::string& GetBaseFileName() const; ///< Base filename (no extension)
         const std::string& GetFileName() const; ///< filename (with extension)
 
-        std::string GetFullPath();
-        std::string GetPath();  ///< get file path, like : "C:\Game\Media\"
-        std::string GetMountPathID(); ///< get mount path ID
+        std::string GetFullPath() const;
+        std::string GetPath() const;  ///< get file path, like : "C:\Game\Media\"
         const std::string& GetMountPathID() const; ///< get mount path ID
-        std::string GetFullFileNameAtPath(); ///< return "fullpath@path_id"
-        std::string GetFileNameAtPath(); ///< return "filename(with extension)@path_id"
+        std::string GetFullFileNameAtPath() const; ///< return "fullpath@path_id"
+        std::string GetFileNameAtPath() const; ///< return "filename(with extension)@path_id"
         const std::string& GetSubPathFileName() const; ///< return the filepath when using filepath constructor, 必須提供這個, 否則跟PathID 組合後, 子目錄路徑會被組合掉
-        std::string GetSubPathFileNameAtPath();
+        std::string GetSubPathFileNameAtPath() const;
 
         bool HasPathID() const;
 

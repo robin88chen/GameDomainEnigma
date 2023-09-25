@@ -1,4 +1,4 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   CameraFrustumCommands.h
  * \brief
  *
@@ -24,16 +24,6 @@ namespace Enigma::SceneGraph
     protected:
         Engine::GenericDto m_dto;
     };
-    class CreateFrustum : public Frameworks::ICommand
-    {
-    public:
-        CreateFrustum(const Engine::GenericDto& dto) : m_dto(dto) {}
-
-        const Engine::GenericDto& GetDto() { return m_dto; }
-
-    protected:
-        Engine::GenericDto m_dto;
-    };
 
     class QueryCamera : public Frameworks::IRequestCommand
     {
@@ -42,15 +32,6 @@ namespace Enigma::SceneGraph
 
         const std::string& GetName() { return m_name; }
 
-    protected:
-        std::string m_name;
-    };
-    class QueryFrustum : public Frameworks::IRequestCommand
-    {
-    public:
-        QueryFrustum(const std::string& name) : m_name(name) {}
-
-        const std::string& GetName() { return m_name; }
     protected:
         std::string m_name;
     };

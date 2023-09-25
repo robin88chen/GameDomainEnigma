@@ -9,10 +9,9 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/CameraFrustumCommands.h"
+#include "Platforms/PlatformLayer.h"
 #include <cassert>
 #include <memory>
-
-#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -25,7 +24,7 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Ca
 {
     m_name = name;
     m_handSys = hand;
-    m_cullingFrustum = nullptr;
+    m_cullingFrustum = Frustum(hand, Frustum::ProjectionType::Perspective);
     m_vecLocation = Vector3::ZERO;
     m_vecEyeToLookAt = Vector3::UNIT_Z;
     m_vecUp = Vector3::UNIT_Y;
@@ -38,29 +37,11 @@ Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti())
     m_name = camera_dto.Name();
     m_handSys = camera_dto.HandSystem();
     ChangeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
-    //todo : 要改成 lazy load
-    m_cullingFrustumName = camera_dto.Frustum().GetName();
-    m_onFrustumCreated = std::make_shared<EventSubscriber>([=](auto e) { OnFrustumCreated(e); });
-    EventPublisher::Subscribe(typeid(FrustumCreated), m_onFrustumCreated);
-    m_onCreateFrustumFailed = std::make_shared<EventSubscriber>([=](auto e) { OnCreateFrustumFailed(e); });
-    EventPublisher::Subscribe(typeid(CreateFrustumFailed), m_onCreateFrustumFailed);
-
-    CommandBus::Post(std::make_shared<CreateFrustum>(camera_dto.Frustum()));
+    m_cullingFrustum = Frustum(camera_dto.Frustum());
 }
 
 Camera::~Camera()
 {
-    if (m_onFrustumCreated)
-    {
-        EventPublisher::Unsubscribe(typeid(FrustumCreated), m_onFrustumCreated);
-        m_onFrustumCreated = nullptr;
-    }
-    if (m_onCreateFrustumFailed)
-    {
-        EventPublisher::Unsubscribe(typeid(CreateFrustumFailed), m_onCreateFrustumFailed);
-        m_onCreateFrustumFailed = nullptr;
-    }
-    m_cullingFrustum = nullptr;
 }
 
 GenericDto Camera::SerializeDto()
@@ -72,7 +53,7 @@ GenericDto Camera::SerializeDto()
     dto.EyePosition() = m_vecLocation;
     dto.LookAtDirection() = m_vecEyeToLookAt;
     dto.UpVector() = m_vecUp;
-    dto.Frustum() = m_cullingFrustum->SerializeDto();
+    dto.Frustum() = m_cullingFrustum.SerializeDto();
     return dto.ToGenericDto();
 }
 
@@ -183,9 +164,8 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     return er;
 }
 
-error Camera::SetCullingFrustum(const FrustumPtr& frustum)
+error Camera::SetCullingFrustum(const Frustum& frustum)
 {
-    assert(frustum);  // must valid pointer
     m_cullingFrustum = frustum;
 
     return ErrorCode::ok;
@@ -202,21 +182,6 @@ void Camera::_UpdateViewTransform()
 
 const Matrix4& Camera::GetProjectionTransform()
 {
-    return m_cullingFrustum->GetProjectionTransform();
+    return m_cullingFrustum.GetProjectionTransform();
 }
 
-void Camera::OnFrustumCreated(const IEventPtr& e)
-{
-    if (!e) return;
-    auto frustum_created = std::dynamic_pointer_cast<FrustumCreated>(e);
-    if (frustum_created->GetName() != m_cullingFrustumName) return;
-    m_cullingFrustum = frustum_created->GetFrustum();
-}
-
-void Camera::OnCreateFrustumFailed(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto create_failed = std::dynamic_pointer_cast<CreateFrustumFailed>(e);
-    if (create_failed->GetName() != m_cullingFrustumName) return;
-    Platforms::Debug::Printf("create frustum %s failed : %s\n", create_failed->GetName().c_str(), create_failed->GetError().message().c_str());
-}

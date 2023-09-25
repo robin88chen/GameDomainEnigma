@@ -13,9 +13,8 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
-Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj)
+Frustum::Frustum(GraphicCoordSys hand, ProjectionType proj)
 {
-    m_name = name;
     m_handCoord = hand;
     m_projectionType = proj;
     m_fov = MathLib::Math::PI / 4.0f;
@@ -51,7 +50,6 @@ Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType p
 Frustum::Frustum(const GenericDto& dto)
 {
     FrustumDto frustum_dto = FrustumDto::FromGenericDto(dto);
-    m_name = frustum_dto.Name();
     m_handCoord = frustum_dto.HandSystem();
     m_projectionType = frustum_dto.ProjectionType();
     m_fov = frustum_dto.Fov();
@@ -84,14 +82,9 @@ Frustum::Frustum(const GenericDto& dto)
     }
 }
 
-Frustum::~Frustum()
-{
-}
-
 GenericDto Frustum::SerializeDto()
 {
     FrustumDto dto;
-    dto.Name() = m_name;
     dto.HandSystem() = m_handCoord;
     dto.ProjectionType() = m_projectionType;
     dto.Fov() = m_fov;
@@ -121,7 +114,7 @@ error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, 
 
     m_projectionType = ProjectionType::Perspective;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 
@@ -144,7 +137,7 @@ error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, flo
 
     m_projectionType = ProjectionType::Ortho;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 

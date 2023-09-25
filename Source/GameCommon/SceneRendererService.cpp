@@ -105,7 +105,7 @@ void SceneRendererService::AttachCamera()
     auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
     if ((w > 0) && (h > 0))
     {
-        m_cameraService.lock()->GetPrimaryCamera()->GetCullingFrustum()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+        m_cameraService.lock()->GetPrimaryCamera()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
     }
 }
 

@@ -55,12 +55,8 @@ ServiceResult SceneGraphRepository::OnInit()
 {
     m_doQueryingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoQueryingCamera(c); });
     CommandBus::Subscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
-    m_doQueryingFrustum = std::make_shared<CommandSubscriber>([=](auto c) { DoQueryingFrustum(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::QueryFrustum), m_doQueryingFrustum);
     m_doCreatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingCamera(c); });
     CommandBus::Subscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
-    m_doCreatingFrustum = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingFrustum(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::CreateFrustum), m_doCreatingFrustum);
 
     return ServiceResult::Complete;
 }
@@ -68,12 +64,8 @@ ServiceResult SceneGraphRepository::OnTerm()
 {
     CommandBus::Unsubscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
     m_doQueryingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(SceneGraph::QueryFrustum), m_doQueryingFrustum);
-    m_doQueryingFrustum = nullptr;
     CommandBus::Unsubscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
     m_doCreatingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(SceneGraph::CreateFrustum), m_doCreatingFrustum);
-    m_doCreatingFrustum = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -118,40 +110,6 @@ std::shared_ptr<Camera> SceneGraphRepository::QueryCamera(const std::string& nam
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(name);
     if (it == m_cameras.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
-}
-
-std::shared_ptr<Frustum> SceneGraphRepository::CreateFrustum(const std::string& name, Frustum::ProjectionType proj)
-{
-    assert(!HasFrustum(name));
-    auto frustum = std::make_shared<Frustum>(name, m_handSystem, proj);
-    std::lock_guard locker{ m_frustumMapLock };
-    m_frustums.insert_or_assign(name, frustum);
-    return frustum;
-}
-
-std::shared_ptr<Frustum> SceneGraphRepository::CreateFrustum(const Engine::GenericDto& dto)
-{
-    assert(!HasFrustum(dto.GetName()));
-    auto frustum = std::make_shared<Frustum>(dto);
-    std::lock_guard locker{ m_frustumMapLock };
-    m_frustums.insert_or_assign(dto.GetName(), frustum);
-    return frustum;
-}
-
-bool SceneGraphRepository::HasFrustum(const std::string& name)
-{
-    std::lock_guard locker{ m_frustumMapLock };
-    auto it = m_frustums.find(name);
-    return ((it != m_frustums.end()) && (!it->second.expired()));
-}
-
-std::shared_ptr<Frustum> SceneGraphRepository::QueryFrustum(const std::string& name)
-{
-    std::lock_guard locker{ m_frustumMapLock };
-    auto it = m_frustums.find(name);
-    if (it == m_frustums.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
 }
@@ -346,26 +304,6 @@ void SceneGraphRepository::DoQueryingCamera(const Frameworks::ICommandPtr& c)
     }
 }
 
-void SceneGraphRepository::DoQueryingFrustum(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::QueryFrustum>(c))
-    {
-        if (auto frustum = QueryFrustum(cmd->GetName()))
-        {
-            EventPublisher::Post(std::make_shared<SceneGraph::ReplyFrustumQuery>(cmd->GetRuid(), frustum));
-        }
-        else
-        {
-            EventPublisher::Post(std::make_shared<SceneGraph::QueryFrustumFailed>(cmd->GetRuid(), ErrorCode::frustumNotFound));
-        }
-    }
-    else
-    {
-        assert(false);
-    }
-}
-
 void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -392,30 +330,5 @@ void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
     else
     {
         assert(false);
-    }
-}
-
-void SceneGraphRepository::DoCreatingFrustum(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateFrustum>(c))
-    {
-        std::shared_ptr<Frustum> frustum = nullptr;
-        if (HasFrustum(cmd->GetDto().GetName()))
-        {
-            frustum = QueryFrustum(cmd->GetDto().GetName());
-        }
-        else
-        {
-            frustum = CreateFrustum(cmd->GetDto());
-        }
-        if (frustum)
-        {
-            EventPublisher::Post(std::make_shared<SceneGraph::FrustumCreated>(frustum->GetName(), frustum));
-        }
-        else
-        {
-            EventPublisher::Post(std::make_shared<SceneGraph::CreateFrustumFailed>(cmd->GetDto().GetName(), ErrorCode::sceneRepositoryFailed));
-        }
     }
 }

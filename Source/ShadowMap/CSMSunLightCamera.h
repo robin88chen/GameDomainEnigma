@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CSMSunLightCamera.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -58,7 +58,7 @@ namespace Enigma::ShadowMap
 
         std::vector<MathLib::Matrix4> m_mxLightViewTransforms;
         std::vector<MathLib::Vector3> m_vecLightCameraLocations;
-        std::vector<SceneGraph::FrustumPtr> m_lightFrustums;
+        std::vector<SceneGraph::Frustum> m_lightFrustums;
         std::vector<MathLib::Matrix4> m_mxLightViewProjs;
         std::vector<float> m_lightFrustaDistances;
         std::vector<MathLib::Matrix4> m_mxSceneCrops;  ///< 對有效的場景做縮放

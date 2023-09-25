@@ -287,7 +287,7 @@ void MainForm::OnGodModeChanged(bool enabled)
 
 void MainForm::OnCameraFrustumCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(FrustumInfoDialog(*this, m_appDelegate->GetAppConfig()->GetFrustumName()));
+    nana::API::modal_window(FrustumInfoDialog(*this, m_appDelegate->GetAppConfig()->GetCameraName()));
 }
 
 void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)

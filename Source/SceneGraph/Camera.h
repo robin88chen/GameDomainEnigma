@@ -14,6 +14,7 @@
 #include "Frameworks/Rtti.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frustum.h"
 #include <memory>
 #include <string>
 #include <system_error>
@@ -21,7 +22,6 @@
 
 namespace Enigma::SceneGraph
 {
-    class Frustum;
     using error = std::error_code;
     using FrustumPtr = std::shared_ptr<Frustum>;
 
@@ -63,11 +63,15 @@ namespace Enigma::SceneGraph
         MathLib::Vector3 GetUpVector() const { return m_vecUp; };
         MathLib::Vector3 GetRightVector() const { return m_vecRight; };
 
+        void ChangeAspectRatio(float ratio) { m_cullingFrustum.ChangeAspectRatio(ratio); };
+        void ChangeFrustumFarPlane(float far_z) { m_cullingFrustum.ChangeFarZ(far_z); };
+        void ChangeFrustumNearPlane(float near_z) { m_cullingFrustum.ChangeNearZ(near_z); };
+        void ChangeFrustumFov(float fov) { m_cullingFrustum.ChangeFov(fov); };
+
         /** set frustum */
-        error SetCullingFrustum(const FrustumPtr& frustum);
+        error SetCullingFrustum(const Frustum& frustum);
         /** get frustum */
-        FrustumPtr GetCullingFrustum() { return m_cullingFrustum; };
-        const std::string& GetCullingFrustumName() const { return m_cullingFrustumName; }
+        const Frustum& GetCullingFrustum() const { return m_cullingFrustum; };
 
         /** get view transform */
         virtual const MathLib::Matrix4& GetViewTransform() { return m_mxViewTransform; };
@@ -81,9 +85,6 @@ namespace Enigma::SceneGraph
     protected:
         virtual void _UpdateViewTransform();
 
-        void OnFrustumCreated(const Frameworks::IEventPtr& e);
-        void OnCreateFrustumFailed(const Frameworks::IEventPtr& e);
-
     protected:
         std::string m_name;
         Engine::FactoryDesc m_factoryDesc;
@@ -91,16 +92,12 @@ namespace Enigma::SceneGraph
 
         MathLib::Matrix4 m_mxViewTransform;    ///< view transform matrix
 
-        FrustumPtr m_cullingFrustum; ///< frustum of this camera, create/destroy with camera, can be changed by application
-        std::string m_cullingFrustumName;
+        Frustum m_cullingFrustum; ///< frustum of this camera, create/destroy with camera, can be changed by application
         MathLib::Vector3 m_vecLocation;
         MathLib::Vector3 m_vecEyeToLookAt;
         MathLib::Vector3 m_vecUp;
         MathLib::Vector3 m_vecRight;
         MathLib::Vector3 m_vecCameraForward;
-
-        Frameworks::EventSubscriberPtr m_onFrustumCreated;
-        Frameworks::EventSubscriberPtr m_onCreateFrustumFailed;
     };
 }
 

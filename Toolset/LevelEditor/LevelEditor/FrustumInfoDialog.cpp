@@ -11,7 +11,7 @@
 
 using namespace LevelEditor;
 
-FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& frustum_name) : form(owner, nana::API::make_center(owner, 280, 200), nana::appear::decorate<>{})
+FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& camera_name) : form(owner, nana::API::make_center(owner, 280, 200), nana::appear::decorate<>{})
 {
     caption("Frustum Info");
     get_place().div("vert<fov_prompt margin=[10,20]><near_plane_prompt margin=[10,20]><far_plane_prompt margin=[10,20]><buttons margin=[10,40] gap=10>");
@@ -36,7 +36,7 @@ FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& frus
 
     RegisterHandlers();
 
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<Enigma::SceneGraph::QueryFrustum>(frustum_name));
+    Enigma::Frameworks::CommandBus::Post(std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_name));
 }
 
 FrustumInfoDialog::~FrustumInfoDialog()
@@ -55,18 +55,18 @@ FrustumInfoDialog::~FrustumInfoDialog()
 
 void FrustumInfoDialog::RegisterHandlers()
 {
-    m_onReplyFrustumQuery = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyFrustumQuery(e); });
-    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::ReplyFrustumQuery), m_onReplyFrustumQuery);
-    m_onQueryFrustumFailed = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyFrustumQuery(e); });
-    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::QueryFrustumFailed), m_onQueryFrustumFailed);
+    m_onReplyCameraQuery = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
+    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
+    m_onQueryCameraFailed = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
+    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
 }
 
 void FrustumInfoDialog::UnregisterHandlers()
 {
-    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::ReplyFrustumQuery), m_onReplyFrustumQuery);
-    m_onReplyFrustumQuery = nullptr;
-    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::QueryFrustumFailed), m_onQueryFrustumFailed);
-    m_onQueryFrustumFailed = nullptr;
+    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
+    m_onReplyCameraQuery = nullptr;
+    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
+    m_onQueryCameraFailed = nullptr;
 }
 
 void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
@@ -79,20 +79,20 @@ void FrustumInfoDialog::OnCancelButton(const nana::arg_click& arg)
 
 }
 
-void FrustumInfoDialog::OnReplyFrustumQuery(const Enigma::Frameworks::IEventPtr& e)
+void FrustumInfoDialog::OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::ReplyFrustumQuery>(e))
+    if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::ReplyCameraQuery>(e))
     {
-        if (ev->GetFrustum())
+        if (ev->GetCamera())
         {
-            m_fovInputBox->caption(std::to_string(ev->GetFrustum()->GetFov() * 180.0f / Enigma::MathLib::Math::PI));
-            m_nearPlaneInputBox->caption(std::to_string(ev->GetFrustum()->GetNearPlaneZ()));
-            m_farPlaneInputBox->caption(std::to_string(ev->GetFrustum()->GetFarPlaneZ()));
+            m_fovInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFov() * 180.0f / Enigma::MathLib::Math::PI));
+            m_nearPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetNearPlaneZ()));
+            m_farPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFarPlaneZ()));
         }
     }
-    else if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::QueryFrustumFailed>(e))
+    else if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::QueryCameraFailed>(e))
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("QueryFrustumFailed : " + ev->GetError().message()));
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("QueryCameraFailed : " + ev->GetError().message()));
     }
 }

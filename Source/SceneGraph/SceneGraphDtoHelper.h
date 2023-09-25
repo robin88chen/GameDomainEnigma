@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
         CameraDtoHelper& LookAt(const MathLib::Vector3& look_at);
         CameraDtoHelper& UpDirection(const MathLib::Vector3& up_direction);
 
-        CameraDtoHelper& Frustum(const std::string& name, Frustum::ProjectionType projection_type);
+        CameraDtoHelper& Frustum(Frustum::ProjectionType projection_type);
         CameraDtoHelper& FrustumFrontBackZ(float front_z, float back_z);
         CameraDtoHelper& FrustumFov(float fov);
         CameraDtoHelper& FrustumNearPlaneDimension(float width, float height);

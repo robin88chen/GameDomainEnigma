@@ -76,10 +76,9 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     會比實際看得見的範圍的z值差很多
     */
     if (m_viewerCamera.expired()) return;
-    if (!m_viewerCamera.lock()->GetCullingFrustum()) return;
 
-    m_adjustedViewerNearPlane = m_viewerCamera.lock()->GetCullingFrustum()->GetNearPlaneZ();
-    m_adjustedViewerFarPlane = m_viewerCamera.lock()->GetCullingFrustum()->GetFarPlaneZ();
+    m_adjustedViewerNearPlane = m_viewerCamera.lock()->GetCullingFrustum().GetNearPlaneZ();
+    m_adjustedViewerFarPlane = m_viewerCamera.lock()->GetCullingFrustum().GetFarPlaneZ();
 
     if (sceneWorldBound.IsEmpty()) return;
     auto cropBox = sceneWorldBound.BoundingBox3();
@@ -176,12 +175,9 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         if (fPlaneH < vecMaxLightBox.Y()) fPlaneH = vecMaxLightBox.Y();
         // frustum far z
         float fFarZ = vecMaxLightBox.Z() - vecMinLightBox.Z() + 0.0f;
-        if (!m_lightFrustums[frusta])
-        {
-            m_lightFrustums[frusta] = std::make_shared<Frustum>(string_format("%s_frustum%d", m_name.c_str(), frusta), m_handSys, Frustum::ProjectionType::Ortho);
-        }
-        m_lightFrustums[frusta]->SetOrthoProjection(fPlaneW * 2.0f, fPlaneH * 2.0f, 0.1f, fFarZ);
-        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta]->GetProjectionTransform();
+        m_lightFrustums[frusta] = Frustum(m_handSys, Frustum::ProjectionType::Ortho);
+        m_lightFrustums[frusta].SetOrthoProjection(fPlaneW * 2.0f, fPlaneH * 2.0f, 0.1f, fFarZ);
+        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].GetProjectionTransform();
     }
 
     RefreshTextureCoordTransform();
@@ -210,8 +206,7 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     std::array<Vector3, 8> viewerFrustumCorners;
 
     if (m_viewerCamera.expired()) return viewerFrustumCorners;
-    FrustumPtr frustum = m_viewerCamera.lock()->GetCullingFrustum();
-    if (!frustum) return viewerFrustumCorners;
+    Frustum frustum = m_viewerCamera.lock()->GetCullingFrustum();
 
     float viewerNear = m_adjustedViewerNearPlane;
     float viewerFar = m_adjustedViewerFarPlane;
@@ -235,8 +230,8 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     Vector3 vecZ = m_viewerCamera.lock()->GetEyeToLookatVector();
     Vector3 vecX = m_viewerCamera.lock()->GetRightVector();
     Vector3 vecY = m_viewerCamera.lock()->GetUpVector();
-    float frustaAspect = frustum->GetAspectRatio();
-    float frustaFov = frustum->GetFov();
+    float frustaAspect = frustum.GetAspectRatio();
+    float frustaFov = frustum.GetFov();
 
     float nearPlaneHalfHeight = std::tan(frustaFov * 0.5f) * frustaNear;
     float nearPlaneHalfWidth = nearPlaneHalfHeight * frustaAspect;
@@ -299,8 +294,7 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
     // https://github.com/GKR/NvidiaCascadedShadowMapsGLM
     for (unsigned int frusta = 0; frusta < m_partitionCount; frusta++)
     {
-        if (!m_lightFrustums[frusta]) continue;
-        Matrix4 mxLightViewProj = m_lightFrustums[frusta]->GetProjectionTransform() * m_mxLightViewTransforms[frusta];
+        Matrix4 mxLightViewProj = m_lightFrustums[frusta].GetProjectionTransform() * m_mxLightViewTransforms[frusta];
 
         BoundingVolume cropBound = Engine::BoundingVolume::CreateFromTransform(sceneWorldBound, mxLightViewProj);
         auto cropBox = cropBound.BoundingBox3();
@@ -331,7 +325,7 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
             0.0f, scaleY, 0.0f, offsetY,
             0.0f, 0.0f, 1.0f, 0.0f, //scaleZ, offsetZ,
             0.0f, 0.0f, 0.0f, 1.0f);
-        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta]->GetProjectionTransform();
+        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].GetProjectionTransform();
         m_mxLightViewProjs[frusta] = m_mxProjSceneCrops[frusta] * m_mxLightViewTransforms[frusta];
     }
 }

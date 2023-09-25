@@ -62,11 +62,6 @@ namespace Enigma::SceneGraph
         bool HasCamera(const std::string& name);
         std::shared_ptr<Camera> QueryCamera(const std::string& name);
 
-        std::shared_ptr<Frustum> CreateFrustum(const std::string& name, Frustum::ProjectionType proj);
-        std::shared_ptr<Frustum> CreateFrustum(const Engine::GenericDto& dto);
-        bool HasFrustum(const std::string& name);
-        std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
-
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         bool HasNode(const std::string& name);
         std::shared_ptr<Node> QueryNode(const std::string& name);
@@ -88,17 +83,13 @@ namespace Enigma::SceneGraph
 
     private:
         void DoQueryingCamera(const Frameworks::ICommandPtr& c);
-        void DoQueryingFrustum(const Frameworks::ICommandPtr& c);
         void DoCreatingCamera(const Frameworks::ICommandPtr& c);
-        void DoCreatingFrustum(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
         std::recursive_mutex m_cameraMapLock;
-        std::unordered_map<std::string, std::weak_ptr<Frustum>> m_frustums;
-        std::recursive_mutex m_frustumMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
         std::recursive_mutex m_nodeMapLock;
@@ -114,9 +105,7 @@ namespace Enigma::SceneGraph
         SceneGraphBuilder* m_builder;
 
         Frameworks::CommandSubscriberPtr m_doQueryingCamera;
-        Frameworks::CommandSubscriberPtr m_doQueryingFrustum;
         Frameworks::CommandSubscriberPtr m_doCreatingCamera;
-        Frameworks::CommandSubscriberPtr m_doCreatingFrustum;
     };
 }
 

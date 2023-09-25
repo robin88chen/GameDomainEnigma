@@ -19,7 +19,7 @@ namespace LevelEditor
     class FrustumInfoDialog : public nana::form
     {
     public:
-        FrustumInfoDialog(nana::window owner, const std::string& frustum_name);
+        FrustumInfoDialog(nana::window owner, const std::string& camera_name);
         virtual ~FrustumInfoDialog();
 
         void RegisterHandlers();
@@ -29,7 +29,7 @@ namespace LevelEditor
         void OnCancelButton(const nana::arg_click& arg);
 
     private:
-        void OnReplyFrustumQuery(const Enigma::Frameworks::IEventPtr& e);
+        void OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         nana::button* m_okButton;
@@ -42,8 +42,8 @@ namespace LevelEditor
         nana::label* m_farPlanePrompt;
         nana::textbox* m_farPlaneInputBox;
 
-        Enigma::Frameworks::EventSubscriberPtr m_onReplyFrustumQuery;
-        Enigma::Frameworks::EventSubscriberPtr m_onQueryFrustumFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onReplyCameraQuery;
+        Enigma::Frameworks::EventSubscriberPtr m_onQueryCameraFailed;
     };
 }
 

@@ -9,6 +9,7 @@
 #define FRUSTUM_INFO_DIALOG_H
 
 #include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/Camera.h"
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/widgets/form.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -41,6 +42,8 @@ namespace LevelEditor
         nana::textbox* m_nearPlaneInputBox;
         nana::label* m_farPlanePrompt;
         nana::textbox* m_farPlaneInputBox;
+
+        std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
 
         Enigma::Frameworks::EventSubscriberPtr m_onReplyCameraQuery;
         Enigma::Frameworks::EventSubscriberPtr m_onQueryCameraFailed;

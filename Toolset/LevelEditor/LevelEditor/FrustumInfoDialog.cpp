@@ -71,12 +71,58 @@ void FrustumInfoDialog::UnregisterHandlers()
 
 void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
 {
-
+    if (m_camera.expired())
+    {
+        close();
+        return;
+    }
+    if (!m_fovInputBox->caption().empty())
+    {
+        float fov = std::stof(m_fovInputBox->caption()) * Enigma::MathLib::Math::PI / 180.0f;
+        if ((fov > 0.0f) && (fov < Enigma::MathLib::Math::HALF_PI))
+        {
+            m_camera.lock()->ChangeFrustumFov(fov);
+        }
+        else
+        {
+            Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid fov value."));
+        }
+    }
+    float near_plane = 0.0f;
+    float far_plane = 0.0f;
+    if (!m_nearPlaneInputBox->caption().empty())
+    {
+        near_plane = std::stof(m_nearPlaneInputBox->caption());
+    }
+    if (near_plane <= 0.0f)
+    {
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid near plane value."));
+        return;
+    }
+    if (!m_farPlaneInputBox->caption().empty())
+    {
+        far_plane = std::stof(m_farPlaneInputBox->caption());
+    }
+    if (far_plane <= 0.0f)
+    {
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid far plane value."));
+        return;
+    }
+    if (near_plane < far_plane)
+    {
+        m_camera.lock()->ChangeFrustumNearPlane(near_plane);
+        m_camera.lock()->ChangeFrustumFarPlane(far_plane);
+    }
+    else
+    {
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid near/far plane value."));
+    }
+    close();
 }
 
 void FrustumInfoDialog::OnCancelButton(const nana::arg_click& arg)
 {
-
+    close();
 }
 
 void FrustumInfoDialog::OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e)
@@ -86,6 +132,7 @@ void FrustumInfoDialog::OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& 
     {
         if (ev->GetCamera())
         {
+            m_camera = ev->GetCamera();
             m_fovInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFov() * 180.0f / Enigma::MathLib::Math::PI));
             m_nearPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetNearPlaneZ()));
             m_farPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFarPlaneZ()));

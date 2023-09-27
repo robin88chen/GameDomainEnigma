@@ -21,7 +21,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Renderer;
 using namespace Enigma::SceneGraph;
 
-Rtti TerrainEditConsole::TYPE_RTTI{"LevelEditor.TerrainEditConsole", &ISystemService::TYPE_RTTI};
+Rtti TerrainEditConsole::TYPE_RTTI{ "LevelEditor.TerrainEditConsole", &ISystemService::TYPE_RTTI };
 
 std::string BRUSH_SPHERE_TAG = "_brush_sphere_";
 std::string SEMANTIC_DECAL_MAP = "DecalMap";
@@ -136,17 +136,17 @@ void TerrainEditConsole::SendTerrainEditCommand(float elapse_time)
     if (!m_isEnabled) return;
     switch (m_currMode)
     {
-        case TerrainEditMode::Mode_Unknown:
-            break;
-        case TerrainEditMode::Mode_RaiseHeight:
-            CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
-            break;
-        case TerrainEditMode::Mode_LowerHeight:
-            CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
-            break;
-        case TerrainEditMode::Mode_PaintTexture:
-            CommandBus::Post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->GetWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
-            break;
+    case TerrainEditMode::Mode_Unknown:
+        break;
+    case TerrainEditMode::Mode_RaiseHeight:
+        CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
+        break;
+    case TerrainEditMode::Mode_LowerHeight:
+        CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
+        break;
+    case TerrainEditMode::Mode_PaintTexture:
+        CommandBus::Post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->GetWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
+        break;
     }
 }
 
@@ -243,15 +243,15 @@ void TerrainEditConsole::OnTerrainToolSelected(const Enigma::Frameworks::IEventP
     if (!ev) return;
     switch (ev->GetTool())
     {
-        case TerrainEditToolSelected::Tool::Raise:
-            m_currMode = TerrainEditMode::Mode_RaiseHeight;
-            break;
-        case TerrainEditToolSelected::Tool::Lower:
-            m_currMode = TerrainEditMode::Mode_LowerHeight;
-            break;
-        case TerrainEditToolSelected::Tool::Paint:
-            m_currMode = TerrainEditMode::Mode_PaintTexture;
-            break;
+    case TerrainEditToolSelected::Tool::Raise:
+        m_currMode = TerrainEditMode::Mode_RaiseHeight;
+        break;
+    case TerrainEditToolSelected::Tool::Lower:
+        m_currMode = TerrainEditMode::Mode_LowerHeight;
+        break;
+    case TerrainEditToolSelected::Tool::Paint:
+        m_currMode = TerrainEditMode::Mode_PaintTexture;
+        break;
     }
     CommandBus::Post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
 }
@@ -276,7 +276,7 @@ void TerrainEditConsole::OnSceneCursorDragged(const Enigma::Frameworks::IEventPt
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
     if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
-    SendTerrainEditCommand(0.01f);
+    SendTerrainEditCommand(0.1f);
 }
 
 void TerrainEditConsole::OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e)

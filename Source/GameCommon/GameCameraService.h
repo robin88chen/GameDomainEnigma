@@ -12,6 +12,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "SceneGraph/CameraFrustumDtos.h"
 
 namespace Enigma::GameCommon
@@ -53,10 +54,16 @@ namespace Enigma::GameCommon
 
     protected:
         void OnTargetResized(const Frameworks::IEventPtr& e);
+        //todo: move to UI layer
         void OnMouseRightBtnDrag(const Frameworks::IEventPtr& e);
         void OnMouseWheel(const Frameworks::IEventPtr& e);
         void OnGestureScroll(const Frameworks::IEventPtr& e);
         void OnGestureScale(const Frameworks::IEventPtr& e);
+
+        void DoZoomingCamera(const Frameworks::ICommandPtr& c);
+        void DoSphereRotatingCamera(const Frameworks::ICommandPtr& c);
+        void DoMovingCamera(const Frameworks::ICommandPtr& c);
+        void DoMovingCameraXZ(const Frameworks::ICommandPtr& c);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
@@ -67,6 +74,11 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onMouseWheel;
         Frameworks::EventSubscriberPtr m_onGestureScroll;
         Frameworks::EventSubscriberPtr m_onGestureScale;
+
+        Frameworks::CommandSubscriberPtr m_doZoomingCamera;
+        Frameworks::CommandSubscriberPtr m_doSphereRotatingCamera;
+        Frameworks::CommandSubscriberPtr m_doMovingCamera;
+        Frameworks::CommandSubscriberPtr m_doMovingCameraXZ;
     };
 }
 

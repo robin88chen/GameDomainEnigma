@@ -18,7 +18,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.7044999003410339, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.7044999599456787, 1024.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },
@@ -47,7 +47,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.7044999003410339, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.7044999599456787, 1024.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },
@@ -61,7 +61,7 @@
         },
         "ChildNames": {
             "Type": "StringArray",
-            "Value": ["world1/du_qroot", "ww1_amb_lit", "ww1_sun_lit", "ww1_amb_lit_lit_quad", "ww1_sun_lit_lit_quad"]
+            "Value": ["ww1_amb_lit", "ww1_sun_lit", "ww1_amb_lit_lit_quad", "ww1_sun_lit_lit_quad", "world1/landing_qroot"]
         }
     }, {
         "LocalTransform": {
@@ -75,7 +75,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.SceneGraph.VisibilityManagedNode",
-                "PrefabFilename": "world1/du_qroot.node@WorldMaps"
+                "PrefabFilename": "world1/landing_qroot.node@WorldMaps"
             }
         },
         "ModelBound": {
@@ -83,7 +83,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.7044999599456787, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.7044999599456787, 1024.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },
@@ -93,7 +93,7 @@
         },
         "Name": {
             "Type": "String",
-            "Value": "world1/du_qroot"
+            "Value": "world1/landing_qroot"
         },
         "NotifyFlag": {
             "Type": "Uint32",
@@ -112,7 +112,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.7044999599456787, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.7044999599456787, 1024.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1024.0, 1.0, 1024.0]
                 }
             }
         },

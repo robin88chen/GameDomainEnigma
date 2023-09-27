@@ -1,9 +1,12 @@
 ﻿#include "EditorSceneConsole.h"
+#include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "InputHandlers/MouseInputEvents.h"
+#include "InputHandlers/WinKeyboardInputEvents.h"
 #include "Renderer/RendererEvents.h"
 #include "GameCommon/GameSceneEvents.h"
 #include "GameCommon/GameCameraEvents.h"
+#include "GameCommon/GameCameraCommands.h"
 #include "ScenePicker.h"
 #include "LevelEditorEvents.h"
 
@@ -41,6 +44,8 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::OnInit()
     EventPublisher::Subscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
     m_onMouseLeftDragged = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftDragged(e); });
     EventPublisher::Subscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
+    m_onKeyboardAsyncKeyPressed = std::make_shared<EventSubscriber>([=](auto e) { OnKeyboardAsyncKeyPressed(e); });
+    EventPublisher::Subscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
 
     return ServiceResult::Complete;
 }
@@ -61,6 +66,8 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::OnTerm()
     m_onMouseLeftButtonUp = nullptr;
     EventPublisher::Unsubscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
     m_onMouseLeftDragged = nullptr;
+    EventPublisher::Unsubscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
+    m_onKeyboardAsyncKeyPressed = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -141,6 +148,29 @@ void EditorSceneConsole::OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr&
     if (pickedPawn)
     {
         EventPublisher::Post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn));
+    }
+}
+
+void EditorSceneConsole::OnKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<WinKeyboardAsyncPressed>(e);
+    if (!ev) return;
+    if (ev->m_param.m_virtualKey == 'A')
+    {
+        CommandBus::Post(std::make_shared<MoveCamera>(0.0f, -0.1f));
+    }
+    else if (ev->m_param.m_virtualKey == 'D')
+    {
+        CommandBus::Post(std::make_shared<MoveCamera>(0.0f, 0.1f));
+    }
+    else if (ev->m_param.m_virtualKey == 'S')
+    {
+        CommandBus::Post(std::make_shared<MoveCamera>(-0.1f, 0.0f));
+    }
+    else if (ev->m_param.m_virtualKey == 'W')
+    {
+        CommandBus::Post(std::make_shared<MoveCamera>(0.1f, 0.0f));
     }
 }
 

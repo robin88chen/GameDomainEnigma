@@ -3,6 +3,7 @@
 #include "FileSystem/FileSystem.h"
 #include "Gateways/DtoJsonGateway.h"
 #include <cassert>
+#include <SceneGraph/CameraFrustumDtos.h>
 
 using namespace LevelEditor;
 
@@ -90,4 +91,18 @@ std::string AppConfiguration::GetWorldMapPathId() const
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_WORLD_MAP_PATH_ID)) return v.value();
     return "";
+}
+
+std::string AppConfiguration::GetCameraName() const
+{
+    assert(!m_configDto.IsEmpty());
+    auto cameraDto = GetCameraDto();
+    return cameraDto.GetName();
+}
+
+std::string AppConfiguration::GetFrustumName() const
+{
+    assert(!m_configDto.IsEmpty());
+    auto cameraDto = Enigma::SceneGraph::CameraDto::FromGenericDto(GetCameraDto());
+    return cameraDto.Frustum().GetName();
 }

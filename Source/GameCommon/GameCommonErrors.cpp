@@ -14,6 +14,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullSceneRoot: return "Null scene root";
     case ErrorCode::nodeNotFound: return "Node not found";
     case ErrorCode::spatialNotFound: return "Spatial not found";
+    case ErrorCode::nullFrustum: return "Null frustum";
     }
     return "Unknown";
 }

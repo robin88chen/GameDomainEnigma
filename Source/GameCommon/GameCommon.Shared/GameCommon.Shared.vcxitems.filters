@@ -117,6 +117,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h">
       <Filter>DeferredRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraCommands.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">

@@ -9,22 +9,25 @@
 #include "SceneGraphEvents.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraphCommands.h"
+#include "SceneGraphErrors.h"
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
-#include "PortalDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Platforms/MemoryAllocMacro.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
 #include "Renderer/ModelPrimitive.h"
 #include "Platforms/MemoryMacro.h"
+#include "CameraFrustumCommands.h"
+#include "CameraFrustumEvents.h"
+#include "CameraFrustumDtos.h"
 #include <cassert>
 #include <mutex>
 
-#include "CameraFrustumDtos.h"
+#include "ContainingPortalZoneFinder.h"
+#include "ContainingPortalZoneFinder.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -48,9 +51,22 @@ SceneGraphRepository::~SceneGraphRepository()
     SAFE_DELETE(m_builder);
 }
 
+ServiceResult SceneGraphRepository::OnInit()
+{
+    m_doQueryingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoQueryingCamera(c); });
+    CommandBus::Subscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
+    m_doCreatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingCamera(c); });
+    CommandBus::Subscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
+
+    return ServiceResult::Complete;
+}
 ServiceResult SceneGraphRepository::OnTerm()
 {
-    SAFE_DELETE(m_builder);
+    CommandBus::Unsubscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
+    m_doQueryingCamera = nullptr;
+    CommandBus::Unsubscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
+    m_doCreatingCamera = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -73,12 +89,12 @@ std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& na
     return camera;
 }
 
-std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const CameraDto& dto)
+std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const GenericDto& dto)
 {
-    assert(!HasCamera(dto.Name()));
+    assert(!HasCamera(dto.GetName()));
     auto camera = std::make_shared<Camera>(dto);
     std::lock_guard locker{ m_cameraMapLock };
-    m_cameras.insert_or_assign(dto.Name(), camera);
+    m_cameras.insert_or_assign(dto.GetName(), camera);
     return camera;
 }
 
@@ -94,31 +110,6 @@ std::shared_ptr<Camera> SceneGraphRepository::QueryCamera(const std::string& nam
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(name);
     if (it == m_cameras.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
-}
-
-std::shared_ptr<Frustum> SceneGraphRepository::CreateFrustum(const std::string& name, Frustum::ProjectionType proj)
-{
-    assert(!HasFrustum(name));
-    auto frustum = std::make_shared<Frustum>(name, m_handSystem, proj);
-    std::lock_guard locker{ m_frustumMapLock };
-    m_frustums.insert_or_assign(name, frustum);
-    return frustum;
-}
-
-bool SceneGraphRepository::HasFrustum(const std::string& name)
-{
-    std::lock_guard locker{ m_frustumMapLock };
-    auto it = m_frustums.find(name);
-    return ((it != m_frustums.end()) && (!it->second.expired()));
-}
-
-std::shared_ptr<Frustum> SceneGraphRepository::QueryFrustum(const std::string& name)
-{
-    std::lock_guard locker{ m_frustumMapLock };
-    auto it = m_frustums.find(name);
-    if (it == m_frustums.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
 }
@@ -293,3 +284,51 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
     }
 }
 
+void SceneGraphRepository::DoQueryingCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::QueryCamera>(c))
+    {
+        if (auto camera = QueryCamera(cmd->GetName()))
+        {
+            EventPublisher::Post(std::make_shared<SceneGraph::ReplyCameraQuery>(cmd->GetRuid(), camera));
+        }
+        else
+        {
+            EventPublisher::Post(std::make_shared<SceneGraph::QueryCameraFailed>(cmd->GetRuid(), ErrorCode::cameraNotFound));
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateCamera>(c))
+    {
+        std::shared_ptr<Camera> camera = nullptr;
+        if (HasCamera(cmd->GetDto().GetName()))
+        {
+            camera = QueryCamera(cmd->GetDto().GetName());
+        }
+        else
+        {
+            camera = CreateCamera(cmd->GetDto());
+        }
+        if (camera)
+        {
+            EventPublisher::Post(std::make_shared<SceneGraph::CameraCreated>(camera->GetName(), camera));
+        }
+        else
+        {
+            EventPublisher::Post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().GetName(), ErrorCode::sceneRepositoryFailed));
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+}

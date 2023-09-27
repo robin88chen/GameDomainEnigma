@@ -30,6 +30,9 @@ namespace LevelEditor
         std::string GetWorldMapPathId() const;
 
         Enigma::Engine::GenericDto GetCameraDto() const;
+        std::string GetCameraName() const;
+        std::string GetFrustumName() const;
+
     private:
         Enigma::Engine::GenericDto m_configDto;
     };

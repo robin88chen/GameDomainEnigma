@@ -26,6 +26,9 @@ namespace Enigma::SceneGraph
 
         invalidChangingCamera = 201,
         emptyLightQueryResult,
+        cameraNotFound,
+        frustumNotFound,
+        sceneRepositoryFailed,
     };
     class ErrorCategory : public std::error_category
     {

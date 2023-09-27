@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Frustum.h
- * \brief  Frustum class, entity, use shared_ptr, maintained by repository
- *
+ * \brief  Frustum class, entity, use shared_ptr, maintained by repository,
+ *          (2023.9) should be a value object, not entity
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -19,7 +19,6 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
-    class FrustumDto;
 
     /** Frustum class */
     class Frustum : public std::enable_shared_from_this<Frustum>
@@ -34,17 +33,17 @@ namespace Enigma::SceneGraph
         };
 
     public:
-        Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj);
-        Frustum(const FrustumDto& dto);
-        Frustum(const Frustum&) = delete;
-        Frustum(Frustum&&) = delete;
-        virtual ~Frustum();
-        Frustum& operator=(const Frustum&) = delete;
-        Frustum& operator=(Frustum&&) = delete;
+        Frustum() = default;
+        Frustum(GraphicCoordSys hand, ProjectionType proj);
+        Frustum(const Engine::GenericDto& dto);
+        Frustum(const Frustum&) = default;
+        Frustum(Frustum&&) = default;
+        virtual ~Frustum() = default;
+        Frustum& operator=(const Frustum&) = default;
+        Frustum& operator=(Frustum&&) = default;
 
         Engine::GenericDto SerializeDto();
 
-        const std::string& GetName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handCoord; }
         /** 設定透視投影矩陣 */
         error SetPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
@@ -78,12 +77,11 @@ namespace Enigma::SceneGraph
         void ChangeNearHeight(float nh);
 
         /** get projection transform */
-        const MathLib::Matrix4& GetProjectionTransform() { return m_mxProjTransform; };
+        const MathLib::Matrix4& GetProjectionTransform() const { return m_mxProjTransform; };
         /** get projection type */
         ProjectionType GetProjectionType() const { return m_projectionType; };
 
     protected:
-        std::string m_name;
         GraphicCoordSys m_handCoord;
 
         float m_fov;  ///< fov角度(弳度), default = pi/4

@@ -85,7 +85,7 @@ error Renderer::BeginScene()
         Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
     }
     std::shared_ptr<SceneGraph::Camera> camera;
-    if ((!m_associatedCamera.expired()) && (m_associatedCamera.lock()->GetCullingFrustum()))
+    if (!m_associatedCamera.expired())
     {
         camera = m_associatedCamera.lock();
     }

@@ -1,6 +1,6 @@
-/*********************************************************************
+Ôªø/*********************************************************************
  * \file   EditorSceneConsole.h
- * \brief  ≥B≤z editor scene view §§™∫æﬁß@
+ * \brief  ËôïÁêÜ editor scene view ‰∏≠ÁöÑÊìç‰Ωú
  *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
@@ -41,6 +41,8 @@ namespace LevelEditor
         void OnMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e);
         void OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr& e);
 
+        void OnKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e);
+
         std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> PickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
 
     protected:
@@ -51,6 +53,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonDown;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonUp;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftDragged;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onKeyboardAsyncKeyPressed;
 
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

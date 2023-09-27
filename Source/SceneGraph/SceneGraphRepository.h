@@ -13,6 +13,7 @@
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -50,19 +51,16 @@ namespace Enigma::SceneGraph
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
+        virtual Frameworks::ServiceResult OnInit() override;
         virtual Frameworks::ServiceResult OnTerm() override;
 
         void SetCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys GetCoordinateSystem();
 
         std::shared_ptr<Camera> CreateCamera(const std::string& name);
-        std::shared_ptr<Camera> CreateCamera(const CameraDto& dto);
+        std::shared_ptr<Camera> CreateCamera(const Engine::GenericDto& dto);
         bool HasCamera(const std::string& name);
         std::shared_ptr<Camera> QueryCamera(const std::string& name);
-
-        std::shared_ptr<Frustum> CreateFrustum(const std::string& name, Frustum::ProjectionType proj);
-        bool HasFrustum(const std::string& name);
-        std::shared_ptr<Frustum> QueryFrustum(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         bool HasNode(const std::string& name);
@@ -84,12 +82,14 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
     private:
+        void DoQueryingCamera(const Frameworks::ICommandPtr& c);
+        void DoCreatingCamera(const Frameworks::ICommandPtr& c);
+
+    private:
         GraphicCoordSys m_handSystem;
 
         std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
         std::recursive_mutex m_cameraMapLock;
-        std::unordered_map<std::string, std::weak_ptr<Frustum>> m_frustums;
-        std::recursive_mutex m_frustumMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
         std::recursive_mutex m_nodeMapLock;
@@ -103,6 +103,9 @@ namespace Enigma::SceneGraph
         std::recursive_mutex m_portalMapLock;
 
         SceneGraphBuilder* m_builder;
+
+        Frameworks::CommandSubscriberPtr m_doQueryingCamera;
+        Frameworks::CommandSubscriberPtr m_doCreatingCamera;
     };
 }
 

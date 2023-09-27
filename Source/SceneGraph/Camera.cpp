@@ -7,6 +7,9 @@
 #include "MathLib/IntrRay3Plane3.h"
 #include "MathLib/MathGlobal.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
+#include "SceneGraph/CameraFrustumCommands.h"
+#include "Platforms/PlatformLayer.h"
 #include <cassert>
 #include <memory>
 
@@ -21,25 +24,24 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Ca
 {
     m_name = name;
     m_handSys = hand;
-    m_cullingFrustum = nullptr;
+    m_cullingFrustum = Frustum(hand, Frustum::ProjectionType::Perspective);
     m_vecLocation = Vector3::ZERO;
     m_vecEyeToLookAt = Vector3::UNIT_Z;
     m_vecUp = Vector3::UNIT_Y;
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const CameraDto& dto) : m_factoryDesc(dto.TheFactoryDesc())
+Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti())
 {
-    m_name = dto.Name();
-    m_handSys = dto.HandSystem();
-    ChangeCameraFrame(dto.EyePosition(), dto.LookAtDirection(), dto.UpVector());
-    //todo : 要改成 lazy load
-    m_cullingFrustum = std::make_shared<Frustum>(FrustumDto::FromGenericDto(dto.Frustum()));
+    CameraDto camera_dto = CameraDto::FromGenericDto(dto);
+    m_name = camera_dto.Name();
+    m_handSys = camera_dto.HandSystem();
+    ChangeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
+    m_cullingFrustum = Frustum(camera_dto.Frustum());
 }
 
 Camera::~Camera()
 {
-    m_cullingFrustum = nullptr;
 }
 
 GenericDto Camera::SerializeDto()
@@ -51,7 +53,7 @@ GenericDto Camera::SerializeDto()
     dto.EyePosition() = m_vecLocation;
     dto.LookAtDirection() = m_vecEyeToLookAt;
     dto.UpVector() = m_vecUp;
-    dto.Frustum() = m_cullingFrustum->SerializeDto();
+    dto.Frustum() = m_cullingFrustum.SerializeDto();
     return dto.ToGenericDto();
 }
 
@@ -162,9 +164,8 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     return er;
 }
 
-error Camera::SetCullingFrustum(const FrustumPtr& frustum)
+error Camera::SetCullingFrustum(const Frustum& frustum)
 {
-    assert(frustum);  // must valid pointer
     m_cullingFrustum = frustum;
 
     return ErrorCode::ok;
@@ -181,5 +182,6 @@ void Camera::_UpdateViewTransform()
 
 const Matrix4& Camera::GetProjectionTransform()
 {
-    return m_cullingFrustum->GetProjectionTransform();
+    return m_cullingFrustum.GetProjectionTransform();
 }
+

@@ -29,9 +29,8 @@ CameraDtoHelper& CameraDtoHelper::UpDirection(const MathLib::Vector3& up_directi
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::Frustum(const std::string& name, Frustum::ProjectionType projection_type)
+CameraDtoHelper& CameraDtoHelper::Frustum(Frustum::ProjectionType projection_type)
 {
-    m_frustumDto.Name() = name;
     m_frustumDto.HandSystem() = GraphicCoordSys::LeftHand;
     m_frustumDto.ProjectionType() = projection_type;
     return *this;

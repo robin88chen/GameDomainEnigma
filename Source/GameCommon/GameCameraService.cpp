@@ -4,10 +4,12 @@
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Frustum.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "MathLib/IntrRay3Plane3.h"
 #include "Renderer/RendererEvents.h"
 #include "Renderer/RenderTarget.h"
 #include "InputHandlers/MouseInputEvents.h"
+#include "GameCameraCommands.h"
 #include "InputHandlers/GestureInputEvents.h"
 
 using namespace Enigma::GameCommon;
@@ -22,7 +24,7 @@ DEFINE_RTTI(GameCommon, GameCameraService, ISystemService);
 #define WHEEL_THRESHOLD 120.0f
 
 GameCameraService::GameCameraService(ServiceManager* mngr,
-                                     const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
+    const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
 {
     m_sceneGraphRepository = scene_graph_repository;
     m_needTick = false;
@@ -38,17 +40,27 @@ GameCameraService::~GameCameraService()
 ServiceResult GameCameraService::OnInit()
 {
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
-    m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
-    m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
-    m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
-    m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
     EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
+
+    m_doZoomingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoZoomingCamera(c); });
+    CommandBus::Subscribe(typeid(ZoomCamera), m_doZoomingCamera);
+    m_doSphereRotatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoSphereRotatingCamera(c); });
+    CommandBus::Subscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
+    m_doMovingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoMovingCamera(c); });
+    CommandBus::Subscribe(typeid(MoveCamera), m_doMovingCamera);
+    m_doMovingCameraXZ = std::make_shared<CommandSubscriber>([=](auto c) { DoMovingCameraXZ(c); });
+    CommandBus::Subscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
+
 #if TARGET_PLATFORM == PLATFORM_WIN32
+    m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
     EventPublisher::Subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
     EventPublisher::Subscribe(typeid(MouseWheeled), m_onMouseWheel);
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
+    m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
     EventPublisher::Subscribe(typeid(GestureScroll), m_onGestureScroll);
+    m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
     EventPublisher::Subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
     return ServiceResult::Complete;
@@ -57,30 +69,39 @@ ServiceResult GameCameraService::OnInit()
 ServiceResult GameCameraService::OnTerm()
 {
     EventPublisher::Unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
+    m_onTargetResized = nullptr;
+
+    CommandBus::Unsubscribe(typeid(ZoomCamera), m_doZoomingCamera);
+    m_doZoomingCamera = nullptr;
+    CommandBus::Unsubscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
+    m_doSphereRotatingCamera = nullptr;
+    CommandBus::Unsubscribe(typeid(MoveCamera), m_doMovingCamera);
+    m_doMovingCamera = nullptr;
+    CommandBus::Unsubscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
+    m_doMovingCameraXZ = nullptr;
+
 #if TARGET_PLATFORM == PLATFORM_WIN32
     EventPublisher::Unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    m_onRightBtnDrag = nullptr;
     EventPublisher::Unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
+    m_onMouseWheel = nullptr;
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
     EventPublisher::Unsubscribe(typeid(GestureScroll), m_onGestureScroll);
-    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
-#endif
-    m_onTargetResized = nullptr;
-    m_onRightBtnDrag = nullptr;
-    m_onMouseWheel = nullptr;
     m_onGestureScroll = nullptr;
+    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
     m_onGestureScale = nullptr;
+#endif
 
     m_primaryCamera = nullptr;
 
     return ServiceResult::Complete;
 }
 
-void GameCameraService::CreatePrimaryCamera(const CameraDto& dto)
+void GameCameraService::CreatePrimaryCamera(const Engine::GenericDto& dto)
 {
     assert(!m_sceneGraphRepository.expired());
     m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(dto);
-
     EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }
 
@@ -132,46 +153,36 @@ void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, c
 void GameCameraService::ChangeAspectRatio(float ratio)
 {
     if (!m_primaryCamera) return;
-    if (m_primaryCamera->GetCullingFrustum())
-    {
-        m_primaryCamera->GetCullingFrustum()->ChangeAspectRatio(ratio);
-    }
+    m_primaryCamera->ChangeAspectRatio(ratio);
     EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
 }
 
 void GameCameraService::ChangeFrustumFarPlane(float far_z)
 {
     if (!m_primaryCamera) return;
-    FrustumPtr frustum = m_primaryCamera->GetCullingFrustum();
-    if (!frustum) return;
-    frustum->ChangeFarZ(far_z);
+    m_primaryCamera->ChangeFrustumFarPlane(far_z);
     EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 void GameCameraService::ChangeFrustumFov(float fov)
 {
     if (!m_primaryCamera) return;
-    FrustumPtr frustum = m_primaryCamera->GetCullingFrustum();
-    if (!frustum) return;
-    frustum->ChangeFov(fov);
+    m_primaryCamera->ChangeFrustumFov(fov);
     EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
 }
 
 void GameCameraService::ChangeFrustumNearPlane(float near_z)
 {
     if (!m_primaryCamera) return;
-    FrustumPtr frustum = m_primaryCamera->GetCullingFrustum();
-    if (!frustum) return;
-    frustum->ChangeNearZ(near_z);
+    m_primaryCamera->ChangeFrustumNearPlane(near_z);
     EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 Ray3 GameCameraService::GetPickerRay(float clip_space_x, float clip_space_y)
 {
     assert(m_primaryCamera);
-    assert(m_primaryCamera->GetCullingFrustum());
     Vector3 clip_vec = Vector3(clip_space_x, clip_space_y, 0.0f);
-    Matrix4 mxProj = m_primaryCamera->GetCullingFrustum()->GetProjectionTransform().Inverse();
+    Matrix4 mxProj = m_primaryCamera->GetCullingFrustum().GetProjectionTransform().Inverse();
     Vector3 camera_vec = mxProj.TransformCoord(clip_vec);
     Matrix4 mxView = m_primaryCamera->GetViewTransform().Inverse();
     Vector3 world_vec = mxView.TransformCoord(camera_vec);
@@ -232,4 +243,36 @@ void GameCameraService::OnGestureScale(const Frameworks::IEventPtr& e)
     float delta_dist = (ev->m_factor - 1.0f) * 10.0f;
     CameraZoom(delta_dist);
 #endif
+}
+
+void GameCameraService::DoZoomingCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ZoomCamera, ICommand>(c);
+    if (!cmd) return;
+    CameraZoom(cmd->GetDistance());
+}
+
+void GameCameraService::DoSphereRotatingCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<SphereRotateCamera, ICommand>(c);
+    if (!cmd) return;
+    CameraSphereRotate(cmd->GetHorizontalAngle(), cmd->GetVerticalAngle(), cmd->GetCenter());
+}
+
+void GameCameraService::DoMovingCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<MoveCamera, ICommand>(c);
+    if (!cmd) return;
+    CameraMove(cmd->GetDirectionDistance(), cmd->GetSlideDistance());
+}
+
+void GameCameraService::DoMovingCameraXZ(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<MoveCameraXZ, ICommand>(c);
+    if (!cmd) return;
+    CameraMoveXZ(cmd->GetMoveX(), cmd->GetMoveZ());
 }

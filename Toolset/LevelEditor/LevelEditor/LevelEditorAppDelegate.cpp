@@ -71,7 +71,7 @@ EditorAppDelegate::~EditorAppDelegate()
 }
 
 void EditorAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI::AsyncType useAsyncDevice,
-                                   const std::string& log_filename, HWND hwnd)
+    const std::string& log_filename, HWND hwnd)
 {
     m_hwnd = hwnd;
     if (log_filename.length() > 0)
@@ -157,7 +157,7 @@ void EditorAppDelegate::InstallEngine()
         std::make_shared<JsonFileDtoDeserializer>());
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_appConfig->GetSceneRootName(), m_appConfig->GetPortalManagementName());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(CameraDto::FromGenericDto(m_appConfig->GetCameraDto()));
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->GetCameraDto());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
@@ -165,6 +165,10 @@ void EditorAppDelegate::InstallEngine()
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
+    m_inputHandler.lock()->RegisterKeyboardAsyncKey('A');
+    m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');
+    m_inputHandler.lock()->RegisterKeyboardAsyncKey('S');
+    m_inputHandler.lock()->RegisterKeyboardAsyncKey('W');
     m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->GetSystemServiceAs<ShadowMapService>();
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));

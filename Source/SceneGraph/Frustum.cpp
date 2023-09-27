@@ -13,9 +13,8 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
-Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType proj)
+Frustum::Frustum(GraphicCoordSys hand, ProjectionType proj)
 {
-    m_name = name;
     m_handCoord = hand;
     m_projectionType = proj;
     m_fov = MathLib::Math::PI / 4.0f;
@@ -48,17 +47,17 @@ Frustum::Frustum(const std::string& name, GraphicCoordSys hand, ProjectionType p
     }
 }
 
-Frustum::Frustum(const FrustumDto& dto)
+Frustum::Frustum(const GenericDto& dto)
 {
-    m_name = dto.Name();
-    m_handCoord = dto.HandSystem();
-    m_projectionType = dto.ProjectionType();
-    m_fov = dto.Fov();
-    m_nearPlaneZ = dto.NearPlaneZ();
-    m_farPlaneZ = dto.FarPlaneZ();
-    m_aspectRatio = dto.AspectRatio();
-    m_nearWidth = dto.NearWidth();
-    m_nearHeight = dto.NearHeight();
+    FrustumDto frustum_dto = FrustumDto::FromGenericDto(dto);
+    m_handCoord = frustum_dto.HandSystem();
+    m_projectionType = frustum_dto.ProjectionType();
+    m_fov = frustum_dto.Fov();
+    m_nearPlaneZ = frustum_dto.NearPlaneZ();
+    m_farPlaneZ = frustum_dto.FarPlaneZ();
+    m_aspectRatio = frustum_dto.AspectRatio();
+    m_nearWidth = frustum_dto.NearWidth();
+    m_nearHeight = frustum_dto.NearHeight();
     if (m_handCoord == GraphicCoordSys::LeftHand)
     {
         if (m_projectionType == ProjectionType::Perspective)
@@ -83,14 +82,9 @@ Frustum::Frustum(const FrustumDto& dto)
     }
 }
 
-Frustum::~Frustum()
-{
-}
-
 GenericDto Frustum::SerializeDto()
 {
     FrustumDto dto;
-    dto.Name() = m_name;
     dto.HandSystem() = m_handCoord;
     dto.ProjectionType() = m_projectionType;
     dto.Fov() = m_fov;
@@ -120,7 +114,7 @@ error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, 
 
     m_projectionType = ProjectionType::Perspective;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 
@@ -143,7 +137,7 @@ error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, flo
 
     m_projectionType = ProjectionType::Ortho;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(shared_from_this()));
+    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 

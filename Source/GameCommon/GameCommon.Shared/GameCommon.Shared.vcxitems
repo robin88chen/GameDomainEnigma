@@ -24,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.h" />

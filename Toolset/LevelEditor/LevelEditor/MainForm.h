@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MainForm.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -81,6 +81,8 @@ namespace LevelEditor
         /*void OnImportDaeFile(const nana::menu::item_proxy& menu_item);
         void OnSaveEntity(const nana::menu::item_proxy& menu_item);
         void OnLoadEntity(const nana::menu::item_proxy& menu_item);*/
+
+        void OnCameraFrustumCommand(const nana::menu::item_proxy& menu_item);
 
         void OnGodModeChanged(bool enabled);
         void FinalizeGraphics();

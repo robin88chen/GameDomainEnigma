@@ -11,6 +11,7 @@
 #include <string>
 #include "Application/AppDelegateWin32.h"
 #include "GameCommon/SceneRendererService.h"
+#include "ShadowMap/ShadowMapService.h"
 
 namespace EnigmaGame
 {
@@ -36,6 +37,7 @@ namespace EnigmaGame
 
     private:
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+        std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
         std::unique_ptr<AppConfiguration> m_appConfig;
     };

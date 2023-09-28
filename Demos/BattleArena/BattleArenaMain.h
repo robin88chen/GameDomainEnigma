@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   BattleArenaMain.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -16,6 +16,7 @@
 #elif TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/AppDelegateAndroid.h"
 #endif
+#include "ShadowMap/ShadowMapService.h"
 #include "GameCommon/SceneRendererService.h"
 
 namespace BattleArena
@@ -39,6 +40,7 @@ namespace BattleArena
 
     private:
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+        std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
         std::unique_ptr<AppConfiguration> m_appConfig;
     };

@@ -131,6 +131,11 @@ const Enigma::Graphics::TargetViewPort& RenderTarget::GetViewPort()
 
 error RenderTarget::Bind()
 {
+    if (!m_backSurface)
+    {
+        Platforms::Debug::Printf("bind render target %s back surface not ready\n", m_name.c_str());
+        return ErrorCode::nullBackSurface;
+    }
     Graphics::IGraphicAPI::Instance()->Bind(m_backSurface, m_depthStencilSurface);
     //Frameworks::CommandBus::Post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     return ErrorCode::ok;

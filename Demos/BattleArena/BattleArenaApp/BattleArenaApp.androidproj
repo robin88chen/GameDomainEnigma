@@ -41,7 +41,7 @@
     <ProjectVersion>1.0</ProjectVersion>
     <ProjectGuid>{ba0c0e51-2689-45a3-8d46-3b223123ef82}</ProjectGuid>
     <_PackagingProjectWithoutNativeComponent>true</_PackagingProjectWithoutNativeComponent>
-    <LaunchActivity Condition="'$(LaunchActivity)' == ''">com.BattleArenaApp.BattleArenaApp</LaunchActivity>
+    <LaunchActivity Condition="'$(LaunchActivity)' == ''">com.RobinGames.BattleArena.BattleArenaMain</LaunchActivity>
     <JavaSourceRoots>src\main\java</JavaSourceRoots>
   </PropertyGroup>
   <Import Project="$(AndroidTargetsPath)\Android.Default.props" />

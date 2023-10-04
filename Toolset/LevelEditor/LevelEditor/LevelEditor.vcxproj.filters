@@ -25,6 +25,9 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{5d03fe07-e5ff-482e-aca4-a8e4e3d081b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Errors">
+      <UniqueIdentifier>{0e915b66-e096-4240-b678-33fcae1a05a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -96,6 +99,15 @@
     </ClCompile>
     <ClCompile Include="FrustumInfoDialog.cpp">
       <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="PawnEditConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="PawnEditService.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditorErrors.cpp">
+      <Filter>Errors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +189,15 @@
     </ClInclude>
     <ClInclude Include="FrustumInfoDialog.h">
       <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="PawnEditConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="PawnEditService.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorErrors.h">
+      <Filter>Errors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

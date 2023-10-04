@@ -105,7 +105,7 @@ void EditorSceneConsole::OnMouseMoved(const Enigma::Frameworks::IEventPtr& e)
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn));
+        EventPublisher::Post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -119,7 +119,7 @@ void EditorSceneConsole::OnMouseLeftButtonDown(const Enigma::Frameworks::IEventP
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn));
+        EventPublisher::Post(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -133,7 +133,7 @@ void EditorSceneConsole::OnMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn));
+        EventPublisher::Post(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -147,7 +147,7 @@ void EditorSceneConsole::OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr&
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn));
+        EventPublisher::Post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 

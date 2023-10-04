@@ -33,6 +33,7 @@
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/SpatialShadowFlags.h"
 #include "LightEditService.h"
+#include "PawnEditService.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -174,6 +175,7 @@ void EditorAppDelegate::InstallEngine()
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
     m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<LightEditService>(m_graphicMain->GetServiceManager()));
+    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<PawnEditService>(m_graphicMain->GetServiceManager()));
 }
 
 void EditorAppDelegate::ShutdownEngine()

@@ -25,6 +25,7 @@ namespace LevelEditor
     class TerrainToolPanel;
     class OutputPanel;
     class WorldEditConsole;
+    class PawnEditConsole;
 
     class MainForm : public nana::form
     {
@@ -75,8 +76,8 @@ namespace LevelEditor
 
         void OnToolBarSelected(const nana::arg_toolbar& arg);
 
-        void OnAddCandidateEntity(const nana::toolbar::item_proxy& drop_down_item);
-        void OnSelectEntity(const nana::toolbar::item_proxy& drop_down_item, const std::string& entity_name);
+        void OnAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_item);
+        void OnSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name);
         void OnSelectZoneNode(const nana::toolbar::item_proxy& drop_down_item, const std::string& node_name);
         /*void OnImportDaeFile(const nana::menu::item_proxy& menu_item);
         void OnSaveEntity(const nana::menu::item_proxy& menu_item);
@@ -101,6 +102,7 @@ namespace LevelEditor
         OutputPanel* m_outputPanel;
 
         std::weak_ptr<WorldEditConsole> m_worldConsole;
+        std::weak_ptr<PawnEditConsole> m_pawnConsole;
 
         EditorMode m_editorMode;
     };

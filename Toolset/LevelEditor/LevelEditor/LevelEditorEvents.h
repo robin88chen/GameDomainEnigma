@@ -12,6 +12,7 @@
 #include "EditorModes.h"
 #include "SceneGraph/Spatial.h"
 #include "SceneGraph/Pawn.h"
+#include "InputHandlers/MouseInputEvents.h"
 
 namespace LevelEditor
 {
@@ -48,50 +49,58 @@ namespace LevelEditor
     class SceneCursorMoved : public Enigma::Frameworks::IEvent
     {
     public:
-        SceneCursorMoved(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn) : m_pos(pos), m_hoveredPawn(hovered_pawn) {}
+        SceneCursorMoved(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_hoveredPawn(hovered_pawn), m_mouseParam(mouse_param) {}
 
         const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
         std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
+        Enigma::InputHandlers::MouseInputEvent::MouseInputParameters m_mouseParam;
     };
     class SceneCursorPressed : public Enigma::Frameworks::IEvent
     {
     public:
-        SceneCursorPressed(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn) : m_pos(pos), m_pickedPawn(picked_pawn) {}
+        SceneCursorPressed(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_pickedPawn(picked_pawn), m_mouseParam(mouse_param) {}
 
         const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
         std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_pickedPawn;
+        Enigma::InputHandlers::MouseInputEvent::MouseInputParameters m_mouseParam;
     };
     class SceneCursorReleased : public Enigma::Frameworks::IEvent
     {
     public:
-        SceneCursorReleased(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn) : m_pos(pos), m_pickedPawn(picked_pawn) {}
+        SceneCursorReleased(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_pickedPawn(picked_pawn), m_mouseParam(mouse_param) {}
 
         const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
         std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_pickedPawn;
+        Enigma::InputHandlers::MouseInputEvent::MouseInputParameters m_mouseParam;
     };
     class SceneCursorDragged : public Enigma::Frameworks::IEvent
     {
     public:
-        SceneCursorDragged(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn) : m_pos(pos), m_hoveredPawn(hovered_pawn) {}
+        SceneCursorDragged(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_hoveredPawn(hovered_pawn), m_mouseParam(mouse_param) {}
 
         const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
         std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
+        Enigma::InputHandlers::MouseInputEvent::MouseInputParameters m_mouseParam;
     };
 }
 

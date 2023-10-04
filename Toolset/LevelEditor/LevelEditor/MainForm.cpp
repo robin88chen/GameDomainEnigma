@@ -24,6 +24,8 @@
 #include "LevelEditorEvents.h"
 #include "nana/gui/filebox.hpp"
 #include "FrustumInfoDialog.h"
+#include "PawnEditConsole.h"
+#include "PawnEditService.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -104,12 +106,15 @@ void MainForm::InitializeGraphics()
     m_timer->start();
     events().destroy([this] { this->FinalizeGraphics(); });
     auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->GetServiceManager();
-    auto world_edit = std::dynamic_pointer_cast<WorldEditService, Enigma::Frameworks::ISystemService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
+    auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->GetSystemService(WorldEditService::TYPE_RTTI));
     srv_mngr->RegisterSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
     srv_mngr->RegisterSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
     srv_mngr->RegisterSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
+    auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->GetSystemService(PawnEditService::TYPE_RTTI));
+    srv_mngr->RegisterSystemService(std::make_shared<PawnEditConsole>(srv_mngr, pawn_edit));
     m_worldConsole = srv_mngr->GetSystemServiceAs<WorldEditConsole>();
     m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
+    m_pawnConsole = srv_mngr->GetSystemServiceAs<PawnEditConsole>();
 }
 
 void MainForm::FinalizeGraphics()
@@ -204,7 +209,7 @@ void MainForm::InitTools()
     m_toolbar->append_separator();
     m_toolbar->append(nana::toolbar::tools::dropdown, "Candidate Entities",
         nana::paint::image("icons/creature_entity.bmp")).dropdown_append(
-            "...", [this](const nana::toolbar::item_proxy& it) { this->OnAddCandidateEntity(it); });
+            "...", [this](const nana::toolbar::item_proxy& it) { this->OnAddCandidatePawn(it); });
     m_toolbar->append_separator();
     m_toolbar->append(nana::toolbar::tools::toggle, "God Mode",
         nana::paint::image("icons/god_mode.bmp")).toggle_group("god_mode");
@@ -260,9 +265,10 @@ void MainForm::OnAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_i
     Enigma::Frameworks::CommandBus::Post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->GetCurrentWorldName()));
 }
 
-void MainForm::OnSelectEntity(const nana::toolbar::item_proxy& drop_down_item, const std::string& entity_name)
+void MainForm::OnSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name)
 {
-
+    if (m_pawnConsole.expired()) return;
+    m_pawnConsole.lock()->SelectCandidatePawn(pawn_name);
 }
 
 void MainForm::OnCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item)
@@ -275,9 +281,22 @@ void MainForm::OnAddPortalCommand(const nana::menu::item_proxy& menu_item)
 
 }
 
-void MainForm::OnAddCandidateEntity(const nana::toolbar::item_proxy& drop_down_item)
+void MainForm::OnAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_item)
 {
-
+    nana::filebox fb(handle(), true);
+    fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} }).title("Load Pawn");
+    if (auto paths = fb.show(); !paths.empty())
+    {
+        Filename filename_obj(paths[0].string());
+        std::string pawn_name = filename_obj.GetBaseFileName();
+        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
+        if (!m_pawnConsole.expired())
+        {
+            m_pawnConsole.lock()->InsertCandidatePawnFilePath(pawn_name, paths[0].string());
+        }
+        ((nana::toolbar::item_proxy)(drop_down_item)).dropdown_append(pawn_name,
+            [=](const nana::toolbar::item_proxy& it) { this->OnSelectPawn(it, pawn_name); });
+    }
 }
 
 void MainForm::OnGodModeChanged(bool enabled)

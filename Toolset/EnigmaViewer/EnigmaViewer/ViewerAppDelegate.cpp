@@ -155,8 +155,8 @@ void ViewerAppDelegate::InstallEngine()
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
-        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
+        .Frustum(Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
+        .FrustumNearPlaneDimension(40.0f, 30.0f).ToGenericDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";

@@ -8,6 +8,7 @@
 #ifndef PAWN_LOADER_H
 #define PAWN_LOADER_H
 
+#include "Frameworks/EventSubscriber.h"
 #include <system_error>
 
 namespace LevelEditor
@@ -21,6 +22,14 @@ namespace LevelEditor
         ~PawnLoader();
 
         error StartLoadingPawn(const std::string& full_path);
+
+    private:
+        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
+    private:
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+
+        std::string m_pawnFullPath;
     };
 }
 

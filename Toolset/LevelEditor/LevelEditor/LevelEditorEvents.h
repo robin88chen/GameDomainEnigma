@@ -16,6 +16,7 @@
 
 namespace LevelEditor
 {
+    //---- Editor Modes ----
     class EditorModeChanged : public Enigma::Frameworks::IEvent
     {
     public:
@@ -28,6 +29,7 @@ namespace LevelEditor
         EditorMode m_prevMode;
         EditorMode m_currMode;
     };
+    //---- Scene Graph Events ----
     class PickedSpatialChanged : public Enigma::Frameworks::IEvent
     {
     public:
@@ -46,6 +48,7 @@ namespace LevelEditor
         std::shared_ptr<Enigma::SceneGraph::Spatial> m_spatial;
         PickedFrom m_from;
     };
+    //---- Scene View Events ----
     class SceneCursorMoved : public Enigma::Frameworks::IEvent
     {
     public:
@@ -101,6 +104,19 @@ namespace LevelEditor
         Enigma::MathLib::Vector3 m_pos;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_hoveredPawn;
         Enigma::InputHandlers::MouseInputEvent::MouseInputParameters m_mouseParam;
+    };
+    //---- Pawn Events ----
+    class PawnLoaded : public Enigma::Frameworks::IEvent
+    {
+    public:
+        PawnLoaded(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const std::string& pawn_file_path) : m_pawn(pawn), m_pawnFilePath(pawn_file_path) {}
+
+        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPawn() const { return m_pawn; }
+        const std::string& GetPawnFilePath() const { return m_pawnFilePath; }
+
+    private:
+        std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
+        std::string m_pawnFilePath;
     };
 }
 

@@ -28,6 +28,7 @@ ServiceResult PawnEditService::OnTerm()
 
 error PawnEditService::PutCandidatePawn(const std::string& full_path, const Enigma::MathLib::Vector3& position)
 {
+
     return ErrorCode::ok;
 }
 

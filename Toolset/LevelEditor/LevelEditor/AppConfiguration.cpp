@@ -19,7 +19,7 @@ std::string TOKEN_WORLD_MAP_PATH_ID = "WorldMapPathID";
 
 void AppConfiguration::LoadConfig()
 {
-    const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(Enigma::FileSystem::Filename("app.cfg"), "rb");
+    const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(Enigma::FileSystem::Filename("app.cfg"), Enigma::FileSystem::Read | Enigma::FileSystem::Binary);
     const size_t file_size = iFile->Size();
     const auto read_buf = iFile->Read(0, file_size);
     Enigma::FileSystem::FileSystem::Instance()->CloseFile(iFile);

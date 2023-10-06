@@ -28,6 +28,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::WorldMap;
+using namespace Enigma::FileSystem;
 
 Rtti TerrainEditService::TYPE_RTTI{ "LevelEditor.TerrainEditService", &ISystemService::TYPE_RTTI };
 
@@ -73,7 +74,7 @@ ServiceResult TerrainEditService::OnInit()
     m_onTerrainPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainPrimitiveBuilt(e); });
     EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
     m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
-    EventPublisher::Subscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::Subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 
     m_onSplatTextureSaved = std::make_shared<EventSubscriber>([=](auto e) { OnSplatTextureSaved(e); });
     EventPublisher::Subscribe(typeid(TextureSaved), m_onSplatTextureSaved);
@@ -102,7 +103,7 @@ ServiceResult TerrainEditService::OnTerm()
     m_onSceneGraphBuilt = nullptr;
     EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
     m_onTerrainPrimitiveBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(LevelEditor::PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::Unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 
     EventPublisher::Unsubscribe(typeid(TextureSaved), m_onSplatTextureSaved);
@@ -184,7 +185,7 @@ void TerrainEditService::CommitHeightMapUpdated(const std::shared_ptr<TerrainPri
     m_dirtyVtxMinIndex = std::numeric_limits<unsigned int>::max();
 }
 
-void TerrainEditService::PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density)
+void TerrainEditService::PaintTerrainLayerByBrush(const Vector3& brush_pos, float brush_size, unsigned layer_idx, float density)
 {
     assert(layer_idx < TextureLayerNum);
     if (m_pickedTerrain.expired()) return;
@@ -219,7 +220,7 @@ void TerrainEditService::PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3
     CommitAlphaTexelUpdated();
 }
 
-void TerrainEditService::PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density)
+void TerrainEditService::PaintTerrainLayer(const Vector3& picking_pos, unsigned layer_idx, float density)
 {
     assert(layer_idx < TextureLayerNum);
     if (m_pickedTerrain.expired()) return;
@@ -357,7 +358,7 @@ void TerrainEditService::DoCompletingEditOperation(const ICommandPtr& c)
 
 }
 
-void TerrainEditService::DoSavingSplatTexture(const Enigma::Frameworks::ICommandPtr& c)
+void TerrainEditService::DoSavingSplatTexture(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<SaveTerrainSplatTexture, ICommand>(c);
@@ -377,7 +378,7 @@ void TerrainEditService::DoSavingSplatTexture(const Enigma::Frameworks::ICommand
         CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
-    m_savingSplatTextureFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), "w+b");
+    m_savingSplatTextureFile = FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), Write | OpenAlways | Binary);
     CommandBus::Post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_savingSplatTextureFile));
 }
 
@@ -393,7 +394,7 @@ void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)
     CommandBus::Post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
 }
 
-void TerrainEditService::OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
+void TerrainEditService::OnTerrainPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
@@ -428,7 +429,7 @@ void TerrainEditService::OnPickedSpatialChanged(const IEventPtr& e)
     CommandBus::Post(std::make_shared<RetrieveTextureImage>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_alphaRect));
 }
 
-void TerrainEditService::OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e)
+void TerrainEditService::OnTextureImageRetrieved(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TextureImageRetrieved, IEvent>(e);
@@ -438,7 +439,7 @@ void TerrainEditService::OnTextureImageRetrieved(const Enigma::Frameworks::IEven
     m_alphaTexels = ev->GetImageBuffer();
 }
 
-void TerrainEditService::OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e)
+void TerrainEditService::OnRetrieveTextureImageFailed(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RetrieveTextureImageFailed, IEvent>(e);
@@ -449,7 +450,7 @@ void TerrainEditService::OnRetrieveTextureImageFailed(const Enigma::Frameworks::
     }
 }
 
-void TerrainEditService::OnSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e)
+void TerrainEditService::OnSplatTextureSaved(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TextureSaved, IEvent>(e);
@@ -457,16 +458,16 @@ void TerrainEditService::OnSplatTextureSaved(const Enigma::Frameworks::IEventPtr
     if (!m_savingSplatTextureFile) return;
     if (m_pickedSplatTexture.expired())
     {
-        Enigma::FileSystem::FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
+        FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
         m_savingSplatTextureFile = nullptr;
         return;
     }
     if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
-    Enigma::FileSystem::FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
+    FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
     m_savingSplatTextureFile = nullptr;
 }
 
-void TerrainEditService::OnSaveSplatTextureFailed(const Enigma::Frameworks::IEventPtr& e)
+void TerrainEditService::OnSaveSplatTextureFailed(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SaveTextureFailed, IEvent>(e);
@@ -474,12 +475,12 @@ void TerrainEditService::OnSaveSplatTextureFailed(const Enigma::Frameworks::IEve
     if (!m_savingSplatTextureFile) return;
     if (m_pickedSplatTexture.expired())
     {
-        Enigma::FileSystem::FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
+        FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
         m_savingSplatTextureFile = nullptr;
         return;
     }
     if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
-    Enigma::FileSystem::FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
+    FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
     m_savingSplatTextureFile = nullptr;
     CommandBus::Post(std::make_shared<OutputMessage>(string_format("Save splat texture %s image failed %s", ev->GetName().c_str(), ev->GetErrorCode().message().c_str())));
 }

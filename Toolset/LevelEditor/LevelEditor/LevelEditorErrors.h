@@ -15,6 +15,8 @@ namespace LevelEditor
     enum class ErrorCode
     {
         ok = 0,
+        emptyFilePath,
+        fileIOError,
     };
     class ErrorCategory : public std::error_category
     {

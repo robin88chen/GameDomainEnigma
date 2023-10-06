@@ -10,6 +10,7 @@
 
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
+#include "MathLib/Vector3.h"
 
 namespace LevelEditor
 {
@@ -35,6 +36,8 @@ namespace LevelEditor
         void OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e);
         void OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e);
+
+        void PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos);
 
     private:
         std::weak_ptr<PawnEditService> m_editService;

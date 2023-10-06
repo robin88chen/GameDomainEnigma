@@ -9,6 +9,8 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
+    case ErrorCode::emptyFilePath: return "Empty file path";
+    case ErrorCode::fileIOError: return "File IO error";
     }
     return "Unknown";
 }

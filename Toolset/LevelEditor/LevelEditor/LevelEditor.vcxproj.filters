@@ -109,6 +109,9 @@
     <ClCompile Include="LevelEditorErrors.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
+    <ClCompile Include="PawnLoader.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="LevelEditorErrors.h">
       <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="PawnLoader.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

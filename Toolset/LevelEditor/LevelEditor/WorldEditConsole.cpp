@@ -89,7 +89,7 @@ void WorldEditConsole::SaveWorldMap()
     if (!map_graph.empty())
     {
         std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(map_graph);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(map_graph[0].GetRtti().GetPrefab()), "w+b");
+        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(map_graph[0].GetRtti().GetPrefab()), Write | OpenAlways | Binary);
         if (FATAL_LOG_EXPR(!iFile)) return;
         iFile->Write(0, convert_to_buffer(json));
         FileSystem::Instance()->CloseFile(iFile);
@@ -97,7 +97,7 @@ void WorldEditConsole::SaveWorldMap()
     for (auto& dtos : node_graphs)
     {
         std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(dtos);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), "w+b");
+        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), Write | OpenAlways | Binary);
         if (FATAL_LOG_EXPR(!iFile)) return;
         iFile->Write(0, convert_to_buffer(json));
         FileSystem::Instance()->CloseFile(iFile);
@@ -109,7 +109,7 @@ void WorldEditConsole::LoadWorldMap(const std::filesystem::path& map_filepath)
     std::string path_string = FilePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
 
     Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, "rb");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, Read | Binary);
     size_t file_size = iFile->Size();
 
     auto read_buf = iFile->Read(0, file_size);

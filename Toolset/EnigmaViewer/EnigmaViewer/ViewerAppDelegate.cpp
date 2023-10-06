@@ -250,7 +250,7 @@ void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
     auto pawn_dto = m_pawn->SerializeDto();
     pawn_dto.AsTopLevel(true);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Write | OpenAlways | Binary);
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
 }
@@ -262,7 +262,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
         m_pawn->DetachFromParent();
         m_pawn = nullptr;
     }
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "rb");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Read | Binary);
     size_t file_size = iFile->Size();
 
     auto read_buf = iFile->Read(0, file_size);

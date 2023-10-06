@@ -107,7 +107,7 @@ DaeParser::~DaeParser()
 
 void DaeParser::LoadDaeFile(const std::string& filename)
 {
-    IFilePtr file = FileSystem::Instance()->OpenFile(filename, "rb", "");
+    IFilePtr file = FileSystem::Instance()->OpenFile(filename, Read | Binary, "");
     if (!file) return;
     unsigned file_size = static_cast<unsigned>(file->Size());
     auto read_buf = file->Read(0, file_size);
@@ -792,7 +792,7 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
     m_animationAssetDto.AddRtti(desc);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{m_animationAssetDto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), Write | OpenAlways | Binary);
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
     desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
@@ -1226,7 +1226,7 @@ GenericDto DaeParser::ComposeTriangleListDto(const std::string& geo_name, bool i
     auto generic_dto = geo_dto.ToGenericDto();
     auto filename = Filename("pawns/" + geo_name + ".geo@APK_PATH");
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> { generic_dto });
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filename, "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filename, Write | OpenAlways | Binary);
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
     FactoryDesc desc = generic_dto.GetRtti();

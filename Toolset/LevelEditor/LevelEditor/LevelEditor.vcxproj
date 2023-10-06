@@ -146,6 +146,7 @@
     <ClCompile Include="OutputPanel.cpp" />
     <ClCompile Include="PawnEditConsole.cpp" />
     <ClCompile Include="PawnEditService.cpp" />
+    <ClCompile Include="PawnLoader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -180,6 +181,7 @@
     <ClInclude Include="OutputPanel.h" />
     <ClInclude Include="PawnEditConsole.h" />
     <ClInclude Include="PawnEditService.h" />
+    <ClInclude Include="PawnLoader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="propertygrid\pgitems.h" />
     <ClInclude Include="propertygrid\propertygrid.h" />

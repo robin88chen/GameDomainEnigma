@@ -3,6 +3,7 @@
 #include "LevelEditorCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
+#include "PawnEditService.h"
 #include <cassert>
 
 using namespace LevelEditor;
@@ -77,7 +78,10 @@ void PawnEditConsole::OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& 
     const auto ev = std::dynamic_pointer_cast<SceneCursorPressed>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-
+    if (ev->GetMouseParam().m_flags.m_buttons.m_ctrl)
+    {
+        PutSelectedPawnToScene(ev->GetPosition());
+    }
 }
 
 void PawnEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e)
@@ -87,4 +91,13 @@ void PawnEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr&
     if (!ev) return;
     if (!m_isEnabled) return;
 
+}
+
+void PawnEditConsole::PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos)
+{
+    if (m_selectedCandidatePawnName.empty()) return;
+    auto it = m_pawnFullpaths.find(m_selectedCandidatePawnName);
+    if (it == m_pawnFullpaths.end()) return;
+    CommandBus::Post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
+    if (!m_editService.expired()) m_editService.lock()->PutCandidatePawn(it->second, pos);
 }

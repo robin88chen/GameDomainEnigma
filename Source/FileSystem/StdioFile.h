@@ -11,6 +11,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "IFile.h"
+#include "ReadWriteOption.h"
 #include <fstream>
 
 namespace Enigma::FileSystem
@@ -21,7 +22,7 @@ namespace Enigma::FileSystem
         StdioFile();
         StdioFile(const StdioFile&) = delete;
         StdioFile(StdioFile&&) = delete;
-        StdioFile(const std::string& fullpath, const std::string& rw_option);
+        StdioFile(const std::string& fullpath, const ReadWriteOption& rw_option);
         virtual ~StdioFile() override;
         StdioFile& operator=(const StdioFile&) = delete;
         StdioFile& operator=(StdioFile&&) = delete;
@@ -47,7 +48,7 @@ namespace Enigma::FileSystem
     private:
         std::fstream m_file;
         std::string m_fullPath;
-        std::string m_rwOption;
+        ReadWriteOption m_rwOption;
         time_t m_fileTime;
         bool m_isWritable;
     };

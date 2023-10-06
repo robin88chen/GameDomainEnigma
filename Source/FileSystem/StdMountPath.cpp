@@ -28,7 +28,7 @@ StdMountPath::~StdMountPath()
 {
 }
 
-IFile* StdMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
+IFile* StdMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
     std::string full_path = FixFullPath(m_filePath, filename);
     IFile* file = menew StdioFile(full_path, rw_option);

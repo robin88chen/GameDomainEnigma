@@ -31,7 +31,7 @@ void AsyncJsonFileEffectProfileDeserializer::InvokeDeserialize(const Frameworks:
 
 void AsyncJsonFileEffectProfileDeserializer::DeserializeProcedure()
 {
-    FutureFile readingFile = FileSystem::FileSystem::Instance()->AsyncOpenFile(Filename(m_parameter), "rb");
+    FutureFile readingFile = FileSystem::FileSystem::Instance()->AsyncOpenFile(Filename(m_parameter), Read | Binary);
     while (!readingFile.valid() || (readingFile.wait_for(std::chrono::milliseconds(1)) != std::future_status::ready)) {}
     IFilePtr readFile = readingFile.get();
     if (!readFile)

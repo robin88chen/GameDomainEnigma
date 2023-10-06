@@ -23,7 +23,7 @@ namespace Enigma::FileSystem
 
         virtual ~AndroidMountPath();
 
-        virtual IFile* CreateFile(const std::string& filename, const std::string& rw_option) override;
+        virtual IFile* CreateFile(const std::string& filename, const ReadWriteOption& rw_option) override;
 
         virtual bool EqualMountPath(IMountPath* path) override;
         virtual bool EqualMountPath(const std::filesystem::path& path) override;

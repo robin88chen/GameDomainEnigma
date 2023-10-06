@@ -16,7 +16,7 @@ StdioFile::StdioFile() : IFile()
     m_isWritable = false;
 }
 
-StdioFile::StdioFile(const std::string& fullpath, const std::string& rw_option) : IFile()
+StdioFile::StdioFile(const std::string& fullpath, const ReadWriteOption& rw_option) : IFile()
 {
     m_fullPath = fullpath;
     m_rwOption = rw_option;
@@ -157,24 +157,24 @@ bool StdioFile::IsFileExisted(const std::string& filepath)
 error StdioFile::Open()
 {
     if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
-    if (m_rwOption.length() == 0) return ErrorCode::emptyRWOption;
-    Debug::Printf("stdio file %s with option %s", m_fullPath.c_str(), m_rwOption.c_str());
+    if (!m_rwOption.any()) return ErrorCode::emptyRWOption;
+    Debug::Printf("stdio file %s with option %s", m_fullPath.c_str(), m_rwOption.to_string().c_str());
 
     std::fstream::openmode mode{};
-    if (m_rwOption.find('w') != std::string::npos)
+    if ((m_rwOption & ReadWriteOptionWrite).any())
     {
         mode |= std::fstream::out;
         m_isWritable = true;
     }
-    if (m_rwOption.find('r') != std::string::npos)
+    if ((m_rwOption & ReadWriteOptionRead).any())
     {
         mode |= std::fstream::in;
     }
-    if (m_rwOption.find('+') != std::string::npos)
+    if ((m_rwOption & ReadWriteOptionOpenAlways).any())
     {
         mode |= std::fstream::trunc;
     }
-    if (m_rwOption.find('b') != std::string::npos)
+    if ((m_rwOption & ReadWriteOptionBinary).any())
     {
         mode |= std::fstream::binary;
     }

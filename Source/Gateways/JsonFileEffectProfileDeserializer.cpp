@@ -23,7 +23,7 @@ void JsonFileEffectProfileDeserializer::InvokeDeserialize(const Ruid& ruid_deser
 {
     m_gateway.Cleanup();
 
-    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), "rb");
+    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), Read | Binary);
     if (!readFile)
     {
         Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::fileOpenError));

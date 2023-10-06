@@ -102,7 +102,7 @@ void ITexture::Retrieve(const MathLib::Rect& rcSrc)
 error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)
 {
     FileSystem::Filename filename_at_path(filename, pathid);
-    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetSubPathFileName(), "rb", filename_at_path.GetMountPathID());
+    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetSubPathFileName(), FileSystem::Read | FileSystem::Binary, filename_at_path.GetMountPathID());
     if (!iFile) return ErrorCode::fileIO;
     size_t file_size = iFile->Size();
     if (file_size <= 0)
@@ -134,7 +134,7 @@ void ITexture::Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 error ITexture::SaveTextureImage(const std::string& filename, const std::string& pathid)
 {
     FileSystem::Filename filename_at_path(filename, pathid);
-    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetSubPathFileName(), "w+b", filename_at_path.GetMountPathID());
+    FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filename_at_path.GetSubPathFileName(), FileSystem::Write | FileSystem::OpenAlways | FileSystem::Binary, filename_at_path.GetMountPathID());
     if (!iFile) return ErrorCode::fileIO;
     error er = SaveTextureImage(iFile);
     FileSystem::FileSystem::Instance()->CloseFile(iFile);

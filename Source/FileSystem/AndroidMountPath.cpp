@@ -23,7 +23,7 @@ AndroidMountPath::~AndroidMountPath()
 }
 
 #pragma warning(disable:4100)  // for unused parameter rw_option in VC++
-IFile* AndroidMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
+IFile* AndroidMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
     if (filename.length() == 0) return nullptr;
     IFile* file = nullptr;

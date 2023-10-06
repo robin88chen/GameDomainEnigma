@@ -19,7 +19,7 @@ AndroidAsset::AndroidAsset()
     m_aasset = nullptr;
 }
 
-AndroidAsset::AndroidAsset(const std::string& filename, const std::string& rw_option)
+AndroidAsset::AndroidAsset(const std::string& filename, const ReadWriteOption& rw_option)
 {
     m_aasset = nullptr;
     m_filename = filename;
@@ -101,7 +101,7 @@ bool AndroidAsset::IsExisted()
 error AndroidAsset::Open()
 {
     if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
-    if (m_rwOption.length() == 0) return ErrorCode::emptyRWOption;
+    if (!m_rwOption.any()) return ErrorCode::emptyRWOption;
     if (!AndroidBridge::GetAAssetManager()) return ErrorCode::androidAssetManagerError;
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     m_aasset = AAssetManager_open(AndroidBridge::GetAAssetManager(), m_filename.c_str(), AASSET_MODE_UNKNOWN);

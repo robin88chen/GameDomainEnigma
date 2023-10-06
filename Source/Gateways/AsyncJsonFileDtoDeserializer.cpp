@@ -28,7 +28,7 @@ void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& rui
 
 void AsyncJsonFileDtoDeserializer::DeserializeProcedure()
 {
-    FutureFile readingFile = FileSystem::FileSystem::Instance()->AsyncOpenFile(Filename(m_parameter), "rb");
+    FutureFile readingFile = FileSystem::FileSystem::Instance()->AsyncOpenFile(Filename(m_parameter), Read | Binary);
     while (!readingFile.valid() || (readingFile.wait_for(std::chrono::milliseconds(1)) != std::future_status::ready)) {}
     IFilePtr readFile = readingFile.get();
     if (!readFile)

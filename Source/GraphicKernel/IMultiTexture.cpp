@@ -103,7 +103,7 @@ error IMultiTexture::LoadTextureImages(const std::vector<std::string>& filenames
     buffs.resize(count);
     for (size_t i = 0; i < count; i++)
     {
-        FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filenames[i], "rb", pathids[i]);
+        FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filenames[i], FileSystem::Read | FileSystem::Binary, pathids[i]);
         if (!iFile) return ErrorCode::fileIO;
         size_t file_size = iFile->Size();
         if (file_size <= 0)
@@ -136,7 +136,7 @@ error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames
     files.resize(count);
     for (size_t i = 0; i < count; i++)
     {
-        FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filenames[i], "w+b", pathids[i]);
+        FileSystem::IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(filenames[i], FileSystem::Write | FileSystem::OpenAlways | FileSystem::Binary, pathids[i]);
         if (!iFile) return ErrorCode::fileIO;
         files.emplace_back(iFile);
     }

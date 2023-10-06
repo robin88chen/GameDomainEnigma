@@ -20,7 +20,7 @@ JsonFileDtoDeserializer::JsonFileDtoDeserializer() : IDtoDeserializer()
 
 void JsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
-    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), "rb");
+    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), Read | Binary);
     size_t filesize = readFile->Size();
     auto read_buff = readFile->Read(0, filesize);
     if (read_buff)

@@ -8,6 +8,7 @@
 #ifndef _MOUNT_PATH_INTERFACE_H
 #define _MOUNT_PATH_INTERFACE_H
 
+#include "ReadWriteOption.h"
 #include <string>
 #include <memory>
 #include <filesystem>
@@ -25,7 +26,7 @@ namespace Enigma::FileSystem
         IMountPath(const std::string& path_id) { m_pathID = path_id; };
         virtual ~IMountPath() = default;
 
-        virtual IFile* CreateFile(const std::string& filename, const std::string& rw_option) = 0;
+        virtual IFile* CreateFile(const std::string& filename, const ReadWriteOption& rw_option) = 0;
 
         virtual bool EqualPathID(const std::string& path_id)
         {

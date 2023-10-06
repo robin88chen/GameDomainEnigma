@@ -35,6 +35,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IMountPath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageContent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PackageMountPath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ReadWriteOption.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StdioFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StdMountPath.h" />
   </ItemGroup>

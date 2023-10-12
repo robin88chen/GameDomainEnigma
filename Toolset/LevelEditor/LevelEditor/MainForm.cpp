@@ -26,6 +26,7 @@
 #include "FrustumInfoDialog.h"
 #include "PawnEditConsole.h"
 #include "PawnEditService.h"
+#include "EditorUtilities.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -123,6 +124,7 @@ void MainForm::FinalizeGraphics()
     srv_mngr->UnregisterSystemService(WorldEditConsole::TYPE_RTTI);
     srv_mngr->UnregisterSystemService(TerrainEditConsole::TYPE_RTTI);
     srv_mngr->UnregisterSystemService(EditorSceneConsole::TYPE_RTTI);
+    srv_mngr->UnregisterSystemService(PawnEditConsole::TYPE_RTTI);
 
     if (m_terrainToolPanel) m_terrainToolPanel->UnsubscribeHandlers();
     if (m_spatialInspectorPanel) m_spatialInspectorPanel->UnsubscribeHandlers();
@@ -292,7 +294,8 @@ void MainForm::OnAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_ite
         Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
         if (!m_pawnConsole.expired())
         {
-            m_pawnConsole.lock()->InsertCandidatePawnFilePath(pawn_name, paths[0].string());
+            std::string filename_sub_path = FilePathCombinePathID(paths[0], m_appDelegate->GetAppConfig()->GetMediaPathId());
+            m_pawnConsole.lock()->InsertCandidatePawnFilePath(pawn_name, filename_sub_path + "@" + m_appDelegate->GetAppConfig()->GetMediaPathId());
         }
         ((nana::toolbar::item_proxy)(drop_down_item)).dropdown_append(pawn_name,
             [=](const nana::toolbar::item_proxy& it) { this->OnSelectPawn(it, pawn_name); });

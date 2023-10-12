@@ -17,6 +17,7 @@
 #include <memory>
 #include <vector>
 #include <deque>
+#include <system_error>
 
 namespace Enigma::SceneGraph
 {
@@ -27,6 +28,7 @@ namespace Enigma::SceneGraph
     class Node;
 
     using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
+    using error = std::error_code;
 
     class SceneGraphBuilder
     {
@@ -62,6 +64,7 @@ namespace Enigma::SceneGraph
         void BuildSceneGraph(const std::string& scene_graph_id, const Engine::GenericDtoCollection& dtos);
         void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const Engine::GenericDtoCollection& dtos);
 
+        void InterruptBuildingSceneGraph(error er);
         void SpatialFactory(const Engine::GenericDto& dto);
 
         void NodeFactory(const Engine::GenericDto& dto);

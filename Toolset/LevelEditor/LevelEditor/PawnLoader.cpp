@@ -21,12 +21,16 @@ PawnLoader::PawnLoader()
 {
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
     EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onBuildSceneGraphFailed = std::make_shared<EventSubscriber>([=](auto e) { OnBuildSceneGraphFailed(e); });
+    EventPublisher::Subscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
 }
 
 PawnLoader::~PawnLoader()
 {
     EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
+    EventPublisher::Unsubscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
+    m_onBuildSceneGraphFailed = nullptr;
 }
 
 error PawnLoader::StartLoadingPawn(const std::string& full_path)
@@ -55,4 +59,13 @@ void PawnLoader::OnSceneGraphBuilt(const IEventPtr& e)
     auto pawn = std::dynamic_pointer_cast<Pawn>(ev->GetTopLevelSpatial()[0]);
     if (!pawn) return;
     EventPublisher::Post(std::make_shared<PawnLoaded>(pawn, m_pawnFullPath));
+}
+
+void PawnLoader::OnBuildSceneGraphFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildFactorySceneGraphFailed>(e);
+    if (!ev) return;
+    if (ev->GetSceneGraphId() != m_pawnFullPath) return;
+    EventPublisher::Post(std::make_shared<LoadPawnFailed>(m_pawnFullPath, ev->GetErrorCode()));
 }

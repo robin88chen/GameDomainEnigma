@@ -25,9 +25,11 @@ namespace LevelEditor
 
     private:
         void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void OnBuildSceneGraphFailed(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        Enigma::Frameworks::EventSubscriberPtr m_onBuildSceneGraphFailed;
 
         std::string m_pawnFullPath;
     };

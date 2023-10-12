@@ -29,7 +29,7 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult OnInit() override;
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
 
-        void InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& full_path);
+        void InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& filename_at_path);
         void SelectCandidatePawn(const std::string& pawn_name);
 
     private:
@@ -47,8 +47,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorPressed;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorReleased;
 
-        typedef std::unordered_map< std::string, std::string > PawnFullpathMap;  // file base name map to full path
-        PawnFullpathMap m_pawnFullpaths;
+        typedef std::unordered_map< std::string, std::string > PawnFilePathMap;  // file base name map to full path
+        PawnFilePathMap m_pawnFilePaths;
         std::string m_selectedCandidatePawnName;
     };
 }

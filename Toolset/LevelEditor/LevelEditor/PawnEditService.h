@@ -40,12 +40,14 @@ namespace LevelEditor
 
     private:
         void OnPawnLoaded(const Enigma::Frameworks::IEventPtr& e);
+        void OnLoadPawnFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void PutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
     private:
         PawnLoader* m_pawnLoader;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPawnLoaded;
+        Enigma::Frameworks::EventSubscriberPtr m_onLoadPawnFailed;
 
         struct LoadingPawnMeta
         {

@@ -29,6 +29,9 @@ namespace Enigma::SceneGraph
         cameraNotFound,
         frustumNotFound,
         sceneRepositoryFailed,
+
+        spatialFactoryNotFound = 301,
+        factoryRttiMismatch,
     };
     class ErrorCategory : public std::error_category
     {

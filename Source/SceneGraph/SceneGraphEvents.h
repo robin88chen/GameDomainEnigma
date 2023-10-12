@@ -67,7 +67,7 @@ namespace Enigma::SceneGraph
         };
     public:
         SceneGraphChanged(const std::shared_ptr<Spatial>& parent, const std::shared_ptr<Spatial> child, NotifyCode code)
-        : SceneGraphEvent(parent), m_child(child), m_code(code)  {};
+            : SceneGraphEvent(parent), m_child(child), m_code(code) {};
         std::shared_ptr<Spatial> GetParentNode() { return m_spatial.lock(); }
         std::shared_ptr<Spatial> GetChild() { return m_child.lock(); }
         const NotifyCode GetNotifyCode() const { return m_code; }
@@ -116,7 +116,7 @@ namespace Enigma::SceneGraph
         };
     public:
         LightInfoUpdated(const std::shared_ptr<Light>& lit, NotifyCode code) : LightInfoEvent(lit),
-        m_notifyCode{ code } {}
+            m_notifyCode{ code } {}
 
         NotifyCode GetNotifyCode() const { return m_notifyCode; }
     protected:
@@ -137,6 +137,18 @@ namespace Enigma::SceneGraph
         Engine::GenericDto m_dto;
         std::shared_ptr<Spatial> m_spatial;
     };
+    class CreateFactorySpatialFailed : public Frameworks::IEvent
+    {
+    public:
+        CreateFactorySpatialFailed(const Engine::GenericDto& dto, std::error_code er) : m_dto(dto), m_error(er) {}
+
+        const Engine::GenericDto& GetDto() const { return m_dto; }
+        std::error_code GetErrorCode() const { return m_error; }
+
+    protected:
+        Engine::GenericDto m_dto;
+        std::error_code m_error;
+    };
     class FactorySceneGraphBuilt : public Frameworks::IEvent
     {
     public:
@@ -150,6 +162,19 @@ namespace Enigma::SceneGraph
         std::string m_sceneGraphId;
         std::vector<std::shared_ptr<Spatial>> m_topLevels;
     };
+    class BuildFactorySceneGraphFailed : public Frameworks::IEvent
+    {
+    public:
+        BuildFactorySceneGraphFailed(const std::string& scene_graph_id, std::error_code er)
+            : m_sceneGraphId(scene_graph_id), m_error(er) {}
+
+        const std::string& GetSceneGraphId() { return m_sceneGraphId; }
+        std::error_code GetErrorCode() const { return m_error; }
+
+    protected:
+        std::string m_sceneGraphId;
+        std::error_code m_error;
+    };
     class InPlaceSceneGraphBuilt : public Frameworks::IEvent
     {
     public:
@@ -158,6 +183,18 @@ namespace Enigma::SceneGraph
         const std::shared_ptr<Node>& GetInPlaceRootNode() { return m_in_placeRoot; }
     protected:
         std::shared_ptr<Node> m_in_placeRoot;
+    };
+    class BuildInPlaceSceneGraphFailed : public Frameworks::IEvent
+    {
+    public:
+        BuildInPlaceSceneGraphFailed(const std::string& in_place_root_name, std::error_code er) : m_in_placeRootName(in_place_root_name), m_error(er) {}
+
+        const std::string& GetInPlaceRootNodeName() { return m_in_placeRootName; }
+        std::error_code GetErrorCode() const { return m_error; }
+
+    protected:
+        std::string m_in_placeRootName;
+        std::error_code m_error;
     };
 
     class LazyNodeInstanced : public Frameworks::IEvent

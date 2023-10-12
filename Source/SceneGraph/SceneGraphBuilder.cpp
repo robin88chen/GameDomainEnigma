@@ -13,11 +13,9 @@
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
-#include "PortalDtos.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "GameEngine/FactoryCommands.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/ResponseBus.h"
 #include "Frameworks/RequestBus.h"
@@ -120,6 +118,8 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     if (factory == m_factories.end())
     {
         Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::spatialFactoryNotFound));
+        InterruptBuildingSceneGraph(ErrorCode::spatialFactoryNotFound);
         return;
     }
     if (Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.GetName()))
@@ -141,6 +141,8 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     else
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
     }
 }
 
@@ -149,6 +151,8 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.GetName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     std::shared_ptr<Node> node;
@@ -177,6 +181,8 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Light::TYPE_RTTI.GetName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasLight(dto.GetName()));
@@ -190,6 +196,8 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.GetName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasPawn(dto.GetName()));
@@ -208,6 +216,8 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
     if (!Rtti::IsExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Portal::TYPE_RTTI.GetName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory\n", dto.GetRtti().GetRttiName().c_str());
+        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasPortal(dto.GetName()));
@@ -239,6 +249,21 @@ void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
         CommandBus::Post(std::make_shared<InvokeSpatialDtoFactory>(o));
     }
+}
+
+void SceneGraphBuilder::InterruptBuildingSceneGraph(error er)
+{
+    m_isCurrentBuilding = false;
+    if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
+    {
+        EventPublisher::Post(std::make_shared<BuildFactorySceneGraphFailed>(m_builtSceneGraphMeta.m_sceneGraphId, er));
+    }
+    else
+    {
+        EventPublisher::Post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->GetSpatialName(), er));
+    }
+    m_builtSceneGraphMeta.Reset();
+    BuildNextSceneGraph();
 }
 
 void SceneGraphBuilder::DoBuildingSceneGraph(const ICommandPtr& c)

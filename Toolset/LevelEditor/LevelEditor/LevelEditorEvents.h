@@ -118,6 +118,18 @@ namespace LevelEditor
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
         std::string m_pawnFilePath;
     };
+    class LoadPawnFailed : public Enigma::Frameworks::IEvent
+    {
+    public:
+        LoadPawnFailed(const std::string& pawn_file_path, std::error_code er) : m_pawnFilePath(pawn_file_path), m_error(er) {}
+
+        const std::string& GetPawnFilePath() const { return m_pawnFilePath; }
+        std::error_code GetErrorCode() const { return m_error; }
+
+    private:
+        std::string m_pawnFilePath;
+        std::error_code m_error;
+    };
 }
 
 #endif // LEVEL_EDITOR_EVENTS_H

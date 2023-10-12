@@ -20,7 +20,7 @@ PawnEditConsole::PawnEditConsole(ServiceManager* srv_mngr, const std::shared_ptr
 
 PawnEditConsole::~PawnEditConsole()
 {
-    m_pawnFullpaths.clear();
+    m_pawnFilePaths.clear();
 }
 
 ServiceResult PawnEditConsole::OnInit()
@@ -47,12 +47,12 @@ ServiceResult PawnEditConsole::OnTerm()
     return ServiceResult::Complete;
 }
 
-void PawnEditConsole::InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& full_path)
+void PawnEditConsole::InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& filename_at_path)
 {
     assert(!pawn_name.empty());
-    assert(!full_path.empty());
+    assert(!filename_at_path.empty());
 
-    m_pawnFullpaths.insert_or_assign(pawn_name, full_path);
+    m_pawnFilePaths.insert_or_assign(pawn_name, filename_at_path);
 }
 
 void PawnEditConsole::SelectCandidatePawn(const std::string& pawn_name)
@@ -96,8 +96,8 @@ void PawnEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr&
 void PawnEditConsole::PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos)
 {
     if (m_selectedCandidatePawnName.empty()) return;
-    auto it = m_pawnFullpaths.find(m_selectedCandidatePawnName);
-    if (it == m_pawnFullpaths.end()) return;
+    auto it = m_pawnFilePaths.find(m_selectedCandidatePawnName);
+    if (it == m_pawnFilePaths.end()) return;
     CommandBus::Post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
     if (!m_editService.expired()) m_editService.lock()->PutCandidatePawn(it->second, pos);
 }

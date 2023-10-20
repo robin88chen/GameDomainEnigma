@@ -22,12 +22,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
-#include "CameraFrustumDtos.h"
 #include <cassert>
-#include <mutex>
-
-#include "ContainingPortalZoneFinder.h"
-#include "ContainingPortalZoneFinder.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;

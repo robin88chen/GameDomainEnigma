@@ -1,24 +1,24 @@
 ﻿/*********************************************************************
- * \file   SceneGraphInstallingPolicy.h
+ * \file   PrefabInstallingPolicy.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   March 2023
+ * \date   October 2023
  *********************************************************************/
-#ifndef _SCENE_GRAPH_INSTALLING_POLICY_H
-#define _SCENE_GRAPH_INSTALLING_POLICY_H
+#ifndef PREFAB_INSTALLING_POLICY_H
+#define PREFAB_INSTALLING_POLICY_H
 
 #include "GameEngine/InstallingPolicy.h"
 #include "GameEngine/DtoDeserializer.h"
 
-namespace Enigma::SceneGraph
+namespace Enigma::Prefabs
 {
     using error = std::error_code;
 
-    class SceneGraphInstallingPolicy : public Engine::InstallingPolicy
+    class PrefabInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
+        PrefabInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
             : m_dtoDeserializer(dto_deserializer) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
@@ -29,4 +29,4 @@ namespace Enigma::SceneGraph
     };
 }
 
-#endif // _SCENE_GRAPH_INSTALLING_POLICY_H
+#endif // PREFAB_INSTALLING_POLICY_H

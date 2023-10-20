@@ -156,6 +156,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldMap.Win32", "WorldMap\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldMap.Android", "WorldMap\WorldMap.Android\WorldMap.Android.vcxproj", "{94DF7C5C-73BE-45F8-A0AF-DB109670A258}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{F8A0C1F3-AB3F-4DAE-9E82-2FFAC5C45F2D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prefabs.Shared", "Prefabs\Prefabs.Shared\Prefabs.Shared.vcxitems", "{09755E80-7AA5-4F5F-B5F9-0F054BF4EDEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gatesways", "Gatesways", "{1C6347DC-AD47-4ACD-8095-7D33CFA2645E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{19919F63-C6D2-4695-B27F-7184DC7080E1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prefabs.Win32", "Prefabs\Prefabs.Win32\Prefabs.Win32.vcxproj", "{813176A7-4410-4758-9962-A0A54C8F3AB8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prefabs.Android", "Prefabs\Prefabs.Android\Prefabs.Android.vcxproj", "{3223A7D6-6332-40C8-9AF4-928CFDB1809E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -748,6 +760,37 @@ Global
 		{94DF7C5C-73BE-45F8-A0AF-DB109670A258}.Release|x64.Build.0 = Release|x64
 		{94DF7C5C-73BE-45F8-A0AF-DB109670A258}.Release|x86.ActiveCfg = Release|x86
 		{94DF7C5C-73BE-45F8-A0AF-DB109670A258}.Release|x86.Build.0 = Release|x86
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|ARM.ActiveCfg = Debug|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|ARM.Build.0 = Debug|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|ARM64.ActiveCfg = Debug|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|x64.ActiveCfg = Debug|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|x64.Build.0 = Debug|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|x86.ActiveCfg = Debug|Win32
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Debug|x86.Build.0 = Debug|Win32
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|ARM.ActiveCfg = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|ARM.Build.0 = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|ARM64.ActiveCfg = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|ARM64.Build.0 = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|x64.ActiveCfg = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|x64.Build.0 = Release|x64
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|x86.ActiveCfg = Release|Win32
+		{813176A7-4410-4758-9962-A0A54C8F3AB8}.Release|x86.Build.0 = Release|Win32
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|ARM.Build.0 = Debug|ARM
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|ARM64.Build.0 = Debug|ARM64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|x64.ActiveCfg = Debug|x64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|x64.Build.0 = Debug|x64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|x86.ActiveCfg = Debug|x86
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Debug|x86.Build.0 = Debug|x86
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|ARM.ActiveCfg = Release|ARM
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|ARM.Build.0 = Release|ARM
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|ARM64.ActiveCfg = Release|ARM64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|ARM64.Build.0 = Release|ARM64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|x64.ActiveCfg = Release|x64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|x64.Build.0 = Release|x64
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|x86.ActiveCfg = Release|x86
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -794,9 +837,9 @@ Global
 		{3A16EC08-6DD5-4480-A4A1-6CF8DF61F4CF} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 		{D0C2647D-0249-400C-833E-33AD3B9FCE25} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 		{B69B50D8-A3AA-4F42-B445-5C2F14BFC1FC} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
-		{1BA82AC6-2492-4CFA-8F13-C887A679AA6B} = {0B251C6A-C6A2-4837-A592-D08DB5BA7921}
-		{978AB843-6780-4718-A241-22A2C023779D} = {9CE70778-C0C8-4ED2-A8BE-73AE17709D5B}
-		{F6FBA2F2-CD51-4688-9AA9-A9D0B48DE5BB} = {3A16EC08-6DD5-4480-A4A1-6CF8DF61F4CF}
+		{1BA82AC6-2492-4CFA-8F13-C887A679AA6B} = {F8A0C1F3-AB3F-4DAE-9E82-2FFAC5C45F2D}
+		{978AB843-6780-4718-A241-22A2C023779D} = {1C6347DC-AD47-4ACD-8095-7D33CFA2645E}
+		{F6FBA2F2-CD51-4688-9AA9-A9D0B48DE5BB} = {19919F63-C6D2-4695-B27F-7184DC7080E1}
 		{91273323-464F-460E-975B-68FFA7040067} = {C1CA6CAE-B70D-4DDE-8107-DF96679B0896}
 		{24E29EED-9480-4CAE-9208-83239A09FD3D} = {C1CA6CAE-B70D-4DDE-8107-DF96679B0896}
 		{7A1CC646-B9F7-4AEF-93D4-11DB78A5F6CB} = {7E2098EB-77DE-4019-865A-8B5DF20151B9}
@@ -824,6 +867,12 @@ Global
 		{CADA0F19-672D-441A-8F69-B3DE76992885} = {C1CA6CAE-B70D-4DDE-8107-DF96679B0896}
 		{CE162CF8-18F7-4A4D-BCDB-DC46CBC35F74} = {7E2098EB-77DE-4019-865A-8B5DF20151B9}
 		{94DF7C5C-73BE-45F8-A0AF-DB109670A258} = {BCFDD818-30DC-4D27-AC3E-C3BB061F7603}
+		{F8A0C1F3-AB3F-4DAE-9E82-2FFAC5C45F2D} = {A9308DE0-35A7-4534-AB4F-6A873B1D5A82}
+		{09755E80-7AA5-4F5F-B5F9-0F054BF4EDEC} = {F8A0C1F3-AB3F-4DAE-9E82-2FFAC5C45F2D}
+		{1C6347DC-AD47-4ACD-8095-7D33CFA2645E} = {2B40734A-1A8A-434C-8369-C2971DD7DDFD}
+		{19919F63-C6D2-4695-B27F-7184DC7080E1} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
+		{813176A7-4410-4758-9962-A0A54C8F3AB8} = {1C6347DC-AD47-4ACD-8095-7D33CFA2645E}
+		{3223A7D6-6332-40C8-9AF4-928CFDB1809E} = {19919F63-C6D2-4695-B27F-7184DC7080E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB30DE-8D69-441D-A1DA-A2C3B6962EDF}
@@ -831,6 +880,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{037415ed-ae0f-4fdf-a93b-8432d15c2a3b}*SharedItemsImports = 4
 		Terrain\Terrain.Shared\Terrain.Shared.vcxitems*{06720cfd-9333-48da-a37b-f74e9a041c72}*SharedItemsImports = 4
+		Prefabs\Prefabs.Shared\Prefabs.Shared.vcxitems*{09755e80-7aa5-4f5f-b5f9-0f054bf4edec}*SharedItemsImports = 9
 		Animators\Animators.Shared\Animators.Shared.vcxitems*{09955997-e9c1-4973-a3de-a85ca6ba35b0}*SharedItemsImports = 4
 		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{0adeb60d-8fa3-463d-aeb0-2f883a336b43}*SharedItemsImports = 4
 		InputHandlers\InputHandlers.Shared\InputHandlers.Shared.vcxitems*{0eb4d7f4-bd8f-4686-80da-6b9437fdd356}*SharedItemsImports = 4
@@ -840,6 +890,7 @@ Global
 		Renderer\Renderer.Shared\Renderer.Shared.vcxitems*{24e29eed-9480-4cae-9208-83239a09fd3d}*SharedItemsImports = 9
 		MathLib\MathLib.Shared\MathLib.Shared.vcxitems*{2af3ca53-3295-43c2-9861-559709c3a2f5}*SharedItemsImports = 9
 		InputHandlers\InputHandlers.Shared\InputHandlers.Shared.vcxitems*{2eaffa6a-6be0-4967-81cd-491a40ac2bdb}*SharedItemsImports = 4
+		Prefabs\Prefabs.Shared\Prefabs.Shared.vcxitems*{3223a7d6-6332-40c8-9af4-928cfdb1809e}*SharedItemsImports = 4
 		Animators\Animators.Shared\Animators.Shared.vcxitems*{326643fe-647d-4460-8439-73193d3bf35d}*SharedItemsImports = 9
 		GraphicKernel\GraphicKernel.Shared\GraphicKernel.Shared.vcxitems*{3310ea9a-6391-4a66-b125-a58024aae9bf}*SharedItemsImports = 9
 		Platforms\Platforms.Shared\Platforms.Shared.vcxitems*{37988168-96c3-4248-af00-e75f90ea3251}*SharedItemsImports = 4
@@ -853,6 +904,7 @@ Global
 		Renderer\Renderer.Shared\Renderer.Shared.vcxitems*{7a1cc646-b9f7-4aef-93d4-11db78a5f6cb}*SharedItemsImports = 4
 		Animators\Animators.Shared\Animators.Shared.vcxitems*{7b2e1512-0e71-4c73-aefa-70e42b55d693}*SharedItemsImports = 4
 		GameCommon\GameCommon.Shared\GameCommon.Shared.vcxitems*{7cc65fdb-2daf-4489-9228-a86903b5dee3}*SharedItemsImports = 9
+		Prefabs\Prefabs.Shared\Prefabs.Shared.vcxitems*{813176a7-4410-4758-9962-a0a54c8f3ab8}*SharedItemsImports = 4
 		Terrain\Terrain.Shared\Terrain.Shared.vcxitems*{8206cc12-f3c4-4fda-9df9-7ff430e28d23}*SharedItemsImports = 4
 		Renderer\Renderer.Shared\Renderer.Shared.vcxitems*{861da396-6313-4405-a530-e8dd9f16def8}*SharedItemsImports = 4
 		SceneGraph\SceneGraph.Shared\SceneGraph.Shared.vcxitems*{91273323-464f-460e-975b-68ffa7040067}*SharedItemsImports = 9

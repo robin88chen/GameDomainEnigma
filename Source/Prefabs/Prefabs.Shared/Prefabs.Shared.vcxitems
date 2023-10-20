@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{09755e80-7aa5-4f5f-b5f9-0f054bf4edec}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabIOService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabIOService.cpp" />
+  </ItemGroup>
+</Project>

@@ -79,7 +79,7 @@ TerrainGeometryDto TerrainGeometryDtoHelper::ToDto() const
 TerrainPawnDtoHelper::TerrainPawnDtoHelper(const std::string& name)
 {
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
-    m_dto.TheFactoryDesc() = Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.GetName());
+    m_dto.TheFactoryDesc() = Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.getName());
     m_dto.Name() = name;
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;

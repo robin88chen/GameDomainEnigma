@@ -23,7 +23,7 @@ namespace Enigma::Frameworks
         virtual ~ICommand() {};
         ICommand& operator=(const ICommand&) = delete;
         ICommand& operator=(ICommand&&) = delete;
-        virtual const std::type_info& TypeInfo() { return typeid(*this); };  ///< 實作層的 type info
+        virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
     };
     // merge request and command, need ruid to identity
     class IRequestCommand : public ICommand
@@ -37,7 +37,7 @@ namespace Enigma::Frameworks
         IRequestCommand& operator=(const IRequestCommand&) = delete;
         IRequestCommand& operator=(IRequestCommand&&) = delete;
 
-        const Ruid& GetRuid() const { return m_ruid; }
+        const Ruid& getRuid() const { return m_ruid; }
 
     protected:
         Ruid m_ruid;

@@ -8,7 +8,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderer, MeshNode);
 
-MeshNode::MeshNode(const std::string& name) : m_factoryDesc(MeshNode::TYPE_RTTI.GetName())
+MeshNode::MeshNode(const std::string& name) : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 {
     m_name = name;
     m_mxT_PosTransform = Matrix4::IDENTITY;

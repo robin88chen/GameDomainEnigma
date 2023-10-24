@@ -18,7 +18,7 @@ namespace Enigma::WorldMap
     public:
         WorldMapCreated(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const std::shared_ptr<WorldMap>& GetWorld() const { return m_world; }
 
     protected:
@@ -30,7 +30,7 @@ namespace Enigma::WorldMap
     public:
         WorldMapDeserialized(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const std::shared_ptr<WorldMap>& GetWorld() const { return m_world; }
 
     protected:

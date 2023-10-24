@@ -42,7 +42,7 @@ namespace Enigma::Engine
 
         virtual GenericDto SerializeDto() const;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
         FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }

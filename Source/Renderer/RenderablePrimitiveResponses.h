@@ -21,7 +21,7 @@ namespace Enigma::Renderer
             const std::string& name, const Engine::PrimitivePtr prim, std::error_code er) : IResponse(request_ruid),
            m_name(name), m_prim(prim), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const Engine::PrimitivePtr& GetPrimitive() { return m_prim; }
         std::error_code GetErrorCode() const { return m_error; }
 

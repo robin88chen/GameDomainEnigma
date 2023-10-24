@@ -15,7 +15,7 @@ DEFINE_RTTI(Animators, ModelPrimitiveAnimator, Animator);
 
 ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
@@ -64,7 +64,7 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
     ModelAnimatorDto dto;
     if (!m_animationAsset) return dto;
     dto.TheFactoryDesc() = m_factoryDesc;
-    dto.AssetName() = m_animationAsset->GetName();
+    dto.AssetName() = m_animationAsset->getName();
     dto.AssetFactoryDesc() = m_animationAsset->TheFactoryDesc();
     if ((m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
@@ -155,7 +155,7 @@ void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
         if ((m_animationAsset) && (mesh_node))
         {
             m_meshNodeMapping[m].m_nodeIndexInAnimation =
-                m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().GetName());
+                m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().getName());
         }
     }
 }

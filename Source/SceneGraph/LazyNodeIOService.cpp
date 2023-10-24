@@ -93,7 +93,7 @@ void LazyNodeIOService::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     CommandBus::Post(std::make_shared<InPlaceBuildSceneGraph>(m_in_placeNode, ev->GetDtos()));
 }
 
@@ -102,7 +102,7 @@ void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     std::string node_name = "unknown";
     if (m_in_placeNode) node_name = m_in_placeNode->GetSpatialName();
     Platforms::Debug::ErrorPrintf("deserializing lazy node %s dto failed : %s", node_name.c_str(), ev->GetErrorCode().message().c_str());

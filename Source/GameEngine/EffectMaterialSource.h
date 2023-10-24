@@ -26,7 +26,7 @@ namespace Enigma::Engine
         EffectMaterialSource& operator=(const EffectMaterialSource&) = delete;
         EffectMaterialSource& operator=(EffectMaterialSource&&) = delete;
 
-        const std::string& GetName() const;
+        const std::string& getName() const;
 
         void LinkSource();
 

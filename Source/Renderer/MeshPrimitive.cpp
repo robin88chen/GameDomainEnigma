@@ -20,7 +20,7 @@ DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
 MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
 {
-    m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
     m_name = name;
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
@@ -121,7 +121,7 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
     dto.Name() = m_name;
     if (m_geometry)
     {
-        dto.GeometryName() = m_geometry->GetName();
+        dto.GeometryName() = m_geometry->getName();
         dto.GeometryFactoryDesc() = m_geometry->TheFactoryDesc();
         if ((m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))

@@ -8,12 +8,12 @@ static std::string TOKEN_HOST_LIGHT_NAME = "HostLightName";
 
 LightingPawnDto::LightingPawnDto() : PawnDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.getName());
 }
 
 LightingPawnDto::LightingPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LightingPawn::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LightingPawn::TYPE_RTTI.getName()));
 }
 
 LightingPawnDto LightingPawnDto::FromGenericDto(const Engine::GenericDto& dto)

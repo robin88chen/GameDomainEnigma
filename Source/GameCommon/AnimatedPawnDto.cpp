@@ -10,12 +10,12 @@ static std::string TOKEN_AVATAR_RECIPES = "AvatarRecipes";
 
 AnimatedPawnDto::AnimatedPawnDto() : PawnDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI.getName());
 }
 
 AnimatedPawnDto::AnimatedPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), AnimatedPawn::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), AnimatedPawn::TYPE_RTTI.getName()));
 }
 
 AnimatedPawnDto AnimatedPawnDto::FromGenericDto(const Engine::GenericDto& dto)

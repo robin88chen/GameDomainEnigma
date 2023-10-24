@@ -177,7 +177,7 @@ void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
     if (!m_world.expired())
     {
         m_world.lock()->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);  // empty world map is ready
-        EventPublisher::Post(std::make_shared<WorldMapCreated>(m_world.lock()->GetName(), m_world.lock()));
+        EventPublisher::Post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
         CommandBus::Post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }
 }

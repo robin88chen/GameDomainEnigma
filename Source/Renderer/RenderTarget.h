@@ -100,7 +100,7 @@ namespace Enigma::Renderer
 
         error ChangeClearingProperty(const RenderTargetClearChangingProperty& prop);
         /** get name */
-        const std::string& GetName() { return m_name; };
+        const std::string& getName() { return m_name; };
 
         /** get dimension. */
         const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };

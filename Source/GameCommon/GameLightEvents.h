@@ -31,7 +31,7 @@ namespace Enigma::GameCommon
     public:
         CreateGameLightFailed(const std::string& name, error err) : m_name(name), m_err(err) {}
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         error GetError() const { return m_err; }
 
     protected:

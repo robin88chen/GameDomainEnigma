@@ -26,7 +26,7 @@ namespace Enigma::Animators
         AnimationAsset& operator=(const AnimationAsset&) = delete;
         AnimationAsset& operator=(AnimationAsset&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }

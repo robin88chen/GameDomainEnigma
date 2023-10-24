@@ -17,7 +17,7 @@ DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
 ModelPrimitive::ModelPrimitive(const std::string& name) : Primitive()
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName());
     m_name = name;
     m_meshPrimitiveIndexCache.clear();
 }
@@ -120,7 +120,7 @@ MeshPrimitivePtr ModelPrimitive::FindMeshPrimitive(const std::string& name)
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         MeshPrimitivePtr mesh_prim = GetMeshPrimitive(i);
-        if ((mesh_prim) && (mesh_prim->GetName() == name)) return mesh_prim;
+        if ((mesh_prim) && (mesh_prim->getName() == name)) return mesh_prim;
     }
     return nullptr;
 }

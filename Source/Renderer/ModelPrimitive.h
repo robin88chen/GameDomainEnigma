@@ -33,7 +33,7 @@ namespace Enigma::Renderer
 
         virtual Engine::GenericDto SerializeDto() const override;
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
 
         const MeshNodeTree& GetMeshNodeTree() const { return m_nodeTree; };
         MeshNodeTree& GetMeshNodeTree() { return m_nodeTree; };

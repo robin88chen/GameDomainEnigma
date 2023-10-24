@@ -11,7 +11,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI_OF_BASE(Engine, GeometryData);
 
-GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
+GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData::TYPE_RTTI.getName())
 {
     m_name = name;
     m_vtxCapacity = m_idxCapacity = 0;
@@ -24,7 +24,7 @@ GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData
 
 GeometryData::GeometryData(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
-    m_name = o.GetName();
+    m_name = o.getName();
     GeometryDataDto dto = GeometryDataDto::FromGenericDto(o);
     DeserializeGeometryDto(dto);
 }

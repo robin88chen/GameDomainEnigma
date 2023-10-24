@@ -12,7 +12,7 @@ DEFINE_RTTI(Renderer, SkinMeshPrimitive, MeshPrimitive);
 
 SkinMeshPrimitive::SkinMeshPrimitive(const std::string& name) : MeshPrimitive(name)
 {
-    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 

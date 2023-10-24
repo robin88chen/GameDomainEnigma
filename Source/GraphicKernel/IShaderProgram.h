@@ -37,7 +37,7 @@ namespace Enigma::Graphics
         IShaderProgram& operator=(const IShaderProgram&) = delete;
         IShaderProgram& operator=(IShaderProgram&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const IVertexShaderPtr& GetVertexShader() { return m_vtxShader; }
         const IPixelShaderPtr& GetPixelShader() { return m_pixShader; }
         const IVertexDeclarationPtr& GetVertexDeclaration() { return m_vtxDeclaration; }

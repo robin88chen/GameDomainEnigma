@@ -112,7 +112,7 @@ error RendererManager::CreateRenderer(const std::string& name)
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->GetName(), render));
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -140,7 +140,7 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->GetName(), render));
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -162,7 +162,7 @@ error RendererManager::InsertRenderer(const std::string& name, const Engine::IRe
     }
     m_accumulateRendererStamp |= stamp;
     renderer->SetStampBitMask(stamp);
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(renderer->GetName(), renderer));
+    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(renderer->getName(), renderer));
     return ErrorCode::ok;
 }
 

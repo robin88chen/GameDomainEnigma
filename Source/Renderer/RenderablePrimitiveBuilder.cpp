@@ -118,14 +118,14 @@ void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e))
     {
-        if (ev->GetRuid() != m_buildingRuid) return;
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->GetName(), ev->GetPrimitive(), ErrorCode::ok));
+        if (ev->getRuid() != m_buildingRuid) return;
+        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::ModelPrimitiveBuilt, IEvent>(e))
     {
-        if (ev->GetRuid() != m_buildingRuid) return;
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->GetName(), ev->GetPrimitive(), ErrorCode::ok));
+        if (ev->getRuid() != m_buildingRuid) return;
+        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
         m_isCurrentBuilding = false;
     }
 }
@@ -135,18 +135,18 @@ void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const IEventPtr& e)
     if (!e) return;
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::BuildMeshPrimitiveFailed, IEvent>(e))
     {
-        if (ev->GetRuid() != m_buildingRuid) return;
+        if (ev->getRuid() != m_buildingRuid) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
-            ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->GetName(), nullptr, ev->GetErrorCode()));
+            ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::BuildModelPrimitiveFailed, IEvent>(e))
     {
-        if (ev->GetRuid() != m_buildingRuid) return;
+        if (ev->getRuid() != m_buildingRuid) return;
         Platforms::Debug::ErrorPrintf("model primitive %s build failed : %s\n",
-                       ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->GetName(), nullptr, ev->GetErrorCode()));
+                       ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
         m_isCurrentBuilding = false;
     }
 }
@@ -156,5 +156,5 @@ void RenderablePrimitiveBuilder::DoBuildingPrimitive(const IRequestPtr& r)
     if (!r) return;
     const auto req = std::dynamic_pointer_cast<RequestBuildRenderablePrimitive, IRequest>(r);
     if (!req) return;
-    BuildPrimitive(req->GetRuid(), req->GetPolicy());
+    BuildPrimitive(req->getRuid(), req->GetPolicy());
 }

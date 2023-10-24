@@ -9,7 +9,7 @@ DEFINE_RTTI(Animators, ModelAnimationAsset, AnimationAsset);
 
 ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAsset(name)
 {
-    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
 ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.Name())

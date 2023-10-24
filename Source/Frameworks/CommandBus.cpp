@@ -11,7 +11,6 @@ CommandBus::CommandBus(ServiceManager* manager) : ISystemService(manager)
 {
     assert(m_thisBus == nullptr);
     m_needTick = false;
-    m_orderValue = MessageServiceOrderValue;
     m_thisBus = this;
 }
 
@@ -92,7 +91,7 @@ void CommandBus::Send(const ICommandPtr& c)
 {
     assert(m_thisBus);
     if (!c) return;
-    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ c->TypeInfo() });
+    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ c->typeInfo() });
     if (subscribers == m_thisBus->m_subscribers.end()) return;
     m_thisBus->InvokeHandler(c, subscribers->second);
 }

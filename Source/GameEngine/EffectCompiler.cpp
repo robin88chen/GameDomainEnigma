@@ -141,7 +141,7 @@ void EffectCompiler::OnCompilingProfileDeserialized(const Frameworks::IEventPtr&
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<CompilingProfileDeserialized, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     CompileEffect(ev->GetProfile());
 }
 
@@ -309,7 +309,7 @@ void EffectCompiler::TryBuildEffectMaterial()
     auto effect_material = std::make_shared<EffectMaterial>(m_profile.m_name, effect_techniques);
     if (!m_policy.Parameter().empty())
     {
-        effect_material->TheFactoryDesc().ClaimFromResource(effect_material->GetName(), m_policy.Parameter());
+        effect_material->TheFactoryDesc().ClaimFromResource(effect_material->getName(), m_policy.Parameter());
     }
     EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
     m_hasMaterialProduced = true;

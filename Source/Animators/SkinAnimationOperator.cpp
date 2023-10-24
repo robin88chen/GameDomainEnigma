@@ -8,7 +8,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI_OF_BASE(Animators, SkinAnimationOperator);
 
-SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.GetName())
+SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
 {
 }
 
@@ -57,7 +57,7 @@ SkinOperatorDto SkinAnimationOperator::SerializeDto()
 {
     SkinOperatorDto dto;
     dto.TheFactoryDesc() = m_factoryDesc;
-    if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->GetName();
+    if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->getName();
     dto.BoneNodeNames() = m_boneNodeNames;
     dto.NodeOffsets() = m_nodeOffsets;
     return dto;

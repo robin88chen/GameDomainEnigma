@@ -7,7 +7,7 @@ std::unordered_map<std::string, PrimitiveRay3IntersectionFinderCreator> Primitiv
 
 PrimitiveRay3IntersectionFinder* PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(const Frameworks::Rtti& primitive_rtti)
 {
-    if (auto it = std::find_if(m_creators.begin(), m_creators.end(), [&primitive_rtti](const auto& pair) { return Frameworks::Rtti::IsExactlyOrDerivedFrom(primitive_rtti.GetName(), pair.first); }); it != m_creators.end())
+    if (auto it = std::find_if(m_creators.begin(), m_creators.end(), [&primitive_rtti](const auto& pair) { return Frameworks::Rtti::isExactlyOrDerivedFrom(primitive_rtti.getName(), pair.first); }); it != m_creators.end())
     {
         return it->second();
     }

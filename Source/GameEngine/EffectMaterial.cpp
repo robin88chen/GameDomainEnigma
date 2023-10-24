@@ -9,7 +9,7 @@ using namespace Enigma::Frameworks;
 DEFINE_RTTI_OF_BASE(Engine, EffectMaterial);
 
 EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
-    : m_factoryDesc(EffectMaterial::TYPE_RTTI.GetName())
+    : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
 {
     m_factoryDesc.ClaimAsNative(name);
     m_name = name;
@@ -172,7 +172,7 @@ stdext::optional_ref<EffectVariable> EffectMaterial::GetEffectVariableInPassByNa
     {
         for (unsigned int i = 0; i < tech.GetPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).GetName() == pass_name)
+            if (tech.GetPassByIndex(i).getName() == pass_name)
                 return tech.GetPassByIndex(i).GetVariableByName(name);
         }
     }
@@ -186,7 +186,7 @@ stdext::optional_ref<EffectVariable> EffectMaterial::GetEffectVariableInPassBySe
     {
         for (unsigned int i = 0; i < tech.GetPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).GetName() == pass_name)
+            if (tech.GetPassByIndex(i).getName() == pass_name)
                 return tech.GetPassByIndex(i).GetVariableBySemantic(semantic);
         }
     }
@@ -270,10 +270,10 @@ void EffectMaterial::SelectTechnique()
 {
     std::string combinedTechName = m_selectedRendererTechName + "/" + m_selectedVisualTechName;
     if ((m_currentTechnique != m_effectTechniques.end())
-        && (m_currentTechnique->GetName() == combinedTechName)) return;
+        && (m_currentTechnique->getName() == combinedTechName)) return;
     if (m_effectTechniques.empty()) return;
     auto iter = std::find_if(m_effectTechniques.begin(), m_effectTechniques.end(),
-        [=](auto& t) -> bool { return t.GetName() == combinedTechName; });
+        [=](auto& t) -> bool { return t.getName() == combinedTechName; });
     if (iter != m_effectTechniques.end())
     {
         m_currentTechnique = iter;

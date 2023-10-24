@@ -135,7 +135,7 @@ error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     glDrawBuffers(static_cast<GLsizei>(m_textures.size()), drawBuffers);
     SAFE_FREE(drawBuffers);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(m_name, back_surf->GetName()));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(m_name, back_surf->getName()));
     return ErrorCode::ok;
 }
 

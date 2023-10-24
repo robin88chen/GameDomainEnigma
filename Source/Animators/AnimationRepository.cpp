@@ -31,13 +31,13 @@ AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemServi
     m_assetBuilder = std::make_unique<AnimationAssetBuilder>(this);
     m_animatorBuilder = std::make_unique<ModelAnimatorBuilder>(this);
 
-    CommandBus::Post(std::make_shared<RegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.GetName(),
+    CommandBus::Post(std::make_shared<RegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName(),
         [=](auto o) { this->ModelAnimationAssetFactory(o); }));
 }
 
 AnimationRepository::~AnimationRepository()
 {
-    CommandBus::Post(std::make_shared<UnRegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.GetName()));
+    CommandBus::Post(std::make_shared<UnRegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName()));
     m_assetBuilder = nullptr;
     m_animatorBuilder = nullptr;
 }
@@ -93,7 +93,7 @@ bool AnimationRepository::PopAnimatorBuilding()
     if (m_animatorPolicies.empty()) return false;
     assert(m_animatorBuilder);
     m_animatorBuilder->BuildModelAnimator(m_animatorPolicies.front());
-    m_constructingAnimatorRuid = m_animatorPolicies.front()->GetRuid();
+    m_constructingAnimatorRuid = m_animatorPolicies.front()->getRuid();
     m_animatorPolicies.pop();
     m_isAnimatorCurrentBuilding = true;
     return true;
@@ -152,7 +152,7 @@ error AnimationRepository::BuildModelAnimator(const std::shared_ptr<ModelAnimato
 
 void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& dto)
 {
-    if (dto.GetRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.GetName())
+    if (dto.GetRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.getName())
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.GetRtti().GetRttiName().c_str());
         return;
@@ -187,7 +187,7 @@ void AnimationRepository::OnAnimationAssetBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Animators::AnimationAssetBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_buildingAssetName) return;
+    if (ev->getName() != m_buildingAssetName) return;
     m_isAssetCurrentBuilding = false;
 }
 
@@ -196,9 +196,9 @@ void AnimationRepository::OnBuildAnimationAssetFailed(const Frameworks::IEventPt
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Animators::BuildAnimationAssetFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_buildingAssetName) return;
+    if (ev->getName() != m_buildingAssetName) return;
     Platforms::Debug::ErrorPrintf("animation asset %s build failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
     m_isAssetCurrentBuilding = false;
 }
 
@@ -209,7 +209,7 @@ void AnimationRepository::OnAnimatorBuilt(const Frameworks::IEventPtr& e)
     auto ev_model = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt, IEvent>(e);
     if (ev_model)
     {
-        ruid_in_event = ev_model->GetRuid();
+        ruid_in_event = ev_model->getRuid();
     }
     if (ruid_in_event != m_constructingAnimatorRuid) return;
     m_isAnimatorCurrentBuilding = false;
@@ -223,7 +223,7 @@ void AnimationRepository::OnBuildAnimatorFailed(const Frameworks::IEventPtr& e)
     auto ev_model = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed, IEvent>(e);
     if (ev_model)
     {
-        ruid_in_event = ev_model->GetRuid();
+        ruid_in_event = ev_model->getRuid();
         err_msg = string_format("model animator build failed : %s\n", ev_model->GetErrorCode().message().c_str());
     }
     if (ruid_in_event != m_constructingAnimatorRuid) return;

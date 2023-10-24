@@ -20,7 +20,7 @@ namespace Enigma::Engine
     public:
         GeometryDataBuilt(const std::string& name, const GeometryDataPtr geo) :
             m_name(name), m_geometry(geo) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const GeometryDataPtr& GetGeometryData() { return m_geometry; }
     private:
         std::string m_name;
@@ -31,7 +31,7 @@ namespace Enigma::Engine
     public:
         BuildGeometryDataFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;

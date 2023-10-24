@@ -31,7 +31,7 @@ namespace Enigma::Graphics
         IDepthStencilSurface& operator=(const IDepthStencilSurface&) = delete;
         IDepthStencilSurface& operator=(IDepthStencilSurface&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         /** get buffer format */
         virtual const GraphicFormat& GetFormat() { return m_format; };

@@ -11,7 +11,7 @@ DEFINE_RTTI(SceneGraph, Pawn, Spatial);
 
 Pawn::Pawn(const std::string& name) : Spatial(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_primitive = nullptr;
     RemoveSpatialFlag(Spatial_Unlit);
 }

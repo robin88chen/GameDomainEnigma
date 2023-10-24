@@ -17,7 +17,7 @@ AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
     {
         AnimClip clip(dto.AnimNames()[i], AnimationClip(dto.StartOffsets()[i], dto.LoopTimes()[i],
             static_cast<AnimationClip::WarpMode>(dto.WarpModes()[i]), dto.DivideIndices()[i]));
-        m_animClips[clip.GetName()] = clip;
+        m_animClips[clip.getName()] = clip;
     }
 }
 
@@ -51,7 +51,7 @@ std::optional<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(co
 
 void AnimationClipMap::InsertClip(const AnimClip& anim_clip)
 {
-    m_animClips[anim_clip.GetName()] = anim_clip;
+    m_animClips[anim_clip.getName()] = anim_clip;
     Frameworks::EventPublisher::Post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
 }
 

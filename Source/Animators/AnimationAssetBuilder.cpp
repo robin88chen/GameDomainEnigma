@@ -82,7 +82,7 @@ void AnimationAssetBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     if (ev->GetDtos().empty())
     {
         EventPublisher::Post(std::make_shared<BuildAnimationAssetFailed>(m_policy->Name(), ErrorCode::deserializeFail));
@@ -96,6 +96,6 @@ void AnimationAssetBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& 
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     EventPublisher::Post(std::make_shared<BuildAnimationAssetFailed>(m_policy->Name(), ev->GetErrorCode()));
 }

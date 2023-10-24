@@ -29,7 +29,6 @@ GameCameraService::GameCameraService(ServiceManager* mngr,
     m_sceneGraphRepository = scene_graph_repository;
     m_needTick = false;
     m_primaryCamera = nullptr;
-    m_orderValue = ServiceDefaultOrderValue - 1;
 }
 
 GameCameraService::~GameCameraService()

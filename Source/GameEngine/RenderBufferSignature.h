@@ -29,7 +29,7 @@ namespace Enigma::Engine
         bool operator!=(const RenderBufferSignature& signature) const;
         bool operator<(const RenderBufferSignature& signature) const;
 
-        const std::string& GetName() const { return m_name; };
+        const std::string& getName() const { return m_name; };
         // 拿掉 vertex layout, 應該不需要
         //Graphics::IVertexDeclarationPtr GetVertexDeclaration() const { return m_vertexDecl.lock(); };
         const Graphics::PrimitiveTopology GetTopology() const { return m_topology; };

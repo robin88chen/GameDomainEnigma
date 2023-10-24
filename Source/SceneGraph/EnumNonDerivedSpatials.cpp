@@ -18,7 +18,7 @@ EnumNonDerivedSpatials::~EnumNonDerivedSpatials()
 SceneTraveler::TravelResult EnumNonDerivedSpatials::TravelTo(const SpatialPtr& spatial)
 {
     if (!spatial) return SceneTraveler::TravelResult::InterruptError;
-    if (spatial->TypeInfo().IsDerived(*m_baseRtti)) return SceneTraveler::TravelResult::Skip;
+    if (spatial->typeInfo().isDerived(*m_baseRtti)) return SceneTraveler::TravelResult::Skip;
 
     m_spatials.emplace_back(spatial);
     return SceneTraveler::TravelResult::Continue;

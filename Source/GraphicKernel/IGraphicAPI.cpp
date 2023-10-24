@@ -511,11 +511,11 @@ void IGraphicAPI::DoCreatingVertexShader(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateVertexShader(cmd->GetName());
+        AsyncCreateVertexShader(cmd->getName());
     }
     else
     {
-        CreateVertexShader(cmd->GetName());
+        CreateVertexShader(cmd->getName());
     }
 }
 
@@ -526,11 +526,11 @@ void IGraphicAPI::DoCreatingPixelShader(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreatePixelShader(cmd->GetName());
+        AsyncCreatePixelShader(cmd->getName());
     }
     else
     {
-        CreatePixelShader(cmd->GetName());
+        CreatePixelShader(cmd->getName());
     }
 }
 
@@ -541,11 +541,11 @@ void IGraphicAPI::DoCreatingShaderProgram(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
+        AsyncCreateShaderProgram(cmd->getName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
     }
     else
     {
-        CreateShaderProgram(cmd->GetName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
+        CreateShaderProgram(cmd->getName(), cmd->GetVertexShader(), cmd->GetPixelShader(), cmd->GetVertexDeclaration());
     }
 }
 
@@ -556,11 +556,11 @@ void IGraphicAPI::DoCreatingVertexDeclaration(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
+        AsyncCreateVertexDeclaration(cmd->getName(), cmd->GetDataVertexFormat(), cmd->GetShader());
     }
     else
     {
-        CreateVertexDeclaration(cmd->GetName(), cmd->GetDataVertexFormat(), cmd->GetShader());
+        CreateVertexDeclaration(cmd->getName(), cmd->GetDataVertexFormat(), cmd->GetShader());
     }
 }
 
@@ -571,11 +571,11 @@ void IGraphicAPI::DoCreatingVertexBuffer(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
+        AsyncCreateVertexBuffer(cmd->getName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
     }
     else
     {
-        CreateVertexBuffer(cmd->GetName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
+        CreateVertexBuffer(cmd->getName(), cmd->GetSizeofVertex(), cmd->GetSizeBuffer());
     }
 }
 
@@ -586,11 +586,11 @@ void IGraphicAPI::DoCreatingIndexBuffer(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
+        AsyncCreateIndexBuffer(cmd->getName(), cmd->GetSizeBuffer());
     }
     else
     {
-        CreateIndexBuffer(cmd->GetName(), cmd->GetSizeBuffer());
+        CreateIndexBuffer(cmd->getName(), cmd->GetSizeBuffer());
     }
 }
 
@@ -601,11 +601,11 @@ void IGraphicAPI::DoCreatingSamplerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateSamplerState(cmd->GetName(), cmd->GetData());
+        AsyncCreateSamplerState(cmd->getName(), cmd->GetData());
     }
     else
     {
-        CreateSamplerState(cmd->GetName(), cmd->GetData());
+        CreateSamplerState(cmd->getName(), cmd->GetData());
     }
 }
 
@@ -616,11 +616,11 @@ void IGraphicAPI::DoCreatingRasterizerState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateRasterizerState(cmd->GetName(), cmd->GetData());
+        AsyncCreateRasterizerState(cmd->getName(), cmd->GetData());
     }
     else
     {
-        CreateRasterizerState(cmd->GetName(), cmd->GetData());
+        CreateRasterizerState(cmd->getName(), cmd->GetData());
     }
 }
 
@@ -631,11 +631,11 @@ void IGraphicAPI::DoCreatingBlendState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateAlphaBlendState(cmd->GetName(), cmd->GetData());
+        AsyncCreateAlphaBlendState(cmd->getName(), cmd->GetData());
     }
     else
     {
-        CreateAlphaBlendState(cmd->GetName(), cmd->GetData());
+        CreateAlphaBlendState(cmd->getName(), cmd->GetData());
     }
 }
 
@@ -646,11 +646,11 @@ void IGraphicAPI::DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateDepthStencilState(cmd->GetName(), cmd->GetData());
+        AsyncCreateDepthStencilState(cmd->getName(), cmd->GetData());
     }
     else
     {
-        CreateDepthStencilState(cmd->GetName(), cmd->GetData());
+        CreateDepthStencilState(cmd->getName(), cmd->GetData());
     }
 }
 
@@ -661,11 +661,11 @@ void IGraphicAPI::DoCreatingTexture(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateTexture(cmd->GetName());
+        AsyncCreateTexture(cmd->getName());
     }
     else
     {
-        CreateTexture(cmd->GetName());
+        CreateTexture(cmd->getName());
     }
 }
 
@@ -676,11 +676,11 @@ void IGraphicAPI::DoCreatingMultiTexture(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateMultiTexture(cmd->GetName());
+        AsyncCreateMultiTexture(cmd->getName());
     }
     else
     {
-        CreateMultiTexture(cmd->GetName());
+        CreateMultiTexture(cmd->getName());
     }
 }
 

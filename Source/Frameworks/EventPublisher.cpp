@@ -11,7 +11,6 @@ EventPublisher::EventPublisher(ServiceManager* manager) : ISystemService(manager
 {
     assert(m_thisPublisher == nullptr);
     m_needTick = false;
-    m_orderValue = MessageServiceOrderValue;
     m_thisPublisher = this;
 }
 
@@ -88,7 +87,7 @@ void EventPublisher::Send(const IEventPtr& e)
 {
     assert(m_thisPublisher);
     if (!e) return;
-    auto subscribers = m_thisPublisher->m_subscribers.find(std::type_index{ e->TypeInfo() });
+    auto subscribers = m_thisPublisher->m_subscribers.find(std::type_index{ e->typeInfo() });
     if (subscribers == m_thisPublisher->m_subscribers.end()) return;
     m_thisPublisher->InvokeHandlers(e, subscribers->second);
 }

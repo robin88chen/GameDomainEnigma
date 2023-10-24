@@ -7,7 +7,7 @@ using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
 
-EffectMaterialDto::EffectMaterialDto() : m_factoryDesc(EffectMaterial::TYPE_RTTI.GetName())
+EffectMaterialDto::EffectMaterialDto() : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
 {
 }
 

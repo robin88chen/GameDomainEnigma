@@ -288,7 +288,7 @@ void RenderTarget::CreateRenderTargetTexture()
     if (m_isPrimary) return;
     if (!m_backSurface) return;
     Frameworks::CommandBus::Post(std::make_shared<Engine::CreateTexture>(
-        Engine::TexturePolicy{ m_backSurface->GetName(), m_backSurface->GetDimension(), m_backSurface->GetSurfaceCount() }));
+        Engine::TexturePolicy{ m_backSurface->getName(), m_backSurface->GetDimension(), m_backSurface->GetSurfaceCount() }));
 }
 
 void RenderTarget::InitViewPortSize()
@@ -435,10 +435,10 @@ void RenderTarget::OnTextureCreated(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::TextureCreated>(e);
     if (!ev) return;
     if (!m_backSurface) return;
-    if (ev->GetName() != m_backSurface->GetName()) return;
+    if (ev->getName() != m_backSurface->getName()) return;
     m_renderTargetTexture = ev->GetTexture();
     m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
-    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->GetName()));
+    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->getName()));
 }
 
 void RenderTarget::OnCreateTextureFailed(const Frameworks::IEventPtr& e)
@@ -447,6 +447,6 @@ void RenderTarget::OnCreateTextureFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::CreateTextureFailed>(e);
     if (!ev) return;
     if (!m_backSurface) return;
-    if (ev->GetName() != m_backSurface->GetName()) return;
-    Frameworks::EventPublisher::Post(std::make_shared<CreateRenderTargetTextureFailed>(ev->GetName(), ev->GetErrorCode()));
+    if (ev->getName() != m_backSurface->getName()) return;
+    Frameworks::EventPublisher::Post(std::make_shared<CreateRenderTargetTextureFailed>(ev->getName(), ev->GetErrorCode()));
 }

@@ -21,13 +21,13 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
-    CommandBus::Post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.GetName(),
+    CommandBus::Post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName(),
         [=](auto o) { return std::make_shared<TriangleList>(o); }));
 }
 
 GeometryRepository::~GeometryRepository()
 {
-    CommandBus::Post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.GetName()));
+    CommandBus::Post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName()));
     SAFE_DELETE(m_builder);
 }
 
@@ -103,7 +103,7 @@ void GeometryRepository::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e
     auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_geometryLock };
-    m_geometries.insert_or_assign(ev->GetDto().GetName(), ev->GetGeometryData());
+    m_geometries.insert_or_assign(ev->GetDto().getName(), ev->GetGeometryData());
 }
 
 void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)
@@ -112,7 +112,7 @@ void GeometryRepository::OnGeometryBuilt(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
     //std::lock_guard locker{ m_geometryLock };
-    //m_geometries.insert_or_assign(ev->GetName(), ev->GetGeometryData());
+    //m_geometries.insert_or_assign(ev->getName(), ev->GetGeometryData());
     m_isCurrentBuilding = false;
 }
 
@@ -122,7 +122,7 @@ void GeometryRepository::OnBuildGeometryFail(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("geometry data %s build failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }
 

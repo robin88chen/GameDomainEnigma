@@ -27,7 +27,7 @@ namespace Enigma::WorldMap
         WorldMap& operator=(WorldMap&& other) = delete;
         virtual ~WorldMap() override;
 
-        const std::string& GetName() const { return m_name; };
+        const std::string& getName() const { return m_name; };
 
         virtual Engine::GenericDto SerializeDto() override;
 

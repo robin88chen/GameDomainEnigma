@@ -233,7 +233,7 @@ void DeferredRendererService::OnSceneGraphChanged(const Frameworks::IEventPtr& e
     const auto ev = std::dynamic_pointer_cast<SceneGraph::SceneGraphChanged, Frameworks::IEvent>(e);
     if ((!ev) || (ev->GetChild())) return;
     // 抓light entity 被 attach 的訊息來改變 light volume 的 parent
-    if (!ev->GetChild()->TypeInfo().IsDerived(Light::TYPE_RTTI)) return;
+    if (!ev->GetChild()->typeInfo().isDerived(Light::TYPE_RTTI)) return;
     if (ev->GetNotifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
     const auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
     if (!light) return;
@@ -395,13 +395,13 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_quad");
     pawn_helper.MeshPrimitive(mesh_dto)
         .TopLevel(true)
-        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.GetName()));
+        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
-    InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
+    InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
 void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
@@ -424,13 +424,13 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_quad");
     pawn_helper.MeshPrimitive(mesh_dto)
         .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true)
-        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.GetName()));
+        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
-    InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
+    InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
 void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit)
@@ -450,14 +450,14 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_volume");
-    pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.GetName())).MeshPrimitive(mesh_dto)
+    pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).MeshPrimitive(mesh_dto)
         .TopLevel(true).LocalTransform(lit->GetLocalTransform());
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
-    InsertLightPawnBuildingMeta(pawn_dto.GetName(), lit);
+    InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
 void DeferredRendererService::InsertLightPawnBuildingMeta(const std::string& pawn_name, const std::shared_ptr<SceneGraph::Light>& lit)

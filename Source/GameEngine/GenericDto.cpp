@@ -49,7 +49,7 @@ void GenericDto::AddName(const std::string& name)
    AddOrUpdate(TOKEN_NAME, name);
 }
 
-std::string GenericDto::GetName() const
+std::string GenericDto::getName() const
 {
    return Get<std::string>(TOKEN_NAME);
 }

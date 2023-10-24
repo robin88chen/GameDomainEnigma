@@ -13,7 +13,7 @@ DEFINE_RTTI(Engine, TriangleList, GeometryData);
 
 TriangleList::TriangleList(const std::string& name) : GeometryData(name)
 {
-    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.getName());
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
 

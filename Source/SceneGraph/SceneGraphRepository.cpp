@@ -86,10 +86,10 @@ std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& na
 
 std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const GenericDto& dto)
 {
-    assert(!HasCamera(dto.GetName()));
+    assert(!HasCamera(dto.getName()));
     auto camera = std::make_shared<Camera>(dto);
     std::lock_guard locker{ m_cameraMapLock };
-    m_cameras.insert_or_assign(dto.GetName(), camera);
+    m_cameras.insert_or_assign(dto.getName(), camera);
     return camera;
 }
 
@@ -284,13 +284,13 @@ void SceneGraphRepository::DoQueryingCamera(const Frameworks::ICommandPtr& c)
     if (!c) return;
     if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::QueryCamera>(c))
     {
-        if (auto camera = QueryCamera(cmd->GetName()))
+        if (auto camera = QueryCamera(cmd->getName()))
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::ReplyCameraQuery>(cmd->GetRuid(), camera));
+            EventPublisher::Post(std::make_shared<SceneGraph::ReplyCameraQuery>(cmd->getRuid(), camera));
         }
         else
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::QueryCameraFailed>(cmd->GetRuid(), ErrorCode::cameraNotFound));
+            EventPublisher::Post(std::make_shared<SceneGraph::QueryCameraFailed>(cmd->getRuid(), ErrorCode::cameraNotFound));
         }
     }
     else
@@ -305,9 +305,9 @@ void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
     if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateCamera>(c))
     {
         std::shared_ptr<Camera> camera = nullptr;
-        if (HasCamera(cmd->GetDto().GetName()))
+        if (HasCamera(cmd->GetDto().getName()))
         {
-            camera = QueryCamera(cmd->GetDto().GetName());
+            camera = QueryCamera(cmd->GetDto().getName());
         }
         else
         {
@@ -315,11 +315,11 @@ void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
         }
         if (camera)
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::CameraCreated>(camera->GetName(), camera));
+            EventPublisher::Post(std::make_shared<SceneGraph::CameraCreated>(camera->getName(), camera));
         }
         else
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().GetName(), ErrorCode::sceneRepositoryFailed));
+            EventPublisher::Post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().getName(), ErrorCode::sceneRepositoryFailed));
         }
     }
     else

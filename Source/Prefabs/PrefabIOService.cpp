@@ -99,7 +99,7 @@ void PrefabIOService::CompletePawnPrefabLoading(const std::shared_ptr<SceneGraph
 
 void PrefabIOService::FailPrefabLoading(error er)
 {
-    EventPublisher::Post(std::make_shared<LoadPrefabFailed>(m_currentCommand->GetRuid(), er));
+    EventPublisher::Post(std::make_shared<LoadPrefabFailed>(m_currentCommand->getRuid(), er));
     m_currentCommand = nullptr;
     LoadNextPrefab();
 }
@@ -110,8 +110,8 @@ void PrefabIOService::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_currentCommand->GetPawnDto().GetId()) return;
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(m_currentCommand->GetPawnDto().GetName(), ev->GetDtos()));
+    if (ev->getRuid() != m_currentCommand->GetPawnDto().GetId()) return;
+    CommandBus::Post(std::make_shared<BuildSceneGraph>(m_currentCommand->GetPawnDto().getName(), ev->GetDtos()));
 }
 
 void PrefabIOService::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
@@ -120,7 +120,7 @@ void PrefabIOService::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_currentCommand->GetPawnDto().GetId()) return;
+    if (ev->getRuid() != m_currentCommand->GetPawnDto().GetId()) return;
     FailPrefabLoading(ev->GetErrorCode());
 }
 
@@ -130,7 +130,7 @@ void PrefabIOService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt>(e);
     if (!ev) return;
-    if (ev->GetSceneGraphId() != m_currentCommand->GetPawnDto().GetName()) return;
+    if (ev->GetSceneGraphId() != m_currentCommand->GetPawnDto().getName()) return;
     if ((ev->GetTopLevelSpatial().empty()) || (!ev->GetTopLevelSpatial()[0])) return FailPrefabLoading(ErrorCode::emptyPrefabs);
     auto pawn = std::dynamic_pointer_cast<Pawn>(ev->GetTopLevelSpatial()[0]);
     if (!pawn) return FailPrefabLoading(ErrorCode::invalidPrefab);
@@ -143,7 +143,7 @@ void PrefabIOService::OnBuildSceneGraphFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildFactorySceneGraphFailed>(e);
     if (!ev) return;
-    if (ev->GetSceneGraphId() != m_currentCommand->GetPawnDto().GetName()) return;
+    if (ev->GetSceneGraphId() != m_currentCommand->GetPawnDto().getName()) return;
     FailPrefabLoading(ev->GetErrorCode());
 }
 

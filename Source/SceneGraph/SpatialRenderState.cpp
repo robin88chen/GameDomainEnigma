@@ -32,7 +32,7 @@ SpatialRenderState::~SpatialRenderState()
 void SpatialRenderState::QueryLightingState(const MathLib::Vector3& spatialPos)
 {
     auto request = std::make_shared<RequestSpatialLightInfo>(spatialPos);
-    m_requestRuid = request->GetRuid();
+    m_requestRuid = request->getRuid();
 
     m_onLightingStateResponse = std::make_shared<ResponseSubscriber>([=](auto r) { OnLightingStateResponse(r); });
     ResponseBus::Subscribe(typeid(SpatialLightInfoResponse), m_onLightingStateResponse);

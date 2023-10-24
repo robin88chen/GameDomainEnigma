@@ -59,7 +59,7 @@ void LightInfoTraversal::QueryNextRequest()
 
         const auto request = m_queryRequests.front();
         m_queryRequests.pop_front();
-        m_requesterRuid = request->GetRuid();
+        m_requesterRuid = request->getRuid();
         m_querySpatialPos = request->GetSpatialPos();
         m_isCurrentQuerying = true;
     }

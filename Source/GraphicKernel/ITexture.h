@@ -42,7 +42,7 @@ namespace Enigma::Graphics
         ITexture& operator=(const ITexture&) = delete;
         ITexture& operator=(ITexture&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         virtual void Load(const byte_buffer& img_buff);
         virtual void Load(const std::string& filename, const std::string& pathid);

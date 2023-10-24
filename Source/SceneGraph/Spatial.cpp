@@ -16,7 +16,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Spatial);
 
-Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.GetName())
+Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.getName())
 {
     m_name = name;
 

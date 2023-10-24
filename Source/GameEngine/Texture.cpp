@@ -6,7 +6,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Engine, Texture);
 
-Texture::Texture(const std::string& name, const Graphics::ITexturePtr & tex) : m_factoryDesc(Texture::TYPE_RTTI.GetName())
+Texture::Texture(const std::string& name, const Graphics::ITexturePtr & tex) : m_factoryDesc(Texture::TYPE_RTTI.getName())
 {
     m_name = name;
     m_texture = tex;

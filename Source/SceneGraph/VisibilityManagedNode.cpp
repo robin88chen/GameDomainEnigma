@@ -16,7 +16,7 @@ DEFINE_RTTI(SceneGraph, VisibilityManagedNode, LazyNode);
 VisibilityManagedNode::VisibilityManagedNode(const std::string& name)
     : LazyNode(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
 }
 
 VisibilityManagedNode::VisibilityManagedNode(const GenericDto& dto)

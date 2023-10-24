@@ -9,13 +9,13 @@ static std::string TOKEN_NEW_MATERIAL_DTO = "NewMaterialDto";
 static std::string TOKEN_MESH_NAME = "MeshName";
 static std::string TOKEN_TEXTURE_MAPPING_DTO = "TextureMappingDto";
 
-AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.GetName())
+AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.getName())
 {
 }
 
 AvatarRecipeReplaceMaterialDto::AvatarRecipeReplaceMaterialDto() : AvatarRecipeDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
 }
 
 AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -37,7 +37,7 @@ GenericDto AvatarRecipeReplaceMaterialDto::ToGenericDto() const
 
 AvatarRecipeChangeTextureDto::AvatarRecipeChangeTextureDto() : AvatarRecipeDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
 }
 
 AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::FromGenericDto(const Engine::GenericDto& dto)

@@ -141,7 +141,7 @@ stdext::optional_ref<EffectVariable> EffectPass::GetVariableByName(const std::st
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].GetName() == name) return m_variables[i];
+        if (m_variables[i].getName() == name) return m_variables[i];
     }
 
     return std::nullopt;
@@ -162,7 +162,7 @@ stdext::optional_ref<const EffectVariable> EffectPass::GetVariableByName(const s
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].GetName() == name) return m_variables[i];
+        if (m_variables[i].getName() == name) return m_variables[i];
     }
     return std::nullopt;
 }

@@ -62,7 +62,7 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onTick()
     }
     assert(m_compiler);
     auto request = m_requests.front();
-    m_currentCompilingRuid = request->GetRuid();
+    m_currentCompilingRuid = request->getRuid();
     m_currentCompilingEffectName = request->GetDto().Name();
     m_requests.pop();
     auto policy = request->GetDto().ConvertToPolicy(m_effectDeserializer);
@@ -112,17 +112,17 @@ void EffectMaterialManager::OnCompilerEffectMaterialCompiled(const Frameworks::I
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EffectCompiler::EffectMaterialCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_currentCompilingEffectName) return;
+    if (ev->getName() != m_currentCompilingEffectName) return;
 
     std::lock_guard lock(m_sourceMapLock);
     if (!ev->HasExisted())
     {
         EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
         source->LinkSource();
-        m_sourceMaterials.insert_or_assign(ev->GetName(), source);
+        m_sourceMaterials.insert_or_assign(ev->getName(), source);
     }
     Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
-        m_currentCompilingRuid, ev->GetName(), QueryEffectMaterial(ev->GetName())));
+        m_currentCompilingRuid, ev->getName(), QueryEffectMaterial(ev->getName())));
     m_isCurrentCompiling = false;
 }
 
@@ -132,9 +132,9 @@ void EffectMaterialManager::OnCompilerCompileEffectMaterialFailed(const Framewor
     auto ev = std::dynamic_pointer_cast<EffectCompiler::CompileEffectMaterialFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
     Frameworks::EventPublisher::Post(std::make_shared<Engine::CompileEffectMaterialFailed>(
-        m_currentCompilingRuid, ev->GetName(), ev->GetErrorCode()));
+        m_currentCompilingRuid, ev->getName(), ev->GetErrorCode()));
     m_isCurrentCompiling = false;
 }
 
@@ -153,7 +153,7 @@ void EffectMaterialManager::ReleaseEffectMaterialSource(const std::shared_ptr<Ef
 {
     if (!eff_source) return;
     std::lock_guard locker{ m_sourceMapLock };
-    m_sourceMaterials.erase(eff_source->GetName());
+    m_sourceMaterials.erase(eff_source->getName());
 }
 
 void EffectMaterialManager::DumpUnreleasedMaterial()
@@ -162,7 +162,7 @@ void EffectMaterialManager::DumpUnreleasedMaterial()
     {
         for (auto& mat : m_sourceMaterials)
         {
-            std::string source_name = mat.second->GetName();
+            std::string source_name = mat.second->getName();
             Platforms::Debug::ErrorPrintf("un-released material %s", source_name.c_str());
         }
     }

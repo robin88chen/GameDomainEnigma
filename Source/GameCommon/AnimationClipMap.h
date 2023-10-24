@@ -33,7 +33,7 @@ namespace Enigma::GameCommon
                 m_actionName = name; m_animClip = clip;
             };
             // copy-er, move-er, destructor 會自動建立
-            const std::string& GetName() const { return m_actionName; };
+            const std::string& getName() const { return m_actionName; };
             void ChangeClip(const Animators::AnimationClip& clip) { m_animClip = clip; };
             const Animators::AnimationClip& GetClip() const { return m_animClip; };
 

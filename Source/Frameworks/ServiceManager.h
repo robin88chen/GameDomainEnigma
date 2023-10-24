@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ServiceManager.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -71,11 +71,6 @@ namespace Enigma::Frameworks
             ServiceState m_state;
             std::shared_ptr<ISystemService> m_service;
             bool m_isRegistered;
-        };
-        static bool comp_service_order(const ServiceStateRecord& rec1, const ServiceStateRecord& rec2)
-        {
-            if (rec1.m_service->GetOrderValue() < rec2.m_service->GetOrderValue()) return true;
-            return false;
         };
 
         typedef std::list<ServiceStateRecord> SystemServiceList;

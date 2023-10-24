@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RttiDerivingMap.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -17,9 +17,9 @@ namespace Enigma::Frameworks
     {
     private:
         friend class Rtti;
-        static bool TryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token);
-        static bool IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
-        static bool IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool tryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token);
+        static bool isDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool isExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
 
     private:
         using DerivingMap = std::unordered_map<std::string, std::string>;

@@ -11,7 +11,7 @@ static std::string TOKEN_LOOP_TIMES = "LoopTimes";
 static std::string TOKEN_WARP_MODES = "WarpModes";
 static std::string TOKEN_DIVIDE_INDICES = "DivideIndices";
 
-AnimationClipMapDto::AnimationClipMapDto() : m_factoryDesc(AnimationClipMap::TYPE_RTTI.GetName())
+AnimationClipMapDto::AnimationClipMapDto() : m_factoryDesc(AnimationClipMap::TYPE_RTTI.getName())
 {
 }
 

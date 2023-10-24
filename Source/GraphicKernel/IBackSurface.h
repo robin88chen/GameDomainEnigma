@@ -30,7 +30,7 @@ namespace Enigma::Graphics
         IBackSurface& operator=(const IBackSurface&) = delete;
         IBackSurface& operator=(IBackSurface&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         virtual const GraphicFormat& GetFormat() { return m_format; };
         virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
 

@@ -9,7 +9,6 @@ DEFINE_RTTI(Engine, TimerService, ISystemService);
 TimerService::TimerService(ServiceManager* manager) : ISystemService(manager)
 {
     m_needTick = true;
-    m_orderValue = TimerServiceOrderValue;
     m_gameTimer = std::make_unique<Timer>();
     m_realLifeTimer = std::make_unique<Timer>();
 }

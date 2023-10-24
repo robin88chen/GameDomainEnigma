@@ -72,7 +72,7 @@ Enigma::Engine::GenericDto CameraDtoHelper::ToGenericDto()
 SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
 {
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
-    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.GetName());
+    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
     m_dto.Name() = name;
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
@@ -144,7 +144,7 @@ Enigma::Engine::GenericDto SpatialDtoHelper::ToGenericDto()
 PawnDtoHelper::PawnDtoHelper(const std::string& name)
 {
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
-    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_dto.Name() = name;
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;

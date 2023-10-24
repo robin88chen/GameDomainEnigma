@@ -85,7 +85,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTick()
     if (!m_requests.empty())
     {
         auto r = m_requests.front();
-        m_currentRequestRuid = r->GetRuid();
+        m_currentRequestRuid = r->getRuid();
         InvokeRequest(r);
         m_requests.pop();
         m_currentRequesting = true;

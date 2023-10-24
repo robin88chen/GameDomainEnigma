@@ -8,7 +8,7 @@ DEFINE_RTTI(Terrain, TerrainPrimitive, MeshPrimitive);
 
 TerrainPrimitive::TerrainPrimitive(const std::string& name) : MeshPrimitive(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()).ClaimAsInstanced(name + ".terrain");
+    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".terrain");
 }
 
 TerrainPrimitive::~TerrainPrimitive()

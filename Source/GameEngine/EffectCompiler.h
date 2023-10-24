@@ -35,7 +35,7 @@ namespace Enigma::Engine
         public:
             EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff, bool has_existed) :
                 m_name(name), m_effect(eff), m_hasExisted(has_existed) {};
-            const std::string& GetName() { return m_name; }
+            const std::string& getName() { return m_name; }
             bool HasEffect() { return m_effect != nullptr; }
             std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
             bool HasExisted() { return m_hasExisted; }
@@ -49,7 +49,7 @@ namespace Enigma::Engine
         public:
             CompileEffectMaterialFailed(const std::string& name, std::error_code er) :
                 m_name(name), m_error(er) {};
-            const std::string& GetName() { return m_name; }
+            const std::string& getName() { return m_name; }
             std::error_code GetErrorCode() const { return m_error; }
         private:
             std::string m_name;
@@ -60,7 +60,7 @@ namespace Enigma::Engine
         public:
             CompilingProfileDeserialized(const Frameworks::Ruid& ruid, const EffectCompilingProfile& profile) :
                 m_ruid(ruid), m_profile(profile) {};
-            const Frameworks::Ruid& GetRuid() { return m_ruid; }
+            const Frameworks::Ruid& getRuid() { return m_ruid; }
             const EffectCompilingProfile& GetProfile() { return m_profile; }
         private:
             Frameworks::Ruid m_ruid;
@@ -71,7 +71,7 @@ namespace Enigma::Engine
         public:
             DeserializeCompilingProfileFailed(const Frameworks::Ruid& ruid, std::error_code er) :
                 m_ruid(ruid), m_error(er) {};
-            const Frameworks::Ruid& GetRuid() { return m_ruid; }
+            const Frameworks::Ruid& getRuid() { return m_ruid; }
             std::error_code GetErrorCode() const { return m_error; }
         private:
             Frameworks::Ruid m_ruid;

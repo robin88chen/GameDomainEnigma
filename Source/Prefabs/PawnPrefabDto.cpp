@@ -17,7 +17,7 @@ static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_PARENT_NAME = "ParentName";
 
-PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.GetName())), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
+PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.getName())), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;

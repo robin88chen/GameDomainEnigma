@@ -621,7 +621,7 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
         //Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
         /*unsigned int w, h;
         m_texture->GetDimension(&w, &h);
-        DebugPrintf("Texture %s, %d, %d\n", m_texture->GetName().String().c_str(), w, h);*/
+        DebugPrintf("Texture %s, %d, %d\n", m_texture->getName().String().c_str(), w, h);*/
     }
     else if ((tex) && (tex->IsMultiTexture()) && (indexMultiTexture))
     {
@@ -632,7 +632,7 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
         }
         /*unsigned int w, h;
         m_multiTexture->GetDimension(&w, &h);
-        DebugPrintf("Multi Texture %s, %d, %d\n", m_multiTexture->GetName().String().c_str(), w, h);*/
+        DebugPrintf("Multi Texture %s, %d, %d\n", m_multiTexture->getName().String().c_str(), w, h);*/
     }
     else
     {

@@ -10,7 +10,6 @@ ISystemService::ISystemService(ServiceManager* manager)
     m_serviceManager = manager;
     m_needTick = true;
     m_isSuspended = false;
-    m_orderValue = ServiceDefaultOrderValue;
 }
 
 ISystemService::~ISystemService()

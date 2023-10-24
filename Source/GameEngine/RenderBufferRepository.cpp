@@ -102,7 +102,7 @@ void RenderBufferRepository::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_bufferMapLock };
     m_renderBuffers.insert_or_assign(ev->GetSignature(), ev->GetBuffer());
     m_isCurrentBuilding = false;
-    Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->GetName(), ev->GetSignature(), ev->GetBuffer()));
+    Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->getName(), ev->GetSignature(), ev->GetBuffer()));
 }
 
 void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
@@ -111,7 +111,7 @@ void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventP
     auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("render buffer %s build failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }
 

@@ -8,7 +8,7 @@ DEFINE_RTTI(SceneGraph, LazyNode, Node);
 
 LazyNode::LazyNode(const std::string& name) : Node(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(LazyNode::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(LazyNode::TYPE_RTTI.getName());
 }
 
 LazyNode::LazyNode(const GenericDto& o) : Node(o)

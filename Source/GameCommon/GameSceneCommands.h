@@ -44,7 +44,7 @@ namespace Enigma::GameCommon
     public:
         DeleteSceneSpatial(const std::string& name) : m_name(name) {}
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
 
     protected:
         std::string m_name;

@@ -29,13 +29,13 @@ GenericDto AnimationTimeSRTDto::ToGenericDto()
     return dto;
 }
 
-AnimationAssetDto::AnimationAssetDto() : m_factoryDesc(AnimationAsset::TYPE_RTTI.GetName())
+AnimationAssetDto::AnimationAssetDto() : m_factoryDesc(AnimationAsset::TYPE_RTTI.getName())
 {
 }
 
 ModelAnimationAssetDto::ModelAnimationAssetDto() : AnimationAssetDto()
 {
-    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
 ModelAnimationAssetDto ModelAnimationAssetDto::FromGenericDto(const Engine::GenericDto& dto)

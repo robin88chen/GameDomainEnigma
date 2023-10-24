@@ -62,20 +62,20 @@ TextureLoader::~TextureLoader()
 void TextureLoader::LoadTexture(const TexturePolicy& policy)
 {
     m_policy = policy;
-    if (m_hostRepository->HasTexture(m_policy.GetName()))
+    if (m_hostRepository->HasTexture(m_policy.getName()))
     {
         Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(
-            m_policy.GetName(), m_hostRepository->QueryTexture(m_policy.GetName())));
+            m_policy.getName(), m_hostRepository->QueryTexture(m_policy.getName())));
     }
     else
     {
         if (m_policy.GetSurfaceCount() > 1)
         {
-            Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateMultiTexture>(m_policy.GetName()));
+            Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateMultiTexture>(m_policy.getName()));
         }
         else
         {
-            Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateTexture>(m_policy.GetName()));
+            Frameworks::CommandBus::Post(std::make_shared<Graphics::CreateTexture>(m_policy.getName()));
         }
     }
 }
@@ -94,7 +94,7 @@ void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, 
         return;
     }
     m_savingTextureName = name;
-    m_savingDeviceTextureName = target_texture->GetDeviceTexture()->GetName();
+    m_savingDeviceTextureName = target_texture->GetDeviceTexture()->getName();
     target_texture->GetDeviceTexture()->Save(file);
 }
 
@@ -117,7 +117,7 @@ void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
     {
         Platforms::Debug::Printf("can't get texture asset %s", tex_name.c_str());
         Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(
-            m_policy.GetName(), ErrorCode::findStashedAssetFail));
+            m_policy.getName(), ErrorCode::findStashedAssetFail));
         return;
     }
     if (m_policy.GetJobType() == TexturePolicy::JobType::Load)
@@ -144,19 +144,19 @@ void TextureLoader::OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_policy.GetName()) return;
+    if (ev->GetTextureName() != m_policy.getName()) return;
     if (m_policy.GetJobType() != TexturePolicy::JobType::Load) return;
-    Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.GetName());
+    Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.getName());
     if (!dev_tex)
     {
         Platforms::Debug::Printf("can't get texture asset %s", ev->GetTextureName().c_str());
         Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(
-            m_policy.GetName(), ErrorCode::findStashedAssetFail));
+            m_policy.getName(), ErrorCode::findStashedAssetFail));
         return;
     }
-    auto tex = std::make_shared<Texture>(m_policy.GetName(), dev_tex);
-    tex->TheFactoryDesc().ClaimAsResourceAsset(m_policy.GetName(), m_policy.GetFileName(), m_policy.GetPathID());
-    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(m_policy.GetName(), tex));
+    auto tex = std::make_shared<Texture>(m_policy.getName(), dev_tex);
+    tex->TheFactoryDesc().ClaimAsResourceAsset(m_policy.getName(), m_policy.GetFileName(), m_policy.GetPathID());
+    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(m_policy.getName(), tex));
 }
 
 void TextureLoader::OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -164,10 +164,10 @@ void TextureLoader::OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceLoadImageFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_policy.GetName()) return;
-    Platforms::Debug::Printf("texture %s load image %s failed", m_policy.GetName().c_str(), m_policy.GetFileName().c_str());
+    if (ev->GetTextureName() != m_policy.getName()) return;
+    Platforms::Debug::Printf("texture %s load image %s failed", m_policy.getName().c_str(), m_policy.GetFileName().c_str());
     Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(
-        m_policy.GetName(), ev->GetError()));
+        m_policy.getName(), ev->GetError()));
 }
 
 void TextureLoader::OnTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -183,18 +183,18 @@ void TextureLoader::OnTextureResourceCreated(const Enigma::Frameworks::IEventPtr
         tex_name = ev->GetTextureName();
     }
     else return;
-    if (tex_name != m_policy.GetName()) return;
+    if (tex_name != m_policy.getName()) return;
     if (m_policy.GetJobType() != TexturePolicy::JobType::Create) return;
-    Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.GetName());
+    Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_policy.getName());
     if (!dev_tex)
     {
         Platforms::Debug::Printf("can't get texture asset %s", tex_name.c_str());
         Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(
-            m_policy.GetName(), ErrorCode::findStashedAssetFail));
+            m_policy.getName(), ErrorCode::findStashedAssetFail));
         return;
     }
-    auto tex = std::make_shared<Texture>(m_policy.GetName(), dev_tex);
-    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(m_policy.GetName(), tex));
+    auto tex = std::make_shared<Texture>(m_policy.getName(), dev_tex);
+    Frameworks::EventPublisher::Post(std::make_shared<TextureLoaded>(m_policy.getName(), tex));
 }
 
 void TextureLoader::OnTextureCreateResourceFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -202,9 +202,9 @@ void TextureLoader::OnTextureCreateResourceFailed(const Enigma::Frameworks::IEve
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceCreateFromMemoryFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_policy.GetName()) return;
-    Platforms::Debug::Printf("texture %s create from memory failed", m_policy.GetName().c_str());
-    Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(m_policy.GetName(), ev->GetError()));
+    if (ev->GetTextureName() != m_policy.getName()) return;
+    Platforms::Debug::Printf("texture %s create from memory failed", m_policy.getName().c_str());
+    Frameworks::EventPublisher::Post(std::make_shared<LoadTextureFailed>(m_policy.getName(), ev->GetError()));
 }
 
 void TextureLoader::OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e)

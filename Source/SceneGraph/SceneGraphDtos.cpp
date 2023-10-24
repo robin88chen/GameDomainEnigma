@@ -28,7 +28,7 @@ static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
-SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.GetName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
+SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
@@ -73,12 +73,12 @@ GenericDto SpatialDto::ToGenericDto() const
 
 NodeDto::NodeDto() : SpatialDto()
 {
-    m_factoryDesc = FactoryDesc(Node::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(Node::TYPE_RTTI.getName());
 }
 
 NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.getName()));
 }
 
 NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
@@ -98,12 +98,12 @@ GenericDto NodeDto::ToGenericDto() const
 
 LightDto::LightDto() : SpatialDto()
 {
-    m_factoryDesc = FactoryDesc(Light::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(Light::TYPE_RTTI.getName());
 }
 
 LightDto::LightDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.getName()));
 }
 
 LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -123,12 +123,12 @@ GenericDto LightDto::ToGenericDto() const
 
 PawnDto::PawnDto() : SpatialDto()
 {
-    m_factoryDesc = FactoryDesc(Pawn::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(Pawn::TYPE_RTTI.getName());
 }
 
 PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.getName()));
 }
 
 PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -163,12 +163,12 @@ std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engin
 
 LazyNodeDto::LazyNodeDto() : NodeDto()
 {
-    m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
 }
 
 LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LazyNode::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
 }
 
 LazyNodeDto LazyNodeDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -185,12 +185,12 @@ GenericDto LazyNodeDto::ToGenericDto() const
 
 VisibilityManagedNodeDto::VisibilityManagedNodeDto() : LazyNodeDto()
 {
-    m_factoryDesc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
 }
 
 VisibilityManagedNodeDto::VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.getName()));
 }
 
 VisibilityManagedNodeDto VisibilityManagedNodeDto::FromGenericDto(const Engine::GenericDto& dto)

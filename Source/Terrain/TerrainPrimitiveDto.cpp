@@ -9,13 +9,13 @@ using namespace Enigma::Engine;
 
 TerrainPrimitiveDto::TerrainPrimitiveDto() : MeshPrimitiveDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName());
-    m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName());
+    m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
 TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto) : MeshPrimitiveDto(dto)
 {
-    //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
 TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
@@ -27,7 +27,7 @@ TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto
 Enigma::Engine::GenericDto TerrainPrimitiveDto::ToGenericDto() const
 {
     Engine::GenericDto dto = MeshPrimitiveDto::ToGenericDto();
-    //dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.GetName()));
+    //dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()));
     return dto;
 }
 

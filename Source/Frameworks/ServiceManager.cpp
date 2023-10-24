@@ -22,8 +22,7 @@ void ServiceManager::RegisterSystemService(const std::shared_ptr<ISystemService>
     rec.m_service = service;
     rec.m_isRegistered = true;
     m_services.emplace_back(rec);
-    m_services.sort(comp_service_order);
-    m_mapServices[service->TypeIndex()] = service;
+    m_mapServices[service->typeIndex()] = service;
 }
 
 void ServiceManager::UnregisterSystemService(const Rtti& service_type)
@@ -31,7 +30,7 @@ void ServiceManager::UnregisterSystemService(const Rtti& service_type)
     SystemServiceList::iterator iter = m_services.begin();
     while (iter != m_services.end())
     {
-        if (((*iter).m_service) && ((*iter).m_service->TypeInfo() == service_type))
+        if (((*iter).m_service) && ((*iter).m_service->typeInfo() == service_type))
         {
             (*iter).m_isRegistered = false;
             if ((*iter).m_state == ServiceState::Running) (*iter).m_state = ServiceState::WaitingToShutdown;
@@ -56,7 +55,7 @@ void ServiceManager::ShutdownSystemService(const Rtti& service_type)
     SystemServiceList::iterator iter = m_services.begin();
     while (iter != m_services.end())
     {
-        if (((*iter).m_service) && ((*iter).m_service->TypeInfo() == service_type))
+        if (((*iter).m_service) && ((*iter).m_service->typeInfo() == service_type))
         {
             (*iter).m_isRegistered = false;
             if ((*iter).m_state == ServiceState::Running)
@@ -119,7 +118,7 @@ void ServiceManager::RunOnce()
         break;
         case ServiceState::Complete:
         {  // 完成，砍掉service
-            m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
+            m_mapServices[(*iterService).m_service->typeIndex()] = nullptr;
             (*iterService).m_service = nullptr;
         }
         break;
@@ -192,7 +191,7 @@ void ServiceManager::RunForState(ServiceState st)
         break;
         case ServiceState::Complete:
         {  // 完成，砍掉service
-            m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
+            m_mapServices[(*iterService).m_service->typeIndex()] = nullptr;
             (*iterService).m_service = nullptr;
         }
         break;
@@ -228,7 +227,7 @@ ServiceManager::ServiceState ServiceManager::CheckServiceState(const Rtti& servi
     for (SystemServiceList::iterator iterService = m_services.begin();
         iterService != m_services.end(); ++iterService)
     {
-        if (((*iterService).m_service) && ((*iterService).m_service->TypeInfo().IsDerived(service_type)))
+        if (((*iterService).m_service) && ((*iterService).m_service->typeInfo().isDerived(service_type)))
         {
             return (*iterService).m_state;
         }
@@ -254,7 +253,7 @@ std::optional<std::shared_ptr<ISystemService>> ServiceManager::TryGetSystemServi
     // map中沒有完全符合的，找service type的繼承者
     for (iter = m_mapServices.begin(); iter != m_mapServices.end(); ++iter)
     {
-        if (iter->first->IsDerived(service_type))
+        if (iter->first->isDerived(service_type))
         {
             return iter->second;
         }

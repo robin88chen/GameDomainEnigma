@@ -20,13 +20,13 @@ static std::string TOKEN_HEIGHT_MAP = "HeightMap";
 
 TerrainGeometryDto::TerrainGeometryDto() : TriangleListDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
     m_numRows = m_numCols = 1;
 }
 
 TerrainGeometryDto::TerrainGeometryDto(const TriangleListDto& triangle_dto) : TriangleListDto(triangle_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainGeometry::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainGeometry::TYPE_RTTI.getName()));
     m_numRows = m_numCols = 1;
 }
 

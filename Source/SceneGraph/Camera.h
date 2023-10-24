@@ -42,7 +42,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto SerializeDto();
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handSys; }
 
         /** change camera frame, eye_to_lookat & up must both set together or both not set   */

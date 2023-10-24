@@ -13,7 +13,7 @@ DEFINE_RTTI(SceneGraph, Light, Spatial);
 
 Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spatial(spatialName), m_lightInfo(lightInfo)
 {
-    m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
 
 Light::Light(const Engine::GenericDto& o) : Spatial(o)

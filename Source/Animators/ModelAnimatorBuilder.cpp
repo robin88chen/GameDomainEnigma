@@ -16,7 +16,7 @@ using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 
-ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(AnimationAsset::TYPE_RTTI.GetName())
+ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(AnimationAsset::TYPE_RTTI.getName())
 {
     m_repository = host;
     m_builtAnimator = nullptr;
@@ -54,7 +54,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     }
     else
     {
-        EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->GetRuid(), ErrorCode::policyIncomplete));
+        EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::policyIncomplete));
     }
 }
 
@@ -96,17 +96,17 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_assetName) return;
+    if (ev->getName() != m_assetName) return;
     auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset, AnimationAsset>(ev->GetAnimationAsset());
     if (!model_anim)
     {
-        EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->GetRuid(), ErrorCode::dynamicCastFail));
+        EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));
         return;
     }
     model_anim->TheFactoryDesc() = m_originalAssetDesc;
     m_builtAnimator->LinkAnimationAsset(model_anim);
     if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
-    EventPublisher::Post(std::make_shared<ModelAnimatorBuilt>(m_policy->GetRuid(), m_builtAnimator));
+    EventPublisher::Post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));
 }
 
 void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const IEventPtr& e)
@@ -114,6 +114,6 @@ void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildAnimationAssetFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_assetName) return;
-    EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->GetRuid(), ev->GetErrorCode()));
+    if (ev->getName() != m_assetName) return;
+    EventPublisher::Post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ev->GetErrorCode()));
 }

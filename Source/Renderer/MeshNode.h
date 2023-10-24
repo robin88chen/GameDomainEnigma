@@ -30,7 +30,7 @@ namespace Enigma::Renderer
 
         Engine::GenericDto SerializeDto() const;
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         void SetName(const std::string& name) { m_name = name; }
         void SetT_PosTransform(const MathLib::Matrix4& mx) { m_mxT_PosTransform = mx; }
         const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocalTransform; }

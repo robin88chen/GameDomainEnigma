@@ -19,7 +19,7 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
-MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.GetName()), m_buildingRuid()
+MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.getName()), m_buildingRuid()
 {
     m_onGeometryDataBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryDataBuilt(e); });
     EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
@@ -44,16 +44,16 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryDa
     m_onCreateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadOrCreateTextureFailed(e); });
     EventPublisher::Subscribe(typeid(CreateTextureFailed), m_onCreateTextureFailed);
 
-    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.GetName(), MeshPrimitiveDto::MeshDtoConvertToPolicy));
-    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.GetName(), SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy));
+    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveDto::MeshDtoConvertToPolicy));
+    CommandBus::Post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy));
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 {
     m_policy = nullptr;
 
-    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.GetName()));
-    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.GetName()));
+    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.getName()));
+    CommandBus::Post(std::make_shared<UnRegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName()));
 
     EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryDataBuilt);
     m_onGeometryDataBuilt = nullptr;
@@ -100,12 +100,12 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
-    if ((m_policy) && (ev->GetName() != m_policy->GeometryPolicy().Name())) return;
+    if ((m_policy) && (ev->getName() != m_policy->GeometryPolicy().Name())) return;
     m_builtGeometry = ev->GetGeometryData();
     m_builtGeometry->TheFactoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
-    buffer.m_renderBufferName = buffer.m_signature.GetName();
+    buffer.m_renderBufferName = buffer.m_signature.getName();
     buffer.m_vtxBufferName = buffer.m_renderBufferName + ".vtx";
     buffer.m_idxBufferName = buffer.m_renderBufferName + ".idx";
     buffer.m_sizeofVertex = m_builtGeometry->SizeofVertex();
@@ -125,7 +125,7 @@ void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_policy->GeometryPolicy().Name()) return;
+    if (ev->getName() != m_policy->GeometryPolicy().Name()) return;
     EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
@@ -136,7 +136,7 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_builtGeometry->MakeRenderBufferSignature().GetName()) return;
+    if (ev->getName() != m_builtGeometry->MakeRenderBufferSignature().getName()) return;
     m_builtRenderBuffer = ev->GetBuffer();
     std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->LinkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     m_builtEffects.resize(m_policy->EffectDtos().size());
@@ -162,7 +162,7 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->GetName() != m_builtGeometry->MakeRenderBufferSignature().GetName()) return;
+    if (ev->getName() != m_builtGeometry->MakeRenderBufferSignature().getName()) return;
     EventPublisher::Post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 
@@ -172,7 +172,7 @@ void MeshPrimitiveBuilder::OnEffectMaterialCompiled(const Frameworks::IEventPtr&
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled>(e);
     if (!ev) return;
-    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->GetName());
+    const std::optional<unsigned> found_idx = FindBuildingEffectIndex(ev->getName());
     if (!found_idx) return;
     m_builtEffects[found_idx.value()] = ev->GetEffect();
     TryCompletingMesh();
@@ -195,12 +195,12 @@ void MeshPrimitiveBuilder::OnTextureLoadedOrCreated(const Frameworks::IEventPtr&
     std::shared_ptr<Texture> tex_loaded;
     if (const auto ev = std::dynamic_pointer_cast<TextureLoaded>(e))
     {
-        tex_name = ev->GetName();
+        tex_name = ev->getName();
         tex_loaded = ev->GetTexture();
     }
     else if (const auto res = std::dynamic_pointer_cast<TextureCreated>(e))
     {
-        tex_name = res->GetName();
+        tex_name = res->getName();
         tex_loaded = res->GetTexture();
     }
     else

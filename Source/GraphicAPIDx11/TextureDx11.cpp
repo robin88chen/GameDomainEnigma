@@ -489,7 +489,7 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     m_d3dTextureResource = d3dResource;
 
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(
-        m_name, back_surf->GetName()));
+        m_name, back_surf->getName()));
     return ErrorCode::ok;
 }
 

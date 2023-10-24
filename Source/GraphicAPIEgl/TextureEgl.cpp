@@ -174,7 +174,7 @@ error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     glBindFramebuffer(GL_FRAMEBUFFER, bb->GetFrameBufferHandle());
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(m_name, back_surf->GetName()));
+    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(m_name, back_surf->getName()));
 
     return ErrorCode::ok;
 }

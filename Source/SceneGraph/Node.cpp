@@ -14,7 +14,7 @@ DEFINE_RTTI(SceneGraph, Node, Spatial);
 
 Node::Node(const std::string& name) : Spatial(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
 }
 
 Node::Node(const Engine::GenericDto& o) : Spatial(o)

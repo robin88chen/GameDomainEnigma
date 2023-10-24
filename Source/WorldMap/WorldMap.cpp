@@ -13,13 +13,13 @@ DEFINE_RTTI(WorldMap, WorldMap, PortalZoneNode);
 
 WorldMap::WorldMap(const std::string& name) : PortalZoneNode(name)
 {
-    m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName()).ClaimAsInstanced(name + ".wld");
+    m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".wld");
 }
 
 WorldMap::WorldMap(const Engine::GenericDto& o) : PortalZoneNode(o)
 {
     //WorldMapDto world = WorldMapDto::FromGenericDto(o);
-    //m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName()).ClaimAsInstanced(world.Name() + ".wld");
+    //m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.getName()).ClaimAsInstanced(world.Name() + ".wld");
 }
 
 WorldMap::~WorldMap()

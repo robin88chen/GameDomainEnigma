@@ -11,7 +11,6 @@ ResponseBus::ResponseBus(ServiceManager* manager) : ISystemService(manager)
 {
     assert(m_thisBus == nullptr);
     m_needTick = false;
-    m_orderValue = MessageServiceOrderValue;
     m_thisBus = this;
 }
 
@@ -95,7 +94,7 @@ void ResponseBus::Send(const IResponsePtr& r)
 {
     assert(m_thisBus);
     if (!r) return;
-    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ r->TypeInfo() });
+    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ r->typeInfo() });
     if (subscribers == m_thisBus->m_subscribers.end()) return;
     m_thisBus->InvokeHandlers(r, subscribers->second);
 }

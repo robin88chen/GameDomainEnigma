@@ -207,10 +207,10 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<DeleteSceneSpatial, ICommand>(c);
     if (!cmd) return;
-    auto spatial = FindSpatialByName(cmd->GetName());
+    auto spatial = FindSpatialByName(cmd->getName());
     if (!spatial)
     {
-        EventPublisher::Post(std::make_shared<DeleteSceneSpatialFailed>(cmd->GetName(), ErrorCode::spatialNotFound));
+        EventPublisher::Post(std::make_shared<DeleteSceneSpatialFailed>(cmd->getName(), ErrorCode::spatialNotFound));
         return;
     }
     if (const auto parent = spatial->GetParent())
@@ -221,5 +221,5 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
         }
     }
     spatial = nullptr;
-    EventPublisher::Post(std::make_shared<SceneSpatialDeleted>(cmd->GetName()));
+    EventPublisher::Post(std::make_shared<SceneSpatialDeleted>(cmd->getName()));
 }

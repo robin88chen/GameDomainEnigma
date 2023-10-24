@@ -194,7 +194,7 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
         m_d3dTextureResources[i] = d3dResource;
     }
     Frameworks::EventPublisher::Post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(
-        m_name, back_surf->GetName()));
+        m_name, back_surf->getName()));
     return ErrorCode::ok;
 }
 

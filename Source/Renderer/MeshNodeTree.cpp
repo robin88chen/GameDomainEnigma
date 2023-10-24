@@ -6,7 +6,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderer, MeshNodeTree);
 
-MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.GetName())
+MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
     m_meshNodes.clear();
 }
@@ -57,7 +57,7 @@ std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_
     unsigned count = static_cast<unsigned>(m_meshNodes.size());
     for (unsigned i = 0; i < count; i++)
     {
-        if (m_meshNodes[i].GetName() == node_name) return i;
+        if (m_meshNodes[i].getName() == node_name) return i;
     }
     return std::nullopt;
 }
@@ -102,7 +102,7 @@ bool MeshNodeTree::IsInSubTree(unsigned child_node_index, const std::string& par
     std::optional<unsigned> curr_node_index = child_node_index;
     while (curr_node_index)
     {
-        if (m_meshNodes[curr_node_index.value()].GetName() == parent_node_name) return true;
+        if (m_meshNodes[curr_node_index.value()].getName() == parent_node_name) return true;
         curr_node_index = m_meshNodes[curr_node_index.value()].GetParentIndexInArray();
     }
     return false;

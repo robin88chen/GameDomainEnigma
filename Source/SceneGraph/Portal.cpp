@@ -21,7 +21,7 @@ DEFINE_RTTI(SceneGraph, Portal, Spatial);
 
 Portal::Portal(const std::string& name) : Spatial(name)
 {
-    m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
     m_isOpen = false;
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }

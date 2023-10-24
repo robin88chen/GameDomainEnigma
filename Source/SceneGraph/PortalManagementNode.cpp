@@ -18,7 +18,7 @@ DEFINE_RTTI(SceneGraph, PortalManagementNode, Node);
 
 PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
 {
-    m_factoryDesc = FactoryDesc(TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
     m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });

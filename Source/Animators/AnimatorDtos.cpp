@@ -16,7 +16,7 @@ static std::string TOKEN_SKIN_MESH_NODE_NAME = "SkinMeshNodeName";
 static std::string TOKEN_BONE_NODE_NAMES = "BoneNodeNames";
 static std::string TOKEN_NODE_OFFSETS = "NodeOffsets";
 
-ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_RTTI.GetName()), m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.GetName())
+ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_RTTI.getName()), m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName())
 {
 }
 
@@ -66,7 +66,7 @@ std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::ConvertToPolicy(const std
     return policy;
 }
 
-SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.GetName())
+SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
 {
 }
 

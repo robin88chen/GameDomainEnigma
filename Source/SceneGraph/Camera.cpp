@@ -20,7 +20,7 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
-Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.GetName())
+Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.getName())
 {
     m_name = name;
     m_handSys = hand;

@@ -31,13 +31,13 @@ AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemServi
     m_assetBuilder = std::make_unique<AnimationAssetBuilder>(this);
     m_animatorBuilder = std::make_unique<ModelAnimatorBuilder>(this);
 
-    CommandBus::Post(std::make_shared<RegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName(),
         [=](auto o) { this->ModelAnimationAssetFactory(o); }));
 }
 
 AnimationRepository::~AnimationRepository()
 {
-    CommandBus::Post(std::make_shared<UnRegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName()));
+    CommandBus::post(std::make_shared<UnRegisterDtoFactory>(ModelAnimationAsset::TYPE_RTTI.getName()));
     m_assetBuilder = nullptr;
     m_animatorBuilder = nullptr;
 }
@@ -46,17 +46,17 @@ ServiceResult AnimationRepository::onInit()
 {
     m_doBuildingAnimationAsset = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingAnimationAsset(c); });
     m_doBuildingModelAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingModelAnimator(c); });
-    CommandBus::Subscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
-    CommandBus::Subscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
+    CommandBus::subscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
+    CommandBus::subscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
 
     m_onAnimationAssetBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnAnimationAssetBuilt(e); });
     m_onBuildAnimationAssetFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildAnimationAssetFailed(e); });
     m_onAnimatorBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnAnimatorBuilt(e); });
     m_onBuildAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildAnimatorFailed(e); });
-    EventPublisher::Subscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
-    EventPublisher::Subscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
-    EventPublisher::Subscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
-    EventPublisher::Subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
+    EventPublisher::subscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
+    EventPublisher::subscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
+    EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
+    EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
 
     return ServiceResult::Complete;
 }
@@ -101,15 +101,15 @@ bool AnimationRepository::PopAnimatorBuilding()
 
 ServiceResult AnimationRepository::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
-    CommandBus::Unsubscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
+    CommandBus::unsubscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
+    CommandBus::unsubscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
     m_doBuildingAnimationAsset = nullptr;
     m_doBuildingModelAnimator = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
-    EventPublisher::Unsubscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
-    EventPublisher::Unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
-    EventPublisher::Unsubscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
+    EventPublisher::unsubscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
+    EventPublisher::unsubscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
+    EventPublisher::unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
+    EventPublisher::unsubscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
     m_onAnimationAssetBuilt = nullptr;
     m_onBuildAnimationAssetFailed = nullptr;
     m_onAnimatorBuilt = nullptr;
@@ -158,7 +158,7 @@ void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& d
         return;
     }
     auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::FromGenericDto(dto));
-    EventPublisher::Post(std::make_shared<FactoryAnimationAssetCreated>(dto.GetId(), animation));
+    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.GetId(), animation));
 }
 
 std::string AnimationRepository::MakeAssetKey(const std::string& rtti_name, const std::string& name)

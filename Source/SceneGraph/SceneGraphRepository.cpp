@@ -49,17 +49,17 @@ SceneGraphRepository::~SceneGraphRepository()
 ServiceResult SceneGraphRepository::onInit()
 {
     m_doQueryingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoQueryingCamera(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
+    CommandBus::subscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
     m_doCreatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingCamera(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
+    CommandBus::subscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
 
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
+    CommandBus::unsubscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
     m_doQueryingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
+    CommandBus::unsubscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
     m_doCreatingCamera = nullptr;
 
     return ServiceResult::Complete;
@@ -186,7 +186,7 @@ std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name
     auto light = std::make_shared<Light>(name, info);
     std::lock_guard locker{ m_lightMapLock };
     m_lights.insert_or_assign(name, light);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoCreated>(light));
     return light;
 }
 
@@ -269,7 +269,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
         assert(!HasLight(light->GetSpatialName()));
         std::lock_guard locker{ m_lightMapLock };
         m_lights.insert_or_assign(light->GetSpatialName(), light);
-        Frameworks::EventPublisher::Post(std::make_shared<LightInfoCreated>(light));
+        Frameworks::EventPublisher::post(std::make_shared<LightInfoCreated>(light));
         return light;
     }
     else
@@ -286,11 +286,11 @@ void SceneGraphRepository::DoQueryingCamera(const Frameworks::ICommandPtr& c)
     {
         if (auto camera = QueryCamera(cmd->getName()))
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::ReplyCameraQuery>(cmd->getRuid(), camera));
+            EventPublisher::post(std::make_shared<SceneGraph::ReplyCameraQuery>(cmd->getRuid(), camera));
         }
         else
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::QueryCameraFailed>(cmd->getRuid(), ErrorCode::cameraNotFound));
+            EventPublisher::post(std::make_shared<SceneGraph::QueryCameraFailed>(cmd->getRuid(), ErrorCode::cameraNotFound));
         }
     }
     else
@@ -315,11 +315,11 @@ void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
         }
         if (camera)
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::CameraCreated>(camera->getName(), camera));
+            EventPublisher::post(std::make_shared<SceneGraph::CameraCreated>(camera->getName(), camera));
         }
         else
         {
-            EventPublisher::Post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().getName(), ErrorCode::sceneRepositoryFailed));
+            EventPublisher::post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().getName(), ErrorCode::sceneRepositoryFailed));
         }
     }
     else

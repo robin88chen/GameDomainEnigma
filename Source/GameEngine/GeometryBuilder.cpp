@@ -20,31 +20,31 @@ GeometryBuilder::GeometryBuilder(GeometryRepository* host) : m_ruidDeserializing
 {
     m_hostRepository = host;
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoDeserialized(e); });
-    EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDeserializeDtoFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnDeserializeDtoFailed(e); });
-    EventPublisher::Subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
+    EventPublisher::subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
     m_onFactoryGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryGeometryCreated(e); });
-    EventPublisher::Subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
+    EventPublisher::subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
 
     m_doRegisteringGeometryFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringGeometryFactory(c); });
-    CommandBus::Subscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
+    CommandBus::subscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
     m_doUnRegisteringGeometryFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringGeometryFactory(c); });
-    CommandBus::Subscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
+    CommandBus::subscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
 }
 
 GeometryBuilder::~GeometryBuilder()
 {
-    EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDtoDeserialized = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
+    EventPublisher::unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
     m_onDeserializeDtoFailed = nullptr;
-    EventPublisher::Unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
+    EventPublisher::unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
     m_onFactoryGeometryCreated = nullptr;
-    CommandBus::Unsubscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
+    CommandBus::unsubscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
     m_doRegisteringGeometryFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
+    CommandBus::unsubscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
     m_doUnRegisteringGeometryFactory = nullptr;
 }
 
@@ -54,7 +54,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     m_policy = policy;
     if (m_hostRepository->HasGeometryData(policy.Name()))
     {
-        EventPublisher::Post(std::make_shared<GeometryDataBuilt>(policy.Name(),
+        EventPublisher::post(std::make_shared<GeometryDataBuilt>(policy.Name(),
             m_hostRepository->QueryGeometryData(policy.Name())));
     }
     else if (auto p = policy.GetDto())
@@ -68,7 +68,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     }
     else
     {
-        EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(policy.Name(), ErrorCode::policyIncomplete));
+        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(policy.Name(), ErrorCode::policyIncomplete));
     }
 }
 
@@ -77,7 +77,7 @@ void GeometryBuilder::CreateFromDto(const GenericDto& dto)
     assert(m_hostRepository);
     m_ruidInstancing = dto.GetId();
     GeometryFactory(dto);
-    //CommandBus::Post(std::make_shared<InvokeDtoFactory>(dto));
+    //CommandBus::post(std::make_shared<InvokeDtoFactory>(dto));
 }
 
 void GeometryBuilder::GeometryFactory(const Engine::GenericDto& dto)
@@ -88,7 +88,7 @@ void GeometryBuilder::GeometryFactory(const Engine::GenericDto& dto)
         Platforms::Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    EventPublisher::Post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(dto)));
+    EventPublisher::post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(dto)));
 }
 
 void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
@@ -99,7 +99,7 @@ void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (ev->getRuid() != m_ruidDeserializing) return;
     if (ev->GetDtos().empty())
     {
-        EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ErrorCode::deserializeFail));
+        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ErrorCode::deserializeFail));
         return;
     }
     CreateFromDto(ev->GetDtos()[0]);
@@ -111,7 +111,7 @@ void GeometryBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
-    EventPublisher::Post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ev->GetErrorCode()));
 }
 
 void GeometryBuilder::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
@@ -120,7 +120,7 @@ void GeometryBuilder::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
     if (ev->GetDto().GetId() != m_ruidInstancing) return;
-    EventPublisher::Post(std::make_shared<GeometryDataBuilt>(m_policy.Name(), ev->GetGeometryData()));
+    EventPublisher::post(std::make_shared<GeometryDataBuilt>(m_policy.Name(), ev->GetGeometryData()));
 }
 
 void GeometryBuilder::DoRegisteringGeometryFactory(const Frameworks::ICommandPtr& c)

@@ -65,24 +65,24 @@ ServiceResult ShadowMapService::onTerm()
 void ShadowMapService::SubscribeEvents()
 {
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
-    EventPublisher::Subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 }
 
 void ShadowMapService::UnsubscribeEvents()
 {
-    EventPublisher::Unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
-    EventPublisher::Unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
-    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 }
 

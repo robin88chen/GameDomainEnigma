@@ -22,7 +22,7 @@ PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
     m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
-    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
 }
 
 PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
@@ -30,12 +30,12 @@ PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
     m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
-    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
 }
 
 PortalManagementNode::~PortalManagementNode()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    Frameworks::CommandBus::unsubscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
     m_doAttachingOutsideZone = nullptr;
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;

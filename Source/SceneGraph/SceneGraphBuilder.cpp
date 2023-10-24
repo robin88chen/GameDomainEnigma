@@ -39,74 +39,74 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
 
     m_doRegisteringSpatialFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringSpatialFactory(c); });
-    CommandBus::Subscribe(typeid(RegisterSpatialDtoFactory), m_doRegisteringSpatialFactory);
+    CommandBus::subscribe(typeid(RegisterSpatialDtoFactory), m_doRegisteringSpatialFactory);
     m_doUnRegisteringSpatialFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringSpatialFactory(c); });
-    CommandBus::Subscribe(typeid(UnRegisterSpatialDtoFactory), m_doUnRegisteringSpatialFactory);
+    CommandBus::subscribe(typeid(UnRegisterSpatialDtoFactory), m_doUnRegisteringSpatialFactory);
     m_doInvokingSpatialDtoFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoInvokingSpatialFactory(c); });
-    CommandBus::Subscribe(typeid(InvokeSpatialDtoFactory), m_doInvokingSpatialDtoFactory);
+    CommandBus::subscribe(typeid(InvokeSpatialDtoFactory), m_doInvokingSpatialDtoFactory);
 
     m_onFactoryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryCreated(e); });
-    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
+    EventPublisher::subscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
 
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName(),
         [=](auto dto) { return new Light(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName(),
         [=](auto dto) { return new Node(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName(),
         [=](auto dto) { return new Pawn(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(LazyNode::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(LazyNode::TYPE_RTTI.getName(),
         [=](auto dto) { return new LazyNode(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(VisibilityManagedNode::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(VisibilityManagedNode::TYPE_RTTI.getName(),
         [=](auto dto) { return new VisibilityManagedNode(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(PortalZoneNode::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(PortalZoneNode::TYPE_RTTI.getName(),
         [=](auto dto) { return new PortalZoneNode(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(PortalManagementNode::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(PortalManagementNode::TYPE_RTTI.getName(),
         [=](auto dto) { return new PortalManagementNode(dto); }));
-    CommandBus::Post(std::make_shared<RegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName(),
         [=](auto dto) { return new Portal(dto); }));
 
     m_onBuildPrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnBuildPrimitiveResponse(r); });
-    ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
+    ResponseBus::subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
 
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
     m_doInPlaceBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
-    CommandBus::Subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-    CommandBus::Subscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
+    CommandBus::subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    CommandBus::subscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
     m_builtSceneGraphMeta.Reset();
 
-    CommandBus::Unsubscribe(typeid(RegisterSpatialDtoFactory), m_doRegisteringSpatialFactory);
+    CommandBus::unsubscribe(typeid(RegisterSpatialDtoFactory), m_doRegisteringSpatialFactory);
     m_doRegisteringSpatialFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(UnRegisterSpatialDtoFactory), m_doUnRegisteringSpatialFactory);
+    CommandBus::unsubscribe(typeid(UnRegisterSpatialDtoFactory), m_doUnRegisteringSpatialFactory);
     m_doUnRegisteringSpatialFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(InvokeSpatialDtoFactory), m_doInvokingSpatialDtoFactory);
+    CommandBus::unsubscribe(typeid(InvokeSpatialDtoFactory), m_doInvokingSpatialDtoFactory);
     m_doInvokingSpatialDtoFactory = nullptr;
 
-    CommandBus::Unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-    CommandBus::Unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
+    CommandBus::unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
+    CommandBus::unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
     m_doBuildingSceneGraph = nullptr;
     m_doInPlaceBuildingSceneGraph = nullptr;
 
-    ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
+    ResponseBus::unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
     m_onBuildPrimitiveResponse = nullptr;
 
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(LazyNode::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(VisibilityManagedNode::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(PortalZoneNode::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName()));
-    CommandBus::Send(std::make_shared<UnRegisterSpatialDtoFactory>(PortalManagementNode::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(LazyNode::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(VisibilityManagedNode::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(PortalZoneNode::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName()));
+    CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(PortalManagementNode::TYPE_RTTI.getName()));
 
-    EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
+    EventPublisher::unsubscribe(typeid(FactorySpatialCreated), m_onFactoryCreated);
     m_onFactoryCreated = nullptr;
 
     delete m_resolver;
@@ -118,7 +118,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     if (factory == m_factories.end())
     {
         Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::spatialFactoryNotFound));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::spatialFactoryNotFound));
         InterruptBuildingSceneGraph(ErrorCode::spatialFactoryNotFound);
         return;
     }
@@ -141,7 +141,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     else
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
     }
 }
@@ -151,7 +151,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
@@ -173,7 +173,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
         }
     }
     node->ResolveFactoryLinkage(dto, *m_resolver);
-    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, node));
+    EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, node));
 }
 
 void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
@@ -181,14 +181,14 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasLight(dto.getName()));
     auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
     light->ResolveFactoryLinkage(dto, *m_resolver);
-    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, light));
+    EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
 void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
@@ -196,7 +196,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
@@ -208,7 +208,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
         BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn, prim.value()));
     }
     pawn->ResolveFactoryLinkage(dto, *m_resolver);
-    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, pawn));
+    EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }
 
 void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
@@ -216,14 +216,14 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
     if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory\n", dto.GetRtti().GetRttiName().c_str());
-        EventPublisher::Post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
+        EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasPortal(dto.getName()));
     auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
     portal->ResolveFactoryLinkage(dto, *m_resolver);
-    EventPublisher::Post(std::make_shared<FactorySpatialCreated>(dto, portal));
+    EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, portal));
 }
 
 void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const GenericDtoCollection& dtos)
@@ -234,7 +234,7 @@ void SceneGraphBuilder::BuildSceneGraph(const std::string& scene_graph_id, const
     for (auto& o : dtos)
     {
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
-        CommandBus::Post(std::make_shared<InvokeSpatialDtoFactory>(o));
+        CommandBus::post(std::make_shared<InvokeSpatialDtoFactory>(o));
     }
 }
 
@@ -247,7 +247,7 @@ void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_
     for (auto& o : dtos)
     {
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
-        CommandBus::Post(std::make_shared<InvokeSpatialDtoFactory>(o));
+        CommandBus::post(std::make_shared<InvokeSpatialDtoFactory>(o));
     }
 }
 
@@ -256,11 +256,11 @@ void SceneGraphBuilder::InterruptBuildingSceneGraph(error er)
     m_isCurrentBuilding = false;
     if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
     {
-        EventPublisher::Post(std::make_shared<BuildFactorySceneGraphFailed>(m_builtSceneGraphMeta.m_sceneGraphId, er));
+        EventPublisher::post(std::make_shared<BuildFactorySceneGraphFailed>(m_builtSceneGraphMeta.m_sceneGraphId, er));
     }
     else
     {
-        EventPublisher::Post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->GetSpatialName(), er));
     }
     m_builtSceneGraphMeta.Reset();
     BuildNextSceneGraph();
@@ -325,11 +325,11 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     m_isCurrentBuilding = false;
     if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
     {
-        EventPublisher::Post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+        EventPublisher::post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
     }
     else
     {
-        EventPublisher::Post(std::make_shared<InPlaceSceneGraphBuilt>(m_builtSceneGraphMeta.m_in_placeRoot));
+        EventPublisher::post(std::make_shared<InPlaceSceneGraphBuilt>(m_builtSceneGraphMeta.m_in_placeRoot));
     }
     BuildNextSceneGraph();
 }
@@ -342,7 +342,7 @@ std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePo
     }
     else
     {
-        EventPublisher::Post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
+        EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
     }
     return nullptr;
 }
@@ -354,7 +354,7 @@ void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, co
     std::lock_guard locker{ m_buildingPrimitiveLock };
     auto request = std::make_shared<RequestBuildRenderablePrimitive>(primitive_policy);
     m_buildingPawnPrimitives.insert({ request->getRuid(), pawn->GetSpatialName() });
-    RequestBus::Post(request);
+    RequestBus::post(request);
 }
 
 void SceneGraphBuilder::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
@@ -364,7 +364,7 @@ void SceneGraphBuilder::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr&
     if (!resp) return;
     if (m_buildingPawnPrimitives.empty()) return;
     std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(resp->GetRequestRuid());
+    auto it = m_buildingPawnPrimitives.find(resp->getRequestRuid());
     if (it == m_buildingPawnPrimitives.end()) return;
     if (resp->GetErrorCode())
     {
@@ -372,7 +372,7 @@ void SceneGraphBuilder::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr&
             resp->getName().c_str(), resp->GetErrorCode().message().c_str());
         if (auto pawn = m_host->QueryPawn(it->second))
         {
-            EventPublisher::Post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, resp->GetErrorCode()));
+            EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, resp->GetErrorCode()));
         }
     }
     else
@@ -380,7 +380,7 @@ void SceneGraphBuilder::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr&
         if (auto pawn = m_host->QueryPawn(it->second))
         {
             pawn->SetPrimitive(resp->GetPrimitive());
-            EventPublisher::Post(std::make_shared<PawnPrimitiveBuilt>(pawn));
+            EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
         }
     }
     m_buildingPawnPrimitives.erase(it);

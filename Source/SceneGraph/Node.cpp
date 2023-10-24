@@ -100,7 +100,7 @@ error Node::AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
     m_childList.push_back(child);
     child->LinkParent(ThisSpatial());
 
-    Frameworks::EventPublisher::Post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
 
     error er = child->SetLocalTransform(mxChildLocal);
 
@@ -116,7 +116,7 @@ error Node::DetachChild(const SpatialPtr& child)
 
     child->LinkParent(nullptr);
 
-    Frameworks::EventPublisher::Post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
 
     error er = child->SetLocalTransform(MathLib::Matrix4::IDENTITY);
 
@@ -142,7 +142,7 @@ error Node::_UpdateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (TestNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialLocationChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(ThisSpatial()));
     }
 
     // propagate up
@@ -193,7 +193,7 @@ error Node::_UpdateBoundData()
 
     if (TestNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialBoundChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(ThisSpatial()));
     }
 
     error er = ErrorCode::ok;
@@ -222,7 +222,7 @@ error Node::_UpdateSpatialRenderState()
     }
     if (TestNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialRenderStateChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(ThisSpatial()));
     }
     return er;
 }

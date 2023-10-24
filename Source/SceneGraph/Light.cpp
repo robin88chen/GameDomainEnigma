@@ -24,7 +24,7 @@ Light::Light(const Engine::GenericDto& o) : Spatial(o)
 
 Light::~Light()
 {
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
 }
 
 Enigma::Engine::GenericDto Light::SerializeDto()
@@ -52,35 +52,35 @@ error Light::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
 void Light::SetLightColor(const MathLib::ColorRGBA& color)
 {
     Info().SetLightColor(color);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Color));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Color));
 }
 
 void Light::SetLightPosition(const MathLib::Vector3& vec)
 {
     Info().SetLightPosition(vec);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Position));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Position));
 }
 
 void Light::SetLightDirection(const MathLib::Vector3& vec)
 {
     Info().SetLightDirection(vec);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Direction));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Direction));
 }
 
 void Light::SetLightAttenuation(const MathLib::Vector3& attenuation)
 {
     Info().SetLightAttenuation(attenuation);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Attenuation));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Attenuation));
 }
 
 void Light::SetLightRange(float range)
 {
     Info().SetLightRange(range);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Range));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Range));
 }
 
 void Light::SetEnable(bool flag)
 {
     Info().SetEnable(flag);
-    Frameworks::EventPublisher::Post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Enable));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Enable));
 }

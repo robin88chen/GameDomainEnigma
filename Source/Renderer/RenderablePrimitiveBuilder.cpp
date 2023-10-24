@@ -42,13 +42,13 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
     m_onModelPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
     m_onBuildMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
     m_onBuildModelPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
-    EventPublisher::Subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::Subscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
 
     m_doBuildingPrimitive = std::make_shared<RequestSubscriber>([=](auto r) { this->DoBuildingPrimitive(r); });
-    RequestBus::Subscribe(typeid(RequestBuildRenderablePrimitive), m_doBuildingPrimitive);
+    RequestBus::subscribe(typeid(RequestBuildRenderablePrimitive), m_doBuildingPrimitive);
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
     m_modelBuilder = menew ModelPrimitiveBuilder();
@@ -75,16 +75,16 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     SAFE_DELETE(m_meshBuilder);
     SAFE_DELETE(m_modelBuilder);
 
-    EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::Unsubscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
-    EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::Unsubscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
     m_onMeshPrimitiveBuilt = nullptr;
     m_onModelPrimitiveBuilt = nullptr;
     m_onBuildMeshPrimitiveFailed = nullptr;
     m_onBuildModelPrimitiveFailed = nullptr;
 
-    RequestBus::Unsubscribe(typeid(RequestBuildRenderablePrimitive), m_doBuildingPrimitive);
+    RequestBus::unsubscribe(typeid(RequestBuildRenderablePrimitive), m_doBuildingPrimitive);
     m_doBuildingPrimitive = nullptr;
 
     return ServiceResult::Complete;
@@ -119,13 +119,13 @@ void RenderablePrimitiveBuilder::OnPrimitiveBuilt(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e))
     {
         if (ev->getRuid() != m_buildingRuid) return;
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
+        ResponseBus::post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::ModelPrimitiveBuilt, IEvent>(e))
     {
         if (ev->getRuid() != m_buildingRuid) return;
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
+        ResponseBus::post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), ev->GetPrimitive(), ErrorCode::ok));
         m_isCurrentBuilding = false;
     }
 }
@@ -138,7 +138,7 @@ void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const IEventPtr& e)
         if (ev->getRuid() != m_buildingRuid) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->getName().c_str(), ev->GetErrorCode().message().c_str());
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
+        ResponseBus::post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::BuildModelPrimitiveFailed, IEvent>(e))
@@ -146,7 +146,7 @@ void RenderablePrimitiveBuilder::OnBuildPrimitiveFailed(const IEventPtr& e)
         if (ev->getRuid() != m_buildingRuid) return;
         Platforms::Debug::ErrorPrintf("model primitive %s build failed : %s\n",
                        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
-        ResponseBus::Post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
+        ResponseBus::post(std::make_shared<BuildRenderablePrimitiveResponse>(m_buildingRuid, ev->getName(), nullptr, ev->GetErrorCode()));
         m_isCurrentBuilding = false;
     }
 }

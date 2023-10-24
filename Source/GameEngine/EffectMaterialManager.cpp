@@ -37,12 +37,12 @@ EffectMaterialManager::~EffectMaterialManager()
 Enigma::Frameworks::ServiceResult EffectMaterialManager::onInit()
 {
     m_onCompilerEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerEffectMaterialCompiled(e); });
-    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
+    Frameworks::EventPublisher::subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
     m_onCompilerCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerCompileEffectMaterialFailed(e); });
-    Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
+    Frameworks::EventPublisher::subscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
 
     m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCompilingEffectMaterial(c); });
-    Frameworks::CommandBus::Subscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
+    Frameworks::CommandBus::subscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
 
     EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
         {
@@ -73,12 +73,12 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onTick()
 
 Enigma::Frameworks::ServiceResult EffectMaterialManager::onTerm()
 {
-    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
+    Frameworks::EventPublisher::unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
     m_onCompilerEffectMaterialCompiled = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
+    Frameworks::EventPublisher::unsubscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
     m_onCompilerCompileEffectMaterialFailed = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
+    Frameworks::CommandBus::unsubscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
     m_doCompilingEffectMaterial = nullptr;
 
     return Frameworks::ServiceResult::Complete;
@@ -121,7 +121,7 @@ void EffectMaterialManager::OnCompilerEffectMaterialCompiled(const Frameworks::I
         source->LinkSource();
         m_sourceMaterials.insert_or_assign(ev->getName(), source);
     }
-    Frameworks::EventPublisher::Post(std::make_shared<Engine::EffectMaterialCompiled>(
+    Frameworks::EventPublisher::post(std::make_shared<Engine::EffectMaterialCompiled>(
         m_currentCompilingRuid, ev->getName(), QueryEffectMaterial(ev->getName())));
     m_isCurrentCompiling = false;
 }
@@ -133,7 +133,7 @@ void EffectMaterialManager::OnCompilerCompileEffectMaterialFailed(const Framewor
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
         ev->getName().c_str(), ev->GetErrorCode().message().c_str());
-    Frameworks::EventPublisher::Post(std::make_shared<Engine::CompileEffectMaterialFailed>(
+    Frameworks::EventPublisher::post(std::make_shared<Engine::CompileEffectMaterialFailed>(
         m_currentCompilingRuid, ev->getName(), ev->GetErrorCode()));
     m_isCurrentCompiling = false;
 }

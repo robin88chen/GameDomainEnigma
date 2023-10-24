@@ -257,7 +257,7 @@ void Spatial::SetCullingMode(CullingMode mode)
     }
     if ((TestNotifyFlag(Notify_CullMode)) && (has_changed))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialCullModeChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(ThisSpatial()));
     }
 }
 
@@ -279,7 +279,7 @@ error Spatial::_UpdateBoundData()
 
     if (TestNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialBoundChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(ThisSpatial()));
     }
 
     error er = ErrorCode::ok;
@@ -302,7 +302,7 @@ error Spatial::_UpdateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (TestNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialLocationChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(ThisSpatial()));
     }
     // propagate up
     er = _UpdateBoundData();
@@ -317,7 +317,7 @@ error Spatial::_UpdateSpatialRenderState()
 
     if (TestNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialRenderStateChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(ThisSpatial()));
     }
     return ErrorCode::ok;
 }
@@ -339,7 +339,7 @@ void Spatial::AddSpatialFlag(SpatialFlags flag)
     const bool visible_after = TestSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (TestNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
     }
 }
 
@@ -350,6 +350,6 @@ void Spatial::RemoveSpatialFlag(SpatialFlags flag)
     const bool visible_after = TestSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (TestNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(ThisSpatial()));
     }
 }

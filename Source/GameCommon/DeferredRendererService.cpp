@@ -61,60 +61,60 @@ DeferredRendererService::~DeferredRendererService()
 ServiceResult DeferredRendererService::onInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
-    EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    EventPublisher::subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetResized(e); });
-    EventPublisher::Subscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
+    EventPublisher::subscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
     m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
-    EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    EventPublisher::subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
+    EventPublisher::subscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
     m_onGBufferTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGBufferTextureCreated(e); });
-    EventPublisher::Subscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
+    EventPublisher::subscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onGameLightCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameLightCreated(e); });
-    EventPublisher::Subscribe(typeid(GameLightCreated), m_onGameLightCreated);
+    EventPublisher::subscribe(typeid(GameLightCreated), m_onGameLightCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::subscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::subscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onLightingPawnCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightingPawnCreated(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
+    EventPublisher::subscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     m_doBindingGBuffer = std::make_shared<CommandSubscriber>([=](auto c) { DoBindingGBuffer(c); });
-    CommandBus::Subscribe(typeid(BindGBuffer), m_doBindingGBuffer);
+    CommandBus::subscribe(typeid(BindGBuffer), m_doBindingGBuffer);
 
     return SceneRendererService::onInit();
 }
 
 ServiceResult DeferredRendererService::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
+    EventPublisher::unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
+    EventPublisher::unsubscribe(typeid(Renderer::RenderTargetResized), m_onPrimaryRenderTargetResized);
     m_onPrimaryRenderTargetResized = nullptr;
-    EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    EventPublisher::unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onGameCameraUpdated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
+    EventPublisher::unsubscribe(typeid(SceneGraph::SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
+    EventPublisher::unsubscribe(typeid(Renderer::RenderTargetTextureCreated), m_onGBufferTextureCreated);
     m_onGBufferTextureCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(GameLightCreated), m_onGameLightCreated);
+    EventPublisher::unsubscribe(typeid(GameLightCreated), m_onGameLightCreated);
     m_onGameLightCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::unsubscribe(typeid(SceneGraph::LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::unsubscribe(typeid(SceneGraph::LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(SceneGraph::FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
+    EventPublisher::unsubscribe(typeid(SceneGraph::FactorySpatialCreated), m_onLightingPawnCreated);
     m_onLightingPawnCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(SceneGraph::PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
-    CommandBus::Unsubscribe(typeid(BindGBuffer), m_doBindingGBuffer);
+    CommandBus::unsubscribe(typeid(BindGBuffer), m_doBindingGBuffer);
     m_doBindingGBuffer = nullptr;
 
     m_lightingPawns.clear();
@@ -280,7 +280,7 @@ void DeferredRendererService::OnLightInfoDeleted(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<SceneGraph::LightInfoDeleted, Frameworks::IEvent>(e);
     if (!ev) return;
     RemoveLightingPawn(ev->GetLightName());
-    CommandBus::Post(std::make_shared<DeleteSceneSpatial>(ev->GetLightName()));
+    CommandBus::post(std::make_shared<DeleteSceneSpatial>(ev->GetLightName()));
 }
 
 void DeferredRendererService::OnLightInfoUpdated(const Frameworks::IEventPtr& e)
@@ -316,7 +316,7 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     {
         if (!lit->second.m_parentNodeName.empty())
         {
-            CommandBus::Post(std::make_shared<AttachNodeChild>(lit->second.m_parentNodeName, top_spatials[0], lit->second.m_localTransform));
+            CommandBus::post(std::make_shared<AttachNodeChild>(lit->second.m_parentNodeName, top_spatials[0], lit->second.m_localTransform));
         }
         m_buildingLightPawns.erase(lit);
     }
@@ -400,7 +400,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
@@ -429,7 +429,7 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
@@ -456,7 +456,7 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 

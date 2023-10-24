@@ -15,7 +15,7 @@ SpatialLinkageResolver::SpatialLinkageResolver(const Engine::FactoryQuery<Spatia
 {
     m_onFactorySpatialCreated =
         std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
+    EventPublisher::subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
 }
 
 SpatialLinkageResolver::SpatialLinkageResolver(const SpatialLinkageResolver& resolver)
@@ -23,14 +23,14 @@ SpatialLinkageResolver::SpatialLinkageResolver(const SpatialLinkageResolver& res
 {
     m_onFactorySpatialCreated =
         std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
+    EventPublisher::subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
 }
 
 SpatialLinkageResolver::~SpatialLinkageResolver()
 {
     if (m_onFactorySpatialCreated)
     {
-        EventPublisher::Unsubscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
+        EventPublisher::unsubscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
         m_onFactorySpatialCreated = nullptr;
     }
 }
@@ -42,7 +42,7 @@ SpatialLinkageResolver& SpatialLinkageResolver::operator=(const SpatialLinkageRe
     m_linkageResolverTable = resolver.m_linkageResolverTable;
     m_onFactorySpatialCreated =
         std::make_shared<EventSubscriber>([=](auto c) { this->OnFactorySpatialCreated(c); });
-    EventPublisher::Subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
+    EventPublisher::subscribe(typeid(FactorySpatialCreated), m_onFactorySpatialCreated);
     return *this;
 }
 

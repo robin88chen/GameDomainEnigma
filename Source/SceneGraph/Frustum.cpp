@@ -114,7 +114,7 @@ error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, 
 
     m_projectionType = ProjectionType::Perspective;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
+    EventPublisher::post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 
@@ -137,7 +137,7 @@ error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, flo
 
     m_projectionType = ProjectionType::Ortho;
 
-    EventPublisher::Post(std::make_shared<FrustumShapeChanged>(*this));
+    EventPublisher::post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 

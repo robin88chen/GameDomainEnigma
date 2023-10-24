@@ -40,32 +40,32 @@ WorldMapService::~WorldMapService()
 ServiceResult WorldMapService::onInit()
 {
     m_doCreatingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingEmptyWorldMap(c); });
-    CommandBus::Subscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
+    CommandBus::subscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
     m_doDeserializingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoDeserializingWorldMap(c); });
-    CommandBus::Subscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
+    CommandBus::subscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
     m_doAttachingTerrain = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingTerrain(c); });
-    CommandBus::Subscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
+    CommandBus::subscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onLazyNodeInstanced = std::make_shared<EventSubscriber>([=](auto e) { OnLazyNodeInstanced(e); });
-    EventPublisher::Subscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
+    EventPublisher::subscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
 
     return ServiceResult::Complete;
 }
 
 ServiceResult WorldMapService::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
+    CommandBus::unsubscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
     m_doCreatingWorldMap = nullptr;
-    CommandBus::Unsubscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
+    CommandBus::unsubscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
     m_doDeserializingWorldMap = nullptr;
-    CommandBus::Unsubscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
+    CommandBus::unsubscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
     m_doAttachingTerrain = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
+    EventPublisher::unsubscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
     m_onLazyNodeInstanced = nullptr;
 
     return ServiceResult::Complete;
@@ -125,7 +125,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
 
 void WorldMapService::DeserializeWorldMap(const Engine::GenericDtoCollection& graph)
 {
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
 }
 
 void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
@@ -149,7 +149,7 @@ void WorldMapService::DoCreatingEmptyWorldMap(const ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
     if (!cmd) return;
     std::vector<Engine::GenericDto> dtos = { cmd->GetDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
 }
 
 void WorldMapService::DoDeserializingWorldMap(const Frameworks::ICommandPtr& c)
@@ -177,8 +177,8 @@ void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
     if (!m_world.expired())
     {
         m_world.lock()->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);  // empty world map is ready
-        EventPublisher::Post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
-        CommandBus::Post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
+        EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
+        CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }
 }
 

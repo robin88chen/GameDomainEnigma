@@ -46,7 +46,7 @@ ServiceResult RequestBus::onTick()
             }
         }
         if (!req) break;
-        Send(req);
+        send(req);
         req_sended++;
     }
     return ServiceResult::Pendding;
@@ -59,13 +59,13 @@ ServiceResult RequestBus::onTerm()
     return ServiceResult::Complete;
 }
 
-void RequestBus::Subscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub)
+void RequestBus::subscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub)
 {
     assert(m_thisBus);
     m_thisBus->m_subscribers[std::type_index{ req_type }].emplace_back(sub);
 }
 
-void RequestBus::Unsubscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub)
+void RequestBus::unsubscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub)
 {
     assert(m_thisBus);
     auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ req_type });
@@ -79,7 +79,7 @@ void RequestBus::CleanupAllRequests()
     m_requests.clear();
 }
 
-void RequestBus::Post(const IRequestPtr& r)
+void RequestBus::post(const IRequestPtr& r)
 {
     assert(m_thisBus);
     if (!r) return;
@@ -90,7 +90,7 @@ void RequestBus::Post(const IRequestPtr& r)
     m_thisBus->m_needTick = true;
 }
 
-void RequestBus::Send(const IRequestPtr& r)
+void RequestBus::send(const IRequestPtr& r)
 {
     assert(m_thisBus);
     if (!r) return;

@@ -39,7 +39,7 @@ error GraphicMain::InstallFrameworks()
     m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::RequestBus>(m_serviceManager));
     m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::ResponseBus>(m_serviceManager));
 
-    Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
+    Frameworks::EventPublisher::post(std::make_shared<FrameworksInstalled>());
 
     return ErrorCode::ok;
 }

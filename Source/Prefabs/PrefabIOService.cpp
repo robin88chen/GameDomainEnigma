@@ -33,12 +33,12 @@ PrefabIOService::~PrefabIOService()
 Enigma::Frameworks::ServiceResult PrefabIOService::onInit()
 {
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { OnDtoDeserialized(e); });
-    EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDeserializeDtoFailed = std::make_shared<EventSubscriber>([=](auto e) { OnDeserializeDtoFailed(e); });
-    EventPublisher::Subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
+    EventPublisher::subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
 
     m_doLoadingPawnPrefab = std::make_shared<CommandSubscriber>([=](auto c) { DoLoadingPawnPrefab(c); });
-    CommandBus::Subscribe(typeid(LoadPawnPrefab), m_doLoadingPawnPrefab);
+    CommandBus::subscribe(typeid(LoadPawnPrefab), m_doLoadingPawnPrefab);
 
     return ServiceResult::Complete;
 }
@@ -55,12 +55,12 @@ Enigma::Frameworks::ServiceResult PrefabIOService::onTerm()
     m_currentCommand = nullptr;
     m_loadingCommands.clear();
 
-    EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDtoDeserialized = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
+    EventPublisher::unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
     m_onDeserializeDtoFailed = nullptr;
 
-    CommandBus::Unsubscribe(typeid(LoadPawnPrefab), m_doLoadingPawnPrefab);
+    CommandBus::unsubscribe(typeid(LoadPawnPrefab), m_doLoadingPawnPrefab);
     m_doLoadingPawnPrefab = nullptr;
 
     return ServiceResult::Complete;
@@ -92,14 +92,14 @@ void PrefabIOService::CompletePawnPrefabLoading(const std::shared_ptr<SceneGraph
     assert(pawn);
     assert(m_currentCommand);
     PawnPrefabDto dto = PawnPrefabDto::FromGenericDto(m_currentCommand->GetPawnDto());
-    CommandBus::Post(std::make_shared<GameCommon::AttachNodeChild>(dto.ParentName(), pawn, dto.LocalTransform()));
+    CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(dto.ParentName(), pawn, dto.LocalTransform()));
     m_currentCommand = nullptr;
     LoadNextPrefab();
 }
 
 void PrefabIOService::FailPrefabLoading(error er)
 {
-    EventPublisher::Post(std::make_shared<LoadPrefabFailed>(m_currentCommand->getRuid(), er));
+    EventPublisher::post(std::make_shared<LoadPrefabFailed>(m_currentCommand->getRuid(), er));
     m_currentCommand = nullptr;
     LoadNextPrefab();
 }
@@ -111,7 +111,7 @@ void PrefabIOService::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized>(e);
     if (!ev) return;
     if (ev->getRuid() != m_currentCommand->GetPawnDto().GetId()) return;
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(m_currentCommand->GetPawnDto().getName(), ev->GetDtos()));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(m_currentCommand->GetPawnDto().getName(), ev->GetDtos()));
 }
 
 void PrefabIOService::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)

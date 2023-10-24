@@ -140,7 +140,7 @@ void ServiceManager::RunOnce()
         if ((m_minServiceState <= ServiceState::Initializing)
             && (tempMinState > ServiceState::Initializing))
         {
-            EventPublisher::Post(std::make_shared<AllServiceInitialized>());
+            EventPublisher::post(std::make_shared<AllServiceInitialized>());
         }
         m_minServiceState = tempMinState;
     }
@@ -213,7 +213,7 @@ void ServiceManager::RunForState(ServiceState st)
         if ((m_minServiceState <= ServiceState::Initializing)
             && (tempMinState > ServiceState::Initializing))
         {
-            EventPublisher::Post(std::make_shared<AllServiceInitialized>());
+            EventPublisher::post(std::make_shared<AllServiceInitialized>());
         }
         m_minServiceState = tempMinState;
     }

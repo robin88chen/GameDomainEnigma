@@ -27,8 +27,8 @@ ServiceResult AnimationFrameListener::onInit()
 {
     m_doAddingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingListeningAnimator(c); });
     m_doRemovingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoRemovingListeningAnimator(c); });
-    CommandBus::Subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::Subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    CommandBus::subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
     return ServiceResult::Complete;
 }
 
@@ -44,8 +44,8 @@ ServiceResult AnimationFrameListener::onTick()
 
 ServiceResult AnimationFrameListener::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::Unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    CommandBus::unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
     m_doAddingListeningAnimator = nullptr;
     m_doRemovingListeningAnimator = nullptr;
     return ServiceResult::Complete;

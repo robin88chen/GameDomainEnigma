@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CommandSubscriber.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -23,7 +23,7 @@ namespace Enigma::Frameworks
         CommandSubscriber& operator=(const CommandSubscriber&) = delete;
         CommandSubscriber& operator=(CommandSubscriber&&) = delete;
 
-        virtual void HandleCommand(const ICommandPtr& e);
+        virtual void handleCommand(const ICommandPtr& e);
 
     protected:
         CommandHandler m_handler;

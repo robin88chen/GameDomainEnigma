@@ -49,9 +49,9 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_nam
 {
     m_factoryDesc = FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
     m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
-    EventPublisher::Subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
+    EventPublisher::subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
     m_onCompileEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompileEffectMaterialFailed(e); });
-    EventPublisher::Subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    EventPublisher::subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
@@ -60,16 +60,16 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : Avat
     m_oldMaterialName = dto.OldMaterialName();
     m_newMaterialDto = dto.NewMaterialDto();
     m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
-    EventPublisher::Subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
+    EventPublisher::subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
     m_onCompileEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompileEffectMaterialFailed(e); });
-    EventPublisher::Subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    EventPublisher::subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 {
-    EventPublisher::Unsubscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
+    EventPublisher::unsubscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
     m_onEffectMaterialCompiled = nullptr;
-    EventPublisher::Unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    EventPublisher::unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
     m_onCompileEffectMaterialFailed = nullptr;
     m_changeSpecifyMaterialMap.clear();
 }
@@ -136,7 +136,7 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
                         m_primitive.lock()->SelectVisualTechnique(m_primitive.lock()->GetSelectedVisualTechnique());
                     }
                 };
-            CommandBus::Post(cmd);
+            CommandBus::post(cmd);
         }
     }
 }
@@ -146,7 +146,7 @@ void ReplaceAvatarMaterial::OnEffectMaterialCompiled(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled>(e);
     if (!ev) return;
-    auto it = m_changeSpecifyMaterialMap.find(ev->GetRequestRuid());
+    auto it = m_changeSpecifyMaterialMap.find(ev->getRequestRuid());
     if (it == m_changeSpecifyMaterialMap.end()) return;
     it->second(ev->GetEffect());
 }
@@ -164,9 +164,9 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureLoaded(e); });
-    EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    EventPublisher::subscribe(typeid(TextureLoaded), m_onTextureLoaded);
     m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
-    EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    EventPublisher::subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
@@ -174,16 +174,16 @@ ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRe
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
     m_meshName = dto.MeshName();
     m_textureDto = dto.TextureDto();
-    EventPublisher::Subscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    EventPublisher::subscribe(typeid(TextureLoaded), m_onTextureLoaded);
     m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
-    EventPublisher::Subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    EventPublisher::subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
-    EventPublisher::Unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
+    EventPublisher::unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;
-    EventPublisher::Unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    EventPublisher::unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
     m_onLoadTextureFailed = nullptr;
 }
 
@@ -227,7 +227,7 @@ void ChangeAvatarTexture::ChangeMeshTexture(const MeshPrimitivePtr& mesh)
     auto req = std::make_shared<LoadTexture>(std::get<TexturePolicy>(policy));
     m_requsetRuid = req->getRuid();
     m_mesh = mesh;
-    CommandBus::Post(req);
+    CommandBus::post(req);
 }
 
 void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
@@ -235,7 +235,7 @@ void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureLoaded>(e);
     if (!ev) return;
-    if (ev->GetRequestRuid() != m_requsetRuid) return;
+    if (ev->getRequestRuid() != m_requsetRuid) return;
     if (m_mesh.expired()) return;
     m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
 }
@@ -245,7 +245,7 @@ void ChangeAvatarTexture::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LoadTextureFailed>(e);
     if (!ev) return;
-    if (ev->GetRequestRuid() != m_requsetRuid) return;
+    if (ev->getRequestRuid() != m_requsetRuid) return;
     Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->getName().c_str(), ev->GetErrorCode().message().c_str());
 }
 

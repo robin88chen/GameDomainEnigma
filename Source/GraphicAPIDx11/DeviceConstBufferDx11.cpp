@@ -43,7 +43,7 @@ error DeviceConstBufferDx11::CreateDataBuffer(unsigned cb_size)
     HRESULT hr = device->CreateBuffer(&desc, nullptr, &m_d3dBuffer);
     if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateBuffer;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ConstBufferResourceCreated>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ConstBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -63,7 +63,7 @@ error DeviceConstBufferDx11::Apply(const byte_buffer& data, unsigned dataSize)
     deviceContext->Unmap(m_d3dBuffer, 0);
 
     //todo : 這個沒有改變物件狀態，只是展示面的事件需要嗎??
-    //Frameworks::EventPublisher::Post(Frameworks::IEventPtr{ menew Graphics::ConstBufferResourceApplied(m_name) });
+    //Frameworks::EventPublisher::post(Frameworks::IEventPtr{ menew Graphics::ConstBufferResourceApplied(m_name) });
     return ErrorCode::ok;
 }
 

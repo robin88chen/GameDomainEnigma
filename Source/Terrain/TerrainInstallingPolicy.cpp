@@ -17,11 +17,11 @@ using namespace Enigma::Renderer;
 error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName(),
+    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName(),
         [](auto o) { return new TerrainPawn(o); }));
-    Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::RegisterGeometryDtoFactory>(
+    Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::RegisterGeometryDtoFactory>(
            TerrainGeometry::TYPE_RTTI.getName(), [](auto dto) { return std::make_shared<TerrainGeometry>(dto); }));
-    Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::RegisterDtoPolicyConverter>(
+    Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::RegisterDtoPolicyConverter>(
         TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitiveDto::TerrainMeshConvertToPolicy));
     return ErrorCode::ok;
 }
@@ -29,8 +29,8 @@ error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manag
 error TerrainInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::UnRegisterDtoPolicyConverter>(TerrainPrimitive::TYPE_RTTI.getName()));
-    Frameworks::CommandBus::Post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName()));
-    Frameworks::CommandBus::Post(std::make_shared<Enigma::Engine::UnRegisterGeometryDtoFactory>(TerrainGeometry::TYPE_RTTI.getName()));
+    Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::UnRegisterDtoPolicyConverter>(TerrainPrimitive::TYPE_RTTI.getName()));
+    Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName()));
+    Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::UnRegisterGeometryDtoFactory>(TerrainGeometry::TYPE_RTTI.getName()));
     return ErrorCode::ok;
 }

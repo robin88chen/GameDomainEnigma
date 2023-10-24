@@ -35,7 +35,7 @@ error PortalZoneNode::OnCullingVisible(Culler* culler, bool noCull)
     // 需要讀取
     if (m_lazyStatus.IsGhost())
     {
-        CommandBus::Post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
+        CommandBus::post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
         return ErrorCode::ok;
     }
     if (!m_lazyStatus.IsReady())

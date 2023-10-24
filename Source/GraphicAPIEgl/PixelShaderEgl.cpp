@@ -52,7 +52,7 @@ error PixelShaderEgl::CompileCode(const std::string& code, const std::string& pr
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not compile pixel shader:\n%s\n", infoLog);
-                Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, infoLog));
+                Frameworks::EventPublisher::post(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }
@@ -63,7 +63,7 @@ error PixelShaderEgl::CompileCode(const std::string& code, const std::string& pr
 
     m_hasCompiled = true;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
     return ErrorCode::ok;
 }
 

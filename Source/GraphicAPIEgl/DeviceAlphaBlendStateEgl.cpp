@@ -50,7 +50,7 @@ error DeviceAlphaBlendStateEgl::CreateFromData(const BlendStateData& data)
     break;
     }
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::AlphaBlendStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::AlphaBlendStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

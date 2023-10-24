@@ -15,7 +15,7 @@ EventSubscriber::~EventSubscriber()
     m_handler = nullptr;
 }
 
-void EventSubscriber::HandleEvent(const IEventPtr& e)
+void EventSubscriber::handleEvent(const IEventPtr& e)
 {
     if (m_handler) m_handler(e);
 }

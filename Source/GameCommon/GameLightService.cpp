@@ -24,56 +24,56 @@ GameLightService::GameLightService(Frameworks::ServiceManager* mngr,
 ServiceResult GameLightService::onInit()
 {
     m_doCreatingAmbientLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingAmbientLight(c); });
-    CommandBus::Subscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
+    CommandBus::subscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
     m_doCreatingSunLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingSunLight(c); });
-    CommandBus::Subscribe(typeid(GameCommon::CreateSunLight), m_doCreatingSunLight);
+    CommandBus::subscribe(typeid(GameCommon::CreateSunLight), m_doCreatingSunLight);
     m_doCreatingPointLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingPointLight(c); });
-    CommandBus::Subscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
+    CommandBus::subscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
     m_doChangingLightColor = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightColor(c); });
-    CommandBus::Subscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
+    CommandBus::subscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
     m_doChangingLightDirection = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightDirection(c); });
-    CommandBus::Subscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
+    CommandBus::subscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
     m_doChangingLightPosition = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightPosition(c); });
-    CommandBus::Subscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
+    CommandBus::subscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
     m_doChangingLightAttenuation = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAttenuation(c); });
-    CommandBus::Subscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
+    CommandBus::subscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
     m_doChangingLightRange = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightRange(c); });
-    CommandBus::Subscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
+    CommandBus::subscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
     m_doChangingLightEnable = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAbility(c); });
-    CommandBus::Subscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
+    CommandBus::subscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
     m_doChangingLightDisable = std::make_shared<CommandSubscriber>([=](auto c) { DoChangingLightAbility(c); });
-    CommandBus::Subscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
+    CommandBus::subscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
 
     m_onSceneNodeChildAttached = std::make_shared<EventSubscriber>([=](auto e) { OnSceneNodeChildAttached(e); });
-    EventPublisher::Subscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+    EventPublisher::subscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
 
     return ServiceResult::Complete;
 }
 
 ServiceResult GameLightService::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
+    CommandBus::unsubscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
     m_doCreatingAmbientLight = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::CreateSunLight), m_doCreatingSunLight);
+    CommandBus::unsubscribe(typeid(GameCommon::CreateSunLight), m_doCreatingSunLight);
     m_doCreatingSunLight = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
+    CommandBus::unsubscribe(typeid(GameCommon::CreatePointLight), m_doCreatingPointLight);
     m_doCreatingPointLight = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
+    CommandBus::unsubscribe(typeid(GameCommon::ChangeLightColor), m_doChangingLightColor);
     m_doChangingLightColor = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
+    CommandBus::unsubscribe(typeid(GameCommon::ChangeLightDir), m_doChangingLightDirection);
     m_doChangingLightDirection = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
+    CommandBus::unsubscribe(typeid(GameCommon::ChangeLightPos), m_doChangingLightPosition);
     m_doChangingLightPosition = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
+    CommandBus::unsubscribe(typeid(GameCommon::ChangeLightAttenuation), m_doChangingLightAttenuation);
     m_doChangingLightAttenuation = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
+    CommandBus::unsubscribe(typeid(GameCommon::ChangeLightRange), m_doChangingLightRange);
     m_doChangingLightRange = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
+    CommandBus::unsubscribe(typeid(GameCommon::EnableLight), m_doChangingLightEnable);
     m_doChangingLightEnable = nullptr;
-    CommandBus::Unsubscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
+    CommandBus::unsubscribe(typeid(GameCommon::DisableLight), m_doChangingLightDisable);
     m_doChangingLightDisable = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+    EventPublisher::unsubscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
     m_onSceneNodeChildAttached = nullptr;
 
     return ServiceResult::Complete;
@@ -89,7 +89,7 @@ void GameLightService::CreateAmbientLight(const std::string& parent_name, const 
     if (!parent_name.empty())
     {
         m_pendingLightNames.insert(lightName);
-        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -104,7 +104,7 @@ void GameLightService::CreateSunLight(const std::string& parent_name, const std:
     if (!parent_name.empty())
     {
         m_pendingLightNames.insert(lightName);
-        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_name, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -120,7 +120,7 @@ void GameLightService::CreatePointLight(const std::string& parent_name, const Ma
     if (!parent_name.empty())
     {
         m_pendingLightNames.insert(lightName);
-        CommandBus::Post(std::make_shared<AttachNodeChild>(parent_name, light, mxLocal));
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_name, light, mxLocal));
     }
 }
 
@@ -226,7 +226,7 @@ void GameLightService::DoDeletingLight(const Frameworks::ICommandPtr& command) c
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<DeleteLight, ICommand>(command);
     if (!cmd) return;
-    CommandBus::Post(std::make_shared<DeleteSceneSpatial>(cmd->GetLightName()));
+    CommandBus::post(std::make_shared<DeleteSceneSpatial>(cmd->GetLightName()));
 }
 
 void GameLightService::OnSceneNodeChildAttached(const Frameworks::IEventPtr& e)
@@ -239,7 +239,7 @@ void GameLightService::OnSceneNodeChildAttached(const Frameworks::IEventPtr& e)
     auto light_name = light->GetSpatialName();
     if (const auto it = m_pendingLightNames.find(light_name); it != m_pendingLightNames.end())
     {
-        EventPublisher::Post(std::make_shared<GameLightCreated>(light));
+        EventPublisher::post(std::make_shared<GameLightCreated>(light));
         m_pendingLightNames.erase(it);
     }
 }
@@ -252,7 +252,7 @@ void GameLightService::OnAttachSceneNodeChildFailed(const Frameworks::IEventPtr&
     auto child_name = ev->GetChildName();
     if (auto it = m_pendingLightNames.find(child_name); it != m_pendingLightNames.end())
     {
-        EventPublisher::Post(std::make_shared<CreateGameLightFailed>(child_name, ev->GetError()));
+        EventPublisher::post(std::make_shared<CreateGameLightFailed>(child_name, ev->GetError()));
         m_pendingLightNames.erase(it);
     }
 }

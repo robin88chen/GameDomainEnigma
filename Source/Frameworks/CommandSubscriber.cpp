@@ -15,7 +15,7 @@ CommandSubscriber::~CommandSubscriber()
     m_handler = nullptr;
 }
 
-void CommandSubscriber::HandleCommand(const ICommandPtr& e)
+void CommandSubscriber::handleCommand(const ICommandPtr& e)
 {
     if (m_handler) m_handler(e);
 }

@@ -42,11 +42,11 @@ namespace Enigma::Frameworks
         如果 handler 是實體 functor, 而不是 lambda, 就可以用來移除,
         所以, 用 subscriber 模式來實作
         */
-        static void Subscribe(const std::type_info& resp_type, const ResponseSubscriberPtr& sub);
-        static void Unsubscribe(const std::type_info& resp_type, const ResponseSubscriberPtr& sub);
+        static void subscribe(const std::type_info& resp_type, const ResponseSubscriberPtr& sub);
+        static void unsubscribe(const std::type_info& resp_type, const ResponseSubscriberPtr& sub);
 
-        static void Post(const IResponsePtr& r);
-        static void Send(const IResponsePtr& r);
+        static void post(const IResponsePtr& r);
+        static void send(const IResponsePtr& r);
 
         void CleanupAllResponses();
 

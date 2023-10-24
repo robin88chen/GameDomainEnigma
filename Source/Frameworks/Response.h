@@ -24,7 +24,7 @@ namespace Enigma::Frameworks
         IResponse& operator=(IResponse&&) = delete;
         virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
 
-        const Ruid& GetRequestRuid() const { return m_ruid; }
+        const Ruid& getRequestRuid() const { return m_ruid; }
 
     protected:
         Ruid m_ruid;

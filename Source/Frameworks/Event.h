@@ -36,7 +36,7 @@ namespace Enigma::Frameworks
         IResponseEvent& operator=(const IResponseEvent&) = delete;
         IResponseEvent& operator=(IResponseEvent&&) = delete;
 
-        const Ruid& GetRequestRuid() const { return m_ruid; }
+        const Ruid& getRequestRuid() const { return m_ruid; }
 
     protected:
         Ruid m_ruid;

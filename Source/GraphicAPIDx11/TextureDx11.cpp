@@ -34,7 +34,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
@@ -70,7 +70,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
         HRESULT hr = device->CreateTexture2D(&tex_desc, &data, &texture2D);
         if (FAILED(hr))
         {
-            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
+            Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
                 m_name, ErrorCode::deviceCreateTexture));
             return ErrorCode::deviceCreateTexture;
         }
@@ -80,7 +80,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
         HRESULT hr = device->CreateTexture2D(&tex_desc, 0, &texture2D);
         if (FAILED(hr))
         {
-            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
+            Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
                 m_name, ErrorCode::deviceCreateTexture));
             return ErrorCode::deviceCreateTexture;
         }
@@ -96,7 +96,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
     HRESULT hr = device->CreateShaderResourceView(texture2D, &SRDesc, &d3dResource);
     if (FATAL_LOG_EXPR(S_OK != hr))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceCreateFromMemoryFailed>(
             m_name, ErrorCode::deviceCreateTexture));
         return ErrorCode::deviceCreateTexture;
     }
@@ -106,7 +106,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
     m_dimension = dimension;
     m_format = ConvertDXGIFormatToGraphicFormat(SRDesc.Format);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -117,7 +117,7 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
@@ -131,7 +131,7 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
         HRESULT hr = DirectX::LoadFromDDSMemory(&img_buff[0], img_buff.size(), 0, &metaData, scratchImage);
         if (FAILED(hr))
         {
-            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+            Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
                 m_name, ErrorCode::dxLoadTexture));
             return ErrorCode::dxLoadTexture;
         }
@@ -141,7 +141,7 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
         HRESULT hr = DirectX::LoadFromWICMemory(&img_buff[0], img_buff.size(), DirectX::WIC_FLAGS_FORCE_RGB, &metaData, scratchImage);
         if (FAILED(hr))
         {
-            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+            Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
                 m_name, ErrorCode::dxLoadTexture));
             return ErrorCode::dxLoadTexture;
         }
@@ -150,7 +150,7 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
     error er = CreateFromScratchImage(scratchImage);
     if (er) return er;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
     return ErrorCode::ok;
 }
 
@@ -165,14 +165,14 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
@@ -195,13 +195,13 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     HRESULT hr = device->CreateTexture2D(&tex_desc, 0, &targetTex);
     if (FAILED(hr))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
             m_name, ErrorCode::dxCreateTexture));
         return ErrorCode::dxCreateTexture;
     }
     if (FATAL_LOG_EXPR(!targetTex))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
             m_name, ErrorCode::nullDxTexture));
         return ErrorCode::nullDxTexture;
     }
@@ -224,7 +224,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     if (FAILED(hr))
     {
         targetTex->Release();
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceRetrieveImageFailed>(
             m_name, ErrorCode::dxTextureMapping));
         return ErrorCode::dxTextureMapping;
     }
@@ -252,7 +252,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     deviceContext->Unmap(targetTex, 0);
     targetTex->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageRetrieved>(shared_from_this(), m_name, rcSrc));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageRetrieved>(shared_from_this(), m_name, rcSrc));
     return ErrorCode::ok;
 }
 
@@ -260,13 +260,13 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::nullMemoryBuffer));
         return ErrorCode::nullMemoryBuffer;
     }
     if (FATAL_LOG_EXPR((rcDest.Width() <= 0) || (rcDest.Height() <= 0)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::invalidParameter));
         return ErrorCode::invalidParameter;
     }
@@ -275,20 +275,20 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
     if (FATAL_LOG_EXPR(!m_d3dTextureResource))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::nullDxTexture));
         return ErrorCode::nullDxTexture;
     }
@@ -311,13 +311,13 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     HRESULT hr = device->CreateTexture2D(&tex_desc, 0, &mappingTex);
     if (FAILED(hr))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::dxCreateTexture));
         return ErrorCode::dxCreateTexture;
     }
     if (FATAL_LOG_EXPR(!mappingTex))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::nullDxTexture));
         return ErrorCode::nullDxTexture;
     }
@@ -327,7 +327,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     if (FAILED(hr))
     {
         mappingTex->Release();
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::dxTextureMapping));
         return ErrorCode::dxTextureMapping;
     }
@@ -366,7 +366,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     mappingTex->Release();
     d3dResource->Release();
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
     return ErrorCode::ok;
 }
 
@@ -378,21 +378,21 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
 
     if (FATAL_LOG_EXPR(!m_d3dTextureResource))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::nullDxTexture));
         return ErrorCode::nullDxTexture;
     }
@@ -400,7 +400,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     m_d3dTextureResource->GetResource(&d3dResource);
     if (!d3dResource)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::nullDxTexture));
         return ErrorCode::nullDxTexture;
     }
@@ -409,7 +409,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     HRESULT hr = DirectX::CaptureTexture(device, deviceContext, d3dResource, resultImage);
     if (FATAL_LOG_EXPR(FAILED(hr)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::dxSaveTexture));
         return ErrorCode::dxSaveTexture;
     }
@@ -428,7 +428,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     }
     if (FATAL_LOG_EXPR(FAILED(hr)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::dxSaveTexture));
         return ErrorCode::dxSaveTexture;
     }
@@ -436,12 +436,12 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     size_t write_bytes = file->Write(0, write_buff);
     if (write_bytes != write_buff.size())
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
             m_name, ErrorCode::saveTextureFile));
         return ErrorCode::saveTextureFile;
     }
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageSaved>(m_name, file->GetFullPath()));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageSaved>(m_name, file->GetFullPath()));
     return ErrorCode::ok;
 }
 
@@ -452,14 +452,14 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
             m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
 
     if (FATAL_LOG_EXPR(!back_surf))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
             m_name, ErrorCode::nullBackSurface));
         return ErrorCode::nullBackSurface;
     }
@@ -482,13 +482,13 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     HRESULT hr = device->CreateShaderResourceView(bbDx11->GetD3DSurface(), &SRDesc, &d3dResource);
     if (FATAL_LOG_EXPR(S_OK != hr))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUseAsBackSurfaceFailed>(
             m_name, ErrorCode::dxCreateShaderResource));
         return ErrorCode::dxCreateShaderResource;
     }
     m_d3dTextureResource = d3dResource;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(
         m_name, back_surf->getName()));
     return ErrorCode::ok;
 }

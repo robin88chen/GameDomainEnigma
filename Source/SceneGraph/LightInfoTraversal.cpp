@@ -19,22 +19,22 @@ LightInfoTraversal::LightInfoTraversal(Frameworks::ServiceManager* srv_mngr) : I
 {
     m_needTick = false;
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnLightInfoCreated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { this->OnLightInfoDeleted(e); });
-    EventPublisher::Subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
 
     m_doQueryingLight = std::make_shared<RequestSubscriber>([=](auto r) { DoQueryingLight(r); });
-    RequestBus::Subscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
+    RequestBus::subscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
 }
 
 LightInfoTraversal::~LightInfoTraversal()
 {
-    EventPublisher::Unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
 
-    RequestBus::Unsubscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
+    RequestBus::unsubscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
     m_doQueryingLight = nullptr;
 }
 
@@ -70,7 +70,7 @@ void LightInfoTraversal::QueryNextRequest()
     QuerySpatialLightInfo(query);
     if (query.GetResultList().empty())
     {
-        ResponseBus::Post(std::make_shared<SpatialLightInfoResponse>(
+        ResponseBus::post(std::make_shared<SpatialLightInfoResponse>(
             m_requesterRuid, lighting_state, ErrorCode::emptyLightQueryResult));
         return;
     }
@@ -105,7 +105,7 @@ void LightInfoTraversal::QueryNextRequest()
         }
     }
     lighting_state.SetPointLightArray(light_positions, light_colors, light_attenuations);
-    ResponseBus::Post(std::make_shared<SpatialLightInfoResponse>(
+    ResponseBus::post(std::make_shared<SpatialLightInfoResponse>(
         m_requesterRuid, lighting_state, ErrorCode::ok));
     m_isCurrentQuerying = false;
 }

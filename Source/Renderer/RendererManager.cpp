@@ -36,50 +36,50 @@ Enigma::Frameworks::ServiceResult RendererManager::onInit()
 
     m_doCreatingRenderer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
+    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
     m_doDestroyingRenderer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
+    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
 
     m_doCreatingRenderTarget =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderTarget(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
+    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
     m_doDestroyingRenderTarget =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderTarget(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
+    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
 
     m_doResizingPrimaryTarget =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+    Frameworks::CommandBus::subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
 
     m_doChangingViewPort =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    Frameworks::CommandBus::subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
     m_doChangingClearingProperty =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
-    Frameworks::CommandBus::Subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+    Frameworks::CommandBus::subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
 
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::onTerm()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
+    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
     m_doCreatingRenderer = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
+    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
     m_doDestroyingRenderer = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
+    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
     m_doCreatingRenderTarget = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
+    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
     m_doDestroyingRenderTarget = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+    Frameworks::CommandBus::unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
     m_doResizingPrimaryTarget = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
+    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
     m_doChangingViewPort = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
     m_doChangingClearingProperty = nullptr;
 
     ClearAllRenderer();
@@ -112,7 +112,7 @@ error RendererManager::CreateRenderer(const std::string& name)
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -140,7 +140,7 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -162,7 +162,7 @@ error RendererManager::InsertRenderer(const std::string& name, const Engine::IRe
     }
     m_accumulateRendererStamp |= stamp;
     renderer->SetStampBitMask(stamp);
-    Frameworks::EventPublisher::Post(std::make_shared<RendererCreated>(renderer->getName(), renderer));
+    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(renderer->getName(), renderer));
     return ErrorCode::ok;
 }
 
@@ -175,7 +175,7 @@ error RendererManager::DestroyRenderer(const std::string& name)
     m_accumulateRendererStamp &= (~stamp);
     m_renderers.erase(name);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RendererDestroyed>(name));
+    Frameworks::EventPublisher::post(std::make_shared<RendererDestroyed>(name));
 
     return ErrorCode::ok;
 }
@@ -211,7 +211,7 @@ error RendererManager::DestroyRenderTarget(const std::string& name)
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
 
-    Frameworks::EventPublisher::Post(std::make_shared<RenderTargetDestroyed>(name));
+    Frameworks::EventPublisher::post(std::make_shared<RenderTargetDestroyed>(name));
 
     return ErrorCode::ok;
 }

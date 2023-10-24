@@ -93,7 +93,7 @@ error Camera::ChangeCameraFrame(const std::optional<Vector3>& eye,
 error Camera::Zoom(float dist)
 {
     error er = ChangeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -124,7 +124,7 @@ error Camera::SphereRotate(float horz_angle, float vert_angle, const Vector3& ce
     Vector3 loc = vecCenter - radius * dir;  // 新的camera位置
 
     error er = ChangeCameraFrame(loc, dir, up);
-    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -138,14 +138,14 @@ error Camera::Move(float dir_dist, float slide_dist)
     Vector3 pos = m_vecLocation + dir_dist * move_dir + slide_dist * move_right;
 
     error er = ChangeCameraFrame(pos, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
 error Camera::MoveXZ(float move_x, float move_z)
 {
     error er = ChangeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
-    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -160,7 +160,7 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     if (!res.m_hasIntersect) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
     error er = ChangeCameraFrame(new_loc, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::Post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 

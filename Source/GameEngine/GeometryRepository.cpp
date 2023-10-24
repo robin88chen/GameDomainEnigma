@@ -21,25 +21,25 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
-    CommandBus::Post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName(),
+    CommandBus::post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName(),
         [=](auto o) { return std::make_shared<TriangleList>(o); }));
 }
 
 GeometryRepository::~GeometryRepository()
 {
-    CommandBus::Post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName()));
+    CommandBus::post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName()));
     SAFE_DELETE(m_builder);
 }
 
 ServiceResult GeometryRepository::onInit()
 {
     m_onGeometryBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryBuilt(e); });
-    EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    EventPublisher::subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
     m_onBuildGeometryFail = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryFail(e); });
-    EventPublisher::Subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+    EventPublisher::subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
 
     m_doBuildingGeometry = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingGeometry(c); });
-    CommandBus::Subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+    CommandBus::subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -62,12 +62,12 @@ ServiceResult GeometryRepository::onTick()
 
 ServiceResult GeometryRepository::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    EventPublisher::unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
     m_onGeometryBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+    EventPublisher::unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
     m_onBuildGeometryFail = nullptr;
 
-    CommandBus::Unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+    CommandBus::unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
     m_doBuildingGeometry = nullptr;
 
     return Frameworks::ServiceResult::Complete;

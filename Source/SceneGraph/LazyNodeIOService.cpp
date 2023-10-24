@@ -30,16 +30,16 @@ LazyNodeIOService::~LazyNodeIOService()
 ServiceResult LazyNodeIOService::onInit()
 {
     m_doInstancingLazyNode = std::make_shared<CommandSubscriber>([=](auto c) { DoInstancingLazyNode(c); });
-    CommandBus::Subscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
+    CommandBus::subscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
 
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { OnDtoDeserialized(e); });
     m_onDeserializingDtoFailed = std::make_shared<EventSubscriber>([=](auto e) { OnDeserializingDtoFailed(e); });
     m_onInPlaceSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnInPlaceSceneGraphBuilt(e); });
     m_onVisibilityChanged = std::make_shared<EventSubscriber>([=](auto e) { OnVisibilityChanged(e); });
-    EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
-    EventPublisher::Subscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
-    EventPublisher::Subscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
-    EventPublisher::Subscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
+    EventPublisher::subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::subscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
+    EventPublisher::subscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
 
     return ServiceResult::Complete;
 }
@@ -60,16 +60,16 @@ ServiceResult LazyNodeIOService::onTerm()
     }
     m_visibilityTimers.clear();
 
-    EventPublisher::Unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
-    EventPublisher::Unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
-    EventPublisher::Unsubscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
-    EventPublisher::Unsubscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
+    EventPublisher::unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
+    EventPublisher::unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializingDtoFailed);
+    EventPublisher::unsubscribe(typeid(InPlaceSceneGraphBuilt), m_onInPlaceSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
     m_onDtoDeserialized = nullptr;
     m_onDeserializingDtoFailed = nullptr;
     m_onInPlaceSceneGraphBuilt = nullptr;
     m_onVisibilityChanged = nullptr;
 
-    CommandBus::Unsubscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
+    CommandBus::unsubscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
     m_doInstancingLazyNode = nullptr;
 
     return ServiceResult::Complete;
@@ -94,7 +94,7 @@ void LazyNodeIOService::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
-    CommandBus::Post(std::make_shared<InPlaceBuildSceneGraph>(m_in_placeNode, ev->GetDtos()));
+    CommandBus::post(std::make_shared<InPlaceBuildSceneGraph>(m_in_placeNode, ev->GetDtos()));
 }
 
 void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
@@ -106,7 +106,7 @@ void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
     std::string node_name = "unknown";
     if (m_in_placeNode) node_name = m_in_placeNode->GetSpatialName();
     Platforms::Debug::ErrorPrintf("deserializing lazy node %s dto failed : %s", node_name.c_str(), ev->GetErrorCode().message().c_str());
-    EventPublisher::Post(std::make_shared<InstanceLazyNodeFailed>(m_in_placeNode, ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<InstanceLazyNodeFailed>(m_in_placeNode, ev->GetErrorCode()));
     if (m_in_placeNode) m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ghost);
     m_isCurrentInstancing = false;
 }
@@ -120,7 +120,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
     m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
     m_in_placeNode->TheFactoryDesc().ClaimAsInstanced();
-    EventPublisher::Post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
+    EventPublisher::post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
 }
 

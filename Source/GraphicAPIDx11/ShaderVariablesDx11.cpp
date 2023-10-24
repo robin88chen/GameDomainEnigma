@@ -35,7 +35,7 @@ ShaderVariableDx11_ConstBuffer::ShaderVariableDx11_ConstBuffer(IShaderVariable::
     m_constBuffer = nullptr;
     m_childVariableCount = 0;
     m_isDirty = false;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::constBuffer));
 }
 
@@ -217,7 +217,7 @@ ShaderVariableDx11_Float::ShaderVariableDx11_Float(const std::string& name, cons
     m_offset = offset;
     if (elements == 0) elements = 1;
     m_numElements = elements;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::floatValue));
 }
 
@@ -277,7 +277,7 @@ ShaderVariableDx11_Int::ShaderVariableDx11_Int(const std::string& name, const st
     m_offset = offset;
     if (elements == 0) elements = 1;
     m_numElements = elements;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::intValue));
 }
 
@@ -338,7 +338,7 @@ ShaderVariableDx11_Boolean::ShaderVariableDx11_Boolean(const std::string& name, 
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_value = memalloc(BOOL, m_numElements);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::booleanValue));
 }
 
@@ -411,7 +411,7 @@ ShaderVariableDx11_Matrix::ShaderVariableDx11_Matrix(const std::string& name, co
     {
         m_transposMatrixValue = menew MathLib::Matrix4[m_numElements];
     }
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::matrixValue));
 }
 
@@ -496,7 +496,7 @@ ShaderVariableDx11_Vector::ShaderVariableDx11_Vector(const std::string& name, co
     m_offset = offset;
     if (elements == 0) elements = 1;
     m_numElements = elements;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::vectorValue));
 }
 
@@ -564,7 +564,7 @@ ShaderVariableDx11_Texture::ShaderVariableDx11_Texture(VarOwner var_of,
     const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount)
     : ShaderVariableDx11_Resource(var_of, name, semantic, bindPoint, bindCount)
 {
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::textureObject));
 }
 
@@ -662,7 +662,7 @@ ShaderVariableDx11_Sampler::ShaderVariableDx11_Sampler(VarOwner var_of,
     const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount)
     : ShaderVariableDx11_Resource(var_of, name, semantic, bindPoint, bindCount)
 {
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::samplerState));
 }
 

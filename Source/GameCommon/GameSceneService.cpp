@@ -39,14 +39,14 @@ GameSceneService::~GameSceneService()
 ServiceResult GameSceneService::onInit()
 {
     m_onCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraCreated(e); });
-    EventPublisher::Subscribe(typeid(GameCameraCreated), m_onCameraCreated);
+    EventPublisher::subscribe(typeid(GameCameraCreated), m_onCameraCreated);
     m_onCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraUpdated(e); });
-    EventPublisher::Subscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
+    EventPublisher::subscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
 
     m_doAttachingSceneRootChild = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingSceneRootChild(c); });
-    CommandBus::Subscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
+    CommandBus::subscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
     m_doAttachingNodeChild = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingNodeChild(c); });
-    CommandBus::Subscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
+    CommandBus::subscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
 
     return ServiceResult::Complete;
 }
@@ -63,13 +63,13 @@ ServiceResult GameSceneService::onTick()
 
 ServiceResult GameSceneService::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onCameraCreated);
+    EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onCameraCreated);
     m_onCameraCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
+    EventPublisher::unsubscribe(typeid(GameCameraUpdated), m_onCameraUpdated);
     m_onCameraUpdated = nullptr;
-    CommandBus::Unsubscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
+    CommandBus::unsubscribe(typeid(AttachSceneRootChild), m_doAttachingSceneRootChild);
     m_doAttachingSceneRootChild = nullptr;
-    CommandBus::Unsubscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
+    CommandBus::unsubscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
     m_doAttachingNodeChild = nullptr;
 
     DestroyRootScene();
@@ -95,8 +95,8 @@ void GameSceneService::CreateRootScene(const std::string& scene_root_name, const
     {
         CreateSceneCuller(m_cameraService.lock()->GetPrimaryCamera());
     }
-    EventPublisher::Post(std::make_shared<SceneRootCreated>(m_sceneRoot));
-    EventPublisher::Post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
+    EventPublisher::post(std::make_shared<SceneRootCreated>(m_sceneRoot));
+    EventPublisher::post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
 }
 
 void GameSceneService::DestroyRootScene()
@@ -167,16 +167,16 @@ void GameSceneService::DoAttachingSceneRootChild(const Frameworks::ICommandPtr& 
     if (!cmd->GetChild()) return;
     if (!m_sceneRoot)
     {
-        EventPublisher::Post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), ErrorCode::nullSceneRoot));
+        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), ErrorCode::nullSceneRoot));
         return;
     }
     if (error er = m_sceneRoot->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
     {
-        EventPublisher::Post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), er));
     }
     else
     {
-        EventPublisher::Post(std::make_shared<SceneRootChildAttached>(cmd->GetChild()));
+        EventPublisher::post(std::make_shared<SceneRootChildAttached>(cmd->GetChild()));
     }
 }
 
@@ -189,16 +189,16 @@ void GameSceneService::DoAttachingNodeChild(const Frameworks::ICommandPtr& c)
     auto node = std::dynamic_pointer_cast<Node, Spatial>(FindSpatialByName(cmd->GetNodeName()));
     if (!node)
     {
-        EventPublisher::Post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), ErrorCode::nodeNotFound));
+        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), ErrorCode::nodeNotFound));
         return;
     }
     if (error er = node->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
     {
-        EventPublisher::Post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), er));
     }
     else
     {
-        EventPublisher::Post(std::make_shared<SceneNodeChildAttached>(cmd->GetNodeName(), cmd->GetChild()));
+        EventPublisher::post(std::make_shared<SceneNodeChildAttached>(cmd->GetNodeName(), cmd->GetChild()));
     }
 }
 
@@ -210,7 +210,7 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
     auto spatial = FindSpatialByName(cmd->getName());
     if (!spatial)
     {
-        EventPublisher::Post(std::make_shared<DeleteSceneSpatialFailed>(cmd->getName(), ErrorCode::spatialNotFound));
+        EventPublisher::post(std::make_shared<DeleteSceneSpatialFailed>(cmd->getName(), ErrorCode::spatialNotFound));
         return;
     }
     if (const auto parent = spatial->GetParent())
@@ -221,5 +221,5 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
         }
     }
     spatial = nullptr;
-    EventPublisher::Post(std::make_shared<SceneSpatialDeleted>(cmd->getName()));
+    EventPublisher::post(std::make_shared<SceneSpatialDeleted>(cmd->getName()));
 }

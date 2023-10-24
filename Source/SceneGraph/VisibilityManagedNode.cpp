@@ -39,14 +39,14 @@ error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
     // 需要讀取
     if (m_lazyStatus.IsGhost())
     {
-        CommandBus::Post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
+        CommandBus::post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
         return ErrorCode::ok;
     }
     if (!m_lazyStatus.IsReady())
     {
         return ErrorCode::dataNotReady;
     }
-    EventPublisher::Post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), true));
+    EventPublisher::post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), true));
     return Node::OnCullingVisible(culler, noCull);
 }
 
@@ -57,7 +57,7 @@ void VisibilityManagedNode::OnCullingCompleteNotVisible(Culler* culler)
     // let me check first
     if (!culler) return;
     if (!culler->IsOuterClippingEnable()) return;
-    EventPublisher::Post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), false));
+    EventPublisher::post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), false));
 }
 
 void VisibilityManagedNode::ReleaseDeferredContent()

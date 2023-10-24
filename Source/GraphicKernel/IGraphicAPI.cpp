@@ -41,180 +41,180 @@ void IGraphicAPI::SubscribeHandlers()
 {
     m_doCreatingDevice =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDevice(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
     m_doCleaningDevice =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCleaningDevice(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
 
     m_doBeginningScene =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBeginningScene(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
     m_doEndingScene =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoEndingScene(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::EndScene), m_doEndingScene);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::EndScene), m_doEndingScene);
 
     m_doDrawingPrimitive =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingPrimitive(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
     m_doDrawingIndexedPrimitive =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
 
     m_doClearing =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoClearing(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::ClearSurface), m_doClearing);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::ClearSurface), m_doClearing);
     m_doFlipping =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoFlipping(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
 
     m_doCreatingPrimarySurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPrimarySurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBackSurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
     m_doCreatingMultiBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiBackSurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingDepthSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDepthSurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
     m_doSharingDepthSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoSharingDepthSurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
 
     m_doCreatingVertexShader =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexShader(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
     m_doCreatingPixelShader =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPixelShader(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
     m_doCreatingShaderProgram =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingShaderProgram(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
     m_doCreatingVertexDeclaration =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexDeclaration(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
 
     m_doCreatingVertexBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingVertexBuffer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
     m_doCreatingIndexBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingIndexBuffer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
 
     m_doCreatingSamplerState =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingSamplerState(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
     m_doCreatingRasterizerState =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRasterizerState(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
     m_doCreatingBlendState =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBlendState(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
     m_doCreatingDepthStencilState =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDepthStencilState(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
 
     m_doCreatingTexture =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingTexture(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
     m_doCreatingMultiTexture =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiTexture(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
 
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingViewPort =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingViewPort(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
 
     m_doBindingShaderProgram
         = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingShaderProgram(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
 
     m_doBindingVertexBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingVertexBuffer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
     m_doBindingIndexBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingIndexBuffer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
 }
 
 void IGraphicAPI::UnsubscribeHandlers()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
     m_doCreatingDevice = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
     m_doCleaningDevice = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
     m_doBeginningScene = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::EndScene), m_doEndingScene);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::EndScene), m_doEndingScene);
     m_doEndingScene = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
     m_doDrawingPrimitive = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
     m_doDrawingIndexedPrimitive = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ClearSurface), m_doClearing);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::ClearSurface), m_doClearing);
     m_doClearing = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
     m_doFlipping = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
     m_doCreatingPrimarySurface = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
     m_doCreatingBackSurface = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingMultiBackSurface = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDepthStencilSurface), m_doCreatingDepthSurface);
     m_doCreatingDepthSurface = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::ShareDepthStencilSurface), m_doSharingDepthSurface);
     m_doSharingDepthSurface = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateVertexShader), m_doCreatingVertexShader);
     m_doCreatingVertexShader = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreatePixelShader), m_doCreatingPixelShader);
     m_doCreatingPixelShader = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateShaderProgram), m_doCreatingShaderProgram);
     m_doCreatingShaderProgram = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateVertexDeclaration), m_doCreatingVertexDeclaration);
     m_doCreatingVertexDeclaration = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateVertexBuffer), m_doCreatingVertexBuffer);
     m_doCreatingVertexBuffer = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateIndexBuffer), m_doCreatingIndexBuffer);
     m_doCreatingIndexBuffer = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateSamplerState), m_doCreatingSamplerState);
     m_doCreatingSamplerState = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateRasterizerState), m_doCreatingRasterizerState);
     m_doCreatingRasterizerState = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateBlendState), m_doCreatingBlendState);
     m_doCreatingBlendState = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
     m_doCreatingDepthStencilState = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
     m_doCreatingTexture = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
     m_doCreatingMultiTexture = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingBackSurface = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindViewPort), m_doBindingViewPort);
     m_doBindingViewPort = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindShaderProgram), m_doBindingShaderProgram);
     m_doBindingShaderProgram = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindVertexBuffer), m_doBindingVertexBuffer);
     m_doBindingVertexBuffer = nullptr;
-    Frameworks::CommandBus::Unsubscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
     m_doBindingIndexBuffer = nullptr;
 }
 

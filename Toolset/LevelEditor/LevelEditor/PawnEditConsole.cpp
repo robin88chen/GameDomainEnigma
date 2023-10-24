@@ -99,5 +99,5 @@ void PawnEditConsole::PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos
     auto it = m_pawnFilePaths.find(m_selectedCandidatePawnName);
     if (it == m_pawnFilePaths.end()) return;
     CommandBus::Post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
-    if (!m_editService.expired()) m_editService.lock()->PutCandidatePawn(it->second, pos);
+    if (!m_editService.expired()) m_editService.lock()->putCandidatePawn(m_selectedCandidatePawnName, it->second, pos);
 }

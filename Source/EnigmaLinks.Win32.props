@@ -6,7 +6,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalLibraryDirectories>$(EnigmaSourceRoot)$(PlatformTarget)\$(Configuration);$(EnigmaSourceRoot)ShareLib\zlib\prebuilt\$(PlatformTarget)\$(Configuration)Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MathLib.Win32.lib;AssetPackage.Win32.lib;Platforms.Win32.lib;FileSystem.Win32.lib;Frameworks.Win32.lib;Controllers.Win32.lib;Gateways.Win32.lib;GraphicKernel.Win32.lib;GraphicAPIDx11.Win32.lib;Application.Win32.lib;GameEngine.Win32.lib;Renderer.Win32.lib;Animators.Win32.lib;SceneGraph.Win32.lib;Terrain.Win32.lib;WorldMap.Win32.lib;InputHandlers.Win32.lib;GameCommon.Win32.lib;ShadowMap.Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathLib.Win32.lib;AssetPackage.Win32.lib;Platforms.Win32.lib;FileSystem.Win32.lib;Frameworks.Win32.lib;Controllers.Win32.lib;Gateways.Win32.lib;GraphicKernel.Win32.lib;GraphicAPIDx11.Win32.lib;Application.Win32.lib;GameEngine.Win32.lib;Renderer.Win32.lib;Animators.Win32.lib;SceneGraph.Win32.lib;Terrain.Win32.lib;WorldMap.Win32.lib;InputHandlers.Win32.lib;GameCommon.Win32.lib;ShadowMap.Win32.lib;Prefabs.Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>NOMINMAX;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>

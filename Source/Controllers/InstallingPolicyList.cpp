@@ -39,12 +39,12 @@ constexpr std::uint64_t OrderOfUnknownPolicy = UINT16_MAX;
 InstallingPolicyList::InstallingPolicyList(std::initializer_list<std::shared_ptr<Engine::InstallingPolicy>> initializer_list)
     : std::list<std::shared_ptr<Engine::InstallingPolicy>>(initializer_list)
 {
-    SortOrder();
+    sortOrder();
 }
 
-void InstallingPolicyList::SortOrder()
+void InstallingPolicyList::sortOrder()
 {
-    MakeOrderMap();
+    makeOrderMap();
     sort([this](const std::shared_ptr<Engine::InstallingPolicy>& lhs, const std::shared_ptr<Engine::InstallingPolicy>& rhs)
         {
             auto& l = *lhs;
@@ -53,7 +53,7 @@ void InstallingPolicyList::SortOrder()
         });
 }
 
-void InstallingPolicyList::MakeOrderMap()
+void InstallingPolicyList::makeOrderMap()
 {
     if (!m_orderMap.empty()) return;
 

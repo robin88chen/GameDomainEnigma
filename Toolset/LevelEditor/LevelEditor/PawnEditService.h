@@ -36,22 +36,25 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult OnTick() override;
         virtual Enigma::Frameworks::ServiceResult OnTerm() override;
 
-        error PutCandidatePawn(const std::string& full_path, const Enigma::MathLib::Vector3& position);
+        error putCandidatePawn(const std::string& name, const std::string& full_path, const std::string& parent_name, const Enigma::MathLib::Vector3& position);
 
     private:
-        void OnPawnLoaded(const Enigma::Frameworks::IEventPtr& e);
-        void OnLoadPawnFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onPrefabLoaded(const Enigma::Frameworks::IEventPtr& e);
+        void onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e);
 
-        void PutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
+        void loadNextPawn();
+        void putPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
     private:
         PawnLoader* m_pawnLoader;
 
-        Enigma::Frameworks::EventSubscriberPtr m_onPawnLoaded;
-        Enigma::Frameworks::EventSubscriberPtr m_onLoadPawnFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onPrefabLoaded;
+        Enigma::Frameworks::EventSubscriberPtr m_onLoadPrefabFailed;
 
         struct LoadingPawnMeta
         {
+            std::string m_name;
             std::string m_full_path;
+            std::string m_parent_name;
             Enigma::MathLib::Vector3 m_position;
         };
         std::deque<LoadingPawnMeta> m_loadingPawns;

@@ -42,7 +42,7 @@ AnimationRepository::~AnimationRepository()
     m_animatorBuilder = nullptr;
 }
 
-ServiceResult AnimationRepository::OnInit()
+ServiceResult AnimationRepository::onInit()
 {
     m_doBuildingAnimationAsset = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingAnimationAsset(c); });
     m_doBuildingModelAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingModelAnimator(c); });
@@ -61,7 +61,7 @@ ServiceResult AnimationRepository::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult AnimationRepository::OnTick()
+ServiceResult AnimationRepository::onTick()
 {
     if ((m_isAssetCurrentBuilding) && (m_isAnimatorCurrentBuilding)) return Frameworks::ServiceResult::Pendding;  // 都在處理中
     bool is_building = PopAssetBuilding();
@@ -99,7 +99,7 @@ bool AnimationRepository::PopAnimatorBuilding()
     return true;
 }
 
-ServiceResult AnimationRepository::OnTerm()
+ServiceResult AnimationRepository::onTerm()
 {
     CommandBus::Unsubscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
     CommandBus::Unsubscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);

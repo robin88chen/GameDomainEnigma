@@ -25,7 +25,7 @@ RenderBufferRepository::~RenderBufferRepository()
     SAFE_DELETE(m_builder);
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnInit()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onInit()
 {
     m_onRenderBufferBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuilt(c); });
@@ -41,7 +41,7 @@ Enigma::Frameworks::ServiceResult RenderBufferRepository::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTick()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -57,7 +57,7 @@ Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTerm()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onRenderBufferBuilt = nullptr;

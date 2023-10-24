@@ -58,7 +58,7 @@ DeferredRendererService::~DeferredRendererService()
     m_lightingPawns.clear();
 }
 
-ServiceResult DeferredRendererService::OnInit()
+ServiceResult DeferredRendererService::onInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { OnPrimaryRenderTargetCreated(e); });
     EventPublisher::Subscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
@@ -86,10 +86,10 @@ ServiceResult DeferredRendererService::OnInit()
     m_doBindingGBuffer = std::make_shared<CommandSubscriber>([=](auto c) { DoBindingGBuffer(c); });
     CommandBus::Subscribe(typeid(BindGBuffer), m_doBindingGBuffer);
 
-    return SceneRendererService::OnInit();
+    return SceneRendererService::onInit();
 }
 
-ServiceResult DeferredRendererService::OnTerm()
+ServiceResult DeferredRendererService::onTerm()
 {
     EventPublisher::Unsubscribe(typeid(Renderer::PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
@@ -119,7 +119,7 @@ ServiceResult DeferredRendererService::OnTerm()
 
     m_lightingPawns.clear();
 
-    return SceneRendererService::OnTerm();
+    return SceneRendererService::onTerm();
 }
 
 void DeferredRendererService::CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)

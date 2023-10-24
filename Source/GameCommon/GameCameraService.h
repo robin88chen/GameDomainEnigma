@@ -28,8 +28,8 @@ namespace Enigma::GameCommon
         GameCameraService& operator=(const GameCameraService&) = delete;
         GameCameraService& operator=(GameCameraService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         void CreatePrimaryCamera(const Engine::GenericDto& dto);
         const std::shared_ptr<SceneGraph::Camera>& GetPrimaryCamera() const { return m_primaryCamera; }

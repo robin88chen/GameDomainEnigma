@@ -30,7 +30,7 @@ ShaderRepository::~ShaderRepository()
     SAFE_DELETE(m_builder);
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnInit()
+Enigma::Frameworks::ServiceResult ShaderRepository::onInit()
 {
     m_onBuilderShaderProgramBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuilderShaderProgramBuilt(c); });
@@ -44,7 +44,7 @@ Enigma::Frameworks::ServiceResult ShaderRepository::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnTick()
+Enigma::Frameworks::ServiceResult ShaderRepository::onTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -60,7 +60,7 @@ Enigma::Frameworks::ServiceResult ShaderRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnTerm()
+Enigma::Frameworks::ServiceResult ShaderRepository::onTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
     m_onBuilderShaderProgramBuilt = nullptr;

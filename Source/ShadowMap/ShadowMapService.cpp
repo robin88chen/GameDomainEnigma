@@ -36,7 +36,7 @@ ShadowMapService::~ShadowMapService()
     m_configuration = nullptr;
 }
 
-ServiceResult ShadowMapService::OnInit()
+ServiceResult ShadowMapService::onInit()
 {
     SubscribeEvents();
     Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
@@ -44,7 +44,7 @@ ServiceResult ShadowMapService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult ShadowMapService::OnTick()
+ServiceResult ShadowMapService::onTick()
 {
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
@@ -54,7 +54,7 @@ ServiceResult ShadowMapService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult ShadowMapService::OnTerm()
+ServiceResult ShadowMapService::onTerm()
 {
     m_sunLightCamera = nullptr;
 

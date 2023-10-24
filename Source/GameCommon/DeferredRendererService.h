@@ -38,8 +38,8 @@ namespace Enigma::GameCommon
         DeferredRendererService& operator=(DeferredRendererService&) = delete;
         DeferredRendererService& operator=(DeferredRendererService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;

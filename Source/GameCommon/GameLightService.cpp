@@ -21,7 +21,7 @@ GameLightService::GameLightService(Frameworks::ServiceManager* mngr,
     m_needTick = false;
 }
 
-ServiceResult GameLightService::OnInit()
+ServiceResult GameLightService::onInit()
 {
     m_doCreatingAmbientLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingAmbientLight(c); });
     CommandBus::Subscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
@@ -50,7 +50,7 @@ ServiceResult GameLightService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult GameLightService::OnTerm()
+ServiceResult GameLightService::onTerm()
 {
     CommandBus::Unsubscribe(typeid(GameCommon::CreateAmbientLight), m_doCreatingAmbientLight);
     m_doCreatingAmbientLight = nullptr;

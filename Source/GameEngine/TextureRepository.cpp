@@ -29,7 +29,7 @@ TextureRepository::~TextureRepository()
     SAFE_DELETE(m_updater);
 }
 
-Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
+Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 {
     m_onTextureLoaded =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureLoaded(c); });
@@ -76,7 +76,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
+Enigma::Frameworks::ServiceResult TextureRepository::onTick()
 {
     if (m_currentRequesting) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_requestsLock };
@@ -97,7 +97,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult TextureRepository::OnTerm()
+Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     m_onTextureLoaded = nullptr;

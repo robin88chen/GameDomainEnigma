@@ -34,9 +34,9 @@ namespace Enigma::Renderer
         RenderablePrimitiveBuilder& operator=(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder& operator=(RenderablePrimitiveBuilder&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         error BuildPrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 

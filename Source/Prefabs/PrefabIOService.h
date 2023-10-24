@@ -33,9 +33,9 @@ namespace Enigma::Prefabs
         PrefabIOService(PrefabIOService&&) = delete;
         PrefabIOService& operator=(PrefabIOService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
     private:
         void LoadNextPrefab();

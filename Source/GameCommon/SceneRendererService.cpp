@@ -32,7 +32,7 @@ SceneRendererService::~SceneRendererService()
 
 }
 
-ServiceResult SceneRendererService::OnInit()
+ServiceResult SceneRendererService::onInit()
 {
     m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryCameraCreated(e); });
     m_onPrimaryTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryTargetCreated(e); });
@@ -42,7 +42,7 @@ ServiceResult SceneRendererService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult SceneRendererService::OnTerm()
+ServiceResult SceneRendererService::onTerm()
 {
     EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
     EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);

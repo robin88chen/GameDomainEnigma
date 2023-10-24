@@ -29,8 +29,8 @@ namespace Enigma::WorldMap
         WorldMapService& operator=(WorldMapService&& other) noexcept = delete;
         virtual ~WorldMapService() override;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         std::vector<Engine::GenericDtoCollection> SerializeQuadNodeGraphs() const;
         Engine::GenericDtoCollection SerializeWorldMap() const;

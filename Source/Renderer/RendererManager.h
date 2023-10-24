@@ -39,9 +39,9 @@ namespace Enigma::Renderer
         RendererManager& operator=(RendererManager&&) = delete;
 
         /// On Init
-        virtual Frameworks::ServiceResult OnInit() override;
+        virtual Frameworks::ServiceResult onInit() override;
         /// On Term
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         /** register renderer factory */
         static void RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn);

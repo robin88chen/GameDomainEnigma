@@ -30,7 +30,7 @@ RendererManager::~RendererManager()
     assert(m_renderers.empty());
 }
 
-Enigma::Frameworks::ServiceResult RendererManager::OnInit()
+Enigma::Frameworks::ServiceResult RendererManager::onInit()
 {
     m_accumulateRendererStamp = 0;
 
@@ -62,7 +62,7 @@ Enigma::Frameworks::ServiceResult RendererManager::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult RendererManager::OnTerm()
+Enigma::Frameworks::ServiceResult RendererManager::onTerm()
 {
     Frameworks::CommandBus::Unsubscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
     m_doCreatingRenderer = nullptr;

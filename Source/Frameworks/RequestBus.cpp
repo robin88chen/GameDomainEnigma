@@ -20,7 +20,7 @@ RequestBus::~RequestBus()
     m_thisBus = nullptr;
 }
 
-ServiceResult RequestBus::OnTick()
+ServiceResult RequestBus::onTick()
 {
     assert(m_thisBus);
 
@@ -53,7 +53,7 @@ ServiceResult RequestBus::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult RequestBus::OnTerm()
+ServiceResult RequestBus::onTerm()
 {
     CleanupAllRequests();
 

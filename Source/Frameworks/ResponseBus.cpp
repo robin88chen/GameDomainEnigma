@@ -20,7 +20,7 @@ ResponseBus::~ResponseBus()
     m_thisBus = nullptr;
 }
 
-ServiceResult ResponseBus::OnTick()
+ServiceResult ResponseBus::onTick()
 {
     assert(m_thisBus);
 
@@ -53,7 +53,7 @@ ServiceResult ResponseBus::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult ResponseBus::OnTerm()
+ServiceResult ResponseBus::onTerm()
 {
     CleanupAllResponses();
 

@@ -36,7 +36,7 @@ GameSceneService::~GameSceneService()
     assert(!m_culler);
 }
 
-ServiceResult GameSceneService::OnInit()
+ServiceResult GameSceneService::onInit()
 {
     m_onCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraCreated(e); });
     EventPublisher::Subscribe(typeid(GameCameraCreated), m_onCameraCreated);
@@ -51,7 +51,7 @@ ServiceResult GameSceneService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult GameSceneService::OnTick()
+ServiceResult GameSceneService::onTick()
 {
     if (m_culler)
     {
@@ -61,7 +61,7 @@ ServiceResult GameSceneService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult GameSceneService::OnTerm()
+ServiceResult GameSceneService::onTerm()
 {
     EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onCameraCreated);
     m_onCameraCreated = nullptr;

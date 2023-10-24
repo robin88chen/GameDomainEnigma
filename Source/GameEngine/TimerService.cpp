@@ -20,7 +20,7 @@ TimerService::~TimerService()
     m_realLifeTimer = nullptr;
 }
 
-ServiceResult TimerService::OnInit()
+ServiceResult TimerService::onInit()
 {
     if (m_gameTimer) m_gameTimer->Reset();
     if (m_realLifeTimer) m_realLifeTimer->Reset();
@@ -28,7 +28,7 @@ ServiceResult TimerService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult TimerService::OnTick()
+ServiceResult TimerService::onTick()
 {
     if (m_gameTimer) m_gameTimer->Update();
     if (m_realLifeTimer) m_realLifeTimer->Update();
@@ -36,7 +36,7 @@ ServiceResult TimerService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult TimerService::OnTerm()
+ServiceResult TimerService::onTerm()
 {
     m_gameTimer = nullptr;
     m_realLifeTimer = nullptr;

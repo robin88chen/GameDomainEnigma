@@ -28,8 +28,8 @@ namespace Enigma::GameCommon
         GameLightService& operator=(const GameLightService&) = delete;
         GameLightService& operator=(GameLightService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         void CreateAmbientLight(const std::string& parent_name, const std::string& lightName, const MathLib::ColorRGBA& colorLight);
         void CreateSunLight(const std::string& parent_name, const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight);

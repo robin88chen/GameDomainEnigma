@@ -34,7 +34,7 @@ EffectMaterialManager::~EffectMaterialManager()
     assert(m_sourceMaterials.empty());
 }
 
-Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
+Enigma::Frameworks::ServiceResult EffectMaterialManager::onInit()
 {
     m_onCompilerEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerEffectMaterialCompiled(e); });
     Frameworks::EventPublisher::Subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
@@ -51,7 +51,7 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
+Enigma::Frameworks::ServiceResult EffectMaterialManager::onTick()
 {
     if (m_isCurrentCompiling) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_requestLock };
@@ -71,7 +71,7 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult EffectMaterialManager::OnTerm()
+Enigma::Frameworks::ServiceResult EffectMaterialManager::onTerm()
 {
     Frameworks::EventPublisher::Unsubscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
     m_onCompilerEffectMaterialCompiled = nullptr;

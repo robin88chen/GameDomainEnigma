@@ -27,7 +27,7 @@ LazyNodeIOService::~LazyNodeIOService()
 {
 }
 
-ServiceResult LazyNodeIOService::OnInit()
+ServiceResult LazyNodeIOService::onInit()
 {
     m_doInstancingLazyNode = std::make_shared<CommandSubscriber>([=](auto c) { DoInstancingLazyNode(c); });
     CommandBus::Subscribe(typeid(InstanceLazyNode), m_doInstancingLazyNode);
@@ -44,14 +44,14 @@ ServiceResult LazyNodeIOService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult LazyNodeIOService::OnTick()
+ServiceResult LazyNodeIOService::onTick()
 {
     if (m_isCurrentInstancing) return ServiceResult::Pendding;
     InstanceNextLazyNode();
     return ServiceResult::Pendding;
 }
 
-ServiceResult LazyNodeIOService::OnTerm()
+ServiceResult LazyNodeIOService::onTerm()
 {
     m_in_placeNode = nullptr;
     {

@@ -29,12 +29,12 @@ InputHandlerService::~InputHandlerService()
 {
 }
 
-ServiceResult InputHandlerService::OnInit()
+ServiceResult InputHandlerService::onInit()
 {
     return ServiceResult::Complete;
 }
 
-ServiceResult InputHandlerService::OnTick()
+ServiceResult InputHandlerService::onTick()
 {
 #if TARGET_PLATFORM == PLATFORM_WIN32
     DetectAsyncKeyPress();
@@ -43,7 +43,7 @@ ServiceResult InputHandlerService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult InputHandlerService::OnTerm()
+ServiceResult InputHandlerService::onTerm()
 {
     m_asyncKeyArray.clear();
     return ServiceResult::Complete;

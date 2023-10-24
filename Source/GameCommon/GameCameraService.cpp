@@ -37,7 +37,7 @@ GameCameraService::~GameCameraService()
     m_primaryCamera = nullptr;
 }
 
-ServiceResult GameCameraService::OnInit()
+ServiceResult GameCameraService::onInit()
 {
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
     EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
@@ -66,7 +66,7 @@ ServiceResult GameCameraService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult GameCameraService::OnTerm()
+ServiceResult GameCameraService::onTerm()
 {
     EventPublisher::Unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
     m_onTargetResized = nullptr;

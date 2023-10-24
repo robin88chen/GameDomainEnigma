@@ -35,9 +35,9 @@ namespace Enigma::GameCommon
         GameSceneService& operator=(const GameSceneService&) = delete;
         GameSceneService& operator=(GameSceneService&&) = delete;
 
-        Frameworks::ServiceResult OnInit() override;
-        Frameworks::ServiceResult OnTick() override;
-        Frameworks::ServiceResult OnTerm() override;
+        Frameworks::ServiceResult onInit() override;
+        Frameworks::ServiceResult onTick() override;
+        Frameworks::ServiceResult onTerm() override;
 
         /** @name scene root */
         //@{

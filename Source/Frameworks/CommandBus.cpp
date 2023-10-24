@@ -20,7 +20,7 @@ CommandBus::~CommandBus()
     m_thisBus = nullptr;
 }
 
-ServiceResult CommandBus::OnTick()
+ServiceResult CommandBus::onTick()
 {
     assert(m_thisBus);
 
@@ -51,7 +51,7 @@ ServiceResult CommandBus::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult CommandBus::OnTerm()
+ServiceResult CommandBus::onTerm()
 {
     CleanupAllCommands();
 

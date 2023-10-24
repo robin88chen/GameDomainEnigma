@@ -31,9 +31,9 @@ namespace Enigma::Animators
         AnimationFrameListener& operator=(const AnimationFrameListener&) = delete;
         AnimationFrameListener& operator=(AnimationFrameListener&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         error AddListeningAnimator(const Engine::AnimatorPtr& ani);
         error RemoveListeningAnimator(const Engine::AnimatorPtr& ani);

@@ -36,7 +36,7 @@ RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
     }
 }
 
-ServiceResult RenderablePrimitiveBuilder::OnInit()
+ServiceResult RenderablePrimitiveBuilder::onInit()
 {
     m_onMeshPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
     m_onModelPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
@@ -55,7 +55,7 @@ ServiceResult RenderablePrimitiveBuilder::OnInit()
 
     return ServiceResult::Complete;
 }
-ServiceResult RenderablePrimitiveBuilder::OnTick()
+ServiceResult RenderablePrimitiveBuilder::onTick()
 {
     if (m_isCurrentBuilding) return ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -70,7 +70,7 @@ ServiceResult RenderablePrimitiveBuilder::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult RenderablePrimitiveBuilder::OnTerm()
+ServiceResult RenderablePrimitiveBuilder::onTerm()
 {
     SAFE_DELETE(m_meshBuilder);
     SAFE_DELETE(m_modelBuilder);

@@ -23,7 +23,7 @@ AnimationFrameListener::~AnimationFrameListener()
 
 }
 
-ServiceResult AnimationFrameListener::OnInit()
+ServiceResult AnimationFrameListener::onInit()
 {
     m_doAddingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingListeningAnimator(c); });
     m_doRemovingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoRemovingListeningAnimator(c); });
@@ -32,7 +32,7 @@ ServiceResult AnimationFrameListener::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult AnimationFrameListener::OnTick()
+ServiceResult AnimationFrameListener::onTick()
 {
     if (!m_timer.expired())
     {
@@ -42,7 +42,7 @@ ServiceResult AnimationFrameListener::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult AnimationFrameListener::OnTerm()
+ServiceResult AnimationFrameListener::onTerm()
 {
     CommandBus::Unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
     CommandBus::Unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);

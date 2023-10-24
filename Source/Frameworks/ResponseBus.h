@@ -34,8 +34,8 @@ namespace Enigma::Frameworks
         ResponseBus& operator=(const ResponseBus&) = delete;
         ResponseBus& operator=(ResponseBus&&) = delete;
 
-        virtual ServiceResult OnTick() override;
-        virtual ServiceResult OnTerm() override;
+        virtual ServiceResult onTick() override;
+        virtual ServiceResult onTerm() override;
 
         /** lambda 函式無法做互相比對 (operator==), 所以在 list 中無法做 remove,
         必須把每個 handler booking 一個 index, 據此來做 unregister,

@@ -20,7 +20,7 @@ EventPublisher::~EventPublisher()
     m_thisPublisher = nullptr;
 }
 
-ServiceResult EventPublisher::OnTick()
+ServiceResult EventPublisher::onTick()
 {
     assert(m_thisPublisher);
 
@@ -51,7 +51,7 @@ ServiceResult EventPublisher::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult EventPublisher::OnTerm()
+ServiceResult EventPublisher::onTerm()
 {
     CleanupAllEvents();
 

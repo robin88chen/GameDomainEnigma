@@ -38,11 +38,11 @@ namespace Enigma::Animators
         AnimationRepository& operator=(AnimationRepository&&) = delete;
 
         /// On Init
-        virtual Frameworks::ServiceResult OnInit() override;
+        virtual Frameworks::ServiceResult onInit() override;
         /// On Tick
-        virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult onTick() override;
         /// On Term
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         bool HasAnimationAsset(const std::string& rtti_name, const std::string& name);
         std::shared_ptr<AnimationAsset> QueryAnimationAsset(const std::string& rtti_name, const std::string& name);

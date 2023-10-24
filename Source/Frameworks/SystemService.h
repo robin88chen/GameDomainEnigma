@@ -38,22 +38,22 @@ namespace Enigma::Frameworks
         inline const ServiceManager* GetServiceManager() const { return m_serviceManager; };
 
         /// On PreInit
-        virtual ServiceResult OnPreInit();
+        virtual ServiceResult onPreInit();
         /// On Init
-        virtual ServiceResult OnInit();
+        virtual ServiceResult onInit();
         /// On Term
-        virtual ServiceResult OnTerm();
+        virtual ServiceResult onTerm();
 
         /// On Tick (if need tick)
-        virtual ServiceResult OnTick();
-        inline bool IsNeedTick() { return m_needTick; };
+        virtual ServiceResult onTick();
+        inline bool isNeedTick() { return m_needTick; };
 
         /// suspend
-        inline void Suspend() { m_isSuspended = true; };
+        inline void suspend() { m_isSuspended = true; };
         /// resume
-        inline void Resume() { m_isSuspended = false; };
+        inline void resume() { m_isSuspended = false; };
         /// is suspended?
-        inline bool IsSuspended() { return m_isSuspended; };
+        inline bool isSuspended() { return m_isSuspended; };
 
         /// order value, for sorting in service manager, small value will called early
         unsigned int GetOrderValue() { return m_orderValue; };

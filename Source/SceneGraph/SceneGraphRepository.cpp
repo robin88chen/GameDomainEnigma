@@ -46,7 +46,7 @@ SceneGraphRepository::~SceneGraphRepository()
     SAFE_DELETE(m_builder);
 }
 
-ServiceResult SceneGraphRepository::OnInit()
+ServiceResult SceneGraphRepository::onInit()
 {
     m_doQueryingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoQueryingCamera(c); });
     CommandBus::Subscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
@@ -55,7 +55,7 @@ ServiceResult SceneGraphRepository::OnInit()
 
     return ServiceResult::Complete;
 }
-ServiceResult SceneGraphRepository::OnTerm()
+ServiceResult SceneGraphRepository::onTerm()
 {
     CommandBus::Unsubscribe(typeid(SceneGraph::QueryCamera), m_doQueryingCamera);
     m_doQueryingCamera = nullptr;

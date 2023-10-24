@@ -38,7 +38,7 @@ LightInfoTraversal::~LightInfoTraversal()
     m_doQueryingLight = nullptr;
 }
 
-ServiceResult LightInfoTraversal::OnTick()
+ServiceResult LightInfoTraversal::onTick()
 {
     if (m_isCurrentQuerying) return ServiceResult::Pendding;
     QueryNextRequest();

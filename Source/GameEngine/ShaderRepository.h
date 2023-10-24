@@ -45,11 +45,11 @@ namespace Enigma::Engine
         ShaderRepository& operator=(ShaderRepository&&) = delete;
 
         /// On Init
-        virtual Frameworks::ServiceResult OnInit() override;
+        virtual Frameworks::ServiceResult onInit() override;
         /// On Tick
-        virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult onTick() override;
         /// On Term
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         error BuildShaderProgram(const ShaderProgramPolicy& policy);
 

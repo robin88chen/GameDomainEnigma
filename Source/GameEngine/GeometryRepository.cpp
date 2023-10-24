@@ -31,7 +31,7 @@ GeometryRepository::~GeometryRepository()
     SAFE_DELETE(m_builder);
 }
 
-ServiceResult GeometryRepository::OnInit()
+ServiceResult GeometryRepository::onInit()
 {
     m_onGeometryBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryBuilt(e); });
     EventPublisher::Subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
@@ -44,7 +44,7 @@ ServiceResult GeometryRepository::OnInit()
     return Frameworks::ServiceResult::Complete;
 }
 
-ServiceResult GeometryRepository::OnTick()
+ServiceResult GeometryRepository::onTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -60,7 +60,7 @@ ServiceResult GeometryRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-ServiceResult GeometryRepository::OnTerm()
+ServiceResult GeometryRepository::onTerm()
 {
     EventPublisher::Unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
     m_onGeometryBuilt = nullptr;

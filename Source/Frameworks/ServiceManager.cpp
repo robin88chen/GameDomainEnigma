@@ -62,7 +62,7 @@ void ServiceManager::ShutdownSystemService(const Rtti& service_type)
             if ((*iter).m_state == ServiceState::Running)
             {
                 (*iter).m_state = ServiceState::ShuttingDown;
-                ServiceResult res = (*iter).m_service->OnTerm();
+                ServiceResult res = (*iter).m_service->onTerm();
                 if (res == ServiceResult::Complete)
                 {
                     m_mapServices[&service_type] = nullptr;
@@ -85,46 +85,46 @@ void ServiceManager::RunOnce()
         iterService != m_services.end(); ++iterService)
     {
         if (!((*iterService).m_service)) continue;
-        if (((*iterService).m_service)->IsSuspended()) continue;
+        if (((*iterService).m_service)->isSuspended()) continue;
 
         ServiceResult result = ServiceResult::Complete;
         switch ((*iterService).m_state)
         {
-            case ServiceState::Running:
+        case ServiceState::Running:
+        {
+            if ((*iterService).m_service->isNeedTick())
             {
-                if ((*iterService).m_service->IsNeedTick())
-                {
-                    result = (*iterService).m_service->OnTick();
-                }
-                else
-                {
-                    result = ServiceResult::Pendding;
-                }
+                result = (*iterService).m_service->onTick();
             }
-            break;
-            case ServiceState::PreInit:
+            else
             {
-                result = (*iterService).m_service->OnPreInit();
+                result = ServiceResult::Pendding;
             }
+        }
+        break;
+        case ServiceState::PreInit:
+        {
+            result = (*iterService).m_service->onPreInit();
+        }
+        break;
+        case ServiceState::Initializing:
+        {
+            result = (*iterService).m_service->onInit();
+        }
+        break;
+        case ServiceState::ShuttingDown:
+        {
+            result = (*iterService).m_service->onTerm();
+        }
+        break;
+        case ServiceState::Complete:
+        {  // 完成，砍掉service
+            m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
+            (*iterService).m_service = nullptr;
+        }
+        break;
+        default:
             break;
-            case ServiceState::Initializing:
-            {
-                result = (*iterService).m_service->OnInit();
-            }
-            break;
-            case ServiceState::ShuttingDown:
-            {
-                result = (*iterService).m_service->OnTerm();
-            }
-            break;
-            case ServiceState::Complete:
-            {  // 完成，砍掉service
-                m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
-                (*iterService).m_service = nullptr;
-            }
-            break;
-            default:
-                break;
         }
 
         if (result == ServiceResult::Complete)
@@ -157,47 +157,47 @@ void ServiceManager::RunForState(ServiceState st)
         iterService != m_services.end(); ++iterService)
     {
         if (!((*iterService).m_service)) continue;
-        if (((*iterService).m_service)->IsSuspended()) continue;
+        if (((*iterService).m_service)->isSuspended()) continue;
         if ((*iterService).m_state != st) continue;
 
         ServiceResult result = ServiceResult::Complete;
         switch (st)
         {
-            case ServiceState::Running:
+        case ServiceState::Running:
+        {
+            if ((*iterService).m_service->isNeedTick())
             {
-                if ((*iterService).m_service->IsNeedTick())
-                {
-                    result = (*iterService).m_service->OnTick();
-                }
-                else
-                {
-                    result = ServiceResult::Pendding;
-                }
+                result = (*iterService).m_service->onTick();
             }
-            break;
-            case ServiceState::PreInit:
+            else
             {
-                result = (*iterService).m_service->OnPreInit();
+                result = ServiceResult::Pendding;
             }
+        }
+        break;
+        case ServiceState::PreInit:
+        {
+            result = (*iterService).m_service->onPreInit();
+        }
+        break;
+        case ServiceState::Initializing:
+        {
+            result = (*iterService).m_service->onInit();
+        }
+        break;
+        case ServiceState::ShuttingDown:
+        {
+            result = (*iterService).m_service->onTerm();
+        }
+        break;
+        case ServiceState::Complete:
+        {  // 完成，砍掉service
+            m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
+            (*iterService).m_service = nullptr;
+        }
+        break;
+        default:
             break;
-            case ServiceState::Initializing:
-            {
-                result = (*iterService).m_service->OnInit();
-            }
-            break;
-            case ServiceState::ShuttingDown:
-            {
-                result = (*iterService).m_service->OnTerm();
-            }
-            break;
-            case ServiceState::Complete:
-            {  // 完成，砍掉service
-                m_mapServices[(*iterService).m_service->TypeIndex()] = nullptr;
-                (*iterService).m_service = nullptr;
-            }
-            break;
-            default:
-                break;
         }
 
         if (result == ServiceResult::Complete)

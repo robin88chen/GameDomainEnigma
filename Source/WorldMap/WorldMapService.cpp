@@ -37,7 +37,7 @@ WorldMapService::~WorldMapService()
 
 }
 
-ServiceResult WorldMapService::OnInit()
+ServiceResult WorldMapService::onInit()
 {
     m_doCreatingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingEmptyWorldMap(c); });
     CommandBus::Subscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
@@ -54,7 +54,7 @@ ServiceResult WorldMapService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult WorldMapService::OnTerm()
+ServiceResult WorldMapService::onTerm()
 {
     CommandBus::Unsubscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
     m_doCreatingWorldMap = nullptr;

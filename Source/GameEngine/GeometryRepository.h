@@ -39,11 +39,11 @@ namespace Enigma::Engine
         GeometryRepository& operator=(GeometryRepository&&) = delete;
 
         /// On Init
-        virtual Frameworks::ServiceResult OnInit() override;
+        virtual Frameworks::ServiceResult onInit() override;
         /// On Tick
-        virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult onTick() override;
         /// On Term
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         bool HasGeometryData(const std::string& name);
         std::shared_ptr<GeometryData> QueryGeometryData(const std::string& name);

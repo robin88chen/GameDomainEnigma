@@ -30,7 +30,7 @@ CascadeShadowMapService::~CascadeShadowMapService()
     m_sunLightCamera = nullptr;
 }
 
-ServiceResult CascadeShadowMapService::OnInit()
+ServiceResult CascadeShadowMapService::onInit()
 {
     SubscribeEvents();
     Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
@@ -41,7 +41,7 @@ ServiceResult CascadeShadowMapService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult CascadeShadowMapService::OnTick()
+ServiceResult CascadeShadowMapService::onTick()
 {
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
@@ -53,7 +53,7 @@ ServiceResult CascadeShadowMapService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult CascadeShadowMapService::OnTerm()
+ServiceResult CascadeShadowMapService::onTerm()
 {
     m_sunLightCamera = nullptr;
     UnsubscribeEvents();

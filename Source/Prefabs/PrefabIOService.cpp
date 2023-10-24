@@ -30,7 +30,7 @@ PrefabIOService::~PrefabIOService()
     m_loadingCommands.clear();
 }
 
-Enigma::Frameworks::ServiceResult PrefabIOService::OnInit()
+Enigma::Frameworks::ServiceResult PrefabIOService::onInit()
 {
     m_onDtoDeserialized = std::make_shared<EventSubscriber>([=](auto e) { OnDtoDeserialized(e); });
     EventPublisher::Subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
@@ -43,14 +43,14 @@ Enigma::Frameworks::ServiceResult PrefabIOService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult PrefabIOService::OnTick()
+ServiceResult PrefabIOService::onTick()
 {
     if (m_currentCommand) return ServiceResult::Pendding;
     LoadNextPrefab();
     return ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult PrefabIOService::OnTerm()
+Enigma::Frameworks::ServiceResult PrefabIOService::onTerm()
 {
     m_currentCommand = nullptr;
     m_loadingCommands.clear();

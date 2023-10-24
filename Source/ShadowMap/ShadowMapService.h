@@ -32,9 +32,9 @@ namespace Enigma::ShadowMap
         ShadowMapService& operator=(const ShadowMapService& rhs) = delete;
         ShadowMapService& operator=(ShadowMapService&& rhs) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         virtual void CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);
         virtual void DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);

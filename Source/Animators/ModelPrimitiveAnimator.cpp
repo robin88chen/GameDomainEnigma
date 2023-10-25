@@ -78,17 +78,17 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
     return dto;
 }
 
-Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>& timer)
+Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)
 {
     if (FATAL_LOG_EXPR(!timer)) return HasUpdated::False;
     if (!m_isOnPlay) return HasUpdated::False;
 
-    const float elapse_time = timer->GetElapseTime();
-    auto next_to_stop = m_currentAnimClip.Update(elapse_time);
+    const float elapse_time = timer->getElapseTime();
+    auto next_to_stop = m_currentAnimClip.update(elapse_time);
 
     if (m_isFading)
     {
-        m_fadeInAnimClip.Update(elapse_time);
+        m_fadeInAnimClip.update(elapse_time);
         m_remainFadingTime -= elapse_time;
     }
 
@@ -101,9 +101,9 @@ Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>
     return res ? HasUpdated::True : HasUpdated::False;
 }
 
-void ModelPrimitiveAnimator::Reset()
+void ModelPrimitiveAnimator::reset()
 {
-    m_currentAnimClip.Reset();
+    m_currentAnimClip.reset();
     TimeValueUpdate();
 }
 

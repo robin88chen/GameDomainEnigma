@@ -63,7 +63,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     }
     else if (policy.GetDeserializer())
     {
-        m_ruidDeserializing = Ruid::Generate();
+        m_ruidDeserializing = Ruid::generate();
         policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
     }
     else

@@ -136,7 +136,7 @@ void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     if (FATAL_LOG_EXPR(m_world.expired())) return;
     std::string node_name = terrain->GetSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
-    quadRootNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
+    quadRootNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
     quadRootNode->TheFactoryDesc().ClaimAsInstanced(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_world.lock()->AttachChild(quadRootNode, local_transform);
@@ -176,7 +176,7 @@ void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
     m_world = std::dynamic_pointer_cast<WorldMap, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!m_world.expired())
     {
-        m_world.lock()->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);  // empty world map is ready
+        m_world.lock()->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
         EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
         CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }

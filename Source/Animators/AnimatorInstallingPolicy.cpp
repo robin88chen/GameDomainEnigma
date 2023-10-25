@@ -10,17 +10,17 @@ using namespace Enigma::Animators;
 error AnimatorInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->RegisterSystemService(std::make_shared<AnimationRepository>(service_manager));
-    auto timer = service_manager->GetSystemServiceAs<Engine::TimerService>();
-    service_manager->RegisterSystemService(std::make_shared<AnimationFrameListener>(service_manager, timer));
+    service_manager->registerSystemService(std::make_shared<AnimationRepository>(service_manager));
+    auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
+    service_manager->registerSystemService(std::make_shared<AnimationFrameListener>(service_manager, timer));
     return ErrorCode::ok;
 }
 
 error AnimatorInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->ShutdownSystemService(AnimationFrameListener::TYPE_RTTI);
-    service_manager->ShutdownSystemService(AnimationRepository::TYPE_RTTI);
+    service_manager->shutdownSystemService(AnimationFrameListener::TYPE_RTTI);
+    service_manager->shutdownSystemService(AnimationRepository::TYPE_RTTI);
     return ErrorCode::ok;
 }
 

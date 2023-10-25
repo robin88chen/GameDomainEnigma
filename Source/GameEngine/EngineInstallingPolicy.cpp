@@ -16,27 +16,27 @@ using namespace Enigma::Engine;
 error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->RegisterSystemService(std::make_shared<GenericDtoFactories>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<GeometryRepository>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<ShaderRepository>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<EffectMaterialManager>(service_manager, m_effectDeserializer));
+    service_manager->registerSystemService(std::make_shared<GenericDtoFactories>(service_manager));
+    service_manager->registerSystemService(std::make_shared<GeometryRepository>(service_manager));
+    service_manager->registerSystemService(std::make_shared<ShaderRepository>(service_manager));
+    service_manager->registerSystemService(std::make_shared<EffectMaterialManager>(service_manager, m_effectDeserializer));
     menew MaterialVariableMap;
-    service_manager->RegisterSystemService(std::make_shared<TextureRepository>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<RenderBufferRepository>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<TimerService>(service_manager));
+    service_manager->registerSystemService(std::make_shared<TextureRepository>(service_manager));
+    service_manager->registerSystemService(std::make_shared<RenderBufferRepository>(service_manager));
+    service_manager->registerSystemService(std::make_shared<TimerService>(service_manager));
     return ErrorCode::ok;
 }
 
 error EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->ShutdownSystemService(TimerService::TYPE_RTTI);
-    service_manager->ShutdownSystemService(RenderBufferRepository::TYPE_RTTI);
-    service_manager->ShutdownSystemService(TextureRepository::TYPE_RTTI);
+    service_manager->shutdownSystemService(TimerService::TYPE_RTTI);
+    service_manager->shutdownSystemService(RenderBufferRepository::TYPE_RTTI);
+    service_manager->shutdownSystemService(TextureRepository::TYPE_RTTI);
     delete MaterialVariableMap::Instance();
-    service_manager->ShutdownSystemService(EffectMaterialManager::TYPE_RTTI);
-    service_manager->ShutdownSystemService(ShaderRepository::TYPE_RTTI);
-    service_manager->ShutdownSystemService(GeometryRepository::TYPE_RTTI);
-    service_manager->ShutdownSystemService(GenericDtoFactories::TYPE_RTTI);
+    service_manager->shutdownSystemService(EffectMaterialManager::TYPE_RTTI);
+    service_manager->shutdownSystemService(ShaderRepository::TYPE_RTTI);
+    service_manager->shutdownSystemService(GeometryRepository::TYPE_RTTI);
+    service_manager->shutdownSystemService(GenericDtoFactories::TYPE_RTTI);
     return ErrorCode::ok;
 }

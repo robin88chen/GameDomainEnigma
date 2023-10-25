@@ -14,7 +14,7 @@ ServiceManager::~ServiceManager()
 {
 }
 
-void ServiceManager::RegisterSystemService(const std::shared_ptr<ISystemService>& service)
+void ServiceManager::registerSystemService(const std::shared_ptr<ISystemService>& service)
 {
     if (!service) return;
     ServiceStateRecord rec;
@@ -25,7 +25,7 @@ void ServiceManager::RegisterSystemService(const std::shared_ptr<ISystemService>
     m_mapServices[service->typeIndex()] = service;
 }
 
-void ServiceManager::UnregisterSystemService(const Rtti& service_type)
+void ServiceManager::unregisterSystemService(const Rtti& service_type)
 {
     SystemServiceList::iterator iter = m_services.begin();
     while (iter != m_services.end())
@@ -39,18 +39,18 @@ void ServiceManager::UnregisterSystemService(const Rtti& service_type)
     }
 }
 
-void ServiceManager::InsertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service)
+void ServiceManager::insertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service)
 {
     if (!service) return;
     m_mapServices[&service_type] = service;
 }
 
-void ServiceManager::RemoveHashAsService(const Rtti& service_type)
+void ServiceManager::removeHashAsService(const Rtti& service_type)
 {
     m_mapServices.erase(&service_type);
 }
 
-void ServiceManager::ShutdownSystemService(const Rtti& service_type)
+void ServiceManager::shutdownSystemService(const Rtti& service_type)
 {
     SystemServiceList::iterator iter = m_services.begin();
     while (iter != m_services.end())
@@ -74,7 +74,7 @@ void ServiceManager::ShutdownSystemService(const Rtti& service_type)
     }
 }
 
-void ServiceManager::RunOnce()
+void ServiceManager::runOnce()
 {
     if (m_services.empty()) return;
 
@@ -146,7 +146,7 @@ void ServiceManager::RunOnce()
     }
 }
 
-void ServiceManager::RunForState(ServiceState st)
+void ServiceManager::runForState(ServiceState st)
 {
     if (m_services.empty()) return;
 
@@ -219,9 +219,9 @@ void ServiceManager::RunForState(ServiceState st)
     }
 }
 
-ServiceManager::ServiceState ServiceManager::CheckServiceState(const Rtti& service_type)
+ServiceManager::ServiceState ServiceManager::checkServiceState(const Rtti& service_type)
 {
-    auto service = TryGetSystemService(service_type);
+    auto service = tryGetSystemService(service_type);
     if (!service) return ServiceState::Invalid;
     if (!service.value()) return ServiceState::Deleted;
     for (SystemServiceList::iterator iterService = m_services.begin();
@@ -235,14 +235,14 @@ ServiceManager::ServiceState ServiceManager::CheckServiceState(const Rtti& servi
     return ServiceState::Invalid;
 }
 
-std::shared_ptr<ISystemService> ServiceManager::GetSystemService(const Rtti& service_type)
+std::shared_ptr<ISystemService> ServiceManager::getSystemService(const Rtti& service_type)
 {
-    auto service = TryGetSystemService(service_type);
+    auto service = tryGetSystemService(service_type);
     if (service) return service.value();
     return nullptr;
 }
 
-std::optional<std::shared_ptr<ISystemService>> ServiceManager::TryGetSystemService(const Rtti& service_type)
+std::optional<std::shared_ptr<ISystemService>> ServiceManager::tryGetSystemService(const Rtti& service_type)
 {
     SystemServiceMap::iterator iter = m_mapServices.find(&service_type);
     if (iter != m_mapServices.end())

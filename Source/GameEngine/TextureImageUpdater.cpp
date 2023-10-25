@@ -45,7 +45,7 @@ void TextureImageUpdater::UpdateTextureImage(const std::shared_ptr<Texture>& tar
     m_targetTextureRect = image_rect;
     if ((target_tex) && target_tex->GetDeviceTexture())
     {
-        target_tex->GetDeviceTexture()->Update(m_targetTextureRect, image_buff);
+        target_tex->GetDeviceTexture()->update(m_targetTextureRect, image_buff);
     }
     else
     {

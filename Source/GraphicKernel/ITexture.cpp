@@ -117,7 +117,7 @@ error ITexture::LoadTextureImage(const std::string& filename, const std::string&
     return LoadTextureImage(buff.value());
 }
 
-void ITexture::Update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
+void ITexture::update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {

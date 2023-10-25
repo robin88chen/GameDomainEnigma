@@ -26,7 +26,7 @@ namespace Enigma::Frameworks
         Ruid& operator=(const Ruid&) = default;
         Ruid& operator=(Ruid&&) = default;
 
-        static Ruid Generate();
+        static Ruid generate();
 
         bool operator==(const Ruid& ruid) const;
         bool operator!=(const Ruid& ruid) const;

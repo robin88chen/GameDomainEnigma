@@ -81,9 +81,9 @@ void LazyNodeIOService::DoInstancingLazyNode(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<InstanceLazyNode, ICommand>(c);
     if (!cmd) return;
     if (!cmd->GetNode()) return;
-    if (!cmd->GetNode()->TheLazyStatus().IsGhost()) return;
+    if (!cmd->GetNode()->TheLazyStatus().isGhost()) return;
     std::lock_guard locker{ m_waitingNodesLock };
-    cmd->GetNode()->TheLazyStatus().ChangeStatus(LazyStatus::Status::InQueue);
+    cmd->GetNode()->TheLazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_waitingNodes.push_back(cmd->GetNode());
     m_needTick = true;
 }
@@ -107,7 +107,7 @@ void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
     if (m_in_placeNode) node_name = m_in_placeNode->GetSpatialName();
     Platforms::Debug::ErrorPrintf("deserializing lazy node %s dto failed : %s", node_name.c_str(), ev->GetErrorCode().message().c_str());
     EventPublisher::post(std::make_shared<InstanceLazyNodeFailed>(m_in_placeNode, ev->GetErrorCode()));
-    if (m_in_placeNode) m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ghost);
+    if (m_in_placeNode) m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ghost);
     m_isCurrentInstancing = false;
 }
 
@@ -118,7 +118,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_in_placeNode) return;
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
-    m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ready);
+    m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
     m_in_placeNode->TheFactoryDesc().ClaimAsInstanced();
     EventPublisher::post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
@@ -133,14 +133,14 @@ void LazyNodeIOService::OnVisibilityChanged(const Frameworks::IEventPtr& e)
     if (!ev->GetNode()) return;
     if (ev->IsVisible())
     {
-        m_visibilityTimers.insert_or_assign(ev->GetNode(), m_timer.lock()->GetGameTimer()->GetTotalTime());
+        m_visibilityTimers.insert_or_assign(ev->GetNode(), m_timer.lock()->GetGameTimer()->getTotalTime());
     }
     else
     {
         auto it_vis = m_visibilityTimers.find(ev->GetNode());
         if (it_vis != m_visibilityTimers.end())
         {
-            auto time = m_timer.lock()->GetGameTimer()->GetTotalTime() - it_vis->second;
+            auto time = m_timer.lock()->GetGameTimer()->getTotalTime() - it_vis->second;
             if ((time > MIN_KEEP_TIME) && (m_in_placeNode != ev->GetNode()))
             {
                 std::lock_guard locker{ m_waitingNodesLock };
@@ -165,17 +165,17 @@ void LazyNodeIOService::InstanceNextLazyNode()
     const auto node = m_waitingNodes.front();
     m_waitingNodes.pop_front();
     m_in_placeNode = node;
-    m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Loading);
+    m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Loading);
     m_isCurrentInstancing = true;
     if (m_dtoDeserializer)
     {
-        m_ruidDeserializing = Ruid::Generate();
+        m_ruidDeserializing = Ruid::generate();
         m_dtoDeserializer->InvokeDeserialize(m_ruidDeserializing, node->TheFactoryDesc().GetDeferredFilename());
     }
     else
     {
         Platforms::Debug::ErrorPrintf("Instance Lazy Node without dto deserializer!!");
-        m_in_placeNode->TheLazyStatus().ChangeStatus(LazyStatus::Status::Ghost);
+        m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ghost);
         m_isCurrentInstancing = false;
     }
 }

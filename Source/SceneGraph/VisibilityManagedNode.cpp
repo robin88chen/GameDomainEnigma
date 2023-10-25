@@ -37,12 +37,12 @@ GenericDto VisibilityManagedNode::SerializeDto()
 error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
 {
     // 需要讀取
-    if (m_lazyStatus.IsGhost())
+    if (m_lazyStatus.isGhost())
     {
         CommandBus::post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
         return ErrorCode::ok;
     }
-    if (!m_lazyStatus.IsReady())
+    if (!m_lazyStatus.isReady())
     {
         return ErrorCode::dataNotReady;
     }
@@ -52,7 +52,7 @@ error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
 
 void VisibilityManagedNode::OnCullingCompleteNotVisible(Culler* culler)
 {
-    if (!m_lazyStatus.IsReady()) return;
+    if (!m_lazyStatus.isReady()) return;
 
     // let me check first
     if (!culler) return;
@@ -67,5 +67,5 @@ void VisibilityManagedNode::ReleaseDeferredContent()
         DetachChild(*(m_childList.begin()));
     }
 
-    m_lazyStatus.ChangeStatus(LazyStatus::Status::Ghost);
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);
 }

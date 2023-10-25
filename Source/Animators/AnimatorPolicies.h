@@ -19,9 +19,9 @@ namespace Enigma::Animators
     class ModelAnimatorPolicy
     {
     public:
-        ModelAnimatorPolicy() : m_ruid(Frameworks::Ruid::Generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.getName()) {}
+        ModelAnimatorPolicy() : m_ruid(Frameworks::Ruid::generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.getName()) {}
         ModelAnimatorPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled, const std::shared_ptr<AnimationAssetPolicy>& asset_policy)
-            : m_ruid(Frameworks::Ruid::Generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.getName()),
+            : m_ruid(Frameworks::Ruid::generate()), m_assetFactory(Engine::Animator::TYPE_RTTI.getName()),
                 m_controlledPrimitive(controlled), m_assetPolicy(asset_policy)  {}
 
         [[nodiscard]] const Frameworks::Ruid& getRuid() const { return m_ruid; }

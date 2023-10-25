@@ -12,7 +12,7 @@ static std::random_device s_seed;
 static std::default_random_engine s_generator;
 static std::uniform_int_distribution<std::uint64_t> s_unit64_rand;
 
-Ruid Ruid::Generate()
+Ruid Ruid::generate()
 {
     auto now = hclock::now();
     duration curr = duration(now.time_since_epoch().count());

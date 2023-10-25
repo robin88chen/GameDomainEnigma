@@ -43,7 +43,7 @@ namespace Enigma::SceneGraph
             std::string m_sceneGraphId;
             std::shared_ptr<Node> m_in_placeRoot;
             std::vector<BuiltSpatialMeta> m_builtSpatialMetas;
-            void Reset()
+            void reset()
             {
                 m_sceneGraphId.clear();
                 m_in_placeRoot = nullptr;

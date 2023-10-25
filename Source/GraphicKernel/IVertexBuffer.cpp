@@ -15,7 +15,7 @@ IVertexBuffer::~IVertexBuffer()
 {
 }
 
-void IVertexBuffer::Update(const byte_buffer& dataVertex)
+void IVertexBuffer::update(const byte_buffer& dataVertex)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {

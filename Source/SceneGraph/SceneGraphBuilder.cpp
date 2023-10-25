@@ -80,7 +80,7 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
 
 SceneGraphBuilder::~SceneGraphBuilder()
 {
-    m_builtSceneGraphMeta.Reset();
+    m_builtSceneGraphMeta.reset();
 
     CommandBus::unsubscribe(typeid(RegisterSpatialDtoFactory), m_doRegisteringSpatialFactory);
     m_doRegisteringSpatialFactory = nullptr;
@@ -262,7 +262,7 @@ void SceneGraphBuilder::InterruptBuildingSceneGraph(error er)
     {
         EventPublisher::post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->GetSpatialName(), er));
     }
-    m_builtSceneGraphMeta.Reset();
+    m_builtSceneGraphMeta.reset();
     BuildNextSceneGraph();
 }
 

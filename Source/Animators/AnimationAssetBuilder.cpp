@@ -14,7 +14,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
 AnimationAssetBuilder::AnimationAssetBuilder(AnimationRepository* host)
-    : m_ruidConstructing(Ruid::Generate()), m_ruidDeserializing(Ruid::Generate())
+    : m_ruidConstructing(Ruid::generate()), m_ruidDeserializing(Ruid::generate())
 {
     m_repository = host;
     m_onDtoAnimationCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnDtoAnimationAssetCreated(e); });
@@ -52,7 +52,7 @@ void AnimationAssetBuilder::BuildAnimationAsset(const std::shared_ptr<AnimationA
     }
     else if (policy->GetDeserializer())
     {
-        m_ruidDeserializing = Ruid::Generate();
+        m_ruidDeserializing = Ruid::generate();
         policy->GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy->Parameter());
     }
     else

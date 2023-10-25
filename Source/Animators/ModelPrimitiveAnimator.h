@@ -34,8 +34,8 @@ namespace Enigma::Animators
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
         ModelAnimatorDto SerializeDto();
-        virtual HasUpdated Update(const std::unique_ptr<Frameworks::Timer>& timer) override;
-        virtual void Reset() override;
+        virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
+        virtual void reset() override;
 
         void SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
         std::shared_ptr<Renderer::ModelPrimitive> GetControlledModel() const;

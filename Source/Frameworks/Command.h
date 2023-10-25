@@ -29,7 +29,7 @@ namespace Enigma::Frameworks
     class IRequestCommand : public ICommand
     {
     public:
-        IRequestCommand() : m_ruid(Ruid::Generate()) {};
+        IRequestCommand() : m_ruid(Ruid::generate()) {};
         IRequestCommand(const Ruid& ruid) : m_ruid(ruid) {};
         IRequestCommand(const IRequestCommand&) = delete;
         IRequestCommand(IRequestCommand&&) = delete;

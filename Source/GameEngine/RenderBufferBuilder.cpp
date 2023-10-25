@@ -99,7 +99,7 @@ void RenderBufferBuilder::OnVertexBufferCreated(const Frameworks::IEventPtr& e)
     }
     if (m_policy.m_vtxBuffer)
     {
-        buffer.value()->Update(m_policy.m_vtxBuffer.value());
+        buffer.value()->update(m_policy.m_vtxBuffer.value());
     }
     else
     {
@@ -134,7 +134,7 @@ void RenderBufferBuilder::OnIndexBufferCreated(const Frameworks::IEventPtr& e)
     }
     if (m_policy.m_idxBuffer)
     {
-        buffer.value()->Update(m_policy.m_idxBuffer.value());
+        buffer.value()->update(m_policy.m_idxBuffer.value());
     }
     else
     {

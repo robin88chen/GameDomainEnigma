@@ -43,10 +43,10 @@ namespace Enigma::Controllers
         Frameworks::ServiceManager* getServiceManager() { return m_serviceManager; };
 
         template <class T>
-        std::shared_ptr<T> GetSystemServiceAs()
+        std::shared_ptr<T> getSystemServiceAs()
         {
             assert(m_serviceManager);
-            return m_serviceManager->GetSystemServiceAs<T>();
+            return m_serviceManager->getSystemServiceAs<T>();
         };
 
     private:

@@ -15,8 +15,8 @@ using namespace Enigma::Renderer;
 error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->RegisterSystemService(std::make_shared<RendererManager>(service_manager));
-    service_manager->RegisterSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager));
+    service_manager->registerSystemService(std::make_shared<RendererManager>(service_manager));
+    service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager));
 
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::Create);
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::Create);
@@ -26,14 +26,14 @@ error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_
 error RenderSystemInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->ShutdownSystemService(RenderablePrimitiveBuilder::TYPE_RTTI);
-    service_manager->ShutdownSystemService(RendererManager::TYPE_RTTI);
+    service_manager->shutdownSystemService(RenderablePrimitiveBuilder::TYPE_RTTI);
+    service_manager->shutdownSystemService(RendererManager::TYPE_RTTI);
     return ErrorCode::ok;
 }
 
 error DefaultRendererInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
-    const auto manager = service_manager->GetSystemServiceAs<RendererManager>();
+    const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);
     error er = manager->CreateRenderer(m_rendererName);
     if (er) return er;
@@ -43,7 +43,7 @@ error DefaultRendererInstallingPolicy::Install(Frameworks::ServiceManager* servi
 
 error DefaultRendererInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
-    const auto manager = service_manager->GetSystemServiceAs<RendererManager>();
+    const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);
     error er = manager->DestroyRenderer(m_rendererName);
     if (er) return er;

@@ -42,26 +42,26 @@ namespace Enigma::Frameworks
         ServiceManager& operator=(const ServiceManager&) = delete;
         ServiceManager& operator=(ServiceManager&&) = delete;
 
-        void RegisterSystemService(const std::shared_ptr<ISystemService>& service);
-        void UnregisterSystemService(const Rtti& service_type);
-        void InsertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service);
-        void RemoveHashAsService(const Rtti& service_type);
+        void registerSystemService(const std::shared_ptr<ISystemService>& service);
+        void unregisterSystemService(const Rtti& service_type);
+        void insertHashAsService(const Rtti& service_type, const std::shared_ptr<ISystemService>& service);
+        void removeHashAsService(const Rtti& service_type);
         /// shutdown immediately
-        void ShutdownSystemService(const Rtti& service_type);
+        void shutdownSystemService(const Rtti& service_type);
 
-        void RunOnce();
+        void runOnce();
         /// run service once if service is on state
-        void RunForState(ServiceState st);
+        void runForState(ServiceState st);
 
-        ServiceState CheckServiceState(const Rtti& service_type);
+        ServiceState checkServiceState(const Rtti& service_type);
 
-        std::shared_ptr<ISystemService> GetSystemService(const Rtti& service_type);
-        std::optional<std::shared_ptr<ISystemService>> TryGetSystemService(const Rtti& service_type);
+        std::shared_ptr<ISystemService> getSystemService(const Rtti& service_type);
+        std::optional<std::shared_ptr<ISystemService>> tryGetSystemService(const Rtti& service_type);
 
         template <class T>
-        std::shared_ptr<T> GetSystemServiceAs()
+        std::shared_ptr<T> getSystemServiceAs()
         {
-            return std::dynamic_pointer_cast<T, ISystemService>(GetSystemService(T::TYPE_RTTI));
+            return std::dynamic_pointer_cast<T, ISystemService>(getSystemService(T::TYPE_RTTI));
         };
 
     protected:

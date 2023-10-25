@@ -51,11 +51,11 @@ GenericDto LazyNode::SerializeAsLaziness()
 
 bool LazyNode::CanVisited()
 {
-    return m_lazyStatus.IsReady() || m_lazyStatus.IsGhost();
+    return m_lazyStatus.isReady() || m_lazyStatus.isGhost();
 }
 
 SceneTraveler::TravelResult LazyNode::VisitBy(SceneTraveler* traveler)
 {
-    if (m_lazyStatus.IsGhost()) return SceneTraveler::TravelResult::Skip;
+    if (m_lazyStatus.isGhost()) return SceneTraveler::TravelResult::Skip;
     return Node::VisitBy(traveler);
 }

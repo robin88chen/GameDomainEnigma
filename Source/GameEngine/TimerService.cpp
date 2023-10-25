@@ -21,16 +21,16 @@ TimerService::~TimerService()
 
 ServiceResult TimerService::onInit()
 {
-    if (m_gameTimer) m_gameTimer->Reset();
-    if (m_realLifeTimer) m_realLifeTimer->Reset();
+    if (m_gameTimer) m_gameTimer->reset();
+    if (m_realLifeTimer) m_realLifeTimer->reset();
 
     return ServiceResult::Complete;
 }
 
 ServiceResult TimerService::onTick()
 {
-    if (m_gameTimer) m_gameTimer->Update();
-    if (m_realLifeTimer) m_realLifeTimer->Update();
+    if (m_gameTimer) m_gameTimer->update();
+    if (m_realLifeTimer) m_realLifeTimer->update();
 
     return ServiceResult::Pendding;
 }
@@ -45,25 +45,25 @@ ServiceResult TimerService::onTerm()
 
 void TimerService::SetGameTimerScale(float scale)
 {
-    if (m_gameTimer) m_gameTimer->SetScale(scale);
+    if (m_gameTimer) m_gameTimer->setScale(scale);
 }
 
 void TimerService::PauseGameTimer()
 {
-    if (m_gameTimer) m_gameTimer->Pause();
+    if (m_gameTimer) m_gameTimer->pause();
 }
 
 void TimerService::ResumeGameTimer()
 {
-    if (m_gameTimer) m_gameTimer->Resume();
+    if (m_gameTimer) m_gameTimer->resume();
 }
 
 void TimerService::ReverseGameTimer()
 {
-    if (m_gameTimer) m_gameTimer->SetScale(-m_gameTimer->GetScale());
+    if (m_gameTimer) m_gameTimer->setScale(-m_gameTimer->getScale());
 }
 
 void TimerService::SetGameTimerStep(bool enable, float step)
 {
-    if (m_gameTimer) m_gameTimer->SetFrameStep(enable, step);
+    if (m_gameTimer) m_gameTimer->setFrameStep(enable, step);
 }

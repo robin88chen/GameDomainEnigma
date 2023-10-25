@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TokenVector.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -24,6 +24,6 @@ using TokenVector = std::vector<std::string>;
 /** 將字串分解成token
   @param src 來源字串
   @param sep 分解記號 */
-extern TokenVector En_Split_Token(const std::string& src, const std::string& sep);
+extern TokenVector split_token(const std::string& src, const std::string& sep);
 
 #endif // TOKEN_VECTOR_H

@@ -78,7 +78,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
 
 void ModelPrimitiveBuilder::PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
-    Ruid mesh_ruid = Ruid::Generate();
+    Ruid mesh_ruid = Ruid::generate();
     m_meshBuildingMetas.emplace_back(node_name, mesh_ruid);
     m_meshPolicies.push({ mesh_ruid, policy });
 }

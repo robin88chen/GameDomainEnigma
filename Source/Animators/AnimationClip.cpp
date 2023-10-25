@@ -26,7 +26,7 @@ void AnimationClip::SyncPhase(const AnimationClip& clip)
     if (m_currentPhaseTime > m_loopTime) m_currentPhaseTime -= m_loopTime;
 }
 
-AnimationClip::GoingToStop AnimationClip::Update(float elapse_time)
+AnimationClip::GoingToStop AnimationClip::update(float elapse_time)
 {
     GoingToStop going_to_stop = GoingToStop::False;
     m_currentPhaseTime += elapse_time;

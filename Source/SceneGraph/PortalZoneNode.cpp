@@ -33,12 +33,12 @@ GenericDto PortalZoneNode::SerializeDto()
 error PortalZoneNode::OnCullingVisible(Culler* culler, bool noCull)
 {
     // 需要讀取
-    if (m_lazyStatus.IsGhost())
+    if (m_lazyStatus.isGhost())
     {
         CommandBus::post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
         return ErrorCode::ok;
     }
-    if (!m_lazyStatus.IsReady())
+    if (!m_lazyStatus.isReady())
     {
         return ErrorCode::dataNotReady;
     }

@@ -7,17 +7,17 @@ LazyStatus::LazyStatus()
     m_status = Status::Ghost;
 }
 
-void LazyStatus::ChangeStatus(Status s)
+void LazyStatus::changeStatus(Status s)
 {
     m_status = s;
 }
 
-bool LazyStatus::IsGhost() const
+bool LazyStatus::isGhost() const
 {
     return m_status == Status::Ghost;
 }
 
-bool LazyStatus::IsReady() const
+bool LazyStatus::isReady() const
 {
     return m_status == Status::Ready;
 }

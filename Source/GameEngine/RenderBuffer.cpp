@@ -31,8 +31,8 @@ error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffe
         unsigned int dataSize = static_cast<unsigned int>(indexBuffer.size()) * sizeof(unsigned int);
         if (FATAL_LOG_EXPR(dataSize > m_indexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
     }
-    m_vertexBuffer->Update(dataBuffer);
-    if (m_indexBuffer) m_indexBuffer->Update(indexBuffer);
+    m_vertexBuffer->update(dataBuffer);
+    if (m_indexBuffer) m_indexBuffer->update(indexBuffer);
     return ErrorCode::ok;
 }
 

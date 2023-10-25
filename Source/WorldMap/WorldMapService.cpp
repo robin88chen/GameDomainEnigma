@@ -39,16 +39,16 @@ WorldMapService::~WorldMapService()
 
 ServiceResult WorldMapService::onInit()
 {
-    m_doCreatingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingEmptyWorldMap(c); });
+    m_doCreatingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { doCreatingEmptyWorldMap(c); });
     CommandBus::subscribe(typeid(CreateEmptyWorldMap), m_doCreatingWorldMap);
-    m_doDeserializingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { DoDeserializingWorldMap(c); });
+    m_doDeserializingWorldMap = std::make_shared<CommandSubscriber>([=](auto c) { doDeserializingWorldMap(c); });
     CommandBus::subscribe(typeid(Enigma::WorldMap::DeserializeWorldMap), m_doDeserializingWorldMap);
-    m_doAttachingTerrain = std::make_shared<CommandSubscriber>([=](auto c) { DoAttachingTerrain(c); });
+    m_doAttachingTerrain = std::make_shared<CommandSubscriber>([=](auto c) { doAttachingTerrain(c); });
     CommandBus::subscribe(typeid(Enigma::WorldMap::AttachTerrainToWorldMap), m_doAttachingTerrain);
 
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
     EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onLazyNodeInstanced = std::make_shared<EventSubscriber>([=](auto e) { OnLazyNodeInstanced(e); });
+    m_onLazyNodeInstanced = std::make_shared<EventSubscriber>([=](auto e) { onLazyNodeInstanced(e); });
     EventPublisher::subscribe(typeid(LazyNodeInstanced), m_onLazyNodeInstanced);
 
     return ServiceResult::Complete;
@@ -71,7 +71,7 @@ ServiceResult WorldMapService::onTerm()
     return ServiceResult::Complete;
 }
 
-std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::SerializeQuadNodeGraphs() const
+std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::serializeQuadNodeGraphs() const
 {
     assert(!m_world.expired());
 
@@ -97,7 +97,7 @@ std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::SerializeQuad
     return collections;
 }
 
-Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
+Enigma::Engine::GenericDtoCollection WorldMapService::serializeWorldMap() const
 {
     assert(!m_world.expired());
     Engine::GenericDtoCollection collection;
@@ -123,12 +123,12 @@ Enigma::Engine::GenericDtoCollection WorldMapService::SerializeWorldMap() const
     return collection;
 }
 
-void WorldMapService::DeserializeWorldMap(const Engine::GenericDtoCollection& graph)
+void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& graph)
 {
     CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
 }
 
-void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
+void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
     const Matrix4& local_transform)
 {
     assert(terrain);
@@ -143,32 +143,32 @@ void WorldMapService::AttachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     m_listQuadRoot.push_back(quadRootNode);
 }
 
-void WorldMapService::DoCreatingEmptyWorldMap(const ICommandPtr& c)
+void WorldMapService::doCreatingEmptyWorldMap(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
     if (!cmd) return;
-    std::vector<Engine::GenericDto> dtos = { cmd->GetDto() };
+    std::vector<Engine::GenericDto> dtos = { cmd->getDto() };
     CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
 }
 
-void WorldMapService::DoDeserializingWorldMap(const Frameworks::ICommandPtr& c)
+void WorldMapService::doDeserializingWorldMap(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::WorldMap::DeserializeWorldMap, ICommand>(c);
     if (!cmd) return;
-    DeserializeWorldMap(cmd->GetGraph());
+    DeserializeWorldMap(cmd->getGraph());
 }
 
-void WorldMapService::DoAttachingTerrain(const ICommandPtr& c)
+void WorldMapService::doAttachingTerrain(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::WorldMap::AttachTerrainToWorldMap, ICommand>(c);
     if (!cmd) return;
-    AttachTerrainToWorldMap(cmd->GetTerrain(), cmd->GetLocalTransform());
+    AttachTerrainToWorldMap(cmd->getTerrain(), cmd->getLocalTransform());
 }
 
-void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
+void WorldMapService::onSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
@@ -182,7 +182,7 @@ void WorldMapService::OnSceneGraphBuilt(const IEventPtr& e)
     }
 }
 
-void WorldMapService::OnLazyNodeInstanced(const Frameworks::IEventPtr& e)
+void WorldMapService::onLazyNodeInstanced(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LazyNodeInstanced, IEvent>(e);

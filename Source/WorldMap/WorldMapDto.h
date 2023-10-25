@@ -20,8 +20,8 @@ namespace Enigma::WorldMap
         //const std::string& Name() const { return m_name; }
         //std::string& Name() { return m_name; }
 
-        static WorldMapDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static WorldMapDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
         //[[nodiscard]] const std::string& WorldZoneName() const { return m_worldZoneName; }
         //std::string& WorldZoneName() { return m_worldZoneName; }
 

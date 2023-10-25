@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   WorldMapEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -19,7 +19,7 @@ namespace Enigma::WorldMap
         WorldMapCreated(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
 
         const std::string& getName() const { return m_name; }
-        const std::shared_ptr<WorldMap>& GetWorld() const { return m_world; }
+        const std::shared_ptr<WorldMap>& getWorld() const { return m_world; }
 
     protected:
         std::string m_name;
@@ -31,7 +31,7 @@ namespace Enigma::WorldMap
         WorldMapDeserialized(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
 
         const std::string& getName() const { return m_name; }
-        const std::shared_ptr<WorldMap>& GetWorld() const { return m_world; }
+        const std::shared_ptr<WorldMap>& getWorld() const { return m_world; }
 
     protected:
         std::string m_name;

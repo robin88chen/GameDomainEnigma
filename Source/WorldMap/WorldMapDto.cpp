@@ -18,7 +18,7 @@ WorldMapDto::WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_d
     //m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.getName());
 }
 
-WorldMapDto WorldMapDto::FromGenericDto(const Engine::GenericDto& dto)
+WorldMapDto WorldMapDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     WorldMapDto world_map_dto(PortalZoneNodeDto::FromGenericDto(dto));
     //world_map_dto.Name() = dto.getName();
@@ -26,7 +26,7 @@ WorldMapDto WorldMapDto::FromGenericDto(const Engine::GenericDto& dto)
     return world_map_dto;
 }
 
-Enigma::Engine::GenericDto WorldMapDto::ToGenericDto() const
+Enigma::Engine::GenericDto WorldMapDto::toGenericDto() const
 {
     GenericDto dto = PortalZoneNodeDto::ToGenericDto();
     //dto.AddName(m_name);

@@ -31,9 +31,9 @@ namespace Enigma::WorldMap
 
         virtual Engine::GenericDto SerializeDto() override;
 
-        void SetPortalRootNode(const std::shared_ptr<SceneGraph::PortalManagementNode>& root);
+        void setPortalRootNode(const std::shared_ptr<SceneGraph::PortalManagementNode>& root);
 
-        std::shared_ptr<SceneGraph::PortalManagementNode> GetPortalRootNode() const { return m_portalRootNode.lock(); };
+        std::shared_ptr<SceneGraph::PortalManagementNode> getPortalRootNode() const { return m_portalRootNode.lock(); };
 
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_portalRootNode;

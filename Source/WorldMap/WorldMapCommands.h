@@ -20,7 +20,7 @@ namespace Enigma::WorldMap
     public:
         CreateEmptyWorldMap(const Engine::GenericDto& dto) : m_dto(dto) {}
 
-        const Engine::GenericDto& GetDto() const { return m_dto; }
+        const Engine::GenericDto& getDto() const { return m_dto; }
 
     protected:
         Engine::GenericDto m_dto;
@@ -30,7 +30,7 @@ namespace Enigma::WorldMap
     public:
         DeserializeWorldMap(const Engine::GenericDtoCollection& graph) : m_graph(graph) {}
 
-        const Engine::GenericDtoCollection& GetGraph() const { return m_graph; }
+        const Engine::GenericDtoCollection& getGraph() const { return m_graph; }
 
     protected:
         Engine::GenericDtoCollection m_graph;
@@ -40,8 +40,8 @@ namespace Enigma::WorldMap
     public:
         AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform) : m_terrain(terrain), m_local(local_transform) {}
 
-        const std::shared_ptr<Terrain::TerrainPawn>& GetTerrain() const { return m_terrain; }
-        const MathLib::Matrix4& GetLocalTransform() const { return m_local; }
+        const std::shared_ptr<Terrain::TerrainPawn>& getTerrain() const { return m_terrain; }
+        const MathLib::Matrix4& getLocalTransform() const { return m_local; }
 
     protected:
         std::shared_ptr<Terrain::TerrainPawn> m_terrain;

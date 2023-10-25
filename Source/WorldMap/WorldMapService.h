@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   WorldMapService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -32,19 +32,19 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        std::vector<Engine::GenericDtoCollection> SerializeQuadNodeGraphs() const;
-        Engine::GenericDtoCollection SerializeWorldMap() const;
+        std::vector<Engine::GenericDtoCollection> serializeQuadNodeGraphs() const;
+        Engine::GenericDtoCollection serializeWorldMap() const;
 
-        void DeserializeWorldMap(const Engine::GenericDtoCollection& graph);
+        void deserializeWorldMap(const Engine::GenericDtoCollection& graph);
 
     protected:
-        void AttachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
+        void attachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
 
-        void DoCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c);
-        void DoDeserializingWorldMap(const Frameworks::ICommandPtr& c);
-        void DoAttachingTerrain(const Frameworks::ICommandPtr& c);
-        void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
-        void OnLazyNodeInstanced(const Frameworks::IEventPtr& e);
+        void doCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c);
+        void doDeserializingWorldMap(const Frameworks::ICommandPtr& c);
+        void doAttachingTerrain(const Frameworks::ICommandPtr& c);
+        void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void onLazyNodeInstanced(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<WorldMap> m_world;

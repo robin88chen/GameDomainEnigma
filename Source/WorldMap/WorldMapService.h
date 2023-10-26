@@ -11,9 +11,11 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Terrain/TerrainPawn.h"
+#include "GameEngine/BoundingVolume.h"
 
 namespace Enigma::WorldMap
 {
@@ -39,12 +41,18 @@ namespace Enigma::WorldMap
 
     protected:
         void attachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
+        std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
+        std::shared_ptr<SceneGraph::Node> findFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_node) const;
+        std::shared_ptr<SceneGraph::Node> findFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth) const;
+        std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
+        bool testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const;
 
-        void doCreatingEmptyWorldMap(const Frameworks::ICommandPtr& c);
-        void doDeserializingWorldMap(const Frameworks::ICommandPtr& c);
-        void doAttachingTerrain(const Frameworks::ICommandPtr& c);
+        void createEmptyWorldMap(const Frameworks::ICommandPtr& c);
+        void deserializeWorldMap(const Frameworks::ICommandPtr& c);
+        void attachTerrain(const Frameworks::ICommandPtr& c);
         void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void onLazyNodeInstanced(const Frameworks::IEventPtr& e);
+        void queryFittingNode(const Frameworks::IQueryPtr& q) const;
 
     protected:
         std::weak_ptr<WorldMap> m_world;
@@ -53,11 +61,12 @@ namespace Enigma::WorldMap
         typedef std::list<std::weak_ptr<SceneGraph::LazyNode>> QuadRootList;
         QuadRootList m_listQuadRoot;
 
-        Frameworks::CommandSubscriberPtr m_doCreatingWorldMap;
-        Frameworks::CommandSubscriberPtr m_doDeserializingWorldMap;
-        Frameworks::CommandSubscriberPtr m_doAttachingTerrain;
+        Frameworks::CommandSubscriberPtr m_createWorldMap;
+        Frameworks::CommandSubscriberPtr m_deserializeWorldMap;
+        Frameworks::CommandSubscriberPtr m_attachTerrain;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;  // check world map is created
         Frameworks::EventSubscriberPtr m_onLazyNodeInstanced;
+        Frameworks::QuerySubscriberPtr m_queryFittingNode;
     };
 }
 

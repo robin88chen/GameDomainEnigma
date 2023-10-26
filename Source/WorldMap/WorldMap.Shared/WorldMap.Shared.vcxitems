@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapService.h" />
   </ItemGroup>
   <ItemGroup>

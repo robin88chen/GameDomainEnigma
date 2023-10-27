@@ -310,26 +310,26 @@ void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateNewTerrain, ICommand>(c);
     if (!cmd) return;
-    m_terrainPathId = cmd->GetAssetPathId();
+    m_terrainPathId = cmd->getAssetPathId();
 
     TerrainPrimitiveDto terrain_dto;
     terrain_dto.Name() = cmd->getName();
-    terrain_dto.TheGeometry() = cmd->GetGeometryDto().ToGenericDto();
+    terrain_dto.TheGeometry() = cmd->getGeometryDto().ToGenericDto();
     terrain_dto.VisualTechniqueSelection() = "Default";
     EffectMaterialDtoHelper mat_dto("TerrainMesh");
     mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
     EffectTextureMapDtoHelper tex_dto;
     for (unsigned i = 0; i < TextureLayerNum; i++)
     {
-        if (cmd->GetLayerTextures()[i].empty()) continue;
-        tex_dto.TextureMapping(cmd->GetLayerTextures()[i], "APK_PATH", cmd->GetLayerTextures()[i], std::nullopt, LayerSemantics[i]);
+        if (cmd->getLayerTextures()[i].empty()) continue;
+        tex_dto.TextureMapping(cmd->getLayerTextures()[i], "APK_PATH", cmd->getLayerTextures()[i], std::nullopt, LayerSemantics[i]);
     }
     auto splat_texture_name = cmd->getName() + SPLAT_TEXTURE_POSTFIX;
     tex_dto.TextureMapping(Enigma::MathLib::Dimension<unsigned>{512, 512}, 1, splat_texture_name, std::nullopt, ALPHA_TEXTURE_SEMANTIC);
     terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
     terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
-    terrain_dto.GeometryName() = cmd->GetGeometryDto().Name();
-    Matrix4 mxLocal = Matrix4::MakeTranslateTransform(cmd->GetLocalPos());
+    terrain_dto.GeometryName() = cmd->getGeometryDto().Name();
+    Matrix4 mxLocal = Matrix4::MakeTranslateTransform(cmd->getLocalPos());
     TerrainPawnDtoHelper pawn_dto(cmd->getName());
     pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto).LocalTransform(mxLocal);
 
@@ -342,7 +342,7 @@ void TerrainEditService::DoMovingUpTerrainVertex(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<LevelEditor::MoveUpTerrainVertex, ICommand>(c);
     if (!cmd) return;
-    MoveUpTerrainVertexByBrush(cmd->GetBrushPos(), cmd->GetBrushSize(), cmd->GetBrushHeight());
+    MoveUpTerrainVertexByBrush(cmd->getBrushPos(), cmd->getBrushSize(), cmd->getBrushHeight());
 }
 
 void TerrainEditService::DoPaintingTerrainLayer(const ICommandPtr& c)
@@ -350,7 +350,7 @@ void TerrainEditService::DoPaintingTerrainLayer(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<PaintTerrainTextureLayer, ICommand>(c);
     if (!cmd) return;
-    PaintTerrainLayerByBrush(cmd->GetBrushPos(), cmd->GetBrushSize(), cmd->GetTextureLayerIndex(), cmd->GetBrushDensity());
+    PaintTerrainLayerByBrush(cmd->getBrushPos(), cmd->getBrushSize(), cmd->getTextureLayerIndex(), cmd->getBrushDensity());
 }
 
 void TerrainEditService::DoCompletingEditOperation(const ICommandPtr& c)

@@ -87,7 +87,7 @@ void MainForm::InitSubPanels()
     get_place().collocate();
 
     if (m_sceneGraphPanel) m_sceneGraphPanel->SubscribeHandlers();
-    if (m_outputPanel) m_outputPanel->SubscribeHandlers();
+    if (m_outputPanel) m_outputPanel->subscribeHandlers();
     if (m_renderPanel)
     {
         m_renderPanel->InitInputHandler(m_appDelegate->GetInputHandler());
@@ -134,7 +134,7 @@ void MainForm::FinalizeGraphics()
         m_sceneGraphPanel->Finalize();
         m_sceneGraphPanel->UnsubscribeHandlers();
     }
-    if (m_outputPanel) m_outputPanel->UnsubscribeHandlers();
+    if (m_outputPanel) m_outputPanel->unsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->Finalize();
 }
 
@@ -186,7 +186,7 @@ void MainForm::InitPanels()
     m_tabbar->append("Terrain", *m_terrainToolPanel);
 
     m_outputPanel = menew OutputPanel{ *this };
-    m_outputPanel->Initialize();
+    m_outputPanel->initialize();
     get_place()["outputpanel"] << *m_outputPanel;
 }
 

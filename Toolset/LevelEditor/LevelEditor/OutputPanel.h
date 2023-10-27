@@ -21,19 +21,19 @@ namespace LevelEditor
         OutputPanel(const nana::window& wd);
         virtual ~OutputPanel();
 
-        void Initialize();
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void initialize();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
-        void AddMessage(const std::string& msg);
+        void addMessage(const std::string& msg);
 
     private:
-        void DoOutputMessage(const Enigma::Frameworks::ICommandPtr& c);
+        void outputMessage(const Enigma::Frameworks::ICommandPtr& c);
 
     private:
         nana::place* m_place;
         nana::textbox* m_outputText;
-        Enigma::Frameworks::CommandSubscriberPtr m_doOutputMessage;
+        Enigma::Frameworks::CommandSubscriberPtr m_outputMessage;
     };
 }
 

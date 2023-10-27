@@ -163,5 +163,5 @@ void SceneGraphPanel::DoRefreshingSceneGraphTree(const Enigma::Frameworks::IComm
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<RefreshSceneGraph, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
-    RefreshSceneGraphTree(cmd->GetFlattenedSpatial());
+    RefreshSceneGraphTree(cmd->getFlattenedSpatial());
 }

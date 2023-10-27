@@ -18,31 +18,29 @@ namespace Enigma::Prefabs
     public:
         PawnPrefabDto();
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
-        [[nodiscard]] bool IsTopLevel() const { return m_isTopLevel; }
-        bool& IsTopLevel() { return m_isTopLevel; }
-        const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
-        [[nodiscard]] MathLib::Matrix4 LocalTransform() const { return m_localTransform; }
-        MathLib::Matrix4& LocalTransform() { return m_localTransform; }
-        [[nodiscard]] MathLib::Matrix4 WorldTransform() const { return m_worldTransform; }
-        MathLib::Matrix4& WorldTransform() { return m_worldTransform; }
-        [[nodiscard]] unsigned int GraphDepth() const { return m_graphDepth; }
-        unsigned int& GraphDepth() { return m_graphDepth; }
-        [[nodiscard]] Engine::GenericDto WorldBound() const { return m_worldBound; }
-        Engine::GenericDto& WorldBound() { return m_worldBound; }
-        [[nodiscard]] unsigned int CullingMode() const { return m_cullingMode; }
-        unsigned int& CullingMode() { return m_cullingMode; }
-        [[nodiscard]] unsigned int SpatialFlag() const { return m_spatialFlag; }
-        unsigned int& SpatialFlag() { return m_spatialFlag; }
-        [[nodiscard]] unsigned int NotifyFlag() const { return m_notifyFlag; }
-        unsigned int& NotifyFlag() { return m_notifyFlag; }
-        [[nodiscard]] const std::string& ParentName() const { return m_parentName; }
-        std::string& ParentName() { return m_parentName; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] bool isTopLevel() const { return m_isTopLevel; }
+        bool& isTopLevel() { return m_isTopLevel; }
+        const std::string& name() const { return m_name; }
+        std::string& name() { return m_name; }
+        [[nodiscard]] MathLib::Matrix4 localTransform() const { return m_localTransform; }
+        MathLib::Matrix4& localTransform() { return m_localTransform; }
+        [[nodiscard]] MathLib::Matrix4 worldTransform() const { return m_worldTransform; }
+        MathLib::Matrix4& worldTransform() { return m_worldTransform; }
+        [[nodiscard]] unsigned int graphDepth() const { return m_graphDepth; }
+        unsigned int& graphDepth() { return m_graphDepth; }
+        [[nodiscard]] Engine::GenericDto worldBound() const { return m_worldBound; }
+        Engine::GenericDto& worldBound() { return m_worldBound; }
+        [[nodiscard]] unsigned int cullingMode() const { return m_cullingMode; }
+        unsigned int& cullingMode() { return m_cullingMode; }
+        [[nodiscard]] unsigned int spatialFlag() const { return m_spatialFlag; }
+        unsigned int& spatialFlag() { return m_spatialFlag; }
+        [[nodiscard]] unsigned int notifyFlag() const { return m_notifyFlag; }
+        unsigned int& notifyFlag() { return m_notifyFlag; }
 
-        static PawnPrefabDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static PawnPrefabDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -55,7 +53,6 @@ namespace Enigma::Prefabs
         unsigned int m_cullingMode;
         unsigned int m_spatialFlag;
         unsigned int m_notifyFlag;
-        std::string m_parentName;
     };
 }
 

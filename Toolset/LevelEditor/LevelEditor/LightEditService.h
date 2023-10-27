@@ -24,8 +24,8 @@ namespace LevelEditor
         LightEditService& operator=(LightEditService&&) = delete;
         virtual ~LightEditService() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
         void DoCreatingEnvironmentLight(const Enigma::Frameworks::ICommandPtr& c);

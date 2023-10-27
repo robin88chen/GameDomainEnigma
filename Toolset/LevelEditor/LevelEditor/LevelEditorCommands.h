@@ -48,7 +48,7 @@ namespace LevelEditor
             const Enigma::MathLib::Vector3& local_pos, const std::string& asset_path_id)
             : m_name(name), m_geometryDto(geometry_dto), m_layerTextures(layer_textures), m_localPos(local_pos), m_assetPathId(asset_path_id) {}
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const Enigma::Terrain::TerrainGeometryDto& GetGeometryDto() const { return m_geometryDto; }
         const std::array<std::string, TerrainEditService::TextureLayerNum>& GetLayerTextures() const { return m_layerTextures; }
         const Enigma::MathLib::Vector3& GetLocalPos() const { return m_localPos; }

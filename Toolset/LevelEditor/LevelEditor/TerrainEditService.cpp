@@ -58,61 +58,61 @@ TerrainEditService::~TerrainEditService()
 
 }
 
-ServiceResult TerrainEditService::OnInit()
+ServiceResult TerrainEditService::onInit()
 {
     m_doCreatingNewTerrain = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingNewTerrain(c); });
-    CommandBus::Subscribe(typeid(CreateNewTerrain), m_doCreatingNewTerrain);
+    CommandBus::subscribe(typeid(CreateNewTerrain), m_doCreatingNewTerrain);
     m_doMovingUpTerrainVertex = std::make_shared<CommandSubscriber>([=](auto c) { DoMovingUpTerrainVertex(c); });
-    CommandBus::Subscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_doMovingUpTerrainVertex);
+    CommandBus::subscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_doMovingUpTerrainVertex);
     m_doPaintingTerrainLayer = std::make_shared<CommandSubscriber>([=](auto c) { DoPaintingTerrainLayer(c); });
-    CommandBus::Subscribe(typeid(PaintTerrainTextureLayer), m_doPaintingTerrainLayer);
+    CommandBus::subscribe(typeid(PaintTerrainTextureLayer), m_doPaintingTerrainLayer);
     m_doSavingSplatTexture = std::make_shared<CommandSubscriber>([=](auto c) { DoSavingSplatTexture(c); });
-    CommandBus::Subscribe(typeid(SaveTerrainSplatTexture), m_doSavingSplatTexture);
+    CommandBus::subscribe(typeid(SaveTerrainSplatTexture), m_doSavingSplatTexture);
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onTerrainPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
     m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
-    EventPublisher::Subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 
     m_onSplatTextureSaved = std::make_shared<EventSubscriber>([=](auto e) { OnSplatTextureSaved(e); });
-    EventPublisher::Subscribe(typeid(TextureSaved), m_onSplatTextureSaved);
+    EventPublisher::subscribe(typeid(TextureSaved), m_onSplatTextureSaved);
     m_onSaveSplatTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { OnSaveSplatTextureFailed(e); });
-    EventPublisher::Subscribe(typeid(SaveTextureFailed), m_onSaveSplatTextureFailed);
+    EventPublisher::subscribe(typeid(SaveTextureFailed), m_onSaveSplatTextureFailed);
     m_onTextureImageRetrieved = std::make_shared<EventSubscriber>([=](auto e) { OnTextureImageRetrieved(e); });
-    EventPublisher::Subscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
+    EventPublisher::subscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
     m_onRetrieveTextureImageFailed = std::make_shared<EventSubscriber>([=](auto e) { OnRetrieveTextureImageFailed(e); });
-    EventPublisher::Subscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
+    EventPublisher::subscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
 
     return ServiceResult::Complete;
 }
 
-ServiceResult TerrainEditService::OnTerm()
+ServiceResult TerrainEditService::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(CreateNewTerrain), m_doCreatingNewTerrain);
+    CommandBus::unsubscribe(typeid(CreateNewTerrain), m_doCreatingNewTerrain);
     m_doCreatingNewTerrain = nullptr;
-    CommandBus::Unsubscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_doMovingUpTerrainVertex);
+    CommandBus::unsubscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_doMovingUpTerrainVertex);
     m_doMovingUpTerrainVertex = nullptr;
-    CommandBus::Unsubscribe(typeid(PaintTerrainTextureLayer), m_doPaintingTerrainLayer);
+    CommandBus::unsubscribe(typeid(PaintTerrainTextureLayer), m_doPaintingTerrainLayer);
     m_doPaintingTerrainLayer = nullptr;
-    CommandBus::Unsubscribe(typeid(SaveTerrainSplatTexture), m_doSavingSplatTexture);
+    CommandBus::unsubscribe(typeid(SaveTerrainSplatTexture), m_doSavingSplatTexture);
     m_doSavingSplatTexture = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
     m_onTerrainPrimitiveBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(TextureSaved), m_onSplatTextureSaved);
+    EventPublisher::unsubscribe(typeid(TextureSaved), m_onSplatTextureSaved);
     m_onSplatTextureSaved = nullptr;
-    EventPublisher::Unsubscribe(typeid(SaveTextureFailed), m_onSaveSplatTextureFailed);
+    EventPublisher::unsubscribe(typeid(SaveTextureFailed), m_onSaveSplatTextureFailed);
     m_onSaveSplatTextureFailed = nullptr;
-    EventPublisher::Unsubscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
+    EventPublisher::unsubscribe(typeid(TextureImageRetrieved), m_onTextureImageRetrieved);
     m_onTextureImageRetrieved = nullptr;
-    EventPublisher::Unsubscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
+    EventPublisher::unsubscribe(typeid(RetrieveTextureImageFailed), m_onRetrieveTextureImageFailed);
     m_onRetrieveTextureImageFailed = nullptr;
 
     return ServiceResult::Complete;
@@ -298,7 +298,7 @@ void TerrainEditService::CommitAlphaTexelUpdated()
         std::memcpy(&m_dirtyAlphaTexels[dest_idx], &m_alphaTexels[src_idx],
             width * TextureLayerNum);
     }
-    CommandBus::Post(std::make_shared<UpdateTextureImage>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_dirtyAlphaRect, m_dirtyAlphaTexels));
+    CommandBus::post(std::make_shared<UpdateTextureImage>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->getName(), m_dirtyAlphaRect, m_dirtyAlphaTexels));
     m_dirtyAlphaRect.Left() = std::numeric_limits<int>::max();
     m_dirtyAlphaRect.Right() = std::numeric_limits<int>::min();
     m_dirtyAlphaRect.Top() = std::numeric_limits<int>::max();
@@ -313,7 +313,7 @@ void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)
     m_terrainPathId = cmd->GetAssetPathId();
 
     TerrainPrimitiveDto terrain_dto;
-    terrain_dto.Name() = cmd->GetName();
+    terrain_dto.Name() = cmd->getName();
     terrain_dto.TheGeometry() = cmd->GetGeometryDto().ToGenericDto();
     terrain_dto.VisualTechniqueSelection() = "Default";
     EffectMaterialDtoHelper mat_dto("TerrainMesh");
@@ -324,17 +324,17 @@ void TerrainEditService::DoCreatingNewTerrain(const ICommandPtr& c)
         if (cmd->GetLayerTextures()[i].empty()) continue;
         tex_dto.TextureMapping(cmd->GetLayerTextures()[i], "APK_PATH", cmd->GetLayerTextures()[i], std::nullopt, LayerSemantics[i]);
     }
-    auto splat_texture_name = cmd->GetName() + SPLAT_TEXTURE_POSTFIX;
+    auto splat_texture_name = cmd->getName() + SPLAT_TEXTURE_POSTFIX;
     tex_dto.TextureMapping(Enigma::MathLib::Dimension<unsigned>{512, 512}, 1, splat_texture_name, std::nullopt, ALPHA_TEXTURE_SEMANTIC);
     terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
     terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
     terrain_dto.GeometryName() = cmd->GetGeometryDto().Name();
     Matrix4 mxLocal = Matrix4::MakeTranslateTransform(cmd->GetLocalPos());
-    TerrainPawnDtoHelper pawn_dto(cmd->GetName());
+    TerrainPawnDtoHelper pawn_dto(cmd->getName());
     pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto).LocalTransform(mxLocal);
 
     std::vector<GenericDto> dtos = { pawn_dto.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(NEW_TERRAIN_TAG, dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(NEW_TERRAIN_TAG, dtos));
 }
 
 void TerrainEditService::DoMovingUpTerrainVertex(const ICommandPtr& c)
@@ -365,21 +365,21 @@ void TerrainEditService::DoSavingSplatTexture(const ICommandPtr& c)
     if (!cmd) return;
     if (m_savingSplatTextureFile)
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : previous saving not complete yet"));
+        CommandBus::post(std::make_shared<OutputMessage>("Save Splat Texture : previous saving not complete yet"));
         return;
     }
     if (m_pickedSplatTexture.expired())
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : No splat texture selected"));
+        CommandBus::post(std::make_shared<OutputMessage>("Save Splat Texture : No splat texture selected"));
         return;
     }
     if (m_pickedTerrain.expired())
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
+        CommandBus::post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
     m_savingSplatTextureFile = FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), Write | OpenAlways | Binary);
-    CommandBus::Post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_savingSplatTextureFile));
+    CommandBus::post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->getName(), m_savingSplatTextureFile));
 }
 
 void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)
@@ -391,7 +391,7 @@ void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)
     auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!terrain) return;
     terrain->TheFactoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", m_terrainPathId);
-    CommandBus::Post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
+    CommandBus::post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
 }
 
 void TerrainEditService::OnTerrainPrimitiveBuilt(const IEventPtr& e)
@@ -403,10 +403,10 @@ void TerrainEditService::OnTerrainPrimitiveBuilt(const IEventPtr& e)
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<TerrainPrimitive>(terrain->GetPrimitive());
     if (!terrain_prim) return;
-    terrain_prim->TheFactoryDesc().ClaimAsInstanced(terrain_prim->GetName() + ".terrain", m_terrainPathId);
+    terrain_prim->TheFactoryDesc().ClaimAsInstanced(terrain_prim->getName() + ".terrain", m_terrainPathId);
     auto splat_texture = terrain_prim->FindTextureBySemantic(ALPHA_TEXTURE_SEMANTIC);
     if (!splat_texture) return;
-    std::string splat_texture_resouce_name = splat_texture->GetName();
+    std::string splat_texture_resouce_name = splat_texture->getName();
     splat_texture->TheFactoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
     m_splatTextures.insert_or_assign(terrain->GetSpatialName(), splat_texture);
 }
@@ -426,7 +426,7 @@ void TerrainEditService::OnPickedSpatialChanged(const IEventPtr& e)
     }
     if (m_pickedSplatTexture.expired()) return;
     m_alphaRect = { 0, 0, static_cast<int>(m_pickedSplatTexture.lock()->GetDimension().m_width), static_cast<int>(m_pickedSplatTexture.lock()->GetDimension().m_height) };
-    CommandBus::Post(std::make_shared<RetrieveTextureImage>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->GetName(), m_alphaRect));
+    CommandBus::post(std::make_shared<RetrieveTextureImage>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->getName(), m_alphaRect));
 }
 
 void TerrainEditService::OnTextureImageRetrieved(const IEventPtr& e)
@@ -435,7 +435,7 @@ void TerrainEditService::OnTextureImageRetrieved(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<TextureImageRetrieved, IEvent>(e);
     if (!ev) return;
     if (m_pickedSplatTexture.expired()) return;
-    if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
+    if (ev->getName() != m_pickedSplatTexture.lock()->getName()) return;
     m_alphaTexels = ev->GetImageBuffer();
 }
 
@@ -446,7 +446,7 @@ void TerrainEditService::OnRetrieveTextureImageFailed(const IEventPtr& e)
     if (!ev) return;
     if (ev->GetErrorCode())
     {
-        CommandBus::Post(std::make_shared<OutputMessage>(string_format("Retrieve splat texture %s image failed %s", ev->GetName().c_str(), ev->GetErrorCode().message().c_str())));
+        CommandBus::post(std::make_shared<OutputMessage>(string_format("Retrieve splat texture %s image failed %s", ev->getName().c_str(), ev->GetErrorCode().message().c_str())));
     }
 }
 
@@ -462,7 +462,7 @@ void TerrainEditService::OnSplatTextureSaved(const IEventPtr& e)
         m_savingSplatTextureFile = nullptr;
         return;
     }
-    if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
+    if (ev->getName() != m_pickedSplatTexture.lock()->getName()) return;
     FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
     m_savingSplatTextureFile = nullptr;
 }
@@ -479,8 +479,8 @@ void TerrainEditService::OnSaveSplatTextureFailed(const IEventPtr& e)
         m_savingSplatTextureFile = nullptr;
         return;
     }
-    if (ev->GetName() != m_pickedSplatTexture.lock()->GetName()) return;
+    if (ev->getName() != m_pickedSplatTexture.lock()->getName()) return;
     FileSystem::Instance()->CloseFile(m_savingSplatTextureFile);
     m_savingSplatTextureFile = nullptr;
-    CommandBus::Post(std::make_shared<OutputMessage>(string_format("Save splat texture %s image failed %s", ev->GetName().c_str(), ev->GetErrorCode().message().c_str())));
+    CommandBus::post(std::make_shared<OutputMessage>(string_format("Save splat texture %s image failed %s", ev->getName().c_str(), ev->GetErrorCode().message().c_str())));
 }

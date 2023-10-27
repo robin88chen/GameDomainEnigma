@@ -34,9 +34,6 @@
     <Filter Include="Renderable Primitives\Skin Mesh">
       <UniqueIdentifier>{e291082e-92ce-4840-90d3-fd21d298b2f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Communicatios">
-      <UniqueIdentifier>{3d0986fe-5f53-41e3-9304-5b82b093f4fa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{5d4c5d57-c9e4-49a9-b825-7cd36a651139}</UniqueIdentifier>
     </Filter>
@@ -46,14 +43,14 @@
     <Filter Include="Renderable Primitives\Intersection">
       <UniqueIdentifier>{bac101d5-00e8-4b9f-894b-14e1534632c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{13c7f2bd-b156-43de-9468-46a028f1bef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{5dec1543-6290-4686-8ba9-62f5820b1ccb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
-      <Filter>Communicatios</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
-      <Filter>Communicatios</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -90,12 +87,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
       <Filter>Renderable Primitives\Builders</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveResponses.h">
-      <Filter>Communicatios</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveRequests.h">
-      <Filter>Communicatios</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h">
       <Filter>Renderable Primitives\Model</Filter>
     </ClInclude>
@@ -131,6 +122,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h">
       <Filter>Renderable Primitives\Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

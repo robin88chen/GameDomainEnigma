@@ -19,8 +19,8 @@
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/ResponseBus.h"
 #include "Frameworks/RequestBus.h"
-#include "Renderer/RenderablePrimitiveRequests.h"
-#include "Renderer/RenderablePrimitiveResponses.h"
+#include "Renderer/RenderableCommands.h"
+#include "Renderer/RenderableEvents.h"
 #include "Renderer/SkinMeshPrimitive.h"
 
 using namespace Enigma::SceneGraph;
@@ -67,8 +67,10 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
     CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName(),
         [=](auto dto) { return new Portal(dto); }));
 
-    m_onBuildPrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto r) { this->OnBuildPrimitiveResponse(r); });
-    ResponseBus::subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
+    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
+    EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
+    EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
 
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
@@ -94,8 +96,10 @@ SceneGraphBuilder::~SceneGraphBuilder()
     m_doBuildingSceneGraph = nullptr;
     m_doInPlaceBuildingSceneGraph = nullptr;
 
-    ResponseBus::unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildPrimitiveResponse);
-    m_onBuildPrimitiveResponse = nullptr;
+    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    m_onPrimitiveBuilt = nullptr;
+    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    m_onBuildPrimitiveFailed = nullptr;
 
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName()));
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName()));
@@ -352,35 +356,44 @@ void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, co
     assert(pawn);
     if (!primitive_policy) return;
     std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto request = std::make_shared<RequestBuildRenderablePrimitive>(primitive_policy);
-    m_buildingPawnPrimitives.insert({ request->getRuid(), pawn->GetSpatialName() });
-    RequestBus::post(request);
+    auto cmd = std::make_shared<BuildRenderablePrimitive>(primitive_policy);
+    m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->GetSpatialName() });
+    CommandBus::post(cmd);
 }
 
-void SceneGraphBuilder::OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r)
+void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
-    if (!r) return;
-    auto resp = std::dynamic_pointer_cast<BuildRenderablePrimitiveResponse, IResponse>(r);
-    if (!resp) return;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt>(e);
+    if (!ev) return;
     if (m_buildingPawnPrimitives.empty()) return;
     std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(resp->getRequestRuid());
+    auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
     if (it == m_buildingPawnPrimitives.end()) return;
-    if (resp->GetErrorCode())
+    if (auto pawn = m_host->QueryPawn(it->second))
+    {
+        pawn->SetPrimitive(ev->getPrimitive());
+        EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
+    }
+    m_buildingPawnPrimitives.erase(it);
+}
+
+void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed>(e);
+    if (!ev) return;
+    if (m_buildingPawnPrimitives.empty()) return;
+    std::lock_guard locker{ m_buildingPrimitiveLock };
+    auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
+    if (it == m_buildingPawnPrimitives.end()) return;
+    if (ev->errorCode())
     {
         Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
-            resp->getName().c_str(), resp->GetErrorCode().message().c_str());
+            ev->getName().c_str(), ev->errorCode().message().c_str());
         if (auto pawn = m_host->QueryPawn(it->second))
         {
-            EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, resp->GetErrorCode()));
-        }
-    }
-    else
-    {
-        if (auto pawn = m_host->QueryPawn(it->second))
-        {
-            pawn->SetPrimitive(resp->GetPrimitive());
-            EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
+            EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ev->errorCode()));
         }
     }
     m_buildingPawnPrimitives.erase(it);

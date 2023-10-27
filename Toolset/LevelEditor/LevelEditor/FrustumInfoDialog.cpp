@@ -36,7 +36,7 @@ FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& came
 
     RegisterHandlers();
 
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_name));
+    Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_name));
 }
 
 FrustumInfoDialog::~FrustumInfoDialog()
@@ -56,16 +56,16 @@ FrustumInfoDialog::~FrustumInfoDialog()
 void FrustumInfoDialog::RegisterHandlers()
 {
     m_onReplyCameraQuery = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
-    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
+    Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
     m_onQueryCameraFailed = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
-    Enigma::Frameworks::EventPublisher::Subscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
+    Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
 }
 
 void FrustumInfoDialog::UnregisterHandlers()
 {
-    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
+    Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
     m_onReplyCameraQuery = nullptr;
-    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
+    Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
     m_onQueryCameraFailed = nullptr;
 }
 
@@ -85,7 +85,7 @@ void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
         }
         else
         {
-            Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid fov value."));
+            Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid fov value."));
         }
     }
     float near_plane = 0.0f;
@@ -96,7 +96,7 @@ void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
     }
     if (near_plane <= 0.0f)
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid near plane value."));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid near plane value."));
         return;
     }
     if (!m_farPlaneInputBox->caption().empty())
@@ -105,7 +105,7 @@ void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
     }
     if (far_plane <= 0.0f)
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid far plane value."));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid far plane value."));
         return;
     }
     if (near_plane < far_plane)
@@ -115,7 +115,7 @@ void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
     }
     else
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Invalid near/far plane value."));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid near/far plane value."));
     }
     close();
 }
@@ -140,6 +140,6 @@ void FrustumInfoDialog::OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& 
     }
     else if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::QueryCameraFailed>(e))
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("QueryCameraFailed : " + ev->GetError().message()));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("QueryCameraFailed : " + ev->GetError().message()));
     }
 }

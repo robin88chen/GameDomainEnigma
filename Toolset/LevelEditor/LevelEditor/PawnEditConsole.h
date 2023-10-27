@@ -26,8 +26,8 @@ namespace LevelEditor
         PawnEditConsole& operator=(PawnEditConsole&&) = delete;
         virtual ~PawnEditConsole() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
         void InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& filename_at_path);
         void SelectCandidatePawn(const std::string& pawn_name);

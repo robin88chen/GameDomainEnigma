@@ -29,8 +29,8 @@ namespace LevelEditor
         EditorSceneConsole(EditorSceneConsole&&) = delete;
         EditorSceneConsole& operator=(EditorSceneConsole&&) = delete;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
         void OnGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);

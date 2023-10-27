@@ -28,45 +28,45 @@ EditorSceneConsole::~EditorSceneConsole()
 {
 }
 
-Enigma::Frameworks::ServiceResult EditorSceneConsole::OnInit()
+Enigma::Frameworks::ServiceResult EditorSceneConsole::onInit()
 {
     m_onGameCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { OnGameCameraCreated(e); });
-    EventPublisher::Subscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
+    EventPublisher::subscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
     m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { OnSceneRootCreated(e); });
-    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onTargetViewportChanged = std::make_shared<EventSubscriber>([=](auto e) { OnTargetViewportChanged(e); });
-    EventPublisher::Subscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
+    EventPublisher::subscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onMouseMoved = std::make_shared<EventSubscriber>([=](auto e) { OnMouseMoved(e); });
-    EventPublisher::Subscribe(typeid(MouseMoved), m_onMouseMoved);
+    EventPublisher::subscribe(typeid(MouseMoved), m_onMouseMoved);
     m_onMouseLeftButtonDown = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftButtonDown(e); });
-    EventPublisher::Subscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
+    EventPublisher::subscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
     m_onMouseLeftButtonUp = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftButtonUp(e); });
-    EventPublisher::Subscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
+    EventPublisher::subscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
     m_onMouseLeftDragged = std::make_shared<EventSubscriber>([=](auto e) { OnMouseLeftDragged(e); });
-    EventPublisher::Subscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
+    EventPublisher::subscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
     m_onKeyboardAsyncKeyPressed = std::make_shared<EventSubscriber>([=](auto e) { OnKeyboardAsyncKeyPressed(e); });
-    EventPublisher::Subscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
+    EventPublisher::subscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
 
     return ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult EditorSceneConsole::OnTerm()
+Enigma::Frameworks::ServiceResult EditorSceneConsole::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
+    EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
     m_onGameCameraCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onSceneRootCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
+    EventPublisher::unsubscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onTargetViewportChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(MouseMoved), m_onMouseMoved);
+    EventPublisher::unsubscribe(typeid(MouseMoved), m_onMouseMoved);
     m_onMouseMoved = nullptr;
-    EventPublisher::Unsubscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
+    EventPublisher::unsubscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
     m_onMouseLeftButtonDown = nullptr;
-    EventPublisher::Unsubscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
+    EventPublisher::unsubscribe(typeid(MouseLeftButtonUp), m_onMouseLeftButtonUp);
     m_onMouseLeftButtonUp = nullptr;
-    EventPublisher::Unsubscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
+    EventPublisher::unsubscribe(typeid(MouseLeftButtonDrag), m_onMouseLeftDragged);
     m_onMouseLeftDragged = nullptr;
-    EventPublisher::Unsubscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
+    EventPublisher::unsubscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
     m_onKeyboardAsyncKeyPressed = nullptr;
 
     return ServiceResult::Complete;
@@ -105,7 +105,7 @@ void EditorSceneConsole::OnMouseMoved(const Enigma::Frameworks::IEventPtr& e)
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -119,7 +119,7 @@ void EditorSceneConsole::OnMouseLeftButtonDown(const Enigma::Frameworks::IEventP
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::post(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -133,7 +133,7 @@ void EditorSceneConsole::OnMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::post(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -147,7 +147,7 @@ void EditorSceneConsole::OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr&
     auto [pickedPawn, picked_pos] = PickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::Post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -158,19 +158,19 @@ void EditorSceneConsole::OnKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEv
     if (!ev) return;
     if (ev->m_param.m_virtualKey == 'A')
     {
-        CommandBus::Post(std::make_shared<MoveCamera>(0.0f, -0.1f));
+        CommandBus::post(std::make_shared<MoveCamera>(0.0f, -0.1f));
     }
     else if (ev->m_param.m_virtualKey == 'D')
     {
-        CommandBus::Post(std::make_shared<MoveCamera>(0.0f, 0.1f));
+        CommandBus::post(std::make_shared<MoveCamera>(0.0f, 0.1f));
     }
     else if (ev->m_param.m_virtualKey == 'S')
     {
-        CommandBus::Post(std::make_shared<MoveCamera>(-0.1f, 0.0f));
+        CommandBus::post(std::make_shared<MoveCamera>(-0.1f, 0.0f));
     }
     else if (ev->m_param.m_virtualKey == 'W')
     {
-        CommandBus::Post(std::make_shared<MoveCamera>(0.1f, 0.0f));
+        CommandBus::post(std::make_shared<MoveCamera>(0.1f, 0.0f));
     }
 }
 

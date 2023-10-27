@@ -32,11 +32,11 @@ namespace LevelEditor
         PawnEditService& operator=(PawnEditService&&) = delete;
         virtual ~PawnEditService() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTick() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTick() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
-        error putCandidatePawn(const std::string& name, const std::string& full_path, const std::string& parent_name, const Enigma::MathLib::Vector3& position);
+        error putCandidatePawn(const std::string& name, const std::string& full_path, const Enigma::MathLib::Vector3& position);
 
     private:
         void onPrefabLoaded(const Enigma::Frameworks::IEventPtr& e);
@@ -54,11 +54,11 @@ namespace LevelEditor
         {
             std::string m_name;
             std::string m_full_path;
-            std::string m_parent_name;
             Enigma::MathLib::Vector3 m_position;
         };
         std::deque<LoadingPawnMeta> m_loadingPawns;
         std::optional<LoadingPawnMeta> m_currentLoadingPawn;
+        std::shared_ptr<Enigma::SceneGraph::Pawn> m_loadedPawn;
     };
 }
 

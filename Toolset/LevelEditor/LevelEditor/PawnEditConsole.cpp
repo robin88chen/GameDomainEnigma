@@ -23,25 +23,25 @@ PawnEditConsole::~PawnEditConsole()
     m_pawnFilePaths.clear();
 }
 
-ServiceResult PawnEditConsole::OnInit()
+ServiceResult PawnEditConsole::onInit()
 {
     m_onEditorModeChanged = std::make_shared<EventSubscriber>([=](auto e) { OnEditorModeChanged(e); });
-    EventPublisher::Subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
+    EventPublisher::subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onSceneCursorPressed = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorPressed(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
+    EventPublisher::subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
     m_onSceneCursorReleased = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorReleased(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
+    EventPublisher::subscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
 
     return ServiceResult::Complete;
 }
 
-ServiceResult PawnEditConsole::OnTerm()
+ServiceResult PawnEditConsole::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
+    EventPublisher::unsubscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onEditorModeChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
+    EventPublisher::unsubscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
     m_onSceneCursorPressed = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
+    EventPublisher::unsubscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
     m_onSceneCursorReleased = nullptr;
 
     return ServiceResult::Complete;
@@ -68,7 +68,7 @@ void PawnEditConsole::OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e
     m_isEnabled = ev->GetCurrMode() == EditorMode::Pawn;
     if (m_isEnabled)
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
+        CommandBus::post(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
     }
 }
 
@@ -98,6 +98,6 @@ void PawnEditConsole::PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos
     if (m_selectedCandidatePawnName.empty()) return;
     auto it = m_pawnFilePaths.find(m_selectedCandidatePawnName);
     if (it == m_pawnFilePaths.end()) return;
-    CommandBus::Post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
+    CommandBus::post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
     if (!m_editService.expired()) m_editService.lock()->putCandidatePawn(m_selectedCandidatePawnName, it->second, pos);
 }

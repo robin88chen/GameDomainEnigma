@@ -46,11 +46,11 @@ void OutputPanel::DoOutputMessage(const Enigma::Frameworks::ICommandPtr& c)
 void OutputPanel::SubscribeHandlers()
 {
     m_doOutputMessage = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](auto c) { DoOutputMessage(c); });
-    Enigma::Frameworks::CommandBus::Subscribe(typeid(OutputMessage), m_doOutputMessage);
+    Enigma::Frameworks::CommandBus::subscribe(typeid(OutputMessage), m_doOutputMessage);
 }
 
 void OutputPanel::UnsubscribeHandlers()
 {
-    Enigma::Frameworks::CommandBus::Unsubscribe(typeid(OutputMessage), m_doOutputMessage);
+    Enigma::Frameworks::CommandBus::unsubscribe(typeid(OutputMessage), m_doOutputMessage);
     m_doOutputMessage = nullptr;
 }

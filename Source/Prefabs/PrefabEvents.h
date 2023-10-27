@@ -13,20 +13,22 @@
 
 namespace Enigma::Prefabs
 {
-    class PrefabLoaded : public Frameworks::IResponseEvent
+    class PawnPrefabLoaded : public Frameworks::IResponseEvent
     {
     public:
-        PrefabLoaded(const Frameworks::Ruid& request_ruid, const std::string& prefab_at_path) : IResponseEvent(request_ruid), m_prefabAtPath(prefab_at_path) {}
+        PawnPrefabLoaded(const Frameworks::Ruid& request_ruid, const std::string& prefab_at_path, const std::shared_ptr<SceneGraph::Pawn>& pawn) : IResponseEvent(request_ruid), m_prefabAtPath(prefab_at_path), m_pawn(pawn) {}
 
-        const std::string& GetPrefabAtPath() const { return m_prefabAtPath; }
+        const std::string& getPrefabAtPath() const { return m_prefabAtPath; }
+        const std::shared_ptr<SceneGraph::Pawn>& getPawn() const { return m_pawn; }
 
     private:
         std::string m_prefabAtPath;
+        std::shared_ptr<SceneGraph::Pawn> m_pawn;
     };
-    class LoadPrefabFailed : public Frameworks::IResponseEvent
+    class LoadPawnPrefabFailed : public Frameworks::IResponseEvent
     {
     public:
-        LoadPrefabFailed(const Frameworks::Ruid& request_ruid, std::error_code er) : IResponseEvent(request_ruid), m_error(er) {}
+        LoadPawnPrefabFailed(const Frameworks::Ruid& request_ruid, std::error_code er) : IResponseEvent(request_ruid), m_error(er) {}
 
         std::error_code GetError() const { return m_error; }
 

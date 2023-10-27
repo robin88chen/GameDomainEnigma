@@ -15,7 +15,6 @@ static std::string TOKEN_WORLD_BOUND = "WorldBound";
 static std::string TOKEN_CULLING_MODE = "CullingMode";
 static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
-static std::string TOKEN_PARENT_NAME = "ParentName";
 
 PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.getName())), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
@@ -25,24 +24,23 @@ PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.getNa
     m_worldBound = bv.SerializeDto().ToGenericDto();
 }
 
-PawnPrefabDto PawnPrefabDto::FromGenericDto(const Engine::GenericDto& dto)
+PawnPrefabDto PawnPrefabDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     PawnPrefabDto prefab_dto;
-    prefab_dto.TheFactoryDesc() = dto.GetRtti();
+    prefab_dto.factoryDesc() = dto.GetRtti();
     prefab_dto.m_isTopLevel = dto.IsTopLevel();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) prefab_dto.Name() = v.value();
-    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) prefab_dto.LocalTransform() = v.value();
-    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) prefab_dto.WorldTransform() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) prefab_dto.GraphDepth() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) prefab_dto.WorldBound() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE)) prefab_dto.CullingMode() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) prefab_dto.SpatialFlag() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) prefab_dto.NotifyFlag() = v.value();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_PARENT_NAME)) prefab_dto.ParentName() = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) prefab_dto.name() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) prefab_dto.localTransform() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) prefab_dto.worldTransform() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) prefab_dto.graphDepth() = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) prefab_dto.worldBound() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE)) prefab_dto.cullingMode() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) prefab_dto.spatialFlag() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) prefab_dto.notifyFlag() = v.value();
     return prefab_dto;
 }
 
-Enigma::Engine::GenericDto PawnPrefabDto::ToGenericDto() const
+Enigma::Engine::GenericDto PawnPrefabDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -55,6 +53,5 @@ Enigma::Engine::GenericDto PawnPrefabDto::ToGenericDto() const
     dto.AddOrUpdate(TOKEN_CULLING_MODE, m_cullingMode);
     dto.AddOrUpdate(TOKEN_SPATIAL_FLAG, m_spatialFlag);
     dto.AddOrUpdate(TOKEN_NOTIFY_FLAG, m_notifyFlag);
-    dto.AddOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     return dto;
 }

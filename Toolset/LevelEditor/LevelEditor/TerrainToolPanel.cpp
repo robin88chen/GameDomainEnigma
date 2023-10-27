@@ -124,12 +124,12 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
 void TerrainToolPanel::SubscribeHandlers()
 {
     m_onPickedSpatialChanged = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
-    Enigma::Frameworks::EventPublisher::Subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    Enigma::Frameworks::EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 }
 
 void TerrainToolPanel::UnsubscribeHandlers()
 {
-    Enigma::Frameworks::EventPublisher::Unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    Enigma::Frameworks::EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 }
 
@@ -141,7 +141,7 @@ void TerrainToolPanel::SetTerrainName(const std::string& name)
 void TerrainToolPanel::OnBrushSizeChanged(const nana::arg_spinbox& arg)
 {
     if (!m_brushSizeSpin) return;
-    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
+    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
 }
 
 void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
@@ -149,7 +149,7 @@ void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
     if ((m_brushHeight) && (!m_brushHeight->text().empty()))
     {
         auto height = static_cast<float>(m_brushHeight->to_double());
-        Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushHeightChanged>(height));
+        Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushHeightChanged>(height));
     }
 }
 
@@ -157,18 +157,18 @@ void TerrainToolPanel::OnLayerDensityChanged(const nana::arg_slider& arg)
 {
     if (!m_textureDensity) return;
     auto density = SlideValueToDensity(m_textureDensity->value());
-    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainBrushDensityChanged>(density));
+    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushDensityChanged>(density));
 }
 
 void TerrainToolPanel::OnTextureLayerButton(const nana::arg_click& arg, unsigned int index)
 {
     if (index >= m_textureLayerButtons.size()) return;
-    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainPaintingLayerChanged>(index));
+    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainPaintingLayerChanged>(index));
 }
 
 void TerrainToolPanel::OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
 {
-    Enigma::Frameworks::EventPublisher::Post(std::make_shared<TerrainEditToolSelected>(tool));
+    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainEditToolSelected>(tool));
 }
 
 unsigned int TerrainToolPanel::DensityToSlideValue(float density) const

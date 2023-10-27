@@ -137,11 +137,11 @@ void EditorAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 void EditorAppDelegate::InstallEngine()
 {
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
-    EventPublisher::Subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { OnSceneRootCreated(e); });
-    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { OnWorldMapCreated(e); });
-    EventPublisher::Subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
 
     assert(m_graphicMain);
 
@@ -174,28 +174,28 @@ void EditorAppDelegate::InstallEngine()
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('S');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('W');
-    m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
-    m_shadowMapService = m_graphicMain->GetSystemServiceAs<ShadowMapService>();
-    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<WorldEditService>(m_graphicMain->GetServiceManager(), m_graphicMain->GetSystemServiceAs<WorldMapService>()));
-    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<TerrainEditService>(m_graphicMain->GetServiceManager()));
-    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<LightEditService>(m_graphicMain->GetServiceManager()));
-    m_graphicMain->GetServiceManager()->RegisterSystemService(std::make_shared<PawnEditService>(m_graphicMain->GetServiceManager()));
+    m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
+    m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager(), m_graphicMain->getSystemServiceAs<WorldMapService>()));
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<TerrainEditService>(m_graphicMain->getServiceManager()));
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<LightEditService>(m_graphicMain->getServiceManager()));
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<PawnEditService>(m_graphicMain->getServiceManager()));
 }
 
 void EditorAppDelegate::ShutdownEngine()
 {
-    EventPublisher::Unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onSceneRootCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     m_onWorldMapCreated = nullptr;
 
     assert(m_graphicMain);
-    m_graphicMain->GetServiceManager()->ShutdownSystemService(TerrainEditService::TYPE_RTTI);
-    m_graphicMain->GetServiceManager()->ShutdownSystemService(WorldEditService::TYPE_RTTI);
-    m_graphicMain->GetServiceManager()->ShutdownSystemService(LightEditService::TYPE_RTTI);
-    m_graphicMain->GetServiceManager()->ShutdownSystemService(PawnEditService::TYPE_RTTI);
+    m_graphicMain->getServiceManager()->shutdownSystemService(TerrainEditService::TYPE_RTTI);
+    m_graphicMain->getServiceManager()->shutdownSystemService(WorldEditService::TYPE_RTTI);
+    m_graphicMain->getServiceManager()->shutdownSystemService(LightEditService::TYPE_RTTI);
+    m_graphicMain->getServiceManager()->shutdownSystemService(PawnEditService::TYPE_RTTI);
     m_graphicMain->ShutdownRenderEngine();
 }
 
@@ -239,7 +239,7 @@ void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)
     if (m_sceneRoot.expired()) return;
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->VisitBy(&traversal);
-    CommandBus::Post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
 void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -247,11 +247,11 @@ void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->GetSpatialName()));
+    CommandBus::post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->GetSpatialName()));
     m_sceneRoot = ev->GetSceneRoot();
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->VisitBy(&traversal);
-    CommandBus::Post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
 void EditorAppDelegate::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -259,9 +259,9 @@ void EditorAppDelegate::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<WorldMapCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<OutputMessage>("world map created : " + ev->GetName()));
+    CommandBus::post(std::make_shared<OutputMessage>("world map created : " + ev->getName()));
     if (!m_sceneRoot.expired())
     {
-        m_sceneRoot.lock()->AttachChild(ev->GetWorld(), Enigma::MathLib::Matrix4::IDENTITY);
+        m_sceneRoot.lock()->AttachChild(ev->getWorld(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }

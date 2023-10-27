@@ -28,11 +28,11 @@ SceneTraveler::TravelResult ScenePicker::TravelTo(const SpatialPtr& spatial)
     auto bv_test_res = intrBV.Test(nullptr);
     if (!bv_test_res.m_hasIntersect) return TravelResult::TestFail;  // no intersection
 
-    if ((m_filter & FilterFlag::Pick_Node) && (spatial->TypeInfo().IsDerived(Node::TYPE_RTTI)))
+    if ((m_filter & FilterFlag::Pick_Node) && (spatial->typeInfo().isDerived(Node::TYPE_RTTI)))
     {
         PushNodeRecord(spatial);
     }
-    else if ((m_filter & FilterFlag::Pick_Pawn) && (Enigma::Frameworks::Rtti::IsExactlyOrDerivedFrom(spatial->TypeInfo().GetName(), Enigma::Terrain::TerrainPawn::TYPE_RTTI.GetName())))
+    else if ((m_filter & FilterFlag::Pick_Pawn) && (Enigma::Frameworks::Rtti::isExactlyOrDerivedFrom(spatial->typeInfo().getName(), Enigma::Terrain::TerrainPawn::TYPE_RTTI.getName())))
     {
         bool test_result = PushPawnRecord(spatial);
         if (!test_result) return TravelResult::TestFail;

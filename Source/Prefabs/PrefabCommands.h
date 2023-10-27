@@ -18,7 +18,7 @@ namespace Enigma::Prefabs
     public:
         LoadPawnPrefab(const Engine::GenericDto& pawn_dto) : m_pawnDto(pawn_dto) {}
 
-        const Engine::GenericDto& GetPawnDto() const { return m_pawnDto; }
+        const Engine::GenericDto& getPawnDto() const { return m_pawnDto; }
     protected:
         Engine::GenericDto m_pawnDto;
     };

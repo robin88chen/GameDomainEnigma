@@ -28,16 +28,16 @@ WorldEditConsole::~WorldEditConsole()
 {
 }
 
-ServiceResult WorldEditConsole::OnInit()
+ServiceResult WorldEditConsole::onInit()
 {
     m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { OnWorldMapCreated(e); });
-    EventPublisher::Subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     return ServiceResult::Complete;
 }
 
-ServiceResult WorldEditConsole::OnTerm()
+ServiceResult WorldEditConsole::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     m_onWorldMapCreated = nullptr;
     return ServiceResult::Complete;
 }
@@ -77,14 +77,14 @@ void WorldEditConsole::CreateWorldMapFolder(const std::string& folder_name)
     const auto world_path = m_mapFileRootPath / folder_name;
     if (const bool is_created = create_directory(world_path); is_created)
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("[WorldEditorService] World map folder " + folder_name + " is created!"));
+        CommandBus::post(std::make_shared<OutputMessage>("[WorldEditorService] World map folder " + folder_name + " is created!"));
     }
 }
 
 void WorldEditConsole::SaveWorldMap()
 {
     assert(!m_worldEditService.expired());
-    CommandBus::Post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
+    CommandBus::post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
     auto [map_graph, node_graphs] = m_worldEditService.lock()->SerializeWorldMapAndNodeGraphs(m_worldMapPathId);
     if (!map_graph.empty())
     {
@@ -108,7 +108,7 @@ void WorldEditConsole::LoadWorldMap(const std::filesystem::path& map_filepath)
 {
     std::string path_string = FilePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
 
-    Enigma::Frameworks::CommandBus::Post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
+    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
     IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, Read | Binary);
     size_t file_size = iFile->Size();
 
@@ -126,5 +126,5 @@ void WorldEditConsole::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapCreated, IEvent>(e);
     if (!ev) return;
-    m_currentWorldName = ev->GetName();
+    m_currentWorldName = ev->getName();
 }

@@ -97,12 +97,12 @@ std::string AppConfiguration::GetCameraName() const
 {
     assert(!m_configDto.IsEmpty());
     auto cameraDto = GetCameraDto();
-    return cameraDto.GetName();
+    return cameraDto.getName();
 }
 
 std::string AppConfiguration::GetFrustumName() const
 {
     assert(!m_configDto.IsEmpty());
     auto cameraDto = Enigma::SceneGraph::CameraDto::FromGenericDto(GetCameraDto());
-    return cameraDto.Frustum().GetName();
+    return cameraDto.Frustum().getName();
 }

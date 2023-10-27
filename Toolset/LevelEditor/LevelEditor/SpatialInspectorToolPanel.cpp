@@ -163,12 +163,12 @@ void SpatialInspectorPanel::Finalize()
 void SpatialInspectorPanel::SubscribeHandlers()
 {
     m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
-    EventPublisher::Subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 }
 
 void SpatialInspectorPanel::UnsubscribeHandlers()
 {
-    EventPublisher::Unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 }
 

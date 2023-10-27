@@ -39,7 +39,7 @@ std::string LevelEditor::FilePathCombinePathID(const std::filesystem::path& path
 
 std::tuple<MathLib::Vector3, bool> LevelEditor::ParseTextToVector3(const std::string& value)
 {
-    TokenVector tokens = En_Split_Token(value, ", ");
+    TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 3) return { MathLib::Vector3::ZERO, false };
     MathLib::Vector3 vec;
     for (unsigned int i = 0; i < 3; i++)
@@ -51,7 +51,7 @@ std::tuple<MathLib::Vector3, bool> LevelEditor::ParseTextToVector3(const std::st
 
 std::tuple<MathLib::Vector2, bool> LevelEditor::ParseTextToVector2(const std::string& value)
 {
-    TokenVector tokens = En_Split_Token(value, ", ");
+    TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 2) return { MathLib::Vector2::ZERO, false };
     MathLib::Vector2 vec;
     for (unsigned int i = 0; i < 2; i++)
@@ -63,7 +63,7 @@ std::tuple<MathLib::Vector2, bool> LevelEditor::ParseTextToVector2(const std::st
 
 std::tuple<MathLib::ColorRGBA, bool> LevelEditor::ParseTextToColorRGBA(const std::string& value)
 {
-    TokenVector tokens = En_Split_Token(value, ", ");
+    TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 4) return { MathLib::ColorRGBA::WHITE, false };
     MathLib::ColorRGBA color;
     for (unsigned int i = 0; i < 4; i++)

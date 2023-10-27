@@ -159,7 +159,7 @@ void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
     Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
     terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
 
-    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->GetWorldMapPathId()));
+    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->GetWorldMapPathId()));
 
     close();
 }

@@ -111,7 +111,7 @@ void RenderPanel::OnMouseWheel(const nana::arg_wheel& arg)
 
 void RenderPanel::OnResized(const nana::arg_resized& arg)
 {
-    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ arg.width, arg.height }));
+    CommandBus::post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ arg.width, arg.height }));
 }
 
 std::tuple<float, float> RenderPanel::ClientXYToClippingXY(int x, int y)
@@ -125,12 +125,12 @@ std::tuple<float, float> RenderPanel::ClientXYToClippingXY(int x, int y)
 void RenderPanel::SubscribeHandlers()
 {
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { this->OnRenderTargetCreated(e); });
-    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
 }
 
 void RenderPanel::UnsubscribeHandlers()
 {
-    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
 }
 
@@ -139,6 +139,6 @@ void RenderPanel::OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::Post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ size().width, size().height }));
-    CommandBus::Post(std::make_shared<ChangeTargetViewPort>(ev->GetRenderTargetName(), Enigma::Graphics::TargetViewPort{ 0, 0, size().width, size().height }));
+    CommandBus::post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ size().width, size().height }));
+    CommandBus::post(std::make_shared<ChangeTargetViewPort>(ev->GetRenderTargetName(), Enigma::Graphics::TargetViewPort{ 0, 0, size().width, size().height }));
 }

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainEditConsole.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -35,8 +35,8 @@ namespace LevelEditor
         TerrainEditConsole(TerrainEditConsole&&) = delete;
         TerrainEditConsole& operator=(TerrainEditConsole&&) = delete;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);

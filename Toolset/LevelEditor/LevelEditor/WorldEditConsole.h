@@ -23,8 +23,8 @@ namespace LevelEditor
         WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service);
         virtual ~WorldEditConsole() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
         void SetWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id);
 

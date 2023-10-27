@@ -36,30 +36,30 @@ PawnEditService::~PawnEditService()
     SAFE_DELETE(m_pawnLoader);
 }
 
-ServiceResult PawnEditService::OnInit()
+ServiceResult PawnEditService::onInit()
 {
     m_onPrefabLoaded = std::make_shared<EventSubscriber>([=](auto e) { onPrefabLoaded(e); });
-    EventPublisher::Subscribe(typeid(PrefabLoaded), m_onPrefabLoaded);
+    EventPublisher::subscribe(typeid(PawnPrefabLoaded), m_onPrefabLoaded);
     m_onLoadPrefabFailed = std::make_shared<EventSubscriber>([=](auto e) { onLoadPrefabFailed(e); });
-    EventPublisher::Subscribe(typeid(LoadPawnFailed), m_onLoadPrefabFailed);
+    EventPublisher::subscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
 
     m_pawnLoader = new PawnLoader();
 
     return ServiceResult::Complete;
 }
 
-ServiceResult PawnEditService::OnTick()
+ServiceResult PawnEditService::onTick()
 {
     if (m_currentLoadingPawn) return ServiceResult::Pendding;
     loadNextPawn();
     return ServiceResult::Pendding;
 }
 
-ServiceResult PawnEditService::OnTerm()
+ServiceResult PawnEditService::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(PawnLoaded), m_onPrefabLoaded);
+    EventPublisher::unsubscribe(typeid(PawnLoaded), m_onPrefabLoaded);
     m_onPrefabLoaded = nullptr;
-    EventPublisher::Unsubscribe(typeid(LoadPawnFailed), m_onLoadPrefabFailed);
+    EventPublisher::unsubscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
     m_onLoadPrefabFailed = nullptr;
 
     SAFE_DELETE(m_pawnLoader);
@@ -67,9 +67,9 @@ ServiceResult PawnEditService::OnTerm()
     return ServiceResult::Complete;
 }
 
-error PawnEditService::putCandidatePawn(const std::string& name, const std::string& full_path, const std::string& parent_name, const Vector3& position)
+error PawnEditService::putCandidatePawn(const std::string& name, const std::string& full_path, const Vector3& position)
 {
-    LoadingPawnMeta meta{ name, full_path, parent_name, position };
+    LoadingPawnMeta meta{ name, full_path, position };
     m_loadingPawns.push_back(meta);
     m_needTick = true;
     return ErrorCode::ok;
@@ -86,36 +86,36 @@ void PawnEditService::loadNextPawn()
     m_currentLoadingPawn = m_loadingPawns.front();
     m_loadingPawns.pop_front();
     PawnPrefabDto dto;
-    dto.Name() = m_currentLoadingPawn->m_name;
-    dto.IsTopLevel() = true;
-    dto.TheFactoryDesc() = FactoryDesc(AnimatedPawn::TYPE_RTTI.GetName()).ClaimByPrefab(m_currentLoadingPawn->m_full_path);
-    dto.LocalTransform() = Matrix4::MakeTranslateTransform(m_currentLoadingPawn->m_position);
-    CommandBus::Post(std::make_shared<LoadPawnPrefab>(dto.ToGenericDto()));
+    dto.name() = m_currentLoadingPawn->m_name;
+    dto.isTopLevel() = true;
+    dto.factoryDesc() = FactoryDesc(AnimatedPawn::TYPE_RTTI.getName()).ClaimByPrefab(m_currentLoadingPawn->m_full_path);
+    dto.worldTransform() = Matrix4::MakeTranslateTransform(m_currentLoadingPawn->m_position);
+    CommandBus::post(std::make_shared<LoadPawnPrefab>(dto.toGenericDto()));
 }
 
 void PawnEditService::onPrefabLoaded(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PrefabLoaded>(e);
+    const auto ev = std::dynamic_pointer_cast<PawnPrefabLoaded>(e);
     if (!ev) return;
     if (!m_currentLoadingPawn) return;
-    if (ev->GetPrefabAtPath() != m_currentLoadingPawn->m_full_path) return;
-    m_currentLoadingPawn = std::nullopt;
+    if (ev->getPrefabAtPath() != m_currentLoadingPawn->m_full_path) return;
+    m_loadedPawn = ev->getPawn();
 }
 
 void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<LoadPrefabFailed>(e);
+    const auto ev = std::dynamic_pointer_cast<LoadPawnPrefabFailed>(e);
     if (!ev) return;
     if (!m_currentLoadingPawn) return;
     //if (ev->GetPrefabFilePath() != m_currentLoadingPawn->m_full_path) return;
-    CommandBus::Post(std::make_shared<OutputMessage>(string_format("Load Pawn Failed : %s", ev->GetError().message().c_str())));
+    CommandBus::post(std::make_shared<OutputMessage>(string_format("Load Pawn Failed : %s", ev->GetError().message().c_str())));
     m_currentLoadingPawn = std::nullopt;
 }
 
 void PawnEditService::putPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
 {
     assert(pawn);
-    CommandBus::Post(std::make_shared<AttachSceneRootChild>(pawn, Matrix4::MakeTranslateTransform(position)));
+    CommandBus::post(std::make_shared<AttachSceneRootChild>(pawn, Matrix4::MakeTranslateTransform(position)));
 }

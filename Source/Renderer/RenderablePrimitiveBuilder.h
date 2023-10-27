@@ -11,7 +11,7 @@
 #include "RenderablePrimitivePolicies.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/RequestSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -38,15 +38,15 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error BuildPrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        error buildPrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
     protected:
-        void BuildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
 
-        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+        void onPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void onBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
 
-        void DoBuildingPrimitive(const Frameworks::IRequestPtr& r);
+        void buildPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
         std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
@@ -59,7 +59,7 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
 
-        Frameworks::RequestSubscriberPtr m_doBuildingPrimitive;
+        Frameworks::CommandSubscriberPtr m_buildPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
         ModelPrimitiveBuilder* m_modelBuilder;

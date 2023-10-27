@@ -38,18 +38,18 @@ namespace Enigma::Prefabs
         virtual Frameworks::ServiceResult onTerm() override;
 
     private:
-        void LoadNextPrefab();
-        void DeserializePrefab(const Frameworks::Ruid& dto_ruid, const std::string& prefab_at_path);
-        void CompletePawnPrefabLoading(const std::shared_ptr<SceneGraph::Pawn>& pawn);
+        void loadNextPrefab();
+        void deserializePrefab(const Frameworks::Ruid& dto_ruid, const std::string& prefab_at_path);
+        void completePawnPrefabLoading(const std::shared_ptr<SceneGraph::Pawn>& pawn);
 
-        void FailPrefabLoading(error er);
+        void failPrefabLoading(error er);
 
-        void OnDtoDeserialized(const Frameworks::IEventPtr& e);
-        void OnDeserializeDtoFailed(const Frameworks::IEventPtr& e);
-        void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildSceneGraphFailed(const Frameworks::IEventPtr& e);
+        void onDtoDeserialized(const Frameworks::IEventPtr& e);
+        void onDeserializeDtoFailed(const Frameworks::IEventPtr& e);
+        void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void onBuildSceneGraphFailed(const Frameworks::IEventPtr& e);
 
-        void DoLoadingPawnPrefab(const Frameworks::ICommandPtr& c);
+        void doLoadingPawnPrefab(const Frameworks::ICommandPtr& c);
 
     private:
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;

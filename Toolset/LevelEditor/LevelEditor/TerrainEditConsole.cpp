@@ -42,65 +42,65 @@ TerrainEditConsole::~TerrainEditConsole()
 
 }
 
-ServiceResult TerrainEditConsole::OnInit()
+ServiceResult TerrainEditConsole::onInit()
 {
     m_onEditorModeChanged = std::make_shared<EventSubscriber>([=](auto e) { OnEditorModeChanged(e); });
-    EventPublisher::Subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
+    EventPublisher::subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     m_onTerrainBrushSizeChanged = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainBrushSizeChanged(e); });
-    EventPublisher::Subscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
+    EventPublisher::subscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
     m_onTerrainBrushHeightChanged = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainBrushHeightChanged(e); });
-    EventPublisher::Subscribe(typeid(TerrainBrushHeightChanged), m_onTerrainBrushHeightChanged);
+    EventPublisher::subscribe(typeid(TerrainBrushHeightChanged), m_onTerrainBrushHeightChanged);
     m_onTerrainBrushDensityChanged = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainBrushDensityChanged(e); });
-    EventPublisher::Subscribe(typeid(TerrainBrushDensityChanged), m_onTerrainBrushDensityChanged);
+    EventPublisher::subscribe(typeid(TerrainBrushDensityChanged), m_onTerrainBrushDensityChanged);
     m_onTerrainPaintingLayerChanged = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainPaintingLayerChanged(e); });
-    EventPublisher::Subscribe(typeid(TerrainPaintingLayerChanged), m_onTerrainPaintingLayerChanged);
+    EventPublisher::subscribe(typeid(TerrainPaintingLayerChanged), m_onTerrainPaintingLayerChanged);
     m_onTerrainToolSelected = std::make_shared<EventSubscriber>([=](auto e) { OnTerrainToolSelected(e); });
-    EventPublisher::Subscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
+    EventPublisher::subscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
 
     m_onSceneCursorMoved = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorMoved(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
+    EventPublisher::subscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
     m_onSceneCursorDragged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorDragged(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
+    EventPublisher::subscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
     m_onSceneCursorPressed = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorPressed(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
+    EventPublisher::subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
     m_onSceneCursorReleased = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorReleased(e); });
-    EventPublisher::Subscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
+    EventPublisher::subscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
 
     return ServiceResult::Complete;
 }
 
-ServiceResult TerrainEditConsole::OnTerm()
+ServiceResult TerrainEditConsole::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
+    EventPublisher::unsubscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onEditorModeChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
+    EventPublisher::unsubscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
     m_onTerrainBrushSizeChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(TerrainBrushHeightChanged), m_onTerrainBrushHeightChanged);
+    EventPublisher::unsubscribe(typeid(TerrainBrushHeightChanged), m_onTerrainBrushHeightChanged);
     m_onTerrainBrushHeightChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(TerrainBrushDensityChanged), m_onTerrainBrushDensityChanged);
+    EventPublisher::unsubscribe(typeid(TerrainBrushDensityChanged), m_onTerrainBrushDensityChanged);
     m_onTerrainBrushDensityChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(TerrainPaintingLayerChanged), m_onTerrainPaintingLayerChanged);
+    EventPublisher::unsubscribe(typeid(TerrainPaintingLayerChanged), m_onTerrainPaintingLayerChanged);
     m_onTerrainPaintingLayerChanged = nullptr;
-    EventPublisher::Unsubscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
+    EventPublisher::unsubscribe(typeid(TerrainEditToolSelected), m_onTerrainToolSelected);
     m_onTerrainToolSelected = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
+    EventPublisher::unsubscribe(typeid(SceneCursorMoved), m_onSceneCursorMoved);
     m_onSceneCursorMoved = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
+    EventPublisher::unsubscribe(typeid(SceneCursorDragged), m_onSceneCursorDragged);
     m_onSceneCursorDragged = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
+    EventPublisher::unsubscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
     m_onSceneCursorPressed = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
+    EventPublisher::unsubscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
     m_onSceneCursorReleased = nullptr;
 
     return ServiceResult::Complete;
@@ -127,7 +127,7 @@ void TerrainEditConsole::CreateBrushPawn()
     const Matrix4 local = Matrix4::MakeScaleTransform(static_cast<float>(m_brushSize), static_cast<float>(m_brushSize), static_cast<float>(m_brushSize));
     pawn_helper.LocalTransform(local);
     auto dtos = { pawn_helper.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));
 }
 
 void TerrainEditConsole::SendTerrainEditCommand(float elapse_time)
@@ -139,13 +139,13 @@ void TerrainEditConsole::SendTerrainEditCommand(float elapse_time)
     case TerrainEditMode::Mode_Unknown:
         break;
     case TerrainEditMode::Mode_RaiseHeight:
-        CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
+        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::Mode_LowerHeight:
-        CommandBus::Post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
+        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::Mode_PaintTexture:
-        CommandBus::Post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->GetWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
+        CommandBus::post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->GetWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
         break;
     }
 }
@@ -158,7 +158,7 @@ void TerrainEditConsole::OnEditorModeChanged(const IEventPtr& e)
     m_isEnabled = ev->GetCurrMode() == EditorMode::Terrain;
     if (m_isEnabled)
     {
-        CommandBus::Post(std::make_shared<OutputMessage>("Mode : Terrain Edit Selected"));
+        CommandBus::post(std::make_shared<OutputMessage>("Mode : Terrain Edit Selected"));
         if (m_brush.expired())
         {
             CreateBrushPawn();
@@ -186,8 +186,8 @@ void TerrainEditConsole::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& 
     if (ev->GetTopLevelSpatial().empty()) return;
     auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(ev->GetTopLevelSpatial().front());
     m_brush = pawn;
-    CommandBus::Post(std::make_shared<OutputMessage>("Brush Pawn Created"));
-    CommandBus::Post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->GetLocalTransform()));
+    CommandBus::post(std::make_shared<OutputMessage>("Brush Pawn Created"));
+    CommandBus::post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->GetLocalTransform()));
 }
 
 void TerrainEditConsole::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
@@ -197,7 +197,7 @@ void TerrainEditConsole::OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
     if (!ev) return;
     if (ev->GetPawn() != m_brush.lock()) return;
-    CommandBus::Post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->GetPawn()));
+    CommandBus::post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->GetPawn()));
 }
 
 void TerrainEditConsole::OnTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e)
@@ -253,7 +253,7 @@ void TerrainEditConsole::OnTerrainToolSelected(const Enigma::Frameworks::IEventP
         m_currMode = TerrainEditMode::Mode_PaintTexture;
         break;
     }
-    CommandBus::Post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
+    CommandBus::post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
 }
 
 void TerrainEditConsole::OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e)
@@ -302,6 +302,6 @@ void TerrainEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventP
     if (!m_brush.expired())
     {
         m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
-        CommandBus::Post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->GetWorldPosition()));
+        CommandBus::post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->GetWorldPosition()));
     }
 }

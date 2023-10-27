@@ -68,7 +68,7 @@ void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
     world_map_dto.Name() = world_name;
     world_map_dto.IsTopLevel() = true;
     world_map_dto.TheFactoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
-    Frameworks::CommandBus::Post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
+    Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
     m_worldEditor.lock()->CreateWorldMapFolder(folder_name);
 
     close();

@@ -19,29 +19,29 @@ AssetNameList::~AssetNameList()
     m_assetNames.clear();
 }
 
-bool AssetNameList::HasAssetName(const string& name)
+bool AssetNameList::hasAssetName(const string& name)
 {
     if (name.empty()) return false;
     return m_assetNames.find(name) != m_assetNames.end();
 }
 
-error AssetNameList::AppendAssetName(const string& name)
+error AssetNameList::appendAssetName(const string& name)
 {
     if (name.empty()) return ErrorCode::emptyKey;
-    if (HasAssetName(name)) return ErrorCode::duplicatedKey;
+    if (hasAssetName(name)) return ErrorCode::duplicatedKey;
     m_assetNames.emplace(name);
     return ErrorCode::ok;
 }
 
-error AssetNameList::RemoveAssetName(const std::string& name)
+error AssetNameList::removeAssetName(const std::string& name)
 {
     if (name.empty()) return ErrorCode::emptyKey;
-    if (!HasAssetName(name)) return ErrorCode::notExistedKey;
+    if (!hasAssetName(name)) return ErrorCode::notExistedKey;
     m_assetNames.erase(name);
     return ErrorCode::ok;
 }
 
-size_t AssetNameList::CalcNameListDataBytes() const
+size_t AssetNameList::calcNameListDataBytes() const
 {
     size_t sum = 0;
     for (const string& name : m_assetNames)
@@ -51,9 +51,9 @@ size_t AssetNameList::CalcNameListDataBytes() const
     return sum;
 }
 
-std::vector<char> AssetNameList::ExportToByteBuffer() const
+std::vector<char> AssetNameList::exportToByteBuffer() const
 {
-    size_t size = CalcNameListDataBytes();
+    size_t size = calcNameListDataBytes();
     if (size == 0) return std::vector<char>();
 
     std::vector<char> buff;
@@ -69,7 +69,7 @@ std::vector<char> AssetNameList::ExportToByteBuffer() const
     return buff;
 }
 
-error AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
+error AssetNameList::importFromByteBuffer(const std::vector<char>& buff)
 {
     if (buff.empty()) return ErrorCode::emptyBuffer;
     m_assetNames.clear();
@@ -79,7 +79,7 @@ error AssetNameList::ImportFromByteBuffer(const std::vector<char>& buff)
     {
         string name{ &buff[index] };
         index += (name.length() + 1);
-        er = AppendAssetName(name);
+        er = appendAssetName(name);
     }
     return er;
 }

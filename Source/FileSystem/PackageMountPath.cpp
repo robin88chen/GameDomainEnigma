@@ -13,7 +13,7 @@ PackageMountPath::PackageMountPath(const std::shared_ptr<AssetPackage::AssetPack
 {
     assert(package);
     m_assetPackage = package;
-    m_packageFilename = m_assetPackage->GetBaseFilename();
+    m_packageFilename = m_assetPackage->getBaseFilename();
 }
 
 PackageMountPath::~PackageMountPath()

@@ -27,6 +27,7 @@ PrefabIOService::PrefabIOService(Frameworks::ServiceManager* srv_mngr, const std
 PrefabIOService::~PrefabIOService()
 {
     m_currentCommand = nullptr;
+    m_loadedPawn = nullptr;
     m_loadingCommands.clear();
 }
 
@@ -40,6 +41,10 @@ Enigma::Frameworks::ServiceResult PrefabIOService::onInit()
     EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onBuildSceneGraphFailed = std::make_shared<EventSubscriber>([=](auto e) { onBuildSceneGraphFailed(e); });
     EventPublisher::subscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onPawnPrimitiveBuilt(e); });
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onBuildPawnPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { onBuildPawnPrimitiveFailed(e); });
+    EventPublisher::subscribe(typeid(BuildPawnPrimitiveFailed), m_onBuildPawnPrimitiveFailed);
 
     m_loadPawnPrefab = std::make_shared<CommandSubscriber>([=](auto c) { loadPawnPrefab(c); });
     CommandBus::subscribe(typeid(LoadPawnPrefab), m_loadPawnPrefab);
@@ -57,6 +62,7 @@ ServiceResult PrefabIOService::onTick()
 Enigma::Frameworks::ServiceResult PrefabIOService::onTerm()
 {
     m_currentCommand = nullptr;
+    m_loadedPawn = nullptr;
     m_loadingCommands.clear();
 
     EventPublisher::unsubscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
@@ -67,6 +73,10 @@ Enigma::Frameworks::ServiceResult PrefabIOService::onTerm()
     m_onSceneGraphBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
     m_onBuildSceneGraphFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnPrimitiveBuilt = nullptr;
+    EventPublisher::unsubscribe(typeid(BuildPawnPrimitiveFailed), m_onBuildPawnPrimitiveFailed);
+    m_onBuildPawnPrimitiveFailed = nullptr;
 
     CommandBus::unsubscribe(typeid(LoadPawnPrefab), m_loadPawnPrefab);
     m_loadPawnPrefab = nullptr;
@@ -101,6 +111,7 @@ void PrefabIOService::completePawnPrefabLoading(const std::shared_ptr<SceneGraph
     assert(m_currentCommand);
     EventPublisher::post(std::make_shared<PawnPrefabLoaded>(m_currentCommand->getRuid(), m_currentCommand->getPawnDto().GetRtti().GetPrefab(), pawn));
     m_currentCommand = nullptr;
+    m_loadedPawn = nullptr;
     loadNextPrefab();
 }
 
@@ -108,6 +119,7 @@ void PrefabIOService::failPrefabLoading(error er)
 {
     EventPublisher::post(std::make_shared<LoadPawnPrefabFailed>(m_currentCommand->getRuid(), er));
     m_currentCommand = nullptr;
+    m_loadedPawn = nullptr;
     loadNextPrefab();
 }
 
@@ -141,7 +153,40 @@ void PrefabIOService::onSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if ((ev->GetTopLevelSpatial().empty()) || (!ev->GetTopLevelSpatial()[0])) return failPrefabLoading(ErrorCode::emptyPrefabs);
     auto pawn = std::dynamic_pointer_cast<Pawn>(ev->GetTopLevelSpatial()[0]);
     if (!pawn) return failPrefabLoading(ErrorCode::invalidPrefab);
-    completePawnPrefabLoading(pawn);
+    if (pawn->GetPrimitive())
+    {
+        completePawnPrefabLoading(pawn);
+    }
+    else
+    {
+        m_loadedPawn = pawn;
+    }
+}
+
+void PrefabIOService::onPawnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+{
+    if (!m_currentCommand) return;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
+    if (!ev) return;
+    if (!m_loadedPawn) return; // no pending pawn
+    if (ev->GetPawn() == m_loadedPawn)
+    {
+        completePawnPrefabLoading(m_loadedPawn);
+    }
+}
+
+void PrefabIOService::onBuildPawnPrimitiveFailed(const Frameworks::IEventPtr& e)
+{
+    if (!m_currentCommand) return;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<BuildPawnPrimitiveFailed>(e);
+    if (!ev) return;
+    if (!m_loadedPawn) return; // no pending pawn
+    if (ev->GetPawn() == m_loadedPawn)
+    {
+        failPrefabLoading(ev->GetErrorCode());
+    }
 }
 
 void PrefabIOService::onBuildSceneGraphFailed(const Frameworks::IEventPtr& e)

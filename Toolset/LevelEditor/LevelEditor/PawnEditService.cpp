@@ -14,6 +14,8 @@
 #include "Prefabs/PrefabEvents.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameCommon/AnimatedPawn.h"
+#include "WorldMap/WorldMapQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -101,6 +103,7 @@ void PawnEditService::onPrefabLoaded(const IEventPtr& e)
     if (!m_currentLoadingPawn) return;
     if (ev->getPrefabAtPath() != m_currentLoadingPawn->m_full_path) return;
     m_loadedPawn = ev->getPawn();
+    tryPutPawnAt(m_loadedPawn, m_currentLoadingPawn->m_position);
 }
 
 void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -112,6 +115,20 @@ void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
     //if (ev->GetPrefabFilePath() != m_currentLoadingPawn->m_full_path) return;
     CommandBus::post(std::make_shared<OutputMessage>(string_format("Load Pawn Failed : %s", ev->GetError().message().c_str())));
     m_currentLoadingPawn = std::nullopt;
+    m_loadedPawn = nullptr;
+}
+
+bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
+{
+    auto world_transform = Matrix4::MakeTranslateTransform(position);
+    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->GetModelBound(), world_transform);
+    auto query = std::make_shared<Enigma::WorldMap::QueryFittingNode>(bv);
+    QueryDispatcher::dispatch(query);
+    if (query->getResult() == nullptr) return false;
+    auto node = query->getResult();
+    auto inv_node_transform = node->GetWorldTransform().Inverse();
+    CommandBus::post(std::make_shared<AttachNodeChild>(node->GetSpatialName(), pawn, inv_node_transform * world_transform));
+    return true;
 }
 
 void PawnEditService::putPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)

@@ -48,6 +48,8 @@ namespace Enigma::Prefabs
         void onDeserializeDtoFailed(const Frameworks::IEventPtr& e);
         void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void onBuildSceneGraphFailed(const Frameworks::IEventPtr& e);
+        void onPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void onBuildPawnPrimitiveFailed(const Frameworks::IEventPtr& e);
 
         void loadPawnPrefab(const Frameworks::ICommandPtr& c);
 
@@ -58,11 +60,14 @@ namespace Enigma::Prefabs
         Frameworks::EventSubscriberPtr m_onDeserializeDtoFailed;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Frameworks::EventSubscriberPtr m_onBuildSceneGraphFailed;
+        Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildPawnPrimitiveFailed;
 
         Frameworks::CommandSubscriberPtr m_loadPawnPrefab;
 
         std::deque<std::shared_ptr<LoadPawnPrefab>> m_loadingCommands;
         std::shared_ptr<LoadPawnPrefab> m_currentCommand;
+        std::shared_ptr<SceneGraph::Pawn> m_loadedPawn;
     };
 }
 

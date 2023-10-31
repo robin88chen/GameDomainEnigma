@@ -43,6 +43,7 @@ namespace LevelEditor
         void onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void loadNextPawn();
+        bool tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
         void putPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
     private:
         PawnLoader* m_pawnLoader;

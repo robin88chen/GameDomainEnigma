@@ -309,7 +309,7 @@ void EffectCompiler::TryBuildEffectMaterial()
     auto effect_material = std::make_shared<EffectMaterial>(m_profile.m_name, effect_techniques);
     if (!m_policy.Parameter().empty())
     {
-        effect_material->TheFactoryDesc().ClaimFromResource(effect_material->getName(), m_policy.Parameter());
+        effect_material->factoryDesc().ClaimFromResource(effect_material->getName(), m_policy.Parameter());
     }
     EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
     m_hasMaterialProduced = true;

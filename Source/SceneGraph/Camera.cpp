@@ -47,7 +47,7 @@ Camera::~Camera()
 GenericDto Camera::SerializeDto()
 {
     CameraDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.HandSystem() = m_handSys;
     dto.EyePosition() = m_vecLocation;

@@ -16,6 +16,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Terrain/TerrainPawn.h"
 #include "GameEngine/BoundingVolume.h"
+#include <system_error>
 
 namespace Enigma::WorldMap
 {
@@ -46,10 +47,16 @@ namespace Enigma::WorldMap
         std::shared_ptr<SceneGraph::Node> findFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth) const;
         std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
         bool testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const;
+        void createFittingNode(const Engine::BoundingVolume& bv_in_world);
+        std::error_code tryCreateFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root);
+        std::error_code tryCreateFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth);
+        void completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node);
+        void failCreateFittingNode(std::error_code err);
 
         void createEmptyWorldMap(const Frameworks::ICommandPtr& c);
         void deserializeWorldMap(const Frameworks::ICommandPtr& c);
         void attachTerrain(const Frameworks::ICommandPtr& c);
+        void createFittingNode(const Frameworks::ICommandPtr& c);
         void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
         void onLazyNodeInstanced(const Frameworks::IEventPtr& e);
         void queryFittingNode(const Frameworks::IQueryPtr& q) const;
@@ -64,9 +71,12 @@ namespace Enigma::WorldMap
         Frameworks::CommandSubscriberPtr m_createWorldMap;
         Frameworks::CommandSubscriberPtr m_deserializeWorldMap;
         Frameworks::CommandSubscriberPtr m_attachTerrain;
+        Frameworks::CommandSubscriberPtr m_createFittingNode;
         Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;  // check world map is created
         Frameworks::EventSubscriberPtr m_onLazyNodeInstanced;
         Frameworks::QuerySubscriberPtr m_queryFittingNode;
+
+        Frameworks::Ruid m_createFittingNodeRuid;
     };
 }
 

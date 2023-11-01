@@ -40,7 +40,7 @@ MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.ge
 MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     MeshPrimitiveDto mesh;
-    mesh.TheFactoryDesc() = dto.GetRtti();
+    mesh.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) mesh.Name() = v.value();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_NAME)) mesh.GeometryName() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.TheGeometry() = v.value();
@@ -148,7 +148,7 @@ MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     MeshNodeDto node;
-    node.TheFactoryDesc() = dto.GetRtti();
+    node.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) node.Name() = v.value();
     if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_T_POS_TRANSFORM)) node.LocalT_PosTransform() = v.value();
     //if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();

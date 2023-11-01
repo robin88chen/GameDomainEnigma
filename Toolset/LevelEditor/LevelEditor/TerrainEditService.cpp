@@ -378,7 +378,7 @@ void TerrainEditService::DoSavingSplatTexture(const ICommandPtr& c)
         CommandBus::post(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
-    m_savingSplatTextureFile = FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->TheFactoryDesc().GetResourceFilename(), Write | OpenAlways | Binary);
+    m_savingSplatTextureFile = FileSystem::Instance()->OpenFile(m_pickedSplatTexture.lock()->factoryDesc().GetResourceFilename(), Write | OpenAlways | Binary);
     CommandBus::post(std::make_shared<SaveTexture>(m_pickedSplatTexture.lock(), m_pickedSplatTexture.lock()->getName(), m_savingSplatTextureFile));
 }
 
@@ -390,7 +390,7 @@ void TerrainEditService::OnSceneGraphBuilt(const IEventPtr& e)
     if (ev->GetSceneGraphId() != NEW_TERRAIN_TAG) return;
     auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!terrain) return;
-    terrain->TheFactoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", m_terrainPathId);
+    terrain->factoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", m_terrainPathId);
     CommandBus::post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
 }
 
@@ -403,11 +403,11 @@ void TerrainEditService::OnTerrainPrimitiveBuilt(const IEventPtr& e)
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<TerrainPrimitive>(terrain->GetPrimitive());
     if (!terrain_prim) return;
-    terrain_prim->TheFactoryDesc().ClaimAsInstanced(terrain_prim->getName() + ".terrain", m_terrainPathId);
+    terrain_prim->factoryDesc().ClaimAsInstanced(terrain_prim->getName() + ".terrain", m_terrainPathId);
     auto splat_texture = terrain_prim->FindTextureBySemantic(ALPHA_TEXTURE_SEMANTIC);
     if (!splat_texture) return;
     std::string splat_texture_resouce_name = splat_texture->getName();
-    splat_texture->TheFactoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
+    splat_texture->factoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
     m_splatTextures.insert_or_assign(terrain->GetSpatialName(), splat_texture);
 }
 

@@ -37,8 +37,8 @@ namespace Enigma::SceneGraph
         Camera& operator=(const Camera&) = delete;
         Camera& operator=(Camera&&) = delete;
 
-        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         Engine::GenericDto SerializeDto();
 

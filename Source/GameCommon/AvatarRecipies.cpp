@@ -77,7 +77,7 @@ ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 GenericDto ReplaceAvatarMaterial::SerializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.OldMaterialName() = m_oldMaterialName;
     dto.NewMaterialDto() = m_newMaterialDto;
     return dto.ToGenericDto();
@@ -190,7 +190,7 @@ ChangeAvatarTexture::~ChangeAvatarTexture()
 GenericDto ChangeAvatarTexture::SerializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.MeshName() = m_meshName;
     dto.TextureDto() = m_textureDto;
     return dto.ToGenericDto();

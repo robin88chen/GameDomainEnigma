@@ -14,7 +14,7 @@ ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAss
 
 ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.Name())
 {
-    m_factoryDesc = dto.TheFactoryDesc();
+    m_factoryDesc = dto.factoryDesc();
     m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
     for (unsigned i = 0; i < dto.MeshNodeNames().size(); i++)
     {
@@ -31,7 +31,7 @@ ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
 {
     ModelAnimationAssetDto dto;
     dto.Name() = m_name;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     std::vector<std::string> names;
     GenericDtoCollection srts;
     for (auto& key : m_meshNodeKeyArray)

@@ -45,8 +45,8 @@ namespace Enigma::Animators
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         std::string m_name;

@@ -155,7 +155,7 @@ void TextureLoader::OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
         return;
     }
     auto tex = std::make_shared<Texture>(m_policy.getName(), dev_tex);
-    tex->TheFactoryDesc().ClaimAsResourceAsset(m_policy.getName(), m_policy.GetFileName(), m_policy.GetPathID());
+    tex->factoryDesc().ClaimAsResourceAsset(m_policy.getName(), m_policy.GetFileName(), m_policy.GetPathID());
     Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(m_policy.getName(), tex));
 }
 

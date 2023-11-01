@@ -56,7 +56,7 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
 SkinOperatorDto SkinAnimationOperator::SerializeDto()
 {
     SkinOperatorDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->getName();
     dto.BoneNodeNames() = m_boneNodeNames;
     dto.NodeOffsets() = m_nodeOffsets;

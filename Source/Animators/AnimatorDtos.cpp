@@ -23,7 +23,7 @@ ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_
 ModelAnimatorDto ModelAnimatorDto::FromGenericDto(const GenericDto& dto)
 {
     ModelAnimatorDto model;
-    model.TheFactoryDesc() = dto.GetRtti();
+    model.factoryDesc() = dto.GetRtti();
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_ASSET_OBJECT)) model.AnimationAssetDto() = v.value();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_ANIMATION_NAME)) model.AssetName() = v.value();
     if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_ANIMATION_FACTORY)) model.AssetFactoryDesc() = v.value();
@@ -73,7 +73,7 @@ SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_R
 SkinOperatorDto SkinOperatorDto::FromGenericDto(const Engine::GenericDto& dto)
 {
     SkinOperatorDto op;
-    op.TheFactoryDesc() = dto.GetRtti();
+    op.factoryDesc() = dto.GetRtti();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NAME)) op.SkinMeshName() = v.value();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NODE_NAME)) op.SkinMeshNodeName() = v.value();
     if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_BONE_NODE_NAMES)) op.BoneNodeNames() = v.value();

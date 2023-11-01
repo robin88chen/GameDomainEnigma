@@ -119,7 +119,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!m_in_placeNode) return;
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
     m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
-    m_in_placeNode->TheFactoryDesc().ClaimAsInstanced();
+    m_in_placeNode->factoryDesc().ClaimAsInstanced();
     EventPublisher::post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
 }
@@ -170,7 +170,7 @@ void LazyNodeIOService::InstanceNextLazyNode()
     if (m_dtoDeserializer)
     {
         m_ruidDeserializing = Ruid::generate();
-        m_dtoDeserializer->InvokeDeserialize(m_ruidDeserializing, node->TheFactoryDesc().GetDeferredFilename());
+        m_dtoDeserializer->InvokeDeserialize(m_ruidDeserializing, node->factoryDesc().GetDeferredFilename());
     }
     else
     {

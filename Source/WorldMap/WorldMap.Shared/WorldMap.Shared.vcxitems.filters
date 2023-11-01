@@ -13,6 +13,9 @@
     <Filter Include="Commands &amp; Events &amp; Queries">
       <UniqueIdentifier>{40071ac0-0545-4ed1-8d73-ae51bedcd6e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Error Codes">
+      <UniqueIdentifier>{2c120b68-34c2-47b5-83d8-05d3520797cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h">
@@ -36,6 +39,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapQueries.h">
       <Filter>Commands &amp; Events &amp; Queries</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.h">
+      <Filter>Error Codes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">
@@ -49,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp">
+      <Filter>Error Codes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

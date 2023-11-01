@@ -103,7 +103,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
         EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));
         return;
     }
-    model_anim->TheFactoryDesc() = m_originalAssetDesc;
+    model_anim->factoryDesc() = m_originalAssetDesc;
     m_builtAnimator->LinkAnimationAsset(model_anim);
     if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
     EventPublisher::post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));

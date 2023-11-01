@@ -40,7 +40,7 @@ SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopL
 SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
 {
     SpatialDto spatial_dto;
-    spatial_dto.TheFactoryDesc() = dto.GetRtti();
+    spatial_dto.factoryDesc() = dto.GetRtti();
     spatial_dto.m_isTopLevel = dto.IsTopLevel();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) spatial_dto.Name() = v.value();
     if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) spatial_dto.LocalTransform() = v.value();

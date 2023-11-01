@@ -87,7 +87,7 @@ GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUs
 GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
-    geometry.TheFactoryDesc() = dto.GetRtti();
+    geometry.factoryDesc() = dto.GetRtti();
     geometry.DeserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {

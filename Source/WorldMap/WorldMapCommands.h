@@ -12,6 +12,7 @@
 #include "GameEngine/GenericDto.h"
 #include "Terrain/TerrainPawn.h"
 #include "MathLib/Matrix4.h"
+#include "GameEngine/BoundingVolume.h"
 
 namespace Enigma::WorldMap
 {
@@ -46,6 +47,15 @@ namespace Enigma::WorldMap
     protected:
         std::shared_ptr<Terrain::TerrainPawn> m_terrain;
         MathLib::Matrix4 m_local;
+    };
+    class CreateFittingQuadNode : public Frameworks::IRequestCommand
+    {
+    public:
+        CreateFittingQuadNode(const Engine::BoundingVolume& bv) : m_bv(bv) {}
+
+        const Engine::BoundingVolume& getBoundingVolume() const { return m_bv; }
+    protected:
+        Engine::BoundingVolume m_bv;
     };
 }
 

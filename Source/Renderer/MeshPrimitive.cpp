@@ -117,14 +117,14 @@ GenericDto MeshPrimitive::SerializeDto() const
 MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
 {
     MeshPrimitiveDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     if (m_geometry)
     {
         dto.GeometryName() = m_geometry->getName();
-        dto.GeometryFactoryDesc() = m_geometry->TheFactoryDesc();
-        if ((m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-            || (m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        dto.GeometryFactoryDesc() = m_geometry->factoryDesc();
+        if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+            || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
             dto.TheGeometry() = m_geometry->SerializeDto();
         }

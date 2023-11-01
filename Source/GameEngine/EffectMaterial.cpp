@@ -27,7 +27,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_
     MappingAutoVariables();
 }
 
-EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.TheFactoryDesc())
+EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.factoryDesc())
 {
     m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
@@ -77,7 +77,7 @@ GenericDto EffectMaterial::SerializeDto()
 {
     EffectMaterialDto dto;
     dto.Name() = m_name;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     return dto.ToGenericDto();
 }
 

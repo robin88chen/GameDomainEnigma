@@ -28,8 +28,8 @@ namespace Enigma::GameCommon
         AvatarRecipe& operator=(const AvatarRecipe&) = delete;
         AvatarRecipe& operator=(AvatarRecipe&&) = delete;
 
-        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
         virtual Engine::GenericDto SerializeDto() const = 0;

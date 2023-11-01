@@ -76,7 +76,7 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
 GenericDto ModelPrimitive::SerializeDto() const
 {
     ModelPrimitiveDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.TheNodeTree() = m_nodeTree.SerializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))

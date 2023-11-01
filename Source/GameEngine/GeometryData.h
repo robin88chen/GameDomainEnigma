@@ -44,8 +44,8 @@ namespace Enigma::Engine
 
         const std::string& getName() { return m_name; }
 
-        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         RenderBufferSignature MakeRenderBufferSignature() const;
 

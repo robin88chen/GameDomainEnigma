@@ -17,6 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapQueries.h" />
@@ -25,6 +26,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapService.cpp" />
   </ItemGroup>

@@ -72,7 +72,7 @@ Enigma::Engine::GenericDto CameraDtoHelper::ToGenericDto()
 SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
 {
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
-    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
+    m_dto.factoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
     m_dto.Name() = name;
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
@@ -144,7 +144,7 @@ Enigma::Engine::GenericDto SpatialDtoHelper::ToGenericDto()
 PawnDtoHelper::PawnDtoHelper(const std::string& name)
 {
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
-    m_dto.TheFactoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
+    m_dto.factoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_dto.Name() = name;
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
@@ -159,7 +159,7 @@ PawnDtoHelper::PawnDtoHelper(const std::string& name)
 
 PawnDtoHelper& PawnDtoHelper::Factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.TheFactoryDesc() = factory;
+    m_dto.factoryDesc() = factory;
     return *this;
 }
 

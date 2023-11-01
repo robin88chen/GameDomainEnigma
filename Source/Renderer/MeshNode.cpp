@@ -18,7 +18,7 @@ MeshNode::MeshNode(const std::string& name) : m_factoryDesc(MeshNode::TYPE_RTTI.
     m_hasSkinMeshPrimitive = false;
 }
 
-MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.TheFactoryDesc())
+MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
 {
     m_name = node.m_name;
     m_mxT_PosTransform = node.m_mxT_PosTransform;
@@ -39,7 +39,7 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.TheFactoryDesc())
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
 
-MeshNode::MeshNode(MeshNode&& node) noexcept : m_factoryDesc(std::move(node.TheFactoryDesc()))
+MeshNode::MeshNode(MeshNode&& node) noexcept : m_factoryDesc(std::move(node.factoryDesc()))
 {
     m_name = std::move(node.m_name);
     m_mxT_PosTransform = std::move(node.m_mxT_PosTransform);
@@ -95,7 +95,7 @@ MeshNode& MeshNode::operator=(MeshNode&& node) noexcept
 GenericDto MeshNode::SerializeDto() const
 {
     MeshNodeDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     dto.LocalT_PosTransform() = m_mxT_PosTransform;
     //dto.RootRefTransform() = m_mxRootRefTransform;

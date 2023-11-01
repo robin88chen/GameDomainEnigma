@@ -9,6 +9,8 @@
 #define WORLD_MAP_EVENTS_H
 
 #include "Frameworks/Event.h"
+#include "SceneGraph/Node.h"
+#include <system_error>
 
 namespace Enigma::WorldMap
 {
@@ -37,6 +39,23 @@ namespace Enigma::WorldMap
         std::string m_name;
         std::shared_ptr<WorldMap> m_world;
     };
-}
+    class FittingNodeCreated : public Frameworks::IResponseEvent
+    {
+    public:
+        FittingNodeCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<SceneGraph::Node>& node) : IResponseEvent(ruid), m_node(node) {}
 
+        const std::shared_ptr<SceneGraph::Node>& getNode() const { return m_node; }
+    protected:
+        std::shared_ptr<SceneGraph::Node> m_node;
+    };
+    class CreateFittingNodeFailed : public Frameworks::IResponseEvent
+    {
+    public:
+        CreateFittingNodeFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
+
+        std::error_code getError() const { return m_error; }
+    protected:
+        std::error_code m_error;
+    };
+}
 #endif // WORLD_MAP_EVENTS_H

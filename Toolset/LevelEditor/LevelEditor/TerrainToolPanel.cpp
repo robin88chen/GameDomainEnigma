@@ -190,7 +190,7 @@ void TerrainToolPanel::RefreshTextureLayerButtons(const Enigma::Engine::EffectTe
         if (!semantic_tex) continue;
         auto tex = std::get<std::shared_ptr<Enigma::Engine::Texture>>(*semantic_tex);
         if (!tex) continue;
-        Enigma::FileSystem::Filename filename(tex->TheFactoryDesc().GetResourceFilename());
+        Enigma::FileSystem::Filename filename(tex->factoryDesc().GetResourceFilename());
         std::string filepath = Enigma::FileSystem::FileSystem::Instance()->GetStdioFullPath(filename.GetSubPathFileName(), filename.GetMountPathID());
         PasteTextureImageToButton(filepath, m_textureLayerButtons[i], 64);
         m_textureLayerButtons[i]->focus();

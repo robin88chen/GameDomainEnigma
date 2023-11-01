@@ -102,7 +102,7 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if ((m_policy) && (ev->getName() != m_policy->GeometryPolicy().Name())) return;
     m_builtGeometry = ev->GetGeometryData();
-    m_builtGeometry->TheFactoryDesc() = m_originalGeometryDesc;
+    m_builtGeometry->factoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
     buffer.m_renderBufferName = buffer.m_signature.getName();

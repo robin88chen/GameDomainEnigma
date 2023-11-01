@@ -23,8 +23,8 @@ namespace Enigma::GameCommon
         AvatarRecipeDto& operator=(const AvatarRecipeDto&) = default;
         AvatarRecipeDto& operator=(AvatarRecipeDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

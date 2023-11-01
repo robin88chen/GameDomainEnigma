@@ -119,7 +119,7 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
 {
     TerrainGeometryDto terrain_dto;
     terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
-    terrain_dto.TheFactoryDesc() = dto.GetRtti();
+    terrain_dto.factoryDesc() = dto.GetRtti();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();

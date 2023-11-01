@@ -11,7 +11,7 @@ MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
     m_meshNodes.clear();
 }
 
-MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.TheFactoryDesc())
+MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.factoryDesc())
 {
     m_meshNodes = tree.m_meshNodes;
 }
@@ -43,7 +43,7 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
 GenericDto MeshNodeTree::SerializeDto() const
 {
     MeshNodeTreeDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     for (auto& node : m_meshNodes)
     {
         dto.MeshNodes().emplace_back(node.SerializeDto());

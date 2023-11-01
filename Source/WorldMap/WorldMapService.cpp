@@ -1,5 +1,6 @@
 ﻿#include "WorldMapService.h"
 #include "WorldMap.h"
+#include "WorldMapErrors.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -34,6 +35,8 @@ std::string QUADROOT_POSTFIX = "_qroot";
 
 constexpr int MAX_RECURSIVE_DEPTH = 4;
 
+using error = std::error_code;
+
 WorldMapService::WorldMapService(ServiceManager* mngr, const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
 {
     m_sceneGraphRepository = scene_graph_repository;
@@ -53,6 +56,8 @@ ServiceResult WorldMapService::onInit()
     CommandBus::subscribe(typeid(DeserializeWorldMap), m_deserializeWorldMap);
     m_attachTerrain = std::make_shared<CommandSubscriber>([=](auto c) { attachTerrain(c); });
     CommandBus::subscribe(typeid(AttachTerrainToWorldMap), m_attachTerrain);
+    m_createFittingNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createFittingNode(c); });
+    CommandBus::subscribe(typeid(CreateFittingQuadNode), m_createFittingNode);
 
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
     EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
@@ -73,6 +78,8 @@ ServiceResult WorldMapService::onTerm()
     m_deserializeWorldMap = nullptr;
     CommandBus::unsubscribe(typeid(AttachTerrainToWorldMap), m_attachTerrain);
     m_attachTerrain = nullptr;
+    CommandBus::unsubscribe(typeid(CreateFittingQuadNode), m_createFittingNode);
+    m_createFittingNode = nullptr;
 
     EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
@@ -151,7 +158,7 @@ void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     std::string node_name = terrain->GetSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
     quadRootNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
-    quadRootNode->TheFactoryDesc().ClaimAsInstanced(node_name + ".node");
+    quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_world.lock()->AttachChild(quadRootNode, local_transform);
     m_listQuadRoot.push_back(quadRootNode);
@@ -211,8 +218,11 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
     {
         fitting_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
     }
+    if (!fitting_node) return nullptr;
     //todo : 原做法會再細切子節點，違背 CQS原則，要改成 query 失敗後，再送 command 細切子節點
-    return fitting_node;
+    Matrix4 fitting_node_inv_local_mx = fitting_node->GetLocalTransform().Inverse();
+    auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
+    return findFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
 }
 
 std::tuple<Box3, unsigned> WorldMapService::locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const
@@ -266,6 +276,95 @@ bool WorldMapService::testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_pa
     return false;
 }
 
+void WorldMapService::createFittingNode(const Engine::BoundingVolume& bv_in_world)
+{
+    assert(!m_world.expired());
+    if (m_listQuadRoot.empty()) return failCreateFittingNode(ErrorCode::emptyQuadRoot);
+    error er;
+    for (auto root : m_listQuadRoot)
+    {
+        if (root.expired()) continue;
+        Matrix4 root_inv_world_mx = root.lock()->GetWorldTransform().Inverse();
+        auto bv_in_node = Engine::BoundingVolume::CreateFromTransform(bv_in_world, root_inv_world_mx);
+        er = tryCreateFittingNodeFromQuadRoot(root.lock(), bv_in_node);
+        if (er == ErrorCode::ok) return;
+        if (er != ErrorCode::outOfBounds) return failCreateFittingNode(er);
+    }
+    failCreateFittingNode(er);
+}
+
+std::error_code WorldMapService::tryCreateFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root)
+{
+    auto root_local_box = root->GetModelBound().BoundingBox3();
+    if (!root_local_box) return ErrorCode::invalidBoundingBox;
+    Vector3 root_box_min = root_local_box->Center() - Vector3(root_local_box->Extent());
+    Vector3 root_box_max = root_local_box->Center() + Vector3(root_local_box->Extent());
+    Vector3 local_pos = bv_in_root.Center();
+    // if out of map bounding, return null
+    if ((local_pos.X() < root_box_min.X())
+        || (local_pos.X() > root_box_max.X())
+        || (local_pos.Z() < root_box_min.Z())
+        || (local_pos.Z() > root_box_max.Z())) return ErrorCode::outOfBounds;
+
+    return tryCreateFittingQuadLeaf(root, bv_in_root, MAX_RECURSIVE_DEPTH);
+}
+
+std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth)
+{
+    if (recursive_depth < 0)
+    {
+        completeCreateFittingNode(parent);
+        return ErrorCode::ok; // enough deep, completed
+    }
+    if (!parent) return ErrorCode::nullQuadNode;
+
+    const auto parent_node_box = parent->GetModelBound().BoundingBox3();
+    if (!parent_node_box) return ErrorCode::invalidBoundingBox;
+
+    Vector3 local_pos = bv_in_node.Center();
+    auto [sub_tree_box_in_parent, sub_tree_index] = locateSubTreeBoxAndIndex(parent_node_box.value(), local_pos);
+    bool envelop = testSubTreeQuadEnvelop(sub_tree_box_in_parent, bv_in_node);
+    if (!envelop)
+    {
+        completeCreateFittingNode(parent);
+        return ErrorCode::ok;  // 下一層放不下這物件，結束
+    }
+
+    std::shared_ptr<Node> fitting_node = nullptr;
+    std::string parent_node_unfix_name = parent->GetSpatialName();
+    parent_node_unfix_name = parent_node_unfix_name.substr(0, parent_node_unfix_name.length()); // -strlen(NODE_FILE_EXT));
+    std::string target_node_name = parent_node_unfix_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
+    FindSpatialByName find_spatial(target_node_name);
+    SceneTraveler::TravelResult result_find_node = parent->VisitBy(&find_spatial);
+    if (result_find_node == SceneTraveler::TravelResult::InterruptTargetFound)
+    {
+        fitting_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
+    }
+    if (!fitting_node)
+    {
+        if (m_sceneGraphRepository.expired()) return ErrorCode::nullSceneGraphRepository;
+        auto subQuadNode = m_sceneGraphRepository.lock()->CreateNode(target_node_name, VisibilityManagedNode::TYPE_RTTI);
+        subQuadNode->factoryDesc().ClaimAsDeferred();
+        Matrix4 mxLocal;
+        mxLocal.MakeTranslateTransform(sub_tree_box_in_parent.Center());
+        parent->AttachChild(subQuadNode, mxLocal);
+        fitting_node = subQuadNode;
+    }
+    Matrix4 fitting_node_inv_local_mx = fitting_node->GetLocalTransform().Inverse();
+    auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
+    return tryCreateFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
+}
+
+void WorldMapService::completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node)
+{
+    EventPublisher::post(std::make_shared<FittingNodeCreated>(m_createFittingNodeRuid, node));
+}
+
+void WorldMapService::failCreateFittingNode(std::error_code err)
+{
+    EventPublisher::post(std::make_shared<CreateFittingNodeFailed>(m_createFittingNodeRuid, err));
+}
+
 void WorldMapService::createEmptyWorldMap(const ICommandPtr& c)
 {
     if (!c) return;
@@ -289,6 +388,15 @@ void WorldMapService::attachTerrain(const ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<AttachTerrainToWorldMap, ICommand>(c);
     if (!cmd) return;
     attachTerrainToWorldMap(cmd->getTerrain(), cmd->getLocalTransform());
+}
+
+void WorldMapService::createFittingNode(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<CreateFittingQuadNode, ICommand>(c);
+    if (!cmd) return;
+    m_createFittingNodeRuid = cmd->getRuid();
+    createFittingNode(cmd->getBoundingVolume());
 }
 
 void WorldMapService::onSceneGraphBuilt(const IEventPtr& e)

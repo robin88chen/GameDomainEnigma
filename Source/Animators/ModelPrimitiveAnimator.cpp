@@ -63,11 +63,11 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
 {
     ModelAnimatorDto dto;
     if (!m_animationAsset) return dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.AssetName() = m_animationAsset->getName();
-    dto.AssetFactoryDesc() = m_animationAsset->TheFactoryDesc();
-    if ((m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-        || (m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+    dto.AssetFactoryDesc() = m_animationAsset->factoryDesc();
+    if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
     {
         dto.AnimationAssetDto() = m_animationAsset->SerializeDto().ToGenericDto();
     }

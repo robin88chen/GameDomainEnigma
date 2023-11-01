@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EditorModes.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -12,10 +12,10 @@ namespace LevelEditor
 {
     enum class EditorMode
     {
-        Cursor,
-        Terrain,
-        Pawn,
-        Portal,
+        cursor,
+        terrain,
+        pawn,
+        portal,
     };
 }
 

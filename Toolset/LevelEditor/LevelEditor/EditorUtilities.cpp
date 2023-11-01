@@ -5,7 +5,7 @@
 
 using namespace Enigma;
 
-void LevelEditor::PasteTextureImageToButton(const std::string& filepath, nana::button* btn, const unsigned int btn_size)
+void LevelEditor::pasteTextureImageToButton(const std::string& filepath, nana::button* btn, const unsigned int btn_size)
 {
     nana::paint::graphics graph(nana::size(btn_size, btn_size * 6));
     nana::paint::image img(filepath); // PNG 要另外編譯support 版本
@@ -22,7 +22,7 @@ void LevelEditor::PasteTextureImageToButton(const std::string& filepath, nana::b
     btn->set_bground(bground);
 }
 
-std::string LevelEditor::FilePathCombinePathID(const std::filesystem::path& path, const std::string& path_id)
+std::string LevelEditor::filePathCombinePathID(const std::filesystem::path& path, const std::string& path_id)
 {
     std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::Instance()->GetMountPathsWithPathID(path_id);
     if (mount_paths.empty()) return path.filename().string();
@@ -37,7 +37,7 @@ std::string LevelEditor::FilePathCombinePathID(const std::filesystem::path& path
     return path.filename().string();
 }
 
-std::tuple<MathLib::Vector3, bool> LevelEditor::ParseTextToVector3(const std::string& value)
+std::tuple<MathLib::Vector3, bool> LevelEditor::parseTextToVector3(const std::string& value)
 {
     TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 3) return { MathLib::Vector3::ZERO, false };
@@ -49,7 +49,7 @@ std::tuple<MathLib::Vector3, bool> LevelEditor::ParseTextToVector3(const std::st
     return { vec, true };
 }
 
-std::tuple<MathLib::Vector2, bool> LevelEditor::ParseTextToVector2(const std::string& value)
+std::tuple<MathLib::Vector2, bool> LevelEditor::parseTextToVector2(const std::string& value)
 {
     TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 2) return { MathLib::Vector2::ZERO, false };
@@ -61,7 +61,7 @@ std::tuple<MathLib::Vector2, bool> LevelEditor::ParseTextToVector2(const std::st
     return { vec, true };
 }
 
-std::tuple<MathLib::ColorRGBA, bool> LevelEditor::ParseTextToColorRGBA(const std::string& value)
+std::tuple<MathLib::ColorRGBA, bool> LevelEditor::parseTextToColorRGBA(const std::string& value)
 {
     TokenVector tokens = split_token(value, ", ");
     if (tokens.size() < 4) return { MathLib::ColorRGBA::WHITE, false };
@@ -73,7 +73,7 @@ std::tuple<MathLib::ColorRGBA, bool> LevelEditor::ParseTextToColorRGBA(const std
     return { color, true };
 }
 
-double LevelEditor::GetSystemTime()
+double LevelEditor::getSystemTime()
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 1000.0;
 }

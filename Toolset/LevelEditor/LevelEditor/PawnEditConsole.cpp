@@ -25,11 +25,11 @@ PawnEditConsole::~PawnEditConsole()
 
 ServiceResult PawnEditConsole::onInit()
 {
-    m_onEditorModeChanged = std::make_shared<EventSubscriber>([=](auto e) { OnEditorModeChanged(e); });
+    m_onEditorModeChanged = std::make_shared<EventSubscriber>([=](auto e) { onEditorModeChanged(e); });
     EventPublisher::subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
-    m_onSceneCursorPressed = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorPressed(e); });
+    m_onSceneCursorPressed = std::make_shared<EventSubscriber>([=](auto e) { onSceneCursorPressed(e); });
     EventPublisher::subscribe(typeid(SceneCursorPressed), m_onSceneCursorPressed);
-    m_onSceneCursorReleased = std::make_shared<EventSubscriber>([=](auto e) { OnSceneCursorReleased(e); });
+    m_onSceneCursorReleased = std::make_shared<EventSubscriber>([=](auto e) { onSceneCursorReleased(e); });
     EventPublisher::subscribe(typeid(SceneCursorReleased), m_onSceneCursorReleased);
 
     return ServiceResult::Complete;
@@ -47,7 +47,7 @@ ServiceResult PawnEditConsole::onTerm()
     return ServiceResult::Complete;
 }
 
-void PawnEditConsole::InsertCandidatePawnFilePath(const std::string& pawn_name, const std::string& filename_at_path)
+void PawnEditConsole::insertCandidatePawnFilePath(const std::string& pawn_name, const std::string& filename_at_path)
 {
     assert(!pawn_name.empty());
     assert(!filename_at_path.empty());
@@ -55,24 +55,24 @@ void PawnEditConsole::InsertCandidatePawnFilePath(const std::string& pawn_name, 
     m_pawnFilePaths.insert_or_assign(pawn_name, filename_at_path);
 }
 
-void PawnEditConsole::SelectCandidatePawn(const std::string& pawn_name)
+void PawnEditConsole::selectCandidatePawn(const std::string& pawn_name)
 {
     m_selectedCandidatePawnName = pawn_name;
 }
 
-void PawnEditConsole::OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditConsole::onEditorModeChanged(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EditorModeChanged>(e);
     if (!ev) return;
-    m_isEnabled = ev->GetCurrMode() == EditorMode::Pawn;
+    m_isEnabled = ev->GetCurrMode() == EditorMode::pawn;
     if (m_isEnabled)
     {
         CommandBus::post(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
     }
 }
 
-void PawnEditConsole::OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditConsole::onSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneCursorPressed>(e);
@@ -80,11 +80,11 @@ void PawnEditConsole::OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& 
     if (!m_isEnabled) return;
     if (ev->GetMouseParam().m_flags.m_buttons.m_ctrl)
     {
-        PutSelectedPawnToScene(ev->GetPosition());
+        putSelectedPawnToScene(ev->GetPosition());
     }
 }
 
-void PawnEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditConsole::onSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneCursorReleased>(e);
@@ -93,7 +93,7 @@ void PawnEditConsole::OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr&
 
 }
 
-void PawnEditConsole::PutSelectedPawnToScene(const Enigma::MathLib::Vector3& pos)
+void PawnEditConsole::putSelectedPawnToScene(const Enigma::MathLib::Vector3& pos)
 {
     if (m_selectedCandidatePawnName.empty()) return;
     auto it = m_pawnFilePaths.find(m_selectedCandidatePawnName);

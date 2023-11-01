@@ -51,14 +51,14 @@ void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
     std::string folder_name = m_folderNameInputBox->text();
     if (m_deleteExistFolderCheckBox->checked())
     {
-        if (const bool world_file_exist = m_worldEditor.lock()->CheckWorldMapFolder(folder_name); world_file_exist)
+        if (const bool world_file_exist = m_worldEditor.lock()->checkWorldMapFolder(folder_name); world_file_exist)
         {
             nana::msgbox mb(*this, "Create New World Map", nana::msgbox::yes_no);
             mb << "Delete Exist World Map Folder?";
             auto answer = mb.show();
             if (answer == nana::msgbox::pick_yes)
             {
-                m_worldEditor.lock()->DeleteWorldMapFolder(folder_name);
+                m_worldEditor.lock()->deleteWorldMapFolder(folder_name);
             }
         }
     }
@@ -69,7 +69,7 @@ void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
     world_map_dto.IsTopLevel() = true;
     world_map_dto.factoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
     Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
-    m_worldEditor.lock()->CreateWorldMapFolder(folder_name);
+    m_worldEditor.lock()->createWorldMapFolder(folder_name);
 
     close();
 }

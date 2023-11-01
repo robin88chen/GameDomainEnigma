@@ -21,21 +21,21 @@ LightEditService::~LightEditService()
 
 ServiceResult LightEditService::onInit()
 {
-    m_doCreatingEnvironmentLight = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingEnvironmentLight(c); });
-    CommandBus::subscribe(typeid(CreateEnvironmentLight), m_doCreatingEnvironmentLight);
+    m_createEnvironmentLight = std::make_shared<CommandSubscriber>([=](auto c) { createEnvironmentLight(c); });
+    CommandBus::subscribe(typeid(CreateEnvironmentLight), m_createEnvironmentLight);
 
     return ServiceResult::Complete;
 }
 
 ServiceResult LightEditService::onTerm()
 {
-    CommandBus::unsubscribe(typeid(CreateEnvironmentLight), m_doCreatingEnvironmentLight);
-    m_doCreatingEnvironmentLight = nullptr;
+    CommandBus::unsubscribe(typeid(CreateEnvironmentLight), m_createEnvironmentLight);
+    m_createEnvironmentLight = nullptr;
 
     return ServiceResult::Complete;
 }
 
-void LightEditService::DoCreatingEnvironmentLight(const ICommandPtr& c)
+void LightEditService::createEnvironmentLight(const ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<CreateEnvironmentLight, ICommand>(c);

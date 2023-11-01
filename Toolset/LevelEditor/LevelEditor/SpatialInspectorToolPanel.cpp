@@ -202,22 +202,22 @@ void SpatialInspectorPanel::OnLightPropertyChanged(const nana::arg_propertygrid&
     const std::string& value = arg.item.value();
     switch (index)
     {
-        case static_cast<size_t>(LightPropertyIndex::Color):
-            if (auto [color, isParseOk] = ParseTextToColorRGBA(value); isParseOk)
-            {
-                light->SetLightColor(color);
-            }
-            break;
-        case static_cast<size_t>(LightPropertyIndex::Direction):
-            if (auto [dir, isParseOk] = ParseTextToVector3(value); isParseOk)
-            {
-                light->SetLightDirection(dir);
-            }
-            break;
-        case static_cast<size_t>(LightPropertyIndex::Intensity):
-            float range = std::strtof(value.c_str(), nullptr);
-            if (range != HUGE_VALF) light->SetLightRange(range);
-            break;
+    case static_cast<size_t>(LightPropertyIndex::Color):
+        if (auto [color, isParseOk] = parseTextToColorRGBA(value); isParseOk)
+        {
+            light->SetLightColor(color);
+        }
+        break;
+    case static_cast<size_t>(LightPropertyIndex::Direction):
+        if (auto [dir, isParseOk] = parseTextToVector3(value); isParseOk)
+        {
+            light->SetLightDirection(dir);
+        }
+        break;
+    case static_cast<size_t>(LightPropertyIndex::Intensity):
+        float range = std::strtof(value.c_str(), nullptr);
+        if (range != HUGE_VALF) light->SetLightRange(range);
+        break;
     }
 }
 
@@ -247,19 +247,19 @@ void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const 
     switch (index)
     {
     case static_cast<size_t>(SpatialPropertyIndex::Position):
-        if (auto [pos, isParseOk] = ParseTextToVector3(value); isParseOk)
+        if (auto [pos, isParseOk] = parseTextToVector3(value); isParseOk)
         {
             m_selectedSpatial.lock()->SetLocalPosition(pos);
         }
         break;
     case static_cast<size_t>(SpatialPropertyIndex::Rotation):
-        if (auto [rot, isParseOk] = ParseTextToVector3(value); isParseOk)
+        if (auto [rot, isParseOk] = parseTextToVector3(value); isParseOk)
         {
             m_selectedSpatial.lock()->SetLocalEulerAngle(rot);
         }
         break;
     case static_cast<size_t>(SpatialPropertyIndex::Scale):
-        if (auto [scale, isParseOk] = ParseTextToVector3(value); isParseOk)
+        if (auto [scale, isParseOk] = parseTextToVector3(value); isParseOk)
         {
             m_selectedSpatial.lock()->SetLocalScale(scale);
         }
@@ -276,7 +276,7 @@ void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const 
     switch (index)
     {
     case static_cast<size_t>(SpatialPropertyIndex::Position):
-        if (auto [pos, isParseOk] = ParseTextToVector3(value); isParseOk)
+        if (auto [pos, isParseOk] = parseTextToVector3(value); isParseOk)
         {
             m_selectedSpatial.lock()->ChangeWorldPosition(pos, std::nullopt);
         }

@@ -30,7 +30,7 @@ WorldEditConsole::~WorldEditConsole()
 
 ServiceResult WorldEditConsole::onInit()
 {
-    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { OnWorldMapCreated(e); });
+    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
     EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     return ServiceResult::Complete;
 }
@@ -42,7 +42,7 @@ ServiceResult WorldEditConsole::onTerm()
     return ServiceResult::Complete;
 }
 
-void WorldEditConsole::SetWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id)
+void WorldEditConsole::setWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id)
 {
     auto path = std::filesystem::current_path();
     auto mediaPath = path / "../../../Media/";
@@ -51,14 +51,14 @@ void WorldEditConsole::SetWorldMapRootFolder(const std::filesystem::path& folder
     FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(m_mapFileRootPath.string(), world_map_path_id));
 }
 
-bool WorldEditConsole::CheckWorldMapFolder(const std::string& world_folder)
+bool WorldEditConsole::checkWorldMapFolder(const std::string& world_folder)
 {
     if (world_folder.empty()) return false;
     const auto world_path = m_mapFileRootPath / world_folder;
     return is_directory(world_path);
 }
 
-void WorldEditConsole::DeleteWorldMapFolder(const std::string& world_folder)
+void WorldEditConsole::deleteWorldMapFolder(const std::string& world_folder)
 {
     if (world_folder.empty()) return;
     const auto world_path = m_mapFileRootPath / world_folder;
@@ -70,7 +70,7 @@ void WorldEditConsole::DeleteWorldMapFolder(const std::string& world_folder)
     }
 }
 
-void WorldEditConsole::CreateWorldMapFolder(const std::string& folder_name)
+void WorldEditConsole::createWorldMapFolder(const std::string& folder_name)
 {
     if (folder_name.empty()) return;
     m_currentWorldFolder = folder_name;
@@ -81,11 +81,11 @@ void WorldEditConsole::CreateWorldMapFolder(const std::string& folder_name)
     }
 }
 
-void WorldEditConsole::SaveWorldMap()
+void WorldEditConsole::saveWorldMap()
 {
     assert(!m_worldEditService.expired());
     CommandBus::post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
-    auto [map_graph, node_graphs] = m_worldEditService.lock()->SerializeWorldMapAndNodeGraphs(m_worldMapPathId);
+    auto [map_graph, node_graphs] = m_worldEditService.lock()->serializeWorldMapAndNodeGraphs(m_worldMapPathId);
     if (!map_graph.empty())
     {
         std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(map_graph);
@@ -104,9 +104,9 @@ void WorldEditConsole::SaveWorldMap()
     }
 }
 
-void WorldEditConsole::LoadWorldMap(const std::filesystem::path& map_filepath)
+void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath)
 {
-    std::string path_string = FilePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
+    std::string path_string = filePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
 
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
     IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, Read | Binary);
@@ -117,11 +117,11 @@ void WorldEditConsole::LoadWorldMap(const std::filesystem::path& map_filepath)
     auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
     if (!m_worldEditService.expired())
     {
-        m_worldEditService.lock()->DeserializeWorldMap(dtos);
+        m_worldEditService.lock()->deserializeWorldMap(dtos);
     }
 }
 
-void WorldEditConsole::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
+void WorldEditConsole::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapCreated, IEvent>(e);

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EditorUtilities.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -16,13 +16,13 @@
 
 namespace LevelEditor
 {
-    void PasteTextureImageToButton(const std::string& filepath, nana::button* btn, const unsigned int btn_size);
-    std::string FilePathCombinePathID(const std::filesystem::path& path, const std::string& path_id);
-    std::tuple<Enigma::MathLib::Vector3, bool> ParseTextToVector3(const std::string& value);
-    std::tuple<Enigma::MathLib::Vector2, bool> ParseTextToVector2(const std::string& value);
-    std::tuple<Enigma::MathLib::ColorRGBA, bool> ParseTextToColorRGBA(const std::string& value);
+    void pasteTextureImageToButton(const std::string& filepath, nana::button* btn, const unsigned int btn_size);
+    std::string filePathCombinePathID(const std::filesystem::path& path, const std::string& path_id);
+    std::tuple<Enigma::MathLib::Vector3, bool> parseTextToVector3(const std::string& value);
+    std::tuple<Enigma::MathLib::Vector2, bool> parseTextToVector2(const std::string& value);
+    std::tuple<Enigma::MathLib::ColorRGBA, bool> parseTextToColorRGBA(const std::string& value);
 
-    double GetSystemTime();
+    double getSystemTime();
 }
 
 

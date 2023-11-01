@@ -47,7 +47,7 @@ MainForm::MainForm() : nana::form()
     m_spatialInspectorPanel = nullptr;
     m_terrainToolPanel = nullptr;
     m_outputPanel = nullptr;
-    m_editorMode = EditorMode::Cursor;
+    m_editorMode = EditorMode::cursor;
 }
 
 MainForm::~MainForm()
@@ -114,7 +114,7 @@ void MainForm::InitializeGraphics()
     auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->getSystemService(PawnEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<PawnEditConsole>(srv_mngr, pawn_edit));
     m_worldConsole = srv_mngr->getSystemServiceAs<WorldEditConsole>();
-    m_worldConsole.lock()->SetWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
+    m_worldConsole.lock()->setWorldMapRootFolder(m_appDelegate->GetAppConfig()->GetWorldMapRootFolderName(), m_appDelegate->GetAppConfig()->GetWorldMapPathId());
     m_pawnConsole = srv_mngr->getSystemServiceAs<PawnEditConsole>();
 }
 
@@ -244,7 +244,7 @@ void MainForm::OnLoadWorldCommand(const nana::menu::item_proxy& menu_item)
     {
         if (!m_worldConsole.expired())
         {
-            m_worldConsole.lock()->LoadWorldMap(paths[0]);
+            m_worldConsole.lock()->loadWorldMap(paths[0]);
         }
     }
 }
@@ -253,7 +253,7 @@ void MainForm::OnSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
     assert(!m_worldConsole.expired());
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Save World File..."));
-    m_worldConsole.lock()->SaveWorldMap();
+    m_worldConsole.lock()->saveWorldMap();
 }
 
 void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
@@ -264,13 +264,13 @@ void MainForm::OnAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::OnAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Environment Light..."));
-    Enigma::Frameworks::CommandBus::post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->GetCurrentWorldName()));
+    Enigma::Frameworks::CommandBus::post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->getCurrentWorldName()));
 }
 
 void MainForm::OnSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name)
 {
     if (m_pawnConsole.expired()) return;
-    m_pawnConsole.lock()->SelectCandidatePawn(pawn_name);
+    m_pawnConsole.lock()->selectCandidatePawn(pawn_name);
 }
 
 void MainForm::OnCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item)
@@ -294,8 +294,8 @@ void MainForm::OnAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_ite
         Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
         if (!m_pawnConsole.expired())
         {
-            std::string filename_sub_path = FilePathCombinePathID(paths[0], m_appDelegate->GetAppConfig()->GetMediaPathId());
-            m_pawnConsole.lock()->InsertCandidatePawnFilePath(pawn_name, filename_sub_path + "@" + m_appDelegate->GetAppConfig()->GetMediaPathId());
+            std::string filename_sub_path = filePathCombinePathID(paths[0], m_appDelegate->GetAppConfig()->GetMediaPathId());
+            m_pawnConsole.lock()->insertCandidatePawnFilePath(pawn_name, filename_sub_path + "@" + m_appDelegate->GetAppConfig()->GetMediaPathId());
         }
         ((nana::toolbar::item_proxy)(drop_down_item)).dropdown_append(pawn_name,
             [=](const nana::toolbar::item_proxy& it) { this->OnSelectPawn(it, pawn_name); });
@@ -317,16 +317,16 @@ void MainForm::OnToolBarSelected(const nana::arg_toolbar& arg)
     switch (arg.button)
     {
     case static_cast<size_t>(ToolIndex::ToolCursor):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Cursor));
-        m_editorMode = EditorMode::Cursor;
+        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::cursor));
+        m_editorMode = EditorMode::cursor;
         break;
     case static_cast<size_t>(ToolIndex::ToolTerrain):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Terrain));
-        m_editorMode = EditorMode::Terrain;
+        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::terrain));
+        m_editorMode = EditorMode::terrain;
         break;
     case static_cast<size_t>(ToolIndex::ToolEntity):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::Pawn));
-        m_editorMode = EditorMode::Pawn;
+        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::pawn));
+        m_editorMode = EditorMode::pawn;
         break;
         /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):
             break;

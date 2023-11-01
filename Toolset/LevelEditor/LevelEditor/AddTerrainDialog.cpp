@@ -140,7 +140,7 @@ AddTerrainDialog::~AddTerrainDialog()
 void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
-    terrainName = m_worldEdit.lock()->GetCurrentWorldFolder() + "/" + terrainName;
+    terrainName = m_worldEdit.lock()->getCurrentWorldFolder() + "/" + terrainName;
     char* endptr = nullptr;
     unsigned rows, cols;
     rows = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);
@@ -149,17 +149,17 @@ void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
     bool isParseOk;
     MathLib::Vector3 minVertexPos, maxVertexPos;
     MathLib::Vector2 minUV, maxUV;
-    if (std::tie(minVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
-    if (std::tie(maxVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
-    if (std::tie(minUV, isParseOk) = ParseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
-    if (std::tie(maxUV, isParseOk) = ParseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
+    if (std::tie(minVertexPos, isParseOk) = parseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxVertexPos, isParseOk) = parseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
+    if (std::tie(minUV, isParseOk) = parseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxUV, isParseOk) = parseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
     MathLib::Vector3 terrainLocalPos;
-    if (std::tie(terrainLocalPos, isParseOk) = ParseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
+    if (std::tie(terrainLocalPos, isParseOk) = parseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
     Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
     terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
 
-    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->GetWorldMapPathId()));
+    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->getWorldMapPathId()));
 
     close();
 }
@@ -186,8 +186,8 @@ void AddTerrainDialog::OnTextureLayerButton(const nana::arg_click& arg)
     fb.add_filter({ {"PNG File(*.png)", "*.png"},{"Bitmap File(*.bmp)", "*.bmp"} }).title("Select Layer Texture");
     if (auto paths = fb.show(); !paths.empty())
     {
-        PasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
-        std::string path_string = FilePathCombinePathID(paths[0], m_mediaPathId);
+        pasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
+        std::string path_string = filePathCombinePathID(paths[0], m_mediaPathId);
         m_layerTextureFilenames[btn_idx] = path_string;
     }
 }

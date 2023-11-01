@@ -29,7 +29,7 @@ ServiceResult WorldEditService::onTerm()
     return ServiceResult::Complete;
 }
 
-std::tuple<Enigma::Engine::GenericDtoCollection, std::vector<Enigma::Engine::GenericDtoCollection>> WorldEditService::SerializeWorldMapAndNodeGraphs(const std::string& path_id) const
+std::tuple<Enigma::Engine::GenericDtoCollection, std::vector<Enigma::Engine::GenericDtoCollection>> WorldEditService::serializeWorldMapAndNodeGraphs(const std::string& path_id) const
 {
     assert(!m_worldMap.expired());
     auto node_collections = m_worldMap.lock()->serializeQuadNodeGraphs();
@@ -52,7 +52,7 @@ std::tuple<Enigma::Engine::GenericDtoCollection, std::vector<Enigma::Engine::Gen
     return { map_graph, node_collections };
 }
 
-void WorldEditService::DeserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto)
+void WorldEditService::deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::WorldMap::DeserializeWorldMap>(world_map_dto));
 }

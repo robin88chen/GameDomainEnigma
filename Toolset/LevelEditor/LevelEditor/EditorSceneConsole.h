@@ -33,17 +33,17 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
-        void OnGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnMouseMoved(const Enigma::Frameworks::IEventPtr& e);
-        void OnMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e);
-        void OnMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e);
-        void OnMouseLeftDragged(const Enigma::Frameworks::IEventPtr& e);
+        void onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onMouseMoved(const Enigma::Frameworks::IEventPtr& e);
+        void onMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e);
+        void onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e);
+        void onMouseLeftDragged(const Enigma::Frameworks::IEventPtr& e);
 
-        void OnKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e);
+        void onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e);
 
-        std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> PickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
+        std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> pickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
 
     protected:
         Enigma::Frameworks::EventSubscriberPtr m_onGameCameraCreated;

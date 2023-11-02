@@ -40,13 +40,13 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
     return *this;
 }
 
-GenericDto MeshNodeTree::SerializeDto() const
+GenericDto MeshNodeTree::serializeDto() const
 {
     MeshNodeTreeDto dto;
     dto.factoryDesc() = m_factoryDesc;
     for (auto& node : m_meshNodes)
     {
-        dto.MeshNodes().emplace_back(node.SerializeDto());
+        dto.MeshNodes().emplace_back(node.serializeDto());
     }
     return dto.ToGenericDto();
 }
@@ -69,11 +69,11 @@ unsigned MeshNodeTree::AddMeshNode(const MeshNode& node)
 
     if (const auto parent_index = node.GetParentIndexInArray())  // has parent node
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * m_meshNodes[idx].GetLocalTransform());
+        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * m_meshNodes[idx].getLocalTransform());
     }
     else
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[idx].GetLocalTransform());
+        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[idx].getLocalTransform());
     }
     return idx;
 }
@@ -111,7 +111,7 @@ bool MeshNodeTree::IsInSubTree(unsigned child_node_index, const std::string& par
 void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal)
 {
     if (index >= m_meshNodes.size()) return;
-    m_meshNodes[index].SetLocalTransform(mxLocal);
+    m_meshNodes[index].setLocalTransform(mxLocal);
     auto parent_index = m_meshNodes[index].GetParentIndexInArray();
     if (parent_index)  // has parent node
     {

@@ -25,9 +25,9 @@ namespace Enigma::SceneGraph
         PortalZoneNode& operator=(PortalZoneNode&&) = delete;
         virtual ~PortalZoneNode() override;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
     protected:
         // for zone graph traversal

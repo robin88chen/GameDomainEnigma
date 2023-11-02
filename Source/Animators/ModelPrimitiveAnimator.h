@@ -33,7 +33,7 @@ namespace Enigma::Animators
         ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani);
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
-        ModelAnimatorDto SerializeDto();
+        ModelAnimatorDto serializeDto();
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 

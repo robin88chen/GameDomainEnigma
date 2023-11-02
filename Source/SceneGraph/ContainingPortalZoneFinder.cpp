@@ -17,8 +17,8 @@ ContainingPortalZoneFinder::~ContainingPortalZoneFinder()
 
 SceneTraveler::TravelResult ContainingPortalZoneFinder::TravelTo(const SpatialPtr& spatial)
 {
-    if ((!spatial) || (spatial->GetWorldBound().IsEmpty())) return SceneTraveler::TravelResult::InterruptError;
-    if (spatial->GetWorldBound().PointInside(m_targetWorldPos) == false) return SceneTraveler::TravelResult::TestFail;
+    if ((!spatial) || (spatial->getWorldBound().IsEmpty())) return SceneTraveler::TravelResult::InterruptError;
+    if (spatial->getWorldBound().PointInside(m_targetWorldPos) == false) return SceneTraveler::TravelResult::TestFail;
 
     PortalZoneNodePtr node = std::dynamic_pointer_cast<PortalZoneNode, Spatial>(spatial);
     if (node)

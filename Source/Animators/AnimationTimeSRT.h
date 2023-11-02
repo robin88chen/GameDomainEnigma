@@ -58,7 +58,7 @@ namespace Enigma::Animators
         AnimationTimeSRT();
         AnimationTimeSRT(const AnimationTimeSRTDto& dto);
 
-        AnimationTimeSRTDto SerializeDto();
+        AnimationTimeSRTDto serializeDto();
 
         MathLib::Matrix4 CalculateTransformMatrix(float off_time);
         SRTValueTie CalculateLerpedSRT(float off_time);

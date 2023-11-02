@@ -176,7 +176,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
             node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
         }
     }
-    node->ResolveFactoryLinkage(dto, *m_resolver);
+    node->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, node));
 }
 
@@ -191,7 +191,7 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     }
     assert(!m_host->HasLight(dto.getName()));
     auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
-    light->ResolveFactoryLinkage(dto, *m_resolver);
+    light->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
@@ -211,7 +211,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     {
         BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn, prim.value()));
     }
-    pawn->ResolveFactoryLinkage(dto, *m_resolver);
+    pawn->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }
 
@@ -226,7 +226,7 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
     }
     assert(!m_host->HasPortal(dto.getName()));
     auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
-    portal->ResolveFactoryLinkage(dto, *m_resolver);
+    portal->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, portal));
 }
 
@@ -247,7 +247,7 @@ void SceneGraphBuilder::InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_
     if (!sub_root) return;
     m_isCurrentBuilding = true;
     if (m_resolver) m_resolver->ClearResolvers();
-    m_builtSceneGraphMeta = BuiltSceneGraphMeta{ sub_root->GetSpatialName(), sub_root, {} };
+    m_builtSceneGraphMeta = BuiltSceneGraphMeta{ sub_root->getSpatialName(), sub_root, {} };
     for (auto& o : dtos)
     {
         m_builtSceneGraphMeta.m_builtSpatialMetas.emplace_back(BuiltSpatialMeta{ o, std::nullopt });
@@ -264,7 +264,7 @@ void SceneGraphBuilder::InterruptBuildingSceneGraph(error er)
     }
     else
     {
-        EventPublisher::post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<BuildInPlaceSceneGraphFailed>(m_builtSceneGraphMeta.m_in_placeRoot->getSpatialName(), er));
     }
     m_builtSceneGraphMeta.reset();
     BuildNextSceneGraph();
@@ -357,7 +357,7 @@ void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, co
     if (!primitive_policy) return;
     std::lock_guard locker{ m_buildingPrimitiveLock };
     auto cmd = std::make_shared<BuildRenderablePrimitive>(primitive_policy);
-    m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->GetSpatialName() });
+    m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->getSpatialName() });
     CommandBus::post(cmd);
 }
 

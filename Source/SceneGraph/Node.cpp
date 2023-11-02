@@ -27,43 +27,43 @@ Node::~Node()
     {
         SpatialPtr child = m_childList.front();
         m_childList.pop_front();
-        if (child) child->LinkParent(nullptr);
+        if (child) child->linkParent(nullptr);
         child = nullptr;
     }
     m_childList.clear();
 }
 
-Enigma::Engine::GenericDto Node::SerializeDto()
+Enigma::Engine::GenericDto Node::serializeDto()
 {
-    NodeDto dto(SerializeSpatialDto());
+    NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.ChildNames().emplace_back(child->GetSpatialName());
+        if (child) dto.ChildNames().emplace_back(child->getSpatialName());
     }
     return dto.ToGenericDto();
 }
 
-void Node::ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
+void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     NodeDto nodeDto = NodeDto::FromGenericDto(dto);
     for (auto& name : nodeDto.ChildNames())
     {
         resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
-                std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->AttachChild(sp, sp->GetLocalTransform()); });
+            std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->AttachChild(sp, sp->getLocalTransform()); });
     }
 }
 
-error Node::OnCullingVisible(Culler* culler, bool noCull)
+error Node::onCullingVisible(Culler* culler, bool noCull)
 {
-    culler->Insert(ThisSpatial());
+    culler->Insert(thisSpatial());
 
     if (m_childList.size() == 0) return ErrorCode::ok;
     error er = ErrorCode::ok;
     ChildList::iterator iter = m_childList.begin();
     while (iter != m_childList.end())
     {
-        er = (*iter)->CullVisibleSet(culler, noCull);
+        er = (*iter)->cullVisibleSet(culler, noCull);
         if (er) return er;
 
         ++iter;
@@ -71,11 +71,11 @@ error Node::OnCullingVisible(Culler* culler, bool noCull)
     return ErrorCode::ok;
 }
 
-SceneTraveler::TravelResult Node::VisitBy(SceneTraveler* traveler)
+SceneTraveler::TravelResult Node::visitBy(SceneTraveler* traveler)
 {
     if (!traveler) return SceneTraveler::TravelResult::InterruptError;
 
-    SceneTraveler::TravelResult res = traveler->TravelTo(ThisSpatial());
+    SceneTraveler::TravelResult res = traveler->TravelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
     if (m_childList.size() == 0) return res;
@@ -83,7 +83,7 @@ SceneTraveler::TravelResult Node::VisitBy(SceneTraveler* traveler)
     ChildList::iterator iter = m_childList.begin();
     while (iter != m_childList.end())
     {
-        res = (*iter)->VisitBy(traveler);
+        res = (*iter)->visitBy(traveler);
         if (res == SceneTraveler::TravelResult::InterruptError) return res;
         if (res == SceneTraveler::TravelResult::InterruptTargetFound) return res;
 
@@ -95,16 +95,16 @@ SceneTraveler::TravelResult Node::VisitBy(SceneTraveler* traveler)
 error Node::AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal)
 {
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
-    if (FATAL_LOG_EXPR(child->GetParent() != nullptr)) return ErrorCode::parentNode; // must not have parent, must detach first!!
+    if (FATAL_LOG_EXPR(child->getParent() != nullptr)) return ErrorCode::parentNode; // must not have parent, must detach first!!
 
     m_childList.push_back(child);
-    child->LinkParent(ThisSpatial());
+    child->linkParent(thisSpatial());
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
 
-    error er = child->SetLocalTransform(mxChildLocal);
+    error er = child->setLocalTransform(mxChildLocal);
 
-    child->_UpdateSpatialRenderState();
+    child->_updateSpatialRenderState();
 
     return er;
 }
@@ -112,15 +112,15 @@ error Node::AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
 error Node::DetachChild(const SpatialPtr& child)
 {
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
-    if (FATAL_LOG_EXPR(child->GetParent() != ThisSpatial())) return ErrorCode::parentNode;
+    if (FATAL_LOG_EXPR(child->getParent() != thisSpatial())) return ErrorCode::parentNode;
 
-    child->LinkParent(nullptr);
+    child->linkParent(nullptr);
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(ThisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
 
-    error er = child->SetLocalTransform(MathLib::Matrix4::IDENTITY);
+    error er = child->setLocalTransform(MathLib::Matrix4::IDENTITY);
 
-    child->_UpdateSpatialRenderState();
+    child->_updateSpatialRenderState();
 
     // now, remove child, if child has no more reference, it will be deleted
     m_childList.remove(child);
@@ -128,32 +128,32 @@ error Node::DetachChild(const SpatialPtr& child)
     return er;
 }
 
-error Node::_UpdateLocalTransform(const MathLib::Matrix4& mxLocal)
+error Node::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 {
     m_mxLocalTransform = mxLocal;
 
     MathLib::Matrix4 mxParent = MathLib::Matrix4::IDENTITY;
-    if (GetParent())
+    if (getParent())
     {
-        mxParent = GetParent()->GetWorldTransform();
+        mxParent = getParent()->getWorldTransform();
     }
-    error er = _UpdateWorldData(mxParent);
+    error er = _updateWorldData(mxParent);
     if (er) return er;
 
-    if (TestNotifyFlag(Notify_Location))
+    if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(thisSpatial()));
     }
 
     // propagate up
-    er = _UpdateBoundData();
+    er = _updateBoundData();
 
     return er;
 }
 
-error Node::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
+error Node::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
-    error er = Spatial::_UpdateWorldData(mxParentWorld);
+    error er = Spatial::_updateWorldData(mxParentWorld);
     if (er) return er;
 
     if (m_childList.size())
@@ -161,7 +161,7 @@ error Node::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
         ChildList::iterator iter = m_childList.begin();
         while (iter != m_childList.end())
         {
-            er = (*iter)->_UpdateWorldData(m_mxWorldTransform);
+            er = (*iter)->_updateWorldData(m_mxWorldTransform);
             if (er) return er;
 
             ++iter;
@@ -170,7 +170,7 @@ error Node::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
     return er;
 }
 
-error Node::_UpdateBoundData()
+error Node::_updateBoundData()
 {
     m_modelBound = Engine::BoundingVolume();
     if (m_childList.size())
@@ -180,33 +180,33 @@ error Node::_UpdateBoundData()
         {
             if (m_modelBound.IsEmpty())
             {
-                m_modelBound = Engine::BoundingVolume::CreateFromTransform((*iter)->GetModelBound(), (*iter)->GetLocalTransform());
+                m_modelBound = Engine::BoundingVolume::CreateFromTransform((*iter)->getModelBound(), (*iter)->getLocalTransform());
             }
             else
             {
-                m_modelBound.Merge((*iter)->GetLocalTransform(), (*iter)->GetModelBound());
+                m_modelBound.Merge((*iter)->getLocalTransform(), (*iter)->getModelBound());
             }
             ++iter;
         }
     }
     m_worldBound = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_mxWorldTransform);
 
-    if (TestNotifyFlag(Notify_Bounding))
+    if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(thisSpatial()));
     }
 
     error er = ErrorCode::ok;
-    if (GetParent())
+    if (getParent())
     {
-        er = GetParent()->_UpdateBoundData();
+        er = getParent()->_updateBoundData();
     }
     return er;
 }
 
-error Node::_UpdateSpatialRenderState()
+error Node::_updateSpatialRenderState()
 {
-    Spatial::_UpdateSpatialRenderState();
+    Spatial::_updateSpatialRenderState();
 
     error er = ErrorCode::ok;
     if (m_childList.size())
@@ -214,30 +214,30 @@ error Node::_UpdateSpatialRenderState()
         ChildList::iterator iter = m_childList.begin();
         while (iter != m_childList.end())
         {
-            er = (*iter)->_UpdateSpatialRenderState();
+            er = (*iter)->_updateSpatialRenderState();
             if (er) return er;
 
             ++iter;
         }
     }
-    if (TestNotifyFlag(Notify_RenderState))
+    if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(ThisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(thisSpatial()));
     }
     return er;
 }
 
-error Node::_PropagateSpatialRenderState()
+error Node::_propagateSpatialRenderState()
 {
     error er;
 
-    if (GetParent())
+    if (getParent())
     {
-        er = GetParent()->_PropagateSpatialRenderState();
+        er = getParent()->_propagateSpatialRenderState();
     }
     else
     {
-        er = _UpdateSpatialRenderState();
+        er = _updateSpatialRenderState();
     }
 
     return er;

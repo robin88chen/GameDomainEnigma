@@ -28,7 +28,7 @@ namespace Enigma::Engine
         TriangleList& operator=(const TriangleList&) = delete;
         TriangleList& operator=(TriangleList&&) = delete;
 
-        virtual GenericDto SerializeDto() const override;
+        virtual GenericDto serializeDto() const override;
 
         unsigned int GetTriangleCount();
         void FetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);

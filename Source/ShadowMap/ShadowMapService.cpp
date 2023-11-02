@@ -170,8 +170,8 @@ void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if ((!ev) || (!ev->GetPawn())) return;
-    if ((ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
-        || (ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
+    if ((ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
+        || (ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
     {
         BindShadowMapToPawn(ev->GetPawn());
     }

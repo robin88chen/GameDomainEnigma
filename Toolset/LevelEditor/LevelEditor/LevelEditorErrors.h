@@ -17,6 +17,7 @@ namespace LevelEditor
         ok = 0,
         emptyFilePath,
         fileIOError,
+        pawnPutProcedureError,
     };
     class ErrorCategory : public std::error_category
     {

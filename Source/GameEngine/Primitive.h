@@ -47,7 +47,7 @@ namespace Enigma::Engine
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        virtual GenericDto SerializeDto() const = 0;
+        virtual GenericDto serializeDto() const = 0;
 
         /** insert to renderer */
         virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,

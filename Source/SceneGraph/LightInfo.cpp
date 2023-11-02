@@ -33,7 +33,7 @@ LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::From
     m_isEnable = dto.IsEnable();
 }
 
-LightInfoDto LightInfo::SerializeDto()
+LightInfoDto LightInfo::serializeDto()
 {
     LightInfoDto dto;
     dto.LightType() = m_type;

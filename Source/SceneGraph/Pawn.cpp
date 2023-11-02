@@ -13,7 +13,7 @@ Pawn::Pawn(const std::string& name) : Spatial(name)
 {
     m_factoryDesc = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_primitive = nullptr;
-    RemoveSpatialFlag(Spatial_Unlit);
+    removeSpatialFlag(Spatial_Unlit);
 }
 
 Pawn::Pawn(const Engine::GenericDto& dto) : Spatial(dto)
@@ -25,35 +25,35 @@ Pawn::~Pawn()
     m_primitive = nullptr;
 }
 
-Enigma::Engine::GenericDto Pawn::SerializeDto()
+Enigma::Engine::GenericDto Pawn::serializeDto()
 {
     return SerializePawnDto().ToGenericDto();
 }
 
 PawnDto Pawn::SerializePawnDto()
 {
-    PawnDto dto(SerializeSpatialDto());
+    PawnDto dto(serializeSpatialDto());
     if (m_primitive)
     {
-        dto.ThePrimitive() = m_primitive->SerializeDto();
+        dto.ThePrimitive() = m_primitive->serializeDto();
     }
     return dto;
 }
 
-error Pawn::OnCullingVisible(Culler* culler, bool noCull)
+error Pawn::onCullingVisible(Culler* culler, bool noCull)
 {
     assert(culler);
-    culler->Insert(ThisSpatial());
+    culler->Insert(thisSpatial());
     return ErrorCode::ok;
 }
 
-bool Pawn::IsRenderable()
+bool Pawn::isRenderable()
 {
     if (m_primitive) return true;
     return false;
 }
 
-error Pawn::InsertToRenderer(const Engine::IRendererPtr& render)
+error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
 {
     assert(render);
     if (!m_primitive) return ErrorCode::nullPrimitive;
@@ -72,8 +72,8 @@ void Pawn::SetPrimitive(const Engine::PrimitivePtr& prim)
         m_modelBound = Engine::BoundingVolume{ m_primitive->GetBoundingVolume() };
     }
 
-    _UpdateBoundData();
-    _PropagateSpatialRenderState();
+    _updateBoundData();
+    _propagateSpatialRenderState();
 }
 
 void Pawn::CalculateModelBound(bool axis_align)
@@ -88,19 +88,19 @@ void Pawn::CalculateModelBound(bool axis_align)
         m_modelBound = Engine::BoundingVolume{ m_primitive->GetBoundingVolume() };
     }
 
-    _UpdateBoundData();
+    _updateBoundData();
 }
 
-error Pawn::_UpdateLocalTransform(const MathLib::Matrix4& mxLocal)
+error Pawn::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 {
-    error er = Spatial::_UpdateLocalTransform(mxLocal);
+    error er = Spatial::_updateLocalTransform(mxLocal);
     if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
     return er;
 }
 
-error Pawn::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
+error Pawn::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
-    error er = Spatial::_UpdateWorldData(mxParentWorld);
+    error er = Spatial::_updateWorldData(mxParentWorld);
     if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
     return er;
 }

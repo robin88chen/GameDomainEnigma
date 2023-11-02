@@ -31,13 +31,13 @@ namespace Enigma::SceneGraph
         PortalManagementNode& operator=(PortalManagementNode&&) = delete;
         virtual ~PortalManagementNode() override;
 
-        virtual Engine::GenericDto SerializeDto() override;
-        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        virtual Engine::GenericDto serializeDto() override;
+        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void AttachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
 
         /** on cull visible, used by culler, for compute visible set, find start zone, then go to portal culling procedure  */
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
     protected:
         void DoAttachingOutsideZone(const Frameworks::ICommandPtr& c);

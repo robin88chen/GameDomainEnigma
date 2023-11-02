@@ -15,6 +15,8 @@
 #include "GameEngine/FactoryDesc.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "WorldMap/WorldMapQueries.h"
+#include "WorldMap/WorldMapCommands.h"
+#include "WorldMap/WorldMapEvents.h"
 #include "Frameworks/QueryDispatcher.h"
 
 using namespace LevelEditor;
@@ -103,7 +105,15 @@ void PawnEditService::onPrefabLoaded(const IEventPtr& e)
     if (!m_currentLoadingPawn) return;
     if (ev->getPrefabAtPath() != m_currentLoadingPawn->m_full_path) return;
     m_loadedPawn = ev->getPawn();
-    tryPutPawnAt(m_loadedPawn, m_currentLoadingPawn->m_position);
+    auto has_put = tryPutPawnAt(m_loadedPawn, m_currentLoadingPawn->m_position);
+    if (has_put)
+    {
+        completePutCandidatePawn();
+    }
+    else
+    {
+        createFittingNodeForPawn(m_loadedPawn, m_currentLoadingPawn->m_position);
+    }
 }
 
 void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -113,9 +123,33 @@ void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_currentLoadingPawn) return;
     //if (ev->GetPrefabFilePath() != m_currentLoadingPawn->m_full_path) return;
-    CommandBus::post(std::make_shared<OutputMessage>(string_format("Load Pawn Failed : %s", ev->GetError().message().c_str())));
-    m_currentLoadingPawn = std::nullopt;
-    m_loadedPawn = nullptr;
+    failPutCandidatePawn(ev->GetError());
+}
+
+void PawnEditService::onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::FittingNodeCreated>(e);
+    if (!ev) return;
+    if (ev->getRequestRuid() != m_creatNodeRuid) return;
+    auto has_put = tryPutPawnAt(m_loadedPawn, m_currentLoadingPawn->m_position);
+    if (has_put)
+    {
+        completePutCandidatePawn();
+    }
+    else
+    {
+        failPutCandidatePawn(ErrorCode::pawnPutProcedureError);
+    }
+}
+
+void PawnEditService::onCreateFittingNodeFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::CreateFittingNodeFailed>(e);
+    if (!ev) return;
+    if (ev->getRequestRuid() != m_creatNodeRuid) return;
+    failPutCandidatePawn(ev->getError());
 }
 
 bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
@@ -129,6 +163,29 @@ bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Paw
     auto inv_node_transform = node->GetWorldTransform().Inverse();
     CommandBus::post(std::make_shared<AttachNodeChild>(node->GetSpatialName(), pawn, inv_node_transform * world_transform));
     return true;
+}
+
+void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
+{
+    auto world_transform = Matrix4::MakeTranslateTransform(position);
+    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->GetModelBound(), world_transform);
+    auto cmd = std::make_shared<Enigma::WorldMap::CreateFittingQuadNode>(bv);
+    m_creatNodeRuid = cmd->getRuid();
+    CommandBus::post(cmd);
+}
+
+void PawnEditService::completePutCandidatePawn()
+{
+    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put at (%f, %f, %f)", m_currentLoadingPawn->m_name.c_str(), m_currentLoadingPawn->m_position.X(), m_currentLoadingPawn->m_position.Y(), m_currentLoadingPawn->m_position.Z())));
+    m_currentLoadingPawn = std::nullopt;
+    m_loadedPawn = nullptr;
+}
+
+void PawnEditService::failPutCandidatePawn(const error& err)
+{
+    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put failed : %s", m_currentLoadingPawn->m_name.c_str(), err.message().c_str())));
+    m_currentLoadingPawn = std::nullopt;
+    m_loadedPawn = nullptr;
 }
 
 void PawnEditService::putPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)

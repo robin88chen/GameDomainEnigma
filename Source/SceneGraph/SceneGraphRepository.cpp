@@ -245,30 +245,30 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
     assert(spatial);
     if (auto pawn = std::shared_ptr<Pawn>(dynamic_cast<Pawn*>(spatial)))
     {
-        assert(!HasPawn(pawn->GetSpatialName()));
+        assert(!HasPawn(pawn->getSpatialName()));
         std::lock_guard locker{ m_pawnMapLock };
-        m_pawns.insert_or_assign(pawn->GetSpatialName(), pawn);
+        m_pawns.insert_or_assign(pawn->getSpatialName(), pawn);
         return pawn;
     }
     else if (auto node = std::shared_ptr<Node>(dynamic_cast<Node*>(spatial)))
     {
-        assert(!HasNode(node->GetSpatialName()));
+        assert(!HasNode(node->getSpatialName()));
         std::lock_guard locker{ m_nodeMapLock };
-        m_nodes.insert_or_assign(node->GetSpatialName(), node);
+        m_nodes.insert_or_assign(node->getSpatialName(), node);
         return node;
     }
     else if (auto portal = std::shared_ptr<Portal>(dynamic_cast<Portal*>(spatial)))
     {
-        assert(!HasPortal(portal->GetSpatialName()));
+        assert(!HasPortal(portal->getSpatialName()));
         std::lock_guard locker{ m_portalMapLock };
-        m_portals.insert_or_assign(portal->GetSpatialName(), portal);
+        m_portals.insert_or_assign(portal->getSpatialName(), portal);
         return portal;
     }
     else if (auto light = std::shared_ptr<Light>(dynamic_cast<Light*>(spatial)))
     {
-        assert(!HasLight(light->GetSpatialName()));
+        assert(!HasLight(light->getSpatialName()));
         std::lock_guard locker{ m_lightMapLock };
-        m_lights.insert_or_assign(light->GetSpatialName(), light);
+        m_lights.insert_or_assign(light->getSpatialName(), light);
         Frameworks::EventPublisher::post(std::make_shared<LightInfoCreated>(light));
         return light;
     }

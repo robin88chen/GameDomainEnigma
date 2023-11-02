@@ -37,7 +37,7 @@ AnimationTimeSRT::AnimationTimeSRT(const AnimationTimeSRTDto& dto)
     }
 }
 
-AnimationTimeSRTDto AnimationTimeSRT::SerializeDto()
+AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
 {
     AnimationTimeSRTDto dto;
     std::vector<float> scale_keys;

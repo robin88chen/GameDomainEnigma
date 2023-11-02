@@ -25,12 +25,12 @@ PortalZoneNode::~PortalZoneNode()
 {
 }
 
-GenericDto PortalZoneNode::SerializeDto()
+GenericDto PortalZoneNode::serializeDto()
 {
-    return LazyNode::SerializeDto();
+    return LazyNode::serializeDto();
 }
 
-error PortalZoneNode::OnCullingVisible(Culler* culler, bool noCull)
+error PortalZoneNode::onCullingVisible(Culler* culler, bool noCull)
 {
     // 需要讀取
     if (m_lazyStatus.isGhost())
@@ -49,7 +49,7 @@ error PortalZoneNode::OnCullingVisible(Culler* culler, bool noCull)
         m_hasTraversed = true;
 
         // Add the zone walls and contained objects.
-        er = Node::OnCullingVisible(culler, noCull);
+        er = Node::onCullingVisible(culler, noCull);
 
         m_hasTraversed = false;
     }

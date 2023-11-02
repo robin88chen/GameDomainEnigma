@@ -27,25 +27,25 @@ Light::~Light()
     Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
 }
 
-Enigma::Engine::GenericDto Light::SerializeDto()
+Enigma::Engine::GenericDto Light::serializeDto()
 {
-    LightDto dto(SerializeSpatialDto());
-    dto.LightInfo() = m_lightInfo.SerializeDto().ToGenericDto();
+    LightDto dto(serializeSpatialDto());
+    dto.LightInfo() = m_lightInfo.serializeDto().ToGenericDto();
     return dto.ToGenericDto();
 }
 
-error Light::OnCullingVisible(Culler*, bool)
+error Light::onCullingVisible(Culler*, bool)
 {
     return ErrorCode::ok;
 }
 
-error Light::_UpdateWorldData(const MathLib::Matrix4& mxParentWorld)
+error Light::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
-    error er = Spatial::_UpdateWorldData(mxParentWorld);
+    error er = Spatial::_updateWorldData(mxParentWorld);
     if (er) return er;
     m_lightInfo.SetLightPosition(m_vecWorldPosition);
 
-    _PropagateSpatialRenderState();
+    _propagateSpatialRenderState();
 
     return er;
 }

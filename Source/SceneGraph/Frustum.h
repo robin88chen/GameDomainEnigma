@@ -42,7 +42,7 @@ namespace Enigma::SceneGraph
         Frustum& operator=(const Frustum&) = default;
         Frustum& operator=(Frustum&&) = default;
 
-        Engine::GenericDto SerializeDto();
+        Engine::GenericDto serializeDto();
 
         GraphicCoordSys GetCoordHandSys() const { return m_handCoord; }
         /** 設定透視投影矩陣 */

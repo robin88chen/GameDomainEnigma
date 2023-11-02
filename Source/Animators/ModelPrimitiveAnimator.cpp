@@ -59,7 +59,7 @@ ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAn
     return *this;
 }
 
-ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
+ModelAnimatorDto ModelPrimitiveAnimator::serializeDto()
 {
     ModelAnimatorDto dto;
     if (!m_animationAsset) return dto;
@@ -69,11 +69,11 @@ ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
     if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
     {
-        dto.AnimationAssetDto() = m_animationAsset->SerializeDto().ToGenericDto();
+        dto.AnimationAssetDto() = m_animationAsset->serializeDto().ToGenericDto();
     }
     for (auto& op : m_skinAnimOperators)
     {
-        dto.SkinOperators().emplace_back(op.SerializeDto().ToGenericDto());
+        dto.SkinOperators().emplace_back(op.serializeDto().ToGenericDto());
     }
     return dto;
 }
@@ -282,7 +282,7 @@ bool ModelPrimitiveAnimator::UpdateMeshNodeTransformWithFading()
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().GetLocalTransform());
+            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
 
@@ -319,7 +319,7 @@ bool ModelPrimitiveAnimator::UpdateMeshNodeTransform()
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().GetLocalTransform());
+            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
     return true;

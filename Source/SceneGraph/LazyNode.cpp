@@ -19,15 +19,15 @@ LazyNode::~LazyNode()
 {
 }
 
-/*GenericDto LazyNode::SerializeDto()
+/*GenericDto LazyNode::serializeDto()
 {
-    NodeDto node_dto(SerializeSpatialDto());  // 基本的 spatial data
+    NodeDto node_dto(serializeSpatialDto());  // 基本的 spatial data
     if ((m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced))
     {
         for (auto child : m_childList)
         {
-            if (child) node_dto.ChildNames().emplace_back(child->GetSpatialName());
+            if (child) node_dto.ChildNames().emplace_back(child->getSpatialName());
         }
         GenericDto dto = node_dto.ToGenericDto();
         dto.AsTopLevel(true);
@@ -41,7 +41,7 @@ LazyNode::~LazyNode()
 
 GenericDto LazyNode::SerializeAsLaziness()
 {
-    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(SerializeSpatialDto()));
+    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));
     GenericDto dto = lazy_node_dto.ToGenericDto();
     FactoryDesc factory_desc = m_factoryDesc;
     factory_desc.ClaimAsDeferred(); // serialize as deferred
@@ -49,13 +49,13 @@ GenericDto LazyNode::SerializeAsLaziness()
     return dto;
 }
 
-bool LazyNode::CanVisited()
+bool LazyNode::canVisited()
 {
     return m_lazyStatus.isReady() || m_lazyStatus.isGhost();
 }
 
-SceneTraveler::TravelResult LazyNode::VisitBy(SceneTraveler* traveler)
+SceneTraveler::TravelResult LazyNode::visitBy(SceneTraveler* traveler)
 {
     if (m_lazyStatus.isGhost()) return SceneTraveler::TravelResult::Skip;
-    return Node::VisitBy(traveler);
+    return Node::visitBy(traveler);
 }

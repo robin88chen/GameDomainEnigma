@@ -18,7 +18,7 @@ SceneTraveler::TravelResult FindSpatialByName::TravelTo(const SpatialPtr& spatia
 {
     if (!spatial) return SceneTraveler::TravelResult::InterruptError;
     if (m_targetSpatialName == "") return SceneTraveler::TravelResult::InterruptError;
-    if (spatial->GetSpatialName() == m_targetSpatialName)
+    if (spatial->getSpatialName() == m_targetSpatialName)
     {
         m_foundSpatial = spatial;
         return TravelResult::InterruptTargetFound;

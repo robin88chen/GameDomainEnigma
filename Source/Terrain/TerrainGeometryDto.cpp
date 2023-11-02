@@ -80,7 +80,7 @@ void TerrainGeometryDto::ConvertGeometryVertices()
 
     m_vertexFormat = "xyz_nor_tex2(2,2)";
     m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    m_geometryBound = CalculateGeometryBounding().SerializeDto().ToGenericDto();
+    m_geometryBound = CalculateGeometryBounding().serializeDto().ToGenericDto();
 }
 
 unsigned TerrainGeometryDto::CalculateGeometryVertexCount() const

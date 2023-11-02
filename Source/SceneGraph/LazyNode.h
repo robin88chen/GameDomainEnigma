@@ -27,15 +27,15 @@ namespace Enigma::SceneGraph
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
 
-        //virtual Engine::GenericDto SerializeDto() override;  // use node's implementation
+        //virtual Engine::GenericDto serializeDto() override;  // use node's implementation
         virtual Engine::GenericDto SerializeAsLaziness();
 
-        virtual bool CanVisited() override;
+        virtual bool canVisited() override;
 
-        virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
-        const Frameworks::LazyStatus& TheLazyStatus() const { return m_lazyStatus; }
-        Frameworks::LazyStatus& TheLazyStatus() { return m_lazyStatus; }
+        const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
 
     protected:
         Frameworks::LazyStatus m_lazyStatus;

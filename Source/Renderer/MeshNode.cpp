@@ -92,7 +92,7 @@ MeshNode& MeshNode::operator=(MeshNode&& node) noexcept
     return *this;
 }
 
-GenericDto MeshNode::SerializeDto() const
+GenericDto MeshNode::serializeDto() const
 {
     MeshNodeDto dto;
     dto.factoryDesc() = m_factoryDesc;
@@ -101,7 +101,7 @@ GenericDto MeshNode::SerializeDto() const
     //dto.RootRefTransform() = m_mxRootRefTransform;
     if (m_meshPrimitive)
     {
-        dto.TheMeshPrimitive() = m_meshPrimitive->SerializeDto();
+        dto.TheMeshPrimitive() = m_meshPrimitive->serializeDto();
     }
     if (m_parentIndexInArray)
     {

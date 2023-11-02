@@ -34,7 +34,7 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&) noexcept;
 
-        GenericDto SerializeDto();
+        GenericDto serializeDto();
 
         const std::string& getName() { return m_name; };
 

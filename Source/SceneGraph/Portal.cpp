@@ -37,15 +37,15 @@ Portal::~Portal()
 {
 }
 
-Enigma::Engine::GenericDto Portal::SerializeDto()
+Enigma::Engine::GenericDto Portal::serializeDto()
 {
-    PortalDto dto(SerializeSpatialDto());
+    PortalDto dto(serializeSpatialDto());
     dto.IsOpen() = m_isOpen;
-    if (!m_adjacentPortalZone.expired()) dto.AdjacentZoneNodeName() = m_adjacentPortalZone.lock()->GetSpatialName();
+    if (!m_adjacentPortalZone.expired()) dto.AdjacentZoneNodeName() = m_adjacentPortalZone.lock()->getSpatialName();
     return dto.ToGenericDto();
 }
 
-void Portal::ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
+void Portal::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     PortalDto portalDto = PortalDto::FromGenericDto(dto);
     resolver.TryResolveLinkage(portalDto.AdjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
@@ -64,19 +64,19 @@ void Portal::SetAdjacentZone(const std::shared_ptr<PortalZoneNode>& node)
     }
 }
 
-error Portal::OnCullingVisible(Culler* culler, bool noCull)
+error Portal::onCullingVisible(Culler* culler, bool noCull)
 {
     if (m_adjacentPortalZone.expired()) return ErrorCode::ok;
 
-    error er = m_adjacentPortalZone.lock()->CullVisibleSet(culler, noCull);
+    error er = m_adjacentPortalZone.lock()->cullVisibleSet(culler, noCull);
     if (er) return er;
 
     return er;
 }
 
-error Portal::CullVisibleSet(Culler* culler, bool noCull)
+error Portal::cullVisibleSet(Culler* culler, bool noCull)
 {
-    if (!CanVisited()) return ErrorCode::dataNotReady;
+    if (!canVisited()) return ErrorCode::dataNotReady;
     if (FATAL_LOG_EXPR((!culler) || (!culler->GetCamera()))) return ErrorCode::nullCullerCamera;
 
     if (!m_isOpen) return ErrorCode::ok;
@@ -90,15 +90,15 @@ error Portal::CullVisibleSet(Culler* culler, bool noCull)
 
     //Todo: 這裡要先把Frustum縮小再繼續
 
-    error er = OnCullingVisible(culler, noCull);
+    error er = onCullingVisible(culler, noCull);
     if (er) return er;
 
     return er;
 }
 
-error Portal::_UpdateWorldData(const MathLib::Matrix4& parentWorld)
+error Portal::_updateWorldData(const MathLib::Matrix4& parentWorld)
 {
-    error er = Spatial::_UpdateWorldData(parentWorld);
+    error er = Spatial::_updateWorldData(parentWorld);
     if (er) return er;
 
     UpdatePortalQuad();
@@ -106,16 +106,16 @@ error Portal::_UpdateWorldData(const MathLib::Matrix4& parentWorld)
     return er;
 }
 
-SceneTraveler::TravelResult Portal::VisitBy(SceneTraveler* traveler)
+SceneTraveler::TravelResult Portal::visitBy(SceneTraveler* traveler)
 {
     if (!traveler) return SceneTraveler::TravelResult::InterruptError;
 
-    SceneTraveler::TravelResult res = traveler->TravelTo(ThisSpatial());
+    SceneTraveler::TravelResult res = traveler->TravelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
     if (!m_adjacentPortalZone.expired())
     {
-        res = m_adjacentPortalZone.lock()->VisitBy(traveler);
+        res = m_adjacentPortalZone.lock()->visitBy(traveler);
     }
     return res;
 }

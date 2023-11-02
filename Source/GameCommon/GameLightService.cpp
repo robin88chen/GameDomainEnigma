@@ -145,7 +145,7 @@ void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& comma
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreatePointLight, ICommand>(command);
     if (!cmd) return;
-    CreatePointLight(cmd->GetParentName(), cmd->GetLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor(), cmd->GetRange());
+    CreatePointLight(cmd->GetParentName(), cmd->getLocalTransform(), cmd->GetLightName(), cmd->GetPos(), cmd->GetColor(), cmd->GetRange());
 }
 
 void GameLightService::DoChangingLightPosition(const Frameworks::ICommandPtr& command) const
@@ -236,7 +236,7 @@ void GameLightService::OnSceneNodeChildAttached(const Frameworks::IEventPtr& e)
     if ((!ev) || (!ev->GetChild())) return;
     auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
     if (!light) return;
-    auto light_name = light->GetSpatialName();
+    auto light_name = light->getSpatialName();
     if (const auto it = m_pendingLightNames.find(light_name); it != m_pendingLightNames.end())
     {
         EventPublisher::post(std::make_shared<GameLightCreated>(light));

@@ -42,7 +42,7 @@ TerrainGeometry::~TerrainGeometry()
 {
 }
 
-GenericDto TerrainGeometry::SerializeDto() const
+GenericDto TerrainGeometry::serializeDto() const
 {
     TerrainGeometryDto dto;
     SerializeNonVertexAttributes(dto);

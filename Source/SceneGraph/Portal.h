@@ -32,8 +32,8 @@ namespace Enigma::SceneGraph
         Portal& operator=(Portal&&) = delete;
         virtual ~Portal() override;
 
-        virtual Engine::GenericDto SerializeDto() override;
-        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        virtual Engine::GenericDto serializeDto() override;
+        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void SetAdjacentZone(const std::shared_ptr<PortalZoneNode>& node);
         std::shared_ptr<PortalZoneNode> GetAdjacentZone() const { return m_adjacentPortalZone.lock(); };
@@ -43,14 +43,14 @@ namespace Enigma::SceneGraph
         void Open() { m_isOpen = true; };
         void Close() { m_isOpen = false; };
 
-        virtual bool CanVisited() override { return true; };
+        virtual bool canVisited() override { return true; };
 
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
-        virtual error CullVisibleSet(Culler* culler, bool noCull) override;
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
+        virtual error cullVisibleSet(Culler* culler, bool noCull) override;
 
-        virtual error _UpdateWorldData(const MathLib::Matrix4& parentWorld) override;
+        virtual error _updateWorldData(const MathLib::Matrix4& parentWorld) override;
 
-        virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
         auto GetPortalQuadWorldPosition() const { return m_vecPortalQuadWorldPos; }; // 實作寫在這裡可以用 auto return
 

@@ -228,7 +228,7 @@ error Culler::ComputeVisibleSet(const std::shared_ptr<Spatial>& scene)
     if (!scene) return ErrorCode::nullSceneGraph;
     UpdateFrustumPlanes();
 
-    return scene->CullVisibleSet(this, false);
+    return scene->cullVisibleSet(this, false);
 }
 
 bool Culler::IsVisible(const Engine::BoundingVolume& bound)

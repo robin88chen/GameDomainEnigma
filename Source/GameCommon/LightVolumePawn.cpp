@@ -28,7 +28,7 @@ LightVolumePawn::~LightVolumePawn()
 
 }
 
-GenericDto LightVolumePawn::SerializeDto()
+GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
     dto.HostLightName() = GetHostLightName();
@@ -55,9 +55,9 @@ void LightVolumePawn::ToggleCameraInside(bool is_inside)
     m_isCameraInside = is_inside;
 }
 
-error LightVolumePawn::_UpdateSpatialRenderState()
+error LightVolumePawn::_updateSpatialRenderState()
 {
-    if (!IsRenderable()) return ErrorCode::ok;  // only renderable entity need
+    if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
     Vector4 vecLightPosRange(m_hostLight.lock()->Info().GetLightPosition(), m_hostLight.lock()->Info().GetLightRange());

@@ -29,7 +29,7 @@ EffectTextureMap::~EffectTextureMap()
     m_effectTextures.clear();
 }
 
-GenericDto EffectTextureMap::SerializeDto() const
+GenericDto EffectTextureMap::serializeDto() const
 {
     EffectTextureMapDto dto;
     for (auto& tex : m_effectTextures)

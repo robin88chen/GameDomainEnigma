@@ -26,9 +26,9 @@ WorldMap::~WorldMap()
 {
 }
 
-GenericDto WorldMap::SerializeDto()
+GenericDto WorldMap::serializeDto()
 {
-    return PortalZoneNode::SerializeDto();
+    return PortalZoneNode::serializeDto();
 }
 
 void WorldMap::setPortalRootNode(const std::shared_ptr<PortalManagementNode>& root)

@@ -109,7 +109,7 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
     return *this;
 }
 
-GenericDto MeshPrimitive::SerializeDto() const
+GenericDto MeshPrimitive::serializeDto() const
 {
     return SerializeMeshDto().ToGenericDto();
 }
@@ -126,17 +126,17 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
-            dto.TheGeometry() = m_geometry->SerializeDto();
+            dto.TheGeometry() = m_geometry->serializeDto();
         }
     }
     for (auto& eff : m_effects)
     {
-        dto.Effects().emplace_back(eff->SerializeDto());
+        dto.Effects().emplace_back(eff->serializeDto());
     }
     for (auto& tex : m_textures)
     {
         if (!tex.IsAllResourceTexture()) continue;
-        dto.TextureMaps().emplace_back(tex.SerializeDto());
+        dto.TextureMaps().emplace_back(tex.serializeDto());
     }
     dto.RenderListID() = m_renderListID;
     dto.VisualTechniqueSelection() = m_selectedVisualTech;

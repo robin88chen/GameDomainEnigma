@@ -41,14 +41,14 @@ PortalManagementNode::~PortalManagementNode()
     m_cachedStartZone = nullptr;
 }
 
-GenericDto PortalManagementNode::SerializeDto()
+GenericDto PortalManagementNode::serializeDto()
 {
-    PortalManagementNodeDto dto(SerializeSpatialDto());
-    if (m_outsideZone) dto.OutsideZoneNodeName() = m_outsideZone->GetSpatialName();
+    PortalManagementNodeDto dto(serializeSpatialDto());
+    if (m_outsideZone) dto.OutsideZoneNodeName() = m_outsideZone->getSpatialName();
     return dto.ToGenericDto();
 }
 
-void PortalManagementNode::ResolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
+void PortalManagementNode::resolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
 {
     PortalManagementNodeDto nodeDto = PortalManagementNodeDto::FromGenericDto(dto);
     resolver.TryResolveLinkage(nodeDto.OutsideZoneNodeName(), [lifetime = weak_from_this()](auto sp)
@@ -64,17 +64,17 @@ void PortalManagementNode::AttachOutsideZone(const std::shared_ptr<PortalZoneNod
     m_outsideZone = node;
 }
 
-error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
+error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
 {
     if (FATAL_LOG_EXPR((!culler) || (!culler->GetCamera()))) return ErrorCode::nullCullerCamera;
 
     error er = ErrorCode::ok;
     if (!noCull)
     {
-        culler->Insert(ThisSpatial());
+        culler->Insert(thisSpatial());
         PortalZoneNodePtr startZone;
         Vector3 camPos = culler->GetCamera()->GetLocation();
-        if ((m_cachedStartZone) && (m_cachedStartZone->GetWorldBound().PointInside(camPos)))
+        if ((m_cachedStartZone) && (m_cachedStartZone->getWorldBound().PointInside(camPos)))
         {
             startZone = m_cachedStartZone;
         }
@@ -82,7 +82,7 @@ error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
         {
             ContainingPortalZoneFinder zone_finder(camPos);
             //CSceneTraveler::TravelResult result=region_finder.TravelTo(this);
-            SceneTraveler::TravelResult result = VisitBy(&zone_finder);
+            SceneTraveler::TravelResult result = visitBy(&zone_finder);
             if (result == SceneTraveler::TravelResult::InterruptError) return ErrorCode::ok;
 
             startZone = zone_finder.GetContainingZone();
@@ -91,13 +91,13 @@ error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
         if (!startZone) startZone = m_outsideZone;
         if (startZone)
         {
-            er = startZone->CullVisibleSet(culler, noCull);
+            er = startZone->cullVisibleSet(culler, noCull);
             if (er) return er;
         }
     }
     else
     {
-        er = Node::OnCullingVisible(culler, noCull);
+        er = Node::onCullingVisible(culler, noCull);
     }
     return er;
 }

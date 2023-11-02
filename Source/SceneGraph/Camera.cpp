@@ -44,7 +44,7 @@ Camera::~Camera()
 {
 }
 
-GenericDto Camera::SerializeDto()
+GenericDto Camera::serializeDto()
 {
     CameraDto dto;
     dto.factoryDesc() = m_factoryDesc;
@@ -53,7 +53,7 @@ GenericDto Camera::SerializeDto()
     dto.EyePosition() = m_vecLocation;
     dto.LookAtDirection() = m_vecEyeToLookAt;
     dto.UpVector() = m_vecUp;
-    dto.Frustum() = m_cullingFrustum.SerializeDto();
+    dto.Frustum() = m_cullingFrustum.serializeDto();
     return dto.ToGenericDto();
 }
 

@@ -130,7 +130,7 @@ void LightInfoTraversal::OnLightInfoCreated(const IEventPtr& e)
     if (!ev) return;
     if (!ev->GetLight()) return;
     std::lock_guard locker{ m_mapLock };
-    m_lights.insert_or_assign(ev->GetLight()->GetSpatialName(), ev->GetLight());
+    m_lights.insert_or_assign(ev->GetLight()->getSpatialName(), ev->GetLight());
 }
 
 void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)

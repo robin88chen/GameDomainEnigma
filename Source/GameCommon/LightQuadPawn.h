@@ -25,10 +25,10 @@ namespace Enigma::GameCommon
         LightQuadPawn& operator=(const LightQuadPawn&) = delete;
         LightQuadPawn& operator=(LightQuadPawn&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
         /// 影響的光源就是自己所帶的光源
-        virtual error _UpdateSpatialRenderState() override;
+        virtual error _updateSpatialRenderState() override;
     };
 }
 

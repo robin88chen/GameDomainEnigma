@@ -74,7 +74,7 @@ ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
     m_changeSpecifyMaterialMap.clear();
 }
 
-GenericDto ReplaceAvatarMaterial::SerializeDto() const
+GenericDto ReplaceAvatarMaterial::serializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
     dto.factoryDesc() = m_factoryDesc;
@@ -187,7 +187,7 @@ ChangeAvatarTexture::~ChangeAvatarTexture()
     m_onLoadTextureFailed = nullptr;
 }
 
-GenericDto ChangeAvatarTexture::SerializeDto() const
+GenericDto ChangeAvatarTexture::serializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
     dto.factoryDesc() = m_factoryDesc;

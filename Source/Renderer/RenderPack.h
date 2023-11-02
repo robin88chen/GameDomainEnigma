@@ -34,8 +34,8 @@ namespace Enigma::Renderer
 
         const std::shared_ptr<RenderElement>& GetRenderElement();
         const std::shared_ptr<RenderElement>& GetRenderElement() const;
-        MathLib::Matrix4 GetWorldTransform();
-        const MathLib::Matrix4& GetWorldTransform() const;
+        MathLib::Matrix4 getWorldTransform();
+        const MathLib::Matrix4& getWorldTransform() const;
         void SetWorldTransform(const MathLib::Matrix4& mxWorld);
         const Engine::RenderLightingState& GetRenderLightingState() const;
         void SetRenderLightingState(const Engine::RenderLightingState& state);

@@ -49,7 +49,7 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexce
     return *this;
 }
 
-GenericDto SkinMeshPrimitive::SerializeDto() const
+GenericDto SkinMeshPrimitive::serializeDto() const
 {
     SkinMeshPrimitiveDto dto(SerializeMeshDto());
     return dto.ToGenericDto();

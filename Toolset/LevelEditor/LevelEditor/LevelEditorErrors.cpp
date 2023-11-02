@@ -11,6 +11,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::ok: return "OK";
     case ErrorCode::emptyFilePath: return "Empty file path";
     case ErrorCode::fileIOError: return "File IO error";
+    case ErrorCode::pawnPutProcedureError: return "Pawn put procedure error";
     }
     return "Unknown";
 }

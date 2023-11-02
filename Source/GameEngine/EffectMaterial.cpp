@@ -73,7 +73,7 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
     return *this;
 }
 
-GenericDto EffectMaterial::SerializeDto()
+GenericDto EffectMaterial::serializeDto()
 {
     EffectMaterialDto dto;
     dto.Name() = m_name;

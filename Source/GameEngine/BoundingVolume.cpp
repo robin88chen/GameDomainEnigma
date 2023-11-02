@@ -78,7 +78,7 @@ BoundingVolume& BoundingVolume::operator=(BoundingVolume&& bv) noexcept
     return *this;
 }
 
-BoundingVolumeDto BoundingVolume::SerializeDto() const
+BoundingVolumeDto BoundingVolume::serializeDto() const
 {
     return BoundingVolumeDto{ BoundingBox3(), BoundingSphere3() };
 }

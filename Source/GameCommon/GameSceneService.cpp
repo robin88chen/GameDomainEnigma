@@ -82,7 +82,7 @@ void GameSceneService::CreateRootScene(const std::string& scene_root_name, const
 {
     assert(!m_sceneGraphRepository.expired());
     m_sceneRoot = m_sceneGraphRepository.lock()->CreateNode(scene_root_name, Node::TYPE_RTTI);
-    m_sceneRoot->SetLocalTransform(Matrix4::IDENTITY);
+    m_sceneRoot->setLocalTransform(Matrix4::IDENTITY);
 
     if (portal_managed_name.has_value())
     {
@@ -117,7 +117,7 @@ std::shared_ptr<Spatial> GameSceneService::FindSpatialByName(const std::string& 
     if (!GetSceneRoot()) return nullptr;
 
     SceneGraph::FindSpatialByName finder(spatial_name);
-    SceneTraveler::TravelResult res = GetSceneRoot()->VisitBy(&finder);
+    SceneTraveler::TravelResult res = GetSceneRoot()->visitBy(&finder);
     if (res == SceneTraveler::TravelResult::InterruptTargetFound)
     {
         return finder.GetFoundSpatial();
@@ -167,12 +167,12 @@ void GameSceneService::DoAttachingSceneRootChild(const Frameworks::ICommandPtr& 
     if (!cmd->GetChild()) return;
     if (!m_sceneRoot)
     {
-        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), ErrorCode::nullSceneRoot));
+        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->getSpatialName(), ErrorCode::nullSceneRoot));
         return;
     }
-    if (error er = m_sceneRoot->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
+    if (error er = m_sceneRoot->AttachChild(cmd->GetChild(), cmd->getLocalTransform()))
     {
-        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->GetChild()->getSpatialName(), er));
     }
     else
     {
@@ -189,12 +189,12 @@ void GameSceneService::DoAttachingNodeChild(const Frameworks::ICommandPtr& c)
     auto node = std::dynamic_pointer_cast<Node, Spatial>(FindSpatialByName(cmd->GetNodeName()));
     if (!node)
     {
-        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), ErrorCode::nodeNotFound));
+        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->getSpatialName(), ErrorCode::nodeNotFound));
         return;
     }
-    if (error er = node->AttachChild(cmd->GetChild(), cmd->GetLocalTransform()))
+    if (error er = node->AttachChild(cmd->GetChild(), cmd->getLocalTransform()))
     {
-        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->GetSpatialName(), er));
+        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->GetNodeName(), cmd->GetChild()->getSpatialName(), er));
     }
     else
     {
@@ -213,7 +213,7 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<DeleteSceneSpatialFailed>(cmd->getName(), ErrorCode::spatialNotFound));
         return;
     }
-    if (const auto parent = spatial->GetParent())
+    if (const auto parent = spatial->getParent())
     {
         if (const auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(parent))
         {

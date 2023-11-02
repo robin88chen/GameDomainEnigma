@@ -82,7 +82,7 @@ Frustum::Frustum(const GenericDto& dto)
     }
 }
 
-GenericDto Frustum::SerializeDto()
+GenericDto Frustum::serializeDto()
 {
     FrustumDto dto;
     dto.HandSystem() = m_handCoord;

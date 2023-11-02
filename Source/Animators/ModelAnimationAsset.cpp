@@ -27,7 +27,7 @@ ModelAnimationAsset::~ModelAnimationAsset()
     m_meshNodeKeyArray.clear();
 }
 
-ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
+ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
     dto.Name() = m_name;
@@ -37,7 +37,7 @@ ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
     for (auto& key : m_meshNodeKeyArray)
     {
         names.emplace_back(key.m_meshNodeName);
-        srts.emplace_back(key.m_timeSRTData.SerializeDto().ToGenericDto());
+        srts.emplace_back(key.m_timeSRTData.serializeDto().ToGenericDto());
     }
     dto.MeshNodeNames() = names;
     dto.TimeSRTs() = srts;

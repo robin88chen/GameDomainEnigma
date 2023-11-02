@@ -19,7 +19,7 @@ namespace Enigma::GameCommon
         AttachSceneRootChild(const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_child(child), m_localTransform(local_transform) {}
 
         const std::shared_ptr<SceneGraph::Spatial>& GetChild() const { return m_child; }
-        const MathLib::Matrix4& GetLocalTransform() const { return m_localTransform; }
+        const MathLib::Matrix4& getLocalTransform() const { return m_localTransform; }
 
     protected:
         std::shared_ptr<SceneGraph::Spatial> m_child;
@@ -32,7 +32,7 @@ namespace Enigma::GameCommon
 
         const std::string& GetNodeName() const { return m_nodeName; }
         const std::shared_ptr<SceneGraph::Spatial>& GetChild() const { return m_child; }
-        const MathLib::Matrix4& GetLocalTransform() const { return m_localTransform; }
+        const MathLib::Matrix4& getLocalTransform() const { return m_localTransform; }
 
     protected:
         std::string m_nodeName;

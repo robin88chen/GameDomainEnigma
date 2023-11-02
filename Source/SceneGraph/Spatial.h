@@ -78,124 +78,124 @@ namespace Enigma::SceneGraph
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto();
-        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
+        virtual Engine::GenericDto serializeDto();
+        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
 
-        const std::string& GetSpatialName() const { return m_name; }
+        const std::string& getSpatialName() const { return m_name; }
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         /** @name scene graph relation */
         //@{
-        void LinkParent(const std::shared_ptr<Spatial>& parent);
-        std::shared_ptr<Spatial> GetParent() const;
-        unsigned int GetGraphDepth() { return m_graphDepth; }
-        void DetachFromParent();  ///< parent should not call this function, it will be recursive forever!!
+        void linkParent(const std::shared_ptr<Spatial>& parent);
+        std::shared_ptr<Spatial> getParent() const;
+        unsigned int getGraphDepth() { return m_graphDepth; }
+        void detachFromParent();  ///< parent should not call this function, it will be recursive forever!!
         //@}
 
         /** @name culling functions */
         //@{
         /** compute visible set, used by culler */
-        virtual error CullVisibleSet(Culler* culler, bool noCull);
-        virtual bool CanVisited() = 0;
+        virtual error cullVisibleSet(Culler* culler, bool noCull);
+        virtual bool canVisited() = 0;
         /** on cull visible, used by culler, for compute visible set (recursive calling)  */
-        virtual error OnCullingVisible(Culler* culler, bool noCull) = 0;
+        virtual error onCullingVisible(Culler* culler, bool noCull) = 0;
         /** on complete not visible, only for top spatial, will not recursive */
-        virtual void OnCullingCompleteNotVisible(Culler*) {}
+        virtual void onCullingCompleteNotVisible(Culler*) {}
         //@}
         /** is renderable object?? */
-        virtual bool IsRenderable() { return false; }
+        virtual bool isRenderable() { return false; }
         /** insert spatial object to renderer */
-        virtual error InsertToRenderer(const Engine::IRendererPtr&) { return error{}; }
+        virtual error insertToRenderer(const Engine::IRendererPtr&) { return error{}; }
 
         /** get world transform */
-        MathLib::Matrix4& GetWorldTransform() { return m_mxWorldTransform; }
+        MathLib::Matrix4& getWorldTransform() { return m_mxWorldTransform; }
         /** get local transform */
-        MathLib::Matrix4& GetLocalTransform() { return m_mxLocalTransform; }
+        MathLib::Matrix4& getLocalTransform() { return m_mxLocalTransform; }
         /** get model bound */
-        const Engine::BoundingVolume& GetModelBound() { return m_modelBound; }
+        const Engine::BoundingVolume& getModelBound() { return m_modelBound; }
         /** get world bound */
-        const Engine::BoundingVolume& GetWorldBound() { return m_worldBound; }
+        const Engine::BoundingVolume& getWorldBound() { return m_worldBound; }
         /** get parent world transform */
-        MathLib::Matrix4 GetParentWorldTransform() const;
+        MathLib::Matrix4 getParentWorldTransform() const;
 
         /** @name set local position attribute, then modify local transform & update world transform/bound */
         //@{
         /** set local position */
-        virtual error SetLocalPosition(const MathLib::Vector3& pos);
+        virtual error setLocalPosition(const MathLib::Vector3& pos);
         /** set local rotation by rotation matrix */
-        virtual error SetLocalRotation(const MathLib::Matrix3& rot);
+        virtual error setLocalRotation(const MathLib::Matrix3& rot);
         /** set local rotation by quaternion */
-        virtual error SetLocalRotation(const MathLib::Quaternion& qt);
+        virtual error setLocalRotation(const MathLib::Quaternion& qt);
         /** set local rotation by euler angle */
-        virtual error SetLocalEulerAngle(const MathLib::Vector3& angle);
+        virtual error setLocalEulerAngle(const MathLib::Vector3& angle);
         /** set local scale with uniform scaling */
-        virtual error SetLocalUniformScale(float scale);
+        virtual error setLocalUniformScale(float scale);
         /** set local scale */
-        virtual error SetLocalScale(const MathLib::Vector3& scale);
+        virtual error setLocalScale(const MathLib::Vector3& scale);
         /** set local transform */
-        virtual error SetLocalTransform(const MathLib::Matrix4& mx);
+        virtual error setLocalTransform(const MathLib::Matrix4& mx);
         //@}
 
         /** @name get local position attribute */
         //@{
         /** get local position */
-        MathLib::Vector3& GetLocalPosition() { return m_vecLocalPosition; }
+        MathLib::Vector3& getLocalPosition() { return m_vecLocalPosition; }
         /** get local rotation matrix */
-        MathLib::Matrix3& GetLocalRotation() { return m_mxLocalRotation; }
+        MathLib::Matrix3& getLocalRotation() { return m_mxLocalRotation; }
         /** get local rotation quaternion */
-        MathLib::Quaternion& GetLocalQuaternion() { return m_qtLocalQuaternion; }
+        MathLib::Quaternion& getLocalQuaternion() { return m_qtLocalQuaternion; }
         /** get local rotation euler angle */
-        MathLib::Vector3& GetLocalEulerAngle() { return m_vecLocalEulerAngle; }
+        MathLib::Vector3& getLocalEulerAngle() { return m_vecLocalEulerAngle; }
         /** get local scale */
-        MathLib::Vector3& GetLocalScale() { return m_vecLocalScale; }
+        MathLib::Vector3& getLocalScale() { return m_vecLocalScale; }
         //@}
 
         /** @name get world position attribute */
         //@{
         /** get world position */
-        MathLib::Vector3& GetWorldPosition() { return m_vecWorldPosition; }
+        MathLib::Vector3& getWorldPosition() { return m_vecWorldPosition; }
         //@}
 
         /** change world position, and attach to new parent node */
-        virtual void ChangeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option);
+        virtual void changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option);
 
         /** @name scene traveler */
         //@{
         /** visit by traveler */
-        virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler);
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler);
         //@}
 
         /** culling mode, default is dynamic */
-        void SetCullingMode(CullingMode mode);
+        void setCullingMode(CullingMode mode);
         /** get culling mode */
-        CullingMode GetCullingMode() { return m_cullingMode; }
+        CullingMode getCullingMode() { return m_cullingMode; }
 
         /** add spatial flag */
-        void AddSpatialFlag(SpatialFlags flag);
+        void addSpatialFlag(SpatialFlags flag);
         /** remove spatial flag */
-        void RemoveSpatialFlag(SpatialFlags flag);
+        void removeSpatialFlag(SpatialFlags flag);
         /** get spatial flag */
-        SpatialFlags GetSpatialFlag() { return m_spatialFlags; }
+        SpatialFlags getSpatialFlag() { return m_spatialFlags; }
         /** test spatial flag */
-        bool TestSpatialFlag(SpatialFlags flag)
+        bool testSpatialFlag(SpatialFlags flag)
         {
             return (m_spatialFlags & flag).any();
         }
 
         /** notify spatial render state changed (after light changed,... etc.) */
-        virtual void NotifySpatialRenderStateChanged();
+        virtual void notifySpatialRenderStateChanged();
 
         /** @name inner public functions    */
         //@{
-        virtual error _UpdateLocalTransform(const MathLib::Matrix4& mxLocal);
-        virtual error _UpdateWorldData(const MathLib::Matrix4& mxParentWorld);
-        virtual error _UpdateBoundData();
+        virtual error _updateLocalTransform(const MathLib::Matrix4& mxLocal);
+        virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld);
+        virtual error _updateBoundData();
 
         /// call by parent
-        virtual error _UpdateSpatialRenderState();
+        virtual error _updateSpatialRenderState();
         /// notify parent to update me!!
-        virtual error _PropagateSpatialRenderState();
+        virtual error _propagateSpatialRenderState();
         //@}
 
 
@@ -204,34 +204,34 @@ namespace Enigma::SceneGraph
         //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
 
         /** add spatial notify flag */
-        void AddNotifyFlag(NotifyFlags flag)
+        void addNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags |= flag;
         }
         /** remove spatial notify flag */
-        void RemoveNotifyFlag(NotifyFlags flag)
+        void removeNotifyFlag(NotifyFlags flag)
         {
             m_notifyFlags &= (~flag);
         }
         /** get spatial notify flag */
-        NotifyFlags GetNotifyFlag() { return m_notifyFlags; };
+        NotifyFlags getNotifyFlag() { return m_notifyFlags; };
         /** test spatial notify flag */
-        bool TestNotifyFlag(NotifyFlags flag)
+        bool testNotifyFlag(NotifyFlags flag)
         {
             return (m_notifyFlags & flag).any();
         }
 
-        std::shared_ptr<Spatial> ThisSpatial()
+        std::shared_ptr<Spatial> thisSpatial()
         {
             return shared_from_this();
         }
-        std::shared_ptr<const Spatial> ThisSpatial() const
+        std::shared_ptr<const Spatial> thisSpatial() const
         {
             return shared_from_this();
         }
 
     protected:
-        SpatialDto SerializeSpatialDto();
+        SpatialDto serializeSpatialDto();
 
     protected:
         std::string m_name;

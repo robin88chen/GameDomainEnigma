@@ -41,15 +41,23 @@ namespace LevelEditor
     private:
         void onPrefabLoaded(const Enigma::Frameworks::IEventPtr& e);
         void onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onCreateFittingNodeFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void loadNextPawn();
         bool tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
+        void createFittingNodeForPawn(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
+
+        void completePutCandidatePawn();
+        void failPutCandidatePawn(const error& err);
         void putPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
     private:
         PawnLoader* m_pawnLoader;
 
         Enigma::Frameworks::EventSubscriberPtr m_onPrefabLoaded;
         Enigma::Frameworks::EventSubscriberPtr m_onLoadPrefabFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onFittingNodeCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onCreateFittingNodeFailed;
 
         struct LoadingPawnMeta
         {
@@ -60,6 +68,7 @@ namespace LevelEditor
         std::deque<LoadingPawnMeta> m_loadingPawns;
         std::optional<LoadingPawnMeta> m_currentLoadingPawn;
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_loadedPawn;
+        Enigma::Frameworks::Ruid m_creatNodeRuid;
     };
 }
 

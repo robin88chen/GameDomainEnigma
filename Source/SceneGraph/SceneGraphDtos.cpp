@@ -33,8 +33,8 @@ SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopL
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
     BoundingVolume bv{ Box3::UNIT_BOX };
-    m_modelBound = bv.SerializeDto().ToGenericDto();
-    m_worldBound = bv.SerializeDto().ToGenericDto();
+    m_modelBound = bv.serializeDto().ToGenericDto();
+    m_worldBound = bv.serializeDto().ToGenericDto();
 }
 
 SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)

@@ -77,8 +77,8 @@ SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.WorldTransform() = MathLib::Matrix4::IDENTITY;
-    m_dto.ModelBound() = m_modelBound.SerializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     m_dto.GraphDepth() = 0;
     m_dto.CullingMode() = static_cast<unsigned>(Spatial::CullingMode::Dynamic);
     m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_All);
@@ -94,15 +94,15 @@ SpatialDtoHelper& SpatialDtoHelper::LocalTransform(const MathLib::Matrix4& local
 SpatialDtoHelper& SpatialDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.WorldTransform() = world_transform;
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     return *this;
 }
 
 SpatialDtoHelper& SpatialDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
-    m_dto.ModelBound() = m_modelBound.SerializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     return *this;
 }
 
@@ -149,8 +149,8 @@ PawnDtoHelper::PawnDtoHelper(const std::string& name)
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.WorldTransform() = MathLib::Matrix4::IDENTITY;
-    m_dto.ModelBound() = m_modelBound.SerializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     m_dto.GraphDepth() = 0;
     m_dto.CullingMode() = static_cast<unsigned>(Spatial::CullingMode::Dynamic);
     m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_All);
@@ -172,15 +172,15 @@ PawnDtoHelper& PawnDtoHelper::LocalTransform(const MathLib::Matrix4& local_trans
 PawnDtoHelper& PawnDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.WorldTransform() = world_transform;
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     return *this;
 }
 
 PawnDtoHelper& PawnDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
-    m_dto.ModelBound() = m_modelBound.SerializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).SerializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
     return *this;
 }
 

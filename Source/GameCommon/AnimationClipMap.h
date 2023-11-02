@@ -51,7 +51,7 @@ namespace Enigma::GameCommon
         AnimationClipMap& operator=(const AnimationClipMap&) = default;
         AnimationClipMap& operator=(AnimationClipMap&&) = default;
 
-        Engine::GenericDto SerializeDto() const;
+        Engine::GenericDto serializeDto() const;
 
         stdext::optional_ref<AnimClip> FindAnimationClip(const std::string& name);
         std::optional<AnimClip> FindAnimationClip(const std::string& name) const;

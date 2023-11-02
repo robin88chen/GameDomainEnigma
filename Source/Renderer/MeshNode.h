@@ -28,13 +28,13 @@ namespace Enigma::Renderer
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto SerializeDto() const;
+        Engine::GenericDto serializeDto() const;
 
         const std::string& getName() const { return m_name; }
         void SetName(const std::string& name) { m_name = name; }
         void SetT_PosTransform(const MathLib::Matrix4& mx) { m_mxT_PosTransform = mx; }
-        const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocalTransform; }
-        void SetLocalTransform(const MathLib::Matrix4& mx) { m_mxLocalTransform = mx; }
+        const MathLib::Matrix4& getLocalTransform() const { return m_mxLocalTransform; }
+        void setLocalTransform(const MathLib::Matrix4& mx) { m_mxLocalTransform = mx; }
         const MathLib::Matrix4& GetRootRefTransform() const { return m_mxRootRefTransform; }
         void SetRootRefTransform(const MathLib::Matrix4& mx); // { m_mxRootRefTransform = mx; }
         const MeshPrimitivePtr& GetMeshPrimitive() const { return m_meshPrimitive; }

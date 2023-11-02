@@ -40,14 +40,14 @@ namespace Enigma::SceneGraph
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
-        virtual void ResolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        virtual Engine::GenericDto serializeDto() override;
+        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
-        virtual bool CanVisited() override { return true; };
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
+        virtual bool canVisited() override { return true; };
 
-        virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
         /** attach child spatial object, setting child's local transform, then update */
         virtual error AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal);
@@ -58,14 +58,14 @@ namespace Enigma::SceneGraph
 
         /** @name inner public functions    */
         //@{
-        virtual error _UpdateLocalTransform(const MathLib::Matrix4& mxLocal) override;
-        virtual error _UpdateWorldData(const MathLib::Matrix4& mxParentWorld) override;
-        virtual error _UpdateBoundData() override;
+        virtual error _updateLocalTransform(const MathLib::Matrix4& mxLocal) override;
+        virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
+        virtual error _updateBoundData() override;
 
         // notify parent to update me!!
-        virtual error _PropagateSpatialRenderState() override;
+        virtual error _propagateSpatialRenderState() override;
         // call by parent
-        virtual error _UpdateSpatialRenderState() override;
+        virtual error _updateSpatialRenderState() override;
         //@}
 
         /** enum animator list deep, including geometry's animator */

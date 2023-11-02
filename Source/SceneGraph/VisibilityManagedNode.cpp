@@ -29,12 +29,12 @@ VisibilityManagedNode::~VisibilityManagedNode()
 
 }
 
-GenericDto VisibilityManagedNode::SerializeDto()
+GenericDto VisibilityManagedNode::serializeDto()
 {
-    return LazyNode::SerializeDto();
+    return LazyNode::serializeDto();
 }
 
-error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
+error VisibilityManagedNode::onCullingVisible(Culler* culler, bool noCull)
 {
     // 需要讀取
     if (m_lazyStatus.isGhost())
@@ -47,10 +47,10 @@ error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
         return ErrorCode::dataNotReady;
     }
     EventPublisher::post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), true));
-    return Node::OnCullingVisible(culler, noCull);
+    return Node::onCullingVisible(culler, noCull);
 }
 
-void VisibilityManagedNode::OnCullingCompleteNotVisible(Culler* culler)
+void VisibilityManagedNode::onCullingCompleteNotVisible(Culler* culler)
 {
     if (!m_lazyStatus.isReady()) return;
 

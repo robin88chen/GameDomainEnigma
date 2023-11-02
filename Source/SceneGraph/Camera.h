@@ -40,7 +40,7 @@ namespace Enigma::SceneGraph
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto SerializeDto();
+        Engine::GenericDto serializeDto();
 
         const std::string& getName() const { return m_name; }
         GraphicCoordSys GetCoordHandSys() const { return m_handSys; }

@@ -34,7 +34,7 @@ GeometryData::~GeometryData()
 
 }
 
-GenericDto GeometryData::SerializeDto() const
+GenericDto GeometryData::serializeDto() const
 {
     return SerializeGeometryDto().ToGenericDto();
 }
@@ -121,7 +121,7 @@ void GeometryData::SerializeNonVertexAttributes(GeometryDataDto& dto) const
         dto.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
     }
     dto.Topology() = static_cast<unsigned>(m_topology);
-    dto.GeometryBound() = m_geometryBound.SerializeDto().ToGenericDto();
+    dto.GeometryBound() = m_geometryBound.serializeDto().ToGenericDto();
 }
 
 void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)

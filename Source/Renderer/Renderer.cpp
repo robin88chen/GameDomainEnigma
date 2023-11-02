@@ -120,10 +120,10 @@ error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     const SceneGraph::VisibleSet::SpatialVector& spatial_array = visible_set.GetObjectSet();
     for (const auto& sp : spatial_array)
     {
-        if (!sp->IsRenderable()) continue;  // 有很多不需要render的node, 先檢查效率較好
-        if (!sp->TestSpatialFlag(accept_filter)) continue;
-        if (sp->TestSpatialFlag(reject_filter)) continue;
-        sp->InsertToRenderer(shared_from_this());
+        if (!sp->isRenderable()) continue;  // 有很多不需要render的node, 先檢查效率較好
+        if (!sp->testSpatialFlag(accept_filter)) continue;
+        if (sp->testSpatialFlag(reject_filter)) continue;
+        sp->insertToRenderer(shared_from_this());
     }
     return ErrorCode::ok;
 }

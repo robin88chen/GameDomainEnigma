@@ -81,9 +81,9 @@ void LazyNodeIOService::DoInstancingLazyNode(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<InstanceLazyNode, ICommand>(c);
     if (!cmd) return;
     if (!cmd->GetNode()) return;
-    if (!cmd->GetNode()->TheLazyStatus().isGhost()) return;
+    if (!cmd->GetNode()->lazyStatus().isGhost()) return;
     std::lock_guard locker{ m_waitingNodesLock };
-    cmd->GetNode()->TheLazyStatus().changeStatus(LazyStatus::Status::InQueue);
+    cmd->GetNode()->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_waitingNodes.push_back(cmd->GetNode());
     m_needTick = true;
 }
@@ -104,10 +104,10 @@ void LazyNodeIOService::OnDeserializingDtoFailed(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
     std::string node_name = "unknown";
-    if (m_in_placeNode) node_name = m_in_placeNode->GetSpatialName();
+    if (m_in_placeNode) node_name = m_in_placeNode->getSpatialName();
     Platforms::Debug::ErrorPrintf("deserializing lazy node %s dto failed : %s", node_name.c_str(), ev->GetErrorCode().message().c_str());
     EventPublisher::post(std::make_shared<InstanceLazyNodeFailed>(m_in_placeNode, ev->GetErrorCode()));
-    if (m_in_placeNode) m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ghost);
+    if (m_in_placeNode) m_in_placeNode->lazyStatus().changeStatus(LazyStatus::Status::Ghost);
     m_isCurrentInstancing = false;
 }
 
@@ -118,7 +118,7 @@ void LazyNodeIOService::OnInPlaceSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_in_placeNode) return;
     if (ev->GetInPlaceRootNode() != m_in_placeNode) return;
-    m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
+    m_in_placeNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     m_in_placeNode->factoryDesc().ClaimAsInstanced();
     EventPublisher::post(std::make_shared<LazyNodeInstanced>(m_in_placeNode));
     m_isCurrentInstancing = false;
@@ -165,7 +165,7 @@ void LazyNodeIOService::InstanceNextLazyNode()
     const auto node = m_waitingNodes.front();
     m_waitingNodes.pop_front();
     m_in_placeNode = node;
-    m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Loading);
+    m_in_placeNode->lazyStatus().changeStatus(LazyStatus::Status::Loading);
     m_isCurrentInstancing = true;
     if (m_dtoDeserializer)
     {
@@ -175,7 +175,7 @@ void LazyNodeIOService::InstanceNextLazyNode()
     else
     {
         Platforms::Debug::ErrorPrintf("Instance Lazy Node without dto deserializer!!");
-        m_in_placeNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ghost);
+        m_in_placeNode->lazyStatus().changeStatus(LazyStatus::Status::Ghost);
         m_isCurrentInstancing = false;
     }
 }

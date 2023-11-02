@@ -61,7 +61,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
         MeshNodeDto node_dto = MeshNodeDto::FromGenericDto(dto);
         MeshNode node(node_dto.Name());
         node.SetT_PosTransform(node_dto.LocalT_PosTransform());
-        node.SetLocalTransform(node_dto.LocalT_PosTransform());
+        node.setLocalTransform(node_dto.LocalT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
         if (auto v = node_dto.ParentIndexInArray())
         {

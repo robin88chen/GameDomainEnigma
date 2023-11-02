@@ -235,9 +235,9 @@ void DeferredRendererService::OnSceneGraphChanged(const Frameworks::IEventPtr& e
     if (ev->GetNotifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
     const auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
     if (!light) return;
-    const auto lightPawn = FindLightingPawn(light->GetSpatialName());
+    const auto lightPawn = FindLightingPawn(light->getSpatialName());
     auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetParentNode());
-    if (lightPawn) lightPawn->ChangeWorldPosition(lightPawn->GetWorldPosition(), parent_node);
+    if (lightPawn) lightPawn->changeWorldPosition(lightPawn->getWorldPosition(), parent_node);
 }
 
 void DeferredRendererService::OnGBufferTextureCreated(const Frameworks::IEventPtr& e)
@@ -310,7 +310,7 @@ void DeferredRendererService::OnSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if (!top_spatials[0]) return;
     auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(top_spatials[0]);
     if (!lighting_pawn) return;
-    if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->GetSpatialName()); lit != m_buildingLightPawns.end())
+    if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->getSpatialName()); lit != m_buildingLightPawns.end())
     {
         if (!lit->second.m_parentNodeName.empty())
         {
@@ -346,7 +346,7 @@ void DeferredRendererService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Pawn>(ev->GetPawn());
     if (!lighting_pawn) return;
     BindGBufferToLightingPawn(lighting_pawn);
-    lighting_pawn->NotifySpatialRenderStateChanged();
+    lighting_pawn->notifySpatialRenderStateChanged();
     CheckLightVolumeBackfaceCulling(lighting_pawn->GetHostLightName());
 }
 
@@ -376,7 +376,7 @@ void DeferredRendererService::DoBindingGBuffer(const Frameworks::ICommandPtr& c)
 void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = lit->GetSpatialName() + "_lit_quad" + ".geo";
+    std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
@@ -390,22 +390,22 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_quad");
+    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.MeshPrimitive(mesh_dto)
         .TopLevel(true)
         .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
-    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
 void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = lit->GetSpatialName() + "_lit_quad" + ".geo";
+    std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
     SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
@@ -419,22 +419,22 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_quad");
+    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.MeshPrimitive(mesh_dto)
         .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true)
         .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
-    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
 void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(lit);
-    std::string vol_geo_name = "deferred_" + lit->GetSpatialName() + "_lit_volume.geo";
+    std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
     SphereDtoHelper sphere_dto_helper(vol_geo_name);
     sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->LightVolumeEffectName());
@@ -447,14 +447,14 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    PawnDtoHelper pawn_helper(lit->GetSpatialName() + "_lit_volume");
+    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");
     pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).MeshPrimitive(mesh_dto)
-        .TopLevel(true).LocalTransform(lit->GetLocalTransform());
+        .TopLevel(true).LocalTransform(lit->getLocalTransform());
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
-    lighting_pawn_dto.HostLightName() = lit->GetSpatialName();
+    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.ToGenericDto();
     auto dtos = { pawn_dto };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->GetSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
     InsertLightPawnBuildingMeta(pawn_dto.getName(), lit);
 }
 
@@ -462,8 +462,8 @@ void DeferredRendererService::InsertLightPawnBuildingMeta(const std::string& paw
 {
     if (!lit) return;
     SceneGraphLightPawnMeta meta;
-    if (lit->GetParent()) meta.m_parentNodeName = lit->GetParent()->GetSpatialName();
-    meta.m_localTransform = lit->GetLocalTransform();
+    if (lit->getParent()) meta.m_parentNodeName = lit->getParent()->getSpatialName();
+    meta.m_localTransform = lit->getLocalTransform();
     m_buildingLightPawns.insert({ pawn_name, meta });
 }
 
@@ -479,52 +479,52 @@ void DeferredRendererService::UpdateAmbientLightQuad(const std::shared_ptr<Scene
 {
     assert(lit);
     if (notify != LightInfoUpdated::NotifyCode::Color) return;
-    const auto& pawn = FindLightingPawn(lit->GetSpatialName());
+    const auto& pawn = FindLightingPawn(lit->getSpatialName());
     if (!pawn) return;
-    pawn->NotifySpatialRenderStateChanged();
+    pawn->notifySpatialRenderStateChanged();
 }
 
 void DeferredRendererService::UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
     assert(lit);
     if (lit->Info().GetLightType() != LightInfo::LightType::Point) return;
-    const auto& pawn = FindLightingPawn(lit->GetSpatialName());
+    const auto& pawn = FindLightingPawn(lit->getSpatialName());
     if (!pawn) return;
     if (notify == LightInfoUpdated::NotifyCode::Position)
     {
-        pawn->ChangeWorldPosition(lit->GetLightPosition(), std::nullopt);
+        pawn->changeWorldPosition(lit->GetLightPosition(), std::nullopt);
     }
     else if (notify == LightInfoUpdated::NotifyCode::Range)
     {
-        pawn->SetLocalUniformScale(lit->GetLightRange());
+        pawn->setLocalUniformScale(lit->GetLightRange());
     }
     else if (notify == LightInfoUpdated::NotifyCode::Enable)
     {
         if (lit->Info().IsEnable())
         {
-            pawn->RemoveSpatialFlag(Spatial::Spatial_Hide);
+            pawn->removeSpatialFlag(Spatial::Spatial_Hide);
         }
         else
         {
-            pawn->AddSpatialFlag(Spatial::Spatial_Hide);
+            pawn->addSpatialFlag(Spatial::Spatial_Hide);
         }
     }
     else if (notify == LightInfoUpdated::NotifyCode::Color)
     {
-        pawn->NotifySpatialRenderStateChanged();
+        pawn->notifySpatialRenderStateChanged();
     }
 
-    CheckLightVolumeBackfaceCulling(lit->GetSpatialName());
+    CheckLightVolumeBackfaceCulling(lit->getSpatialName());
 }
 
 void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify)
 {
     assert(lit);
-    const auto& pawn = FindLightingPawn(lit->GetSpatialName());
+    const auto& pawn = FindLightingPawn(lit->getSpatialName());
     if (!pawn) return;
     if ((notify == LightInfoUpdated::NotifyCode::Color) || (notify == LightInfoUpdated::NotifyCode::Direction))
     {
-        pawn->NotifySpatialRenderStateChanged();
+        pawn->notifySpatialRenderStateChanged();
     }
 }
 
@@ -581,7 +581,7 @@ void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::shared_
 {
     if (!lit_vol) return;
     if (!cam) return;
-    const BoundingVolume& bv = lit_vol->GetWorldBound();
+    const BoundingVolume& bv = lit_vol->getWorldBound();
     if (bv.IsEmpty()) return;
     if (bv.PointInside(cam->GetLocation()))
     {

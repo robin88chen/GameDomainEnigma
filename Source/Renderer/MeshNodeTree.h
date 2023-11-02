@@ -30,7 +30,7 @@ namespace Enigma::Renderer
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto SerializeDto() const;
+        Engine::GenericDto serializeDto() const;
 
         std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name) const;
         /** add mesh node to tree

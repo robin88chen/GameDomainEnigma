@@ -26,7 +26,7 @@ TriangleList::~TriangleList()
 {
 }
 
-GenericDto TriangleList::SerializeDto() const
+GenericDto TriangleList::serializeDto() const
 {
     TriangleListDto dto(SerializeGeometryDto());
     return dto.ToGenericDto();

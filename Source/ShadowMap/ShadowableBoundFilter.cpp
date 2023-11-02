@@ -11,7 +11,7 @@ ShadowableBoundFilter::ShadowableBoundFilter() : RenderableBoundFilter()
 bool ShadowableBoundFilter::FilterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial)
 {
     if (RenderableBoundFilter::FilterOutSpatial(spatial)) return true;
-    if (spatial->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster | SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)) return false;
+    if (spatial->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster | SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)) return false;
     return true;
 }
 

@@ -32,13 +32,13 @@ AnimatedPawn::~AnimatedPawn()
     m_avatarRecipeList.clear();
 }
 
-GenericDto AnimatedPawn::SerializeDto()
+GenericDto AnimatedPawn::serializeDto()
 {
     AnimatedPawnDto dto(SerializePawnDto());
-    dto.TheAnimationClipMapDto() = m_animationClipMap.SerializeDto();
+    dto.TheAnimationClipMapDto() = m_animationClipMap.serializeDto();
     for (auto& avatar_recipe : m_avatarRecipeList)
     {
-        dto.AvatarRecipeDtos().push_back(avatar_recipe->SerializeDto());
+        dto.AvatarRecipeDtos().push_back(avatar_recipe->serializeDto());
     }
     return dto.ToGenericDto();
 }

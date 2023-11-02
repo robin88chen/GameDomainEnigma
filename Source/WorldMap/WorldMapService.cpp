@@ -98,19 +98,19 @@ std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::serializeQuad
 
     std::vector<Engine::GenericDtoCollection> collections;
     EnumDerivedSpatials enumNode(VisibilityManagedNode::TYPE_RTTI);
-    m_world.lock()->VisitBy(&enumNode);
+    m_world.lock()->visitBy(&enumNode);
     if (enumNode.GetSpatials().empty()) return collections;
 
     for (auto& node : enumNode.GetSpatials())
     {
         //todo : if quad node has portal node child, then need serialize portal node
         SceneFlattenTraversal flatten;
-        node->VisitBy(&flatten);
+        node->visitBy(&flatten);
         if (flatten.GetSpatials().empty()) continue;
         Engine::GenericDtoCollection collection;
         for (auto& sp : flatten.GetSpatials())
         {
-            collection.push_back(sp->SerializeDto());
+            collection.push_back(sp->serializeDto());
         }
         collection[0].AsTopLevel(true);
         collections.push_back(collection);
@@ -122,7 +122,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::serializeWorldMap() const
 {
     assert(!m_world.expired());
     Engine::GenericDtoCollection collection;
-    auto world_dto = m_world.lock()->SerializeDto();
+    auto world_dto = m_world.lock()->serializeDto();
     world_dto.AsTopLevel(true);
     collection.push_back(world_dto);
     for (auto node : m_listQuadRoot)
@@ -134,11 +134,11 @@ Enigma::Engine::GenericDtoCollection WorldMapService::serializeWorldMap() const
     {
         if (!child) continue;
         EnumNonDerivedSpatials enumSpatials(LazyNode::TYPE_RTTI);
-        child->VisitBy(&enumSpatials);
+        child->visitBy(&enumSpatials);
         for (const auto& spatial : enumSpatials.GetSpatials())
         {
             if (!spatial) continue;
-            collection.push_back(spatial->SerializeDto());
+            collection.push_back(spatial->serializeDto());
         }
     }
     return collection;
@@ -155,9 +155,9 @@ void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     assert(terrain);
     assert(!m_sceneGraphRepository.expired());
     if (FATAL_LOG_EXPR(m_world.expired())) return;
-    std::string node_name = terrain->GetSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
+    std::string node_name = terrain->getSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
-    quadRootNode->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);
+    quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_world.lock()->AttachChild(quadRootNode, local_transform);
@@ -171,7 +171,7 @@ std::shared_ptr<Node> WorldMapService::queryFittingNode(const Engine::BoundingVo
     for (auto root : m_listQuadRoot)
     {
         if (root.expired()) continue;
-        Matrix4 root_inv_world_mx = root.lock()->GetWorldTransform().Inverse();
+        Matrix4 root_inv_world_mx = root.lock()->getWorldTransform().Inverse();
         auto bv_in_node = Engine::BoundingVolume::CreateFromTransform(bv_in_world, root_inv_world_mx);
         if (auto node = findFittingNodeFromQuadRoot(root.lock(), bv_in_node)) return node;
     }
@@ -180,7 +180,7 @@ std::shared_ptr<Node> WorldMapService::queryFittingNode(const Engine::BoundingVo
 
 std::shared_ptr<Node> WorldMapService::findFittingNodeFromQuadRoot(const std::shared_ptr<Node>& root, const Engine::BoundingVolume& bv_in_root) const
 {
-    auto root_local_box = root->GetModelBound().BoundingBox3();
+    auto root_local_box = root->getModelBound().BoundingBox3();
     if (!root_local_box) return root;
     Vector3 root_box_min = root_local_box->Center() - Vector3(root_local_box->Extent());
     Vector3 root_box_max = root_local_box->Center() + Vector3(root_local_box->Extent());
@@ -200,7 +200,7 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
     if (!parent) return nullptr;
 
     if (parent->GetChildList().empty()) return parent;
-    const auto parent_node_box = parent->GetModelBound().BoundingBox3();
+    const auto parent_node_box = parent->getModelBound().BoundingBox3();
     if (!parent_node_box) return parent;
 
     Vector3 local_pos = bv_in_node.Center();
@@ -209,18 +209,18 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
     if (!envelop) return parent;  // 下一層放不下這物件，返回本層
 
     std::shared_ptr<Node> fitting_node = nullptr;
-    std::string parent_node_unfix_name = parent->GetSpatialName();
+    std::string parent_node_unfix_name = parent->getSpatialName();
     parent_node_unfix_name = parent_node_unfix_name.substr(0, parent_node_unfix_name.length()); // -strlen(NODE_FILE_EXT));
     std::string target_node_name = parent_node_unfix_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
     FindSpatialByName find_spatial(target_node_name);
-    SceneTraveler::TravelResult result_find_node = parent->VisitBy(&find_spatial);
+    SceneTraveler::TravelResult result_find_node = parent->visitBy(&find_spatial);
     if (result_find_node == SceneTraveler::TravelResult::InterruptTargetFound)
     {
         fitting_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
     }
     if (!fitting_node) return nullptr;
     //todo : 原做法會再細切子節點，違背 CQS原則，要改成 query 失敗後，再送 command 細切子節點
-    Matrix4 fitting_node_inv_local_mx = fitting_node->GetLocalTransform().Inverse();
+    Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();
     auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
     return findFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
 }
@@ -284,7 +284,7 @@ void WorldMapService::createFittingNode(const Engine::BoundingVolume& bv_in_worl
     for (auto root : m_listQuadRoot)
     {
         if (root.expired()) continue;
-        Matrix4 root_inv_world_mx = root.lock()->GetWorldTransform().Inverse();
+        Matrix4 root_inv_world_mx = root.lock()->getWorldTransform().Inverse();
         auto bv_in_node = Engine::BoundingVolume::CreateFromTransform(bv_in_world, root_inv_world_mx);
         er = tryCreateFittingNodeFromQuadRoot(root.lock(), bv_in_node);
         if (er == ErrorCode::ok) return;
@@ -295,7 +295,7 @@ void WorldMapService::createFittingNode(const Engine::BoundingVolume& bv_in_worl
 
 std::error_code WorldMapService::tryCreateFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root)
 {
-    auto root_local_box = root->GetModelBound().BoundingBox3();
+    auto root_local_box = root->getModelBound().BoundingBox3();
     if (!root_local_box) return ErrorCode::invalidBoundingBox;
     Vector3 root_box_min = root_local_box->Center() - Vector3(root_local_box->Extent());
     Vector3 root_box_max = root_local_box->Center() + Vector3(root_local_box->Extent());
@@ -318,7 +318,7 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<
     }
     if (!parent) return ErrorCode::nullQuadNode;
 
-    const auto parent_node_box = parent->GetModelBound().BoundingBox3();
+    const auto parent_node_box = parent->getModelBound().BoundingBox3();
     if (!parent_node_box) return ErrorCode::invalidBoundingBox;
 
     Vector3 local_pos = bv_in_node.Center();
@@ -331,11 +331,11 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<
     }
 
     std::shared_ptr<Node> fitting_node = nullptr;
-    std::string parent_node_unfix_name = parent->GetSpatialName();
+    std::string parent_node_unfix_name = parent->getSpatialName();
     parent_node_unfix_name = parent_node_unfix_name.substr(0, parent_node_unfix_name.length()); // -strlen(NODE_FILE_EXT));
     std::string target_node_name = parent_node_unfix_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
     FindSpatialByName find_spatial(target_node_name);
-    SceneTraveler::TravelResult result_find_node = parent->VisitBy(&find_spatial);
+    SceneTraveler::TravelResult result_find_node = parent->visitBy(&find_spatial);
     if (result_find_node == SceneTraveler::TravelResult::InterruptTargetFound)
     {
         fitting_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
@@ -343,14 +343,17 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<
     if (!fitting_node)
     {
         if (m_sceneGraphRepository.expired()) return ErrorCode::nullSceneGraphRepository;
-        auto subQuadNode = m_sceneGraphRepository.lock()->CreateNode(target_node_name, VisibilityManagedNode::TYPE_RTTI);
-        subQuadNode->factoryDesc().ClaimAsDeferred();
-        Matrix4 mxLocal;
-        mxLocal.MakeTranslateTransform(sub_tree_box_in_parent.Center());
-        parent->AttachChild(subQuadNode, mxLocal);
-        fitting_node = subQuadNode;
+        auto sub_quad_node = std::dynamic_pointer_cast<LazyNode>(m_sceneGraphRepository.lock()->CreateNode(target_node_name, VisibilityManagedNode::TYPE_RTTI));
+        sub_quad_node->lazyStatus().changeStatus(LazyStatus::Status::Ready);
+        sub_quad_node->factoryDesc().ClaimAsDeferred();
+        Box3 sub_quad_box = sub_tree_box_in_parent;
+        sub_quad_box.Center() = Vector3::ZERO;
+        Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
+        Matrix4 mxLocal = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
+        parent->AttachChild(sub_quad_node, mxLocal);
+        fitting_node = sub_quad_node;
     }
-    Matrix4 fitting_node_inv_local_mx = fitting_node->GetLocalTransform().Inverse();
+    Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();
     auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
     return tryCreateFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
 }
@@ -407,7 +410,7 @@ void WorldMapService::onSceneGraphBuilt(const IEventPtr& e)
     m_world = std::dynamic_pointer_cast<WorldMap, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!m_world.expired())
     {
-        m_world.lock()->TheLazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
+        m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
         EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
         CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }
@@ -418,7 +421,7 @@ void WorldMapService::onLazyNodeInstanced(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LazyNodeInstanced, IEvent>(e);
     if ((!ev) || (!ev->GetNode())) return;
-    if (ev->GetNode()->GetParent() == m_world.lock())
+    if (ev->GetNode()->getParent() == m_world.lock())
     {
         m_listQuadRoot.push_back(ev->GetNode());
     }

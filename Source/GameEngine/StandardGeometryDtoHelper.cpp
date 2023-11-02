@@ -96,13 +96,13 @@ GenericDto SquareQuadDtoHelper::ToGenericDto()
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     }
     else if (auto& pos4 = m_dto.Position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     }
     return m_dto.ToGenericDto();
 }
@@ -379,13 +379,13 @@ GenericDto CubeDtoHelper::ToGenericDto()
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos.value()[0]), static_cast<unsigned>(pos.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     }
     else if (auto& pos4 = m_dto.Position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     }
     return m_dto.ToGenericDto();
 }
@@ -395,7 +395,7 @@ SphereDtoHelper::SphereDtoHelper(const std::string& name)
     m_radius = 1.0f;
     m_dto.Name() = name;
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
-    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
 }
 
 SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
@@ -577,7 +577,7 @@ SphereDtoHelper& SphereDtoHelper::TextureCoord()
 SphereDtoHelper& SphereDtoHelper::SphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
-    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     return *this;
 }
 
@@ -590,7 +590,7 @@ SphereDtoHelper& SphereDtoHelper::BoxBound()
     box.Extent(2) = m_radius;
 
     const auto bb = BoundingVolume{ box };
-    m_dto.GeometryBound() = bb.SerializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
     return *this;
 }
 

@@ -73,14 +73,14 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
     return *this;
 }
 
-GenericDto ModelPrimitive::SerializeDto() const
+GenericDto ModelPrimitive::serializeDto() const
 {
     ModelPrimitiveDto dto;
     dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
-    dto.TheNodeTree() = m_nodeTree.SerializeDto();
+    dto.TheNodeTree() = m_nodeTree.serializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
-        dto.TheAnimator() = ani->SerializeDto().ToGenericDto();
+        dto.TheAnimator() = ani->serializeDto().ToGenericDto();
     return dto.ToGenericDto();
 }
 

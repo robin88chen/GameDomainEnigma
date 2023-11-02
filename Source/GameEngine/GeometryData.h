@@ -40,7 +40,7 @@ namespace Enigma::Engine
         GeometryData& operator=(const GeometryData&) = delete;
         GeometryData& operator=(GeometryData&&) = delete;
 
-        virtual GenericDto SerializeDto() const;
+        virtual GenericDto serializeDto() const;
 
         const std::string& getName() { return m_name; }
 

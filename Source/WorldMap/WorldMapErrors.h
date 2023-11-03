@@ -22,6 +22,7 @@ namespace Enigma::WorldMap
         outOfQuadTreeDepth,
         invalidBoundingBox,
         nullQuadNode,
+        emptyQuadGraph,
     };
     class ErrorCategory : public std::error_category
     {

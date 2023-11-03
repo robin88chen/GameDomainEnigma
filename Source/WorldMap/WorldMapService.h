@@ -16,6 +16,7 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Terrain/TerrainPawn.h"
 #include "GameEngine/BoundingVolume.h"
+#include "GameEngine/GenericDto.h"
 #include <system_error>
 
 namespace Enigma::WorldMap
@@ -45,10 +46,15 @@ namespace Enigma::WorldMap
         std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
         std::shared_ptr<SceneGraph::Node> findFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_node) const;
         std::shared_ptr<SceneGraph::Node> findFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth) const;
-        std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
-        bool testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const;
+
         void createFittingNode(const Engine::BoundingVolume& bv_in_world);
         std::error_code tryCreateFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root);
+        std::error_code tryCreateFittingQuadLeaves(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node);
+        Engine::GenericDtoCollection createFittingQuadGraph(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root);
+
+        std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
+        bool testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const;
+        std::shared_ptr<SceneGraph::Node> findTargetSubtree(const std::shared_ptr<SceneGraph::Node>& any_level_parent, const std::string& parent_name, unsigned sub_tree_index) const;
         std::error_code tryCreateFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth);
         void completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node);
         void failCreateFittingNode(std::error_code err);

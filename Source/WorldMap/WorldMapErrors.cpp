@@ -15,6 +15,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::outOfQuadTreeDepth: return "Out of QuadTree Depth";
     case ErrorCode::invalidBoundingBox: return "Invalid Bounding Box";
     case ErrorCode::nullQuadNode: return "Null QuadNode";
+    case ErrorCode::emptyQuadGraph: return "Empty QuadGraph";
     }
     return "Unknown";
 }

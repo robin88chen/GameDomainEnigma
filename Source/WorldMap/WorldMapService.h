@@ -51,6 +51,8 @@ namespace Enigma::WorldMap
         std::error_code tryCreateFittingNodeFromQuadRoot(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root);
         std::error_code tryCreateFittingQuadLeaves(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node);
         Engine::GenericDtoCollection createFittingQuadGraph(const std::shared_ptr<SceneGraph::Node>& root, const Engine::BoundingVolume& bv_in_root);
+        SceneGraph::VisibilityManagedNodeDto createSubQuadNodeDto(const std::string& parent_name, unsigned sub_tree_index, const MathLib::Box3& sub_tree_box_in_parent, const MathLib::Matrix4& local_transform);
+        void linkQuadTreeChild(std::vector<SceneGraph::VisibilityManagedNodeDto>& node_dtos, const std::string& parent_name, const std::string& child_name);
 
         std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
         bool testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const;

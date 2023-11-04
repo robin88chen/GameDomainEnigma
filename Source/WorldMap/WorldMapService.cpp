@@ -21,6 +21,7 @@
 #include "SceneGraph/FindSpatialByName.h"
 #include "MathLib/Box2.h"
 #include "MathLib/ContainmentBox2.h"
+#include "SceneGraph/SceneGraphDtos.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -263,6 +264,8 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaves(const std::shared_pt
 Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(const std::shared_ptr<Node>& root, const Engine::BoundingVolume& dest_bv_in_root)
 {
     Engine::GenericDtoCollection dtos;
+    std::vector<VisibilityManagedNodeDto> sub_quad_dtos;
+
     int depth = MAX_RECURSIVE_DEPTH;
     std::string parent_node_name = root->getSpatialName();
     Matrix4 root_local_mx = root->getLocalTransform();
@@ -290,15 +293,44 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
                 dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
                 dest_box = dest_bv_in_node.BoundingBox3();
                 depth--;
-                continue;
             }
             else
             {
                 has_sub_tree = false;
             }
         }
+        if (!has_sub_tree)
+        {
+            VisibilityManagedNodeDto dto = createSubQuadNodeDto(parent_node_name, sub_tree_index, sub_tree_box_in_parent, root_local_mx);
+            linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.Name());
+            parent_node_name = dto.Name();
+            parent_box = Engine::BoundingVolumeDto::FromGenericDto(dto.ModelBound()).Box().value();
+            Matrix4 parent_inv_local_mx = dto.LocalTransform().Inverse();
+            dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
+            dest_box = dest_bv_in_node.BoundingBox3();
+            sub_quad_dtos.push_back(dto);
+            depth--;
+        }
     }
     return dtos;
+}
+
+VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string& parent_name, unsigned sub_tree_index, const MathLib::Box3& sub_tree_box_in_parent, const MathLib::Matrix4& local_transform)
+{
+    VisibilityManagedNodeDto dto;
+    return dto;
+}
+
+void WorldMapService::linkQuadTreeChild(std::vector<SceneGraph::VisibilityManagedNodeDto>& node_dtos, const std::string& parent_name, const std::string& child_name)
+{
+    for (auto& dto : node_dtos)
+    {
+        if (dto.Name() == parent_name)
+        {
+            dto.ChildNames().push_back(child_name);
+            return;
+        }
+    }
 }
 
 std::tuple<Box3, unsigned> WorldMapService::locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const

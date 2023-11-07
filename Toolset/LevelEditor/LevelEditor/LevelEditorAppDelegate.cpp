@@ -238,7 +238,7 @@ void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)
     if (!ev) return;
     if (m_sceneRoot.expired()) return;
     SceneFlattenTraversal traversal;
-    m_sceneRoot.lock()->VisitBy(&traversal);
+    m_sceneRoot.lock()->visitBy(&traversal);
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
@@ -247,10 +247,10 @@ void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->GetSpatialName()));
+    CommandBus::post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->getSpatialName()));
     m_sceneRoot = ev->GetSceneRoot();
     SceneFlattenTraversal traversal;
-    m_sceneRoot.lock()->VisitBy(&traversal);
+    m_sceneRoot.lock()->visitBy(&traversal);
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 

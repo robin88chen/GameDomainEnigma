@@ -159,7 +159,7 @@ void TerrainEditService::moveUpTerrainVertex(const std::shared_ptr<TerrainGeomet
     if (m_pickedTerrain.expired()) return;
     if (terrain_geometry == nullptr) return;
 
-    Matrix4 world_inv = m_pickedTerrain.lock()->GetWorldTransform().Inverse();
+    Matrix4 world_inv = m_pickedTerrain.lock()->getWorldTransform().Inverse();
     Vector3 local_pick_pos = world_inv.TransformCoord(picking_pos);
 
     auto [cell_x, cell_z] = terrain_geometry->LocateCell(local_pick_pos);
@@ -230,7 +230,7 @@ void TerrainEditService::paintTerrainLayer(const Vector3& picking_pos, unsigned 
     auto terrain_geo = std::dynamic_pointer_cast<TerrainGeometry>(terrain_prim->GetGeometryData());
     if (!terrain_geo) return;
 
-    Matrix4 world_inv = m_pickedTerrain.lock()->GetWorldTransform().Inverse();
+    Matrix4 world_inv = m_pickedTerrain.lock()->getWorldTransform().Inverse();
     Vector3 local_pick_pos = world_inv.TransformCoord(picking_pos);
     auto min_local_pos = terrain_geo->GetMinPosition();
 
@@ -385,8 +385,8 @@ void TerrainEditService::onSceneGraphBuilt(const IEventPtr& e)
     if (ev->GetSceneGraphId() != NEW_TERRAIN_TAG) return;
     auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->GetTopLevelSpatial()[0]);
     if (!terrain) return;
-    terrain->factoryDesc().ClaimAsInstanced(terrain->GetSpatialName() + ".pawn", m_terrainPathId);
-    CommandBus::post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->GetLocalTransform()));
+    terrain->factoryDesc().ClaimAsInstanced(terrain->getSpatialName() + ".pawn", m_terrainPathId);
+    CommandBus::post(std::make_shared<AttachTerrainToWorldMap>(terrain, terrain->getLocalTransform()));
 }
 
 void TerrainEditService::onTerrainPrimitiveBuilt(const IEventPtr& e)
@@ -403,7 +403,7 @@ void TerrainEditService::onTerrainPrimitiveBuilt(const IEventPtr& e)
     if (!splat_texture) return;
     std::string splat_texture_resouce_name = splat_texture->getName();
     splat_texture->factoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
-    m_splatTextures.insert_or_assign(terrain->GetSpatialName(), splat_texture);
+    m_splatTextures.insert_or_assign(terrain->getSpatialName(), splat_texture);
 }
 
 void TerrainEditService::onPickedSpatialChanged(const IEventPtr& e)
@@ -415,7 +415,7 @@ void TerrainEditService::onPickedSpatialChanged(const IEventPtr& e)
     m_pickedSplatTexture.reset();
     if (const auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->GetSpatial())) m_pickedTerrain = terrain;
     if (m_pickedTerrain.expired()) return;
-    if (const auto splat_texture = m_splatTextures.find(m_pickedTerrain.lock()->GetSpatialName()); splat_texture != m_splatTextures.end())
+    if (const auto splat_texture = m_splatTextures.find(m_pickedTerrain.lock()->getSpatialName()); splat_texture != m_splatTextures.end())
     {
         m_pickedSplatTexture = splat_texture->second;
     }

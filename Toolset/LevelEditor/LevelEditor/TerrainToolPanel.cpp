@@ -206,6 +206,6 @@ void TerrainToolPanel::OnPickedSpatialChanged(const Enigma::Frameworks::IEventPt
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->GetPrimitive());
     if (!terrain_prim) return;
-    SetTerrainName(terrain->GetSpatialName());
+    SetTerrainName(terrain->getSpatialName());
     RefreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
 }

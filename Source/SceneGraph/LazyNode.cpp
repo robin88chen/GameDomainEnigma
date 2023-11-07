@@ -13,6 +13,8 @@ LazyNode::LazyNode(const std::string& name) : Node(name)
 
 LazyNode::LazyNode(const GenericDto& o) : Node(o)
 {
+    LazyNodeDto lazy_node_dto = LazyNodeDto::FromGenericDto(o);
+    if (lazy_node_dto.isReady()) m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
 }
 
 LazyNode::~LazyNode()

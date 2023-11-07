@@ -155,20 +155,20 @@ void PawnEditService::onCreateFittingNodeFailed(const Enigma::Frameworks::IEvent
 bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
 {
     auto world_transform = Matrix4::MakeTranslateTransform(position);
-    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->GetModelBound(), world_transform);
+    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->getModelBound(), world_transform);
     auto query = std::make_shared<Enigma::WorldMap::QueryFittingNode>(bv);
     QueryDispatcher::dispatch(query);
     if (query->getResult() == nullptr) return false;
     auto node = query->getResult();
-    auto inv_node_transform = node->GetWorldTransform().Inverse();
-    CommandBus::post(std::make_shared<AttachNodeChild>(node->GetSpatialName(), pawn, inv_node_transform * world_transform));
+    auto inv_node_transform = node->getWorldTransform().Inverse();
+    CommandBus::post(std::make_shared<AttachNodeChild>(node->getSpatialName(), pawn, inv_node_transform * world_transform));
     return true;
 }
 
 void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
 {
     auto world_transform = Matrix4::MakeTranslateTransform(position);
-    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->GetModelBound(), world_transform);
+    BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->getModelBound(), world_transform);
     auto cmd = std::make_shared<Enigma::WorldMap::CreateFittingQuadNode>(bv);
     m_creatNodeRuid = cmd->getRuid();
     CommandBus::post(cmd);

@@ -18,6 +18,7 @@
 #include "SceneGraph/SceneFlattenTraversal.h"
 #include "SceneGraph/Spatial.h"
 #include "Frameworks/StringFormat.h"
+#include "GameCommon/GameSceneCommands.h"
 #include "SceneGraph/FindSpatialByName.h"
 #include "MathLib/Box2.h"
 #include "MathLib/ContainmentBox2.h"
@@ -32,6 +33,7 @@ using namespace Enigma::MathLib;
 DEFINE_RTTI(WorldMap, WorldMapService, ISystemService);
 
 std::string WORLD_MAP_TAG = "world_map";
+std::string FITTING_NODE_TAG = "fitting_node";
 std::string QUADROOT_POSTFIX = "_qroot";
 
 constexpr int MAX_RECURSIVE_DEPTH = 4;
@@ -150,6 +152,17 @@ void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& gr
     CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
 }
 
+void WorldMapService::completeCreateWorldMap(const std::shared_ptr<WorldMap>& world)
+{
+    m_world = world;
+    if (!m_world.expired())
+    {
+        m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
+        EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
+        CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
+    }
+}
+
 void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
     const Matrix4& local_transform)
 {
@@ -257,7 +270,7 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaves(const std::shared_pt
     if (!root) return ErrorCode::invalidBoundingBox;
     auto dtos = createFittingQuadGraph(root, bv_in_root);
     if (dtos.empty()) return ErrorCode::emptyQuadGraph;
-    CommandBus::post(std::make_shared<BuildSceneGraph>(root->getSpatialName(), dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(FITTING_NODE_TAG, dtos));
     return ErrorCode::ok;
 }
 
@@ -301,7 +314,12 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
         }
         if (!has_sub_tree)
         {
-            VisibilityManagedNodeDto dto = createSubQuadNodeDto(parent_node_name, sub_tree_index, sub_tree_box_in_parent, root_local_mx);
+            VisibilityManagedNodeDto dto = createSubQuadNodeDto(parent_node_name, sub_tree_index, sub_tree_box_in_parent);
+            if (sub_quad_dtos.empty())
+            {
+                dto.IsTopLevel() = true;
+                m_fittingParentName = parent_node_name;
+            }
             linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.Name());
             parent_node_name = dto.Name();
             parent_box = Engine::BoundingVolumeDto::FromGenericDto(dto.ModelBound()).Box().value();
@@ -312,12 +330,27 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             depth--;
         }
     }
+    if (sub_quad_dtos.empty()) return dtos;
+    for (auto& dto : sub_quad_dtos)
+    {
+        dtos.push_back(dto.ToGenericDto());
+    }
     return dtos;
 }
 
-VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string& parent_name, unsigned sub_tree_index, const MathLib::Box3& sub_tree_box_in_parent, const MathLib::Matrix4& local_transform)
+VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string& parent_name, unsigned sub_tree_index, const MathLib::Box3& sub_tree_box_in_parent)
 {
     VisibilityManagedNodeDto dto;
+    dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
+    dto.isReady() = true;
+    std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
+    dto.Name() = target_node_name;
+    Box3 sub_quad_box = sub_tree_box_in_parent;
+    sub_quad_box.Center() = Vector3::ZERO;
+    Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
+    Matrix4 local_transform = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
+    dto.LocalTransform() = local_transform;
+    dto.ModelBound() = sub_quad_bv.serializeDto().ToGenericDto();
     return dto;
 }
 
@@ -384,7 +417,7 @@ bool WorldMapService::testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_pa
     return false;
 }
 
-std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth)
+/*std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<SceneGraph::Node>& parent, const Engine::BoundingVolume& bv_in_node, int recursive_depth)
 {
     if (recursive_depth < 0)
     {
@@ -407,7 +440,7 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<
     auto fitting_node = findTargetSubtree(parent, parent->getSpatialName(), sub_tree_index);
     if (!fitting_node)
     {
-        /*if (m_sceneGraphRepository.expired()) return ErrorCode::nullSceneGraphRepository;
+        if (m_sceneGraphRepository.expired()) return ErrorCode::nullSceneGraphRepository;
         auto sub_quad_node = std::dynamic_pointer_cast<LazyNode>(m_sceneGraphRepository.lock()->CreateNode(target_node_name, VisibilityManagedNode::TYPE_RTTI));
         sub_quad_node->lazyStatus().changeStatus(LazyStatus::Status::Ready);
         sub_quad_node->factoryDesc().ClaimAsDeferred();
@@ -416,12 +449,12 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaf(const std::shared_ptr<
         Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
         Matrix4 mxLocal = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
         parent->AttachChild(sub_quad_node, mxLocal);
-        fitting_node = sub_quad_node;*/
+        fitting_node = sub_quad_node;
     }
-    Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();
-    auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
-    return tryCreateFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
-}
+        Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();
+        auto bv_in_fitting_node = Engine::BoundingVolume::CreateFromTransform(bv_in_node, fitting_node_inv_local_mx);
+        return tryCreateFittingQuadLeaf(fitting_node, bv_in_fitting_node, recursive_depth - 1);
+}*/
 
 std::shared_ptr<Node> WorldMapService::findTargetSubtree(const std::shared_ptr<SceneGraph::Node>& any_level_parent, const std::string& parent_name, unsigned sub_tree_index) const
 {
@@ -438,6 +471,7 @@ std::shared_ptr<Node> WorldMapService::findTargetSubtree(const std::shared_ptr<S
 
 void WorldMapService::completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node)
 {
+    CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentName, node, node->getLocalTransform()));
     EventPublisher::post(std::make_shared<FittingNodeCreated>(m_createFittingNodeRuid, node));
 }
 
@@ -484,13 +518,14 @@ void WorldMapService::onSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
-    if ((!ev) || (ev->GetSceneGraphId() != WORLD_MAP_TAG)) return;
-    m_world = std::dynamic_pointer_cast<WorldMap, Spatial>(ev->GetTopLevelSpatial()[0]);
-    if (!m_world.expired())
+    if (!ev) return;
+    if (ev->GetSceneGraphId() == WORLD_MAP_TAG)
     {
-        m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
-        EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
-        CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
+        completeCreateWorldMap(std::dynamic_pointer_cast<WorldMap, Spatial>(ev->GetTopLevelSpatial()[0]));
+    }
+    else if (ev->GetSceneGraphId() == FITTING_NODE_TAG)
+    {
+        completeCreateFittingNode(std::dynamic_pointer_cast<Node, Spatial>(ev->GetTopLevelSpatial()[0]));
     }
 }
 

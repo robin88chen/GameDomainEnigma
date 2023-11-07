@@ -22,9 +22,9 @@ ScenePicker::~ScenePicker()
 
 SceneTraveler::TravelResult ScenePicker::TravelTo(const SpatialPtr& spatial)
 {
-    if ((!spatial) || (spatial->GetWorldBound().IsEmpty())) return TravelResult::InterruptError;
+    if ((!spatial) || (spatial->getWorldBound().IsEmpty())) return TravelResult::InterruptError;
 
-    IntrBVRay3 intrBV(spatial->GetWorldBound(), m_pickerRay);
+    IntrBVRay3 intrBV(spatial->getWorldBound(), m_pickerRay);
     auto bv_test_res = intrBV.Test(nullptr);
     if (!bv_test_res.m_hasIntersect) return TravelResult::TestFail;  // no intersection
 
@@ -66,7 +66,7 @@ void ScenePicker::Picking(const SpatialPtr& sceneRoot)
 {
     m_pickRecords.clear();
     if (!sceneRoot) return;
-    sceneRoot->VisitBy(this);
+    sceneRoot->visitBy(this);
 
     if (!m_pickRecords.empty())
     {
@@ -103,15 +103,15 @@ bool ScenePicker::PushPawnRecord(const SpatialPtr& spatial)
     IntrPrimitiveRay3 intrPrim(pawn->GetPrimitive(), m_pickerRay);
     intrPrim.SetRequiredResultCount(1);
     std::unique_ptr<IntersectorCache> cache = nullptr;
-    if (m_intersectorCache.find(pawn->GetSpatialName()) != m_intersectorCache.end())
+    if (m_intersectorCache.find(pawn->getSpatialName()) != m_intersectorCache.end())
     {
-        cache = std::move(m_intersectorCache.at(pawn->GetSpatialName()));
+        cache = std::move(m_intersectorCache.at(pawn->getSpatialName()));
     }
 
     auto prim_find_res = intrPrim.Find(std::move(cache));
 
     if (!prim_find_res.m_hasIntersect) return false;
-    m_intersectorCache.insert_or_assign(pawn->GetSpatialName(), std::move(prim_find_res.m_cache));
+    m_intersectorCache.insert_or_assign(pawn->getSpatialName(), std::move(prim_find_res.m_cache));
     // copy result point
     if (intrPrim.GetQuantity())
     {

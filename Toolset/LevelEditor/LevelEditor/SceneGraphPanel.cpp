@@ -88,18 +88,18 @@ void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<En
     std::shared_ptr scene_root = flattened_scene[0];
     if (!scene_root) return;
     std::string graph_node_name;
-    if (!scene_root->GetSpatialName().empty())
+    if (!scene_root->getSpatialName().empty())
     {
-        graph_node_name = scene_root->GetSpatialName() + "<" + scene_root->typeInfo().getName() + ">";
+        graph_node_name = scene_root->getSpatialName() + "<" + scene_root->typeInfo().getName() + ">";
     }
     else
     {
         graph_node_name = std::string("untitled") + "<" + scene_root->typeInfo().getName() + ">";
     }
-    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(scene_root->GetSpatialName(), graph_node_name);
+    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(scene_root->getSpatialName(), graph_node_name);
     // 掛入 value object, 統一使用基底 spatial 類別, 但不能用 weak_ptr
     root_pos.value(scene_root);
-    spatial_pos_map.emplace(scene_root->GetSpatialName(), root_pos);
+    spatial_pos_map.emplace(scene_root->getSpatialName(), root_pos);
 
     auto iter = flattened_scene.begin();
     ++iter;  // skip scene root
@@ -114,36 +114,36 @@ void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<En
                 continue;
             }
             nana::treebox::item_proxy parent_pos;
-            if (spatial->GetParent() == nullptr)
+            if (spatial->getParent() == nullptr)
             {
-                parent_pos = spatial_pos_map.find(scene_root->GetSpatialName())->second;
+                parent_pos = spatial_pos_map.find(scene_root->getSpatialName())->second;
             }
             else
             {
-                auto parent = spatial->GetParent();
+                auto parent = spatial->getParent();
                 if (parent)
                 {
-                    parent_pos = spatial_pos_map.find(parent->GetSpatialName())->second;
+                    parent_pos = spatial_pos_map.find(parent->getSpatialName())->second;
                 }
                 else
                 {
-                    parent_pos = spatial_pos_map.find(scene_root->GetSpatialName())->second;
+                    parent_pos = spatial_pos_map.find(scene_root->getSpatialName())->second;
                 }
             }
             //auto root = parent_pos.value<SpatialPtr>();
             std::string graph_node_name;
-            if (!spatial->GetSpatialName().empty())
+            if (!spatial->getSpatialName().empty())
             {
-                graph_node_name = spatial->GetSpatialName() + "<" + spatial->typeInfo().getName() + ">";
+                graph_node_name = spatial->getSpatialName() + "<" + spatial->typeInfo().getName() + ">";
             }
             else
             {
                 graph_node_name = std::string("untitled") + "<" + spatial->typeInfo().getName() + ">";
             }
             nana::treebox::item_proxy node_pos = m_sceneGraphTree->insert(
-                parent_pos, spatial->GetSpatialName(), graph_node_name);
+                parent_pos, spatial->getSpatialName(), graph_node_name);
             node_pos.value(spatial);
-            spatial_pos_map.emplace(spatial->GetSpatialName(), node_pos);
+            spatial_pos_map.emplace(spatial->getSpatialName(), node_pos);
         }
         ++iter;
     }

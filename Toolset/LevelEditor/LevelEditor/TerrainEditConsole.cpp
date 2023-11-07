@@ -139,13 +139,13 @@ void TerrainEditConsole::sendTerrainEditCommand(float elapse_time)
     case TerrainEditMode::unknown:
         break;
     case TerrainEditMode::raiseHeight:
-        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
+        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::lowerHeight:
-        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->GetWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
+        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::paintTexture:
-        CommandBus::post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->GetWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
+        CommandBus::post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->getWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
         break;
     }
 }
@@ -165,14 +165,14 @@ void TerrainEditConsole::onEditorModeChanged(const IEventPtr& e)
         }
         else
         {
-            m_brush.lock()->RemoveSpatialFlag(Spatial::SpatialBit::Spatial_Hide);
+            m_brush.lock()->removeSpatialFlag(Spatial::SpatialBit::Spatial_Hide);
         }
     }
     else
     {
         if (!m_brush.expired())
         {
-            m_brush.lock()->AddSpatialFlag(Spatial::SpatialBit::Spatial_Hide);
+            m_brush.lock()->addSpatialFlag(Spatial::SpatialBit::Spatial_Hide);
         }
     }
 }
@@ -187,7 +187,7 @@ void TerrainEditConsole::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& 
     auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(ev->GetTopLevelSpatial().front());
     m_brush = pawn;
     CommandBus::post(std::make_shared<OutputMessage>("Brush Pawn Created"));
-    CommandBus::post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->GetLocalTransform()));
+    CommandBus::post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->getLocalTransform()));
 }
 
 void TerrainEditConsole::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
@@ -208,7 +208,7 @@ void TerrainEditConsole::onTerrainBrushSizeChanged(const Enigma::Frameworks::IEv
     m_brushSize = ev->GetSize();
     if (!m_brush.expired())
     {
-        m_brush.lock()->SetLocalUniformScale(static_cast<float>(m_brushSize));
+        m_brush.lock()->setLocalUniformScale(static_cast<float>(m_brushSize));
     }
 }
 
@@ -265,7 +265,7 @@ void TerrainEditConsole::onSceneCursorMoved(const Enigma::Frameworks::IEventPtr&
     if (!ev->GetHoveredPawn()) return;
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
-    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
 }
 
 void TerrainEditConsole::onSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e)
@@ -277,7 +277,7 @@ void TerrainEditConsole::onSceneCursorDragged(const Enigma::Frameworks::IEventPt
     if (!ev->GetHoveredPawn()) return;
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
-    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
     sendTerrainEditCommand(0.1f);
 }
 
@@ -288,7 +288,7 @@ void TerrainEditConsole::onSceneCursorPressed(const Enigma::Frameworks::IEventPt
     if (!ev) return;
     if (!m_isEnabled) return;
     if (!ev->GetPickedPawn()) return;
-    if (!m_brush.expired()) m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
     sendTerrainEditCommand(1.0f);
 }
 
@@ -301,7 +301,7 @@ void TerrainEditConsole::onSceneCursorReleased(const Enigma::Frameworks::IEventP
     if (!ev->GetPickedPawn()) return;
     if (!m_brush.expired())
     {
-        m_brush.lock()->ChangeWorldPosition(ev->GetPosition(), std::nullopt);
-        CommandBus::post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->GetWorldPosition()));
+        m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
+        CommandBus::post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->getWorldPosition()));
     }
 }

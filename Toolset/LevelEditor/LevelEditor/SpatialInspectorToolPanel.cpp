@@ -231,11 +231,11 @@ void SpatialInspectorPanel::OnAttributePropertiesChanged(size_t index, const std
     case static_cast<size_t>(AttributePropertyIndex::Visibility):
         if (value == "true")
         {
-            m_selectedSpatial.lock()->RemoveSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
+            m_selectedSpatial.lock()->removeSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
         }
         else
         {
-            m_selectedSpatial.lock()->AddSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
+            m_selectedSpatial.lock()->addSpatialFlag(Enigma::SceneGraph::Spatial::Spatial_Hide);
         }
         break;
     }
@@ -249,19 +249,19 @@ void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const 
     case static_cast<size_t>(SpatialPropertyIndex::Position):
         if (auto [pos, isParseOk] = parseTextToVector3(value); isParseOk)
         {
-            m_selectedSpatial.lock()->SetLocalPosition(pos);
+            m_selectedSpatial.lock()->setLocalPosition(pos);
         }
         break;
     case static_cast<size_t>(SpatialPropertyIndex::Rotation):
         if (auto [rot, isParseOk] = parseTextToVector3(value); isParseOk)
         {
-            m_selectedSpatial.lock()->SetLocalEulerAngle(rot);
+            m_selectedSpatial.lock()->setLocalEulerAngle(rot);
         }
         break;
     case static_cast<size_t>(SpatialPropertyIndex::Scale):
         if (auto [scale, isParseOk] = parseTextToVector3(value); isParseOk)
         {
-            m_selectedSpatial.lock()->SetLocalScale(scale);
+            m_selectedSpatial.lock()->setLocalScale(scale);
         }
         break;
     default:
@@ -278,7 +278,7 @@ void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const 
     case static_cast<size_t>(SpatialPropertyIndex::Position):
         if (auto [pos, isParseOk] = parseTextToVector3(value); isParseOk)
         {
-            m_selectedSpatial.lock()->ChangeWorldPosition(pos, std::nullopt);
+            m_selectedSpatial.lock()->changeWorldPosition(pos, std::nullopt);
         }
         break;
     default:
@@ -292,44 +292,44 @@ void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::
     if (!spatial) return;
     if (auto item = m_properties->find(TAG_ATTRIBUTES, TAG_SPATIAL_NAME); item != nullptr)
     {
-        item.value(spatial->GetSpatialName());
+        item.value(spatial->getSpatialName());
     }
     if (auto item = m_properties->find(TAG_ATTRIBUTES, TAG_VISIBLE); item != nullptr)
     {
-        bool is_hide = spatial->TestSpatialFlag(Enigma::SceneGraph::Spatial::SpatialBit::Spatial_Hide);
+        bool is_hide = spatial->testSpatialFlag(Enigma::SceneGraph::Spatial::SpatialBit::Spatial_Hide);
         item.value(is_hide ? "F" : "T");
     }
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_POSITION); item != nullptr)
     {
-        Vector3 pos = spatial->GetLocalPosition();
+        Vector3 pos = spatial->getLocalPosition();
         std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_ROTATION); item != nullptr)
     {
-        Vector3 rot = spatial->GetLocalEulerAngle();
+        Vector3 rot = spatial->getLocalEulerAngle();
         std::string s = string_format("%6.2f, %6.2f, %6.2f", rot.X(), rot.Y(), rot.Z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_SCALE); item != nullptr)
     {
-        Vector3 scale = spatial->GetLocalScale();
+        Vector3 scale = spatial->getLocalScale();
         std::string s = string_format("%6.2f, %6.2f, %6.2f", scale.X(), scale.Y(), scale.Z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_WORLD_SPATIAL, TAG_POSITION); item != nullptr)
     {
-        Vector3 pos = spatial->GetWorldPosition();
+        Vector3 pos = spatial->getWorldPosition();
         std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_CENTER); item != nullptr)
     {
-        Vector3 pos = spatial->GetModelBound().Center();
+        Vector3 pos = spatial->getModelBound().Center();
         std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
         item.value(s);
     }
-    auto box = spatial->GetModelBound().BoundingBox3();
+    auto box = spatial->getModelBound().BoundingBox3();
     if (box)
     {
         if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_AXIS_1); item != nullptr)
@@ -357,7 +357,7 @@ void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::
             item.value(s);
         }
     }
-    box = spatial->GetWorldBound().BoundingBox3();
+    box = spatial->getWorldBound().BoundingBox3();
     if (box)
     {
         if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_AXIS_1); item != nullptr)

@@ -329,6 +329,12 @@ void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::
         std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
         item.value(s);
     }
+    if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_CENTER); item != nullptr)
+    {
+        Vector3 pos = spatial->getWorldBound().Center();
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        item.value(s);
+    }
     auto box = spatial->getModelBound().BoundingBox3();
     if (box)
     {

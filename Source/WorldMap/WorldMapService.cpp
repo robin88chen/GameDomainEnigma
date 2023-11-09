@@ -267,7 +267,7 @@ std::error_code WorldMapService::tryCreateFittingQuadLeaves(const std::shared_pt
 {
     if (!root) return ErrorCode::nullQuadNode;
     auto root_node_box = root->getModelBound().BoundingBox3();
-    if (!root) return ErrorCode::invalidBoundingBox;
+    if (!root_node_box) return ErrorCode::invalidBoundingBox;
     auto dtos = createFittingQuadGraph(root, bv_in_root);
     if (dtos.empty()) return ErrorCode::emptyQuadGraph;
     CommandBus::post(std::make_shared<BuildSceneGraph>(FITTING_NODE_TAG, dtos));
@@ -281,7 +281,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
 
     int depth = MAX_RECURSIVE_DEPTH;
     std::string parent_node_name = root->getSpatialName();
-    Matrix4 root_local_mx = root->getLocalTransform();
+    //Matrix4 parent_world_mx = root->getWorldTransform();
     MathLib::Box3 parent_box = root->getModelBound().BoundingBox3().value();
     Engine::BoundingVolume dest_bv_in_node = dest_bv_in_root;
     auto dest_box = dest_bv_in_node.BoundingBox3();

@@ -26,6 +26,7 @@ using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
 using namespace Enigma::Prefabs;
 using namespace Enigma::Engine;
+using namespace Enigma::WorldMap;
 
 Rtti PawnEditService::TYPE_RTTI{ "LevelEditor.PawnEditService", &ISystemService::TYPE_RTTI };
 
@@ -46,6 +47,10 @@ ServiceResult PawnEditService::onInit()
     EventPublisher::subscribe(typeid(PawnPrefabLoaded), m_onPrefabLoaded);
     m_onLoadPrefabFailed = std::make_shared<EventSubscriber>([=](auto e) { onLoadPrefabFailed(e); });
     EventPublisher::subscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
+    m_onFittingNodeCreated = std::make_shared<EventSubscriber>([=](auto e) { onFittingNodeCreated(e); });
+    EventPublisher::subscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
+    m_onCreateFittingNodeFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateFittingNodeFailed(e); });
+    EventPublisher::subscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
 
     m_pawnLoader = new PawnLoader();
 
@@ -65,6 +70,10 @@ ServiceResult PawnEditService::onTerm()
     m_onPrefabLoaded = nullptr;
     EventPublisher::unsubscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
     m_onLoadPrefabFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
+    m_onFittingNodeCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
+    m_onCreateFittingNodeFailed = nullptr;
 
     SAFE_DELETE(m_pawnLoader);
 

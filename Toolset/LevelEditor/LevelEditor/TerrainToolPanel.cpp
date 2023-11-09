@@ -47,62 +47,62 @@ TerrainToolPanel::~TerrainToolPanel()
     }
 }
 
-void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
+void TerrainToolPanel::initialize(MainForm* form, unsigned texture_btn_count)
 {
     m_mainForm = form;
     m_place = menew nana::place{ *this };
     m_place->div("margin=[2,2,2,2] vert<toolbar weight=28><terrain_name weight=28><brush_size weight=28><brush_height weight=28><texture_density weight=28><texture_btns weight=36 arrange=[32,32,32,32] margin=[2,2] gap=2>");
 
     m_toolbar = menew nana::toolbar(*this);
-    UISchemeColors::ApplySchemaColors(m_toolbar->scheme());
+    UISchemeColors::applySchemaColors(m_toolbar->scheme());
     m_toolbar->append(nana::toolbar::tools::toggle, "Raise Terrain Height",
         nana::paint::image("icons/raise_height.bmp")).toggle_group("brush_type")
         .answerer([this](const nana::toolbar::item_proxy& it)
             {
-                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Raise);
+                this->onTerrainToolButton(it, TerrainEditToolSelected::Tool::Raise);
             });
     m_toolbar->append(nana::toolbar::tools::toggle, "Lower Terrain Height",
         nana::paint::image("icons/lower_height.bmp")).toggle_group("brush_type")
         .answerer([this](const nana::toolbar::item_proxy& it)
             {
-                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Lower);
+                this->onTerrainToolButton(it, TerrainEditToolSelected::Tool::Lower);
             });
     m_toolbar->append(nana::toolbar::tools::toggle, "Paint Texture Layer",
         nana::paint::image("icons/texture_brush.bmp")).toggle_group("brush_type")
         .answerer([this](const nana::toolbar::item_proxy& it)
             {
-                this->OnTerrainToolButton(it, TerrainEditToolSelected::Tool::Paint);
+                this->onTerrainToolButton(it, TerrainEditToolSelected::Tool::Paint);
             });
     m_place->field("toolbar").fasten(*m_toolbar);
 
     m_terrainName = menew nana::label(*this, "Terrain Name");
-    UISchemeColors::ApplySchemaColors(m_terrainName->scheme());
+    UISchemeColors::applySchemaColors(m_terrainName->scheme());
     m_place->field("terrain_name") << *m_terrainName;
 
     m_brushSizeLabel = menew nana::label(*this, "Brush Size");
-    UISchemeColors::ApplySchemaColors(m_brushSizeLabel->scheme());
+    UISchemeColors::applySchemaColors(m_brushSizeLabel->scheme());
     m_brushSizeSpin = menew nana::spinbox(*this, true);
-    UISchemeColors::ApplySchemaColors(m_brushSizeSpin->scheme());
+    UISchemeColors::applySchemaColors(m_brushSizeSpin->scheme());
     m_place->field("brush_size") << *m_brushSizeLabel << *m_brushSizeSpin;
     m_brushSizeSpin->range(1, max_brush_size, 1);
-    m_brushSizeSpin->events().text_changed([this](const nana::arg_spinbox& a) { this->OnBrushSizeChanged(a); });
+    m_brushSizeSpin->events().text_changed([this](const nana::arg_spinbox& a) { this->onBrushSizeChanged(a); });
 
     m_brushHeightLabel = menew nana::label(*this, "Brush Height");
-    UISchemeColors::ApplySchemaColors(m_brushHeightLabel->scheme());
+    UISchemeColors::applySchemaColors(m_brushHeightLabel->scheme());
     m_brushHeight = menew nana::textbox(*this, "0.3");
-    UISchemeColors::ApplySchemaColors(m_brushHeight->scheme());
-    m_brushHeight->events().text_changed([this](const nana::arg_textbox& a) { this->OnBrushHeightChanged(a); });
+    UISchemeColors::applySchemaColors(m_brushHeight->scheme());
+    m_brushHeight->events().text_changed([this](const nana::arg_textbox& a) { this->onBrushHeightChanged(a); });
     m_place->field("brush_height") << *m_brushHeightLabel << *m_brushHeight;
 
     m_textureDensityLabel = menew nana::label(*this, "Texture Density");
-    UISchemeColors::ApplySchemaColors(m_textureDensityLabel->scheme());
+    UISchemeColors::applySchemaColors(m_textureDensityLabel->scheme());
     m_textureDensity = menew nana::slider{ *this };
-    UISchemeColors::ApplySchemaColors(m_textureDensity->scheme());
+    UISchemeColors::applySchemaColors(m_textureDensity->scheme());
     m_textureDensity->maximum(max_density_value);
     m_textureDensity->vernier([this](unsigned int maximum, unsigned int value)
-        { return string_format("%6.2f", SlideValueToDensity(value)); });
+        { return string_format("%6.2f", slideValueToDensity(value)); });
     m_textureDensity->value(10);
-    m_textureDensity->events().value_changed([this](const nana::arg_slider& a) { this->OnLayerDensityChanged(a); });
+    m_textureDensity->events().value_changed([this](const nana::arg_slider& a) { this->onLayerDensityChanged(a); });
     m_place->field("texture_density") << *m_textureDensityLabel << *m_textureDensity;
 
     m_textureLayerButtons.resize(texture_btn_count);
@@ -110,7 +110,7 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
     {
         m_textureLayerButtons[i] = menew nana::button(*this, nana::rectangle(nana::size(64, 64)));
         m_textureLayerButtons[i]->enable_pushed(true);
-        m_textureLayerButtons[i]->events().click([=](const nana::arg_click& a) { this->OnTextureLayerButton(a, i); });
+        m_textureLayerButtons[i]->events().click([=](const nana::arg_click& a) { this->onTextureLayerButton(a, i); });
         m_place->field("texture_btns") << *m_textureLayerButtons[i];
         if (i == 0)
         {
@@ -121,30 +121,30 @@ void TerrainToolPanel::Initialize(MainForm* form, unsigned texture_btn_count)
     m_place->collocate();
 }
 
-void TerrainToolPanel::SubscribeHandlers()
+void TerrainToolPanel::subscribeHandlers()
 {
-    m_onPickedSpatialChanged = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
+    m_onPickedSpatialChanged = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { onPickedSpatialChanged(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 }
 
-void TerrainToolPanel::UnsubscribeHandlers()
+void TerrainToolPanel::unsubscribeHandlers()
 {
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 }
 
-void TerrainToolPanel::SetTerrainName(const std::string& name)
+void TerrainToolPanel::setTerrainName(const std::string& name)
 {
     m_terrainName->caption(name);
 }
 
-void TerrainToolPanel::OnBrushSizeChanged(const nana::arg_spinbox& arg)
+void TerrainToolPanel::onBrushSizeChanged(const nana::arg_spinbox& arg)
 {
     if (!m_brushSizeSpin) return;
     Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
 }
 
-void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
+void TerrainToolPanel::onBrushHeightChanged(const nana::arg_textbox& arg)
 {
     if ((m_brushHeight) && (!m_brushHeight->text().empty()))
     {
@@ -153,36 +153,36 @@ void TerrainToolPanel::OnBrushHeightChanged(const nana::arg_textbox& arg)
     }
 }
 
-void TerrainToolPanel::OnLayerDensityChanged(const nana::arg_slider& arg)
+void TerrainToolPanel::onLayerDensityChanged(const nana::arg_slider& arg)
 {
     if (!m_textureDensity) return;
-    auto density = SlideValueToDensity(m_textureDensity->value());
+    auto density = slideValueToDensity(m_textureDensity->value());
     Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushDensityChanged>(density));
 }
 
-void TerrainToolPanel::OnTextureLayerButton(const nana::arg_click& arg, unsigned int index)
+void TerrainToolPanel::onTextureLayerButton(const nana::arg_click& arg, unsigned int index)
 {
     if (index >= m_textureLayerButtons.size()) return;
     Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainPaintingLayerChanged>(index));
 }
 
-void TerrainToolPanel::OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
+void TerrainToolPanel::onTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
 {
     Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainEditToolSelected>(tool));
 }
 
-unsigned int TerrainToolPanel::DensityToSlideValue(float density) const
+unsigned int TerrainToolPanel::densityToSlideValue(float density) const
 {
     int v = static_cast<int>(density * 10.0f + 10.0f);
     return (unsigned int)std::clamp(v, 0, static_cast<int>(max_density_value));
 }
 
-float TerrainToolPanel::SlideValueToDensity(unsigned int value) const
+float TerrainToolPanel::slideValueToDensity(unsigned int value) const
 {
     return (static_cast<float>(value) - 10.0f) / 10.0f;
 }
 
-void TerrainToolPanel::RefreshTextureLayerButtons(const Enigma::Engine::EffectTextureMap& texture_map)
+void TerrainToolPanel::refreshTextureLayerButtons(const Enigma::Engine::EffectTextureMap& texture_map)
 {
     for (unsigned int i = 0; i < TerrainEditService::LayerSemantics.size(); i++)
     {
@@ -197,15 +197,15 @@ void TerrainToolPanel::RefreshTextureLayerButtons(const Enigma::Engine::EffectTe
     }
 }
 
-void TerrainToolPanel::OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e)
+void TerrainToolPanel::onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
     if (!ev) return;
-    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->GetSpatial());
+    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->spatial());
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->GetPrimitive());
     if (!terrain_prim) return;
-    SetTerrainName(terrain->getSpatialName());
-    RefreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
+    setTerrainName(terrain->getSpatialName());
+    refreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
 }

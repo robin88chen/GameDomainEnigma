@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CreateNewWorldDlg.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -23,8 +23,8 @@ namespace LevelEditor
         CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor);
         virtual ~CreateNewWorldDlg();
 
-        void OnOkButton(const nana::arg_click& arg);
-        void OnCancelButton(const nana::arg_click& arg);
+        void onOkButton(const nana::arg_click& arg);
+        void onCancelButton(const nana::arg_click& arg);
     private:
         nana::button* m_okButton;
         nana::button* m_cancelButton;

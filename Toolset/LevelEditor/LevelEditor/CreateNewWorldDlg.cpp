@@ -25,9 +25,9 @@ CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<W
     m_folderNameInputBox = menew nana::textbox(*this, "");
     get_place()["folder_name_prompt"] << *m_folderNamePrompt << *m_folderNameInputBox;
     m_okButton = menew nana::button(*this, "OK");
-    m_okButton->events().click([this](const nana::arg_click& a) { this->OnOkButton(a); });
+    m_okButton->events().click([this](const nana::arg_click& a) { this->onOkButton(a); });
     m_cancelButton = menew nana::button(*this, "Cancel");
-    m_cancelButton->events().click([this](const nana::arg_click& a) { this->OnCancelButton(a); });
+    m_cancelButton->events().click([this](const nana::arg_click& a) { this->onCancelButton(a); });
     get_place()["buttons"] << *m_okButton << *m_cancelButton;
     m_deleteExistFolderCheckBox = menew nana::checkbox(*this, "Delete Exist Folder");
     get_place()["delete_folder_prompt"] << *m_deleteExistFolderCheckBox;
@@ -45,7 +45,7 @@ CreateNewWorldDlg::~CreateNewWorldDlg()
     SAFE_DELETE(m_deleteExistFolderCheckBox);
 }
 
-void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
+void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
 {
     if (FATAL_LOG_EXPR(m_worldEditor.expired())) return;
     std::string folder_name = m_folderNameInputBox->text();
@@ -74,7 +74,7 @@ void CreateNewWorldDlg::OnOkButton(const nana::arg_click& arg)
     close();
 }
 
-void CreateNewWorldDlg::OnCancelButton(const nana::arg_click& arg)
+void CreateNewWorldDlg::onCancelButton(const nana::arg_click& arg)
 {
     close();
 }

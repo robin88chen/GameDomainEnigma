@@ -25,7 +25,7 @@ void OutputPanel::initialize()
     m_place = menew nana::place{ *this };
     m_place->div("<textbox>");
     m_outputText = menew nana::textbox{ *this };
-    UISchemeColors::ApplySchemaColors(m_outputText->scheme());
+    UISchemeColors::applySchemaColors(m_outputText->scheme());
     m_place->field("textbox") << *m_outputText;
 
 }

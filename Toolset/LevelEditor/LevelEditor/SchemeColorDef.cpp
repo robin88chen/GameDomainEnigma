@@ -9,7 +9,7 @@ nana::color LevelEditor::UISchemeColors::FOREGROUND(s_fgWhite);
 nana::color LevelEditor::UISchemeColors::SELECT_BG(s_bgSelect);
 nana::color LevelEditor::UISchemeColors::HIGHLIGHT_BG(s_bgHighlight);
 
-void LevelEditor::UISchemeColors::ApplySchemaColors(nana::widget_geometrics& scheme)
+void LevelEditor::UISchemeColors::applySchemaColors(nana::widget_geometrics& scheme)
 {
     scheme.background = UISchemeColors::BACKGROUND;
     scheme.foreground = UISchemeColors::FOREGROUND;

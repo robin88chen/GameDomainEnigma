@@ -73,7 +73,7 @@ EditorAppDelegate::~EditorAppDelegate()
 {
 }
 
-void EditorAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI::AsyncType useAsyncDevice,
+void EditorAppDelegate::initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI::AsyncType useAsyncDevice,
     const std::string& log_filename, HWND hwnd)
 {
     m_hwnd = hwnd;
@@ -84,7 +84,7 @@ void EditorAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI:
     }
 
     FileSystem::Create();
-    InitializeMountPaths();
+    initializeMountPaths();
 
     m_graphicMain = menew GraphicMain();
     m_graphicMain->InstallFrameworks();
@@ -93,12 +93,12 @@ void EditorAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI:
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
-    InstallEngine();
+    installEngine();
 }
 
-void EditorAppDelegate::Finalize()
+void EditorAppDelegate::finalize()
 {
-    ShutdownEngine();
+    shutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
     IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
@@ -116,31 +116,31 @@ void EditorAppDelegate::Finalize()
     CoUninitialize();
 }
 
-void EditorAppDelegate::InitializeMountPaths()
+void EditorAppDelegate::initializeMountPaths()
 {
     m_appConfig = std::make_unique<AppConfiguration>();
-    m_appConfig->LoadConfig();
+    m_appConfig->loadConfig();
 
     if (FileSystem::Instance())
     {
         const auto path = std::filesystem::current_path();
         const auto mediaPath = path / "../../../Media/";
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), m_appConfig->GetMediaPathId()));
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), m_appConfig->GetDataPathId()));
+        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), m_appConfig->mediaPathId()));
+        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), m_appConfig->dataPathId()));
     }
 }
 
-void EditorAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
+void EditorAppDelegate::registerMediaMountPaths(const std::string& media_path)
 {
 }
 
-void EditorAppDelegate::InstallEngine()
+void EditorAppDelegate::installEngine()
 {
-    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphChanged(e); });
+    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
     EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
-    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { OnSceneRootCreated(e); });
+    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
-    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { OnWorldMapCreated(e); });
+    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
     EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
 
     assert(m_graphicMain);
@@ -158,9 +158,9 @@ void EditorAppDelegate::InstallEngine()
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>());
-    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_appConfig->GetSceneRootName(), m_appConfig->GetPortalManagementName());
+    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_appConfig->sceneRootName(), m_appConfig->portalManagementName());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->GetCameraDto());
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->cameraDto());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
@@ -182,7 +182,7 @@ void EditorAppDelegate::InstallEngine()
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<PawnEditService>(m_graphicMain->getServiceManager()));
 }
 
-void EditorAppDelegate::ShutdownEngine()
+void EditorAppDelegate::shutdownEngine()
 {
     EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
@@ -199,18 +199,18 @@ void EditorAppDelegate::ShutdownEngine()
     m_graphicMain->ShutdownRenderEngine();
 }
 
-void EditorAppDelegate::FrameUpdate()
+void EditorAppDelegate::frameUpdate()
 {
     if (m_graphicMain) m_graphicMain->FrameUpdate();
 }
 
-void EditorAppDelegate::PrepareRender()
+void EditorAppDelegate::prepareRender()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
     if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->PrepareGameScene();
 }
 
-void EditorAppDelegate::RenderFrame()
+void EditorAppDelegate::renderFrame()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->RenderShadowScene();
     if (!m_sceneRenderer.expired())
@@ -220,18 +220,18 @@ void EditorAppDelegate::RenderFrame()
     }
 }
 
-void EditorAppDelegate::OnTimerElapsed()
+void EditorAppDelegate::onTimerElapsed()
 {
     if (!m_graphicMain) return;
 
-    FrameUpdate();
+    frameUpdate();
 
-    PrepareRender();
-    RenderFrame();
+    prepareRender();
+    renderFrame();
     std::this_thread::sleep_for(30us);
 }
 
-void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)
+void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
@@ -242,7 +242,7 @@ void EditorAppDelegate::OnSceneGraphChanged(const IEventPtr& e)
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
-void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
@@ -254,7 +254,7 @@ void EditorAppDelegate::OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
-void EditorAppDelegate::OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
+void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<WorldMapCreated, IEvent>(e);

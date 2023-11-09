@@ -9,7 +9,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int n
     meInitMemoryCheck();
     //_CrtSetBreakAlloc(10545);
     LevelEditor::MainForm form;
-    form.InitSubPanels();
+    form.initSubPanels();
     form.caption("Enigma Level Editor");
     form.size(nana::size(1440, 800));
     form.move(nana::point(60, 60));

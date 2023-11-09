@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SpatialInspectorToolPanel.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -24,23 +24,23 @@ namespace LevelEditor
         SpatialInspectorPanel(const nana::window& wd);
         virtual ~SpatialInspectorPanel();
 
-        void Initialize(MainForm* form);
-        void Finalize();
+        void initialize(MainForm* form);
+        void finalize();
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
     private:
-        void OnPropertyChanged(const nana::arg_propertygrid& arg);
-        void OnLightPropertyChanged(const nana::arg_propertygrid& arg);
-        void OnAttributePropertiesChanged(size_t index, const std::string& value);
-        void OnLocalSpatialPropertiesChanged(size_t index, const std::string& value);
-        void OnWorldSpatialPropertiesChanged(size_t index, const std::string& value);
+        void onPropertyChanged(const nana::arg_propertygrid& arg);
+        void onLightPropertyChanged(const nana::arg_propertygrid& arg);
+        void onAttributePropertiesChanged(size_t index, const std::string& value);
+        void onLocalSpatialPropertiesChanged(size_t index, const std::string& value);
+        void onWorldSpatialPropertiesChanged(size_t index, const std::string& value);
 
-        void ShowSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
-        void ShowLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light);
+        void showSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
+        void showLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light);
 
-        void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
     private:
         MainForm* m_mainForm;
         nana::propertygrid* m_properties;

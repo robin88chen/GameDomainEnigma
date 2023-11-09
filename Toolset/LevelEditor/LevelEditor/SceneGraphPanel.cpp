@@ -26,13 +26,13 @@ SceneGraphPanel::~SceneGraphPanel()
     SAFE_DELETE(m_sceneGraphTree);
 }
 
-void SceneGraphPanel::Initialize(MainForm* main_form)
+void SceneGraphPanel::initialize(MainForm* main_form)
 {
     m_main = main_form;
     m_place = menew nana::place{ *this };
     m_place->div("margin=[4,4,4,4] vert<scene_graph_tree>");
     m_sceneGraphTree = menew nana::treebox{ *this };
-    UISchemeColors::ApplySchemaColors(m_sceneGraphTree->scheme());
+    UISchemeColors::applySchemaColors(m_sceneGraphTree->scheme());
     m_sceneGraphTree->scheme().item_bg_selected = UISchemeColors::BACKGROUND;
     m_sceneGraphTree->scheme().item_fg_selected = UISchemeColors::FOREGROUND;
     m_sceneGraphTree->scheme().item_bg_highlighted = UISchemeColors::BACKGROUND;
@@ -40,13 +40,13 @@ void SceneGraphPanel::Initialize(MainForm* main_form)
     m_sceneGraphTree->scheme().item_bg_selected_and_highlighted = UISchemeColors::BACKGROUND;
     m_sceneGraphTree->scheme().item_fg_selected_and_highlighted = UISchemeColors::FOREGROUND;
     //m_sceneGraphTree->scheme().background = UISchemeColors::FOREGROUND;
-    m_sceneGraphTree->events().selected([this](const nana::arg_treebox& arg) { this->OnSceneGraphTreeSelected(arg); });
+    m_sceneGraphTree->events().selected([this](const nana::arg_treebox& arg) { this->onSceneGraphTreeSelected(arg); });
     (*m_place)["scene_graph_tree"] << *m_sceneGraphTree;
 
     m_place->collocate();
 }
 
-void SceneGraphPanel::Finalize()
+void SceneGraphPanel::finalize()
 {
     // treebox clear 並不會清掉 item 裡掛入的物件
     auto item = m_sceneGraphTree->first();
@@ -57,19 +57,19 @@ void SceneGraphPanel::Finalize()
     }
 }
 
-void SceneGraphPanel::SubscribeHandlers()
+void SceneGraphPanel::subscribeHandlers()
 {
-    m_doRefreshingSceneGraph = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](auto c) { DoRefreshingSceneGraphTree(c); });
-    Enigma::Frameworks::CommandBus::subscribe(typeid(RefreshSceneGraph), m_doRefreshingSceneGraph);
+    m_refreshSceneGraph = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](const Enigma::Frameworks::ICommandPtr& c) { refreshSceneGraphTree(c); });
+    Enigma::Frameworks::CommandBus::subscribe(typeid(RefreshSceneGraph), m_refreshSceneGraph);
 }
 
-void SceneGraphPanel::UnsubscribeHandlers()
+void SceneGraphPanel::unsubscribeHandlers()
 {
-    Enigma::Frameworks::CommandBus::unsubscribe(typeid(RefreshSceneGraph), m_doRefreshingSceneGraph);
-    m_doRefreshingSceneGraph = nullptr;
+    Enigma::Frameworks::CommandBus::unsubscribe(typeid(RefreshSceneGraph), m_refreshSceneGraph);
+    m_refreshSceneGraph = nullptr;
 }
 
-void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene)
+void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene)
 {
     auto item = m_sceneGraphTree->first();
     if (!item.empty()) item.visit_recursively(clear_item_value);
@@ -149,7 +149,7 @@ void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<En
     }
 }
 
-void SceneGraphPanel::OnSceneGraphTreeSelected(const nana::arg_treebox& arg)
+void SceneGraphPanel::onSceneGraphTreeSelected(const nana::arg_treebox& arg)
 {
     if (!arg.operated) return; // unselected item
     if (arg.item.empty()) return;
@@ -158,10 +158,10 @@ void SceneGraphPanel::OnSceneGraphTreeSelected(const nana::arg_treebox& arg)
     Enigma::Frameworks::EventPublisher::post(std::make_shared<PickedSpatialChanged>(spatial, PickedSpatialChanged::PickedFrom::FromSceneGraph));
 }
 
-void SceneGraphPanel::DoRefreshingSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c)
+void SceneGraphPanel::refreshSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<RefreshSceneGraph, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
-    RefreshSceneGraphTree(cmd->getFlattenedSpatial());
+    refreshSceneGraphTree(cmd->getFlattenedSpatial());
 }

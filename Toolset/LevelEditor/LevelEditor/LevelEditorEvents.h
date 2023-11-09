@@ -22,8 +22,8 @@ namespace LevelEditor
     public:
         EditorModeChanged(EditorMode prev_mode, EditorMode curr_mode) : m_prevMode(prev_mode), m_currMode(curr_mode) {}
 
-        EditorMode GetPrevMode() const { return m_prevMode; }
-        EditorMode GetCurrMode() const { return m_currMode; }
+        EditorMode prevMode() const { return m_prevMode; }
+        EditorMode currMode() const { return m_currMode; }
 
     protected:
         EditorMode m_prevMode;
@@ -41,8 +41,8 @@ namespace LevelEditor
     public:
         PickedSpatialChanged(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial, PickedFrom from) : m_spatial(spatial), m_from(from) {}
 
-        const std::shared_ptr<Enigma::SceneGraph::Spatial>& GetSpatial() const { return m_spatial; }
-        PickedFrom WherePickedFrom() const { return m_from; }
+        const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial() const { return m_spatial; }
+        PickedFrom wherePickedFrom() const { return m_from; }
 
     protected:
         std::shared_ptr<Enigma::SceneGraph::Spatial> m_spatial;
@@ -54,9 +54,9 @@ namespace LevelEditor
     public:
         SceneCursorMoved(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_hoveredPawn(hovered_pawn), m_mouseParam(mouse_param) {}
 
-        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
-        std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
-        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
+        const Enigma::MathLib::Vector3& position() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> hoveredPawn() const { return m_hoveredPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
@@ -68,9 +68,9 @@ namespace LevelEditor
     public:
         SceneCursorPressed(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_pickedPawn(picked_pawn), m_mouseParam(mouse_param) {}
 
-        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
-        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
-        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
+        const Enigma::MathLib::Vector3& position() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> pickedPawn() const { return m_pickedPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
@@ -82,9 +82,9 @@ namespace LevelEditor
     public:
         SceneCursorReleased(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& picked_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_pickedPawn(picked_pawn), m_mouseParam(mouse_param) {}
 
-        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
-        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPickedPawn() const { return m_pickedPawn.lock(); }
-        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
+        const Enigma::MathLib::Vector3& position() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> pickedPawn() const { return m_pickedPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
@@ -96,9 +96,9 @@ namespace LevelEditor
     public:
         SceneCursorDragged(const Enigma::MathLib::Vector3& pos, const std::shared_ptr<Enigma::SceneGraph::Pawn>& hovered_pawn, const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouse_param) : m_pos(pos), m_hoveredPawn(hovered_pawn), m_mouseParam(mouse_param) {}
 
-        const Enigma::MathLib::Vector3& GetPosition() const { return m_pos; }
-        std::shared_ptr<Enigma::SceneGraph::Pawn> GetHoveredPawn() const { return m_hoveredPawn.lock(); }
-        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& GetMouseParam() const { return m_mouseParam; }
+        const Enigma::MathLib::Vector3& position() const { return m_pos; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> hoveredPawn() const { return m_hoveredPawn.lock(); }
+        const Enigma::InputHandlers::MouseInputEvent::MouseInputParameters& mouseParam() const { return m_mouseParam; }
 
     protected:
         Enigma::MathLib::Vector3 m_pos;
@@ -111,8 +111,8 @@ namespace LevelEditor
     public:
         PawnLoaded(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const std::string& pawn_file_path) : m_pawn(pawn), m_pawnFilePath(pawn_file_path) {}
 
-        std::shared_ptr<Enigma::SceneGraph::Pawn> GetPawn() const { return m_pawn; }
-        const std::string& GetPawnFilePath() const { return m_pawnFilePath; }
+        std::shared_ptr<Enigma::SceneGraph::Pawn> pawn() const { return m_pawn; }
+        const std::string& pawnFilePath() const { return m_pawnFilePath; }
 
     private:
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
@@ -123,8 +123,8 @@ namespace LevelEditor
     public:
         LoadPawnFailed(const std::string& pawn_file_path, std::error_code er) : m_pawnFilePath(pawn_file_path), m_error(er) {}
 
-        const std::string& GetPawnFilePath() const { return m_pawnFilePath; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const std::string& pawnFilePath() const { return m_pawnFilePath; }
+        std::error_code errorCode() const { return m_error; }
 
     private:
         std::string m_pawnFilePath;

@@ -28,20 +28,20 @@ FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& came
     get_place()["near_plane_prompt"] << *m_nearPlanePrompt << *m_nearPlaneInputBox;
     get_place()["far_plane_prompt"] << *m_farPlanePrompt << *m_farPlaneInputBox;
     m_okButton = menew nana::button(*this, "OK");
-    m_okButton->events().click([this](const nana::arg_click& a) { this->OnOkButton(a); });
+    m_okButton->events().click([this](const nana::arg_click& a) { this->onOkButton(a); });
     m_cancelButton = menew nana::button(*this, "Cancel");
-    m_cancelButton->events().click([this](const nana::arg_click& a) { this->OnCancelButton(a); });
+    m_cancelButton->events().click([this](const nana::arg_click& a) { this->onCancelButton(a); });
     get_place()["buttons"] << *m_okButton << *m_cancelButton;
     get_place().collocate();
 
-    RegisterHandlers();
+    registerHandlers();
 
     Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_name));
 }
 
 FrustumInfoDialog::~FrustumInfoDialog()
 {
-    UnregisterHandlers();
+    unregisterHandlers();
 
     SAFE_DELETE(m_okButton);
     SAFE_DELETE(m_cancelButton);
@@ -53,15 +53,15 @@ FrustumInfoDialog::~FrustumInfoDialog()
     SAFE_DELETE(m_farPlaneInputBox);
 }
 
-void FrustumInfoDialog::RegisterHandlers()
+void FrustumInfoDialog::registerHandlers()
 {
-    m_onReplyCameraQuery = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
+    m_onReplyCameraQuery = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { onReplyCameraQuery(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
-    m_onQueryCameraFailed = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { OnReplyCameraQuery(e); });
+    m_onQueryCameraFailed = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](auto e) { onReplyCameraQuery(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::QueryCameraFailed), m_onQueryCameraFailed);
 }
 
-void FrustumInfoDialog::UnregisterHandlers()
+void FrustumInfoDialog::unregisterHandlers()
 {
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::ReplyCameraQuery), m_onReplyCameraQuery);
     m_onReplyCameraQuery = nullptr;
@@ -69,7 +69,7 @@ void FrustumInfoDialog::UnregisterHandlers()
     m_onQueryCameraFailed = nullptr;
 }
 
-void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
+void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
 {
     if (m_camera.expired())
     {
@@ -120,12 +120,12 @@ void FrustumInfoDialog::OnOkButton(const nana::arg_click& arg)
     close();
 }
 
-void FrustumInfoDialog::OnCancelButton(const nana::arg_click& arg)
+void FrustumInfoDialog::onCancelButton(const nana::arg_click& arg)
 {
     close();
 }
 
-void FrustumInfoDialog::OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e)
+void FrustumInfoDialog::onReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::ReplyCameraQuery>(e))

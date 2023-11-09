@@ -23,14 +23,14 @@ namespace LevelEditor
         FrustumInfoDialog(nana::window owner, const std::string& camera_name);
         virtual ~FrustumInfoDialog();
 
-        void RegisterHandlers();
-        void UnregisterHandlers();
+        void registerHandlers();
+        void unregisterHandlers();
 
-        void OnOkButton(const nana::arg_click& arg);
-        void OnCancelButton(const nana::arg_click& arg);
+        void onOkButton(const nana::arg_click& arg);
+        void onCancelButton(const nana::arg_click& arg);
 
     private:
-        void OnReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e);
+        void onReplyCameraQuery(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         nana::button* m_okButton;

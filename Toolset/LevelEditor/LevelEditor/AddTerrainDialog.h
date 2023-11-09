@@ -26,11 +26,11 @@ namespace LevelEditor
         AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit, const std::string& media_path_id);
         virtual ~AddTerrainDialog();
 
-        void OnOkButton(const nana::arg_click& arg);
-        void OnCancelButton(const nana::arg_click& arg);
-        void OnTextureLayerButton(const nana::arg_click& arg);
+        void onOkButton(const nana::arg_click& arg);
+        void onCancelButton(const nana::arg_click& arg);
+        void onTextureLayerButton(const nana::arg_click& arg);
 
-        void OnCellNumCellPerUVComboTextChanged(const nana::arg_combox& ev);
+        void onCellNumCellPerUVComboTextChanged(const nana::arg_combox& ev);
 
     private:
         nana::button* m_okButton;

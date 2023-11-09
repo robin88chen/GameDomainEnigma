@@ -65,7 +65,7 @@ void PawnEditConsole::onEditorModeChanged(const Enigma::Frameworks::IEventPtr& e
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EditorModeChanged>(e);
     if (!ev) return;
-    m_isEnabled = ev->GetCurrMode() == EditorMode::pawn;
+    m_isEnabled = ev->currMode() == EditorMode::pawn;
     if (m_isEnabled)
     {
         CommandBus::post(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
@@ -78,9 +78,9 @@ void PawnEditConsole::onSceneCursorPressed(const Enigma::Frameworks::IEventPtr& 
     const auto ev = std::dynamic_pointer_cast<SceneCursorPressed>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-    if (ev->GetMouseParam().m_flags.m_buttons.m_ctrl)
+    if (ev->mouseParam().m_flags.m_buttons.m_ctrl)
     {
-        putSelectedPawnToScene(ev->GetPosition());
+        putSelectedPawnToScene(ev->position());
     }
 }
 

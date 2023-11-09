@@ -50,43 +50,43 @@ namespace LevelEditor
         MainForm();
         virtual ~MainForm();
 
-        void InitSubPanels();
+        void initSubPanels();
 
-        void InitializeGraphics();
+        void initializeGraphics();
 
-        SceneGraphPanel* GetSceneGraphPanel() { return m_sceneGraphPanel; }
-        RenderPanel* GetRenderPanel() { return m_renderPanel; }
-        SpatialInspectorPanel* GetSpatialInspectorPanel() { return m_spatialInspectorPanel; }
+        SceneGraphPanel* getSceneGraphPanel() { return m_sceneGraphPanel; }
+        RenderPanel* getRenderPanel() { return m_renderPanel; }
+        SpatialInspectorPanel* getSpatialInspectorPanel() { return m_spatialInspectorPanel; }
 
         inline static std::string DataKey = "LevelEditor::MainForm";
     private:
-        void InitMenu();
-        void InitPanels();
-        void InitTools();
+        void initMenu();
+        void initPanels();
+        void initTools();
 
-        void OnCloseCommand(const nana::menu::item_proxy& menu_item);
-        void OnCreateWorldMapCommand(const nana::menu::item_proxy& menu_item);
-        void OnLoadWorldCommand(const nana::menu::item_proxy& menu_item);
-        void OnSaveWorldCommand(const nana::menu::item_proxy& menu_item);
-        void OnAddTerrainCommand(const nana::menu::item_proxy& menu_item);
-        void OnAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item);
+        void onCloseCommand(const nana::menu::item_proxy& menu_item);
+        void onCreateWorldMapCommand(const nana::menu::item_proxy& menu_item);
+        void onLoadWorldCommand(const nana::menu::item_proxy& menu_item);
+        void onSaveWorldCommand(const nana::menu::item_proxy& menu_item);
+        void onAddTerrainCommand(const nana::menu::item_proxy& menu_item);
+        void onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item);
 
-        void OnCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item);
-        void OnAddPortalCommand(const nana::menu::item_proxy& menu_item);
+        void onCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item);
+        void onAddPortalCommand(const nana::menu::item_proxy& menu_item);
 
-        void OnToolBarSelected(const nana::arg_toolbar& arg);
+        void onToolBarSelected(const nana::arg_toolbar& arg);
 
-        void OnAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_item);
-        void OnSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name);
-        void OnSelectZoneNode(const nana::toolbar::item_proxy& drop_down_item, const std::string& node_name);
+        void onAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_item);
+        void onSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name);
+        void onSelectZoneNode(const nana::toolbar::item_proxy& drop_down_item, const std::string& node_name);
         /*void OnImportDaeFile(const nana::menu::item_proxy& menu_item);
         void OnSaveEntity(const nana::menu::item_proxy& menu_item);
         void OnLoadEntity(const nana::menu::item_proxy& menu_item);*/
 
-        void OnCameraFrustumCommand(const nana::menu::item_proxy& menu_item);
+        void onCameraFrustumCommand(const nana::menu::item_proxy& menu_item);
 
-        void OnGodModeChanged(bool enabled);
-        void FinalizeGraphics();
+        void onGodModeChanged(bool enabled);
+        void finalizeGraphics();
 
     private:
         nana::menubar* m_menubar;

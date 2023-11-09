@@ -26,27 +26,27 @@ namespace LevelEditor
         EditorAppDelegate();
         ~EditorAppDelegate();
 
-        void Initialize(Enigma::Graphics::IGraphicAPI::APIVersion api_ver, Enigma::Graphics::IGraphicAPI::AsyncType useAsyncDevice,
+        void initialize(Enigma::Graphics::IGraphicAPI::APIVersion api_ver, Enigma::Graphics::IGraphicAPI::AsyncType useAsyncDevice,
             const std::string& log_filename, HWND hwnd);
-        virtual void InitializeMountPaths();
-        void InstallEngine();
-        void RegisterMediaMountPaths(const std::string& media_path);
-        void ShutdownEngine();
-        void Finalize();
+        virtual void initializeMountPaths();
+        void installEngine();
+        void registerMediaMountPaths(const std::string& media_path);
+        void shutdownEngine();
+        void finalize();
 
-        void FrameUpdate();
-        void PrepareRender();
-        void RenderFrame();
+        void frameUpdate();
+        void prepareRender();
+        void renderFrame();
 
-        void OnTimerElapsed();
+        void onTimerElapsed();
 
-        const std::unique_ptr<AppConfiguration>& GetAppConfig() const { return m_appConfig; };
-        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> GetInputHandler() const { return m_inputHandler.lock(); };
+        const std::unique_ptr<AppConfiguration>& appConfig() const { return m_appConfig; };
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); };
 
     protected:
-        void OnSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
 
     protected:
         HWND m_hwnd;

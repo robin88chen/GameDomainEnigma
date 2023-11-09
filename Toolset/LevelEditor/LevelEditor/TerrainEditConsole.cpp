@@ -155,7 +155,7 @@ void TerrainEditConsole::onEditorModeChanged(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EditorModeChanged, IEvent>(e);
     if (!ev) return;
-    m_isEnabled = ev->GetCurrMode() == EditorMode::terrain;
+    m_isEnabled = ev->currMode() == EditorMode::terrain;
     if (m_isEnabled)
     {
         CommandBus::post(std::make_shared<OutputMessage>("Mode : Terrain Edit Selected"));
@@ -205,7 +205,7 @@ void TerrainEditConsole::onTerrainBrushSizeChanged(const Enigma::Frameworks::IEv
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TerrainBrushSizeChanged>(e);
     if (!ev) return;
-    m_brushSize = ev->GetSize();
+    m_brushSize = ev->size();
     if (!m_brush.expired())
     {
         m_brush.lock()->setLocalUniformScale(static_cast<float>(m_brushSize));
@@ -217,7 +217,7 @@ void TerrainEditConsole::onTerrainBrushHeightChanged(const Enigma::Frameworks::I
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TerrainBrushHeightChanged>(e);
     if (!ev) return;
-    m_brushHeight = ev->GetHeight();
+    m_brushHeight = ev->height();
 }
 
 void TerrainEditConsole::onTerrainBrushDensityChanged(const Enigma::Frameworks::IEventPtr& e)
@@ -225,7 +225,7 @@ void TerrainEditConsole::onTerrainBrushDensityChanged(const Enigma::Frameworks::
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TerrainBrushDensityChanged>(e);
     if (!ev) return;
-    m_brushDensity = ev->GetDensity();
+    m_brushDensity = ev->density();
 }
 
 void TerrainEditConsole::onTerrainPaintingLayerChanged(const Enigma::Frameworks::IEventPtr& e)
@@ -233,7 +233,7 @@ void TerrainEditConsole::onTerrainPaintingLayerChanged(const Enigma::Frameworks:
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TerrainPaintingLayerChanged>(e);
     if (!ev) return;
-    m_layerIndex = ev->GetLayer();
+    m_layerIndex = ev->layer();
 }
 
 void TerrainEditConsole::onTerrainToolSelected(const Enigma::Frameworks::IEventPtr& e)
@@ -241,7 +241,7 @@ void TerrainEditConsole::onTerrainToolSelected(const Enigma::Frameworks::IEventP
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TerrainEditToolSelected>(e);
     if (!ev) return;
-    switch (ev->GetTool())
+    switch (ev->tool())
     {
     case TerrainEditToolSelected::Tool::Raise:
         m_currMode = TerrainEditMode::raiseHeight;
@@ -262,10 +262,10 @@ void TerrainEditConsole::onSceneCursorMoved(const Enigma::Frameworks::IEventPtr&
     const auto ev = std::dynamic_pointer_cast<SceneCursorMoved>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-    if (!ev->GetHoveredPawn()) return;
+    if (!ev->hoveredPawn()) return;
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
-    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->position(), std::nullopt);
 }
 
 void TerrainEditConsole::onSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e)
@@ -274,10 +274,10 @@ void TerrainEditConsole::onSceneCursorDragged(const Enigma::Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<SceneCursorDragged>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-    if (!ev->GetHoveredPawn()) return;
+    if (!ev->hoveredPawn()) return;
     //auto msg = string_format("hover position (%8.3f, %8.3f, %8.3f)\n", ev->GetPosition().X(), ev->GetPosition().Y(), ev->GetPosition().Z());
     //OutputDebugString(msg.c_str());
-    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->position(), std::nullopt);
     sendTerrainEditCommand(0.1f);
 }
 
@@ -287,8 +287,8 @@ void TerrainEditConsole::onSceneCursorPressed(const Enigma::Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<SceneCursorPressed>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-    if (!ev->GetPickedPawn()) return;
-    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
+    if (!ev->pickedPawn()) return;
+    if (!m_brush.expired()) m_brush.lock()->changeWorldPosition(ev->position(), std::nullopt);
     sendTerrainEditCommand(1.0f);
 }
 
@@ -298,10 +298,10 @@ void TerrainEditConsole::onSceneCursorReleased(const Enigma::Frameworks::IEventP
     const auto ev = std::dynamic_pointer_cast<SceneCursorReleased>(e);
     if (!ev) return;
     if (!m_isEnabled) return;
-    if (!ev->GetPickedPawn()) return;
+    if (!ev->pickedPawn()) return;
     if (!m_brush.expired())
     {
-        m_brush.lock()->changeWorldPosition(ev->GetPosition(), std::nullopt);
+        m_brush.lock()->changeWorldPosition(ev->position(), std::nullopt);
         CommandBus::post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->getWorldPosition()));
     }
 }

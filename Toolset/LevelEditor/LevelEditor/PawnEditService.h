@@ -50,7 +50,6 @@ namespace LevelEditor
 
         void completePutCandidatePawn();
         void failPutCandidatePawn(const error& err);
-        void putPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
     private:
         PawnLoader* m_pawnLoader;
 

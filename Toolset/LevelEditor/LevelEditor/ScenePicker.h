@@ -1,7 +1,7 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   ScenePIcker.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -50,19 +50,19 @@ namespace LevelEditor
 
         virtual TravelResult TravelTo(const Enigma::SceneGraph::SpatialPtr& spatial) override;
 
-        void SetFilter(FilterFlag filter) { m_filter = filter; }
-        FilterFlag GetFilter() { return m_filter; }
+        void setFilter(FilterFlag filter) { m_filter = filter; }
+        FilterFlag getFilter() { return m_filter; }
 
-        void SetAssociatedCamera(const std::shared_ptr<Enigma::SceneGraph::Camera>& camera);
-        void SetClippingCoord(const Enigma::MathLib::Vector2& clippingCoord);
+        void setAssociatedCamera(const std::shared_ptr<Enigma::SceneGraph::Camera>& camera);
+        void setClippingCoord(const Enigma::MathLib::Vector2& clippingCoord);
 
-        void Picking(const std::shared_ptr<Enigma::SceneGraph::Spatial>& sceneRoot);
-        unsigned int GetRecordCount();
-        std::optional<PickerRecord> GetPickRecord(unsigned int idx);
+        void picking(const std::shared_ptr<Enigma::SceneGraph::Spatial>& sceneRoot);
+        unsigned int getRecordCount();
+        std::optional<PickerRecord> getPickRecord(unsigned int idx);
 
     private:
-        void PushNodeRecord(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
-        bool PushPawnRecord(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
+        void pushNodeRecord(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
+        bool pushPawnRecord(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial);
 
     private:
         Enigma::MathLib::Ray3 m_pickerRay;

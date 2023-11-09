@@ -17,7 +17,7 @@ std::string TOKEN_CAMERA = "Camera";
 std::string TOKEN_WORLD_MAP_ROOT_FOLDER = "WorldMapRootFolder";
 std::string TOKEN_WORLD_MAP_PATH_ID = "WorldMapPathID";
 
-void AppConfiguration::LoadConfig()
+void AppConfiguration::loadConfig()
 {
     const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile(Enigma::FileSystem::Filename("app.cfg"), Enigma::FileSystem::Read | Enigma::FileSystem::Binary);
     const size_t file_size = iFile->Size();
@@ -30,79 +30,78 @@ void AppConfiguration::LoadConfig()
     }
 }
 
-std::string AppConfiguration::GetMediaPathId() const
+std::string AppConfiguration::mediaPathId() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_MEDIA_PATH_ID)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetDataPathId() const
+std::string AppConfiguration::dataPathId() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_DATA_PATH_ID)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetPrimaryTargetName() const
+std::string AppConfiguration::primaryTargetName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_PRIMARY_TARGET_NAME)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetDefaultRendererName() const
+std::string AppConfiguration::defaultRendererName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_DEFAULT_RENDERER_NAME)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetSceneRootName() const
+std::string AppConfiguration::sceneRootName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_SCENE_ROOT_NAME)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetPortalManagementName() const
+std::string AppConfiguration::portalManagementName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NAME)) return v.value();
     return "";
 }
 
-Enigma::Engine::GenericDto AppConfiguration::GetCameraDto() const
+Enigma::Engine::GenericDto AppConfiguration::cameraDto() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<Enigma::Engine::GenericDto>(TOKEN_CAMERA)) return v.value();
     return Enigma::Engine::GenericDto{};
 }
 
-std::string AppConfiguration::GetWorldMapRootFolderName() const
+std::string AppConfiguration::worldMapRootFolderName() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_WORLD_MAP_ROOT_FOLDER)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetWorldMapPathId() const
+std::string AppConfiguration::worldMapPathId() const
 {
     assert(!m_configDto.IsEmpty());
     if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_WORLD_MAP_PATH_ID)) return v.value();
     return "";
 }
 
-std::string AppConfiguration::GetCameraName() const
+std::string AppConfiguration::cameraName() const
 {
     assert(!m_configDto.IsEmpty());
-    auto cameraDto = GetCameraDto();
-    return cameraDto.getName();
+    return cameraDto().getName();
 }
 
-std::string AppConfiguration::GetFrustumName() const
+std::string AppConfiguration::frustumName() const
 {
     assert(!m_configDto.IsEmpty());
-    auto cameraDto = Enigma::SceneGraph::CameraDto::FromGenericDto(GetCameraDto());
-    return cameraDto.Frustum().getName();
+    auto camera = Enigma::SceneGraph::CameraDto::FromGenericDto(cameraDto());
+    return camera.Frustum().getName();
 }

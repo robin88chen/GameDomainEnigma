@@ -30,23 +30,23 @@ SceneTraveler::TravelResult ScenePicker::TravelTo(const SpatialPtr& spatial)
 
     if ((m_filter & FilterFlag::Pick_Node) && (spatial->typeInfo().isDerived(Node::TYPE_RTTI)))
     {
-        PushNodeRecord(spatial);
+        pushNodeRecord(spatial);
     }
     else if ((m_filter & FilterFlag::Pick_Pawn) && (Enigma::Frameworks::Rtti::isExactlyOrDerivedFrom(spatial->typeInfo().getName(), Enigma::Terrain::TerrainPawn::TYPE_RTTI.getName())))
     {
-        bool test_result = PushPawnRecord(spatial);
+        bool test_result = pushPawnRecord(spatial);
         if (!test_result) return TravelResult::TestFail;
     }
 
     return TravelResult::Continue;
 }
 
-void ScenePicker::SetAssociatedCamera(const std::shared_ptr<Camera>& camera)
+void ScenePicker::setAssociatedCamera(const std::shared_ptr<Camera>& camera)
 {
     m_camera = camera;
 }
 
-void ScenePicker::SetClippingCoord(const Vector2& clippingCoord)
+void ScenePicker::setClippingCoord(const Vector2& clippingCoord)
 {
     if (FATAL_LOG_EXPR(m_camera.expired())) return;
 
@@ -62,7 +62,7 @@ void ScenePicker::SetClippingCoord(const Vector2& clippingCoord)
     m_pickerRay = Ray3(m_camera.lock()->GetLocation(), ray_dir);
 }
 
-void ScenePicker::Picking(const SpatialPtr& sceneRoot)
+void ScenePicker::picking(const SpatialPtr& sceneRoot)
 {
     m_pickRecords.clear();
     if (!sceneRoot) return;
@@ -76,25 +76,25 @@ void ScenePicker::Picking(const SpatialPtr& sceneRoot)
     }
 }
 
-unsigned int ScenePicker::GetRecordCount()
+unsigned int ScenePicker::getRecordCount()
 {
     return static_cast<unsigned int>(m_pickRecords.size());
 }
 
-std::optional<ScenePicker::PickerRecord> ScenePicker::GetPickRecord(unsigned int idx)
+std::optional<ScenePicker::PickerRecord> ScenePicker::getPickRecord(unsigned int idx)
 {
     if (idx >= m_pickRecords.size()) return std::nullopt;
     return m_pickRecords[idx];
 }
 
-void ScenePicker::PushNodeRecord(const SpatialPtr& spatial)
+void ScenePicker::pushNodeRecord(const SpatialPtr& spatial)
 {
     NodePtr node = std::dynamic_pointer_cast<Node, Spatial>(spatial);
     if (!node) return;
     m_pickRecords.emplace_back(PickerRecord(node));
 }
 
-bool ScenePicker::PushPawnRecord(const SpatialPtr& spatial)
+bool ScenePicker::pushPawnRecord(const SpatialPtr& spatial)
 {
     auto pawn = std::dynamic_pointer_cast<Pawn>(spatial);
     if (!pawn) return false;

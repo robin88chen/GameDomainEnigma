@@ -179,11 +179,11 @@ std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> 
     if (m_camera.expired()) return { nullptr, Enigma::MathLib::Vector3::ZERO };
     if (m_sceneRoot.expired()) return { nullptr, Vector3::ZERO };
 
-    m_scenePicker.SetAssociatedCamera(m_camera.lock());
-    m_scenePicker.SetClippingCoord(clip_pos);
-    m_scenePicker.Picking(m_sceneRoot.lock());
+    m_scenePicker.setAssociatedCamera(m_camera.lock());
+    m_scenePicker.setClippingCoord(clip_pos);
+    m_scenePicker.picking(m_sceneRoot.lock());
 
-    const unsigned int count = m_scenePicker.GetRecordCount();
+    const unsigned int count = m_scenePicker.getRecordCount();
     if (count == 0)
     {
         return { nullptr, Vector3::ZERO };
@@ -193,7 +193,7 @@ std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> 
     Vector3 picked_pos;
     for (unsigned int i = 0; i < count; i++)
     {
-        auto pick_record = m_scenePicker.GetPickRecord(i);
+        auto pick_record = m_scenePicker.getPickRecord(i);
         if (!pick_record) continue;
         if (pick_record->m_spatial.expired()) continue;
         pickedPawn = std::dynamic_pointer_cast<Enigma::SceneGraph::Pawn, Enigma::SceneGraph::Spatial>(pick_record->m_spatial.lock());

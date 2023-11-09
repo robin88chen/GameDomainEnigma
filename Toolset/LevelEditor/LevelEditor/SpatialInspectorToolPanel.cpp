@@ -91,17 +91,17 @@ SpatialInspectorPanel::~SpatialInspectorPanel()
     SAFE_DELETE(m_place);
 }
 
-void SpatialInspectorPanel::Initialize(MainForm* form)
+void SpatialInspectorPanel::initialize(MainForm* form)
 {
     m_mainForm = form;
     m_place = menew nana::place{ *this };
     m_place->div("margin=[4,4,4,4] vert<property height=60%><light_property>");
 
     m_properties = new nana::propertygrid{ *this };
-    UISchemeColors::ApplySchemaColors(m_properties->scheme());
+    UISchemeColors::applySchemaColors(m_properties->scheme());
     m_properties->ibox_show(false);
     m_lightProperties = new nana::propertygrid{ *this };
-    UISchemeColors::ApplySchemaColors(m_lightProperties->scheme());
+    UISchemeColors::applySchemaColors(m_lightProperties->scheme());
     m_lightProperties->ibox_show(false);
     m_place->field("property") << *m_properties;
     m_place->field("light_property") << *m_lightProperties;
@@ -150,48 +150,48 @@ void SpatialInspectorPanel::Initialize(MainForm* form)
     cat_light.append(std::make_unique<nana::pg_string>(TAG_POSITION, "0, 0, 0"));
     cat_light.append(std::make_unique<nana::pg_string>(TAG_INTENSITY, "1"));
 
-    m_properties->events().property_changed([this](auto arg) {this->OnPropertyChanged(arg); });
-    m_lightProperties->events().property_changed([this](auto arg) {this->OnLightPropertyChanged(arg); });
+    m_properties->events().property_changed([this](auto arg) {this->onPropertyChanged(arg); });
+    m_lightProperties->events().property_changed([this](auto arg) {this->onLightPropertyChanged(arg); });
     m_place->collocate();
 }
 
-void SpatialInspectorPanel::Finalize()
+void SpatialInspectorPanel::finalize()
 {
     m_properties->clear();
 }
 
-void SpatialInspectorPanel::SubscribeHandlers()
+void SpatialInspectorPanel::subscribeHandlers()
 {
-    m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { OnPickedSpatialChanged(e); });
+    m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { onPickedSpatialChanged(e); });
     EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 }
 
-void SpatialInspectorPanel::UnsubscribeHandlers()
+void SpatialInspectorPanel::unsubscribeHandlers()
 {
     EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 }
 
-void SpatialInspectorPanel::OnPropertyChanged(const nana::arg_propertygrid& arg)
+void SpatialInspectorPanel::onPropertyChanged(const nana::arg_propertygrid& arg)
 {
     auto pos = arg.item.pos();
     switch (pos.cat)
     {
     case static_cast<size_t>(CategoryIndex::Attributes):
-        OnAttributePropertiesChanged(pos.item, arg.item.value());
+        onAttributePropertiesChanged(pos.item, arg.item.value());
         break;
     case static_cast<size_t>(CategoryIndex::LocalSpatial):
-        OnLocalSpatialPropertiesChanged(pos.item, arg.item.value());
+        onLocalSpatialPropertiesChanged(pos.item, arg.item.value());
         break;
     case static_cast<size_t>(CategoryIndex::WorldSpatial):
-        OnWorldSpatialPropertiesChanged(pos.item, arg.item.value());
+        onWorldSpatialPropertiesChanged(pos.item, arg.item.value());
         break;
     default:
         break;
     }
 }
 
-void SpatialInspectorPanel::OnLightPropertyChanged(const nana::arg_propertygrid& arg)
+void SpatialInspectorPanel::onLightPropertyChanged(const nana::arg_propertygrid& arg)
 {
     if (m_selectedSpatial.expired()) return;
     auto light = std::dynamic_pointer_cast<Enigma::SceneGraph::Light>(m_selectedSpatial.lock());
@@ -221,7 +221,7 @@ void SpatialInspectorPanel::OnLightPropertyChanged(const nana::arg_propertygrid&
     }
 }
 
-void SpatialInspectorPanel::OnAttributePropertiesChanged(size_t index, const std::string& value)
+void SpatialInspectorPanel::onAttributePropertiesChanged(size_t index, const std::string& value)
 {
     if (m_selectedSpatial.expired()) return;
     switch (index)
@@ -241,7 +241,7 @@ void SpatialInspectorPanel::OnAttributePropertiesChanged(size_t index, const std
     }
 }
 
-void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const std::string& value)
+void SpatialInspectorPanel::onLocalSpatialPropertiesChanged(size_t index, const std::string& value)
 {
     if (m_selectedSpatial.expired()) return;
     switch (index)
@@ -267,10 +267,10 @@ void SpatialInspectorPanel::OnLocalSpatialPropertiesChanged(size_t index, const 
     default:
         break;
     }
-    ShowSpatialProperties(m_selectedSpatial.lock());
+    showSpatialProperties(m_selectedSpatial.lock());
 }
 
-void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const std::string& value)
+void SpatialInspectorPanel::onWorldSpatialPropertiesChanged(size_t index, const std::string& value)
 {
     if (m_selectedSpatial.expired()) return;
     switch (index)
@@ -284,10 +284,10 @@ void SpatialInspectorPanel::OnWorldSpatialPropertiesChanged(size_t index, const 
     default:
         break;
     }
-    ShowSpatialProperties(m_selectedSpatial.lock());
+    showSpatialProperties(m_selectedSpatial.lock());
 }
 
-void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial)
+void SpatialInspectorPanel::showSpatialProperties(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial)
 {
     if (!spatial) return;
     if (auto item = m_properties->find(TAG_ATTRIBUTES, TAG_SPATIAL_NAME); item != nullptr)
@@ -392,10 +392,10 @@ void SpatialInspectorPanel::ShowSpatialProperties(const std::shared_ptr<Enigma::
         }
     }
 
-    ShowLightProperties(std::dynamic_pointer_cast<Enigma::SceneGraph::Light>(spatial));
+    showLightProperties(std::dynamic_pointer_cast<Enigma::SceneGraph::Light>(spatial));
 }
 
-void SpatialInspectorPanel::ShowLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light)
+void SpatialInspectorPanel::showLightProperties(const std::shared_ptr<Enigma::SceneGraph::Light>& light)
 {
     if (!light)
     {
@@ -434,11 +434,11 @@ void SpatialInspectorPanel::ShowLightProperties(const std::shared_ptr<Enigma::Sc
 }
 
 
-void SpatialInspectorPanel::OnPickedSpatialChanged(const IEventPtr& e)
+void SpatialInspectorPanel::onPickedSpatialChanged(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
     if (!ev) return;
-    m_selectedSpatial = ev->GetSpatial();
-    if (!m_selectedSpatial.expired()) ShowSpatialProperties(m_selectedSpatial.lock());
+    m_selectedSpatial = ev->spatial();
+    if (!m_selectedSpatial.expired()) showSpatialProperties(m_selectedSpatial.lock());
 }

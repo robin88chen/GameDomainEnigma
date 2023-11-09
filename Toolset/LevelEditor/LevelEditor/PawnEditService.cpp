@@ -125,7 +125,7 @@ void PawnEditService::onPrefabLoaded(const IEventPtr& e)
     }
 }
 
-void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditService::onLoadPrefabFailed(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LoadPawnPrefabFailed>(e);
@@ -135,10 +135,10 @@ void PawnEditService::onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e)
     failPutCandidatePawn(ev->GetError());
 }
 
-void PawnEditService::onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditService::onFittingNodeCreated(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::FittingNodeCreated>(e);
+    const auto ev = std::dynamic_pointer_cast<FittingNodeCreated>(e);
     if (!ev) return;
     if (ev->getRequestRuid() != m_creatNodeRuid) return;
     auto has_put = tryPutPawnAt(m_loadedPawn, m_currentLoadingPawn->m_position);
@@ -152,20 +152,20 @@ void PawnEditService::onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& 
     }
 }
 
-void PawnEditService::onCreateFittingNodeFailed(const Enigma::Frameworks::IEventPtr& e)
+void PawnEditService::onCreateFittingNodeFailed(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::CreateFittingNodeFailed>(e);
+    const auto ev = std::dynamic_pointer_cast<CreateFittingNodeFailed>(e);
     if (!ev) return;
     if (ev->getRequestRuid() != m_creatNodeRuid) return;
     failPutCandidatePawn(ev->getError());
 }
 
-bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
+bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
 {
     auto world_transform = Matrix4::MakeTranslateTransform(position);
     BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->getModelBound(), world_transform);
-    auto query = std::make_shared<Enigma::WorldMap::QueryFittingNode>(bv);
+    auto query = std::make_shared<QueryFittingNode>(bv);
     QueryDispatcher::dispatch(query);
     if (query->getResult() == nullptr) return false;
     auto node = query->getResult();
@@ -174,11 +174,11 @@ bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Paw
     return true;
 }
 
-void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position)
+void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
 {
     auto world_transform = Matrix4::MakeTranslateTransform(position);
     BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->getModelBound(), world_transform);
-    auto cmd = std::make_shared<Enigma::WorldMap::CreateFittingQuadNode>(bv);
+    auto cmd = std::make_shared<CreateFittingQuadNode>(bv);
     m_creatNodeRuid = cmd->getRuid();
     CommandBus::post(cmd);
 }
@@ -195,10 +195,4 @@ void PawnEditService::failPutCandidatePawn(const error& err)
     CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put failed : %s", m_currentLoadingPawn->m_name.c_str(), err.message().c_str())));
     m_currentLoadingPawn = std::nullopt;
     m_loadedPawn = nullptr;
-}
-
-void PawnEditService::putPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
-{
-    assert(pawn);
-    CommandBus::post(std::make_shared<AttachSceneRootChild>(pawn, Matrix4::MakeTranslateTransform(position)));
 }

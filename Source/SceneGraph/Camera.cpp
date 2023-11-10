@@ -24,7 +24,7 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Ca
 {
     m_name = name;
     m_handSys = hand;
-    m_cullingFrustum = Frustum(hand, Frustum::ProjectionType::Perspective);
+    m_cullingFrustum = Frustum::fromPerspective(hand, MathLib::Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
     m_vecLocation = Vector3::ZERO;
     m_vecEyeToLookAt = Vector3::UNIT_Z;
     m_vecUp = Vector3::UNIT_Y;
@@ -36,7 +36,7 @@ Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti())
     CameraDto camera_dto = CameraDto::FromGenericDto(dto);
     m_name = camera_dto.Name();
     m_handSys = camera_dto.HandSystem();
-    ChangeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
+    changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
     m_cullingFrustum = Frustum(camera_dto.Frustum());
 }
 
@@ -57,7 +57,7 @@ GenericDto Camera::serializeDto()
     return dto.ToGenericDto();
 }
 
-error Camera::ChangeCameraFrame(const std::optional<Vector3>& eye,
+error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
     const std::optional<Vector3>& eye_to_lookat, const std::optional<Vector3>& up)
 {
     if (eye)
@@ -86,18 +86,18 @@ error Camera::ChangeCameraFrame(const std::optional<Vector3>& eye,
         m_vecUp = m_vecCameraForward.Cross(m_vecRight);
     }
 
-    _UpdateViewTransform();
+    _updateViewTransform();
     return ErrorCode::ok;
 }
 
-error Camera::Zoom(float dist)
+error Camera::zoom(float dist)
 {
-    error er = ChangeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
+    error er = changeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
     if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
-error Camera::SphereRotate(float horz_angle, float vert_angle, const Vector3& center)
+error Camera::sphereRotate(float horz_angle, float vert_angle, const Vector3& center)
 {
     Vector3 vecCenter = center;
     if (center == Vector3::ZERO)
@@ -123,12 +123,12 @@ error Camera::SphereRotate(float horz_angle, float vert_angle, const Vector3& ce
     radius = dist.Length();
     Vector3 loc = vecCenter - radius * dir;  // 新的camera位置
 
-    error er = ChangeCameraFrame(loc, dir, up);
+    error er = changeCameraFrame(loc, dir, up);
     if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
-error Camera::Move(float dir_dist, float slide_dist)
+error Camera::move(float dir_dist, float slide_dist)
 {
     Vector3 right = m_vecRight;
     Vector3 up = Vector3::UNIT_Y;
@@ -137,19 +137,19 @@ error Camera::Move(float dir_dist, float slide_dist)
     Vector3 move_right = up.Cross(move_dir);
     Vector3 pos = m_vecLocation + dir_dist * move_dir + slide_dist * move_right;
 
-    error er = ChangeCameraFrame(pos, std::nullopt, std::nullopt);
+    error er = changeCameraFrame(pos, std::nullopt, std::nullopt);
     if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
-error Camera::MoveXZ(float move_x, float move_z)
+error Camera::moveXZ(float move_x, float move_z)
 {
-    error er = ChangeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
+    error er = changeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
     if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
-error Camera::ShiftLookAt(const Vector3& vecLookAt)
+error Camera::shiftLookAt(const Vector3& vecLookAt)
 {
     Vector3 dir = m_vecEyeToLookAt;
     Vector3 loc = m_vecLocation;
@@ -159,19 +159,55 @@ error Camera::ShiftLookAt(const Vector3& vecLookAt)
     auto res = intr.Find(nullptr);
     if (!res.m_hasIntersect) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
-    error er = ChangeCameraFrame(new_loc, std::nullopt, std::nullopt);
+    error er = changeCameraFrame(new_loc, std::nullopt, std::nullopt);
     if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
-error Camera::SetCullingFrustum(const Frustum& frustum)
+error Camera::cullingFrustum(const Frustum& frustum)
 {
     m_cullingFrustum = frustum;
 
     return ErrorCode::ok;
 }
 
-void Camera::_UpdateViewTransform()
+void Camera::changeAspectRatio(float ratio)
+{
+    assert(m_cullingFrustum.projectionType() == Frustum::ProjectionType::Perspective);
+    m_cullingFrustum = Frustum::fromPerspective(m_handSys, m_cullingFrustum.fov(), ratio, m_cullingFrustum.nearPlaneZ(), m_cullingFrustum.farPlaneZ());
+}
+
+void Camera::changeFrustumFarPlane(float far_z)
+{
+    if (m_cullingFrustum.projectionType() == Frustum::ProjectionType::Perspective)
+    {
+        m_cullingFrustum = Frustum::fromPerspective(m_handSys, m_cullingFrustum.fov(), m_cullingFrustum.aspectRatio(), m_cullingFrustum.nearPlaneZ(), far_z);
+    }
+    else
+    {
+        m_cullingFrustum = Frustum::fromOrtho(m_handSys, m_cullingFrustum.nearWidth(), m_cullingFrustum.nearHeight(), m_cullingFrustum.nearPlaneZ(), far_z);
+    }
+}
+
+void Camera::changeFrustumNearPlane(float near_z)
+{
+    if (m_cullingFrustum.projectionType() == Frustum::ProjectionType::Perspective)
+    {
+        m_cullingFrustum = Frustum::fromPerspective(m_handSys, m_cullingFrustum.fov(), m_cullingFrustum.aspectRatio(), near_z, m_cullingFrustum.farPlaneZ());
+    }
+    else
+    {
+        m_cullingFrustum = Frustum::fromOrtho(m_handSys, m_cullingFrustum.nearWidth(), m_cullingFrustum.nearHeight(), near_z, m_cullingFrustum.farPlaneZ());
+    }
+}
+
+void Camera::changeFrustumFov(float fov)
+{
+    assert(m_cullingFrustum.projectionType() == Frustum::ProjectionType::Perspective);
+    m_cullingFrustum = Frustum::fromPerspective(m_handSys, fov, m_cullingFrustum.aspectRatio(), m_cullingFrustum.nearPlaneZ(), m_cullingFrustum.farPlaneZ());
+}
+
+void Camera::_updateViewTransform()
 {
     Vector3 trans;
     trans.X() = m_vecRight.Dot(m_vecLocation);
@@ -180,8 +216,8 @@ void Camera::_UpdateViewTransform()
     m_mxViewTransform = Matrix4(m_vecRight, m_vecUp, m_vecCameraForward, -trans, false);
 }
 
-const Matrix4& Camera::GetProjectionTransform()
+const Matrix4& Camera::projectionTransform()
 {
-    return m_cullingFrustum.GetProjectionTransform();
+    return m_cullingFrustum.projectionTransform();
 }
 

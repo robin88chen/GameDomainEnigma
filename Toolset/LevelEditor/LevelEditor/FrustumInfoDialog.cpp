@@ -81,7 +81,7 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
         float fov = std::stof(m_fovInputBox->caption()) * Enigma::MathLib::Math::PI / 180.0f;
         if ((fov > 0.0f) && (fov < Enigma::MathLib::Math::HALF_PI))
         {
-            m_camera.lock()->ChangeFrustumFov(fov);
+            m_camera.lock()->changeFrustumFov(fov);
         }
         else
         {
@@ -110,8 +110,8 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
     }
     if (near_plane < far_plane)
     {
-        m_camera.lock()->ChangeFrustumNearPlane(near_plane);
-        m_camera.lock()->ChangeFrustumFarPlane(far_plane);
+        m_camera.lock()->changeFrustumNearPlane(near_plane);
+        m_camera.lock()->changeFrustumFarPlane(far_plane);
     }
     else
     {
@@ -133,9 +133,9 @@ void FrustumInfoDialog::onReplyCameraQuery(const Enigma::Frameworks::IEventPtr& 
         if (ev->GetCamera())
         {
             m_camera = ev->GetCamera();
-            m_fovInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFov() * 180.0f / Enigma::MathLib::Math::PI));
-            m_nearPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetNearPlaneZ()));
-            m_farPlaneInputBox->caption(std::to_string(ev->GetCamera()->GetCullingFrustum().GetFarPlaneZ()));
+            m_fovInputBox->caption(std::to_string(ev->GetCamera()->cullingFrustum().fov() * 180.0f / Enigma::MathLib::Math::PI));
+            m_nearPlaneInputBox->caption(std::to_string(ev->GetCamera()->cullingFrustum().nearPlaneZ()));
+            m_farPlaneInputBox->caption(std::to_string(ev->GetCamera()->cullingFrustum().farPlaneZ()));
         }
     }
     else if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::QueryCameraFailed>(e))

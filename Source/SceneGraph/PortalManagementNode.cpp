@@ -73,7 +73,7 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
     {
         culler->Insert(thisSpatial());
         PortalZoneNodePtr startZone;
-        Vector3 camPos = culler->GetCamera()->GetLocation();
+        Vector3 camPos = culler->GetCamera()->location();
         if ((m_cachedStartZone) && (m_cachedStartZone->getWorldBound().PointInside(camPos)))
         {
             startZone = m_cachedStartZone;

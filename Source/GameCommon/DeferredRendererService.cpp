@@ -583,7 +583,7 @@ void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::shared_
     if (!cam) return;
     const BoundingVolume& bv = lit_vol->getWorldBound();
     if (bv.IsEmpty()) return;
-    if (bv.PointInside(cam->GetLocation()))
+    if (bv.PointInside(cam->location()))
     {
         lit_vol->ToggleCameraInside(true);
     }

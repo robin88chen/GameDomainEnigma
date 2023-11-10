@@ -96,7 +96,21 @@ GenericDto Frustum::serializeDto()
     return dto.ToGenericDto();
 }
 
-error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane)
+Frustum Frustum::fromPerspective(GraphicCoordSys hand, float fov, float aspect, float n_plane, float f_plane)
+{
+    Frustum frustum(hand, ProjectionType::Perspective);
+    frustum.setPerspectiveProjection(fov, aspect, n_plane, f_plane);
+    return frustum;
+}
+
+Frustum Frustum::fromOrtho(GraphicCoordSys hand, float near_w, float near_h, float n_plane, float f_plane)
+{
+    Frustum frustum(hand, ProjectionType::Ortho);
+    frustum.setOrthoProjection(near_w, near_h, n_plane, f_plane);
+    return frustum;
+}
+
+error Frustum::setPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane)
 {
     m_fov = fov;
     m_aspectRatio = aspect;
@@ -113,12 +127,10 @@ error Frustum::SetPerspectiveProjection(float fov, float aspect, float n_plane, 
     }
 
     m_projectionType = ProjectionType::Perspective;
-
-    EventPublisher::post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
 }
 
-error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, float f_plane)
+error Frustum::setOrthoProjection(float near_w, float near_h, float n_plane, float f_plane)
 {
     m_nearWidth = near_w;
     m_nearHeight = near_h;
@@ -137,54 +149,5 @@ error Frustum::SetOrthoProjection(float near_w, float near_h, float n_plane, flo
 
     m_projectionType = ProjectionType::Ortho;
 
-    EventPublisher::post(std::make_shared<FrustumShapeChanged>(*this));
     return ErrorCode::ok;
-}
-
-void Frustum::ChangeFov(float fov)
-{
-    if (m_projectionType == ProjectionType::Ortho) return;
-    SetPerspectiveProjection(fov, m_aspectRatio, m_nearPlaneZ, m_farPlaneZ);
-}
-
-void Frustum::ChangeNearZ(float nz)
-{
-    if (m_projectionType == ProjectionType::Ortho)
-    {
-        SetOrthoProjection(m_nearWidth, m_nearHeight, nz, m_farPlaneZ);
-    }
-    else
-    {
-        SetPerspectiveProjection(m_fov, m_aspectRatio, nz, m_farPlaneZ);
-    }
-}
-
-void Frustum::ChangeFarZ(float fz)
-{
-    if (m_projectionType == ProjectionType::Ortho)
-    {
-        SetOrthoProjection(m_nearWidth, m_nearHeight, m_nearPlaneZ, fz);
-    }
-    else
-    {
-        SetPerspectiveProjection(m_fov, m_aspectRatio, m_nearPlaneZ, fz);
-    }
-}
-
-void Frustum::ChangeAspectRatio(float ratio)
-{
-    if (m_projectionType == ProjectionType::Ortho) return;
-    SetPerspectiveProjection(m_fov, ratio, m_nearPlaneZ, m_farPlaneZ);
-}
-
-void Frustum::ChangeNearHeight(float nh)
-{
-    if (m_projectionType == ProjectionType::Perspective) return;
-    SetOrthoProjection(m_nearWidth, nh, m_nearPlaneZ, m_farPlaneZ);
-}
-
-void Frustum::ChangeNearWidth(float nw)
-{
-    if (m_projectionType == ProjectionType::Perspective) return;
-    SetOrthoProjection(nw, m_nearHeight, m_nearPlaneZ, m_farPlaneZ);
 }

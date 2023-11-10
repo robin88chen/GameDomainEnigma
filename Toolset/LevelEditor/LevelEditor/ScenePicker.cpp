@@ -51,15 +51,15 @@ void ScenePicker::setClippingCoord(const Vector2& clippingCoord)
     if (FATAL_LOG_EXPR(m_camera.expired())) return;
 
     Vector3 clip_vec = Vector3(clippingCoord.X(), clippingCoord.Y(), 0.0f);
-    Matrix4 mxProj = m_camera.lock()->GetProjectionTransform().Inverse();
+    Matrix4 mxProj = m_camera.lock()->projectionTransform().Inverse();
     Vector3 camera_vec = mxProj.TransformCoord(clip_vec);
-    Matrix4 mxView = m_camera.lock()->GetViewTransform().Inverse();
+    Matrix4 mxView = m_camera.lock()->viewTransform().Inverse();
     Vector3 world_vec = mxView.TransformCoord(camera_vec);
 
-    Vector3 ray_dir = world_vec - m_camera.lock()->GetLocation();
+    Vector3 ray_dir = world_vec - m_camera.lock()->location();
     ray_dir.NormalizeSelf();
 
-    m_pickerRay = Ray3(m_camera.lock()->GetLocation(), ray_dir);
+    m_pickerRay = Ray3(m_camera.lock()->location(), ray_dir);
 }
 
 void ScenePicker::picking(const SpatialPtr& sceneRoot)

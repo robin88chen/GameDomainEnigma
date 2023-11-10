@@ -108,7 +108,7 @@ void GameCameraService::CameraZoom(float dist)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->Zoom(dist);
+    const error er = m_primaryCamera->zoom(dist);
 
     if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
@@ -117,7 +117,7 @@ void GameCameraService::CameraMove(float dir_dist, float slide_dist)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->Move(dir_dist, slide_dist);
+    const error er = m_primaryCamera->move(dir_dist, slide_dist);
 
     if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
@@ -126,7 +126,7 @@ void GameCameraService::CameraMoveXZ(float move_x, float move_z)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->MoveXZ(move_x, move_z);
+    const error er = m_primaryCamera->moveXZ(move_x, move_z);
 
     if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
@@ -135,7 +135,7 @@ void GameCameraService::CameraShiftLookAt(const Vector3& vecLookAt)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->ShiftLookAt(vecLookAt);
+    const error er = m_primaryCamera->shiftLookAt(vecLookAt);
 
     if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
@@ -144,7 +144,7 @@ void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, c
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->SphereRotate(horz_angle, vert_angle, center);
+    const error er = m_primaryCamera->sphereRotate(horz_angle, vert_angle, center);
 
     if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
@@ -152,28 +152,28 @@ void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, c
 void GameCameraService::ChangeAspectRatio(float ratio)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeAspectRatio(ratio);
+    m_primaryCamera->changeAspectRatio(ratio);
     EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
 }
 
 void GameCameraService::ChangeFrustumFarPlane(float far_z)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumFarPlane(far_z);
+    m_primaryCamera->changeFrustumFarPlane(far_z);
     EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 void GameCameraService::ChangeFrustumFov(float fov)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumFov(fov);
+    m_primaryCamera->changeFrustumFov(fov);
     EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
 }
 
 void GameCameraService::ChangeFrustumNearPlane(float near_z)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumNearPlane(near_z);
+    m_primaryCamera->changeFrustumNearPlane(near_z);
     EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
@@ -181,15 +181,15 @@ Ray3 GameCameraService::GetPickerRay(float clip_space_x, float clip_space_y)
 {
     assert(m_primaryCamera);
     Vector3 clip_vec = Vector3(clip_space_x, clip_space_y, 0.0f);
-    Matrix4 mxProj = m_primaryCamera->GetCullingFrustum().GetProjectionTransform().Inverse();
+    Matrix4 mxProj = m_primaryCamera->cullingFrustum().projectionTransform().Inverse();
     Vector3 camera_vec = mxProj.TransformCoord(clip_vec);
-    Matrix4 mxView = m_primaryCamera->GetViewTransform().Inverse();
+    Matrix4 mxView = m_primaryCamera->viewTransform().Inverse();
     Vector3 world_vec = mxView.TransformCoord(camera_vec);
 
-    Vector3 ray_dir = world_vec - m_primaryCamera->GetLocation();
+    Vector3 ray_dir = world_vec - m_primaryCamera->location();
     ray_dir.NormalizeSelf();
 
-    return Ray3(m_primaryCamera->GetLocation(), ray_dir);
+    return Ray3(m_primaryCamera->location(), ray_dir);
 }
 
 void GameCameraService::OnTargetResized(const Frameworks::IEventPtr& e)

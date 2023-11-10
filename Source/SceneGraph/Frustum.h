@@ -2,6 +2,7 @@
  * \file   Frustum.h
  * \brief  Frustum class, entity, use shared_ptr, maintained by repository,
  *          (2023.9) should be a value object, not entity
+ *          (2023.11) re-design, immutable value object
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -21,7 +22,7 @@ namespace Enigma::SceneGraph
     using error = std::error_code;
 
     /** Frustum class */
-    class Frustum : public std::enable_shared_from_this<Frustum>
+    class Frustum
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
@@ -34,7 +35,6 @@ namespace Enigma::SceneGraph
 
     public:
         Frustum() = default;
-        Frustum(GraphicCoordSys hand, ProjectionType proj);
         Frustum(const Engine::GenericDto& dto);
         Frustum(const Frustum&) = default;
         Frustum(Frustum&&) = default;
@@ -42,44 +42,37 @@ namespace Enigma::SceneGraph
         Frustum& operator=(const Frustum&) = default;
         Frustum& operator=(Frustum&&) = default;
 
+        static Frustum fromPerspective(GraphicCoordSys hand, float fov, float aspect, float n_plane, float f_plane);
+        static Frustum fromOrtho(GraphicCoordSys hand, float near_w, float near_h, float n_plane, float f_plane);
+
         Engine::GenericDto serializeDto();
 
-        GraphicCoordSys GetCoordHandSys() const { return m_handCoord; }
-        /** 設定透視投影矩陣 */
-        error SetPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
-        /**  設定平行投影矩陣 */
-        error SetOrthoProjection(float near_w, float near_h, float n_plane, float f_plane);
+        GraphicCoordSys getCoordHandSys() const { return m_handCoord; }
 
         /** get fov */
-        float GetFov() const { return m_fov; };
+        float fov() const { return m_fov; };
         /** get near plane z */
-        float GetNearPlaneZ() const { return m_nearPlaneZ; };
+        float nearPlaneZ() const { return m_nearPlaneZ; };
         /** get far plane z */
-        float GetFarPlaneZ() const { return m_farPlaneZ; };
+        float farPlaneZ() const { return m_farPlaneZ; };
         /** get aspect ratio */
-        float GetAspectRatio() const { return m_aspectRatio; };
+        float aspectRatio() const { return m_aspectRatio; };
         /** get near width */
-        float GetNearWidth() const { return m_nearWidth; };
+        float nearWidth() const { return m_nearWidth; };
         /** get near width */
-        float GetNearHeight() const { return m_nearHeight; };
-
-        /** change fov (for perspective only) */
-        void ChangeFov(float fov);
-        /** change near z */
-        void ChangeNearZ(float nz);
-        /** change far z */
-        void ChangeFarZ(float fz);
-        /** change aspect ratio (for perspective only) */
-        void ChangeAspectRatio(float ratio);
-        /** change near width (for orthographic only) */
-        void ChangeNearWidth(float nw);
-        /** change near height (for orthographic only) */
-        void ChangeNearHeight(float nh);
+        float nearHeight() const { return m_nearHeight; };
 
         /** get projection transform */
-        const MathLib::Matrix4& GetProjectionTransform() const { return m_mxProjTransform; };
+        const MathLib::Matrix4& projectionTransform() const { return m_mxProjTransform; };
         /** get projection type */
-        ProjectionType GetProjectionType() const { return m_projectionType; };
+        ProjectionType projectionType() const { return m_projectionType; };
+
+    protected:
+        Frustum(GraphicCoordSys hand, ProjectionType proj);
+        /** 設定透視投影矩陣 */
+        error setPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
+        /**  設定平行投影矩陣 */
+        error setOrthoProjection(float near_w, float near_h, float n_plane, float f_plane);
 
     protected:
         GraphicCoordSys m_handCoord;
@@ -95,8 +88,6 @@ namespace Enigma::SceneGraph
 
         ProjectionType m_projectionType;
     };
-
-    using FrustumPtr = std::shared_ptr<Frustum>;
 };
 
 

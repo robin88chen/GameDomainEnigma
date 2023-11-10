@@ -32,7 +32,7 @@ void SunLightCamera::SetSunLightDir(const Vector3& sun_dir)
     {
         up = Vector3::UNIT_X;
     }
-    ChangeCameraFrame(std::nullopt, m_sunDir, up);
+    changeCameraFrame(std::nullopt, m_sunDir, up);
 }
 
 void SunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
@@ -52,7 +52,7 @@ void SunLightCamera::CalcLightCameraSystemMatrix(SceneGraph::Culler* culler)
     CalcLightCameraFrustum();
 
     CalcSceneCropMatrix(filterShadowBound.GetMergedBound());
-    m_mxLightViewProj = m_mxProjSceneCrop * GetViewTransform();
+    m_mxLightViewProj = m_mxProjSceneCrop * viewTransform();
 }
 
 void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound)
@@ -66,14 +66,14 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     */
     if (m_viewerCamera.expired()) return;
 
-    m_effectiveViewerNearZ = m_viewerCamera.lock()->GetCullingFrustum().GetNearPlaneZ();
-    m_effectiveViewerFarZ = m_viewerCamera.lock()->GetCullingFrustum().GetFarPlaneZ();
+    m_effectiveViewerNearZ = m_viewerCamera.lock()->cullingFrustum().nearPlaneZ();
+    m_effectiveViewerFarZ = m_viewerCamera.lock()->cullingFrustum().farPlaneZ();
 
     if (sceneWorldBound.IsEmpty()) return;
     auto cropBox = sceneWorldBound.BoundingBox3();
     if (!cropBox) return;
     // 如果攝影機在BB內，near z 不需調整
-    bool isCameraInBox = sceneWorldBound.PointInside(m_viewerCamera.lock()->GetLocation());
+    bool isCameraInBox = sceneWorldBound.PointInside(m_viewerCamera.lock()->location());
 
     auto vecCropBox = cropBox->ComputeVertices();
     unsigned int nFaceIndex[] =
@@ -96,7 +96,7 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     tpClipper.Clip();
     if (tpClipper.ClippedTriangleCount() == 0) return;
 
-    Matrix4 mxView = m_viewerCamera.lock()->GetViewTransform();
+    Matrix4 mxView = m_viewerCamera.lock()->viewTransform();
     Vector3 vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[0].Vector(0));
     Vector3 vecMin = vecBoxEdgeInView;
     Vector3 vecMax = vecBoxEdgeInView;
@@ -151,7 +151,7 @@ void SunLightCamera::CalcLightCameraFrustum()
     float lightCameraMoveBack = -vecMinLightBox.Z() + 0.2f;  // add some bias
     // move light camera back from dir axis and set light camera frame
     Vector3 vecLightCameraPos = vecViewerFrustumCenter - lightCameraMoveBack * m_sunDir;
-    ChangeCameraFrame(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1]);
+    changeCameraFrame(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1]);
     //SetLightCameraViewTransform(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
     // frustum plane w
     float planeW = -vecMinLightBox.X();
@@ -161,9 +161,8 @@ void SunLightCamera::CalcLightCameraFrustum()
     if (planeH < vecMaxLightBox.Y()) planeH = vecMaxLightBox.Y();
     // frustum far z
     float farZ = vecMaxLightBox.Z() - vecMinLightBox.Z() + 0.5f;
-    m_cullingFrustum = Frustum(m_handSys, Frustum::ProjectionType::Ortho);
-    m_cullingFrustum.SetOrthoProjection(planeW * 2.0f, planeH * 2.0f, 0.1f, farZ);
-    m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum.GetProjectionTransform();
+    m_cullingFrustum = Frustum::fromOrtho(m_handSys, planeW * 2.0f, planeH * 2.0f, 0.1f, farZ);
+    m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum.projectionTransform();
 }
 
 std::array<Vector3, 3> SunLightCamera::CalcLightCameraFrame() const
@@ -188,13 +187,13 @@ std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
 {
     std::array<Vector3, 8> vecFrustumCorner;
     if (m_viewerCamera.expired()) return vecFrustumCorner;
-    const Frustum frustum = m_viewerCamera.lock()->GetCullingFrustum();
+    const Frustum frustum = m_viewerCamera.lock()->cullingFrustum();
 
-    Vector3 vZ = m_viewerCamera.lock()->GetEyeToLookatVector();
-    Vector3 vX = m_viewerCamera.lock()->GetRightVector();
-    Vector3 vY = m_viewerCamera.lock()->GetUpVector();
-    float aspect = frustum.GetAspectRatio();
-    float fov = frustum.GetFov();
+    Vector3 vZ = m_viewerCamera.lock()->eyeToLookatVector();
+    Vector3 vX = m_viewerCamera.lock()->rightVector();
+    Vector3 vY = m_viewerCamera.lock()->upVector();
+    float aspect = frustum.aspectRatio();
+    float fov = frustum.fov();
 
     float nearPlaneHalfHeight = std::tan(fov * 0.5f) * m_effectiveViewerNearZ;
     float nearPlaneHalfWidth = nearPlaneHalfHeight * aspect;
@@ -202,8 +201,8 @@ std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
     float farPlaneHalfHeight = std::tan(fov * 0.5f) * m_effectiveViewerFarZ;
     float farPlaneHalfWidth = farPlaneHalfHeight * aspect;
 
-    Vector3 vecNearPlaneCenter = m_viewerCamera.lock()->GetLocation() + vZ * m_effectiveViewerNearZ;
-    Vector3 vecFarPlaneCenter = m_viewerCamera.lock()->GetLocation() + vZ * m_effectiveViewerFarZ;
+    Vector3 vecNearPlaneCenter = m_viewerCamera.lock()->location() + vZ * m_effectiveViewerNearZ;
+    Vector3 vecFarPlaneCenter = m_viewerCamera.lock()->location() + vZ * m_effectiveViewerFarZ;
 
     vecFrustumCorner[0] = vecNearPlaneCenter - vX * nearPlaneHalfWidth - vY * nearPlaneHalfHeight;
     vecFrustumCorner[1] = vecNearPlaneCenter - vX * nearPlaneHalfWidth + vY * nearPlaneHalfHeight;
@@ -220,7 +219,7 @@ std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
 void SunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
 {
     if (sceneWorldBound.IsEmpty()) return;
-    Matrix4 mxLightViewProj = m_cullingFrustum.GetProjectionTransform() * GetViewTransform();
+    Matrix4 mxLightViewProj = m_cullingFrustum.projectionTransform() * viewTransform();
 
     Engine::BoundingVolume cropBound = Engine::BoundingVolume::CreateFromTransform(sceneWorldBound, mxLightViewProj);
     auto cropBox = cropBound.BoundingBox3();
@@ -249,10 +248,10 @@ void SunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorl
         0.0f, scaleY, 0.0f, offsetY,
         0.0f, 0.0f, scaleZ, offsetZ,
         0.0f, 0.0f, 0.0f, 1.0f);
-    m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum.GetProjectionTransform();
+    m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum.projectionTransform();
 }
 
-const Matrix4& SunLightCamera::GetProjectionTransform()
+const Matrix4& SunLightCamera::projectionTransform()
 {
     return m_mxProjSceneCrop;
 }

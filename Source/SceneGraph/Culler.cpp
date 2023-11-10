@@ -89,14 +89,14 @@ void Culler::UpdateFrustumPlanes()
 {
     if (!m_camera) return;
 
-    Frustum frustum = m_camera->GetCullingFrustum();
+    Frustum frustum = m_camera->cullingFrustum();
 
     float xSin, xCos, ySin, yCos;
-    if (frustum.GetProjectionType() == Frustum::ProjectionType::Ortho)
+    if (frustum.projectionType() == Frustum::ProjectionType::Ortho)
     {
-        xSin = frustum.GetNearWidth() / 2.0f;
-        xCos = frustum.GetNearPlaneZ();
-        ySin = frustum.GetNearHeight() / 2.0f;
+        xSin = frustum.nearWidth() / 2.0f;
+        xCos = frustum.nearPlaneZ();
+        ySin = frustum.nearHeight() / 2.0f;
         yCos = xCos;
         float x = (float)sqrt(xSin * xSin + xCos * xCos);
         float y = (float)sqrt(ySin * ySin + yCos * yCos);
@@ -108,13 +108,13 @@ void Culler::UpdateFrustumPlanes()
     else
     {
         // m_fFov是 y方向 fov
-        float fovy = frustum.GetFov() / 2.0f;
-        float fovx = (float)(atan(tan(fovy) * frustum.GetAspectRatio()));
+        float fovy = frustum.fov() / 2.0f;
+        float fovx = (float)(atan(tan(fovy) * frustum.aspectRatio()));
         xCos = (float)cos(fovx);
         xSin = (float)sin(fovx);
         yCos = (float)cos(fovy);
         ySin = (float)sin(fovy);
-        if (frustum.GetCoordHandSys() == GraphicCoordSys::RightHand)
+        if (frustum.getCoordHandSys() == GraphicCoordSys::RightHand)
         {
             xSin = -xSin;
             ySin = -ySin;
@@ -123,7 +123,7 @@ void Culler::UpdateFrustumPlanes()
 
     MathLib::Vector3 vec;
 
-    MathLib::Matrix4 mxCameraWorldTransform = m_camera->GetViewTransform().Inverse();
+    MathLib::Matrix4 mxCameraWorldTransform = m_camera->viewTransform().Inverse();
 
     MathLib::Vector3 nor, pos;
     // Left Plane
@@ -181,9 +181,9 @@ void Culler::UpdateFrustumPlanes()
     vec.X() = 0.0f;
     vec.Y() = 0.0f;
     vec.Z() = -1.0f;
-    float far_z = frustum.GetFarPlaneZ();
-    float out_far_z = frustum.GetFarPlaneZ() + m_outerClipShiftZ;
-    if (frustum.GetCoordHandSys() == GraphicCoordSys::RightHand)
+    float far_z = frustum.farPlaneZ();
+    float out_far_z = frustum.farPlaneZ() + m_outerClipShiftZ;
+    if (frustum.getCoordHandSys() == GraphicCoordSys::RightHand)
     {
         vec.Z() = 1.0f;
         far_z = -far_z;
@@ -203,7 +203,7 @@ void Culler::UpdateFrustumPlanes()
     vec.Y() = 0.0f;
     vec.Z() = 1.0f;
     float out_near_z = -m_outerClipShiftZ;
-    if (frustum.GetCoordHandSys() == GraphicCoordSys::RightHand)
+    if (frustum.getCoordHandSys() == GraphicCoordSys::RightHand)
     {
         vec.Z() = -1.0f;
         out_near_z = -out_near_z;

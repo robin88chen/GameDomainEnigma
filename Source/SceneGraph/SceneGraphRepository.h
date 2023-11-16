@@ -40,6 +40,7 @@ namespace Enigma::SceneGraph
     class PortalZoneNodeDto;
     class PortalManagementNodeDto;
     class SceneGraphBuilder;
+    class SceneQuadTreeRoot;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -83,6 +84,8 @@ namespace Enigma::SceneGraph
     private:
         bool hasCamera(const std::string& name);
         std::shared_ptr<Camera> queryCamera(const std::string& name);
+        bool hasQuadTreeRoot(const std::string& name);
+        std::shared_ptr<SceneQuadTreeRoot> queryQuadTreeRoot(const std::string& name);
 
         void queryCamera(const Frameworks::IQueryPtr& q);
         void DoCreatingCamera(const Frameworks::ICommandPtr& c);
@@ -103,6 +106,9 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
         std::recursive_mutex m_portalMapLock;
+
+        std::unordered_map<std::string, std::weak_ptr<SceneQuadTreeRoot>> m_quadTreeRoots;
+        std::recursive_mutex m_quadTreeRootMapLock;
 
         SceneGraphBuilder* m_builder;
 

@@ -13,6 +13,7 @@
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
+#include "SceneQuadTreeRoot.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -279,6 +280,22 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
         assert(false);
         return nullptr;
     }
+}
+
+bool SceneGraphRepository::hasQuadTreeRoot(const std::string& name)
+{
+    std::lock_guard locker{ m_quadTreeRootMapLock };
+    auto it = m_quadTreeRoots.find(name);
+    return ((it != m_quadTreeRoots.end()) && (!it->second.expired()));
+}
+
+std::shared_ptr<SceneQuadTreeRoot> SceneGraphRepository::queryQuadTreeRoot(const std::string& name)
+{
+    std::lock_guard locker{ m_quadTreeRootMapLock };
+    auto it = m_quadTreeRoots.find(name);
+    if (it == m_quadTreeRoots.end()) return nullptr;
+    if (it->second.expired()) return nullptr;
+    return it->second.lock();
 }
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)

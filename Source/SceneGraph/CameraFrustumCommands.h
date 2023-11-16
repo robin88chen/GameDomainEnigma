@@ -10,7 +10,6 @@
 
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
-#include <string>
 
 namespace Enigma::SceneGraph
 {

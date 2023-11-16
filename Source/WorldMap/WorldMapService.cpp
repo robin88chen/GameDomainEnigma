@@ -131,7 +131,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::serializeWorldMap() const
     for (auto node : m_listQuadRoot)
     {
         if (node.expired()) continue;
-        collection.push_back(node.lock()->SerializeAsLaziness());
+        collection.push_back(node.lock()->serializeAsLaziness());
     }
     for (const auto& child : m_world.lock()->GetChildList())
     {

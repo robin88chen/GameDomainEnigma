@@ -55,6 +55,9 @@
     <Filter Include="Scene Graph\Aggregates">
       <UniqueIdentifier>{0532e57d-2c78-4892-98f0-6e02f0d2833a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Queries">
+      <UniqueIdentifier>{1afd4c29-661a-4759-b666-b605a72f0cac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -188,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h">
       <Filter>Scene Graph\Aggregates</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h">
+      <Filter>Queries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

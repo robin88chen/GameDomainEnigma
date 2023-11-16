@@ -24,17 +24,6 @@ namespace Enigma::SceneGraph
     protected:
         Engine::GenericDto m_dto;
     };
-
-    class QueryCamera : public Frameworks::IRequestCommand
-    {
-    public:
-        QueryCamera(const std::string& name) : m_name(name) {}
-
-        const std::string& getName() { return m_name; }
-
-    protected:
-        std::string m_name;
-    };
 }
 
 #endif // CAMERA_FRUSTUM_COMMANDS_H

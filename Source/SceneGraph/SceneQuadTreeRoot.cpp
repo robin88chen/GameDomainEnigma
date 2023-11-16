@@ -14,9 +14,8 @@ DEFINE_RTTI_OF_BASE(SceneGraph, SceneQuadTreeRoot);
 constexpr int MAX_RECURSIVE_DEPTH = 4;
 
 SceneQuadTreeRoot::SceneQuadTreeRoot(const std::string& name, const std::shared_ptr<LazyNode>& root)
+    : m_factory_desc(TYPE_RTTI.getName()), m_name(name), m_root(root)
 {
-    m_name = name;
-    m_root = root;
 }
 
 SceneQuadTreeRoot::~SceneQuadTreeRoot()
@@ -69,7 +68,7 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findFittingLeaf(const Engine::BoundingV
         if (!envelop) return parent;  // 下一層放不下這物件，返回本層
 
         fitting_leaf = findTargetSubtree(parent, parent->getSpatialName(), sub_tree_index);
-        if (!fitting_leaf) return parent;
+        if (!fitting_leaf) return nullptr; // 找不到子節點，搜尋失敗
 
         parent = fitting_leaf;
         Matrix4 fitting_leaf_inv_local_mx = fitting_leaf->getLocalTransform().Inverse();

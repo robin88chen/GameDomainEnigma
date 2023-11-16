@@ -47,6 +47,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />

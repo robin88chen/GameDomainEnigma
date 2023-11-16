@@ -14,6 +14,7 @@
 #include "Frustum.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -54,13 +55,11 @@ namespace Enigma::SceneGraph
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void SetCoordinateSystem(GraphicCoordSys hand);
-        GraphicCoordSys GetCoordinateSystem();
+        void setCoordinateSystem(GraphicCoordSys hand);
+        GraphicCoordSys getCoordinateSystem();
 
         std::shared_ptr<Camera> CreateCamera(const std::string& name);
         std::shared_ptr<Camera> CreateCamera(const Engine::GenericDto& dto);
-        bool HasCamera(const std::string& name);
-        std::shared_ptr<Camera> QueryCamera(const std::string& name);
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         bool HasNode(const std::string& name);
@@ -82,7 +81,10 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
     private:
-        void DoQueryingCamera(const Frameworks::ICommandPtr& c);
+        bool hasCamera(const std::string& name);
+        std::shared_ptr<Camera> queryCamera(const std::string& name);
+
+        void queryCamera(const Frameworks::IQueryPtr& q);
         void DoCreatingCamera(const Frameworks::ICommandPtr& c);
 
     private:
@@ -104,7 +106,7 @@ namespace Enigma::SceneGraph
 
         SceneGraphBuilder* m_builder;
 
-        Frameworks::CommandSubscriberPtr m_doQueryingCamera;
+        Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::CommandSubscriberPtr m_doCreatingCamera;
     };
 }

@@ -28,6 +28,7 @@ namespace Enigma::SceneGraph
         SceneQuadTreeRoot& operator=(const SceneQuadTreeRoot& other) = delete;
         SceneQuadTreeRoot& operator=(SceneQuadTreeRoot&& other) noexcept = delete;
 
+        Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
         const std::string& name() const { return m_name; }
 
         std::shared_ptr<Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
@@ -41,6 +42,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<SceneGraph::Node> findTargetSubtree(const std::shared_ptr<SceneGraph::Node>& any_level_parent, const std::string& parent_name, unsigned sub_tree_index) const;
 
     protected:
+        Engine::FactoryDesc m_factory_desc;
         std::string m_name;
         std::shared_ptr<LazyNode> m_root;
     };

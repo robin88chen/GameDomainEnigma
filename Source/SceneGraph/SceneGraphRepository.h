@@ -59,8 +59,8 @@ namespace Enigma::SceneGraph
         void setCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys getCoordinateSystem();
 
-        std::shared_ptr<Camera> CreateCamera(const std::string& name);
-        std::shared_ptr<Camera> CreateCamera(const Engine::GenericDto& dto);
+        std::shared_ptr<Camera> createCamera(const std::string& name);
+        std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
         std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
         bool HasNode(const std::string& name);
@@ -88,7 +88,8 @@ namespace Enigma::SceneGraph
         std::shared_ptr<SceneQuadTreeRoot> queryQuadTreeRoot(const std::string& name);
 
         void queryCamera(const Frameworks::IQueryPtr& q);
-        void DoCreatingCamera(const Frameworks::ICommandPtr& c);
+        void queryQuadTreeRoot(const Frameworks::IQueryPtr& q);
+        void createCamera(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -113,7 +114,8 @@ namespace Enigma::SceneGraph
         SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
-        Frameworks::CommandSubscriberPtr m_doCreatingCamera;
+        Frameworks::QuerySubscriberPtr m_queryQuadTreeRoot;
+        Frameworks::CommandSubscriberPtr m_createCamera;
     };
 }
 

@@ -53,8 +53,10 @@ ServiceResult SceneGraphRepository::onInit()
 {
     m_queryCamera = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryCamera(q); });
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
-    m_doCreatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoCreatingCamera(c); });
-    CommandBus::subscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
+    m_queryQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryQuadTreeRoot(q); });
+    QueryDispatcher::subscribe(typeid(QuerySceneQuadTreeRoot), m_queryQuadTreeRoot);
+    m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
+    CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
 
     return ServiceResult::Complete;
 }
@@ -62,8 +64,10 @@ ServiceResult SceneGraphRepository::onTerm()
 {
     QueryDispatcher::unsubscribe(typeid(QueryCamera), m_queryCamera);
     m_queryCamera = nullptr;
-    CommandBus::unsubscribe(typeid(SceneGraph::CreateCamera), m_doCreatingCamera);
-    m_doCreatingCamera = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QuerySceneQuadTreeRoot), m_queryQuadTreeRoot);
+    m_queryQuadTreeRoot = nullptr;
+    CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
+    m_createCamera = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -78,7 +82,7 @@ GraphicCoordSys SceneGraphRepository::getCoordinateSystem()
     return m_handSystem;
 }
 
-std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& name)
+std::shared_ptr<Camera> SceneGraphRepository::createCamera(const std::string& name)
 {
     assert(!hasCamera(name));
     auto camera = std::make_shared<Camera>(name, m_handSystem);
@@ -87,7 +91,7 @@ std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const std::string& na
     return camera;
 }
 
-std::shared_ptr<Camera> SceneGraphRepository::CreateCamera(const GenericDto& dto)
+std::shared_ptr<Camera> SceneGraphRepository::createCamera(const GenericDto& dto)
 {
     assert(!hasCamera(dto.getName()));
     auto camera = std::make_shared<Camera>(dto);
@@ -306,7 +310,15 @@ void SceneGraphRepository::queryCamera(const IQueryPtr& q)
     query->setResult(queryCamera(query->cameraName()));
 }
 
-void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
+void SceneGraphRepository::queryQuadTreeRoot(const IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QuerySceneQuadTreeRoot>(q);
+    assert(query);
+    query->setResult(queryQuadTreeRoot(query->sceneQuadTreeRootName()));
+}
+
+void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateCamera>(c))
@@ -318,7 +330,7 @@ void SceneGraphRepository::DoCreatingCamera(const Frameworks::ICommandPtr& c)
         }
         else
         {
-            camera = CreateCamera(cmd->GetDto());
+            camera = createCamera(cmd->GetDto());
         }
         if (camera)
         {

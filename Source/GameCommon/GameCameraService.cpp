@@ -100,7 +100,7 @@ ServiceResult GameCameraService::onTerm()
 void GameCameraService::CreatePrimaryCamera(const Engine::GenericDto& dto)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(dto);
+    m_primaryCamera = m_sceneGraphRepository.lock()->createCamera(dto);
     EventPublisher::post(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }
 

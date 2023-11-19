@@ -13,6 +13,7 @@
 namespace Enigma::SceneGraph
 {
     class Camera;
+    class Node;
     class SceneQuadTreeRoot;
     class QueryCamera : public Frameworks::Query<std::shared_ptr<Camera>>
     {
@@ -20,6 +21,16 @@ namespace Enigma::SceneGraph
         QueryCamera(const std::string& name) : m_name(name) {}
 
         const std::string& cameraName() const { return m_name; }
+
+    protected:
+        std::string m_name;
+    };
+    class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
+    {
+    public:
+        QueryNode(const std::string& name) : m_name(name) {}
+
+        const std::string& nodeName() const { return m_name; }
 
     protected:
         std::string m_name;

@@ -7,11 +7,14 @@
  *********************************************************************/
 #ifndef WORLD_MAP_H
 #define WORLD_MAP_H
-#include <string>
 
 #include "SceneGraph/PortalManagementNode.h"
 #include "SceneGraph/PortalZoneNode.h"
+#include "SceneGraph/SceneQuadTreeRoot.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GenericDto.h"
+#include "Terrain/TerrainPawn.h"
+#include <string>
 
 namespace Enigma::WorldMap
 {
@@ -35,8 +38,13 @@ namespace Enigma::WorldMap
 
         std::shared_ptr<SceneGraph::PortalManagementNode> getPortalRootNode() const { return m_portalRootNode.lock(); };
 
+        void attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
+        std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
+
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_portalRootNode;
+        typedef std::list<std::shared_ptr<SceneGraph::SceneQuadTreeRoot>> QuadRootList;
+        QuadRootList m_listQuadRoot;
     };
 }
 

@@ -30,6 +30,7 @@ namespace Enigma::SceneGraph
     class Portal;
     class LightInfo;
     class Light;
+    class LazyNode;
     class CameraDto;
     class NodeDto;
     class LazyNodeDto;
@@ -62,9 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> createCamera(const std::string& name);
         std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
-        std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
-        bool HasNode(const std::string& name);
-        std::shared_ptr<Node> QueryNode(const std::string& name);
+        std::shared_ptr<Node> createNode(const std::string& name, const Frameworks::Rtti& rtti);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
         bool HasPawn(const std::string& name);
@@ -81,15 +80,22 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
-    private:
+        std::shared_ptr<SceneQuadTreeRoot> createQuadTreeRoot(const std::string& name, const std::shared_ptr<LazyNode> root);
+
         bool hasCamera(const std::string& name);
         std::shared_ptr<Camera> queryCamera(const std::string& name);
+        bool hasNode(const std::string& name);
+        std::shared_ptr<Node> queryNode(const std::string& name);
         bool hasQuadTreeRoot(const std::string& name);
         std::shared_ptr<SceneQuadTreeRoot> queryQuadTreeRoot(const std::string& name);
 
+    private:
         void queryCamera(const Frameworks::IQueryPtr& q);
+        void queryNode(const Frameworks::IQueryPtr& q);
         void queryQuadTreeRoot(const Frameworks::IQueryPtr& q);
         void createCamera(const Frameworks::ICommandPtr& c);
+        void createNode(const Frameworks::ICommandPtr& c);
+        void createQuadTreeRoot(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -114,8 +120,11 @@ namespace Enigma::SceneGraph
         SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
+        Frameworks::QuerySubscriberPtr m_queryNode;
         Frameworks::QuerySubscriberPtr m_queryQuadTreeRoot;
         Frameworks::CommandSubscriberPtr m_createCamera;
+        Frameworks::CommandSubscriberPtr m_createNode;
+        Frameworks::CommandSubscriberPtr m_createQuadTreeRoot;
     };
 }
 

@@ -34,7 +34,6 @@ DEFINE_RTTI(WorldMap, WorldMapService, ISystemService);
 
 std::string WORLD_MAP_TAG = "world_map";
 std::string FITTING_NODE_TAG = "fitting_node";
-std::string QUADROOT_POSTFIX = "_qroot";
 
 constexpr int MAX_RECURSIVE_DEPTH = 4;
 
@@ -169,27 +168,13 @@ void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>
     assert(terrain);
     assert(!m_sceneGraphRepository.expired());
     if (FATAL_LOG_EXPR(m_world.expired())) return;
-    std::string node_name = terrain->getSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
-    auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(m_sceneGraphRepository.lock()->CreateNode(node_name, VisibilityManagedNode::TYPE_RTTI));
-    quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
-    quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
-    quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
-    m_world.lock()->AttachChild(quadRootNode, local_transform);
-    m_listQuadRoot.push_back(quadRootNode);
+    m_world.lock()->attachTerrain(m_sceneGraphRepository.lock(), terrain, local_transform);
 }
 
 std::shared_ptr<Node> WorldMapService::queryFittingNode(const Engine::BoundingVolume& bv_in_world) const
 {
     assert(!m_world.expired());
-    if (m_listQuadRoot.empty()) return m_world.lock()->getPortalRootNode();
-    for (auto root : m_listQuadRoot)
-    {
-        if (root.expired()) continue;
-        Matrix4 root_inv_world_mx = root.lock()->getWorldTransform().Inverse();
-        auto bv_in_node = Engine::BoundingVolume::CreateFromTransform(bv_in_world, root_inv_world_mx);
-        if (auto node = findFittingNodeFromQuadRoot(root.lock(), bv_in_node)) return node;
-    }
-    return m_world.lock()->getPortalRootNode();
+    return m_world.lock()->queryFittingNode(bv_in_world);
 }
 
 std::shared_ptr<Node> WorldMapService::findFittingNodeFromQuadRoot(const std::shared_ptr<Node>& root, const Engine::BoundingVolume& bv_in_root) const

@@ -19,6 +19,7 @@ namespace Enigma::SceneGraph
     class Light;
     class LazyNode;
     class Pawn;
+    class SceneQuadTreeRoot;
 
     //------------------ Scene Graph Events -------------------
     class SceneGraphEvent : public Frameworks::IEvent
@@ -255,6 +256,47 @@ namespace Enigma::SceneGraph
     protected:
         std::weak_ptr<LazyNode> m_node;
         bool m_isVisible;
+    };
+    //------------ creator response ------------
+    class SceneQuadTreeRootCreated : public Frameworks::IResponseEvent
+    {
+    public:
+        SceneQuadTreeRootCreated(const Frameworks::Ruid& request_ruid, const std::shared_ptr<SceneQuadTreeRoot>& root) : IResponseEvent(request_ruid), m_root(root) {};
+
+        std::shared_ptr<SceneQuadTreeRoot> root() const { return m_root; }
+
+    protected:
+        std::shared_ptr<SceneQuadTreeRoot> m_root;
+    };
+    class CreateSceneQuadTreeRootFailed : public Frameworks::IResponseEvent
+    {
+    public:
+        CreateSceneQuadTreeRootFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
+
+        std::error_code error() const { return m_error; }
+
+    protected:
+        std::error_code m_error;
+    };
+    class NodeCreated : public Frameworks::IResponseEvent
+    {
+    public:
+        NodeCreated(const Frameworks::Ruid& request_ruid, const std::shared_ptr<Node>& node) : IResponseEvent(request_ruid), m_node(node) {};
+
+        std::shared_ptr<Node> node() const { return m_node; }
+
+    protected:
+        std::shared_ptr<Node> m_node;
+    };
+    class CreateNodeFailed : public Frameworks::IResponseEvent
+    {
+    public:
+        CreateNodeFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
+
+        std::error_code error() const { return m_error; }
+
+    protected:
+        std::error_code m_error;
     };
 }
 

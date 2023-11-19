@@ -81,13 +81,13 @@ ServiceResult GameSceneService::onTerm()
 void GameSceneService::CreateRootScene(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_sceneRoot = m_sceneGraphRepository.lock()->CreateNode(scene_root_name, Node::TYPE_RTTI);
+    m_sceneRoot = m_sceneGraphRepository.lock()->createNode(scene_root_name, Node::TYPE_RTTI);
     m_sceneRoot->setLocalTransform(Matrix4::IDENTITY);
 
     if (portal_managed_name.has_value())
     {
         m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode, Node>(
-            m_sceneGraphRepository.lock()->CreateNode(portal_managed_name.value(), PortalManagementNode::TYPE_RTTI));
+            m_sceneGraphRepository.lock()->createNode(portal_managed_name.value(), PortalManagementNode::TYPE_RTTI));
         m_sceneRoot->AttachChild(m_portalMgtNode, Matrix4::IDENTITY);
     }
 

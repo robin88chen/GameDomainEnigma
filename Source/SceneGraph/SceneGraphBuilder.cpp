@@ -162,14 +162,14 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     std::shared_ptr<Node> node;
     if (dto.GetRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
-        assert(!m_host->HasNode(dto.getName()));  // node name must be unique
+        assert(!m_host->hasNode(dto.getName()));  // node name must be unique
         node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
     }
     else
     {
-        if (m_host->HasNode(dto.getName()))
+        if (m_host->hasNode(dto.getName()))
         {
-            node = m_host->QueryNode(dto.getName());
+            node = m_host->queryNode(dto.getName());
         }
         else
         {

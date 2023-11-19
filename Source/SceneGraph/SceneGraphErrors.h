@@ -29,6 +29,7 @@ namespace Enigma::SceneGraph
         cameraNotFound,
         frustumNotFound,
         sceneRepositoryFailed,
+        entityAlreadyExists,
 
         spatialFactoryNotFound = 301,
         factoryRttiMismatch,

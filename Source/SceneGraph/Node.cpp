@@ -4,6 +4,7 @@
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphDtos.h"
+#include "SceneFlattenTraversal.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
@@ -52,6 +53,20 @@ void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryL
             { if (!lifetime.expired())
             std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->AttachChild(sp, sp->getLocalTransform()); });
     }
+}
+
+Enigma::Engine::GenericDtoCollection Node::serializeFlattenedTree()
+{
+    Engine::GenericDtoCollection collection;
+    SceneFlattenTraversal flatten;
+    visitBy(&flatten);
+    if (flatten.GetSpatials().empty()) return collection;
+    for (auto& sp : flatten.GetSpatials())
+    {
+        collection.push_back(sp->serializeDto());
+    }
+    collection[0].AsTopLevel(true);
+    return collection;
 }
 
 error Node::onCullingVisible(Culler* culler, bool noCull)

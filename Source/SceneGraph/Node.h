@@ -43,6 +43,8 @@ namespace Enigma::SceneGraph
         virtual Engine::GenericDto serializeDto() override;
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
+        virtual Engine::GenericDtoCollection serializeFlattenedTree();
+
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
         virtual bool canVisited() override { return true; };

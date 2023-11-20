@@ -48,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h">
       <Filter>QuadTree</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">
@@ -68,5 +69,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.cpp">
       <Filter>QuadTree</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.cpp" />
   </ItemGroup>
 </Project>

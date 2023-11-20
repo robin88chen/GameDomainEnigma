@@ -1,5 +1,8 @@
 ﻿#include "SceneQuadTreeRoot.h"
+#include "QuadTreeRootDto.h"
 #include "SceneGraph/FindSpatialByName.h"
+#include "SceneGraph/EnumDerivedSpatials.h"
+#include "SceneGraph/VisibilityManagedNode.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/StringFormat.h"
 #include "MathLib/ContainmentBox2.h"
@@ -20,22 +23,49 @@ SceneQuadTreeRoot::SceneQuadTreeRoot(const std::string& name, const std::shared_
 
 SceneQuadTreeRoot::~SceneQuadTreeRoot()
 {
-    m_root = nullptr;
+}
+
+GenericDto SceneQuadTreeRoot::serializeDto()
+{
+    QuadTreeRootDto dto;
+    dto.factoryDesc() = m_factory_desc;
+    dto.name() = m_name;
+    assert(!m_root.expired());
+    dto.root() = m_root.lock()->serializeAsLaziness();
+    return dto.toGenericDto();
+}
+
+std::vector<GenericDtoCollection> SceneQuadTreeRoot::serializeTreeGraphs()
+{
+    assert(!m_root.expired());
+    std::vector<Engine::GenericDtoCollection> collections;
+    EnumDerivedSpatials enumNode(VisibilityManagedNode::TYPE_RTTI);
+    m_root.lock()->visitBy(&enumNode);
+    if (enumNode.GetSpatials().empty()) return collections;
+
+    for (auto& spatial : enumNode.GetSpatials())
+    {
+        const auto node = std::dynamic_pointer_cast<Node, Spatial>(spatial);
+        if (!node) continue;
+        //todo : if quad node has portal node child, then need serialize portal node
+        collections.emplace_back(node->serializeFlattenedTree());
+    }
+    return collections;
 }
 
 std::shared_ptr<Node> SceneQuadTreeRoot::queryFittingNode(const BoundingVolume& bv_in_world) const
 {
-    assert(m_root);
-    Matrix4 root_inv_world_mx = m_root->getWorldTransform().Inverse();
+    assert(!m_root.expired());
+    Matrix4 root_inv_world_mx = m_root.lock()->getWorldTransform().Inverse();
     auto bv_in_node = BoundingVolume::CreateFromTransform(bv_in_world, root_inv_world_mx);
     return findFittingNodeFromRoot(bv_in_node);
 }
 
 std::shared_ptr<Node> SceneQuadTreeRoot::findFittingNodeFromRoot(const Engine::BoundingVolume& bv_in_root) const
 {
-    assert(m_root);
-    auto root_local_box = m_root->getModelBound().BoundingBox3();
-    if (!root_local_box) return m_root;
+    assert(!m_root.expired());
+    auto root_local_box = m_root.lock()->getModelBound().BoundingBox3();
+    if (!root_local_box) return m_root.lock();
     Vector3 root_box_min = root_local_box->Center() - Vector3(root_local_box->Extent());
     Vector3 root_box_max = root_local_box->Center() + Vector3(root_local_box->Extent());
     Vector3 local_pos = bv_in_root.Center();
@@ -50,10 +80,10 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findFittingNodeFromRoot(const Engine::B
 
 std::shared_ptr<Node> SceneQuadTreeRoot::findFittingLeaf(const Engine::BoundingVolume& bv_in_root) const
 {
-    assert(m_root);
+    assert(!m_root.expired());
     std::shared_ptr<Node> fitting_leaf = nullptr;
     int depth = MAX_RECURSIVE_DEPTH;
-    std::shared_ptr<Node> parent = m_root;
+    std::shared_ptr<Node> parent = m_root.lock();
     auto bv_in_node = bv_in_root;
     while (depth >= 0)
     {

@@ -4,6 +4,7 @@
 #include "WorldMapDto.h"
 #include "SceneQuadTreeRoot.h"
 #include "SceneGraph/VisibilityManagedNode.h"
+#include "SceneGraph/EnumNonDerivedSpatials.h"
 #include "Frameworks/LazyStatus.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -32,11 +33,44 @@ WorldMap::WorldMap(const Engine::GenericDto& o) : PortalZoneNode(o)
 
 WorldMap::~WorldMap()
 {
+    m_listQuadRoot.clear();
 }
 
 GenericDto WorldMap::serializeDto()
 {
-    return PortalZoneNode::serializeDto();
+    WorldMapDto world_dto(PortalZoneNodeDto::FromGenericDto(PortalZoneNode::serializeDto()));
+    world_dto.IsTopLevel() = true;
+
+    for (auto& root : m_listQuadRoot)
+    {
+        if (!root) continue;
+        world_dto.quadTreeRoots().emplace_back(root->serializeDto());
+    }
+    for (const auto& child : GetChildList())
+    {
+        if (!child) continue;
+        EnumNonDerivedSpatials enumSpatials(LazyNode::TYPE_RTTI);
+        child->visitBy(&enumSpatials);
+        for (const auto& spatial : enumSpatials.GetSpatials())
+        {
+            if (!spatial) continue;
+            world_dto.nonLazyChildren().emplace_back(spatial->serializeDto());
+        }
+    }
+    return world_dto.toGenericDto();
+}
+
+std::vector<GenericDtoCollection> WorldMap::serializeQuadGraphs()
+{
+    std::vector<Engine::GenericDtoCollection> collections;
+    if (m_listQuadRoot.empty()) return collections;
+    for (auto& root : m_listQuadRoot)
+    {
+        if (!root) continue;
+        auto root_collection = root->serializeTreeGraphs();
+        collections.insert(collections.end(), root_collection.begin(), root_collection.end());
+    }
+    return collections;
 }
 
 void WorldMap::setPortalRootNode(const std::shared_ptr<PortalManagementNode>& root)

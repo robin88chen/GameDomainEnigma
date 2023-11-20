@@ -37,7 +37,7 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult onTerm() override;
 
         std::vector<Engine::GenericDtoCollection> serializeQuadNodeGraphs() const;
-        Engine::GenericDtoCollection serializeWorldMap() const;
+        Engine::GenericDto serializeWorldMap() const;
 
         void deserializeWorldMap(const Engine::GenericDtoCollection& graph);
 

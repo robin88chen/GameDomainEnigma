@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   SceneQuadTreeRoot.h
- * \brief  scene graph quad tree root, an aggregate, maintained by scene graph repository
+ * \brief  scene graph quad tree root, an aggregate,
  *      compose root lazy node, not inherit from lazy node, then we can have different root node type
  * \author Lancelot 'Robin' Chen
  * \date   November 2023
@@ -19,7 +19,7 @@ namespace Enigma::WorldMap
 {
     class SceneQuadTreeRoot
     {
-        DECLARE_EN_RTTI_OF_BASE;
+        DECLARE_EN_RTTI_NON_BASE;
     public:
         SceneQuadTreeRoot(const std::string& name, const std::shared_ptr<SceneGraph::LazyNode>& root);
         ~SceneQuadTreeRoot();
@@ -27,6 +27,9 @@ namespace Enigma::WorldMap
         SceneQuadTreeRoot(SceneQuadTreeRoot&& other) noexcept = delete;
         SceneQuadTreeRoot& operator=(const SceneQuadTreeRoot& other) = delete;
         SceneQuadTreeRoot& operator=(SceneQuadTreeRoot&& other) noexcept = delete;
+
+        Engine::GenericDto serializeDto();
+        std::vector<Engine::GenericDtoCollection> serializeTreeGraphs();
 
         Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
         const std::string& name() const { return m_name; }
@@ -44,7 +47,7 @@ namespace Enigma::WorldMap
     protected:
         Engine::FactoryDesc m_factory_desc;
         std::string m_name;
-        std::shared_ptr<SceneGraph::LazyNode> m_root;
+        std::weak_ptr<SceneGraph::LazyNode> m_root;
     };
 }
 

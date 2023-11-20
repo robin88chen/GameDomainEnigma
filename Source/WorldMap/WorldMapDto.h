@@ -17,17 +17,17 @@ namespace Enigma::WorldMap
         WorldMapDto();
         WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_dto);
 
-        //const std::string& Name() const { return m_name; }
-        //std::string& Name() { return m_name; }
+        [[nodiscard]] const std::vector<Engine::GenericDto>& quadTreeRoots() const { return m_quadTreeRoots; }
+        [[nodiscard]] std::vector<Engine::GenericDto>& quadTreeRoots() { return m_quadTreeRoots; }
+        [[nodiscard]] const std::vector<Engine::GenericDto>& nonLazyChildren() const { return m_nonLazyChildren; }
+        [[nodiscard]] std::vector<Engine::GenericDto>& nonLazyChildren() { return m_nonLazyChildren; }
 
         static WorldMapDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-        //[[nodiscard]] const std::string& WorldZoneName() const { return m_worldZoneName; }
-        //std::string& WorldZoneName() { return m_worldZoneName; }
 
     protected:
-        //std::string m_name;
-        //std::string m_worldZoneName;
+        std::vector<Engine::GenericDto> m_quadTreeRoots;
+        std::vector<Engine::GenericDto> m_nonLazyChildren;
     };
 }
 

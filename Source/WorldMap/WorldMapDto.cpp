@@ -4,7 +4,8 @@
 using namespace Enigma::WorldMap;
 using namespace Enigma::Engine;
 
-//static std::string TOKEN_WORLD_ZONE_NAME = "WorldZoneName";
+static std::string TOKEN_QUAD_TREE_ROOTS = "QuadTreeRoots";
+static std::string TOKEN_NON_LAZY_CHILDREN = "NonLazyChildren";
 
 WorldMapDto::WorldMapDto() : PortalZoneNodeDto()
 {
@@ -21,16 +22,15 @@ WorldMapDto::WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_d
 WorldMapDto WorldMapDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     WorldMapDto world_map_dto(PortalZoneNodeDto::FromGenericDto(dto));
-    //world_map_dto.Name() = dto.getName();
-    //if (auto v = dto.TryGetValue<std::string>(TOKEN_WORLD_ZONE_NAME)) world_map_dto.WorldZoneName() = v.value();
+    if (auto v = dto.TryGetValue<std::vector<Engine::GenericDto>>(TOKEN_QUAD_TREE_ROOTS)) world_map_dto.quadTreeRoots() = v.value();
+    if (auto v = dto.TryGetValue<std::vector<Engine::GenericDto>>(TOKEN_NON_LAZY_CHILDREN)) world_map_dto.nonLazyChildren() = v.value();
     return world_map_dto;
 }
 
 Enigma::Engine::GenericDto WorldMapDto::toGenericDto() const
 {
     GenericDto dto = PortalZoneNodeDto::ToGenericDto();
-    //dto.AddName(m_name);
-    //dto.AddRtti(FactoryDesc(WorldMap::TYPE_RTTI.getName()));
-    //dto.AddOrUpdate(TOKEN_WORLD_ZONE_NAME, m_worldZoneName);
+    dto.AddOrUpdate(TOKEN_QUAD_TREE_ROOTS, m_quadTreeRoots);
+    if (!m_nonLazyChildren.empty()) dto.AddOrUpdate(TOKEN_NON_LAZY_CHILDREN, m_nonLazyChildren);
     return dto;
 }

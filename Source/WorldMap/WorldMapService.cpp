@@ -14,7 +14,6 @@
 #include "SceneGraph/PortalCommands.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include "SceneGraph/EnumDerivedSpatials.h"
-#include "SceneGraph/EnumNonDerivedSpatials.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
 #include "SceneGraph/Spatial.h"
 #include "Frameworks/StringFormat.h"
@@ -97,53 +96,13 @@ ServiceResult WorldMapService::onTerm()
 std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::serializeQuadNodeGraphs() const
 {
     assert(!m_world.expired());
-
-    std::vector<Engine::GenericDtoCollection> collections;
-    EnumDerivedSpatials enumNode(VisibilityManagedNode::TYPE_RTTI);
-    m_world.lock()->visitBy(&enumNode);
-    if (enumNode.GetSpatials().empty()) return collections;
-
-    for (auto& node : enumNode.GetSpatials())
-    {
-        //todo : if quad node has portal node child, then need serialize portal node
-        SceneFlattenTraversal flatten;
-        node->visitBy(&flatten);
-        if (flatten.GetSpatials().empty()) continue;
-        Engine::GenericDtoCollection collection;
-        for (auto& sp : flatten.GetSpatials())
-        {
-            collection.push_back(sp->serializeDto());
-        }
-        collection[0].AsTopLevel(true);
-        collections.push_back(collection);
-    }
-    return collections;
+    return m_world.lock()->serializeQuadGraphs();
 }
 
-Enigma::Engine::GenericDtoCollection WorldMapService::serializeWorldMap() const
+Enigma::Engine::GenericDto WorldMapService::serializeWorldMap() const
 {
     assert(!m_world.expired());
-    Engine::GenericDtoCollection collection;
-    auto world_dto = m_world.lock()->serializeDto();
-    world_dto.AsTopLevel(true);
-    collection.push_back(world_dto);
-    for (auto node : m_listQuadRoot)
-    {
-        if (node.expired()) continue;
-        collection.push_back(node.lock()->serializeAsLaziness());
-    }
-    for (const auto& child : m_world.lock()->GetChildList())
-    {
-        if (!child) continue;
-        EnumNonDerivedSpatials enumSpatials(LazyNode::TYPE_RTTI);
-        child->visitBy(&enumSpatials);
-        for (const auto& spatial : enumSpatials.GetSpatials())
-        {
-            if (!spatial) continue;
-            collection.push_back(spatial->serializeDto());
-        }
-    }
-    return collection;
+    return m_world.lock()->serializeDto();
 }
 
 void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& graph)

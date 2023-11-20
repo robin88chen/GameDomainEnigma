@@ -85,15 +85,12 @@ void WorldEditConsole::saveWorldMap()
 {
     assert(!m_worldEditService.expired());
     CommandBus::post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
-    auto [map_graph, node_graphs] = m_worldEditService.lock()->serializeWorldMapAndNodeGraphs(m_worldMapPathId);
-    if (!map_graph.empty())
-    {
-        std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(map_graph);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(map_graph[0].GetRtti().GetPrefab()), Write | OpenAlways | Binary);
-        if (FATAL_LOG_EXPR(!iFile)) return;
-        iFile->Write(0, convert_to_buffer(json));
-        FileSystem::Instance()->CloseFile(iFile);
-    }
+    auto [map_dto, node_graphs] = m_worldEditService.lock()->serializeWorldMapAndNodeGraphs(m_worldMapPathId);
+    std::string json_map = Enigma::Gateways::DtoJsonGateway::Serialize({ map_dto });
+    IFilePtr file_map = FileSystem::Instance()->OpenFile(Filename(map_dto.GetRtti().GetPrefab()), Write | OpenAlways | Binary);
+    if (FATAL_LOG_EXPR(!file_map)) return;
+    file_map->Write(0, convert_to_buffer(json_map));
+    FileSystem::Instance()->CloseFile(file_map);
     for (auto& dtos : node_graphs)
     {
         std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(dtos);

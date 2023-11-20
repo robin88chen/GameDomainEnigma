@@ -13,7 +13,6 @@
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
-#include "SceneQuadTreeRoot.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -55,14 +54,10 @@ ServiceResult SceneGraphRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
     m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
     QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
-    m_queryQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryQuadTreeRoot(q); });
-    QueryDispatcher::subscribe(typeid(QuerySceneQuadTreeRoot), m_queryQuadTreeRoot);
     m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
     CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
-    m_createQuadTreeRoot = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createQuadTreeRoot(c); });
-    CommandBus::subscribe(typeid(CreateSceneQuadTreeRoot), m_createQuadTreeRoot);
 
     return ServiceResult::Complete;
 }
@@ -72,14 +67,10 @@ ServiceResult SceneGraphRepository::onTerm()
     m_queryCamera = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
     m_queryNode = nullptr;
-    QueryDispatcher::unsubscribe(typeid(QuerySceneQuadTreeRoot), m_queryQuadTreeRoot);
-    m_queryQuadTreeRoot = nullptr;
     CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
     m_createCamera = nullptr;
     CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
     m_createNode = nullptr;
-    CommandBus::unsubscribe(typeid(CreateSceneQuadTreeRoot), m_createQuadTreeRoot);
-    m_createQuadTreeRoot = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -298,31 +289,6 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
     }
 }
 
-std::shared_ptr<SceneQuadTreeRoot> SceneGraphRepository::createQuadTreeRoot(const std::string& name, const std::shared_ptr<LazyNode> root)
-{
-    assert(!hasQuadTreeRoot(name));
-    auto quadTreeRoot = std::make_shared<SceneQuadTreeRoot>(name, root);
-    std::lock_guard locker{ m_quadTreeRootMapLock };
-    m_quadTreeRoots.insert_or_assign(name, quadTreeRoot);
-    return quadTreeRoot;
-}
-
-bool SceneGraphRepository::hasQuadTreeRoot(const std::string& name)
-{
-    std::lock_guard locker{ m_quadTreeRootMapLock };
-    auto it = m_quadTreeRoots.find(name);
-    return ((it != m_quadTreeRoots.end()) && (!it->second.expired()));
-}
-
-std::shared_ptr<SceneQuadTreeRoot> SceneGraphRepository::queryQuadTreeRoot(const std::string& name)
-{
-    std::lock_guard locker{ m_quadTreeRootMapLock };
-    auto it = m_quadTreeRoots.find(name);
-    if (it == m_quadTreeRoots.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
-}
-
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
 {
     if (!q) return;
@@ -337,14 +303,6 @@ void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryNode>(q);
     assert(query);
     query->setResult(queryNode(query->nodeName()));
-}
-
-void SceneGraphRepository::queryQuadTreeRoot(const IQueryPtr& q)
-{
-    if (!q) return;
-    const auto query = std::dynamic_pointer_cast<QuerySceneQuadTreeRoot>(q);
-    assert(query);
-    query->setResult(queryQuadTreeRoot(query->sceneQuadTreeRootName()));
 }
 
 void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
@@ -395,29 +353,6 @@ void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
         else
         {
             EventPublisher::post(std::make_shared<CreateNodeFailed>(cmd->getRuid(), ErrorCode::sceneRepositoryFailed));
-        }
-    }
-}
-
-void SceneGraphRepository::createQuadTreeRoot(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<CreateSceneQuadTreeRoot>(c);
-    if (!cmd) return;
-    if (hasQuadTreeRoot(cmd->name()))
-    {
-        EventPublisher::post(std::make_shared<CreateSceneQuadTreeRootFailed>(cmd->getRuid(), ErrorCode::entityAlreadyExists));
-    }
-    else
-    {
-        auto quadTreeRoot = createQuadTreeRoot(cmd->name(), cmd->root());
-        if (quadTreeRoot)
-        {
-            EventPublisher::post(std::make_shared<SceneQuadTreeRootCreated>(cmd->getRuid(), quadTreeRoot));
-        }
-        else
-        {
-            EventPublisher::post(std::make_shared<CreateSceneQuadTreeRootFailed>(cmd->getRuid(), ErrorCode::sceneRepositoryFailed));
         }
     }
 }

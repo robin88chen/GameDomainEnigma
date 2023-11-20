@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapService.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp" />

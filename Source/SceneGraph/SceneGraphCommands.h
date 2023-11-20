@@ -106,18 +106,6 @@ namespace Enigma::SceneGraph
         std::string m_name;
         const Frameworks::Rtti* m_rtti;
     };
-    class CreateSceneQuadTreeRoot : public Frameworks::IRequestCommand
-    {
-    public:
-        CreateSceneQuadTreeRoot(const std::string& name, std::shared_ptr<LazyNode>& root) : m_name(name), m_root(root) {}
-
-        const std::string& name() { return m_name; }
-        const std::shared_ptr<LazyNode>& root() { return m_root; }
-
-    protected:
-        std::string m_name;
-        std::shared_ptr<LazyNode> m_root;
-    };
 }
 
 #endif // _SCENE_GRAPH_COMMANDS_H

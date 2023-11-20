@@ -35,16 +35,6 @@ namespace Enigma::SceneGraph
     protected:
         std::string m_name;
     };
-    class QuerySceneQuadTreeRoot : public Frameworks::Query<std::shared_ptr<SceneQuadTreeRoot>>
-    {
-    public:
-        QuerySceneQuadTreeRoot(const std::string& name) : m_name(name) {}
-
-        const std::string& sceneQuadTreeRootName() const { return m_name; }
-
-    protected:
-        std::string m_name;
-    };
 }
 
 #endif // SCENE_GRAPH_QUERIES_H

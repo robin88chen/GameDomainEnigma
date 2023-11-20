@@ -189,9 +189,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
       <Filter>Scene Graph\Entities &amp; Values</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h">
-      <Filter>Scene Graph\Aggregates</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h">
       <Filter>Queries</Filter>
     </ClInclude>
@@ -298,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
       <Filter>Scene Graph\Entities &amp; Values</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.cpp">
-      <Filter>Scene Graph\Aggregates</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

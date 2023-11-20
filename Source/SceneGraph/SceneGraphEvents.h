@@ -258,26 +258,6 @@ namespace Enigma::SceneGraph
         bool m_isVisible;
     };
     //------------ creator response ------------
-    class SceneQuadTreeRootCreated : public Frameworks::IResponseEvent
-    {
-    public:
-        SceneQuadTreeRootCreated(const Frameworks::Ruid& request_ruid, const std::shared_ptr<SceneQuadTreeRoot>& root) : IResponseEvent(request_ruid), m_root(root) {};
-
-        std::shared_ptr<SceneQuadTreeRoot> root() const { return m_root; }
-
-    protected:
-        std::shared_ptr<SceneQuadTreeRoot> m_root;
-    };
-    class CreateSceneQuadTreeRootFailed : public Frameworks::IResponseEvent
-    {
-    public:
-        CreateSceneQuadTreeRootFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
-
-        std::error_code error() const { return m_error; }
-
-    protected:
-        std::error_code m_error;
-    };
     class NodeCreated : public Frameworks::IResponseEvent
     {
     public:

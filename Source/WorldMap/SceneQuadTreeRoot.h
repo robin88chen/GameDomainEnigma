@@ -10,18 +10,18 @@
 
 #include "Frameworks/Rtti.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraph/LazyNode.h"
+#include "SceneGraph/Node.h"
 #include <string>
 #include <memory>
 
-namespace Enigma::SceneGraph
+namespace Enigma::WorldMap
 {
-    class Node;
-    class LazyNode;
     class SceneQuadTreeRoot
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        SceneQuadTreeRoot(const std::string& name, const std::shared_ptr<LazyNode>& root);
+        SceneQuadTreeRoot(const std::string& name, const std::shared_ptr<SceneGraph::LazyNode>& root);
         ~SceneQuadTreeRoot();
         SceneQuadTreeRoot(const SceneQuadTreeRoot& other) = delete;
         SceneQuadTreeRoot(SceneQuadTreeRoot&& other) noexcept = delete;
@@ -31,10 +31,10 @@ namespace Enigma::SceneGraph
         Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
         const std::string& name() const { return m_name; }
 
-        std::shared_ptr<Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
+        std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
 
     protected:
-        std::shared_ptr<Node> findFittingNodeFromRoot(const Engine::BoundingVolume& bv_in_root) const;
+        std::shared_ptr<SceneGraph::Node> findFittingNodeFromRoot(const Engine::BoundingVolume& bv_in_root) const;
         std::shared_ptr<SceneGraph::Node> findFittingLeaf(const Engine::BoundingVolume& bv_in_root) const;
 
         std::tuple<MathLib::Box3, unsigned> locateSubTreeBoxAndIndex(const MathLib::Box3& parent_box, const MathLib::Vector3& local_pos) const;
@@ -44,7 +44,7 @@ namespace Enigma::SceneGraph
     protected:
         Engine::FactoryDesc m_factory_desc;
         std::string m_name;
-        std::shared_ptr<LazyNode> m_root;
+        std::shared_ptr<SceneGraph::LazyNode> m_root;
     };
 }
 

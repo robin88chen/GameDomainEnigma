@@ -10,7 +10,6 @@
 
 #include "SceneGraph/PortalManagementNode.h"
 #include "SceneGraph/PortalZoneNode.h"
-#include "SceneGraph/SceneQuadTreeRoot.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GenericDto.h"
 #include "Terrain/TerrainPawn.h"
@@ -18,6 +17,7 @@
 
 namespace Enigma::WorldMap
 {
+    class SceneQuadTreeRoot;
     class WorldMap : public SceneGraph::PortalZoneNode
     {
         DECLARE_EN_RTTI;
@@ -43,7 +43,7 @@ namespace Enigma::WorldMap
 
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_portalRootNode;
-        typedef std::list<std::shared_ptr<SceneGraph::SceneQuadTreeRoot>> QuadRootList;
+        typedef std::list<std::shared_ptr<SceneQuadTreeRoot>> QuadRootList;
         QuadRootList m_listQuadRoot;
     };
 }

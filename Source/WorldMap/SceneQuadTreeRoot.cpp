@@ -1,15 +1,15 @@
 ﻿#include "SceneQuadTreeRoot.h"
-#include "FindSpatialByName.h"
+#include "SceneGraph/FindSpatialByName.h"
 #include "MathLib/Matrix4.h"
-#include "LazyNode.h"
 #include "Frameworks/StringFormat.h"
 #include "MathLib/ContainmentBox2.h"
 
+using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
-DEFINE_RTTI_OF_BASE(SceneGraph, SceneQuadTreeRoot);
+DEFINE_RTTI_OF_BASE(WorldMap, SceneQuadTreeRoot);
 
 constexpr int MAX_RECURSIVE_DEPTH = 4;
 

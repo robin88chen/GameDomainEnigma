@@ -41,7 +41,6 @@ namespace Enigma::SceneGraph
     class PortalZoneNodeDto;
     class PortalManagementNodeDto;
     class SceneGraphBuilder;
-    class SceneQuadTreeRoot;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -80,22 +79,16 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
-        std::shared_ptr<SceneQuadTreeRoot> createQuadTreeRoot(const std::string& name, const std::shared_ptr<LazyNode> root);
-
         bool hasCamera(const std::string& name);
         std::shared_ptr<Camera> queryCamera(const std::string& name);
         bool hasNode(const std::string& name);
         std::shared_ptr<Node> queryNode(const std::string& name);
-        bool hasQuadTreeRoot(const std::string& name);
-        std::shared_ptr<SceneQuadTreeRoot> queryQuadTreeRoot(const std::string& name);
 
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);
         void queryNode(const Frameworks::IQueryPtr& q);
-        void queryQuadTreeRoot(const Frameworks::IQueryPtr& q);
         void createCamera(const Frameworks::ICommandPtr& c);
         void createNode(const Frameworks::ICommandPtr& c);
-        void createQuadTreeRoot(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -114,17 +107,12 @@ namespace Enigma::SceneGraph
         std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
         std::recursive_mutex m_portalMapLock;
 
-        std::unordered_map<std::string, std::weak_ptr<SceneQuadTreeRoot>> m_quadTreeRoots;
-        std::recursive_mutex m_quadTreeRootMapLock;
-
         SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_queryNode;
-        Frameworks::QuerySubscriberPtr m_queryQuadTreeRoot;
         Frameworks::CommandSubscriberPtr m_createCamera;
         Frameworks::CommandSubscriberPtr m_createNode;
-        Frameworks::CommandSubscriberPtr m_createQuadTreeRoot;
     };
 }
 

@@ -16,6 +16,9 @@
     <Filter Include="Error Codes">
       <UniqueIdentifier>{2c120b68-34c2-47b5-83d8-05d3520797cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="QuadTree">
+      <UniqueIdentifier>{15e8e051-bb0d-427d-9ee8-b5d2d4343a73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h">
@@ -42,6 +45,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">
@@ -58,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp">
       <Filter>Error Codes</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.cpp">
+      <Filter>QuadTree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

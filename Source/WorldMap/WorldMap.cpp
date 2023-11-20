@@ -2,6 +2,7 @@
 #include "SceneGraph/PortalManagementNode.h"
 #include "SceneGraph/PortalZoneNode.h"
 #include "WorldMapDto.h"
+#include "SceneQuadTreeRoot.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include "Frameworks/LazyStatus.h"
 #include "Platforms/PlatformLayer.h"

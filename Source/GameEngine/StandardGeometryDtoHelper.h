@@ -25,7 +25,7 @@ namespace Enigma::Engine
         SquareQuadDtoHelper& Normal();
         SquareQuadDtoHelper& TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
 
-        GenericDto ToGenericDto();
+        GenericDto toGenericDto();
 
     protected:
         TriangleListDto m_dto;
@@ -46,7 +46,7 @@ namespace Enigma::Engine
         CubeDtoHelper& TextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
         CubeDtoHelper& FacedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
 
-        GenericDto ToGenericDto();
+        GenericDto toGenericDto();
 
     protected:
         TriangleListDto m_dto;
@@ -63,7 +63,7 @@ namespace Enigma::Engine
         SphereDtoHelper& SphereBound();
         SphereDtoHelper& BoxBound();
 
-        GenericDto ToGenericDto();
+        GenericDto toGenericDto();
 
     protected:
         TriangleListDto m_dto;

@@ -43,8 +43,8 @@ namespace Enigma::Engine
         [[nodiscard]] unsigned SurfaceCount() const { return m_scurfaceCount; }
         unsigned& SurfaceCount() { return m_scurfaceCount; }
 
-        static TextureMappingDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto() const;
+        static TextureMappingDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto() const;
 
         EffectTextureMapPolicy::TextureTuplePolicy ConvertToPolicy();
 
@@ -72,8 +72,8 @@ namespace Enigma::Engine
         [[nodiscard]] const std::vector<TextureMappingDto>& TextureMappings() const { return m_textureMappings; }
         std::vector<TextureMappingDto>& TextureMappings() { return m_textureMappings; }
 
-        static EffectTextureMapDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        static EffectTextureMapDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto();
 
         EffectTextureMapPolicy ConvertToPolicy();
 

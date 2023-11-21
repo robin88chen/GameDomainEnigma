@@ -25,5 +25,5 @@ TerrainPawn::~TerrainPawn()
 GenericDto TerrainPawn::serializeDto()
 {
     TerrainPawnDto dto(SerializePawnDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }

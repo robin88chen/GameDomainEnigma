@@ -49,7 +49,7 @@ Frustum::Frustum(GraphicCoordSys hand, ProjectionType proj)
 
 Frustum::Frustum(const GenericDto& dto)
 {
-    FrustumDto frustum_dto = FrustumDto::FromGenericDto(dto);
+    FrustumDto frustum_dto = FrustumDto::fromGenericDto(dto);
     m_handCoord = frustum_dto.HandSystem();
     m_projectionType = frustum_dto.ProjectionType();
     m_fov = frustum_dto.Fov();
@@ -93,7 +93,7 @@ GenericDto Frustum::serializeDto()
     dto.AspectRatio() = m_aspectRatio;
     dto.NearWidth() = m_nearWidth;
     dto.NearHeight() = m_nearHeight;
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 Frustum Frustum::fromPerspective(GraphicCoordSys hand, float fov, float aspect, float n_plane, float f_plane)

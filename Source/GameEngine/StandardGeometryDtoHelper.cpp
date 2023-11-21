@@ -81,13 +81,13 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::TextureCoord(const MathLib::Vector2& l
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
-GenericDto SquareQuadDtoHelper::ToGenericDto()
+GenericDto SquareQuadDtoHelper::toGenericDto()
 {
     assert(m_dto.Position3s() || m_dto.Position4s());
     m_dto.VertexFormat() = m_format.ToString();
@@ -96,15 +96,15 @@ GenericDto SquareQuadDtoHelper::ToGenericDto()
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     }
     else if (auto& pos4 = m_dto.Position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     }
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }
 
 CubeDtoHelper::CubeDtoHelper(const std::string& name)
@@ -264,7 +264,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, 
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
@@ -300,7 +300,7 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector2& left_bot
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
@@ -320,7 +320,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector3& left_bottom_f
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture3DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
@@ -364,13 +364,13 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector3& left_bot
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture3DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
 }
 
-GenericDto CubeDtoHelper::ToGenericDto()
+GenericDto CubeDtoHelper::toGenericDto()
 {
     assert(m_dto.Position3s() || m_dto.Position4s());
     m_dto.VertexFormat() = m_format.ToString();
@@ -379,15 +379,15 @@ GenericDto CubeDtoHelper::ToGenericDto()
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos.value()[0]), static_cast<unsigned>(pos.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     }
     else if (auto& pos4 = m_dto.Position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     }
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }
 
 SphereDtoHelper::SphereDtoHelper(const std::string& name)
@@ -395,7 +395,7 @@ SphereDtoHelper::SphereDtoHelper(const std::string& name)
     m_radius = 1.0f;
     m_dto.Name() = name;
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
-    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
 }
 
 SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
@@ -568,7 +568,7 @@ SphereDtoHelper& SphereDtoHelper::TextureCoord()
     size_t tex_stage_count = m_dto.TextureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.Texture2DCoords() = m_tex_coords;
-    m_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
     m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
     return *this;
@@ -577,7 +577,7 @@ SphereDtoHelper& SphereDtoHelper::TextureCoord()
 SphereDtoHelper& SphereDtoHelper::SphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
-    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
@@ -590,14 +590,14 @@ SphereDtoHelper& SphereDtoHelper::BoxBound()
     box.Extent(2) = m_radius;
 
     const auto bb = BoundingVolume{ box };
-    m_dto.GeometryBound() = bb.serializeDto().ToGenericDto();
+    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
-GenericDto SphereDtoHelper::ToGenericDto()
+GenericDto SphereDtoHelper::toGenericDto()
 {
     m_dto.VertexFormat() = m_format.ToString();
     m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }
 

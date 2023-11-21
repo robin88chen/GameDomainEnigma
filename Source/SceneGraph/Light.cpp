@@ -18,7 +18,7 @@ Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spati
 
 Light::Light(const Engine::GenericDto& o) : Spatial(o)
 {
-    LightDto dto = LightDto::FromGenericDto(o);
+    LightDto dto = LightDto::fromGenericDto(o);
     m_lightInfo = LightInfo(dto.LightInfo());
 }
 
@@ -30,8 +30,8 @@ Light::~Light()
 Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());
-    dto.LightInfo() = m_lightInfo.serializeDto().ToGenericDto();
-    return dto.ToGenericDto();
+    dto.LightInfo() = m_lightInfo.serializeDto().toGenericDto();
+    return dto.toGenericDto();
 }
 
 error Light::onCullingVisible(Culler*, bool)

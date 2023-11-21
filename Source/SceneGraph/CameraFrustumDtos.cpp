@@ -24,7 +24,7 @@ CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Cam
 {
 }
 
-CameraDto CameraDto::FromGenericDto(const Engine::GenericDto& dto)
+CameraDto CameraDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     CameraDto camera;
     camera.factoryDesc() = dto.GetRtti();
@@ -37,7 +37,7 @@ CameraDto CameraDto::FromGenericDto(const Engine::GenericDto& dto)
     return camera;
 }
 
-GenericDto CameraDto::ToGenericDto()
+GenericDto CameraDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -55,7 +55,7 @@ m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspe
 {
 }
 
-FrustumDto FrustumDto::FromGenericDto(const Engine::GenericDto& dto)
+FrustumDto FrustumDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     FrustumDto frustum;
     frustum.factoryDesc() = dto.GetRtti();
@@ -70,7 +70,7 @@ FrustumDto FrustumDto::FromGenericDto(const Engine::GenericDto& dto)
     return frustum;
 }
 
-GenericDto FrustumDto::ToGenericDto()
+GenericDto FrustumDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

@@ -14,15 +14,15 @@ TerrainPawnDto::TerrainPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainPawn::TYPE_RTTI.getName()));
 }
 
-TerrainPawnDto TerrainPawnDto::FromGenericDto(const Engine::GenericDto& dto)
+TerrainPawnDto TerrainPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPawnDto pawn_dto(PawnDto::FromGenericDto(dto));
+    TerrainPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
     return pawn_dto;
 }
 
-Enigma::Engine::GenericDto TerrainPawnDto::ToGenericDto() const
+Enigma::Engine::GenericDto TerrainPawnDto::toGenericDto() const
 {
-    Engine::GenericDto dto = PawnDto::ToGenericDto();
+    Engine::GenericDto dto = PawnDto::toGenericDto();
     return dto;
 }
 

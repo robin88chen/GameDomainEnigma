@@ -117,16 +117,16 @@ void TerrainEditConsole::createBrushPawn()
     MeshPrimitiveDto mesh_dto;
     mesh_dto.Name() = BRUSH_SPHERE_TAG;
     mesh_dto.GeometryName() = BRUSH_SPHERE_TAG;
-    mesh_dto.TheGeometry() = sphere_helper.ToGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.ToGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto_helper.ToGenericDto());
+    mesh_dto.TheGeometry() = sphere_helper.toGenericDto();
+    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.TextureMaps().emplace_back(tex_dto_helper.toGenericDto());
     mesh_dto.RenderListID() = Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(BRUSH_SPHERE_TAG);
     pawn_helper.MeshPrimitive(mesh_dto).TopLevel(true);
     const Matrix4 local = Matrix4::MakeScaleTransform(static_cast<float>(m_brushSize), static_cast<float>(m_brushSize), static_cast<float>(m_brushSize));
     pawn_helper.LocalTransform(local);
-    auto dtos = { pawn_helper.ToGenericDto() };
+    auto dtos = { pawn_helper.toGenericDto() };
     CommandBus::post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));
 }
 

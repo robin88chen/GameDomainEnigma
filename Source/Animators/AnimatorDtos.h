@@ -33,8 +33,8 @@ namespace Enigma::Animators
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        static ModelAnimatorDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static ModelAnimatorDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
         std::shared_ptr<ModelAnimatorPolicy> ConvertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
             const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
@@ -64,8 +64,8 @@ namespace Enigma::Animators
         [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() const { return m_nodeOffsets; }
         std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() { return m_nodeOffsets; }
 
-        static SkinOperatorDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static SkinOperatorDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     private:
         Engine::FactoryDesc m_factoryDesc;

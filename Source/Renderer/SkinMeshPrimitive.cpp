@@ -52,7 +52,7 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexce
 GenericDto SkinMeshPrimitive::serializeDto() const
 {
     SkinMeshPrimitiveDto dto(SerializeMeshDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)

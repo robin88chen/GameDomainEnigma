@@ -32,8 +32,8 @@ namespace Enigma::GameCommon
         std::vector<unsigned>& DivideIndices() { return m_divideIndices; }
         [[nodiscard]] const std::vector<unsigned>& DivideIndices() const { return m_divideIndices; }
 
-        static AnimationClipMapDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static AnimationClipMapDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     private:
         Engine::FactoryDesc m_factoryDesc;

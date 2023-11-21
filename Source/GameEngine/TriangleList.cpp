@@ -29,7 +29,7 @@ TriangleList::~TriangleList()
 GenericDto TriangleList::serializeDto() const
 {
     TriangleListDto dto(SerializeGeometryDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 unsigned TriangleList::GetTriangleCount()

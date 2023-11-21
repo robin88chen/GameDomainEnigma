@@ -80,8 +80,8 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.Name() = m_name;
     dto.TheNodeTree() = m_nodeTree.serializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
-        dto.TheAnimator() = ani->serializeDto().ToGenericDto();
-    return dto.ToGenericDto();
+        dto.TheAnimator() = ani->serializeDto().toGenericDto();
+    return dto.toGenericDto();
 }
 
 unsigned ModelPrimitive::GetMeshPrimitiveCount()

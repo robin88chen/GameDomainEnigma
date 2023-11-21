@@ -30,7 +30,7 @@ namespace Enigma::Terrain
         TerrainGeometryDtoHelper& MaxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate);
         TerrainGeometryDtoHelper& HeightMap(const float_buffer& height_map);
 
-        Engine::GenericDto ToGenericDto() const;
+        Engine::GenericDto toGenericDto() const;
         TerrainGeometryDto ToDto() const;
 
     private:
@@ -54,7 +54,7 @@ namespace Enigma::Terrain
         TerrainPawnDtoHelper& GraphDepth(unsigned graph_depth);
         TerrainPawnDtoHelper& TerrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto);
 
-        Engine::GenericDto ToGenericDto() const;
+        Engine::GenericDto toGenericDto() const;
 
     private:
         TerrainPawnDto m_dto;

@@ -56,7 +56,7 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_nam
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
-    AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::FromGenericDto(o);
+    AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::fromGenericDto(o);
     m_oldMaterialName = dto.OldMaterialName();
     m_newMaterialDto = dto.NewMaterialDto();
     m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
@@ -80,7 +80,7 @@ GenericDto ReplaceAvatarMaterial::serializeDto() const
     dto.factoryDesc() = m_factoryDesc;
     dto.OldMaterialName() = m_oldMaterialName;
     dto.NewMaterialDto() = m_newMaterialDto;
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
@@ -171,7 +171,7 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
 
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
 {
-    AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::FromGenericDto(o);
+    AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
     m_meshName = dto.MeshName();
     m_textureDto = dto.TextureDto();
     EventPublisher::subscribe(typeid(TextureLoaded), m_onTextureLoaded);
@@ -193,7 +193,7 @@ GenericDto ChangeAvatarTexture::serializeDto() const
     dto.factoryDesc() = m_factoryDesc;
     dto.MeshName() = m_meshName;
     dto.TextureDto() = m_textureDto;
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void ChangeAvatarTexture::Bake(const std::shared_ptr<Pawn>& pawn)

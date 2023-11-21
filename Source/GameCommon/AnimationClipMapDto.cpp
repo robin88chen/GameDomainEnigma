@@ -15,7 +15,7 @@ AnimationClipMapDto::AnimationClipMapDto() : m_factoryDesc(AnimationClipMap::TYP
 {
 }
 
-AnimationClipMapDto AnimationClipMapDto::FromGenericDto(const Engine::GenericDto& dto)
+AnimationClipMapDto AnimationClipMapDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AnimationClipMapDto anim;
     anim.m_factoryDesc = dto.GetRtti();
@@ -27,7 +27,7 @@ AnimationClipMapDto AnimationClipMapDto::FromGenericDto(const Engine::GenericDto
     return anim;
 }
 
-GenericDto AnimationClipMapDto::ToGenericDto() const
+GenericDto AnimationClipMapDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

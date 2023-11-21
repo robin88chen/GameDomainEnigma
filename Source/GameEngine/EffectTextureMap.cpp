@@ -46,7 +46,7 @@ GenericDto EffectTextureMap::serializeDto() const
             dto.TextureMappings().emplace_back(mapping);
         }
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 error EffectTextureMap::BindSemanticTexture(const EffectSemanticTextureTuple& tuple)

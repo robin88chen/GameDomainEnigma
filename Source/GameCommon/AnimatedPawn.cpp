@@ -19,7 +19,7 @@ AnimatedPawn::AnimatedPawn(const std::string& name) : Pawn(name)
 
 AnimatedPawn::AnimatedPawn(const Engine::GenericDto& o) : Pawn(o)
 {
-    AnimatedPawnDto dto = AnimatedPawnDto::FromGenericDto(o);
+    AnimatedPawnDto dto = AnimatedPawnDto::fromGenericDto(o);
     if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
     for (auto& avatar_dto : dto.AvatarRecipeDtos())
     {
@@ -40,7 +40,7 @@ GenericDto AnimatedPawn::serializeDto()
     {
         dto.AvatarRecipeDtos().push_back(avatar_recipe->serializeDto());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void AnimatedPawn::PlayAnimation(const std::string& name)

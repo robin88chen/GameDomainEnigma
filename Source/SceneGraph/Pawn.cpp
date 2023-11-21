@@ -27,7 +27,7 @@ Pawn::~Pawn()
 
 Enigma::Engine::GenericDto Pawn::serializeDto()
 {
-    return SerializePawnDto().ToGenericDto();
+    return SerializePawnDto().toGenericDto();
 }
 
 PawnDto Pawn::SerializePawnDto()

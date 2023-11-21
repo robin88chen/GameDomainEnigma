@@ -149,6 +149,36 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, 
     return node;
 }
 
+std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
+{
+    assert(!hasNode(dto.getName()));
+    std::shared_ptr<Node> node = nullptr;
+    if (dto.GetRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    {
+        node = std::make_shared<Node>(dto);
+    }
+    else if (dto.GetRtti().GetRttiName() == LazyNode::TYPE_RTTI.getName())
+    {
+        node = std::make_shared<LazyNode>(dto);
+    }
+    else if (dto.GetRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
+    {
+        node = std::make_shared<VisibilityManagedNode>(dto);
+    }
+    else if (dto.GetRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    {
+        node = std::make_shared<PortalZoneNode>(dto);
+    }
+    else if (dto.GetRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
+    {
+        node = std::make_shared<PortalManagementNode>(dto);
+    }
+    assert(node);
+    std::lock_guard locker{ m_nodeMapLock };
+    m_nodes.insert_or_assign(dto.getName(), node);
+    return node;
+}
+
 bool SceneGraphRepository::hasNode(const std::string& name)
 {
     std::lock_guard locker{ m_nodeMapLock };

@@ -262,6 +262,6 @@ void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
     CommandBus::post(std::make_shared<OutputMessage>("world map created : " + ev->getName()));
     if (!m_sceneRoot.expired())
     {
-        m_sceneRoot.lock()->AttachChild(ev->getWorld(), Enigma::MathLib::Matrix4::IDENTITY);
+        m_sceneRoot.lock()->AttachChild(ev->getWorld()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }

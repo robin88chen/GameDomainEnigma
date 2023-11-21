@@ -48,7 +48,7 @@ GenericDto MeshNodeTree::serializeDto() const
     {
         dto.MeshNodes().emplace_back(node.serializeDto());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_name) const

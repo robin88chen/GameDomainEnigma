@@ -78,7 +78,7 @@ GenericDto EffectMaterial::serializeDto()
     EffectMaterialDto dto;
     dto.Name() = m_name;
     dto.factoryDesc() = m_factoryDesc;
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void EffectMaterial::SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source)

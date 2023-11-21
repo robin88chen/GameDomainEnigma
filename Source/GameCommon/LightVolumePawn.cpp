@@ -32,7 +32,7 @@ GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
     dto.HostLightName() = GetHostLightName();
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void LightVolumePawn::ToggleCameraInside(bool is_inside)

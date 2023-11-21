@@ -27,7 +27,7 @@ GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
     dto.HostLightName() = GetHostLightName();
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 error LightQuadPawn::_updateSpatialRenderState()

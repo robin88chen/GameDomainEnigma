@@ -15,7 +15,7 @@ TerrainGeometry::TerrainGeometry(const std::string& name) : TriangleList(name)
 
 TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)
 {
-    TerrainGeometryDto dto = TerrainGeometryDto::FromGenericDto(o);
+    TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
     m_numRows = dto.NumRows();
     m_numCols = dto.NumCols();
     m_minPosition = dto.MinPosition();
@@ -57,7 +57,7 @@ GenericDto TerrainGeometry::serializeDto() const
     {
         dto.HeightMap() = m_heightMap;
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void TerrainGeometry::UpdateHeightMapToVertexMemory()

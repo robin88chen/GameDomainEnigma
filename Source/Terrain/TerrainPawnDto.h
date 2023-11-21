@@ -17,8 +17,8 @@ namespace Enigma::Terrain
         TerrainPawnDto();
         TerrainPawnDto(const SceneGraph::PawnDto& dto);
 
-        static TerrainPawnDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static TerrainPawnDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
     };
 }
 

@@ -206,7 +206,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     }
     assert(!m_host->HasPawn(dto.getName()));
     auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
-    PawnDto pawn_dto = PawnDto::FromGenericDto(dto);
+    PawnDto pawn_dto = PawnDto::fromGenericDto(dto);
     if (auto prim = pawn_dto.ThePrimitive())
     {
         BuildPawnPrimitive(pawn, ConvertPrimitivePolicy(pawn, prim.value()));

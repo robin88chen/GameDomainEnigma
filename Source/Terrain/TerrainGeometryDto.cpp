@@ -76,11 +76,11 @@ void TerrainGeometryDto::ConvertGeometryVertices()
     TextureCoordDto alpha_coord_dto;
     tex_coord_dto.Texture2DCoords() = tex_coords;
     alpha_coord_dto.Texture2DCoords() = alpha_coords;
-    m_texCoords = { tex_coord_dto.ToGenericDto(), alpha_coord_dto.ToGenericDto() };
+    m_texCoords = { tex_coord_dto.toGenericDto(), alpha_coord_dto.toGenericDto() };
 
     m_vertexFormat = "xyz_nor_tex2(2,2)";
     m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    m_geometryBound = CalculateGeometryBounding().serializeDto().ToGenericDto();
+    m_geometryBound = CalculateGeometryBounding().serializeDto().toGenericDto();
 }
 
 unsigned TerrainGeometryDto::CalculateGeometryVertexCount() const
@@ -115,7 +115,7 @@ BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
     return BoundingVolume{ bb_box };
 }
 
-TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& dto)
+TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     TerrainGeometryDto terrain_dto;
     terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
@@ -130,7 +130,7 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
     return terrain_dto;
 }
 
-GenericDto TerrainGeometryDto::ToGenericDto() const
+GenericDto TerrainGeometryDto::toGenericDto() const
 {
     GenericDto dto;
     SerializeNonVertexAttributesToGenericDto(dto);

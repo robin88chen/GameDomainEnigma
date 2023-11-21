@@ -12,6 +12,7 @@
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/Node.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include <string>
 #include <memory>
 
@@ -22,6 +23,7 @@ namespace Enigma::WorldMap
         DECLARE_EN_RTTI_NON_BASE;
     public:
         SceneQuadTreeRoot(const std::string& name, const std::shared_ptr<SceneGraph::LazyNode>& root);
+        SceneQuadTreeRoot(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o);
         ~SceneQuadTreeRoot();
         SceneQuadTreeRoot(const SceneQuadTreeRoot& other) = delete;
         SceneQuadTreeRoot(SceneQuadTreeRoot&& other) noexcept = delete;

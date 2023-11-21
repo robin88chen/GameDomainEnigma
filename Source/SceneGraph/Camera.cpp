@@ -33,7 +33,7 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Ca
 
 Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti())
 {
-    CameraDto camera_dto = CameraDto::FromGenericDto(dto);
+    CameraDto camera_dto = CameraDto::fromGenericDto(dto);
     m_name = camera_dto.Name();
     m_handSys = camera_dto.HandSystem();
     changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
@@ -54,7 +54,7 @@ GenericDto Camera::serializeDto()
     dto.LookAtDirection() = m_vecEyeToLookAt;
     dto.UpVector() = m_vecUp;
     dto.Frustum() = m_cullingFrustum.serializeDto();
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 error Camera::changeCameraFrame(const std::optional<Vector3>& eye,

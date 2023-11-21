@@ -18,15 +18,15 @@ TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto) 
     //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-TerrainPrimitiveDto TerrainPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
+TerrainPrimitiveDto TerrainPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPrimitiveDto terrain_dto(MeshPrimitiveDto::FromGenericDto(dto));
+    TerrainPrimitiveDto terrain_dto(MeshPrimitiveDto::fromGenericDto(dto));
     return terrain_dto;
 }
 
-Enigma::Engine::GenericDto TerrainPrimitiveDto::ToGenericDto() const
+Enigma::Engine::GenericDto TerrainPrimitiveDto::toGenericDto() const
 {
-    Engine::GenericDto dto = MeshPrimitiveDto::ToGenericDto();
+    Engine::GenericDto dto = MeshPrimitiveDto::toGenericDto();
     //dto.AddRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()));
     return dto;
 }

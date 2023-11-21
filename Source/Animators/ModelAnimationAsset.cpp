@@ -18,7 +18,7 @@ ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : An
     m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
     for (unsigned i = 0; i < dto.MeshNodeNames().size(); i++)
     {
-        AddMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::FromGenericDto(dto.TimeSRTs()[i])));
+        AddMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::fromGenericDto(dto.TimeSRTs()[i])));
     }
 }
 
@@ -37,7 +37,7 @@ ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
     for (auto& key : m_meshNodeKeyArray)
     {
         names.emplace_back(key.m_meshNodeName);
-        srts.emplace_back(key.m_timeSRTData.serializeDto().ToGenericDto());
+        srts.emplace_back(key.m_timeSRTData.serializeDto().toGenericDto());
     }
     dto.MeshNodeNames() = names;
     dto.TimeSRTs() = srts;

@@ -41,12 +41,12 @@ Enigma::Engine::GenericDto Node::serializeDto()
     {
         if (child) dto.ChildNames().emplace_back(child->getSpatialName());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    NodeDto nodeDto = NodeDto::FromGenericDto(dto);
+    NodeDto nodeDto = NodeDto::fromGenericDto(dto);
     for (auto& name : nodeDto.ChildNames())
     {
         resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)

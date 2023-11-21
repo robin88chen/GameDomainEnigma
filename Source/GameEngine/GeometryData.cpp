@@ -25,7 +25,7 @@ GeometryData::GeometryData(const std::string& name) : m_factoryDesc(GeometryData
 GeometryData::GeometryData(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
     m_name = o.getName();
-    GeometryDataDto dto = GeometryDataDto::FromGenericDto(o);
+    GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
     DeserializeGeometryDto(dto);
 }
 
@@ -36,7 +36,7 @@ GeometryData::~GeometryData()
 
 GenericDto GeometryData::serializeDto() const
 {
-    return SerializeGeometryDto().ToGenericDto();
+    return SerializeGeometryDto().toGenericDto();
 }
 
 GeometryDataDto GeometryData::SerializeGeometryDto() const
@@ -82,7 +82,7 @@ GeometryDataDto GeometryData::SerializeGeometryDto() const
         {
             break;
         }
-        dto.TextureCoords().push_back(texture_coord_dto.ToGenericDto());
+        dto.TextureCoords().push_back(texture_coord_dto.toGenericDto());
     }
     if (m_vertexDesc.HasPaletteIndex())
     {
@@ -121,7 +121,7 @@ void GeometryData::SerializeNonVertexAttributes(GeometryDataDto& dto) const
         dto.Segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
     }
     dto.Topology() = static_cast<unsigned>(m_topology);
-    dto.GeometryBound() = m_geometryBound.serializeDto().ToGenericDto();
+    dto.GeometryBound() = m_geometryBound.serializeDto().toGenericDto();
 }
 
 void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)
@@ -157,7 +157,7 @@ void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)
     }
     for (unsigned i = 0; i < dto.TextureCoords().size(); i++)
     {
-        TextureCoordDto coord = TextureCoordDto::FromGenericDto(dto.TextureCoords()[i]);
+        TextureCoordDto coord = TextureCoordDto::fromGenericDto(dto.TextureCoords()[i]);
         if (auto tex2 = coord.Texture2DCoords())
         {
             SetTexture2DCoordArray(i, tex2.value());
@@ -187,7 +187,7 @@ void GeometryData::DeserializeGeometryDto(const GeometryDataDto& dto)
     {
         SetIndexArray(idx.value());
     }
-    m_geometryBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.GeometryBound()));
+    m_geometryBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.GeometryBound()));
 }
 
 RenderBufferSignature GeometryData::MakeRenderBufferSignature() const

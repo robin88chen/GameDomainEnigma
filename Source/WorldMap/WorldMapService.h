@@ -36,7 +36,7 @@ namespace Enigma::WorldMap
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        std::vector<Engine::GenericDtoCollection> serializeQuadNodeGraphs() const;
+        std::vector<Engine::GenericDtoCollection> serializeWorldSceneGraphs() const;
         Engine::GenericDto serializeWorldMap() const;
 
         void deserializeWorldMap(const Engine::GenericDtoCollection& graph);
@@ -72,7 +72,7 @@ namespace Enigma::WorldMap
         void queryFittingNode(const Frameworks::IQueryPtr& q) const;
 
     protected:
-        std::weak_ptr<WorldMap> m_world;
+        std::shared_ptr<WorldMap> m_world;
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
         typedef std::list<std::weak_ptr<SceneGraph::LazyNode>> QuadRootList;

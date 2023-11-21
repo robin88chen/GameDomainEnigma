@@ -34,11 +34,11 @@ SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopL
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
     BoundingVolume bv{ Box3::UNIT_BOX };
-    m_modelBound = bv.serializeDto().ToGenericDto();
-    m_worldBound = bv.serializeDto().ToGenericDto();
+    m_modelBound = bv.serializeDto().toGenericDto();
+    m_worldBound = bv.serializeDto().toGenericDto();
 }
 
-SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
+SpatialDto SpatialDto::fromGenericDto(const GenericDto& dto)
 {
     SpatialDto spatial_dto;
     spatial_dto.factoryDesc() = dto.GetRtti();
@@ -55,7 +55,7 @@ SpatialDto SpatialDto::FromGenericDto(const GenericDto& dto)
     return spatial_dto;
 }
 
-GenericDto SpatialDto::ToGenericDto() const
+GenericDto SpatialDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -82,16 +82,16 @@ NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.getName()));
 }
 
-NodeDto NodeDto::FromGenericDto(const GenericDto& dto)
+NodeDto NodeDto::fromGenericDto(const GenericDto& dto)
 {
-    NodeDto node_dto(SpatialDto::FromGenericDto(dto));
+    NodeDto node_dto(SpatialDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_CHILD_NAMES)) node_dto.m_childNames = v.value();
     return node_dto;
 }
 
-GenericDto NodeDto::ToGenericDto() const
+GenericDto NodeDto::toGenericDto() const
 {
-    GenericDto dto = SpatialDto::ToGenericDto();
+    GenericDto dto = SpatialDto::toGenericDto();
     dto.AddOrUpdate(TOKEN_CHILD_NAMES, m_childNames);
 
     return dto;
@@ -107,16 +107,16 @@ LightDto::LightDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.getName()));
 }
 
-LightDto LightDto::FromGenericDto(const Engine::GenericDto& dto)
+LightDto LightDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    LightDto light_dto(SpatialDto::FromGenericDto(dto));
+    LightDto light_dto(SpatialDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_LIGHT_INFO)) light_dto.m_lightInfo = v.value();
     return light_dto;
 }
 
-GenericDto LightDto::ToGenericDto() const
+GenericDto LightDto::toGenericDto() const
 {
-    GenericDto dto = SpatialDto::ToGenericDto();
+    GenericDto dto = SpatialDto::toGenericDto();
     dto.AddOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
 
     return dto;
@@ -132,17 +132,17 @@ PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.getName()));
 }
 
-PawnDto PawnDto::FromGenericDto(const Engine::GenericDto& dto)
+PawnDto PawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    PawnDto pawn_dto(SpatialDto::FromGenericDto(dto));
+    PawnDto pawn_dto(SpatialDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_PAWN_PRIMITIVE)) pawn_dto.m_primitive = v.value();
     //if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) pawn_dto.m_primitiveFactory = v.value();
     return pawn_dto;
 }
 
-GenericDto PawnDto::ToGenericDto() const
+GenericDto PawnDto::toGenericDto() const
 {
-    GenericDto dto = SpatialDto::ToGenericDto();
+    GenericDto dto = SpatialDto::toGenericDto();
     if (m_primitive) dto.AddOrUpdate(TOKEN_PAWN_PRIMITIVE, m_primitive.value());
     //dto.AddOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
@@ -174,16 +174,16 @@ LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
     m_isReady = false;
 }
 
-LazyNodeDto LazyNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+LazyNodeDto LazyNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    LazyNodeDto node_dto(NodeDto::FromGenericDto(dto));
+    LazyNodeDto node_dto(NodeDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<bool>(TOKEN_IS_READY)) node_dto.m_isReady = v.value();
     return node_dto;
 }
 
-GenericDto LazyNodeDto::ToGenericDto() const
+GenericDto LazyNodeDto::toGenericDto() const
 {
-    GenericDto dto = NodeDto::ToGenericDto();
+    GenericDto dto = NodeDto::toGenericDto();
     dto.AddOrUpdate(TOKEN_IS_READY, m_isReady);
     return dto;
 }
@@ -198,14 +198,14 @@ VisibilityManagedNodeDto::VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.getName()));
 }
 
-VisibilityManagedNodeDto VisibilityManagedNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+VisibilityManagedNodeDto VisibilityManagedNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    VisibilityManagedNodeDto node_dto(LazyNodeDto::FromGenericDto(dto));
+    VisibilityManagedNodeDto node_dto(LazyNodeDto::fromGenericDto(dto));
     return node_dto;
 }
 
-GenericDto VisibilityManagedNodeDto::ToGenericDto() const
+GenericDto VisibilityManagedNodeDto::toGenericDto() const
 {
-    GenericDto dto = LazyNodeDto::ToGenericDto();
+    GenericDto dto = LazyNodeDto::toGenericDto();
     return dto;
 }

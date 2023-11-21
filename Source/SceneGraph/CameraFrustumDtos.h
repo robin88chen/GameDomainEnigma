@@ -40,8 +40,8 @@ namespace Enigma::SceneGraph
         Engine::GenericDto& Frustum() { return m_frustumDto; }
         [[nodiscard]] Engine::GenericDto Frustum() const { return m_frustumDto; }
 
-        static CameraDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static CameraDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -84,8 +84,8 @@ namespace Enigma::SceneGraph
         float& NearHeight() { return m_nearHeight; }
         [[nodiscard]] float NearHeight() const { return m_nearHeight; }
 
-        static FrustumDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static FrustumDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

@@ -63,15 +63,15 @@ TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::MaxTextureCoordinate(const M
     return *this;
 }
 
-Enigma::Engine::GenericDto TerrainGeometryDtoHelper::ToGenericDto() const
+Enigma::Engine::GenericDto TerrainGeometryDtoHelper::toGenericDto() const
 {
-    return ToDto().ToGenericDto();
+    return ToDto().toGenericDto();
 }
 
 TerrainGeometryDto TerrainGeometryDtoHelper::ToDto() const
 {
     TerrainGeometryDto& geo = const_cast<TerrainGeometryDto&>(m_dto);
-    geo.GeometryBound() = m_geometryBound.serializeDto().ToGenericDto();
+    geo.GeometryBound() = m_geometryBound.serializeDto().toGenericDto();
     return m_dto;
 }
 
@@ -84,8 +84,8 @@ TerrainPawnDtoHelper::TerrainPawnDtoHelper(const std::string& name)
     m_dto.IsTopLevel() = false;
     m_dto.LocalTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.WorldTransform() = MathLib::Matrix4::IDENTITY;
-    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().toGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().toGenericDto();
     m_dto.GraphDepth() = 0;
     m_dto.CullingMode() = static_cast<unsigned>(Spatial::CullingMode::Dynamic);
     m_dto.NotifyFlag() = static_cast<unsigned>(Spatial::NotifyBit::Notify_All);
@@ -107,15 +107,15 @@ TerrainPawnDtoHelper& TerrainPawnDtoHelper::LocalTransform(const MathLib::Matrix
 TerrainPawnDtoHelper& TerrainPawnDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.WorldTransform() = world_transform;
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().toGenericDto();
     return *this;
 }
 
 TerrainPawnDtoHelper& TerrainPawnDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
-    m_dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
-    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().ToGenericDto();
+    m_dto.ModelBound() = m_modelBound.serializeDto().toGenericDto();
+    m_dto.WorldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.WorldTransform()).serializeDto().toGenericDto();
     return *this;
 }
 
@@ -151,11 +151,11 @@ TerrainPawnDtoHelper& TerrainPawnDtoHelper::SpatialFlags(Spatial::SpatialFlags s
 
 TerrainPawnDtoHelper& TerrainPawnDtoHelper::TerrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto)
 {
-    m_dto.ThePrimitive() = terrain_primitive_dto.ToGenericDto();
+    m_dto.ThePrimitive() = terrain_primitive_dto.toGenericDto();
     return *this;
 }
 
-Enigma::Engine::GenericDto TerrainPawnDtoHelper::ToGenericDto() const
+Enigma::Engine::GenericDto TerrainPawnDtoHelper::toGenericDto() const
 {
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }

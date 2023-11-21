@@ -29,7 +29,7 @@ void LightingPawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
 
 void LightingPawn::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    LightingPawnDto pawn_dto = LightingPawnDto::FromGenericDto(dto);
+    LightingPawnDto pawn_dto = LightingPawnDto::fromGenericDto(dto);
     if (!pawn_dto.HostLightName().empty())
     {
         resolver.TryResolveLinkage(pawn_dto.HostLightName(), [lifetime = weak_from_this()](auto sp)

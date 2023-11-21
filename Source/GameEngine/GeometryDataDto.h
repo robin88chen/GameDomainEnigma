@@ -23,8 +23,8 @@ namespace Enigma::Engine
     public:
         TextureCoordDto() = default;
 
-        static TextureCoordDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto();
+        static TextureCoordDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto();
 
         [[nodiscard]] std::optional<std::vector<MathLib::Vector2>> Texture2DCoords() const { return m_2dCoords; }
         std::optional<std::vector<MathLib::Vector2>>& Texture2DCoords() { return m_2dCoords; }
@@ -44,8 +44,8 @@ namespace Enigma::Engine
     public:
         GeometryDataDto();
 
-        static GeometryDataDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto() const;
+        static GeometryDataDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto() const;
         void DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto);
         void SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const;
 
@@ -120,8 +120,8 @@ namespace Enigma::Engine
         TriangleListDto();
         TriangleListDto(const GeometryDataDto& geometry_dto);
 
-        static TriangleListDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static TriangleListDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
     };
 }
 

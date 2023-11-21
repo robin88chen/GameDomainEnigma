@@ -18,17 +18,17 @@ AnimatedPawnDto::AnimatedPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), AnimatedPawn::TYPE_RTTI.getName()));
 }
 
-AnimatedPawnDto AnimatedPawnDto::FromGenericDto(const Engine::GenericDto& dto)
+AnimatedPawnDto AnimatedPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    AnimatedPawnDto pawn_dto(PawnDto::FromGenericDto(dto));
+    AnimatedPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) pawn_dto.TheAnimationClipMapDto() = v.value();
     if (auto v = dto.TryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) pawn_dto.AvatarRecipeDtos() = v.value();
     return pawn_dto;
 }
 
-Enigma::Engine::GenericDto AnimatedPawnDto::ToGenericDto() const
+Enigma::Engine::GenericDto AnimatedPawnDto::toGenericDto() const
 {
-    Engine::GenericDto dto = PawnDto::ToGenericDto();
+    Engine::GenericDto dto = PawnDto::toGenericDto();
     if (m_animationClipMapDto) dto.AddOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_animationClipMapDto.value());
     dto.AddOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
     return dto;

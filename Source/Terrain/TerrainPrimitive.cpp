@@ -39,6 +39,6 @@ TerrainPrimitive& TerrainPrimitive::operator=(TerrainPrimitive&& t) noexcept
 Enigma::Engine::GenericDto TerrainPrimitive::serializeDto() const
 {
     TerrainPrimitiveDto dto(SerializeMeshDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 

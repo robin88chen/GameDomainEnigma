@@ -47,7 +47,7 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.get
 
 Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
-    SpatialDto dto = SpatialDto::FromGenericDto(o);
+    SpatialDto dto = SpatialDto::fromGenericDto(o);
     m_name = dto.Name();
     m_graphDepth = dto.GraphDepth();
     m_cullingMode = static_cast<CullingMode>(dto.CullingMode());
@@ -57,8 +57,8 @@ Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
     assert(m_mxLocalTransform != Matrix4::ZERO);
     m_mxWorldTransform = dto.WorldTransform();
     assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.ModelBound()));
-    m_worldBound = BoundingVolume(BoundingVolumeDto::FromGenericDto(dto.WorldBound()));
+    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.ModelBound()));
+    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.WorldBound()));
     assert(!m_modelBound.IsEmpty());
     assert(!m_worldBound.IsEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
@@ -76,7 +76,7 @@ Spatial::~Spatial()
 
 Enigma::Engine::GenericDto Spatial::serializeDto()
 {
-    return serializeSpatialDto().ToGenericDto();
+    return serializeSpatialDto().toGenericDto();
 }
 
 SpatialDto Spatial::serializeSpatialDto()
@@ -90,8 +90,8 @@ SpatialDto Spatial::serializeSpatialDto()
     dto.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
     dto.LocalTransform() = m_mxLocalTransform;
     dto.WorldTransform() = m_mxWorldTransform;
-    dto.ModelBound() = m_modelBound.serializeDto().ToGenericDto();
-    dto.WorldBound() = m_worldBound.serializeDto().ToGenericDto();
+    dto.ModelBound() = m_modelBound.serializeDto().toGenericDto();
+    dto.WorldBound() = m_worldBound.serializeDto().toGenericDto();
     return dto;
 }
 

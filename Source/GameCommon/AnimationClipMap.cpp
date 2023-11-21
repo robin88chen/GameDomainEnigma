@@ -12,7 +12,7 @@ DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);
 
 AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
 {
-    AnimationClipMapDto dto = AnimationClipMapDto::FromGenericDto(o);
+    AnimationClipMapDto dto = AnimationClipMapDto::fromGenericDto(o);
     for (unsigned i = 0; i < dto.AnimNames().size(); ++i)
     {
         AnimClip clip(dto.AnimNames()[i], AnimationClip(dto.StartOffsets()[i], dto.LoopTimes()[i],
@@ -32,7 +32,7 @@ GenericDto AnimationClipMap::serializeDto() const
         dto.WarpModes().push_back(static_cast<unsigned>(clip.GetClip().GetWarpMode()));
         dto.DivideIndices().push_back(clip.GetClip().GetDivideIndex());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 stdext::optional_ref<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(const std::string& name)

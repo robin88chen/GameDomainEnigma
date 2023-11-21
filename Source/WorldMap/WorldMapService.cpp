@@ -93,16 +93,16 @@ ServiceResult WorldMapService::onTerm()
     return ServiceResult::Complete;
 }
 
-std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::serializeQuadNodeGraphs() const
+std::vector<Enigma::Engine::GenericDtoCollection> WorldMapService::serializeWorldSceneGraphs() const
 {
-    assert(!m_world.expired());
-    return m_world.lock()->serializeQuadGraphs();
+    assert(m_world);
+    return m_world->serializeSceneGraphs();
 }
 
 Enigma::Engine::GenericDto WorldMapService::serializeWorldMap() const
 {
-    assert(!m_world.expired());
-    return m_world.lock()->serializeDto();
+    assert(m_world);
+    return m_world->serializeDto();
 }
 
 void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& graph)
@@ -113,27 +113,27 @@ void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& gr
 void WorldMapService::completeCreateWorldMap(const std::shared_ptr<WorldMap>& world)
 {
     m_world = world;
-    if (!m_world.expired())
+    if (m_world)
     {
-        m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
-        EventPublisher::post(std::make_shared<WorldMapCreated>(m_world.lock()->getName(), m_world.lock()));
-        CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
+        //m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
+        EventPublisher::post(std::make_shared<WorldMapCreated>(m_world->getName(), m_world));
+        //CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }
 }
 
 void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
     const Matrix4& local_transform)
 {
+    assert(m_world);
     assert(terrain);
     assert(!m_sceneGraphRepository.expired());
-    if (FATAL_LOG_EXPR(m_world.expired())) return;
-    m_world.lock()->attachTerrain(m_sceneGraphRepository.lock(), terrain, local_transform);
+    m_world->attachTerrain(m_sceneGraphRepository.lock(), terrain, local_transform);
 }
 
 std::shared_ptr<Node> WorldMapService::queryFittingNode(const Engine::BoundingVolume& bv_in_world) const
 {
-    assert(!m_world.expired());
-    return m_world.lock()->queryFittingNode(bv_in_world);
+    assert(m_world);
+    return m_world->queryFittingNode(bv_in_world);
 }
 
 std::shared_ptr<Node> WorldMapService::findFittingNodeFromQuadRoot(const std::shared_ptr<Node>& root, const Engine::BoundingVolume& bv_in_root) const
@@ -176,7 +176,7 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
 
 void WorldMapService::createFittingNode(const Engine::BoundingVolume& bv_in_world)
 {
-    assert(!m_world.expired());
+    assert(m_world);
     if (m_listQuadRoot.empty()) return failCreateFittingNode(ErrorCode::emptyQuadRoot);
     error er;
     for (auto root : m_listQuadRoot)
@@ -266,7 +266,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             }
             linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.Name());
             parent_node_name = dto.Name();
-            parent_box = Engine::BoundingVolumeDto::FromGenericDto(dto.ModelBound()).Box().value();
+            parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.ModelBound()).Box().value();
             Matrix4 parent_inv_local_mx = dto.LocalTransform().Inverse();
             dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
             dest_box = dest_bv_in_node.BoundingBox3();
@@ -277,7 +277,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
     if (sub_quad_dtos.empty()) return dtos;
     for (auto& dto : sub_quad_dtos)
     {
-        dtos.push_back(dto.ToGenericDto());
+        dtos.push_back(dto.toGenericDto());
     }
     return dtos;
 }
@@ -294,7 +294,7 @@ VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string
     Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
     Matrix4 local_transform = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
     dto.LocalTransform() = local_transform;
-    dto.ModelBound() = sub_quad_bv.serializeDto().ToGenericDto();
+    dto.ModelBound() = sub_quad_bv.serializeDto().toGenericDto();
     return dto;
 }
 
@@ -426,11 +426,14 @@ void WorldMapService::failCreateFittingNode(std::error_code err)
 
 void WorldMapService::createEmptyWorldMap(const ICommandPtr& c)
 {
+    assert(!m_sceneGraphRepository.expired());
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
     if (!cmd) return;
-    std::vector<Engine::GenericDto> dtos = { cmd->getDto() };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
+    const auto world = std::make_shared<WorldMap>(m_sceneGraphRepository.lock(), cmd->getDto());
+    completeCreateWorldMap(world);
+    //std::vector<Engine::GenericDto> dtos = { cmd->getDto() };
+    //CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
 }
 
 void WorldMapService::deserializeWorldMap(const ICommandPtr& c)
@@ -478,10 +481,10 @@ void WorldMapService::onLazyNodeInstanced(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LazyNodeInstanced, IEvent>(e);
     if ((!ev) || (!ev->GetNode())) return;
-    if (ev->GetNode()->getParent() == m_world.lock())
+    /*if (ev->GetNode()->getParent() == m_world)
     {
         m_listQuadRoot.push_back(ev->GetNode());
-    }
+    }*/
 }
 
 void WorldMapService::queryFittingNode(const IQueryPtr& q) const

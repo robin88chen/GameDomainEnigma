@@ -20,7 +20,7 @@ ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_
 {
 }
 
-ModelAnimatorDto ModelAnimatorDto::FromGenericDto(const GenericDto& dto)
+ModelAnimatorDto ModelAnimatorDto::fromGenericDto(const GenericDto& dto)
 {
     ModelAnimatorDto model;
     model.factoryDesc() = dto.GetRtti();
@@ -31,7 +31,7 @@ ModelAnimatorDto ModelAnimatorDto::FromGenericDto(const GenericDto& dto)
     return model;
 }
 
-GenericDto ModelAnimatorDto::ToGenericDto()
+GenericDto ModelAnimatorDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -61,7 +61,7 @@ std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::ConvertToPolicy(const std
     }
     for (auto& op : m_skinOperators)
     {
-        policy->SkinOperators().emplace_back(SkinOperatorDto::FromGenericDto(op));
+        policy->SkinOperators().emplace_back(SkinOperatorDto::fromGenericDto(op));
     }
     return policy;
 }
@@ -70,7 +70,7 @@ SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_R
 {
 }
 
-SkinOperatorDto SkinOperatorDto::FromGenericDto(const Engine::GenericDto& dto)
+SkinOperatorDto SkinOperatorDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     SkinOperatorDto op;
     op.factoryDesc() = dto.GetRtti();
@@ -81,7 +81,7 @@ SkinOperatorDto SkinOperatorDto::FromGenericDto(const Engine::GenericDto& dto)
     return op;
 }
 
-GenericDto SkinOperatorDto::ToGenericDto()
+GenericDto SkinOperatorDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

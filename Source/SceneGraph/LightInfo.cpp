@@ -21,9 +21,9 @@ LightInfo::LightInfo(LightType type)
     m_isEnable = true;
 }
 
-LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::FromGenericDto(o).LightType())
+LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::fromGenericDto(o).LightType())
 {
-    LightInfoDto dto = LightInfoDto::FromGenericDto(o);
+    LightInfoDto dto = LightInfoDto::fromGenericDto(o);
     m_type = dto.LightType();
     m_color = dto.Color();
     m_position = dto.Position();

@@ -64,11 +64,13 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
     }
 
     std::string world_name = m_nameInputBox->text();
+    SceneGraph::PortalZoneNodeDto portal_root_dto;
+    portal_root_dto.Name() = world_name + "_portal_root";
     WorldMap::WorldMapDto world_map_dto;
-    world_map_dto.Name() = world_name;
-    world_map_dto.IsTopLevel() = true;
+    world_map_dto.name() = world_name;
     world_map_dto.factoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
-    Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.ToGenericDto()));
+    world_map_dto.portalRoot() = portal_root_dto.toGenericDto();
+    Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.toGenericDto()));
     m_worldEditor.lock()->createWorldMapFolder(folder_name);
 
     close();

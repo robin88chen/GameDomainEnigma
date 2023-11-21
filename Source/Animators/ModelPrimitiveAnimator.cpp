@@ -69,11 +69,11 @@ ModelAnimatorDto ModelPrimitiveAnimator::serializeDto()
     if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
     {
-        dto.AnimationAssetDto() = m_animationAsset->serializeDto().ToGenericDto();
+        dto.AnimationAssetDto() = m_animationAsset->serializeDto().toGenericDto();
     }
     for (auto& op : m_skinAnimOperators)
     {
-        dto.SkinOperators().emplace_back(op.serializeDto().ToGenericDto());
+        dto.SkinOperators().emplace_back(op.serializeDto().toGenericDto());
     }
     return dto;
 }

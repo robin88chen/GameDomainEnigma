@@ -111,7 +111,7 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
 
 GenericDto MeshPrimitive::serializeDto() const
 {
-    return SerializeMeshDto().ToGenericDto();
+    return SerializeMeshDto().toGenericDto();
 }
 
 MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const

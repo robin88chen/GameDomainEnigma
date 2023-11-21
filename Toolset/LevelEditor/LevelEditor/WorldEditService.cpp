@@ -32,7 +32,7 @@ ServiceResult WorldEditService::onTerm()
 std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCollection>> WorldEditService::serializeWorldMapAndNodeGraphs(const std::string& path_id) const
 {
     assert(!m_worldMap.expired());
-    auto node_collections = m_worldMap.lock()->serializeQuadNodeGraphs();
+    auto node_collections = m_worldMap.lock()->serializeWorldSceneGraphs();
     for (auto& dtos : node_collections)
     {
         auto desc = dtos[0].GetRtti();

@@ -21,6 +21,14 @@ SceneQuadTreeRoot::SceneQuadTreeRoot(const std::string& name, const std::shared_
 {
 }
 
+SceneQuadTreeRoot::SceneQuadTreeRoot(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(TYPE_RTTI.getName())
+{
+    QuadTreeRootDto dto = QuadTreeRootDto::fromGenericDto(o);
+    m_name = dto.name();
+    m_root = std::dynamic_pointer_cast<LazyNode>(repository->createNode(dto.root()));
+    assert(!m_root.expired());
+}
+
 SceneQuadTreeRoot::~SceneQuadTreeRoot()
 {
 }

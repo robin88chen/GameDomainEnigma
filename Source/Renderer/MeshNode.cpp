@@ -107,7 +107,7 @@ GenericDto MeshNode::serializeDto() const
     {
         dto.ParentIndexInArray() = m_parentIndexInArray.value();
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void MeshNode::SetMeshPrimitive(const MeshPrimitivePtr& mesh)

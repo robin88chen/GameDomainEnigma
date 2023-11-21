@@ -30,7 +30,7 @@ namespace Enigma::SceneGraph
         CameraDtoHelper& FrustumNearPlaneDimension(float width, float height);
 
         CameraDto ToCameraDto();
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto toGenericDto();
 
     protected:
         CameraDto m_cameraDto;
@@ -51,7 +51,7 @@ namespace Enigma::SceneGraph
         SpatialDtoHelper& SpatialFlags(Spatial::SpatialFlags spatial_flags);
         SpatialDtoHelper& GraphDepth(unsigned graph_depth);
 
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto toGenericDto();
 
     private:
         SpatialDto m_dto;
@@ -75,7 +75,7 @@ namespace Enigma::SceneGraph
         PawnDtoHelper& MeshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto);
 
         PawnDto ToPawnDto();
-        Engine::GenericDto ToGenericDto();
+        Engine::GenericDto toGenericDto();
 
     private:
         PawnDto m_dto;

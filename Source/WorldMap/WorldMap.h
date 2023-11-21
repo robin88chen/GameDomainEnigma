@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   WorldMap.h
- * \brief
+ * \brief (2023.11.21) WorldMap contains a portal zone node as root, and a list of quad tree roots
  *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
@@ -18,32 +18,32 @@
 namespace Enigma::WorldMap
 {
     class SceneQuadTreeRoot;
-    class WorldMap : public SceneGraph::PortalZoneNode
+    class WorldMap
     {
-        DECLARE_EN_RTTI;
+        DECLARE_EN_RTTI_NON_BASE;
     public:
-        WorldMap(const std::string& name);
-        WorldMap(const Engine::GenericDto& o);
+        WorldMap(const std::string& name, const std::shared_ptr<SceneGraph::PortalZoneNode>& root);
+        WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o);
         WorldMap(const WorldMap& other) = delete;
         WorldMap(WorldMap&& other) = delete;
         WorldMap& operator=(const WorldMap& other) = delete;
         WorldMap& operator=(WorldMap&& other) = delete;
-        virtual ~WorldMap() override;
+        ~WorldMap();
 
         const std::string& getName() const { return m_name; };
 
-        virtual Engine::GenericDto serializeDto() override;
-        virtual std::vector<Engine::GenericDtoCollection> serializeQuadGraphs();
+        Engine::GenericDto serializeDto();
+        std::vector<Engine::GenericDtoCollection> serializeSceneGraphs();
 
-        void setPortalRootNode(const std::shared_ptr<SceneGraph::PortalManagementNode>& root);
-
-        std::shared_ptr<SceneGraph::PortalManagementNode> getPortalRootNode() const { return m_portalRootNode.lock(); };
+        std::shared_ptr<SceneGraph::PortalZoneNode> getRoot() const { return m_root.lock(); };
 
         void attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
         std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
 
     protected:
-        std::weak_ptr<SceneGraph::PortalManagementNode> m_portalRootNode;
+        Engine::FactoryDesc m_factory_desc;
+        std::string m_name;
+        std::weak_ptr<SceneGraph::PortalZoneNode> m_root;
         typedef std::list<std::shared_ptr<SceneQuadTreeRoot>> QuadRootList;
         QuadRootList m_listQuadRoot;
     };

@@ -21,7 +21,7 @@ PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.getNa
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
     BoundingVolume bv{ Box3::UNIT_BOX };
-    m_worldBound = bv.serializeDto().ToGenericDto();
+    m_worldBound = bv.serializeDto().toGenericDto();
 }
 
 PawnPrefabDto PawnPrefabDto::fromGenericDto(const Engine::GenericDto& dto)

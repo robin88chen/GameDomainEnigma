@@ -63,6 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
         std::shared_ptr<Node> createNode(const std::string& name, const Frameworks::Rtti& rtti);
+        std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
         bool HasPawn(const std::string& name);

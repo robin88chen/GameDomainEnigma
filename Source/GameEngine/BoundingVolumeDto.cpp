@@ -7,7 +7,7 @@ using namespace Enigma::MathLib;
 static std::string TOKEN_BOXBV = "BoxBV";
 static std::string TOKEN_SPHEREBV = "SphereBV";
 
-BoundingVolumeDto BoundingVolumeDto::FromGenericDto(const GenericDto& dto)
+BoundingVolumeDto BoundingVolumeDto::fromGenericDto(const GenericDto& dto)
 {
     std::optional<Box3> box;
     std::optional<Sphere3> sphere;
@@ -22,7 +22,7 @@ BoundingVolumeDto BoundingVolumeDto::FromGenericDto(const GenericDto& dto)
     return BoundingVolumeDto{ box, sphere };
 }
 
-GenericDto BoundingVolumeDto::ToGenericDto() const
+GenericDto BoundingVolumeDto::toGenericDto() const
 {
     GenericDto dto;
     if (m_box)

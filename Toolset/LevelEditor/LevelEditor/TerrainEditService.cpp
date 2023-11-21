@@ -314,7 +314,7 @@ void TerrainEditService::createNewTerrain(const ICommandPtr& c)
 
     TerrainPrimitiveDto terrain_dto;
     terrain_dto.Name() = cmd->getName();
-    terrain_dto.TheGeometry() = cmd->getGeometryDto().ToGenericDto();
+    terrain_dto.TheGeometry() = cmd->getGeometryDto().toGenericDto();
     terrain_dto.VisualTechniqueSelection() = "Default";
     EffectMaterialDtoHelper mat_dto("TerrainMesh");
     mat_dto.FilenameAtPath("fx/TerrainMesh.efx@APK_PATH");
@@ -326,14 +326,14 @@ void TerrainEditService::createNewTerrain(const ICommandPtr& c)
     }
     auto splat_texture_name = cmd->getName() + SPLAT_TEXTURE_POSTFIX;
     tex_dto.TextureMapping(Enigma::MathLib::Dimension<unsigned>{512, 512}, 1, splat_texture_name, std::nullopt, ALPHA_TEXTURE_SEMANTIC);
-    terrain_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    terrain_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    terrain_dto.Effects().emplace_back(mat_dto.toGenericDto());
+    terrain_dto.TextureMaps().emplace_back(tex_dto.toGenericDto());
     terrain_dto.GeometryName() = cmd->getGeometryDto().Name();
     Matrix4 mxLocal = Matrix4::MakeTranslateTransform(cmd->getLocalPos());
     TerrainPawnDtoHelper pawn_dto(cmd->getName());
     pawn_dto.TopLevel(true).TerrainPrimitive(terrain_dto).LocalTransform(mxLocal);
 
-    std::vector<GenericDto> dtos = { pawn_dto.ToGenericDto() };
+    std::vector<GenericDto> dtos = { pawn_dto.toGenericDto() };
     CommandBus::post(std::make_shared<BuildSceneGraph>(NEW_TERRAIN_TAG, dtos));
 }
 

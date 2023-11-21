@@ -50,8 +50,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] unsigned int NotifyFlag() const { return m_notifyFlag; }
         unsigned int& NotifyFlag() { return m_notifyFlag; }
 
-        static SpatialDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static SpatialDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -76,8 +76,8 @@ namespace Enigma::SceneGraph
         const std::vector<std::string>& ChildNames() const { return m_childNames; }
         std::vector<std::string>& ChildNames() { return m_childNames; }
 
-        static NodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static NodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         std::vector<std::string> m_childNames;
@@ -92,8 +92,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] Engine::GenericDto LightInfo() const { return m_lightInfo; }
         Engine::GenericDto& LightInfo() { return m_lightInfo; }
 
-        static LightDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static LightDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::GenericDto m_lightInfo;
@@ -110,8 +110,8 @@ namespace Enigma::SceneGraph
         //[[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
         //Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
 
-        static PawnDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static PawnDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
         std::shared_ptr<PawnPolicy> ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
@@ -129,8 +129,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] bool isReady() const { return m_isReady; }
         bool& isReady() { return m_isReady; }
 
-        static LazyNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static LazyNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         bool m_isReady;
@@ -142,8 +142,8 @@ namespace Enigma::SceneGraph
         VisibilityManagedNodeDto();
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
 
-        static VisibilityManagedNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static VisibilityManagedNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
     };
 }
 

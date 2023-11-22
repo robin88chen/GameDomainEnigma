@@ -17,7 +17,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        VisibilityManagedNode(const std::string& name);
+        VisibilityManagedNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         VisibilityManagedNode(const Engine::GenericDto& dto);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;

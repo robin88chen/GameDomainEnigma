@@ -9,6 +9,7 @@
 #define _LAZY_NODE_H
 
 #include "Node.h"
+#include "GameEngine/FactoryDesc.h"
 #include "Frameworks/LazyStatus.h"
 
 namespace Enigma::SceneGraph
@@ -19,7 +20,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        LazyNode(const std::string& name);
+        LazyNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         LazyNode(const Engine::GenericDto& dto);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;

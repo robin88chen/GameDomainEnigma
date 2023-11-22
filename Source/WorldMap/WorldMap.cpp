@@ -21,18 +21,16 @@ DEFINE_RTTI_OF_BASE(WorldMap, WorldMap);
 std::string QUADROOT_POSTFIX = "_qroot";
 std::string WOLRD_PORTAL_ROOT_GRAPH = "portal_root_graph";
 
-WorldMap::WorldMap(const std::string& name, const std::shared_ptr<PortalZoneNode>& root) : m_factory_desc(TYPE_RTTI.getName())
+WorldMap::WorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<PortalZoneNode>& root) : m_factory_desc(factory_desc)
 {
     m_name = name;
     m_root = root;
-    m_factory_desc = m_factory_desc.ClaimAsInstanced(name + ".wld");
 }
 
-WorldMap::WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(TYPE_RTTI.getName())
+WorldMap::WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(o.GetRtti())
 {
     WorldMapDto world = WorldMapDto::fromGenericDto(o);
     m_name = world.name();
-    m_factory_desc = world.factoryDesc();
     for (auto& quad : world.quadTreeRoots())
     {
         auto quad_root = std::make_shared<SceneQuadTreeRoot>(repository, quad);
@@ -81,9 +79,11 @@ void WorldMap::attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphReposit
     assert(terrain);
     assert(repository);
     std::string node_name = terrain->getSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
-    auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(repository->createNode(node_name, VisibilityManagedNode::TYPE_RTTI));
-    quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
-    quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
+    FactoryDesc quad_root_desc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
+    quad_root_desc.ClaimAsInstanced(node_name + ".node");
+    auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(repository->createNode(node_name, quad_root_desc));
+    //quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
+    //quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
     quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
     m_root.lock()->AttachChild(quadRootNode, local_transform);
     auto treeRoot = std::make_shared<SceneQuadTreeRoot>(node_name, quadRootNode);

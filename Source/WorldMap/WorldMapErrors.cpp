@@ -10,6 +10,7 @@ std::string ErrorCategory::message(int err) const
     {
     case ErrorCode::ok: return "OK";
     case ErrorCode::nullSceneGraphRepository: return "Null SceneGraphRepository";
+    case ErrorCode::nullPortalManager: return "Null PortalManager";
     case ErrorCode::emptyQuadRoot: return "QuadRoot is empty";
     case ErrorCode::outOfBounds: return "Out of Bounds";
     case ErrorCode::outOfQuadTreeDepth: return "Out of QuadTree Depth";

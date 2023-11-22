@@ -1,14 +1,21 @@
 ﻿#include "LazyNode.h"
 #include "SceneGraphDtos.h"
+#include "Frameworks/Rtti.h"
+#include "GameEngine/FactoryDesc.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, LazyNode, Node);
 
-LazyNode::LazyNode(const std::string& name) : Node(name)
+LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(LazyNode::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
+    m_factoryDesc = factory_desc;
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
 }
 
 LazyNode::LazyNode(const GenericDto& o) : Node(o)

@@ -10,9 +10,9 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI(SceneGraph, PortalZoneNode, LazyNode);
 
-PortalZoneNode::PortalZoneNode(const std::string& name) : LazyNode(name)
+PortalZoneNode::PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : LazyNode(name, factory_desc)
 {
-    m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
     m_hasTraversed = false;
 }
 

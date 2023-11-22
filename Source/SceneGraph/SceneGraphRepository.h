@@ -15,6 +15,7 @@
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "GameEngine/FactoryDesc.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -62,7 +63,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> createCamera(const std::string& name);
         std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
-        std::shared_ptr<Node> createNode(const std::string& name, const Frameworks::Rtti& rtti);
+        std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);

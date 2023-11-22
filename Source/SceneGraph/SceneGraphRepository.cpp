@@ -119,27 +119,27 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const std::string& nam
     return it->second.lock();
 }
 
-std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Rtti& rtti)
+std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
 {
     assert(!hasNode(name));
     std::shared_ptr<Node> node = nullptr;
-    if (rtti == Node::TYPE_RTTI)
+    if (factory_desc.GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(name);
     }
-    else if (rtti == LazyNode::TYPE_RTTI)
+    else if (factory_desc.GetRttiName() == LazyNode::TYPE_RTTI.getName())
     {
-        node = std::make_shared<LazyNode>(name);
+        node = std::make_shared<LazyNode>(name, factory_desc);
     }
-    else if (rtti == VisibilityManagedNode::TYPE_RTTI)
+    else if (factory_desc.GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
     {
-        node = std::make_shared<VisibilityManagedNode>(name);
+        node = std::make_shared<VisibilityManagedNode>(name, factory_desc);
     }
-    else if (rtti == PortalZoneNode::TYPE_RTTI)
+    else if (factory_desc.GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
-        node = std::make_shared<PortalZoneNode>(name);
+        node = std::make_shared<PortalZoneNode>(name, factory_desc);
     }
-    else if (rtti == PortalManagementNode::TYPE_RTTI)
+    else if (factory_desc.GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<PortalManagementNode>(name);
     }
@@ -375,7 +375,7 @@ void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
     }
     else
     {
-        auto node = createNode(cmd->name(), *cmd->rtti());
+        auto node = createNode(cmd->name(), cmd->factoryDesc());
         if (node)
         {
             EventPublisher::post(std::make_shared<NodeCreated>(cmd->getRuid(), node));

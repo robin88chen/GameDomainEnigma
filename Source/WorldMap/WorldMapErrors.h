@@ -16,6 +16,7 @@ namespace Enigma::WorldMap
     {
         ok = 0,
         nullSceneGraphRepository,
+        nullPortalManager,
 
         emptyQuadRoot = 101,
         outOfBounds,

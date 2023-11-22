@@ -259,9 +259,9 @@ void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<WorldMapCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::post(std::make_shared<OutputMessage>("world map created : " + ev->getName()));
+    CommandBus::post(std::make_shared<OutputMessage>("world map created : " + ev->name()));
     if (!m_sceneRoot.expired())
     {
-        m_sceneRoot.lock()->AttachChild(ev->getWorld()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
+        m_sceneRoot.lock()->AttachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }

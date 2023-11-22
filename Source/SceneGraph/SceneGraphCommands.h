@@ -97,14 +97,14 @@ namespace Enigma::SceneGraph
     class CreateNode : public Frameworks::IRequestCommand
     {
     public:
-        CreateNode(const std::string& name, const Frameworks::Rtti* rtti) : m_name(name), m_rtti(rtti) {}
+        CreateNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : m_name(name), m_factory_desc(factory_desc) {}
 
         const std::string& name() { return m_name; }
-        const Frameworks::Rtti* rtti() { return m_rtti; }
+        const Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
 
     protected:
         std::string m_name;
-        const Frameworks::Rtti* m_rtti;
+        Engine::FactoryDesc m_factory_desc;
     };
 }
 

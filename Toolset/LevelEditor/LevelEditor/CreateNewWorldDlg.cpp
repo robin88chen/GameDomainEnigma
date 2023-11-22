@@ -1,4 +1,7 @@
 ﻿#include "CreateNewWorldDlg.h"
+
+#include <WorldMap/WorldMap.h>
+
 #include "Frameworks/CommandBus.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "WorldMap/WorldMapDto.h"
@@ -11,8 +14,9 @@
 using namespace LevelEditor;
 using namespace Enigma;
 
-CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor) : form(owner, nana::API::make_center(400, 320), nana::appear::decorate<>{})
+CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const std::string& portal_manager_name) : form(owner, nana::API::make_center(400, 320), nana::appear::decorate<>{})
 {
+    m_portalManagerName = portal_manager_name;
     m_worldEditor = world_editor;
     caption("Create New World");
     get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><folder_name_prompt arrange=[40%,variable] margin=[10,20]><delete_folder_prompt margin=[10,20]><><buttons margin=[10,40] gap=10><>");
@@ -64,13 +68,15 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
     }
 
     std::string world_name = m_nameInputBox->text();
-    SceneGraph::PortalZoneNodeDto portal_root_dto;
+    Engine::FactoryDesc factory_desc(WorldMap::WorldMap::TYPE_RTTI.getName());
+    factory_desc.ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
+    /*SceneGraph::PortalZoneNodeDto portal_root_dto;
     portal_root_dto.Name() = world_name + "_portal_root";
     WorldMap::WorldMapDto world_map_dto;
     world_map_dto.name() = world_name;
     world_map_dto.factoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
-    world_map_dto.portalRoot() = portal_root_dto.toGenericDto();
-    Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_map_dto.toGenericDto()));
+    world_map_dto.portalRoot() = portal_root_dto.toGenericDto();*/
+    Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_name, factory_desc, m_portalManagerName));
     m_worldEditor.lock()->createWorldMapFolder(folder_name);
 
     close();

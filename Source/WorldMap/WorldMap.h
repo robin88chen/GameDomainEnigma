@@ -22,7 +22,7 @@ namespace Enigma::WorldMap
     {
         DECLARE_EN_RTTI_NON_BASE;
     public:
-        WorldMap(const std::string& name, const std::shared_ptr<SceneGraph::PortalZoneNode>& root);
+        WorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalZoneNode>& root);
         WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o);
         WorldMap(const WorldMap& other) = delete;
         WorldMap(WorldMap&& other) = delete;

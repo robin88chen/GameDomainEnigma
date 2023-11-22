@@ -19,12 +19,16 @@ namespace Enigma::WorldMap
     class CreateEmptyWorldMap : public Frameworks::ICommand
     {
     public:
-        CreateEmptyWorldMap(const Engine::GenericDto& dto) : m_dto(dto) {}
+        CreateEmptyWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::string& portal_manager_name) : m_name(name), m_factory_desc(factory_desc), m_portal_manager_name(portal_manager_name) {}
 
-        const Engine::GenericDto& getDto() const { return m_dto; }
+        const std::string& name() const { return m_name; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factory_desc; }
+        const std::string& portalManagerName() const { return m_portal_manager_name; }
 
     protected:
-        Engine::GenericDto m_dto;
+        std::string m_name;
+        Engine::FactoryDesc m_factory_desc;
+        std::string m_portal_manager_name;
     };
     class DeserializeWorldMap : public Frameworks::ICommand
     {

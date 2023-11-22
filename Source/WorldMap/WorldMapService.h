@@ -14,6 +14,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "SceneGraph/PortalManagementNode.h"
 #include "Terrain/TerrainPawn.h"
 #include "GameEngine/BoundingVolume.h"
 #include "GameEngine/GenericDto.h"
@@ -41,7 +42,11 @@ namespace Enigma::WorldMap
 
         void deserializeWorldMap(const Engine::GenericDtoCollection& graph);
 
+        /** factory method */
+        std::shared_ptr<WorldMap> createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node);
+
     protected:
+        void failCreateWorldMap(const std::string& name, std::error_code err);
         void completeCreateWorldMap(const std::shared_ptr<WorldMap>& world);
 
         void attachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);

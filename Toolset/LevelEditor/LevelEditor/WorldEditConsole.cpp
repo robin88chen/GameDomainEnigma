@@ -123,5 +123,5 @@ void WorldEditConsole::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapCreated, IEvent>(e);
     if (!ev) return;
-    m_currentWorldName = ev->getName();
+    m_currentWorldName = ev->name();
 }

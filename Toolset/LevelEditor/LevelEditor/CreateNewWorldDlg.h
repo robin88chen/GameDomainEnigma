@@ -13,6 +13,7 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/checkbox.hpp>
+#include "AppConfiguration.h"
 
 namespace LevelEditor
 {
@@ -20,7 +21,7 @@ namespace LevelEditor
     class CreateNewWorldDlg : public nana::form
     {
     public:
-        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor);
+        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const std::string& portal_manager_name);
         virtual ~CreateNewWorldDlg();
 
         void onOkButton(const nana::arg_click& arg);
@@ -35,6 +36,7 @@ namespace LevelEditor
         nana::checkbox* m_deleteExistFolderCheckBox;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;
+        std::string m_portalManagerName;
     };
 }
 

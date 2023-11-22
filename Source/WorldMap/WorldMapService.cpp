@@ -110,15 +110,27 @@ void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& gr
     CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
 }
 
+std::shared_ptr<WorldMap> WorldMapService::createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node)
+{
+    assert(!m_sceneGraphRepository.expired());
+    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node")));
+    if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
+    const auto world = std::make_shared<WorldMap>(name, factory_desc, root_node);
+    return world;
+}
+
 void WorldMapService::completeCreateWorldMap(const std::shared_ptr<WorldMap>& world)
 {
     m_world = world;
     if (m_world)
     {
-        //m_world.lock()->lazyStatus().changeStatus(LazyStatus::Status::Ready);  // empty world map is ready
         EventPublisher::post(std::make_shared<WorldMapCreated>(m_world->getName(), m_world));
-        //CommandBus::post(std::make_shared<AttachPortalOutsideZone>(m_world.lock()));
     }
+}
+
+void WorldMapService::failCreateWorldMap(const std::string& name, std::error_code err)
+{
+    EventPublisher::post(std::make_shared<CreateWorldMapFailed>(name, err));
 }
 
 void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
@@ -430,10 +442,14 @@ void WorldMapService::createEmptyWorldMap(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
     if (!cmd) return;
-    const auto world = std::make_shared<WorldMap>(m_sceneGraphRepository.lock(), cmd->getDto());
+    const auto portal_management_node = std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
+    if (!portal_management_node)
+    {
+        failCreateWorldMap(cmd->name(), ErrorCode::nullPortalManager);
+        return;
+    }
+    const auto world = createWorldMap(cmd->name(), cmd->factoryDesc(), portal_management_node);
     completeCreateWorldMap(world);
-    //std::vector<Engine::GenericDto> dtos = { cmd->getDto() };
-    //CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, dtos));
 }
 
 void WorldMapService::deserializeWorldMap(const ICommandPtr& c)

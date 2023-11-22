@@ -13,10 +13,10 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI(SceneGraph, VisibilityManagedNode, LazyNode);
 
-VisibilityManagedNode::VisibilityManagedNode(const std::string& name)
-    : LazyNode(name)
+VisibilityManagedNode::VisibilityManagedNode(const std::string& name, const FactoryDesc& factory_desc)
+    : LazyNode(name, factory_desc)
 {
-    m_factoryDesc = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.getName()));
 }
 
 VisibilityManagedNode::VisibilityManagedNode(const GenericDto& dto)

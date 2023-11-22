@@ -9,6 +9,7 @@
 #define _PORTAL_ZONE_NODE_H
 
 #include "LazyNode.h"
+#include "GameEngine/FactoryDesc.h"
 #include <memory>
 
 namespace Enigma::SceneGraph
@@ -17,7 +18,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        PortalZoneNode(const std::string& name);
+        PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         PortalZoneNode(const Engine::GenericDto& dto);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;

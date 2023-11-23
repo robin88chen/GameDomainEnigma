@@ -26,6 +26,8 @@
 #include "SceneGraphQueries.h"
 #include <cassert>
 
+#include "PortalDtos.h"
+
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
@@ -167,7 +169,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     }
     else if (dto.GetRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
-        node = std::make_shared<PortalZoneNode>(dto);
+        node = createPortalZoneNode(PortalZoneNodeDto::fromGenericDto(dto));
     }
     else if (dto.GetRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
     {
@@ -176,6 +178,21 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     assert(node);
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(dto.getName(), node);
+    return node;
+}
+
+std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto)
+{
+    auto node = std::make_shared<PortalZoneNode>(portal_zone_node_dto.toGenericDto());
+    if (!portal_zone_node_dto.portalName().empty())
+    {
+        if (const auto portal = queryPortal(portal_zone_node_dto.portalName())) portal->SetAdjacentZone(node);
+    }
+    else if (!portal_zone_node_dto.portalManagementNodeName().empty())
+    {
+        if (const auto portal_management = std::dynamic_pointer_cast<PortalManagementNode>(queryNode(portal_zone_node_dto.portalManagementNodeName())))
+            portal_management->AttachOutsideZone(node);
+    }
     return node;
 }
 
@@ -246,23 +263,23 @@ std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
     return it->second.lock();
 }
 
-std::shared_ptr<Portal> SceneGraphRepository::CreatePortal(const std::string& name)
+std::shared_ptr<Portal> SceneGraphRepository::createPortal(const std::string& name)
 {
-    assert(!HasPortal(name));
+    assert(!hasPortal(name));
     auto portal = std::make_shared<Portal>(name);
     std::lock_guard locker{ m_portalMapLock };
     m_portals.insert_or_assign(name, portal);
     return portal;
 }
 
-bool SceneGraphRepository::HasPortal(const std::string& name)
+bool SceneGraphRepository::hasPortal(const std::string& name)
 {
     std::lock_guard locker{ m_portalMapLock };
     auto it = m_portals.find(name);
     return ((it != m_portals.end()) && (!it->second.expired()));
 }
 
-std::shared_ptr<Portal> SceneGraphRepository::QueryPortal(const std::string& name)
+std::shared_ptr<Portal> SceneGraphRepository::queryPortal(const std::string& name)
 {
     std::lock_guard locker{ m_portalMapLock };
     auto it = m_portals.find(name);
@@ -276,7 +293,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& n
     if (auto node = queryNode(name)) return node;
     if (auto pawn = QueryPawn(name)) return pawn;
     if (auto light = QueryLight(name)) return light;
-    if (auto portal = QueryPortal(name)) return portal;
+    if (auto portal = queryPortal(name)) return portal;
     return nullptr;
 }
 
@@ -299,7 +316,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
     }
     else if (auto portal = std::shared_ptr<Portal>(dynamic_cast<Portal*>(spatial)))
     {
-        assert(!HasPortal(portal->getSpatialName()));
+        assert(!hasPortal(portal->getSpatialName()));
         std::lock_guard locker{ m_portalMapLock };
         m_portals.insert_or_assign(portal->getSpatialName(), portal);
         return portal;

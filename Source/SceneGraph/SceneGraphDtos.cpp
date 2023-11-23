@@ -26,7 +26,6 @@ static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_CHILD_NAMES = "ChildNames";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE = "PawnPrimitive";
-static std::string TOKEN_IS_READY = "IsReady";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
@@ -165,26 +164,22 @@ std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engin
 LazyNodeDto::LazyNodeDto() : NodeDto()
 {
     m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
-    m_isReady = false;
 }
 
 LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
-    m_isReady = false;
 }
 
 LazyNodeDto LazyNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     LazyNodeDto node_dto(NodeDto::fromGenericDto(dto));
-    if (auto v = dto.TryGetValue<bool>(TOKEN_IS_READY)) node_dto.m_isReady = v.value();
     return node_dto;
 }
 
 GenericDto LazyNodeDto::toGenericDto() const
 {
     GenericDto dto = NodeDto::toGenericDto();
-    dto.AddOrUpdate(TOKEN_IS_READY, m_isReady);
     return dto;
 }
 

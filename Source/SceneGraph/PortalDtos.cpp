@@ -6,6 +6,8 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
+static std::string TOKEN_PORTAL_MANAGEMENT_NODE_NAME = "PortalManagementNodeName";
+static std::string TOKEN_PORTAL_NAME = "PortalName";
 static std::string TOKEN_ADJACENT_NODE_NAME = "AdjacentNodeName";
 static std::string TOKEN_IS_PORTAL_OPEN = "IsPortalOpen";
 static std::string TOKEN_OUTSIDE_NODE_NAME = "OutsideNodeName";
@@ -23,12 +25,16 @@ PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNod
 PortalZoneNodeDto PortalZoneNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     PortalZoneNodeDto node_dto(LazyNodeDto::fromGenericDto(dto));
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NODE_NAME)) node_dto.portalManagementNodeName() = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_PORTAL_NAME)) node_dto.portalName() = v.value();
     return node_dto;
 }
 
 GenericDto PortalZoneNodeDto::toGenericDto() const
 {
     GenericDto dto = LazyNodeDto::toGenericDto();
+    dto.AddOrUpdate(TOKEN_PORTAL_MANAGEMENT_NODE_NAME, m_portalManagementNodeName);
+    dto.AddOrUpdate(TOKEN_PORTAL_NAME, m_portalName);
     return dto;
 }
 

@@ -32,6 +32,7 @@ namespace Enigma::SceneGraph
     class LightInfo;
     class Light;
     class LazyNode;
+    class PortalZoneNode;
     class CameraDto;
     class NodeDto;
     class LazyNodeDto;
@@ -74,9 +75,9 @@ namespace Enigma::SceneGraph
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 
-        std::shared_ptr<Portal> CreatePortal(const std::string& name);
-        bool HasPortal(const std::string& name);
-        std::shared_ptr<Portal> QueryPortal(const std::string& name);
+        std::shared_ptr<Portal> createPortal(const std::string& name);
+        bool hasPortal(const std::string& name);
+        std::shared_ptr<Portal> queryPortal(const std::string& name);
 
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
@@ -85,6 +86,9 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> queryCamera(const std::string& name);
         bool hasNode(const std::string& name);
         std::shared_ptr<Node> queryNode(const std::string& name);
+
+        /** factory methods */
+        std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
 
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);

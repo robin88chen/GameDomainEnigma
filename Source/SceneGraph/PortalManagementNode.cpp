@@ -62,6 +62,7 @@ void PortalManagementNode::resolveFactoryLinkage(const GenericDto& dto, FactoryL
 void PortalManagementNode::AttachOutsideZone(const std::shared_ptr<PortalZoneNode>& node)
 {
     m_outsideZone = node;
+    m_outsideZone->setPortalParent(shared_from_this());
 }
 
 error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)

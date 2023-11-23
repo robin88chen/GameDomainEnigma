@@ -81,7 +81,7 @@ void WorldMap::attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphReposit
     assert(repository);
     std::string node_name = terrain->getSpatialName() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
     FactoryDesc quad_root_desc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
-    quad_root_desc.ClaimAsInstanced(node_name + ".node");
+    quad_root_desc.ClaimAsInstanced(node_name + ".node").PathId(m_factory_desc.PathId());
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(repository->createNode(node_name, quad_root_desc));
     //quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     //quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");

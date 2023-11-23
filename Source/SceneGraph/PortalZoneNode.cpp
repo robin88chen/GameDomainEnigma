@@ -1,8 +1,11 @@
 ﻿#include "PortalZoneNode.h"
 #include "PortalDtos.h"
+#include "Portal.h"
+#include "PortalManagementNode.h"
 #include "SceneGraphCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraphErrors.h"
+#include "SceneGraphRepository.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -27,7 +30,36 @@ PortalZoneNode::~PortalZoneNode()
 
 GenericDto PortalZoneNode::serializeDto()
 {
-    return LazyNode::serializeDto();
+    PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNodeDto(Node::serializeNodeDto()));
+    if (!m_portalParent.expired())
+    {
+        if (auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_portalParent.lock()))
+        {
+            dto.portalName() = portal->getSpatialName();
+        }
+        else if (auto portal_management = std::dynamic_pointer_cast<PortalManagementNode, Spatial>(m_portalParent.lock()))
+        {
+            dto.portalManagementNodeName() = portal_management->getSpatialName();
+        }
+    }
+    return dto.toGenericDto();
+}
+
+GenericDto PortalZoneNode::serializeAsLaziness()
+{
+    PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
+    if (!m_portalParent.expired())
+    {
+        if (auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_portalParent.lock()))
+        {
+            dto.portalName() = portal->getSpatialName();
+        }
+        else if (auto portal_management = std::dynamic_pointer_cast<PortalManagementNode, Spatial>(m_portalParent.lock()))
+        {
+            dto.portalManagementNodeName() = portal_management->getSpatialName();
+        }
+    }
+    return dto.toGenericDto();
 }
 
 error PortalZoneNode::onCullingVisible(Culler* culler, bool noCull)

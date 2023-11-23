@@ -84,6 +84,9 @@ namespace Enigma::SceneGraph
         }
 
     protected:
+        NodeDto serializeNodeDto();
+
+    protected:
         //todo : rethink -- mutex for lock list??
         ChildList m_childList;
     };

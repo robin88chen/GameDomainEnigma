@@ -39,6 +39,9 @@ namespace Enigma::SceneGraph
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
 
     protected:
+        LazyNodeDto serializeLazyNodeAsLaziness();
+
+    protected:
         Frameworks::LazyStatus m_lazyStatus;
     };
 }

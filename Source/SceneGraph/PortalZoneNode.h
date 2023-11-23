@@ -14,6 +14,7 @@
 
 namespace Enigma::SceneGraph
 {
+    class SceneGraphRepository;
     class PortalZoneNode : public LazyNode
     {
         DECLARE_EN_RTTI;
@@ -27,10 +28,14 @@ namespace Enigma::SceneGraph
         virtual ~PortalZoneNode() override;
 
         virtual Engine::GenericDto serializeDto() override;
+        virtual Engine::GenericDto serializeAsLaziness() override;
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
+        virtual void setPortalParent(const std::shared_ptr<Spatial>& portal_parent) { m_portalParent = portal_parent; }
+
     protected:
+        std::weak_ptr<Spatial> m_portalParent; // either portal or portal management node
         // for zone graph traversal
         bool m_hasTraversed;
     };

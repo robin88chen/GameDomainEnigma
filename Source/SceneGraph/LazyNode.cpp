@@ -21,7 +21,10 @@ LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : N
 LazyNode::LazyNode(const GenericDto& o) : Node(o)
 {
     LazyNodeDto lazy_node_dto = LazyNodeDto::fromGenericDto(o);
-    if (lazy_node_dto.isReady()) m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
 }
 
 LazyNode::~LazyNode()
@@ -30,12 +33,16 @@ LazyNode::~LazyNode()
 
 GenericDto LazyNode::serializeAsLaziness()
 {
-    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));
-    GenericDto dto = lazy_node_dto.toGenericDto();
+    return serializeLazyNodeAsLaziness().toGenericDto();
+}
+
+LazyNodeDto LazyNode::serializeLazyNodeAsLaziness()
+{
+    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));  // this won't serialize children, that's we want
     FactoryDesc factory_desc = m_factoryDesc;
     factory_desc.ClaimAsDeferred(); // serialize as deferred
-    dto.AddRtti(factory_desc);
-    return dto;
+    lazy_node_dto.factoryDesc() = factory_desc;
+    return lazy_node_dto;
 }
 
 bool LazyNode::canVisited()

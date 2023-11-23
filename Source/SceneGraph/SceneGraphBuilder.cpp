@@ -224,7 +224,7 @@ void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
-    assert(!m_host->HasPortal(dto.getName()));
+    assert(!m_host->hasPortal(dto.getName()));
     auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
     portal->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, portal));

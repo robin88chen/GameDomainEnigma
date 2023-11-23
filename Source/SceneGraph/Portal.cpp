@@ -60,6 +60,7 @@ void Portal::SetAdjacentZone(const std::shared_ptr<PortalZoneNode>& node)
     m_adjacentPortalZone = node;
     if (!m_adjacentPortalZone.expired())
     {
+        m_adjacentPortalZone.lock()->setPortalParent(shared_from_this());
         m_zoneLoadStatus = ZoneLoadStatus::Done;
     }
 }

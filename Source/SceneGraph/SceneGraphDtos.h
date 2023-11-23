@@ -126,14 +126,8 @@ namespace Enigma::SceneGraph
         LazyNodeDto();
         LazyNodeDto(const NodeDto& node_dto);
 
-        [[nodiscard]] bool isReady() const { return m_isReady; }
-        bool& isReady() { return m_isReady; }
-
         static LazyNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-
-    protected:
-        bool m_isReady;
     };
 
     class VisibilityManagedNodeDto : public LazyNodeDto

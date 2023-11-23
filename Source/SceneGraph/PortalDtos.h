@@ -19,8 +19,17 @@ namespace Enigma::SceneGraph
         PortalZoneNodeDto();
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
+        [[nodiscard]] const std::string& portalManagementNodeName() const { return m_portalManagementNodeName; }
+        std::string& portalManagementNodeName() { return m_portalManagementNodeName; }
+        [[nodiscard]] const std::string& portalName() const { return m_portalName; }
+        std::string& portalName() { return m_portalName; }
+
         static PortalZoneNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
+
+    protected:
+        std::string m_portalManagementNodeName;
+        std::string m_portalName;
     };
 
     class PortalDto : public SpatialDto

@@ -110,12 +110,13 @@ std::shared_ptr<WorldMap> WorldMapService::deserializeWorldMap(const std::string
 {
     assert(!m_sceneGraphRepository.expired());
     assert(!graph.empty());
-    WorldMapDto dto = WorldMapDto::fromGenericDto(graph[0]);
-    PortalZoneNodeDto portal_zone_dto = PortalZoneNodeDto::fromGenericDto(dto.portalRoot());
-    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.Name(), portal_zone_dto.factoryDesc()));
-    if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
-    const auto world = std::make_shared<WorldMap>(name, dto.factoryDesc(), root_node);
-    return world;
+    return std::make_shared<WorldMap>(m_sceneGraphRepository.lock(), graph[0]);
+    //WorldMapDto dto = WorldMapDto::fromGenericDto(graph[0]);
+    //PortalZoneNodeDto portal_zone_dto = PortalZoneNodeDto::fromGenericDto(dto.portalRoot());
+    //auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.Name(), portal_zone_dto.factoryDesc()));
+    //if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
+    //const auto world = std::make_shared<WorldMap>(name, dto.factoryDesc(), root_node);
+    //return world;
 }
 
 std::shared_ptr<WorldMap> WorldMapService::createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node)
@@ -320,7 +321,6 @@ VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string
 {
     VisibilityManagedNodeDto dto;
     dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
-    dto.isReady() = true;
     std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
     dto.Name() = target_node_name;
     Box3 sub_quad_box = sub_tree_box_in_parent;

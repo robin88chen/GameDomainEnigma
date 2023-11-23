@@ -154,7 +154,7 @@ bool StdioFile::IsFileExisted(const std::string& filepath)
 }
 
 
-error StdioFile::Open()
+error StdioFile::open()
 {
     if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
     if (!m_rwOption.any()) return ErrorCode::emptyRWOption;
@@ -188,7 +188,7 @@ error StdioFile::Open()
     return ErrorCode::ok;
 }
 
-error StdioFile::Close()
+error StdioFile::close()
 {
     if (!m_file) return ErrorCode::fileStatusError;
     m_file.close();

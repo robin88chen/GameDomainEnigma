@@ -186,12 +186,12 @@ std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const
     auto node = std::make_shared<PortalZoneNode>(portal_zone_node_dto.toGenericDto());
     if (!portal_zone_node_dto.portalName().empty())
     {
-        if (const auto portal = queryPortal(portal_zone_node_dto.portalName())) portal->SetAdjacentZone(node);
+        if (const auto portal = queryPortal(portal_zone_node_dto.portalName())) portal->setAdjacentZone(node);
     }
     else if (!portal_zone_node_dto.portalManagementNodeName().empty())
     {
         if (const auto portal_management = std::dynamic_pointer_cast<PortalManagementNode>(queryNode(portal_zone_node_dto.portalManagementNodeName())))
-            portal_management->AttachOutsideZone(node);
+            portal_management->attachOutsideZone(node);
     }
     return node;
 }

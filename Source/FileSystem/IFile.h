@@ -47,8 +47,8 @@ namespace Enigma::FileSystem
         error LastError() const { return m_lastError; }
     protected:
         friend class FileSystem;
-        virtual error Open() = 0;
-        virtual error Close() = 0;
+        virtual error open() = 0;
+        virtual error close() = 0;
 
         error MakeErrorCode(ErrorCode error_code);
         ErrorCode LastErrorCode();

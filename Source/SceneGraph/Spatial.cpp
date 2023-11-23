@@ -113,7 +113,7 @@ void Spatial::detachFromParent()
     if (m_parent.expired()) return;
     const NodePtr parent_node = std::dynamic_pointer_cast<Node, Spatial>(m_parent.lock());
     if (!parent_node) return;
-    parent_node->DetachChild(thisSpatial());
+    parent_node->detachChild(thisSpatial());
 }
 
 error Spatial::cullVisibleSet(Culler* culler, bool noCull)
@@ -225,10 +225,10 @@ void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
     if (getParent() != targetParentNode)
     {
         NodePtr node = std::dynamic_pointer_cast<Node, Spatial>(getParent());
-        if (node) node->DetachChild(thisSpatial());
+        if (node) node->detachChild(thisSpatial());
         if (targetParentNode)
         {
-            targetParentNode->AttachChild(thisSpatial(), mxNewLocalTransform);
+            targetParentNode->attachChild(thisSpatial(), mxNewLocalTransform);
         }
         else
         {

@@ -96,7 +96,7 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findFittingLeaf(const Engine::BoundingV
     while (depth >= 0)
     {
         if (!parent) return nullptr;
-        if (parent->GetChildList().empty()) return parent;
+        if (parent->getChildList().empty()) return parent;
         const auto parent_node_box = parent->getModelBound().BoundingBox3();
         if (!parent_node_box) return parent;
 

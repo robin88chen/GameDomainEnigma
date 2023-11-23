@@ -80,7 +80,7 @@ IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::strin
 {
     std::string fullpath = StdMountPath::FixFullPath(filepath, filename);
     IFilePtr file = IFilePtr{ menew StdioFile(fullpath, rw_option) };
-    error open_er = file->Open();
+    error open_er = file->open();
     if (open_er)
     {
         Debug::ErrorPrintf("Open stdio file %s error %s\n", filename.c_str(), open_er.message().c_str());
@@ -98,7 +98,7 @@ void FileSystem::CloseFile(const IFilePtr& file)
     std::lock_guard<std::mutex> locker{ m_openedFileLocker };
     m_openedFileList.remove(file);
 
-    file->Close();
+    file->close();
     //EN_DELETE file;
 }
 
@@ -109,7 +109,7 @@ IFilePtr FileSystem::OpenMountedFile(const IMountPathPtr& path,
 
     IFilePtr file = IFilePtr{ path->CreateFile(filename, rw_option) };
     if (!file) return nullptr;
-    error open_er = file->Open();
+    error open_er = file->open();
     if (open_er)
     {
         Debug::ErrorPrintf("Open mounted file %s error %s\n", filename.c_str(), open_er.message().c_str());

@@ -52,11 +52,11 @@ namespace Enigma::SceneGraph
         virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
         /** attach child spatial object, setting child's local transform, then update */
-        virtual error AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal);
+        virtual error attachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal);
         /** detach child spatial object */
-        virtual error DetachChild(const SpatialPtr& child);
+        virtual error detachChild(const SpatialPtr& child);
         /** get child list */
-        virtual const ChildList& GetChildList() { return m_childList; };
+        virtual const ChildList& getChildList() { return m_childList; };
 
         /** @name inner public functions    */
         //@{
@@ -74,11 +74,11 @@ namespace Enigma::SceneGraph
         //todo : animators
         //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
 
-        std::shared_ptr<Node> ThisNode()
+        std::shared_ptr<Node> thisNode()
         {
             return std::dynamic_pointer_cast<Node, Spatial>(shared_from_this());
         }
-        std::shared_ptr<const Node> ThisNode() const
+        std::shared_ptr<const Node> thisNode() const
         {
             return std::dynamic_pointer_cast<const Node, const Spatial>(shared_from_this());
         }

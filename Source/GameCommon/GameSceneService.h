@@ -47,7 +47,7 @@ namespace Enigma::GameCommon
         //@}
 
         const std::shared_ptr<SceneGraph::PortalManagementNode>& GetPortalManagementNode() { return m_portalMgtNode; };
-        error AttachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
+        error attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
 
         std::shared_ptr<SceneGraph::Spatial> FindSpatialByName(const std::string& spatial_name);
 

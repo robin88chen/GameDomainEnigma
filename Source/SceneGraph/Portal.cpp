@@ -51,11 +51,11 @@ void Portal::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::Factor
     resolver.TryResolveLinkage(portalDto.adjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
-                std::dynamic_pointer_cast<Portal, Spatial>(lifetime.lock())->SetAdjacentZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
+                std::dynamic_pointer_cast<Portal, Spatial>(lifetime.lock())->setAdjacentZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
         });
 }
 
-void Portal::SetAdjacentZone(const std::shared_ptr<PortalZoneNode>& node)
+void Portal::setAdjacentZone(const std::shared_ptr<PortalZoneNode>& node)
 {
     m_adjacentPortalZone = node;
     if (!m_adjacentPortalZone.expired())
@@ -102,7 +102,7 @@ error Portal::_updateWorldData(const MathLib::Matrix4& parentWorld)
     error er = Spatial::_updateWorldData(parentWorld);
     if (er) return er;
 
-    UpdatePortalQuad();
+    updatePortalQuad();
 
     return er;
 }
@@ -121,7 +121,7 @@ SceneTraveler::TravelResult Portal::visitBy(SceneTraveler* traveler)
     return res;
 }
 
-void Portal::UpdatePortalQuad()
+void Portal::updatePortalQuad()
 {
     m_vecPortalQuadWorldPos[0] = m_mxWorldTransform.TransformCoord(s_vecPortalLocalQuad[0]);
     m_vecPortalQuadWorldPos[1] = m_mxWorldTransform.TransformCoord(s_vecPortalLocalQuad[1]);

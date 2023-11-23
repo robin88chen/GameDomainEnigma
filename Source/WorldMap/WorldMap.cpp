@@ -85,8 +85,8 @@ void WorldMap::attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphReposit
     auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(repository->createNode(node_name, quad_root_desc));
     //quadRootNode->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     //quadRootNode->factoryDesc().ClaimAsInstanced(node_name + ".node");
-    quadRootNode->AttachChild(terrain, Matrix4::IDENTITY);
-    m_root.lock()->AttachChild(quadRootNode, local_transform);
+    quadRootNode->attachChild(terrain, Matrix4::IDENTITY);
+    m_root.lock()->attachChild(quadRootNode, local_transform);
     auto treeRoot = std::make_shared<SceneQuadTreeRoot>(node_name, quadRootNode);
     m_listQuadRoot.push_back(treeRoot);
 }

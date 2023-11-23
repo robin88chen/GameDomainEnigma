@@ -42,8 +42,8 @@ namespace Enigma::FileSystem
         static bool IsFileExisted(const std::string& filepath);
 
     protected:
-        virtual error Open() override;
-        virtual error Close() override;
+        virtual error open() override;
+        virtual error close() override;
 
     private:
         std::fstream m_file;

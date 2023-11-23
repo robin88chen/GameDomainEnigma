@@ -56,7 +56,7 @@ void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryL
     {
         resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
-            std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->AttachChild(sp, sp->getLocalTransform()); });
+            std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
     }
 }
 
@@ -112,7 +112,7 @@ SceneTraveler::TravelResult Node::visitBy(SceneTraveler* traveler)
     return res;
 }
 
-error Node::AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal)
+error Node::attachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChildLocal)
 {
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
     if (FATAL_LOG_EXPR(child->getParent() != nullptr)) return ErrorCode::parentNode; // must not have parent, must detach first!!
@@ -129,7 +129,7 @@ error Node::AttachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
     return er;
 }
 
-error Node::DetachChild(const SpatialPtr& child)
+error Node::detachChild(const SpatialPtr& child)
 {
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
     if (FATAL_LOG_EXPR(child->getParent() != thisSpatial())) return ErrorCode::parentNode;

@@ -30,7 +30,7 @@ AndroidAsset::AndroidAsset(const std::string& filename, const ReadWriteOption& r
 AndroidAsset::~AndroidAsset()
 {
     Debug::Printf("Android asset destructor");
-    Close();
+    close();
 }
 
 std::optional<std::vector<unsigned char>> AndroidAsset::Read(size_t offset, size_t size_request)
@@ -98,7 +98,7 @@ bool AndroidAsset::IsExisted()
     return true;
 }
 
-error AndroidAsset::Open()
+error AndroidAsset::open()
 {
     if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
     if (!m_rwOption.any()) return ErrorCode::emptyRWOption;
@@ -109,7 +109,7 @@ error AndroidAsset::Open()
     return ErrorCode::ok;
 }
 
-error AndroidAsset::Close()
+error AndroidAsset::close()
 {
     Debug::Printf("Close file %s\n", m_filename.c_str());
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };

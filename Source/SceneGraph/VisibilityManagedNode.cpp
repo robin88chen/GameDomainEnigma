@@ -64,7 +64,7 @@ void VisibilityManagedNode::ReleaseDeferredContent()
 {
     while (!m_childList.empty())
     {
-        DetachChild(*(m_childList.begin()));
+        detachChild(*(m_childList.begin()));
     }
 
     m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);

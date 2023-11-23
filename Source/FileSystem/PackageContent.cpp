@@ -73,13 +73,13 @@ bool PackageContent::IsExisted()
     return m_size != 0;
 }
 
-error PackageContent::Open()
+error PackageContent::open()
 {
     if (!IsExisted()) return LastError();
     return ErrorCode::ok;
 }
 
-error PackageContent::Close()
+error PackageContent::close()
 {
     if (!IsValidContent()) return LastError();
     m_size = 0;

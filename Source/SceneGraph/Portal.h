@@ -35,13 +35,13 @@ namespace Enigma::SceneGraph
         virtual Engine::GenericDto serializeDto() override;
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
-        void SetAdjacentZone(const std::shared_ptr<PortalZoneNode>& node);
-        std::shared_ptr<PortalZoneNode> GetAdjacentZone() const { return m_adjacentPortalZone.lock(); };
+        void setAdjacentZone(const std::shared_ptr<PortalZoneNode>& node);
+        std::shared_ptr<PortalZoneNode> getAdjacentZone() const { return m_adjacentPortalZone.lock(); };
 
         /// Portal Open & Close, Closed Portal 就像關起來的門
-        bool IsOpen() const { return m_isOpen; };
-        void Open() { m_isOpen = true; };
-        void Close() { m_isOpen = false; };
+        bool isOpen() const { return m_isOpen; };
+        void open() { m_isOpen = true; };
+        void close() { m_isOpen = false; };
 
         virtual bool canVisited() override { return true; };
 
@@ -52,9 +52,9 @@ namespace Enigma::SceneGraph
 
         virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
-        auto GetPortalQuadWorldPosition() const { return m_vecPortalQuadWorldPos; }; // 實作寫在這裡可以用 auto return
+        auto getPortalQuadWorldPosition() const { return m_vecPortalQuadWorldPos; }; // 實作寫在這裡可以用 auto return
 
-        void UpdatePortalQuad();
+        void updatePortalQuad();
 
     protected:
         std::weak_ptr<PortalZoneNode> m_adjacentPortalZone;

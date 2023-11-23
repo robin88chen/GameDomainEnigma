@@ -114,7 +114,7 @@ std::shared_ptr<WorldMap> WorldMapService::deserializeWorldMap(const std::string
     //WorldMapDto dto = WorldMapDto::fromGenericDto(graph[0]);
     //PortalZoneNodeDto portal_zone_dto = PortalZoneNodeDto::fromGenericDto(dto.portalRoot());
     //auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.Name(), portal_zone_dto.factoryDesc()));
-    //if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
+    //if (portal_management_node) portal_management_node->attachOutsideZone(root_node);
     //const auto world = std::make_shared<WorldMap>(name, dto.factoryDesc(), root_node);
     //return world;
 }
@@ -123,7 +123,7 @@ std::shared_ptr<WorldMap> WorldMapService::createWorldMap(const std::string& nam
 {
     assert(!m_sceneGraphRepository.expired());
     auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node").PathId(factory_desc.PathId())));
-    if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
+    if (portal_management_node) portal_management_node->attachOutsideZone(root_node);
     const auto world = std::make_shared<WorldMap>(name, factory_desc, root_node);
     return world;
 }
@@ -192,7 +192,7 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
     if (recursive_depth < 0) return parent;
     if (!parent) return nullptr;
 
-    if (parent->GetChildList().empty()) return parent;
+    if (parent->getChildList().empty()) return parent;
     const auto parent_node_box = parent->getModelBound().BoundingBox3();
     if (!parent_node_box) return parent;
 
@@ -426,7 +426,7 @@ bool WorldMapService::testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_pa
         sub_quad_box.Center() = Vector3::ZERO;
         Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
         Matrix4 mxLocal = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
-        parent->AttachChild(sub_quad_node, mxLocal);
+        parent->attachChild(sub_quad_node, mxLocal);
         fitting_node = sub_quad_node;
     }
         Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();

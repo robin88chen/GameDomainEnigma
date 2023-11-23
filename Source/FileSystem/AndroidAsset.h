@@ -38,8 +38,8 @@ namespace Enigma::FileSystem
         virtual bool IsWritable() override { return false; };
 
     protected:
-        virtual error Open() override;
-        virtual error Close() override;
+        virtual error open() override;
+        virtual error close() override;
 
     private:
         AAsset* m_aasset;

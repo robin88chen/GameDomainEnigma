@@ -142,6 +142,12 @@ void EditorAppDelegate::installEngine()
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
     EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
+    m_onCreateWorldFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateWorldFailed(e); });
+    EventPublisher::subscribe(typeid(CreateWorldMapFailed), m_onCreateWorldFailed);
+    m_onWorldMapDeserialized = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapDeserialized(e); });
+    EventPublisher::subscribe(typeid(WorldMapDeserialized), m_onWorldMapDeserialized);
+    m_onDeserializeWorldMapFailed = std::make_shared<EventSubscriber>([=](auto e) { onDeserializeWorldMapFailed(e); });
+    EventPublisher::subscribe(typeid(DeserializeWorldMapFailed), m_onDeserializeWorldMapFailed);
 
     assert(m_graphicMain);
 
@@ -190,6 +196,12 @@ void EditorAppDelegate::shutdownEngine()
     m_onSceneRootCreated = nullptr;
     EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     m_onWorldMapCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(CreateWorldMapFailed), m_onCreateWorldFailed);
+    m_onCreateWorldFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(WorldMapDeserialized), m_onWorldMapDeserialized);
+    m_onWorldMapDeserialized = nullptr;
+    EventPublisher::unsubscribe(typeid(DeserializeWorldMapFailed), m_onDeserializeWorldMapFailed);
+    m_onDeserializeWorldMapFailed = nullptr;
 
     assert(m_graphicMain);
     m_graphicMain->getServiceManager()->shutdownSystemService(TerrainEditService::TYPE_RTTI);
@@ -265,3 +277,32 @@ void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
         m_sceneRoot.lock()->AttachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }
+
+void EditorAppDelegate::onCreateWorldFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<CreateWorldMapFailed, IEvent>(e);
+    if (!ev) return;
+    CommandBus::post(std::make_shared<OutputMessage>("create world map " + ev->name() + " failed : " + ev->error().message()));
+}
+
+void EditorAppDelegate::onWorldMapDeserialized(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<WorldMapDeserialized, IEvent>(e);
+    if (!ev) return;
+    CommandBus::post(std::make_shared<OutputMessage>("world map deserialized : " + ev->name()));
+    if (!m_sceneRoot.expired())
+    {
+        m_sceneRoot.lock()->AttachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
+    }
+}
+
+void EditorAppDelegate::onDeserializeWorldMapFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<DeserializeWorldMapFailed, IEvent>(e);
+    if (!ev) return;
+    CommandBus::post(std::make_shared<OutputMessage>("deserialize world map " + ev->name() + " failed : " + ev->error().message()));
+}
+

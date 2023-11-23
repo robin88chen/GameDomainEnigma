@@ -5,6 +5,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "WorldMapCommands.h"
+#include "WorldMapDto.h"
 #include "WorldMapEvents.h"
 #include "WorldMapQueries.h"
 #include "SceneGraph/SceneGraphCommands.h"
@@ -105,15 +106,22 @@ Enigma::Engine::GenericDto WorldMapService::serializeWorldMap() const
     return m_world->serializeDto();
 }
 
-void WorldMapService::deserializeWorldMap(const Engine::GenericDtoCollection& graph)
+std::shared_ptr<WorldMap> WorldMapService::deserializeWorldMap(const std::string& name, const Engine::GenericDtoCollection& graph, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node)
 {
-    CommandBus::post(std::make_shared<BuildSceneGraph>(WORLD_MAP_TAG, graph));
+    assert(!m_sceneGraphRepository.expired());
+    assert(!graph.empty());
+    WorldMapDto dto = WorldMapDto::fromGenericDto(graph[0]);
+    PortalZoneNodeDto portal_zone_dto = PortalZoneNodeDto::fromGenericDto(dto.portalRoot());
+    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.Name(), portal_zone_dto.factoryDesc()));
+    if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
+    const auto world = std::make_shared<WorldMap>(name, dto.factoryDesc(), root_node);
+    return world;
 }
 
 std::shared_ptr<WorldMap> WorldMapService::createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node)
 {
     assert(!m_sceneGraphRepository.expired());
-    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node")));
+    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node").PathId(factory_desc.PathId())));
     if (portal_management_node) portal_management_node->AttachOutsideZone(root_node);
     const auto world = std::make_shared<WorldMap>(name, factory_desc, root_node);
     return world;
@@ -128,9 +136,23 @@ void WorldMapService::completeCreateWorldMap(const std::shared_ptr<WorldMap>& wo
     }
 }
 
+void WorldMapService::completeDeserializeWorldMap(const std::shared_ptr<WorldMap>& world)
+{
+    m_world = world;
+    if (m_world)
+    {
+        EventPublisher::post(std::make_shared<WorldMapDeserialized>(m_world->getName(), m_world));
+    }
+}
+
 void WorldMapService::failCreateWorldMap(const std::string& name, std::error_code err)
 {
     EventPublisher::post(std::make_shared<CreateWorldMapFailed>(name, err));
+}
+
+void WorldMapService::failDeserializeWorldMap(const std::string& name, std::error_code err)
+{
+    EventPublisher::post(std::make_shared<DeserializeWorldMapFailed>(name, err));
 }
 
 void WorldMapService::attachTerrainToWorldMap(const std::shared_ptr<TerrainPawn>& terrain,
@@ -457,7 +479,14 @@ void WorldMapService::deserializeWorldMap(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<DeserializeWorldMap, ICommand>(c);
     if (!cmd) return;
-    deserializeWorldMap(cmd->getGraph());
+    const auto portal_management_node = std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
+    if (!portal_management_node)
+    {
+        failDeserializeWorldMap(cmd->name(), ErrorCode::nullPortalManager);
+        return;
+    }
+    const auto world = deserializeWorldMap(cmd->name(), cmd->graph(), portal_management_node);
+    completeDeserializeWorldMap(world);
 }
 
 void WorldMapService::attachTerrain(const ICommandPtr& c)

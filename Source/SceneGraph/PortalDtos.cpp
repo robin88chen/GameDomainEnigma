@@ -17,7 +17,7 @@ PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
 
 PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
 {
-    m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
 }
 
 PortalZoneNodeDto PortalZoneNodeDto::fromGenericDto(const Engine::GenericDto& dto)
@@ -39,7 +39,7 @@ PortalDto::PortalDto() : SpatialDto(), m_isOpen(false)
 
 PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_isOpen(false)
 {
-    m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Portal::TYPE_RTTI.getName()));
 }
 
 PortalDto PortalDto::fromGenericDto(const GenericDto& dto)
@@ -65,7 +65,7 @@ PortalManagementNodeDto::PortalManagementNodeDto() : NodeDto()
 
 PortalManagementNodeDto::PortalManagementNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 {
-    m_factoryDesc = FactoryDesc(PortalManagementNode::TYPE_RTTI.getName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalManagementNode::TYPE_RTTI.getName()));
 }
 
 PortalManagementNodeDto PortalManagementNodeDto::fromGenericDto(const Engine::GenericDto& dto)

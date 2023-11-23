@@ -44,12 +44,24 @@ namespace Enigma::WorldMap
     public:
         WorldMapDeserialized(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
 
-        const std::string& getName() const { return m_name; }
-        const std::shared_ptr<WorldMap>& getWorld() const { return m_world; }
+        const std::string& name() const { return m_name; }
+        const std::shared_ptr<WorldMap>& world() const { return m_world; }
 
     protected:
         std::string m_name;
         std::shared_ptr<WorldMap> m_world;
+    };
+    class DeserializeWorldMapFailed : public Frameworks::IEvent
+    {
+    public:
+        DeserializeWorldMapFailed(const std::string& name, std::error_code err) : m_name(name), m_error(err) {}
+
+        const std::string& name() const { return m_name; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        std::string m_name;
+        std::error_code m_error;
     };
     class FittingNodeCreated : public Frameworks::IResponseEvent
     {

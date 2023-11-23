@@ -47,6 +47,9 @@ namespace LevelEditor
         void onSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
         void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onCreateWorldFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapDeserialized(const Enigma::Frameworks::IEventPtr& e);
+        void onDeserializeWorldMapFailed(const Enigma::Frameworks::IEventPtr& e);
 
     protected:
         HWND m_hwnd;
@@ -66,6 +69,9 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onCreateWorldFailed;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapDeserialized;
+        Enigma::Frameworks::EventSubscriberPtr m_onDeserializeWorldMapFailed;
     };
 }
 

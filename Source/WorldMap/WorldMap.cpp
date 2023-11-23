@@ -49,6 +49,7 @@ GenericDto WorldMap::serializeDto()
 {
     WorldMapDto world_dto;
     world_dto.factoryDesc() = m_factory_desc;
+    world_dto.name() = m_name;
     for (auto& root : m_listQuadRoot)
     {
         if (!root) continue;

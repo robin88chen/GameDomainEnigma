@@ -47,7 +47,7 @@ namespace LevelEditor
         //std::tuple<Enigma::TerrainEntityPtr, Enigma::Vector3> PickingTerrainOnWorldMap(const Enigma::Vector2& clip_pos);
 
         void saveWorldMap();
-        void loadWorldMap(const std::filesystem::path& map_filepath);
+        void loadWorldMap(const std::filesystem::path& map_filepath, const std::string& portal_manager_name);
 
     private:
         void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);

@@ -244,7 +244,7 @@ void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
     {
         if (!m_worldConsole.expired())
         {
-            m_worldConsole.lock()->loadWorldMap(paths[0]);
+            m_worldConsole.lock()->loadWorldMap(paths[0], m_appDelegate->appConfig()->portalManagementName());
         }
     }
 }

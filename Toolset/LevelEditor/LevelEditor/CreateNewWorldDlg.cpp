@@ -68,8 +68,9 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
     }
 
     std::string world_name = m_nameInputBox->text();
+    world_name = folder_name + "/" + world_name;
     Engine::FactoryDesc factory_desc(WorldMap::WorldMap::TYPE_RTTI.getName());
-    factory_desc.ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
+    factory_desc.ClaimAsInstanced(world_name + ".wld").PathId(m_worldEditor.lock()->getWorldMapPathId());
     /*SceneGraph::PortalZoneNodeDto portal_root_dto;
     portal_root_dto.Name() = world_name + "_portal_root";
     WorldMap::WorldMapDto world_map_dto;

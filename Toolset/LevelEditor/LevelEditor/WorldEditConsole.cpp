@@ -101,7 +101,7 @@ void WorldEditConsole::saveWorldMap()
     }
 }
 
-void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath)
+void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath, const std::string& portal_manager_name)
 {
     std::string path_string = filePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
 
@@ -114,7 +114,7 @@ void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath)
     auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
     if (!m_worldEditService.expired())
     {
-        m_worldEditService.lock()->deserializeWorldMap(dtos);
+        m_worldEditService.lock()->deserializeWorldMap(dtos, portal_manager_name);
     }
 }
 

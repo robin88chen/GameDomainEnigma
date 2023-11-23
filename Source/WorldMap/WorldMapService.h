@@ -40,14 +40,16 @@ namespace Enigma::WorldMap
         std::vector<Engine::GenericDtoCollection> serializeWorldSceneGraphs() const;
         Engine::GenericDto serializeWorldMap() const;
 
-        void deserializeWorldMap(const Engine::GenericDtoCollection& graph);
 
         /** factory method */
         std::shared_ptr<WorldMap> createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node);
+        std::shared_ptr<WorldMap> deserializeWorldMap(const std::string& name, const Engine::GenericDtoCollection& graph, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node);
 
     protected:
         void failCreateWorldMap(const std::string& name, std::error_code err);
+        void failDeserializeWorldMap(const std::string& name, std::error_code err);
         void completeCreateWorldMap(const std::shared_ptr<WorldMap>& world);
+        void completeDeserializeWorldMap(const std::shared_ptr<WorldMap>& world);
 
         void attachTerrainToWorldMap(const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
         std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;

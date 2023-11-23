@@ -33,12 +33,16 @@ namespace Enigma::WorldMap
     class DeserializeWorldMap : public Frameworks::ICommand
     {
     public:
-        DeserializeWorldMap(const Engine::GenericDtoCollection& graph) : m_graph(graph) {}
+        DeserializeWorldMap(const std::string& name, const Engine::GenericDtoCollection& graph, const std::string& portal_manager_name) : m_name(name), m_graph(graph), m_portal_manager_name(portal_manager_name) {}
 
-        const Engine::GenericDtoCollection& getGraph() const { return m_graph; }
+        const std::string& name() const { return m_name; }
+        const Engine::GenericDtoCollection& graph() const { return m_graph; }
+        const std::string& portalManagerName() const { return m_portal_manager_name; }
 
     protected:
+        std::string m_name;
         Engine::GenericDtoCollection m_graph;
+        std::string m_portal_manager_name;
     };
     class AttachTerrainToWorldMap : public Frameworks::ICommand
     {

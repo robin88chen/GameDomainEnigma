@@ -35,7 +35,7 @@ namespace LevelEditor
         @return world map scene graph and a vector of each node graph
          */
         std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCollection>> serializeWorldMapAndNodeGraphs(const std::string& path_id) const;
-        void deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto);
+        void deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto, const std::string& portal_manager_name);
 
     private:
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);

@@ -186,6 +186,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
       <Filter>Scene Graph</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.h">
+      <Filter>Scene Traveler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
       <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp">
+      <Filter>Scene Traveler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

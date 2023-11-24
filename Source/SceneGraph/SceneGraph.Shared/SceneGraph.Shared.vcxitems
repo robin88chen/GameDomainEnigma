@@ -49,6 +49,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
@@ -88,6 +89,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp" />

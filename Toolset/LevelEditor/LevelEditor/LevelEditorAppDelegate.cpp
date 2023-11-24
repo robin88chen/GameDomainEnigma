@@ -274,7 +274,7 @@ void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
     CommandBus::post(std::make_shared<OutputMessage>("world map created : " + ev->name()));
     if (!m_sceneRoot.expired())
     {
-        m_sceneRoot.lock()->AttachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
+        m_sceneRoot.lock()->attachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }
 
@@ -294,7 +294,7 @@ void EditorAppDelegate::onWorldMapDeserialized(const Enigma::Frameworks::IEventP
     CommandBus::post(std::make_shared<OutputMessage>("world map deserialized : " + ev->name()));
     if (!m_sceneRoot.expired())
     {
-        m_sceneRoot.lock()->AttachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
+        m_sceneRoot.lock()->attachChild(ev->world()->getRoot(), Enigma::MathLib::Matrix4::IDENTITY);
     }
 }
 

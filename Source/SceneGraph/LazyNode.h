@@ -30,6 +30,7 @@ namespace Enigma::SceneGraph
 
         //virtual Engine::GenericDto serializeDto() override;  // use node's implementation
         virtual Engine::GenericDto serializeAsLaziness();
+        virtual Engine::GenericDtoCollection serializeFlattenedTree() override;
 
         virtual bool canVisited() override;
 

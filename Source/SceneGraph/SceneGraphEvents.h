@@ -19,7 +19,6 @@ namespace Enigma::SceneGraph
     class Light;
     class LazyNode;
     class Pawn;
-    class SceneQuadTreeRoot;
 
     //------------------ Scene Graph Events -------------------
     class SceneGraphEvent : public Frameworks::IEvent

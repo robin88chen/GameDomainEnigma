@@ -24,9 +24,8 @@
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
-#include <cassert>
-
 #include "PortalDtos.h"
+#include <cassert>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -165,7 +164,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     }
     else if (dto.GetRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
     {
-        node = std::make_shared<VisibilityManagedNode>(dto);
+        node = createVisibilityManagedNode(VisibilityManagedNodeDto::fromGenericDto(dto));
     }
     else if (dto.GetRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
@@ -192,6 +191,16 @@ std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const
     {
         if (const auto portal_management = std::dynamic_pointer_cast<PortalManagementNode>(queryNode(portal_zone_node_dto.portalManagementNodeName())))
             portal_management->attachOutsideZone(node);
+    }
+    return node;
+}
+
+std::shared_ptr<VisibilityManagedNode> SceneGraphRepository::createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto)
+{
+    auto node = std::make_shared<VisibilityManagedNode>(visibility_managed_node_dto.toGenericDto());
+    if (!visibility_managed_node_dto.parentName().empty())
+    {
+        if (const auto parent = queryNode(visibility_managed_node_dto.parentName())) parent->attachChild(node, visibility_managed_node_dto.localTransform());
     }
     return node;
 }

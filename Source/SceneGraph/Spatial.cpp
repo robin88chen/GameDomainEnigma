@@ -48,17 +48,17 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.get
 Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
 {
     SpatialDto dto = SpatialDto::fromGenericDto(o);
-    m_name = dto.Name();
-    m_graphDepth = dto.GraphDepth();
-    m_cullingMode = static_cast<CullingMode>(dto.CullingMode());
-    m_spatialFlags = dto.SpatialFlag();
-    m_notifyFlags = dto.NotifyFlag();
-    m_mxLocalTransform = dto.LocalTransform();
+    m_name = dto.name();
+    m_graphDepth = dto.graphDepth();
+    m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
+    m_spatialFlags = dto.spatialFlag();
+    m_notifyFlags = dto.notifyFlag();
+    m_mxLocalTransform = dto.localTransform();
     assert(m_mxLocalTransform != Matrix4::ZERO);
-    m_mxWorldTransform = dto.WorldTransform();
+    m_mxWorldTransform = dto.worldTransform();
     assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.ModelBound()));
-    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.WorldBound()));
+    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
+    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
     assert(!m_modelBound.IsEmpty());
     assert(!m_worldBound.IsEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
@@ -83,15 +83,16 @@ SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.Name() = m_name;
-    dto.GraphDepth() = m_graphDepth;
-    dto.CullingMode() = static_cast<unsigned int>(m_cullingMode);
-    dto.SpatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
-    dto.NotifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
-    dto.LocalTransform() = m_mxLocalTransform;
-    dto.WorldTransform() = m_mxWorldTransform;
-    dto.ModelBound() = m_modelBound.serializeDto().toGenericDto();
-    dto.WorldBound() = m_worldBound.serializeDto().toGenericDto();
+    dto.name() = m_name;
+    if (!m_parent.expired()) dto.parentName() = m_parent.lock()->getSpatialName();
+    dto.graphDepth() = m_graphDepth;
+    dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);
+    dto.spatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
+    dto.notifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
+    dto.localTransform() = m_mxLocalTransform;
+    dto.worldTransform() = m_mxWorldTransform;
+    dto.modelBound() = m_modelBound.serializeDto().toGenericDto();
+    dto.worldBound() = m_worldBound.serializeDto().toGenericDto();
     return dto;
 }
 

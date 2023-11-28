@@ -35,7 +35,7 @@ PawnDto Pawn::SerializePawnDto()
     PawnDto dto(serializeSpatialDto());
     if (m_primitive)
     {
-        dto.ThePrimitive() = m_primitive->serializeDto();
+        dto.primitive() = m_primitive->serializeDto();
     }
     return dto;
 }

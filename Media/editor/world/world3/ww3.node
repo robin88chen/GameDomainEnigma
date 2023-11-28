@@ -26,6 +26,10 @@
             "Type": "Boolean",
             "Value": true
         },
+        "ParentName": {
+            "Type": "String",
+            "Value": "_SceneRoot_"
+        },
         "NotifyFlag": {
             "Type": "Uint32",
             "Value": 31
@@ -98,6 +102,10 @@
         "TopLevel": {
             "Type": "Boolean",
             "Value": false
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world3/ww3"
         },
         "Name": {
             "Type": "String",
@@ -192,6 +200,10 @@
         "TopLevel": {
             "Type": "Boolean",
             "Value": false
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world3/ww3"
         },
         "NotifyFlag": {
             "Type": "Uint32",
@@ -290,6 +302,10 @@
         "HostLightName": {
             "Type": "String",
             "Value": "world3/ww3_amb_lit"
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world3/ww3"
         },
         "Name": {
             "Type": "String",
@@ -494,6 +510,10 @@
             "Type": "Boolean",
             "Value": false
         },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world3/ww3"
+        },
         "NotifyFlag": {
             "Type": "Uint32",
             "Value": 31
@@ -692,6 +712,10 @@
         "TopLevel": {
             "Type": "Boolean",
             "Value": false
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world3/ww3"
         },
         "NotifyFlag": {
             "Type": "Uint32",

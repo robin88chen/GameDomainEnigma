@@ -15,6 +15,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
 static std::string TOKEN_WORLD_TRANSFORM = "WorldTransform";
 static std::string TOKEN_GRAPH_DEPTH = "GraphDepth";
@@ -42,15 +43,16 @@ SpatialDto SpatialDto::fromGenericDto(const GenericDto& dto)
     SpatialDto spatial_dto;
     spatial_dto.factoryDesc() = dto.GetRtti();
     spatial_dto.m_isTopLevel = dto.IsTopLevel();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) spatial_dto.Name() = v.value();
-    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) spatial_dto.LocalTransform() = v.value();
-    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) spatial_dto.WorldTransform() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) spatial_dto.GraphDepth() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_MODEL_BOUND)) spatial_dto.ModelBound() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) spatial_dto.WorldBound() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE)) spatial_dto.CullingMode() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) spatial_dto.SpatialFlag() = v.value();
-    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) spatial_dto.NotifyFlag() = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) spatial_dto.name() = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_PARENT_NAME)) spatial_dto.parentName() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) spatial_dto.localTransform() = v.value();
+    if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) spatial_dto.worldTransform() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) spatial_dto.graphDepth() = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_MODEL_BOUND)) spatial_dto.modelBound() = v.value();
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) spatial_dto.worldBound() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_CULLING_MODE)) spatial_dto.cullingMode() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) spatial_dto.spatialFlag() = v.value();
+    if (auto v = dto.TryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) spatial_dto.notifyFlag() = v.value();
     return spatial_dto;
 }
 
@@ -60,6 +62,7 @@ GenericDto SpatialDto::toGenericDto() const
     dto.AddRtti(m_factoryDesc);
     dto.AsTopLevel(m_isTopLevel);
     dto.AddOrUpdate(TOKEN_NAME, m_name);
+    if (!m_parentName.empty()) dto.AddOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
     dto.AddOrUpdate(TOKEN_WORLD_TRANSFORM, m_worldTransform);
     dto.AddOrUpdate(TOKEN_GRAPH_DEPTH, m_graphDepth);
@@ -147,7 +150,7 @@ GenericDto PawnDto::toGenericDto() const
     return dto;
 }
 
-std::shared_ptr<PawnPolicy> PawnDto::ConvertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+std::shared_ptr<PawnPolicy> PawnDto::convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     if (m_primitive)
     {

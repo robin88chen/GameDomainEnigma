@@ -6,6 +6,8 @@
 #include "MathLib/Matrix4.h"
 #include "Frameworks/StringFormat.h"
 #include "MathLib/ContainmentBox2.h"
+#include "Frameworks/EventPublisher.h"
+#include "SceneGraph/SceneGraphEvents.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
@@ -25,12 +27,29 @@ SceneQuadTreeRoot::SceneQuadTreeRoot(const std::shared_ptr<SceneGraph::SceneGrap
 {
     QuadTreeRootDto dto = QuadTreeRootDto::fromGenericDto(o);
     m_name = dto.name();
-    m_root = std::dynamic_pointer_cast<LazyNode>(repository->createNode(dto.root()));
-    assert(!m_root.expired());
+    //todo: workaround for serialization
+    if (repository->hasNode(dto.root().getName()))
+    {
+        m_root = std::dynamic_pointer_cast<LazyNode>(repository->queryNode(dto.root().getName()));
+        assert(!m_root.expired());
+    }
+    else
+    {
+        m_workaround_root_dto = dto.root();
+        m_workaround_on_factory_spatial_created = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { workaround_onFactorySpatialCreated(e); });
+        Frameworks::EventPublisher::subscribe(typeid(FactorySpatialCreated), m_workaround_on_factory_spatial_created);
+    }
+    //m_root = std::dynamic_pointer_cast<LazyNode>(repository->createNode(dto.root()));
+    //assert(!m_root.expired());
 }
 
 SceneQuadTreeRoot::~SceneQuadTreeRoot()
 {
+    if (m_workaround_on_factory_spatial_created)
+    {
+        Frameworks::EventPublisher::unsubscribe(typeid(FactorySpatialCreated), m_workaround_on_factory_spatial_created);
+        m_workaround_on_factory_spatial_created = nullptr;
+    }
 }
 
 GenericDto SceneQuadTreeRoot::serializeDto()
@@ -178,4 +197,16 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findTargetSubtree(const std::shared_ptr
         found_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
     }
     return found_node;
+}
+
+void SceneQuadTreeRoot::workaround_onFactorySpatialCreated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<FactorySpatialCreated>(e);
+    if (!ev) return;
+    if (ev->GetDto().getName() == m_workaround_root_dto.getName())
+    {
+        m_root = std::dynamic_pointer_cast<LazyNode>(ev->GetSpatial());
+        assert(!m_root.expired());
+    }
 }

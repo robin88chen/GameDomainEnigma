@@ -296,13 +296,13 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             VisibilityManagedNodeDto dto = createSubQuadNodeDto(parent_node_name, sub_tree_index, sub_tree_box_in_parent);
             if (sub_quad_dtos.empty())
             {
-                dto.IsTopLevel() = true;
+                dto.isTopLevel() = true;
                 m_fittingParentName = parent_node_name;
             }
-            linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.Name());
-            parent_node_name = dto.Name();
-            parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.ModelBound()).Box().value();
-            Matrix4 parent_inv_local_mx = dto.LocalTransform().Inverse();
+            linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.name());
+            parent_node_name = dto.name();
+            parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.modelBound()).Box().value();
+            Matrix4 parent_inv_local_mx = dto.localTransform().Inverse();
             dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
             dest_box = dest_bv_in_node.BoundingBox3();
             sub_quad_dtos.push_back(dto);
@@ -322,13 +322,13 @@ VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string
     VisibilityManagedNodeDto dto;
     dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
     std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
-    dto.Name() = target_node_name;
+    dto.name() = target_node_name;
     Box3 sub_quad_box = sub_tree_box_in_parent;
     sub_quad_box.Center() = Vector3::ZERO;
     Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
     Matrix4 local_transform = Matrix4::MakeTranslateTransform(sub_tree_box_in_parent.Center());
-    dto.LocalTransform() = local_transform;
-    dto.ModelBound() = sub_quad_bv.serializeDto().toGenericDto();
+    dto.localTransform() = local_transform;
+    dto.modelBound() = sub_quad_bv.serializeDto().toGenericDto();
     return dto;
 }
 
@@ -336,9 +336,9 @@ void WorldMapService::linkQuadTreeChild(std::vector<SceneGraph::VisibilityManage
 {
     for (auto& dto : node_dtos)
     {
-        if (dto.Name() == parent_name)
+        if (dto.name() == parent_name)
         {
-            dto.ChildNames().push_back(child_name);
+            dto.childNames().push_back(child_name);
             return;
         }
     }

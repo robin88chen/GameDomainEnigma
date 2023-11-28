@@ -19,7 +19,7 @@ Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spati
 Light::Light(const Engine::GenericDto& o) : Spatial(o)
 {
     LightDto dto = LightDto::fromGenericDto(o);
-    m_lightInfo = LightInfo(dto.LightInfo());
+    m_lightInfo = LightInfo(dto.lightInfo());
 }
 
 Light::~Light()
@@ -30,7 +30,7 @@ Light::~Light()
 Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());
-    dto.LightInfo() = m_lightInfo.serializeDto().toGenericDto();
+    dto.lightInfo() = m_lightInfo.serializeDto().toGenericDto();
     return dto.toGenericDto();
 }
 

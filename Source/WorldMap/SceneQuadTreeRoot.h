@@ -50,6 +50,11 @@ namespace Enigma::WorldMap
         Engine::FactoryDesc m_factory_desc;
         std::string m_name;
         std::weak_ptr<SceneGraph::LazyNode> m_root;
+
+    private: //todo: workaround for serialization
+        void workaround_onFactorySpatialCreated(const Frameworks::IEventPtr& e);
+        Engine::GenericDto m_workaround_root_dto;
+        Frameworks::EventSubscriberPtr m_workaround_on_factory_spatial_created;
     };
 }
 

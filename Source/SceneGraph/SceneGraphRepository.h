@@ -33,6 +33,7 @@ namespace Enigma::SceneGraph
     class Light;
     class LazyNode;
     class PortalZoneNode;
+    class VisibilityManagedNode;
     class CameraDto;
     class NodeDto;
     class LazyNodeDto;
@@ -89,6 +90,7 @@ namespace Enigma::SceneGraph
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
+        std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
 
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);

@@ -44,7 +44,7 @@ NodeDto Node::serializeNodeDto()
     NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.ChildNames().emplace_back(child->getSpatialName());
+        if (child) dto.childNames().emplace_back(child->getSpatialName());
     }
     return dto;
 }
@@ -52,7 +52,7 @@ NodeDto Node::serializeNodeDto()
 void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     NodeDto nodeDto = NodeDto::fromGenericDto(dto);
-    for (auto& name : nodeDto.ChildNames())
+    for (auto& name : nodeDto.childNames())
     {
         resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())

@@ -10,6 +10,7 @@
 
 #include "Frameworks/Event.h"
 #include "Frustum.h"
+#include "SpatialId.h"
 #include <memory>
 #include <system_error>
 
@@ -39,23 +40,23 @@ namespace Enigma::SceneGraph
     class CameraCreated : public Frameworks::IEvent
     {
     public:
-        CameraCreated(const std::string& name, const std::shared_ptr<Camera>& camera) : m_name(name), m_camera(camera) {};
-        const std::string& getName() const { return m_name; }
-        std::shared_ptr<Camera> GetCamera() { return m_camera; }
+        CameraCreated(const SpatialId& id, const std::shared_ptr<Camera>& camera) : m_id(id), m_camera(camera) {};
+        const SpatialId& id() const { return m_id; }
+        std::shared_ptr<Camera> camera() { return m_camera; }
 
     protected:
-        std::string m_name;
+        SpatialId m_id;
         std::shared_ptr<Camera> m_camera;
     };
     class CreateCameraFailed : public Frameworks::IEvent
     {
     public:
-        CreateCameraFailed(const std::string& name, std::error_code err) : m_name(name), m_err(err) {};
-        const std::string& getName() const { return m_name; }
-        std::error_code GetError() const { return m_err; }
+        CreateCameraFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
 
     protected:
-        std::string m_name;
+        SpatialId m_id;
         std::error_code m_err;
     };
     class ReplyCameraQuery : public Frameworks::IResponseEvent

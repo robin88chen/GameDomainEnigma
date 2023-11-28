@@ -18,12 +18,12 @@ namespace Enigma::SceneGraph
     class QueryCamera : public Frameworks::Query<std::shared_ptr<Camera>>
     {
     public:
-        QueryCamera(const std::string& name) : m_name(name) {}
+        QueryCamera(const SpatialId& id) : m_id(id) {}
 
-        const std::string& cameraName() const { return m_name; }
+        const SpatialId& id() const { return m_id; }
 
     protected:
-        std::string m_name;
+        SpatialId m_id;
     };
     class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
     {

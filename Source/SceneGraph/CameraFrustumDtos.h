@@ -27,8 +27,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        std::string& Name() { return m_name; }
-        [[nodiscard]] const std::string& Name() const { return m_name; }
+        SpatialId& id() { return m_id; }
+        [[nodiscard]] const SpatialId& id() const { return m_id; }
         SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
         [[nodiscard]] SceneGraph::GraphicCoordSys HandSystem() const { return m_handSys; }
         MathLib::Vector3& EyePosition() { return m_eyePosition; }
@@ -45,7 +45,7 @@ namespace Enigma::SceneGraph
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
-        std::string m_name;
+        SpatialId m_id;
         SceneGraph::GraphicCoordSys m_handSys;
         MathLib::Vector3 m_eyePosition;
         MathLib::Vector3 m_lookAtDir;

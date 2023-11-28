@@ -29,6 +29,15 @@ namespace Enigma::SceneGraph
         const std::string& name() const { return m_name; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }
 
+        class hash
+        {
+        public:
+            size_t operator()(const SpatialId& id) const
+            {
+                return std::hash<std::string>()(id.m_name) ^ std::hash<std::uint64_t>()(reinterpret_cast<std::uint64_t>(id.m_rtti));
+            }
+        };
+
     private:
         std::string m_name;
         const Frameworks::Rtti* m_rtti;

@@ -6,7 +6,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 
-static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_HAND_SYSTEM = "HandSystem";
 static std::string TOKEN_EYE_POSITION = "EyePosition";
 static std::string TOKEN_LOOK_AT_DIR = "LookAtDir";
@@ -20,7 +20,7 @@ static std::string TOKEN_ASPECT_RATIO = "AspectRatio";
 static std::string TOKEN_NEAR_WIDTH = "NearWidth";
 static std::string TOKEN_NEAR_HEIGHT = "NearHeight";
 
-CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.getName())
+CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.getName()), m_id(SpatialId("", Camera::TYPE_RTTI))
 {
 }
 
@@ -28,7 +28,7 @@ CameraDto CameraDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     CameraDto camera;
     camera.factoryDesc() = dto.GetRtti();
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) camera.Name() = v.value();
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_ID)) camera.id() = SpatialId(v.value(), Camera::TYPE_RTTI);
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_HAND_SYSTEM)) camera.HandSystem() = static_cast<GraphicCoordSys>(v.value());
     if (const auto v = dto.TryGetValue<Vector3>(TOKEN_EYE_POSITION)) camera.EyePosition() = v.value();
     if (const auto v = dto.TryGetValue<Vector3>(TOKEN_LOOK_AT_DIR)) camera.LookAtDirection() = v.value();
@@ -41,7 +41,7 @@ GenericDto CameraDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_ID, m_id.name());
     dto.AddOrUpdate(TOKEN_HAND_SYSTEM, static_cast<unsigned>(m_handSys));
     dto.AddOrUpdate(TOKEN_EYE_POSITION, m_eyePosition);
     dto.AddOrUpdate(TOKEN_LOOK_AT_DIR, m_lookAtDir);

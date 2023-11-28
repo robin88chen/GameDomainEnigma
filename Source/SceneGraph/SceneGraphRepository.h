@@ -23,6 +23,7 @@
 
 namespace Enigma::SceneGraph
 {
+    class SceneGraphStoreMapper;
     class Spatial;
     class Camera;
     class Frustum;
@@ -62,7 +63,7 @@ namespace Enigma::SceneGraph
         void setCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys getCoordinateSystem();
 
-        std::shared_ptr<Camera> createCamera(const std::string& name);
+        std::shared_ptr<Camera> createCamera(const SpatialId& id);
         std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
         std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
@@ -83,10 +84,12 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
-        bool hasCamera(const std::string& name);
-        std::shared_ptr<Camera> queryCamera(const std::string& name);
         bool hasNode(const std::string& name);
         std::shared_ptr<Node> queryNode(const std::string& name);
+
+        /** query entities */
+        bool hasCamera(const SpatialId& id);
+        std::shared_ptr<Camera> queryCamera(const SpatialId& id);
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
@@ -99,9 +102,10 @@ namespace Enigma::SceneGraph
         void createNode(const Frameworks::ICommandPtr& c);
 
     private:
+        std::shared_ptr<SceneGraphStoreMapper> m_storeMapper;
         GraphicCoordSys m_handSystem;
 
-        std::unordered_map<std::string, std::weak_ptr<Camera>> m_cameras;
+        std::unordered_map<SpatialId, std::shared_ptr<Camera>, SpatialId::hash> m_cameras;
         std::recursive_mutex m_cameraMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;

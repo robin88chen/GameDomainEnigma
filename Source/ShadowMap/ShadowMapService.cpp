@@ -180,7 +180,7 @@ void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
 void ShadowMapService::CreateSunLightCamera(const std::shared_ptr<Light>& lit)
 {
     assert(!m_cameraService.expired());
-    m_sunLightCamera = std::make_shared<SunLightCamera>(m_configuration->SunLightCameraName());
+    m_sunLightCamera = std::make_shared<SunLightCamera>(SpatialId(m_configuration->SunLightCameraName(), SunLightCamera::TYPE_RTTI));
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
     if (lit) vecSunDir = lit->GetLightDirection();
     m_sunLightCamera->SetSunLightDir(vecSunDir);

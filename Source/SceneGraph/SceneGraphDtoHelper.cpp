@@ -7,7 +7,7 @@ using namespace Enigma::SceneGraph;
 
 CameraDtoHelper::CameraDtoHelper(const std::string& name)
 {
-    m_cameraDto.Name() = name;
+    m_cameraDto.id() = SpatialId(name, Camera::TYPE_RTTI);
     m_cameraDto.HandSystem() = GraphicCoordSys::LeftHand;
 }
 

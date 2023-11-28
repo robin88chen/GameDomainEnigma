@@ -11,7 +11,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(ShadowMap, SunLightCamera, Camera);
 
-SunLightCamera::SunLightCamera(const std::string& name) : Camera(name, GraphicCoordSys::LeftHand)
+SunLightCamera::SunLightCamera(const SpatialId& id) : Camera(id, GraphicCoordSys::LeftHand)
 {
     m_effectiveViewerNearZ = 0.1f;
     m_effectiveViewerFarZ = 1000.0f;

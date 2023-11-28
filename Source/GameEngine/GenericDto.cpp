@@ -9,7 +9,7 @@ std::string TOKEN_NAME = "Name";
 
 std::unordered_map<std::string, GenericPolicyConverter> GenericDto::m_converters;
 
-GenericDto::GenericDto() : m_ruid(Frameworks::Ruid::Generate())
+GenericDto::GenericDto() : m_ruid(Frameworks::Ruid::generate())
 {
 }
 
@@ -49,7 +49,7 @@ void GenericDto::AddName(const std::string& name)
    AddOrUpdate(TOKEN_NAME, name);
 }
 
-std::string GenericDto::GetName() const
+std::string GenericDto::getName() const
 {
    return Get<std::string>(TOKEN_NAME);
 }

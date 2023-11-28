@@ -28,8 +28,8 @@ namespace Enigma::Animators
         [[nodiscard]] const std::vector<float>& TranslateTimeKeys() const { return m_translateTimeKeys; }
         std::vector<float>& TranslateTimeKeys() { return m_translateTimeKeys; }
 
-        static AnimationTimeSRTDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static AnimationTimeSRTDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         std::vector<float> m_scaleTimeKeys;
@@ -45,8 +45,8 @@ namespace Enigma::Animators
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         std::string m_name;
@@ -63,8 +63,8 @@ namespace Enigma::Animators
         [[nodiscard]] const Engine::GenericDtoCollection& TimeSRTs() const { return m_timeSrtDtos; }
         Engine::GenericDtoCollection& TimeSRTs() { return m_timeSrtDtos; }
 
-        static ModelAnimationAssetDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static ModelAnimationAssetDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         std::vector<std::string> m_meshNodeNames;

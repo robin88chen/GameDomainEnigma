@@ -43,7 +43,7 @@ static std::array<std::string, VertexFormatCode::MAX_TEX_COORD> TOKEN_TEX_COORDS
     TOKEN_TEX_COORD4, TOKEN_TEX_COORD5, TOKEN_TEX_COORD6, TOKEN_TEX_COORD7
 };
 
-TextureCoordDto TextureCoordDto::FromGenericDto(const GenericDto& dto)
+TextureCoordDto TextureCoordDto::fromGenericDto(const GenericDto& dto)
 {
     TextureCoordDto coords;
     if (dto.HasValue(TOKEN_2D_COORDS))
@@ -61,7 +61,7 @@ TextureCoordDto TextureCoordDto::FromGenericDto(const GenericDto& dto)
     return coords;
 }
 
-GenericDto TextureCoordDto::ToGenericDto()
+GenericDto TextureCoordDto::toGenericDto()
 {
     GenericDto dto;
     if (m_2dCoords)
@@ -80,14 +80,14 @@ GenericDto TextureCoordDto::ToGenericDto()
 }
 
 //-----------------------------------------------------------------------------------
-GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI.GetName())
+GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI.getName())
 {
 }
 
-GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
+GeometryDataDto GeometryDataDto::fromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
-    geometry.TheFactoryDesc() = dto.GetRtti();
+    geometry.factoryDesc() = dto.GetRtti();
     geometry.DeserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
@@ -136,7 +136,7 @@ GeometryDataDto GeometryDataDto::FromGenericDto(const GenericDto& dto)
     return geometry;
 }
 
-GenericDto GeometryDataDto::ToGenericDto() const
+GenericDto GeometryDataDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -213,23 +213,23 @@ void GeometryDataDto::SerializeNonVertexAttributesToGenericDto(GenericDto& dto) 
 
 TriangleListDto::TriangleListDto() : GeometryDataDto()
 {
-    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.getName());
 }
 
 TriangleListDto::TriangleListDto(const GeometryDataDto& geometry_dto) : GeometryDataDto(geometry_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TriangleList::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TriangleList::TYPE_RTTI.getName()));
 }
 
-TriangleListDto TriangleListDto::FromGenericDto(const Engine::GenericDto& dto)
+TriangleListDto TriangleListDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    return TriangleListDto(GeometryDataDto::FromGenericDto(dto));
+    return TriangleListDto(GeometryDataDto::fromGenericDto(dto));
 }
 
-GenericDto TriangleListDto::ToGenericDto() const
+GenericDto TriangleListDto::toGenericDto() const
 {
-    GenericDto dto = GeometryDataDto::ToGenericDto();
-    //dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.GetName()));
+    GenericDto dto = GeometryDataDto::toGenericDto();
+    //dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.getName()));
 
     return dto;
 }

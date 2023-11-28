@@ -10,7 +10,6 @@ ISystemService::ISystemService(ServiceManager* manager)
     m_serviceManager = manager;
     m_needTick = true;
     m_isSuspended = false;
-    m_orderValue = ServiceDefaultOrderValue;
 }
 
 ISystemService::~ISystemService()
@@ -18,22 +17,22 @@ ISystemService::~ISystemService()
     m_serviceManager = nullptr;
 }
 
-ServiceResult ISystemService::OnPreInit()
+ServiceResult ISystemService::onPreInit()
 {
     return ServiceResult::Complete;
 }
 
-ServiceResult ISystemService::OnInit()
+ServiceResult ISystemService::onInit()
 {
     return ServiceResult::Complete;
 }
 
-ServiceResult ISystemService::OnTerm()
+ServiceResult ISystemService::onTerm()
 {
     return ServiceResult::Complete;
 }
 
-ServiceResult ISystemService::OnTick()
+ServiceResult ISystemService::onTick()
 {
     return ServiceResult::Pendding;
 }

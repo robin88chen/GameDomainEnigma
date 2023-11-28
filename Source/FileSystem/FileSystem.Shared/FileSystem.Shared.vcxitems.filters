@@ -83,6 +83,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Filename.h">
       <Filter>Filename</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ReadWriteOption.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

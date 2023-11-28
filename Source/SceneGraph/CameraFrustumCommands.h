@@ -10,7 +10,6 @@
 
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
-#include <string>
 
 namespace Enigma::SceneGraph
 {
@@ -23,17 +22,6 @@ namespace Enigma::SceneGraph
 
     protected:
         Engine::GenericDto m_dto;
-    };
-
-    class QueryCamera : public Frameworks::IRequestCommand
-    {
-    public:
-        QueryCamera(const std::string& name) : m_name(name) {}
-
-        const std::string& GetName() { return m_name; }
-
-    protected:
-        std::string m_name;
     };
 }
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainEditConsole.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -22,10 +22,10 @@ namespace LevelEditor
     public:
         enum class TerrainEditMode
         {
-            Mode_Unknown = 0,
-            Mode_RaiseHeight,
-            Mode_LowerHeight,
-            Mode_PaintTexture,
+            unknown = 0,
+            raiseHeight,
+            lowerHeight,
+            paintTexture,
         };
     public:
         TerrainEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr);
@@ -35,26 +35,26 @@ namespace LevelEditor
         TerrainEditConsole(TerrainEditConsole&&) = delete;
         TerrainEditConsole& operator=(TerrainEditConsole&&) = delete;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
-        void OnEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainBrushHeightChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainBrushDensityChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainPaintingLayerChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainToolSelected(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e);
+        void onEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainBrushHeightChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainBrushDensityChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainPaintingLayerChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainToolSelected(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneCursorDragged(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneCursorPressed(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneCursorReleased(const Enigma::Frameworks::IEventPtr& e);
 
-        void CreateBrushPawn();
-        void SendTerrainEditCommand(float elapse_time);
+        void createBrushPawn();
+        void sendTerrainEditCommand(float elapse_time);
 
     protected:
         bool m_isEnabled;

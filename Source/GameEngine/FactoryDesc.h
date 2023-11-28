@@ -67,7 +67,7 @@ namespace Enigma::Engine
         const std::string& GetResourceFilename() const { return m_resourceFilename; };
         const std::string& GetDeferredFilename() { return m_prefab_deferredFilename; };
         const std::string& GetDeferredFilename() const { return m_prefab_deferredFilename; };
-
+        std::string PathId() const;
     protected:
         InstanceType m_type;
         std::string m_resourceName;

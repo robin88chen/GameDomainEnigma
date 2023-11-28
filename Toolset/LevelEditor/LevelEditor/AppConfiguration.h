@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AppConfiguration.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -17,21 +17,21 @@ namespace LevelEditor
     public:
         AppConfiguration() = default;
 
-        void LoadConfig();
+        void loadConfig();
 
-        std::string GetMediaPathId() const;
-        std::string GetDataPathId() const;
-        std::string GetPrimaryTargetName() const;
-        std::string GetDefaultRendererName() const;
-        std::string GetSceneRootName() const;
-        std::string GetPortalManagementName() const;
+        std::string mediaPathId() const;
+        std::string dataPathId() const;
+        std::string primaryTargetName() const;
+        std::string defaultRendererName() const;
+        std::string sceneRootName() const;
+        std::string portalManagementName() const;
 
-        std::string GetWorldMapRootFolderName() const;
-        std::string GetWorldMapPathId() const;
+        std::string worldMapRootFolderName() const;
+        std::string worldMapPathId() const;
 
-        Enigma::Engine::GenericDto GetCameraDto() const;
-        std::string GetCameraName() const;
-        std::string GetFrustumName() const;
+        Enigma::Engine::GenericDto cameraDto() const;
+        std::string cameraName() const;
+        std::string frustumName() const;
 
     private:
         Enigma::Engine::GenericDto m_configDto;

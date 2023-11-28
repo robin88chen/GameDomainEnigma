@@ -13,7 +13,7 @@ PackageMountPath::PackageMountPath(const std::shared_ptr<AssetPackage::AssetPack
 {
     assert(package);
     m_assetPackage = package;
-    m_packageFilename = m_assetPackage->GetBaseFilename();
+    m_packageFilename = m_assetPackage->getBaseFilename();
 }
 
 PackageMountPath::~PackageMountPath()
@@ -21,11 +21,11 @@ PackageMountPath::~PackageMountPath()
     m_assetPackage = nullptr;
 }
 
-IFile* PackageMountPath::CreateFile(const std::string& filename, const std::string& rw_option)
+IFile* PackageMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
     if ((!m_assetPackage) || (filename.length() == 0)) return nullptr;
     bool readonly = true;
-    if (rw_option.find("w") != std::string::npos) readonly = false;
+    if ((rw_option & ReadWriteOptionWrite).any()) readonly = false;
     if (!readonly) return nullptr;  // must readonly
     IFile* file = menew PackageContent(m_assetPackage, filename);
     return file;

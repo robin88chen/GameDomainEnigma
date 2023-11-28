@@ -4,33 +4,31 @@
 using namespace Enigma::WorldMap;
 using namespace Enigma::Engine;
 
-//static std::string TOKEN_WORLD_ZONE_NAME = "WorldZoneName";
+static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_QUAD_TREE_ROOTS = "QuadTreeRoots";
+static std::string TOKEN_PORTAL_ROOT = "PortalRoot";
 
-WorldMapDto::WorldMapDto() : PortalZoneNodeDto()
+WorldMapDto::WorldMapDto() : m_factory_desc(WorldMap::TYPE_RTTI.getName())
 {
-    m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName());
 }
 
-WorldMapDto::WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_dto)
-    : PortalZoneNodeDto(portal_zone_node_dto)
+WorldMapDto WorldMapDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), WorldMap::TYPE_RTTI.GetName()));
-    //m_factoryDesc = FactoryDesc(WorldMap::TYPE_RTTI.GetName());
-}
-
-WorldMapDto WorldMapDto::FromGenericDto(const Engine::GenericDto& dto)
-{
-    WorldMapDto world_map_dto(PortalZoneNodeDto::FromGenericDto(dto));
-    //world_map_dto.Name() = dto.GetName();
-    //if (auto v = dto.TryGetValue<std::string>(TOKEN_WORLD_ZONE_NAME)) world_map_dto.WorldZoneName() = v.value();
+    WorldMapDto world_map_dto;
+    world_map_dto.factoryDesc() = dto.GetRtti();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) world_map_dto.name() = v.value();
+    if (auto v = dto.TryGetValue<Engine::GenericDtoCollection>(TOKEN_QUAD_TREE_ROOTS)) world_map_dto.quadTreeRoots() = v.value();
+    if (auto v = dto.TryGetValue<Engine::GenericDto>(TOKEN_PORTAL_ROOT)) world_map_dto.portalRoot() = v.value();
     return world_map_dto;
 }
 
-Enigma::Engine::GenericDto WorldMapDto::ToGenericDto() const
+Enigma::Engine::GenericDto WorldMapDto::toGenericDto() const
 {
-    GenericDto dto = PortalZoneNodeDto::ToGenericDto();
-    //dto.AddName(m_name);
-    //dto.AddRtti(FactoryDesc(WorldMap::TYPE_RTTI.GetName()));
-    //dto.AddOrUpdate(TOKEN_WORLD_ZONE_NAME, m_worldZoneName);
+    GenericDto dto;
+    dto.AsTopLevel(true);
+    dto.AddRtti(m_factory_desc);
+    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_QUAD_TREE_ROOTS, m_quadTreeRoots);
+    dto.AddOrUpdate(TOKEN_PORTAL_ROOT, m_portalRoot);
     return dto;
 }

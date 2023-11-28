@@ -9,50 +9,50 @@ static std::string TOKEN_NEW_MATERIAL_DTO = "NewMaterialDto";
 static std::string TOKEN_MESH_NAME = "MeshName";
 static std::string TOKEN_TEXTURE_MAPPING_DTO = "TextureMappingDto";
 
-AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.GetName())
+AvatarRecipeDto::AvatarRecipeDto() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.getName())
 {
 }
 
 AvatarRecipeReplaceMaterialDto::AvatarRecipeReplaceMaterialDto() : AvatarRecipeDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
 }
 
-AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::FromGenericDto(const Engine::GenericDto& dto)
+AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeReplaceMaterialDto recipe;
     if (auto v = dto.TryGetValue<std::string>(TOKEN_OLD_MATERIAL_NAME)) recipe.OldMaterialName() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_NEW_MATERIAL_DTO)) recipe.NewMaterialDto() = EffectMaterialDto::FromGenericDto(v.value());
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_NEW_MATERIAL_DTO)) recipe.NewMaterialDto() = EffectMaterialDto::fromGenericDto(v.value());
     return recipe;
 }
 
-GenericDto AvatarRecipeReplaceMaterialDto::ToGenericDto() const
+GenericDto AvatarRecipeReplaceMaterialDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_OLD_MATERIAL_NAME, m_oldMaterialName);
-    dto.AddOrUpdate(TOKEN_NEW_MATERIAL_DTO, m_newMaterialDto.ToGenericDto());
+    dto.AddOrUpdate(TOKEN_NEW_MATERIAL_DTO, m_newMaterialDto.toGenericDto());
     return dto;
 }
 
 AvatarRecipeChangeTextureDto::AvatarRecipeChangeTextureDto() : AvatarRecipeDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
 }
 
-AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::FromGenericDto(const Engine::GenericDto& dto)
+AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeChangeTextureDto recipe;
     if (auto v = dto.TryGetValue<std::string>(TOKEN_MESH_NAME)) recipe.MeshName() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.TextureDto() = TextureMappingDto::FromGenericDto(v.value());
+    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.TextureDto() = TextureMappingDto::fromGenericDto(v.value());
     return recipe;
 }
 
-GenericDto AvatarRecipeChangeTextureDto::ToGenericDto() const
+GenericDto AvatarRecipeChangeTextureDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_MESH_NAME, m_meshName);
-    dto.AddOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.ToGenericDto());
+    dto.AddOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.toGenericDto());
     return dto;
 }

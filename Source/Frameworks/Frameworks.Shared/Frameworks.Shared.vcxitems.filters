@@ -37,6 +37,9 @@
     <Filter Include="LazyStatus">
       <UniqueIdentifier>{10b2669a-fc7c-48be-9bfb-f3f2f00902bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{c0a02806-9d80-4d4b-af7e-8330007037c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp">
@@ -95,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyStatus.cpp">
       <Filter>LazyStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.cpp">
+      <Filter>Query</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +184,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\menew_make_shared.hpp">
       <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Query.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.h">
+      <Filter>Query</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

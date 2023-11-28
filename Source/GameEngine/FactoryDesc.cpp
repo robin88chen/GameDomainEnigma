@@ -115,3 +115,32 @@ FactoryDesc& FactoryDesc::PathId(const std::string& path_id)
     }
     return *this;
 }
+
+std::string FactoryDesc::PathId() const
+{
+    if (!m_resourceFilename.empty())
+    {
+        auto pos = m_resourceFilename.find_last_of('@');
+        if (pos != std::string::npos)
+        {
+            return m_resourceFilename.substr(pos + 1);
+        }
+        else
+        {
+            return "";
+        }
+    }
+    if (!m_prefab_deferredFilename.empty())
+    {
+        auto pos = m_prefab_deferredFilename.find_last_of('@');
+        if (pos != std::string::npos)
+        {
+            return m_prefab_deferredFilename.substr(pos + 1);
+        }
+        else
+        {
+            return "";
+        }
+    }
+    return "";
+}

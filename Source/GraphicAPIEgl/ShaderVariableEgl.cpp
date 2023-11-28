@@ -31,7 +31,7 @@ ShaderVariableEgl_Matrix::ShaderVariableEgl_Matrix(GLuint program, const std::st
     m_numElements = elements;
     m_dimension = dimension;
     m_values.resize(elements * dimension * dimension, 0.0f);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::matrixValue));
 }
 
@@ -143,7 +143,7 @@ ShaderVariableEgl_Texture::ShaderVariableEgl_Texture(GLuint program, const std::
     const std::string& semantic, unsigned bindSlot) : ShaderVariableEgl_Base(program, name, semantic)
 {
     m_bindSlot = bindSlot;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::textureObject));
 }
 
@@ -204,7 +204,7 @@ ShaderVariableEgl_Sampler::ShaderVariableEgl_Sampler(GLuint program, const std::
     const std::string& semantic, unsigned bindSlot) : ShaderVariableEgl_Base(program, name, semantic)
 {
     m_bindSlot = bindSlot;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::samplerState));
 }
 
@@ -245,7 +245,7 @@ ShaderVariableEgl_Vector::ShaderVariableEgl_Vector(GLuint program, const std::st
     m_numElements = elements;
     m_dimension = dimension;
     m_values.resize(elements * dimension, 0.0f);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::vectorValue));
 }
 
@@ -383,7 +383,7 @@ ShaderVariableEgl_Boolean::ShaderVariableEgl_Boolean(GLuint program, const std::
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::booleanValue));
 }
 
@@ -455,7 +455,7 @@ ShaderVariableEgl_Float::ShaderVariableEgl_Float(GLuint program, const std::stri
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0.0f);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::floatValue));
 }
 
@@ -520,7 +520,7 @@ ShaderVariableEgl_Int::ShaderVariableEgl_Int(GLuint program, const std::string& 
     if (elements == 0) elements = 1;
     m_numElements = elements;
     m_values.resize(elements, 0);
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderVariableCreated>(
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderVariableCreated>(
         m_name, m_semantic, Graphics::ShaderVariableCreated::VarType::intValue));
 }
 

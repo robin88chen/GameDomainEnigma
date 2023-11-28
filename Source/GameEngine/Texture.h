@@ -27,10 +27,10 @@ namespace Enigma::Engine
         Texture& operator=(const Texture&) = delete;
         Texture& operator=(Texture&&) = delete;
 
-        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
 
         const Graphics::ITexturePtr& GetDeviceTexture() { return m_texture; }
 

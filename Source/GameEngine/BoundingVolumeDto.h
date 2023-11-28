@@ -22,8 +22,8 @@ namespace Enigma::Engine
         BoundingVolumeDto(const std::optional<MathLib::Box3>& box, const std::optional<MathLib::Sphere3>& sphere) :
             m_box(box), m_sphere(sphere) {};
 
-        static BoundingVolumeDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto() const;
+        static BoundingVolumeDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto() const;
 
         std::optional<MathLib::Box3> Box() const { return m_box; }
         std::optional<MathLib::Sphere3> Sphere() const { return m_sphere; }

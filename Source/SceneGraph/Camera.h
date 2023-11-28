@@ -37,53 +37,53 @@ namespace Enigma::SceneGraph
         Camera& operator=(const Camera&) = delete;
         Camera& operator=(Camera&&) = delete;
 
-        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto SerializeDto();
+        Engine::GenericDto serializeDto();
 
-        const std::string& GetName() const { return m_name; }
-        GraphicCoordSys GetCoordHandSys() const { return m_handSys; }
+        const std::string& getName() const { return m_name; }
+        GraphicCoordSys getCoordHandSys() const { return m_handSys; }
 
         /** change camera frame, eye_to_lookat & up must both set together or both not set   */
-        error ChangeCameraFrame(const std::optional<MathLib::Vector3>& eye,
+        error changeCameraFrame(const std::optional<MathLib::Vector3>& eye,
             const std::optional<MathLib::Vector3>& eye_to_lookat, const std::optional<MathLib::Vector3>& up);
 
         /** @name camera operations */
         //@{
-        error Zoom(float dist);
-        error SphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center = MathLib::Vector3::ZERO);
-        error Move(float dir_dist, float slide_dist);
-        error MoveXZ(float move_x, float move_z);
-        error ShiftLookAt(const MathLib::Vector3& vecLookAt);
+        error zoom(float dist);
+        error sphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center = MathLib::Vector3::ZERO);
+        error move(float dir_dist, float slide_dist);
+        error moveXZ(float move_x, float move_z);
+        error shiftLookAt(const MathLib::Vector3& vecLookAt);
         //@}
 
-        MathLib::Vector3 GetLocation() const { return m_vecLocation; };
-        MathLib::Vector3 GetEyeToLookatVector() const { return m_vecEyeToLookAt; };
-        MathLib::Vector3 GetUpVector() const { return m_vecUp; };
-        MathLib::Vector3 GetRightVector() const { return m_vecRight; };
+        MathLib::Vector3 location() const { return m_vecLocation; };
+        MathLib::Vector3 eyeToLookatVector() const { return m_vecEyeToLookAt; };
+        MathLib::Vector3 upVector() const { return m_vecUp; };
+        MathLib::Vector3 rightVector() const { return m_vecRight; };
 
-        void ChangeAspectRatio(float ratio) { m_cullingFrustum.ChangeAspectRatio(ratio); };
-        void ChangeFrustumFarPlane(float far_z) { m_cullingFrustum.ChangeFarZ(far_z); };
-        void ChangeFrustumNearPlane(float near_z) { m_cullingFrustum.ChangeNearZ(near_z); };
-        void ChangeFrustumFov(float fov) { m_cullingFrustum.ChangeFov(fov); };
+        void changeAspectRatio(float ratio);
+        void changeFrustumFarPlane(float far_z);
+        void changeFrustumNearPlane(float near_z);
+        void changeFrustumFov(float fov);
 
         /** set frustum */
-        error SetCullingFrustum(const Frustum& frustum);
+        error cullingFrustum(const Frustum& frustum);
         /** get frustum */
-        const Frustum& GetCullingFrustum() const { return m_cullingFrustum; };
+        const Frustum& cullingFrustum() const { return m_cullingFrustum; };
 
         /** get view transform */
-        virtual const MathLib::Matrix4& GetViewTransform() { return m_mxViewTransform; };
+        virtual const MathLib::Matrix4& viewTransform() { return m_mxViewTransform; };
         /** get projection transform */
-        virtual const MathLib::Matrix4& GetProjectionTransform();
+        virtual const MathLib::Matrix4& projectionTransform();
 
         /** enum animator list deep, including geometry's animator */
         //todo : animators
         //virtual void EnumAnimatorListDeep(AnimatorList& pResultList) override;
 
     protected:
-        virtual void _UpdateViewTransform();
+        virtual void _updateViewTransform();
 
     protected:
         std::string m_name;

@@ -23,21 +23,21 @@ namespace LevelEditor
         WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service);
         virtual ~WorldEditConsole() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
-        void SetWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id);
+        void setWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id);
 
         // check world files
-        bool CheckWorldMapFolder(const std::string& world_folder);
+        bool checkWorldMapFolder(const std::string& world_folder);
         // delete world files
-        void DeleteWorldMapFolder(const std::string& world_folder);
+        void deleteWorldMapFolder(const std::string& world_folder);
         // create world map directory & files
-        void CreateWorldMapFolder(const std::string& world_folder);
+        void createWorldMapFolder(const std::string& world_folder);
 
-        const std::string& GetCurrentWorldName() const { return m_currentWorldName; }
-        const std::string& GetCurrentWorldFolder() const { return m_currentWorldFolder; }
-        const std::string& GetWorldMapPathId() const { return m_worldMapPathId; }
+        const std::string& getCurrentWorldName() const { return m_currentWorldName; }
+        const std::string& getCurrentWorldFolder() const { return m_currentWorldFolder; }
+        const std::string& getWorldMapPathId() const { return m_worldMapPathId; }
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
 
@@ -46,11 +46,11 @@ namespace LevelEditor
         @return picked terrain and picked position on terrain */
         //std::tuple<Enigma::TerrainEntityPtr, Enigma::Vector3> PickingTerrainOnWorldMap(const Enigma::Vector2& clip_pos);
 
-        void SaveWorldMap();
-        void LoadWorldMap(const std::filesystem::path& map_filepath);
+        void saveWorldMap();
+        void loadWorldMap(const std::filesystem::path& map_filepath, const std::string& portal_manager_name);
 
     private:
-        void OnWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);
         //void OnAsyncKeyReleased(const Enigma::IMessagePtr& m);
 

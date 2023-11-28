@@ -24,9 +24,9 @@ namespace Enigma::Frameworks
         virtual ~IRequest() = default;
         IRequest& operator=(const IRequest&) = delete;
         IRequest& operator=(IRequest&&) = delete;
-        virtual const std::type_info& TypeInfo() { return typeid(*this); };  ///< 實作層的 type info
+        virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
 
-        const Ruid& GetRuid() const { return m_ruid; }
+        const Ruid& getRuid() const { return m_ruid; }
 
     protected:
         Ruid m_ruid;

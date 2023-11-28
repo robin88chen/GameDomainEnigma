@@ -175,7 +175,7 @@ namespace Enigma::Graphics
     {
     public:
         ResizeBackSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const MathLib::Dimension& GetDimension() const { return m_dimension; }
     private:
         std::string m_name;
@@ -185,7 +185,7 @@ namespace Enigma::Graphics
     {
     public:
         ResizeDepthSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const MathLib::Dimension& GetDimension() const { return m_dimension; }
     private:
         std::string m_name;
@@ -197,7 +197,7 @@ namespace Enigma::Graphics
     {
     public:
         CreateVertexShader(const std::string& name) : m_name(name) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
     private:
         std::string m_name;
     };
@@ -205,7 +205,7 @@ namespace Enigma::Graphics
     {
     public:
         CreatePixelShader(const std::string& name) : m_name(name) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
     private:
         std::string m_name;
     };
@@ -215,7 +215,7 @@ namespace Enigma::Graphics
         CreateShaderProgram(const std::string& name, const IVertexShaderPtr& vtx_shader,
             const IPixelShaderPtr& pixel_shader, const IVertexDeclarationPtr& vtx_decl)
             : m_name(name), m_vtxShader(vtx_shader), m_pixelShader(pixel_shader), m_vtxDecl(vtx_decl) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const IVertexShaderPtr& GetVertexShader() const { return m_vtxShader; }
         const IPixelShaderPtr& GetPixelShader() const { return m_pixelShader; }
         const IVertexDeclarationPtr& GetVertexDeclaration() const { return m_vtxDecl; }
@@ -230,7 +230,7 @@ namespace Enigma::Graphics
     public:
         CreateVertexDeclaration(const std::string& name, const std::string& data_vertex_format,
             const IVertexShaderPtr& shader) : m_name(name), m_dataVertexFormat(data_vertex_format), m_shader(shader) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const std::string& GetDataVertexFormat() const { return m_dataVertexFormat; }
         const IVertexShaderPtr& GetShader() const { return m_shader; }
     private:
@@ -245,7 +245,7 @@ namespace Enigma::Graphics
     public:
         CreateVertexBuffer(const std::string& name, unsigned int sizeofVertex, unsigned int sizeBuffer)
             : m_name(name), m_sizeofVertex(sizeofVertex), m_sizeBuffer(sizeBuffer) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         unsigned int GetSizeofVertex() const { return m_sizeofVertex; }
         unsigned int GetSizeBuffer() const { return m_sizeBuffer; }
     private:
@@ -258,7 +258,7 @@ namespace Enigma::Graphics
     public:
         CreateIndexBuffer(const std::string& name, unsigned int sizeBuffer)
             : m_name(name), m_sizeBuffer(sizeBuffer) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         unsigned int GetSizeBuffer() const { return m_sizeBuffer; }
     private:
         std::string m_name;
@@ -270,7 +270,7 @@ namespace Enigma::Graphics
     public:
         CreateSamplerState(const std::string& name, const IDeviceSamplerState::SamplerStateData& data)
             : m_name(name), m_data(data) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const IDeviceSamplerState::SamplerStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
@@ -281,7 +281,7 @@ namespace Enigma::Graphics
     public:
         CreateRasterizerState(const std::string& name, const IDeviceRasterizerState::RasterizerStateData& data)
             : m_name(name), m_data(data) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const IDeviceRasterizerState::RasterizerStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
@@ -292,7 +292,7 @@ namespace Enigma::Graphics
     public:
         CreateDepthStencilState(const std::string& name, const IDeviceDepthStencilState::DepthStencilData data)
             : m_name(name), m_data(data) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const IDeviceDepthStencilState::DepthStencilData& GetData() const { return m_data; }
     private:
         std::string m_name;
@@ -303,7 +303,7 @@ namespace Enigma::Graphics
     public:
         CreateBlendState(const std::string& name, const IDeviceAlphaBlendState::BlendStateData& data)
             : m_name(name), m_data(data) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const IDeviceAlphaBlendState::BlendStateData& GetData() const { return m_data; }
     private:
         std::string m_name;
@@ -315,7 +315,7 @@ namespace Enigma::Graphics
     {
     public:
         CreateTexture(const std::string& name) : m_name(name) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
     private:
         std::string m_name;
     };
@@ -323,7 +323,7 @@ namespace Enigma::Graphics
     {
     public:
         CreateMultiTexture(const std::string& name) : m_name(name) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
     private:
         std::string m_name;
     };

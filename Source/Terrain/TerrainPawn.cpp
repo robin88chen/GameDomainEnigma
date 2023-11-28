@@ -9,7 +9,7 @@ DEFINE_RTTI(Terrain, TerrainPawn, Pawn);
 
 TerrainPawn::TerrainPawn(const std::string& name) : Pawn(name)
 {
-    m_factoryDesc = FactoryDesc(TerrainPawn::TYPE_RTTI.GetName()).ClaimAsInstanced(name + ".pawn");
+    m_factoryDesc = FactoryDesc(TerrainPawn::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".pawn");
 }
 
 TerrainPawn::TerrainPawn(const GenericDto& o) : Pawn(o)
@@ -22,8 +22,8 @@ TerrainPawn::~TerrainPawn()
 
 }
 
-GenericDto TerrainPawn::SerializeDto()
+GenericDto TerrainPawn::serializeDto()
 {
     TerrainPawnDto dto(SerializePawnDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }

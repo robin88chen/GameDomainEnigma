@@ -17,7 +17,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        VisibilityManagedNode(const std::string& name);
+        VisibilityManagedNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         VisibilityManagedNode(const Engine::GenericDto& dto);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;
@@ -25,10 +25,10 @@ namespace Enigma::SceneGraph
         VisibilityManagedNode& operator=(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode& operator=(VisibilityManagedNode&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
-        virtual void OnCullingCompleteNotVisible(Culler* culler) override;
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
+        virtual void onCullingCompleteNotVisible(Culler* culler) override;
 
         void ReleaseDeferredContent();
     };

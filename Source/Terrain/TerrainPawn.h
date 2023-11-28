@@ -24,7 +24,7 @@ namespace Enigma::Terrain
         TerrainPawn& operator=(TerrainPawn&&) = delete;
         virtual ~TerrainPawn() override;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
     };
 }
 

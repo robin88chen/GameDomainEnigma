@@ -7,14 +7,14 @@ using namespace Enigma::Frameworks;
 
 Timer::Timer() : m_scale(1.0f), m_frameStep(0.0f), m_isForceStepped(false), m_isTimerStopped(true), m_totalTime(duration(0.0f)), m_currElapseTime(duration(0.0f))
 {
-       Reset();
+       reset();
 }
 
 Timer::~Timer()
 {
 }
 
-void Timer::Reset()
+void Timer::reset()
 {
     m_lastTickedTime = hclock::now();
     m_currentTime = m_lastTickedTime;
@@ -29,7 +29,7 @@ void Timer::Reset()
     m_isTimerStopped = false;
 }
 
-void Timer::Update()
+void Timer::update()
 {
     m_lastTickedTime = m_currentTime;
 
@@ -52,17 +52,17 @@ void Timer::Update()
     m_totalTime += m_currElapseTime;
 }
 
-float Timer::GetElapseTime()
+float Timer::getElapseTime()
 {
     return m_currElapseTime.count();
 }
 
-float Timer::GetTotalTime()
+float Timer::getTotalTime()
 {
     return m_totalTime.count();
 }
 
-void Timer::Pause()
+void Timer::pause()
 {
     if (m_isTimerStopped) return;  // already stop
 
@@ -70,7 +70,7 @@ void Timer::Pause()
     m_isTimerStopped = true;
 }
 
-void Timer::Resume()
+void Timer::resume()
 {
     if (!m_isTimerStopped) return; // timer is running
 
@@ -81,18 +81,18 @@ void Timer::Resume()
     m_isTimerStopped = false;
 }
 
-void Timer::SetScale(float scale)
+void Timer::setScale(float scale)
 {
     m_scale = scale;
 }
 
-void Timer::SetFrameStep(bool force_step, float frame_step)
+void Timer::setFrameStep(bool force_step, float frame_step)
 {
     m_isForceStepped = force_step;
     m_frameStep = frame_step;
 }
 
-double Timer::GetClockTime()
+double Timer::getClockTime()
 {
     std::chrono::system_clock::time_point t = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = t.time_since_epoch();

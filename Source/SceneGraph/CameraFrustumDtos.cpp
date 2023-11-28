@@ -20,14 +20,14 @@ static std::string TOKEN_ASPECT_RATIO = "AspectRatio";
 static std::string TOKEN_NEAR_WIDTH = "NearWidth";
 static std::string TOKEN_NEAR_HEIGHT = "NearHeight";
 
-CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.GetName())
+CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.getName())
 {
 }
 
-CameraDto CameraDto::FromGenericDto(const Engine::GenericDto& dto)
+CameraDto CameraDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     CameraDto camera;
-    camera.TheFactoryDesc() = dto.GetRtti();
+    camera.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) camera.Name() = v.value();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_HAND_SYSTEM)) camera.HandSystem() = static_cast<GraphicCoordSys>(v.value());
     if (const auto v = dto.TryGetValue<Vector3>(TOKEN_EYE_POSITION)) camera.EyePosition() = v.value();
@@ -37,7 +37,7 @@ CameraDto CameraDto::FromGenericDto(const Engine::GenericDto& dto)
     return camera;
 }
 
-GenericDto CameraDto::ToGenericDto()
+GenericDto CameraDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -51,14 +51,14 @@ GenericDto CameraDto::ToGenericDto()
 }
 
 FrustumDto::FrustumDto() : m_handSys(GraphicCoordSys::LeftHand), m_projectionType(Frustum::ProjectionType::Perspective),
-m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f), m_factoryDesc(Frustum::TYPE_RTTI.GetName())
+m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f), m_factoryDesc(Frustum::TYPE_RTTI.getName())
 {
 }
 
-FrustumDto FrustumDto::FromGenericDto(const Engine::GenericDto& dto)
+FrustumDto FrustumDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     FrustumDto frustum;
-    frustum.TheFactoryDesc() = dto.GetRtti();
+    frustum.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_HAND_SYSTEM)) frustum.HandSystem() = static_cast<GraphicCoordSys>(v.value());
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_PROJECTION_TYPE)) frustum.ProjectionType() = static_cast<Frustum::ProjectionType>(v.value());
     if (const auto v = dto.TryGetValue<float>(TOKEN_FOV)) frustum.Fov() = v.value();
@@ -70,7 +70,7 @@ FrustumDto FrustumDto::FromGenericDto(const Engine::GenericDto& dto)
     return frustum;
 }
 
-GenericDto FrustumDto::ToGenericDto()
+GenericDto FrustumDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

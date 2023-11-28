@@ -26,10 +26,10 @@ EffectMaterialSource::~EffectMaterialSource()
     m_effectMaterial = nullptr;
 }
 
-const std::string& EffectMaterialSource::GetName() const
+const std::string& EffectMaterialSource::getName() const
 {
     assert(m_effectMaterial);
-    return m_effectMaterial->GetName();
+    return m_effectMaterial->getName();
 }
 
 void EffectMaterialSource::LinkSource()

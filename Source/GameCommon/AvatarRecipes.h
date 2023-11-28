@@ -28,11 +28,11 @@ namespace Enigma::GameCommon
         AvatarRecipe& operator=(const AvatarRecipe&) = delete;
         AvatarRecipe& operator=(AvatarRecipe&&) = delete;
 
-        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
-        virtual Engine::GenericDto SerializeDto() const = 0;
+        virtual Engine::GenericDto serializeDto() const = 0;
 
         static std::shared_ptr<AvatarRecipe> CreateFromGenericDto(const Engine::GenericDto& dto);
 
@@ -53,7 +53,7 @@ namespace Enigma::GameCommon
         ReplaceAvatarMaterial& operator=(ReplaceAvatarMaterial&&) = delete;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
-        Engine::GenericDto SerializeDto() const override;
+        Engine::GenericDto serializeDto() const override;
 
     private:
         void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
@@ -84,7 +84,7 @@ namespace Enigma::GameCommon
         ChangeAvatarTexture& operator=(ChangeAvatarTexture&&) = delete;
 
         void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
-        Engine::GenericDto SerializeDto() const override;
+        Engine::GenericDto serializeDto() const override;
 
     private:
         void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);

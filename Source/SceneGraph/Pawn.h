@@ -31,15 +31,15 @@ namespace Enigma::SceneGraph
         Pawn& operator=(const Pawn&) = delete;
         Pawn& operator=(Pawn&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
         /** on cull visible, insert this object to culler */
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
-        virtual bool CanVisited() override { return true; };
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
+        virtual bool canVisited() override { return true; };
         /** if has primitive, then is renderable object */
-        virtual bool IsRenderable() override;
+        virtual bool isRenderable() override;
         /** insert primitive to renderer (if has any) */
-        virtual error InsertToRenderer(const Engine::IRendererPtr& render) override;
+        virtual error insertToRenderer(const Engine::IRendererPtr& render) override;
 
         /** set entity's primitive */
         void SetPrimitive(const Engine::PrimitivePtr& prim);
@@ -51,8 +51,8 @@ namespace Enigma::SceneGraph
         /** calculate model bound */
         virtual void CalculateModelBound(bool axis_align);
 
-        virtual error _UpdateLocalTransform(const MathLib::Matrix4& mxLocal) override;
-        virtual error _UpdateWorldData(const MathLib::Matrix4& mxParentWorld) override;
+        virtual error _updateLocalTransform(const MathLib::Matrix4& mxLocal) override;
+        virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         /** enum animator list deep, including geometry's animator */
         virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);

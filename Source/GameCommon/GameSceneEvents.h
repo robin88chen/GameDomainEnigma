@@ -89,7 +89,7 @@ namespace Enigma::GameCommon
     public:
         SceneSpatialDeleted(const std::string& spatial_name) : m_spatialName(spatial_name) {}
 
-        const std::string& GetSpatialName() const { return m_spatialName; }
+        const std::string& getSpatialName() const { return m_spatialName; }
     protected:
         std::string m_spatialName;
     };
@@ -98,7 +98,7 @@ namespace Enigma::GameCommon
     public:
         DeleteSceneSpatialFailed(const std::string& spatial_name, error er) : m_spatialName(spatial_name), m_error(er) {}
 
-        const std::string& GetSpatialName() const { return m_spatialName; }
+        const std::string& getSpatialName() const { return m_spatialName; }
         error GetError() const { return m_error; }
 
     protected:

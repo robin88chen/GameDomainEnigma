@@ -14,12 +14,12 @@ DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 
 AnimatedPawn::AnimatedPawn(const std::string& name) : Pawn(name)
 {
-    m_factoryDesc = FactoryDesc(AnimatedPawn::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(AnimatedPawn::TYPE_RTTI.getName());
 }
 
 AnimatedPawn::AnimatedPawn(const Engine::GenericDto& o) : Pawn(o)
 {
-    AnimatedPawnDto dto = AnimatedPawnDto::FromGenericDto(o);
+    AnimatedPawnDto dto = AnimatedPawnDto::fromGenericDto(o);
     if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
     for (auto& avatar_dto : dto.AvatarRecipeDtos())
     {
@@ -32,15 +32,15 @@ AnimatedPawn::~AnimatedPawn()
     m_avatarRecipeList.clear();
 }
 
-GenericDto AnimatedPawn::SerializeDto()
+GenericDto AnimatedPawn::serializeDto()
 {
     AnimatedPawnDto dto(SerializePawnDto());
-    dto.TheAnimationClipMapDto() = m_animationClipMap.SerializeDto();
+    dto.TheAnimationClipMapDto() = m_animationClipMap.serializeDto();
     for (auto& avatar_recipe : m_avatarRecipeList)
     {
-        dto.AvatarRecipeDtos().push_back(avatar_recipe->SerializeDto());
+        dto.AvatarRecipeDtos().push_back(avatar_recipe->serializeDto());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void AnimatedPawn::PlayAnimation(const std::string& name)
@@ -56,9 +56,9 @@ void AnimatedPawn::PlayAnimation(const std::string& name)
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {
-        if (anim->TypeInfo().IsExactly(ModelPrimitiveAnimator::TYPE_RTTI))
+        if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::Post(std::make_shared<AddListeningAnimator>(anim));
+            Frameworks::CommandBus::post(std::make_shared<AddListeningAnimator>(anim));
             if (ModelPrimitiveAnimatorPtr model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->FadeInAnimation(0.3f, action_clip.value().get().GetClip());
@@ -76,9 +76,9 @@ void AnimatedPawn::StopAnimation()
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {
-        if (anim->TypeInfo().IsExactly(ModelPrimitiveAnimator::TYPE_RTTI))
+        if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::Post(std::make_shared<RemoveListeningAnimator>(anim));
+            Frameworks::CommandBus::post(std::make_shared<RemoveListeningAnimator>(anim));
             if (ModelPrimitiveAnimatorPtr model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->StopAnimation();

@@ -23,27 +23,27 @@ void JsonFileEffectProfileDeserializer::InvokeDeserialize(const Ruid& ruid_deser
 {
     m_gateway.Cleanup();
 
-    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), "rb");
+    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), Read | Binary);
     if (!readFile)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::fileOpenError));
+        Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::fileOpenError));
         return;
     }
     size_t filesize = readFile->Size();
     auto read_buff = readFile->Read(0, filesize);
     if (!read_buff)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::readFail));
+        Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::readFail));
         return;
     }
     std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
     auto profile = m_gateway.Deserialize(read_json);
     if (profile)
     {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::CompilingProfileDeserialized>(ruid_deserializing, profile.value()));
+        Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::CompilingProfileDeserialized>(ruid_deserializing, profile.value()));
     }
     else
     {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, Engine::ErrorCode::deserializeFail));
+        Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, Engine::ErrorCode::deserializeFail));
     }
 }

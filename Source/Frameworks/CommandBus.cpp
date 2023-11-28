@@ -11,7 +11,6 @@ CommandBus::CommandBus(ServiceManager* manager) : ISystemService(manager)
 {
     assert(m_thisBus == nullptr);
     m_needTick = false;
-    m_orderValue = MessageServiceOrderValue;
     m_thisBus = this;
 }
 
@@ -20,7 +19,7 @@ CommandBus::~CommandBus()
     m_thisBus = nullptr;
 }
 
-ServiceResult CommandBus::OnTick()
+ServiceResult CommandBus::onTick()
 {
     assert(m_thisBus);
 
@@ -45,20 +44,20 @@ ServiceResult CommandBus::OnTick()
         }
         m_commandListLock.unlock();
         if (!cmd) break;
-        Send(cmd);
+        send(cmd);
         cmd_sended++;
     }
     return ServiceResult::Pendding;
 }
 
-ServiceResult CommandBus::OnTerm()
+ServiceResult CommandBus::onTerm()
 {
-    CleanupAllCommands();
+    cleanupAllCommands();
 
     return ServiceResult::Complete;
 }
 
-void CommandBus::Subscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub)
+void CommandBus::subscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub)
 {
     assert(m_thisBus);
     auto type_index = std::type_index{ cmd_type };
@@ -67,7 +66,7 @@ void CommandBus::Subscribe(const std::type_info& cmd_type, const CommandSubscrib
     assert(res.second);
 }
 
-void CommandBus::Unsubscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub)
+void CommandBus::unsubscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub)
 {
     assert(m_thisBus);
     auto type_index = std::type_index{ cmd_type };
@@ -76,7 +75,7 @@ void CommandBus::Unsubscribe(const std::type_info& cmd_type, const CommandSubscr
     assert(res == 1);
 }
 
-void CommandBus::Post(const ICommandPtr& c)
+void CommandBus::post(const ICommandPtr& c)
 {
     assert(m_thisBus);
     if (!c) return;
@@ -88,22 +87,22 @@ void CommandBus::Post(const ICommandPtr& c)
     m_thisBus->m_needTick = true;
 }
 
-void CommandBus::Send(const ICommandPtr& c)
+void CommandBus::send(const ICommandPtr& c)
 {
     assert(m_thisBus);
     if (!c) return;
-    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ c->TypeInfo() });
+    auto subscribers = m_thisBus->m_subscribers.find(std::type_index{ c->typeInfo() });
     if (subscribers == m_thisBus->m_subscribers.end()) return;
-    m_thisBus->InvokeHandler(c, subscribers->second);
+    m_thisBus->invokeHandler(c, subscribers->second);
 }
 
-void CommandBus::CleanupAllCommands()
+void CommandBus::cleanupAllCommands()
 {
     std::lock_guard<std::mutex> locker{ m_commandListLock };
     m_commands.clear();
 }
 
-void CommandBus::InvokeHandler(const ICommandPtr& c, const CommandSubscriberPtr& subscriber)
+void CommandBus::invokeHandler(const ICommandPtr& c, const CommandSubscriberPtr& subscriber)
 {
-    if (subscriber) subscriber->HandleCommand(c);
+    if (subscriber) subscriber->handleCommand(c);
 }

@@ -34,8 +34,8 @@ namespace Enigma::Renderer
         MeshPrimitiveDto& operator=(const MeshPrimitiveDto&) = default;
         MeshPrimitiveDto& operator=(MeshPrimitiveDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -54,8 +54,8 @@ namespace Enigma::Renderer
         [[nodiscard]] const std::string& VisualTechniqueSelection() const { return m_visualTechniqueSelection; }
         std::string& VisualTechniqueSelection() { return m_visualTechniqueSelection; }
 
-        static MeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static MeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
         static std::shared_ptr<Engine::GenericPolicy> MeshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
@@ -82,8 +82,8 @@ namespace Enigma::Renderer
         SkinMeshPrimitiveDto& operator=(const SkinMeshPrimitiveDto&) = default;
         SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
 
-        static SkinMeshPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static SkinMeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
         static std::shared_ptr<Engine::GenericPolicy> SkinMeshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 
@@ -97,8 +97,8 @@ namespace Enigma::Renderer
         MeshNodeDto& operator=(const MeshNodeDto&) = default;
         MeshNodeDto& operator=(MeshNodeDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -111,8 +111,8 @@ namespace Enigma::Renderer
         [[nodiscard]] std::optional<unsigned> ParentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& ParentIndexInArray() { return m_parentIndexInArray; }
 
-        static MeshNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static MeshNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -133,14 +133,14 @@ namespace Enigma::Renderer
         MeshNodeTreeDto& operator=(const MeshNodeTreeDto&) = default;
         MeshNodeTreeDto& operator=(MeshNodeTreeDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const Engine::GenericDtoCollection& MeshNodes() const { return m_nodeDtos; }
         Engine::GenericDtoCollection& MeshNodes() { return m_nodeDtos; }
 
-        static MeshNodeTreeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static MeshNodeTreeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -157,8 +157,8 @@ namespace Enigma::Renderer
         ModelPrimitiveDto& operator=(const ModelPrimitiveDto&) = default;
         ModelPrimitiveDto& operator=(ModelPrimitiveDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
@@ -167,8 +167,8 @@ namespace Enigma::Renderer
         [[nodiscard]] const std::optional<Engine::GenericDto>& TheAnimator() const { return m_animatorDto; }
         std::optional<Engine::GenericDto>& TheAnimator() { return m_animatorDto; }
 
-        static ModelPrimitiveDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
         static std::shared_ptr<Engine::GenericPolicy> ModelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 

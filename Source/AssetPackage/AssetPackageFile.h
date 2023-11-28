@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   AssetPackageFile.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -32,32 +32,32 @@ namespace Enigma::AssetPackage
         AssetPackageFile& operator=(const AssetPackageFile&) = delete;
         AssetPackageFile& operator=(AssetPackageFile&&) = delete;
 
-        const std::string& GetBaseFilename() { return m_baseFilename; };
-        static AssetPackageFile* CreateNewPackage(const std::string& basefilename);
-        static AssetPackageFile* OpenPackage(const std::string& basefilename);
+        const std::string& getBaseFilename() { return m_baseFilename; };
+        static AssetPackageFile* createNewPackage(const std::string& basefilename);
+        static AssetPackageFile* openPackage(const std::string& basefilename);
 
-        error AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version);
-        error AddAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version);
-        error TryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key);
-        std::optional<std::vector<char>> TryRetrieveAssetToMemory(const std::string& asset_key);
-        unsigned int GetAssetOriginalSize(const std::string& asset_key);
-        time_t GetAssetTimeStamp(const std::string& asset_key);
+        error addAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version);
+        error addAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version);
+        error tryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key);
+        std::optional<std::vector<char>> tryRetrieveAssetToMemory(const std::string& asset_key);
+        unsigned int getAssetOriginalSize(const std::string& asset_key);
+        time_t getAssetTimeStamp(const std::string& asset_key);
 
-        error RemoveAsset(const std::string& asset_key);
+        error removeAsset(const std::string& asset_key);
 
-        const std::unique_ptr<AssetNameList>& GetAssetNameList() { return m_nameList; };
-        std::optional<AssetHeaderDataMap::AssetHeaderData> TryGetAssetHeaderData(const std::string& asset_key) const;
+        const std::unique_ptr<AssetNameList>& getAssetNameList() { return m_nameList; };
+        std::optional<AssetHeaderDataMap::AssetHeaderData> tryGetAssetHeaderData(const std::string& asset_key) const;
     private:
         AssetPackageFile();
-        error CreateNewPackageImp(const std::string& basefilename);
-        error OpenPackageImp(const std::string& basefilename);
-        void ResetPackage();
+        error createNewPackageImp(const std::string& basefilename);
+        error openPackageImp(const std::string& basefilename);
+        void resetPackage();
 
-        void SaveHeaderFile();
-        void ReadHeaderFile();
+        void saveHeaderFile();
+        void readHeaderFile();
 
-        std::tuple<std::vector<char>, unsigned int> ReadBundleContent(unsigned int offset, unsigned int content_size);
-        error RepackBundleContent(const unsigned int content_size, const unsigned int base_offset);
+        std::tuple<std::vector<char>, unsigned int> readBundleContent(unsigned int offset, unsigned int content_size);
+        error repackBundleContent(const unsigned int content_size, const unsigned int base_offset);
 
     private:
         unsigned int m_formatTag;

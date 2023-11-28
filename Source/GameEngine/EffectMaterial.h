@@ -34,12 +34,12 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&) noexcept;
 
-        GenericDto SerializeDto();
+        GenericDto serializeDto();
 
-        const std::string& GetName() { return m_name; };
+        const std::string& getName() { return m_name; };
 
-        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         void SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
         std::shared_ptr<EffectMaterialSource> GetEffectMaterialSource() { return m_sourceMaterial.lock(); };

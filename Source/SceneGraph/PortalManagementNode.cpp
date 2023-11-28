@@ -18,63 +18,64 @@ DEFINE_RTTI(SceneGraph, PortalManagementNode, Node);
 
 PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
 {
-    m_factoryDesc = FactoryDesc(TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
-    m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
-    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
+    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
 }
 
 PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
 {
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
-    m_doAttachingOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { DoAttachingOutsideZone(c); });
-    Frameworks::CommandBus::Subscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
+    m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
+    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
 }
 
 PortalManagementNode::~PortalManagementNode()
 {
-    Frameworks::CommandBus::Unsubscribe(typeid(AttachPortalOutsideZone), m_doAttachingOutsideZone);
-    m_doAttachingOutsideZone = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
+    m_attachOutsideZone = nullptr;
     m_outsideZone = nullptr;
     m_cachedStartZone = nullptr;
 }
 
-GenericDto PortalManagementNode::SerializeDto()
+GenericDto PortalManagementNode::serializeDto()
 {
-    PortalManagementNodeDto dto(SerializeSpatialDto());
-    if (m_outsideZone) dto.OutsideZoneNodeName() = m_outsideZone->GetSpatialName();
-    return dto.ToGenericDto();
+    PortalManagementNodeDto dto(serializeSpatialDto());
+    if (m_outsideZone) dto.outsideZoneNodeName() = m_outsideZone->getSpatialName();
+    return dto.toGenericDto();
 }
 
-void PortalManagementNode::ResolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
+void PortalManagementNode::resolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
 {
-    PortalManagementNodeDto nodeDto = PortalManagementNodeDto::FromGenericDto(dto);
-    resolver.TryResolveLinkage(nodeDto.OutsideZoneNodeName(), [lifetime = weak_from_this()](auto sp)
+    PortalManagementNodeDto nodeDto = PortalManagementNodeDto::fromGenericDto(dto);
+    resolver.TryResolveLinkage(nodeDto.outsideZoneNodeName(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
                 std::dynamic_pointer_cast<PortalManagementNode, Spatial>(lifetime.lock())->
-                    AttachOutsideZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
+                attachOutsideZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
         });
 }
 
-void PortalManagementNode::AttachOutsideZone(const std::shared_ptr<PortalZoneNode>& node)
+void PortalManagementNode::attachOutsideZone(const std::shared_ptr<PortalZoneNode>& node)
 {
     m_outsideZone = node;
+    m_outsideZone->setPortalParent(shared_from_this());
 }
 
-error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
+error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
 {
     if (FATAL_LOG_EXPR((!culler) || (!culler->GetCamera()))) return ErrorCode::nullCullerCamera;
 
     error er = ErrorCode::ok;
     if (!noCull)
     {
-        culler->Insert(ThisSpatial());
+        culler->Insert(thisSpatial());
         PortalZoneNodePtr startZone;
-        Vector3 camPos = culler->GetCamera()->GetLocation();
-        if ((m_cachedStartZone) && (m_cachedStartZone->GetWorldBound().PointInside(camPos)))
+        Vector3 camPos = culler->GetCamera()->location();
+        if ((m_cachedStartZone) && (m_cachedStartZone->getWorldBound().PointInside(camPos)))
         {
             startZone = m_cachedStartZone;
         }
@@ -82,7 +83,7 @@ error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
         {
             ContainingPortalZoneFinder zone_finder(camPos);
             //CSceneTraveler::TravelResult result=region_finder.TravelTo(this);
-            SceneTraveler::TravelResult result = VisitBy(&zone_finder);
+            SceneTraveler::TravelResult result = visitBy(&zone_finder);
             if (result == SceneTraveler::TravelResult::InterruptError) return ErrorCode::ok;
 
             startZone = zone_finder.GetContainingZone();
@@ -91,22 +92,22 @@ error PortalManagementNode::OnCullingVisible(Culler* culler, bool noCull)
         if (!startZone) startZone = m_outsideZone;
         if (startZone)
         {
-            er = startZone->CullVisibleSet(culler, noCull);
+            er = startZone->cullVisibleSet(culler, noCull);
             if (er) return er;
         }
     }
     else
     {
-        er = Node::OnCullingVisible(culler, noCull);
+        er = Node::onCullingVisible(culler, noCull);
     }
     return er;
 }
 
-void PortalManagementNode::DoAttachingOutsideZone(const Frameworks::ICommandPtr& c)
+void PortalManagementNode::attachOutsideZone(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<AttachPortalOutsideZone, Frameworks::ICommand>(c);
     if (!cmd) return;
-    AttachChild(cmd->GetZone(), Matrix4::IDENTITY);
-    AttachOutsideZone(cmd->GetZone());
+    attachChild(cmd->GetZone(), Matrix4::IDENTITY);
+    attachOutsideZone(cmd->GetZone());
 }

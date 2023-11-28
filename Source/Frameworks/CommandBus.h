@@ -35,24 +35,24 @@ namespace Enigma::Frameworks
         CommandBus& operator=(const CommandBus&) = delete;
         CommandBus& operator=(CommandBus&&) = delete;
 
-        virtual ServiceResult OnTick() override;
-        virtual ServiceResult OnTerm() override;
+        virtual ServiceResult onTick() override;
+        virtual ServiceResult onTerm() override;
 
         /** lambda 函式無法做互相比對 (operator==), 所以在 list 中無法做 remove,
         必須把每個 handler booking 一個 index, 據此來做 unregister,
         如果 handler 是實體 functor, 而不是 lambda, 就可以用來移除,
         所以, 用 subscriber 模式來實作
         */
-        static void Subscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
-        static void Unsubscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
+        static void subscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
+        static void unsubscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
 
-        static void Post(const ICommandPtr& c);
-        static void Send(const ICommandPtr& c);
+        static void post(const ICommandPtr& c);
+        static void send(const ICommandPtr& c);
 
-        void CleanupAllCommands();
+        void cleanupAllCommands();
 
     protected:
-        void InvokeHandler(const ICommandPtr& e, const CommandSubscriberPtr& subscriber);
+        void invokeHandler(const ICommandPtr& e, const CommandSubscriberPtr& subscriber);
 
     protected:
         static CommandBus* m_thisBus;

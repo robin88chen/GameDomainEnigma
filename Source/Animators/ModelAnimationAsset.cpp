@@ -9,16 +9,16 @@ DEFINE_RTTI(Animators, ModelAnimationAsset, AnimationAsset);
 
 ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAsset(name)
 {
-    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
 ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.Name())
 {
-    m_factoryDesc = dto.TheFactoryDesc();
+    m_factoryDesc = dto.factoryDesc();
     m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
     for (unsigned i = 0; i < dto.MeshNodeNames().size(); i++)
     {
-        AddMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::FromGenericDto(dto.TimeSRTs()[i])));
+        AddMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::fromGenericDto(dto.TimeSRTs()[i])));
     }
 }
 
@@ -27,17 +27,17 @@ ModelAnimationAsset::~ModelAnimationAsset()
     m_meshNodeKeyArray.clear();
 }
 
-ModelAnimationAssetDto ModelAnimationAsset::SerializeDto()
+ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
     dto.Name() = m_name;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     std::vector<std::string> names;
     GenericDtoCollection srts;
     for (auto& key : m_meshNodeKeyArray)
     {
         names.emplace_back(key.m_meshNodeName);
-        srts.emplace_back(key.m_timeSRTData.SerializeDto().ToGenericDto());
+        srts.emplace_back(key.m_timeSRTData.serializeDto().toGenericDto());
     }
     dto.MeshNodeNames() = names;
     dto.TimeSRTs() = srts;

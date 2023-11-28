@@ -6,12 +6,12 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderer, MeshNodeTree);
 
-MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.GetName())
+MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
     m_meshNodes.clear();
 }
 
-MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.TheFactoryDesc())
+MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.factoryDesc())
 {
     m_meshNodes = tree.m_meshNodes;
 }
@@ -40,15 +40,15 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
     return *this;
 }
 
-GenericDto MeshNodeTree::SerializeDto() const
+GenericDto MeshNodeTree::serializeDto() const
 {
     MeshNodeTreeDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     for (auto& node : m_meshNodes)
     {
-        dto.MeshNodes().emplace_back(node.SerializeDto());
+        dto.MeshNodes().emplace_back(node.serializeDto());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_name) const
@@ -57,7 +57,7 @@ std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_
     unsigned count = static_cast<unsigned>(m_meshNodes.size());
     for (unsigned i = 0; i < count; i++)
     {
-        if (m_meshNodes[i].GetName() == node_name) return i;
+        if (m_meshNodes[i].getName() == node_name) return i;
     }
     return std::nullopt;
 }
@@ -69,11 +69,11 @@ unsigned MeshNodeTree::AddMeshNode(const MeshNode& node)
 
     if (const auto parent_index = node.GetParentIndexInArray())  // has parent node
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * m_meshNodes[idx].GetLocalTransform());
+        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * m_meshNodes[idx].getLocalTransform());
     }
     else
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[idx].GetLocalTransform());
+        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[idx].getLocalTransform());
     }
     return idx;
 }
@@ -102,7 +102,7 @@ bool MeshNodeTree::IsInSubTree(unsigned child_node_index, const std::string& par
     std::optional<unsigned> curr_node_index = child_node_index;
     while (curr_node_index)
     {
-        if (m_meshNodes[curr_node_index.value()].GetName() == parent_node_name) return true;
+        if (m_meshNodes[curr_node_index.value()].getName() == parent_node_name) return true;
         curr_node_index = m_meshNodes[curr_node_index.value()].GetParentIndexInArray();
     }
     return false;
@@ -111,7 +111,7 @@ bool MeshNodeTree::IsInSubTree(unsigned child_node_index, const std::string& par
 void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal)
 {
     if (index >= m_meshNodes.size()) return;
-    m_meshNodes[index].SetLocalTransform(mxLocal);
+    m_meshNodes[index].setLocalTransform(mxLocal);
     auto parent_index = m_meshNodes[index].GetParentIndexInArray();
     if (parent_index)  // has parent node
     {

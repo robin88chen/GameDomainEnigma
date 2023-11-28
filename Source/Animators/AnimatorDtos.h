@@ -30,11 +30,11 @@ namespace Enigma::Animators
         [[nodiscard]] const Engine::GenericDtoCollection& SkinOperators() const { return m_skinOperators; }
         Engine::GenericDtoCollection& SkinOperators() { return m_skinOperators; }
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        static ModelAnimatorDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static ModelAnimatorDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
         std::shared_ptr<ModelAnimatorPolicy> ConvertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
             const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
@@ -52,8 +52,8 @@ namespace Enigma::Animators
     public:
         SkinOperatorDto();
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         [[nodiscard]] const std::optional<std::string>& SkinMeshName() const { return m_skinMeshName; }
         std::optional<std::string>& SkinMeshName() { return m_skinMeshName; }
@@ -64,8 +64,8 @@ namespace Enigma::Animators
         [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() const { return m_nodeOffsets; }
         std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() { return m_nodeOffsets; }
 
-        static SkinOperatorDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static SkinOperatorDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     private:
         Engine::FactoryDesc m_factoryDesc;

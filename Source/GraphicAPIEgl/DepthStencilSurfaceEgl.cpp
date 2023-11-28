@@ -54,7 +54,7 @@ void DepthStencilSurfaceEgl::MakeBackSurfaceRelated(const Graphics::IBackSurface
 error DepthStencilSurfaceEgl::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     m_dimension = dimension;
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
     return ErrorCode::ok;
 }
 

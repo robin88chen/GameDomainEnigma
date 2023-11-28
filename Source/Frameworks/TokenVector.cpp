@@ -1,6 +1,6 @@
 ﻿#include "TokenVector.h"
 
-TokenVector En_Split_Token(const std::string& src, const std::string& sep)
+TokenVector split_token(const std::string& src, const std::string& sep)
 {
     TokenVector token_vec;
     token_vec.reserve(10);

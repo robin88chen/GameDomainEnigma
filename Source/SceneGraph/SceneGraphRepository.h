@@ -14,6 +14,8 @@
 #include "Frustum.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
+#include "GameEngine/FactoryDesc.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -29,6 +31,9 @@ namespace Enigma::SceneGraph
     class Portal;
     class LightInfo;
     class Light;
+    class LazyNode;
+    class PortalZoneNode;
+    class VisibilityManagedNode;
     class CameraDto;
     class NodeDto;
     class LazyNodeDto;
@@ -51,20 +56,17 @@ namespace Enigma::SceneGraph
         SceneGraphRepository& operator=(const SceneGraphRepository&) = delete;
         SceneGraphRepository& operator=(SceneGraphRepository&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
-        void SetCoordinateSystem(GraphicCoordSys hand);
-        GraphicCoordSys GetCoordinateSystem();
+        void setCoordinateSystem(GraphicCoordSys hand);
+        GraphicCoordSys getCoordinateSystem();
 
-        std::shared_ptr<Camera> CreateCamera(const std::string& name);
-        std::shared_ptr<Camera> CreateCamera(const Engine::GenericDto& dto);
-        bool HasCamera(const std::string& name);
-        std::shared_ptr<Camera> QueryCamera(const std::string& name);
+        std::shared_ptr<Camera> createCamera(const std::string& name);
+        std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
-        std::shared_ptr<Node> CreateNode(const std::string& name, const Frameworks::Rtti& rtti);
-        bool HasNode(const std::string& name);
-        std::shared_ptr<Node> QueryNode(const std::string& name);
+        std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
+        std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
 
         std::shared_ptr<Pawn> CreatePawn(const std::string& name);
         bool HasPawn(const std::string& name);
@@ -74,16 +76,27 @@ namespace Enigma::SceneGraph
         bool HasLight(const std::string& name);
         std::shared_ptr<Light> QueryLight(const std::string& name);
 
-        std::shared_ptr<Portal> CreatePortal(const std::string& name);
-        bool HasPortal(const std::string& name);
-        std::shared_ptr<Portal> QueryPortal(const std::string& name);
+        std::shared_ptr<Portal> createPortal(const std::string& name);
+        bool hasPortal(const std::string& name);
+        std::shared_ptr<Portal> queryPortal(const std::string& name);
 
         std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
+        bool hasCamera(const std::string& name);
+        std::shared_ptr<Camera> queryCamera(const std::string& name);
+        bool hasNode(const std::string& name);
+        std::shared_ptr<Node> queryNode(const std::string& name);
+
+        /** factory methods */
+        std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
+        std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
+
     private:
-        void DoQueryingCamera(const Frameworks::ICommandPtr& c);
-        void DoCreatingCamera(const Frameworks::ICommandPtr& c);
+        void queryCamera(const Frameworks::IQueryPtr& q);
+        void queryNode(const Frameworks::IQueryPtr& q);
+        void createCamera(const Frameworks::ICommandPtr& c);
+        void createNode(const Frameworks::ICommandPtr& c);
 
     private:
         GraphicCoordSys m_handSystem;
@@ -104,8 +117,10 @@ namespace Enigma::SceneGraph
 
         SceneGraphBuilder* m_builder;
 
-        Frameworks::CommandSubscriberPtr m_doQueryingCamera;
-        Frameworks::CommandSubscriberPtr m_doCreatingCamera;
+        Frameworks::QuerySubscriberPtr m_queryCamera;
+        Frameworks::QuerySubscriberPtr m_queryNode;
+        Frameworks::CommandSubscriberPtr m_createCamera;
+        Frameworks::CommandSubscriberPtr m_createNode;
     };
 }
 

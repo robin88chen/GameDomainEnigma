@@ -20,7 +20,7 @@ DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
 MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
 {
-    m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
     m_name = name;
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
@@ -109,34 +109,34 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
     return *this;
 }
 
-GenericDto MeshPrimitive::SerializeDto() const
+GenericDto MeshPrimitive::serializeDto() const
 {
-    return SerializeMeshDto().ToGenericDto();
+    return SerializeMeshDto().toGenericDto();
 }
 
 MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
 {
     MeshPrimitiveDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
     if (m_geometry)
     {
-        dto.GeometryName() = m_geometry->GetName();
-        dto.GeometryFactoryDesc() = m_geometry->TheFactoryDesc();
-        if ((m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-            || (m_geometry->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        dto.GeometryName() = m_geometry->getName();
+        dto.GeometryFactoryDesc() = m_geometry->factoryDesc();
+        if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+            || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
-            dto.TheGeometry() = m_geometry->SerializeDto();
+            dto.TheGeometry() = m_geometry->serializeDto();
         }
     }
     for (auto& eff : m_effects)
     {
-        dto.Effects().emplace_back(eff->SerializeDto());
+        dto.Effects().emplace_back(eff->serializeDto());
     }
     for (auto& tex : m_textures)
     {
         if (!tex.IsAllResourceTexture()) continue;
-        dto.TextureMaps().emplace_back(tex.SerializeDto());
+        dto.TextureMaps().emplace_back(tex.serializeDto());
     }
     dto.RenderListID() = m_renderListID;
     dto.VisualTechniqueSelection() = m_selectedVisualTech;

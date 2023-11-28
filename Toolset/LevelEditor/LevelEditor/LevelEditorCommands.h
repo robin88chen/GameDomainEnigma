@@ -22,7 +22,7 @@ namespace LevelEditor
     public:
         OutputMessage(const std::string& msg) : m_msg(msg) {}
 
-        const std::string& GetMessage() const { return m_msg; }
+        const std::string& message() const { return m_msg; }
 
     private:
         std::string m_msg;
@@ -34,7 +34,7 @@ namespace LevelEditor
         RefreshSceneGraph(std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>> flattened_spatial) : m_flattenedSpatial(
             std::move(flattened_spatial)) {}
 
-        const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& GetFlattenedSpatial() const { return m_flattenedSpatial; }
+        const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& getFlattenedSpatial() const { return m_flattenedSpatial; }
 
     protected:
         std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>> m_flattenedSpatial;
@@ -48,11 +48,11 @@ namespace LevelEditor
             const Enigma::MathLib::Vector3& local_pos, const std::string& asset_path_id)
             : m_name(name), m_geometryDto(geometry_dto), m_layerTextures(layer_textures), m_localPos(local_pos), m_assetPathId(asset_path_id) {}
 
-        const std::string& GetName() const { return m_name; }
-        const Enigma::Terrain::TerrainGeometryDto& GetGeometryDto() const { return m_geometryDto; }
-        const std::array<std::string, TerrainEditService::TextureLayerNum>& GetLayerTextures() const { return m_layerTextures; }
-        const Enigma::MathLib::Vector3& GetLocalPos() const { return m_localPos; }
-        const std::string& GetAssetPathId() const { return m_assetPathId; }
+        const std::string& getName() const { return m_name; }
+        const Enigma::Terrain::TerrainGeometryDto& getGeometryDto() const { return m_geometryDto; }
+        const std::array<std::string, TerrainEditService::TextureLayerNum>& getLayerTextures() const { return m_layerTextures; }
+        const Enigma::MathLib::Vector3& getLocalPos() const { return m_localPos; }
+        const std::string& getAssetPathId() const { return m_assetPathId; }
 
     protected:
         std::string m_name;
@@ -67,7 +67,7 @@ namespace LevelEditor
     public:
         CreateEnvironmentLight(const std::string& world_name) : m_worldName(world_name) {}
 
-        const std::string& GetWorldName() const { return m_worldName; }
+        const std::string& getWorldName() const { return m_worldName; }
 
     protected:
         std::string m_worldName;
@@ -80,9 +80,9 @@ namespace LevelEditor
         MoveUpTerrainVertex(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float brush_height)
             : m_brushPos(brush_pos), m_brushSize(brush_size), m_brushHeight(brush_height) {}
 
-        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
-        float GetBrushSize() const { return m_brushSize; }
-        float GetBrushHeight() const { return m_brushHeight; }
+        const Enigma::MathLib::Vector3& getBrushPos() const { return m_brushPos; }
+        float getBrushSize() const { return m_brushSize; }
+        float getBrushHeight() const { return m_brushHeight; }
 
     protected:
         Enigma::MathLib::Vector3 m_brushPos;
@@ -95,10 +95,10 @@ namespace LevelEditor
         PaintTerrainTextureLayer(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float brush_density, unsigned texture_layer_index)
             : m_brushPos(brush_pos), m_brushSize(brush_size), m_brushDensity(brush_density), m_textureLayerIndex(texture_layer_index) {}
 
-        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
-        float GetBrushSize() const { return m_brushSize; }
-        float GetBrushDensity() const { return m_brushDensity; }
-        unsigned GetTextureLayerIndex() const { return m_textureLayerIndex; }
+        const Enigma::MathLib::Vector3& getBrushPos() const { return m_brushPos; }
+        float getBrushSize() const { return m_brushSize; }
+        float getBrushDensity() const { return m_brushDensity; }
+        unsigned getTextureLayerIndex() const { return m_textureLayerIndex; }
 
     protected:
         Enigma::MathLib::Vector3 m_brushPos;
@@ -111,7 +111,7 @@ namespace LevelEditor
     public:
         CompleteTerrainEditOperation(const Enigma::MathLib::Vector3& brush_pos) : m_brushPos(brush_pos) {}
 
-        const Enigma::MathLib::Vector3& GetBrushPos() const { return m_brushPos; }
+        const Enigma::MathLib::Vector3& getBrushPos() const { return m_brushPos; }
 
     protected:
         Enigma::MathLib::Vector3 m_brushPos;
@@ -121,7 +121,7 @@ namespace LevelEditor
     public:
         SaveTerrainSplatTexture(const std::string& path_id) : m_pathId(path_id) {}
 
-        const std::string& GetPathId() const { return m_pathId; }
+        const std::string& getPathId() const { return m_pathId; }
     protected:
         std::string m_pathId;
     };

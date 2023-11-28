@@ -639,7 +639,7 @@ EffectDepthStencilProfile EffectProfileJsonGateway::FetchDepthStateProfile(const
 
 std::string EffectProfileJsonGateway::ReadShaderCode(const std::string& filename) const
 {
-    IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(filename), "rb");
+    IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(filename), Read | Binary);
     if (FATAL_LOG_EXPR(!iFile)) return "";
     size_t file_size = iFile->Size();
     if (FATAL_LOG_EXPR(file_size <= 0))

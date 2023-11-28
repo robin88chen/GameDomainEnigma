@@ -40,9 +40,9 @@ namespace Enigma::Renderer
         MeshPrimitive& operator=(const MeshPrimitive&);
         MeshPrimitive& operator=(MeshPrimitive&&) noexcept;
 
-        virtual Engine::GenericDto SerializeDto() const override;
+        virtual Engine::GenericDto serializeDto() const override;
 
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         /** get geometry data */
         const Engine::GeometryDataPtr& GetGeometryData() const { return m_geometry; };
 

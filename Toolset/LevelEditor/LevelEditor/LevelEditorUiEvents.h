@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LevelEditorUiEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -16,7 +16,7 @@ namespace LevelEditor
     public:
         TerrainBrushSizeChanged(unsigned size) : m_size(size) {}
 
-        unsigned GetSize() const { return m_size; }
+        unsigned size() const { return m_size; }
 
     private:
         unsigned m_size;
@@ -26,7 +26,7 @@ namespace LevelEditor
     public:
         TerrainBrushHeightChanged(float height) : m_height(height) {}
 
-        float GetHeight() const { return m_height; }
+        float height() const { return m_height; }
 
     private:
         float m_height;
@@ -36,17 +36,17 @@ namespace LevelEditor
     public:
         TerrainBrushDensityChanged(float density) : m_density(density) {}
 
-        float GetDensity() const { return m_density; }
+        float density() const { return m_density; }
 
     private:
         float m_density;
     };
     class TerrainPaintingLayerChanged : public Enigma::Frameworks::IEvent
     {
-        public:
+    public:
         TerrainPaintingLayerChanged(unsigned layer) : m_layer(layer) {}
 
-        unsigned GetLayer() const { return m_layer; }
+        unsigned layer() const { return m_layer; }
 
     private:
         unsigned m_layer;
@@ -63,7 +63,7 @@ namespace LevelEditor
     public:
         TerrainEditToolSelected(Tool tool) : m_tool(tool) {}
 
-        Tool GetTool() const { return m_tool; }
+        Tool tool() const { return m_tool; }
     private:
         Tool m_tool;
     };

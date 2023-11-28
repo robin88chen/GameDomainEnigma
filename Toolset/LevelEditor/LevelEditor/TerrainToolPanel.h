@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainToolPanel.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -29,25 +29,25 @@ namespace LevelEditor
         TerrainToolPanel(const nana::window& wd);
         virtual ~TerrainToolPanel();
 
-        void Initialize(MainForm* form, unsigned texture_btn_count);
-        void SetTerrainName(const std::string& name);
+        void initialize(MainForm* form, unsigned texture_btn_count);
+        void setTerrainName(const std::string& name);
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
     private:
-        void OnBrushSizeChanged(const nana::arg_spinbox& arg);
-        void OnBrushHeightChanged(const nana::arg_textbox& arg);
-        void OnLayerDensityChanged(const nana::arg_slider& arg);
-        void OnTextureLayerButton(const nana::arg_click& arg, unsigned int index);
-        void OnTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool);
+        void onBrushSizeChanged(const nana::arg_spinbox& arg);
+        void onBrushHeightChanged(const nana::arg_textbox& arg);
+        void onLayerDensityChanged(const nana::arg_slider& arg);
+        void onTextureLayerButton(const nana::arg_click& arg, unsigned int index);
+        void onTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool);
 
-        unsigned int DensityToSlideValue(float density) const;
-        float SlideValueToDensity(unsigned int value) const;
+        unsigned int densityToSlideValue(float density) const;
+        float slideValueToDensity(unsigned int value) const;
 
-        void RefreshTextureLayerButtons(const Enigma::Engine::EffectTextureMap& texture_map);
+        void refreshTextureLayerButtons(const Enigma::Engine::EffectTextureMap& texture_map);
 
-        void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         MainForm* m_mainForm;

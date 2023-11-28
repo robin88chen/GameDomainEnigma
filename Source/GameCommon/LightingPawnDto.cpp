@@ -8,24 +8,24 @@ static std::string TOKEN_HOST_LIGHT_NAME = "HostLightName";
 
 LightingPawnDto::LightingPawnDto() : PawnDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.getName());
 }
 
 LightingPawnDto::LightingPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LightingPawn::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LightingPawn::TYPE_RTTI.getName()));
 }
 
-LightingPawnDto LightingPawnDto::FromGenericDto(const Engine::GenericDto& dto)
+LightingPawnDto LightingPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    LightingPawnDto pawn_dto(PawnDto::FromGenericDto(dto));
+    LightingPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
     if (auto v = dto.TryGetValue<std::string>(TOKEN_HOST_LIGHT_NAME)) pawn_dto.HostLightName() = v.value();
     return pawn_dto;
 }
 
-Enigma::Engine::GenericDto LightingPawnDto::ToGenericDto() const
+Enigma::Engine::GenericDto LightingPawnDto::toGenericDto() const
 {
-    Engine::GenericDto dto = PawnDto::ToGenericDto();
+    Engine::GenericDto dto = PawnDto::toGenericDto();
     if (!m_hostLightName.empty()) dto.AddOrUpdate(TOKEN_HOST_LIGHT_NAME, m_hostLightName);
     return dto;
 }

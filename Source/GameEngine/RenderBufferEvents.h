@@ -20,7 +20,7 @@ namespace Enigma::Engine
     public:
         RenderBufferBuilt(const std::string& name, const RenderBufferSignature& signature, const RenderBufferPtr& buffer) :
             m_name(name), m_signature(signature), m_buffer(buffer) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         const RenderBufferSignature& GetSignature() const { return m_signature; }
         const RenderBufferPtr& GetBuffer() const { return m_buffer; }
     private:
@@ -33,7 +33,7 @@ namespace Enigma::Engine
     public:
         BuildRenderBufferFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;

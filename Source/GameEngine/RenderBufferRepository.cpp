@@ -25,23 +25,23 @@ RenderBufferRepository::~RenderBufferRepository()
     SAFE_DELETE(m_builder);
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnInit()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onInit()
 {
     m_onRenderBufferBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnRenderBufferBuilt(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
+    Frameworks::EventPublisher::subscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onBuildRenderBufferFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildRenderBufferFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
+    Frameworks::EventPublisher::subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
 
     m_doBuildingRenderBuffer =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingRenderBuffer(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
+    Frameworks::CommandBus::subscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
 
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTick()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -57,14 +57,14 @@ Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult RenderBufferRepository::OnTerm()
+Enigma::Frameworks::ServiceResult RenderBufferRepository::onTerm()
 {
-    Frameworks::EventPublisher::Unsubscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
+    Frameworks::EventPublisher::unsubscribe(typeid(RenderBufferBuilder::RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onRenderBufferBuilt = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
+    Frameworks::EventPublisher::unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
     m_onBuildRenderBufferFailed = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
+    Frameworks::CommandBus::unsubscribe(typeid(Engine::BuildRenderBuffer), m_doBuildingRenderBuffer);
     m_doBuildingRenderBuffer = nullptr;
     return Frameworks::ServiceResult::Complete;
 }
@@ -102,7 +102,7 @@ void RenderBufferRepository::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_bufferMapLock };
     m_renderBuffers.insert_or_assign(ev->GetSignature(), ev->GetBuffer());
     m_isCurrentBuilding = false;
-    Frameworks::EventPublisher::Post(std::make_shared<RenderBufferBuilt>(ev->GetName(), ev->GetSignature(), ev->GetBuffer()));
+    Frameworks::EventPublisher::post(std::make_shared<RenderBufferBuilt>(ev->getName(), ev->GetSignature(), ev->GetBuffer()));
 }
 
 void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
@@ -111,7 +111,7 @@ void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventP
     auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("render buffer %s build failed : %s\n",
-        ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }
 

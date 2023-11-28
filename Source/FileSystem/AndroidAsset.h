@@ -11,6 +11,7 @@
 #include "Platforms/PlatformLayerUtilities.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
+#include "ReadWriteOption.h"
 #include "IFile.h"
 #include <android/asset_manager.h>
 namespace Enigma::FileSystem
@@ -20,7 +21,7 @@ namespace Enigma::FileSystem
     public:
         AndroidAsset();
         AndroidAsset(const AndroidAsset&) = delete;
-        AndroidAsset(const std::string& filename, const std::string& rw_option);
+        AndroidAsset(const std::string& filename, const ReadWriteOption& rw_option);
         virtual ~AndroidAsset();
         AndroidAsset& operator=(const AndroidAsset&) = delete;
 
@@ -37,14 +38,14 @@ namespace Enigma::FileSystem
         virtual bool IsWritable() override { return false; };
 
     protected:
-        virtual error Open() override;
-        virtual error Close() override;
+        virtual error open() override;
+        virtual error close() override;
 
     private:
         AAsset* m_aasset;
         std::string m_filename;
         std::string m_fullPath;
-        std::string m_rwOption;
+        ReadWriteOption m_rwOption;
         static std::mutex m_allAssetLocker;
     };
 }

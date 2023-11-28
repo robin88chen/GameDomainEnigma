@@ -26,13 +26,13 @@ SceneGraphPanel::~SceneGraphPanel()
     SAFE_DELETE(m_sceneGraphTree);
 }
 
-void SceneGraphPanel::Initialize(MainForm* main_form)
+void SceneGraphPanel::initialize(MainForm* main_form)
 {
     m_main = main_form;
     m_place = menew nana::place{ *this };
     m_place->div("margin=[4,4,4,4] vert<scene_graph_tree>");
     m_sceneGraphTree = menew nana::treebox{ *this };
-    UISchemeColors::ApplySchemaColors(m_sceneGraphTree->scheme());
+    UISchemeColors::applySchemaColors(m_sceneGraphTree->scheme());
     m_sceneGraphTree->scheme().item_bg_selected = UISchemeColors::BACKGROUND;
     m_sceneGraphTree->scheme().item_fg_selected = UISchemeColors::FOREGROUND;
     m_sceneGraphTree->scheme().item_bg_highlighted = UISchemeColors::BACKGROUND;
@@ -40,13 +40,13 @@ void SceneGraphPanel::Initialize(MainForm* main_form)
     m_sceneGraphTree->scheme().item_bg_selected_and_highlighted = UISchemeColors::BACKGROUND;
     m_sceneGraphTree->scheme().item_fg_selected_and_highlighted = UISchemeColors::FOREGROUND;
     //m_sceneGraphTree->scheme().background = UISchemeColors::FOREGROUND;
-    m_sceneGraphTree->events().selected([this](const nana::arg_treebox& arg) { this->OnSceneGraphTreeSelected(arg); });
+    m_sceneGraphTree->events().selected([this](const nana::arg_treebox& arg) { this->onSceneGraphTreeSelected(arg); });
     (*m_place)["scene_graph_tree"] << *m_sceneGraphTree;
 
     m_place->collocate();
 }
 
-void SceneGraphPanel::Finalize()
+void SceneGraphPanel::finalize()
 {
     // treebox clear 並不會清掉 item 裡掛入的物件
     auto item = m_sceneGraphTree->first();
@@ -57,19 +57,19 @@ void SceneGraphPanel::Finalize()
     }
 }
 
-void SceneGraphPanel::SubscribeHandlers()
+void SceneGraphPanel::subscribeHandlers()
 {
-    m_doRefreshingSceneGraph = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](auto c) { DoRefreshingSceneGraphTree(c); });
-    Enigma::Frameworks::CommandBus::Subscribe(typeid(RefreshSceneGraph), m_doRefreshingSceneGraph);
+    m_refreshSceneGraph = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](const Enigma::Frameworks::ICommandPtr& c) { refreshSceneGraphTree(c); });
+    Enigma::Frameworks::CommandBus::subscribe(typeid(RefreshSceneGraph), m_refreshSceneGraph);
 }
 
-void SceneGraphPanel::UnsubscribeHandlers()
+void SceneGraphPanel::unsubscribeHandlers()
 {
-    Enigma::Frameworks::CommandBus::Unsubscribe(typeid(RefreshSceneGraph), m_doRefreshingSceneGraph);
-    m_doRefreshingSceneGraph = nullptr;
+    Enigma::Frameworks::CommandBus::unsubscribe(typeid(RefreshSceneGraph), m_refreshSceneGraph);
+    m_refreshSceneGraph = nullptr;
 }
 
-void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene)
+void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene)
 {
     auto item = m_sceneGraphTree->first();
     if (!item.empty()) item.visit_recursively(clear_item_value);
@@ -88,18 +88,18 @@ void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<En
     std::shared_ptr scene_root = flattened_scene[0];
     if (!scene_root) return;
     std::string graph_node_name;
-    if (!scene_root->GetSpatialName().empty())
+    if (!scene_root->getSpatialName().empty())
     {
-        graph_node_name = scene_root->GetSpatialName() + "<" + scene_root->TypeInfo().GetName() + ">";
+        graph_node_name = scene_root->getSpatialName() + "<" + scene_root->typeInfo().getName() + ">";
     }
     else
     {
-        graph_node_name = std::string("untitled") + "<" + scene_root->TypeInfo().GetName() + ">";
+        graph_node_name = std::string("untitled") + "<" + scene_root->typeInfo().getName() + ">";
     }
-    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(scene_root->GetSpatialName(), graph_node_name);
+    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(scene_root->getSpatialName(), graph_node_name);
     // 掛入 value object, 統一使用基底 spatial 類別, 但不能用 weak_ptr
     root_pos.value(scene_root);
-    spatial_pos_map.emplace(scene_root->GetSpatialName(), root_pos);
+    spatial_pos_map.emplace(scene_root->getSpatialName(), root_pos);
 
     auto iter = flattened_scene.begin();
     ++iter;  // skip scene root
@@ -114,54 +114,54 @@ void SceneGraphPanel::RefreshSceneGraphTree(const std::vector<std::shared_ptr<En
                 continue;
             }
             nana::treebox::item_proxy parent_pos;
-            if (spatial->GetParent() == nullptr)
+            if (spatial->getParent() == nullptr)
             {
-                parent_pos = spatial_pos_map.find(scene_root->GetSpatialName())->second;
+                parent_pos = spatial_pos_map.find(scene_root->getSpatialName())->second;
             }
             else
             {
-                auto parent = spatial->GetParent();
+                auto parent = spatial->getParent();
                 if (parent)
                 {
-                    parent_pos = spatial_pos_map.find(parent->GetSpatialName())->second;
+                    parent_pos = spatial_pos_map.find(parent->getSpatialName())->second;
                 }
                 else
                 {
-                    parent_pos = spatial_pos_map.find(scene_root->GetSpatialName())->second;
+                    parent_pos = spatial_pos_map.find(scene_root->getSpatialName())->second;
                 }
             }
             //auto root = parent_pos.value<SpatialPtr>();
             std::string graph_node_name;
-            if (!spatial->GetSpatialName().empty())
+            if (!spatial->getSpatialName().empty())
             {
-                graph_node_name = spatial->GetSpatialName() + "<" + spatial->TypeInfo().GetName() + ">";
+                graph_node_name = spatial->getSpatialName() + "<" + spatial->typeInfo().getName() + ">";
             }
             else
             {
-                graph_node_name = std::string("untitled") + "<" + spatial->TypeInfo().GetName() + ">";
+                graph_node_name = std::string("untitled") + "<" + spatial->typeInfo().getName() + ">";
             }
             nana::treebox::item_proxy node_pos = m_sceneGraphTree->insert(
-                parent_pos, spatial->GetSpatialName(), graph_node_name);
+                parent_pos, spatial->getSpatialName(), graph_node_name);
             node_pos.value(spatial);
-            spatial_pos_map.emplace(spatial->GetSpatialName(), node_pos);
+            spatial_pos_map.emplace(spatial->getSpatialName(), node_pos);
         }
         ++iter;
     }
 }
 
-void SceneGraphPanel::OnSceneGraphTreeSelected(const nana::arg_treebox& arg)
+void SceneGraphPanel::onSceneGraphTreeSelected(const nana::arg_treebox& arg)
 {
     if (!arg.operated) return; // unselected item
     if (arg.item.empty()) return;
     const auto& spatial = arg.item.value<std::shared_ptr<Enigma::SceneGraph::Spatial>>();
     if (!spatial) return;
-    Enigma::Frameworks::EventPublisher::Post(std::make_shared<PickedSpatialChanged>(spatial, PickedSpatialChanged::PickedFrom::FromSceneGraph));
+    Enigma::Frameworks::EventPublisher::post(std::make_shared<PickedSpatialChanged>(spatial, PickedSpatialChanged::PickedFrom::FromSceneGraph));
 }
 
-void SceneGraphPanel::DoRefreshingSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c)
+void SceneGraphPanel::refreshSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<RefreshSceneGraph, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
-    RefreshSceneGraphTree(cmd->GetFlattenedSpatial());
+    refreshSceneGraphTree(cmd->getFlattenedSpatial());
 }

@@ -374,7 +374,7 @@ namespace Enigma::Graphics
     public:
         VertexBufferUpdateFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         std::error_code GetError() const { return m_error; }
     private:
         std::string m_name;
@@ -385,7 +385,7 @@ namespace Enigma::Graphics
     public:
         IndexBufferUpdateFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         std::error_code GetError() const { return m_error; }
     private:
         std::string m_name;
@@ -397,7 +397,7 @@ namespace Enigma::Graphics
     public:
         DeviceVertexShaderCreated(const std::string& name) :
             m_name(name) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };
@@ -406,7 +406,7 @@ namespace Enigma::Graphics
     public:
         DevicePixelShaderCreated(const std::string& name) :
             m_name(name) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };
@@ -415,7 +415,7 @@ namespace Enigma::Graphics
     public:
         DeviceShaderProgramCreated(const std::string& name) :
             m_name(name) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };
@@ -424,7 +424,7 @@ namespace Enigma::Graphics
     public:
         DeviceVertexDeclarationCreated(const std::string& name) :
             m_name(name) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };

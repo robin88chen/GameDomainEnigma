@@ -73,7 +73,7 @@ static std::vector<Vector3> DeserializeVector3Array(const rapidjson::Value& valu
 static std::vector<Vector4> DeserializeVector4Array(const rapidjson::Value& value);
 static std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value);
 //------------------------------------------------------------------------
-static rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator);
+static rapidjson::Value serializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeDtoArray(const GenericDtoCollection& dtos, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeObject(std::any ob, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator);
@@ -129,7 +129,7 @@ std::string DtoJsonGateway::Serialize(const GenericDtoCollection& dtos)
     json_doc.SetArray();
     for (auto dto : dtos)
     {
-        json_doc.PushBack(SerializeDto(dto, json_doc.GetAllocator()), json_doc.GetAllocator());
+        json_doc.PushBack(serializeDto(dto, json_doc.GetAllocator()), json_doc.GetAllocator());
     }
 
     rapidjson::StringBuffer buf;
@@ -418,7 +418,7 @@ std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value)
 }
 
 //--------------------------------------------------------------------------
-rapidjson::Value SerializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator)
+rapidjson::Value serializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     if (dto.IsEmpty()) return rapidjson::Value();
     rapidjson::Value json{ rapidjson::kObjectType };
@@ -435,7 +435,7 @@ rapidjson::Value SerializeDtoArray(const GenericDtoCollection& dtos, rapidjson::
     rapidjson::Value value(rapidjson::kArrayType);
     for (auto& o : dtos)
     {
-        value.PushBack(SerializeDto(o, allocator), allocator);
+        value.PushBack(serializeDto(o, allocator), allocator);
     }
     return value;
 }
@@ -447,7 +447,7 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
     {
         node.AddMember(rapidjson::StringRef(TYPE_TOKEN), rapidjson::StringRef(DATA_OBJECT_TOKEN), allocator);
         node.AddMember(rapidjson::StringRef(VALUE_TOKEN),
-            SerializeDto(std::any_cast<GenericDto>(any_ob), allocator), allocator);
+            serializeDto(std::any_cast<GenericDto>(any_ob), allocator), allocator);
     }
     else if (any_ob.type() == typeid(GenericDtoCollection))
     {

@@ -20,44 +20,44 @@ EffectCompiler::EffectCompiler(EffectMaterialManager* host) : m_ruidDeserializin
     m_hasMaterialProduced = false;
 
     m_onCompilingProfileDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompilingProfileDeserialized(e); });
-    EventPublisher::Subscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
+    EventPublisher::subscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
     m_onDeserializeCompilingProfileFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnDeserializeCompilingProfileFailed(e); });
-    EventPublisher::Subscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
+    EventPublisher::subscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
 
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnShaderProgramBuilt(e); });
-    EventPublisher::Subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
+    EventPublisher::subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onBuildProgramFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildProgramFailed(e); });
-    EventPublisher::Subscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
+    EventPublisher::subscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
 
     m_onSamplerStateCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSamplerStateCreated(e); });
-    EventPublisher::Subscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
+    EventPublisher::subscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
     m_onBlendStateCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnBlendStateCreated(e); });
-    EventPublisher::Subscribe(typeid(DeviceAlphaBlendStateCreated), m_onBlendStateCreated);
+    EventPublisher::subscribe(typeid(DeviceAlphaBlendStateCreated), m_onBlendStateCreated);
     m_onDepthStateCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnDepthStateCreated(e); });
-    EventPublisher::Subscribe(typeid(DeviceDepthStencilStateCreated), m_onDepthStateCreated);
+    EventPublisher::subscribe(typeid(DeviceDepthStencilStateCreated), m_onDepthStateCreated);
     m_onRasterizerStateCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRasterizerStateCreated(e); });
-    EventPublisher::Subscribe(typeid(DeviceRasterizerStateCreated), m_onRasterizerStateCreated);
+    EventPublisher::subscribe(typeid(DeviceRasterizerStateCreated), m_onRasterizerStateCreated);
 }
 
 EffectCompiler::~EffectCompiler()
 {
-    EventPublisher::Unsubscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
+    EventPublisher::unsubscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
     m_onCompilingProfileDeserialized = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
+    EventPublisher::unsubscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
     m_onDeserializeCompilingProfileFailed = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
+    EventPublisher::unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onShaderProgramBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
+    EventPublisher::unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
     m_onBuildProgramFailed = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
+    EventPublisher::unsubscribe(typeid(DeviceSamplerStateCreated), m_onSamplerStateCreated);
     m_onSamplerStateCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeviceAlphaBlendStateCreated), m_onBlendStateCreated);
+    EventPublisher::unsubscribe(typeid(DeviceAlphaBlendStateCreated), m_onBlendStateCreated);
     m_onBlendStateCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeviceDepthStencilStateCreated), m_onDepthStateCreated);
+    EventPublisher::unsubscribe(typeid(DeviceDepthStencilStateCreated), m_onDepthStateCreated);
     m_onDepthStateCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(DeviceRasterizerStateCreated), m_onRasterizerStateCreated);
+    EventPublisher::unsubscribe(typeid(DeviceRasterizerStateCreated), m_onRasterizerStateCreated);
     m_onRasterizerStateCreated = nullptr;
 }
 
@@ -67,7 +67,7 @@ EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const Eff
     m_policy = policy;
     if (m_hostManager->HasEffectMaterial(policy.Name()))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(
+        Frameworks::EventPublisher::post(std::make_shared<EffectMaterialCompiled>(
             policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name()), true));
         return CompilingProceed::False;
     }
@@ -77,12 +77,12 @@ EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const Eff
     }
     else if (policy.GetDeserializer())
     {
-        m_ruidDeserializing = Ruid::Generate();
+        m_ruidDeserializing = Ruid::generate();
         policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
     }
     else
     {
-        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(policy.Name(), ErrorCode::policyIncomplete));
+        EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(policy.Name(), ErrorCode::policyIncomplete));
         return CompilingProceed::False;
     }
     return CompilingProceed::True;
@@ -97,7 +97,7 @@ void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
 
     if (m_profile.m_techniques.empty())
     {
-        EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ErrorCode::compilingEmptyEffectTech));
+        EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ErrorCode::compilingEmptyEffectTech));
         return;
     }
     m_builtEffectTechniques.reserve(m_profile.m_techniques.size());
@@ -114,7 +114,7 @@ void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
                 m_builtPrograms.emplace(pass.m_program.m_programName, nullptr);
             }
             EffectPassStates built_pass_states;
-            CommandBus::Post(std::make_shared<BuildShaderProgram>(pass.m_program));
+            CommandBus::post(std::make_shared<BuildShaderProgram>(pass.m_program));
             if (!pass.m_samplers.empty())
             {
                 built_pass_states.m_samplers = std::vector<Graphics::IDeviceSamplerStatePtr>{};
@@ -122,13 +122,13 @@ void EffectCompiler::CompileEffect(const EffectCompilingProfile& profile)
             }
             for (auto& samp : pass.m_samplers)
             {
-                CommandBus::Post(std::make_shared<CreateSamplerState>(samp.m_name, samp.m_data));
+                CommandBus::post(std::make_shared<CreateSamplerState>(samp.m_name, samp.m_data));
                 if (built_pass_states.m_samplers) built_pass_states.m_samplers->emplace_back(nullptr);
                 if (built_pass_states.m_samplerNames) built_pass_states.m_samplerNames->emplace_back(samp.m_variableName);
             }
-            CommandBus::Post(std::make_shared<CreateDepthStencilState>(pass.m_depth.m_name, pass.m_depth.m_data));
-            CommandBus::Post(std::make_shared<CreateBlendState>(pass.m_blend.m_name, pass.m_blend.m_data));
-            CommandBus::Post(std::make_shared<CreateRasterizerState>(pass.m_rasterizer.m_name, pass.m_rasterizer.m_data));
+            CommandBus::post(std::make_shared<CreateDepthStencilState>(pass.m_depth.m_name, pass.m_depth.m_data));
+            CommandBus::post(std::make_shared<CreateBlendState>(pass.m_blend.m_name, pass.m_blend.m_data));
+            CommandBus::post(std::make_shared<CreateRasterizerState>(pass.m_rasterizer.m_name, pass.m_rasterizer.m_data));
             m_builtPassStates.emplace(pass.m_name, built_pass_states);
         }
         m_builtEffectTechniques.emplace_back(built_effect_technique);
@@ -141,7 +141,7 @@ void EffectCompiler::OnCompilingProfileDeserialized(const Frameworks::IEventPtr&
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<CompilingProfileDeserialized, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRuid() != m_ruidDeserializing) return;
+    if (ev->getRuid() != m_ruidDeserializing) return;
     CompileEffect(ev->GetProfile());
 }
 
@@ -150,7 +150,7 @@ void EffectCompiler::OnDeserializeCompilingProfileFailed(const Frameworks::IEven
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeserializeCompilingProfileFailed, IEvent>(e);
     if (!ev) return;
-    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_policy.Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_policy.Name(), ev->GetErrorCode()));
 }
 
 void EffectCompiler::OnShaderProgramBuilt(const Frameworks::IEventPtr& e)
@@ -168,7 +168,7 @@ void EffectCompiler::OnBuildProgramFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev_fail = std::dynamic_pointer_cast<BuildShaderProgramFailed, IEvent>(e);
     if (!ev_fail) return;
-    EventPublisher::Post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ev_fail->GetErrorCode()));
+    EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ev_fail->GetErrorCode()));
 }
 
 void EffectCompiler::OnSamplerStateCreated(const Frameworks::IEventPtr& e)
@@ -309,9 +309,9 @@ void EffectCompiler::TryBuildEffectMaterial()
     auto effect_material = std::make_shared<EffectMaterial>(m_profile.m_name, effect_techniques);
     if (!m_policy.Parameter().empty())
     {
-        effect_material->TheFactoryDesc().ClaimFromResource(effect_material->GetName(), m_policy.Parameter());
+        effect_material->factoryDesc().ClaimFromResource(effect_material->getName(), m_policy.Parameter());
     }
-    EventPublisher::Post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
+    EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
     m_hasMaterialProduced = true;
 }
 

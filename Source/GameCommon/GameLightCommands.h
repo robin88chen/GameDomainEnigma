@@ -55,7 +55,7 @@ namespace Enigma::GameCommon
             : m_parentName(parent_name), m_mxLocal(mxLocal), m_lightName(lightName), m_pos(pos), m_color(color), m_range(range) {}
 
         const std::string& GetParentName() const { return m_parentName; }
-        const MathLib::Matrix4& GetLocalTransform() const { return m_mxLocal; }
+        const MathLib::Matrix4& getLocalTransform() const { return m_mxLocal; }
         const std::string& GetLightName() const { return m_lightName; }
         const MathLib::Vector3& GetPos() const { return m_pos; }
         const MathLib::ColorRGBA& GetColor() const { return m_color; }

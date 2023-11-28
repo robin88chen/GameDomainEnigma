@@ -35,9 +35,9 @@ namespace Enigma::GameCommon
         GameSceneService& operator=(const GameSceneService&) = delete;
         GameSceneService& operator=(GameSceneService&&) = delete;
 
-        Frameworks::ServiceResult OnInit() override;
-        Frameworks::ServiceResult OnTick() override;
-        Frameworks::ServiceResult OnTerm() override;
+        Frameworks::ServiceResult onInit() override;
+        Frameworks::ServiceResult onTick() override;
+        Frameworks::ServiceResult onTerm() override;
 
         /** @name scene root */
         //@{
@@ -47,7 +47,7 @@ namespace Enigma::GameCommon
         //@}
 
         const std::shared_ptr<SceneGraph::PortalManagementNode>& GetPortalManagementNode() { return m_portalMgtNode; };
-        error AttachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
+        error attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
 
         std::shared_ptr<SceneGraph::Spatial> FindSpatialByName(const std::string& spatial_name);
 

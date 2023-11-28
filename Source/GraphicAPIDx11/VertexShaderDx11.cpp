@@ -56,7 +56,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
         LOG(Error, str);
         SAFE_RELEASE(outBuf);
         SAFE_RELEASE(errorBuf);
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, str));
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, str));
         return ErrorCode::compileShader;
     }
     SAFE_RELEASE(errorBuf);
@@ -81,7 +81,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
 
     m_hasCompiled = true;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
     return ErrorCode::ok;
 }
 

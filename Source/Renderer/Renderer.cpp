@@ -60,7 +60,7 @@ error Renderer::InsertRenderElement(const std::shared_ptr<RenderElement>& elemen
     if ((list_id == RenderListID::OffSurface) && (!m_associatedCamera.expired()))
     {
         er = m_renderPacksArray[static_cast<size_t>(list_id)].
-            InsertRenderElement(element, mxWorld, m_associatedCamera.lock()->GetLocation(), lighting, m_stampBitMask);
+            InsertRenderElement(element, mxWorld, m_associatedCamera.lock()->location(), lighting, m_stampBitMask);
     }
     else
     {
@@ -91,8 +91,8 @@ error Renderer::BeginScene()
     }
     if (camera)
     {
-        Engine::MaterialVariableMap::UseCameraParameter(camera->GetLocation(),
-            camera->GetViewTransform(), camera->GetProjectionTransform());
+        Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
+            camera->viewTransform(), camera->projectionTransform());
     }
     Graphics::IGraphicAPI::Instance()->BeginScene();
     return ErrorCode::ok;
@@ -120,10 +120,10 @@ error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     const SceneGraph::VisibleSet::SpatialVector& spatial_array = visible_set.GetObjectSet();
     for (const auto& sp : spatial_array)
     {
-        if (!sp->IsRenderable()) continue;  // 有很多不需要render的node, 先檢查效率較好
-        if (!sp->TestSpatialFlag(accept_filter)) continue;
-        if (sp->TestSpatialFlag(reject_filter)) continue;
-        sp->InsertToRenderer(shared_from_this());
+        if (!sp->isRenderable()) continue;  // 有很多不需要render的node, 先檢查效率較好
+        if (!sp->testSpatialFlag(accept_filter)) continue;
+        if (sp->testSpatialFlag(reject_filter)) continue;
+        sp->insertToRenderer(shared_from_this());
     }
     return ErrorCode::ok;
 }

@@ -36,9 +36,9 @@ namespace Enigma::Engine
         TextureRepository& operator=(const TextureRepository&) = delete;
         TextureRepository& operator=(TextureRepository&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         //error LoadTexture(const TexturePolicy& policy);
 

@@ -14,28 +14,28 @@ AssetHeaderDataMap::~AssetHeaderDataMap()
     m_headerDataMap.clear();
 }
 
-error AssetHeaderDataMap::InsertHeaderData(const AssetHeaderData& header)
+error AssetHeaderDataMap::insertHeaderData(const AssetHeaderData& header)
 {
-    if (HasAssetKey(header.m_name)) return ErrorCode::duplicatedKey;
+    if (hasAssetKey(header.m_name)) return ErrorCode::duplicatedKey;
     auto result = m_headerDataMap.emplace(header.m_name, header);
     assert(result.second);
     return ErrorCode::ok;
 }
 
-error AssetHeaderDataMap::RemoveHeaderData(const std::string& name)
+error AssetHeaderDataMap::removeHeaderData(const std::string& name)
 {
-    if (!HasAssetKey(name)) return ErrorCode::notExistedKey;
+    if (!hasAssetKey(name)) return ErrorCode::notExistedKey;
     m_headerDataMap.erase(name);
     return ErrorCode::ok;
 }
 
-bool AssetHeaderDataMap::HasAssetKey(const std::string& name) const
+bool AssetHeaderDataMap::hasAssetKey(const std::string& name) const
 {
     auto find_iter = m_headerDataMap.find(name);
     return (find_iter != m_headerDataMap.end());
 }
 
-void AssetHeaderDataMap::RepackContentOffsets(const unsigned content_size, const unsigned base_offset)
+void AssetHeaderDataMap::repackContentOffsets(const unsigned content_size, const unsigned base_offset)
 {
     for (auto& kv : m_headerDataMap)
     {
@@ -46,27 +46,27 @@ void AssetHeaderDataMap::RepackContentOffsets(const unsigned content_size, const
     }
 }
 
-std::optional<AssetHeaderDataMap::AssetHeaderData> AssetHeaderDataMap::TryGetHeaderData(const std::string& name)
+std::optional<AssetHeaderDataMap::AssetHeaderData> AssetHeaderDataMap::tryGetHeaderData(const std::string& name)
 {
     auto find_iter = m_headerDataMap.find(name);
     if (find_iter != m_headerDataMap.end()) return find_iter->second;
     return std::nullopt;
 }
 
-size_t AssetHeaderDataMap::CalcHeaderDataMapBytes() const
+size_t AssetHeaderDataMap::calcHeaderDataMapBytes() const
 {
     size_t sum = 0;
     for (auto kv : m_headerDataMap)
     {
         sum += (kv.first.length() + 1); // name 的長度加起來
     }
-    sum += (GetTotalDataCount() * sizeof(unsigned int) * 5);  // 5個uint * 總數量
+    sum += (getTotalDataCount() * sizeof(unsigned int) * 5);  // 5個uint * 總數量
     return sum;
 }
 
-std::vector<char> AssetHeaderDataMap::ExportToByteBuffer() const
+std::vector<char> AssetHeaderDataMap::exportToByteBuffer() const
 {
-    size_t size = CalcHeaderDataMapBytes();
+    size_t size = calcHeaderDataMapBytes();
     if (size == 0) return std::vector<char>();
 
     std::vector<char> buff;
@@ -92,7 +92,7 @@ std::vector<char> AssetHeaderDataMap::ExportToByteBuffer() const
     return buff;
 }
 
-std::error_code AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>& buff)
+std::error_code AssetHeaderDataMap::importFromByteBuffer(const std::vector<char>& buff)
 {
     if (buff.empty()) return ErrorCode::emptyBuffer;
     m_headerDataMap.clear();
@@ -114,7 +114,7 @@ std::error_code AssetHeaderDataMap::ImportFromByteBuffer(const std::vector<char>
         memcpy(&header.m_crc, &buff[index], sizeof(unsigned int));
         index += sizeof(unsigned int);
 
-        InsertHeaderData(header);
+        insertHeaderData(header);
     }
     return ErrorCode::ok;
 }

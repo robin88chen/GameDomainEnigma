@@ -23,8 +23,8 @@ namespace Enigma::GameCommon
         Engine::GenericDtoCollection& AvatarRecipeDtos() { return m_avatarRecipeDtos; }
         [[nodiscard]] const Engine::GenericDtoCollection& AvatarRecipeDtos() const { return m_avatarRecipeDtos; }
 
-        static AnimatedPawnDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static AnimatedPawnDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     private:
         std::optional<Engine::GenericDto> m_animationClipMapDto;

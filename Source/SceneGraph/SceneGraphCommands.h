@@ -93,6 +93,19 @@ namespace Enigma::SceneGraph
     private:
         Engine::GenericDto m_dto;
     };
+    //--------------------------- Creator --------------------------------------
+    class CreateNode : public Frameworks::IRequestCommand
+    {
+    public:
+        CreateNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : m_name(name), m_factory_desc(factory_desc) {}
+
+        const std::string& name() { return m_name; }
+        const Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
+
+    protected:
+        std::string m_name;
+        Engine::FactoryDesc m_factory_desc;
+    };
 }
 
 #endif // _SCENE_GRAPH_COMMANDS_H

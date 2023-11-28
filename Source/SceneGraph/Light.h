@@ -32,14 +32,14 @@ namespace Enigma::SceneGraph
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
         const LightInfo& Info() const { return m_lightInfo; };
         LightInfo& Info() { return m_lightInfo; }
 
-        virtual error OnCullingVisible(Culler*, bool) override;
-        virtual bool CanVisited() override { return true; };
-        virtual error _UpdateWorldData(const MathLib::Matrix4& mxParentWorld) override;
+        virtual error onCullingVisible(Culler*, bool) override;
+        virtual bool canVisited() override { return true; };
+        virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         void SetLightColor(const MathLib::ColorRGBA& color);
         const MathLib::ColorRGBA& GetLightColor() { return Info().GetLightColor(); };

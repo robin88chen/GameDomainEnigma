@@ -51,7 +51,7 @@ namespace Enigma::Engine
         EffectPass& operator=(const EffectPass& pass);
         EffectPass& operator=(EffectPass&& pass) noexcept;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         void MappingAutoVariables();
         void CommitVariables();

@@ -25,9 +25,9 @@ namespace Enigma::Engine
         TimerService& operator=(const TimerService&) = delete;
         TimerService& operator=(TimerService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         const std::unique_ptr<Frameworks::Timer>& GetGameTimer() { return m_gameTimer; };
         const std::unique_ptr<Frameworks::Timer>& GetRealLifeTimer() { return m_realLifeTimer; };

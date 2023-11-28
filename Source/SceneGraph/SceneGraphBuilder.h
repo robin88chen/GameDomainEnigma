@@ -12,11 +12,11 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Renderer/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "Frameworks/ResponseSubscriber.h"
 #include <optional>
 #include <memory>
 #include <vector>
 #include <deque>
+#include <system_error>
 
 namespace Enigma::SceneGraph
 {
@@ -27,6 +27,7 @@ namespace Enigma::SceneGraph
     class Node;
 
     using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
+    using error = std::error_code;
 
     class SceneGraphBuilder
     {
@@ -41,7 +42,7 @@ namespace Enigma::SceneGraph
             std::string m_sceneGraphId;
             std::shared_ptr<Node> m_in_placeRoot;
             std::vector<BuiltSpatialMeta> m_builtSpatialMetas;
-            void Reset()
+            void reset()
             {
                 m_sceneGraphId.clear();
                 m_in_placeRoot = nullptr;
@@ -62,6 +63,7 @@ namespace Enigma::SceneGraph
         void BuildSceneGraph(const std::string& scene_graph_id, const Engine::GenericDtoCollection& dtos);
         void InPlaceBuildSceneGraph(const std::shared_ptr<Node>& sub_root, const Engine::GenericDtoCollection& dtos);
 
+        void InterruptBuildingSceneGraph(error er);
         void SpatialFactory(const Engine::GenericDto& dto);
 
         void NodeFactory(const Engine::GenericDto& dto);
@@ -76,7 +78,8 @@ namespace Enigma::SceneGraph
             const Engine::GenericDto& primitive_dto);
         void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
-        void OnBuildPrimitiveResponse(const Frameworks::IResponsePtr& r);
+        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
 
         void DoRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);
         void DoUnRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);
@@ -98,7 +101,8 @@ namespace Enigma::SceneGraph
         std::unordered_map<Frameworks::Ruid, std::string, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn name
         std::recursive_mutex m_buildingPrimitiveLock;
 
-        Frameworks::ResponseSubscriberPtr m_onBuildPrimitiveResponse;
+        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
 
         std::deque<Frameworks::ICommandPtr> m_buildCommands;
         std::recursive_mutex m_buildCommandsLock;

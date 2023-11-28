@@ -139,10 +139,14 @@
     <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="FrustumInfoDialog.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
+    <ClCompile Include="LevelEditorErrors.cpp" />
     <ClCompile Include="LightEditService.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="OutputPanel.cpp" />
+    <ClCompile Include="PawnEditConsole.cpp" />
+    <ClCompile Include="PawnEditService.cpp" />
+    <ClCompile Include="PawnLoader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -169,11 +173,15 @@
     <ClInclude Include="FrustumInfoDialog.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />
+    <ClInclude Include="LevelEditorErrors.h" />
     <ClInclude Include="LevelEditorEvents.h" />
     <ClInclude Include="LevelEditorUiEvents.h" />
     <ClInclude Include="LightEditService.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="OutputPanel.h" />
+    <ClInclude Include="PawnEditConsole.h" />
+    <ClInclude Include="PawnEditService.h" />
+    <ClInclude Include="PawnLoader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="propertygrid\pgitems.h" />
     <ClInclude Include="propertygrid\propertygrid.h" />

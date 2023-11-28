@@ -3,6 +3,7 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/RequestBus.h"
 #include "Frameworks/ResponseBus.h"
+#include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
@@ -34,12 +35,13 @@ GraphicMain* GraphicMain::Instance()
 error GraphicMain::InstallFrameworks()
 {
     assert(m_serviceManager);
-    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::EventPublisher>(m_serviceManager));
-    m_serviceManager->RegisterSystemService(std::make_shared <Frameworks::CommandBus>(m_serviceManager));
-    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::RequestBus>(m_serviceManager));
-    m_serviceManager->RegisterSystemService(std::make_shared<Frameworks::ResponseBus>(m_serviceManager));
+    m_serviceManager->registerSystemService(std::make_shared<Frameworks::EventPublisher>(m_serviceManager));
+    m_serviceManager->registerSystemService(std::make_shared <Frameworks::CommandBus>(m_serviceManager));
+    m_serviceManager->registerSystemService(std::make_shared<Frameworks::RequestBus>(m_serviceManager));
+    m_serviceManager->registerSystemService(std::make_shared<Frameworks::ResponseBus>(m_serviceManager));
+    m_serviceManager->registerSystemService(std::make_shared<Frameworks::QueryDispatcher>(m_serviceManager));
 
-    Frameworks::EventPublisher::Post(std::make_shared<FrameworksInstalled>());
+    Frameworks::EventPublisher::post(std::make_shared<FrameworksInstalled>());
 
     return ErrorCode::ok;
 }
@@ -47,10 +49,11 @@ error GraphicMain::InstallFrameworks()
 error GraphicMain::ShutdownFrameworks()
 {
     assert(m_serviceManager);
-    m_serviceManager->ShutdownSystemService(Frameworks::EventPublisher::TYPE_RTTI);
-    m_serviceManager->ShutdownSystemService(Frameworks::CommandBus::TYPE_RTTI);
-    m_serviceManager->ShutdownSystemService(Frameworks::RequestBus::TYPE_RTTI);
-    m_serviceManager->ShutdownSystemService(Frameworks::ResponseBus::TYPE_RTTI);
+    m_serviceManager->shutdownSystemService(Frameworks::EventPublisher::TYPE_RTTI);
+    m_serviceManager->shutdownSystemService(Frameworks::CommandBus::TYPE_RTTI);
+    m_serviceManager->shutdownSystemService(Frameworks::RequestBus::TYPE_RTTI);
+    m_serviceManager->shutdownSystemService(Frameworks::ResponseBus::TYPE_RTTI);
+    m_serviceManager->shutdownSystemService(Frameworks::QueryDispatcher::TYPE_RTTI);
     return ErrorCode::ok;
 }
 
@@ -82,7 +85,7 @@ void GraphicMain::FrameUpdate()
 {
     if (m_serviceManager)
     {
-        m_serviceManager->RunOnce();
+        m_serviceManager->runOnce();
     }
 }
 

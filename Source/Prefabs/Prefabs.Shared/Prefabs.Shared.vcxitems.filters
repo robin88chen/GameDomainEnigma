@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PawnPrefabs">
+      <UniqueIdentifier>{258f3ef3-a25d-4008-baee-94e7b2c81276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PrefabIOService">
+      <UniqueIdentifier>{f28ffa5e-4d1a-49d4-8bee-c9f27ed6dd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands Events">
+      <UniqueIdentifier>{54a744e9-3a5e-475b-8480-3982b5a0ab53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Errors">
+      <UniqueIdentifier>{26dfbd34-85c0-4de8-85e2-03ba0b44dbfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{74c53204-86b8-45f9-9d3d-2b85308efa95}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.h">
+      <Filter>PawnPrefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabIOService.h">
+      <Filter>PrefabIOService</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabCommands.h">
+      <Filter>Commands Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabErrors.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabEvents.h">
+      <Filter>Commands Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.cpp">
+      <Filter>PawnPrefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabIOService.cpp">
+      <Filter>PrefabIOService</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabErrors.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

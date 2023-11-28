@@ -30,21 +30,21 @@ ShaderRepository::~ShaderRepository()
     SAFE_DELETE(m_builder);
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnInit()
+Enigma::Frameworks::ServiceResult ShaderRepository::onInit()
 {
     m_onBuilderShaderProgramBuilt =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuilderShaderProgramBuilt(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
+    Frameworks::EventPublisher::subscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
     m_onBuildShaderProgramFailed =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildShaderProgramFailed(c); });
-    Frameworks::EventPublisher::Subscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
+    Frameworks::EventPublisher::subscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
     m_doBuildingShaderProgram =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingShaderProgram(c); });
-    Frameworks::CommandBus::Subscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
+    Frameworks::CommandBus::subscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
     return Frameworks::ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnTick()
+Enigma::Frameworks::ServiceResult ShaderRepository::onTick()
 {
     if (m_isCurrentBuilding) return Frameworks::ServiceResult::Pendding;
     std::lock_guard locker{ m_policiesLock };
@@ -60,14 +60,14 @@ Enigma::Frameworks::ServiceResult ShaderRepository::OnTick()
     return Frameworks::ServiceResult::Pendding;
 }
 
-Enigma::Frameworks::ServiceResult ShaderRepository::OnTerm()
+Enigma::Frameworks::ServiceResult ShaderRepository::onTerm()
 {
-    Frameworks::EventPublisher::Unsubscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
+    Frameworks::EventPublisher::unsubscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
     m_onBuilderShaderProgramBuilt = nullptr;
-    Frameworks::EventPublisher::Unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
+    Frameworks::EventPublisher::unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
     m_onBuildShaderProgramFailed = nullptr;
 
-    Frameworks::CommandBus::Unsubscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
+    Frameworks::CommandBus::unsubscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
     m_doBuildingShaderProgram = nullptr;
 
     return Frameworks::ServiceResult::Complete;
@@ -165,21 +165,21 @@ void ShaderRepository::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& 
     }
     {
         std::lock_guard locker{ m_vtxShaderTableLock };
-        m_vtxShaderTable.insert_or_assign(program->GetVertexShader()->GetName(), program->GetVertexShader());
+        m_vtxShaderTable.insert_or_assign(program->GetVertexShader()->getName(), program->GetVertexShader());
     }
     {
         std::lock_guard locker{ m_vtxLayoutTableLock };
-        m_vtxLayoutTable.insert_or_assign(program->GetVertexDeclaration()->GetName(), program->GetVertexDeclaration());
+        m_vtxLayoutTable.insert_or_assign(program->GetVertexDeclaration()->getName(), program->GetVertexDeclaration());
     }
     {
         std::lock_guard locker{ m_pixShaderTableLock };
-        m_pixShaderTable.insert_or_assign(program->GetPixelShader()->GetName(), program->GetPixelShader());
+        m_pixShaderTable.insert_or_assign(program->GetPixelShader()->getName(), program->GetPixelShader());
     }
     {
         std::lock_guard locker{ m_programTableLock };
-        m_programTable.insert_or_assign(program->GetName(), program);
+        m_programTable.insert_or_assign(program->getName(), program);
     }
-    Frameworks::EventPublisher::Post(std::make_shared<ShaderProgramBuilt>(program->GetName(), program));
+    Frameworks::EventPublisher::post(std::make_shared<ShaderProgramBuilt>(program->getName(), program));
     m_isCurrentBuilding = false;
 }
 

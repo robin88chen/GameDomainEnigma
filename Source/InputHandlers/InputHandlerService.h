@@ -29,9 +29,9 @@ namespace Enigma::InputHandlers
 
         //static Frameworks::ISystemService* Create(Frameworks::ServiceManager* mngr);
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         /// 記錄鍵盤Async Key所要抓取的Key
         void RegisterKeyboardAsyncKey(unsigned int vk);

@@ -10,12 +10,12 @@ DEFINE_RTTI(Terrain, TerrainGeometry, TriangleList);
 
 TerrainGeometry::TerrainGeometry(const std::string& name) : TriangleList(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
 TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)
 {
-    TerrainGeometryDto dto = TerrainGeometryDto::FromGenericDto(o);
+    TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
     m_numRows = dto.NumRows();
     m_numCols = dto.NumCols();
     m_minPosition = dto.MinPosition();
@@ -42,7 +42,7 @@ TerrainGeometry::~TerrainGeometry()
 {
 }
 
-GenericDto TerrainGeometry::SerializeDto() const
+GenericDto TerrainGeometry::serializeDto() const
 {
     TerrainGeometryDto dto;
     SerializeNonVertexAttributes(dto);
@@ -57,7 +57,7 @@ GenericDto TerrainGeometry::SerializeDto() const
     {
         dto.HeightMap() = m_heightMap;
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void TerrainGeometry::UpdateHeightMapToVertexMemory()

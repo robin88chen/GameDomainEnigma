@@ -40,13 +40,13 @@ namespace Enigma::Controllers
         /** frame update (service manager call run one to update) */
         void FrameUpdate();
 
-        Frameworks::ServiceManager* GetServiceManager() { return m_serviceManager; };
+        Frameworks::ServiceManager* getServiceManager() { return m_serviceManager; };
 
         template <class T>
-        std::shared_ptr<T> GetSystemServiceAs()
+        std::shared_ptr<T> getSystemServiceAs()
         {
             assert(m_serviceManager);
-            return m_serviceManager->GetSystemServiceAs<T>();
+            return m_serviceManager->getSystemServiceAs<T>();
         };
 
     private:

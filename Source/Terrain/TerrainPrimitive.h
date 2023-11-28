@@ -23,7 +23,7 @@ namespace Enigma::Terrain
         TerrainPrimitive(TerrainPrimitive&&) noexcept;
         TerrainPrimitive& operator=(TerrainPrimitive&&) noexcept;
 
-        virtual Engine::GenericDto SerializeDto() const override;
+        virtual Engine::GenericDto serializeDto() const override;
     };
 }
 

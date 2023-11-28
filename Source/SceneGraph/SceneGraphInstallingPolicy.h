@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SceneGraphInstallingPolicy.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -10,7 +10,6 @@
 
 #include "GameEngine/InstallingPolicy.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 
 namespace Enigma::SceneGraph
 {
@@ -20,7 +19,7 @@ namespace Enigma::SceneGraph
     {
     public:
         SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
-                : m_dtoDeserializer(dto_deserializer) {}
+            : m_dtoDeserializer(dto_deserializer) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;

@@ -77,14 +77,14 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     */
     if (m_viewerCamera.expired()) return;
 
-    m_adjustedViewerNearPlane = m_viewerCamera.lock()->GetCullingFrustum().GetNearPlaneZ();
-    m_adjustedViewerFarPlane = m_viewerCamera.lock()->GetCullingFrustum().GetFarPlaneZ();
+    m_adjustedViewerNearPlane = m_viewerCamera.lock()->cullingFrustum().nearPlaneZ();
+    m_adjustedViewerFarPlane = m_viewerCamera.lock()->cullingFrustum().farPlaneZ();
 
     if (sceneWorldBound.IsEmpty()) return;
     auto cropBox = sceneWorldBound.BoundingBox3();
     if (!cropBox) return;
     // 如果攝影機在BB內，near z 不需調整
-    bool isCameraInBox = sceneWorldBound.PointInside(m_viewerCamera.lock()->GetLocation());
+    bool isCameraInBox = sceneWorldBound.PointInside(m_viewerCamera.lock()->location());
 
     auto vecCropBox = cropBox->ComputeVertices();
     unsigned int nFaceIndex[] =
@@ -107,7 +107,7 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     tpClipper.Clip();
     if (tpClipper.ClippedTriangleCount() == 0) return;
 
-    Matrix4 mxView = m_viewerCamera.lock()->GetViewTransform();
+    Matrix4 mxView = m_viewerCamera.lock()->viewTransform();
     Vector3 vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[0].Vector(0));
     Vector3 vecMin = vecBoxEdgeInView;
     Vector3 vecMax = vecBoxEdgeInView;
@@ -175,9 +175,8 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         if (fPlaneH < vecMaxLightBox.Y()) fPlaneH = vecMaxLightBox.Y();
         // frustum far z
         float fFarZ = vecMaxLightBox.Z() - vecMinLightBox.Z() + 0.0f;
-        m_lightFrustums[frusta] = Frustum(m_handSys, Frustum::ProjectionType::Ortho);
-        m_lightFrustums[frusta].SetOrthoProjection(fPlaneW * 2.0f, fPlaneH * 2.0f, 0.1f, fFarZ);
-        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].GetProjectionTransform();
+        m_lightFrustums[frusta] = Frustum::fromOrtho(m_handSys, fPlaneW * 2.0f, fPlaneH * 2.0f, 0.1f, fFarZ);
+        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].projectionTransform();
     }
 
     RefreshTextureCoordTransform();
@@ -206,7 +205,7 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     std::array<Vector3, 8> viewerFrustumCorners;
 
     if (m_viewerCamera.expired()) return viewerFrustumCorners;
-    Frustum frustum = m_viewerCamera.lock()->GetCullingFrustum();
+    Frustum frustum = m_viewerCamera.lock()->cullingFrustum();
 
     float viewerNear = m_adjustedViewerNearPlane;
     float viewerFar = m_adjustedViewerFarPlane;
@@ -227,11 +226,11 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     }
     if (frustaIndex < m_partitionCount) m_lightFrustaDistances[frustaIndex] = frustaFar;
 
-    Vector3 vecZ = m_viewerCamera.lock()->GetEyeToLookatVector();
-    Vector3 vecX = m_viewerCamera.lock()->GetRightVector();
-    Vector3 vecY = m_viewerCamera.lock()->GetUpVector();
-    float frustaAspect = frustum.GetAspectRatio();
-    float frustaFov = frustum.GetFov();
+    Vector3 vecZ = m_viewerCamera.lock()->eyeToLookatVector();
+    Vector3 vecX = m_viewerCamera.lock()->rightVector();
+    Vector3 vecY = m_viewerCamera.lock()->upVector();
+    float frustaAspect = frustum.aspectRatio();
+    float frustaFov = frustum.fov();
 
     float nearPlaneHalfHeight = std::tan(frustaFov * 0.5f) * frustaNear;
     float nearPlaneHalfWidth = nearPlaneHalfHeight * frustaAspect;
@@ -239,8 +238,8 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     float farPlaneHalfHeight = std::tan(frustaFov * 0.5f) * frustaFar;
     float farPlaneHalfWidth = farPlaneHalfHeight * frustaAspect;
 
-    Vector3 vecNearPlaneCenter = m_viewerCamera.lock()->GetLocation() + vecZ * frustaNear;
-    Vector3 vecFarPlaneCenter = m_viewerCamera.lock()->GetLocation() + vecZ * frustaFar;
+    Vector3 vecNearPlaneCenter = m_viewerCamera.lock()->location() + vecZ * frustaNear;
+    Vector3 vecFarPlaneCenter = m_viewerCamera.lock()->location() + vecZ * frustaFar;
 
     viewerFrustumCorners[0] = vecNearPlaneCenter - vecX * nearPlaneHalfWidth - vecY * nearPlaneHalfHeight;
     viewerFrustumCorners[1] = vecNearPlaneCenter - vecX * nearPlaneHalfWidth + vecY * nearPlaneHalfHeight;
@@ -294,7 +293,7 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
     // https://github.com/GKR/NvidiaCascadedShadowMapsGLM
     for (unsigned int frusta = 0; frusta < m_partitionCount; frusta++)
     {
-        Matrix4 mxLightViewProj = m_lightFrustums[frusta].GetProjectionTransform() * m_mxLightViewTransforms[frusta];
+        Matrix4 mxLightViewProj = m_lightFrustums[frusta].projectionTransform() * m_mxLightViewTransforms[frusta];
 
         BoundingVolume cropBound = Engine::BoundingVolume::CreateFromTransform(sceneWorldBound, mxLightViewProj);
         auto cropBox = cropBound.BoundingBox3();
@@ -325,7 +324,7 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
             0.0f, scaleY, 0.0f, offsetY,
             0.0f, 0.0f, 1.0f, 0.0f, //scaleZ, offsetZ,
             0.0f, 0.0f, 0.0f, 1.0f);
-        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].GetProjectionTransform();
+        m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].projectionTransform();
         m_mxLightViewProjs[frusta] = m_mxProjSceneCrops[frusta] * m_mxLightViewTransforms[frusta];
     }
 }

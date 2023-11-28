@@ -20,13 +20,13 @@ static std::string TOKEN_HEIGHT_MAP = "HeightMap";
 
 TerrainGeometryDto::TerrainGeometryDto() : TriangleListDto()
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.GetName());
+    m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
     m_numRows = m_numCols = 1;
 }
 
 TerrainGeometryDto::TerrainGeometryDto(const TriangleListDto& triangle_dto) : TriangleListDto(triangle_dto)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainGeometry::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), TerrainGeometry::TYPE_RTTI.getName()));
     m_numRows = m_numCols = 1;
 }
 
@@ -76,11 +76,11 @@ void TerrainGeometryDto::ConvertGeometryVertices()
     TextureCoordDto alpha_coord_dto;
     tex_coord_dto.Texture2DCoords() = tex_coords;
     alpha_coord_dto.Texture2DCoords() = alpha_coords;
-    m_texCoords = { tex_coord_dto.ToGenericDto(), alpha_coord_dto.ToGenericDto() };
+    m_texCoords = { tex_coord_dto.toGenericDto(), alpha_coord_dto.toGenericDto() };
 
     m_vertexFormat = "xyz_nor_tex2(2,2)";
     m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    m_geometryBound = CalculateGeometryBounding().SerializeDto().ToGenericDto();
+    m_geometryBound = CalculateGeometryBounding().serializeDto().toGenericDto();
 }
 
 unsigned TerrainGeometryDto::CalculateGeometryVertexCount() const
@@ -115,11 +115,11 @@ BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
     return BoundingVolume{ bb_box };
 }
 
-TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& dto)
+TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     TerrainGeometryDto terrain_dto;
     terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
-    terrain_dto.TheFactoryDesc() = dto.GetRtti();
+    terrain_dto.factoryDesc() = dto.GetRtti();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
@@ -130,7 +130,7 @@ TerrainGeometryDto TerrainGeometryDto::FromGenericDto(const Engine::GenericDto& 
     return terrain_dto;
 }
 
-GenericDto TerrainGeometryDto::ToGenericDto() const
+GenericDto TerrainGeometryDto::toGenericDto() const
 {
     GenericDto dto;
     SerializeNonVertexAttributesToGenericDto(dto);

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LightEditService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -24,14 +24,14 @@ namespace LevelEditor
         LightEditService& operator=(LightEditService&&) = delete;
         virtual ~LightEditService() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
-        void DoCreatingEnvironmentLight(const Enigma::Frameworks::ICommandPtr& c);
+        void createEnvironmentLight(const Enigma::Frameworks::ICommandPtr& c);
 
     protected:
-        Enigma::Frameworks::CommandSubscriberPtr m_doCreatingEnvironmentLight;
+        Enigma::Frameworks::CommandSubscriberPtr m_createEnvironmentLight;
     };
 }
 

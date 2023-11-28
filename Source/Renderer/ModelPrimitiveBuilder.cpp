@@ -21,22 +21,22 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     m_onBuildMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildMeshPrimitiveFailed(e); });
     m_onModelAnimatorBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnModelAnimatorBuilt(e); });
     m_onBuildModelAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildModelAnimatorFailed(e); });
-    EventPublisher::Subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::Subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::Subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
-    EventPublisher::Subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
+    EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
 
-    CommandBus::Post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.GetName(), ModelPrimitiveDto::ModelDtoConvertToPolicy));
+    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::ModelDtoConvertToPolicy));
 }
 
 ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
 {
-    CommandBus::Post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.GetName()));
+    CommandBus::post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName()));
 
-    EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::Unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::Unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
-    EventPublisher::Unsubscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
+    EventPublisher::unsubscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
     m_onMeshPrimitiveBuilt = nullptr;
     m_onBuildMeshPrimitiveFailed = nullptr;
     m_onModelAnimatorBuilt = nullptr;
@@ -58,10 +58,10 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
     m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->Name());
     for (auto& dto : m_policy->NodeTreeDto().MeshNodes())
     {
-        MeshNodeDto node_dto = MeshNodeDto::FromGenericDto(dto);
+        MeshNodeDto node_dto = MeshNodeDto::fromGenericDto(dto);
         MeshNode node(node_dto.Name());
         node.SetT_PosTransform(node_dto.LocalT_PosTransform());
-        node.SetLocalTransform(node_dto.LocalT_PosTransform());
+        node.setLocalTransform(node_dto.LocalT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
         if (auto v = node_dto.ParentIndexInArray())
         {
@@ -78,7 +78,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
 
 void ModelPrimitiveBuilder::PushInnerMesh(const std::string& node_name, const std::shared_ptr<MeshPrimitivePolicy>& policy)
 {
-    Ruid mesh_ruid = Ruid::Generate();
+    Ruid mesh_ruid = Ruid::generate();
     m_meshBuildingMetas.emplace_back(node_name, mesh_ruid);
     m_meshPolicies.push({ mesh_ruid, policy });
 }
@@ -101,7 +101,7 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
     if (auto ani = m_policy->TheModelAnimator())
     {
         m_animatorPolicy = ani->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
-        CommandBus::Post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
+        CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
     }
     else
     {
@@ -112,7 +112,7 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
 void ModelPrimitiveBuilder::CompleteModelPrimitive()
 {
     if (!m_policy) return;
-    EventPublisher::Post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
+    EventPublisher::post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
 }
 
 void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
@@ -126,7 +126,7 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
     bool has_mesh_built = false;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->GetRuid())
+        if (meta.m_ruidPolicy == ev->getRuid())
         {
             auto index = m_builtPrimitive->GetMeshNodeTree().FindMeshNodeIndex(meta.m_nodeName);
             if (index)
@@ -151,9 +151,9 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
     if (!ev) return;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->GetRuid())
+        if (meta.m_ruidPolicy == ev->getRuid())
         {
-            EventPublisher::Post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
             return;
         }
     }
@@ -166,7 +166,7 @@ void ModelPrimitiveBuilder::OnModelAnimatorBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt>(e);
     if (!ev) return;
-    if (m_animatorPolicy->GetRuid() != ev->GetRuid()) return;
+    if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
     //auto anim = ev->GetAnimator();
     //anim->SetControlledModel(m_builtPrimitive);
     CompleteModelPrimitive();
@@ -179,6 +179,6 @@ void ModelPrimitiveBuilder::OnBuildModelAnimatorFailed(const Frameworks::IEventP
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed>(e);
     if (!ev) return;
-    if (m_animatorPolicy->GetRuid() != ev->GetRuid()) return;
-    EventPublisher::Post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+    if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
+    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }

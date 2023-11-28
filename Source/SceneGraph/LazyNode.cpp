@@ -1,61 +1,84 @@
 ﻿#include "LazyNode.h"
+#include "SceneNonLazyFlattenTraversal.h"
 #include "SceneGraphDtos.h"
+#include "Frameworks/Rtti.h"
+#include "GameEngine/FactoryDesc.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, LazyNode, Node);
 
-LazyNode::LazyNode(const std::string& name) : Node(name)
+LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
 {
-    m_factoryDesc = Engine::FactoryDesc(LazyNode::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
+    m_factoryDesc = factory_desc;
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
 }
 
 LazyNode::LazyNode(const GenericDto& o) : Node(o)
 {
+    LazyNodeDto lazy_node_dto = LazyNodeDto::fromGenericDto(o);
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
 }
 
 LazyNode::~LazyNode()
 {
 }
 
-/*GenericDto LazyNode::SerializeDto()
+GenericDto LazyNode::serializeAsLaziness()
 {
-    NodeDto node_dto(SerializeSpatialDto());  // 基本的 spatial data
-    if ((m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Native)
-        || (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced))
-    {
-        for (auto child : m_childList)
-        {
-            if (child) node_dto.ChildNames().emplace_back(child->GetSpatialName());
-        }
-        GenericDto dto = node_dto.ToGenericDto();
-        dto.AsTopLevel(true);
-        return dto;
-    }
-    else
-    {
-        return node_dto.ToGenericDto();
-    }
-}*/
+    return serializeLazyNodeAsLaziness().toGenericDto();
+}
 
-GenericDto LazyNode::SerializeAsLaziness()
+LazyNodeDto LazyNode::serializeLazyNodeAsLaziness()
 {
-    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(SerializeSpatialDto()));
-    GenericDto dto = lazy_node_dto.ToGenericDto();
+    LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));  // this won't serialize children, that's we want
     FactoryDesc factory_desc = m_factoryDesc;
     factory_desc.ClaimAsDeferred(); // serialize as deferred
-    dto.AddRtti(factory_desc);
-    return dto;
+    lazy_node_dto.factoryDesc() = factory_desc;
+    return lazy_node_dto;
+}
+Enigma::Engine::GenericDtoCollection LazyNode::serializeFlattenedTree()
+{
+    Engine::GenericDtoCollection collection;
+    collection.push_back(serializeDto());
+    collection[0].AsTopLevel(true);
+
+    SceneNonLazyFlattenTraversal flatten_children;
+    for (auto& child : m_childList)
+    {
+        child->visitBy(&flatten_children);
+    }
+    if (flatten_children.GetSpatials().empty()) return collection;
+    for (auto& sp : flatten_children.GetSpatials())
+    {
+        if ((sp->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+            && (std::dynamic_pointer_cast<LazyNode>(sp) != nullptr))
+        {
+            collection.push_back(std::dynamic_pointer_cast<LazyNode>(sp)->serializeAsLaziness());
+        }
+        else
+        {
+            collection.push_back(sp->serializeDto());
+        }
+    }
+    return collection;
 }
 
-bool LazyNode::CanVisited()
+bool LazyNode::canVisited()
 {
-    return m_lazyStatus.IsReady() || m_lazyStatus.IsGhost();
+    return m_lazyStatus.isReady() || m_lazyStatus.isGhost();
 }
 
-SceneTraveler::TravelResult LazyNode::VisitBy(SceneTraveler* traveler)
+SceneTraveler::TravelResult LazyNode::visitBy(SceneTraveler* traveler)
 {
-    if (m_lazyStatus.IsGhost()) return SceneTraveler::TravelResult::Skip;
-    return Node::VisitBy(traveler);
+    if (m_lazyStatus.isGhost()) return SceneTraveler::TravelResult::Skip;
+    return Node::visitBy(traveler);
 }

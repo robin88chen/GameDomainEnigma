@@ -157,11 +157,11 @@ void ShaderProgramDx11::RetrieveShaderVariables(ID3D11ShaderReflection* shaderRe
     std::string shader_name;
     if (var_of == Graphics::IShaderVariable::VarOwner::VarOfVertexShader)
     {
-        shader_name = m_vtxShader->GetName();
+        shader_name = m_vtxShader->getName();
     }
     else
     {
-        shader_name = m_pixShader->GetName();
+        shader_name = m_pixShader->getName();
     }
     // shader resource var
     for (unsigned int i = 0; i < shader_desc.BoundResources; i++)

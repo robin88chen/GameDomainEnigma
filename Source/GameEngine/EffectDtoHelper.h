@@ -21,7 +21,7 @@ namespace Enigma::Engine
         EffectMaterialDtoHelper& FilenameAtPath(const std::string& filename, const std::string& path_id);
         EffectMaterialDtoHelper& FilenameAtPath(const std::string& filename_at_path);
 
-        GenericDto ToGenericDto();
+        GenericDto toGenericDto();
 
     protected:
         EffectMaterialDto m_dto;
@@ -37,7 +37,7 @@ namespace Enigma::Engine
         EffectTextureMapDtoHelper& TextureMapping(const MathLib::Dimension<unsigned>& dimension, unsigned surface_count,
             const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic);
 
-        GenericDto ToGenericDto();
+        GenericDto toGenericDto();
 
     protected:
         EffectTextureMapDto m_dto;

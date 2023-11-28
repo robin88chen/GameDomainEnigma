@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   PortalDtos.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -16,27 +16,36 @@ namespace Enigma::SceneGraph
     class PortalZoneNodeDto : public LazyNodeDto
     {
     public:
-        PortalZoneNodeDto() = default;
+        PortalZoneNodeDto();
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
-        static PortalZoneNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        [[nodiscard]] const std::string& portalManagementNodeName() const { return m_portalManagementNodeName; }
+        std::string& portalManagementNodeName() { return m_portalManagementNodeName; }
+        [[nodiscard]] const std::string& portalName() const { return m_portalName; }
+        std::string& portalName() { return m_portalName; }
+
+        static PortalZoneNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
+
+    protected:
+        std::string m_portalManagementNodeName;
+        std::string m_portalName;
     };
 
     class PortalDto : public SpatialDto
     {
     public:
-        PortalDto() : m_isOpen(false) {};
+        PortalDto();
         PortalDto(const SpatialDto& spatial_dto);
 
-        [[nodiscard]] const std::string& AdjacentZoneNodeName() const { return m_adjacentZoneNodeName; }
-        std::string& AdjacentZoneNodeName() { return m_adjacentZoneNodeName; }
+        [[nodiscard]] const std::string& adjacentZoneNodeName() const { return m_adjacentZoneNodeName; }
+        std::string& adjacentZoneNodeName() { return m_adjacentZoneNodeName; }
 
-        [[nodiscard]] bool IsOpen() const { return m_isOpen; }
-        bool& IsOpen() { return m_isOpen; }
+        [[nodiscard]] bool isOpen() const { return m_isOpen; }
+        bool& isOpen() { return m_isOpen; }
 
-        static PortalDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static PortalDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         std::string m_adjacentZoneNodeName;
@@ -46,14 +55,14 @@ namespace Enigma::SceneGraph
     class PortalManagementNodeDto : public NodeDto
     {
     public:
-        PortalManagementNodeDto() = default;
+        PortalManagementNodeDto();
         PortalManagementNodeDto(const NodeDto& node_dto);
 
-        static PortalManagementNodeDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static PortalManagementNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
-        [[nodiscard]] const std::string& OutsideZoneNodeName() const { return m_outsideZoneNodeName; }
-        std::string& OutsideZoneNodeName() { return m_outsideZoneNodeName; }
+        [[nodiscard]] const std::string& outsideZoneNodeName() const { return m_outsideZoneNodeName; }
+        std::string& outsideZoneNodeName() { return m_outsideZoneNodeName; }
 
     protected:
         std::string m_outsideZoneNodeName;

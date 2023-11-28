@@ -11,7 +11,7 @@ EffectMaterialDtoHelper::EffectMaterialDtoHelper(const std::string& name)
 
 EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::string& filename, const std::string& path_id)
 {
-    m_dto.TheFactoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.GetName()).ClaimFromResource(m_dto.Name(), filename, path_id);
+    m_dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(m_dto.Name(), filename, path_id);
     return *this;
 }
 
@@ -21,9 +21,9 @@ EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::stri
     return FilenameAtPath(fn.GetSubPathFileName(), fn.GetMountPathID());
 }
 
-GenericDto EffectMaterialDtoHelper::ToGenericDto()
+GenericDto EffectMaterialDtoHelper::toGenericDto()
 {
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }
 
 EffectTextureMapDtoHelper::EffectTextureMapDtoHelper()
@@ -58,7 +58,7 @@ EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const MathL
     return *this;
 }
 
-GenericDto EffectTextureMapDtoHelper::ToGenericDto()
+GenericDto EffectTextureMapDtoHelper::toGenericDto()
 {
-    return m_dto.ToGenericDto();
+    return m_dto.toGenericDto();
 }

@@ -25,9 +25,9 @@ namespace Enigma::Frameworks
     public:
         LazyStatus();
 
-        bool IsReady() const;
-        bool IsGhost() const;
-        void ChangeStatus(Status s);
+        bool isReady() const;
+        bool isGhost() const;
+        void changeStatus(Status s);
 
     private:
         std::atomic<Status> m_status;

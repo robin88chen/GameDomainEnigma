@@ -63,8 +63,8 @@ error DeferredRenderer::BeginScene()
     }
     if (camera)
     {
-        Engine::MaterialVariableMap::UseCameraParameter(camera->GetLocation(),
-            camera->GetViewTransform(), camera->GetProjectionTransform());
+        Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
+            camera->viewTransform(), camera->projectionTransform());
     }
     Graphics::IGraphicAPI::Instance()->BeginScene();
     return ErrorCode::ok;

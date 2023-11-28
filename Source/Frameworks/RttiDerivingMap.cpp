@@ -4,7 +4,7 @@ using namespace Enigma::Frameworks;
 
 RttiDerivingMap::DerivingMap RttiDerivingMap::m_derivingMap;
 
-bool RttiDerivingMap::TryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token)
+bool RttiDerivingMap::tryInsertDeriving(const std::string& type_token, const std::string& base_rtti_token)
 {
     if (auto iter = m_derivingMap.find(type_token); iter != m_derivingMap.end())
     {
@@ -17,7 +17,7 @@ bool RttiDerivingMap::TryInsertDeriving(const std::string& type_token, const std
     return true;
 }
 
-bool RttiDerivingMap::IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
+bool RttiDerivingMap::isDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
 {
     std::string search_type = type_token;
     while (!search_type.empty())
@@ -30,8 +30,8 @@ bool RttiDerivingMap::IsDerivedFrom(const std::string& type_token, const std::st
     return false;
 }
 
-bool RttiDerivingMap::IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
+bool RttiDerivingMap::isExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
 {
-    return type_token == base_rtti_token || IsDerivedFrom(type_token, base_rtti_token);
+    return type_token == base_rtti_token || isDerivedFrom(type_token, base_rtti_token);
 }
 

@@ -1,42 +1,51 @@
 ﻿/*********************************************************************
  * \file   WorldMap.h
- * \brief
+ * \brief (2023.11.21) WorldMap contains a portal zone node as root, and a list of quad tree roots
  *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
 #ifndef WORLD_MAP_H
 #define WORLD_MAP_H
-#include <string>
 
 #include "SceneGraph/PortalManagementNode.h"
 #include "SceneGraph/PortalZoneNode.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include "GameEngine/GenericDto.h"
+#include "Terrain/TerrainPawn.h"
+#include <string>
 
 namespace Enigma::WorldMap
 {
-    class WorldMap : public SceneGraph::PortalZoneNode
+    class SceneQuadTreeRoot;
+    class WorldMap
     {
-        DECLARE_EN_RTTI;
+        DECLARE_EN_RTTI_NON_BASE;
     public:
-        WorldMap(const std::string& name);
-        WorldMap(const Engine::GenericDto& o);
+        WorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalZoneNode>& root);
+        WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o);
         WorldMap(const WorldMap& other) = delete;
         WorldMap(WorldMap&& other) = delete;
         WorldMap& operator=(const WorldMap& other) = delete;
         WorldMap& operator=(WorldMap&& other) = delete;
-        virtual ~WorldMap() override;
+        ~WorldMap();
 
-        const std::string& GetName() const { return m_name; };
+        const std::string& getName() const { return m_name; };
 
-        virtual Engine::GenericDto SerializeDto() override;
+        Engine::GenericDto serializeDto();
+        std::vector<Engine::GenericDtoCollection> serializeSceneGraphs();
 
-        void SetPortalRootNode(const std::shared_ptr<SceneGraph::PortalManagementNode>& root);
+        std::shared_ptr<SceneGraph::PortalZoneNode> getRoot() const { return m_root.lock(); };
 
-        std::shared_ptr<SceneGraph::PortalManagementNode> GetPortalRootNode() const { return m_portalRootNode.lock(); };
+        void attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
+        std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
 
     protected:
-        std::weak_ptr<SceneGraph::PortalManagementNode> m_portalRootNode;
+        Engine::FactoryDesc m_factory_desc;
+        std::string m_name;
+        std::weak_ptr<SceneGraph::PortalZoneNode> m_root;
+        typedef std::list<std::shared_ptr<SceneQuadTreeRoot>> QuadRootList;
+        QuadRootList m_listQuadRoot;
     };
 }
 

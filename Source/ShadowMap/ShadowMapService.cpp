@@ -36,7 +36,7 @@ ShadowMapService::~ShadowMapService()
     m_configuration = nullptr;
 }
 
-ServiceResult ShadowMapService::OnInit()
+ServiceResult ShadowMapService::onInit()
 {
     SubscribeEvents();
     Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
@@ -44,7 +44,7 @@ ServiceResult ShadowMapService::OnInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult ShadowMapService::OnTick()
+ServiceResult ShadowMapService::onTick()
 {
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
@@ -54,7 +54,7 @@ ServiceResult ShadowMapService::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult ShadowMapService::OnTerm()
+ServiceResult ShadowMapService::onTerm()
 {
     m_sunLightCamera = nullptr;
 
@@ -65,24 +65,24 @@ ServiceResult ShadowMapService::OnTerm()
 void ShadowMapService::SubscribeEvents()
 {
     m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
-    EventPublisher::Subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
-    EventPublisher::Subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 }
 
 void ShadowMapService::UnsubscribeEvents()
 {
-    EventPublisher::Unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
+    EventPublisher::unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
+    EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
-    EventPublisher::Unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
-    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
 }
 
@@ -170,8 +170,8 @@ void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if ((!ev) || (!ev->GetPawn())) return;
-    if ((ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
-        || (ev->GetPawn()->TestSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
+    if ((ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
+        || (ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
     {
         BindShadowMapToPawn(ev->GetPawn());
     }

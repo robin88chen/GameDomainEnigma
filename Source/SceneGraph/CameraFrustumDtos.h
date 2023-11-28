@@ -24,8 +24,8 @@ namespace Enigma::SceneGraph
         CameraDto& operator=(const CameraDto&) = default;
         CameraDto& operator=(CameraDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         std::string& Name() { return m_name; }
         [[nodiscard]] const std::string& Name() const { return m_name; }
@@ -40,8 +40,8 @@ namespace Enigma::SceneGraph
         Engine::GenericDto& Frustum() { return m_frustumDto; }
         [[nodiscard]] Engine::GenericDto Frustum() const { return m_frustumDto; }
 
-        static CameraDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static CameraDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -63,8 +63,8 @@ namespace Enigma::SceneGraph
         FrustumDto& operator=(const FrustumDto&) = default;
         FrustumDto& operator=(FrustumDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
         [[nodiscard]] SceneGraph::GraphicCoordSys HandSystem() const { return m_handSys; }
@@ -84,8 +84,8 @@ namespace Enigma::SceneGraph
         float& NearHeight() { return m_nearHeight; }
         [[nodiscard]] float NearHeight() const { return m_nearHeight; }
 
-        static FrustumDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static FrustumDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

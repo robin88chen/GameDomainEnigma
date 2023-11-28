@@ -18,7 +18,7 @@ LightInfoDto::LightInfoDto()
     m_isEnable = false;
 }
 
-LightInfoDto LightInfoDto::FromGenericDto(const GenericDto& dto)
+LightInfoDto LightInfoDto::fromGenericDto(const GenericDto& dto)
 {
     LightInfoDto light_dto;
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.LightType() = static_cast<LightInfo::LightType>(v.value());
@@ -31,7 +31,7 @@ LightInfoDto LightInfoDto::FromGenericDto(const GenericDto& dto)
     return light_dto;
 }
 
-GenericDto LightInfoDto::ToGenericDto()
+GenericDto LightInfoDto::toGenericDto()
 {
     GenericDto dto;
     dto.AddOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));

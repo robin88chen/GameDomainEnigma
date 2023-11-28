@@ -155,8 +155,8 @@ void ViewerAppDelegate::InstallEngine()
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
-        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto());
+        .Frustum(Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
+        .FrustumNearPlaneDimension(40.0f, 30.0f).ToGenericDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
@@ -250,7 +250,7 @@ void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
     auto pawn_dto = m_pawn->SerializeDto();
     pawn_dto.AsTopLevel(true);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "w+b");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Write | OpenAlways | Binary);
     iFile->Write(0, convert_to_buffer(json));
     FileSystem::Instance()->CloseFile(iFile);
 }
@@ -262,7 +262,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
         m_pawn->DetachFromParent();
         m_pawn = nullptr;
     }
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), "rb");
+    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Read | Binary);
     size_t file_size = iFile->Size();
 
     auto read_buf = iFile->Read(0, file_size);

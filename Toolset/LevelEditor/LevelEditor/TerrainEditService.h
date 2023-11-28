@@ -30,33 +30,32 @@ namespace LevelEditor
         TerrainEditService(TerrainEditService&&) = delete;
         TerrainEditService& operator=(TerrainEditService&&) = delete;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
-        void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
-        void DoMovingUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
-        void DoPaintingTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
-        void DoCompletingEditOperation(const Enigma::Frameworks::ICommandPtr& c);
-        void DoSavingSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
+        void createNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
+        void moveUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
+        void paintTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
+        void saveSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
 
-        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void onTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
-        void OnSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e);
-        void OnSaveSplatTextureFailed(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
-        void OnRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e);
+        void onSaveSplatTextureFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onTextureImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
+        void onRetrieveTextureImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
-        void MoveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
-        void MoveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
-        void CommitHeightMapUpdated(const std::shared_ptr<Enigma::Terrain::TerrainPrimitive>& terrain_primitive, const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry);
+        void moveUpTerrainVertexByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, float height);
+        void moveUpTerrainVertex(const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry, const Enigma::MathLib::Vector3& picking_pos, float height);
+        void commitHeightMapUpdated(const std::shared_ptr<Enigma::Terrain::TerrainPrimitive>& terrain_primitive, const std::shared_ptr<Enigma::Terrain::TerrainGeometry>& terrain_geometry);
 
-        void PaintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density);
-        void PaintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density);
-        void AddLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density);
-        void CommitAlphaTexelUpdated();
+        void paintTerrainLayerByBrush(const Enigma::MathLib::Vector3& brush_pos, float brush_size, unsigned layer_idx, float density);
+        void paintTerrainLayer(const Enigma::MathLib::Vector3& picking_pos, unsigned layer_idx, float density);
+        void addLayerAlpha(unsigned texel_x, unsigned texel_y, unsigned layer_idx, int density);
+        void commitAlphaTexelUpdated();
     public:
         static constexpr inline unsigned TextureLayerNum = 4;
         static std::array<std::string, TextureLayerNum> LayerSemantics;
@@ -66,11 +65,10 @@ namespace LevelEditor
         std::unordered_map<std::string, std::weak_ptr<Enigma::Engine::Texture>> m_splatTextures;
         std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;
-        Enigma::Frameworks::CommandSubscriberPtr m_doMovingUpTerrainVertex;
-        Enigma::Frameworks::CommandSubscriberPtr m_doPaintingTerrainLayer;
-        Enigma::Frameworks::CommandSubscriberPtr m_doCompletingEditOperation;
-        Enigma::Frameworks::CommandSubscriberPtr m_doSavingSplatTexture;
+        Enigma::Frameworks::CommandSubscriberPtr m_createNewTerrain;
+        Enigma::Frameworks::CommandSubscriberPtr m_moveUpTerrainVertex;
+        Enigma::Frameworks::CommandSubscriberPtr m_paintTerrainLayer;
+        Enigma::Frameworks::CommandSubscriberPtr m_saveSplatTexture;
 
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;

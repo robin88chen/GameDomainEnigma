@@ -20,7 +20,7 @@ IntrPrimitiveRay3::IntrPrimitiveRay3(const std::shared_ptr<Primitive>& primitive
 {
     assert(m_primitive);
     m_intersectionType = IntersectionType::POINT;
-    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(m_primitive->TypeInfo());
+    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(m_primitive->typeInfo());
 }
 
 IntrPrimitiveRay3::~IntrPrimitiveRay3()

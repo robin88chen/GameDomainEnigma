@@ -39,21 +39,21 @@ namespace Enigma::AssetPackage
         AssetHeaderDataMap& operator=(const AssetHeaderDataMap&) = delete;
         AssetHeaderDataMap& operator=(AssetHeaderDataMap&&) = delete;
 
-        error InsertHeaderData(const AssetHeaderData& header);
-        error RemoveHeaderData(const std::string& name);
+        error insertHeaderData(const AssetHeaderData& header);
+        error removeHeaderData(const std::string& name);
 
-        bool HasAssetKey(const std::string& name) const;
+        bool hasAssetKey(const std::string& name) const;
 
-        void RepackContentOffsets(const unsigned int content_size, const unsigned int base_offset);
+        void repackContentOffsets(const unsigned int content_size, const unsigned int base_offset);
 
-        std::optional<AssetHeaderData> TryGetHeaderData(const std::string& name);
+        std::optional<AssetHeaderData> tryGetHeaderData(const std::string& name);
 
-        size_t CalcHeaderDataMapBytes() const;
+        size_t calcHeaderDataMapBytes() const;
 
-        size_t GetTotalDataCount() const { return m_headerDataMap.size(); };
+        size_t getTotalDataCount() const { return m_headerDataMap.size(); };
 
-        std::vector<char> ExportToByteBuffer() const;
-        std::error_code ImportFromByteBuffer(const std::vector<char>& buff);
+        std::vector<char> exportToByteBuffer() const;
+        std::error_code importFromByteBuffer(const std::vector<char>& buff);
 
     private:
         std::unordered_map<std::string, AssetHeaderData> m_headerDataMap;

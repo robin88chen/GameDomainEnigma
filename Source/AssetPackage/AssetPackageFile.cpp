@@ -79,19 +79,19 @@ AssetPackageFile::~AssetPackageFile()
     }
 }
 
-AssetPackageFile* AssetPackageFile::CreateNewPackage(const std::string& basefilename)
+AssetPackageFile* AssetPackageFile::createNewPackage(const std::string& basefilename)
 {
     AssetPackageFile* package = new AssetPackageFile();
-    const error er = package->CreateNewPackageImp(basefilename);
+    const error er = package->createNewPackageImp(basefilename);
     assert(!er);
     return package;
 }
 
-error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
+error AssetPackageFile::createNewPackageImp(const std::string& basefilename)
 {
     if (basefilename.empty()) return ErrorCode::emptyFileName;
 
-    ResetPackage();
+    resetPackage();
 
     m_nameList = std::make_unique<AssetNameList>();
     m_headerDataMap = std::make_unique<AssetHeaderDataMap>();
@@ -109,24 +109,24 @@ error AssetPackageFile::CreateNewPackageImp(const std::string& basefilename)
         return ErrorCode::fileOpenFail;
     }
 
-    SaveHeaderFile();
+    saveHeaderFile();
 
     return ErrorCode::ok;
 }
 
-AssetPackageFile* AssetPackageFile::OpenPackage(const std::string& basefilename)
+AssetPackageFile* AssetPackageFile::openPackage(const std::string& basefilename)
 {
     AssetPackageFile* package = new AssetPackageFile();
-    const error er = package->OpenPackageImp(basefilename);
+    const error er = package->openPackageImp(basefilename);
     assert(!er);
     return package;
 }
 
-error AssetPackageFile::OpenPackageImp(const std::string& basefilename)
+error AssetPackageFile::openPackageImp(const std::string& basefilename)
 {
     if (basefilename.empty()) return ErrorCode::emptyFileName;
 
-    ResetPackage();
+    resetPackage();
 
     m_baseFilename = basefilename;
 
@@ -140,12 +140,12 @@ error AssetPackageFile::OpenPackageImp(const std::string& basefilename)
         return ErrorCode::fileOpenFail;
     }
 
-    ReadHeaderFile();
+    readHeaderFile();
 
     return ErrorCode::ok;
 }
 
-error AssetPackageFile::AddAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version)
+error AssetPackageFile::addAssetFile(const std::string& file_path, const std::string& asset_key, unsigned int version)
 {
     assert(m_headerFile);
     assert(m_bundleFile);
@@ -171,13 +171,13 @@ error AssetPackageFile::AddAssetFile(const std::string& file_path, const std::st
         asset_file.close();
         return ErrorCode::fileReadFail;
     }
-    error add_result = AddAssetMemory(buff, asset_key, asset_ver);
+    error add_result = addAssetMemory(buff, asset_key, asset_ver);
 
     asset_file.close();
     return add_result;
 }
 
-error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version)
+error AssetPackageFile::addAssetMemory(const std::vector<char>& buff, const std::string& asset_key, unsigned int version)
 {
     assert(m_headerFile);
     assert(m_bundleFile);
@@ -210,13 +210,13 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
     header_data.m_version = version;
     header_data.m_crc = 0;
 
-    error er = m_nameList->AppendAssetName(asset_key);
+    error er = m_nameList->appendAssetName(asset_key);
     if (er) return er;
-    er = m_headerDataMap->InsertHeaderData(header_data);
+    er = m_headerDataMap->insertHeaderData(header_data);
     if (er)
     {
         // header add 失敗, 要再把 name list 改回
-        m_nameList->RemoveAssetName(asset_key);
+        m_nameList->removeAssetName(asset_key);
         return er;
     }
 
@@ -225,12 +225,12 @@ error AssetPackageFile::AddAssetMemory(const std::vector<char>& buff, const std:
 
     m_assetCount++;
 
-    SaveHeaderFile();
+    saveHeaderFile();
 
     return ErrorCode::ok;
 }
 
-error AssetPackageFile::TryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key)
+error AssetPackageFile::tryRetrieveAssetToFile(const std::string& file_path, const std::string& asset_key)
 {
     if (file_path.empty())
     {
@@ -240,9 +240,9 @@ error AssetPackageFile::TryRetrieveAssetToFile(const std::string& file_path, con
     {
         return ErrorCode::emptyKey;
     }
-    unsigned int asset_orig_size = GetAssetOriginalSize(asset_key);
+    unsigned int asset_orig_size = getAssetOriginalSize(asset_key);
     if (asset_orig_size == 0) return ErrorCode::zeroSizeAsset;
-    auto buff = TryRetrieveAssetToMemory(asset_key);
+    auto buff = tryRetrieveAssetToMemory(asset_key);
     if (!buff)
     {
         return ErrorCode::emptyBuffer;
@@ -262,18 +262,18 @@ error AssetPackageFile::TryRetrieveAssetToFile(const std::string& file_path, con
     return ErrorCode::ok;
 }
 
-std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(const std::string& asset_key)
+std::optional<std::vector<char>> AssetPackageFile::tryRetrieveAssetToMemory(const std::string& asset_key)
 {
     assert(m_bundleFile);
 
     if (asset_key.empty()) return std::nullopt;
-    unsigned int asset_orig_size = GetAssetOriginalSize(asset_key);
+    unsigned int asset_orig_size = getAssetOriginalSize(asset_key);
     if (asset_orig_size == 0) return std::nullopt;
 
-    auto header_data = TryGetAssetHeaderData(asset_key);
+    auto header_data = tryGetAssetHeaderData(asset_key);
     if (!header_data) return std::nullopt;
 
-    auto [comp_buff, read_bytes] = ReadBundleContent(header_data->m_offset, header_data->m_size);
+    auto [comp_buff, read_bytes] = readBundleContent(header_data->m_offset, header_data->m_size);
 
     if (read_bytes != header_data->m_size) return std::nullopt;
 
@@ -288,61 +288,61 @@ std::optional<std::vector<char>> AssetPackageFile::TryRetrieveAssetToMemory(cons
     return buff;
 }
 
-unsigned int AssetPackageFile::GetAssetOriginalSize(const std::string& asset_key)
+unsigned int AssetPackageFile::getAssetOriginalSize(const std::string& asset_key)
 {
     assert(m_headerDataMap);
 
     if (asset_key.empty()) return 0;
-    auto header_data = TryGetAssetHeaderData(asset_key);
+    auto header_data = tryGetAssetHeaderData(asset_key);
     if (!header_data) return 0;
     return header_data->m_orgSize;
 }
 
-time_t AssetPackageFile::GetAssetTimeStamp(const std::string& asset_key)
+time_t AssetPackageFile::getAssetTimeStamp(const std::string& asset_key)
 {
     assert(m_headerDataMap);
 
     if (asset_key.empty()) return 0;
 
-    auto header_data = TryGetAssetHeaderData(asset_key);
+    auto header_data = tryGetAssetHeaderData(asset_key);
     if (!header_data) return 0;
 
     unsigned int ver = header_data->m_version;
     return GetTimeStampFromFileVersion(ver);
 }
 
-error AssetPackageFile::RemoveAsset(const std::string& asset_key)
+error AssetPackageFile::removeAsset(const std::string& asset_key)
 {
     if (asset_key.empty()) return ErrorCode::emptyKey;
     if (!m_headerDataMap) return ErrorCode::invalidHeaderData;
     if (!m_nameList) return ErrorCode::invalidNameList;
-    auto header_data = TryGetAssetHeaderData(asset_key);
+    auto header_data = tryGetAssetHeaderData(asset_key);
     if (!header_data) return ErrorCode::invalidHeaderData;
     unsigned int content_size = header_data->m_size;
     unsigned int content_offset = header_data->m_offset;
 
-    error er = RepackBundleContent(content_size, content_offset);
+    error er = repackBundleContent(content_size, content_offset);
     if (er) return er;
 
     // 前面都檢查過可以移除，所以這後面的 error 都做 assert
-    er = m_nameList->RemoveAssetName(asset_key);
+    er = m_nameList->removeAssetName(asset_key);
     assert(!er);
-    m_headerDataMap->RepackContentOffsets(content_size, content_offset);
-    er = m_headerDataMap->RemoveHeaderData(asset_key);
+    m_headerDataMap->repackContentOffsets(content_size, content_offset);
+    er = m_headerDataMap->removeHeaderData(asset_key);
     assert(!er);
-    SaveHeaderFile();
+    saveHeaderFile();
 
     return ErrorCode::ok;
 }
 
-std::optional<AssetHeaderDataMap::AssetHeaderData> AssetPackageFile::TryGetAssetHeaderData(
+std::optional<AssetHeaderDataMap::AssetHeaderData> AssetPackageFile::tryGetAssetHeaderData(
     const std::string& asset_key) const
 {
     assert(m_headerDataMap);
-    return m_headerDataMap->TryGetHeaderData(asset_key);
+    return m_headerDataMap->tryGetHeaderData(asset_key);
 }
 
-void AssetPackageFile::ResetPackage()
+void AssetPackageFile::resetPackage()
 {
     if (m_headerFile)
     {
@@ -359,7 +359,7 @@ void AssetPackageFile::ResetPackage()
     m_headerDataMap = nullptr;
 }
 
-void AssetPackageFile::SaveHeaderFile()
+void AssetPackageFile::saveHeaderFile()
 {
     assert(m_headerFile);
     std::lock_guard<std::mutex> locker{ m_headerFileLocker };
@@ -371,7 +371,7 @@ void AssetPackageFile::SaveHeaderFile()
     m_headerFile.write((const char*)&m_assetCount, sizeof(m_assetCount));
 
     assert(m_nameList);
-    std::vector<char> name_buff = m_nameList->ExportToByteBuffer();
+    std::vector<char> name_buff = m_nameList->exportToByteBuffer();
     unsigned int name_list_byte_size = (unsigned int)name_buff.size();
     m_headerFile.write((const char*)&name_list_byte_size, sizeof(name_list_byte_size));
     if (name_list_byte_size > 0)
@@ -380,7 +380,7 @@ void AssetPackageFile::SaveHeaderFile()
     }
 
     assert(m_headerDataMap);
-    std::vector<char> header_buff = m_headerDataMap->ExportToByteBuffer();
+    std::vector<char> header_buff = m_headerDataMap->exportToByteBuffer();
     unsigned int header_byte_size = (unsigned int)header_buff.size();
     m_headerFile.write((const char*)&header_byte_size, sizeof(header_byte_size));
     if (header_byte_size > 0)
@@ -391,7 +391,7 @@ void AssetPackageFile::SaveHeaderFile()
     m_headerFile.flush();
 }
 
-void AssetPackageFile::ReadHeaderFile()
+void AssetPackageFile::readHeaderFile()
 {
     assert(m_headerFile);
     std::lock_guard<std::mutex> locker{ m_headerFileLocker };
@@ -411,7 +411,7 @@ void AssetPackageFile::ReadHeaderFile()
         m_headerFile.read(&name_buff[0], name_list_byte_size);
     }
     m_nameList = std::make_unique<AssetNameList>();
-    m_nameList->ImportFromByteBuffer(name_buff);
+    m_nameList->importFromByteBuffer(name_buff);
 
     unsigned int header_byte_size;
     m_headerFile.read((char*)&header_byte_size, sizeof(header_byte_size));
@@ -422,10 +422,10 @@ void AssetPackageFile::ReadHeaderFile()
         m_headerFile.read(&header_buff[0], header_byte_size);
     }
     m_headerDataMap = std::make_unique<AssetHeaderDataMap>();
-    m_headerDataMap->ImportFromByteBuffer(header_buff);
+    m_headerDataMap->importFromByteBuffer(header_buff);
 }
 
-std::tuple<std::vector<char>, unsigned int> AssetPackageFile::ReadBundleContent(unsigned int offset,
+std::tuple<std::vector<char>, unsigned int> AssetPackageFile::readBundleContent(unsigned int offset,
     unsigned int content_size)
 {
     std::lock_guard<std::mutex> locker{ m_bundleFileLocker };
@@ -437,7 +437,7 @@ std::tuple<std::vector<char>, unsigned int> AssetPackageFile::ReadBundleContent(
     return { out_buff, (unsigned int)m_bundleFile.tellg() - offset };
 }
 
-error AssetPackageFile::RepackBundleContent(const unsigned int content_size, const unsigned int base_offset)
+error AssetPackageFile::repackBundleContent(const unsigned int content_size, const unsigned int base_offset)
 {
     assert(m_bundleFile);
 

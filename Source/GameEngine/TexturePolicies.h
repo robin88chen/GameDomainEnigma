@@ -35,7 +35,7 @@ namespace Enigma::Engine
         TexturePolicy(const std::string& name, const MathLib::Dimension<unsigned>& dimension, unsigned surface_count)
             : m_jobType(JobType::Create), m_name(name), m_dimension(dimension), m_surfaceCount(surface_count) {};
 
-        const std::string& GetName() const { return m_name; };
+        const std::string& getName() const { return m_name; };
         const std::string& GetFileName() const { return m_filename; };
         const std::string& GetPathID() const { return m_pathId; };
         const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };

@@ -27,7 +27,7 @@ namespace Enigma::Engine
         EffectTechnique& operator=(const EffectTechnique& source_tech);
         EffectTechnique& operator=(EffectTechnique&& source_tech) noexcept;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         void AddPass(const EffectPass& pass);
         unsigned int GetPassCount() { return static_cast<unsigned int>(m_effectPasses.size()); };

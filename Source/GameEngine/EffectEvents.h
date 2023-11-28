@@ -21,7 +21,7 @@ namespace Enigma::Engine
     public:
         EffectMaterialCompiled(const Frameworks::Ruid& request_ruid, const std::string& name, EffectMaterialPtr eff)
             : IResponseEvent(request_ruid), m_name(name), m_effect(std::move(eff)) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         bool HasEffect() { return m_effect != nullptr; }
         EffectMaterialPtr GetEffect() { return m_effect; }
 
@@ -34,7 +34,7 @@ namespace Enigma::Engine
     public:
         CompileEffectMaterialFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
 
     private:

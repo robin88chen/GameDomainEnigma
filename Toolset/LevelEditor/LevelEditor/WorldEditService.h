@@ -20,8 +20,8 @@ namespace LevelEditor
         WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapService>& map);
         virtual ~WorldEditService() override;
 
-        virtual Enigma::Frameworks::ServiceResult OnInit() override;
-        virtual Enigma::Frameworks::ServiceResult OnTerm() override;
+        virtual Enigma::Frameworks::ServiceResult onInit() override;
+        virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
@@ -34,8 +34,8 @@ namespace LevelEditor
         /** serializing
         @return world map scene graph and a vector of each node graph
          */
-        std::tuple<Enigma::Engine::GenericDtoCollection, std::vector<Enigma::Engine::GenericDtoCollection>> SerializeWorldMapAndNodeGraphs(const std::string& path_id) const;
-        void DeserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto);
+        std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCollection>> serializeWorldMapAndNodeGraphs(const std::string& path_id) const;
+        void deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto, const std::string& portal_manager_name);
 
     private:
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);

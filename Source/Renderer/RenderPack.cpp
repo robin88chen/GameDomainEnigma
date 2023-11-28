@@ -81,12 +81,12 @@ const std::shared_ptr<RenderElement>& RenderPack::GetRenderElement() const
     return m_element;
 }
 
-Matrix4 RenderPack::GetWorldTransform()
+Matrix4 RenderPack::getWorldTransform()
 {
     return m_worldTransform;
 }
 
-const Matrix4& RenderPack::GetWorldTransform() const
+const Matrix4& RenderPack::getWorldTransform() const
 {
     return m_worldTransform;
 }

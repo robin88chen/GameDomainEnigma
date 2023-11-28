@@ -27,9 +27,9 @@ namespace Enigma::Engine
 
         bool operator==(const EffectVariable& var);
 
-        const std::string& GetName() { return m_name; };
+        const std::string& getName() { return m_name; };
         const std::string& GetSemantic() { return m_semantic; };
-        const std::string& GetName() const { return m_name; };
+        const std::string& getName() const { return m_name; };
         const std::string& GetSemantic() const { return m_semantic; };
 
         void AssignValue(std::any value);

@@ -41,7 +41,7 @@ namespace Enigma::Engine
         BoundingVolume& operator=(const BoundingVolume&);
         BoundingVolume& operator=(BoundingVolume&&) noexcept;
 
-        BoundingVolumeDto SerializeDto() const;
+        BoundingVolumeDto serializeDto() const;
 
         MathLib::Vector3 Center() const;
 

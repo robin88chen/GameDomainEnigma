@@ -12,7 +12,7 @@ DEFINE_RTTI(Renderer, SkinMeshPrimitive, MeshPrimitive);
 
 SkinMeshPrimitive::SkinMeshPrimitive(const std::string& name) : MeshPrimitive(name)
 {
-    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
@@ -49,10 +49,10 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexce
     return *this;
 }
 
-GenericDto SkinMeshPrimitive::SerializeDto() const
+GenericDto SkinMeshPrimitive::serializeDto() const
 {
     SkinMeshPrimitiveDto dto(SerializeMeshDto());
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)

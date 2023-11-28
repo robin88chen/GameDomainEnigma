@@ -53,7 +53,7 @@ namespace Enigma::Engine
 
         /** add Name */
         void AddName(const std::string& name);
-        std::string GetName() const;
+        std::string getName() const;
 
         //GenericPolicyConverter GetPolicyConverter() const;
         //void SetPolicyConverter(GenericPolicyConverter converter);

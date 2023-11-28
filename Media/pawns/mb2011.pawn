@@ -1,0 +1,1557 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, 1.0, 0.0, 0.0, -1.0, -4.371138828673793e-8, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.GameCommon.AnimatedPawn",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": true
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "D:\\Projects\\EnigmaD3\\Media\\model\\mb2011_zup.dae"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, 1.0, 0.0, 0.0, -1.0, -4.371138828673793e-8, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, -1.0, 0.0, 1.0, -4.371138828673793e-8, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 16
+        },
+        "PawnPrimitive": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Renderer.ModelPrimitive",
+                        "PrefabFilename": ""
+                    }
+                },
+                "Name": {
+                    "Type": "String",
+                    "Value": "mb2011_zup"
+                },
+                "MeshNodeTree": {
+                    "Type": "DataObject",
+                    "Value": {
+                        "Rtti": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 0,
+                                "ResourceName": "",
+                                "ResourceFilename": "",
+                                "RttiName": "En.Renderer.MeshNodeTree",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "MeshNodes": {
+                            "Type": "DataObjectArray",
+                            "Value": [{
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "k_headtop"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 8.742279788975793e-8, 8.742279788975793e-8, 1.7923700568189815e-7, -8.742279788975793e-8, 1.0, 1.3113400143538456e-7, -0.08836503326892853, -8.742279788975793e-8, -1.3113400143538456e-7, 1.0, 1.8002879619598389, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.MeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "k_headtop"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "mb2011_zup.k_headtop"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "mb2011_zup.k_headtop",
+                                                    "ResourceFilename": "pawns/mb2011_zup.k_headtop.geo@APK_PATH",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "default_color_mesh_effect",
+                                                                "ResourceFilename": "fx/default_color_mesh_effect.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": "default_color_mesh_effect"
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "default_color_mesh_effect"
+                                                        }
+                                                    }]
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": []
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "k_headfront"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 8.742279788975793e-8, 8.742279788975793e-8, 1.809189953405621e-8, -8.742279788975793e-8, 1.0, 1.3113400143538456e-7, -0.8789950013160706, -8.742279788975793e-8, -1.3113400143538456e-7, 1.0, 1.012442946434021, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.MeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "k_headfront"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "mb2011_zup.k_headfront"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "mb2011_zup.k_headfront",
+                                                    "ResourceFilename": "pawns/mb2011_zup.k_headfront.geo@APK_PATH",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "default_color_mesh_effect",
+                                                                "ResourceFilename": "fx/default_color_mesh_effect.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": "default_color_mesh_effect"
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "default_color_mesh_effect"
+                                                        }
+                                                    }]
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": []
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-1.629170043315753e-7, 0.9999998807907104, 0.0000016980500276986277, 0.0031195878982543945, -0.9999784827232361, -1.5180299328676483e-7, -0.006543437950313091, 0.018047809600830078, -0.006543437950313091, -0.0000016990800304483855, 0.9999784827232361, 0.20579159259796143, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Pelvis"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [4.378919982173102e-8, 0.9999998807907104, -0.000001311300025008677, 7.487690328877861e-11, 0.0000015180099808276282, 0.000001311300025008677, 1.0, 2.3283600047996345e-10, 1.0, -4.3791398951498195e-8, -0.0000015180099808276282, 0.00171302305534482, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 2
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Spine"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 3
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9999997019767761, -0.0007963189855217934, 0.0000016678900465194602, 0.05582540109753609, 0.0007963189855217934, 0.9999998211860657, -0.00014700200699735433, -0.00034516298910602927, -0.000001550830006635806, 0.00014700400060974061, 1.0, -8.456579791982222e-8, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Spine1"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 4
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 0.0, 2.811420074522175e-8, 0.43347620964050293, 0.0, 1.0, -2.5336500258932304e-11, -0.00017324100190307945, -2.811420074522175e-8, 4.070839845771168e-11, 1.0, 3.947090121414476e-8, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "k_heart"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -1.7136299845788017e-7, -2.273740007038838e-13, 0.24447749555110931, 1.6391300050599966e-7, 1.0, 3.019920029601053e-7, 0.13266760110855103, 0.0, -3.0199100820027525e-7, 0.9999998807907104, 0.0017582769505679607, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 5
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.MeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "k_heart"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "mb2011_zup.k_heart"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "mb2011_zup.k_heart",
+                                                    "ResourceFilename": "pawns/mb2011_zup.k_heart.geo@APK_PATH",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "default_color_mesh_effect",
+                                                                "ResourceFilename": "fx/default_color_mesh_effect.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": "default_color_mesh_effect"
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "default_color_mesh_effect"
+                                                        }
+                                                    }]
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": []
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Spine2"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 9.482030094432048e-8, 3.65544998714995e-8, 0.2175855040550232, -9.482030094432048e-8, 1.0, 3.760550031095544e-12, -0.00025025001377798617, -3.65544998714995e-8, 3.7843101048651295e-12, 1.0, 5.03660011474949e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 5
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Neck"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.6106641292572021, -0.7918896079063416, -0.0000021396299416664988, 0.3143795132637024, 0.7918896079063416, 0.6106641292572021, -8.82568997440103e-7, -0.0000571609016333241, 0.0000020054999367857818, -0.00000115540001388581, 1.0, 2.9742700746737682e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 7
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Head"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 8
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.6100335121154785, 0.7923756241798401, 0.00012082600005669519, 0.11757899820804596, -0.7923756241798401, 0.610033392906189, 0.00009230260184267536, 6.332989954671575e-8, -5.693730145139853e-7, -0.0001520469959359616, 1.0, -0.000014036299944564234, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 HeadNub"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 9
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 9.929730282465243e-8, 1.2050799594320871e-11, 0.3416314125061035, -9.929730282465243e-8, 1.0, -1.5259399646638805e-11, -1.1920899822825959e-7, -1.2164500309830295e-11, 1.5634599517810877e-11, 1.0, -4.084709903651174e-9, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone06"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 9
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.29300031065940857, -0.9561123251914978, -7.450579886381092e-8, 0.22535720467567444, 9.536739753457368e-7, 2.0861600091848231e-7, 1.0, -0.008438073098659515, -0.9561122059822083, -0.29300010204315186, 9.834769798544585e-7, -0.16321399807929993, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone07"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 11
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -2.98022992950564e-8, -1.141300032259096e-7, 0.16661730408668518, 2.98022992950564e-8, 1.0, -1.8739399365585996e-7, 8.940700269022273e-8, 1.141300032259096e-7, 1.8739399365585996e-7, 1.0, 3.725289943190546e-8, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone04"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.253713995218277, 0.967279314994812, -2.0861600091848231e-7, 0.22634360194206238, -0.0000014305099966804846, 5.513430210157821e-7, 1.0, -0.008921347558498383, 0.9672793745994568, -0.253713995218277, 0.000001519920033388189, 0.16524100303649902, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 9
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone05"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -8.940700269022273e-8, 2.1332599686729736e-8, 0.16203629970550537, 8.940700269022273e-8, 1.0, 1.1065699823120667e-7, 2.6077000825353025e-7, -2.1332599686729736e-8, -1.1065699823120667e-7, 1.0, 2.98022992950564e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 13
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Clavicle"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-0.1679818034172058, -0.7923756837844849, 0.5864493250846863, 0.0000021591199583781417, 0.21842780709266663, -0.6100332736968994, -0.7616748809814453, 0.00009502150351181626, 0.9612864255905151, 0.00014923600247129798, 0.2755514085292816, 0.016990289092063904, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 8
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L UpperArm"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9887441992759705, -0.01749051921069622, -0.1485908031463623, 0.42017170786857605, 0.002909312956035137, 0.9952033162117004, -0.09778568148612976, 2.98022992950564e-8, 0.14958840608596802, 0.09625270962715149, 0.9840521812438965, 2.98022992950564e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 15
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Forearm"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9998483061790466, 0.017414050176739693, 2.98022992950564e-8, 0.16909460723400116, -0.01741405948996544, 0.9998484253883362, 1.1920899822825959e-7, -3.6321601726285735e-8, -2.98022992950564e-8, -1.1175900027637908e-7, 0.9999998807907104, -1.0430800045924116e-7, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 16
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Hand"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, 2.0861600091848231e-7, 1.3038500057405145e-8, 0.23841020464897156, -1.396980042756013e-8, 0.0007962139789015055, 0.9999998807907104, -3.352759847530251e-8, 2.3841900542720396e-7, -0.9999998211860657, 0.0007961320225149393, -5.96045985901128e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 17
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "m_eq01"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 18
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.41999268531799316, 0.05793667957186699, -0.9056761264801025, 0.21493129432201385, -0.9068711996078491, 0.06473665684461594, -0.41640570759773254, -0.005013525020331144, 0.03450525179505348, 0.9962189793586731, 0.07973004877567291, -0.0017678890144452453, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.MeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "m_eq01"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "mb2011_zup.m_eq01"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "mb2011_zup.m_eq01",
+                                                    "ResourceFilename": "pawns/mb2011_zup.m_eq01.geo@APK_PATH",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "default_textured_mesh_effect",
+                                                                "ResourceFilename": "fx/default_textured_mesh_effect.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": "default_textured_mesh_effect"
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "default_textured_mesh_effect"
+                                                        }
+                                                    }]
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "TextureMappings": {
+                                                            "Type": "DataObjectArray",
+                                                            "Value": [{
+                                                                    "JobType": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 1
+                                                                    },
+                                                                    "TextureName": {
+                                                                        "Type": "String",
+                                                                        "Value": "image/mb20110700.png"
+                                                                    },
+                                                                    "Filename": {
+                                                                        "Type": "String",
+                                                                        "Value": "image/mb20110700.png@APK_PATH"
+                                                                    },
+                                                                    "SurfaceCount": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 3435973836
+                                                                    },
+                                                                    "Dimension": {
+                                                                        "Type": "Uint32Array",
+                                                                        "Value": [3435973836, 3435973836]
+                                                                    },
+                                                                    "PathId": {
+                                                                        "Type": "String",
+                                                                        "Value": ""
+                                                                    },
+                                                                    "Semantic": {
+                                                                        "Type": "String",
+                                                                        "Value": "DiffuseMap"
+                                                                    }
+                                                                }]
+                                                        }
+                                                    }]
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Finger0"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 18
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -0.0000014603100453314255, -5.2154099705603585e-8, 0.06795412302017212, 0.0000014901199847372482, 0.9999998211860657, 0.0007962359813973308, 1.9371499604403652e-7, 4.8428798749000634e-8, -0.0007962440140545368, 0.9999998211860657, -1.8626500342122654e-9, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Finger0Nub"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 20
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9999998807907104, -2.5331999609079503e-7, -2.607700011481029e-8, 0.015169859863817692, 2.3841900542720396e-7, 0.9999998807907104, -3.725289943190546e-8, -4.470350134511136e-8, 2.70084008491267e-8, 5.2154099705603585e-8, 1.0, 7.450580152834618e-9, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Clavicle"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 8
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-0.1682116985321045, -0.792375922203064, -0.5863834023475647, -0.000001961029965968919, 0.21825559437274933, -0.610033392906189, 0.7617244124412537, 0.00009203750232700258, -0.961285412311554, 0.00014924599963705987, 0.2755551040172577, -0.016990289092063904, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R UpperArm"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 22
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9887440800666809, -0.01749051921069622, 0.14859089255332947, 0.4201717972755432, 0.002909295028075576, 0.9952033162117004, 0.09778568893671036, 0.0, -0.14958849549293518, -0.09625273197889328, 0.984052300453186, -1.7881400538044545e-7, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Forearm"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 23
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9998481869697571, 0.017413929104804993, 1.0430800045924116e-7, 0.16909460723400116, -0.017413929104804993, 0.9998481869697571, -8.195640077701682e-8, -5.4482399036714924e-8, -1.3410999599727802e-7, 8.940700269022273e-8, 0.9999998807907104, 1.5646199358343438e-7, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Hand"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 24
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -1.4901200273698123e-8, -5.774199962615967e-8, 0.2384101003408432, -5.494799992789012e-8, 0.000796445005107671, -0.9999998211860657, -1.005830014833009e-7, -2.98022992950564e-8, 0.9999997019767761, 0.0007963849930092692, 8.195640077701682e-8, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Finger0"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 25
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -0.0000019818498913082294, -3.0733598777032967e-8, 0.06795406341552734, 0.000001952050070030964, 0.9999998211860657, -0.0007966309785842896, 8.195640077701682e-8, 3.166499951134938e-8, 0.0007966309785842896, 0.9999998211860657, -7.450580152834618e-9, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Finger0Nub"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 26
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-1.0, 5.96045985901128e-8, 8.847560195590631e-8, 0.015169859863817692, 5.96045985901128e-8, 1.0, -5.96045985901128e-8, 7.450579886381092e-8, -8.66129994392395e-8, -5.96045985901128e-8, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Thigh"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-0.9949243068695068, 0.10062570124864578, -3.950840099520292e-9, -0.0558251217007637, 0.10062570124864578, 0.9949247241020203, -0.0001495989999966696, 0.0004257260006852448, -0.000015049599824124016, -0.0001488410052843392, -1.0, 0.2432412952184677, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 4
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Calf"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9800664782524109, 0.19866929948329926, -7.713970262557268e-8, 0.10712289810180664, -0.19866929948329926, 0.9800664186477661, 0.0000010920699651251198, 7.543710012214433e-8, 2.92561992409901e-7, -0.0000010549699709372362, 1.0, 1.4901200273698123e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 28
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Foot"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9950041174888611, -0.09983343631029129, 1.7316099842901167e-7, 0.06744129210710526, 0.09983343631029129, 0.9950041770935059, 2.253150057640596e-7, 9.313230187046884e-10, -1.947900045706774e-7, -2.0690200130957237e-7, 1.0, -2.98022992950564e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 29
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Toe0"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-5.329070094684278e-15, -1.0, -4.371889872345491e-8, 0.052244510501623154, 1.0, 0.0, -8.948160257205018e-8, 0.07184463739395142, 8.948160257205018e-8, -4.371889872345491e-8, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 30
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 L Toe0Nub"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-1.0, -9.313220061812899e-8, 1.5099600148005266e-7, 0.00728154182434082, -9.313220061812899e-8, 1.0, 2.5164799985575442e-14, 1.8589899619669836e-9, -1.5099600148005266e-7, 1.1102199753065464e-14, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 31
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Thigh"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [-0.9949243068695068, 0.10062570124864578, -3.954479854684223e-9, -0.05582511052489281, 0.10062570124864578, 0.9949247241020203, -0.0001495989999966696, 0.0003535450086928904, -0.000015049599824124016, -0.0001488410052843392, -1.0, -0.24324139952659607, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 4
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Calf"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9800664782524109, 0.19866929948329926, -7.714329797181563e-8, 0.10712289810180664, -0.19866929948329926, 0.9800664782524109, 0.0000010920699651251198, 6.053600287714289e-8, 2.925659998709307e-7, -0.0000010549699709372362, 1.0, -1.4901200273698123e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 33
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Foot"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9950041770935059, -0.09983345866203308, 1.7316099842901167e-7, 0.06744127720594406, 0.09983345121145248, 0.9950042963027954, 2.253150057640596e-7, -6.053599843625079e-9, -1.947900045706774e-7, -2.0690200130957237e-7, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 34
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Toe0"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.0, -1.0, -4.37190017521516e-8, 0.05224452167749405, 1.0, 0.0, 2.97279001415518e-8, 0.07184463739395142, -2.97279001415518e-8, -4.37190017521516e-8, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 35
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 R Toe0Nub"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [1.0, -4.6566100309064495e-8, -1.1723999863381268e-13, 0.00728154880926013, 4.6566100309064495e-8, 1.0, -1.3877800513308666e-15, 1.8553300007440043e-9, 1.1723999863381268e-13, 1.3877800513308666e-15, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 36
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone01"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.028603019192814827, 0.9995908141136169, -7.258039858015763e-8, 0.14779050648212433, -0.9995908141136169, 0.02860298939049244, 0.00014964900037739426, -0.4389592111110687, 0.0001495890028309077, -0.000004207839992886875, 1.0, -0.003053884021937847, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 4
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone02"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.9071882963180542, -0.4207248091697693, 1.4884200538745063e-7, 0.1745699942111969, 0.4207248091697693, 0.9071884155273438, 1.0612399847786946e-7, -0.007705091033130884, -1.7967599319490546e-7, -3.365260070609111e-8, 1.0, 1.4668300352127517e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 38
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bone03"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.986393928527832, -0.16439929604530334, -3.0542099693775526e-7, 0.12639929354190826, 0.16439929604530334, 0.986393928527832, -1.1848999559305184e-10, -2.98022992950564e-8, 3.01285012938024e-7, -5.009410131151526e-8, 1.0, 2.956950062582564e-8, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 39
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "Bip01 Footsteps"
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.0000013868000223737909, -1.0, 4.656610097519831e-10, -1.8626500342122654e-9, 1.0, 0.0000013868000223737909, -1.136870003519419e-13, 0.0, 0.0, 4.656610097519831e-10, 1.0, -0.22593660652637482, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 2
+                                    }
+                                }, {
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Renderer.MeshNode",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "Name": {
+                                        "Type": "String",
+                                        "Value": "m_a"
+                                    },
+                                    "ParentNodeIndex": {
+                                        "Type": "Uint32",
+                                        "Value": 2
+                                    },
+                                    "LocalT_PosTransform": {
+                                        "Type": "Matrix4",
+                                        "Value": [0.0000013868000223737909, -1.0, 7.351369646357853e-8, 2.547720079348892e-8, 1.0, 0.0000013868000223737909, -1.0017200014356825e-13, -0.0031195878982543945, -8.881959956337808e-16, 1.3909099649822565e-8, 1.0, -0.22593660652637482, 0.0, 0.0, 0.0, 1.0]
+                                    },
+                                    "MeshPrimitiveObject": {
+                                        "Type": "DataObject",
+                                        "Value": {
+                                            "RenderListId": {
+                                                "Type": "Uint32",
+                                                "Value": 1
+                                            },
+                                            "Rtti": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 0,
+                                                    "ResourceName": "",
+                                                    "ResourceFilename": "",
+                                                    "RttiName": "En.Renderer.SkinMeshPrimitive",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "Name": {
+                                                "Type": "String",
+                                                "Value": "m_a"
+                                            },
+                                            "GeometryName": {
+                                                "Type": "String",
+                                                "Value": "mb2011_zup.m_a"
+                                            },
+                                            "GeometryFactory": {
+                                                "Type": "FactoryDesc",
+                                                "Value": {
+                                                    "InstanceType": 4,
+                                                    "ResourceName": "mb2011_zup.m_a",
+                                                    "ResourceFilename": "pawns/mb2011_zup.m_a.geo@APK_PATH",
+                                                    "RttiName": "En.Engine.TriangleList",
+                                                    "PrefabFilename": ""
+                                                }
+                                            },
+                                            "VisualTechniqueSelection": {
+                                                "Type": "String",
+                                                "Value": "Default"
+                                            },
+                                            "Effects": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "Rtti": {
+                                                            "Type": "FactoryDesc",
+                                                            "Value": {
+                                                                "InstanceType": 4,
+                                                                "ResourceName": "default_textured_skinmesh_effect",
+                                                                "ResourceFilename": "fx/default_textured_skinmesh_effect.efx@APK_PATH",
+                                                                "RttiName": "En.Engine.EffectMaterial",
+                                                                "PrefabFilename": "default_textured_skinmesh_effect"
+                                                            }
+                                                        },
+                                                        "Name": {
+                                                            "Type": "String",
+                                                            "Value": "default_textured_skinmesh_effect"
+                                                        }
+                                                    }]
+                                            },
+                                            "TextureMaps": {
+                                                "Type": "DataObjectArray",
+                                                "Value": [{
+                                                        "TextureMappings": {
+                                                            "Type": "DataObjectArray",
+                                                            "Value": [{
+                                                                    "JobType": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 1
+                                                                    },
+                                                                    "TextureName": {
+                                                                        "Type": "String",
+                                                                        "Value": "image/mb20110801.png"
+                                                                    },
+                                                                    "Filename": {
+                                                                        "Type": "String",
+                                                                        "Value": "image/mb20110801.png@APK_PATH"
+                                                                    },
+                                                                    "PathId": {
+                                                                        "Type": "String",
+                                                                        "Value": ""
+                                                                    },
+                                                                    "Dimension": {
+                                                                        "Type": "Uint32Array",
+                                                                        "Value": [3435973836, 3435973836]
+                                                                    },
+                                                                    "SurfaceCount": {
+                                                                        "Type": "Uint32",
+                                                                        "Value": 3435973836
+                                                                    },
+                                                                    "Semantic": {
+                                                                        "Type": "String",
+                                                                        "Value": "DiffuseMap"
+                                                                    }
+                                                                }]
+                                                        }
+                                                    }]
+                                            }
+                                        }
+                                    }
+                                }]
+                        }
+                    }
+                },
+                "ModelAnimator": {
+                    "Type": "DataObject",
+                    "Value": {
+                        "Rtti": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 0,
+                                "ResourceName": "",
+                                "ResourceFilename": "",
+                                "RttiName": "En.Animators.ModelPrimitiveAnimator",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "AnimationName": {
+                            "Type": "String",
+                            "Value": "mb2011_zup"
+                        },
+                        "AnimationFactory": {
+                            "Type": "FactoryDesc",
+                            "Value": {
+                                "InstanceType": 4,
+                                "ResourceName": "mb2011_zup",
+                                "ResourceFilename": "pawns/mb2011_zup.ani@APK_PATH",
+                                "RttiName": "En.Animators.ModelAnimationAsset",
+                                "PrefabFilename": ""
+                            }
+                        },
+                        "SkinOperators": {
+                            "Type": "DataObjectArray",
+                            "Value": [{
+                                    "Rtti": {
+                                        "Type": "FactoryDesc",
+                                        "Value": {
+                                            "InstanceType": 0,
+                                            "ResourceName": "",
+                                            "ResourceFilename": "",
+                                            "RttiName": "En.Animators.SkinAnimationOperator",
+                                            "PrefabFilename": ""
+                                        }
+                                    },
+                                    "SkinMeshName": {
+                                        "Type": "String",
+                                        "Value": "m_a"
+                                    },
+                                    "BoneNodeNames": {
+                                        "Type": "StringArray",
+                                        "Value": ["Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1", "Bip01 Spine2", "Bip01 Head", "Bone06", "Bone04", "Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand", "Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand", "Bip01 L Thigh", "Bip01 L Calf", "Bip01 L Foot", "Bip01 R Thigh", "Bip01 R Calf", "Bip01 R Foot", "Bone01", "Bone02"]
+                                    },
+                                    "NodeOffsets": {}
+                                }]
+                        }
+                    }
+                }
+            }
+        },
+        "AnimClipMap": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.GameCommon.AnimationClipMap",
+                        "PrefabFilename": ""
+                    }
+                },
+                "AnimationNames": {
+                    "Type": "StringArray",
+                    "Value": []
+                },
+                "StartOffsets": {
+                    "Type": "FloatArray",
+                    "Value": []
+                },
+                "DivideIndices": {
+                    "Type": "Uint32Array",
+                    "Value": []
+                },
+                "LoopTimes": {
+                    "Type": "FloatArray",
+                    "Value": []
+                },
+                "WarpModes": {
+                    "Type": "Uint32Array",
+                    "Value": []
+                }
+            }
+        },
+        "AvatarRecipes": {
+            "Type": "DataObjectArray",
+            "Value": []
+        }
+    }]

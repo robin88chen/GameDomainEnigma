@@ -26,7 +26,7 @@ namespace Enigma::Graphics
         IVertexShader& operator=(const IVertexShader&) = delete;
         IVertexShader& operator=(IVertexShader&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         /** compile vertex shader
         @param code HLSL/GLSL shader code
         @param profile "vs_1_1", "vs_2_0" ....

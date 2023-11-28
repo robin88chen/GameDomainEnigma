@@ -39,7 +39,7 @@ namespace Enigma::Animators
         ModelAnimationAsset& operator=(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset& operator=(ModelAnimationAsset&&) = delete;
 
-        ModelAnimationAssetDto SerializeDto();
+        ModelAnimationAssetDto serializeDto();
 
         /** reserve data array capacity */
         void ReserveCapacity(unsigned int mesh_node_count);

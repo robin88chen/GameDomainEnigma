@@ -17,7 +17,7 @@ DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
 ModelPrimitive::ModelPrimitive(const std::string& name) : Primitive()
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName());
     m_name = name;
     m_meshPrimitiveIndexCache.clear();
 }
@@ -73,15 +73,15 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
     return *this;
 }
 
-GenericDto ModelPrimitive::SerializeDto() const
+GenericDto ModelPrimitive::serializeDto() const
 {
     ModelPrimitiveDto dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
+    dto.factoryDesc() = m_factoryDesc;
     dto.Name() = m_name;
-    dto.TheNodeTree() = m_nodeTree.SerializeDto();
+    dto.TheNodeTree() = m_nodeTree.serializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
-        dto.TheAnimator() = ani->SerializeDto().ToGenericDto();
-    return dto.ToGenericDto();
+        dto.TheAnimator() = ani->serializeDto().toGenericDto();
+    return dto.toGenericDto();
 }
 
 unsigned ModelPrimitive::GetMeshPrimitiveCount()
@@ -120,7 +120,7 @@ MeshPrimitivePtr ModelPrimitive::FindMeshPrimitive(const std::string& name)
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         MeshPrimitivePtr mesh_prim = GetMeshPrimitive(i);
-        if ((mesh_prim) && (mesh_prim->GetName() == name)) return mesh_prim;
+        if ((mesh_prim) && (mesh_prim->getName() == name)) return mesh_prim;
     }
     return nullptr;
 }

@@ -297,7 +297,7 @@ void VertexFormatCode::FromString(const std::string& fvf_string)
 {
     m_fvfCode = 0;
     m_texCount = 0;
-    TokenVector fvf_tokens = En_Split_Token(fvf_string, "_");
+    TokenVector fvf_tokens = split_token(fvf_string, "_");
     for (auto token : fvf_tokens)
     {
         if (token == "xyz")

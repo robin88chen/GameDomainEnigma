@@ -9,15 +9,17 @@
 #define _PORTAL_ZONE_NODE_H
 
 #include "LazyNode.h"
+#include "GameEngine/FactoryDesc.h"
 #include <memory>
 
 namespace Enigma::SceneGraph
 {
+    class SceneGraphRepository;
     class PortalZoneNode : public LazyNode
     {
         DECLARE_EN_RTTI;
     public:
-        PortalZoneNode(const std::string& name);
+        PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         PortalZoneNode(const Engine::GenericDto& dto);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;
@@ -25,11 +27,15 @@ namespace Enigma::SceneGraph
         PortalZoneNode& operator=(PortalZoneNode&&) = delete;
         virtual ~PortalZoneNode() override;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
+        virtual Engine::GenericDto serializeAsLaziness() override;
 
-        virtual error OnCullingVisible(Culler* culler, bool noCull) override;
+        virtual error onCullingVisible(Culler* culler, bool noCull) override;
+
+        virtual void setPortalParent(const std::shared_ptr<Spatial>& portal_parent) { m_portalParent = portal_parent; }
 
     protected:
+        std::weak_ptr<Spatial> m_portalParent; // either portal or portal management node
         // for zone graph traversal
         bool m_hasTraversed;
     };

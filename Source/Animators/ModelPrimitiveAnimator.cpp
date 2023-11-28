@@ -15,7 +15,7 @@ DEFINE_RTTI(Animators, ModelPrimitiveAnimator, Animator);
 
 ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
@@ -59,36 +59,36 @@ ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAn
     return *this;
 }
 
-ModelAnimatorDto ModelPrimitiveAnimator::SerializeDto()
+ModelAnimatorDto ModelPrimitiveAnimator::serializeDto()
 {
     ModelAnimatorDto dto;
     if (!m_animationAsset) return dto;
-    dto.TheFactoryDesc() = m_factoryDesc;
-    dto.AssetName() = m_animationAsset->GetName();
-    dto.AssetFactoryDesc() = m_animationAsset->TheFactoryDesc();
-    if ((m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-        || (m_animationAsset->TheFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+    dto.factoryDesc() = m_factoryDesc;
+    dto.AssetName() = m_animationAsset->getName();
+    dto.AssetFactoryDesc() = m_animationAsset->factoryDesc();
+    if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
+        || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
     {
-        dto.AnimationAssetDto() = m_animationAsset->SerializeDto().ToGenericDto();
+        dto.AnimationAssetDto() = m_animationAsset->serializeDto().toGenericDto();
     }
     for (auto& op : m_skinAnimOperators)
     {
-        dto.SkinOperators().emplace_back(op.SerializeDto().ToGenericDto());
+        dto.SkinOperators().emplace_back(op.serializeDto().toGenericDto());
     }
     return dto;
 }
 
-Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>& timer)
+Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)
 {
     if (FATAL_LOG_EXPR(!timer)) return HasUpdated::False;
     if (!m_isOnPlay) return HasUpdated::False;
 
-    const float elapse_time = timer->GetElapseTime();
-    auto next_to_stop = m_currentAnimClip.Update(elapse_time);
+    const float elapse_time = timer->getElapseTime();
+    auto next_to_stop = m_currentAnimClip.update(elapse_time);
 
     if (m_isFading)
     {
-        m_fadeInAnimClip.Update(elapse_time);
+        m_fadeInAnimClip.update(elapse_time);
         m_remainFadingTime -= elapse_time;
     }
 
@@ -101,9 +101,9 @@ Animator::HasUpdated ModelPrimitiveAnimator::Update(const std::unique_ptr<Timer>
     return res ? HasUpdated::True : HasUpdated::False;
 }
 
-void ModelPrimitiveAnimator::Reset()
+void ModelPrimitiveAnimator::reset()
 {
-    m_currentAnimClip.Reset();
+    m_currentAnimClip.reset();
     TimeValueUpdate();
 }
 
@@ -155,7 +155,7 @@ void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
         if ((m_animationAsset) && (mesh_node))
         {
             m_meshNodeMapping[m].m_nodeIndexInAnimation =
-                m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().GetName());
+                m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().getName());
         }
     }
 }
@@ -282,7 +282,7 @@ bool ModelPrimitiveAnimator::UpdateMeshNodeTransformWithFading()
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().GetLocalTransform());
+            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
 
@@ -319,7 +319,7 @@ bool ModelPrimitiveAnimator::UpdateMeshNodeTransform()
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().GetLocalTransform());
+            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
     return true;

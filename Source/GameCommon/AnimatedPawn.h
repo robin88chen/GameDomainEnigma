@@ -26,7 +26,7 @@ namespace Enigma::GameCommon
         AnimatedPawn& operator=(const AnimatedPawn&) = delete;
         AnimatedPawn& operator=(AnimatedPawn&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
         AnimationClipMap& TheAnimationClipMap() { return m_animationClipMap; };
         const AnimationClipMap& TheAnimationClipMap() const { return m_animationClipMap; };

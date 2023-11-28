@@ -23,8 +23,8 @@ namespace Enigma::GameCommon
         AvatarRecipeDto& operator=(const AvatarRecipeDto&) = default;
         AvatarRecipeDto& operator=(AvatarRecipeDto&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -40,8 +40,8 @@ namespace Enigma::GameCommon
         Engine::EffectMaterialDto& NewMaterialDto() { return m_newMaterialDto; }
         [[nodiscard]] const Engine::EffectMaterialDto& NewMaterialDto() const { return m_newMaterialDto; }
 
-        static AvatarRecipeReplaceMaterialDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static AvatarRecipeReplaceMaterialDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     private:
         std::string m_oldMaterialName;
@@ -58,8 +58,8 @@ namespace Enigma::GameCommon
         Engine::TextureMappingDto& TextureDto() { return m_textureDto; }
         [[nodiscard]] const Engine::TextureMappingDto& TextureDto() const { return m_textureDto; }
 
-        static AvatarRecipeChangeTextureDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static AvatarRecipeChangeTextureDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;

@@ -26,7 +26,7 @@ namespace Enigma::Graphics
         IPixelShader& operator=(const IPixelShader&) = delete;
         IPixelShader& operator=(IPixelShader&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         /** compile pixel shader
         @param code HLSL/GLSL shader code
         @param profile "ps_1_1", "ps_2_0" ....

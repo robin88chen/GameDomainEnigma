@@ -20,8 +20,8 @@ namespace Enigma::Terrain
         TerrainGeometryDto();
         TerrainGeometryDto(const Engine::TriangleListDto& triangle_dto);
 
-        static TerrainGeometryDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static TerrainGeometryDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
         [[nodiscard]] unsigned NumRows() const { return m_numRows; }
         unsigned& NumRows() { return m_numRows; }

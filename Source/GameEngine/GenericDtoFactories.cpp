@@ -14,32 +14,32 @@ GenericDtoFactories::GenericDtoFactories(ServiceManager* srv_mngr) : ISystemServ
 {
     m_doRegisteringFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringFactory(c); });
-    CommandBus::Subscribe(typeid(RegisterDtoFactory), m_doRegisteringFactory);
+    CommandBus::subscribe(typeid(RegisterDtoFactory), m_doRegisteringFactory);
     m_doUnRegisteringFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringFactory(c); });
-    CommandBus::Subscribe(typeid(UnRegisterDtoFactory), m_doUnRegisteringFactory);
+    CommandBus::subscribe(typeid(UnRegisterDtoFactory), m_doUnRegisteringFactory);
     m_doInvokingDtoFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoInvokingDtoFactory(c); });
-    CommandBus::Subscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
+    CommandBus::subscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
     m_doRegisteringConverter =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringConverter(c); });
-    CommandBus::Subscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
+    CommandBus::subscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
     m_doUnRegisteringConverter =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringConverter(c); });
-    CommandBus::Subscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
+    CommandBus::subscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
 }
 
 GenericDtoFactories::~GenericDtoFactories()
 {
-    CommandBus::Unsubscribe(typeid(RegisterDtoFactory), m_doRegisteringFactory);
+    CommandBus::unsubscribe(typeid(RegisterDtoFactory), m_doRegisteringFactory);
     m_doRegisteringFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(UnRegisterDtoFactory), m_doUnRegisteringFactory);
+    CommandBus::unsubscribe(typeid(UnRegisterDtoFactory), m_doUnRegisteringFactory);
     m_doUnRegisteringFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
+    CommandBus::unsubscribe(typeid(InvokeDtoFactory), m_doInvokingDtoFactory);
     m_doInvokingDtoFactory = nullptr;
-    CommandBus::Unsubscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
+    CommandBus::unsubscribe(typeid(RegisterDtoPolicyConverter), m_doRegisteringConverter);
     m_doRegisteringConverter = nullptr;
-    CommandBus::Unsubscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
+    CommandBus::unsubscribe(typeid(UnRegisterDtoPolicyConverter), m_doUnRegisteringConverter);
     m_doUnRegisteringConverter = nullptr;
 }
 

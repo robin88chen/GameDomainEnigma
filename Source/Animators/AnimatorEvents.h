@@ -20,7 +20,7 @@ namespace Enigma::Animators
     public:
         ModelAnimatorBuilt(const Frameworks::Ruid& ruid, const std::shared_ptr<ModelPrimitiveAnimator>& ani) :
             m_ruid(ruid), m_animator(ani) {};
-        const Frameworks::Ruid& GetRuid() { return m_ruid; }
+        const Frameworks::Ruid& getRuid() { return m_ruid; }
         const std::shared_ptr<ModelPrimitiveAnimator>& GetAnimator() { return m_animator; }
     private:
         Frameworks::Ruid m_ruid;
@@ -31,7 +31,7 @@ namespace Enigma::Animators
     public:
         BuildModelAnimatorFailed(const Frameworks::Ruid& ruid, std::error_code er) :
             m_ruid(ruid), m_error(er) {};
-        const Frameworks::Ruid& GetRuid() { return m_ruid; }
+        const Frameworks::Ruid& getRuid() { return m_ruid; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         Frameworks::Ruid m_ruid;

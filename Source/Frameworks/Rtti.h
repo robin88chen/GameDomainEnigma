@@ -11,29 +11,29 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-//----------------------------------------------------------------------------
+ //----------------------------------------------------------------------------
 #define DECLARE_RTTI \
 public: \
   static Rtti TYPE_RTTI; \
-  virtual const Rtti& TypeInfo () const override { return TYPE_RTTI; };
+  virtual const Rtti& typeInfo() const override { return TYPE_RTTI; };
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
-    virtual const Enigma::Frameworks::Rtti& TypeInfo () const override { return TYPE_RTTI; } \
-    virtual const Enigma::Frameworks::Rtti* TypeIndex() override { return &TYPE_RTTI; }
+    virtual const Enigma::Frameworks::Rtti& typeInfo() const override { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* typeIndex() override { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI_OF_BASE \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
-    virtual const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
-    virtual const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; }
+    virtual const Enigma::Frameworks::Rtti& typeInfo() const { return TYPE_RTTI; } \
+    virtual const Enigma::Frameworks::Rtti* typeIndex() { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
 #define DECLARE_EN_RTTI_NON_BASE \
 public: \
     static Enigma::Frameworks::Rtti TYPE_RTTI; \
-    const Enigma::Frameworks::Rtti& TypeInfo () const { return TYPE_RTTI; } \
-    const Enigma::Frameworks::Rtti* TypeIndex() { return &TYPE_RTTI; }
+    const Enigma::Frameworks::Rtti& typeInfo() const { return TYPE_RTTI; } \
+    const Enigma::Frameworks::Rtti* typeIndex() { return &TYPE_RTTI; }
 //----------------------------------------------------------------------------
 #define DEFINE_RTTI(modulename, classname, baseclassname) \
     Enigma::Frameworks::Rtti Enigma::modulename::classname::TYPE_RTTI{"En."#modulename"."#classname, &baseclassname::TYPE_RTTI}
@@ -77,13 +77,13 @@ namespace Enigma::Frameworks
         Rtti& operator=(Rtti&& rhs) = delete;
         bool operator==(const Rtti& rhs) const;
 
-        const std::string& GetName() const;
+        const std::string& getName() const;
 
-        bool IsExactly(const Rtti& type) const;
-        bool IsDerived(const Rtti& type) const;
+        bool isExactly(const Rtti& type) const;
+        bool isDerived(const Rtti& type) const;
 
-        static bool IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
-        static bool IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool isDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
+        static bool isExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
 
     private:
         std::string m_name;
@@ -95,7 +95,7 @@ namespace Enigma::Frameworks
     public:
         size_t operator()(const Rtti& rtti) const
         {
-            return std::hash<std::string>()(rtti.GetName());
+            return std::hash<std::string>()(rtti.getName());
         }
     };
 };

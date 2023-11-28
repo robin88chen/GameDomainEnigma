@@ -40,7 +40,7 @@ namespace Enigma::SceneGraph
     {
     public:
         CameraCreated(const std::string& name, const std::shared_ptr<Camera>& camera) : m_name(name), m_camera(camera) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         std::shared_ptr<Camera> GetCamera() { return m_camera; }
 
     protected:
@@ -51,7 +51,7 @@ namespace Enigma::SceneGraph
     {
     public:
         CreateCameraFailed(const std::string& name, std::error_code err) : m_name(name), m_err(err) {};
-        const std::string& GetName() const { return m_name; }
+        const std::string& getName() const { return m_name; }
         std::error_code GetError() const { return m_err; }
 
     protected:

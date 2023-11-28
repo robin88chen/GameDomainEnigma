@@ -18,7 +18,7 @@ PackageContent::PackageContent(const std::shared_ptr<AssetPackage::AssetPackageF
     m_keyName = key_name;
     if (!m_packageFile.expired())
     {
-        m_fullPath = m_packageFile.lock()->GetBaseFilename() + "/" + m_keyName;
+        m_fullPath = m_packageFile.lock()->getBaseFilename() + "/" + m_keyName;
     }
     m_size = 0;
 }
@@ -61,25 +61,25 @@ size_t PackageContent::Size()
 time_t PackageContent::FileTime()
 {
     if (!IsValidContent()) return 0;
-    return m_packageFile.lock()->GetAssetTimeStamp(m_keyName);
+    return m_packageFile.lock()->getAssetTimeStamp(m_keyName);
 }
 
 bool PackageContent::IsExisted()
 {
     if (!IsValidContent()) return false;
     if (m_size != 0) return true;
-    size_t file_size = m_packageFile.lock()->GetAssetOriginalSize(m_keyName);
+    size_t file_size = m_packageFile.lock()->getAssetOriginalSize(m_keyName);
     m_size = file_size;
     return m_size != 0;
 }
 
-error PackageContent::Open()
+error PackageContent::open()
 {
     if (!IsExisted()) return LastError();
     return ErrorCode::ok;
 }
 
-error PackageContent::Close()
+error PackageContent::close()
 {
     if (!IsValidContent()) return LastError();
     m_size = 0;
@@ -108,9 +108,9 @@ ErrorCode PackageContent::RetrieveAssetContent()
     m_size = 0;
     if (!IsValidContent()) return LastErrorCode();
 
-    size_t asset_size = m_packageFile.lock()->GetAssetOriginalSize(m_keyName);
+    size_t asset_size = m_packageFile.lock()->getAssetOriginalSize(m_keyName);
     if (asset_size == 0) return ErrorCode::zeroSizeContent;
-    auto buff = m_packageFile.lock()->TryRetrieveAssetToMemory(m_keyName);
+    auto buff = m_packageFile.lock()->tryRetrieveAssetToMemory(m_keyName);
     if (!buff)
     {
         return ErrorCode::retrieveContentFail;

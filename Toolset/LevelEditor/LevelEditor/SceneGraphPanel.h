@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SceneGraphPanel.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -24,24 +24,24 @@ namespace LevelEditor
         SceneGraphPanel(const nana::window& wd);
         virtual ~SceneGraphPanel();
 
-        void Initialize(MainForm* main_form);
-        void Finalize();
+        void initialize(MainForm* main_form);
+        void finalize();
 
-        void RefreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene);
+        void refreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene);
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
     private:
-        void OnSceneGraphTreeSelected(const nana::arg_treebox& arg);
+        void onSceneGraphTreeSelected(const nana::arg_treebox& arg);
 
-        void DoRefreshingSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c);
+        void refreshSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c);
     private:
         MainForm* m_main;
         nana::place* m_place;
         nana::treebox* m_sceneGraphTree;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_doRefreshingSceneGraph;
+        Enigma::Frameworks::CommandSubscriberPtr m_refreshSceneGraph;
     };
 }
 

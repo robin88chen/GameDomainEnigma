@@ -13,7 +13,7 @@ static std::string TOKEN_SURFACE_COUNT = "SurfaceCount";
 static std::string TOKEN_JOB_TYPE = "JobType";
 static std::string TOKEN_TEXTURE_MAPPINGS = "TextureMappings";
 
-TextureMappingDto TextureMappingDto::FromGenericDto(const GenericDto& dto)
+TextureMappingDto TextureMappingDto::fromGenericDto(const GenericDto& dto)
 {
     TextureMappingDto tex;
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_JOB_TYPE)) tex.JobType() = static_cast<TexturePolicy::JobType>(v.value());
@@ -27,7 +27,7 @@ TextureMappingDto TextureMappingDto::FromGenericDto(const GenericDto& dto)
     return tex;
 }
 
-GenericDto TextureMappingDto::ToGenericDto() const
+GenericDto TextureMappingDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddOrUpdate(TOKEN_JOB_TYPE, static_cast<unsigned>(m_jobType));
@@ -60,25 +60,25 @@ EffectTextureMapPolicy::TextureTuplePolicy TextureMappingDto::ConvertToPolicy()
     }
 }
 
-EffectTextureMapDto EffectTextureMapDto::FromGenericDto(const GenericDto& dto)
+EffectTextureMapDto EffectTextureMapDto::fromGenericDto(const GenericDto& dto)
 {
     EffectTextureMapDto effect;
     if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
     {
         for (auto& mapping_dto : v.value())
         {
-            effect.TextureMappings().emplace_back(TextureMappingDto::FromGenericDto(mapping_dto));
+            effect.TextureMappings().emplace_back(TextureMappingDto::fromGenericDto(mapping_dto));
         }
     }
     return effect;
 }
 
-GenericDto EffectTextureMapDto::ToGenericDto()
+GenericDto EffectTextureMapDto::toGenericDto()
 {
     GenericDtoCollection mappings;
     for (auto& tex : m_textureMappings)
     {
-        mappings.emplace_back(tex.ToGenericDto());
+        mappings.emplace_back(tex.toGenericDto());
     }
     GenericDto dto;
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPPINGS, mappings);

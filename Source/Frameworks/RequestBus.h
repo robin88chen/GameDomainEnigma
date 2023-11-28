@@ -34,19 +34,19 @@ namespace Enigma::Frameworks
         RequestBus& operator=(const RequestBus&) = delete;
         RequestBus& operator=(RequestBus&&) = delete;
 
-        virtual ServiceResult OnTick() override;
-        virtual ServiceResult OnTerm() override;
+        virtual ServiceResult onTick() override;
+        virtual ServiceResult onTerm() override;
 
         /** lambda 函式無法做互相比對 (operator==), 所以在 list 中無法做 remove,
         必須把每個 handler booking 一個 index, 據此來做 unregister,
         如果 handler 是實體 functor, 而不是 lambda, 就可以用來移除,
         所以, 用 subscriber 模式來實作
         */
-        static void Subscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub);
-        static void Unsubscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub);
+        static void subscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub);
+        static void unsubscribe(const std::type_info& req_type, const RequestSubscriberPtr& sub);
 
-        static void Post(const IRequestPtr& r);
-        static void Send(const IRequestPtr& r);
+        static void post(const IRequestPtr& r);
+        static void send(const IRequestPtr& r);
 
         void CleanupAllRequests();
 

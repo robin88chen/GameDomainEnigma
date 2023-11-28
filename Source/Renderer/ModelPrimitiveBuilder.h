@@ -27,8 +27,8 @@ namespace Enigma::Renderer
         public:
             ModelPrimitiveBuilt(const Frameworks::Ruid& ruid, const std::string& name, const std::shared_ptr<ModelPrimitive>& prim)
                 : m_ruid(ruid), m_name(name), m_prim(prim) {};
-            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
-            const std::string& GetName() const { return m_name; }
+            const Frameworks::Ruid& getRuid() const { return m_ruid; }
+            const std::string& getName() const { return m_name; }
             const std::shared_ptr<ModelPrimitive>& GetPrimitive() { return m_prim; }
 
         private:
@@ -42,8 +42,8 @@ namespace Enigma::Renderer
             BuildModelPrimitiveFailed(const Frameworks::Ruid& ruid, const std::string& name, std::error_code er)
                 : m_ruid(ruid), m_name(name), m_error(er) {};
 
-            const Frameworks::Ruid& GetRuid() const { return m_ruid; }
-            const std::string& GetName() const { return m_name; }
+            const Frameworks::Ruid& getRuid() const { return m_ruid; }
+            const std::string& getName() const { return m_name; }
             std::error_code GetErrorCode() const { return m_error; }
 
         private:

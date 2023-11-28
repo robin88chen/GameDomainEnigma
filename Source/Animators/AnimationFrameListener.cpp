@@ -23,16 +23,16 @@ AnimationFrameListener::~AnimationFrameListener()
 
 }
 
-ServiceResult AnimationFrameListener::OnInit()
+ServiceResult AnimationFrameListener::onInit()
 {
     m_doAddingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingListeningAnimator(c); });
     m_doRemovingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoRemovingListeningAnimator(c); });
-    CommandBus::Subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::Subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    CommandBus::subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
     return ServiceResult::Complete;
 }
 
-ServiceResult AnimationFrameListener::OnTick()
+ServiceResult AnimationFrameListener::onTick()
 {
     if (!m_timer.expired())
     {
@@ -42,10 +42,10 @@ ServiceResult AnimationFrameListener::OnTick()
     return ServiceResult::Pendding;
 }
 
-ServiceResult AnimationFrameListener::OnTerm()
+ServiceResult AnimationFrameListener::onTerm()
 {
-    CommandBus::Unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::Unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    CommandBus::unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
+    CommandBus::unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
     m_doAddingListeningAnimator = nullptr;
     m_doRemovingListeningAnimator = nullptr;
     return ServiceResult::Complete;
@@ -100,7 +100,7 @@ bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Ti
             continue;
         }
 
-        bool res = static_cast<bool>(ani->Update(timer));
+        bool res = static_cast<bool>(ani->update(timer));
         all_res |= res;
         if (!res)  // no update, remove this animator and continue
         {

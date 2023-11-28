@@ -4,7 +4,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Engine, Animator);
 
-Animator::Animator() : m_isListened(false), m_factoryDesc(Animator::TYPE_RTTI.GetName())
+Animator::Animator() : m_isListened(false), m_factoryDesc(Animator::TYPE_RTTI.getName())
 {
 
 }

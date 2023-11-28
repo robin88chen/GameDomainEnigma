@@ -41,8 +41,8 @@ namespace Enigma::SceneGraph
         bool& IsEnable() { return m_isEnable; }
         [[nodiscard]] bool IsEnable() const { return m_isEnable; }
 
-        static LightInfoDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto();
+        static LightInfoDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto();
 
     private:
         LightInfo::LightType m_type;

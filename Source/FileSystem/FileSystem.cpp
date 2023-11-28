@@ -41,11 +41,11 @@ FileSystem* FileSystem::Instance()
     return m_instance;
 }
 
-IFilePtr FileSystem::OpenFile(const std::string& filename, const std::string& rw_options, const std::string& path_id)
+IFilePtr FileSystem::OpenFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id)
 {
     Debug::Printf("Open file %s at path %s called in thread %d\n", filename.c_str(), path_id.c_str(), std::this_thread::get_id());
     bool readonly = true;
-    if (rw_options.find("w") != std::string::npos) readonly = false;
+    if ((rw_options & ReadWriteOptionWrite).any()) readonly = false;
     if ((path_id.length() != 0) && (m_mountPathList.size()))
     {
         for (MountPathList::iterator iter = m_mountPathList.begin(); iter != m_mountPathList.end(); ++iter)
@@ -60,27 +60,27 @@ IFilePtr FileSystem::OpenFile(const std::string& filename, const std::string& rw
 }
 
 FutureFile FileSystem::AsyncOpenFile(const std::string& filename,
-    const std::string& rw_options, const std::string& path_id)
+    const ReadWriteOption& rw_options, const std::string& path_id)
 {
     return std::async(std::launch::async, [=]() -> IFilePtr { return this->OpenFile(filename, rw_options, path_id); });
 }
 
-IFilePtr FileSystem::OpenFile(const Filename& filename, const std::string& rw_options)
+IFilePtr FileSystem::OpenFile(const Filename& filename, const ReadWriteOption& rw_options)
 {
     return OpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
 }
 
-FutureFile FileSystem::AsyncOpenFile(const Filename& filename, const std::string& rw_options)
+FutureFile FileSystem::AsyncOpenFile(const Filename& filename, const ReadWriteOption& rw_options)
 {
     return AsyncOpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
 }
 
 IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::string& filename,
-    const std::string& rw_option)
+    const ReadWriteOption& rw_option)
 {
     std::string fullpath = StdMountPath::FixFullPath(filepath, filename);
     IFilePtr file = IFilePtr{ menew StdioFile(fullpath, rw_option) };
-    error open_er = file->Open();
+    error open_er = file->open();
     if (open_er)
     {
         Debug::ErrorPrintf("Open stdio file %s error %s\n", filename.c_str(), open_er.message().c_str());
@@ -98,18 +98,18 @@ void FileSystem::CloseFile(const IFilePtr& file)
     std::lock_guard<std::mutex> locker{ m_openedFileLocker };
     m_openedFileList.remove(file);
 
-    file->Close();
+    file->close();
     //EN_DELETE file;
 }
 
 IFilePtr FileSystem::OpenMountedFile(const IMountPathPtr& path,
-    const std::string& filename, const std::string& rw_option)
+    const std::string& filename, const ReadWriteOption& rw_option)
 {
     assert(path);
 
     IFilePtr file = IFilePtr{ path->CreateFile(filename, rw_option) };
     if (!file) return nullptr;
-    error open_er = file->Open();
+    error open_er = file->open();
     if (open_er)
     {
         Debug::ErrorPrintf("Open mounted file %s error %s\n", filename.c_str(), open_er.message().c_str());

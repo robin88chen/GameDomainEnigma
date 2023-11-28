@@ -21,8 +21,8 @@ namespace Enigma::GameCommon
         [[nodiscard]] const std::string& HostLightName() const { return m_hostLightName; }
         std::string& HostLightName() { return m_hostLightName; }
 
-        static LightingPawnDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
+        static LightingPawnDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     private:
         std::string m_hostLightName;

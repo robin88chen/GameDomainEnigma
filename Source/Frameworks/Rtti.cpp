@@ -25,15 +25,15 @@ Rtti::Rtti(const std::string& name, const Rtti* base_rtti)
 
 bool Rtti::operator==(const Rtti& rhs) const
 {
-    return IsExactly(rhs);
+    return isExactly(rhs);
 }
 
-bool Rtti::IsExactly(const Rtti& type) const
+bool Rtti::isExactly(const Rtti& type) const
 {
     return &type == this;
 }
 
-bool Rtti::IsDerived(const Rtti& type) const
+bool Rtti::isDerived(const Rtti& type) const
 {
     const Rtti* search = this;
     while (search)
@@ -45,21 +45,21 @@ bool Rtti::IsDerived(const Rtti& type) const
     return false;
 }
 
-const std::string& Rtti::GetName() const
+const std::string& Rtti::getName() const
 {
     return m_name;
 }
 
-bool Rtti::IsDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
+bool Rtti::isDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
 {
     auto iter_type = m_valueMap->find(type_token);
     auto iter_base = m_valueMap->find(base_rtti_token);
     if (iter_type == m_valueMap->end() || iter_base == m_valueMap->end()) return false;
-    return (*iter_type->second).IsDerived(*iter_base->second);
+    return (*iter_type->second).isDerived(*iter_base->second);
 }
 
-bool Rtti::IsExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
+bool Rtti::isExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token)
 {
-    return type_token == base_rtti_token || IsDerivedFrom(type_token, base_rtti_token);
+    return type_token == base_rtti_token || isDerivedFrom(type_token, base_rtti_token);
 }
 

@@ -36,7 +36,7 @@ namespace Enigma::SceneGraph
         LightInfoTraversal& operator=(const LightInfoTraversal&) = delete;
         LightInfoTraversal& operator=(LightInfoTraversal&&) = delete;
 
-        virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult onTick() override;
 
         void QueryNextRequest();
 

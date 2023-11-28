@@ -22,7 +22,7 @@ namespace Enigma::Animators
     public:
         AnimationAssetBuilt(const std::string& name, const std::shared_ptr<AnimationAsset>& ani) :
             m_name(name), m_animation(ani) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const std::shared_ptr<AnimationAsset>& GetAnimationAsset() { return m_animation; }
     private:
         std::string m_name;
@@ -33,7 +33,7 @@ namespace Enigma::Animators
     public:
         BuildAnimationAssetFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;

@@ -28,7 +28,7 @@ namespace Enigma::Graphics
         IVertexDeclaration& operator=(const IVertexDeclaration&) = delete;
         IVertexDeclaration& operator=(IVertexDeclaration&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const std::string& GetFormatString() { return m_formatString; };
 
         const VertexFormatCode& GetVertexFormatCode() const { return m_dataVertexFormatCode; };

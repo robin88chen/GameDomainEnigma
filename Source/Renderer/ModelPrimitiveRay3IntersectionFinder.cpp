@@ -27,7 +27,7 @@ PrimitiveRay3IntersectionFinder* ModelPrimitiveRay3IntersectionFinder::Create()
 
 void ModelPrimitiveRay3IntersectionFinder::RegisterFactory()
 {
-    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.GetName(), Create);
+    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), Create);
 }
 
 Intersector::Result ModelPrimitiveRay3IntersectionFinder::Test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,

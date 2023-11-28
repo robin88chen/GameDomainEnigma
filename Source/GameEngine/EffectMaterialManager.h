@@ -38,11 +38,11 @@ namespace Enigma::Engine
         EffectMaterialManager& operator=(EffectMaterialManager&&) = delete;
 
         /// On Init
-        virtual Frameworks::ServiceResult OnInit() override;
+        virtual Frameworks::ServiceResult onInit() override;
         /// On Tick
-        virtual Frameworks::ServiceResult OnTick() override;
+        virtual Frameworks::ServiceResult onTick() override;
         /// On Term
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         bool HasEffectMaterial(const std::string& name);
         EffectMaterialPtr QueryEffectMaterial(const std::string& name);

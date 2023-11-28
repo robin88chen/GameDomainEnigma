@@ -14,7 +14,7 @@ IIndexBuffer::~IIndexBuffer()
 {
 }
 
-void IIndexBuffer::Update(const uint_buffer& dataIndex)
+void IIndexBuffer::update(const uint_buffer& dataIndex)
 {
     if (IGraphicAPI::Instance()->UseAsync())
     {

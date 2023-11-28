@@ -34,9 +34,9 @@ namespace Enigma::Engine
 
         /** animation update
         @return has update something or not */
-        virtual HasUpdated Update(const std::unique_ptr<Frameworks::Timer>&) { return HasUpdated::False; /* base class do nothing */ };
+        virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>&) { return HasUpdated::False; /* base class do nothing */ };
         /** reset animation */
-        virtual void Reset() {};
+        virtual void reset() {};
 
         /** called after animator add to listening list */
         virtual void ProcessAfterAddListening() {};
@@ -46,8 +46,8 @@ namespace Enigma::Engine
         bool IsListened() { return m_isListened; };
         void SetListened(bool flag) { m_isListened = flag; };
 
-        const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         bool m_isListened;

@@ -23,7 +23,7 @@ namespace Enigma::Frameworks
         virtual ~IEvent() {};
         IEvent& operator=(const IEvent&) = delete;
         IEvent& operator=(IEvent&&) = delete;
-        virtual const std::type_info& TypeInfo() { return typeid(*this); };  ///< 實作層的 type info
+        virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
     };
 
     class IResponseEvent : public IEvent
@@ -36,7 +36,7 @@ namespace Enigma::Frameworks
         IResponseEvent& operator=(const IResponseEvent&) = delete;
         IResponseEvent& operator=(IResponseEvent&&) = delete;
 
-        const Ruid& GetRequestRuid() const { return m_ruid; }
+        const Ruid& getRequestRuid() const { return m_ruid; }
 
     protected:
         Ruid m_ruid;

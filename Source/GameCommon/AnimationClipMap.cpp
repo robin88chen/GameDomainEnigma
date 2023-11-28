@@ -12,16 +12,16 @@ DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);
 
 AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
 {
-    AnimationClipMapDto dto = AnimationClipMapDto::FromGenericDto(o);
+    AnimationClipMapDto dto = AnimationClipMapDto::fromGenericDto(o);
     for (unsigned i = 0; i < dto.AnimNames().size(); ++i)
     {
         AnimClip clip(dto.AnimNames()[i], AnimationClip(dto.StartOffsets()[i], dto.LoopTimes()[i],
             static_cast<AnimationClip::WarpMode>(dto.WarpModes()[i]), dto.DivideIndices()[i]));
-        m_animClips[clip.GetName()] = clip;
+        m_animClips[clip.getName()] = clip;
     }
 }
 
-GenericDto AnimationClipMap::SerializeDto() const
+GenericDto AnimationClipMap::serializeDto() const
 {
     AnimationClipMapDto dto;
     for (auto& [name, clip] : m_animClips)
@@ -32,7 +32,7 @@ GenericDto AnimationClipMap::SerializeDto() const
         dto.WarpModes().push_back(static_cast<unsigned>(clip.GetClip().GetWarpMode()));
         dto.DivideIndices().push_back(clip.GetClip().GetDivideIndex());
     }
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
 stdext::optional_ref<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(const std::string& name)
@@ -51,12 +51,12 @@ std::optional<AnimationClipMap::AnimClip> AnimationClipMap::FindAnimationClip(co
 
 void AnimationClipMap::InsertClip(const AnimClip& anim_clip)
 {
-    m_animClips[anim_clip.GetName()] = anim_clip;
-    Frameworks::EventPublisher::Post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
+    m_animClips[anim_clip.getName()] = anim_clip;
+    Frameworks::EventPublisher::post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
 }
 
 void AnimationClipMap::RemoveClip(const std::string& name)
 {
     m_animClips.erase(name);
-    Frameworks::EventPublisher::Post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
+    Frameworks::EventPublisher::post(std::make_shared<AnimationClipMapChanged>(GetAnimationClipMap()));
 }

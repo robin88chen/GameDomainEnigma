@@ -33,7 +33,7 @@ namespace Enigma::GameCommon
                 m_actionName = name; m_animClip = clip;
             };
             // copy-er, move-er, destructor 會自動建立
-            const std::string& GetName() const { return m_actionName; };
+            const std::string& getName() const { return m_actionName; };
             void ChangeClip(const Animators::AnimationClip& clip) { m_animClip = clip; };
             const Animators::AnimationClip& GetClip() const { return m_animClip; };
 
@@ -51,7 +51,7 @@ namespace Enigma::GameCommon
         AnimationClipMap& operator=(const AnimationClipMap&) = default;
         AnimationClipMap& operator=(AnimationClipMap&&) = default;
 
-        Engine::GenericDto SerializeDto() const;
+        Engine::GenericDto serializeDto() const;
 
         stdext::optional_ref<AnimClip> FindAnimationClip(const std::string& name);
         std::optional<AnimClip> FindAnimationClip(const std::string& name) const;

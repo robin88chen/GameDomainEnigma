@@ -70,7 +70,7 @@ error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimens
     error er = Create(graphic->GetD3DDevice(), dimension, m_format);
     if (er) return er;
     CreateD3DDepthView(graphic->GetD3DDevice());
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
 
     return er;
 }

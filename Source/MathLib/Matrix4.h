@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Matrix4.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -70,8 +70,8 @@ namespace Enigma::MathLib
 
         /** @name create various matrices */
         //@{
-        static Matrix4 MakeZero();
-        static Matrix4 MakeIdentity();
+        [[nodiscard]] static Matrix4 MakeZero();
+        [[nodiscard]] static Matrix4 MakeIdentity();
         //@}
 
         /** @name member access */
@@ -160,18 +160,18 @@ namespace Enigma::MathLib
 
         /** @name Make Transform Matrix */
         //@{
-        static Matrix4 MakeTranslateTransform(const float tx, const float ty, const float tz);
-        static Matrix4 MakeTranslateTransform(const Vector3& vec);
-        static Matrix4 MakeScaleTransform(const float sx, const float sy, const float sz);
-        static Matrix4 MakeScaleTransform(const Vector3& vec);
+        [[nodiscard]] static Matrix4 MakeTranslateTransform(const float tx, const float ty, const float tz);
+        [[nodiscard]] static Matrix4 MakeTranslateTransform(const Vector3& vec);
+        [[nodiscard]] static Matrix4 MakeScaleTransform(const float sx, const float sy, const float sz);
+        [[nodiscard]] static Matrix4 MakeScaleTransform(const Vector3& vec);
         /** radian > 0 indicates a clockwise rotation in the yz-plane */
-        static Matrix4 MakeRotationXTransform(const float radian);
+        [[nodiscard]] static Matrix4 MakeRotationXTransform(const float radian);
         /** radian > 0 indicates a clockwise rotation in the xz-plane */
-        static Matrix4 MakeRotationYTransform(const float radian);
+        [[nodiscard]] static Matrix4 MakeRotationYTransform(const float radian);
         /** radian > 0 indicates a clockwise rotation in the xy-plane */
-        static Matrix4 MakeRotationZTransform(const float radian);
+        [[nodiscard]] static Matrix4 MakeRotationZTransform(const float radian);
         /** 先對Z軸轉(roll),再對X軸轉(pitch),最後對Y軸轉(yaw) */
-        static Matrix4 MakeRotationYawPitchRoll(const float yaw, const float pitch, const float roll);
+        [[nodiscard]] static Matrix4 MakeRotationYawPitchRoll(const float yaw, const float pitch, const float roll);
         /** matrix from SRT
         @remark
         <pre>
@@ -182,8 +182,8 @@ namespace Enigma::MathLib
         R is Rotate Matrix from Quaternion
         </pre>
         */
-        static Matrix4 FromSRT(const Vector3& scale, const Matrix3& rot, const Vector3& trans);
-        static Matrix4 FromSRT(const Vector3& scale, const Quaternion& rot, const Vector3& trans);
+        [[nodiscard]] static Matrix4 FromSRT(const Vector3& scale, const Matrix3& rot, const Vector3& trans);
+        [[nodiscard]] static Matrix4 FromSRT(const Vector3& scale, const Quaternion& rot, const Vector3& trans);
         //@}
 
         /** @name Matrix分解 */
@@ -207,10 +207,10 @@ namespace Enigma::MathLib
         {
             struct
             {
-                float        m_11, m_12, m_13, m_14;
-                float        m_21, m_22, m_23, m_24;
-                float               m_31, m_32, m_33, m_34;
-                float               m_41, m_42, m_43, m_44;
+                float m_11, m_12, m_13, m_14;
+                float m_21, m_22, m_23, m_24;
+                float m_31, m_32, m_33, m_34;
+                float m_41, m_42, m_43, m_44;
             };
             float m_entry[4][4];
         };

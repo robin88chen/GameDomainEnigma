@@ -30,11 +30,11 @@ namespace Enigma::Engine
 
         [[nodiscard]] const std::string& Name() const { return m_name; }
         std::string& Name() { return m_name; }
-        [[nodiscard]] const FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        static EffectMaterialDto FromGenericDto(const GenericDto& dto);
-        GenericDto ToGenericDto() const;
+        static EffectMaterialDto fromGenericDto(const GenericDto& dto);
+        GenericDto toGenericDto() const;
 
         EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer) const;
 

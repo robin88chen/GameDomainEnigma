@@ -23,16 +23,16 @@ LightQuadPawn::~LightQuadPawn()
 {
 }
 
-GenericDto LightQuadPawn::SerializeDto()
+GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
     dto.HostLightName() = GetHostLightName();
-    return dto.ToGenericDto();
+    return dto.toGenericDto();
 }
 
-error LightQuadPawn::_UpdateSpatialRenderState()
+error LightQuadPawn::_updateSpatialRenderState()
 {
-    if (!IsRenderable()) return ErrorCode::ok;  // only renderable entity need
+    if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
     ColorRGBA colorLight(m_hostLight.lock()->Info().GetLightColor());

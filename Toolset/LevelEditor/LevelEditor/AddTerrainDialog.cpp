@@ -44,11 +44,11 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<Wor
     m_cellColumnsPrompt = menew nana::label(*this, "Cell Columns : ");
     (*m_cellColumnsPrompt).text_align(nana::align::right);
     m_cellColumnsCombo = menew nana::combox{ *this };
-    m_cellColumnsCombo->events().text_changed([this](const nana::arg_combox& a) { this->OnCellNumCellPerUVComboTextChanged(a); });
+    m_cellColumnsCombo->events().text_changed([this](const nana::arg_combox& a) { this->onCellNumCellPerUVComboTextChanged(a); });
     m_cellRowsPrompt = menew nana::label(*this, "Cell Rows : ");
     (*m_cellRowsPrompt).text_align(nana::align::right);
     m_cellRowsCombo = menew nana::combox{ *this };
-    m_cellRowsCombo->events().text_changed([this](const nana::arg_combox& a) { this->OnCellNumCellPerUVComboTextChanged(a); });
+    m_cellRowsCombo->events().text_changed([this](const nana::arg_combox& a) { this->onCellNumCellPerUVComboTextChanged(a); });
     for (auto cell_num_candidate : cellNumCandidates)
     {
         m_cellColumnsCombo->push_back(cell_num_candidate);
@@ -82,7 +82,7 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<Wor
     m_cellPerUVPrompt = menew nana::label(*this, "Cell Per UV Units : ");
     (*m_cellPerUVPrompt).text_align(nana::align::right);
     m_cellPerUVCombo = menew nana::combox{ *this };
-    m_cellPerUVCombo->events().text_changed([this](const nana::arg_combox& a) { this->OnCellNumCellPerUVComboTextChanged(a); });
+    m_cellPerUVCombo->events().text_changed([this](const nana::arg_combox& a) { this->onCellNumCellPerUVComboTextChanged(a); });
     for (auto cell_uv_candidate : cellPerUVCandidates)
     {
         m_cellPerUVCombo->push_back(cell_uv_candidate);
@@ -92,14 +92,14 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<Wor
     for (auto& btn : m_textureLayerButtons)
     {
         btn = menew nana::button(*this, nana::rectangle(nana::size(64, 64)));
-        btn->events().click([this](const nana::arg_click& a) { this->OnTextureLayerButton(a); });
+        btn->events().click([this](const nana::arg_click& a) { this->onTextureLayerButton(a); });
         get_place()["texture_btns"] << *btn;
     }
 
     m_okButton = menew nana::button(*this, "OK");
-    m_okButton->events().click([this](const nana::arg_click& a) { this->OnOkButton(a); });
+    m_okButton->events().click([this](const nana::arg_click& a) { this->onOkButton(a); });
     m_cancelButton = menew nana::button(*this, "Cancel");
-    m_cancelButton->events().click([this](const nana::arg_click& a) { this->OnCancelButton(a); });
+    m_cancelButton->events().click([this](const nana::arg_click& a) { this->onCancelButton(a); });
     get_place()["buttons"] << *m_okButton << *m_cancelButton;
     get_place().collocate();
 }
@@ -137,10 +137,10 @@ AddTerrainDialog::~AddTerrainDialog()
     SAFE_DELETE(m_cancelButton);
 }
 
-void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
+void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
-    terrainName = m_worldEdit.lock()->GetCurrentWorldFolder() + "/" + terrainName;
+    terrainName = m_worldEdit.lock()->getCurrentWorldFolder() + "/" + terrainName;
     char* endptr = nullptr;
     unsigned rows, cols;
     rows = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);
@@ -149,27 +149,27 @@ void AddTerrainDialog::OnOkButton(const nana::arg_click& arg)
     bool isParseOk;
     MathLib::Vector3 minVertexPos, maxVertexPos;
     MathLib::Vector2 minUV, maxUV;
-    if (std::tie(minVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
-    if (std::tie(maxVertexPos, isParseOk) = ParseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
-    if (std::tie(minUV, isParseOk) = ParseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
-    if (std::tie(maxUV, isParseOk) = ParseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
+    if (std::tie(minVertexPos, isParseOk) = parseTextToVector3(m_terrainVertexMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxVertexPos, isParseOk) = parseTextToVector3(m_terrainVertexMaxInputBox->text()); !isParseOk) return;
+    if (std::tie(minUV, isParseOk) = parseTextToVector2(m_terrainUVMinInputBox->text()); !isParseOk) return;
+    if (std::tie(maxUV, isParseOk) = parseTextToVector2(m_terrainUVMaxInputBox->text()); !isParseOk) return;
     MathLib::Vector3 terrainLocalPos;
-    if (std::tie(terrainLocalPos, isParseOk) = ParseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
+    if (std::tie(terrainLocalPos, isParseOk) = parseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
     Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
     terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
 
-    Frameworks::CommandBus::Post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->GetWorldMapPathId()));
+    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->getWorldMapPathId()));
 
     close();
 }
 
-void AddTerrainDialog::OnCancelButton(const nana::arg_click& arg)
+void AddTerrainDialog::onCancelButton(const nana::arg_click& arg)
 {
     close();
 }
 
-void AddTerrainDialog::OnTextureLayerButton(const nana::arg_click& arg)
+void AddTerrainDialog::onTextureLayerButton(const nana::arg_click& arg)
 {
     int btn_idx = -1;
     for (int i = 0; i < (int)m_textureLayerButtons.size(); i++)
@@ -186,13 +186,13 @@ void AddTerrainDialog::OnTextureLayerButton(const nana::arg_click& arg)
     fb.add_filter({ {"PNG File(*.png)", "*.png"},{"Bitmap File(*.bmp)", "*.bmp"} }).title("Select Layer Texture");
     if (auto paths = fb.show(); !paths.empty())
     {
-        PasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
-        std::string path_string = FilePathCombinePathID(paths[0], m_mediaPathId);
+        pasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
+        std::string path_string = filePathCombinePathID(paths[0], m_mediaPathId);
         m_layerTextureFilenames[btn_idx] = path_string;
     }
 }
 
-void AddTerrainDialog::OnCellNumCellPerUVComboTextChanged(const nana::arg_combox& ev)
+void AddTerrainDialog::onCellNumCellPerUVComboTextChanged(const nana::arg_combox& ev)
 {
     char* endptr = nullptr;
     int cellPerUV = std::strtol(m_cellPerUVCombo->caption().c_str(), &endptr, 10);

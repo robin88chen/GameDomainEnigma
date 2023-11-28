@@ -20,6 +20,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyStatus.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Request.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestBus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.cpp" />
@@ -45,6 +47,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyStatus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\menew_make_shared.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\optional_ref.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Query.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Request.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestBus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.h" />

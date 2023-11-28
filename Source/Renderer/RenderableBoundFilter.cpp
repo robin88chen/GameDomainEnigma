@@ -20,17 +20,17 @@ void RenderableBoundFilter::ComputeMergedBound(const SceneGraph::VisibleSet& vis
         if (FilterOutSpatial(spatial)) continue;
         if (m_mergedBound.IsEmpty())
         {
-            m_mergedBound = spatial->GetWorldBound();
+            m_mergedBound = spatial->getWorldBound();
         }
         else
         {
-            m_mergedBound.Merge(MathLib::Matrix4::IDENTITY, spatial->GetWorldBound());
+            m_mergedBound.Merge(MathLib::Matrix4::IDENTITY, spatial->getWorldBound());
         }
     }
 }
 
 bool RenderableBoundFilter::FilterOutSpatial(const std::shared_ptr<Spatial>& spatial)
 {
-    if ((!spatial) || (!(spatial->IsRenderable()))) return true;
+    if ((!spatial) || (!(spatial->isRenderable()))) return true;
     return false;
 }

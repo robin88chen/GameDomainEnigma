@@ -13,10 +13,10 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI(SceneGraph, VisibilityManagedNode, LazyNode);
 
-VisibilityManagedNode::VisibilityManagedNode(const std::string& name)
-    : LazyNode(name)
+VisibilityManagedNode::VisibilityManagedNode(const std::string& name, const FactoryDesc& factory_desc)
+    : LazyNode(name, factory_desc)
 {
-    m_factoryDesc = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.GetName());
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.getName()));
 }
 
 VisibilityManagedNode::VisibilityManagedNode(const GenericDto& dto)
@@ -29,43 +29,43 @@ VisibilityManagedNode::~VisibilityManagedNode()
 
 }
 
-GenericDto VisibilityManagedNode::SerializeDto()
+GenericDto VisibilityManagedNode::serializeDto()
 {
-    return LazyNode::SerializeDto();
+    return LazyNode::serializeDto();
 }
 
-error VisibilityManagedNode::OnCullingVisible(Culler* culler, bool noCull)
+error VisibilityManagedNode::onCullingVisible(Culler* culler, bool noCull)
 {
     // 需要讀取
-    if (m_lazyStatus.IsGhost())
+    if (m_lazyStatus.isGhost())
     {
-        CommandBus::Post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
+        CommandBus::post(std::make_shared<InstanceLazyNode>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this())));
         return ErrorCode::ok;
     }
-    if (!m_lazyStatus.IsReady())
+    if (!m_lazyStatus.isReady())
     {
         return ErrorCode::dataNotReady;
     }
-    EventPublisher::Post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), true));
-    return Node::OnCullingVisible(culler, noCull);
+    EventPublisher::post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), true));
+    return Node::onCullingVisible(culler, noCull);
 }
 
-void VisibilityManagedNode::OnCullingCompleteNotVisible(Culler* culler)
+void VisibilityManagedNode::onCullingCompleteNotVisible(Culler* culler)
 {
-    if (!m_lazyStatus.IsReady()) return;
+    if (!m_lazyStatus.isReady()) return;
 
     // let me check first
     if (!culler) return;
     if (!culler->IsOuterClippingEnable()) return;
-    EventPublisher::Post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), false));
+    EventPublisher::post(std::make_shared<VisibilityChanged>(std::dynamic_pointer_cast<LazyNode, Spatial>(shared_from_this()), false));
 }
 
 void VisibilityManagedNode::ReleaseDeferredContent()
 {
     while (!m_childList.empty())
     {
-        DetachChild(*(m_childList.begin()));
+        detachChild(*(m_childList.begin()));
     }
 
-    m_lazyStatus.ChangeStatus(LazyStatus::Status::Ghost);
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);
 }

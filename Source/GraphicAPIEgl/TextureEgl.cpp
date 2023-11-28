@@ -50,7 +50,7 @@ error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dim
     m_dimension = dimension;
     m_format = Graphics::GraphicFormat::FMT_A8R8G8B8;
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceFromMemoryCreated>(m_name));
 
     return ErrorCode::ok;
 }
@@ -59,7 +59,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
             m_name, ErrorCode::nullMemoryBuffer));
         return ErrorCode::nullMemoryBuffer;
     }
@@ -77,7 +77,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
         res = png_image_finish_read(&image, NULL, &raw_buffer[0], 0, NULL);
         if (res == 0)
         {
-            Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
+            Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceLoadImageFailed>(
                 m_name, ErrorCode::eglLoadTexture));
             return ErrorCode::eglLoadTexture;
         }
@@ -85,7 +85,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
         CreateFromSystemMemory(MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
         png_image_free(&image);
 
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
 
         return ErrorCode::ok;
     }
@@ -101,13 +101,13 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::nullMemoryBuffer));
         return ErrorCode::nullMemoryBuffer;
     }
     if (FATAL_LOG_EXPR((rcDest.Width() <= 0) || (rcDest.Height() <= 0)))
     {
-        Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
+        Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceUpdateImageFailed>(
             m_name, ErrorCode::invalidParameter));
         return ErrorCode::invalidParameter;
     }
@@ -118,7 +118,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
         GL_RGBA, GL_UNSIGNED_BYTE, &img_buff[0]);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageUpdated>(shared_from_this(), m_name, rcDest));
 
     return ErrorCode::ok;
 }
@@ -174,7 +174,7 @@ error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     glBindFramebuffer(GL_FRAMEBUFFER, bb->GetFrameBufferHandle());
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
-    Frameworks::EventPublisher::Post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(m_name, back_surf->GetName()));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceAsBackSurfaceUsed>(m_name, back_surf->getName()));
 
     return ErrorCode::ok;
 }

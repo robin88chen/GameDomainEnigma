@@ -30,9 +30,9 @@ namespace Enigma::ShadowMap
         CascadeShadowMapService& operator=(const CascadeShadowMapService& other) = delete;
         CascadeShadowMapService& operator=(CascadeShadowMapService&& other) noexcept = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
         virtual void CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;

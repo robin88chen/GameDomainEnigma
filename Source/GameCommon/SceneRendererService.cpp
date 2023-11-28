@@ -32,20 +32,20 @@ SceneRendererService::~SceneRendererService()
 
 }
 
-ServiceResult SceneRendererService::OnInit()
+ServiceResult SceneRendererService::onInit()
 {
     m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryCameraCreated(e); });
     m_onPrimaryTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { OnPrimaryTargetCreated(e); });
-    EventPublisher::Subscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
-    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
+    EventPublisher::subscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
 
     return ServiceResult::Complete;
 }
 
-ServiceResult SceneRendererService::OnTerm()
+ServiceResult SceneRendererService::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
-    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
+    EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
     m_onPrimaryCameraCreated = nullptr;
     m_onPrimaryTargetCreated = nullptr;
 
@@ -105,7 +105,7 @@ void SceneRendererService::AttachCamera()
     auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
     if ((w > 0) && (h > 0))
     {
-        m_cameraService.lock()->GetPrimaryCamera()->ChangeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+        m_cameraService.lock()->GetPrimaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CreateNewWorldDlg.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -13,6 +13,7 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/checkbox.hpp>
+#include "AppConfiguration.h"
 
 namespace LevelEditor
 {
@@ -20,11 +21,11 @@ namespace LevelEditor
     class CreateNewWorldDlg : public nana::form
     {
     public:
-        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor);
+        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const std::string& portal_manager_name);
         virtual ~CreateNewWorldDlg();
 
-        void OnOkButton(const nana::arg_click& arg);
-        void OnCancelButton(const nana::arg_click& arg);
+        void onOkButton(const nana::arg_click& arg);
+        void onCancelButton(const nana::arg_click& arg);
     private:
         nana::button* m_okButton;
         nana::button* m_cancelButton;
@@ -35,6 +36,7 @@ namespace LevelEditor
         nana::checkbox* m_deleteExistFolderCheckBox;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;
+        std::string m_portalManagerName;
     };
 }
 

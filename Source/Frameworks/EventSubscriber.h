@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EventSubscriber.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -23,7 +23,7 @@ namespace Enigma::Frameworks
         EventSubscriber& operator=(const EventSubscriber&) = delete;
         EventSubscriber& operator=(EventSubscriber&&) = delete;
 
-        virtual void HandleEvent(const IEventPtr& e);
+        virtual void handleEvent(const IEventPtr& e);
 
     protected:
         EventHandler m_handler;

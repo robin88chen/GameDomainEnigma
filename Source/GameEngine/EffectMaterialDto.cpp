@@ -7,19 +7,19 @@ using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
 
-EffectMaterialDto::EffectMaterialDto() : m_factoryDesc(EffectMaterial::TYPE_RTTI.GetName())
+EffectMaterialDto::EffectMaterialDto() : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
 {
 }
 
-EffectMaterialDto EffectMaterialDto::FromGenericDto(const GenericDto& dto)
+EffectMaterialDto EffectMaterialDto::fromGenericDto(const GenericDto& dto)
 {
     EffectMaterialDto effect;
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) effect.Name() = v.value();
-    effect.TheFactoryDesc() = dto.GetRtti();
+    effect.factoryDesc() = dto.GetRtti();
     return effect;
 }
 
-GenericDto EffectMaterialDto::ToGenericDto() const
+GenericDto EffectMaterialDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);

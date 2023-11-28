@@ -26,10 +26,10 @@ namespace Enigma::Animators
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
         SkinAnimationOperator& operator=(SkinAnimationOperator&& op) noexcept;
 
-        SkinOperatorDto SerializeDto();
+        SkinOperatorDto serializeDto();
 
-        const Engine::FactoryDesc& TheFactoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& TheFactoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         
         void LinkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
         void CalculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);

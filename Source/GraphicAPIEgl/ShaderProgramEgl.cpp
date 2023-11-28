@@ -144,7 +144,7 @@ void ShaderProgramEgl::LinkShaders()
             {
                 glGetProgramInfoLog(m_program, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not link program:\n%s\n", infoLog);
-                Frameworks::EventPublisher::Post(std::make_shared<Graphics::ShaderProgramLinkFailed>(m_name, infoLog));
+                Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderProgramLinkFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }

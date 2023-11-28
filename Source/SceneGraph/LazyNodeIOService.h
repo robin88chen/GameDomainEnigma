@@ -32,9 +32,9 @@ namespace Enigma::SceneGraph
         LazyNodeIOService& operator=(const LazyNodeIOService&) = delete;
         LazyNodeIOService& operator=(LazyNodeIOService&&) = delete;
 
-        virtual Frameworks::ServiceResult OnInit() override;
-        virtual Frameworks::ServiceResult OnTick() override;
-        virtual Frameworks::ServiceResult OnTerm() override;
+        virtual Frameworks::ServiceResult onInit() override;
+        virtual Frameworks::ServiceResult onTick() override;
+        virtual Frameworks::ServiceResult onTerm() override;
 
     private:
         void DoInstancingLazyNode(const Frameworks::ICommandPtr& c);

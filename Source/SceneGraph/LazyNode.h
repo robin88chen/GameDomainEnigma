@@ -9,6 +9,7 @@
 #define _LAZY_NODE_H
 
 #include "Node.h"
+#include "GameEngine/FactoryDesc.h"
 #include "Frameworks/LazyStatus.h"
 
 namespace Enigma::SceneGraph
@@ -19,7 +20,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        LazyNode(const std::string& name);
+        LazyNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         LazyNode(const Engine::GenericDto& dto);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;
@@ -27,15 +28,19 @@ namespace Enigma::SceneGraph
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
 
-        //virtual Engine::GenericDto SerializeDto() override;  // use node's implementation
-        virtual Engine::GenericDto SerializeAsLaziness();
+        //virtual Engine::GenericDto serializeDto() override;  // use node's implementation
+        virtual Engine::GenericDto serializeAsLaziness();
+        virtual Engine::GenericDtoCollection serializeFlattenedTree() override;
 
-        virtual bool CanVisited() override;
+        virtual bool canVisited() override;
 
-        virtual SceneTraveler::TravelResult VisitBy(SceneTraveler* traveler) override;
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
-        const Frameworks::LazyStatus& TheLazyStatus() const { return m_lazyStatus; }
-        Frameworks::LazyStatus& TheLazyStatus() { return m_lazyStatus; }
+        const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
+
+    protected:
+        LazyNodeDto serializeLazyNodeAsLaziness();
 
     protected:
         Frameworks::LazyStatus m_lazyStatus;

@@ -11,23 +11,28 @@
 
 namespace Enigma::WorldMap
 {
-    class WorldMapDto : public SceneGraph::PortalZoneNodeDto
+    class WorldMapDto
     {
     public:
         WorldMapDto();
-        WorldMapDto(const SceneGraph::PortalZoneNodeDto& portal_zone_node_dto);
 
-        //const std::string& Name() const { return m_name; }
-        //std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        [[nodiscard]] std::string& name() { return m_name; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factory_desc; }
+        [[nodiscard]] Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
+        [[nodiscard]] const Engine::GenericDtoCollection& quadTreeRoots() const { return m_quadTreeRoots; }
+        [[nodiscard]] Engine::GenericDtoCollection& quadTreeRoots() { return m_quadTreeRoots; }
+        [[nodiscard]] const Engine::GenericDto& portalRoot() const { return m_portalRoot; }
+        [[nodiscard]] Engine::GenericDto& portalRoot() { return m_portalRoot; }
 
-        static WorldMapDto FromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto ToGenericDto() const;
-        //[[nodiscard]] const std::string& WorldZoneName() const { return m_worldZoneName; }
-        //std::string& WorldZoneName() { return m_worldZoneName; }
+        static WorldMapDto fromGenericDto(const Engine::GenericDto& dto);
+        Engine::GenericDto toGenericDto() const;
 
     protected:
-        //std::string m_name;
-        //std::string m_worldZoneName;
+        std::string m_name;
+        Engine::FactoryDesc m_factory_desc;
+        Engine::GenericDtoCollection m_quadTreeRoots;
+        Engine::GenericDto m_portalRoot;
     };
 }
 

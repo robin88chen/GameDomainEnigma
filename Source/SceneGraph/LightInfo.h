@@ -41,7 +41,7 @@ namespace Enigma::SceneGraph
         LightInfo& operator=(const LightInfo&) = default;
         LightInfo& operator=(LightInfo&&) = default;
 
-        LightInfoDto SerializeDto();
+        LightInfoDto serializeDto();
 
         LightType GetLightType() const { return m_type; };
 

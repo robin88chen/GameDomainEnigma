@@ -35,7 +35,7 @@ namespace Enigma::Engine
         EffectTextureMap& operator=(const EffectTextureMap&) = default;
         EffectTextureMap& operator=(EffectTextureMap&&) = default;
 
-        GenericDto SerializeDto() const;
+        GenericDto serializeDto() const;
 
         error BindSemanticTexture(const EffectSemanticTextureTuple& tuple);
         error ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple);

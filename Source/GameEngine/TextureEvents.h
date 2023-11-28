@@ -21,7 +21,7 @@ namespace Enigma::Engine
         TextureLoaded(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<Texture>& tex)
             : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::shared_ptr<Texture> GetTexture() { return m_texture; }
     private:
         std::string m_name;
@@ -33,7 +33,7 @@ namespace Enigma::Engine
         LoadTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;
@@ -46,7 +46,7 @@ namespace Enigma::Engine
         TextureCreated(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<Texture>& tex)
             : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::shared_ptr<Texture> GetTexture() { return m_texture; }
     private:
         std::string m_name;
@@ -58,7 +58,7 @@ namespace Enigma::Engine
         CreateTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;
@@ -71,7 +71,7 @@ namespace Enigma::Engine
         TextureSaved(const Frameworks::Ruid& request_ruid, const std::string& name)
             : IResponseEvent(request_ruid), m_name(name) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };
@@ -81,7 +81,7 @@ namespace Enigma::Engine
         SaveTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;
@@ -94,7 +94,7 @@ namespace Enigma::Engine
         TextureImageRetrieved(const Frameworks::Ruid& request_ruid, const std::string& name, const byte_buffer& image_buff)
             : IResponseEvent(request_ruid), m_name(name), m_imageBuff(image_buff) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         const byte_buffer& GetImageBuffer() { return m_imageBuff; }
     private:
         std::string m_name;
@@ -106,7 +106,7 @@ namespace Enigma::Engine
         RetrieveTextureImageFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;
@@ -119,7 +119,7 @@ namespace Enigma::Engine
         TextureImageUpdated(const Frameworks::Ruid& request_ruid, const std::string& name)
             : IResponseEvent(request_ruid), m_name(name) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
     private:
         std::string m_name;
     };
@@ -129,7 +129,7 @@ namespace Enigma::Engine
         UpdateTextureImageFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
             : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;

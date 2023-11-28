@@ -33,14 +33,14 @@ static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
-MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.GetName()), m_geometryFactory(GeometryData::TYPE_RTTI.GetName()), m_renderListID(Renderer::RenderListID::Scene)
+MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_geometryFactory(GeometryData::TYPE_RTTI.getName()), m_renderListID(Renderer::RenderListID::Scene)
 {
 }
 
-MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
+MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     MeshPrimitiveDto mesh;
-    mesh.TheFactoryDesc() = dto.GetRtti();
+    mesh.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) mesh.Name() = v.value();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_NAME)) mesh.GeometryName() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.TheGeometry() = v.value();
@@ -64,7 +64,7 @@ MeshPrimitiveDto MeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
     return mesh;
 }
 
-GenericDto MeshPrimitiveDto::ToGenericDto() const
+GenericDto MeshPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -87,7 +87,7 @@ GenericDto MeshPrimitiveDto::ToGenericDto() const
 
 std::shared_ptr<GenericPolicy> MeshPrimitiveDto::MeshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::FromGenericDto(dto);
+    MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<MeshPrimitivePolicy>();
     policy->Name() = mesh_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
@@ -103,11 +103,11 @@ std::shared_ptr<GenericPolicy> MeshPrimitiveDto::MeshDtoConvertToPolicy(const Ge
     }
     for (auto& eff : mesh_dto.m_effects)
     {
-        policy->EffectDtos().emplace_back(EffectMaterialDto::FromGenericDto(eff));
+        policy->EffectDtos().emplace_back(EffectMaterialDto::fromGenericDto(eff));
     }
     for (auto& tex : mesh_dto.m_textureMaps)
     {
-        policy->TextureDtos().emplace_back(EffectTextureMapDto::FromGenericDto(tex));
+        policy->TextureDtos().emplace_back(EffectTextureMapDto::fromGenericDto(tex));
     }
     policy->RenderListId() = mesh_dto.m_renderListID;
     policy->VisualTechniqueSelection() = mesh_dto.m_visualTechniqueSelection;
@@ -116,22 +116,22 @@ std::shared_ptr<GenericPolicy> MeshPrimitiveDto::MeshDtoConvertToPolicy(const Ge
 
 SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() : MeshPrimitiveDto()
 {
-    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.GetName());
+    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
 }
 
 SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const MeshPrimitiveDto& mesh) : MeshPrimitiveDto(mesh)
 {
-    assert(Frameworks::Rtti::IsExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), SkinMeshPrimitive::TYPE_RTTI.GetName()));
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), SkinMeshPrimitive::TYPE_RTTI.getName()));
 }
 
-SkinMeshPrimitiveDto SkinMeshPrimitiveDto::FromGenericDto(const Engine::GenericDto& dto)
+SkinMeshPrimitiveDto SkinMeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    return MeshPrimitiveDto::FromGenericDto(dto);
+    return MeshPrimitiveDto::fromGenericDto(dto);
 }
 
-GenericDto SkinMeshPrimitiveDto::ToGenericDto() const
+GenericDto SkinMeshPrimitiveDto::toGenericDto() const
 {
-    GenericDto dto = MeshPrimitiveDto::ToGenericDto();
+    GenericDto dto = MeshPrimitiveDto::toGenericDto();
     return dto;
 }
 
@@ -141,14 +141,14 @@ std::shared_ptr<GenericPolicy> SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy(
     return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
-MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.GetName())
+MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 {
 }
 
-MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
+MeshNodeDto MeshNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     MeshNodeDto node;
-    node.TheFactoryDesc() = dto.GetRtti();
+    node.factoryDesc() = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) node.Name() = v.value();
     if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_T_POS_TRANSFORM)) node.LocalT_PosTransform() = v.value();
     //if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
@@ -157,7 +157,7 @@ MeshNodeDto MeshNodeDto::FromGenericDto(const Engine::GenericDto& dto)
     return node;
 }
 
-GenericDto MeshNodeDto::ToGenericDto() const
+GenericDto MeshNodeDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -175,11 +175,11 @@ GenericDto MeshNodeDto::ToGenericDto() const
     return dto;
 }
 
-MeshNodeTreeDto::MeshNodeTreeDto() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.GetName())
+MeshNodeTreeDto::MeshNodeTreeDto() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
 }
 
-MeshNodeTreeDto MeshNodeTreeDto::FromGenericDto(const GenericDto& dto)
+MeshNodeTreeDto MeshNodeTreeDto::fromGenericDto(const GenericDto& dto)
 {
     MeshNodeTreeDto tree;
     tree.m_factoryDesc = dto.GetRtti();
@@ -187,7 +187,7 @@ MeshNodeTreeDto MeshNodeTreeDto::FromGenericDto(const GenericDto& dto)
     return tree;
 }
 
-GenericDto MeshNodeTreeDto::ToGenericDto() const
+GenericDto MeshNodeTreeDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -195,11 +195,11 @@ GenericDto MeshNodeTreeDto::ToGenericDto() const
     return dto;
 }
 
-ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI.GetName())
+ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI.getName())
 {
 }
 
-ModelPrimitiveDto ModelPrimitiveDto::FromGenericDto(const GenericDto& dto)
+ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
 {
     ModelPrimitiveDto model;
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.Name() = v.value();
@@ -208,7 +208,7 @@ ModelPrimitiveDto ModelPrimitiveDto::FromGenericDto(const GenericDto& dto)
     return model;
 }
 
-GenericDto ModelPrimitiveDto::ToGenericDto() const
+GenericDto ModelPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
@@ -220,14 +220,14 @@ GenericDto ModelPrimitiveDto::ToGenericDto() const
 
 std::shared_ptr<GenericPolicy> ModelPrimitiveDto::ModelDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    ModelPrimitiveDto model_dto = ModelPrimitiveDto::FromGenericDto(dto);
+    ModelPrimitiveDto model_dto = ModelPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<ModelPrimitivePolicy>();
     policy->Name() = model_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
-    policy->NodeTreeDto() = MeshNodeTreeDto::FromGenericDto(model_dto.m_nodeTreeDto);
-    if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.GetName()))
+    policy->NodeTreeDto() = MeshNodeTreeDto::fromGenericDto(model_dto.m_nodeTreeDto);
+    if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.getName()))
     {
-        policy->TheModelAnimator() = ModelAnimatorDto::FromGenericDto(model_dto.m_animatorDto.value());
+        policy->TheModelAnimator() = ModelAnimatorDto::fromGenericDto(model_dto.m_animatorDto.value());
     }
     return policy;
 }

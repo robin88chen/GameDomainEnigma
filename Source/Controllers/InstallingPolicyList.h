@@ -20,9 +20,9 @@ namespace Enigma::Controllers
         InstallingPolicyList() = default;
         InstallingPolicyList(std::initializer_list<std::shared_ptr<Engine::InstallingPolicy>> initializer_list);
 
-        void SortOrder();
+        void sortOrder();
     private:
-        void MakeOrderMap();
+        void makeOrderMap();
 
     private:
         std::unordered_map<std::type_index, std::uint16_t> m_orderMap;

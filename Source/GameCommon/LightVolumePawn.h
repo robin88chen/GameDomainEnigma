@@ -26,13 +26,13 @@ namespace Enigma::GameCommon
         LightVolumePawn& operator=(const LightVolumePawn&) = delete;
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
-        virtual Engine::GenericDto SerializeDto() override;
+        virtual Engine::GenericDto serializeDto() override;
 
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
         void ToggleCameraInside(bool is_inside);
 
         /// 影響的光源就是自己所帶的光源
-        virtual error _UpdateSpatialRenderState() override;
+        virtual error _updateSpatialRenderState() override;
 
     public:
         static void SetDefaultVisualTech(const std::string& token) { m_tokenDefaultVisualTech = token; }

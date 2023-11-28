@@ -136,7 +136,7 @@ error RenderPackList::Draw(unsigned stamp_mask, const std::string& rendererTechn
                 continue;
             }
             iter->GetRenderElement()->RemoveActiveFrameFlag(stamp_mask);  // mark this element as out of date
-            error er_draw = iter->GetRenderElement()->Draw(iter->GetWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
+            error er_draw = iter->GetRenderElement()->Draw(iter->getWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
             LOG_IF(Error, er_draw.value() != 0);
             ++iter;
         }
@@ -172,7 +172,7 @@ error RenderPackList::DrawWithRemoveDated(unsigned stamp_mask, const std::string
             }
             // 不設定為過期
             //iter->GetRenderElement()->RemoveActiveFrameFlag(stamp_mask);  // mark this element as out of date
-            error er_draw = iter->GetRenderElement()->Draw(iter->GetWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
+            error er_draw = iter->GetRenderElement()->Draw(iter->getWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
             LOG_IF(Error, er_draw.value() != 0);
             ++iter;
         }
@@ -199,7 +199,7 @@ error RenderPackList::DrawOnlyNative(unsigned stamp_mask, const std::string& ren
                 ++iter;
                 continue;
             }
-            error er_draw = iter->GetRenderElement()->Draw(iter->GetWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
+            error er_draw = iter->GetRenderElement()->Draw(iter->getWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
             LOG_IF(Error, er_draw.value() != 0);
             ++iter;
         }
@@ -227,7 +227,7 @@ error RenderPackList::DrawWithMarkDated(unsigned stamp_mask, const std::string& 
                 continue;
             }
             iter->GetRenderElement()->RemoveActiveFrameFlag(stamp_mask);  // mark this element as out of date
-            error er_draw = iter->GetRenderElement()->Draw(iter->GetWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
+            error er_draw = iter->GetRenderElement()->Draw(iter->getWorldTransform(), iter->GetRenderLightingState(), rendererTechnique);
             LOG_IF(Error, er_draw.value() != 0);
             ++iter;
         }

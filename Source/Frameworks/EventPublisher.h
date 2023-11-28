@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EventPublisher.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2022
  *********************************************************************/
@@ -35,24 +35,24 @@ namespace Enigma::Frameworks
         EventPublisher& operator=(const EventPublisher&) = delete;
         EventPublisher& operator=(EventPublisher&&) = delete;
 
-        virtual ServiceResult OnTick() override;
-        virtual ServiceResult OnTerm() override;
+        virtual ServiceResult onTick() override;
+        virtual ServiceResult onTerm() override;
 
         /** lambda 函式無法做互相比對 (operator==), 所以在 list 中無法做 remove,
         必須把每個 handler booking 一個 index, 據此來做 unregister,
         如果 handler 是實體 functor, 而不是 lambda, 就可以用來移除,
         所以, 用 subscriber 模式來實作
         */
-        static void Subscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
-        static void Unsubscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
+        static void subscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
+        static void unsubscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
 
-        static void Post(const IEventPtr& e);
-        static void Send(const IEventPtr& e);
+        static void post(const IEventPtr& e);
+        static void send(const IEventPtr& e);
 
-        void CleanupAllEvents();
+        void cleanupAllEvents();
 
     protected:
-        void InvokeHandlers(const IEventPtr& e, const SubscriberList& subscribers);
+        void invokeHandlers(const IEventPtr& e, const SubscriberList& subscribers);
 
     protected:
         static EventPublisher* m_thisPublisher;

@@ -80,7 +80,7 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
 
 void AppDelegate::OnFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::Post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
+    Frameworks::CommandBus::post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
         MathLib::Dimension<unsigned>{(unsigned)w, (unsigned)h}));
 }
 

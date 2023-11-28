@@ -24,7 +24,7 @@ namespace Enigma::Engine
         IRenderer& operator=(IRenderer&&) = delete;
 
         /** get renderer's name */
-        const std::string& GetName() { return m_name; };
+        const std::string& getName() { return m_name; };
 
         /** set stamp bit mask */
         void SetStampBitMask(unsigned int mask) { m_stampBitMask = mask; };

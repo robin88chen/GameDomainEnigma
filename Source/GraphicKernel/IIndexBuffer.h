@@ -32,10 +32,10 @@ namespace Enigma::Graphics
         IIndexBuffer& operator=(const IIndexBuffer&) = delete;
         IIndexBuffer& operator=(IIndexBuffer&&) = delete;
 
-        const std::string& GetName() { return m_name; }
+        const std::string& getName() { return m_name; }
 
         virtual error Create(unsigned int sizeBuffer) = 0;
-        void Update(const uint_buffer& dataIndex);
+        void update(const uint_buffer& dataIndex);
         void RangedUpdate(const ranged_buffer& buffer);
 
         // Buffer size

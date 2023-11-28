@@ -29,7 +29,6 @@ GameCameraService::GameCameraService(ServiceManager* mngr,
     m_sceneGraphRepository = scene_graph_repository;
     m_needTick = false;
     m_primaryCamera = nullptr;
-    m_orderValue = ServiceDefaultOrderValue - 1;
 }
 
 GameCameraService::~GameCameraService()
@@ -37,59 +36,59 @@ GameCameraService::~GameCameraService()
     m_primaryCamera = nullptr;
 }
 
-ServiceResult GameCameraService::OnInit()
+ServiceResult GameCameraService::onInit()
 {
     m_onTargetResized = std::make_shared<EventSubscriber>([=](auto e) { OnTargetResized(e); });
-    EventPublisher::Subscribe(typeid(RenderTargetResized), m_onTargetResized);
+    EventPublisher::subscribe(typeid(RenderTargetResized), m_onTargetResized);
 
     m_doZoomingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoZoomingCamera(c); });
-    CommandBus::Subscribe(typeid(ZoomCamera), m_doZoomingCamera);
+    CommandBus::subscribe(typeid(ZoomCamera), m_doZoomingCamera);
     m_doSphereRotatingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoSphereRotatingCamera(c); });
-    CommandBus::Subscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
+    CommandBus::subscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
     m_doMovingCamera = std::make_shared<CommandSubscriber>([=](auto c) { DoMovingCamera(c); });
-    CommandBus::Subscribe(typeid(MoveCamera), m_doMovingCamera);
+    CommandBus::subscribe(typeid(MoveCamera), m_doMovingCamera);
     m_doMovingCameraXZ = std::make_shared<CommandSubscriber>([=](auto c) { DoMovingCameraXZ(c); });
-    CommandBus::Subscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
+    CommandBus::subscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
 
 #if TARGET_PLATFORM == PLATFORM_WIN32
     m_onRightBtnDrag = std::make_shared<EventSubscriber>([=](auto e) { OnMouseRightBtnDrag(e); });
-    EventPublisher::Subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    EventPublisher::subscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
     m_onMouseWheel = std::make_shared<EventSubscriber>([=](auto e) { OnMouseWheel(e); });
-    EventPublisher::Subscribe(typeid(MouseWheeled), m_onMouseWheel);
+    EventPublisher::subscribe(typeid(MouseWheeled), m_onMouseWheel);
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
     m_onGestureScroll = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScroll(e); });
-    EventPublisher::Subscribe(typeid(GestureScroll), m_onGestureScroll);
+    EventPublisher::subscribe(typeid(GestureScroll), m_onGestureScroll);
     m_onGestureScale = std::make_shared<EventSubscriber>([=](auto e) { OnGestureScale(e); });
-    EventPublisher::Subscribe(typeid(GestureScale), m_onGestureScale);
+    EventPublisher::subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
     return ServiceResult::Complete;
 }
 
-ServiceResult GameCameraService::OnTerm()
+ServiceResult GameCameraService::onTerm()
 {
-    EventPublisher::Unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
+    EventPublisher::unsubscribe(typeid(RenderTargetResized), m_onTargetResized);
     m_onTargetResized = nullptr;
 
-    CommandBus::Unsubscribe(typeid(ZoomCamera), m_doZoomingCamera);
+    CommandBus::unsubscribe(typeid(ZoomCamera), m_doZoomingCamera);
     m_doZoomingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
+    CommandBus::unsubscribe(typeid(SphereRotateCamera), m_doSphereRotatingCamera);
     m_doSphereRotatingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(MoveCamera), m_doMovingCamera);
+    CommandBus::unsubscribe(typeid(MoveCamera), m_doMovingCamera);
     m_doMovingCamera = nullptr;
-    CommandBus::Unsubscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
+    CommandBus::unsubscribe(typeid(MoveCameraXZ), m_doMovingCameraXZ);
     m_doMovingCameraXZ = nullptr;
 
 #if TARGET_PLATFORM == PLATFORM_WIN32
-    EventPublisher::Unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
+    EventPublisher::unsubscribe(typeid(MouseRightButtonDrag), m_onRightBtnDrag);
     m_onRightBtnDrag = nullptr;
-    EventPublisher::Unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
+    EventPublisher::unsubscribe(typeid(MouseWheeled), m_onMouseWheel);
     m_onMouseWheel = nullptr;
 #endif
 #if TARGET_PLATFORM == PLATFORM_ANDROID
-    EventPublisher::Unsubscribe(typeid(GestureScroll), m_onGestureScroll);
+    EventPublisher::unsubscribe(typeid(GestureScroll), m_onGestureScroll);
     m_onGestureScroll = nullptr;
-    EventPublisher::Unsubscribe(typeid(GestureScale), m_onGestureScale);
+    EventPublisher::unsubscribe(typeid(GestureScale), m_onGestureScale);
     m_onGestureScale = nullptr;
 #endif
 
@@ -101,96 +100,96 @@ ServiceResult GameCameraService::OnTerm()
 void GameCameraService::CreatePrimaryCamera(const Engine::GenericDto& dto)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_primaryCamera = m_sceneGraphRepository.lock()->CreateCamera(dto);
-    EventPublisher::Post(std::make_shared<GameCameraCreated>(m_primaryCamera));
+    m_primaryCamera = m_sceneGraphRepository.lock()->createCamera(dto);
+    EventPublisher::post(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }
 
 void GameCameraService::CameraZoom(float dist)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->Zoom(dist);
+    const error er = m_primaryCamera->zoom(dist);
 
-    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraMove(float dir_dist, float slide_dist)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->Move(dir_dist, slide_dist);
+    const error er = m_primaryCamera->move(dir_dist, slide_dist);
 
-    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraMoveXZ(float move_x, float move_z)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->MoveXZ(move_x, move_z);
+    const error er = m_primaryCamera->moveXZ(move_x, move_z);
 
-    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraShiftLookAt(const Vector3& vecLookAt)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->ShiftLookAt(vecLookAt);
+    const error er = m_primaryCamera->shiftLookAt(vecLookAt);
 
-    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::CameraSphereRotate(float horz_angle, float vert_angle, const Vector3& center)
 {
     if (!m_primaryCamera) return;
 
-    const error er = m_primaryCamera->SphereRotate(horz_angle, vert_angle, center);
+    const error er = m_primaryCamera->sphereRotate(horz_angle, vert_angle, center);
 
-    if (!er) EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::ChangeAspectRatio(float ratio)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeAspectRatio(ratio);
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
+    m_primaryCamera->changeAspectRatio(ratio);
+    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
 }
 
 void GameCameraService::ChangeFrustumFarPlane(float far_z)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumFarPlane(far_z);
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
+    m_primaryCamera->changeFrustumFarPlane(far_z);
+    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 void GameCameraService::ChangeFrustumFov(float fov)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumFov(fov);
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
+    m_primaryCamera->changeFrustumFov(fov);
+    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
 }
 
 void GameCameraService::ChangeFrustumNearPlane(float near_z)
 {
     if (!m_primaryCamera) return;
-    m_primaryCamera->ChangeFrustumNearPlane(near_z);
-    EventPublisher::Post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
+    m_primaryCamera->changeFrustumNearPlane(near_z);
+    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 Ray3 GameCameraService::GetPickerRay(float clip_space_x, float clip_space_y)
 {
     assert(m_primaryCamera);
     Vector3 clip_vec = Vector3(clip_space_x, clip_space_y, 0.0f);
-    Matrix4 mxProj = m_primaryCamera->GetCullingFrustum().GetProjectionTransform().Inverse();
+    Matrix4 mxProj = m_primaryCamera->cullingFrustum().projectionTransform().Inverse();
     Vector3 camera_vec = mxProj.TransformCoord(clip_vec);
-    Matrix4 mxView = m_primaryCamera->GetViewTransform().Inverse();
+    Matrix4 mxView = m_primaryCamera->viewTransform().Inverse();
     Vector3 world_vec = mxView.TransformCoord(camera_vec);
 
-    Vector3 ray_dir = world_vec - m_primaryCamera->GetLocation();
+    Vector3 ray_dir = world_vec - m_primaryCamera->location();
     ray_dir.NormalizeSelf();
 
-    return Ray3(m_primaryCamera->GetLocation(), ray_dir);
+    return Ray3(m_primaryCamera->location(), ray_dir);
 }
 
 void GameCameraService::OnTargetResized(const Frameworks::IEventPtr& e)

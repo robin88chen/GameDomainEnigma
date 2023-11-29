@@ -97,6 +97,9 @@ namespace Enigma::SceneGraph
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
 
+        /** remove entities */
+        void removeCamera(const SpatialId& id);
+
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
         std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);

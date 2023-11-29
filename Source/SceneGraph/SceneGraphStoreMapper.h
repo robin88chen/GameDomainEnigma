@@ -24,6 +24,7 @@ namespace Enigma::SceneGraph
 
         virtual bool hasCamera(const SpatialId& id) = 0;
         virtual std::shared_ptr<Camera> queryCamera(const SpatialId& id) = 0;
+        virtual std::error_code removeCamera(const SpatialId& id) = 0;
         virtual std::error_code serializeCamera(const SpatialId& id, const std::shared_ptr<Camera>& camera) = 0;
     };
 }

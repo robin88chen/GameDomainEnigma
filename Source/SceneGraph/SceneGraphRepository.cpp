@@ -376,6 +376,14 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
     m_storeMapper->serializeCamera(camera->id(), camera);
 }
 
+void SceneGraphRepository::removeCamera(const SpatialId& id)
+{
+    if (!hasCamera(id)) return;
+    std::lock_guard locker{ m_cameraMapLock };
+    m_cameras.erase(id);
+    m_storeMapper->removeCamera(id);
+}
+
 void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
 {
     if (!q) return;

@@ -59,6 +59,29 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         std::error_code m_err;
     };
+    class CameraConstituted : public Frameworks::IEvent
+    {
+    public:
+        CameraConstituted(const SpatialId& id, const std::shared_ptr<Camera>& camera) : m_id(id), m_camera(camera) {};
+        const SpatialId& id() const { return m_id; }
+        std::shared_ptr<Camera> camera() { return m_camera; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<Camera> m_camera;
+    };
+    class ConstituteCameraFailed : public Frameworks::IEvent
+    {
+    public:
+        ConstituteCameraFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+
     class ReplyCameraQuery : public Frameworks::IResponseEvent
     {
     public:

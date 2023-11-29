@@ -30,6 +30,7 @@ namespace Enigma::SceneGraph
         frustumNotFound,
         sceneRepositoryFailed,
         entityAlreadyExists,
+        sceneFactoryFailed,
 
         spatialFactoryNotFound = 301,
         factoryRttiMismatch,

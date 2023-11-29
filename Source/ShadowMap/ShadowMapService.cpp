@@ -184,7 +184,7 @@ void ShadowMapService::CreateSunLightCamera(const std::shared_ptr<Light>& lit)
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
     if (lit) vecSunDir = lit->GetLightDirection();
     m_sunLightCamera->SetSunLightDir(vecSunDir);
-    if (auto cam = m_cameraService.lock()->GetPrimaryCamera())
+    if (auto cam = m_cameraService.lock()->primaryCamera())
     {
         m_sunLightCamera->SetViewerCamera(cam);
     }

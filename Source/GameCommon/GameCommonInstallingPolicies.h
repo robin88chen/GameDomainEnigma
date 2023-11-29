@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GameCommonInstallingPolicies.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -18,12 +18,13 @@ namespace Enigma::GameCommon
     class GameCameraInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        GameCameraInstallingPolicy(const Engine::GenericDto& dto) : m_cameraDto(dto) {}
+        GameCameraInstallingPolicy(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) : m_cameraId(id), m_cameraDto(dto) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
+        SceneGraph::SpatialId m_cameraId;
         Engine::GenericDto m_cameraDto;
     };
     class GameLightInstallingPolicy : public Engine::InstallingPolicy

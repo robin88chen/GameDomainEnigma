@@ -1,5 +1,6 @@
 ﻿#include "SceneGraphRepository.h"
 #include "SceneGraphStoreMapper.h"
+#include "SceneGraphFactory.h"
 #include "SpatialId.h"
 #include "Camera.h"
 #include "Frustum.h"
@@ -43,7 +44,7 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
-
+    m_factory = menew SceneGraphFactory();
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this, dto_deserializer);
 }
@@ -51,6 +52,7 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
 SceneGraphRepository::~SceneGraphRepository()
 {
     SAFE_DELETE(m_builder);
+    SAFE_DELETE(m_factory);
 }
 
 ServiceResult SceneGraphRepository::onInit()
@@ -59,23 +61,26 @@ ServiceResult SceneGraphRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
     m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
     QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
-    m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
-    CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
+    //m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
+    //CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
 
+    m_factory->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
+    m_factory->unregisterHandlers();
+
     m_cameras.clear();
 
     QueryDispatcher::unsubscribe(typeid(QueryCamera), m_queryCamera);
     m_queryCamera = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
     m_queryNode = nullptr;
-    CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
-    m_createCamera = nullptr;
+    //CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
+    //m_createCamera = nullptr;
     CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
     m_createNode = nullptr;
 
@@ -92,7 +97,7 @@ GraphicCoordSys SceneGraphRepository::getCoordinateSystem()
     return m_handSystem;
 }
 
-std::shared_ptr<Camera> SceneGraphRepository::createCamera(const SpatialId& id)
+/*std::shared_ptr<Camera> SceneGraphRepository::createCamera(const SpatialId& id)
 {
     assert(!hasCamera(id));
     auto camera = std::make_shared<Camera>(id, m_handSystem);
@@ -109,7 +114,7 @@ std::shared_ptr<Camera> SceneGraphRepository::createCamera(const GenericDto& dto
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(camera_dto.id(), camera);
     return camera;
-}
+}*/
 
 bool SceneGraphRepository::hasCamera(const SpatialId& id)
 {
@@ -122,7 +127,7 @@ bool SceneGraphRepository::hasCamera(const SpatialId& id)
 
 std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
 {
-    assert(hasCamera(id));
+    if (!hasCamera(id)) return nullptr;
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(id);
     if (it != m_cameras.end()) return it->second;
@@ -362,6 +367,15 @@ void SceneGraphRepository::queryCamera(const IQueryPtr& q)
     query->setResult(queryCamera(query->id()));
 }
 
+void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
+{
+    assert(m_storeMapper);
+    assert(camera);
+    std::lock_guard locker{ m_cameraMapLock };
+    m_cameras.insert_or_assign(camera->id(), camera);
+    m_storeMapper->serializeCamera(camera->id(), camera);
+}
+
 void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
 {
     if (!q) return;
@@ -370,7 +384,7 @@ void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
     query->setResult(queryNode(query->nodeName()));
 }
 
-void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
+/*void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateCamera>(c))
@@ -398,7 +412,7 @@ void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
     {
         assert(false);
     }
-}
+}*/
 
 void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
 {

@@ -571,7 +571,7 @@ void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::string&
     auto lit_vol = std::dynamic_pointer_cast<LightVolumePawn, LightingPawn>(FindLightingPawn(lit_name));
     if (!lit_vol) return;
     if (m_cameraService.expired()) return;
-    auto camera = m_cameraService.lock()->GetPrimaryCamera();
+    auto camera = m_cameraService.lock()->primaryCamera();
     if (!camera) return;
     CheckLightVolumeBackfaceCulling(lit_vol, camera);
 }

@@ -24,6 +24,7 @@
 namespace Enigma::SceneGraph
 {
     class SceneGraphStoreMapper;
+    class SceneGraphFactory;
     class Spatial;
     class Camera;
     class Frustum;
@@ -63,8 +64,10 @@ namespace Enigma::SceneGraph
         void setCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys getCoordinateSystem();
 
-        std::shared_ptr<Camera> createCamera(const SpatialId& id);
-        std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
+        SceneGraphFactory* factory() { return m_factory; }
+
+        //std::shared_ptr<Camera> createCamera(const SpatialId& id);
+        //std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
         std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
@@ -91,6 +94,9 @@ namespace Enigma::SceneGraph
         bool hasCamera(const SpatialId& id);
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
 
+        /** put entities */
+        void putCamera(const std::shared_ptr<Camera>& camera);
+
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
         std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
@@ -98,10 +104,11 @@ namespace Enigma::SceneGraph
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);
         void queryNode(const Frameworks::IQueryPtr& q);
-        void createCamera(const Frameworks::ICommandPtr& c);
+        //void createCamera(const Frameworks::ICommandPtr& c);
         void createNode(const Frameworks::ICommandPtr& c);
 
     private:
+        SceneGraphFactory* m_factory;
         std::shared_ptr<SceneGraphStoreMapper> m_storeMapper;
         GraphicCoordSys m_handSystem;
 
@@ -123,7 +130,7 @@ namespace Enigma::SceneGraph
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_queryNode;
-        Frameworks::CommandSubscriberPtr m_createCamera;
+        //Frameworks::CommandSubscriberPtr m_createCamera;
         Frameworks::CommandSubscriberPtr m_createNode;
     };
 }

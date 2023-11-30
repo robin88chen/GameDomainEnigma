@@ -127,22 +127,22 @@ void ViewerAppDelegate::InitializeMountPaths()
 void ViewerAppDelegate::InstallEngine()
 {
     m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
-    EventPublisher::Subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
-    EventPublisher::Subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
 
     m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
-    CommandBus::Subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
+    CommandBus::subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
     m_doAddingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingAnimationClip(c); });
-    CommandBus::Subscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
+    CommandBus::subscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
     m_doDeletingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoDeletingAnimationClip(c); });
-    CommandBus::Subscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
+    CommandBus::subscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
     m_doPlayingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoPlayingAnimationClip(c); });
-    CommandBus::Subscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
+    CommandBus::subscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
     m_doChangingAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingAnimationTimeValue(c); });
-    CommandBus::Subscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
+    CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
 
     assert(m_graphicMain);
 
@@ -153,10 +153,10 @@ void ViewerAppDelegate::InstallEngine()
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>());
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
-    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(
+    auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
         .Frustum(Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).ToGenericDto());
+        .FrustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
@@ -172,8 +172,8 @@ void ViewerAppDelegate::InstallEngine()
     m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
         input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
-    m_sceneRenderer = m_graphicMain->GetSystemServiceAs<SceneRendererService>();
-    m_shadowMapService = m_graphicMain->GetSystemServiceAs<ShadowMapService>();
+    m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
+    m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
 }
 
 void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
@@ -186,22 +186,22 @@ void ViewerAppDelegate::ShutdownEngine()
     m_sceneRoot = nullptr;
     m_floor = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
     m_onPawnPrimitiveBuilt = nullptr;
-    EventPublisher::Unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
 
-    CommandBus::Unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
+    CommandBus::unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
     m_doChangingMeshTexture = nullptr;
-    CommandBus::Unsubscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
+    CommandBus::unsubscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
     m_doAddingAnimationClip = nullptr;
-    CommandBus::Unsubscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
+    CommandBus::unsubscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
     m_doDeletingAnimationClip = nullptr;
-    CommandBus::Unsubscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
+    CommandBus::unsubscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
     m_doPlayingAnimationClip = nullptr;
-    CommandBus::Unsubscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
+    CommandBus::unsubscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
     m_doChangingAnimationTimeValue = nullptr;
 
     m_graphicMain->ShutdownRenderEngine();
@@ -240,14 +240,14 @@ void ViewerAppDelegate::OnTimerElapsed()
 
 void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
 {
-    CommandBus::Post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.Name()));
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.ToGenericDto() }));
+    CommandBus::post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.name()));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
 }
 
 void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
 {
     if (!m_pawn) return;
-    auto pawn_dto = m_pawn->SerializeDto();
+    auto pawn_dto = m_pawn->serializeDto();
     pawn_dto.AsTopLevel(true);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
     IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Write | OpenAlways | Binary);
@@ -259,7 +259,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
 {
     if (m_pawn)
     {
-        m_pawn->DetachFromParent();
+        m_pawn->detachFromParent();
         m_pawn = nullptr;
     }
     IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Read | Binary);
@@ -268,7 +268,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
     auto read_buf = iFile->Read(0, file_size);
     FileSystem::Instance()->CloseFile(iFile);
     auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }
 
 void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
@@ -290,19 +290,19 @@ void ViewerAppDelegate::OnViewingPawnPrimitiveBuilt()
 {
     m_pawn->GetPrimitive()->SelectVisualTechnique("Default");
     m_pawn->BakeAvatarRecipes();
-    CommandBus::Post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
-    auto scene_service = m_graphicMain->GetSystemServiceAs<GameSceneService>();
+    CommandBus::post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
+    auto scene_service = m_graphicMain->getSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     auto prim = m_pawn->GetPrimitive();
     if (prim)
     {
         auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
         if (!model) return;
-        CommandBus::Post(std::make_shared<RefreshModelNodeTree>(model));
+        CommandBus::post(std::make_shared<RefreshModelNodeTree>(model));
         if (auto ani = model->GetAnimator())
         {
-            ani->Reset();
-            CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
+            ani->reset();
+            CommandBus::post(std::make_shared<AddListeningAnimator>(ani));
             if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
             {
                 model_ani->PlayAnimation(AnimationClip{ 0.0f, 20.0f, AnimationClip::WarpMode::Loop, 0 });
@@ -322,10 +322,10 @@ void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
     m_sceneRoot = ev->GetSceneRoot();
-    CommandBus::Post(std::make_shared<CreateAmbientLight>(SceneRootName, "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::Post(std::make_shared<CreateSunLight>(SceneRootName, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    CommandBus::post(std::make_shared<CreateAmbientLight>(SceneRootName, "amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    CommandBus::post(std::make_shared<CreateSunLight>(SceneRootName, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-    CommandBus::Post(std::make_shared<CreatePointLight>(SceneRootName, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    CommandBus::post(std::make_shared<CreatePointLight>(SceneRootName, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
     CreateFloorReceiver();
 }
 
@@ -339,13 +339,13 @@ void ViewerAppDelegate::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e
     if (ev->GetSceneGraphId() == FloorReceiverName)
     {
         m_floor = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
-        if (m_sceneRoot) m_sceneRoot->AttachChild(m_floor, Matrix4::IDENTITY);
+        if (m_sceneRoot) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
     }
     else if (ev->GetSceneGraphId() == ViewingPawnName)
     {
         m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Spatial>(top_spatials[0]);
         Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-        if (m_sceneRoot) m_sceneRoot->AttachChild(m_pawn, mx);
+        if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, mx);
     }
 }
 
@@ -440,12 +440,12 @@ void ViewerAppDelegate::CreateFloorReceiver()
     EffectTextureMapDtoHelper tex_dto;
     tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "DiffuseMap");
     mesh_dto.Name() = "floor_mesh";
-    mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
+    mesh_dto.Effects().emplace_back(mat_dto.toGenericDto());
+    mesh_dto.TextureMaps().emplace_back(tex_dto.toGenericDto());
     mesh_dto.GeometryName() = "floor";
-    mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
+    mesh_dto.TheGeometry() = floor_dto.toGenericDto();
 
     pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto dtos = { pawn_dto.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
+    auto dtos = { pawn_dto.toGenericDto() };
+    CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

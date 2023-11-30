@@ -74,7 +74,7 @@ void ModelInfoPanel::EnumModelMeshNode(const std::shared_ptr<Enigma::Renderer::M
     unsigned int total_mesh_count = model->GetMeshPrimitiveCount();
     unsigned int mesh_count = 0;
 
-    nana::treebox::item_proxy root_pos = m_meshNodeTree->insert("root", model->GetName());
+    nana::treebox::item_proxy root_pos = m_meshNodeTree->insert("root", model->getName());
     mesh_pos_map.emplace("root", root_pos);
     for (unsigned int ni = 0; ni < total_node_count; ni++)
     {
@@ -86,7 +86,7 @@ void ModelInfoPanel::EnumModelMeshNode(const std::shared_ptr<Enigma::Renderer::M
             auto parent_mesh_node = model->GetMeshNodeTree().GetMeshNode(parent_index.value());
             if (parent_mesh_node)
             {
-                parent_pos = mesh_pos_map.find(parent_mesh_node.value().get().GetName())->second;
+                parent_pos = mesh_pos_map.find(parent_mesh_node.value().get().getName())->second;
             }
             else
             {
@@ -98,12 +98,12 @@ void ModelInfoPanel::EnumModelMeshNode(const std::shared_ptr<Enigma::Renderer::M
             parent_pos = mesh_pos_map.find("root")->second;
         }
         nana::treebox::item_proxy node_pos = m_meshNodeTree->insert(
-            parent_pos, mesh_node.value().get().GetName(), mesh_node.value().get().GetName());
-        mesh_pos_map.emplace(mesh_node.value().get().GetName(), node_pos);
+            parent_pos, mesh_node.value().get().getName(), mesh_node.value().get().getName());
+        mesh_pos_map.emplace(mesh_node.value().get().getName(), node_pos);
         if (mesh_node.value().get().GetMeshPrimitive())
         {
             m_meshNodeTree->insert(node_pos,
-                mesh_node.value().get().GetMeshPrimitive()->GetName(), mesh_node.value().get().GetMeshPrimitive()->GetName());
+                mesh_node.value().get().GetMeshPrimitive()->getName(), mesh_node.value().get().GetMeshPrimitive()->getName());
         }
     }
 }
@@ -136,7 +136,7 @@ void ModelInfoPanel::OnChangeMeshTexture(const nana::menu::item_proxy& menu_item
     auto paths = fb.show();
     if (paths.size() > 0)
     {
-        Enigma::Frameworks::CommandBus::Post(std::make_shared<ChangeMeshTexture>(m_meshNodeTree->selected().key(), paths[0].filename().generic_string()));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<ChangeMeshTexture>(m_meshNodeTree->selected().key(), paths[0].filename().generic_string()));
     }
     //m_main->GetAppDelegate()->ChangeMeshTexture(m_meshNodeTree->selected().key());
 }
@@ -144,12 +144,12 @@ void ModelInfoPanel::OnChangeMeshTexture(const nana::menu::item_proxy& menu_item
 void ModelInfoPanel::SubscribeHandlers()
 {
     m_doRefreshingModelNodeTree = std::make_shared<Enigma::Frameworks::CommandSubscriber>([=](auto c) { DoRefreshingModelNodeTree(c); });
-    Enigma::Frameworks::CommandBus::Subscribe(typeid(RefreshModelNodeTree), m_doRefreshingModelNodeTree);
+    Enigma::Frameworks::CommandBus::subscribe(typeid(RefreshModelNodeTree), m_doRefreshingModelNodeTree);
 }
 
 void ModelInfoPanel::UnsubscribeHandlers()
 {
-    Enigma::Frameworks::CommandBus::Unsubscribe(typeid(RefreshModelNodeTree), m_doRefreshingModelNodeTree);
+    Enigma::Frameworks::CommandBus::unsubscribe(typeid(RefreshModelNodeTree), m_doRefreshingModelNodeTree);
     m_doRefreshingModelNodeTree = nullptr;
 }
 

@@ -31,7 +31,7 @@ IGraphicAPI::~IGraphicAPI()
     if (m_stash) delete m_stash;
 }
 
-IGraphicAPI* IGraphicAPI::Instance()
+IGraphicAPI* IGraphicAPI::instance()
 {
     assert(m_instance);
     return m_instance;

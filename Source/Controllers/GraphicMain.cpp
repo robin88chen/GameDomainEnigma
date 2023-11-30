@@ -26,7 +26,7 @@ GraphicMain::~GraphicMain()
     delete m_serviceManager;
 }
 
-GraphicMain* GraphicMain::Instance()
+GraphicMain* GraphicMain::instance()
 {
     assert(m_instance);
     return m_instance;

@@ -55,7 +55,7 @@ error DeviceSamplerStateEgl::BindToShader(unsigned bindPoint)
 
 future_error DeviceSamplerStateEgl::AsyncBindToShader(unsigned bindPoint)
 {
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), bindPoint, this]()->error
             {
                 return BindToShader(bindPoint);

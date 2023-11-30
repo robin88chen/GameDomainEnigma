@@ -44,7 +44,7 @@ BackSurfaceDx11::BackSurfaceDx11(const std::string& name, ID3D11Device* device, 
     m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     m_d3dSurface = nullptr;
     m_d3dRenderTarget = nullptr;
-    Create(device, dimension, fmt);
+    create(device, dimension, fmt);
     if (m_d3dSurface) CreateD3DRenderTarget(device, m_d3dSurface);
 }
 
@@ -56,7 +56,7 @@ BackSurfaceDx11::~BackSurfaceDx11()
 
 error BackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
     SAFE_RELEASE(m_d3dSurface);
@@ -71,7 +71,7 @@ error BackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
     }
     else
     {
-        error er = Create(graphic->GetD3DDevice(), dimension, m_format);
+        error er = create(graphic->GetD3DDevice(), dimension, m_format);
         if (er) return er;
     }
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurface);
@@ -89,7 +89,7 @@ void BackSurfaceDx11::CreateD3DRenderTarget(ID3D11Device* device, ID3D11Texture2
     if (FATAL_LOG_EXPR(FAILED(hr))) return;
 }
 
-error BackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
+error BackSurfaceDx11::create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     assert(device);

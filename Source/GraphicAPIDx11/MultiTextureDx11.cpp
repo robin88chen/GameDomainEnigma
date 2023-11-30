@@ -61,7 +61,7 @@ error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension<unsign
 error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     assert(!img_buffs.empty());
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -113,7 +113,7 @@ error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_bu
 error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     assert(!files.empty());
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -139,14 +139,14 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
         DirectX::Blob blob;
         DirectX::SaveToDDSMemory(resultImage.GetImages(), resultImage.GetImageCount(), resultImage.GetMetadata(), 0, blob);
         byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
-        size_t write_bytes = files[i]->Write(0, write_buff);
+        size_t write_bytes = files[i]->write(0, write_buff);
         if (write_bytes != write_buff.size()) return ErrorCode::saveTextureFile;
     }
 
     std::vector<std::string> filenames;
     for (size_t i = 0; i < count; i++)
     {
-        filenames.emplace_back(files[i]->GetFullPath());
+        filenames.emplace_back(files[i]->getFullPath());
     }
     Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourceImagesSaved>(m_name, filenames));
     return ErrorCode::ok;
@@ -154,7 +154,7 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
 
 error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -226,7 +226,7 @@ error MultiTextureDx11::CreateFromScratchImage(unsigned index, DirectX::ScratchI
 
 error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;

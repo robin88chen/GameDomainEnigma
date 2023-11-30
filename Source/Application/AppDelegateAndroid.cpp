@@ -34,7 +34,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics
         m_hasLogFile = true;
     }
 
-    FileSystem::FileSystem::Create();
+    FileSystem::FileSystem::create();
     InitializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
@@ -50,8 +50,8 @@ void AppDelegate::Finalize()
     ShutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
-    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
-    delete Graphics::IGraphicAPI::Instance();
+    Graphics::IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
+    delete Graphics::IGraphicAPI::instance();
 
     m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
@@ -60,7 +60,7 @@ void AppDelegate::Finalize()
     {
         Platforms::Logger::CloseLoggerFile();
     }
-    delete FileSystem::FileSystem::Instance();
+    delete FileSystem::FileSystem::instance();
 }
 
 void AppDelegate::Run()
@@ -86,12 +86,12 @@ void AppDelegate::OnFrameSizeChanged(int w, int h)
 
 void AppDelegate::InitBridgeCallback()
 {
-    ApplicationBridge::m_initializeGraphicDevice = []() { Instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
-    ApplicationBridge::m_finalizeGraphicDevice = []() { Instance()->Finalize(); };
-    ApplicationBridge::m_onFrameUpdate = []() { Instance()->FrameUpdate(); };
-    ApplicationBridge::m_onPrepareFrame = []() { Instance()->PrepareRender(); };
-    ApplicationBridge::m_onDrawFrame = []() { Instance()->RenderFrame(); };
-    ApplicationBridge::m_onRendererSurfaceSizeChanged = [](int w, int h) { Instance()->OnFrameSizeChanged(w, h); };
+    ApplicationBridge::m_initializeGraphicDevice = []() { instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
+    ApplicationBridge::m_finalizeGraphicDevice = []() { instance()->Finalize(); };
+    ApplicationBridge::m_onFrameUpdate = []() { instance()->FrameUpdate(); };
+    ApplicationBridge::m_onPrepareFrame = []() { instance()->PrepareRender(); };
+    ApplicationBridge::m_onDrawFrame = []() { instance()->RenderFrame(); };
+    ApplicationBridge::m_onRendererSurfaceSizeChanged = [](int w, int h) { instance()->OnFrameSizeChanged(w, h); };
 }
 
 #endif

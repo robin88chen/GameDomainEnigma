@@ -88,7 +88,7 @@ EffectPass& EffectPass::operator=(EffectPass&& pass) noexcept
 
 void EffectPass::MappingAutoVariables()
 {
-    if (!MaterialVariableMap::Instance()) return;
+    if (!MaterialVariableMap::instance()) return;
     for (auto& var : m_variables)
     {
         MaterialVariableMap::SetAutoVariableCommitFunction(var);
@@ -119,7 +119,7 @@ void EffectPass::Apply()
     // 每個 api call 會自行處理 async
     if (m_shader)
     {
-        IGraphicAPI::Instance()->Bind(m_shader);
+        IGraphicAPI::instance()->Bind(m_shader);
         m_shader->ApplyVariables();
     }
     if (m_blendState)

@@ -20,7 +20,7 @@ namespace Enigma::Renderer
         MeshPrimitiveRay3IntersectionFinder();
         virtual ~MeshPrimitiveRay3IntersectionFinder();
 
-        static PrimitiveRay3IntersectionFinder* Create();
+        static PrimitiveRay3IntersectionFinder* create();
 
         static void RegisterFactory();
 

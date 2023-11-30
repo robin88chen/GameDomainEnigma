@@ -54,7 +54,7 @@ void AppDelegate::RegisterAppClass()
     m_atom = RegisterClass(&wc);
 }
 
-void AppDelegate::Create()
+void AppDelegate::create()
 {
     m_hwnd = CreateWindow(m_appName.c_str(), m_appName.c_str(), WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, 0, NULL);
@@ -81,7 +81,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
         m_hasLogFile = true;
     }
 
-    FileSystem::FileSystem::Create();
+    FileSystem::FileSystem::create();
     InitializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
@@ -92,7 +92,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
     RegisterAppClass();
-    Create();
+    create();
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
@@ -105,19 +105,19 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
     {
         m_mediaRootPath = media_path[media_path.length() - 1] == '/' ? media_path : (media_path + "/");
     }
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, EffectMaterialManager::GetEffectFilePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, ShaderManager::GetShaderCodePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, TextureManager::GetImageFilePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, GeometryData::GetDataFilePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, AnimationAsset::GetAnimationFilePathID()) });
-        FileSystem::Instance()->AddMountPath(IMountPathPtr{
+        FileSystem::instance()->addMountPath(IMountPathPtr{
             menew StdMountPath(m_mediaRootPath, GlyphBitmapLoader::GetGlyphFilePathID()) });
     }*/
 }
@@ -127,8 +127,8 @@ void AppDelegate::Finalize()
     ShutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
-    Graphics::IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
-    delete Graphics::IGraphicAPI::Instance();
+    Graphics::IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
+    delete Graphics::IGraphicAPI::instance();
 
     m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
@@ -137,7 +137,7 @@ void AppDelegate::Finalize()
     {
         Platforms::Logger::CloseLoggerFile();
     }
-    delete FileSystem::FileSystem::Instance();
+    delete FileSystem::FileSystem::instance();
 
     CoUninitialize();
 }

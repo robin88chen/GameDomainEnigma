@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   FileSystem.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -25,43 +25,43 @@ namespace Enigma::FileSystem
         ~FileSystem();
 
         /** 以 create 函式來建立 file system */
-        static FileSystem* Create();
-        static FileSystem* Instance();
+        static FileSystem* create();
+        static FileSystem* instance();
 
         /** Open File
         @param rw_options option bits
         @param path_id  像是變數名稱之類的字串，例如 "EXECUTABLE_PATH", "RESOURCE_PATH" */
-        IFilePtr OpenFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id);
-        FutureFile AsyncOpenFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id);
+        IFilePtr openFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id);
+        FutureFile asyncOpenFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id);
 
-    	/** Open File
+        /** Open File
         @param rw_options option bits
         @param filename  filename object */
-        IFilePtr OpenFile(const Filename& filename, const ReadWriteOption& rw_options);
-        FutureFile AsyncOpenFile(const Filename& filename, const ReadWriteOption& rw_options);
+        IFilePtr openFile(const Filename& filename, const ReadWriteOption& rw_options);
+        FutureFile asyncOpenFile(const Filename& filename, const ReadWriteOption& rw_options);
 
-        void CloseFile(const IFilePtr& file);
+        void closeFile(const IFilePtr& file);
 
         /** Add Mount Path \n 相同的PathID可以增加多次, 會依序搜尋  */
-        void AddMountPath(const IMountPathPtr& path);
-        void RemoveMountPath(const IMountPathPtr& path);
+        void addMountPath(const IMountPathPtr& path);
+        void removeMountPath(const IMountPathPtr& path);
 
         /** 從 path id 取得 full path */
-        std::string GetStdioFullPath(const std::string& filename, const std::string& path_id);
+        std::string getStdioFullPath(const std::string& filename, const std::string& path_id);
 
-        IMountPathPtr FindMountPath(const std::filesystem::path& path);
-        std::list<IMountPathPtr> GetMountPathsWithPathID(const std::string& path_id);
+        IMountPathPtr findMountPath(const std::filesystem::path& path);
+        std::list<IMountPathPtr> getMountPathsWithPathId(const std::string& path_id);
 
     private:
         FileSystem();
-        void Cleanup();
-        void CloseAllOpenedFile();
-        void RemoveAllMountPath();
+        void cleanup();
+        void closeAllOpenedFiles();
+        void removeAllMountPaths();
 
-        IFilePtr OpenStdioFile(const std::string& filepath, const std::string& filename, const ReadWriteOption& rw_option);
+        IFilePtr openStdioFile(const std::string& filepath, const std::string& filename, const ReadWriteOption& rw_option);
 
-        IFilePtr OpenMountedFile(const IMountPathPtr& path, const std::string& filename, const ReadWriteOption& rw_option);
-        std::string FixToFullPath(const std::string& filepath, const std::string& filename);
+        IFilePtr openMountedFile(const IMountPathPtr& path, const std::string& filename, const ReadWriteOption& rw_option);
+        std::string fixToFullPath(const std::string& filepath, const std::string& filename);
 
     private:
         static FileSystem* m_instance;

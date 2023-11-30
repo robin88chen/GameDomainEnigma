@@ -24,24 +24,24 @@ FileSystem::FileSystem()
 
 FileSystem::~FileSystem()
 {
-    Cleanup();
+    cleanup();
     m_instance = nullptr;
 }
 
-FileSystem* FileSystem::Create()
+FileSystem* FileSystem::create()
 {
     if (m_instance) return m_instance;
     return new FileSystem();
 }
 
 /** 由 Create 建立物件， 而不是讓 Instance 可以建立物件 */
-FileSystem* FileSystem::Instance()
+FileSystem* FileSystem::instance()
 {
     assert(m_instance);
     return m_instance;
 }
 
-IFilePtr FileSystem::OpenFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id)
+IFilePtr FileSystem::openFile(const std::string& filename, const ReadWriteOption& rw_options, const std::string& path_id)
 {
     Debug::Printf("Open file %s at path %s called in thread %d\n", filename.c_str(), path_id.c_str(), std::this_thread::get_id());
     bool readonly = true;
@@ -50,35 +50,35 @@ IFilePtr FileSystem::OpenFile(const std::string& filename, const ReadWriteOption
     {
         for (MountPathList::iterator iter = m_mountPathList.begin(); iter != m_mountPathList.end(); ++iter)
         {
-            if (!((*iter)->EqualPathID(path_id))) continue;
-            IFilePtr file = OpenMountedFile((*iter), filename, rw_options);
+            if (!((*iter)->equalPathId(path_id))) continue;
+            IFilePtr file = openMountedFile((*iter), filename, rw_options);
             if (file) return file;
         }
     }
 
-    return OpenStdioFile("", filename, rw_options);
+    return openStdioFile("", filename, rw_options);
 }
 
-FutureFile FileSystem::AsyncOpenFile(const std::string& filename,
+FutureFile FileSystem::asyncOpenFile(const std::string& filename,
     const ReadWriteOption& rw_options, const std::string& path_id)
 {
-    return std::async(std::launch::async, [=]() -> IFilePtr { return this->OpenFile(filename, rw_options, path_id); });
+    return std::async(std::launch::async, [=]() -> IFilePtr { return this->openFile(filename, rw_options, path_id); });
 }
 
-IFilePtr FileSystem::OpenFile(const Filename& filename, const ReadWriteOption& rw_options)
+IFilePtr FileSystem::openFile(const Filename& filename, const ReadWriteOption& rw_options)
 {
-    return OpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
+    return openFile(filename.getSubPathFileName(), rw_options, filename.getMountPathId());
 }
 
-FutureFile FileSystem::AsyncOpenFile(const Filename& filename, const ReadWriteOption& rw_options)
+FutureFile FileSystem::asyncOpenFile(const Filename& filename, const ReadWriteOption& rw_options)
 {
-    return AsyncOpenFile(filename.GetSubPathFileName(), rw_options, filename.GetMountPathID());
+    return asyncOpenFile(filename.getSubPathFileName(), rw_options, filename.getMountPathId());
 }
 
-IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::string& filename,
+IFilePtr FileSystem::openStdioFile(const std::string& filepath, const std::string& filename,
     const ReadWriteOption& rw_option)
 {
-    std::string fullpath = StdMountPath::FixFullPath(filepath, filename);
+    std::string fullpath = StdMountPath::fixFullPath(filepath, filename);
     IFilePtr file = IFilePtr{ menew StdioFile(fullpath, rw_option) };
     error open_er = file->open();
     if (open_er)
@@ -92,7 +92,7 @@ IFilePtr FileSystem::OpenStdioFile(const std::string& filepath, const std::strin
     return file;
 }
 
-void FileSystem::CloseFile(const IFilePtr& file)
+void FileSystem::closeFile(const IFilePtr& file)
 {
     if (!file) return;
     std::lock_guard<std::mutex> locker{ m_openedFileLocker };
@@ -102,12 +102,12 @@ void FileSystem::CloseFile(const IFilePtr& file)
     //EN_DELETE file;
 }
 
-IFilePtr FileSystem::OpenMountedFile(const IMountPathPtr& path,
+IFilePtr FileSystem::openMountedFile(const IMountPathPtr& path,
     const std::string& filename, const ReadWriteOption& rw_option)
 {
     assert(path);
 
-    IFilePtr file = IFilePtr{ path->CreateFile(filename, rw_option) };
+    IFilePtr file = IFilePtr{ path->createFile(filename, rw_option) };
     if (!file) return nullptr;
     error open_er = file->open();
     if (open_er)
@@ -122,7 +122,7 @@ IFilePtr FileSystem::OpenMountedFile(const IMountPathPtr& path,
     return file;
 }
 
-std::string FileSystem::FixToFullPath(const std::string& filepath, const std::string& filename)
+std::string FileSystem::fixToFullPath(const std::string& filepath, const std::string& filename)
 {
     if (!filename.length()) return "";
 
@@ -135,16 +135,16 @@ std::string FileSystem::FixToFullPath(const std::string& filepath, const std::st
     return fullpath;
 }
 
-void FileSystem::Cleanup()
+void FileSystem::cleanup()
 {
-    RemoveAllMountPath();
-    CloseAllOpenedFile();
+    removeAllMountPaths();
+    closeAllOpenedFiles();
 }
-void FileSystem::AddMountPath(const IMountPathPtr& path)
+void FileSystem::addMountPath(const IMountPathPtr& path)
 {
     std::lock_guard<std::mutex> path_locker{ m_mountPathLocker };
     MountPathList::iterator found = find_if(m_mountPathList.begin(), m_mountPathList.end(),
-        [=] (const IMountPathPtr& mp)->bool { return mp->EqualMountPath(path.get()); });
+        [=](const IMountPathPtr& mp)->bool { return mp->equalMountPath(path.get()); });
     if (found != m_mountPathList.end())
     {
         return;
@@ -152,45 +152,45 @@ void FileSystem::AddMountPath(const IMountPathPtr& path)
     m_mountPathList.emplace_back(path);
 }
 
-void FileSystem::RemoveMountPath(const IMountPathPtr& path)
+void FileSystem::removeMountPath(const IMountPathPtr& path)
 {
     std::lock_guard<std::mutex> path_locker{ m_mountPathLocker };
     MountPathList::iterator found = find_if(m_mountPathList.begin(), m_mountPathList.end(),
-        [=] (const IMountPathPtr& mp)->bool { return mp->EqualMountPath(path.get()); });
+        [=](const IMountPathPtr& mp)->bool { return mp->equalMountPath(path.get()); });
     if (found != m_mountPathList.end())
     {
         m_mountPathList.erase(found);
     }
 }
 
-void FileSystem::RemoveAllMountPath()
+void FileSystem::removeAllMountPaths()
 {
     std::lock_guard<std::mutex> path_locker{ m_mountPathLocker };
     m_mountPathList.clear();
 }
 
-std::string FileSystem::GetStdioFullPath(const std::string& filename, const std::string& path_id)
+std::string FileSystem::getStdioFullPath(const std::string& filename, const std::string& path_id)
 {
     if ((path_id.length() != 0) && (m_mountPathList.size()))
     {
         for (MountPathList::iterator iter = m_mountPathList.begin(); iter != m_mountPathList.end(); ++iter)
         {
-            if (!((*iter)->EqualPathID(path_id))) continue;
+            if (!((*iter)->equalPathId(path_id))) continue;
             StdMountPath* path = dynamic_cast<StdMountPath*>((*iter).get());
             if (!path) continue;
-            std::string fullpath = path->FixFullPath(filename);
-            if (StdioFile::IsFileExisted(fullpath)) return fullpath;
+            std::string fullpath = path->fixFullPath(filename);
+            if (StdioFile::isFileExisted(fullpath)) return fullpath;
         }
     }
 
-    return StdMountPath::FixFullPath("", filename);
+    return StdMountPath::fixFullPath("", filename);
 }
 
-IMountPathPtr FileSystem::FindMountPath(const std::filesystem::path& path)
+IMountPathPtr FileSystem::findMountPath(const std::filesystem::path& path)
 {
     std::lock_guard<std::mutex> path_locker{ m_mountPathLocker };
     MountPathList::iterator found = find_if(m_mountPathList.begin(), m_mountPathList.end(),
-        [=](const IMountPathPtr& mp)->bool { return mp->EqualMountPath(path); });
+        [=](const IMountPathPtr& mp)->bool { return mp->equalMountPath(path); });
     if (found != m_mountPathList.end())
     {
         return *found;
@@ -198,13 +198,13 @@ IMountPathPtr FileSystem::FindMountPath(const std::filesystem::path& path)
     return nullptr;
 }
 
-std::list<IMountPathPtr> FileSystem::GetMountPathsWithPathID(const std::string& path_id)
+std::list<IMountPathPtr> FileSystem::getMountPathsWithPathId(const std::string& path_id)
 {
     MountPathList paths_list;
     std::lock_guard<std::mutex> path_locker{ m_mountPathLocker };
     for (auto mount_path : m_mountPathList)
     {
-        if (mount_path->GetPathID() == path_id)
+        if (mount_path->getPathId() == path_id)
         {
             paths_list.emplace_back(mount_path);
         }
@@ -212,12 +212,12 @@ std::list<IMountPathPtr> FileSystem::GetMountPathsWithPathID(const std::string& 
     return paths_list;
 }
 
-void FileSystem::CloseAllOpenedFile()
+void FileSystem::closeAllOpenedFiles()
 {
     while (m_openedFileList.size() > 0)
     {
         IFilePtr file = m_openedFileList.front();
-        CloseFile(file);
+        closeFile(file);
     }
 }
 

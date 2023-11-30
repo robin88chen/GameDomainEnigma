@@ -94,7 +94,7 @@ error Renderer::BeginScene()
         Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
-    Graphics::IGraphicAPI::Instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
 }
 
@@ -108,7 +108,7 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
         Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
     }
     Engine::MaterialVariableMap::UseCameraParameter(camera_loc, mxView, mxProj);
-    Graphics::IGraphicAPI::Instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
 }
 
@@ -144,7 +144,7 @@ error Renderer::DrawScene()
 
 error Renderer::EndScene()
 {
-    Graphics::IGraphicAPI::Instance()->EndScene();
+    Graphics::IGraphicAPI::instance()->EndScene();
     return ErrorCode::ok;
 }
 

@@ -34,7 +34,7 @@ namespace Enigma::Engine
         MaterialVariableMap& operator=(const MaterialVariableMap&) = delete;
         MaterialVariableMap& operator=(MaterialVariableMap&&) = delete;
 
-        static MaterialVariableMap* Instance();
+        static MaterialVariableMap* instance();
 
         /** insert variable function to map */
         static void InsertAutoVariableFunctionToMap(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);

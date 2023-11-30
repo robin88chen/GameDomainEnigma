@@ -142,7 +142,7 @@ error TextureEgl::SaveTextureImage(const FileSystem::IFilePtr& file)
 
     m_imageFileName = filename;
 
-    png_image_write_to_file(&image, FileSystem::Instance()->GetStdioFullPath(filename, pathid).c_str(),
+    png_image_write_to_file(&image, FileSystem::instance()->getStdioFullPath(filename, pathid).c_str(),
         0, raw_buffer, 0, 0); */
 
     return ErrorCode::ok;

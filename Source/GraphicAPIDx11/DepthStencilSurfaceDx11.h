@@ -30,7 +30,7 @@ namespace Enigma::Devices
 
         ID3D11DepthStencilView* GetD3DDepthView() { return m_d3dDepthView; }
     protected:
-        error Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
+        error create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
         void CreateD3DDepthView(ID3D11Device* device);
 
     protected:

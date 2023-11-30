@@ -26,7 +26,7 @@ error DeviceRasterizerStateDx11::CreateFromData(const RasterizerStateData& data)
 
     SAFE_RELEASE(m_d3dRasterizer);
 
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -52,7 +52,7 @@ error DeviceRasterizerStateDx11::CreateFromData(const RasterizerStateData& data)
 
 error DeviceRasterizerStateDx11::BindToDevice()
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -107,7 +107,7 @@ BOOL DeviceRasterizerStateDx11::BackfaceWiseByData(RasterizerStateData::Backface
 
 int DeviceRasterizerStateDx11::PixeledDepthBiasByData(float bias)
 {
-    unsigned bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
+    unsigned bits = Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat().DepthBits();
     if ((bits == 16) || (bits == 24)) // D16UNORM, D24UNORM
     {
         return static_cast<int>(bias * static_cast<float>(pow(2, bits)));

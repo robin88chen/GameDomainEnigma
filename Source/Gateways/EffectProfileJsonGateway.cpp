@@ -126,7 +126,7 @@ std::optional<EffectCompilingProfile> EffectProfileJsonGateway::Deserialize(cons
     return profile;
 }
 
-void EffectProfileJsonGateway::Cleanup()
+void EffectProfileJsonGateway::cleanup()
 {
     m_vertexShaderGateways.clear();
     m_pixelShaderGateways.clear();
@@ -532,7 +532,7 @@ EffectPassProfile EffectProfileJsonGateway::DeserializePassProfile(const rapidjs
 ShaderProgramPolicy EffectProfileJsonGateway::DeserializeProgramPolicy(const std::string& name,
     const std::string& vtx_shader_name, const std::string& pix_shader_name) const
 {
-    Graphics::IGraphicAPI::APIVersion api = Graphics::IGraphicAPI::Instance()->GetAPIVersion();
+    Graphics::IGraphicAPI::APIVersion api = Graphics::IGraphicAPI::instance()->GetAPIVersion();
     ShaderProgramPolicy policy;
     policy.m_programName = name;
     auto vtx_it = std::find_if(m_vertexShaderGateways.begin(), m_vertexShaderGateways.end(), [=](auto g)
@@ -571,9 +571,9 @@ std::vector<EffectSamplerProfile> EffectProfileJsonGateway::DeserializeSamplerPr
     for (auto samp = sampler_list.GetArray().Begin(); samp != sampler_list.GetArray().End(); ++samp)
     {
         auto samp_it = std::find_if(m_samplerStateGateways.begin(), m_samplerStateGateways.end(), [=](auto g)
-        {
-            return g.m_name == (*samp)[SAMPLER_TOKEN].GetString();
-        });
+            {
+                return g.m_name == (*samp)[SAMPLER_TOKEN].GetString();
+            });
         if (samp_it != m_samplerStateGateways.end())
         {
             profiles.emplace_back(EffectSamplerProfile{
@@ -639,18 +639,18 @@ EffectDepthStencilProfile EffectProfileJsonGateway::FetchDepthStateProfile(const
 
 std::string EffectProfileJsonGateway::ReadShaderCode(const std::string& filename) const
 {
-    IFilePtr iFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(filename), Read | Binary);
+    IFilePtr iFile = FileSystem::FileSystem::instance()->openFile(Filename(filename), FileSystem::read | FileSystem::binary);
     if (FATAL_LOG_EXPR(!iFile)) return "";
-    size_t file_size = iFile->Size();
+    size_t file_size = iFile->size();
     if (FATAL_LOG_EXPR(file_size <= 0))
     {
-        FileSystem::FileSystem::Instance()->CloseFile(iFile);
+        FileSystem::FileSystem::instance()->closeFile(iFile);
         return "";
     }
 
-    auto code_buff = iFile->Read(0, file_size);
+    auto code_buff = iFile->read(0, file_size);
     if (!code_buff) return "";
-    FileSystem::FileSystem::Instance()->CloseFile(iFile);
+    FileSystem::FileSystem::instance()->closeFile(iFile);
     return convert_to_string(code_buff.value(), file_size);
 }
 

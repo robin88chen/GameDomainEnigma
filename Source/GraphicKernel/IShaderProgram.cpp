@@ -21,7 +21,7 @@ IShaderProgram::~IShaderProgram()
 
 void IShaderProgram::ApplyVariables()
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncApplyShaderVariables();
     }

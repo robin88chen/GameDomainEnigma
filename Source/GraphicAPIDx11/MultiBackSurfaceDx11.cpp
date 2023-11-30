@@ -54,7 +54,7 @@ MultiBackSurfaceDx11::MultiBackSurfaceDx11(const std::string& name, ID3D11Device
     m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
     m_d3dSurfaceArray = nullptr;
     m_d3dRenderTargetArray = nullptr;
-    Create(device, dimension, buffer_count, fmt);
+    create(device, dimension, buffer_count, fmt);
     if (m_d3dSurfaceArray) CreateD3DRenderTarget(device, m_d3dSurfaceArray, buffer_count);
 }
 
@@ -69,7 +69,7 @@ MultiBackSurfaceDx11::~MultiBackSurfaceDx11()
 error MultiBackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
     if (FATAL_LOG_EXPR(m_isPrimary)) return ErrorCode::resizeBackSurfaceFail;
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
 
@@ -78,7 +78,7 @@ error MultiBackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension
     ReleaseRenderTargetArray();
     SAFE_FREE(m_d3dRenderTargetArray);
 
-    error er = Create(graphic->GetD3DDevice(), dimension, m_surfaceCount, m_formatArray);
+    error er = create(graphic->GetD3DDevice(), dimension, m_surfaceCount, m_formatArray);
     if (er) return er;
 
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurfaceArray, m_surfaceCount);
@@ -169,7 +169,7 @@ void MultiBackSurfaceDx11::CreateD3DRenderTarget(ID3D11Device* device,
     }
 }
 
-error MultiBackSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
+error MultiBackSurfaceDx11::create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     unsigned int buff_count, const std::vector<Graphics::GraphicFormat>& fmt)
 {
     assert(device);

@@ -71,7 +71,7 @@ GLenum DeviceRasterizerStateEgl::FrontFaceWiseByData(RasterizerStateData::Backfa
 
 float DeviceRasterizerStateEgl::PixeledDepthBiasByData(float bias) const
 {
-    unsigned bits = Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat().DepthBits();
+    unsigned bits = Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat().DepthBits();
     if ((bits == 16) || (bits == 24)) // D16UNORM, D24UNORM
     {
         return (bias * static_cast<float>(pow(2, bits)));

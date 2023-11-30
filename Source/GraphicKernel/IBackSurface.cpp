@@ -16,7 +16,7 @@ IBackSurface::~IBackSurface()
 
 void IBackSurface::ResizeSurface(const MathLib::Dimension<unsigned>& dimension)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncResize(dimension);
     }
@@ -28,6 +28,6 @@ void IBackSurface::ResizeSurface(const MathLib::Dimension<unsigned>& dimension)
 
 future_error IBackSurface::AsyncResize(const MathLib::Dimension<unsigned>& dimension)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), dimension = dimension, this]() -> error { return Resize(dimension); });
 }

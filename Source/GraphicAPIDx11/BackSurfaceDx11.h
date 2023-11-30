@@ -34,7 +34,7 @@ namespace Enigma::Devices
 
     protected:
         void CreateD3DRenderTarget(ID3D11Device* device, ID3D11Texture2D* texBackbuffer);
-        error Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
+        error create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension, const Graphics::GraphicFormat& fmt);
 
     protected:
         ID3D11Texture2D* m_d3dSurface;

@@ -15,9 +15,9 @@ IPixelShader::~IPixelShader()
 
 void IPixelShader::Compile(const std::string& code, const std::string& profile, const std::string& entry)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
-        IGraphicAPI::Instance()->GetGraphicThread()->
+        IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), code, profile, entry, this]() 
                 -> error { return CompileCode(code, profile, entry); });
     }

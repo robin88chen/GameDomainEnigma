@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   IFile.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -30,28 +30,28 @@ namespace Enigma::FileSystem
         IFile& operator=(const IFile&) = delete;
         IFile& operator=(IFile&&) = delete;
 
-        virtual std::string GetFullPath() = 0;
+        virtual std::string getFullPath() = 0;
 
-        virtual std::optional<std::vector<unsigned char>> Read(size_t offset, size_t size_request) = 0;
-        virtual FutureRead AsyncRead(size_t offset, size_t size_request);
-        virtual size_t  Write(size_t offset, const std::vector<unsigned char>& in_buff) = 0;
-        virtual FutureWrite AsyncWrite(size_t offset, const std::vector<unsigned char>& in_buff);
+        virtual std::optional<std::vector<unsigned char>> read(size_t offset, size_t size_request) = 0;
+        virtual FutureRead asyncRead(size_t offset, size_t size_request);
+        virtual size_t  write(size_t offset, const std::vector<unsigned char>& in_buff) = 0;
+        virtual FutureWrite asyncWrite(size_t offset, const std::vector<unsigned char>& in_buff);
 
-        virtual size_t Size() = 0;
+        virtual size_t size() = 0;
         /** 檔案時間 (最後修改時間) \n 一個長整數，用ctime, localtime函式去取得其他格式的時間表示法 */
-        virtual time_t FileTime() = 0;
+        virtual time_t filetime() = 0;
 
-        virtual bool IsExisted() = 0;
-        virtual bool IsWritable() = 0;
+        virtual bool isExisted() = 0;
+        virtual bool isWritable() = 0;
 
-        error LastError() const { return m_lastError; }
+        error lastError() const { return m_lastError; }
     protected:
         friend class FileSystem;
         virtual error open() = 0;
         virtual error close() = 0;
 
-        error MakeErrorCode(ErrorCode error_code);
-        ErrorCode LastErrorCode();
+        error makeErrorCode(ErrorCode error_code);
+        ErrorCode lastErrorCode();
 
     protected:
         error m_lastError;

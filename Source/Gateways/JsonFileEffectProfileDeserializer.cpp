@@ -21,16 +21,16 @@ JsonFileEffectProfileDeserializer::JsonFileEffectProfileDeserializer()
 
 void JsonFileEffectProfileDeserializer::InvokeDeserialize(const Ruid& ruid_deserializing, const std::string& param)
 {
-    m_gateway.Cleanup();
+    m_gateway.cleanup();
 
-    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), Read | Binary);
+    IFilePtr readFile = FileSystem::FileSystem::instance()->openFile(Filename(param), FileSystem::read | FileSystem::binary);
     if (!readFile)
     {
         Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::fileOpenError));
         return;
     }
-    size_t filesize = readFile->Size();
-    auto read_buff = readFile->Read(0, filesize);
+    size_t filesize = readFile->size();
+    auto read_buff = readFile->read(0, filesize);
     if (!read_buff)
     {
         Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(ruid_deserializing, FileSystem::ErrorCode::readFail));

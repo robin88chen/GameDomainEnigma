@@ -40,7 +40,7 @@ MaterialVariableMap::~MaterialVariableMap()
     m_instance = nullptr;
 }
 
-MaterialVariableMap* MaterialVariableMap::Instance()
+MaterialVariableMap* MaterialVariableMap::instance()
 {
     assert(m_instance);
     return m_instance;

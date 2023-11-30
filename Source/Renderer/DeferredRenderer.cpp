@@ -66,7 +66,7 @@ error DeferredRenderer::BeginScene()
         Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
-    Graphics::IGraphicAPI::Instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
 }
 
@@ -81,7 +81,7 @@ error DeferredRenderer::BeginScene(const MathLib::Vector3& camera_loc, const Mat
     }
     Engine::MaterialVariableMap::UseCameraParameter(camera_loc, mxView, mxProj);
 
-    Graphics::IGraphicAPI::Instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
 }
 
@@ -91,7 +91,7 @@ error DeferredRenderer::DrawScene()
     {
         if (i == static_cast<size_t>(RenderListID::DeferredLighting)) // switch render target for deferred lighting and final blending
         {
-            Graphics::IGraphicAPI::Instance()->EndScene();  // end previous stage
+            Graphics::IGraphicAPI::instance()->EndScene();  // end previous stage
 
             // in this stage, we need to render to the primary target using g-buffer
             if (!m_target.expired())  // that's the primary target
@@ -104,7 +104,7 @@ error DeferredRenderer::DrawScene()
                 Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
             }
 
-            Graphics::IGraphicAPI::Instance()->BeginScene();
+            Graphics::IGraphicAPI::instance()->BeginScene();
         }
         if (!m_renderPacksArray[i].HasElements()) continue;
         error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName);

@@ -18,8 +18,8 @@ error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_
     service_manager->registerSystemService(std::make_shared<RendererManager>(service_manager));
     service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager));
 
-    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::Create);
-    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::Create);
+    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
+    Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);
     return ErrorCode::ok;
 }
 

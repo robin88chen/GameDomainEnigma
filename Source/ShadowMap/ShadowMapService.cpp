@@ -98,7 +98,7 @@ void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name
     m_shadowMapRenderTarget = m_rendererManager.lock()->GetRenderTarget(target_name);
     m_shadowMapRenderTarget.lock()->InitBackSurface(m_configuration->ShadowMapSurfaceName(), m_configuration->ShadowMapDimension(), Graphics::GraphicFormat::FMT_R32F);
     m_shadowMapRenderTarget.lock()->InitDepthStencilSurface(m_configuration->ShadowMapDepthName(), m_configuration->ShadowMapDimension(),
-        Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat());
+        Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat());
     m_renderer.lock()->SetRenderTarget(m_shadowMapRenderTarget.lock());
     m_shadowMapRenderTarget.lock()->ChangeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
 

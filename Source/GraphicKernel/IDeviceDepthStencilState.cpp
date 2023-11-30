@@ -14,9 +14,9 @@ IDeviceDepthStencilState::~IDeviceDepthStencilState()
 {
 }
 
-/*void IDeviceDepthStencilState::Create(const DepthStencilData& data)
+/*void IDeviceDepthStencilState::create(const DepthStencilData& data)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncCreateFromData(data);
     }
@@ -28,7 +28,7 @@ IDeviceDepthStencilState::~IDeviceDepthStencilState()
 
 void IDeviceDepthStencilState::Bind()
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncBindToDevice();
     }
@@ -46,12 +46,12 @@ error IDeviceDepthStencilState::CreateFromData(const DepthStencilData& data)
 
 future_error IDeviceDepthStencilState::AsyncCreateFromData(const DepthStencilData& data)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), data, this]() -> error { return CreateFromData(data); });
 }
 
 future_error IDeviceDepthStencilState::AsyncBindToDevice()
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this]() -> error { return BindToDevice(); });
 }

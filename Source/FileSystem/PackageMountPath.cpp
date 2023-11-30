@@ -21,7 +21,7 @@ PackageMountPath::~PackageMountPath()
     m_assetPackage = nullptr;
 }
 
-IFile* PackageMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
+IFile* PackageMountPath::createFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
     if ((!m_assetPackage) || (filename.length() == 0)) return nullptr;
     bool readonly = true;
@@ -31,22 +31,22 @@ IFile* PackageMountPath::CreateFile(const std::string& filename, const ReadWrite
     return file;
 }
 
-bool PackageMountPath::EqualMountPath(IMountPath* path)
+bool PackageMountPath::equalMountPath(IMountPath* path)
 {
     assert(path);
-    if (!EqualPathID(path->GetPathID())) return false;
+    if (!equalPathId(path->getPathId())) return false;
     PackageMountPath* pkg_path = dynamic_cast<PackageMountPath*>(path);
     if (!pkg_path) return false;
     if (pkg_path->m_packageFilename != m_packageFilename) return false;
     return true;
 }
 
-bool PackageMountPath::EqualMountPath(const std::filesystem::path& path)
+bool PackageMountPath::equalMountPath(const std::filesystem::path& path)
 {
     return m_packageFilename == path.string();
 }
 
-bool PackageMountPath::EqualMouthPath(const std::string& path)
+bool PackageMountPath::equalMountPath(const std::string& path)
 {
     return m_packageFilename == path;
 }

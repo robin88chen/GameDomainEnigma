@@ -25,7 +25,7 @@ namespace Enigma::Devices
         VertexBufferDx11& operator=(const VertexBufferDx11&) = delete;
         VertexBufferDx11& operator=(VertexBufferDx11&&) = delete;
 
-        virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
+        virtual error create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
 
         ID3D11Buffer* GetD3DBuffer() const { return m_d3dBuffer; }
 

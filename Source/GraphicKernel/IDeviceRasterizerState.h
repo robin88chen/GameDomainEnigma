@@ -50,7 +50,7 @@ namespace Enigma::Graphics
         IDeviceRasterizerState& operator=(const IDeviceRasterizerState&) = delete;
         IDeviceRasterizerState& operator=(IDeviceRasterizerState&&) = delete;
 
-        //virtual void Create(const RasterizerStateData& data);
+        //virtual void create(const RasterizerStateData& data);
         virtual error CreateFromData(const RasterizerStateData& data);
         virtual future_error AsyncCreateFromData(const RasterizerStateData& data);
         virtual void Bind();

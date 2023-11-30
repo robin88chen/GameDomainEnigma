@@ -34,7 +34,7 @@ namespace Enigma::Graphics
 
         const std::string& getName() { return m_name; }
 
-        virtual error Create(unsigned int sizeBuffer) = 0;
+        virtual error create(unsigned int sizeBuffer) = 0;
         void update(const uint_buffer& dataIndex);
         void RangedUpdate(const ranged_buffer& buffer);
 

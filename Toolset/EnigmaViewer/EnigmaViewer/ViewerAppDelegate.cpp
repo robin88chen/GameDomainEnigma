@@ -35,6 +35,7 @@
 #include "ShadowMap/SpatialShadowFlags.h"
 #include "GameEngine/StandardGeometryDtoHelper.h"
 #include "GameEngine/EffectDtoHelper.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -80,7 +81,7 @@ void ViewerAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI:
         m_hasLogFile = true;
     }
 
-    FileSystem::Create();
+    FileSystem::create();
     InitializeMountPaths();
 
     m_graphicMain = menew GraphicMain();
@@ -98,8 +99,8 @@ void ViewerAppDelegate::Finalize()
     ShutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
-    IGraphicAPI::Instance()->TerminateGraphicThread(); // 先跳出thread
-    delete IGraphicAPI::Instance();
+    IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
+    delete IGraphicAPI::instance();
 
     m_graphicMain->ShutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
@@ -108,19 +109,19 @@ void ViewerAppDelegate::Finalize()
     {
         Logger::CloseLoggerFile();
     }
-    delete FileSystem::Instance();
+    delete FileSystem::instance();
 
     CoUninitialize();
 }
 
 void ViewerAppDelegate::InitializeMountPaths()
 {
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
         auto path = std::filesystem::current_path();
         auto mediaPath = path / "../../../Media/";
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), "APK_PATH"));
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), "DataPath"));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(mediaPath.string(), "APK_PATH"));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(path.string(), "DataPath"));
     }
 }
 
@@ -151,7 +152,7 @@ void ViewerAppDelegate::InstallEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>());
+        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt"));
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
@@ -250,9 +251,9 @@ void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
     auto pawn_dto = m_pawn->serializeDto();
     pawn_dto.AsTopLevel(true);
     std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Write | OpenAlways | Binary);
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    IFilePtr iFile = FileSystem::instance()->openFile(filepath.generic_string(), write | openAlways | binary);
+    iFile->write(0, convert_to_buffer(json));
+    FileSystem::instance()->closeFile(iFile);
 }
 
 void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
@@ -262,11 +263,11 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
         m_pawn->detachFromParent();
         m_pawn = nullptr;
     }
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filepath.generic_string(), Read | Binary);
-    size_t file_size = iFile->Size();
+    IFilePtr iFile = FileSystem::instance()->openFile(filepath.generic_string(), read | binary);
+    size_t file_size = iFile->size();
 
-    auto read_buf = iFile->Read(0, file_size);
-    FileSystem::Instance()->CloseFile(iFile);
+    auto read_buf = iFile->read(0, file_size);
+    FileSystem::instance()->closeFile(iFile);
     auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
     CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }

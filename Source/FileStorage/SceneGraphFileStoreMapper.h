@@ -8,6 +8,8 @@
 #ifndef SCENE_GRAPH_FILE_STORE_MAPPER_H
 #define SCENE_GRAPH_FILE_STORE_MAPPER_H
 
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "GameEngine/FactoryDesc.h"
 #include "SceneGraph/SceneGraphStoreMapper.h"
 
 namespace Enigma::FileStorage
@@ -23,12 +25,15 @@ namespace Enigma::FileStorage
         virtual bool hasCamera(const SceneGraph::SpatialId& id) override;
         virtual std::shared_ptr<SceneGraph::Camera> queryCamera(const SceneGraph::SpatialId& id) override;
         virtual std::error_code removeCamera(const SceneGraph::SpatialId& id) override;
-        virtual std::error_code serializeCamera(const SceneGraph::SpatialId& id, const std::shared_ptr<SceneGraph::Camera>& camera) override;
+        virtual std::error_code putCamera(const SceneGraph::SpatialId& id, const std::shared_ptr<SceneGraph::Camera>& camera) override;
 
     protected:
-        void parseMapperFile(const std::string& mapper_file_content);
+        std::string serializeMapperFile();
+        void deserializeMapperFile(const std::string& mapper_file_content);
+        std::string extractFilename(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc);
 
     protected:
+        bool m_has_connected;
         std::string m_mapper_filename;
         std::unordered_map<SceneGraph::SpatialId, std::string, SceneGraph::SpatialId::hash> m_filename_map;
     };

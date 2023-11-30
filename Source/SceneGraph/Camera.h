@@ -31,7 +31,7 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI_OF_BASE;
     public:
         Camera(const SpatialId& id, GraphicCoordSys hand);
-        Camera(const Engine::GenericDto& dto);
+        Camera(const SpatialId& id, const Engine::GenericDto& dto);
         Camera(const Camera&) = delete;
         Camera(Camera&&) = delete;
         virtual ~Camera();

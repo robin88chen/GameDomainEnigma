@@ -26,7 +26,7 @@ namespace Enigma::SceneGraph
         void unregisterHandlers();
 
         std::shared_ptr<Camera> createCamera(const SpatialId& id);
-        std::shared_ptr<Camera> constituteCamera(const Engine::GenericDto& dto);
+        std::shared_ptr<Camera> constituteCamera(const SpatialId& id, const Engine::GenericDto& dto);
 
     protected:
         void createCamera(const Frameworks::ICommandPtr& c);

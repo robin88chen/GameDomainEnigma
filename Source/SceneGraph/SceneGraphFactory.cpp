@@ -42,9 +42,9 @@ std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
     return std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
 }
 
-std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const Engine::GenericDto& dto)
+std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto)
 {
-    return std::make_shared<Camera>(dto);
+    return std::make_shared<Camera>(id, dto);
 }
 
 void SceneGraphFactory::createCamera(const ICommandPtr& c)
@@ -82,7 +82,7 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    auto camera = constituteCamera(cmd->dto());
+    auto camera = constituteCamera(cmd->id(), cmd->dto());
     if (camera)
     {
         EventPublisher::post(std::make_shared<CameraConstituted>(cmd->id(), camera));

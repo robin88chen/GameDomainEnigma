@@ -41,9 +41,10 @@ using namespace Enigma::Renderer;
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
 SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(srv_mngr)
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer, const std::shared_ptr<SceneGraphStoreMapper>& store_mapper) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
+    m_storeMapper = store_mapper;
     m_factory = menew SceneGraphFactory();
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this, dto_deserializer);
@@ -66,11 +67,13 @@ ServiceResult SceneGraphRepository::onInit()
     m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
 
+    m_storeMapper->connect();
     m_factory->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
+    m_storeMapper->disconnect();
     m_factory->unregisterHandlers();
 
     m_cameras.clear();
@@ -373,7 +376,7 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
     assert(camera);
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(camera->id(), camera);
-    m_storeMapper->serializeCamera(camera->id(), camera);
+    m_storeMapper->putCamera(camera->id(), camera);
 }
 
 void SceneGraphRepository::removeCamera(const SpatialId& id)

@@ -13,7 +13,7 @@ error SceneGraphInstallingPolicy::Install(Frameworks::ServiceManager* service_ma
     assert(service_manager);
     const auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
     assert(timer);
-    service_manager->registerSystemService(std::make_shared<SceneGraphRepository>(service_manager, m_dtoDeserializer));
+    service_manager->registerSystemService(std::make_shared<SceneGraphRepository>(service_manager, m_dtoDeserializer, m_storeMapper));
     service_manager->registerSystemService(std::make_shared<LazyNodeIOService>(service_manager, timer, m_dtoDeserializer));
     service_manager->registerSystemService(std::make_shared<LightInfoTraversal>(service_manager));
     return ErrorCode::ok;

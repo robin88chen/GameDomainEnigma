@@ -108,9 +108,10 @@ void GameCameraService::constitutePrimaryCamera(const SceneGraph::SpatialId& id,
     }
     else
     {
-        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(dto);
+        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(id, dto);
         m_sceneGraphRepository.lock()->putCamera(m_primaryCamera);
     }
+    assert(m_sceneGraphRepository.lock()->hasCamera(id));
     EventPublisher::post(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }
 

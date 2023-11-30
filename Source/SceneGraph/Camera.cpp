@@ -29,10 +29,9 @@ Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(Camera
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti()), m_id(SpatialId(dto.getName(), Camera::TYPE_RTTI))
+Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.GetRtti()), m_id(id)
 {
     CameraDto camera_dto = CameraDto::fromGenericDto(dto);
-    m_id = camera_dto.id();
     m_handSys = camera_dto.HandSystem();
     changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
     m_cullingFrustum = Frustum(camera_dto.Frustum());

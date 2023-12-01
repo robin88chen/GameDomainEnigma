@@ -20,7 +20,7 @@ void DaeParserConfiguration::LoadConfig()
     Enigma::FileSystem::FileSystem::instance()->closeFile(iFile);
     if (read_buf)
     {
-        const auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+        const auto dtos = std::make_shared<Enigma::Gateways::DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
         m_configDto = dtos[0];
     }
 }

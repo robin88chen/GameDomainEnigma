@@ -152,7 +152,7 @@ void ViewerAppDelegate::InstallEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt"));
+        std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt", std::make_shared<DtoJsonGateway>()));
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
         CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
@@ -250,7 +250,7 @@ void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
     if (!m_pawn) return;
     auto pawn_dto = m_pawn->serializeDto();
     pawn_dto.AsTopLevel(true);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{pawn_dto});
+    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto>{pawn_dto});
     IFilePtr iFile = FileSystem::instance()->openFile(filepath.generic_string(), write | openAlways | binary);
     iFile->write(0, convert_to_buffer(json));
     FileSystem::instance()->closeFile(iFile);
@@ -268,7 +268,7 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
 
     auto read_buf = iFile->read(0, file_size);
     FileSystem::instance()->closeFile(iFile);
-    auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+    auto dtos = std::make_shared<DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
     CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }
 

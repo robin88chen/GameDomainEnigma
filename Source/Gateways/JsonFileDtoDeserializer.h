@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   JsonFileDtoDeserializer.h
  * \brief  dto deserializer for json file
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -13,12 +13,17 @@
 
 namespace Enigma::Gateways
 {
+    class IDtoGateway;
+
     class JsonFileDtoDeserializer : public Engine::IDtoDeserializer
     {
     public:
         JsonFileDtoDeserializer();
 
         virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
+
+    private:
+        std::shared_ptr<IDtoGateway> m_gateway;
     };
 }
 

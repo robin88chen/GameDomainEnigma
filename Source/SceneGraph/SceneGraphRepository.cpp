@@ -134,7 +134,9 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(id);
     if (it != m_cameras.end()) return it->second;
-    return m_storeMapper->queryCamera(id);
+    auto dtos = m_storeMapper->queryCamera(id);
+    assert(!dtos.empty());
+    return m_factory->constituteCamera(id, dtos[0]);
 }
 
 std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
@@ -376,7 +378,8 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
     assert(camera);
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(camera->id(), camera);
-    m_storeMapper->putCamera(camera->id(), camera);
+    auto camera_dto = camera->serializeDto();
+    m_storeMapper->putCamera(camera->id(), { camera_dto });
 }
 
 void SceneGraphRepository::removeCamera(const SpatialId& id)

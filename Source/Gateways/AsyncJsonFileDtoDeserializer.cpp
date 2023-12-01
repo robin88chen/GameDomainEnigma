@@ -15,6 +15,7 @@ using namespace Enigma::FileSystem;
 
 AsyncJsonFileDtoDeserializer::AsyncJsonFileDtoDeserializer() : IDtoDeserializer(), m_ruid()
 {
+    m_gateway = std::make_shared<DtoJsonGateway>();
 }
 
 void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
@@ -28,6 +29,7 @@ void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& rui
 
 void AsyncJsonFileDtoDeserializer::DeserializeProcedure()
 {
+    assert(m_gateway);
     FutureFile readingFile = FileSystem::FileSystem::instance()->asyncOpenFile(Filename(m_parameter), FileSystem::read | FileSystem::binary);
     while (!readingFile.valid() || (readingFile.wait_for(std::chrono::milliseconds(1)) != std::future_status::ready)) {}
     IFilePtr readFile = readingFile.get();
@@ -46,5 +48,5 @@ void AsyncJsonFileDtoDeserializer::DeserializeProcedure()
         return;
     }
     std::string read_json = convert_to_string(buff.value(), buff->size());
-    Frameworks::EventPublisher::post(std::make_shared<GenericDtoDeserialized>(m_ruid, DtoJsonGateway::Deserialize(read_json)));
+    Frameworks::EventPublisher::post(std::make_shared<GenericDtoDeserialized>(m_ruid, m_gateway->deserialize(read_json)));
 }

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileDtoDeserializer.h" />

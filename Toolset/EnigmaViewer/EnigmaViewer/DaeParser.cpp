@@ -791,7 +791,7 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.getName());
     desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
     m_animationAssetDto.AddRtti(desc);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{m_animationAssetDto});
+    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto>{m_animationAssetDto});
     IFilePtr iFile = FileSystem::instance()->openFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), write | openAlways | binary);
     iFile->write(0, convert_to_buffer(json));
     FileSystem::instance()->closeFile(iFile);
@@ -1225,7 +1225,7 @@ GenericDto DaeParser::ComposeTriangleListDto(const std::string& geo_name, bool i
     geo_dto.GeometryBound() = bounding.serializeDto().toGenericDto();
     auto generic_dto = geo_dto.toGenericDto();
     auto filename = Filename("pawns/" + geo_name + ".geo@APK_PATH");
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> { generic_dto });
+    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto> { generic_dto });
     IFilePtr iFile = FileSystem::instance()->openFile(filename, write | openAlways | binary);
     iFile->write(0, convert_to_buffer(json));
     FileSystem::instance()->closeFile(iFile);

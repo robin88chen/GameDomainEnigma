@@ -28,6 +28,13 @@ bool Rtti::operator==(const Rtti& rhs) const
     return isExactly(rhs);
 }
 
+const Rtti& Rtti::fromName(const std::string& name)
+{
+    auto iter = m_valueMap->find(name);
+    assert(iter != m_valueMap->end());
+    return *iter->second;
+}
+
 bool Rtti::isExactly(const Rtti& type) const
 {
     return &type == this;

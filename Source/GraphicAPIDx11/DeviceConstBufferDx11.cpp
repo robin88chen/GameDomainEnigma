@@ -25,7 +25,7 @@ error DeviceConstBufferDx11::CreateDataBuffer(unsigned cb_size)
 {
     IDeviceConstBuffer::CreateDataBuffer(cb_size);
 
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -50,7 +50,7 @@ error DeviceConstBufferDx11::CreateDataBuffer(unsigned cb_size)
 error DeviceConstBufferDx11::Apply(const byte_buffer& data, unsigned dataSize)
 {
     //Platforms::Debug::Printf("apply const buffer in thread %d\n", std::this_thread::get_id());
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -75,18 +75,18 @@ error DeviceConstBufferDx11::Apply()
 future_error DeviceConstBufferDx11::AsyncApply()
 {
     //! lambda 從 this 抓 member data 並不是 by value, 要複製; c++17 可以用 *this; 因為這個物件不能複製, 所以 *this 沒法使用, 還是複製成員, 做物件複製更不划算
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), data = this->m_data, size = this->m_size, this]() -> error
         {
             return Apply(data, size);
         }); // 資料 copy 到 functor 裡
-    //return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    //return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
       //  PushTask([=, *this]() -> error { return Apply(m_data, m_size); }); // 資料 copy 到 functor 裡
 }
 
 error DeviceConstBufferDx11::BindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -109,7 +109,7 @@ error DeviceConstBufferDx11::BindToShader(Graphics::IShaderVariable::VarOwner va
 
 future_error DeviceConstBufferDx11::AsyncBindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this, var_of, bindPoint]()->error
         {
             return BindToShader(var_of, bindPoint);

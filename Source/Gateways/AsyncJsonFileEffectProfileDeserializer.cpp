@@ -31,7 +31,7 @@ void AsyncJsonFileEffectProfileDeserializer::InvokeDeserialize(const Frameworks:
 
 void AsyncJsonFileEffectProfileDeserializer::DeserializeProcedure()
 {
-    FutureFile readingFile = FileSystem::FileSystem::Instance()->AsyncOpenFile(Filename(m_parameter), Read | Binary);
+    FutureFile readingFile = FileSystem::FileSystem::instance()->asyncOpenFile(Filename(m_parameter), FileSystem::read | FileSystem::binary);
     while (!readingFile.valid() || (readingFile.wait_for(std::chrono::milliseconds(1)) != std::future_status::ready)) {}
     IFilePtr readFile = readingFile.get();
     if (!readFile)
@@ -39,8 +39,8 @@ void AsyncJsonFileEffectProfileDeserializer::DeserializeProcedure()
         Frameworks::EventPublisher::post(std::make_shared<EffectCompiler::DeserializeCompilingProfileFailed>(m_ruid, FileSystem::ErrorCode::fileOpenError));
         return;
     }
-    size_t filesize = readFile->Size();
-    IFile::FutureRead read = readFile->AsyncRead(0, filesize);
+    size_t filesize = readFile->size();
+    IFile::FutureRead read = readFile->asyncRead(0, filesize);
     while (!read.valid() || (read.wait_for(std::chrono::milliseconds(1)) != std::future_status::ready)) {}
     auto buff = read.get();
     if (!buff)

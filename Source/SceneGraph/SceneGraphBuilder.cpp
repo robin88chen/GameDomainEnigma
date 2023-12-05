@@ -54,8 +54,8 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
         [=](auto dto) { return new Light(dto); }));
     CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName(),
         [=](auto dto) { return new Node(dto); }));
-    CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName(),
-        [=](auto dto) { return new Pawn(dto); }));
+    //CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Pawn::TYPE_RTTI.getName(),
+      //  [=](auto dto) { return new Pawn(dto); }));
     CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(LazyNode::TYPE_RTTI.getName(),
         [=](auto dto) { return new LazyNode(dto); }));
     CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(VisibilityManagedNode::TYPE_RTTI.getName(),
@@ -67,10 +67,10 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
     CommandBus::post(std::make_shared<RegisterSpatialDtoFactory>(Portal::TYPE_RTTI.getName(),
         [=](auto dto) { return new Portal(dto); }));
 
-    m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    //m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPrimitiveBuilt(e); });
+    //EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    //m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildPrimitiveFailed(e); });
+    //EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
 
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
@@ -126,11 +126,11 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
         InterruptBuildingSceneGraph(ErrorCode::spatialFactoryNotFound);
         return;
     }
-    if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
+    /*if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
         PawnFactory(dto);
     }
-    else if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
+    else*/ if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
     {
         NodeFactory(dto);
     }
@@ -195,7 +195,7 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
-void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
+/*void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
@@ -213,7 +213,7 @@ void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
     }
     pawn->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, pawn));
-}
+}*/
 
 void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
 {
@@ -338,7 +338,7 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     BuildNextSceneGraph();
 }
 
-std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
+/*std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
 {
     if (auto p = primitive_dto.ConvertToPolicy(m_dtoDeserializer))
     {
@@ -349,9 +349,9 @@ std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePo
         EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
     }
     return nullptr;
-}
+}*/
 
-void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
+/*void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
 {
     assert(pawn);
     if (!primitive_policy) return;
@@ -359,9 +359,9 @@ void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, co
     auto cmd = std::make_shared<BuildRenderablePrimitive>(primitive_policy);
     m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->getSpatialName() });
     CommandBus::post(cmd);
-}
+}*/
 
-void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
+/*void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt>(e);
@@ -376,9 +376,9 @@ void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
         EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
     }
     m_buildingPawnPrimitives.erase(it);
-}
+}*/
 
-void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
+/*void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed>(e);
@@ -397,7 +397,7 @@ void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
         }
     }
     m_buildingPawnPrimitives.erase(it);
-}
+}*/
 
 void SceneGraphBuilder::DoRegisteringSpatialFactory(const ICommandPtr& c)
 {

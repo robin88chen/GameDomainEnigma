@@ -9,6 +9,7 @@
 #define CAMERA_H
 
 #include "SceneGraphDefines.h"
+#include "SpatialId.h"
 #include "MathLib/Vector3.h"
 #include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
@@ -29,8 +30,8 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        Camera(const std::string& name, GraphicCoordSys hand);
-        Camera(const Engine::GenericDto& dto);
+        Camera(const SpatialId& id, GraphicCoordSys hand);
+        Camera(const SpatialId& id, const Engine::GenericDto& dto);
         Camera(const Camera&) = delete;
         Camera(Camera&&) = delete;
         virtual ~Camera();
@@ -42,7 +43,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto serializeDto();
 
-        const std::string& getName() const { return m_name; }
+        const SpatialId& id() const { return m_id; }
         GraphicCoordSys getCoordHandSys() const { return m_handSys; }
 
         /** change camera frame, eye_to_lookat & up must both set together or both not set   */
@@ -86,7 +87,7 @@ namespace Enigma::SceneGraph
         virtual void _updateViewTransform();
 
     protected:
-        std::string m_name;
+        SpatialId m_id;
         Engine::FactoryDesc m_factoryDesc;
         GraphicCoordSys m_handSys;
 

@@ -20,7 +20,7 @@ DepthStencilSurfaceDx11::DepthStencilSurfaceDx11(const std::string& name, ID3D11
     m_d3dSurface = nullptr;
     m_d3dDepthView = nullptr;
     m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
-    Create(device, dimension, fmt);
+    create(device, dimension, fmt);
     if (m_d3dSurface) CreateD3DDepthView(device);
 }
 
@@ -60,14 +60,14 @@ DepthStencilSurfaceDx11::~DepthStencilSurfaceDx11()
 
 error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
 {
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
 
     SAFE_RELEASE(m_d3dDepthView);
     SAFE_RELEASE(m_d3dSurface);
 
-    error er = Create(graphic->GetD3DDevice(), dimension, m_format);
+    error er = create(graphic->GetD3DDevice(), dimension, m_format);
     if (er) return er;
     CreateD3DDepthView(graphic->GetD3DDevice());
     Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
@@ -75,7 +75,7 @@ error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimens
     return er;
 }
 
-error DepthStencilSurfaceDx11::Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
+error DepthStencilSurfaceDx11::create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
     const Graphics::GraphicFormat& fmt)
 {
     assert(device);

@@ -45,7 +45,61 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.get
     m_notifyFlags = Notify_All;
 }
 
+Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_id(id)
+{
+    m_name = id.name();
+
+    m_graphDepth = 0;
+
+    //m_spatialRenderState = nullptr;
+
+    m_cullingMode = CullingMode::Dynamic;
+
+    m_spatialFlags = Spatial_Unlit; // 預設是不受光的...entity再打開
+
+    m_vecLocalPosition = Vector3::ZERO;
+    m_vecLocalScale = Vector3(1.0f, 1.0f, 1.0f);
+    m_mxLocalRotation = Matrix3::IDENTITY;
+    m_qtLocalQuaternion = Quaternion::IDENTITY;
+    m_vecLocalEulerAngle = Vector3::ZERO;
+
+    m_mxLocalTransform = Matrix4::IDENTITY;
+    m_mxWorldTransform = Matrix4::IDENTITY;
+
+    m_modelBound = BoundingVolume(Box3::UNIT_BOX);
+    m_worldBound = BoundingVolume(Box3::UNIT_BOX);
+
+    m_vecWorldPosition = Vector3::ZERO;
+
+    m_notifyFlags = Notify_All;
+
+}
+
 Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
+{
+    SpatialDto dto = SpatialDto::fromGenericDto(o);
+    m_name = dto.name();
+    m_graphDepth = dto.graphDepth();
+    m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
+    m_spatialFlags = dto.spatialFlag();
+    m_notifyFlags = dto.notifyFlag();
+    m_mxLocalTransform = dto.localTransform();
+    assert(m_mxLocalTransform != Matrix4::ZERO);
+    m_mxWorldTransform = dto.worldTransform();
+    assert(m_mxWorldTransform != Matrix4::ZERO);
+    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
+    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
+    assert(!m_modelBound.IsEmpty());
+    assert(!m_worldBound.IsEmpty());
+    std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
+    m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
+    std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
+    m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
+    m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
+}
+
+Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.GetRtti()), m_id(id)
 {
     SpatialDto dto = SpatialDto::fromGenericDto(o);
     m_name = dto.name();
@@ -84,6 +138,7 @@ SpatialDto Spatial::serializeSpatialDto()
     SpatialDto dto;
     dto.factoryDesc() = m_factoryDesc;
     dto.name() = m_name;
+    dto.id() = m_id;
     if (!m_parent.expired()) dto.parentName() = m_parent.lock()->getSpatialName();
     dto.graphDepth() = m_graphDepth;
     dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);

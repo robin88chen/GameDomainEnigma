@@ -15,6 +15,6 @@ IShaderVariable::~IShaderVariable()
 
 future_error IShaderVariable::AsyncApply()
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this]() -> error { return Apply(); });
 }

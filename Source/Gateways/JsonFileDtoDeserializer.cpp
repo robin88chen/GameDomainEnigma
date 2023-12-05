@@ -15,18 +15,19 @@ using namespace Enigma::Engine;
 
 JsonFileDtoDeserializer::JsonFileDtoDeserializer() : IDtoDeserializer()
 {
-
+    m_gateway = std::make_shared<DtoJsonGateway>();
 }
 
 void JsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
-    IFilePtr readFile = FileSystem::FileSystem::Instance()->OpenFile(Filename(param), Read | Binary);
-    size_t filesize = readFile->Size();
-    auto read_buff = readFile->Read(0, filesize);
+    assert(m_gateway);
+    IFilePtr readFile = FileSystem::FileSystem::instance()->openFile(Filename(param), FileSystem::read | FileSystem::binary);
+    size_t filesize = readFile->size();
+    auto read_buff = readFile->read(0, filesize);
     if (read_buff)
     {
         std::string read_json = convert_to_string(read_buff.value(), read_buff->size());
-        Frameworks::EventPublisher::post(std::make_shared<GenericDtoDeserialized>(ruid_deserializing, DtoJsonGateway::Deserialize(read_json)));
+        Frameworks::EventPublisher::post(std::make_shared<GenericDtoDeserialized>(ruid_deserializing, m_gateway->deserialize(read_json)));
     }
     else
     {

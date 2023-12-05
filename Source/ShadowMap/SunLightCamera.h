@@ -10,6 +10,7 @@
 
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Culler.h"
+#include "SceneGraph/SpatialId.h"
 
 namespace Enigma::ShadowMap
 {
@@ -17,7 +18,7 @@ namespace Enigma::ShadowMap
     {
         DECLARE_EN_RTTI;
     public:
-        SunLightCamera(const std::string& name);
+        SunLightCamera(const SceneGraph::SpatialId& id);
         virtual ~SunLightCamera() override;
         SunLightCamera(const SunLightCamera& other) = delete;
         SunLightCamera(SunLightCamera&& other) noexcept = delete;

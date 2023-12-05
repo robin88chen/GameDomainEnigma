@@ -137,7 +137,7 @@ void GameLightService::DoCreatingSunLight(const Frameworks::ICommandPtr& command
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<GameCommon::CreateSunLight, ICommand>(command);
     if (!cmd) return;
-    CreateSunLight(cmd->GetParentName(), cmd->GetLightName(), cmd->GetDir(), cmd->GetColor());
+    CreateSunLight(cmd->GetParentName(), cmd->GetLightName(), cmd->getDir(), cmd->GetColor());
 }
 
 void GameLightService::DoCreatingPointLight(const Frameworks::ICommandPtr& command)
@@ -167,7 +167,7 @@ void GameLightService::DoChangingLightDirection(const Frameworks::ICommandPtr& c
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightDirection(cmd->GetDir());
+    light->SetLightDirection(cmd->getDir());
 }
 
 void GameLightService::DoChangingLightColor(const Frameworks::ICommandPtr& command) const

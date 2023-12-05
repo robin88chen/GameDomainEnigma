@@ -69,7 +69,7 @@ void CascadeShadowMapService::CreateShadowRenderSystem(const std::string& render
     {
         viewPorts[i].Width() = m_configuration->ShadowMapDimension().m_width;
         viewPorts[i].Height() = m_configuration->ShadowMapDimension().m_height;
-        viewPorts[i].X() = i *  m_configuration->ShadowMapDimension().m_width;
+        viewPorts[i].X() = i * m_configuration->ShadowMapDimension().m_width;
         viewPorts[i].Y() = 0;
     }
     m_shadowMapDimensionBiasDensity[0] = static_cast<float>(m_configuration->ShadowMapDimension().m_width);
@@ -77,7 +77,7 @@ void CascadeShadowMapService::CreateShadowRenderSystem(const std::string& render
     m_shadowMapDimensionBiasDensity[2] = m_configuration->ShadowMapDepthBias();
     m_shadowMapDimensionBiasDensity[3] = m_configuration->ShadowMapDensity();
 
-    MathLib::Dimension<unsigned> fullDimension{ m_configuration->ShadowMapDimension().m_width* m_configuration->FrustaPartitionCount(),
+    MathLib::Dimension<unsigned> fullDimension{ m_configuration->ShadowMapDimension().m_width * m_configuration->FrustaPartitionCount(),
         m_configuration->ShadowMapDimension().m_height };
     TargetViewPort fullViewPort(0, 0, fullDimension.m_width, fullDimension.m_height);
     Engine::IRendererPtr renderer = std::make_shared<CascadeShadowMapRenderer>(renderer_name);
@@ -93,7 +93,7 @@ void CascadeShadowMapService::CreateShadowRenderSystem(const std::string& render
     m_shadowMapRenderTarget = m_rendererManager.lock()->GetRenderTarget(target_name);
     m_shadowMapRenderTarget.lock()->InitBackSurface(m_configuration->ShadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F);
     m_shadowMapRenderTarget.lock()->InitDepthStencilSurface(m_configuration->ShadowMapDepthName(), fullDimension,
-        Graphics::IGraphicAPI::Instance()->GetDepthSurfaceFormat());
+        Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat());
     m_renderer.lock()->SetRenderTarget(m_shadowMapRenderTarget.lock());
     m_shadowMapRenderTarget.lock()->ChangeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
     m_shadowMapRenderTarget.lock()->SetViewPort(fullViewPort);
@@ -114,11 +114,11 @@ void CascadeShadowMapService::DestroyShadowRenderSystem(const std::string& rende
 void CascadeShadowMapService::CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(!m_cameraService.expired());
-    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(m_configuration->SunLightCameraName(), m_configuration->FrustaPartitionCount());
+    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(SceneGraph::SpatialId(m_configuration->SunLightCameraName(), CSMSunLightCamera::TYPE_RTTI), m_configuration->FrustaPartitionCount());
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
     if (lit) vecSunDir = lit->GetLightDirection();
     m_sunLightCamera->SetSunLightDir(vecSunDir);
-    if (auto cam = m_cameraService.lock()->GetPrimaryCamera())
+    if (auto cam = m_cameraService.lock()->primaryCamera())
     {
         m_sunLightCamera->SetViewerCamera(cam);
     }

@@ -145,7 +145,7 @@ future_error ShaderProgramDx11::AsyncApplyShaderVariables()
 void ShaderProgramDx11::RetrieveShaderVariables(ID3D11ShaderReflection* shaderReflect,
     const Graphics::IShaderVariable::SemanticNameTable& semantic_table, Graphics::IShaderVariable::VarOwner var_of)
 {
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     ID3D11Device* device = graphic->GetD3DDevice();
     assert(device);
@@ -189,7 +189,7 @@ void ShaderProgramDx11::RetrieveShaderVariables(ID3D11ShaderReflection* shaderRe
             auto var_cb = std::shared_ptr<ShaderVariableDx11_ConstBuffer>{
                 menew ShaderVariableDx11_ConstBuffer(var_of, res_desc.Name, res_semantic.c_str(),
                 res_desc.BindPoint, res_desc.BindPoint) };
-            var_cb->Create(cb_desc, shader_name);
+            var_cb->create(cb_desc, shader_name);
             if (cb_desc.Variables == 0) continue;
             var_cb->CreateChildVariables(reflect_cb, cb_desc.Variables, semantic_table);
             m_variables.push_back(std::dynamic_pointer_cast<ShaderVariableDx11_Resource, ShaderVariableDx11_ConstBuffer>(var_cb));

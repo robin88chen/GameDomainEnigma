@@ -10,6 +10,7 @@
 
 #include "Frameworks/SystemService.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "SceneGraph/SpatialId.h"
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -31,39 +32,39 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void CreatePrimaryCamera(const Engine::GenericDto& dto);
-        const std::shared_ptr<SceneGraph::Camera>& GetPrimaryCamera() const { return m_primaryCamera; }
+        void constitutePrimaryCamera(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
+        const std::shared_ptr<SceneGraph::Camera>& primaryCamera() const { return m_primaryCamera; }
 
         /** @name camera operations */
         //@{
-        void CameraZoom(float dist);
-        void CameraSphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center = MathLib::Vector3::ZERO);
-        void CameraMove(float dir_dist, float slide_dist);
-        void CameraMoveXZ(float move_x, float move_z);
-        void CameraShiftLookAt(const MathLib::Vector3& vecLookAt);
+        void zoom(float dist);
+        void sphereRotate(float horz_angle, float vert_angle, const MathLib::Vector3& center = MathLib::Vector3::ZERO);
+        void move(float dir_dist, float slide_dist);
+        void moveXZ(float move_x, float move_z);
+        void shiftLookAt(const MathLib::Vector3& vecLookAt);
         //@}
 
         /** @name frustum operations */
         //@{
-        void ChangeAspectRatio(float ratio);
-        void ChangeFrustumFarPlane(float far_z);
-        void ChangeFrustumNearPlane(float near_z);
-        void ChangeFrustumFov(float fov);
+        void changeAspectRatio(float ratio);
+        void changeFrustumFarPlane(float far_z);
+        void changeFrustumNearPlane(float near_z);
+        void changeFrustumFov(float fov);
         //@}
-        MathLib::Ray3 GetPickerRay(float clip_space_x, float clip_space_y);
+        MathLib::Ray3 getPickerRay(float clip_space_x, float clip_space_y);
 
     protected:
-        void OnTargetResized(const Frameworks::IEventPtr& e);
+        void onTargetResized(const Frameworks::IEventPtr& e);
         //todo: move to UI layer
-        void OnMouseRightBtnDrag(const Frameworks::IEventPtr& e);
-        void OnMouseWheel(const Frameworks::IEventPtr& e);
-        void OnGestureScroll(const Frameworks::IEventPtr& e);
-        void OnGestureScale(const Frameworks::IEventPtr& e);
+        void onMouseRightBtnDrag(const Frameworks::IEventPtr& e);
+        void onMouseWheel(const Frameworks::IEventPtr& e);
+        void onGestureScroll(const Frameworks::IEventPtr& e);
+        void onGestureScale(const Frameworks::IEventPtr& e);
 
-        void DoZoomingCamera(const Frameworks::ICommandPtr& c);
-        void DoSphereRotatingCamera(const Frameworks::ICommandPtr& c);
-        void DoMovingCamera(const Frameworks::ICommandPtr& c);
-        void DoMovingCameraXZ(const Frameworks::ICommandPtr& c);
+        void zoom(const Frameworks::ICommandPtr& c);
+        void sphereRotate(const Frameworks::ICommandPtr& c);
+        void move(const Frameworks::ICommandPtr& c);
+        void moveXZ(const Frameworks::ICommandPtr& c);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
@@ -75,10 +76,10 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onGestureScroll;
         Frameworks::EventSubscriberPtr m_onGestureScale;
 
-        Frameworks::CommandSubscriberPtr m_doZoomingCamera;
-        Frameworks::CommandSubscriberPtr m_doSphereRotatingCamera;
-        Frameworks::CommandSubscriberPtr m_doMovingCamera;
-        Frameworks::CommandSubscriberPtr m_doMovingCameraXZ;
+        Frameworks::CommandSubscriberPtr m_zoomCamera;
+        Frameworks::CommandSubscriberPtr m_sphereRotateCamera;
+        Frameworks::CommandSubscriberPtr m_moveCamera;
+        Frameworks::CommandSubscriberPtr m_moveCameraXZ;
     };
 }
 

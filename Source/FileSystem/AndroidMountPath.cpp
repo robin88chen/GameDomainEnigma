@@ -23,7 +23,7 @@ AndroidMountPath::~AndroidMountPath()
 }
 
 #pragma warning(disable:4100)  // for unused parameter rw_option in VC++
-IFile* AndroidMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
+IFile* AndroidMountPath::createFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
     if (filename.length() == 0) return nullptr;
     IFile* file = nullptr;
@@ -34,22 +34,22 @@ IFile* AndroidMountPath::CreateFile(const std::string& filename, const ReadWrite
 }
 #pragma warning(default:4100)
 
-bool AndroidMountPath::EqualMountPath(IMountPath* path)
+bool AndroidMountPath::equalMountPath(IMountPath* path)
 {
     assert(path);
-    if (!EqualPathID(path->GetPathID())) return false;
+    if (!equalPathId(path->getPathId())) return false;
     AndroidMountPath* pkg_path = dynamic_cast<AndroidMountPath*>(path);
     if (!pkg_path) return false;
     if (pkg_path->m_subPath != m_subPath) return false;
     return true;
 }
 
-bool AndroidMountPath::EqualMountPath(const std::filesystem::path& path)
+bool AndroidMountPath::equalMountPath(const std::filesystem::path& path)
 {
     return m_subPath == path.string();
 }
 
-bool AndroidMountPath::EqualMouthPath(const std::string& path)
+bool AndroidMountPath::equalMountPath(const std::string& path)
 {
     return m_subPath == path;
 }

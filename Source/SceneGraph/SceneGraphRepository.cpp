@@ -1,4 +1,7 @@
 ﻿#include "SceneGraphRepository.h"
+#include "SceneGraphStoreMapper.h"
+#include "SceneGraphFactory.h"
+#include "SpatialId.h"
 #include "Camera.h"
 #include "Frustum.h"
 #include "Node.h"
@@ -27,6 +30,8 @@
 #include "PortalDtos.h"
 #include <cassert>
 
+#include "CameraFrustumDtos.h"
+
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
@@ -36,10 +41,11 @@ using namespace Enigma::Renderer;
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 
 SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(srv_mngr)
+    const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer, const std::shared_ptr<SceneGraphStoreMapper>& store_mapper) : ISystemService(srv_mngr)
 {
     m_handSystem = GraphicCoordSys::LeftHand;
-
+    m_storeMapper = store_mapper;
+    m_factory = menew SceneGraphFactory();
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this, dto_deserializer);
 }
@@ -47,6 +53,7 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
 SceneGraphRepository::~SceneGraphRepository()
 {
     SAFE_DELETE(m_builder);
+    SAFE_DELETE(m_factory);
 }
 
 ServiceResult SceneGraphRepository::onInit()
@@ -55,21 +62,32 @@ ServiceResult SceneGraphRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
     m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
     QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
-    m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
-    CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
+    m_queryPawn = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPawn(q); });
+    QueryDispatcher::subscribe(typeid(QueryPawn), m_queryPawn);
+    //m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
+    //CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
 
+    m_storeMapper->connect();
+    m_factory->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
+    m_storeMapper->disconnect();
+    m_factory->unregisterHandlers();
+
+    m_cameras.clear();
+
     QueryDispatcher::unsubscribe(typeid(QueryCamera), m_queryCamera);
     m_queryCamera = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
     m_queryNode = nullptr;
-    CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
-    m_createCamera = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryPawn), m_queryPawn);
+    m_queryPawn = nullptr;
+    //CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
+    //m_createCamera = nullptr;
     CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
     m_createNode = nullptr;
 
@@ -86,38 +104,43 @@ GraphicCoordSys SceneGraphRepository::getCoordinateSystem()
     return m_handSystem;
 }
 
-std::shared_ptr<Camera> SceneGraphRepository::createCamera(const std::string& name)
+/*std::shared_ptr<Camera> SceneGraphRepository::createCamera(const SpatialId& id)
 {
-    assert(!hasCamera(name));
-    auto camera = std::make_shared<Camera>(name, m_handSystem);
+    assert(!hasCamera(id));
+    auto camera = std::make_shared<Camera>(id, m_handSystem);
     std::lock_guard locker{ m_cameraMapLock };
-    m_cameras.insert_or_assign(name, camera);
+    m_cameras.insert_or_assign(id, camera);
     return camera;
 }
 
 std::shared_ptr<Camera> SceneGraphRepository::createCamera(const GenericDto& dto)
 {
-    assert(!hasCamera(dto.getName()));
+    CameraDto camera_dto = CameraDto::fromGenericDto(dto);
+    assert(!hasCamera(camera_dto.id()));
     auto camera = std::make_shared<Camera>(dto);
     std::lock_guard locker{ m_cameraMapLock };
-    m_cameras.insert_or_assign(dto.getName(), camera);
+    m_cameras.insert_or_assign(camera_dto.id(), camera);
     return camera;
+}*/
+
+bool SceneGraphRepository::hasCamera(const SpatialId& id)
+{
+    assert(m_storeMapper);
+    std::lock_guard locker{ m_cameraMapLock };
+    auto it = m_cameras.find(id);
+    if (it != m_cameras.end()) return true;
+    return m_storeMapper->hasCamera(id);
 }
 
-bool SceneGraphRepository::hasCamera(const std::string& name)
+std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
 {
+    if (!hasCamera(id)) return nullptr;
     std::lock_guard locker{ m_cameraMapLock };
-    auto it = m_cameras.find(name);
-    return ((it != m_cameras.end()) && (!it->second.expired()));
-}
-
-std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const std::string& name)
-{
-    std::lock_guard locker{ m_cameraMapLock };
-    auto it = m_cameras.find(name);
-    if (it == m_cameras.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
+    auto it = m_cameras.find(id);
+    if (it != m_cameras.end()) return it->second;
+    auto dtos = m_storeMapper->queryCamera(id);
+    assert(!dtos.empty());
+    return m_factory->constituteCamera(id, dtos[0]);
 }
 
 std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
@@ -221,29 +244,34 @@ std::shared_ptr<Node> SceneGraphRepository::queryNode(const std::string& name)
     return it->second.lock();
 }
 
-std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
+/*std::shared_ptr<Pawn> SceneGraphRepository::CreatePawn(const std::string& name)
 {
     assert(!HasPawn(name));
     auto pawn = std::make_shared<Pawn>(name);
     std::lock_guard locker{ m_pawnMapLock };
     m_pawns.insert_or_assign(name, pawn);
     return pawn;
+}*/
+
+bool SceneGraphRepository::hasPawn(const SpatialId& id)
+{
+    assert(m_storeMapper);
+    assert(id.rtti().isDerived(Pawn::TYPE_RTTI));
+    std::lock_guard locker{ m_pawnMapLock };
+    auto it = m_pawns.find(id);
+    if (it != m_pawns.end()) return true;
+    return m_storeMapper->hasSpatial(id);
 }
 
-bool SceneGraphRepository::HasPawn(const std::string& name)
+std::shared_ptr<Pawn> SceneGraphRepository::queryPawn(const SpatialId& id)
 {
+    if (!hasPawn(id)) return nullptr;
     std::lock_guard locker{ m_pawnMapLock };
-    auto it = m_pawns.find(name);
-    return ((it != m_pawns.end()) && (!it->second.expired()));
-}
-
-std::shared_ptr<Pawn> SceneGraphRepository::QueryPawn(const std::string& name)
-{
-    std::lock_guard locker{ m_pawnMapLock };
-    auto it = m_pawns.find(name);
-    if (it == m_pawns.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
+    auto it = m_pawns.find(id);
+    if (it != m_pawns.end()) return it->second;
+    auto dtos = m_storeMapper->querySpatial(id);
+    assert(!dtos.empty());
+    return m_factory->constitutePawn(id, dtos);
 }
 
 std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name, const LightInfo& info)
@@ -300,7 +328,7 @@ std::shared_ptr<Portal> SceneGraphRepository::queryPortal(const std::string& nam
 std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& name)
 {
     if (auto node = queryNode(name)) return node;
-    if (auto pawn = QueryPawn(name)) return pawn;
+    //if (auto pawn = queryPawn(name)) return pawn;
     if (auto light = QueryLight(name)) return light;
     if (auto portal = queryPortal(name)) return portal;
     return nullptr;
@@ -309,14 +337,14 @@ std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& n
 std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
 {
     assert(spatial);
-    if (auto pawn = std::shared_ptr<Pawn>(dynamic_cast<Pawn*>(spatial)))
+    /*if (auto pawn = std::shared_ptr<Pawn>(dynamic_cast<Pawn*>(spatial)))
     {
         assert(!HasPawn(pawn->getSpatialName()));
         std::lock_guard locker{ m_pawnMapLock };
         m_pawns.insert_or_assign(pawn->getSpatialName(), pawn);
         return pawn;
     }
-    else if (auto node = std::shared_ptr<Node>(dynamic_cast<Node*>(spatial)))
+    else*/ if (auto node = std::shared_ptr<Node>(dynamic_cast<Node*>(spatial)))
     {
         assert(!hasNode(node->getSpatialName()));
         std::lock_guard locker{ m_nodeMapLock };
@@ -350,7 +378,43 @@ void SceneGraphRepository::queryCamera(const IQueryPtr& q)
     if (!q) return;
     const auto query = std::dynamic_pointer_cast<QueryCamera>(q);
     assert(query);
-    query->setResult(queryCamera(query->cameraName()));
+    query->setResult(queryCamera(query->id()));
+}
+
+void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
+{
+    assert(m_storeMapper);
+    assert(camera);
+    std::lock_guard locker{ m_cameraMapLock };
+    m_cameras.insert_or_assign(camera->id(), camera);
+    auto camera_dto = camera->serializeDto();
+    m_storeMapper->putCamera(camera->id(), { camera_dto });
+}
+
+void SceneGraphRepository::removeCamera(const SpatialId& id)
+{
+    if (!hasCamera(id)) return;
+    std::lock_guard locker{ m_cameraMapLock };
+    m_cameras.erase(id);
+    m_storeMapper->removeCamera(id);
+}
+
+void SceneGraphRepository::putPawn(const std::shared_ptr<Pawn>& pawn)
+{
+    assert(m_storeMapper);
+    assert(pawn);
+    std::lock_guard locker{ m_pawnMapLock };
+    m_pawns.insert_or_assign(pawn->id(), pawn);
+    auto pawn_dto = pawn->serializeDto();
+    m_storeMapper->putSpatial(pawn->id(), { pawn_dto });
+}
+
+void SceneGraphRepository::removePawn(const SpatialId& id)
+{
+    if (!hasPawn(id)) return;
+    std::lock_guard locker{ m_pawnMapLock };
+    m_pawns.erase(id);
+    m_storeMapper->removeSpatial(id);
 }
 
 void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
@@ -361,34 +425,43 @@ void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
     query->setResult(queryNode(query->nodeName()));
 }
 
-void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
+void SceneGraphRepository::queryPawn(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryPawn>(q);
+    assert(query);
+    query->setResult(queryPawn(query->id()));
+}
+
+/*void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     if (const auto cmd = std::dynamic_pointer_cast<SceneGraph::CreateCamera>(c))
     {
+        CameraDto dto = CameraDto::fromGenericDto(cmd->GetDto());
         std::shared_ptr<Camera> camera = nullptr;
-        if (hasCamera(cmd->GetDto().getName()))
+        if (hasCamera(dto.id()))
         {
-            camera = queryCamera(cmd->GetDto().getName());
+            camera = queryCamera(dto.id());
         }
         else
         {
-            camera = createCamera(cmd->GetDto());
+            camera = createCamera(dto.id());
         }
         if (camera)
         {
-            EventPublisher::post(std::make_shared<SceneGraph::CameraCreated>(camera->getName(), camera));
+            EventPublisher::post(std::make_shared<SceneGraph::CameraCreated>(camera->id(), camera));
         }
         else
         {
-            EventPublisher::post(std::make_shared<SceneGraph::CreateCameraFailed>(cmd->GetDto().getName(), ErrorCode::sceneRepositoryFailed));
+            EventPublisher::post(std::make_shared<SceneGraph::CreateCameraFailed>(dto.id(), ErrorCode::sceneRepositoryFailed));
         }
     }
     else
     {
         assert(false);
     }
-}
+}*/
 
 void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
 {

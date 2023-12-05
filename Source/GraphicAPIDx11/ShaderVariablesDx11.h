@@ -61,7 +61,7 @@ namespace Enigma::Devices
         ShaderVariableDx11_ConstBuffer& operator=(ShaderVariableDx11_ConstBuffer&&) = delete;
 
         //virtual void Commit() override;
-        error Create(const D3D11_SHADER_BUFFER_DESC& cb_desc, const std::string& shader_name);
+        error create(const D3D11_SHADER_BUFFER_DESC& cb_desc, const std::string& shader_name);
         error CreateChildVariables(ID3D11ShaderReflectionConstantBuffer* cb_reflect, unsigned int var_count,
             const SemanticNameTable& semantic_table);
 

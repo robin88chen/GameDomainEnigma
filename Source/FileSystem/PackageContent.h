@@ -26,17 +26,17 @@ namespace Enigma::FileSystem
         virtual ~PackageContent();
         PackageContent& operator=(const PackageContent&) = delete;
 
-        virtual std::string GetFullPath() override { return m_fullPath; };
+        virtual std::string getFullPath() override { return m_fullPath; };
 
-        virtual std::optional<std::vector<unsigned char>> Read(size_t offset, size_t size_request) override;
-        virtual size_t  Write(size_t offset, const std::vector<unsigned char>& in_buff) override;
+        virtual std::optional<std::vector<unsigned char>> read(size_t offset, size_t size_request) override;
+        virtual size_t  write(size_t offset, const std::vector<unsigned char>& in_buff) override;
 
-        virtual size_t Size() override;
+        virtual size_t size() override;
 
-        virtual time_t FileTime() override;
+        virtual time_t filetime() override;
 
-        virtual bool IsExisted() override;
-        virtual bool IsWritable() override { return false; };
+        virtual bool isExisted() override;
+        virtual bool isWritable() override { return false; };
 
     protected:
         virtual error open() override;

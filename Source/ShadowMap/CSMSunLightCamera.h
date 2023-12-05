@@ -10,6 +10,7 @@
 
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Culler.h"
+#include "SceneGraph/SpatialId.h"
 
 namespace Enigma::ShadowMap
 {
@@ -17,7 +18,7 @@ namespace Enigma::ShadowMap
     {
         DECLARE_EN_RTTI;
     public:
-        CSMSunLightCamera(std::string name, unsigned partition = 1);
+        CSMSunLightCamera(const SceneGraph::SpatialId& id, unsigned partition = 1);
         virtual ~CSMSunLightCamera() override;
         CSMSunLightCamera(const CSMSunLightCamera& other) = delete;
         CSMSunLightCamera(CSMSunLightCamera&& other) noexcept = delete;

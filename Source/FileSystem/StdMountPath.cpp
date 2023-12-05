@@ -28,36 +28,36 @@ StdMountPath::~StdMountPath()
 {
 }
 
-IFile* StdMountPath::CreateFile(const std::string& filename, const ReadWriteOption& rw_option)
+IFile* StdMountPath::createFile(const std::string& filename, const ReadWriteOption& rw_option)
 {
-    std::string full_path = FixFullPath(m_filePath, filename);
+    std::string full_path = fixFullPath(m_filePath, filename);
     IFile* file = menew StdioFile(full_path, rw_option);
 
     return file;
 }
 
-bool StdMountPath::EqualMountPath(IMountPath* path)
+bool StdMountPath::equalMountPath(IMountPath* path)
 {
     assert(path);
-    if (!EqualPathID(path->GetPathID())) return false;
+    if (!equalPathId(path->getPathId())) return false;
     StdMountPath* std_path = dynamic_cast<StdMountPath*>(path);
     if (!std_path) return false;
     if (std_path->m_filePath != m_filePath) return false;
     return true;
 }
 
-bool StdMountPath::EqualMountPath(const std::filesystem::path& path)
+bool StdMountPath::equalMountPath(const std::filesystem::path& path)
 {
     std::filesystem::path f_path(m_filePath);
     return std::filesystem::equivalent(path, f_path);
 }
 
-bool StdMountPath::EqualMouthPath(const std::string& path)
+bool StdMountPath::equalMountPath(const std::string& path)
 {
-    return EqualMountPath(std::filesystem::path{path});
+    return equalMountPath(std::filesystem::path{path});
 }
 
-std::string StdMountPath::FixFullPath(const std::string& filename)
+std::string StdMountPath::fixFullPath(const std::string& filename)
 {
     if (!filename.length()) return "";
 
@@ -71,7 +71,7 @@ std::string StdMountPath::FixFullPath(const std::string& filename)
     return fullpath;
 }
 
-std::string StdMountPath::FixFullPath(const std::string& filepath, const std::string& filename)
+std::string StdMountPath::fixFullPath(const std::string& filepath, const std::string& filename)
 {
     if (!filename.length()) return "";
 

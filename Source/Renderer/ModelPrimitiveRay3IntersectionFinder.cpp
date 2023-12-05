@@ -20,14 +20,14 @@ ModelPrimitiveRay3IntersectionFinder::~ModelPrimitiveRay3IntersectionFinder()
 
 }
 
-PrimitiveRay3IntersectionFinder* ModelPrimitiveRay3IntersectionFinder::Create()
+PrimitiveRay3IntersectionFinder* ModelPrimitiveRay3IntersectionFinder::create()
 {
     return new ModelPrimitiveRay3IntersectionFinder();
 }
 
 void ModelPrimitiveRay3IntersectionFinder::RegisterFactory()
 {
-    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), Create);
+    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), create);
 }
 
 Intersector::Result ModelPrimitiveRay3IntersectionFinder::Test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,

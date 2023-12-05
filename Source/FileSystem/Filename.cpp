@@ -11,17 +11,17 @@ Filename::Filename(const std::string& file_path, const std::string& path_id)
 {
     if (path_id.empty())
     {
-        SplitPath(file_path);
+        splitPath(file_path);
     }
     else
     {
-        SplitPath(file_path + "@" + path_id);
+        splitPath(file_path + "@" + path_id);
     }
 }
 
 Filename::Filename(const std::string& full_path)
 {
-    SplitPath(full_path);
+    splitPath(full_path);
 }
 
 Filename::Filename(const Filename& filename)
@@ -35,7 +35,7 @@ Filename::Filename(const Filename& filename)
     m_subPathFilename = filename.m_subPathFilename;
 }
 
-void Filename::SplitPath(const std::string& str)
+void Filename::splitPath(const std::string& str)
 {
     size_t pos = str.find(':');
     if (pos != std::string::npos)
@@ -78,58 +78,58 @@ void Filename::SplitPath(const std::string& str)
     m_filename = m_fname + m_ext;
 }
 
-std::string Filename::GetFullPath() const
+std::string Filename::getFullPath() const
 {
     return m_drive + m_dir + m_fname + m_ext;
 }
 
-std::string Filename::GetPath() const
+std::string Filename::getPath() const
 {
     return m_drive + m_dir;
 }
 
-const std::string& Filename::GetMountPathID() const
+const std::string& Filename::getMountPathId() const
 {
     return m_pathID;
 }
 
-std::string Filename::GetFullFileNameAtPath() const
+std::string Filename::getFullFileNameAtPath() const
 {
-    if (HasPathID())
+    if (hasPathId())
     {
-        return GetFullPath() + "@" + m_pathID;
+        return getFullPath() + "@" + m_pathID;
     }
-    return GetFullPath();
+    return getFullPath();
 }
 
-std::string Filename::GetFileNameAtPath() const
+std::string Filename::getFileNameAtPath() const
 {
-    if (HasPathID())
+    if (hasPathId())
     {
-        return GetFileName() + "@" + m_pathID;
+        return getFileName() + "@" + m_pathID;
     }
-    return GetFileName();
+    return getFileName();
 }
 
-const std::string& Filename::GetSubPathFileName() const
+const std::string& Filename::getSubPathFileName() const
 {
-    if (!HasPathID())
+    if (!hasPathId())
     {
         return m_filename;
     }
     return m_subPathFilename;
 }
 
-std::string Filename::GetSubPathFileNameAtPath() const
+std::string Filename::getSubPathFileNameAtPath() const
 {
-    if (!HasPathID())
+    if (!hasPathId())
     {
-        return GetFileNameAtPath();
+        return getFileNameAtPath();
     }
-    return GetSubPathFileName() + "@" + m_pathID;
+    return getSubPathFileName() + "@" + m_pathID;
 }
 
-void Filename::SetDir(const std::string& dir)
+void Filename::setDir(const std::string& dir)
 {
     m_dir = dir;
     if ((m_dir.length() > 0) &&
@@ -139,7 +139,7 @@ void Filename::SetDir(const std::string& dir)
     }
 }
 
-void Filename::SetDrive(const std::string& drive)
+void Filename::setDrive(const std::string& drive)
 {
     m_drive = drive;
     if ((m_drive.length() > 0) && (m_drive[m_drive.length() - 1] != ':'))
@@ -148,7 +148,7 @@ void Filename::SetDrive(const std::string& drive)
     }
 }
 
-void Filename::SetExt(const std::string& ext)
+void Filename::setExt(const std::string& ext)
 {
     m_ext = ext;
     if ((m_ext.length() > 0) && (m_ext[0] != '.'))
@@ -158,13 +158,13 @@ void Filename::SetExt(const std::string& ext)
     m_filename = m_fname + m_ext;
 }
 
-void Filename::SetBaseFileName(const std::string& fname)
+void Filename::setBaseFileName(const std::string& fname)
 {
     m_fname = fname;
     m_filename = m_fname + m_ext;
 }
 
-void Filename::SetFileName(const std::string& filename)
+void Filename::setFileName(const std::string& filename)
 {
     m_filename = filename;
     size_t pos = m_filename.find_last_of('.');
@@ -180,37 +180,37 @@ void Filename::SetFileName(const std::string& filename)
     }
 }
 
-void Filename::SetMountPathID(const std::string& path_id)
+void Filename::setMountPathId(const std::string& path_id)
 {
     m_pathID = path_id;
 }
 
-const std::string& Filename::GetDir() const
+const std::string& Filename::getDir() const
 {
     return m_dir;
 }
 
-const std::string& Filename::GetDrive() const
+const std::string& Filename::getDrive() const
 {
     return m_drive;
 }
 
-const std::string& Filename::GetExt() const
+const std::string& Filename::getExt() const
 {
     return m_ext;
 }
 
-const std::string& Filename::GetBaseFileName() const
+const std::string& Filename::getBaseFileName() const
 {
     return m_fname;
 }
 
-const std::string& Filename::GetFileName() const
+const std::string& Filename::getFileName() const
 {
     return m_filename;
 }
 
-bool Filename::HasPathID() const
+bool Filename::hasPathId() const
 {
     return m_pathID.length() > 0;
 }

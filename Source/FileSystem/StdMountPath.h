@@ -27,15 +27,15 @@ namespace Enigma::FileSystem
         StdMountPath& operator=(const StdMountPath&) = delete;
         StdMountPath& operator=(StdMountPath&&) = delete;
 
-        virtual IFile* CreateFile(const std::string& filename, const ReadWriteOption& rw_option) override;
+        virtual IFile* createFile(const std::string& filename, const ReadWriteOption& rw_option) override;
 
-        virtual bool EqualMountPath(IMountPath* path) override;
-        virtual bool EqualMountPath(const std::filesystem::path& path) override;
-        virtual bool EqualMouthPath(const std::string& path) override;
+        virtual bool equalMountPath(IMountPath* path) override;
+        virtual bool equalMountPath(const std::filesystem::path& path) override;
+        virtual bool equalMountPath(const std::string& path) override;
 
-        std::string FixFullPath(const std::string& filename);
+        std::string fixFullPath(const std::string& filename);
 
-        static std::string FixFullPath(const std::string& filepath, const std::string& filename);
+        static std::string fixFullPath(const std::string& filepath, const std::string& filename);
 
     protected:
         std::string m_filePath;

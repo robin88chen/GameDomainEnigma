@@ -26,18 +26,18 @@ namespace Enigma::FileSystem
         IMountPath(const std::string& path_id) { m_pathID = path_id; };
         virtual ~IMountPath() = default;
 
-        virtual IFile* CreateFile(const std::string& filename, const ReadWriteOption& rw_option) = 0;
+        virtual IFile* createFile(const std::string& filename, const ReadWriteOption& rw_option) = 0;
 
-        virtual bool EqualPathID(const std::string& path_id)
+        virtual bool equalPathId(const std::string& path_id)
         {
             if ((path_id.length() == 0) && (m_pathID.length() == 0)) return true;
             if ((path_id.length() != 0) && (m_pathID.length() != 0) && (m_pathID == path_id)) return true;
             return false;
         }
-        const std::string& GetPathID() { return m_pathID; }
-        virtual bool EqualMountPath(IMountPath* path) = 0;
-        virtual bool EqualMountPath(const std::filesystem::path& path) = 0;
-        virtual bool EqualMouthPath(const std::string& path) = 0;
+        const std::string& getPathId() { return m_pathID; }
+        virtual bool equalMountPath(IMountPath* path) = 0;
+        virtual bool equalMountPath(const std::filesystem::path& path) = 0;
+        virtual bool equalMountPath(const std::string& path) = 0;
 
     protected:
         std::string m_pathID;

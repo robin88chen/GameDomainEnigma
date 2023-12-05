@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AsyncJsonFileDtoDeserializer.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -14,6 +14,7 @@
 
 namespace Enigma::Gateways
 {
+    class IDtoGateway;
     class AsyncJsonFileDtoDeserializer : public Engine::IDtoDeserializer
     {
     public:
@@ -24,6 +25,7 @@ namespace Enigma::Gateways
         void DeserializeProcedure();
 
     protected:
+        std::shared_ptr<IDtoGateway> m_gateway;
         Frameworks::Ruid m_ruid;
         std::string m_parameter;
         std::future<void> m_deserializing;

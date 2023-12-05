@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   StdioFile.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -27,19 +27,19 @@ namespace Enigma::FileSystem
         StdioFile& operator=(const StdioFile&) = delete;
         StdioFile& operator=(StdioFile&&) = delete;
 
-        virtual std::string GetFullPath() override { return m_fullPath; };
+        virtual std::string getFullPath() override { return m_fullPath; };
 
-        virtual std::optional<std::vector<unsigned char>> Read(size_t offset, size_t size_request) override;
-        virtual size_t  Write(size_t offset, const std::vector<unsigned char>& in_buff) override;
+        virtual std::optional<std::vector<unsigned char>> read(size_t offset, size_t size_request) override;
+        virtual size_t  write(size_t offset, const std::vector<unsigned char>& in_buff) override;
 
-        virtual size_t Size() override;
+        virtual size_t size() override;
 
-        virtual time_t FileTime() override;
+        virtual time_t filetime() override;
 
-        virtual bool IsExisted() override;
-        virtual bool IsWritable() override { return m_isWritable; };
+        virtual bool isExisted() override;
+        virtual bool isWritable() override { return m_isWritable; };
 
-        static bool IsFileExisted(const std::string& filepath);
+        static bool isFileExisted(const std::string& filepath);
 
     protected:
         virtual error open() override;

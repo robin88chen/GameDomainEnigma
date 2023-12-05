@@ -38,7 +38,7 @@ namespace Enigma::GameCommon
 
         const std::string& GetParentName() const { return m_parentName; }
         const std::string& GetLightName() const { return m_lightName; }
-        const MathLib::Vector3& GetDir() const { return m_dir; }
+        const MathLib::Vector3& getDir() const { return m_dir; }
         const MathLib::ColorRGBA& GetColor() const { return m_color; }
 
     protected:
@@ -90,7 +90,7 @@ namespace Enigma::GameCommon
             : m_lightName(light_name), m_dir(dir) {}
 
         const std::string& GetLightName() const { return m_lightName; }
-        const MathLib::Vector3& GetDir() const { return m_dir; }
+        const MathLib::Vector3& getDir() const { return m_dir; }
 
     protected:
         std::string m_lightName;

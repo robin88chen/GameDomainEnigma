@@ -59,22 +59,22 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
     if (FATAL_LOG_EXPR(!m_vertexBuffer)) return Graphics::ErrorCode::nullVertexBuffer;
     if (m_vertexBuffer)
     {
-        Graphics::IGraphicAPI::Instance()->Bind(m_vertexBuffer, m_signature.GetTopology());
+        Graphics::IGraphicAPI::instance()->Bind(m_vertexBuffer, m_signature.GetTopology());
     }
     if (m_indexBuffer)
     {
-        Graphics::IGraphicAPI::Instance()->Bind(m_indexBuffer);
+        Graphics::IGraphicAPI::instance()->Bind(m_indexBuffer);
     }
 
     effectMaterial->ApplyFirstPass();
     if (m_indexBuffer)
     {
-        Graphics::IGraphicAPI::Instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
+        Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
             segment.m_startIdx, static_cast<int>(segment.m_startVtx));
     }
     else
     {
-        Graphics::IGraphicAPI::Instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
+        Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
     }
     // if multi-pass effect
     while (effectMaterial->HasNextPass())
@@ -82,12 +82,12 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         effectMaterial->ApplyNextPass();
         if (m_indexBuffer)
         {
-            Graphics::IGraphicAPI::Instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
+            Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
                 segment.m_startIdx, static_cast<int>(segment.m_startVtx));
         }
         else
         {
-            Graphics::IGraphicAPI::Instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
+            Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
         }
     }
     return ErrorCode::ok;

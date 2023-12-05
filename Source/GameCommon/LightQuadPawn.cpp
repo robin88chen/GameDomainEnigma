@@ -11,11 +11,11 @@ using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(GameCommon, LightQuadPawn, LightingPawn);
 
-LightQuadPawn::LightQuadPawn(const std::string& name) : LightingPawn(name)
+LightQuadPawn::LightQuadPawn(const SpatialId& id) : LightingPawn(id)
 {
 }
 
-LightQuadPawn::LightQuadPawn(const Engine::GenericDto& o) : LightingPawn(o)
+LightQuadPawn::LightQuadPawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
 {
 }
 

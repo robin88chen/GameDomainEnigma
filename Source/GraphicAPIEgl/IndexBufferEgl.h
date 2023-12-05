@@ -27,7 +27,7 @@ namespace Enigma::Devices
         IndexBufferEgl& operator=(const IndexBufferEgl&) = delete;
         IndexBufferEgl& operator=(IndexBufferEgl&&) = delete;
 
-        virtual error Create(unsigned int sizeBuffer) override;
+        virtual error create(unsigned int sizeBuffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
 

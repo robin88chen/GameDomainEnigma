@@ -23,14 +23,14 @@ void EnigmaViewer::InlineComboxItem::create(nana::window wd)
             //当鼠标在文本框上移动时，需要高亮本项
             m_indicator->hovered(m_pos);
         });
-    m_combo.events().text_changed([this] (const nana::arg_combox& ar)
+    m_combo.events().text_changed([this](const nana::arg_combox& ar)
         {
             //ar.ignore = true;
             m_indicator->modify(m_pos, m_combo.caption());
             auto s = ar.widget.caption();
             auto s1 = m_combo.text(0);
             auto s2 = m_combo.text(1);
-            Enigma::Frameworks::EventPublisher::Post(std::make_shared<AnimationClipItemUpdated>(static_cast<unsigned int>(m_pos.cat), static_cast<unsigned int>(m_pos.item), "", ""));
+            Enigma::Frameworks::EventPublisher::post(std::make_shared<AnimationClipItemUpdated>(static_cast<unsigned int>(m_pos.cat), static_cast<unsigned int>(m_pos.item), "", ""));
         });
 }
 

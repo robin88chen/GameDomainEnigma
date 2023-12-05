@@ -194,6 +194,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.h">
       <Filter>Query</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\call_me_later.hpp">
+      <Filter>Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\DesignRules.md" />

@@ -107,11 +107,11 @@ DaeParser::~DaeParser()
 
 void DaeParser::LoadDaeFile(const std::string& filename)
 {
-    IFilePtr file = FileSystem::Instance()->OpenFile(filename, Read | Binary, "");
+    IFilePtr file = FileSystem::instance()->openFile(filename, read | binary, "");
     if (!file) return;
-    unsigned file_size = static_cast<unsigned>(file->Size());
-    auto read_buf = file->Read(0, file_size);
-    FileSystem::Instance()->CloseFile(file);
+    unsigned file_size = static_cast<unsigned>(file->size());
+    auto read_buf = file->read(0, file_size);
+    FileSystem::instance()->closeFile(file);
     if (!read_buf)
     {
         OutputLog(filename + " read fail!!");
@@ -139,7 +139,7 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     ParseAnimations(collada_root);
 
     ComposeModelPrimitiveDto();
-    m_pawn.IsTopLevel() = true;
+    m_pawn.isTopLevel() = true;
     /*if ((m_model) && (m_animation))
     {
         ModelPrimitiveAnimatorPtr model_anim = ModelPrimitiveAnimatorPtr{ menew ModelPrimitiveAnimator() };
@@ -167,13 +167,13 @@ void DaeParser::LoadDaeFile(const std::string& filename)
 
 void DaeParser::OutputLog(const std::string& msg)
 {
-    CommandBus::Post(std::make_shared<OutputMessage>(msg));
+    CommandBus::post(std::make_shared<OutputMessage>(msg));
 }
 
 void DaeParser::ComposeModelPrimitiveDto()
 {
     ModelAnimatorDto animator_dto;
-    animator_dto.AssetName() = m_animationAssetDto.GetName();
+    animator_dto.AssetName() = m_animationAssetDto.getName();
     animator_dto.AssetFactoryDesc() = m_animationAssetDto.GetRtti();
     if ((animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
@@ -185,19 +185,19 @@ void DaeParser::ComposeModelPrimitiveDto()
         SkinOperatorDto operator_dto;
         operator_dto.BoneNodeNames() = skin_bone_name.second;
         operator_dto.SkinMeshNodeName() = skin_bone_name.first;
-        animator_dto.SkinOperators().emplace_back(operator_dto.ToGenericDto());
+        animator_dto.SkinOperators().emplace_back(operator_dto.toGenericDto());
     }
-    m_model.TheAnimator() = animator_dto.ToGenericDto();
+    m_model.TheAnimator() = animator_dto.toGenericDto();
 
     BoundingVolume unit_bv(Box3::UNIT_BOX);
-    m_pawn.ThePrimitive() = m_model.ToGenericDto();
+    m_pawn.primitive() = m_model.toGenericDto();
     //m_pawn.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
-    m_pawn.Name() = m_filename;
-    m_pawn.LocalTransform() = Matrix4::IDENTITY;
-    m_pawn.WorldTransform() = Matrix4::IDENTITY;
-    m_pawn.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.WorldBound() = unit_bv.SerializeDto().ToGenericDto();
-    m_pawn.SpatialFlag() = static_cast<unsigned>(SpatialShadowFlags::Spatial_ShadowCaster);
+    m_pawn.name() = m_filename;
+    m_pawn.localTransform() = Matrix4::IDENTITY;
+    m_pawn.worldTransform() = Matrix4::IDENTITY;
+    m_pawn.modelBound() = unit_bv.serializeDto().toGenericDto();
+    m_pawn.worldBound() = unit_bv.serializeDto().toGenericDto();
+    m_pawn.spatialFlag() = static_cast<unsigned>(SpatialShadowFlags::Spatial_ShadowCaster);
 }
 
 void DaeParser::ParseScene(const pugi::xml_node& collada_root)
@@ -244,7 +244,7 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
     if (model_name == "Scene")
     {
         Filename filename(m_filename);
-        model_name = filename.GetBaseFileName();
+        model_name = filename.getBaseFileName();
     }
     m_model.Name() = model_name;
     m_modelName = m_model.Name();
@@ -256,7 +256,7 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
         ParseSceneNode(tree_dto, scene_node_xml, std::nullopt);
         scene_node_xml = scene_node_xml.next_sibling(TOKEN_NODE);
     }
-    m_model.TheNodeTree() = tree_dto.ToGenericDto();
+    m_model.TheNodeTree() = tree_dto.toGenericDto();
 
     // parse for skin
     /*scene_node_xml = model_scene_node.child(TOKEN_NODE);
@@ -310,7 +310,7 @@ void DaeParser::ParseSceneNode(MeshNodeTreeDto& node_tree, const pugi::xml_node&
     }
     if (parent_node_array_index) mesh_node.ParentIndexInArray() = parent_node_array_index.value();
     std::optional<unsigned> current_index = static_cast<unsigned>(node_tree.MeshNodes().size());
-    node_tree.MeshNodes().emplace_back(mesh_node.ToGenericDto());
+    node_tree.MeshNodes().emplace_back(mesh_node.toGenericDto());
     pugi::xml_node child_node = scene_node_xml.child(TOKEN_NODE);
     while (child_node)
     {
@@ -349,7 +349,7 @@ void DaeParser::ParseSceneNodeForSkin(MeshNodeTreeDto& node_tree, const pugi::xm
     ClearParsedDatas();
     ParseSkinMesh(mesh_node, skin_node);
     if (parent_node_array_index) mesh_node.ParentIndexInArray() = parent_node_array_index.value();
-    node_tree.MeshNodes().emplace_back(mesh_node.ToGenericDto());
+    node_tree.MeshNodes().emplace_back(mesh_node.toGenericDto());
     /*mesh_node->SetParentIndexInArray(parent_node_array_index);
     mesh_node->SetDataStatus(Object::DataStatus::Ready);
     if (m_model)
@@ -416,14 +416,14 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
         //dto.TheGeometry() = geo_dto;
         if (texmap_filename.empty())
         {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
         }
         else
         {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedSkinMeshEffectName(), m_config.DefaultTexturedSkinMeshEffectFilename()).ToGenericDto());
-            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedSkinMeshEffectName(), m_config.DefaultTexturedSkinMeshEffectFilename()).toGenericDto());
+            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
         }
-        mesh_node.TheMeshPrimitive() = dto.ToGenericDto();
+        mesh_node.TheMeshPrimitive() = dto.toGenericDto();
     }
     else
     {
@@ -434,14 +434,14 @@ void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node
         //dto.TheGeometry() = geo_dto;
         if (texmap_filename.empty())
         {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
         }
         else
         {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedMeshEffectName(), m_config.DefaultTexturedMeshEffectFilename()).ToGenericDto());
-            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).ToGenericDto());
+            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedMeshEffectName(), m_config.DefaultTexturedMeshEffectFilename()).toGenericDto());
+            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
         }
-        mesh_node.TheMeshPrimitive() = dto.ToGenericDto();
+        mesh_node.TheMeshPrimitive() = dto.toGenericDto();
     }
 }
 
@@ -787,14 +787,14 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     }
     //m_animation->SetDataStatus(Object::DataStatus::Ready);
     //m_animation->GetFactoryDesc().ClaimAsResourceAsset(m_filename, m_filename + ".anim");
-    m_animationAssetDto = asset_dto.ToGenericDto();
-    FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
+    m_animationAssetDto = asset_dto.toGenericDto();
+    FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.getName());
     desc.ClaimAsResourceAsset(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
     m_animationAssetDto.AddRtti(desc);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{m_animationAssetDto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), Write | OpenAlways | Binary);
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto>{m_animationAssetDto});
+    IFilePtr iFile = FileSystem::instance()->openFile(Filename("pawns/" + m_modelName + ".ani@APK_PATH"), write | openAlways | binary);
+    iFile->write(0, convert_to_buffer(json));
+    FileSystem::instance()->closeFile(iFile);
     desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
     m_animationAssetDto.AddRtti(desc);
 }
@@ -861,7 +861,7 @@ void DaeParser::ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& 
     OutputLog("parse animation for node " + target_mesh_node_name + " done.");
 
     asset_dto.MeshNodeNames().emplace_back(target_mesh_node_name);
-    asset_dto.TimeSRTs().emplace_back(srt_data.ToGenericDto());
+    asset_dto.TimeSRTs().emplace_back(srt_data.toGenericDto());
 }
 
 void DaeParser::ParseAnimationSample(AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node, const pugi::xml_node& anim_node)
@@ -1219,18 +1219,18 @@ GenericDto DaeParser::ComposeTriangleListDto(const std::string& geo_name, bool i
     }
     TextureCoordDto tex_dto;
     tex_dto.Texture2DCoords() = m_splitedTexCoord[0];
-    geo_dto.TextureCoords().emplace_back(tex_dto.ToGenericDto());
+    geo_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
     Box3 box = ContainmentBox3::ComputeAlignedBox(&m_splitedPositions[0], static_cast<unsigned>(m_splitedPositions.size()));
     BoundingVolume bounding = BoundingVolume{ box };
-    geo_dto.GeometryBound() = bounding.SerializeDto().ToGenericDto();
-    auto generic_dto = geo_dto.ToGenericDto();
+    geo_dto.GeometryBound() = bounding.serializeDto().toGenericDto();
+    auto generic_dto = geo_dto.toGenericDto();
     auto filename = Filename("pawns/" + geo_name + ".geo@APK_PATH");
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto> { generic_dto });
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(filename, Write | OpenAlways | Binary);
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto> { generic_dto });
+    IFilePtr iFile = FileSystem::instance()->openFile(filename, write | openAlways | binary);
+    iFile->write(0, convert_to_buffer(json));
+    FileSystem::instance()->closeFile(iFile);
     FactoryDesc desc = generic_dto.GetRtti();
-    desc.ClaimFromResource(geo_name, filename.GetSubPathFileName(), "APK_PATH");
+    desc.ClaimFromResource(geo_name, filename.getSubPathFileName(), "APK_PATH");
     generic_dto.AddRtti(desc);
     return generic_dto;
 }
@@ -1239,7 +1239,7 @@ EffectMaterialDto DaeParser::MakeMaterialDto(const std::string& eff_name, const 
 {
     EffectMaterialDto dto;
     dto.Name() = eff_name;
-    dto.TheFactoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.GetName()).ClaimFromResource(eff_name, eff_filename, "APK_PATH");
+    dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(eff_name, eff_filename, "APK_PATH");
     return dto;
 }
 
@@ -1360,8 +1360,8 @@ std::string DaeParser::FindMaterialTexImageFilename(const pugi::xml_node& collad
     {
         filename = Filename(file_url);
     }
-    OutputLog("    " + material_id + " image file name: " + filename.GetFileName());
-    return "image/" + filename.GetFileName();
+    OutputLog("    " + material_id + " image file name: " + filename.getFileName());
+    return "image/" + filename.getFileName();
 }
 
 void DaeParser::ClearParsedDatas()

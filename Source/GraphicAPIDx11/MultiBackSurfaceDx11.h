@@ -40,7 +40,7 @@ namespace Enigma::Devices
 
     protected:
         void CreateD3DRenderTarget(ID3D11Device* device, ID3D11Texture2D** texBackbuffer, unsigned int buff_count);
-        error Create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
+        error create(ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<Graphics::GraphicFormat>& fmt);
 
     protected:

@@ -76,7 +76,7 @@ namespace Enigma::Graphics
         IDeviceDepthStencilState& operator=(const IDeviceDepthStencilState&) = delete;
         IDeviceDepthStencilState& operator=(IDeviceDepthStencilState&&) = delete;
 
-        //virtual void Create(const DepthStencilData& data);
+        //virtual void create(const DepthStencilData& data);
         virtual error CreateFromData(const DepthStencilData& data);
         virtual future_error AsyncCreateFromData(const DepthStencilData& data);
         virtual void Bind();

@@ -27,7 +27,7 @@ namespace Enigma::InputHandlers
         InputHandlerService& operator=(const InputHandlerService&) = delete;
         InputHandlerService& operator=(InputHandlerService&&) = delete;
 
-        //static Frameworks::ISystemService* Create(Frameworks::ServiceManager* mngr);
+        //static Frameworks::ISystemService* create(Frameworks::ServiceManager* mngr);
 
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTick() override;

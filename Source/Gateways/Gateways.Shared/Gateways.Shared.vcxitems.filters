@@ -33,6 +33,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.h">
       <Filter>EffectProfile\Deserializer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoGateway.h">
+      <Filter>DTOs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.cpp">

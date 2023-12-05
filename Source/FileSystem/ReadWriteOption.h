@@ -1,7 +1,7 @@
-/*********************************************************************
+﻿/*********************************************************************
  * \file   ReadWriteOption.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2023
  *********************************************************************/
@@ -15,17 +15,17 @@ namespace Enigma::FileSystem
     using ReadWriteOption = std::bitset<8>;
     enum ReadWriteOptionBits
     {
-        None = 0x00,
-        Read = 0x01,
-        Write = 0x02,
-        OpenAlways = 0x04,
-        Binary = 0x08,
+        none = 0x00,
+        read = 0x01,
+        write = 0x02,
+        openAlways = 0x04,
+        binary = 0x08,
     };
-    constexpr ReadWriteOption ReadWriteOptionNone = None;
-    constexpr ReadWriteOption ReadWriteOptionRead = Read;
-    constexpr ReadWriteOption ReadWriteOptionWrite = Write;
-    constexpr ReadWriteOption ReadWriteOptionOpenAlways = OpenAlways;
-    constexpr ReadWriteOption ReadWriteOptionBinary = Binary;
+    constexpr ReadWriteOption ReadWriteOptionNone = none;
+    constexpr ReadWriteOption ReadWriteOptionRead = read;
+    constexpr ReadWriteOption ReadWriteOptionWrite = write;
+    constexpr ReadWriteOption ReadWriteOptionOpenAlways = openAlways;
+    constexpr ReadWriteOption ReadWriteOptionBinary = binary;
 }
 
 #endif // READ_WRITE_OPTION_H

@@ -45,7 +45,7 @@ ShaderVariableDx11_ConstBuffer::~ShaderVariableDx11_ConstBuffer()
     m_constBuffer = nullptr;
 }
 
-error ShaderVariableDx11_ConstBuffer::Create(const D3D11_SHADER_BUFFER_DESC& cb_desc,
+error ShaderVariableDx11_ConstBuffer::create(const D3D11_SHADER_BUFFER_DESC& cb_desc,
     const std::string& shader_name)
 {
     std::string cb_name = cb_desc.Name;
@@ -598,13 +598,13 @@ error ShaderVariableDx11_Texture::Apply()
 
 future_error ShaderVariableDx11_Texture::AsyncApply()
 {
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), tex = m_texture, idx = m_indexMultiTexture]() -> error { return std::dynamic_pointer_cast<ShaderVariableDx11_Texture, IShaderVariable>(lifetime)->ApplyTexture(tex, idx); });
 }
 
 error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex, std::optional<unsigned> indexMultiTexture)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -693,13 +693,13 @@ error ShaderVariableDx11_Sampler::Apply()
 
 future_error ShaderVariableDx11_Sampler::AsyncApply()
 {
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), samp = m_sampler]() -> error { return std::dynamic_pointer_cast<ShaderVariableDx11_Sampler, IShaderVariable>(lifetime)->ApplySampler(samp); });
 }
 
 error ShaderVariableDx11_Sampler::ApplySampler(const Graphics::IDeviceSamplerStatePtr& sampler)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;

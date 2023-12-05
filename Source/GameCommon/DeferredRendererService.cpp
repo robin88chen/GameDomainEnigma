@@ -391,10 +391,10 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
-    pawn_helper.MeshPrimitive(mesh_dto)
-        .TopLevel(true)
-        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    pawn_helper.meshPrimitive(mesh_dto)
+        .topLevel(true)
+        .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
     auto dtos = { pawn_dto };
@@ -420,10 +420,10 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
-    pawn_helper.MeshPrimitive(mesh_dto)
-        .SpatialFlags(m_configuration->SunLightSpatialFlags()).TopLevel(true)
-        .Factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    pawn_helper.meshPrimitive(mesh_dto)
+        .spatialFlags(m_configuration->SunLightSpatialFlags()).topLevel(true)
+        .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
     auto dtos = { pawn_dto };
@@ -448,9 +448,9 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");
-    pawn_helper.Factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).MeshPrimitive(mesh_dto)
-        .TopLevel(true).LocalTransform(lit->getLocalTransform());
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.ToPawnDto());
+    pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).meshPrimitive(mesh_dto)
+        .topLevel(true).localTransform(lit->getLocalTransform());
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
     auto dtos = { pawn_dto };
@@ -571,7 +571,7 @@ void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::string&
     auto lit_vol = std::dynamic_pointer_cast<LightVolumePawn, LightingPawn>(FindLightingPawn(lit_name));
     if (!lit_vol) return;
     if (m_cameraService.expired()) return;
-    auto camera = m_cameraService.lock()->GetPrimaryCamera();
+    auto camera = m_cameraService.lock()->primaryCamera();
     if (!camera) return;
     CheckLightVolumeBackfaceCulling(lit_vol, camera);
 }

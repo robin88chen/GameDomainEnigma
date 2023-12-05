@@ -88,9 +88,9 @@ void GameSceneService::CreateRootScene(const std::string& scene_root_name, const
         m_sceneRoot->attachChild(m_portalMgtNode, Matrix4::IDENTITY);
     }
 
-    if ((!m_cameraService.expired()) && m_cameraService.lock()->GetPrimaryCamera())
+    if ((!m_cameraService.expired()) && m_cameraService.lock()->primaryCamera())
     {
-        CreateSceneCuller(m_cameraService.lock()->GetPrimaryCamera());
+        CreateSceneCuller(m_cameraService.lock()->primaryCamera());
     }
     EventPublisher::post(std::make_shared<SceneRootCreated>(m_sceneRoot));
     EventPublisher::post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));

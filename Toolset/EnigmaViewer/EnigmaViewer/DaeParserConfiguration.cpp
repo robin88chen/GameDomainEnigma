@@ -14,13 +14,13 @@ using namespace EnigmaViewer;
 
 void DaeParserConfiguration::LoadConfig()
 {
-    const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::Instance()->OpenFile("DaeParser.cfg", Enigma::FileSystem::Read | Enigma::FileSystem::Binary, "");
-    const size_t file_size = iFile->Size();
-    const auto read_buf = iFile->Read(0, file_size);
-    Enigma::FileSystem::FileSystem::Instance()->CloseFile(iFile);
+    const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::instance()->openFile("DaeParser.cfg", Enigma::FileSystem::read | Enigma::FileSystem::binary, "");
+    const size_t file_size = iFile->size();
+    const auto read_buf = iFile->read(0, file_size);
+    Enigma::FileSystem::FileSystem::instance()->closeFile(iFile);
     if (read_buf)
     {
-        const auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+        const auto dtos = std::make_shared<Enigma::Gateways::DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
         m_configDto = dtos[0];
     }
 }

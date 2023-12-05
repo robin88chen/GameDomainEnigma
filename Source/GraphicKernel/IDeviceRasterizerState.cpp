@@ -14,9 +14,9 @@ IDeviceRasterizerState::~IDeviceRasterizerState()
 {
 }
 
-/*void IDeviceRasterizerState::Create(const RasterizerStateData& data)
+/*void IDeviceRasterizerState::create(const RasterizerStateData& data)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncCreateFromData(data);
     }
@@ -28,7 +28,7 @@ IDeviceRasterizerState::~IDeviceRasterizerState()
 
 void IDeviceRasterizerState::Bind()
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncBindToDevice();
     }
@@ -46,12 +46,12 @@ error IDeviceRasterizerState::CreateFromData(const RasterizerStateData& data)
 
 future_error IDeviceRasterizerState::AsyncCreateFromData(const RasterizerStateData& data)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), data, this]() -> error { return CreateFromData(data); });
 }
 
 future_error IDeviceRasterizerState::AsyncBindToDevice()
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this]() -> error { return BindToDevice(); });
 }

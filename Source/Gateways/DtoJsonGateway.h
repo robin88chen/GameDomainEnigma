@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DtoJsonGateway.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -10,17 +10,17 @@
 
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include "GameEngine/GenericDto.h"
+#include "DtoGateway.h"
 #include <vector>
 #include <string>
 
 namespace Enigma::Gateways
 {
-    class DtoJsonGateway
+    class DtoJsonGateway : public IDtoGateway
     {
     public:
-        static Engine::GenericDtoCollection Deserialize(const std::string& json);
-        static std::string Serialize(const Engine::GenericDtoCollection& contracts);
+        Engine::GenericDtoCollection deserialize(const std::string& json) override;
+        std::string serialize(const Engine::GenericDtoCollection& dtos) override;
     };
 }
 

@@ -14,9 +14,9 @@ IDeviceAlphaBlendState::~IDeviceAlphaBlendState()
 {
 }
 
-/*void IDeviceAlphaBlendState::Create(const BlendStateData& data)
+/*void IDeviceAlphaBlendState::create(const BlendStateData& data)
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncCreateFromData(data);
     }
@@ -28,7 +28,7 @@ IDeviceAlphaBlendState::~IDeviceAlphaBlendState()
 
 void IDeviceAlphaBlendState::Bind()
 {
-    if (IGraphicAPI::Instance()->UseAsync())
+    if (IGraphicAPI::instance()->UseAsync())
     {
         AsyncBindToDevice();
     }
@@ -46,12 +46,12 @@ error IDeviceAlphaBlendState::CreateFromData(const BlendStateData& data)
 
 future_error IDeviceAlphaBlendState::AsyncCreateFromData(const BlendStateData& data)
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), data, this]() -> error { return CreateFromData(data); });
 }
 
 future_error IDeviceAlphaBlendState::AsyncBindToDevice()
 {
-    return IGraphicAPI::Instance()->GetGraphicThread()->
+    return IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this]() -> error { return BindToDevice(); });
 }

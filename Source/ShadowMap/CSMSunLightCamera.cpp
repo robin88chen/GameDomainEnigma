@@ -13,7 +13,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(ShadowMap, CSMSunLightCamera, Camera);
 
-CSMSunLightCamera::CSMSunLightCamera(std::string name, unsigned partition) : Camera(name, GraphicCoordSys::LeftHand)
+CSMSunLightCamera::CSMSunLightCamera(const SpatialId& id, unsigned partition) : Camera(id, GraphicCoordSys::LeftHand)
 {
     m_adjustedViewerNearPlane = 0.1f;
     m_adjustedViewerFarPlane = 10.0f;

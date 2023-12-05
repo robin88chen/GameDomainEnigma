@@ -15,6 +15,8 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_ID_NAME = "Id.Name";
+static std::string TOKEN_ID_RTTI = "Id.Rtti";
 static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
 static std::string TOKEN_WORLD_TRANSFORM = "WorldTransform";
@@ -44,6 +46,13 @@ SpatialDto SpatialDto::fromGenericDto(const GenericDto& dto)
     spatial_dto.factoryDesc() = dto.GetRtti();
     spatial_dto.m_isTopLevel = dto.IsTopLevel();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) spatial_dto.name() = v.value();
+    if (auto n = dto.TryGetValue<std::string>(TOKEN_ID_NAME))
+    {
+        if (auto r = dto.TryGetValue<std::string>(TOKEN_ID_RTTI))
+        {
+            spatial_dto.id() = SpatialId(n.value(), Frameworks::Rtti::fromName(r.value()));
+        }
+    }
     if (auto v = dto.TryGetValue<std::string>(TOKEN_PARENT_NAME)) spatial_dto.parentName() = v.value();
     if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) spatial_dto.localTransform() = v.value();
     if (auto v = dto.TryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) spatial_dto.worldTransform() = v.value();
@@ -62,6 +71,8 @@ GenericDto SpatialDto::toGenericDto() const
     dto.AddRtti(m_factoryDesc);
     dto.AsTopLevel(m_isTopLevel);
     dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_ID_NAME, m_id.name());
+    dto.AddOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
     if (!m_parentName.empty()) dto.AddOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
     dto.AddOrUpdate(TOKEN_WORLD_TRANSFORM, m_worldTransform);

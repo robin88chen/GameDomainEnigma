@@ -17,7 +17,7 @@ error GameCameraInstallingPolicy::Install(Frameworks::ServiceManager* service_ma
     auto camera_service = std::make_shared<GameCameraService>(service_manager,
         service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>());
     service_manager->registerSystemService(camera_service);
-    camera_service->CreatePrimaryCamera(m_cameraDto);
+    camera_service->constitutePrimaryCamera(m_cameraId, m_cameraDto);
     return error();
 }
 
@@ -32,7 +32,7 @@ error GameLightInstallingPolicy::Install(Frameworks::ServiceManager* service_man
 {
     assert(service_manager);
     auto light_service = std::make_shared<GameLightService>(service_manager,
-               service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>());
+        service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>());
     service_manager->registerSystemService(light_service);
     return error();
 }
@@ -64,13 +64,13 @@ error GameSceneInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_ma
 
 error AnimatedPawnInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName(),
-        [](auto o) { return new AnimatedPawn(o); }));
+    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName(),
+      //  [](auto o) { return new AnimatedPawn(o); }));
     return error();
 }
 
 error AnimatedPawnInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName()));
     return error();
 }

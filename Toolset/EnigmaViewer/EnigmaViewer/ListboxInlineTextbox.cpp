@@ -27,7 +27,7 @@ void EnigmaViewer::InlineTextBoxItem::create(nana::window wd)
                 //在文本框里按下回车，则修改本项的值
                 arg.ignore = true;
                 m_indicator->modify(m_pos, m_txt.caption());
-                Enigma::Frameworks::EventPublisher::Post(std::make_shared<AnimationClipItemUpdated>(static_cast<unsigned int>(m_pos.cat), static_cast<unsigned int>(m_pos.item), m_prevText, m_txt.caption()));
+                Enigma::Frameworks::EventPublisher::post(std::make_shared<AnimationClipItemUpdated>(static_cast<unsigned int>(m_pos.cat), static_cast<unsigned int>(m_pos.item), m_prevText, m_txt.caption()));
                 m_prevText = m_txt.caption();
             }
         });

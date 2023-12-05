@@ -18,18 +18,18 @@ MeshPrimitiveRay3IntersectionFinder::~MeshPrimitiveRay3IntersectionFinder()
 
 }
 
-PrimitiveRay3IntersectionFinder* MeshPrimitiveRay3IntersectionFinder::Create()
+PrimitiveRay3IntersectionFinder* MeshPrimitiveRay3IntersectionFinder::create()
 {
     return new MeshPrimitiveRay3IntersectionFinder();
 }
 
 void MeshPrimitiveRay3IntersectionFinder::RegisterFactory()
 {
-    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), Create);
+    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), create);
 }
 
 Intersector::Result MeshPrimitiveRay3IntersectionFinder::Test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
-                                                              std::unique_ptr<IntersectorCache> cache) const
+    std::unique_ptr<IntersectorCache> cache) const
 {
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(primitive);
     if (!mesh) return { false, std::move(cache) };

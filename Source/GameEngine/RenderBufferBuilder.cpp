@@ -89,7 +89,7 @@ void RenderBufferBuilder::OnVertexBufferCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->GetBufferName() != m_policy.m_vtxBufferName) return;
 
-    auto buffer = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexBufferPtr>(ev->GetBufferName());
+    auto buffer = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IVertexBufferPtr>(ev->GetBufferName());
     if (!buffer)
     {
         Platforms::Debug::Printf("can't get vertex buffer asset %s", ev->GetBufferName().c_str());
@@ -124,7 +124,7 @@ void RenderBufferBuilder::OnIndexBufferCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->GetBufferName() != m_policy.m_idxBufferName) return;
 
-    auto buffer = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IIndexBufferPtr>(ev->GetBufferName());
+    auto buffer = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IIndexBufferPtr>(ev->GetBufferName());
     if (!buffer)
     {
         Platforms::Debug::Printf("can't get index buffer asset %s", ev->GetBufferName().c_str());
@@ -178,13 +178,13 @@ void RenderBufferBuilder::OnBufferBuilt(const Frameworks::IEventPtr& e)
     if (ev_vtx)
     {
         if (ev_vtx->GetBufferName() != m_policy.m_vtxBufferName) return;
-        m_vertexBuffer = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexBufferPtr>(m_policy.m_vtxBufferName);
+        m_vertexBuffer = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IVertexBufferPtr>(m_policy.m_vtxBufferName);
     }
     auto ev_idx = std::dynamic_pointer_cast<IndexBufferBuilt, Frameworks::IEvent>(e);
     if (ev_idx)
     {
         if (ev_idx->GetBufferName() != m_policy.m_idxBufferName) return;
-        m_indexBuffer = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IIndexBufferPtr>(m_policy.m_idxBufferName);
+        m_indexBuffer = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IIndexBufferPtr>(m_policy.m_idxBufferName);
     }
     if ((m_vertexBuffer) && (m_indexBuffer))
     {

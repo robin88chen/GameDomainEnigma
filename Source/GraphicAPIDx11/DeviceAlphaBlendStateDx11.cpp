@@ -26,7 +26,7 @@ error DeviceAlphaBlendStateDx11::CreateFromData(const BlendStateData& data)
 
     SAFE_RELEASE(m_d3dBlend);
 
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -55,7 +55,7 @@ error DeviceAlphaBlendStateDx11::CreateFromData(const BlendStateData& data)
 
 error DeviceAlphaBlendStateDx11::BindToDevice()
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;

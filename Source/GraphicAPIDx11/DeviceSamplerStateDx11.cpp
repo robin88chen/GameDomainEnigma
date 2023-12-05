@@ -26,7 +26,7 @@ error DeviceSamplerStateDx11::CreateFromData(const SamplerStateData& data)
 
     SAFE_RELEASE(m_d3dSampler);
 
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device)) return ErrorCode::d3dDeviceNullPointer;
@@ -55,7 +55,7 @@ error DeviceSamplerStateDx11::CreateFromData(const SamplerStateData& data)
 
 error DeviceSamplerStateDx11::BindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11DeviceContext* deviceContext = api_dx11->GetD3DDeviceContext();
     if (FATAL_LOG_EXPR(!deviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -78,7 +78,7 @@ error DeviceSamplerStateDx11::BindToShader(Graphics::IShaderVariable::VarOwner v
 
 future_error DeviceSamplerStateDx11::AsyncBindToShader(Graphics::IShaderVariable::VarOwner var_of, unsigned bindPoint)
 {
-    return Graphics::IGraphicAPI::Instance()->GetGraphicThread()->
+    return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this, var_of, bindPoint]()->error
             {
                 return BindToShader(var_of, bindPoint);

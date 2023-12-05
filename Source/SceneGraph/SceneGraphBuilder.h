@@ -68,18 +68,18 @@ namespace Enigma::SceneGraph
 
         void NodeFactory(const Engine::GenericDto& dto);
         void LightFactory(const Engine::GenericDto& dto);
-        void PawnFactory(const Engine::GenericDto& dto);
+        //void PawnFactory(const Engine::GenericDto& dto);
         void PortalFactory(const Engine::GenericDto& dto);
 
         void OnFactoryCreated(const Frameworks::IEventPtr& e);
         void TryCompleteSceneGraphBuilding();
 
-        std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn,
-            const Engine::GenericDto& primitive_dto);
-        void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
+        //std::shared_ptr<Renderer::RenderablePrimitivePolicy> ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn,
+          //  const Engine::GenericDto& primitive_dto);
+        //void BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<Renderer::RenderablePrimitivePolicy>& primitive_policy);
 
-        void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+        //void OnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        //void OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
 
         void DoRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);
         void DoUnRegisteringSpatialFactory(const Frameworks::ICommandPtr& c);

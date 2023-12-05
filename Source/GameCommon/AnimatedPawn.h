@@ -18,8 +18,8 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        AnimatedPawn(const std::string& name);
-        AnimatedPawn(const Engine::GenericDto& o);
+        AnimatedPawn(const SceneGraph::SpatialId& id);
+        AnimatedPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         AnimatedPawn(const AnimatedPawn&) = delete;
         AnimatedPawn(AnimatedPawn&&) = delete;
         virtual ~AnimatedPawn() override;

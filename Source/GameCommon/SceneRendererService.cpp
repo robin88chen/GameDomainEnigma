@@ -101,11 +101,11 @@ void SceneRendererService::Flip()
 void SceneRendererService::AttachCamera()
 {
     if ((m_renderer.expired()) || (m_cameraService.expired())) return;
-    m_renderer.lock()->SetAssociatedCamera(m_cameraService.lock()->GetPrimaryCamera());
+    m_renderer.lock()->SetAssociatedCamera(m_cameraService.lock()->primaryCamera());
     auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
     if ((w > 0) && (h > 0))
     {
-        m_cameraService.lock()->GetPrimaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+        m_cameraService.lock()->primaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
     }
 }
 

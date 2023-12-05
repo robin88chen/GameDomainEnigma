@@ -29,7 +29,7 @@ TextureDx11::~TextureDx11()
 
 error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
@@ -112,7 +112,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
 
 error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
@@ -160,7 +160,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
 
     if (FATAL_LOG_EXPR(!m_d3dTextureResource)) return ErrorCode::nullDxTexture;
 
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
@@ -270,7 +270,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
             m_name, ErrorCode::invalidParameter));
         return ErrorCode::invalidParameter;
     }
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
@@ -373,7 +373,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
 error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
 {
     assert(file);
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))
@@ -415,8 +415,8 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     }
 
     DirectX::Blob blob;
-    FileSystem::Filename filename(file->GetFullPath());
-    if (filename.GetExt() == ".png")
+    FileSystem::Filename filename(file->getFullPath());
+    if (filename.getExt() == ".png")
     {
         const DirectX::Image* img = resultImage.GetImage(0, 0, 0);
         hr = DirectX::SaveToWICMemory(*img, DirectX::WIC_FLAGS_NONE, GetWICCodec(DirectX::WIC_CODEC_PNG), blob);
@@ -433,7 +433,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
         return ErrorCode::dxSaveTexture;
     }
     byte_buffer write_buff = make_data_buffer(static_cast<unsigned char*>(blob.GetBufferPointer()), blob.GetBufferSize());
-    size_t write_bytes = file->Write(0, write_buff);
+    size_t write_bytes = file->write(0, write_buff);
     if (write_bytes != write_buff.size())
     {
         Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceSaveImageFailed>(
@@ -441,13 +441,13 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
         return ErrorCode::saveTextureFile;
     }
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageSaved>(m_name, file->GetFullPath()));
+    Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageSaved>(m_name, file->getFullPath()));
     return ErrorCode::ok;
 }
 
 error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
-    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
     ID3D11Device* device = api_dx11->GetD3DDevice();
     if (FATAL_LOG_EXPR(!device))

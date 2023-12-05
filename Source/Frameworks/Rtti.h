@@ -67,8 +67,8 @@ namespace Enigma::Frameworks
     {
     public:
         Rtti() : m_base(nullptr) {}
-        Rtti(const std::string& name);
-        Rtti(const std::string& name, const Rtti* base_rtti);
+        explicit Rtti(const std::string& name);
+        explicit Rtti(const std::string& name, const Rtti* base_rtti);
         Rtti(const Rtti& rhs) = delete;
         Rtti(Rtti&& rhs) = delete;
         ~Rtti() = default;
@@ -76,6 +76,8 @@ namespace Enigma::Frameworks
         Rtti& operator=(const Rtti& rhs) = delete;
         Rtti& operator=(Rtti&& rhs) = delete;
         bool operator==(const Rtti& rhs) const;
+
+        static const Rtti& fromName(const std::string& name);
 
         const std::string& getName() const;
 

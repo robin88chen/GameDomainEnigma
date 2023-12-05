@@ -7,49 +7,49 @@ using namespace Enigma::SceneGraph;
 
 CameraDtoHelper::CameraDtoHelper(const std::string& name)
 {
-    m_cameraDto.Name() = name;
+    m_cameraDto.id() = SpatialId(name, Camera::TYPE_RTTI);
     m_cameraDto.HandSystem() = GraphicCoordSys::LeftHand;
 }
 
-CameraDtoHelper& CameraDtoHelper::EyePosition(const MathLib::Vector3& eye_position)
+CameraDtoHelper& CameraDtoHelper::eyePosition(const MathLib::Vector3& eye_position)
 {
     m_cameraDto.EyePosition() = eye_position;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::LookAt(const MathLib::Vector3& look_at)
+CameraDtoHelper& CameraDtoHelper::lookAt(const MathLib::Vector3& look_at)
 {
     m_cameraDto.LookAtDirection() = look_at;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::UpDirection(const MathLib::Vector3& up_direction)
+CameraDtoHelper& CameraDtoHelper::upDirection(const MathLib::Vector3& up_direction)
 {
     m_cameraDto.UpVector() = up_direction;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::Frustum(Frustum::ProjectionType projection_type)
+CameraDtoHelper& CameraDtoHelper::frustum(Frustum::ProjectionType projection_type)
 {
     m_frustumDto.HandSystem() = GraphicCoordSys::LeftHand;
     m_frustumDto.ProjectionType() = projection_type;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::FrustumFrontBackZ(float front_z, float back_z)
+CameraDtoHelper& CameraDtoHelper::frustumFrontBackZ(float front_z, float back_z)
 {
     m_frustumDto.NearPlaneZ() = front_z;
     m_frustumDto.FarPlaneZ() = back_z;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::FrustumFov(float fov)
+CameraDtoHelper& CameraDtoHelper::frustumFov(float fov)
 {
     m_frustumDto.Fov() = fov;
     return *this;
 }
 
-CameraDtoHelper& CameraDtoHelper::FrustumNearPlaneDimension(float width, float height)
+CameraDtoHelper& CameraDtoHelper::frustumNearPlaneDimension(float width, float height)
 {
     m_frustumDto.NearWidth() = width;
     m_frustumDto.NearHeight() = height;
@@ -57,7 +57,7 @@ CameraDtoHelper& CameraDtoHelper::FrustumNearPlaneDimension(float width, float h
     return *this;
 }
 
-CameraDto CameraDtoHelper::ToCameraDto()
+CameraDto CameraDtoHelper::toCameraDto()
 {
     m_cameraDto.Frustum() = m_frustumDto.toGenericDto();
     return m_cameraDto;
@@ -71,6 +71,7 @@ Enigma::Engine::GenericDto CameraDtoHelper::toGenericDto()
 
 SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
 {
+    m_dto.id() = SpatialId(name, Spatial::TYPE_RTTI);
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
     m_dto.name() = name;
@@ -85,20 +86,20 @@ SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
     m_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
 }
 
-SpatialDtoHelper& SpatialDtoHelper::LocalTransform(const MathLib::Matrix4& local_transform)
+SpatialDtoHelper& SpatialDtoHelper::localTransform(const MathLib::Matrix4& local_transform)
 {
     m_dto.localTransform() = local_transform;
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
+SpatialDtoHelper& SpatialDtoHelper::worldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.worldTransform() = world_transform;
     m_dto.worldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto();
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
+SpatialDtoHelper& SpatialDtoHelper::modelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
     m_dto.modelBound() = m_modelBound.serializeDto().toGenericDto();
@@ -106,31 +107,31 @@ SpatialDtoHelper& SpatialDtoHelper::ModelBound(const Engine::BoundingVolume& mod
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::GraphDepth(unsigned graph_depth)
+SpatialDtoHelper& SpatialDtoHelper::graphDepth(unsigned graph_depth)
 {
     m_dto.graphDepth() = graph_depth;
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::CullingMode(Spatial::CullingMode culling_mode)
+SpatialDtoHelper& SpatialDtoHelper::cullingMode(Spatial::CullingMode culling_mode)
 {
     m_dto.cullingMode() = static_cast<unsigned>(culling_mode);
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::NotifyFlags(Spatial::NotifyFlags notify_flag)
+SpatialDtoHelper& SpatialDtoHelper::notifyFlags(Spatial::NotifyFlags notify_flag)
 {
     m_dto.notifyFlag() = static_cast<unsigned>(notify_flag.to_ullong());
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::TopLevel(bool top_level)
+SpatialDtoHelper& SpatialDtoHelper::topLevel(bool top_level)
 {
     m_dto.isTopLevel() = top_level;
     return *this;
 }
 
-SpatialDtoHelper& SpatialDtoHelper::SpatialFlags(Spatial::SpatialFlags spatial_flag)
+SpatialDtoHelper& SpatialDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
 {
     m_dto.spatialFlag() = static_cast<unsigned>(spatial_flag.to_ullong());
     return *this;
@@ -143,6 +144,7 @@ Enigma::Engine::GenericDto SpatialDtoHelper::toGenericDto()
 
 PawnDtoHelper::PawnDtoHelper(const std::string& name)
 {
+    m_dto.id() = SpatialId(name, Pawn::TYPE_RTTI);
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_dto.name() = name;
@@ -157,26 +159,27 @@ PawnDtoHelper::PawnDtoHelper(const std::string& name)
     m_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
 }
 
-PawnDtoHelper& PawnDtoHelper::Factory(const Engine::FactoryDesc& factory)
+PawnDtoHelper& PawnDtoHelper::factory(const Engine::FactoryDesc& factory)
 {
     m_dto.factoryDesc() = factory;
+    m_dto.id() = SpatialId(m_dto.name(), Frameworks::Rtti::fromName(factory.GetRttiName()));
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::LocalTransform(const MathLib::Matrix4& local_transform)
+PawnDtoHelper& PawnDtoHelper::localTransform(const MathLib::Matrix4& local_transform)
 {
     m_dto.localTransform() = local_transform;
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
+PawnDtoHelper& PawnDtoHelper::worldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.worldTransform() = world_transform;
     m_dto.worldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto();
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
+PawnDtoHelper& PawnDtoHelper::modelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
     m_dto.modelBound() = m_modelBound.serializeDto().toGenericDto();
@@ -184,43 +187,43 @@ PawnDtoHelper& PawnDtoHelper::ModelBound(const Engine::BoundingVolume& model_bou
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::GraphDepth(unsigned graph_depth)
+PawnDtoHelper& PawnDtoHelper::graphDepth(unsigned graph_depth)
 {
     m_dto.graphDepth() = graph_depth;
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::CullingMode(Spatial::CullingMode culling_mode)
+PawnDtoHelper& PawnDtoHelper::cullingMode(Spatial::CullingMode culling_mode)
 {
     m_dto.cullingMode() = static_cast<unsigned>(culling_mode);
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::NotifyFlags(Spatial::NotifyFlags notify_flag)
+PawnDtoHelper& PawnDtoHelper::notifyFlags(Spatial::NotifyFlags notify_flag)
 {
     m_dto.notifyFlag() = static_cast<unsigned>(notify_flag.to_ullong());
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::TopLevel(bool top_level)
+PawnDtoHelper& PawnDtoHelper::topLevel(bool top_level)
 {
     m_dto.isTopLevel() = top_level;
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::SpatialFlags(Spatial::SpatialFlags spatial_flag)
+PawnDtoHelper& PawnDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
 {
     m_dto.spatialFlag() = static_cast<unsigned>(spatial_flag.to_ullong());
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::MeshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto)
+PawnDtoHelper& PawnDtoHelper::meshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto)
 {
     m_dto.primitive() = mesh_dto.toGenericDto();
     return *this;
 }
 
-PawnDto PawnDtoHelper::ToPawnDto()
+PawnDto PawnDtoHelper::toPawnDto()
 {
     return m_dto;
 }

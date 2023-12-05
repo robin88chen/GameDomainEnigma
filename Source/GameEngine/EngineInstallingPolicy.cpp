@@ -33,7 +33,7 @@ error EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manag
     service_manager->shutdownSystemService(TimerService::TYPE_RTTI);
     service_manager->shutdownSystemService(RenderBufferRepository::TYPE_RTTI);
     service_manager->shutdownSystemService(TextureRepository::TYPE_RTTI);
-    delete MaterialVariableMap::Instance();
+    delete MaterialVariableMap::instance();
     service_manager->shutdownSystemService(EffectMaterialManager::TYPE_RTTI);
     service_manager->shutdownSystemService(ShaderRepository::TYPE_RTTI);
     service_manager->shutdownSystemService(GeometryRepository::TYPE_RTTI);

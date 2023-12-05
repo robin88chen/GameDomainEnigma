@@ -22,14 +22,14 @@ VertexBufferDx11::~VertexBufferDx11()
     SAFE_RELEASE(m_d3dBuffer);
 }
 
-error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
+error VertexBufferDx11::create(unsigned sizeofVertex, unsigned sizeBuffer)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     m_sizeofVertex = sizeofVertex;
     m_bufferSize = sizeBuffer;
     assert(m_bufferSize > 0);
 
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
 
@@ -49,7 +49,7 @@ error VertexBufferDx11::Create(unsigned sizeofVertex, unsigned sizeBuffer)
 
 error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataVertex.empty());
     if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize))
     {
@@ -57,7 +57,7 @@ error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
         return ErrorCode::bufferSize;
     }
 
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {
@@ -74,14 +74,14 @@ error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
 
 error VertexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
     if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize))
     {
         Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {

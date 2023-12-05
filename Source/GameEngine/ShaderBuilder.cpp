@@ -123,7 +123,7 @@ void ShaderBuilder::OnVertexShaderCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getName() != m_policy.m_vtxShaderName) return;
 
-    auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->getName());
+    auto shader = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->getName());
     if (!shader)
     {
         Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->getName().c_str());
@@ -140,7 +140,7 @@ void ShaderBuilder::OnVertexShaderCompiled(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::VertexShaderCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetShaderName() != m_policy.m_vtxShaderName) return;
-    auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->GetShaderName());
+    auto shader = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IVertexShaderPtr>(ev->GetShaderName());
     if (!shader)
     {
         Platforms::Debug::Printf("can't get vertex shader asset %s\n", ev->GetShaderName().c_str());
@@ -166,7 +166,7 @@ void ShaderBuilder::OnVertexLayoutCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getName() != m_policy.m_vtxLayoutName) return;
 
-    auto layout = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IVertexDeclarationPtr>(ev->getName());
+    auto layout = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IVertexDeclarationPtr>(ev->getName());
     if (!layout)
     {
         Platforms::Debug::Printf("can't get vertex layout asset %s\n", ev->getName().c_str());
@@ -184,7 +184,7 @@ void ShaderBuilder::OnPixelShaderCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getName() != m_policy.m_pixShaderName) return;
 
-    auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->getName());
+    auto shader = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->getName());
     if (!shader)
     {
         Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->getName().c_str());
@@ -202,7 +202,7 @@ void ShaderBuilder::OnPixelShaderCompiled(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::PixelShaderCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->GetShaderName() != m_policy.m_pixShaderName) return;
-    auto shader = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->GetShaderName());
+    auto shader = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IPixelShaderPtr>(ev->GetShaderName());
     if (!shader)
     {
         Platforms::Debug::Printf("can't get pixel shader asset %s\n", ev->GetShaderName().c_str());
@@ -245,7 +245,7 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
         }
         else
         {
-            m_vtxShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexShaderPtr>(m_policy.m_vtxShaderName);
+            m_vtxShader = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IVertexShaderPtr>(m_policy.m_vtxShaderName);
         }
         if (m_hostRepository->HasVertexLayout(m_policy.m_vtxLayoutName))
         {
@@ -253,7 +253,7 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
         }
         else
         {
-            m_layout = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IVertexDeclarationPtr>(m_policy.m_vtxLayoutName);
+            m_layout = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IVertexDeclarationPtr>(m_policy.m_vtxLayoutName);
         }
     }
     auto ev_pix = std::dynamic_pointer_cast<PixelShaderBuilt, Frameworks::IEvent>(e);
@@ -266,7 +266,7 @@ void ShaderBuilder::OnShaderBuilt(const Frameworks::IEventPtr& e)
         }
         else
         {
-            m_pixShader = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IPixelShaderPtr>(m_policy.m_pixShaderName);
+            m_pixShader = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IPixelShaderPtr>(m_policy.m_pixShaderName);
         }
     }
     if ((m_vtxShader) && (m_pixShader))
@@ -282,7 +282,7 @@ void ShaderBuilder::OnShaderProgramCreated(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Graphics::DeviceShaderProgramCreated, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->getName() != m_policy.m_programName) return;
-    auto program = Graphics::IGraphicAPI::Instance()->TryFindGraphicAsset<Graphics::IShaderProgramPtr>(ev->getName());
+    auto program = Graphics::IGraphicAPI::instance()->TryFindGraphicAsset<Graphics::IShaderProgramPtr>(ev->getName());
     if (!program)
     {
         Platforms::Debug::Printf("can't get shader program asset %s\n", ev->getName().c_str());
@@ -290,7 +290,7 @@ void ShaderBuilder::OnShaderProgramCreated(const Frameworks::IEventPtr& e)
             m_policy.m_programName, ErrorCode::findStashedAssetFail));
         return;
     }
-    m_program = Graphics::IGraphicAPI::Instance()->GetGraphicAsset<Graphics::IShaderProgramPtr>(m_policy.m_programName);
+    m_program = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IShaderProgramPtr>(m_policy.m_programName);
     Frameworks::EventPublisher::post(std::make_shared<ShaderProgramBuilt>(m_policy.m_programName));
 }
 

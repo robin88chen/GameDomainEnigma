@@ -21,12 +21,12 @@ IndexBufferDx11::~IndexBufferDx11()
     SAFE_RELEASE(m_d3dBuffer);
 }
 
-error IndexBufferDx11::Create(unsigned sizeBuffer)
+error IndexBufferDx11::create(unsigned sizeBuffer)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     m_bufferSize = sizeBuffer;
     assert(m_bufferSize > 0);
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
 
@@ -47,7 +47,7 @@ error IndexBufferDx11::Create(unsigned sizeBuffer)
 
 error IndexBufferDx11::UpdateBuffer(const uint_buffer& dataIndex)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!dataIndex.empty());
     unsigned int dataSize = static_cast<unsigned int>(dataIndex.size()) * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
@@ -56,7 +56,7 @@ error IndexBufferDx11::UpdateBuffer(const uint_buffer& dataIndex)
         return ErrorCode::bufferSize;
     }
 
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {
@@ -73,7 +73,7 @@ error IndexBufferDx11::UpdateBuffer(const uint_buffer& dataIndex)
 
 error IndexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
 {
-    assert(Graphics::IGraphicAPI::Instance()->IsValidGraphicThread(std::this_thread::get_id()));
+    assert(Graphics::IGraphicAPI::instance()->IsValidGraphicThread(std::this_thread::get_id()));
     assert(!buffer.data.empty());
     unsigned int dataSize = static_cast<unsigned int>(buffer.data.size()) * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
@@ -82,7 +82,7 @@ error IndexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
         return ErrorCode::bufferSize;
     }
 
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {

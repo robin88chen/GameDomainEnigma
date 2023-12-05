@@ -27,7 +27,7 @@ namespace Enigma::Devices
         VertexBufferEgl& operator=(const VertexBufferEgl&) = delete;
         VertexBufferEgl& operator=(VertexBufferEgl&&) = delete;
 
-        virtual error Create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
+        virtual error create(unsigned int sizeofVertex, unsigned int sizeBuffer) override;
 
         GLuint GetBufferHandle() const { return m_bufferHandle; }
     protected:

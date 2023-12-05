@@ -1,7 +1,7 @@
 ﻿/*****************************************************************//**
  * \file   Filename.h
- * \brief  
- * 
+ * \brief
+ *
  * \author jongb
  * \date   September 2022
  *********************************************************************/
@@ -10,7 +10,7 @@
 
 #include <cstdlib>
 #include <string>
-/** @file Filename.h */
+ /** @file Filename.h */
 
 namespace Enigma::FileSystem
 {
@@ -26,43 +26,43 @@ namespace Enigma::FileSystem
         /** Contains the path of directories, not including the drive designator or the actual file name.
         The trailing slash is optional, and either a forward slash (/) or a backslash (\) or both might be used in a single dir argument.
         If a trailing slash (/ or \) is not specified, it is inserted automatically. */
-        void SetDir(const std::string& dir);
+        void setDir(const std::string& dir);
 
         /** Contains a letter (A, B, and so on) corresponding to the desired drive and an optional trailing colon.
         inserts the colon automatically in the composite path if it is missing. */
-        void SetDrive(const std::string& drive);
+        void setDrive(const std::string& drive);
 
         /** Contains the actual file name extension, with or without a leading period (.).
         inserts the period automatically if it does not appear in ext. */
-        void SetExt(const std::string& ext);
+        void setExt(const std::string& ext);
 
         /** Contains the base file name without any extensions.  */
-        void SetBaseFileName(const std::string& fname);
+        void setBaseFileName(const std::string& fname);
 
         /** Contains the file name with extensions.  */
-        void SetFileName(const std::string& filename);
+        void setFileName(const std::string& filename);
 
         /** The mount path id */
-        void SetMountPathID(const std::string& path_id);
+        void setMountPathId(const std::string& path_id);
 
-        const std::string& GetDir() const;  ///< Optional directory path, including trailing slash. Forward slashes ( / ), backslashes ( \ ), or both may be used.
-        const std::string& GetDrive() const; ///< Optional drive letter, followed by a colon (:)
-        const std::string& GetExt() const; ///< Optional filename extension, including leading period (.)
-        const std::string& GetBaseFileName() const; ///< Base filename (no extension)
-        const std::string& GetFileName() const; ///< filename (with extension)
+        const std::string& getDir() const;  ///< Optional directory path, including trailing slash. Forward slashes ( / ), backslashes ( \ ), or both may be used.
+        const std::string& getDrive() const; ///< Optional drive letter, followed by a colon (:)
+        const std::string& getExt() const; ///< Optional filename extension, including leading period (.)
+        const std::string& getBaseFileName() const; ///< Base filename (no extension)
+        const std::string& getFileName() const; ///< filename (with extension)
 
-        std::string GetFullPath() const;
-        std::string GetPath() const;  ///< get file path, like : "C:\Game\Media\"
-        const std::string& GetMountPathID() const; ///< get mount path ID
-        std::string GetFullFileNameAtPath() const; ///< return "fullpath@path_id"
-        std::string GetFileNameAtPath() const; ///< return "filename(with extension)@path_id"
-        const std::string& GetSubPathFileName() const; ///< return the filepath when using filepath constructor, 必須提供這個, 否則跟PathID 組合後, 子目錄路徑會被組合掉
-        std::string GetSubPathFileNameAtPath() const;
+        std::string getFullPath() const;
+        std::string getPath() const;  ///< get file path, like : "C:\Game\Media\"
+        const std::string& getMountPathId() const; ///< get mount path ID
+        std::string getFullFileNameAtPath() const; ///< return "fullpath@path_id"
+        std::string getFileNameAtPath() const; ///< return "filename(with extension)@path_id"
+        const std::string& getSubPathFileName() const; ///< return the filepath when using filepath constructor, 必須提供這個, 否則跟PathID 組合後, 子目錄路徑會被組合掉
+        std::string getSubPathFileNameAtPath() const;
 
-        bool HasPathID() const;
+        bool hasPathId() const;
 
     private:
-        void SplitPath(const std::string& str);
+        void splitPath(const std::string& str);
 
     private:
         std::string m_dir;

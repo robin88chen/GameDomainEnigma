@@ -8,7 +8,6 @@
 #include "MathLib/MathGlobal.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "SceneGraph/CameraFrustumCommands.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 #include <memory>
@@ -20,9 +19,8 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
-Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.getName())
+Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.getName()), m_id(id)
 {
-    m_name = name;
     m_handSys = hand;
     m_cullingFrustum = Frustum::fromPerspective(hand, MathLib::Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
     m_vecLocation = Vector3::ZERO;
@@ -31,10 +29,9 @@ Camera::Camera(const std::string& name, GraphicCoordSys hand) : m_factoryDesc(Ca
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const GenericDto& dto) : m_factoryDesc(dto.GetRtti())
+Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.GetRtti()), m_id(id)
 {
     CameraDto camera_dto = CameraDto::fromGenericDto(dto);
-    m_name = camera_dto.Name();
     m_handSys = camera_dto.HandSystem();
     changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
     m_cullingFrustum = Frustum(camera_dto.Frustum());
@@ -48,13 +45,15 @@ GenericDto Camera::serializeDto()
 {
     CameraDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.Name() = m_name;
+    dto.id() = m_id;
     dto.HandSystem() = m_handSys;
     dto.EyePosition() = m_vecLocation;
     dto.LookAtDirection() = m_vecEyeToLookAt;
     dto.UpVector() = m_vecUp;
     dto.Frustum() = m_cullingFrustum.serializeDto();
-    return dto.toGenericDto();
+    GenericDto generic_dto = dto.toGenericDto();
+    generic_dto.AddName(m_id.name());
+    return generic_dto;
 }
 
 error Camera::changeCameraFrame(const std::optional<Vector3>& eye,

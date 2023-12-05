@@ -97,7 +97,7 @@ static rapidjson::Value SerializeVector3Array(const std::vector<Vector3>& vecs, 
 static rapidjson::Value SerializeVector4Array(const std::vector<Vector4>& vecs, rapidjson::MemoryPoolAllocator<>& allocator);
 static rapidjson::Value SerializeMatrix4Array(const std::vector<Matrix4>& mxs, rapidjson::MemoryPoolAllocator<>& allocator);
 
-GenericDtoCollection DtoJsonGateway::Deserialize(const std::string& json)
+GenericDtoCollection DtoJsonGateway::deserialize(const std::string& json)
 {
     GenericDtoCollection dtos;
     rapidjson::Document json_doc;
@@ -122,7 +122,7 @@ GenericDtoCollection DtoJsonGateway::Deserialize(const std::string& json)
     return dtos;
 }
 
-std::string DtoJsonGateway::Serialize(const GenericDtoCollection& dtos)
+std::string DtoJsonGateway::serialize(const GenericDtoCollection& dtos)
 {
     if (dtos.empty()) return "";
     rapidjson::Document json_doc;

@@ -77,7 +77,7 @@ namespace Enigma::Graphics
         IGraphicAPI& operator=(const IGraphicAPI&) = delete;
         IGraphicAPI& operator=(IGraphicAPI&&) = delete;
 
-        static IGraphicAPI* Instance();
+        static IGraphicAPI* instance();
 
         APIVersion GetAPIVersion() { return m_apiVersion; }
 

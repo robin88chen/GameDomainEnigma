@@ -33,19 +33,19 @@ AndroidAsset::~AndroidAsset()
     close();
 }
 
-std::optional<std::vector<unsigned char>> AndroidAsset::Read(size_t offset, size_t size_request)
+std::optional<std::vector<unsigned char>> AndroidAsset::read(size_t offset, size_t size_request)
 {
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset,  std::this_thread::get_id());
     if (!m_aasset)
     {
-        MakeErrorCode(ErrorCode::nullAndroidAsset);
+        makeErrorCode(ErrorCode::nullAndroidAsset);
         return std::nullopt;
     }
     size_t file_length = AAsset_getLength(m_aasset);
     if (offset > file_length)
     {
-        MakeErrorCode(ErrorCode::readOffsetError);
+        makeErrorCode(ErrorCode::readOffsetError);
         return std::nullopt;
     }
     if (offset + size_request > file_length) size_request = file_length - offset;
@@ -53,7 +53,7 @@ std::optional<std::vector<unsigned char>> AndroidAsset::Read(size_t offset, size
     off_t sp = AAsset_seek(m_aasset, offset, SEEK_SET);
     if (sp == (off_t)-1)
     {
-        MakeErrorCode(ErrorCode::readOffsetError);
+        makeErrorCode(ErrorCode::readOffsetError);
         return std::nullopt;
     }
     std::vector<unsigned char> out_buff;
@@ -61,31 +61,31 @@ std::optional<std::vector<unsigned char>> AndroidAsset::Read(size_t offset, size
     int read_bytes = AAsset_read(m_aasset, &out_buff[0], size_request);
     if (read_bytes < 0)
     {
-        MakeErrorCode(ErrorCode::readFail);
+        makeErrorCode(ErrorCode::readFail);
         return std::nullopt;
     }
 
     return out_buff;
 }
 
-size_t AndroidAsset::Write(size_t offset, const std::vector<unsigned char>& in_buff)
+size_t AndroidAsset::write(size_t offset, const std::vector<unsigned char>& in_buff)
 {
     assert(!"Write not supported on android asset");
     return 0;
 }
 
-size_t AndroidAsset::Size()
+size_t AndroidAsset::size()
 {
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     if (!m_aasset)
     {
-        MakeErrorCode(ErrorCode::nullAndroidAsset);
+        makeErrorCode(ErrorCode::nullAndroidAsset);
         return 0;
     }
     return (size_t)AAsset_getLength(m_aasset);
 }
 
-bool AndroidAsset::IsExisted()
+bool AndroidAsset::isExisted()
 {
     if (!AndroidBridge::GetAAssetManager()) return false;
     if (m_filename.length() == 0) return false;

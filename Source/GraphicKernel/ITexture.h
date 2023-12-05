@@ -49,7 +49,7 @@ namespace Enigma::Graphics
         virtual void Save(const FileSystem::IFilePtr& file);
         virtual void Save(const std::string& filename, const std::string& pathid);
 
-        virtual void Create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
+        virtual void create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
 
         virtual void Retrieve(const MathLib::Rect& rcSrc);
         virtual void update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);

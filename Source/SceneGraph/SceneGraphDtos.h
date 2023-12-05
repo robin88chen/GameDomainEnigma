@@ -13,6 +13,7 @@
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "GameEngine/GenericDto.h"
+#include "SpatialId.h"
 #include <string>
 #include <vector>
 #include <optional>
@@ -33,6 +34,8 @@ namespace Enigma::SceneGraph
         bool& isTopLevel() { return m_isTopLevel; }
         const std::string& name() const { return m_name; }
         std::string& name() { return m_name; }
+        SpatialId& id() { return m_id; }
+        [[nodiscard]] const SpatialId& id() const { return m_id; }
         const std::string& parentName() const { return m_parentName; }
         std::string& parentName() { return m_parentName; }
         [[nodiscard]] MathLib::Matrix4 localTransform() const { return m_localTransform; }
@@ -59,6 +62,7 @@ namespace Enigma::SceneGraph
         Engine::FactoryDesc m_factoryDesc;
         bool m_isTopLevel;
         std::string m_name;
+        SpatialId m_id;
         std::string m_parentName;
         MathLib::Matrix4 m_localTransform;
         MathLib::Matrix4 m_worldTransform;

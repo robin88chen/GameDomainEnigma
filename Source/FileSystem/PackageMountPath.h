@@ -28,11 +28,11 @@ namespace Enigma::FileSystem
 
         virtual ~PackageMountPath();
 
-        virtual IFile* CreateFile(const std::string& filename, const ReadWriteOption& rw_option) override;
+        virtual IFile* createFile(const std::string& filename, const ReadWriteOption& rw_option) override;
 
-        virtual bool EqualMountPath(IMountPath* path) override;
-        virtual bool EqualMountPath(const std::filesystem::path& path) override;
-        virtual bool EqualMouthPath(const std::string& path) override;
+        virtual bool equalMountPath(IMountPath* path) override;
+        virtual bool equalMountPath(const std::filesystem::path& path) override;
+        virtual bool equalMountPath(const std::string& path) override;
 
     protected:
         std::shared_ptr<AssetPackage::AssetPackageFile> m_assetPackage;

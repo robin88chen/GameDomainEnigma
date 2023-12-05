@@ -29,15 +29,15 @@ namespace Enigma::Engine
             : m_jobType(JobType::Load), m_name(name), m_filename(filename), m_pathId(path_id), m_surfaceCount(1) {};
         TexturePolicy(const std::string& name, const FileSystem::Filename& filename) : m_jobType(JobType::Load), m_name(name), m_surfaceCount(1)
         {
-            m_filename = filename.GetSubPathFileName();
-            m_pathId = filename.GetMountPathID();
+            m_filename = filename.getSubPathFileName();
+            m_pathId = filename.getMountPathId();
         };
         TexturePolicy(const std::string& name, const MathLib::Dimension<unsigned>& dimension, unsigned surface_count)
             : m_jobType(JobType::Create), m_name(name), m_dimension(dimension), m_surfaceCount(surface_count) {};
 
         const std::string& getName() const { return m_name; };
-        const std::string& GetFileName() const { return m_filename; };
-        const std::string& GetPathID() const { return m_pathId; };
+        const std::string& getFileName() const { return m_filename; };
+        const std::string& getPathId() const { return m_pathId; };
         const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };
         const JobType& GetJobType() const { return m_jobType; };
         const unsigned& GetSurfaceCount() const { return m_surfaceCount; };

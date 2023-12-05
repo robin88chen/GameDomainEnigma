@@ -61,7 +61,7 @@ void ApplicationBridge::OnBridgeDestroy()
 
 void ApplicationBridge::OnRendererSurfaceCreate(int width, int height, int* attribs)
 {
-    GraphicAPIEgl* graphic = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIEgl* graphic = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (!graphic)
     {
         Debug::ErrorPrintf("GraphicAPI EGL cast fail");
@@ -77,7 +77,7 @@ void ApplicationBridge::OnRendererSurfaceCreate(int width, int height, int* attr
 
 void ApplicationBridge::OnRendererSurfaceSizeChanged(int width, int height)
 {
-    GraphicAPIEgl* graphic = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIEgl* graphic = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (!graphic)
     {
         Debug::ErrorPrintf("GraphicAPI EGL cast fail");
@@ -92,9 +92,9 @@ void ApplicationBridge::OnRendererSurfaceSizeChanged(int width, int height)
 
 void ApplicationBridge::OnRendererDrawFrame()
 {
-    if (AppDelegate::Instance())
+    if (AppDelegate::instance())
     {
-        AppDelegate::Instance()->FrameUpdate();
+        AppDelegate::instance()->FrameUpdate();
     }
     if (m_onFrameUpdate)
     {

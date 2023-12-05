@@ -25,7 +25,7 @@ namespace Enigma::Application
         AppDelegate(const std::string app_name);
         virtual ~AppDelegate();
 
-        static AppDelegate* Instance() { return m_instance; };
+        static AppDelegate* instance() { return m_instance; };
 
         virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
                                 const std::string & log_filename = "");
@@ -50,7 +50,7 @@ namespace Enigma::Application
             WPARAM wParam, LPARAM lParam);
 
         void RegisterAppClass();
-        void Create();
+        void create();
         void Destroy();
 
         /// Processing Message

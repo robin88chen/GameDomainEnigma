@@ -10,6 +10,7 @@
 
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
+#include "SpatialId.h"
 #include <string>
 #include <vector>
 
@@ -105,6 +106,28 @@ namespace Enigma::SceneGraph
     protected:
         std::string m_name;
         Engine::FactoryDesc m_factory_desc;
+    };
+    class CreatePawn : public Frameworks::ICommand
+    {
+    public:
+        CreatePawn(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class ConstitutePawn : public Frameworks::ICommand
+    {
+    public:
+        ConstitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos) : m_id(id), m_dtos(dtos) {}
+
+        const SpatialId& id() { return m_id; }
+        const Engine::GenericDtoCollection& dtos() { return m_dtos; }
+
+    protected:
+        SpatialId m_id;
+        Engine::GenericDtoCollection m_dtos;
     };
 }
 

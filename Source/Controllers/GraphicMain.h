@@ -29,7 +29,7 @@ namespace Enigma::Controllers
         GraphicMain& operator=(GraphicMain&&) = delete;
 
         /** get singleton instance */
-        static GraphicMain* Instance();
+        static GraphicMain* instance();
 
         error InstallFrameworks();
         error ShutdownFrameworks();

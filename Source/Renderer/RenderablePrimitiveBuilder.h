@@ -27,7 +27,7 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr);
+        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder(RenderablePrimitiveBuilder&&) = delete;
         ~RenderablePrimitiveBuilder() override;
@@ -38,7 +38,7 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error buildPrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        error buildPrimitive(const Frameworks::Ruid& requester_ruid, const Engine::GenericDto& dto);
 
     protected:
         void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
@@ -49,6 +49,7 @@ namespace Enigma::Renderer
         void buildPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
+        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
         std::mutex m_policiesLock;
         bool m_isCurrentBuilding;

@@ -36,7 +36,7 @@ VertexShaderDx11::~VertexShaderDx11()
 
 error VertexShaderDx11::CompileCode(const std::string& code, const std::string& profile, const std::string& entry)
 {
-    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::Instance());
+    GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice())) return ErrorCode::d3dDeviceNullPointer;
 

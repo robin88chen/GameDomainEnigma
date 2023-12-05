@@ -333,7 +333,7 @@ error GraphicAPIDx11::CreateVertexBuffer(const std::string& buff_name, unsigned 
 {
     Platforms::Debug::Printf("create vertex buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IVertexBufferPtr buff = Graphics::IVertexBufferPtr{ menew VertexBufferDx11{ buff_name } };
-    buff->Create(sizeofVertex, sizeBuffer);
+    buff->create(sizeofVertex, sizeBuffer);
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
@@ -344,7 +344,7 @@ error GraphicAPIDx11::CreateIndexBuffer(const std::string& buff_name, unsigned i
 {
     Platforms::Debug::Printf("create index buffer in thread %d\n", std::this_thread::get_id());
     Graphics::IIndexBufferPtr buff = Graphics::IIndexBufferPtr{ menew IndexBufferDx11{ buff_name } };
-    buff->Create(sizeBuffer);
+    buff->create(sizeBuffer);
     m_stash->Add(buff_name, buff);
 
     Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));

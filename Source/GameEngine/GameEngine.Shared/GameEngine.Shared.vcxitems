@@ -51,7 +51,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h" />

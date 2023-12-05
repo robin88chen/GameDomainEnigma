@@ -12,6 +12,8 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
+#include "GeometryId.h"
 #include "GeometryDataPolicy.h"
 #include <memory>
 #include <mutex>
@@ -24,6 +26,8 @@ namespace Enigma::Engine
 
     class GeometryData;
     class GenericDto;
+    class GeometryDataStoreMapper;
+    class GeometryDataFactory;
     class TriangleListDto;
     class GeometryBuilder;
 
@@ -31,7 +35,7 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        GeometryRepository(Frameworks::ServiceManager* srv_manager);
+        GeometryRepository(Frameworks::ServiceManager* srv_manager, const std::shared_ptr<GeometryDataStoreMapper>& store_mapper);
         GeometryRepository(const GeometryRepository&) = delete;
         GeometryRepository(GeometryRepository&&) = delete;
         ~GeometryRepository() override;
@@ -45,8 +49,8 @@ namespace Enigma::Engine
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        bool HasGeometryData(const std::string& name);
-        std::shared_ptr<GeometryData> QueryGeometryData(const std::string& name);
+        bool hasGeometryData(const GeometryId& id);
+        std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
 
         error BuildGeometry(const GeometryDataPolicy& policy);
 
@@ -56,8 +60,12 @@ namespace Enigma::Engine
         void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
         void DoBuildingGeometry(const Frameworks::ICommandPtr& c);
 
+        void queryGeometryData(const Frameworks::IQueryPtr& q);
+
     protected:
-        std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometries;
+        std::shared_ptr<GeometryDataStoreMapper> m_storeMapper;
+        GeometryDataFactory* m_factory;
+        std::unordered_map<GeometryId, std::shared_ptr<GeometryData>> m_geometries;
         std::recursive_mutex m_geometryLock;
 
         GeometryBuilder* m_builder;
@@ -68,6 +76,8 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onGeometryBuilt;
         Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
         Frameworks::CommandSubscriberPtr m_doBuildingGeometry;
+
+        Frameworks::QuerySubscriberPtr m_queryGeometryData;
     };
 }
 

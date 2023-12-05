@@ -85,6 +85,12 @@
     <Filter Include="Events">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry Repository\Store Mapper">
+      <UniqueIdentifier>{b441de16-8766-42c2-bd1b-254bc208b319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Queries">
+      <UniqueIdentifier>{961b9d78-91ba-45af-999b-a803b3ceeb2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -311,6 +317,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h">
+      <Filter>Geometry Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h">
+      <Filter>Geometry Repository\Store Mapper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h">
+      <Filter>Geometry Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h">
+      <Filter>Queries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

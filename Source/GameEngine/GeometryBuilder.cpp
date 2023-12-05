@@ -52,10 +52,10 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
 {
     assert(m_hostRepository);
     m_policy = policy;
-    if (m_hostRepository->HasGeometryData(policy.Name()))
+    if (m_hostRepository->hasGeometryData(policy.Name()))
     {
         EventPublisher::post(std::make_shared<GeometryDataBuilt>(policy.Name(),
-            m_hostRepository->QueryGeometryData(policy.Name())));
+            m_hostRepository->queryGeometryData(policy.Name())));
     }
     else if (auto p = policy.GetDto())
     {

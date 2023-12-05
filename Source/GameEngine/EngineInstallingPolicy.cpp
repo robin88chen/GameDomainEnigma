@@ -17,7 +17,7 @@ error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manage
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<GenericDtoFactories>(service_manager));
-    service_manager->registerSystemService(std::make_shared<GeometryRepository>(service_manager));
+    service_manager->registerSystemService(std::make_shared<GeometryRepository>(service_manager, m_storeMapper));
     service_manager->registerSystemService(std::make_shared<ShaderRepository>(service_manager));
     service_manager->registerSystemService(std::make_shared<EffectMaterialManager>(service_manager, m_effectDeserializer));
     menew MaterialVariableMap;

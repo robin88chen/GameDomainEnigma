@@ -1,4 +1,5 @@
 ﻿#include "GeometryRepository.h"
+#include "GeometryDataStoreMapper.h"
 #include "TriangleList.h"
 #include "GeometryDataEvents.h"
 #include "GeometryDataPolicy.h"
@@ -10,14 +11,19 @@
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/CommandBus.h"
 #include "GeometryCommands.h"
+#include "GeometryDataQueries.h"
+#include "Frameworks/QueryDispatcher.h"
+#include "GeometryDataFactory.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
 DEFINE_RTTI(Engine, GeometryRepository, ISystemService);
 
-GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) : ISystemService(srv_manager)
+GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, const std::shared_ptr<GeometryDataStoreMapper>& store_mapper) : ISystemService(srv_manager)
 {
+    m_storeMapper = store_mapper;
+    m_factory = menew GeometryDataFactory();
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
@@ -28,6 +34,7 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager) 
 GeometryRepository::~GeometryRepository()
 {
     CommandBus::post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName()));
+    SAFE_DELETE(m_factory);
     SAFE_DELETE(m_builder);
 }
 
@@ -40,6 +47,9 @@ ServiceResult GeometryRepository::onInit()
 
     m_doBuildingGeometry = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingGeometry(c); });
     CommandBus::subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+
+    m_queryGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { return this->queryGeometryData(q); });
+    QueryDispatcher::subscribe(typeid(QueryGeometryData), m_queryGeometryData);
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -70,23 +80,30 @@ ServiceResult GeometryRepository::onTerm()
     CommandBus::unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
     m_doBuildingGeometry = nullptr;
 
+    QueryDispatcher::unsubscribe(typeid(QueryGeometryData), m_queryGeometryData);
+    m_queryGeometryData = nullptr;
+
     return Frameworks::ServiceResult::Complete;
 }
 
-bool GeometryRepository::HasGeometryData(const std::string& name)
+bool GeometryRepository::hasGeometryData(const GeometryId& id)
 {
+    assert(m_storeMapper);
     std::lock_guard locker{ m_geometryLock };
-    auto it = m_geometries.find(name);
-    return ((it != m_geometries.end()) && (!it->second.expired()));
+    const auto it = m_geometries.find(id);
+    if (it != m_geometries.end()) return true;
+    return m_storeMapper->hasGeometry(id);
 }
 
-std::shared_ptr<GeometryData> GeometryRepository::QueryGeometryData(const std::string& name)
+std::shared_ptr<GeometryData> GeometryRepository::queryGeometryData(const GeometryId& id)
 {
+    if (!hasGeometryData(id)) return nullptr;
     std::lock_guard locker{ m_geometryLock };
-    auto it = m_geometries.find(name);
-    if (it == m_geometries.end()) return nullptr;
-    if (it->second.expired()) return nullptr;
-    return it->second.lock();
+    auto it = m_geometries.find(id);
+    if (it != m_geometries.end()) return it->second;
+    assert(m_factory);
+    auto dto = m_storeMapper->queryGeometry(id);
+    return m_factory->constitute(id, dto);
 }
 
 error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)
@@ -132,4 +149,12 @@ void GeometryRepository::DoBuildingGeometry(const Frameworks::ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<BuildGeometryData, ICommand>(c);
     if (!cmd) return;
     BuildGeometry(cmd->GetPolicy());
+}
+
+void GeometryRepository::queryGeometryData(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryGeometryData, IQuery>(q);
+    if (!query) return;
+    query->setResult(queryGeometryData(query->id()));
 }

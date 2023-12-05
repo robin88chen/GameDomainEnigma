@@ -64,13 +64,13 @@ error GameSceneInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_ma
 
 error AnimatedPawnInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
 {
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName(),
-        [](auto o) { return new AnimatedPawn(o); }));
+    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName(),
+      //  [](auto o) { return new AnimatedPawn(o); }));
     return error();
 }
 
 error AnimatedPawnInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
 {
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName()));
     return error();
 }

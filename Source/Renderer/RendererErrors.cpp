@@ -24,6 +24,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::rendererFactoryFail: return "Renderer factory fail";
     case ErrorCode::nullRenderer: return "Null Renderer error";
     case ErrorCode::emptyRenderElementList: return "Empty render element list";
+    case ErrorCode::invalidPrimitiveDto: return "Invalid primitive dto";
     }
     return "Unknown";
 }

@@ -4,6 +4,7 @@
 #include "SceneGraph/SceneGraphErrors.h"
 #include "SceneGraph/Camera.h"
 #include "Frameworks/TokenVector.h"
+#include "SceneGraph/Spatial.h"
 #include <cassert>
 
 using namespace Enigma::FileStorage;
@@ -81,6 +82,45 @@ std::error_code SceneGraphFileStoreMapper::putCamera(const SceneGraph::SpatialId
     auto er = serializeMapperFile();
     if (er) return er;
     er = serializeDataTransferObjects(filename, dtos);
+    if (er) return er;
+    return SceneGraph::ErrorCode::ok;
+}
+
+bool SceneGraphFileStoreMapper::hasSpatial(const SceneGraph::SpatialId& id)
+{
+    assert(id.rtti().isDerived(SceneGraph::Spatial::TYPE_RTTI));
+    if (!m_has_connected) connect();
+    std::lock_guard locker{ m_fileMapLock };
+    return m_filename_map.find(id) != m_filename_map.end();
+}
+
+Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::querySpatial(const SceneGraph::SpatialId& id)
+{
+    assert(id.rtti().isDerived(SceneGraph::Spatial::TYPE_RTTI));
+    auto it = m_filename_map.find(id);
+    if (it == m_filename_map.end()) return {};
+    return deserializeDataTransferObjects(it->second);
+}
+
+std::error_code SceneGraphFileStoreMapper::putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos)
+{
+    assert(!dtos.empty());
+    auto filename = extractFilename(id, dtos[0].GetRtti());
+    std::lock_guard locker{ m_fileMapLock };
+    m_filename_map.insert_or_assign(id, filename);
+    auto er = serializeMapperFile();
+    if (er) return er;
+    er = serializeDataTransferObjects(filename, dtos);
+    if (er) return er;
+    return SceneGraph::ErrorCode::ok;
+}
+
+std::error_code SceneGraphFileStoreMapper::removeSpatial(const SceneGraph::SpatialId& id)
+{
+    assert(id.rtti().isDerived(SceneGraph::Spatial::TYPE_RTTI));
+    std::lock_guard locker{ m_fileMapLock };
+    m_filename_map.erase(id);
+    auto er = serializeMapperFile();
     if (er) return er;
     return SceneGraph::ErrorCode::ok;
 }

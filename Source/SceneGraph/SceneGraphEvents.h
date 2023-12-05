@@ -277,6 +277,50 @@ namespace Enigma::SceneGraph
     protected:
         std::error_code m_error;
     };
+    class PawnCreated : public Frameworks::IEvent
+    {
+    public:
+        PawnCreated(const SpatialId& id, const std::shared_ptr<Pawn>& pawn) : m_id(id), m_pawn(pawn) {};
+        const SpatialId& id() const { return m_id; }
+        std::shared_ptr<Pawn> pawn() { return m_pawn; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<Pawn> m_pawn;
+    };
+    class CreatePawnFailed : public Frameworks::IEvent
+    {
+    public:
+        CreatePawnFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class PawnConstituted : public Frameworks::IEvent
+    {
+    public:
+        PawnConstituted(const SpatialId& id, const std::shared_ptr<Pawn>& pawn) : m_id(id), m_pawn(pawn) {};
+        const SpatialId& id() const { return m_id; }
+        std::shared_ptr<Pawn> pawn() { return m_pawn; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<Pawn> m_pawn;
+    };
+    class ConstitutePawnFailed : public Frameworks::IEvent
+    {
+    public:
+        ConstitutePawnFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
 }
 
 

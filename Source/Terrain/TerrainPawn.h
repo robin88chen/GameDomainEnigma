@@ -16,8 +16,8 @@ namespace Enigma::Terrain
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainPawn(const std::string& name);
-        TerrainPawn(const Engine::GenericDto& o);
+        TerrainPawn(const SceneGraph::SpatialId& id);
+        TerrainPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         TerrainPawn(const TerrainPawn&) = delete;
         TerrainPawn(TerrainPawn&&) = delete;
         TerrainPawn& operator=(const TerrainPawn&) = delete;

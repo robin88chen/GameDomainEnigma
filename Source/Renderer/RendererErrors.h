@@ -33,6 +33,8 @@ namespace Enigma::Renderer
 
         nullRenderer = 401,
         emptyRenderElementList,
+
+        invalidPrimitiveDto = 501,
     };
     class ErrorCategory : public std::error_category
     {

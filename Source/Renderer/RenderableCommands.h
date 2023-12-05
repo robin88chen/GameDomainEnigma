@@ -9,18 +9,18 @@
 #define RENDERABLE_COMMANDS_H
 
 #include "Frameworks/Command.h"
-#include "RenderablePrimitivePolicies.h"
+#include "GameEngine/GenericDto.h"
 
 namespace Enigma::Renderer
 {
     class BuildRenderablePrimitive : public Frameworks::IRequestCommand
     {
     public:
-        BuildRenderablePrimitive(const std::shared_ptr<RenderablePrimitivePolicy>& policy) : m_policy(policy) {}
-        const std::shared_ptr<RenderablePrimitivePolicy>& getPolicy() { return m_policy; }
+        BuildRenderablePrimitive(const Engine::GenericDto& primitive_dto) : m_primitiveDto(primitive_dto) {}
+        const Engine::GenericDto& primitiveDto() { return m_primitiveDto; }
 
     private:
-        std::shared_ptr<RenderablePrimitivePolicy> m_policy;
+        Engine::GenericDto m_primitiveDto;
     };
 }
 

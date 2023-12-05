@@ -16,7 +16,7 @@ error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<RendererManager>(service_manager));
-    service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager));
+    service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager, m_dtoDeserializer));
 
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);

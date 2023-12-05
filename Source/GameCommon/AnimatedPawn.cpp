@@ -12,12 +12,12 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 
-AnimatedPawn::AnimatedPawn(const std::string& name) : Pawn(name)
+AnimatedPawn::AnimatedPawn(const SpatialId& id) : Pawn(id)
 {
     m_factoryDesc = FactoryDesc(AnimatedPawn::TYPE_RTTI.getName());
 }
 
-AnimatedPawn::AnimatedPawn(const Engine::GenericDto& o) : Pawn(o)
+AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
 {
     AnimatedPawnDto dto = AnimatedPawnDto::fromGenericDto(o);
     if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());

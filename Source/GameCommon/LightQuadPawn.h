@@ -17,8 +17,8 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        LightQuadPawn(const std::string& name);
-        LightQuadPawn(const Engine::GenericDto& o);
+        LightQuadPawn(const SceneGraph::SpatialId& id);
+        LightQuadPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         LightQuadPawn(const LightQuadPawn&) = delete;
         LightQuadPawn(LightQuadPawn&&) = delete;
         virtual ~LightQuadPawn() override;

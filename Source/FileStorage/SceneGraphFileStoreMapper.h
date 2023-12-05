@@ -29,6 +29,11 @@ namespace Enigma::FileStorage
         virtual std::error_code removeCamera(const SceneGraph::SpatialId& id) override;
         virtual std::error_code putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos) override;
 
+        virtual bool hasSpatial(const SceneGraph::SpatialId& id) override;
+        virtual Engine::GenericDtoCollection querySpatial(const SceneGraph::SpatialId& id) override;
+        virtual std::error_code removeSpatial(const SceneGraph::SpatialId& id) override;
+        virtual std::error_code putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos) override;
+
     protected:
         std::error_code serializeMapperFile();
         void deserializeMapperFile(const std::string& mapper_file_content);

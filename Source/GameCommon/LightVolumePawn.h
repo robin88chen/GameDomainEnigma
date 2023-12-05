@@ -18,8 +18,8 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        LightVolumePawn(const std::string& name);
-        LightVolumePawn(const Engine::GenericDto& o);
+        LightVolumePawn(const SceneGraph::SpatialId& id);
+        LightVolumePawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         LightVolumePawn(const LightVolumePawn&) = delete;
         LightVolumePawn(LightVolumePawn&&) = delete;
         virtual ~LightVolumePawn() override;

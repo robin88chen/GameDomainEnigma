@@ -8,6 +8,7 @@
 #ifndef SPATIAL_H
 #define SPATIAL_H
 
+#include "SpatialId.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Matrix3.h"
 #include "MathLib/Quaternion.h"
@@ -71,7 +72,9 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const std::string& name);
+        Spatial(const SpatialId& id);
         Spatial(const Engine::GenericDto& dto);
+        Spatial(const SpatialId& id, const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();
@@ -81,6 +84,7 @@ namespace Enigma::SceneGraph
         virtual Engine::GenericDto serializeDto();
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
 
+        const SpatialId& id() const { return m_id; }
         const std::string& getSpatialName() const { return m_name; }
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
@@ -234,6 +238,7 @@ namespace Enigma::SceneGraph
         SpatialDto serializeSpatialDto();
 
     protected:
+        SpatialId m_id;
         std::string m_name;
 
         Engine::FactoryDesc m_factoryDesc;

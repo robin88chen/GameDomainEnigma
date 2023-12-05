@@ -3,20 +3,22 @@
 #include "SceneGraphErrors.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphDtos.h"
+#include "Renderer/RenderableCommands.h"
+#include "Frameworks/CommandBus.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(SceneGraph, Pawn, Spatial);
 
-Pawn::Pawn(const std::string& name) : Spatial(name)
+Pawn::Pawn(const SpatialId& id) : Spatial(id)
 {
     m_factoryDesc = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
     m_primitive = nullptr;
     removeSpatialFlag(Spatial_Unlit);
 }
 
-Pawn::Pawn(const Engine::GenericDto& dto) : Spatial(dto)
+Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
 }
 

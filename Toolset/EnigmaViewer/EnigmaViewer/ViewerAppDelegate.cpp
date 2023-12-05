@@ -149,15 +149,15 @@ void ViewerAppDelegate::InstallEngine()
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
-    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
+    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt", std::make_shared<DtoJsonGateway>()));
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
-        CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
-        .Frustum(Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
+        CameraDtoHelper("camera").eyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).upDirection(Enigma::MathLib::Vector3::UNIT_Y)
+        .frustum(Frustum::ProjectionType::Perspective).frustumFov(Enigma::MathLib::Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f)
+        .frustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
@@ -446,7 +446,8 @@ void ViewerAppDelegate::CreateFloorReceiver()
     mesh_dto.GeometryName() = "floor";
     mesh_dto.TheGeometry() = floor_dto.toGenericDto();
 
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
+    pawn_dto.meshPrimitive(mesh_dto).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.toGenericDto() };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
+    CommandBus::post(std::make_shared<ConstitutePawn>(pawn_dto.toPawnDto().id(), dtos));
+    //CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

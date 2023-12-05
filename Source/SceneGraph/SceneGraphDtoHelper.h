@@ -20,16 +20,16 @@ namespace Enigma::SceneGraph
     public:
         CameraDtoHelper(const std::string& name);
 
-        CameraDtoHelper& EyePosition(const MathLib::Vector3& eye_position);
-        CameraDtoHelper& LookAt(const MathLib::Vector3& look_at);
-        CameraDtoHelper& UpDirection(const MathLib::Vector3& up_direction);
+        CameraDtoHelper& eyePosition(const MathLib::Vector3& eye_position);
+        CameraDtoHelper& lookAt(const MathLib::Vector3& look_at);
+        CameraDtoHelper& upDirection(const MathLib::Vector3& up_direction);
 
-        CameraDtoHelper& Frustum(Frustum::ProjectionType projection_type);
-        CameraDtoHelper& FrustumFrontBackZ(float front_z, float back_z);
-        CameraDtoHelper& FrustumFov(float fov);
-        CameraDtoHelper& FrustumNearPlaneDimension(float width, float height);
+        CameraDtoHelper& frustum(Frustum::ProjectionType projection_type);
+        CameraDtoHelper& frustumFrontBackZ(float front_z, float back_z);
+        CameraDtoHelper& frustumFov(float fov);
+        CameraDtoHelper& frustumNearPlaneDimension(float width, float height);
 
-        CameraDto ToCameraDto();
+        CameraDto toCameraDto();
         Engine::GenericDto toGenericDto();
 
     protected:
@@ -42,14 +42,14 @@ namespace Enigma::SceneGraph
     public:
         SpatialDtoHelper(const std::string& name);
 
-        SpatialDtoHelper& LocalTransform(const MathLib::Matrix4& local_transform);
-        SpatialDtoHelper& WorldTransform(const MathLib::Matrix4& world_transform);
-        SpatialDtoHelper& ModelBound(const Engine::BoundingVolume& model_bound);
-        SpatialDtoHelper& TopLevel(bool top_level);
-        SpatialDtoHelper& CullingMode(Spatial::CullingMode cull_mode);
-        SpatialDtoHelper& NotifyFlags(Spatial::NotifyFlags notify_flags);
-        SpatialDtoHelper& SpatialFlags(Spatial::SpatialFlags spatial_flags);
-        SpatialDtoHelper& GraphDepth(unsigned graph_depth);
+        SpatialDtoHelper& localTransform(const MathLib::Matrix4& local_transform);
+        SpatialDtoHelper& worldTransform(const MathLib::Matrix4& world_transform);
+        SpatialDtoHelper& modelBound(const Engine::BoundingVolume& model_bound);
+        SpatialDtoHelper& topLevel(bool top_level);
+        SpatialDtoHelper& cullingMode(Spatial::CullingMode cull_mode);
+        SpatialDtoHelper& notifyFlags(Spatial::NotifyFlags notify_flags);
+        SpatialDtoHelper& spatialFlags(Spatial::SpatialFlags spatial_flags);
+        SpatialDtoHelper& graphDepth(unsigned graph_depth);
 
         Engine::GenericDto toGenericDto();
 
@@ -63,18 +63,18 @@ namespace Enigma::SceneGraph
     public:
         PawnDtoHelper(const std::string& name);
 
-        PawnDtoHelper& Factory(const Engine::FactoryDesc& factory);
-        PawnDtoHelper& LocalTransform(const MathLib::Matrix4& local_transform);
-        PawnDtoHelper& WorldTransform(const MathLib::Matrix4& world_transform);
-        PawnDtoHelper& ModelBound(const Engine::BoundingVolume& model_bound);
-        PawnDtoHelper& TopLevel(bool top_level);
-        PawnDtoHelper& CullingMode(Spatial::CullingMode cull_mode);
-        PawnDtoHelper& NotifyFlags(Spatial::NotifyFlags notify_flags);
-        PawnDtoHelper& SpatialFlags(Spatial::SpatialFlags spatial_flags);
-        PawnDtoHelper& GraphDepth(unsigned graph_depth);
-        PawnDtoHelper& MeshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto);
+        PawnDtoHelper& factory(const Engine::FactoryDesc& factory);
+        PawnDtoHelper& localTransform(const MathLib::Matrix4& local_transform);
+        PawnDtoHelper& worldTransform(const MathLib::Matrix4& world_transform);
+        PawnDtoHelper& modelBound(const Engine::BoundingVolume& model_bound);
+        PawnDtoHelper& topLevel(bool top_level);
+        PawnDtoHelper& cullingMode(Spatial::CullingMode cull_mode);
+        PawnDtoHelper& notifyFlags(Spatial::NotifyFlags notify_flags);
+        PawnDtoHelper& spatialFlags(Spatial::SpatialFlags spatial_flags);
+        PawnDtoHelper& graphDepth(unsigned graph_depth);
+        PawnDtoHelper& meshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto);
 
-        PawnDto ToPawnDto();
+        PawnDto toPawnDto();
         Engine::GenericDto toGenericDto();
 
     private:

@@ -72,9 +72,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
 
-        std::shared_ptr<Pawn> CreatePawn(const std::string& name);
-        bool HasPawn(const std::string& name);
-        std::shared_ptr<Pawn> QueryPawn(const std::string& name);
+        //std::shared_ptr<Pawn> CreatePawn(const std::string& name);
 
         std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
         bool HasLight(const std::string& name);
@@ -93,12 +91,16 @@ namespace Enigma::SceneGraph
         /** query entities */
         bool hasCamera(const SpatialId& id);
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
+        bool hasPawn(const SpatialId& id);
+        std::shared_ptr<Pawn> queryPawn(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
+        void putPawn(const std::shared_ptr<Pawn>& pawn);
 
         /** remove entities */
         void removeCamera(const SpatialId& id);
+        void removePawn(const SpatialId& id);
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
@@ -107,6 +109,7 @@ namespace Enigma::SceneGraph
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);
         void queryNode(const Frameworks::IQueryPtr& q);
+        void queryPawn(const Frameworks::IQueryPtr& q);
         //void createCamera(const Frameworks::ICommandPtr& c);
         void createNode(const Frameworks::ICommandPtr& c);
 
@@ -120,7 +123,7 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
         std::recursive_mutex m_nodeMapLock;
-        std::unordered_map<std::string, std::weak_ptr<Pawn>> m_pawns;
+        std::unordered_map<SpatialId, std::shared_ptr<Pawn>, SpatialId::hash> m_pawns;
         std::recursive_mutex m_pawnMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
@@ -133,6 +136,7 @@ namespace Enigma::SceneGraph
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_queryNode;
+        Frameworks::QuerySubscriberPtr m_queryPawn;
         //Frameworks::CommandSubscriberPtr m_createCamera;
         Frameworks::CommandSubscriberPtr m_createNode;
     };

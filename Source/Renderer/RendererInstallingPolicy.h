@@ -8,6 +8,7 @@
 #ifndef _RENDERER_INSTALLING_POLICY_H
 #define _RENDERER_INSTALLING_POLICY_H
 
+#include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/InstallingPolicy.h"
 
 namespace Enigma::Renderer
@@ -17,10 +18,13 @@ namespace Enigma::Renderer
     class RenderSystemInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        RenderSystemInstallingPolicy() = default;
+        RenderSystemInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : m_dtoDeserializer(dto_deserializer) {}
 
         virtual error Install(Frameworks::ServiceManager* service_manager) override;
         virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+
+    protected:
+        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
     };
 
     class RendererInstallingPolicy : public Engine::InstallingPolicy

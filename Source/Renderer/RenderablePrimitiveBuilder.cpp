@@ -18,8 +18,9 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 
-RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr) : ISystemService(mngr), m_buildingRuid()
+RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
 {
+    m_dtoDeserializer = dto_deserializer;
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_meshBuilder = nullptr;
@@ -89,8 +90,10 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     return ServiceResult::Complete;
 }
 
-error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy)
+error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const Engine::GenericDto& dto)
 {
+    auto policy = std::dynamic_pointer_cast<RenderablePrimitivePolicy>(dto.ConvertToPolicy(m_dtoDeserializer));
+    if (!policy) return ErrorCode::invalidPrimitiveDto;
     std::lock_guard locker{ m_policiesLock };
     m_policies.push({ requester_ruid, policy });
     m_needTick = true;
@@ -155,5 +158,9 @@ void RenderablePrimitiveBuilder::buildPrimitive(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<BuildRenderablePrimitive>(c);
     if (!cmd) return;
-    buildPrimitive(cmd->getRuid(), cmd->getPolicy());
+    error er = buildPrimitive(cmd->getRuid(), cmd->primitiveDto());
+    if (er)
+    {
+        EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(m_buildingRuid, cmd->primitiveDto().getName(), er));
+    }
 }

@@ -47,7 +47,7 @@ namespace Enigma::Engine
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        RenderBufferSignature MakeRenderBufferSignature() const;
+        RenderBufferSignature makeRenderBufferSignature() const;
 
         /** Create geometry vertex
         @param vertex_format_string vertex format string
@@ -55,154 +55,154 @@ namespace Enigma::Engine
         @param vtx_count vertex data used count
         @param idx_capa index data capacity
         @param idx_count index data used count */
-        error CreateVertexCapacity(const std::string& vertex_format_string,
+        error createVertexCapacity(const std::string& vertex_format_string,
             unsigned int vtx_capa, unsigned int vtx_count, unsigned int idx_capa = 0, unsigned int idx_count = 0);
         /** resize vertex memory */
-        error ReSizeVertexMemoryCapacity(unsigned int vtx_capa, unsigned int idx_capa);
+        error resizeVertexMemoryCapacity(unsigned int vtx_capa, unsigned int idx_capa);
         /** set using vertex count */
-        void SetUsingVertexCount(unsigned int vtx_count, unsigned int idx_count = 0);
+        void setUsingVertexCount(unsigned int vtx_count, unsigned int idx_count = 0);
 
         /** get position */
-        MathLib::Vector3 GetPosition3(unsigned int vtxIndex);
+        MathLib::Vector3 getPosition3(unsigned int vtxIndex);
         /** get position */
-        MathLib::Vector4 GetPosition4(unsigned int vtxIndex);
+        MathLib::Vector4 getPosition4(unsigned int vtxIndex);
         /** get position array */
-        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int count) const;
-        std::vector<MathLib::Vector3> GetPosition3Array(unsigned int offset, unsigned int count) const;
-        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int count) const;
-        std::vector<MathLib::Vector4> GetPosition4Array(unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector3> getPosition3Array(unsigned int count) const;
+        std::vector<MathLib::Vector3> getPosition3Array(unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector4> getPosition4Array(unsigned int count) const;
+        std::vector<MathLib::Vector4> getPosition4Array(unsigned int offset, unsigned int count) const;
         /** set position */
-        error SetPosition3(unsigned int vtxIndex, const MathLib::Vector3& position);
+        error setPosition3(unsigned int vtxIndex, const MathLib::Vector3& position);
         /** set position */
-        error SetPosition4(unsigned int vtxIndex, const MathLib::Vector4& position);
+        error setPosition4(unsigned int vtxIndex, const MathLib::Vector4& position);
         /** set position array */
-        error SetPosition3Array(const std::vector<MathLib::Vector3>& positions);
-        error SetPosition3Array(unsigned int offset, const std::vector<MathLib::Vector3>& positions);
+        error setPosition3Array(const std::vector<MathLib::Vector3>& positions);
+        error setPosition3Array(unsigned int offset, const std::vector<MathLib::Vector3>& positions);
         /** set position array */
-        error SetPosition4Array(const std::vector<MathLib::Vector4>& positions);
-        error SetPosition4Array(unsigned int offset, const std::vector<MathLib::Vector4>& positions);
+        error setPosition4Array(const std::vector<MathLib::Vector4>& positions);
+        error setPosition4Array(unsigned int offset, const std::vector<MathLib::Vector4>& positions);
 
         /** get vertex normal */
-        MathLib::Vector3 GetVertexNormal(unsigned int vtxIndex) const;
+        MathLib::Vector3 getVertexNormal(unsigned int vtxIndex) const;
         /** set vertex normal */
-        error SetVertexNormal(unsigned int vtxIndex, const MathLib::Vector3& nor);
+        error setVertexNormal(unsigned int vtxIndex, const MathLib::Vector3& nor);
         /** get vertex normal array */
-        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int count) const;
-        std::vector<MathLib::Vector3> GetVertexNormalArray(unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector3> getVertexNormalArray(unsigned int count) const;
+        std::vector<MathLib::Vector3> getVertexNormalArray(unsigned int offset, unsigned int count) const;
         /** set vertex normal array */
-        error SetVertexNormalArray(const std::vector<MathLib::Vector3>& normals);
-        error SetVertexNormalArray(unsigned int offset, const std::vector<MathLib::Vector3>& normals);
+        error setVertexNormalArray(const std::vector<MathLib::Vector3>& normals);
+        error setVertexNormalArray(unsigned int offset, const std::vector<MathLib::Vector3>& normals);
 
         /** set diffuse color */
-        error SetDiffuseColorArray(const std::vector<MathLib::Vector4>& color);
-        error SetDiffuseColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
+        error setDiffuseColorArray(const std::vector<MathLib::Vector4>& color);
+        error setDiffuseColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
         /** set diffuse color */
-        error SetDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& color);
-        error SetDiffuseColorArray(unsigned int offset, const std::vector<MathLib::ColorRGBA>& color);
+        error setDiffuseColorArray(const std::vector<MathLib::ColorRGBA>& color);
+        error setDiffuseColorArray(unsigned int offset, const std::vector<MathLib::ColorRGBA>& color);
         /** get diffuse color */
-        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
-        std::vector<MathLib::Vector4> GetDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector4> getDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
+        std::vector<MathLib::Vector4> getDiffuseColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
         /** set specular color */
-        error SetSpecularColorArray(const std::vector<MathLib::Vector4>& color);
-        error SetSpecularColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
+        error setSpecularColorArray(const std::vector<MathLib::Vector4>& color);
+        error setSpecularColorArray(unsigned int offset, const std::vector<MathLib::Vector4>& color);
         /** get specular color */
-        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
-        std::vector<MathLib::Vector4> GetSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector4> getSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int count) const;
+        std::vector<MathLib::Vector4> getSpecularColorArray(Graphics::VertexDescription::ColorNumeric type, unsigned int offset, unsigned int count) const;
 
         /** set texture coord array */
-        error SetTexture2DCoordArray(unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
-        error SetTexture2DCoordArray(unsigned int offset, unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
+        error setTexture2DCoordArray(unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
+        error setTexture2DCoordArray(unsigned int offset, unsigned int stage, const std::vector<MathLib::Vector2>& uvs);
         /** get texture coord array */
-        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int stage, unsigned int count) const;
-        std::vector<MathLib::Vector2> GetTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector2> getTexture2DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector2> getTexture2DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
         /** set texture coord array */
-        error SetTexture1DCoordArray(unsigned int stage, const std::vector<float>& us);
+        error setTexture1DCoordArray(unsigned int stage, const std::vector<float>& us);
         /** get texture coord array */
-        std::vector<float> GetTexture1DCoordArray(unsigned int stage, unsigned int count) const;
-        std::vector<float> GetTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
+        std::vector<float> getTexture1DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<float> getTexture1DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
         /** set texture coord array */
-        error SetTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
+        error setTexture3DCoordArray(unsigned int stage, const std::vector<MathLib::Vector3>& uvws);
         /** get texture coord array */
-        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int stage, unsigned int count) const;
-        std::vector<MathLib::Vector3> GetTexture3DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector3> getTexture3DCoordArray(unsigned int stage, unsigned int count) const;
+        std::vector<MathLib::Vector3> getTexture3DCoordArray(unsigned int offset, unsigned int stage, unsigned int count) const;
 
         /** set palette index array */
-        error SetPaletteIndexArray(const std::vector<unsigned int>& palette_array);
+        error setPaletteIndexArray(const std::vector<unsigned int>& palette_array);
         /** get palette index array */
-        std::vector<unsigned> GetPaletteIndexArray(unsigned int count) const;
-        std::vector<unsigned> GetPaletteIndexArray(unsigned int offset, unsigned int count) const;
+        std::vector<unsigned> getPaletteIndexArray(unsigned int count) const;
+        std::vector<unsigned> getPaletteIndexArray(unsigned int offset, unsigned int count) const;
         /** set skin weight array */
-        error SetSkinWeightArray(unsigned int weight_idx, const std::vector<float>& weight_array);
+        error setSkinWeightArray(unsigned int weight_idx, const std::vector<float>& weight_array);
         /** set total skin weight array, array size : vtx count * blend weight count */
-        error SetTotalSkinWeightArray(const std::vector<float>& weight_array);
+        error setTotalSkinWeightArray(const std::vector<float>& weight_array);
         /** get total skin weight array, array size : vtx count * blend weight count */
-        std::vector<float> GetTotalSkinWeightArray(unsigned int vtx_count) const;
-        std::vector<float> GetTotalSkinWeightArray(unsigned int offset, unsigned int vtx_count) const;
+        std::vector<float> getTotalSkinWeightArray(unsigned int vtx_count) const;
+        std::vector<float> getTotalSkinWeightArray(unsigned int offset, unsigned int vtx_count) const;
         /** set vertex tangent array */
-        error SetVertexTangentArray(const std::vector<MathLib::Vector4>& tangent);
+        error setVertexTangentArray(const std::vector<MathLib::Vector4>& tangent);
         /** get vertex tangent array */
-        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int count) const;
-        std::vector<MathLib::Vector4> GetVertexTangentArray(unsigned int offset, unsigned int count) const;
+        std::vector<MathLib::Vector4> getVertexTangentArray(unsigned int count) const;
+        std::vector<MathLib::Vector4> getVertexTangentArray(unsigned int offset, unsigned int count) const;
 
         /** set index array */
-        error SetIndexArray(const std::vector<unsigned int>& idx_ary);
+        error setIndexArray(const std::vector<unsigned int>& idx_ary);
 
         /** get primitive type */
-        Graphics::PrimitiveTopology GetPrimitiveTopology() const { return m_topology; };
+        Graphics::PrimitiveTopology getPrimitiveTopology() const { return m_topology; };
 
         /** get vertex format string */
-        std::string GetVertexFormatString() const { return m_vertexFormatCode.ToString(); };
+        std::string getVertexFormatString() const { return m_vertexFormatCode.ToString(); };
 
         /** get vertex memory */
-        const byte_buffer& GetVertexMemory() const { return m_vertexMemory; };
+        const byte_buffer& getVertexMemory() const { return m_vertexMemory; };
         /** get ranged vertex memory */
-        Graphics::IVertexBuffer::ranged_buffer GetRangedVertexMemory(unsigned int offset, unsigned int count) const;
+        Graphics::IVertexBuffer::ranged_buffer getRangedVertexMemory(unsigned int offset, unsigned int count) const;
         /** get index memory */
-        const uint_buffer& GetIndexMemory() const { return m_indexMemory; };
+        const uint_buffer& getIndexMemory() const { return m_indexMemory; };
         /** get ranged index memory */
-        Graphics::IIndexBuffer::ranged_buffer GetRangedIndexMemory(unsigned int offset, unsigned int count) const;
+        Graphics::IIndexBuffer::ranged_buffer getRangedIndexMemory(unsigned int offset, unsigned int count) const;
 
         /** get vertex capacity */
-        unsigned int GetVertexCapacity() const { return m_vtxCapacity; };
+        unsigned int getVertexCapacity() const { return m_vtxCapacity; };
         /** get index capacity */
-        unsigned int GetIndexCapacity() const { return m_idxCapacity; };
+        unsigned int getIndexCapacity() const { return m_idxCapacity; };
 
         /** get used vertex count */
-        unsigned int GetUsedVertexCount() const { return m_vtxUsedCount; };
+        unsigned int getUsedVertexCount() const { return m_vtxUsedCount; };
         /** get used index count */
-        unsigned int GetUsedIndexCount() const { return m_idxUsedCount; };
+        unsigned int getUsedIndexCount() const { return m_idxUsedCount; };
 
         /** size of vertex (in byte) */
-        unsigned int SizeofVertex() const { return m_vertexDesc.TotalVertexSize(); };
+        unsigned int sizeofVertex() const { return m_vertexDesc.TotalVertexSize(); };
 
         /** get geometry segment */
-        const GeometrySegment& GetSegment(unsigned int index) const;
+        const GeometrySegment& getSegment(unsigned int index) const;
         /** get geometry segment count */
-        unsigned int GetSegmentCount() const { return static_cast<unsigned int>(m_geoSegmentVector.size()); };
+        unsigned int getSegmentCount() const { return static_cast<unsigned int>(m_geoSegmentVector.size()); };
         /** get geometry segment vector */
-        const GeometrySegmentVector& GetSegmentVector() const { return m_geoSegmentVector; };
+        const GeometrySegmentVector& getSegmentVector() const { return m_geoSegmentVector; };
         /** change segment */
-        void ChangeSegment(unsigned int index, unsigned int start_vtx, unsigned int vtx_count, unsigned int start_idx, unsigned int idx_count);
+        void changeSegment(unsigned int index, unsigned int start_vtx, unsigned int vtx_count, unsigned int start_idx, unsigned int idx_count);
         /** resize segment array */
-        void ResizeSegmentVector(unsigned int new_size) { m_geoSegmentVector.resize(new_size, GeometrySegment()); };
+        void resizeSegmentVector(unsigned int new_size) { m_geoSegmentVector.resize(new_size, GeometrySegment()); };
 
         /** calculate bounding volume */
-        void CalculateBoundingVolume(bool axis_align);
+        void calculateBoundingVolume(bool axis_align);
         /** get bounding volume */
-        const BoundingVolume& GetBoundingVolume() const { return m_geometryBound; };
+        const BoundingVolume& getBoundingVolume() const { return m_geometryBound; };
 
     protected:
-        error GetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos) const;
-        error SetVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);
-        error GetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
+        error getVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int destDimension, float* dest, bool isPos) const;
+        error setVertexMemoryData(unsigned int vtxIndex, int elementOffset, int elementDimension, int srcDimension, const float* src, bool isPos);
+        error getVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int destDimension, float* dest, unsigned int count, bool isPos) const;
-        error SetVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
+        error setVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
-        GeometryDataDto SerializeGeometryDto() const;
-        void DeserializeGeometryDto(const GeometryDataDto& dto);
+        GeometryDataDto serializeGeometryDto() const;
+        void deserializeGeometryDto(const GeometryDataDto& dto);
 
-        void SerializeNonVertexAttributes(GeometryDataDto& dto) const;
+        void serializeNonVertexAttributes(GeometryDataDto& dto) const;
 
     protected:
         FactoryDesc m_factoryDesc;

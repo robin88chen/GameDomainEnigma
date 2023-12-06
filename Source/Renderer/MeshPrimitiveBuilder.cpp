@@ -104,17 +104,17 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     m_builtGeometry = ev->GetGeometryData();
     m_builtGeometry->factoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
-    buffer.m_signature = m_builtGeometry->MakeRenderBufferSignature();
+    buffer.m_signature = m_builtGeometry->makeRenderBufferSignature();
     buffer.m_renderBufferName = buffer.m_signature.getName();
     buffer.m_vtxBufferName = buffer.m_renderBufferName + ".vtx";
     buffer.m_idxBufferName = buffer.m_renderBufferName + ".idx";
-    buffer.m_sizeofVertex = m_builtGeometry->SizeofVertex();
-    buffer.m_vtxBufferSize = m_builtGeometry->GetVertexCapacity() * m_builtGeometry->SizeofVertex();
-    buffer.m_idxBufferSize = m_builtGeometry->GetIndexCapacity() * sizeof(unsigned);
-    buffer.m_vtxBuffer = m_builtGeometry->GetVertexMemory();
-    if (m_builtGeometry->GetIndexCapacity() > 0)
+    buffer.m_sizeofVertex = m_builtGeometry->sizeofVertex();
+    buffer.m_vtxBufferSize = m_builtGeometry->getVertexCapacity() * m_builtGeometry->sizeofVertex();
+    buffer.m_idxBufferSize = m_builtGeometry->getIndexCapacity() * sizeof(unsigned);
+    buffer.m_vtxBuffer = m_builtGeometry->getVertexMemory();
+    if (m_builtGeometry->getIndexCapacity() > 0)
     {
-        buffer.m_idxBuffer = m_builtGeometry->GetIndexMemory();
+        buffer.m_idxBuffer = m_builtGeometry->getIndexMemory();
     }
     CommandBus::post(std::make_shared<BuildRenderBuffer>(buffer));
 }
@@ -136,7 +136,7 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_builtGeometry->MakeRenderBufferSignature().getName()) return;
+    if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
     m_builtRenderBuffer = ev->GetBuffer();
     std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->LinkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     m_builtEffects.resize(m_policy->EffectDtos().size());
@@ -162,7 +162,7 @@ void MeshPrimitiveBuilder::OnBuildRenderBufferFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_builtGeometry->MakeRenderBufferSignature().getName()) return;
+    if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
     EventPublisher::post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
 }
 

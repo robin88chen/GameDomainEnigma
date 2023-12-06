@@ -33,9 +33,9 @@ namespace Enigma::Engine
         // 拿掉 vertex layout, 應該不需要
         //Graphics::IVertexDeclarationPtr GetVertexDeclaration() const { return m_vertexDecl.lock(); };
         const Graphics::PrimitiveTopology GetTopology() const { return m_topology; };
-        unsigned int GetVertexCapacity() { return m_vertexCapacity; };
+        unsigned int getVertexCapacity() { return m_vertexCapacity; };
         void ChangeVertexCapacity(unsigned int vtxCapa) { m_vertexCapacity = vtxCapa; };
-        unsigned int GetIndexCapacity() { return m_indexCapacity; };
+        unsigned int getIndexCapacity() { return m_indexCapacity; };
         void ChangeIndexCapacity(unsigned int idxCapa) { m_indexCapacity = idxCapa; };
 
         class _signature_hasher

@@ -34,7 +34,7 @@ TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)
     if (!dto.Position3s())
     {
         dto.ConvertGeometryVertices();
-        GeometryData::DeserializeGeometryDto(dto);
+        GeometryData::deserializeGeometryDto(dto);
     }
 }
 
@@ -45,7 +45,7 @@ TerrainGeometry::~TerrainGeometry()
 GenericDto TerrainGeometry::serializeDto() const
 {
     TerrainGeometryDto dto;
-    SerializeNonVertexAttributes(dto);
+    serializeNonVertexAttributes(dto);
     dto.Name() = m_name;
     dto.NumRows() = m_numRows;
     dto.NumCols() = m_numCols;
@@ -72,9 +72,9 @@ void TerrainGeometry::RangedUpdateHeightMapToVertexMemory(unsigned offset, unsig
     //todo : check performance later
     for (unsigned i = offset; i < offset + count; i++)
     {
-        auto pos = GetPosition3(i);
+        auto pos = getPosition3(i);
         pos.Y() = m_heightMap[i];
-        SetPosition3(i, pos);
+        setPosition3(i, pos);
     }
 }
 
@@ -147,7 +147,7 @@ void TerrainGeometry::RangedUpdateVertexNormals(unsigned offset, unsigned count)
 
             // vtx idx
             int vtxIdx = iz * vtx_num_x + ix;
-            SetVertexNormal(vtxIdx, vecNor);
+            setVertexNormal(vtxIdx, vecNor);
         }
     }
 }

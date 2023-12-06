@@ -205,7 +205,7 @@ error MeshPrimitive::UpdateRenderBuffer()
 {
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
-    const error er = m_renderBuffer->UpdateVertex(m_geometry->GetVertexMemory(), m_geometry->GetIndexMemory());
+    const error er = m_renderBuffer->UpdateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
     return er;
 }
 
@@ -215,8 +215,8 @@ error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     std::optional<IIndexBuffer::ranged_buffer> idx_memory;
-    if (idx_count && idx_offset) idx_memory = m_geometry->GetRangedIndexMemory(idx_offset.value(), idx_count.value());
-    const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->GetRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
+    if (idx_count && idx_offset) idx_memory = m_geometry->getRangedIndexMemory(idx_offset.value(), idx_count.value());
+    const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
     return er;
 }
 
@@ -251,12 +251,12 @@ error MeshPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>
     return ErrorCode::ok;
 }
 
-void MeshPrimitive::CalculateBoundingVolume(bool axis_align)
+void MeshPrimitive::calculateBoundingVolume(bool axis_align)
 {
     if (m_geometry)
     {
-        m_geometry->CalculateBoundingVolume(axis_align);
-        m_bound = m_geometry->GetBoundingVolume();
+        m_geometry->calculateBoundingVolume(axis_align);
+        m_bound = m_geometry->getBoundingVolume();
     }
 }
 
@@ -279,7 +279,7 @@ void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo, const E
     CleanupGeometry();
     m_geometry = geo;
     m_renderBuffer = render_buffer;
-    m_bound = m_geometry->GetBoundingVolume();
+    m_bound = m_geometry->getBoundingVolume();
 }
 
 void MeshPrimitive::ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
@@ -320,14 +320,14 @@ void MeshPrimitive::CreateRenderElements()
 {
     assert(m_geometry);
     assert(m_renderBuffer);
-    unsigned elem_count = m_geometry->GetSegmentCount();
+    unsigned elem_count = m_geometry->getSegmentCount();
     if (elem_count > m_effects.size()) elem_count = static_cast<unsigned>(m_effects.size());
     assert(elem_count > 0);
     m_elements.clear();
     m_elements.reserve(elem_count);
     for (unsigned i = 0; i < elem_count; i++)
     {
-        m_elements.emplace_back(std::make_shared<RenderElement>(m_renderBuffer, m_effects[i], m_geometry->GetSegment(i)));
+        m_elements.emplace_back(std::make_shared<RenderElement>(m_renderBuffer, m_effects[i], m_geometry->getSegment(i)));
     }
 }
 

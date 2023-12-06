@@ -223,7 +223,7 @@ void ModelPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
     }
 }
 
-void ModelPrimitive::CalculateBoundingVolume(bool axis_align)
+void ModelPrimitive::calculateBoundingVolume(bool axis_align)
 {
     m_bound = BoundingVolume{ Box3::UNIT_BOX };
     const unsigned int mesh_count = GetMeshPrimitiveCount();
@@ -237,8 +237,8 @@ void ModelPrimitive::CalculateBoundingVolume(bool axis_align)
         if (!mesh_prim) continue;
         if (!mesh_prim->TestPrimitiveFlag(Primitive_UnBound))
         {
-            mesh_prim->CalculateBoundingVolume(axis_align);
-            m_bound.Merge(mesh_node.value().get().GetRootRefTransform(), mesh_prim->GetBoundingVolume());
+            mesh_prim->calculateBoundingVolume(axis_align);
+            m_bound.Merge(mesh_node.value().get().GetRootRefTransform(), mesh_prim->getBoundingVolume());
         }
     }
 }

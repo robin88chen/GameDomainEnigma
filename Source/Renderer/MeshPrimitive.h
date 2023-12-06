@@ -77,7 +77,7 @@ namespace Enigma::Renderer
         virtual error RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
 
         /** calculate bounding volume */
-        virtual void CalculateBoundingVolume(bool axis_align) override;
+        virtual void calculateBoundingVolume(bool axis_align) override;
 
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;

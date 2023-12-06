@@ -28,7 +28,7 @@ TriangleList::~TriangleList()
 
 GenericDto TriangleList::serializeDto() const
 {
-    TriangleListDto dto(SerializeGeometryDto());
+    TriangleListDto dto(serializeGeometryDto());
     return dto.toGenericDto();
 }
 
@@ -58,7 +58,7 @@ void TriangleList::FetchTrianglePos(unsigned idx, MathLib::Vector3 tri[3])
 {
     unsigned int vtx_idx[3];
     FetchTriangleVertexIndex(idx, vtx_idx);
-    unsigned int vtx_pitch = SizeofVertex();
+    unsigned int vtx_pitch = sizeofVertex();
     memcpy(&tri[0], &m_vertexMemory[vtx_idx[0] * vtx_pitch], sizeof(Vector3));
     memcpy(&tri[1], &m_vertexMemory[vtx_idx[1] * vtx_pitch], sizeof(Vector3));
     memcpy(&tri[2], &m_vertexMemory[vtx_idx[2] * vtx_pitch], sizeof(Vector3));
@@ -73,7 +73,7 @@ void TriangleList::FetchTriangleTextureCoord(unsigned idx, unsigned tex_channel,
     unsigned int vtx_idx[3];
     FetchTriangleVertexIndex(idx, vtx_idx);
 
-    unsigned int vtx_pitch = SizeofVertex();
+    unsigned int vtx_pitch = sizeofVertex();
     unsigned int offset = m_vertexDesc.TextureCoordOffset(tex_channel) * sizeof(float);
     memcpy(&uv[0], &m_vertexMemory[vtx_idx[0] * vtx_pitch + offset], sizeof(Vector2));
     memcpy(&uv[1], &m_vertexMemory[vtx_idx[1] * vtx_pitch + offset], sizeof(Vector2));
@@ -118,7 +118,7 @@ error TriangleList::CalculateVertexTangentSpace(unsigned tex_channel)
     // normalize and set to geometry
     for (unsigned int vi = 0; vi < m_vtxUsedCount; vi++)
     {
-        Vector3 nor = GetVertexNormal(vi);
+        Vector3 nor = getVertexNormal(vi);
         Vector3 tangent = tangent_buf[vi] - nor * nor.Dot(tangent_buf[vi]);
         tangent.NormalizeSelf();
         float binor_w = 1.0f;
@@ -130,7 +130,7 @@ error TriangleList::CalculateVertexTangentSpace(unsigned tex_channel)
         vtxTangent[vi] = Vector4(tangent.X(), tangent.Y(), tangent.Z(), binor_w);
     }
 
-    SetVertexTangentArray(vtxTangent);
+    setVertexTangentArray(vtxTangent);
 
     return ErrorCode::ok;
 }

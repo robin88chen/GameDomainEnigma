@@ -56,9 +56,9 @@ namespace Enigma::Engine
         virtual error RemoveFromRenderer(const std::shared_ptr<IRenderer>& renderer) = 0;
 
         /** get bounding volume */
-        virtual const BoundingVolume& GetBoundingVolume() { return m_bound; };
+        virtual const BoundingVolume& getBoundingVolume() { return m_bound; };
         /** calculate bounding volume */
-        virtual void CalculateBoundingVolume(bool axis_align) = 0;
+        virtual void calculateBoundingVolume(bool axis_align) = 0;
 
         /** update world transform */
         virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) = 0;

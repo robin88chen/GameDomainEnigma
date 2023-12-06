@@ -34,15 +34,15 @@ Intersector::Result IntrGeometryRay3::Test(std::unique_ptr<IntersectorCache> las
 {
     if (!m_geometry) return { false, std::move(last_result) };
     // test bounding volume first
-    if (!m_geometry->GetBoundingVolume().IsEmpty())
+    if (!m_geometry->getBoundingVolume().IsEmpty())
     {
-        IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
+        IntrBVRay3 intr_bv(m_geometry->getBoundingVolume(), m_ray);
         auto res = intr_bv.Test(nullptr);
         if (!res.m_hasIntersect) return { false, std::move(last_result) };
     }
 
     // test for triangle list
-    if (m_geometry->GetPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
+    if (m_geometry->getPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
     {
         std::unique_ptr<IntrGeometryCache> geo_cache = nullptr;
         if (last_result)
@@ -58,15 +58,15 @@ Intersector::Result IntrGeometryRay3::Find(std::unique_ptr<IntersectorCache> las
 {
     if (!m_geometry) return { false, std::move(last_result) };
     // test bounding volume first
-    if (!m_geometry->GetBoundingVolume().IsEmpty())
+    if (!m_geometry->getBoundingVolume().IsEmpty())
     {
-        IntrBVRay3 intr_bv(m_geometry->GetBoundingVolume(), m_ray);
+        IntrBVRay3 intr_bv(m_geometry->getBoundingVolume(), m_ray);
         auto res = intr_bv.Test(nullptr);
         if (!res.m_hasIntersect) return { false, std::move(last_result) };
     }
 
     // test for triangle list
-    if (m_geometry->GetPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
+    if (m_geometry->getPrimitiveTopology() == Graphics::PrimitiveTopology::Topology_TriangleList)
     {
         std::unique_ptr<IntrGeometryCache> geo_cache = nullptr;
         if (last_result)

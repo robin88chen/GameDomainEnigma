@@ -8,7 +8,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 using namespace Enigma::Graphics;
 
-static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_VERTEX_FORMAT = "VertexFormat";
 static std::string TOKEN_SEGMENTS = "Segments";
 static std::string TOKEN_POSITIONS_3 = "Positions3";
@@ -48,7 +48,7 @@ TextureCoordDto TextureCoordDto::fromGenericDto(const GenericDto& dto)
     TextureCoordDto coords;
     if (dto.HasValue(TOKEN_2D_COORDS))
     {
-       if (auto v = dto.TryGetValue<std::vector<Vector2>>(TOKEN_2D_COORDS)) coords.m_2dCoords = v.value();
+        if (auto v = dto.TryGetValue<std::vector<Vector2>>(TOKEN_2D_COORDS)) coords.m_2dCoords = v.value();
     }
     else if (dto.HasValue(TOKEN_1D_COORDS))
     {
@@ -88,7 +88,7 @@ GeometryDataDto GeometryDataDto::fromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
     geometry.factoryDesc() = dto.GetRtti();
-    geometry.DeserializeNonVertexAttributesFromGenericDto(dto);
+    geometry.deserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
         if (auto v = dto.TryGetValue<std::vector<Vector3>>(TOKEN_POSITIONS_3)) geometry.m_position3s = v.value();
@@ -140,7 +140,7 @@ GenericDto GeometryDataDto::toGenericDto() const
 {
     GenericDto dto;
     dto.AddRtti(m_factoryDesc);
-    SerializeNonVertexAttributesToGenericDto(dto);
+    serializeNonVertexAttributesToGenericDto(dto);
     if (m_position3s)
     {
         dto.AddOrUpdate(TOKEN_POSITIONS_3, m_position3s.value());
@@ -182,12 +182,13 @@ GenericDto GeometryDataDto::toGenericDto() const
         dto.AddOrUpdate(TOKEN_INDICES, m_indices.value());
     }
 
+    dto.AddName(m_id.name());
     return dto;
 }
 
-void GeometryDataDto::DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto)
+void GeometryDataDto::deserializeNonVertexAttributesFromGenericDto(const GenericDto& dto)
 {
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) m_name = v.value();
+    if (auto v = dto.TryGetValue<std::string>(TOKEN_ID)) m_id = GeometryId{ v.value() };
     if (auto v = dto.TryGetValue<std::string>(TOKEN_VERTEX_FORMAT)) m_vertexFormat = v.value();
     if (auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS)) m_segments = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY)) m_vtxCapacity = v.value();
@@ -198,9 +199,9 @@ void GeometryDataDto::DeserializeNonVertexAttributesFromGenericDto(const Generic
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_GEOMETRY_BOUND)) m_geometryBound = v.value();
 }
 
-void GeometryDataDto::SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const
+void GeometryDataDto::serializeNonVertexAttributesToGenericDto(GenericDto& dto) const
 {
-    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.AddOrUpdate(TOKEN_ID, m_id.name());
     dto.AddOrUpdate(TOKEN_VERTEX_FORMAT, m_vertexFormat);
     dto.AddOrUpdate(TOKEN_SEGMENTS, m_segments);
     dto.AddOrUpdate(TOKEN_VERTEX_CAPACITY, m_vtxCapacity);

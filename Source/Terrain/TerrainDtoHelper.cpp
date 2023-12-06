@@ -7,71 +7,71 @@ using namespace Enigma::SceneGraph;
 
 TerrainGeometryDtoHelper::TerrainGeometryDtoHelper(const std::string& name)
 {
-    m_dto.Name() = name;
-    m_dto.NumRows() = 8;
-    m_dto.NumCols() = 8;
-    m_dto.MinPosition() = MathLib::Vector3(-1.0f, 0.0f, -1.0f);
-    m_dto.MaxPosition() = MathLib::Vector3(1.0f, 0.0f, 1.0f);
-    m_dto.MinTextureCoordinate() = MathLib::Vector2(0.0f, 0.0f);
-    m_dto.MaxTextureCoordinate() = MathLib::Vector2(1.0f, 1.0f);
-    m_dto.HeightMap() = std::nullopt;
+    m_dto.id() = Engine::GeometryId{ name };
+    m_dto.numRows() = 8;
+    m_dto.numCols() = 8;
+    m_dto.minPosition() = MathLib::Vector3(-1.0f, 0.0f, -1.0f);
+    m_dto.maxPosition() = MathLib::Vector3(1.0f, 0.0f, 1.0f);
+    m_dto.minTextureCoordinate() = MathLib::Vector2(0.0f, 0.0f);
+    m_dto.maxTextureCoordinate() = MathLib::Vector2(1.0f, 1.0f);
+    m_dto.heightMap() = std::nullopt;
     m_geometryBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::NumRows(unsigned num_rows)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::numRows(unsigned num_rows)
 {
-    m_dto.NumRows() = num_rows;
+    m_dto.numRows() = num_rows;
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::NumCols(unsigned num_cols)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::numCols(unsigned num_cols)
 {
-    m_dto.NumCols() = num_cols;
+    m_dto.numCols() = num_cols;
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::MinPosition(const MathLib::Vector3& min_position)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::minPosition(const MathLib::Vector3& min_position)
 {
-    m_dto.MinPosition() = min_position;
-    m_geometryBound = m_dto.CalculateGeometryBounding();
+    m_dto.minPosition() = min_position;
+    m_geometryBound = m_dto.calculateGeometryBounding();
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::MaxPosition(const MathLib::Vector3& max_position)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::maxPosition(const MathLib::Vector3& max_position)
 {
-    m_dto.MaxPosition() = max_position;
-    m_geometryBound = m_dto.CalculateGeometryBounding();
+    m_dto.maxPosition() = max_position;
+    m_geometryBound = m_dto.calculateGeometryBounding();
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::HeightMap(const float_buffer& height_map)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::heightMap(const float_buffer& height_map)
 {
-    m_dto.HeightMap() = height_map;
-    m_geometryBound = m_dto.CalculateGeometryBounding();
+    m_dto.heightMap() = height_map;
+    m_geometryBound = m_dto.calculateGeometryBounding();
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::MinTextureCoordinate(const MathLib::Vector2& min_texture_coordinate)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::minTextureCoordinate(const MathLib::Vector2& min_texture_coordinate)
 {
-    m_dto.MinTextureCoordinate() = min_texture_coordinate;
+    m_dto.minTextureCoordinate() = min_texture_coordinate;
     return *this;
 }
 
-TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::MaxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate)
+TerrainGeometryDtoHelper& TerrainGeometryDtoHelper::maxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate)
 {
-    m_dto.MaxTextureCoordinate() = max_texture_coordinate;
+    m_dto.maxTextureCoordinate() = max_texture_coordinate;
     return *this;
 }
 
 Enigma::Engine::GenericDto TerrainGeometryDtoHelper::toGenericDto() const
 {
-    return ToDto().toGenericDto();
+    return toDto().toGenericDto();
 }
 
-TerrainGeometryDto TerrainGeometryDtoHelper::ToDto() const
+TerrainGeometryDto TerrainGeometryDtoHelper::toDto() const
 {
     TerrainGeometryDto& geo = const_cast<TerrainGeometryDto&>(m_dto);
-    geo.GeometryBound() = m_geometryBound.serializeDto().toGenericDto();
+    geo.geometryBound() = m_geometryBound.serializeDto().toGenericDto();
     return m_dto;
 }
 
@@ -92,26 +92,26 @@ TerrainPawnDtoHelper::TerrainPawnDtoHelper(const std::string& name)
     m_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::Factory(const Engine::FactoryDesc& factory)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::factory(const Engine::FactoryDesc& factory)
 {
     m_dto.factoryDesc() = factory;
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::LocalTransform(const MathLib::Matrix4& local_transform)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::localTransform(const MathLib::Matrix4& local_transform)
 {
     m_dto.localTransform() = local_transform;
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::WorldTransform(const MathLib::Matrix4& world_transform)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::worldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.worldTransform() = world_transform;
     m_dto.worldBound() = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto();
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::ModelBound(const Engine::BoundingVolume& model_bound)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::modelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
     m_dto.modelBound() = m_modelBound.serializeDto().toGenericDto();
@@ -119,37 +119,37 @@ TerrainPawnDtoHelper& TerrainPawnDtoHelper::ModelBound(const Engine::BoundingVol
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::GraphDepth(unsigned graph_depth)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::graphDepth(unsigned graph_depth)
 {
     m_dto.graphDepth() = graph_depth;
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::CullingMode(Spatial::CullingMode culling_mode)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::cullingMode(Spatial::CullingMode culling_mode)
 {
     m_dto.cullingMode() = static_cast<unsigned>(culling_mode);
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::NotifyFlags(Spatial::NotifyFlags notify_flag)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::notifyFlags(Spatial::NotifyFlags notify_flag)
 {
     m_dto.notifyFlag() = static_cast<unsigned>(notify_flag.to_ullong());
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::TopLevel(bool top_level)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::topLevel(bool top_level)
 {
     m_dto.isTopLevel() = top_level;
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::SpatialFlags(Spatial::SpatialFlags spatial_flag)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
 {
     m_dto.spatialFlag() = static_cast<unsigned>(spatial_flag.to_ullong());
     return *this;
 }
 
-TerrainPawnDtoHelper& TerrainPawnDtoHelper::TerrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto)
+TerrainPawnDtoHelper& TerrainPawnDtoHelper::terrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto)
 {
     m_dto.primitive() = terrain_primitive_dto.toGenericDto();
     return *this;

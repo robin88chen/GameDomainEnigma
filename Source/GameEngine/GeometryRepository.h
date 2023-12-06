@@ -65,7 +65,7 @@ namespace Enigma::Engine
     protected:
         std::shared_ptr<GeometryDataStoreMapper> m_storeMapper;
         GeometryDataFactory* m_factory;
-        std::unordered_map<GeometryId, std::shared_ptr<GeometryData>> m_geometries;
+        std::unordered_map<GeometryId, std::shared_ptr<GeometryData>, GeometryId::hash> m_geometries;
         std::recursive_mutex m_geometryLock;
 
         GeometryBuilder* m_builder;

@@ -20,8 +20,8 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        TriangleList(const std::string& name);
-        TriangleList(const GenericDto& o);
+        TriangleList(const GeometryId& id);
+        TriangleList(const GeometryId& id, const GenericDto& o);
         TriangleList(const TriangleList&) = delete;
         TriangleList(TriangleList&&) = delete;
         virtual ~TriangleList() override;

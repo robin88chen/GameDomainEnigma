@@ -100,8 +100,8 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GeometryDataBuilt, IEvent>(e);
     if (!ev) return;
-    if ((m_policy) && (ev->getName() != m_policy->GeometryPolicy().Name())) return;
-    m_builtGeometry = ev->GetGeometryData();
+    if ((m_policy) && (ev->id() != m_policy->GeometryPolicy().id())) return;
+    m_builtGeometry = ev->geometryData();
     m_builtGeometry->factoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->makeRenderBufferSignature();
@@ -125,8 +125,8 @@ void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_policy->GeometryPolicy().Name()) return;
-    EventPublisher::post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+    if (ev->id() != m_policy->GeometryPolicy().id()) return;
+    EventPublisher::post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->error()));
 }
 
 void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)

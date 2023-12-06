@@ -121,7 +121,7 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
     dto.Name() = m_name;
     if (m_geometry)
     {
-        dto.GeometryName() = m_geometry->getName();
+        dto.GeometryName() = m_geometry->id().name();
         dto.GeometryFactoryDesc() = m_geometry->factoryDesc();
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
@@ -421,7 +421,7 @@ void MeshPrimitive::LooseSegmentEffectTexture(unsigned index)
     {
         auto& eff_tex_set = m_textures[index].GetEffectSemanticTextureTuple(i);
         // 改直接指定
-        m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{nullptr, std::nullopt});
+        m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
         /*m_effects[index]->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {

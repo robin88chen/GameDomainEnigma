@@ -9,7 +9,7 @@ using namespace Enigma::Engine;
 
 SquareQuadDtoHelper::SquareQuadDtoHelper(const std::string& name)
 {
-    m_dto.Name() = name;
+    m_dto.id() = name;
 }
 
 SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
@@ -19,18 +19,18 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bo
     positions.emplace_back(MathLib::Vector3(left_bottom.X(), right_top.Y(), left_bottom.Z()));
     positions.emplace_back(MathLib::Vector3(right_top.X(), right_top.Y(), left_bottom.Z()));
     positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
-    m_dto.Position3s() = positions;
+    m_dto.position3s() = positions;
     m_normal = MathLib::Vector3(0, 0, 1);
     uint_buffer indices =
     {
         0,1,2, 0,2,3
     };
-    m_dto.Indices() = indices;
-    m_dto.Segments() = { 0, 4, 0, 6 };
-    m_dto.VertexUsedCount() = 4;
-    m_dto.IndexUsedCount() = 6;
-    m_dto.VertexCapacity() = 4;
-    m_dto.IndexCapacity() = 6;
+    m_dto.indices() = indices;
+    m_dto.segments() = { 0, 4, 0, 6 };
+    m_dto.vertexUsedCount() = 4;
+    m_dto.indexUsedCount() = 6;
+    m_dto.vertexCapacity() = 4;
+    m_dto.indexCapacity() = 6;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
     return *this;
 }
@@ -42,18 +42,18 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XZQuad(const MathLib::Vector3& left_bo
     positions.emplace_back(MathLib::Vector3(left_bottom.X(), left_bottom.Y(), right_top.Z()));
     positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), right_top.Z()));
     positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
-    m_dto.Position3s() = positions;
+    m_dto.position3s() = positions;
     m_normal = MathLib::Vector3(0, 1, 0);
     uint_buffer indices =
     {
         0,1,2, 0,2,3
     };
-    m_dto.Indices() = indices;
-    m_dto.Segments() = { 0, 4, 0, 6 };
-    m_dto.VertexUsedCount() = 4;
-    m_dto.IndexUsedCount() = 6;
-    m_dto.VertexCapacity() = 4;
-    m_dto.IndexCapacity() = 6;
+    m_dto.indices() = indices;
+    m_dto.segments() = { 0, 4, 0, 6 };
+    m_dto.vertexUsedCount() = 4;
+    m_dto.indexUsedCount() = 6;
+    m_dto.vertexCapacity() = 4;
+    m_dto.indexCapacity() = 6;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
     return *this;
 
@@ -66,7 +66,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::Normal()
     normals.emplace_back(m_normal);
     normals.emplace_back(m_normal);
     normals.emplace_back(m_normal);
-    m_dto.Normals() = normals;
+    m_dto.normals() = normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
@@ -78,38 +78,38 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::TextureCoord(const MathLib::Vector2& l
     texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture2DCoords() = texcoords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
 GenericDto SquareQuadDtoHelper::toGenericDto()
 {
-    assert(m_dto.Position3s() || m_dto.Position4s());
-    m_dto.VertexFormat() = m_format.ToString();
-    m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (auto& pos3 = m_dto.Position3s())
+    assert(m_dto.position3s() || m_dto.position4s());
+    m_dto.vertexFormat() = m_format.ToString();
+    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
+    if (auto& pos3 = m_dto.position3s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     }
-    else if (auto& pos4 = m_dto.Position4s())
+    else if (auto& pos4 = m_dto.position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     }
     return m_dto.toGenericDto();
 }
 
 CubeDtoHelper::CubeDtoHelper(const std::string& name)
 {
-    m_dto.Name() = name;
+    m_dto.id() = name;
 }
 
 CubeDtoHelper& CubeDtoHelper::Cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
@@ -125,7 +125,7 @@ CubeDtoHelper& CubeDtoHelper::Cube(const MathLib::Vector3& center, const MathLib
     positions.emplace_back(MathLib::Vector3(xyz1.X(), xyz1.Y(), xyz0.Z()));
     positions.emplace_back(xyz1);
     positions.emplace_back(MathLib::Vector3(xyz0.X(), xyz1.Y(), xyz1.Z()));
-    m_dto.Position3s() = positions;
+    m_dto.position3s() = positions;
     uint_buffer indices =
     {
         0, 1, 2, 0, 2, 3,
@@ -137,12 +137,12 @@ CubeDtoHelper& CubeDtoHelper::Cube(const MathLib::Vector3& center, const MathLib
 
         4, 6, 5, 4, 7, 6
     };
-    m_dto.Indices() = indices;
-    m_dto.Segments() = { 0, 8, 0, 36 };
-    m_dto.VertexUsedCount() = 8;
-    m_dto.IndexUsedCount() = 36;
-    m_dto.VertexCapacity() = 8;
-    m_dto.IndexCapacity() = 36;
+    m_dto.indices() = indices;
+    m_dto.segments() = { 0, 8, 0, 36 };
+    m_dto.vertexUsedCount() = 8;
+    m_dto.indexUsedCount() = 36;
+    m_dto.vertexCapacity() = 8;
+    m_dto.indexCapacity() = 36;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
     return *this;
 }
@@ -182,7 +182,7 @@ CubeDtoHelper& CubeDtoHelper::FacedCube(const MathLib::Vector3& center, const Ma
     positions.emplace_back(xyz7);
     positions.emplace_back(xyz6);
     positions.emplace_back(xyz5);
-    m_dto.Position3s() = positions;
+    m_dto.position3s() = positions;
     uint_buffer indices =
     {
         0, 1, 2, 0, 2, 3,
@@ -192,12 +192,12 @@ CubeDtoHelper& CubeDtoHelper::FacedCube(const MathLib::Vector3& center, const Ma
         16, 17, 18, 16, 18, 19,
         20, 21, 22, 20, 22, 23,
     };
-    m_dto.Indices() = indices;
-    m_dto.Segments() = { 0, 24, 0, 36 };
-    m_dto.VertexUsedCount() = 24;
-    m_dto.IndexUsedCount() = 36;
-    m_dto.VertexCapacity() = 24;
-    m_dto.IndexCapacity() = 36;
+    m_dto.indices() = indices;
+    m_dto.segments() = { 0, 24, 0, 36 };
+    m_dto.vertexUsedCount() = 24;
+    m_dto.indexUsedCount() = 36;
+    m_dto.vertexCapacity() = 24;
+    m_dto.indexCapacity() = 36;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
     return *this;
 }
@@ -213,7 +213,7 @@ CubeDtoHelper& CubeDtoHelper::Normal()
     normals.emplace_back(MathLib::Vector3(1, 1, -1).Normalize());
     normals.emplace_back(MathLib::Vector3(1, 1, 1).Normalize());
     normals.emplace_back(MathLib::Vector3(-1, 1, 1).Normalize());
-    m_dto.Normals() = normals;
+    m_dto.normals() = normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
@@ -245,7 +245,7 @@ CubeDtoHelper& CubeDtoHelper::FacedNormal()
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
-    m_dto.Normals() = normals;
+    m_dto.normals() = normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
@@ -261,12 +261,12 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, 
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
     texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture2DCoords() = texcoords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
@@ -297,12 +297,12 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector2& left_bot
     texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
     texcoords.emplace_back(right_top);
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture2DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture2DCoords() = texcoords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
@@ -317,12 +317,12 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector3& left_bottom_f
     texcoords.emplace_back(MathLib::Vector3(right_top_back.X(), right_top_back.Y(), left_bottom_front.Z()));
     texcoords.emplace_back(MathLib::Vector3(right_top_back));
     texcoords.emplace_back(MathLib::Vector3(left_bottom_front.X(), right_top_back.Y(), right_top_back.Z()));
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture3DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture3DCoords() = texcoords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
@@ -361,31 +361,31 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector3& left_bot
     texcoords.emplace_back(xyz7);
     texcoords.emplace_back(xyz6);
     texcoords.emplace_back(xyz5);
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture3DCoords() = texcoords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture3DCoords() = texcoords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
 GenericDto CubeDtoHelper::toGenericDto()
 {
-    assert(m_dto.Position3s() || m_dto.Position4s());
-    m_dto.VertexFormat() = m_format.ToString();
-    m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (auto& pos = m_dto.Position3s())
+    assert(m_dto.position3s() || m_dto.position4s());
+    m_dto.vertexFormat() = m_format.ToString();
+    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
+    if (auto& pos = m_dto.position3s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos.value()[0]), static_cast<unsigned>(pos.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     }
-    else if (auto& pos4 = m_dto.Position4s())
+    else if (auto& pos4 = m_dto.position4s())
     {
         const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
         const auto bb = BoundingVolume{ box };
-        m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     }
     return m_dto.toGenericDto();
 }
@@ -393,9 +393,9 @@ GenericDto CubeDtoHelper::toGenericDto()
 SphereDtoHelper::SphereDtoHelper(const std::string& name)
 {
     m_radius = 1.0f;
-    m_dto.Name() = name;
+    m_dto.id() = name;
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
-    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
 }
 
 SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
@@ -541,13 +541,13 @@ SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float r
         indices[1] = i + 1 + offset;
     }
 
-    m_dto.Position3s() = vecPos;
-    m_dto.Indices() = vtxIndex;
-    m_dto.Segments() = { 0, static_cast<unsigned>(numVertices), 0, static_cast<unsigned>(numIndices) };
-    m_dto.VertexUsedCount() = static_cast<unsigned>(numVertices);
-    m_dto.IndexUsedCount() = static_cast<unsigned>(numIndices);
-    m_dto.VertexCapacity() = static_cast<unsigned>(numVertices);
-    m_dto.IndexCapacity() = static_cast<unsigned>(numIndices);
+    m_dto.position3s() = vecPos;
+    m_dto.indices() = vtxIndex;
+    m_dto.segments() = { 0, static_cast<unsigned>(numVertices), 0, static_cast<unsigned>(numIndices) };
+    m_dto.vertexUsedCount() = static_cast<unsigned>(numVertices);
+    m_dto.indexUsedCount() = static_cast<unsigned>(numIndices);
+    m_dto.vertexCapacity() = static_cast<unsigned>(numVertices);
+    m_dto.indexCapacity() = static_cast<unsigned>(numIndices);
     m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
 
     m_normals = vecNor;
@@ -558,26 +558,26 @@ SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float r
 
 SphereDtoHelper& SphereDtoHelper::Normal()
 {
-    m_dto.Normals() = m_normals;
+    m_dto.normals() = m_normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
 
 SphereDtoHelper& SphereDtoHelper::TextureCoord()
 {
-    size_t tex_stage_count = m_dto.TextureCoords().size();
+    size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
-    tex_dto.Texture2DCoords() = m_tex_coords;
-    m_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+    tex_dto.texture2DCoords() = m_tex_coords;
+    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
     m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.TextureCoords().size());
+    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
     return *this;
 }
 
 SphereDtoHelper& SphereDtoHelper::SphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
-    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
@@ -590,14 +590,14 @@ SphereDtoHelper& SphereDtoHelper::BoxBound()
     box.Extent(2) = m_radius;
 
     const auto bb = BoundingVolume{ box };
-    m_dto.GeometryBound() = bb.serializeDto().toGenericDto();
+    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
 GenericDto SphereDtoHelper::toGenericDto()
 {
-    m_dto.VertexFormat() = m_format.ToString();
-    m_dto.Topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
+    m_dto.vertexFormat() = m_format.ToString();
+    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
     return m_dto.toGenericDto();
 }
 

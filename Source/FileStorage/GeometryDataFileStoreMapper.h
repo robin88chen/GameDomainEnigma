@@ -41,7 +41,7 @@ namespace Enigma::FileStorage
         bool m_has_connected;
         std::shared_ptr<Gateways::IDtoGateway> m_gateway;
         std::string m_mapper_filename;
-        std::unordered_map<Engine::GeometryId, std::string> m_filename_map;
+        std::unordered_map<Engine::GeometryId, std::string, Engine::GeometryId::hash> m_filename_map;
         std::recursive_mutex m_fileMapLock;
     };
 }

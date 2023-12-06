@@ -158,7 +158,7 @@ void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& d
         return;
     }
     auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::fromGenericDto(dto));
-    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.GetId(), animation));
+    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.ruid(), animation));
 }
 
 std::string AnimationRepository::MakeAssetKey(const std::string& rtti_name, const std::string& name)

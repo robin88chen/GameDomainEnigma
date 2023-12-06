@@ -20,7 +20,7 @@ error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manag
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName(),
       //  [](auto o) { return new TerrainPawn(o); }));
     Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::RegisterGeometryDtoFactory>(
-        TerrainGeometry::TYPE_RTTI.getName(), [](auto dto) { return std::make_shared<TerrainGeometry>(dto); }));
+        TerrainGeometry::TYPE_RTTI.getName(), [](auto id, auto dto) { return std::make_shared<TerrainGeometry>(id, dto); }));
     Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::RegisterDtoPolicyConverter>(
         TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitiveDto::TerrainMeshConvertToPolicy));
     return ErrorCode::ok;

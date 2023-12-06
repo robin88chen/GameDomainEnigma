@@ -15,6 +15,7 @@
 #include "MathLib/Vector4.h"
 #include "MathLib/Vector2.h"
 #include "GenericDto.h"
+#include "GeometryId.h"
 
 namespace Enigma::Engine
 {
@@ -26,12 +27,12 @@ namespace Enigma::Engine
         static TextureCoordDto fromGenericDto(const GenericDto& dto);
         GenericDto toGenericDto();
 
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector2>> Texture2DCoords() const { return m_2dCoords; }
-        std::optional<std::vector<MathLib::Vector2>>& Texture2DCoords() { return m_2dCoords; }
-        [[nodiscard]] std::optional<std::vector<float>> Texture1DCoords() const { return m_1dCoords; }
-        std::optional<std::vector<float>>& Texture1DCoords() { return m_1dCoords; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> Texture3DCoords() const { return m_3dCoords; }
-        std::optional<std::vector<MathLib::Vector3>>& Texture3DCoords() { return m_3dCoords; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector2>> texture2DCoords() const { return m_2dCoords; }
+        std::optional<std::vector<MathLib::Vector2>>& texture2DCoords() { return m_2dCoords; }
+        [[nodiscard]] std::optional<std::vector<float>> texture1DCoords() const { return m_1dCoords; }
+        std::optional<std::vector<float>>& texture1DCoords() { return m_1dCoords; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> texture3DCoords() const { return m_3dCoords; }
+        std::optional<std::vector<MathLib::Vector3>>& texture3DCoords() { return m_3dCoords; }
 
     protected:
         std::optional<std::vector<MathLib::Vector2>> m_2dCoords;
@@ -46,54 +47,54 @@ namespace Enigma::Engine
 
         static GeometryDataDto fromGenericDto(const GenericDto& dto);
         GenericDto toGenericDto() const;
-        void DeserializeNonVertexAttributesFromGenericDto(const GenericDto& dto);
-        void SerializeNonVertexAttributesToGenericDto(GenericDto& dto) const;
+        void deserializeNonVertexAttributesFromGenericDto(const GenericDto& dto);
+        void serializeNonVertexAttributesToGenericDto(GenericDto& dto) const;
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
-        [[nodiscard]] const std::string& VertexFormat() const { return m_vertexFormat; }
-        std::string& VertexFormat() { return m_vertexFormat; }
-        [[nodiscard]] const std::vector<unsigned>& Segments() const { return m_segments; }
-        std::vector<unsigned>& Segments() { return m_segments; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> Position3s() const { return m_position3s; }
-        std::optional<std::vector<MathLib::Vector3>>& Position3s() { return m_position3s; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> Position4s() const { return m_position4s; }
-        std::optional<std::vector<MathLib::Vector4>>& Position4s() { return m_position4s; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> Normals() const { return m_normals; }
-        std::optional<std::vector<MathLib::Vector3>>& Normals() { return m_normals; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> DiffuseColors() const { return m_diffuseColors; }
-        std::optional<std::vector<MathLib::Vector4>>& DiffuseColors() { return m_diffuseColors; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> SpecularColors() const { return m_specularColors; }
-        std::optional<std::vector<MathLib::Vector4>>& SpecularColors() { return m_specularColors; }
-        [[nodiscard]] const GenericDtoCollection& TextureCoords() const { return m_texCoords; }
-        GenericDtoCollection& TextureCoords() { return m_texCoords; }
-        [[nodiscard]] std::optional<std::vector<unsigned>> PaletteIndices() const { return m_paletteIndices; }
-        std::optional<std::vector<unsigned>>& PaletteIndices() { return m_paletteIndices; }
-        [[nodiscard]] std::optional<std::vector<float>> Weights() const { return m_weights; }
-        std::optional<std::vector<float>>& Weights() { return m_weights; }
-        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> Tangents() const { return m_tangents; }
-        std::optional<std::vector<MathLib::Vector4>>& Tangents() { return m_tangents; }
-        [[nodiscard]] std::optional<std::vector<unsigned>> Indices() const { return m_indices; }
-        std::optional<std::vector<unsigned>>& Indices() { return m_indices; }
-        [[nodiscard]] unsigned VertexCapacity() const { return m_vtxCapacity; }
-        unsigned& VertexCapacity() { return m_vtxCapacity; }
-        [[nodiscard]] unsigned IndexCapacity() const { return m_idxCapacity; }
-        unsigned& IndexCapacity() { return m_idxCapacity; }
-        [[nodiscard]] unsigned VertexUsedCount() const { return m_vtxUsedCount; }
-        unsigned& VertexUsedCount() { return m_vtxUsedCount; }
-        [[nodiscard]] unsigned IndexUsedCount() const { return m_idxUsedCount; }
-        unsigned& IndexUsedCount() { return m_idxUsedCount; }
-        [[nodiscard]] unsigned Topology() const { return m_topology; }
-        unsigned& Topology() { return m_topology; }
-        [[nodiscard]] const GenericDto& GeometryBound() const { return m_geometryBound; }
-        GenericDto& GeometryBound() { return m_geometryBound; }
+        [[nodiscard]] const GeometryId& id() const { return m_id; }
+        GeometryId& id() { return m_id; }
+        [[nodiscard]] const std::string& vertexFormat() const { return m_vertexFormat; }
+        std::string& vertexFormat() { return m_vertexFormat; }
+        [[nodiscard]] const std::vector<unsigned>& segments() const { return m_segments; }
+        std::vector<unsigned>& segments() { return m_segments; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> position3s() const { return m_position3s; }
+        std::optional<std::vector<MathLib::Vector3>>& position3s() { return m_position3s; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> position4s() const { return m_position4s; }
+        std::optional<std::vector<MathLib::Vector4>>& position4s() { return m_position4s; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector3>> normals() const { return m_normals; }
+        std::optional<std::vector<MathLib::Vector3>>& normals() { return m_normals; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> diffuseColors() const { return m_diffuseColors; }
+        std::optional<std::vector<MathLib::Vector4>>& diffuseColors() { return m_diffuseColors; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> specularColors() const { return m_specularColors; }
+        std::optional<std::vector<MathLib::Vector4>>& specularColors() { return m_specularColors; }
+        [[nodiscard]] const GenericDtoCollection& textureCoords() const { return m_texCoords; }
+        GenericDtoCollection& textureCoords() { return m_texCoords; }
+        [[nodiscard]] std::optional<std::vector<unsigned>> paletteIndices() const { return m_paletteIndices; }
+        std::optional<std::vector<unsigned>>& paletteIndices() { return m_paletteIndices; }
+        [[nodiscard]] std::optional<std::vector<float>> weights() const { return m_weights; }
+        std::optional<std::vector<float>>& weights() { return m_weights; }
+        [[nodiscard]] std::optional<std::vector<MathLib::Vector4>> tangents() const { return m_tangents; }
+        std::optional<std::vector<MathLib::Vector4>>& tangents() { return m_tangents; }
+        [[nodiscard]] std::optional<std::vector<unsigned>> indices() const { return m_indices; }
+        std::optional<std::vector<unsigned>>& indices() { return m_indices; }
+        [[nodiscard]] unsigned vertexCapacity() const { return m_vtxCapacity; }
+        unsigned& vertexCapacity() { return m_vtxCapacity; }
+        [[nodiscard]] unsigned indexCapacity() const { return m_idxCapacity; }
+        unsigned& indexCapacity() { return m_idxCapacity; }
+        [[nodiscard]] unsigned vertexUsedCount() const { return m_vtxUsedCount; }
+        unsigned& vertexUsedCount() { return m_vtxUsedCount; }
+        [[nodiscard]] unsigned indexUsedCount() const { return m_idxUsedCount; }
+        unsigned& indexUsedCount() { return m_idxUsedCount; }
+        [[nodiscard]] unsigned topology() const { return m_topology; }
+        unsigned& topology() { return m_topology; }
+        [[nodiscard]] const GenericDto& geometryBound() const { return m_geometryBound; }
+        GenericDto& geometryBound() { return m_geometryBound; }
 
     protected:
         FactoryDesc m_factoryDesc;
-        std::string m_name;
+        GeometryId m_id;
         std::string m_vertexFormat;
         std::vector<unsigned> m_segments;
         std::optional<std::vector<MathLib::Vector3>> m_position3s;

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GeometryDataEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -18,23 +18,23 @@ namespace Enigma::Engine
     class GeometryDataBuilt : public Frameworks::IEvent
     {
     public:
-        GeometryDataBuilt(const std::string& name, const GeometryDataPtr geo) :
-            m_name(name), m_geometry(geo) {};
-        const std::string& getName() { return m_name; }
-        const GeometryDataPtr& GetGeometryData() { return m_geometry; }
+        GeometryDataBuilt(const GeometryId& id, const GeometryDataPtr geo) :
+            m_id(id), m_geometry(geo) {};
+        const GeometryId& id() { return m_id; }
+        const GeometryDataPtr& geometryData() { return m_geometry; }
     private:
-        std::string m_name;
+        GeometryId m_id;
         GeometryDataPtr m_geometry;
     };
     class BuildGeometryDataFailed : public Frameworks::IEvent
     {
     public:
-        BuildGeometryDataFailed(const std::string& name, std::error_code er) :
-            m_name(name), m_error(er) {};
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        BuildGeometryDataFailed(const GeometryId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const GeometryId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        GeometryId m_id;
         std::error_code m_error;
     };
     class FactoryGeometryCreated : public Frameworks::IEvent

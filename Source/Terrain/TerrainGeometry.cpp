@@ -8,32 +8,32 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(Terrain, TerrainGeometry, TriangleList);
 
-TerrainGeometry::TerrainGeometry(const std::string& name) : TriangleList(name)
+TerrainGeometry::TerrainGeometry(const GeometryId& id) : TriangleList(id)
 {
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-TerrainGeometry::TerrainGeometry(const GenericDto& o) : TriangleList(o)
+TerrainGeometry::TerrainGeometry(const GeometryId& id, const GenericDto& o) : TriangleList(id, o)
 {
     TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
-    m_numRows = dto.NumRows();
-    m_numCols = dto.NumCols();
-    m_minPosition = dto.MinPosition();
-    m_maxPosition = dto.MaxPosition();
-    m_minTextureCoordinate = dto.MinTextureCoordinate();
-    m_maxTextureCoordinate = dto.MaxTextureCoordinate();
-    if (dto.HeightMap())
+    m_numRows = dto.numRows();
+    m_numCols = dto.numCols();
+    m_minPosition = dto.minPosition();
+    m_maxPosition = dto.maxPosition();
+    m_minTextureCoordinate = dto.minTextureCoordinate();
+    m_maxTextureCoordinate = dto.maxTextureCoordinate();
+    if (dto.heightMap())
     {
-        m_heightMap = dto.HeightMap().value();
+        m_heightMap = dto.heightMap().value();
     }
     else
     {
         m_heightMap = std::vector<float>((m_numRows + 1) * (m_numCols + 1));
         std::memset(m_heightMap.data(), 0, m_heightMap.size() * sizeof(float));
     }
-    if (!dto.Position3s())
+    if (!dto.position3s())
     {
-        dto.ConvertGeometryVertices();
+        dto.convertGeometryVertices();
         GeometryData::deserializeGeometryDto(dto);
     }
 }
@@ -46,26 +46,26 @@ GenericDto TerrainGeometry::serializeDto() const
 {
     TerrainGeometryDto dto;
     serializeNonVertexAttributes(dto);
-    dto.Name() = m_name;
-    dto.NumRows() = m_numRows;
-    dto.NumCols() = m_numCols;
-    dto.MinPosition() = m_minPosition;
-    dto.MaxPosition() = m_maxPosition;
-    dto.MinTextureCoordinate() = m_minTextureCoordinate;
-    dto.MaxTextureCoordinate() = m_maxTextureCoordinate;
+    dto.id() = m_id;
+    dto.numRows() = m_numRows;
+    dto.numCols() = m_numCols;
+    dto.minPosition() = m_minPosition;
+    dto.maxPosition() = m_maxPosition;
+    dto.minTextureCoordinate() = m_minTextureCoordinate;
+    dto.maxTextureCoordinate() = m_maxTextureCoordinate;
     if (!m_heightMap.empty())
     {
-        dto.HeightMap() = m_heightMap;
+        dto.heightMap() = m_heightMap;
     }
     return dto.toGenericDto();
 }
 
-void TerrainGeometry::UpdateHeightMapToVertexMemory()
+void TerrainGeometry::updateHeightMapToVertexMemory()
 {
-    RangedUpdateHeightMapToVertexMemory(0, m_heightMap.size());
+    rangedUpdateHeightMapToVertexMemory(0, m_heightMap.size());
 }
 
-void TerrainGeometry::RangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count)
+void TerrainGeometry::rangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count)
 {
     assert(m_numRows > 0 && m_numCols > 0);
     if (FATAL_LOG_EXPR(m_heightMap.empty())) return;
@@ -78,16 +78,16 @@ void TerrainGeometry::RangedUpdateHeightMapToVertexMemory(unsigned offset, unsig
     }
 }
 
-void TerrainGeometry::UpdateVertexNormals()
+void TerrainGeometry::updateVertexNormals()
 {
-    RangedUpdateVertexNormals(0, m_heightMap.size());
+    rangedUpdateVertexNormals(0, m_heightMap.size());
 }
 
-void TerrainGeometry::RangedUpdateVertexNormals(unsigned offset, unsigned count)
+void TerrainGeometry::rangedUpdateVertexNormals(unsigned offset, unsigned count)
 {
-    auto dimension = GetCellDimension();
-    auto [start_x, start_z] = RevertVertexIndex(offset);
-    auto [end_x, end_z] = RevertVertexIndex(offset + count - 1);
+    auto dimension = getCellDimension();
+    auto [start_x, start_z] = revertVertexIndex(offset);
+    auto [end_x, end_z] = revertVertexIndex(offset + count - 1);
     if (start_x > 0) start_x--;
     if (start_z > 0) start_z--;
     if (end_x < m_numCols) end_x++;
@@ -152,7 +152,7 @@ void TerrainGeometry::RangedUpdateVertexNormals(unsigned offset, unsigned count)
     }
 }
 
-Enigma::MathLib::Dimension<float> TerrainGeometry::GetCellDimension() const
+Enigma::MathLib::Dimension<float> TerrainGeometry::getCellDimension() const
 {
     assert(m_numCols > 0 && m_numRows > 0);
     MathLib::Dimension<float> cell_dimension;
@@ -162,36 +162,36 @@ Enigma::MathLib::Dimension<float> TerrainGeometry::GetCellDimension() const
     return cell_dimension;
 }
 
-float TerrainGeometry::GetHeight(unsigned x, unsigned z) const
+float TerrainGeometry::getHeight(unsigned x, unsigned z) const
 {
-    unsigned idx = ConvertVertexIndex(x, z);
+    unsigned idx = convertVertexIndex(x, z);
     assert(idx < m_heightMap.size());
     return m_heightMap[idx];
 }
 
-void TerrainGeometry::ChangeHeight(unsigned x, unsigned z, float new_height)
+void TerrainGeometry::changeHeight(unsigned x, unsigned z, float new_height)
 {
-    unsigned idx = ConvertVertexIndex(x, z);
+    unsigned idx = convertVertexIndex(x, z);
     assert(idx < m_heightMap.size());
     m_heightMap[idx] = new_height;
 }
 
-std::tuple<unsigned, unsigned> TerrainGeometry::LocateCell(const MathLib::Vector3& position) const
+std::tuple<unsigned, unsigned> TerrainGeometry::locateCell(const MathLib::Vector3& position) const
 {
-    auto dimension = GetCellDimension();
+    auto dimension = getCellDimension();
     unsigned cell_x = static_cast<unsigned>(std::floorf((position.X() - m_minPosition.X()) / dimension.m_width + 0.5f));
     unsigned cell_z = static_cast<unsigned>(std::floorf((position.Z() - m_minPosition.Z()) / dimension.m_height + 0.5f));
     return std::make_tuple(cell_x, cell_z);
 }
 
-unsigned TerrainGeometry::ConvertVertexIndex(unsigned x, unsigned z) const
+unsigned TerrainGeometry::convertVertexIndex(unsigned x, unsigned z) const
 {
     assert(m_numCols > 0 && m_numRows > 0);
     assert(x <= m_numCols && z <= m_numRows);
     return x + z * (m_numCols + 1);
 }
 
-std::tuple<unsigned, unsigned> TerrainGeometry::RevertVertexIndex(unsigned idx) const
+std::tuple<unsigned, unsigned> TerrainGeometry::revertVertexIndex(unsigned idx) const
 {
     assert(m_numCols > 0 && m_numRows > 0);
     assert(idx < m_heightMap.size());

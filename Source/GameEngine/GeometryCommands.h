@@ -24,7 +24,7 @@ namespace Enigma::Engine
     private:
         GeometryDataPolicy m_policy;
     };
-    using GeometryDtoFactory = std::function<std::shared_ptr<GeometryData> (const Engine::GenericDto& dto)>;
+    using GeometryDtoFactory = std::function<std::shared_ptr<GeometryData>(const GeometryId& id, const Engine::GenericDto& dto)>;
 
     class RegisterGeometryDtoFactory : public Frameworks::ICommand
     {

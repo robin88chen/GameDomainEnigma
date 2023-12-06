@@ -28,7 +28,7 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
     CommandBus::post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName(),
-        [=](auto o) { return std::make_shared<TriangleList>(o); }));
+        [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); }));
 }
 
 GeometryRepository::~GeometryRepository()
@@ -147,7 +147,7 @@ void GeometryRepository::OnBuildGeometryFail(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<BuildGeometryDataFailed, IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("geometry data %s build failed : %s\n",
-        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->id().name().c_str(), ev->error().message().c_str());
     m_isCurrentBuilding = false;
 }
 

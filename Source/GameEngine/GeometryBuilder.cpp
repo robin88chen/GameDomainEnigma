@@ -52,35 +52,35 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
 {
     assert(m_hostRepository);
     m_policy = policy;
-    if (m_hostRepository->hasGeometryData(policy.Name()))
+    if (m_hostRepository->hasGeometryData(policy.id()))
     {
-        EventPublisher::post(std::make_shared<GeometryDataBuilt>(policy.Name(),
-            m_hostRepository->queryGeometryData(policy.Name())));
+        EventPublisher::post(std::make_shared<GeometryDataBuilt>(policy.id(),
+            m_hostRepository->queryGeometryData(policy.id())));
     }
-    else if (auto p = policy.GetDto())
+    else if (auto dto = policy.getDto())
     {
-        CreateFromDto(p.value());
+        CreateFromDto(policy.id(), dto.value());
     }
-    else if (policy.GetDeserializer())
+    else if (policy.getDeserializer())
     {
         m_ruidDeserializing = Ruid::generate();
-        policy.GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.Parameter());
+        policy.getDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy.parameter());
     }
     else
     {
-        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(policy.Name(), ErrorCode::policyIncomplete));
+        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(policy.id(), ErrorCode::policyIncomplete));
     }
 }
 
-void GeometryBuilder::CreateFromDto(const GenericDto& dto)
+void GeometryBuilder::CreateFromDto(const GeometryId& id, const GenericDto& dto)
 {
     assert(m_hostRepository);
-    m_ruidInstancing = dto.GetId();
-    GeometryFactory(dto);
+    m_ruidInstancing = dto.ruid();
+    GeometryFactory(id, dto);
     //CommandBus::post(std::make_shared<InvokeDtoFactory>(dto));
 }
 
-void GeometryBuilder::GeometryFactory(const Engine::GenericDto& dto)
+void GeometryBuilder::GeometryFactory(const GeometryId& id, const Engine::GenericDto& dto)
 {
     auto factory = m_factories.find(dto.GetRtti().GetRttiName());
     if (factory == m_factories.end())
@@ -88,7 +88,7 @@ void GeometryBuilder::GeometryFactory(const Engine::GenericDto& dto)
         Platforms::Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    EventPublisher::post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(dto)));
+    EventPublisher::post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(id, dto)));
 }
 
 void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
@@ -99,10 +99,10 @@ void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (ev->getRuid() != m_ruidDeserializing) return;
     if (ev->GetDtos().empty())
     {
-        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ErrorCode::deserializeFail));
+        EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.id(), ErrorCode::deserializeFail));
         return;
     }
-    CreateFromDto(ev->GetDtos()[0]);
+    CreateFromDto(m_policy.id(), ev->GetDtos()[0]);
 }
 
 void GeometryBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
@@ -111,7 +111,7 @@ void GeometryBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
-    EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.id(), ev->GetErrorCode()));
 }
 
 void GeometryBuilder::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
@@ -119,8 +119,8 @@ void GeometryBuilder::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
-    if (ev->GetDto().GetId() != m_ruidInstancing) return;
-    EventPublisher::post(std::make_shared<GeometryDataBuilt>(m_policy.Name(), ev->GetGeometryData()));
+    if (ev->GetDto().ruid() != m_ruidInstancing) return;
+    EventPublisher::post(std::make_shared<GeometryDataBuilt>(m_policy.id(), ev->GetGeometryData()));
 }
 
 void GeometryBuilder::DoRegisteringGeometryFactory(const Frameworks::ICommandPtr& c)

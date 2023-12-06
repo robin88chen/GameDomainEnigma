@@ -20,6 +20,7 @@
 #include "GraphicKernel/IIndexBuffer.h"
 #include "GeometryDataDto.h"
 #include "RenderBufferSignature.h"
+#include "GeometryId.h"
 #include <memory>
 
 
@@ -31,8 +32,8 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        GeometryData(const std::string& name);
-        GeometryData(const GenericDto& dto);
+        GeometryData(const GeometryId& id);
+        GeometryData(const GeometryId& id, const GenericDto& dto);
         GeometryData(const GeometryData&) = delete;
         GeometryData(GeometryData&&) = delete;
         virtual ~GeometryData();
@@ -42,7 +43,7 @@ namespace Enigma::Engine
 
         virtual GenericDto serializeDto() const;
 
-        const std::string& getName() { return m_name; }
+        const GeometryId& id() { return m_id; }
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
@@ -173,7 +174,7 @@ namespace Enigma::Engine
         unsigned int getUsedIndexCount() const { return m_idxUsedCount; };
 
         /** size of vertex (in byte) */
-        unsigned int sizeofVertex() const { return m_vertexDesc.TotalVertexSize(); };
+        unsigned int sizeofVertex() const { return m_vertexDesc.totalVertexSize(); };
 
         /** get geometry segment */
         const GeometrySegment& getSegment(unsigned int index) const;
@@ -206,7 +207,7 @@ namespace Enigma::Engine
 
     protected:
         FactoryDesc m_factoryDesc;
-        std::string m_name;
+        GeometryId m_id;
 
         GeometrySegmentVector m_geoSegmentVector;
 

@@ -94,7 +94,7 @@ void PrefabIOService::loadNextPrefab()
     }
     m_currentCommand = m_loadingCommands.front();
     m_loadingCommands.pop_front();
-    deserializePrefab(m_currentCommand->getPawnDto().GetId(), m_currentCommand->getPawnDto().GetRtti().GetPrefab());
+    deserializePrefab(m_currentCommand->getPawnDto().ruid(), m_currentCommand->getPawnDto().GetRtti().GetPrefab());
 }
 
 void PrefabIOService::deserializePrefab(const Ruid& dto_ruid, const std::string& prefab_at_path)
@@ -129,7 +129,7 @@ void PrefabIOService::onDtoDeserialized(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized>(e);
     if (!ev) return;
-    if (ev->getRuid() != m_currentCommand->getPawnDto().GetId()) return;
+    if (ev->getRuid() != m_currentCommand->getPawnDto().ruid()) return;
     CommandBus::post(std::make_shared<BuildSceneGraph>(m_currentCommand->getPawnDto().getName(), ev->GetDtos()));
 }
 
@@ -139,7 +139,7 @@ void PrefabIOService::onDeserializeDtoFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed>(e);
     if (!ev) return;
-    if (ev->getRuid() != m_currentCommand->getPawnDto().GetId()) return;
+    if (ev->getRuid() != m_currentCommand->getPawnDto().ruid()) return;
     failPrefabLoading(ev->GetErrorCode());
 }
 

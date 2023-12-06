@@ -34,8 +34,8 @@ namespace Enigma::Engine
         void BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        void CreateFromDto(const GenericDto& dto);
-        void GeometryFactory(const Engine::GenericDto& dto);
+        void CreateFromDto(const GeometryId& id, const GenericDto& dto);
+        void GeometryFactory(const GeometryId& id, const Engine::GenericDto& dto);
 
         void OnDtoDeserialized(const Frameworks::IEventPtr& e);
         void OnDeserializeDtoFailed(const Frameworks::IEventPtr& e);

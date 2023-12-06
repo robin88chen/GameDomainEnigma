@@ -8,11 +8,11 @@ using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
 VertexDeclarationEgl::VertexDeclarationEgl(const std::string& name, const std::string& data_vertex_format)
-        : IVertexDeclaration(name, data_vertex_format)
+    : IVertexDeclaration(name, data_vertex_format)
 {
     m_layouts.clear();
-    Graphics::VertexDescription desc = m_dataVertexFormatCode.CalculateVertexSize();
-    m_vertexSize = desc.TotalVertexSize();
+    Graphics::VertexDescription desc = m_dataVertexFormatCode.calculateVertexSize();
+    m_vertexSize = desc.totalVertexSize();
     CreateVertexLayout(desc);
 }
 
@@ -31,44 +31,44 @@ bool VertexDeclarationEgl::IsMatched(const std::string& data_vertex_format, cons
 
 void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription& vertex_desc)
 {
-    if (FATAL_LOG_EXPR(vertex_desc.NumberOfElements() <= 0)) return;
+    if (FATAL_LOG_EXPR(vertex_desc.numberOfElements() <= 0)) return;
 
     m_layouts.clear();
-    m_layouts.resize(vertex_desc.NumberOfElements());
+    m_layouts.resize(vertex_desc.numberOfElements());
 
     unsigned int element_idx = 0;
-    if (vertex_desc.PositionOffset() >= 0)
+    if (vertex_desc.positionOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.PositionOffset() * sizeof(float));
-        m_layouts[element_idx].m_size = vertex_desc.PositionDimension();
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.positionOffset() * sizeof(float));
+        m_layouts[element_idx].m_size = vertex_desc.positionDimension();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
-    if (vertex_desc.WeightOffset() >= 0)
+    if (vertex_desc.weightOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.WeightOffset() * sizeof(float));
-        m_layouts[element_idx].m_size = vertex_desc.BlendWeightCount();
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.weightOffset() * sizeof(float));
+        m_layouts[element_idx].m_size = vertex_desc.blendWeightCount();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
-    if (vertex_desc.PaletteIndexOffset() >= 0)
+    if (vertex_desc.paletteIndexOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.PaletteIndexOffset() * sizeof(float));
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.paletteIndexOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 1;
         m_layouts[element_idx].m_type = GL_UNSIGNED_INT;
         element_idx++;
     }
-    if (vertex_desc.NormalOffset() >= 0)
+    if (vertex_desc.normalOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.NormalOffset() * sizeof(float));
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.normalOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 3;
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
-    if (vertex_desc.DiffuseColorOffset() >= 0)
+    if (vertex_desc.diffuseColorOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.DiffuseColorOffset() * sizeof(float));
-        if (vertex_desc.DiffuseColorDimension() == 1)
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.diffuseColorOffset() * sizeof(float));
+        if (vertex_desc.diffuseColorDimension() == 1)
         {
             m_layouts[element_idx].m_size = 1;
             m_layouts[element_idx].m_type = GL_UNSIGNED_INT;
@@ -80,10 +80,10 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
         }
         element_idx++;
     }
-    if (vertex_desc.SpecularColorOffset() >= 0)
+    if (vertex_desc.specularColorOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.SpecularColorOffset() * sizeof(float));
-        if (vertex_desc.SpecularColorDimension() == 1)
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.specularColorOffset() * sizeof(float));
+        if (vertex_desc.specularColorDimension() == 1)
         {
             m_layouts[element_idx].m_size = 1;
             m_layouts[element_idx].m_type = GL_UNSIGNED_INT;
@@ -95,26 +95,26 @@ void VertexDeclarationEgl::CreateVertexLayout(const Graphics::VertexDescription&
         }
         element_idx++;
     }
-    if (vertex_desc.TangentOffset() >= 0)
+    if (vertex_desc.tangentOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.TangentOffset() * sizeof(float));
-        m_layouts[element_idx].m_size = vertex_desc.TangentDimension();
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.tangentOffset() * sizeof(float));
+        m_layouts[element_idx].m_size = vertex_desc.tangentDimension();
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
-    if (vertex_desc.BiNormalOffset() >= 0)
+    if (vertex_desc.binormalOffset() >= 0)
     {
-        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.BiNormalOffset() * sizeof(float));
+        m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.binormalOffset() * sizeof(float));
         m_layouts[element_idx].m_size = 3;
         m_layouts[element_idx].m_type = GL_FLOAT;
         element_idx++;
     }
     for (unsigned int ti = 0; ti < Graphics::VertexFormatCode::MAX_TEX_COORD; ti++)
     {
-        if (vertex_desc.TextureCoordOffset(ti) >= 0)
+        if (vertex_desc.textureCoordOffset(ti) >= 0)
         {
-            m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.TextureCoordOffset(ti) * sizeof(float));
-            m_layouts[element_idx].m_size = vertex_desc.TextureCoordSize(ti);
+            m_layouts[element_idx].m_position = static_cast<GLint>(vertex_desc.textureCoordOffset(ti) * sizeof(float));
+            m_layouts[element_idx].m_size = vertex_desc.textureCoordSize(ti);
             m_layouts[element_idx].m_type = GL_FLOAT;
             element_idx++;
         }

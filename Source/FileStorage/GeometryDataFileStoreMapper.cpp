@@ -86,7 +86,7 @@ std::error_code GeometryDataFileStoreMapper::serializeMapperFile()
     std::string mapper_file_content;
     for (auto& rec : m_filename_map)
     {
-        mapper_file_content += rec.first + "," + rec.second + "\n";
+        mapper_file_content += rec.first.name() + "," + rec.second + "\n";
     }
     auto mapper_file = FileSystem::FileSystem::instance()->openFile(m_mapper_filename, FileSystem::write | FileSystem::binary);
     if (!mapper_file) return FileSystem::ErrorCode::fileOpenError;
@@ -113,7 +113,7 @@ std::string GeometryDataFileStoreMapper::extractFilename(const Engine::GeometryI
 {
     if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
     if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
-    return id + ".json";
+    return id.name() + ".json";
 }
 
 std::error_code GeometryDataFileStoreMapper::serializeDataTransferObject(const std::string& filename, const Engine::GenericDto& dto)

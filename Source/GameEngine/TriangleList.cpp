@@ -11,13 +11,13 @@ using namespace Enigma::Graphics;
 
 DEFINE_RTTI(Engine, TriangleList, GeometryData);
 
-TriangleList::TriangleList(const std::string& name) : GeometryData(name)
+TriangleList::TriangleList(const GeometryId& id) : GeometryData(id)
 {
     m_factoryDesc = FactoryDesc(TriangleList::TYPE_RTTI.getName());
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
 
-TriangleList::TriangleList(const GenericDto& o) : GeometryData(o)
+TriangleList::TriangleList(const GeometryId& id, const GenericDto& o) : GeometryData(id, o)
 {
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
@@ -67,14 +67,14 @@ void TriangleList::FetchTrianglePos(unsigned idx, MathLib::Vector3 tri[3])
 void TriangleList::FetchTriangleTextureCoord(unsigned idx, unsigned tex_channel, MathLib::Vector2 uv[3])
 {
     if (FATAL_LOG_EXPR(tex_channel >= VertexFormatCode::MAX_TEX_COORD)) return;
-    if (m_vertexDesc.TextureCoordOffset(tex_channel) < 0) return;
-    if (m_vertexDesc.TextureCoordSize(tex_channel) < 2) return;
+    if (m_vertexDesc.textureCoordOffset(tex_channel) < 0) return;
+    if (m_vertexDesc.textureCoordSize(tex_channel) < 2) return;
 
     unsigned int vtx_idx[3];
     FetchTriangleVertexIndex(idx, vtx_idx);
 
     unsigned int vtx_pitch = sizeofVertex();
-    unsigned int offset = m_vertexDesc.TextureCoordOffset(tex_channel) * sizeof(float);
+    unsigned int offset = m_vertexDesc.textureCoordOffset(tex_channel) * sizeof(float);
     memcpy(&uv[0], &m_vertexMemory[vtx_idx[0] * vtx_pitch + offset], sizeof(Vector2));
     memcpy(&uv[1], &m_vertexMemory[vtx_idx[1] * vtx_pitch + offset], sizeof(Vector2));
     memcpy(&uv[2], &m_vertexMemory[vtx_idx[2] * vtx_pitch + offset], sizeof(Vector2));
@@ -86,8 +86,8 @@ error TriangleList::CalculateVertexTangentSpace(unsigned tex_channel)
         return ErrorCode::invalidArrayIndex;
 
     if (FATAL_LOG_EXPR(m_vertexMemory.empty())) return ErrorCode::nullMemoryBuffer;
-    if (!m_vertexDesc.HasTangent()) return ErrorCode::ok;
-    if (m_vertexDesc.TextureCoordOffset(tex_channel) < 0) return ErrorCode::ok;
+    if (!m_vertexDesc.hasTangent()) return ErrorCode::ok;
+    if (m_vertexDesc.textureCoordOffset(tex_channel) < 0) return ErrorCode::ok;
 
     std::vector<Vector3> tangent_buf;
     tangent_buf.resize(m_vtxUsedCount);

@@ -64,7 +64,7 @@ void AnimationAssetBuilder::BuildAnimationAsset(const std::shared_ptr<AnimationA
 void AnimationAssetBuilder::CreateFromDto(const std::string& name, const GenericDto& dto)
 {
     assert(m_repository);
-    m_ruidConstructing = dto.GetId();
+    m_ruidConstructing = dto.ruid();
     CommandBus::post(std::make_shared<InvokeDtoFactory>(dto));
 }
 

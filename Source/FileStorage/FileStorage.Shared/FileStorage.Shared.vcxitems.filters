@@ -4,15 +4,24 @@
     <Filter Include="SceneGraphStoreMapper">
       <UniqueIdentifier>{009607fa-1b76-4834-a218-61776abfc543}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GeometryDataStoreMapper">
+      <UniqueIdentifier>{04e43a0c-e812-4fee-b94e-f9abd68ab4fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
       <Filter>SceneGraphStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.h">
+      <Filter>GeometryDataStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
       <Filter>SceneGraphStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.cpp">
+      <Filter>GeometryDataStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

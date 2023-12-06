@@ -51,6 +51,9 @@ ServiceResult GeometryRepository::onInit()
     m_queryGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { return this->queryGeometryData(q); });
     QueryDispatcher::subscribe(typeid(QueryGeometryData), m_queryGeometryData);
 
+    m_storeMapper->connect();
+    m_factory->registerHandlers();
+
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -72,6 +75,10 @@ ServiceResult GeometryRepository::onTick()
 
 ServiceResult GeometryRepository::onTerm()
 {
+    m_storeMapper->disconnect();
+    m_factory->unregisterHandlers();
+    m_geometries.clear();
+
     EventPublisher::unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
     m_onGeometryBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
@@ -102,8 +109,9 @@ std::shared_ptr<GeometryData> GeometryRepository::queryGeometryData(const Geomet
     auto it = m_geometries.find(id);
     if (it != m_geometries.end()) return it->second;
     assert(m_factory);
-    auto dto = m_storeMapper->queryGeometry(id);
-    return m_factory->constitute(id, dto);
+    const auto dto = m_storeMapper->queryGeometry(id);
+    assert(dto.has_value());
+    return m_factory->constitute(id, dto.value());
 }
 
 error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)

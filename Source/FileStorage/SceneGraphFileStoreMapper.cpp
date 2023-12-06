@@ -18,6 +18,7 @@ SceneGraphFileStoreMapper::SceneGraphFileStoreMapper(const std::string& mapper_f
 
 SceneGraphFileStoreMapper::~SceneGraphFileStoreMapper()
 {
+    assert(!m_has_connected);
     assert(m_filename_map.empty());
 }
 

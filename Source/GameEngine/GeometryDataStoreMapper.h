@@ -23,7 +23,7 @@ namespace Enigma::Engine
         virtual std::error_code disconnect() = 0;
 
         virtual bool hasGeometry(const GeometryId& id) = 0;
-        virtual Engine::GenericDto queryGeometry(const GeometryId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryGeometry(const GeometryId& id) = 0;
         virtual std::error_code removeGeometry(const GeometryId& id) = 0;
         virtual std::error_code putGeometry(const GeometryId& id, const Engine::GenericDto& dto) = 0;
     };

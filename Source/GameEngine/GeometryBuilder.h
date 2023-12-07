@@ -49,8 +49,8 @@ namespace Enigma::Engine
         Frameworks::Ruid m_ruidInstancing;
         GeometryDataPolicy m_policy;
 
-        using DtoFactoryTable = std::unordered_map<std::string, GeometryDtoFactory>;
-        DtoFactoryTable m_factories;
+        //using DtoFactoryTable = std::unordered_map<std::string, GeometryDtoFactory>;
+        //DtoFactoryTable m_factories;
 
         Frameworks::EventSubscriberPtr m_onDtoDeserialized;
         Frameworks::EventSubscriberPtr m_onDeserializeDtoFailed;

@@ -27,32 +27,33 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
     m_needTick = false;
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
-    CommandBus::post(std::make_shared<RegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName(),
+
+    CommandBus::post(std::make_shared<RegisterGeometryFactory>(TriangleList::TYPE_RTTI.getName(),
+        [=](auto id) { return std::make_shared<TriangleList>(id); },
         [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); }));
 }
 
 GeometryRepository::~GeometryRepository()
 {
-    CommandBus::post(std::make_shared<UnRegisterGeometryDtoFactory>(TriangleList::TYPE_RTTI.getName()));
+    CommandBus::post(std::make_shared<UnRegisterGeometryFactory>(TriangleList::TYPE_RTTI.getName()));
     SAFE_DELETE(m_factory);
     SAFE_DELETE(m_builder);
 }
 
 ServiceResult GeometryRepository::onInit()
 {
-    m_onGeometryBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryBuilt(e); });
-    EventPublisher::subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
-    m_onBuildGeometryFail = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryFail(e); });
-    EventPublisher::subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+    //m_onGeometryBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnGeometryBuilt(e); });
+    //EventPublisher::subscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    //m_onBuildGeometryFail = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildGeometryFail(e); });
+    //EventPublisher::subscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
 
-    m_doBuildingGeometry = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingGeometry(c); });
-    CommandBus::subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+    //m_doBuildingGeometry = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingGeometry(c); });
+    //CommandBus::subscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
 
     m_queryGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { return this->queryGeometryData(q); });
     QueryDispatcher::subscribe(typeid(QueryGeometryData), m_queryGeometryData);
 
     m_storeMapper->connect();
-    m_factory->registerHandlers();
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -76,16 +77,15 @@ ServiceResult GeometryRepository::onTick()
 ServiceResult GeometryRepository::onTerm()
 {
     m_storeMapper->disconnect();
-    m_factory->unregisterHandlers();
     m_geometries.clear();
 
-    EventPublisher::unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
-    m_onGeometryBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
-    m_onBuildGeometryFail = nullptr;
+    //EventPublisher::unsubscribe(typeid(GeometryDataBuilt), m_onGeometryBuilt);
+    //m_onGeometryBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(BuildGeometryDataFailed), m_onBuildGeometryFail);
+    //m_onBuildGeometryFail = nullptr;
 
-    CommandBus::unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
-    m_doBuildingGeometry = nullptr;
+    //CommandBus::unsubscribe(typeid(BuildGeometryData), m_doBuildingGeometry);
+    //m_doBuildingGeometry = nullptr;
 
     QueryDispatcher::unsubscribe(typeid(QueryGeometryData), m_queryGeometryData);
     m_queryGeometryData = nullptr;
@@ -114,7 +114,7 @@ std::shared_ptr<GeometryData> GeometryRepository::queryGeometryData(const Geomet
     return m_factory->constitute(id, dto.value());
 }
 
-error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)
+/*error GeometryRepository::BuildGeometry(const GeometryDataPolicy& policy)
 {
     std::lock_guard locker{ m_policiesLock };
     m_policies.push(policy);
@@ -156,8 +156,8 @@ void GeometryRepository::DoBuildingGeometry(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<BuildGeometryData, ICommand>(c);
     if (!cmd) return;
-    BuildGeometry(cmd->GetPolicy());
-}
+    BuildGeometry(cmd->policy());
+}*/
 
 void GeometryRepository::queryGeometryData(const Frameworks::IQueryPtr& q)
 {
@@ -165,4 +165,30 @@ void GeometryRepository::queryGeometryData(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryGeometryData, IQuery>(q);
     if (!query) return;
     query->setResult(queryGeometryData(query->id()));
+}
+
+void GeometryRepository::removeGeometryData(const GeometryId& id)
+{
+    if (!hasGeometryData(id)) return;
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.erase(id);
+    error er = m_storeMapper->removeGeometry(id);
+    if (er)
+    {
+        Platforms::Debug::ErrorPrintf("remove geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
+        EventPublisher::post(std::make_shared<RemoveGeometryFailed>(id, er));
+    }
+}
+
+void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data)
+{
+    if (hasGeometryData(id)) return;
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(id, data);
+    error er = m_storeMapper->putGeometry(id, data->serializeDto());
+    if (er)
+    {
+        Platforms::Debug::ErrorPrintf("put geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
+        EventPublisher::post(std::make_shared<PutGeometryFailed>(id, er));
+    }
 }

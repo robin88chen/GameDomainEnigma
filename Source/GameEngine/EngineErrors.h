@@ -21,6 +21,9 @@ namespace Enigma::Engine
         deserializeFail,
         fileIOError,
 
+        geometryFactoryNotExists = 151,
+        geometryEntityAlreadyExists,
+
         effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,

@@ -23,15 +23,15 @@ GeometryBuilder::GeometryBuilder(GeometryRepository* host) : m_ruidDeserializing
     EventPublisher::subscribe(typeid(GenericDtoDeserialized), m_onDtoDeserialized);
     m_onDeserializeDtoFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnDeserializeDtoFailed(e); });
     EventPublisher::subscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
-    m_onFactoryGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryGeometryCreated(e); });
-    EventPublisher::subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
+    //m_onFactoryGeometryCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnFactoryGeometryCreated(e); });
+    //EventPublisher::subscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
 
-    m_doRegisteringGeometryFactory =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringGeometryFactory(c); });
-    CommandBus::subscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
-    m_doUnRegisteringGeometryFactory =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringGeometryFactory(c); });
-    CommandBus::subscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
+    //m_doRegisteringGeometryFactory =
+      //  std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringGeometryFactory(c); });
+    //CommandBus::subscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
+    //m_doUnRegisteringGeometryFactory =
+      //  std::make_shared<CommandSubscriber>([=](auto c) { this->DoUnRegisteringGeometryFactory(c); });
+    //CommandBus::subscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
 }
 
 GeometryBuilder::~GeometryBuilder()
@@ -40,19 +40,19 @@ GeometryBuilder::~GeometryBuilder()
     m_onDtoDeserialized = nullptr;
     EventPublisher::unsubscribe(typeid(DeserializeDtoFailed), m_onDeserializeDtoFailed);
     m_onDeserializeDtoFailed = nullptr;
-    EventPublisher::unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
-    m_onFactoryGeometryCreated = nullptr;
-    CommandBus::unsubscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
-    m_doRegisteringGeometryFactory = nullptr;
-    CommandBus::unsubscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
-    m_doUnRegisteringGeometryFactory = nullptr;
+    //EventPublisher::unsubscribe(typeid(FactoryGeometryCreated), m_onFactoryGeometryCreated);
+    //m_onFactoryGeometryCreated = nullptr;
+    //CommandBus::unsubscribe(typeid(RegisterGeometryDtoFactory), m_doRegisteringGeometryFactory);
+    //m_doRegisteringGeometryFactory = nullptr;
+    //CommandBus::unsubscribe(typeid(UnRegisterGeometryDtoFactory), m_doUnRegisteringGeometryFactory);
+    //m_doUnRegisteringGeometryFactory = nullptr;
 }
 
 void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
 {
     assert(m_hostRepository);
     m_policy = policy;
-    if (m_hostRepository->hasGeometryData(policy.id()))
+    /*if (m_hostRepository->hasGeometryData(policy.id()))
     {
         EventPublisher::post(std::make_shared<GeometryDataBuilt>(policy.id(),
             m_hostRepository->queryGeometryData(policy.id())));
@@ -69,7 +69,7 @@ void GeometryBuilder::BuildGeometry(const GeometryDataPolicy& policy)
     else
     {
         EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(policy.id(), ErrorCode::policyIncomplete));
-    }
+    }*/
 }
 
 void GeometryBuilder::CreateFromDto(const GeometryId& id, const GenericDto& dto)
@@ -82,18 +82,18 @@ void GeometryBuilder::CreateFromDto(const GeometryId& id, const GenericDto& dto)
 
 void GeometryBuilder::GeometryFactory(const GeometryId& id, const Engine::GenericDto& dto)
 {
-    auto factory = m_factories.find(dto.GetRtti().GetRttiName());
+    /*auto factory = m_factories.find(dto.GetRtti().GetRttiName());
     if (factory == m_factories.end())
     {
         Platforms::Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
         return;
     }
-    EventPublisher::post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(id, dto)));
+    EventPublisher::post(std::make_shared<FactoryGeometryCreated>(dto, factory->second(id, dto)));*/
 }
 
 void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
@@ -102,39 +102,39 @@ void GeometryBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
         EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.id(), ErrorCode::deserializeFail));
         return;
     }
-    CreateFromDto(m_policy.id(), ev->GetDtos()[0]);
+    CreateFromDto(m_policy.id(), ev->GetDtos()[0]);*/
 }
 
 void GeometryBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
-    EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.id(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildGeometryDataFailed>(m_policy.id(), ev->GetErrorCode()));*/
 }
 
 void GeometryBuilder::OnFactoryGeometryCreated(const Frameworks::IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactoryGeometryCreated, IEvent>(e);
     if (!ev) return;
     if (ev->GetDto().ruid() != m_ruidInstancing) return;
-    EventPublisher::post(std::make_shared<GeometryDataBuilt>(m_policy.id(), ev->GetGeometryData()));
+    EventPublisher::post(std::make_shared<GeometryDataBuilt>(m_policy.id(), ev->GetGeometryData()));*/
 }
 
 void GeometryBuilder::DoRegisteringGeometryFactory(const Frameworks::ICommandPtr& c)
 {
-    if (!c) return;
+    /*if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterGeometryDtoFactory, ICommand>(c);
     if (!cmd) return;
-    m_factories.insert_or_assign(cmd->GetRtti(), cmd->GetFactory());
+    m_factories.insert_or_assign(cmd->GetRtti(), cmd->GetFactory());*/
 }
 
 void GeometryBuilder::DoUnRegisteringGeometryFactory(const Frameworks::ICommandPtr& c)
 {
-    if (!c) return;
+    /*if (!c) return;
     auto cmd = std::dynamic_pointer_cast<UnRegisterGeometryDtoFactory, ICommand>(c);
     if (!cmd) return;
-    if (m_factories.find(cmd->GetRtti()) != m_factories.end()) m_factories.erase(cmd->GetRtti());
+    if (m_factories.find(cmd->GetRtti()) != m_factories.end()) m_factories.erase(cmd->GetRtti());*/
 }

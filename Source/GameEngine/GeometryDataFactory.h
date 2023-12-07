@@ -11,10 +11,13 @@
 #include "GeometryId.h"
 #include "GenericDto.h"
 #include "Frameworks/Rtti.h"
+#include "Frameworks/CommandSubscriber.h"
 
 namespace Enigma::Engine
 {
     class GeometryData;
+    using GeometryCreator = std::function<std::shared_ptr<GeometryData>(const GeometryId& id)>;
+    using GeometryConstitutor = std::function<std::shared_ptr<GeometryData>(const GeometryId& id, const Engine::GenericDto& dto)>;
 
     class GeometryDataFactory
     {
@@ -27,6 +30,21 @@ namespace Enigma::Engine
 
         std::shared_ptr<GeometryData> create(const GeometryId& id, const Frameworks::Rtti& rtti);
         std::shared_ptr<GeometryData> constitute(const GeometryId& id, const GenericDto& dto);
+
+    private:
+        void registerGeometryFactory(const Frameworks::ICommandPtr& c);
+        void unregisterGeometryFactory(const Frameworks::ICommandPtr& c);
+        void createGeometry(const Frameworks::ICommandPtr& c);
+        void constituteGeometry(const Frameworks::ICommandPtr& c);
+
+    private:
+        std::unordered_map<std::string, GeometryCreator> m_creators; // rtti name -> creator
+        std::unordered_map<std::string, GeometryConstitutor> m_constitutors; // rtti name -> constitutor
+
+        Frameworks::CommandSubscriberPtr m_registerGeometryFactory;
+        Frameworks::CommandSubscriberPtr m_unregisterGeometryFactory;
+        Frameworks::CommandSubscriberPtr m_createGeometry;
+        Frameworks::CommandSubscriberPtr m_constituteGeometry;
     };
 }
 

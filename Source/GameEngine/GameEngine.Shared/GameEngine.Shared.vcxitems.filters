@@ -476,5 +476,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp">
+      <Filter>Geometry Repository</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

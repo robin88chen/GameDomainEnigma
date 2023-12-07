@@ -10,41 +10,56 @@
 
 #include "Frameworks/Command.h"
 #include "GeometryDataPolicy.h"
+#include "GeometryDataFactory.h"
 
 namespace Enigma::Engine
 {
     class GeometryData;
 
-    class BuildGeometryData : public Frameworks::ICommand
+    class CreateGeometry : public Frameworks::ICommand
     {
     public:
-        BuildGeometryData(const GeometryDataPolicy& policy) : m_policy(policy) {}
-        const GeometryDataPolicy& GetPolicy() { return m_policy; }
+        CreateGeometry(const GeometryId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
+        const GeometryId& id() { return m_id; }
+        const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
 
     private:
-        GeometryDataPolicy m_policy;
+        GeometryId m_id;
+        std::string m_rtti;
     };
-    using GeometryDtoFactory = std::function<std::shared_ptr<GeometryData>(const GeometryId& id, const Engine::GenericDto& dto)>;
-
-    class RegisterGeometryDtoFactory : public Frameworks::ICommand
+    class ConstituteGeometry : public Frameworks::ICommand
     {
     public:
-        RegisterGeometryDtoFactory(const std::string& rtti, const GeometryDtoFactory& factory)
-            : m_rtti(rtti), m_factory(factory) {}
+        ConstituteGeometry(const GeometryId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
+        const GeometryId& id() { return m_id; }
+        const GenericDto& dto() { return m_dto; }
 
-        const std::string& GetRtti() const { return m_rtti; }
-        const GeometryDtoFactory& GetFactory() { return m_factory; }
+    private:
+        GeometryId m_id;
+        GenericDto m_dto;
+    };
+
+    class RegisterGeometryFactory : public Frameworks::ICommand
+    {
+    public:
+        RegisterGeometryFactory(const std::string& rtti, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
+            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+
+        const std::string& rttiName() const { return m_rtti; }
+        const GeometryCreator& creator() { return m_creator; }
+        const GeometryConstitutor& constitutor() { return m_constitutor; }
 
     private:
         std::string m_rtti;
-        GeometryDtoFactory m_factory;
+        GeometryCreator m_creator;
+        GeometryConstitutor m_constitutor;
     };
-    class UnRegisterGeometryDtoFactory : public Frameworks::ICommand
+    class UnRegisterGeometryFactory : public Frameworks::ICommand
     {
     public:
-        UnRegisterGeometryDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
+        UnRegisterGeometryFactory(const std::string& rtti) : m_rtti(rtti) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& rttiName() const { return m_rtti; }
 
     private:
         std::string m_rtti;

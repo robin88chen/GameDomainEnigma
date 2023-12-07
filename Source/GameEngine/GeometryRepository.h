@@ -49,16 +49,20 @@ namespace Enigma::Engine
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
+        GeometryDataFactory* factory() { return m_factory; }
+
         bool hasGeometryData(const GeometryId& id);
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
+        void removeGeometryData(const GeometryId& id);
+        void putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data);
 
-        error BuildGeometry(const GeometryDataPolicy& policy);
+        //error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        void OnFactoryGeometryCreated(const Frameworks::IEventPtr& e);
-        void OnGeometryBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
-        void DoBuildingGeometry(const Frameworks::ICommandPtr& c);
+        //void OnFactoryGeometryCreated(const Frameworks::IEventPtr& e);
+        //void OnGeometryBuilt(const Frameworks::IEventPtr& e);
+        //void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
+        //void DoBuildingGeometry(const Frameworks::ICommandPtr& c);
 
         void queryGeometryData(const Frameworks::IQueryPtr& q);
 
@@ -73,9 +77,9 @@ namespace Enigma::Engine
         bool m_isCurrentBuilding;
         std::mutex m_policiesLock;
 
-        Frameworks::EventSubscriberPtr m_onGeometryBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
-        Frameworks::CommandSubscriberPtr m_doBuildingGeometry;
+        //Frameworks::EventSubscriberPtr m_onGeometryBuilt;
+        //Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
+        //Frameworks::CommandSubscriberPtr m_doBuildingGeometry;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;
     };

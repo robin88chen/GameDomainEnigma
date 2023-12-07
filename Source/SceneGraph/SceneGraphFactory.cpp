@@ -64,12 +64,16 @@ void SceneGraphFactory::unregisterHandlers()
 
 std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
 {
-    return std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
+    auto camera = std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
+    EventPublisher::post(std::make_shared<CameraCreated>(id, camera));
+    return camera;
 }
 
 std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto)
 {
-    return std::make_shared<Camera>(id, dto);
+    auto camera = std::make_shared<Camera>(id, dto);
+    EventPublisher::post(std::make_shared<CameraConstituted>(id, camera));
+    return camera;
 }
 
 void SceneGraphFactory::createCamera(const ICommandPtr& c)
@@ -84,11 +88,7 @@ void SceneGraphFactory::createCamera(const ICommandPtr& c)
         EventPublisher::post(std::make_shared<CreateCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto camera = createCamera(cmd->id()))
-    {
-        EventPublisher::post(std::make_shared<CameraCreated>(cmd->id(), camera));
-    }
-    else
+    if (createCamera(cmd->id()) == nullptr)
     {
         EventPublisher::post(std::make_shared<CreateCameraFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -106,11 +106,7 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto camera = constituteCamera(cmd->id(), cmd->dto()))
-    {
-        EventPublisher::post(std::make_shared<CameraConstituted>(cmd->id(), camera));
-    }
-    else
+    if (constituteCamera(cmd->id(), cmd->dto()) == nullptr)
     {
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -118,7 +114,9 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
 
 std::shared_ptr<Pawn> SceneGraphFactory::createPawn(const SpatialId& id)
 {
-    return std::make_shared<Pawn>(id);
+    auto pawn = std::make_shared<Pawn>(id);
+    EventPublisher::post(std::make_shared<PawnCreated>(id, pawn));
+    return pawn;
 }
 
 std::shared_ptr<Pawn> SceneGraphFactory::constitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos)
@@ -132,6 +130,7 @@ std::shared_ptr<Pawn> SceneGraphFactory::constitutePawn(const SpatialId& id, con
         m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn });
         CommandBus::post(cmd);
     }
+    EventPublisher::post(std::make_shared<PawnConstituted>(id, pawn));
     return pawn;
 }
 
@@ -147,11 +146,7 @@ void SceneGraphFactory::createPawn(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto pawn = createPawn(cmd->id()))
-    {
-        EventPublisher::post(std::make_shared<PawnCreated>(cmd->id(), pawn));
-    }
-    else
+    if (createPawn(cmd->id()) == nullptr)
     {
         EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -169,11 +164,7 @@ void SceneGraphFactory::constitutePawn(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto pawn = constitutePawn(cmd->id(), cmd->dtos()))
-    {
-        EventPublisher::post(std::make_shared<PawnConstituted>(cmd->id(), pawn));
-    }
-    else
+    if (constitutePawn(cmd->id(), cmd->dtos()) == nullptr)
     {
         EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }

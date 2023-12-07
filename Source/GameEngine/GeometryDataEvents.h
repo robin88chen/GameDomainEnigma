@@ -15,10 +15,10 @@
 
 namespace Enigma::Engine
 {
-    class GeometryDataBuilt : public Frameworks::IEvent
+    class GeometryCreated : public Frameworks::IEvent
     {
     public:
-        GeometryDataBuilt(const GeometryId& id, const GeometryDataPtr geo) :
+        GeometryCreated(const GeometryId& id, const GeometryDataPtr geo) :
             m_id(id), m_geometry(geo) {};
         const GeometryId& id() { return m_id; }
         const GeometryDataPtr& geometryData() { return m_geometry; }
@@ -26,10 +26,10 @@ namespace Enigma::Engine
         GeometryId m_id;
         GeometryDataPtr m_geometry;
     };
-    class BuildGeometryDataFailed : public Frameworks::IEvent
+    class CreateGeometryFailed : public Frameworks::IEvent
     {
     public:
-        BuildGeometryDataFailed(const GeometryId& id, std::error_code er) :
+        CreateGeometryFailed(const GeometryId& id, std::error_code er) :
             m_id(id), m_error(er) {};
         const GeometryId& id() { return m_id; }
         std::error_code error() const { return m_error; }
@@ -37,18 +37,49 @@ namespace Enigma::Engine
         GeometryId m_id;
         std::error_code m_error;
     };
-    class FactoryGeometryCreated : public Frameworks::IEvent
+    class GeometryConstituted : public Frameworks::IEvent
     {
     public:
-        FactoryGeometryCreated(const Engine::GenericDto& dto, const std::shared_ptr<GeometryData>& geometry)
-            : m_dto(dto), m_geometry(geometry) {};
-
-        const Engine::GenericDto& GetDto() const { return m_dto; }
-        const std::shared_ptr<GeometryData>& GetGeometryData() { return m_geometry; }
-
-    protected:
-        Engine::GenericDto m_dto;
-        std::shared_ptr<GeometryData> m_geometry;
+        GeometryConstituted(const GeometryId& id, const GeometryDataPtr geo) :
+            m_id(id), m_geometry(geo) {};
+        const GeometryId& id() { return m_id; }
+        const GeometryDataPtr& geometryData() { return m_geometry; }
+    private:
+        GeometryId m_id;
+        GeometryDataPtr m_geometry;
+    };
+    class ConstituteGeometryFailed : public Frameworks::IEvent
+    {
+    public:
+        ConstituteGeometryFailed(const GeometryId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const GeometryId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        GeometryId m_id;
+        std::error_code m_error;
+    };
+    class RemoveGeometryFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveGeometryFailed(const GeometryId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const GeometryId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        GeometryId m_id;
+        std::error_code m_error;
+    };
+    class PutGeometryFailed : public Frameworks::IEvent
+    {
+    public:
+        PutGeometryFailed(const GeometryId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const GeometryId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        GeometryId m_id;
+        std::error_code m_error;
     };
 }
 

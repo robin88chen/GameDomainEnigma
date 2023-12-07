@@ -121,6 +121,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp" />

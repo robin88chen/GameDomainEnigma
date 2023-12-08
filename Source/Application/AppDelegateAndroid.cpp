@@ -38,7 +38,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics
     InitializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
-    m_graphicMain->InstallFrameworks();
+    m_graphicMain->installFrameworks();
 
     menew Devices::GraphicAPIEgl();
 
@@ -53,7 +53,7 @@ void AppDelegate::Finalize()
     Graphics::IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
     delete Graphics::IGraphicAPI::instance();
 
-    m_graphicMain->ShutdownFrameworks();
+    m_graphicMain->shutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
     if (m_hasLogFile)
@@ -68,9 +68,9 @@ void AppDelegate::Run()
 
 }
 
-void AppDelegate::FrameUpdate()
+void AppDelegate::frameUpdate()
 {
-    if (m_graphicMain) m_graphicMain->FrameUpdate();
+    if (m_graphicMain) m_graphicMain->frameUpdate();
 }
 
 void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
@@ -88,7 +88,7 @@ void AppDelegate::InitBridgeCallback()
 {
     ApplicationBridge::m_initializeGraphicDevice = []() { instance()->Initialize(Graphics::IGraphicAPI::APIVersion::API_EGL, Graphics::IGraphicAPI::AsyncType::NotAsyncDevice, ""); };
     ApplicationBridge::m_finalizeGraphicDevice = []() { instance()->Finalize(); };
-    ApplicationBridge::m_onFrameUpdate = []() { instance()->FrameUpdate(); };
+    ApplicationBridge::m_onFrameUpdate = []() { instance()->frameUpdate(); };
     ApplicationBridge::m_onPrepareFrame = []() { instance()->PrepareRender(); };
     ApplicationBridge::m_onDrawFrame = []() { instance()->RenderFrame(); };
     ApplicationBridge::m_onRendererSurfaceSizeChanged = [](int w, int h) { instance()->OnFrameSizeChanged(w, h); };

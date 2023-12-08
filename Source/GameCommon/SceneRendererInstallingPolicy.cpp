@@ -11,7 +11,7 @@
 
 using namespace Enigma::GameCommon;
 
-error SceneRendererInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error SceneRendererInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_service = service_manager->getSystemServiceAs<GameSceneService>();
@@ -24,14 +24,14 @@ error SceneRendererInstallingPolicy::Install(Frameworks::ServiceManager* service
     return error();
 }
 
-error SceneRendererInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error SceneRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(SceneRendererService::TYPE_RTTI);
     return error();
 }
 
-error DeferredRendererInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_service = service_manager->getSystemServiceAs<GameSceneService>();
@@ -50,7 +50,7 @@ error DeferredRendererInstallingPolicy::Install(Frameworks::ServiceManager* serv
     return error();
 }
 
-error DeferredRendererInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error DeferredRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.getName()));

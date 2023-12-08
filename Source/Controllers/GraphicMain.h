@@ -31,14 +31,14 @@ namespace Enigma::Controllers
         /** get singleton instance */
         static GraphicMain* instance();
 
-        error InstallFrameworks();
-        error ShutdownFrameworks();
+        error installFrameworks();
+        error shutdownFrameworks();
 
-        error InstallRenderEngine(const InstallingPolicyList& policies);
-        error ShutdownRenderEngine();
+        error installRenderEngine(const InstallingPolicyList& policies);
+        error shutdownRenderEngine();
 
         /** frame update (service manager call run one to update) */
-        void FrameUpdate();
+        void frameUpdate();
 
         Frameworks::ServiceManager* getServiceManager() { return m_serviceManager; };
 

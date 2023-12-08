@@ -5,13 +5,13 @@
 
 using namespace Enigma::Engine;
 
-error DeviceCreatingPolicy::Install([[maybe_unused]] Frameworks::ServiceManager* service_manager)
+error DeviceCreatingPolicy::install([[maybe_unused]] Frameworks::ServiceManager* service_manager)
 {
     Frameworks::CommandBus::send(std::make_shared<Graphics::CreateDevice>(m_rqb, m_hwnd));
     return ErrorCode::ok;
 }
 
-error DeviceCreatingPolicy::Shutdown([[maybe_unused]] Frameworks::ServiceManager* service_manager)
+error DeviceCreatingPolicy::shutdown([[maybe_unused]] Frameworks::ServiceManager* service_manager)
 {
     Frameworks::CommandBus::send(std::make_shared<Graphics::CleanupDevice>());
     return ErrorCode::ok;

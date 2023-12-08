@@ -73,7 +73,7 @@ void AppDelegate::Destroy()
 }
 
 void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
-                             const std::string& log_filename)
+    const std::string& log_filename)
 {
     if (log_filename.length() > 0)
     {
@@ -85,7 +85,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     InitializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
-    m_graphicMain->InstallFrameworks();
+    m_graphicMain->installFrameworks();
 
     menew Devices::GraphicAPIDx11(useAsyncDevice);
 
@@ -130,7 +130,7 @@ void AppDelegate::Finalize()
     Graphics::IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
     delete Graphics::IGraphicAPI::instance();
 
-    m_graphicMain->ShutdownFrameworks();
+    m_graphicMain->shutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
     if (m_hasLogFile)
@@ -164,7 +164,7 @@ void AppDelegate::Run()
         else
         {
             OnIdle();
-            //FrameUpdate();
+            //frameUpdate();
             //RenderFrame();
         }
     }  // end while
@@ -252,7 +252,7 @@ LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wP
 
 void AppDelegate::OnIdle()
 {
-    FrameUpdate();
+    frameUpdate();
 
     PrepareRender();
     RenderFrame();
@@ -261,9 +261,9 @@ void AppDelegate::OnIdle()
     std::this_thread::sleep_for(5us);// std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
 }
 
-void AppDelegate::FrameUpdate()
+void AppDelegate::frameUpdate()
 {
-    if (m_graphicMain) m_graphicMain->FrameUpdate();
+    if (m_graphicMain) m_graphicMain->frameUpdate();
 }
 
 void AppDelegate::OnMouseMove(WPARAM wParam, LPARAM lParam)
@@ -376,12 +376,12 @@ void AppDelegate::OnKeyUp(WPARAM wParam, LPARAM lParam)
         m_inputHandler.lock()->ProcessWinKeyPressUp((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
     }
 }
-void AppDelegate::OnClose(WPARAM , LPARAM )
+void AppDelegate::OnClose(WPARAM, LPARAM)
 {
     DestroyWindow(m_hwnd);
     m_hwnd = nullptr;
 }
-void AppDelegate::OnDestroy(WPARAM , LPARAM )
+void AppDelegate::OnDestroy(WPARAM, LPARAM)
 {
     PostQuitMessage(0);
 }

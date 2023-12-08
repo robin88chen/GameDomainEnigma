@@ -32,7 +32,7 @@ GraphicMain* GraphicMain::instance()
     return m_instance;
 }
 
-error GraphicMain::InstallFrameworks()
+error GraphicMain::installFrameworks()
 {
     assert(m_serviceManager);
     m_serviceManager->registerSystemService(std::make_shared<Frameworks::EventPublisher>(m_serviceManager));
@@ -46,7 +46,7 @@ error GraphicMain::InstallFrameworks()
     return ErrorCode::ok;
 }
 
-error GraphicMain::ShutdownFrameworks()
+error GraphicMain::shutdownFrameworks()
 {
     assert(m_serviceManager);
     m_serviceManager->shutdownSystemService(Frameworks::EventPublisher::TYPE_RTTI);
@@ -57,31 +57,31 @@ error GraphicMain::ShutdownFrameworks()
     return ErrorCode::ok;
 }
 
-error GraphicMain::InstallRenderEngine(const InstallingPolicyList& policies)
+error GraphicMain::installRenderEngine(const InstallingPolicyList& policies)
 {
     m_policies = policies;
     for (auto it = m_policies.begin(); it != m_policies.end(); ++it)
     {
         if (*it == nullptr) continue;
-        error er = (*it)->Install(m_serviceManager);
+        error er = (*it)->install(m_serviceManager);
         if (er) return er;
     }
     return ErrorCode::ok;
 }
 
-error GraphicMain::ShutdownRenderEngine()
+error GraphicMain::shutdownRenderEngine()
 {
     for (auto it = m_policies.rbegin(); it != m_policies.rend(); ++it)
     {
         if (*it == nullptr) continue;
-        error er = (*it)->Shutdown(m_serviceManager);
+        error er = (*it)->shutdown(m_serviceManager);
         if (er) return er;
     }
     return ErrorCode::ok;
 }
 
 
-void GraphicMain::FrameUpdate()
+void GraphicMain::frameUpdate()
 {
     if (m_serviceManager)
     {

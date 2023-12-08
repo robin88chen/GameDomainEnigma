@@ -94,7 +94,7 @@ void ApplicationBridge::OnRendererDrawFrame()
 {
     if (AppDelegate::instance())
     {
-        AppDelegate::instance()->FrameUpdate();
+        AppDelegate::instance()->frameUpdate();
     }
     if (m_onFrameUpdate)
     {

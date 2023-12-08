@@ -11,7 +11,7 @@
 
 using namespace Enigma::GameCommon;
 
-error GameCameraInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error GameCameraInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto camera_service = std::make_shared<GameCameraService>(service_manager,
@@ -21,14 +21,14 @@ error GameCameraInstallingPolicy::Install(Frameworks::ServiceManager* service_ma
     return error();
 }
 
-error GameCameraInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error GameCameraInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(GameCameraService::TYPE_RTTI);
     return error();
 }
 
-error GameLightInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error GameLightInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto light_service = std::make_shared<GameLightService>(service_manager,
@@ -37,14 +37,14 @@ error GameLightInstallingPolicy::Install(Frameworks::ServiceManager* service_man
     return error();
 }
 
-error GameLightInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error GameLightInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(GameLightService::TYPE_RTTI);
     return error();
 }
 
-error GameSceneInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error GameSceneInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_graph_repository = service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>();
@@ -55,21 +55,21 @@ error GameSceneInstallingPolicy::Install(Frameworks::ServiceManager* service_man
     return error();
 }
 
-error GameSceneInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error GameSceneInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(GameSceneService::TYPE_RTTI);
     return error();
 }
 
-error AnimatedPawnInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error AnimatedPawnInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName(),
       //  [](auto o) { return new AnimatedPawn(o); }));
     return error();
 }
 
-error AnimatedPawnInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error AnimatedPawnInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(AnimatedPawn::TYPE_RTTI.getName()));
     return error();

@@ -14,7 +14,7 @@
 using namespace Enigma::Terrain;
 using namespace Enigma::Renderer;
 
-error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName(),
@@ -28,7 +28,7 @@ error TerrainInstallingPolicy::Install(Frameworks::ServiceManager* service_manag
     return ErrorCode::ok;
 }
 
-error TerrainInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error TerrainInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::UnRegisterDtoPolicyConverter>(TerrainPrimitive::TYPE_RTTI.getName()));

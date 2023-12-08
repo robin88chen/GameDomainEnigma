@@ -29,14 +29,14 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
     m_isCurrentBuilding = false;
     m_builder = menew GeometryBuilder(this);
 
-    CommandBus::post(std::make_shared<RegisterGeometryFactory>(TriangleList::TYPE_RTTI.getName(),
+    m_factory->registerGeometryFactory(TriangleList::TYPE_RTTI.getName(),
         [=](auto id) { return std::make_shared<TriangleList>(id); },
-        [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); }));
+        [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); });
 }
 
 GeometryRepository::~GeometryRepository()
 {
-    CommandBus::post(std::make_shared<UnRegisterGeometryFactory>(TriangleList::TYPE_RTTI.getName()));
+    if (m_factory) m_factory->unregisterGeometryFactory(TriangleList::TYPE_RTTI.getName());
     SAFE_DELETE(m_factory);
     SAFE_DELETE(m_builder);
 }

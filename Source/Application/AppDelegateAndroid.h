@@ -34,7 +34,7 @@ namespace Enigma::Application
         virtual void Finalize();
 
         virtual void Run();
-        virtual void FrameUpdate();
+        virtual void frameUpdate();
         virtual void PrepareRender() {};
         virtual void RenderFrame() {};
 

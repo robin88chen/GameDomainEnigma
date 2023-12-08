@@ -31,6 +31,9 @@ namespace Enigma::Geometries
         std::shared_ptr<GeometryData> create(const GeometryId& id, const Frameworks::Rtti& rtti);
         std::shared_ptr<GeometryData> constitute(const GeometryId& id, const Engine::GenericDto& dto);
 
+        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor);
+        void unregisterGeometryFactory(const std::string& rtti_name);
+
     private:
         void registerGeometryFactory(const Frameworks::ICommandPtr& c);
         void unregisterGeometryFactory(const Frameworks::ICommandPtr& c);

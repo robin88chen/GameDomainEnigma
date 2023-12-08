@@ -4,7 +4,7 @@
 
 using namespace Enigma::InputHandlers;
 
-error InputHandlerInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error InputHandlerInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     m_inputHandler = std::make_shared<InputHandlerService>(service_manager);
@@ -12,7 +12,7 @@ error InputHandlerInstallingPolicy::Install(Frameworks::ServiceManager* service_
     return std::error_code();
 }
 
-error InputHandlerInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error InputHandlerInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(InputHandlerService::TYPE_RTTI);

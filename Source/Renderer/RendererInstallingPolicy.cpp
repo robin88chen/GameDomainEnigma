@@ -12,7 +12,7 @@
 
 using namespace Enigma::Renderer;
 
-error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error RenderSystemInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<RendererManager>(service_manager));
@@ -23,7 +23,7 @@ error RenderSystemInstallingPolicy::Install(Frameworks::ServiceManager* service_
     return ErrorCode::ok;
 }
 
-error RenderSystemInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error RenderSystemInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(RenderablePrimitiveBuilder::TYPE_RTTI);
@@ -31,7 +31,7 @@ error RenderSystemInstallingPolicy::Shutdown(Frameworks::ServiceManager* service
     return ErrorCode::ok;
 }
 
-error DefaultRendererInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error DefaultRendererInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);
@@ -41,7 +41,7 @@ error DefaultRendererInstallingPolicy::Install(Frameworks::ServiceManager* servi
     return er;
 }
 
-error DefaultRendererInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error DefaultRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);

@@ -8,7 +8,7 @@
 
 using namespace Enigma::SceneGraph;
 
-error SceneGraphInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     const auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
@@ -19,7 +19,7 @@ error SceneGraphInstallingPolicy::Install(Frameworks::ServiceManager* service_ma
     return ErrorCode::ok;
 }
 
-error SceneGraphInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error SceneGraphInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(SceneGraph::LazyNodeIOService::TYPE_RTTI);

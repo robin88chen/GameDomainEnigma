@@ -12,7 +12,7 @@
 
 using namespace Enigma::Engine;
 
-error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error EngineInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<GenericDtoFactories>(service_manager));
@@ -25,7 +25,7 @@ error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manage
     return ErrorCode::ok;
 }
 
-error EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error EngineInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(TimerService::TYPE_RTTI);

@@ -74,30 +74,41 @@ std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& 
     return geo;
 }
 
+void GeometryDataFactory::registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
+{
+    if (m_creators.find(rtti_name) != m_creators.end())
+    {
+        Platforms::Debug::Printf("Geometry factory of %s already exists\n", rtti_name.c_str());
+        return;
+    }
+    m_creators[rtti_name] = creator;
+    m_constitutors[rtti_name] = constitutor;
+}
+
+void GeometryDataFactory::unregisterGeometryFactory(const std::string& rtti_name)
+{
+    if (m_creators.find(rtti_name) == m_creators.end())
+    {
+        Platforms::Debug::Printf("Geometry factory of %s doesn't exist\n", rtti_name.c_str());
+        return;
+    }
+    m_creators.erase(rtti_name);
+    m_constitutors.erase(rtti_name);
+}
 void GeometryDataFactory::registerGeometryFactory(const ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterGeometryFactory>(c);
     if (!cmd) return;
-    if (m_creators.find(cmd->rttiName()) != m_creators.end())
-    {
-        Platforms::Debug::Printf("Geometry factory of %s already exists\n", cmd->rttiName().c_str());
-        return;
-    }
-    m_creators[cmd->rttiName()] = cmd->creator();
-    m_constitutors[cmd->rttiName()] = cmd->constitutor();
+    registerGeometryFactory(cmd->rttiName(), cmd->creator(), cmd->constitutor());
 }
 
 void GeometryDataFactory::unregisterGeometryFactory(const ICommandPtr& c)
 {
+    if (!c) return;
     auto cmd = std::dynamic_pointer_cast<UnRegisterGeometryFactory>(c);
-    if (m_creators.find(cmd->rttiName()) == m_creators.end())
-    {
-        Platforms::Debug::Printf("Geometry factory of %s doesn't exist\n", cmd->rttiName().c_str());
-        return;
-    }
-    m_creators.erase(cmd->rttiName());
-    m_constitutors.erase(cmd->rttiName());
+    if (!cmd) return;
+    unregisterGeometryFactory(cmd->rttiName());
 }
 
 void GeometryDataFactory::createGeometry(const Frameworks::ICommandPtr& c)

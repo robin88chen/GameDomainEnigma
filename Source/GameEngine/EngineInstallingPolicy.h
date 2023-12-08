@@ -21,8 +21,8 @@ namespace Enigma::Engine
         EngineInstallingPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer, const std::shared_ptr<GeometryDataStoreMapper>& store_mapper)
             : m_effectDeserializer(effect_deserializer), m_storeMapper(store_mapper) {};
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::shared_ptr<Engine::IEffectCompilingProfileDeserializer> m_effectDeserializer;

@@ -28,6 +28,21 @@ public:
 
     virtual void InstallEngine() override final;
     virtual void ShutdownEngine() override final;
+
+private:
+    void onAllServicesInitialized(const Enigma::Frameworks::IEventPtr& e);
+
+    void createNewGeometry();
+    void queryGeometry();
+
+private:
+    Enigma::Frameworks::EventSubscriberPtr m_onAllServicesInitialized;
+
+    std::vector<Enigma::MathLib::Vector2> m_uvs;
+    std::vector<Enigma::MathLib::Vector3> m_positions;
+    std::vector<Enigma::MathLib::Vector3> m_normals;
+    std::vector<Enigma::MathLib::Vector4> m_diffuses;
+    std::vector<unsigned> m_indices = { 0, 1, 2, 3 };
 };
 
 #endif // GEOMETRY_REPOSITORY_TEST_H

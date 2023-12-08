@@ -20,8 +20,8 @@ namespace Enigma::GameCommon
     public:
         GameCameraInstallingPolicy(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) : m_cameraId(id), m_cameraDto(dto) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         SceneGraph::SpatialId m_cameraId;
@@ -32,8 +32,8 @@ namespace Enigma::GameCommon
     public:
         GameLightInstallingPolicy() = default;
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
     };
     class GameSceneInstallingPolicy : public Engine::InstallingPolicy
     {
@@ -41,8 +41,8 @@ namespace Enigma::GameCommon
         GameSceneInstallingPolicy(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
             : m_sceneRootName(scene_root_name), m_portalManagedName(portal_managed_name) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::string m_sceneRootName;
@@ -53,8 +53,8 @@ namespace Enigma::GameCommon
     public:
         AnimatedPawnInstallingPolicy() = default;
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
     };
 }
 

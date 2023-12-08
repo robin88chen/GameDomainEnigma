@@ -9,7 +9,7 @@
 #define INTR_MODEL_PRIMITIVE_CACHE_H
 
 #include "MathLib/IntersectorCache.h"
-#include "GameEngine/IntrGeometryCache.h"
+#include "Geometries/IntrGeometryCache.h"
 #include "Frameworks/unique_ptr_dynamic_cast.hpp"
 
 namespace Enigma::Renderer
@@ -23,14 +23,14 @@ namespace Enigma::Renderer
         unsigned int GetCachedMeshPrimIndex() { return m_meshPrimIndex; };
         void SetCachedMeshPrimIndex(unsigned int index) { m_meshPrimIndex = index; };
         std::unique_ptr<MathLib::IntersectorCache> GetIntrGeometryCache() { return std::move(m_geoCache); };
-        void SetIntrGeometryCache(std::unique_ptr<MathLib::IntersectorCache> cache) { m_geoCache = stdext::dynamic_pointer_cast<Engine::IntrGeometryCache>(std::move(cache)); };
+        void SetIntrGeometryCache(std::unique_ptr<MathLib::IntersectorCache> cache) { m_geoCache = stdext::dynamic_pointer_cast<Geometries::IntrGeometryCache>(std::move(cache)); };
         unsigned int GetRequiredResultCount() { return m_requiredResultCount; };
         void SetRequiredResultCount(unsigned int count)
         {
             m_requiredResultCount = count; if (m_geoCache) m_geoCache->SetRequiredResultCount(count);
         };
     private:
-        std::unique_ptr<Engine::IntrGeometryCache> m_geoCache;
+        std::unique_ptr<Geometries::IntrGeometryCache> m_geoCache;
         unsigned int m_meshPrimIndex;
         unsigned int m_requiredResultCount;
     };

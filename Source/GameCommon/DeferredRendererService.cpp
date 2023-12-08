@@ -13,7 +13,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "GameEngine/StandardGeometryDtoHelper.h"
+#include "Geometries/StandardGeometryDtoHelper.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
@@ -377,7 +377,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
 {
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
@@ -406,7 +406,7 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
 {
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->SunLightEffectName());
@@ -435,7 +435,7 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
 {
     assert(lit);
     std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
-    SphereDtoHelper sphere_dto_helper(vol_geo_name);
+    Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
     sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
     EffectMaterialDtoHelper eff_dto_helper(m_configuration->LightVolumeEffectName());
     eff_dto_helper.FilenameAtPath(m_configuration->LightVolumePassFxFileName());

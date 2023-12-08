@@ -72,8 +72,8 @@ void TerrainGeometryDto::convertGeometryVertices()
         m_indices.value()[cell_i * 6 + 4] = (zi + 1) * (m_numCols + 1) + xi + 1;
         m_indices.value()[cell_i * 6 + 5] = zi * (m_numCols + 1) + xi + 1;
     }
-    TextureCoordDto tex_coord_dto;
-    TextureCoordDto alpha_coord_dto;
+    Geometries::TextureCoordDto tex_coord_dto;
+    Geometries::TextureCoordDto alpha_coord_dto;
     tex_coord_dto.texture2DCoords() = tex_coords;
     alpha_coord_dto.texture2DCoords() = alpha_coords;
     m_texCoords = { tex_coord_dto.toGenericDto(), alpha_coord_dto.toGenericDto() };

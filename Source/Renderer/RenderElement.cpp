@@ -15,7 +15,7 @@ RenderElement::RenderElement()
 }
 
 RenderElement::RenderElement(const std::shared_ptr<Engine::RenderBuffer>& renderBuffer,
-    const Engine::EffectMaterialPtr& effect, const Engine::GeometrySegment& segment)
+    const Engine::EffectMaterialPtr& effect, const Geometries::GeometrySegment& segment)
 {
     m_rendererStamp = 0;
     m_rendererActiveFrameFlag = 0;

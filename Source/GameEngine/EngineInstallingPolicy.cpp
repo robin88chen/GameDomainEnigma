@@ -1,6 +1,5 @@
 ﻿#include "EngineInstallingPolicy.h"
 #include "GenericDtoFactories.h"
-#include "GeometryRepository.h"
 #include "ShaderRepository.h"
 #include "EffectMaterialManager.h"
 #include "MaterialVariableMap.h"
@@ -17,7 +16,6 @@ error EngineInstallingPolicy::Install(Frameworks::ServiceManager* service_manage
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<GenericDtoFactories>(service_manager));
-    service_manager->registerSystemService(std::make_shared<GeometryRepository>(service_manager, m_storeMapper));
     service_manager->registerSystemService(std::make_shared<ShaderRepository>(service_manager));
     service_manager->registerSystemService(std::make_shared<EffectMaterialManager>(service_manager, m_effectDeserializer));
     menew MaterialVariableMap;
@@ -36,7 +34,6 @@ error EngineInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manag
     delete MaterialVariableMap::instance();
     service_manager->shutdownSystemService(EffectMaterialManager::TYPE_RTTI);
     service_manager->shutdownSystemService(ShaderRepository::TYPE_RTTI);
-    service_manager->shutdownSystemService(GeometryRepository::TYPE_RTTI);
     service_manager->shutdownSystemService(GenericDtoFactories::TYPE_RTTI);
     return ErrorCode::ok;
 }

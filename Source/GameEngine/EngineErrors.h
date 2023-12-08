@@ -21,20 +21,13 @@ namespace Enigma::Engine
         deserializeFail,
         fileIOError,
 
-        geometryFactoryNotExists = 151,
-        geometryEntityAlreadyExists,
-
         effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,
         textureSemantic,
 
-        invalidArrayIndex = 301,
-        nullMemoryBuffer,
-        zeroVertexSize,
-
-        targetTextureNotExists = 401,
+        targetTextureNotExists = 301,
     };
     class ErrorCategory : public std::error_category
     {

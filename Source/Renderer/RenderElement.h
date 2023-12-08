@@ -8,7 +8,7 @@
 #ifndef RENDER_ELEMENT_H
 #define RENDER_ELEMENT_H
 
-#include "GameEngine/GeometrySegment.h"
+#include "Geometries/GeometrySegment.h"
 #include "GameEngine/EffectMaterial.h"
 #include "MathLib/Matrix4.h"
 #include <memory>
@@ -38,7 +38,7 @@ namespace Enigma::Renderer
     public:
         RenderElement();
         RenderElement(const std::shared_ptr<Engine::RenderBuffer>& renderBuffer,
-            const Engine::EffectMaterialPtr& effect, const Engine::GeometrySegment& segment);
+            const Engine::EffectMaterialPtr& effect, const Geometries::GeometrySegment& segment);
         RenderElement(const RenderElement&) = delete;
         RenderElement(RenderElement&&) = delete;
         ~RenderElement();
@@ -48,7 +48,7 @@ namespace Enigma::Renderer
         std::shared_ptr<Engine::RenderBuffer> GetRenderBuffer() const;
         const Engine::EffectMaterialPtr& GetEffectMaterial() const { return m_effectMaterial; };
 
-        const Engine::GeometrySegment& GetGeometrySegment() const { return m_segment; };
+        const Geometries::GeometrySegment& GetGeometrySegment() const { return m_segment; };
 
         error Draw(const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& state,
             const std::string& rendererTechnique);
@@ -70,7 +70,7 @@ namespace Enigma::Renderer
     private:
         std::weak_ptr<Engine::RenderBuffer> m_renderBuffer;
         Engine::EffectMaterialPtr m_effectMaterial;
-        Engine::GeometrySegment m_segment;
+        Geometries::GeometrySegment m_segment;
 
         /// 這個 bit mask, 紀錄 element 放在哪個 renderer 中，可重複放，所以用 bit 紀錄
         unsigned int m_rendererStamp;

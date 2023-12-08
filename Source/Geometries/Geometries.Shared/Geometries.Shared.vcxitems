@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{8929d95b-c230-46ed-ba91-b83aff657d7d}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
+  </ItemGroup>
+</Project>

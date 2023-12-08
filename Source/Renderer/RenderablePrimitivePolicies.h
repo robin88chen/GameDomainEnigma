@@ -9,7 +9,7 @@
 #define _RENDERABLE_PRIMITIVE_POLICIES_H
 
 #include <memory>
-#include "GameEngine/GeometryDataPolicy.h"
+#include "Geometries/GeometryDataPolicy.h"
 #include "RenderablePrimitiveDtos.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/DtoDeserializer.h"
@@ -54,8 +54,8 @@ namespace Enigma::Renderer
         [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactoryDesc; }
         Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactoryDesc; }
 
-        [[nodiscard]] const Engine::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
-        Engine::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
+        [[nodiscard]] const Geometries::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
+        Geometries::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
 
         [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& EffectDtos() const { return m_effectDtos; }
         std::vector<Engine::EffectMaterialDto>& EffectDtos() { return m_effectDtos; }
@@ -72,7 +72,7 @@ namespace Enigma::Renderer
 
     protected:
         Engine::FactoryDesc m_geometryFactoryDesc;
-        Engine::GeometryDataPolicy m_geometryPolicy;
+        Geometries::GeometryDataPolicy m_geometryPolicy;
         std::vector<Engine::EffectMaterialDto> m_effectDtos;
         std::vector<Engine::EffectTextureMapDto> m_textureDtos;
         Renderer::RenderListID m_renderListId;

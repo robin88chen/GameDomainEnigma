@@ -1,11 +1,12 @@
 ﻿#include "MeshPrimitiveRay3IntersectionFinder.h"
 #include "GameEngine/IntersectionFinderFactories.h"
-#include "GameEngine/IntrGeometryRay3.h"
-#include "GameEngine/IntrGeometryCache.h"
+#include "Geometries/IntrGeometryRay3.h"
+#include "Geometries/IntrGeometryCache.h"
 #include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
+using namespace Enigma::Geometries;
 using namespace Enigma::MathLib;
 
 MeshPrimitiveRay3IntersectionFinder::MeshPrimitiveRay3IntersectionFinder()

@@ -8,17 +8,17 @@
 #ifndef TERRAIN_GEOMETRY_H
 #define TERRAIN_GEOMETRY_H
 
-#include "GameEngine/TriangleList.h"
+#include "Geometries/TriangleList.h"
 #include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainGeometry : public Engine::TriangleList
+    class TerrainGeometry : public Geometries::TriangleList
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainGeometry(const Engine::GeometryId& id);
-        TerrainGeometry(const Engine::GeometryId& id, const Engine::GenericDto& o);
+        TerrainGeometry(const Geometries::GeometryId& id);
+        TerrainGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& o);
         virtual ~TerrainGeometry() override;
         TerrainGeometry(const TerrainGeometry&) = delete;
         TerrainGeometry& operator=(const TerrainGeometry&) = delete;

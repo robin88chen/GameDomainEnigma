@@ -7,7 +7,7 @@ using namespace Enigma::SceneGraph;
 
 TerrainGeometryDtoHelper::TerrainGeometryDtoHelper(const std::string& name)
 {
-    m_dto.id() = Engine::GeometryId{ name };
+    m_dto.id() = Geometries::GeometryId{ name };
     m_dto.numRows() = 8;
     m_dto.numCols() = 8;
     m_dto.minPosition() = MathLib::Vector3(-1.0f, 0.0f, -1.0f);

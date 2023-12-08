@@ -11,7 +11,7 @@
 #include "GameEngine/GenericDto.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/EffectTextureMapDto.h"
-#include "GameEngine/GeometryDataDto.h"
+#include "Geometries/GeometryDataDto.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "Renderer.h"

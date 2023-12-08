@@ -5,7 +5,7 @@
 #include "GraphicKernel/IShaderVariable.h"
 #include "GameEngine/RenderBuffer.h"
 #include "RendererErrors.h"
-#include "GameEngine/GeometryData.h"
+#include "Geometries/GeometryData.h"
 #include "GameEngine/IRenderer.h"
 #include "RenderElement.h"
 #include "Platforms/PlatformLayer.h"
@@ -274,7 +274,7 @@ void MeshPrimitive::SelectVisualTechnique(const std::string& techniqueName)
     }
 }
 
-void MeshPrimitive::LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
+void MeshPrimitive::LinkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
 {
     CleanupGeometry();
     m_geometry = geo;

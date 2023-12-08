@@ -1,6 +1,6 @@
 ﻿#include "RenderablePrimitiveDtos.h"
 #include "RenderablePrimitivePolicies.h"
-#include "GameEngine/GeometryData.h"
+#include "Geometries/GeometryData.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Animators/ModelPrimitiveAnimator.h"
@@ -17,6 +17,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::Animators;
+using namespace Enigma::Geometries;
 
 static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_GEOMETRY_NAME = "GeometryName";

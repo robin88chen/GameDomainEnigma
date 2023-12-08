@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderBuffer.h
  * \brief  Render buffer entity
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -10,7 +10,7 @@
 
 #include "RenderBufferSignature.h"
 #include "EffectMaterial.h"
-#include "GeometrySegment.h"
+#include "Geometries/GeometrySegment.h"
 #include "GraphicKernel/IVertexBuffer.h"
 #include "GraphicKernel/IIndexBuffer.h"
 #include <system_error>
@@ -47,7 +47,7 @@ namespace Enigma::Engine
         bool IsDataEmpty() { return m_isDataEmpty; };
 
         /** draw */
-        error Draw(const EffectMaterialPtr& effectMaterial, const GeometrySegment& segment);
+        error Draw(const EffectMaterialPtr& effectMaterial, const Geometries::GeometrySegment& segment);
 
     protected:
         // todo: 這些func的 Async 由 Manager 負責以 Async 方式呼叫

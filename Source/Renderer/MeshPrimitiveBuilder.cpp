@@ -5,8 +5,8 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/ResponseBus.h"
-#include "GameEngine/GeometryCommands.h"
-#include "GameEngine/GeometryDataEvents.h"
+#include "Geometries/GeometryCommands.h"
+#include "Geometries/GeometryDataEvents.h"
 #include "GameEngine/RenderBufferCommands.h"
 #include "GameEngine/RenderBufferEvents.h"
 #include "GameEngine/EffectCommands.h"
@@ -18,6 +18,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
+using namespace Enigma::Geometries;
 
 MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryData::TYPE_RTTI.getName()), m_buildingRuid()
 {

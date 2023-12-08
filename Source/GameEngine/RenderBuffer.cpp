@@ -6,6 +6,7 @@
 #include <cassert>
 
 using namespace Enigma::Engine;
+using namespace Enigma::Geometries;
 
 RenderBuffer::RenderBuffer(const RenderBufferSignature& signature,
     const Graphics::IVertexBufferPtr& vertex_buffer, const Graphics::IIndexBufferPtr& index_buffer)
@@ -36,7 +37,7 @@ error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffe
     return ErrorCode::ok;
 }
 
-error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer, 
+error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
     const std::optional<const Graphics::IIndexBuffer::ranged_buffer>& idxBuffer)
 {
     assert(m_vertexBuffer);

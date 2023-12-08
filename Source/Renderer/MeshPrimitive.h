@@ -9,7 +9,7 @@
 #define _MESH_PRIMITIVE_H
 
 #include "GameEngine/Primitive.h"
-#include "GameEngine/GeometryData.h"
+#include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectTextureMap.h"
 #include "GameEngine/GenericDto.h"
@@ -44,7 +44,7 @@ namespace Enigma::Renderer
 
         const std::string& getName() const { return m_name; }
         /** get geometry data */
-        const Engine::GeometryDataPtr& GetGeometryData() const { return m_geometry; };
+        const Geometries::GeometryDataPtr& GetGeometryData() const { return m_geometry; };
 
         /** get effect */
         Engine::EffectMaterialPtr GetEffectMaterial(unsigned index);
@@ -87,7 +87,7 @@ namespace Enigma::Renderer
         /** @name building mesh primitive */
         //@{
         /** link geometry object and render buffer */
-        void LinkGeometryData(const Engine::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer);
+        void LinkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer);
         /** change segment's effect */
         virtual void ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect);
         /** change primitive's effect */
@@ -123,7 +123,7 @@ namespace Enigma::Renderer
     protected:
         using RenderElementList = std::vector<std::shared_ptr<RenderElement>>;
         std::string m_name;
-        Engine::GeometryDataPtr m_geometry;
+        Geometries::GeometryDataPtr m_geometry;
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;
         EffectMaterialList m_effects;

@@ -37,23 +37,11 @@
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry Repository">
-      <UniqueIdentifier>{a1a7b622-6eb9-4187-a2fd-1ed4ac1333b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry Repository\Geometry Datas">
-      <UniqueIdentifier>{f0f85a76-37c8-4177-9009-85996962e2cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry Repository\Geometry Datas\Policy">
-      <UniqueIdentifier>{108a32c0-3939-481c-a9c3-84d22d345a4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DTOs">
       <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
     </Filter>
     <Filter Include="DTOs\BV Dto">
       <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DTOs\Geometry Dto">
-      <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Effect Material\Effect Texture Map">
       <UniqueIdentifier>{cb5ad250-41d0-4f9f-8832-8dd059098647}</UniqueIdentifier>
@@ -84,9 +72,6 @@
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry Repository\Store Mapper">
-      <UniqueIdentifier>{b441de16-8766-42c2-bd1b-254bc208b319}</UniqueIdentifier>
     </Filter>
     <Filter Include="Queries">
       <UniqueIdentifier>{961b9d78-91ba-45af-999b-a803b3ceeb2f}</UniqueIdentifier>
@@ -140,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h">
       <Filter>RenderBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.h">
       <Filter>RenderBuffer</Filter>
@@ -201,29 +183,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
       <Filter>DTOs</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h">
-      <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h">
       <Filter>DTOs\BV Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
-      <Filter>DTOs\Geometry Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h">
       <Filter>DTOs</Filter>
@@ -238,9 +199,6 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
@@ -288,9 +246,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
-      <Filter>DTOs\Geometry Dto</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
@@ -298,12 +253,6 @@
       <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
-      <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h">
-      <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
       <Filter>Intersect</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h">
@@ -317,18 +266,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h">
-      <Filter>Geometry Repository\Store Mapper</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h">
-      <Filter>Queries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -407,26 +344,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
       <Filter>Effect Material</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp">
-      <Filter>Geometry Repository</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp">
-      <Filter>Geometry Repository</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp">
       <Filter>DTOs\BV Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
-      <Filter>DTOs\Geometry Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp">
       <Filter>DTOs</Filter>
@@ -455,16 +377,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp">
-      <Filter>DTOs\Geometry Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
       <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
-      <Filter>Intersect</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
       <Filter>Intersect</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp">
@@ -475,9 +391,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp">
-      <Filter>Geometry Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

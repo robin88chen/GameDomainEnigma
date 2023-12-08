@@ -8,17 +8,17 @@
 #ifndef TERRAIN_GEOMETRY_DTO_H
 #define TERRAIN_GEOMETRY_DTO_H
 
-#include "GameEngine/GeometryDataDto.h"
+#include "Geometries/GeometryDataDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GameEngine/BoundingVolume.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainGeometryDto : public Engine::TriangleListDto
+    class TerrainGeometryDto : public Geometries::TriangleListDto
     {
     public:
         TerrainGeometryDto();
-        TerrainGeometryDto(const Engine::TriangleListDto& triangle_dto);
+        TerrainGeometryDto(const Geometries::TriangleListDto& triangle_dto);
 
         static TerrainGeometryDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;

@@ -9,7 +9,9 @@
 #include "MathLib/MathRandom.h"
 #include "Geometries/GeometryRepository.h"
 #include "Geometries/GeometryDataFactory.h"
+#include "Geometries/TriangleList.h"
 #include "GameEngine/BoundingVolume.h"
+#include "Platforms/AndroidBridge.h"
 
 using namespace Enigma::Application;
 using namespace Enigma::FileSystem;
@@ -41,7 +43,7 @@ void GeometryRepositoryTest::InitializeMountPaths()
 
 void GeometryRepositoryTest::InstallEngine()
 {
-    auto engine_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<Enigma::FileStorage::GeometryDataFileStoreMapper>("geometry_test.db.txt",
+    auto engine_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<Enigma::FileStorage::GeometryDataFileStoreMapper>("geometry_test.db.txt@DataPath",
         std::make_shared<Enigma::Gateways::DtoJsonGateway>()));
     m_graphicMain->installRenderEngine({ engine_policy });
 
@@ -60,12 +62,21 @@ void GeometryRepositoryTest::ShutdownEngine()
 
 void GeometryRepositoryTest::onAllServicesInitialized(const Enigma::Frameworks::IEventPtr& e)
 {
-    //createNewGeometry();
-    queryGeometry();
+    auto repository = m_graphicMain->getSystemServiceAs<GeometryRepository>();
+    assert(repository);
+    if (!repository->hasGeometryData(GeometryName))
+    {
+        createNewGeometry();
+    }
+    else
+    {
+        queryGeometry();
+    }
 }
 
 void GeometryRepositoryTest::createNewGeometry()
 {
+    Enigma::Platforms::Debug::Printf("create new geometry");
     UniformFloatDistribution ten_rand = MathRandom::IntervalDistribution(-10.0f, std::nextafter(10.0f, 10.1f));
     UniformFloatDistribution one_rand = MathRandom::IntervalDistribution(0.0f, std::nextafter(1.0f, 1.01f));
     auto repository = m_graphicMain->getSystemServiceAs<GeometryRepository>();
@@ -95,6 +106,7 @@ void GeometryRepositoryTest::createNewGeometry()
     dto.topology() = static_cast<unsigned>(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
     Enigma::Engine::BoundingVolume bound{ Box3::UNIT_BOX };
     dto.geometryBound() = bound.serializeDto().toGenericDto();
+    dto.factoryDesc() = Enigma::Engine::FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(GeometryName, GeometryName + ".geo", "DataPath");
 
     auto geometry = repository->factory()->constitute(dto.id(), dto.toGenericDto());
     repository->putGeometryData(dto.id(), geometry);
@@ -102,6 +114,7 @@ void GeometryRepositoryTest::createNewGeometry()
 
 void GeometryRepositoryTest::queryGeometry()
 {
+    Enigma::Platforms::Debug::Printf("query geometry");
     auto repository = m_graphicMain->getSystemServiceAs<GeometryRepository>();
     assert(repository);
     auto geometry = repository->queryGeometryData(GeometryName);

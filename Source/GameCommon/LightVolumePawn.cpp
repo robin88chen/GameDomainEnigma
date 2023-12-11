@@ -44,11 +44,11 @@ void LightVolumePawn::ToggleCameraInside(bool is_inside)
         {
             if (is_inside)
             {
-                mesh->SelectVisualTechnique(m_tokenInsideVisualTech);
+                mesh->selectVisualTechnique(m_tokenInsideVisualTech);
             }
             else
             {
-                mesh->SelectVisualTechnique(m_tokenDefaultVisualTech);
+                mesh->selectVisualTechnique(m_tokenDefaultVisualTech);
             }
         }
     }

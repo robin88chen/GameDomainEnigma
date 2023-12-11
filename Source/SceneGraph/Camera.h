@@ -81,7 +81,7 @@ namespace Enigma::SceneGraph
 
         /** enum animator list deep, including geometry's animator */
         //todo : animators
-        //virtual void EnumAnimatorListDeep(AnimatorList& pResultList) override;
+        //virtual void enumAnimatorListDeep(AnimatorList& pResultList) override;
 
     protected:
         virtual void _updateViewTransform();

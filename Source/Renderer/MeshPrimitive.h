@@ -71,18 +71,18 @@ namespace Enigma::Renderer
         Renderer::RenderListID& RenderListID() { return m_renderListID; };
 
         /** insert to renderer */
-        virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+        virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
             const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState) override;
         /** remove from renderer */
-        virtual error RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
+        virtual error removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
 
         /** calculate bounding volume */
         virtual void calculateBoundingVolume(bool axis_align) override;
 
         /** update world transform */
-        virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
+        virtual void updateWorldTransform(const MathLib::Matrix4& mxWorld) override;
 
-        virtual void SelectVisualTechnique(const std::string& techniqueName) override;
+        virtual void selectVisualTechnique(const std::string& techniqueName) override;
 
         /** @name building mesh primitive */
         //@{

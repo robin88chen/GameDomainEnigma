@@ -119,7 +119,7 @@ void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelR
         MeshPrimitivePtr mesh_prim = m_meshNodes[index].GetMeshPrimitive();
         if (mesh_prim)
         {
-            mesh_prim->UpdateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
+            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
         }
     }
     else
@@ -128,7 +128,7 @@ void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelR
         MeshPrimitivePtr mesh_prim = m_meshNodes[index].GetMeshPrimitive();
         if (mesh_prim)
         {
-            mesh_prim->UpdateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
+            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
         }
     }
 }

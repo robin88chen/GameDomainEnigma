@@ -46,7 +46,7 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     }
     m_textures = mesh.m_textures;
     CreateRenderElements();
-    MeshPrimitive::SelectVisualTechnique(mesh.m_selectedVisualTech);
+    MeshPrimitive::selectVisualTechnique(mesh.m_selectedVisualTech);
 }
 
 MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive()
@@ -89,7 +89,7 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
     }
     m_textures = mesh.m_textures;
     CreateRenderElements();
-    MeshPrimitive::SelectVisualTechnique(mesh.m_selectedVisualTech);
+    MeshPrimitive::selectVisualTechnique(mesh.m_selectedVisualTech);
     return *this;
 }
 
@@ -220,13 +220,13 @@ error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     return er;
 }
 
-error MeshPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+error MeshPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
 {
     const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
-    if (TestPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
+    if (testPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
 
     if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
 
@@ -239,7 +239,7 @@ error MeshPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr
     return er;
 }
 
-error MeshPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
+error MeshPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
 {
     const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
@@ -260,17 +260,17 @@ void MeshPrimitive::calculateBoundingVolume(bool axis_align)
     }
 }
 
-void MeshPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
+void MeshPrimitive::updateWorldTransform(const MathLib::Matrix4& mxWorld)
 {
     m_mxPrimitiveWorld = mxWorld;
 }
 
-void MeshPrimitive::SelectVisualTechnique(const std::string& techniqueName)
+void MeshPrimitive::selectVisualTechnique(const std::string& techniqueName)
 {
-    Primitive::SelectVisualTechnique(techniqueName);
+    Primitive::selectVisualTechnique(techniqueName);
     for (auto& eff : m_effects)
     {
-        eff->SelectVisualTechnique(techniqueName);
+        eff->selectVisualTechnique(techniqueName);
     }
 }
 

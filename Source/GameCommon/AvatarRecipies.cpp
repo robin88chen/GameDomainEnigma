@@ -133,7 +133,7 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
                     mesh->CreateRenderElements();
                     if (!m_primitive.expired())
                     {
-                        m_primitive.lock()->SelectVisualTechnique(m_primitive.lock()->GetSelectedVisualTechnique());
+                        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->getSelectedVisualTechnique());
                     }
                 };
             CommandBus::post(cmd);

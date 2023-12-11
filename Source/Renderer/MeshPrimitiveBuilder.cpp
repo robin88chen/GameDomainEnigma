@@ -262,7 +262,7 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
     m_builtPrimitive->ChangeTextureMaps(m_builtTextures);
     m_builtPrimitive->CreateRenderElements();
     m_builtPrimitive->RenderListID() = m_policy->RenderListId();
-    m_builtPrimitive->SelectVisualTechnique(m_policy->VisualTechniqueSelection());
+    m_builtPrimitive->selectVisualTechnique(m_policy->VisualTechniqueSelection());
     EventPublisher::post(std::make_shared<MeshPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
 }
 

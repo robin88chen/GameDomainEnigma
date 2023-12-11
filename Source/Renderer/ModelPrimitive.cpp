@@ -30,7 +30,7 @@ ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim)
     m_primitiveFlags = prim.m_primitiveFlags;
     m_nodeTree = prim.m_nodeTree;
     m_meshPrimitiveIndexCache = prim.m_meshPrimitiveIndexCache;
-    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
+    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
 }
 
 ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept
@@ -41,7 +41,7 @@ ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept
     m_primitiveFlags = std::move(prim.m_primitiveFlags);
     m_nodeTree = std::move(prim.m_nodeTree);
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
-    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
+    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
 }
 
 ModelPrimitive::~ModelPrimitive()
@@ -57,7 +57,7 @@ ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
     m_primitiveFlags = prim.m_primitiveFlags;
     m_nodeTree = prim.m_nodeTree;
     m_meshPrimitiveIndexCache = prim.m_meshPrimitiveIndexCache;
-    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
+    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
     return *this;
 }
 
@@ -69,7 +69,7 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
     m_mxPrimitiveWorld = std::move(prim.m_mxPrimitiveWorld);
     m_primitiveFlags = std::move(prim.m_primitiveFlags);
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
-    ModelPrimitive::SelectVisualTechnique(prim.m_selectedVisualTech);
+    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
     return *this;
 }
 
@@ -136,13 +136,13 @@ void ModelPrimitive::UpdateMeshNodeLocalTransform(unsigned index, const MathLib:
     m_nodeTree.UpdateMeshNodeLocalTransform(m_mxPrimitiveWorld, index, mxLocal);
 }
 
-error ModelPrimitive::InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
 {
     const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
-    if (TestPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
+    if (testPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
 
     if (m_nodeTree.GetMeshNodeCount() == 0) return ErrorCode::ok; // no mesh node
     const unsigned int mesh_count = GetMeshPrimitiveCount();
@@ -152,7 +152,7 @@ error ModelPrimitive::InsertToRendererWithTransformUpdating(const std::shared_pt
         if (auto node = GetCachedMeshNode(0))
         {
             Matrix4 mx = mxWorld * node.value().get().GetRootRefTransform();
-            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
+            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->insertToRendererWithTransformUpdating(renderer, mx, lightingState);
         }
     }
     else
@@ -162,14 +162,14 @@ error ModelPrimitive::InsertToRendererWithTransformUpdating(const std::shared_pt
             if (auto node = GetCachedMeshNode(i))
             {
                 Matrix4 mx = mxWorld * node.value().get().GetRootRefTransform();
-                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->InsertToRendererWithTransformUpdating(renderer, mx, lightingState);
+                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->insertToRendererWithTransformUpdating(renderer, mx, lightingState);
             }
         }
     }
     return ErrorCode::ok;
 }
 
-error ModelPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
+error ModelPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
 {
     const auto render = std::dynamic_pointer_cast<Renderer, Engine::IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
@@ -180,7 +180,7 @@ error ModelPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer
     {
         if (GetMeshPrimitive(0))
         {
-            GetMeshPrimitive(0)->RemoveFromRenderer(renderer);
+            GetMeshPrimitive(0)->removeFromRenderer(renderer);
         }
     }
     else
@@ -189,14 +189,14 @@ error ModelPrimitive::RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer
         {
             if (GetMeshPrimitive(i))
             {
-                GetMeshPrimitive(i)->RemoveFromRenderer(renderer);
+                GetMeshPrimitive(i)->removeFromRenderer(renderer);
             }
         }
     }
     return ErrorCode::ok;
 }
 
-void ModelPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
+void ModelPrimitive::updateWorldTransform(const MathLib::Matrix4& mxWorld)
 {
     m_mxPrimitiveWorld = mxWorld;
 
@@ -208,7 +208,7 @@ void ModelPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
     {
         if (auto node = GetCachedMeshNode(0))
         {
-            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->UpdateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
+            if (GetMeshPrimitive(0)) GetMeshPrimitive(0)->updateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
         }
     }
     else
@@ -217,7 +217,7 @@ void ModelPrimitive::UpdateWorldTransform(const MathLib::Matrix4& mxWorld)
         {
             if (auto node = GetCachedMeshNode(i))
             {
-                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->UpdateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
+                if (GetMeshPrimitive(i)) GetMeshPrimitive(i)->updateWorldTransform(mxWorld * node.value().get().GetRootRefTransform());
             }
         }
     }
@@ -235,7 +235,7 @@ void ModelPrimitive::calculateBoundingVolume(bool axis_align)
         if (!mesh_node) continue;
         MeshPrimitivePtr mesh_prim = mesh_node.value().get().GetMeshPrimitive();
         if (!mesh_prim) continue;
-        if (!mesh_prim->TestPrimitiveFlag(Primitive_UnBound))
+        if (!mesh_prim->testPrimitiveFlag(Primitive_UnBound))
         {
             mesh_prim->calculateBoundingVolume(axis_align);
             m_bound.Merge(mesh_node.value().get().GetRootRefTransform(), mesh_prim->getBoundingVolume());
@@ -243,9 +243,9 @@ void ModelPrimitive::calculateBoundingVolume(bool axis_align)
     }
 }
 
-void ModelPrimitive::SelectVisualTechnique(const std::string& techniqueName)
+void ModelPrimitive::selectVisualTechnique(const std::string& techniqueName)
 {
-    Primitive::SelectVisualTechnique(techniqueName);
+    Primitive::selectVisualTechnique(techniqueName);
 
     if (m_nodeTree.GetMeshNodeCount() == 0) return;  // no mesh node
     const unsigned int mesh_count = GetMeshPrimitiveCount();
@@ -255,7 +255,7 @@ void ModelPrimitive::SelectVisualTechnique(const std::string& techniqueName)
     {
         if (GetMeshPrimitive(0))
         {
-            GetMeshPrimitive(0)->SelectVisualTechnique(techniqueName);
+            GetMeshPrimitive(0)->selectVisualTechnique(techniqueName);
         }
     }
     else
@@ -264,13 +264,13 @@ void ModelPrimitive::SelectVisualTechnique(const std::string& techniqueName)
         {
             if (GetMeshPrimitive(i))
             {
-                GetMeshPrimitive(i)->SelectVisualTechnique(techniqueName);
+                GetMeshPrimitive(i)->selectVisualTechnique(techniqueName);
             }
         }
     }
 }
 
-void ModelPrimitive::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+void ModelPrimitive::enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
 {
     if (m_animator) resultList.push_back(m_animator);
     if (m_nodeTree.GetMeshNodeCount() == 0) return;  // no mesh node
@@ -281,7 +281,7 @@ void ModelPrimitive::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Anim
     {
         if (GetMeshPrimitive(i))
         {
-            GetMeshPrimitive(i)->EnumAnimatorListDeep(resultList);
+            GetMeshPrimitive(i)->enumAnimatorListDeep(resultList);
         }
     }
 }

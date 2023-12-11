@@ -134,7 +134,7 @@ void AnimationFrameListener::DoAddingListeningAnimator(const Frameworks::IComman
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Animators::AddListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    AddListeningAnimator(cmd->GetAnimator());
+    AddListeningAnimator(cmd->getAnimator());
 }
 
 void AnimationFrameListener::DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c)
@@ -142,5 +142,5 @@ void AnimationFrameListener::DoRemovingListeningAnimator(const Frameworks::IComm
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Animators::RemoveListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    RemoveListeningAnimator(cmd->GetAnimator());
+    RemoveListeningAnimator(cmd->getAnimator());
 }

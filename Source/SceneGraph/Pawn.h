@@ -55,7 +55,7 @@ namespace Enigma::SceneGraph
         virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         /** enum animator list deep, including geometry's animator */
-        virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
 
     protected:
         PawnDto SerializePawnDto();

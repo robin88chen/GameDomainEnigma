@@ -60,7 +60,7 @@ error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
     assert(render);
     if (!m_primitive) return ErrorCode::nullPrimitive;
 
-    error er = m_primitive->InsertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
+    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
     return er;
 }
 
@@ -96,18 +96,18 @@ void Pawn::CalculateModelBound(bool axis_align)
 error Pawn::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 {
     error er = Spatial::_updateLocalTransform(mxLocal);
-    if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
+    if (m_primitive) m_primitive->updateWorldTransform(m_mxWorldTransform);
     return er;
 }
 
 error Pawn::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
     error er = Spatial::_updateWorldData(mxParentWorld);
-    if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
+    if (m_primitive) m_primitive->updateWorldTransform(m_mxWorldTransform);
     return er;
 }
 
-void Pawn::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+void Pawn::enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
 {
-    if (m_primitive) m_primitive->EnumAnimatorListDeep(resultList);
+    if (m_primitive) m_primitive->enumAnimatorListDeep(resultList);
 }

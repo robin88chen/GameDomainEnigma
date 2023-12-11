@@ -167,7 +167,7 @@ void ModelPrimitiveBuilder::OnModelAnimatorBuilt(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt>(e);
     if (!ev) return;
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
-    //auto anim = ev->GetAnimator();
+    //auto anim = ev->getAnimator();
     //anim->SetControlledModel(m_builtPrimitive);
     CompleteModelPrimitive();
 }

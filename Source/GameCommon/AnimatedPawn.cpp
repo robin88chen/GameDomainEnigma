@@ -52,7 +52,7 @@ void AnimatedPawn::PlayAnimation(const std::string& name)
     if (!action_clip) return;
 
     std::list<std::shared_ptr<Animator>> anim_list;
-    EnumAnimatorListDeep(anim_list);
+    enumAnimatorListDeep(anim_list);
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {
@@ -72,7 +72,7 @@ void AnimatedPawn::StopAnimation()
     if (!m_primitive) return;
 
     std::list<std::shared_ptr<Animator>> anim_list;
-    EnumAnimatorListDeep(anim_list);
+    enumAnimatorListDeep(anim_list);
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {

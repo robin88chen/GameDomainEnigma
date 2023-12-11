@@ -110,7 +110,7 @@ void ModelPrimitiveAnimator::reset()
 void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<ModelPrimitive>& model)
 {
     m_controlledPrimitive = model;
-    if (model) model->AttachAnimator(shared_from_this());
+    if (model) model->attachAnimator(shared_from_this());
 }
 
 std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::GetControlledModel() const

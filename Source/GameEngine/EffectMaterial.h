@@ -46,7 +46,7 @@ namespace Enigma::Engine
 
         /** select renderer & visual technique */
         void SelectRendererTechnique(const std::string& renderer_tech_name);
-        void SelectVisualTechnique(const std::string& visual_tech_name);
+        void selectVisualTechnique(const std::string& visual_tech_name);
 
         unsigned int GetPassCount();
         error ApplyFirstPass();

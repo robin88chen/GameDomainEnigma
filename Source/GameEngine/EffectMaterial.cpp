@@ -92,7 +92,7 @@ void EffectMaterial::SelectRendererTechnique(const std::string& renderer_tech_na
     SelectTechnique();
 }
 
-void EffectMaterial::SelectVisualTechnique(const std::string& visual_tech_name)
+void EffectMaterial::selectVisualTechnique(const std::string& visual_tech_name)
 {
     m_selectedVisualTechName = visual_tech_name;
     SelectTechnique();

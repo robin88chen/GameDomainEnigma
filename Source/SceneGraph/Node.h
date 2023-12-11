@@ -72,7 +72,7 @@ namespace Enigma::SceneGraph
 
         /** enum animator list deep, including geometry's animator */
         //todo : animators
-        //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
+        //virtual void enumAnimatorListDeep(AnimatorList& resultList) override;
 
         std::shared_ptr<Node> thisNode()
         {

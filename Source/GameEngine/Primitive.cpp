@@ -14,7 +14,7 @@ Primitive::~Primitive()
 {
 }
 
-void Primitive::EnumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList)
+void Primitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList)
 {
     if (m_animator) resultList.push_back(m_animator);
 }

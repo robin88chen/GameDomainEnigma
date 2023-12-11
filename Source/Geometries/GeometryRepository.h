@@ -44,8 +44,6 @@ namespace Enigma::Geometries
 
         /// On Init
         virtual Frameworks::ServiceResult onInit() override;
-        /// On Tick
-        virtual Frameworks::ServiceResult onTick() override;
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
@@ -59,11 +57,6 @@ namespace Enigma::Geometries
         //error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
-        //void OnFactoryGeometryCreated(const Frameworks::IEventPtr& e);
-        //void OnGeometryBuilt(const Frameworks::IEventPtr& e);
-        //void OnBuildGeometryFail(const Frameworks::IEventPtr& e);
-        //void DoBuildingGeometry(const Frameworks::ICommandPtr& c);
-
         void queryGeometryData(const Frameworks::IQueryPtr& q);
 
     protected:
@@ -71,15 +64,6 @@ namespace Enigma::Geometries
         GeometryDataFactory* m_factory;
         std::unordered_map<GeometryId, std::shared_ptr<GeometryData>, GeometryId::hash> m_geometries;
         std::recursive_mutex m_geometryLock;
-
-        GeometryBuilder* m_builder;
-        std::queue<GeometryDataPolicy> m_policies;
-        bool m_isCurrentBuilding;
-        std::mutex m_policiesLock;
-
-        //Frameworks::EventSubscriberPtr m_onGeometryBuilt;
-        //Frameworks::EventSubscriberPtr m_onBuildGeometryFail;
-        //Frameworks::CommandSubscriberPtr m_doBuildingGeometry;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;
     };

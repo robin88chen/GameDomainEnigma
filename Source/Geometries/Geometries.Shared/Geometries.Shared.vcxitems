@@ -14,7 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp" />
@@ -26,7 +25,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />

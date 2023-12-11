@@ -51,7 +51,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp">
       <Filter>Installing</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
@@ -102,7 +101,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
   </ItemGroup>
 </Project>

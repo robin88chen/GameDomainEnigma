@@ -21,7 +21,7 @@ namespace Enigma::Geometries
 {
     class GeometryRepository;
 
-    class GeometryBuilder
+    /*class GeometryBuilder
     {
     public:
         GeometryBuilder(GeometryRepository* host);
@@ -57,7 +57,7 @@ namespace Enigma::Geometries
         Frameworks::EventSubscriberPtr m_onFactoryGeometryCreated;
         Frameworks::CommandSubscriberPtr m_doRegisteringGeometryFactory;
         Frameworks::CommandSubscriberPtr m_doUnRegisteringGeometryFactory;
-    };
+    };*/
 }
 
 #endif // _GEOMETRY_BUILDER_H

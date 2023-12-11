@@ -14,14 +14,14 @@ MeshPrimitivePolicy::~MeshPrimitivePolicy()
 
 }
 
-std::shared_ptr<MeshPrimitive> MeshPrimitivePolicy::CreatePrimitive() const
+std::shared_ptr<MeshPrimitive> MeshPrimitivePolicy::createPrimitive() const
 {
-    return std::make_shared<MeshPrimitive>(m_name);
+    return nullptr; // std::make_shared<MeshPrimitive>(m_name);
 }
 
-std::shared_ptr<MeshPrimitive> SkinMeshPrimitivePolicy::CreatePrimitive() const
+std::shared_ptr<MeshPrimitive> SkinMeshPrimitivePolicy::createPrimitive() const
 {
-    return std::make_shared<SkinMeshPrimitive>(m_name);
+    return nullptr; // std::make_shared<SkinMeshPrimitive>(m_name);
 }
 
 /*const EffectTextureMapPolicy::TextureTuplePolicy& MeshPrimitivePolicy::GetTextureTuplePolicy(

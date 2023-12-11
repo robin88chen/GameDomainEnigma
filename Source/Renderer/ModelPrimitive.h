@@ -24,12 +24,12 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        ModelPrimitive(const std::string& name);
-        ModelPrimitive(const ModelPrimitive& prim);
-        ModelPrimitive(ModelPrimitive&& prim) noexcept;
+        ModelPrimitive(const Engine::PrimitiveId& id);
+        ModelPrimitive(const ModelPrimitive& prim) = delete;
+        ModelPrimitive(ModelPrimitive&& prim) = delete;
         ~ModelPrimitive() override;
-        ModelPrimitive& operator=(const ModelPrimitive& prim);
-        ModelPrimitive& operator=(ModelPrimitive&& prim) noexcept;
+        ModelPrimitive& operator=(const ModelPrimitive& prim) = delete;
+        ModelPrimitive& operator=(ModelPrimitive&& prim) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
 

@@ -10,13 +10,13 @@ const std::string SEMANTIC_BONE_MATRIX = "BoneMatrix";
 
 DEFINE_RTTI(Renderer, SkinMeshPrimitive, MeshPrimitive);
 
-SkinMeshPrimitive::SkinMeshPrimitive(const std::string& name) : MeshPrimitive(name)
+SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id) : MeshPrimitive(id)
 {
     m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
-SkinMeshPrimitive::SkinMeshPrimitive(const SkinMeshPrimitive& skin) : MeshPrimitive(skin)
+/*SkinMeshPrimitive::SkinMeshPrimitive(const SkinMeshPrimitive& skin) : MeshPrimitive(skin)
 {
     m_boneEffectMatrix = skin.m_boneEffectMatrix;
     m_ownerNodeRootRefTransform = skin.m_ownerNodeRootRefTransform;
@@ -26,14 +26,14 @@ SkinMeshPrimitive::SkinMeshPrimitive(SkinMeshPrimitive&& skin) noexcept : MeshPr
 {
     m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);
     m_ownerNodeRootRefTransform = std::move(skin.m_ownerNodeRootRefTransform);
-}
+}*/
 
 SkinMeshPrimitive::~SkinMeshPrimitive()
 {
     LoosePrimitiveBoneMatrix();
 }
 
-SkinMeshPrimitive& SkinMeshPrimitive::operator=(const SkinMeshPrimitive& skin)
+/*SkinMeshPrimitive& SkinMeshPrimitive::operator=(const SkinMeshPrimitive& skin)
 {
     MeshPrimitive::operator=(skin);
     m_boneEffectMatrix = skin.m_boneEffectMatrix;
@@ -47,7 +47,7 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexce
     m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);
     m_ownerNodeRootRefTransform = std::move(skin.m_ownerNodeRootRefTransform);
     return *this;
-}
+}*/
 
 GenericDto SkinMeshPrimitive::serializeDto() const
 {

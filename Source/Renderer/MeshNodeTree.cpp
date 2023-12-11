@@ -46,7 +46,7 @@ GenericDto MeshNodeTree::serializeDto() const
     dto.factoryDesc() = m_factoryDesc;
     for (auto& node : m_meshNodes)
     {
-        dto.MeshNodes().emplace_back(node.serializeDto());
+        dto.meshNodes().emplace_back(node.serializeDto());
     }
     return dto.toGenericDto();
 }

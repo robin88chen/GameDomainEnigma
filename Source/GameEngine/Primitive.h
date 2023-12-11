@@ -10,6 +10,7 @@
 
 #include "RenderLightingState.h"
 #include "BoundingVolume.h"
+#include "PrimitiveId.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/Rtti.h"
 #include <memory>
@@ -37,7 +38,7 @@ namespace Enigma::Engine
         using PrimitiveFlags = std::bitset<2>;
 
     public:
-        Primitive();
+        Primitive(const PrimitiveId& id);
         Primitive(const Primitive&) = delete;
         Primitive(Primitive&&) = delete;
         virtual ~Primitive();
@@ -46,6 +47,8 @@ namespace Enigma::Engine
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
+
+        const PrimitiveId& id() const { return m_id; }
 
         virtual GenericDto serializeDto() const = 0;
 
@@ -96,6 +99,7 @@ namespace Enigma::Engine
         }
 
     protected:
+        PrimitiveId m_id;
         FactoryDesc m_factoryDesc;
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;

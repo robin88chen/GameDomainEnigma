@@ -11,8 +11,8 @@ TerrainPrimitivePolicy::TerrainPrimitivePolicy(const MeshPrimitivePolicy& policy
 {
 }
 
-std::shared_ptr<Enigma::Renderer::MeshPrimitive> TerrainPrimitivePolicy::CreatePrimitive() const
+std::shared_ptr<Enigma::Renderer::MeshPrimitive> TerrainPrimitivePolicy::createPrimitive() const
 {
-    return std::make_shared<TerrainPrimitive>(m_name);
+    return nullptr; // std::make_shared<TerrainPrimitive>(m_name);
 }
 

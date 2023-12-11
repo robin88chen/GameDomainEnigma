@@ -384,11 +384,11 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = quad_geo_name;
-    mesh_dto.GeometryName() = quad_geo_name;
-    mesh_dto.TheGeometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.name() = quad_geo_name;
+    mesh_dto.geometryName() = quad_geo_name;
+    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.meshPrimitive(mesh_dto)
@@ -413,11 +413,11 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     eff_dto_helper.FilenameAtPath(m_configuration->SunLightPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = quad_geo_name;
-    mesh_dto.GeometryName() = quad_geo_name;
-    mesh_dto.TheGeometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.name() = quad_geo_name;
+    mesh_dto.geometryName() = quad_geo_name;
+    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.meshPrimitive(mesh_dto)
@@ -441,11 +441,11 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     eff_dto_helper.FilenameAtPath(m_configuration->LightVolumePassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = vol_geo_name;
-    mesh_dto.GeometryName() = vol_geo_name;
-    mesh_dto.TheGeometry() = sphere_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.name() = vol_geo_name;
+    mesh_dto.geometryName() = vol_geo_name;
+    mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");
     pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).meshPrimitive(mesh_dto)

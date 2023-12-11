@@ -54,6 +54,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.cpp" />

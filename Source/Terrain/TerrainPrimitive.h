@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainPrimitive.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -16,12 +16,12 @@ namespace Enigma::Terrain
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainPrimitive(const std::string& name);
+        TerrainPrimitive(const Engine::PrimitiveId& id);
         virtual ~TerrainPrimitive() override;
-        TerrainPrimitive(const TerrainPrimitive&);
-        TerrainPrimitive& operator=(const TerrainPrimitive&);
-        TerrainPrimitive(TerrainPrimitive&&) noexcept;
-        TerrainPrimitive& operator=(TerrainPrimitive&&) noexcept;
+        TerrainPrimitive(const TerrainPrimitive&) = delete;
+        TerrainPrimitive& operator=(const TerrainPrimitive&) = delete;
+        TerrainPrimitive(TerrainPrimitive&&) = delete;
+        TerrainPrimitive& operator=(TerrainPrimitive&&) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
     };

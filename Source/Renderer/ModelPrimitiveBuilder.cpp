@@ -26,7 +26,7 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
 
-    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::ModelDtoConvertToPolicy));
+    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::modelDtoConvertToPolicy));
 }
 
 ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
@@ -55,21 +55,21 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
 
     m_buildingRuid = ruid;
     m_policy = policy;
-    m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->Name());
-    for (auto& dto : m_policy->NodeTreeDto().MeshNodes())
+    m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->id());
+    for (auto& dto : m_policy->nodeTreeDto().meshNodes())
     {
         MeshNodeDto node_dto = MeshNodeDto::fromGenericDto(dto);
-        MeshNode node(node_dto.Name());
-        node.SetT_PosTransform(node_dto.LocalT_PosTransform());
-        node.setLocalTransform(node_dto.LocalT_PosTransform());
+        MeshNode node(node_dto.name());
+        node.SetT_PosTransform(node_dto.localT_PosTransform());
+        node.setLocalTransform(node_dto.localT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
-        if (auto v = node_dto.ParentIndexInArray())
+        if (auto v = node_dto.parentIndexInArray())
         {
             node.SetParentIndexInArray(v.value());
         }
-        if (auto prim = node_dto.TheMeshPrimitive())
+        if (auto prim = node_dto.meshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
+            PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
         }
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }
@@ -98,7 +98,7 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
 void ModelPrimitiveBuilder::TryBuildAnimator()
 {
     if (!m_policy) return;
-    if (auto ani = m_policy->TheModelAnimator())
+    if (auto ani = m_policy->modelAnimator())
     {
         m_animatorPolicy = ani->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
         CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));

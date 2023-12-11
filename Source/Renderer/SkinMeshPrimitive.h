@@ -18,12 +18,12 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        SkinMeshPrimitive(const std::string& name);
-        SkinMeshPrimitive(const SkinMeshPrimitive&);
-        SkinMeshPrimitive(SkinMeshPrimitive&&) noexcept;
+        SkinMeshPrimitive(const Engine::PrimitiveId& id);
+        SkinMeshPrimitive(const SkinMeshPrimitive&) = delete;
+        SkinMeshPrimitive(SkinMeshPrimitive&&) = delete;
         ~SkinMeshPrimitive() override;
-        SkinMeshPrimitive& operator=(const SkinMeshPrimitive&);
-        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) noexcept;
+        SkinMeshPrimitive& operator=(const SkinMeshPrimitive&) = delete;
+        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
 

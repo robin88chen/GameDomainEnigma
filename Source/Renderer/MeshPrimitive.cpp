@@ -18,10 +18,10 @@ using namespace Enigma::Graphics;
 
 DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
-MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
+MeshPrimitive::MeshPrimitive(const PrimitiveId& id) : Primitive(id)
 {
     m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
-    m_name = name;
+    m_name = id.name();
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
     m_renderListID = Renderer::RenderListID::Scene;
@@ -30,7 +30,7 @@ MeshPrimitive::MeshPrimitive(const std::string& name) : Primitive()
     m_textures.clear();
 }
 
-MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
+/*MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive(mesh.m_id)
 {
     m_factoryDesc = mesh.m_factoryDesc;
     m_name = mesh.m_name;
@@ -49,7 +49,7 @@ MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive()
     MeshPrimitive::selectVisualTechnique(mesh.m_selectedVisualTech);
 }
 
-MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive()
+MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive(mesh.m_id)
 {
     m_factoryDesc = std::move(mesh.m_factoryDesc);
     m_name = mesh.m_name;
@@ -62,7 +62,7 @@ MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive()
     m_elements = std::move(mesh.m_elements);
     m_effects = std::move(mesh.m_effects);
     m_textures = std::move(mesh.m_textures);
-}
+}*/
 
 MeshPrimitive::~MeshPrimitive()
 {
@@ -72,9 +72,10 @@ MeshPrimitive::~MeshPrimitive()
     m_textures.clear();
 }
 
-MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
+/*MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 {
     if (this == &mesh) return *this;
+    m_id = mesh.m_id;
     m_factoryDesc = mesh.m_factoryDesc;
     m_name = mesh.m_name;
     m_bound = mesh.m_bound;
@@ -95,6 +96,7 @@ MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
 
 MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
 {
+    m_id = mesh.m_id;
     m_factoryDesc = std::move(mesh.m_factoryDesc);
     m_name = mesh.m_name;
     m_bound = std::move(mesh.m_bound);
@@ -107,7 +109,7 @@ MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
     m_effects = std::move(mesh.m_effects);
     m_textures = std::move(mesh.m_textures);
     return *this;
-}
+}*/
 
 GenericDto MeshPrimitive::serializeDto() const
 {
@@ -118,28 +120,28 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
 {
     MeshPrimitiveDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.Name() = m_name;
+    dto.name() = m_name;
     if (m_geometry)
     {
-        dto.GeometryName() = m_geometry->id().name();
-        dto.GeometryFactoryDesc() = m_geometry->factoryDesc();
+        dto.geometryName() = m_geometry->id().name();
+        dto.geometryFactoryDesc() = m_geometry->factoryDesc();
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
-            dto.TheGeometry() = m_geometry->serializeDto();
+            dto.geometry() = m_geometry->serializeDto();
         }
     }
     for (auto& eff : m_effects)
     {
-        dto.Effects().emplace_back(eff->serializeDto());
+        dto.effects().emplace_back(eff->serializeDto());
     }
     for (auto& tex : m_textures)
     {
         if (!tex.IsAllResourceTexture()) continue;
-        dto.TextureMaps().emplace_back(tex.serializeDto());
+        dto.textureMaps().emplace_back(tex.serializeDto());
     }
-    dto.RenderListID() = m_renderListID;
-    dto.VisualTechniqueSelection() = m_selectedVisualTech;
+    dto.renderListID() = m_renderListID;
+    dto.visualTechniqueSelection() = m_selectedVisualTech;
     return dto;
 }
 

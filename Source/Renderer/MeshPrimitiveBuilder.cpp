@@ -45,8 +45,8 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder() : m_originalGeometryDesc(GeometryDa
     m_onCreateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadOrCreateTextureFailed(e); });
     EventPublisher::subscribe(typeid(CreateTextureFailed), m_onCreateTextureFailed);
 
-    CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveDto::MeshDtoConvertToPolicy));
-    CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::SkinMeshDtoConvertToPolicy));
+    CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveDto::meshDtoConvertToPolicy));
+    CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::skinMeshDtoConvertToPolicy));
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
@@ -85,14 +85,14 @@ void MeshPrimitiveBuilder::BuildMeshPrimitive(const Frameworks::Ruid& ruid, cons
     m_buildingRuid = ruid;
     m_policy = policy;
 
-    m_builtPrimitive = m_policy->CreatePrimitive();
+    m_builtPrimitive = m_policy->createPrimitive();
 
-    m_originalGeometryDesc = m_policy->GeometryFactoryDesc();
+    m_originalGeometryDesc = m_policy->geometryFactoryDesc();
     m_builtGeometry = nullptr;
     m_builtRenderBuffer = nullptr;
     m_builtEffects.clear();
     m_builtTextures.clear();
-    Frameworks::CommandBus::post(std::make_shared<CreateGeometry>(m_policy->GeometryPolicy().id(), Rtti::fromName(m_policy->GeometryFactoryDesc().GetRttiName())));
+    Frameworks::CommandBus::post(std::make_shared<CreateGeometry>(m_policy->geometryPolicy().id(), Rtti::fromName(m_policy->geometryFactoryDesc().GetRttiName())));
 }
 
 void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
@@ -101,7 +101,7 @@ void MeshPrimitiveBuilder::OnGeometryDataBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GeometryCreated, IEvent>(e);
     if (!ev) return;
-    if ((m_policy) && (ev->id() != m_policy->GeometryPolicy().id())) return;
+    if ((m_policy) && (ev->id() != m_policy->geometryPolicy().id())) return;
     m_builtGeometry = ev->geometryData();
     m_builtGeometry->factoryDesc() = m_originalGeometryDesc;
     RenderBufferPolicy buffer;
@@ -126,7 +126,7 @@ void MeshPrimitiveBuilder::OnBuildGeometryDataFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<CreateGeometryFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->id() != m_policy->GeometryPolicy().id()) return;
+    if (ev->id() != m_policy->geometryPolicy().id()) return;
     EventPublisher::post(std::make_shared<BuildMeshPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->error()));
 }
 
@@ -140,15 +140,15 @@ void MeshPrimitiveBuilder::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
     m_builtRenderBuffer = ev->GetBuffer();
     std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->LinkGeometryData(m_builtGeometry, m_builtRenderBuffer);
-    m_builtEffects.resize(m_policy->EffectDtos().size());
-    for (auto& dto : m_policy->EffectDtos())
+    m_builtEffects.resize(m_policy->effectDtos().size());
+    for (auto& dto : m_policy->effectDtos())
     {
         CommandBus::post(std::make_shared<CompileEffectMaterial>(dto));
     }
-    m_builtTextures.resize(m_policy->TextureDtos().size());
-    for (unsigned i = 0; i < m_policy->TextureDtos().size(); i++)
+    m_builtTextures.resize(m_policy->textureDtos().size());
+    for (unsigned i = 0; i < m_policy->textureDtos().size(); i++)
     {
-        for (auto& t : m_policy->TextureDtos()[i].TextureMappings())
+        for (auto& t : m_policy->textureDtos()[i].TextureMappings())
         {
             m_builtTextures[i].AppendTextureSemantic(t.Semantic());
             CommandBus::post(std::make_shared<LoadTexture>(std::get<TexturePolicy>(t.ConvertToPolicy())));
@@ -214,8 +214,8 @@ void MeshPrimitiveBuilder::OnTextureLoadedOrCreated(const Frameworks::IEventPtr&
 
     const unsigned tex_idx = std::get<0>(found_idx.value());
     const unsigned tuple_idx = std::get<1>(found_idx.value());
-    auto semantic = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
-    auto array_idx = m_policy->TextureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
+    auto semantic = m_policy->textureDtos()[tex_idx].TextureMappings()[tuple_idx].Semantic();
+    auto array_idx = m_policy->textureDtos()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
     m_builtTextures[tex_idx].ChangeSemanticTexture({ semantic, tex_loaded, array_idx });
     TryCompletingMesh();
 }
@@ -261,27 +261,27 @@ void MeshPrimitiveBuilder::TryCompletingMesh()
     m_builtPrimitive->ChangeEffectMaterial(m_builtEffects);
     m_builtPrimitive->ChangeTextureMaps(m_builtTextures);
     m_builtPrimitive->CreateRenderElements();
-    m_builtPrimitive->RenderListID() = m_policy->RenderListId();
-    m_builtPrimitive->selectVisualTechnique(m_policy->VisualTechniqueSelection());
+    m_builtPrimitive->RenderListID() = m_policy->renderListId();
+    m_builtPrimitive->selectVisualTechnique(m_policy->visualTechniqueSelection());
     EventPublisher::post(std::make_shared<MeshPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
 }
 
 std::optional<unsigned> MeshPrimitiveBuilder::FindBuildingEffectIndex(const std::string& name)
 {
-    for (unsigned i = 0; i < m_policy->EffectDtos().size(); i++)
+    for (unsigned i = 0; i < m_policy->effectDtos().size(); i++)
     {
-        if ((m_policy->EffectDtos()[i].Name() == name) && (m_builtEffects[i] == nullptr)) return i;
+        if ((m_policy->effectDtos()[i].Name() == name) && (m_builtEffects[i] == nullptr)) return i;
     }
     return std::nullopt;
 }
 
 std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::FindLoadingTextureIndex(const std::string& name)
 {
-    for (unsigned tex = 0; tex < m_policy->TextureDtos().size(); tex++)
+    for (unsigned tex = 0; tex < m_policy->textureDtos().size(); tex++)
     {
-        for (unsigned tp = 0; tp < m_policy->TextureDtos()[tex].TextureMappings().size(); tp++)
+        for (unsigned tp = 0; tp < m_policy->textureDtos()[tex].TextureMappings().size(); tp++)
         {
-            if ((m_policy->TextureDtos()[tex].TextureMappings()[tp].TextureName() == name)
+            if ((m_policy->textureDtos()[tex].TextureMappings()[tp].TextureName() == name)
                 && (m_builtTextures[tex].GetTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
         }
     }

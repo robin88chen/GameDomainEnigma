@@ -33,12 +33,12 @@ namespace Enigma::Renderer
         using EffectMaterialList = std::vector<Engine::EffectMaterialPtr>;
         using TextureMapList = std::vector<Engine::EffectTextureMap>;
     public:
-        MeshPrimitive(const std::string& name);
-        MeshPrimitive(const MeshPrimitive&);
-        MeshPrimitive(MeshPrimitive&&) noexcept;
+        MeshPrimitive(const Engine::PrimitiveId& id);
+        MeshPrimitive(const MeshPrimitive&) = delete;
+        MeshPrimitive(MeshPrimitive&&) = delete;
         ~MeshPrimitive() override;
-        MeshPrimitive& operator=(const MeshPrimitive&);
-        MeshPrimitive& operator=(MeshPrimitive&&) noexcept;
+        MeshPrimitive& operator=(const MeshPrimitive&) = delete;
+        MeshPrimitive& operator=(MeshPrimitive&&) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
 

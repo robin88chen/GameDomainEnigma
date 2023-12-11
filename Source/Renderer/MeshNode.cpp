@@ -29,11 +29,11 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
     {
         if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
         {
-            m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
+            //m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
         }
         else
         {
-            m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+            //m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
         }
     }
     m_parentIndexInArray = node.m_parentIndexInArray;
@@ -68,11 +68,11 @@ MeshNode& MeshNode::operator=(const MeshNode& node)
     {
         if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
         {
-            m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
+            //m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
         }
         else
         {
-            m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
+            //m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
         }
     }
     m_parentIndexInArray = node.m_parentIndexInArray;
@@ -96,16 +96,16 @@ GenericDto MeshNode::serializeDto() const
 {
     MeshNodeDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.Name() = m_name;
-    dto.LocalT_PosTransform() = m_mxT_PosTransform;
+    dto.name() = m_name;
+    dto.localT_PosTransform() = m_mxT_PosTransform;
     //dto.RootRefTransform() = m_mxRootRefTransform;
     if (m_meshPrimitive)
     {
-        dto.TheMeshPrimitive() = m_meshPrimitive->serializeDto();
+        dto.meshPrimitive() = m_meshPrimitive->serializeDto();
     }
     if (m_parentIndexInArray)
     {
-        dto.ParentIndexInArray() = m_parentIndexInArray.value();
+        dto.parentIndexInArray() = m_parentIndexInArray.value();
     }
     return dto.toGenericDto();
 }

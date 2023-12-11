@@ -15,14 +15,14 @@ using namespace Enigma::Animators;
 
 DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
-ModelPrimitive::ModelPrimitive(const std::string& name) : Primitive()
+ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
 {
     m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName());
-    m_name = name;
+    m_name = id.name();
     m_meshPrimitiveIndexCache.clear();
 }
 
-ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim)
+/*ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim) : Primitive(prim.m_id)
 {
     m_name = prim.m_name;
     m_bound = prim.m_bound;
@@ -33,7 +33,7 @@ ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim)
     ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
 }
 
-ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept
+ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept : Primitive(prim.m_id)
 {
     m_name = std::move(prim.m_name);
     m_bound = std::move(prim.m_bound);
@@ -42,15 +42,16 @@ ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept
     m_nodeTree = std::move(prim.m_nodeTree);
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
     ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
-}
+}*/
 
 ModelPrimitive::~ModelPrimitive()
 {
     m_meshPrimitiveIndexCache.clear();
 }
 
-ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
+/*ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
 {
+    m_id = prim.m_id;
     m_name = prim.m_name;
     m_bound = prim.m_bound;
     m_mxPrimitiveWorld = prim.m_mxPrimitiveWorld;
@@ -63,6 +64,7 @@ ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
 
 ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
 {
+    m_id = prim.m_id;
     m_name = std::move(prim.m_name);
     m_nodeTree = std::move(prim.m_nodeTree);
     m_bound = std::move(prim.m_bound);
@@ -71,16 +73,17 @@ ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
     m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
     ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
     return *this;
-}
+}*/
 
 GenericDto ModelPrimitive::serializeDto() const
 {
     ModelPrimitiveDto dto;
+    dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
-    dto.Name() = m_name;
-    dto.TheNodeTree() = m_nodeTree.serializeDto();
+    dto.name() = m_name;
+    dto.nodeTree() = m_nodeTree.serializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
-        dto.TheAnimator() = ani->serializeDto().toGenericDto();
+        dto.animator() = ani->serializeDto().toGenericDto();
     return dto.toGenericDto();
 }
 

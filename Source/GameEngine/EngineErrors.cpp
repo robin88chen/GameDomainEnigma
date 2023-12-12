@@ -13,6 +13,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::policyIncomplete: return "Policy Incomplete";
     case ErrorCode::deserializeFail: return "Deserialize fail";
     case ErrorCode::fileIOError: return "File IO error";
+    case ErrorCode::primitiveFactoryNotExists: return "Primitive factory not exists";
+    case ErrorCode::primitiveEntityAlreadyExists: return "Primitive entity already exists";
     case ErrorCode::effectPassEnd: return "Effect pass ended";
     case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     case ErrorCode::noSelectedTechnique: return "No selected effect technique";

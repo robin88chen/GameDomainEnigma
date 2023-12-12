@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   MeshPrimitive.h
- * \brief Mesh primitive, value object, use shared_ptr
+ * \brief Mesh primitive, aggregate, use shared_ptr
  *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
@@ -34,7 +34,7 @@ namespace Enigma::Renderer
         using TextureMapList = std::vector<Engine::EffectTextureMap>;
     public:
         MeshPrimitive(const Engine::PrimitiveId& id);
-        MeshPrimitive(const MeshPrimitive&) = delete;
+        MeshPrimitive(const MeshPrimitive&) = delete;  // non-copyable
         MeshPrimitive(MeshPrimitive&&) = delete;
         ~MeshPrimitive() override;
         MeshPrimitive& operator=(const MeshPrimitive&) = delete;

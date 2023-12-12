@@ -1,6 +1,7 @@
 ﻿#include "GeometryInstallingPolicy.h"
 #include "GeometryRepository.h"
 #include "GeometryErrors.h"
+#include <cassert>
 
 using namespace Enigma::Geometries;
 

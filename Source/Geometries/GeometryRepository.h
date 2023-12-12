@@ -10,14 +10,10 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
-#include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "GeometryId.h"
-#include "GeometryDataPolicy.h"
 #include <memory>
 #include <mutex>
-#include <queue>
 #include <unordered_map>
 
 namespace Enigma::Geometries
@@ -53,8 +49,6 @@ namespace Enigma::Geometries
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
         void removeGeometryData(const GeometryId& id);
         void putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data);
-
-        //error BuildGeometry(const GeometryDataPolicy& policy);
 
     protected:
         void queryGeometryData(const Frameworks::IQueryPtr& q);

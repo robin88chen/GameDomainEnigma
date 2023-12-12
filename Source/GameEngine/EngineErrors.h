@@ -21,6 +21,9 @@ namespace Enigma::Engine
         deserializeFail,
         fileIOError,
 
+        primitiveFactoryNotExists = 151,
+        primitiveEntityAlreadyExists,
+
         effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,

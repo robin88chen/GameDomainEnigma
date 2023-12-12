@@ -54,8 +54,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuildingPolicies.h" />
@@ -108,7 +114,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.cpp" />

@@ -18,7 +18,7 @@ namespace Enigma::Geometries
     class GeometryCreated : public Frameworks::IEvent
     {
     public:
-        GeometryCreated(const GeometryId& id, const GeometryDataPtr geo) :
+        GeometryCreated(const GeometryId& id, const GeometryDataPtr& geo) :
             m_id(id), m_geometry(geo) {};
         const GeometryId& id() { return m_id; }
         const GeometryDataPtr& geometryData() { return m_geometry; }
@@ -40,7 +40,7 @@ namespace Enigma::Geometries
     class GeometryConstituted : public Frameworks::IEvent
     {
     public:
-        GeometryConstituted(const GeometryId& id, const GeometryDataPtr geo) :
+        GeometryConstituted(const GeometryId& id, const GeometryDataPtr& geo) :
             m_id(id), m_geometry(geo) {};
         const GeometryId& id() { return m_id; }
         const GeometryDataPtr& geometryData() { return m_geometry; }

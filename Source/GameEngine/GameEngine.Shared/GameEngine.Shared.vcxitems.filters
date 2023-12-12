@@ -270,6 +270,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveId.h">
       <Filter>Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveStoreMapper.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -396,6 +414,12 @@
       <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>

@@ -61,6 +61,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.cpp" />

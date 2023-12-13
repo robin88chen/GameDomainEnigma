@@ -16,6 +16,8 @@
 #include "GameEngine/DtoDeserializer.h"
 #include "Renderer.h"
 #include "GameEngine/PrimitiveId.h"
+#include "Geometries/GeometryId.h"
+#include "GameEngine/EffectMaterialDto.h"
 #include <memory>
 #include <vector>
 
@@ -42,12 +44,12 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const std::string& name() const { return m_name; }
         std::string& name() { return m_name; }
-        [[nodiscard]] const std::string& geometryName() const { return m_geometryName; }
-        std::string& geometryName() { return m_geometryName; }
+        [[nodiscard]] const Geometries::GeometryId& geometryId() const { return m_geometryId; }
+        Geometries::GeometryId& geometryId() { return m_geometryId; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& geometry() const { return m_geometry; }
         std::optional<Engine::GenericDto>& geometry() { return m_geometry; }
-        [[nodiscard]] const Engine::FactoryDesc& geometryFactoryDesc() const { return m_geometryFactory; }
-        Engine::FactoryDesc& geometryFactoryDesc() { return m_geometryFactory; }
+        //[[nodiscard]] const Engine::FactoryDesc& geometryFactoryDesc() const { return m_geometryFactory; }
+        //Engine::FactoryDesc& geometryFactoryDesc() { return m_geometryFactory; }
         [[nodiscard]] const Engine::GenericDtoCollection& effects() const { return m_effects; }
         Engine::GenericDtoCollection& effects() { return m_effects; }
         [[nodiscard]] const Engine::GenericDtoCollection& textureMaps() const { return m_textureMaps; }
@@ -60,19 +62,33 @@ namespace Enigma::Renderer
         static MeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
-        static std::shared_ptr<Engine::GenericPolicy> meshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
+        //static std::shared_ptr<Engine::GenericPolicy> meshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         Engine::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         std::string m_name;
-        std::string m_geometryName;
+        Geometries::GeometryId m_geometryId;
         std::optional<Engine::GenericDto> m_geometry;
-        Engine::FactoryDesc m_geometryFactory;
+        //Engine::FactoryDesc m_geometryFactory;
         Engine::GenericDtoCollection m_effects;
         Engine::GenericDtoCollection m_textureMaps;
         Renderer::RenderListID m_renderListID;
         std::string m_visualTechniqueSelection;
+    };
+
+    class MeshPrimitiveMetaDto
+    {
+    public:
+        MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto);
+
+        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& effects() const { return m_effects; }
+
+        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& textureMaps() const { return m_textureMaps; }
+
+    protected:
+        std::vector<Engine::EffectMaterialDto> m_effects;
+        std::vector<Engine::EffectTextureMapDto> m_textureMaps;
     };
 
     class SkinMeshPrimitiveDto : public MeshPrimitiveDto

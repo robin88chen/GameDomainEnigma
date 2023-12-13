@@ -29,8 +29,8 @@ namespace Enigma::Renderer
 
         void BindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
-        virtual void ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect) override;
-        virtual void ChangeEffectMaterial(const EffectMaterialList& effects) override;
+        virtual void changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect) override;
+        virtual void changeEffectMaterials(const EffectMaterialList& effects) override;
 
         void CreateBoneMatrixArray(unsigned int size);
         void UpdateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);

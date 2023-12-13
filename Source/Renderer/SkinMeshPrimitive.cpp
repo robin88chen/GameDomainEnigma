@@ -51,7 +51,7 @@ SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexce
 
 GenericDto SkinMeshPrimitive::serializeDto() const
 {
-    SkinMeshPrimitiveDto dto(SerializeMeshDto());
+    SkinMeshPrimitiveDto dto(serializeMeshDto());
     return dto.toGenericDto();
 }
 
@@ -60,24 +60,24 @@ void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)
     m_ownerNodeRootRefTransform = mx;
 }
 
-void SkinMeshPrimitive::ChangeEffectMaterial(const EffectMaterialList& effects)
+void SkinMeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
 {
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     LoosePrimitiveBoneMatrix();
     m_effects.clear();
     if (effects.size() == 0) return;
     m_effects = effects;
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
     BindPrimitiveBoneMatrix();
 }
 
-void SkinMeshPrimitive::ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
+void SkinMeshPrimitive::changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
 {
     if (index >= m_effects.size()) return;
-    LooseSegmentEffectTexture(index);
+    looseSegmentEffectTexture(index);
     LooseSegmentBoneMatrix(index);
     m_effects[index] = effect;
-    BindSegmentEffectTexture(index);
+    bindSegmentEffectTexture(index);
     BindSegmentBoneMatrix(index);
 }
 

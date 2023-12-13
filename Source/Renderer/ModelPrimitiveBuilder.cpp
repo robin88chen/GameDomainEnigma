@@ -90,8 +90,8 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
         TryBuildAnimator();
         return;
     }
-    m_meshBuilder->BuildMeshPrimitive(std::get<Ruid>(m_meshPolicies.front()),
-        std::get<std::shared_ptr<MeshPrimitivePolicy>>(m_meshPolicies.front()));
+    //m_meshBuilder->BuildMeshPrimitive(std::get<Ruid>(m_meshPolicies.front()),
+      //  std::get<std::shared_ptr<MeshPrimitivePolicy>>(m_meshPolicies.front()));
     m_meshPolicies.pop();
 }
 
@@ -121,12 +121,12 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->GetPrimitive());
+    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->primitive());
     if (!mesh_prim) return;
     bool has_mesh_built = false;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->getRuid())
+        /*if (meta.m_ruidPolicy == ev->ruid())
         {
             auto index = m_builtPrimitive->GetMeshNodeTree().FindMeshNodeIndex(meta.m_nodeName);
             if (index)
@@ -138,7 +138,7 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
                 }
             }
             break;
-        }
+        }*/
     }
     if (has_mesh_built) ContinueBuildInnerMesh();
 }
@@ -151,11 +151,11 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
     if (!ev) return;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->getRuid())
+        /*if (meta.m_ruidPolicy == ev->ruid())
         {
-            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->error()));
             return;
-        }
+        }*/
     }
 }
 

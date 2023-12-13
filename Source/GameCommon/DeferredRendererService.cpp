@@ -385,7 +385,7 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = quad_geo_name;
-    mesh_dto.geometryName() = quad_geo_name;
+    mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
@@ -414,7 +414,7 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = quad_geo_name;
-    mesh_dto.geometryName() = quad_geo_name;
+    mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
@@ -442,7 +442,7 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = vol_geo_name;
-    mesh_dto.geometryName() = vol_geo_name;
+    mesh_dto.geometryId() = vol_geo_name;
     mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
@@ -540,13 +540,13 @@ void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrim
         { m_configuration->GbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
         { m_configuration->GbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
         { m_configuration->GbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
-    if (mesh->GetTextureMapCount() != 0)
+    if (mesh->getTextureMapCount() != 0)
     {
-        mesh->BindSegmentTextures(textures);
+        mesh->bindSemanticTextures(textures);
     }
     else
     {
-        mesh->ChangeTextureMaps({ textures });
+        mesh->changeTextureMaps({ textures });
     }
 }
 

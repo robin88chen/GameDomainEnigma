@@ -117,11 +117,11 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
     if ((m_oldMaterialName.empty()) || (m_newMaterialDto.Name().empty())) return;
     if (m_oldMaterialName == m_newMaterialDto.Name()) return;
 
-    unsigned int total_mat_count = mesh->GetEffectMaterialCount();
+    unsigned int total_mat_count = mesh->getEffectMaterialCount();
     if (total_mat_count == 0) return;
     for (unsigned int i = 0; i < total_mat_count; i++)
     {
-        EffectMaterialPtr eff = mesh->GetEffectMaterial(i);
+        EffectMaterialPtr eff = mesh->getEffectMaterial(i);
         if (!eff) continue;
         if (eff->getName() == m_oldMaterialName)
         {
@@ -129,8 +129,8 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
             auto cmd = std::make_shared<CompileEffectMaterial>(m_newMaterialDto);
             m_changeSpecifyMaterialMap[cmd->getRuid()] = [mesh, i, this](const EffectMaterialPtr& eff_new)
                 {
-                    mesh->ChangeEffectMaterialInSegment(i, eff_new);
-                    mesh->CreateRenderElements();
+                    mesh->changeEffectMaterialInSegment(i, eff_new);
+                    mesh->createRenderElements();
                     if (!m_primitive.expired())
                     {
                         m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->getSelectedVisualTechnique());
@@ -237,7 +237,7 @@ void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getRequestRuid() != m_requsetRuid) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->changeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
 }
 
 void ChangeAvatarTexture::OnLoadTextureFailed(const Frameworks::IEventPtr& e)

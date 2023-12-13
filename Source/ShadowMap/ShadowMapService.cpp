@@ -234,7 +234,7 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
     if (!mesh) return;
     if (m_shadowMapRenderTarget.expired()) return;
 
-    mesh->BindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
+    mesh->bindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
 }
 
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)

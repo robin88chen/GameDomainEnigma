@@ -22,7 +22,7 @@ TextureMappingDto TextureMappingDto::fromGenericDto(const GenericDto& dto)
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_PATH_ID)) tex.PathId() = v.value();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_SEMANTIC)) tex.Semantic() = v.value();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_ARRAY_INDEX)) tex.ArrayIndex() = v.value();
-    if (const auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_DIMENSION)) tex.Dimension() = {v.value()[0], v.value()[1]};
+    if (const auto v = dto.TryGetValue<std::vector<unsigned>>(TOKEN_DIMENSION)) tex.Dimension() = { v.value()[0], v.value()[1] };
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_SURFACE_COUNT)) tex.SurfaceCount() = v.value();
     return tex;
 }
@@ -44,7 +44,7 @@ GenericDto TextureMappingDto::toGenericDto() const
     return dto;
 }
 
-EffectTextureMapPolicy::TextureTuplePolicy TextureMappingDto::ConvertToPolicy()
+EffectTextureMapPolicy::TextureTuplePolicy TextureMappingDto::ConvertToPolicy() const
 {
     if (m_jobType == TexturePolicy::JobType::Load)
     {

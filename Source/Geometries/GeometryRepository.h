@@ -21,7 +21,6 @@ namespace Enigma::Geometries
     using error = std::error_code;
 
     class GeometryData;
-    class GenericDto;
     class GeometryDataStoreMapper;
     class GeometryDataFactory;
     class TriangleListDto;

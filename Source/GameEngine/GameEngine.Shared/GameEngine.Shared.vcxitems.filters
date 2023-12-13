@@ -288,6 +288,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -421,6 +424,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp">
       <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -46,7 +46,7 @@ namespace Enigma::Renderer
         RenderElement& operator=(RenderElement&&) = delete;
 
         std::shared_ptr<Engine::RenderBuffer> GetRenderBuffer() const;
-        const Engine::EffectMaterialPtr& GetEffectMaterial() const { return m_effectMaterial; };
+        const Engine::EffectMaterialPtr& getEffectMaterial() const { return m_effectMaterial; };
 
         const Geometries::GeometrySegment& GetGeometrySegment() const { return m_segment; };
 

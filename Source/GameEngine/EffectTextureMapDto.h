@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectTextureMapDto.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -46,7 +46,7 @@ namespace Enigma::Engine
         static TextureMappingDto fromGenericDto(const GenericDto& dto);
         GenericDto toGenericDto() const;
 
-        EffectTextureMapPolicy::TextureTuplePolicy ConvertToPolicy();
+        EffectTextureMapPolicy::TextureTuplePolicy ConvertToPolicy() const;
 
     protected:
         TexturePolicy::JobType m_jobType;

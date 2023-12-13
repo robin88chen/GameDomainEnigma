@@ -10,6 +10,7 @@
 #include "RenderElement.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderablePrimitiveDtos.h"
+#include "Geometries/GeometryDataFactory.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -20,6 +21,7 @@ DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
 MeshPrimitive::MeshPrimitive(const PrimitiveId& id) : Primitive(id)
 {
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
     m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
     m_name = id.name();
     m_geometry = nullptr;
@@ -30,101 +32,54 @@ MeshPrimitive::MeshPrimitive(const PrimitiveId& id) : Primitive(id)
     m_textures.clear();
 }
 
-/*MeshPrimitive::MeshPrimitive(const MeshPrimitive& mesh) : Primitive(mesh.m_id)
+MeshPrimitive::MeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : Primitive(id)
 {
-    m_factoryDesc = mesh.m_factoryDesc;
-    m_name = mesh.m_name;
-    m_bound = mesh.m_bound;
-    m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
-    m_primitiveFlags = mesh.m_primitiveFlags;
-    m_geometry = mesh.m_geometry;
-    m_renderBuffer = mesh.m_renderBuffer;
-    m_renderListID = mesh.m_renderListID;
-    for (auto& eff : mesh.m_effects)
+    assert(geometry_repository);
+    MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);
+    m_factoryDesc = mesh_dto.factoryDesc();
+    m_name = id.name();
+    m_geometry = nullptr;
+    if (geometry_repository->hasGeometryData(mesh_dto.geometryId()))
     {
-        m_effects.emplace_back(eff->GetEffectMaterialSource()->CloneEffectMaterial());
+        m_geometry = geometry_repository->queryGeometryData(mesh_dto.geometryId());
     }
-    m_textures = mesh.m_textures;
-    CreateRenderElements();
-    MeshPrimitive::selectVisualTechnique(mesh.m_selectedVisualTech);
-}
-
-MeshPrimitive::MeshPrimitive(MeshPrimitive&& mesh) noexcept : Primitive(mesh.m_id)
-{
-    m_factoryDesc = std::move(mesh.m_factoryDesc);
-    m_name = mesh.m_name;
-    m_bound = std::move(mesh.m_bound);
-    m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
-    m_primitiveFlags = std::move(mesh.m_primitiveFlags);
-    m_geometry = std::move(mesh.m_geometry);
-    m_renderBuffer = std::move(mesh.m_renderBuffer);
-    m_renderListID = mesh.m_renderListID;
-    m_elements = std::move(mesh.m_elements);
-    m_effects = std::move(mesh.m_effects);
-    m_textures = std::move(mesh.m_textures);
-}*/
-
-MeshPrimitive::~MeshPrimitive()
-{
-    CleanupGeometry();
-    LoosePrimitiveEffectTexture();
+    else if (mesh_dto.geometry())
+    {
+        m_geometry = geometry_repository->factory()->constitute(mesh_dto.geometryId(), mesh_dto.geometry().value());
+        if (!m_geometry)
+        {
+            geometry_repository->putGeometryData(mesh_dto.geometryId(), m_geometry);
+        }
+    }
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
+    m_renderBuffer = nullptr;
+    m_renderListID = mesh_dto.renderListID();
+    m_elements.clear();
     m_effects.clear();
     m_textures.clear();
 }
 
-/*MeshPrimitive& MeshPrimitive::operator=(const MeshPrimitive& mesh)
+MeshPrimitive::~MeshPrimitive()
 {
-    if (this == &mesh) return *this;
-    m_id = mesh.m_id;
-    m_factoryDesc = mesh.m_factoryDesc;
-    m_name = mesh.m_name;
-    m_bound = mesh.m_bound;
-    m_mxPrimitiveWorld = mesh.m_mxPrimitiveWorld;
-    m_primitiveFlags = mesh.m_primitiveFlags;
-    m_geometry = mesh.m_geometry;
-    m_renderBuffer = mesh.m_renderBuffer;
-    m_renderListID = mesh.m_renderListID;
-    for (auto& eff : mesh.m_effects)
-    {
-        m_effects.emplace_back(eff->GetEffectMaterialSource()->CloneEffectMaterial());
-    }
-    m_textures = mesh.m_textures;
-    CreateRenderElements();
-    MeshPrimitive::selectVisualTechnique(mesh.m_selectedVisualTech);
-    return *this;
+    cleanupGeometry();
+    loosePrimitiveEffectTexture();
+    m_effects.clear();
+    m_textures.clear();
 }
-
-MeshPrimitive& MeshPrimitive::operator=(MeshPrimitive&& mesh) noexcept
-{
-    m_id = mesh.m_id;
-    m_factoryDesc = std::move(mesh.m_factoryDesc);
-    m_name = mesh.m_name;
-    m_bound = std::move(mesh.m_bound);
-    m_mxPrimitiveWorld = std::move(mesh.m_mxPrimitiveWorld);
-    m_primitiveFlags = std::move(mesh.m_primitiveFlags);
-    m_geometry = std::move(mesh.m_geometry);
-    m_renderBuffer = std::move(mesh.m_renderBuffer);
-    m_renderListID = mesh.m_renderListID;
-    m_elements = std::move(mesh.m_elements);
-    m_effects = std::move(mesh.m_effects);
-    m_textures = std::move(mesh.m_textures);
-    return *this;
-}*/
 
 GenericDto MeshPrimitive::serializeDto() const
 {
-    return SerializeMeshDto().toGenericDto();
+    return serializeMeshDto().toGenericDto();
 }
 
-MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
+MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
 {
     MeshPrimitiveDto dto;
     dto.factoryDesc() = m_factoryDesc;
     dto.name() = m_name;
     if (m_geometry)
     {
-        dto.geometryName() = m_geometry->id().name();
-        dto.geometryFactoryDesc() = m_geometry->factoryDesc();
+        dto.geometryId() = m_geometry->id();
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
@@ -145,65 +100,65 @@ MeshPrimitiveDto MeshPrimitive::SerializeMeshDto() const
     return dto;
 }
 
-EffectMaterialPtr MeshPrimitive::GetEffectMaterial(unsigned index)
+EffectMaterialPtr MeshPrimitive::getEffectMaterial(unsigned index)
 {
     if (index >= m_effects.size()) return nullptr;
     return m_effects[index];
 }
 
-unsigned MeshPrimitive::GetEffectMaterialCount() const
+unsigned MeshPrimitive::getEffectMaterialCount() const
 {
     return static_cast<unsigned>(m_effects.size());
 }
 
-const EffectTextureMap& MeshPrimitive::GetTextureMap(unsigned index)
+const EffectTextureMap& MeshPrimitive::getTextureMap(unsigned index)
 {
     assert(index < m_textures.size());
     return m_textures[index];
 }
 
-unsigned MeshPrimitive::GetTextureMapCount() const
+unsigned MeshPrimitive::getTextureMapCount() const
 {
     return static_cast<unsigned>(m_textures.size());
 }
 
-void MeshPrimitive::ChangeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void MeshPrimitive::changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
     if (m_textures.empty()) return;
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
-        tm.ChangeSemanticTexture(tuple);
+        tm.changeSemanticTexture(tuple);
     }
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::BindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void MeshPrimitive::bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
     if (m_textures.empty()) return;
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
-        tm.BindSemanticTexture(tuple);
+        tm.bindSemanticTexture(tuple);
     }
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::BindSegmentTextures(const EffectTextureMap::SegmentEffectTextures& texture_tuples)
+void MeshPrimitive::bindSemanticTextures(const EffectTextureMap::SegmentEffectTextures& texture_tuples)
 {
     if (m_textures.empty()) return;
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
         for (auto& tuple : texture_tuples)
         {
-            tm.BindSemanticTexture(tuple);
+            tm.bindSemanticTexture(tuple);
         }
     }
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
 }
 
-error MeshPrimitive::UpdateRenderBuffer()
+error MeshPrimitive::updateRenderBuffer()
 {
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
@@ -211,7 +166,7 @@ error MeshPrimitive::UpdateRenderBuffer()
     return er;
 }
 
-error MeshPrimitive::RangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_count,
+error MeshPrimitive::rangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_count,
     std::optional<unsigned> idx_offset, std::optional<unsigned> idx_count)
 {
     assert(m_geometry);
@@ -276,49 +231,49 @@ void MeshPrimitive::selectVisualTechnique(const std::string& techniqueName)
     }
 }
 
-void MeshPrimitive::LinkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
+void MeshPrimitive::linkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
 {
-    CleanupGeometry();
+    cleanupGeometry();
     m_geometry = geo;
     m_renderBuffer = render_buffer;
     m_bound = m_geometry->getBoundingVolume();
 }
 
-void MeshPrimitive::ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
+void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
 {
     if (index >= m_effects.size()) return;
-    LooseSegmentEffectTexture(index);
+    looseSegmentEffectTexture(index);
     m_effects[index] = effect;
-    BindSegmentEffectTexture(index);
+    bindSegmentEffectTexture(index);
 }
 
-void MeshPrimitive::ChangeEffectMaterial(const EffectMaterialList& effects)
+void MeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
 {
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     m_effects.clear();
     if (effects.size() == 0) return;
     m_effects = effects;
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::ChangeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map)
+void MeshPrimitive::changeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map)
 {
     if (index >= m_textures.size()) return;
-    LooseSegmentEffectTexture(index);
+    looseSegmentEffectTexture(index);
     m_textures[index] = tex_map;
-    BindSegmentEffectTexture(index);
+    bindSegmentEffectTexture(index);
 }
 
-void MeshPrimitive::ChangeTextureMaps(const TextureMapList& tex_maps)
+void MeshPrimitive::changeTextureMaps(const TextureMapList& tex_maps)
 {
-    LoosePrimitiveEffectTexture();
+    loosePrimitiveEffectTexture();
     m_textures.clear();
     if (tex_maps.size() == 0) return;
     m_textures = tex_maps;
-    BindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();
 }
 
-void MeshPrimitive::CreateRenderElements()
+void MeshPrimitive::createRenderElements()
 {
     assert(m_geometry);
     assert(m_renderBuffer);
@@ -333,14 +288,14 @@ void MeshPrimitive::CreateRenderElements()
     }
 }
 
-void MeshPrimitive::CleanupGeometry()
+void MeshPrimitive::cleanupGeometry()
 {
     m_elements.clear();
     m_geometry = nullptr;
     m_renderBuffer = nullptr;
 }
 
-void MeshPrimitive::BindPrimitiveEffectTexture()
+void MeshPrimitive::bindPrimitiveEffectTexture()
 {
     if (m_effects.empty()) return;
     if (m_textures.empty()) return;
@@ -368,7 +323,7 @@ void MeshPrimitive::BindPrimitiveEffectTexture()
     }
 }
 
-void MeshPrimitive::LoosePrimitiveEffectTexture()
+void MeshPrimitive::loosePrimitiveEffectTexture()
 {
     if (m_effects.empty()) return;
     if (m_textures.empty()) return;
@@ -393,7 +348,7 @@ void MeshPrimitive::LoosePrimitiveEffectTexture()
     }
 }
 
-void MeshPrimitive::BindSegmentEffectTexture(unsigned index)
+void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
 {
     if (index >= m_effects.size()) return;
     if (index >= m_textures.size()) return;
@@ -414,7 +369,7 @@ void MeshPrimitive::BindSegmentEffectTexture(unsigned index)
     }
 }
 
-void MeshPrimitive::LooseSegmentEffectTexture(unsigned index)
+void MeshPrimitive::looseSegmentEffectTexture(unsigned index)
 {
     if (index >= m_effects.size()) return;
     if (index >= m_textures.size()) return;
@@ -432,7 +387,7 @@ void MeshPrimitive::LooseSegmentEffectTexture(unsigned index)
     }
 }
 
-std::shared_ptr<Texture> MeshPrimitive::FindTextureBySemantic(const std::string& semantic) const
+std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string& semantic) const
 {
     for (auto& eff_tex : m_textures)
     {

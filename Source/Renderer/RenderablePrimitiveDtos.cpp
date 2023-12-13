@@ -3,6 +3,7 @@
 #include "Geometries/GeometryData.h"
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/GenericDto.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include "Animators/AnimatorDtos.h"
 #include "MeshPrimitive.h"
@@ -23,7 +24,7 @@ static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_ID_NAME = "Id.Name";
 static std::string TOKEN_ID_SEQUENCE = "Id.Sequence";
 static std::string TOKEN_ID_RTTI = "Id.Rtti";
-static std::string TOKEN_GEOMETRY_NAME = "GeometryName";
+static std::string TOKEN_GEOMETRY_ID = "GeometryId";
 static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
 static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
@@ -37,7 +38,7 @@ static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
-MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_geometryFactory(GeometryData::TYPE_RTTI.getName()), m_renderListID(Renderer::RenderListID::Scene)
+MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_renderListID(Renderer::RenderListID::Scene)
 {
 }
 
@@ -58,9 +59,8 @@ MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
             mesh.id() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
         }
     }
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_NAME)) mesh.geometryName() = v.value();
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_ID)) mesh.geometryId() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.geometry() = v.value();
-    if (const auto v = dto.TryGetValue<FactoryDesc>(TOKEN_GEOMETRY_FACTORY)) mesh.geometryFactoryDesc() = v.value();
     if (const auto ary = dto.TryGetValue<GenericDtoCollection>(TOKEN_EFFECTS))
     {
         for (auto& eff_dto : ary.value())
@@ -88,12 +88,11 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
     dto.AddOrUpdate(TOKEN_ID_NAME, m_id.name());
     dto.AddOrUpdate(TOKEN_ID_SEQUENCE, m_id.sequence());
     dto.AddOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
-    dto.AddOrUpdate(TOKEN_GEOMETRY_NAME, m_geometryName);
+    dto.AddOrUpdate(TOKEN_GEOMETRY_ID, m_geometryId.name());
     if (m_geometry)
     {
         dto.AddOrUpdate(TOKEN_RAW_GEOMETRY, m_geometry.value());
     }
-    dto.AddOrUpdate(TOKEN_GEOMETRY_FACTORY, m_geometryFactory);
     dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
@@ -104,7 +103,7 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
     return dto;
 }
 
-std::shared_ptr<GenericPolicy> MeshPrimitiveDto::meshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+/*std::shared_ptr<GenericPolicy> MeshPrimitiveDto::meshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<MeshPrimitivePolicy>();
@@ -131,6 +130,18 @@ std::shared_ptr<GenericPolicy> MeshPrimitiveDto::meshDtoConvertToPolicy(const Ge
     policy->renderListId() = mesh_dto.m_renderListID;
     policy->visualTechniqueSelection() = mesh_dto.m_visualTechniqueSelection;
     return policy;
+}*/
+
+MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
+{
+    for (auto& eff : dto.effects())
+    {
+        m_effects.emplace_back(EffectMaterialDto::fromGenericDto(eff));
+    }
+    for (auto& tex : dto.textureMaps())
+    {
+        m_textureMaps.emplace_back(EffectTextureMapDto::fromGenericDto(tex));
+    }
 }
 
 SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() : MeshPrimitiveDto()
@@ -156,8 +167,9 @@ GenericDto SkinMeshPrimitiveDto::toGenericDto() const
 
 std::shared_ptr<GenericPolicy> SkinMeshPrimitiveDto::skinMeshDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
-    auto mesh_policy = std::dynamic_pointer_cast<MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::meshDtoConvertToPolicy(dto, deserializer));
-    return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
+    return nullptr;
+    //auto mesh_policy = std::dynamic_pointer_cast<MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::meshDtoConvertToPolicy(dto, deserializer));
+    //return std::make_shared<SkinMeshPrimitivePolicy>(*mesh_policy);
 }
 
 MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())

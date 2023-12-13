@@ -37,8 +37,8 @@ namespace Enigma::Engine
 
         GenericDto serializeDto() const;
 
-        error BindSemanticTexture(const EffectSemanticTextureTuple& tuple);
-        error ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple);
+        error bindSemanticTexture(const EffectSemanticTextureTuple& tuple);
+        error changeSemanticTexture(const EffectSemanticTextureTuple& tuple);
         unsigned AppendTextureSemantic(const std::string& semantic);  ///< return index
         std::shared_ptr<Texture> GetTexture(unsigned index);
         std::shared_ptr<Texture> GetTexture(unsigned index) const;

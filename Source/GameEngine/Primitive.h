@@ -13,6 +13,7 @@
 #include "PrimitiveId.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/Rtti.h"
+#include "Frameworks/LazyStatus.h"
 #include <memory>
 #include <bitset>
 #include <system_error>
@@ -51,6 +52,9 @@ namespace Enigma::Engine
         const PrimitiveId& id() const { return m_id; }
 
         virtual GenericDto serializeDto() const = 0;
+
+        const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
 
         /** insert to renderer */
         virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
@@ -101,6 +105,7 @@ namespace Enigma::Engine
     protected:
         PrimitiveId m_id;
         FactoryDesc m_factoryDesc;
+        Frameworks::LazyStatus m_lazyStatus;
         BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;

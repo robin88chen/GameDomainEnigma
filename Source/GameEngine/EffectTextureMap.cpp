@@ -49,7 +49,7 @@ GenericDto EffectTextureMap::serializeDto() const
     return dto.toGenericDto();
 }
 
-error EffectTextureMap::BindSemanticTexture(const EffectSemanticTextureTuple& tuple)
+error EffectTextureMap::bindSemanticTexture(const EffectSemanticTextureTuple& tuple)
 {
     auto index = GetTextureIndexBySemantic(std::get<std::string>(tuple));
     if (!index) // semantic not match
@@ -61,7 +61,7 @@ error EffectTextureMap::BindSemanticTexture(const EffectSemanticTextureTuple& tu
     return ErrorCode::ok;
 }
 
-error EffectTextureMap::ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple)
+error EffectTextureMap::changeSemanticTexture(const EffectSemanticTextureTuple& tuple)
 {
     auto index = GetTextureIndexBySemantic(std::get<std::string>(tuple));
     if (!index) return ErrorCode::textureSemantic;
@@ -125,7 +125,7 @@ void EffectTextureMap::MergeTextureSetTo(EffectTextureMap& targetMap)
         if (std::get<std::shared_ptr<Texture>>(tex) == nullptr) continue;
         if (std::get<std::string>(tex).empty()) continue;
 
-        targetMap.BindSemanticTexture(tex);
+        targetMap.bindSemanticTexture(tex);
     }
 }
 

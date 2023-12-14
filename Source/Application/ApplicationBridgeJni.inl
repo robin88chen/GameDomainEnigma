@@ -13,7 +13,7 @@ extern "C"
     {
         Enigma::Platforms::Debug::Printf("activity onBridgeCreate");
         // bridge function
-        Enigma::Application::ApplicationBridge::OnBridgeCreate();
+        Enigma::Application::ApplicationBridge::onBridgeCreate();
     }
 
     JNIEXPORT void JNICALL
@@ -21,7 +21,7 @@ extern "C"
     {
         Enigma::Platforms::Debug::Printf("activity onBridgeDestroy");
         // bridge function
-        Enigma::Application::ApplicationBridge::OnBridgeDestroy();
+        Enigma::Application::ApplicationBridge::onBridgeDestroy();
     }
 
     JNIEXPORT jintArray JNICALL
@@ -46,7 +46,7 @@ extern "C"
         // bridge function
         jint attribs[6];
         env->GetIntArrayRegion(jattribs, 0, 6, attribs);
-        Enigma::Application::ApplicationBridge::OnRendererSurfaceCreate(jwidth, jheight, attribs);
+        Enigma::Application::ApplicationBridge::onRendererSurfaceCreate(jwidth, jheight, attribs);
     }
 
     JNIEXPORT void JNICALL
@@ -55,38 +55,38 @@ extern "C"
     {
         Enigma::Platforms::Debug::Printf("renderer onBridgeSurfaceChange");
         // bridge function
-        Enigma::Application::ApplicationBridge::OnRendererSurfaceSizeChanged(jwidth, jheight);
+        Enigma::Application::ApplicationBridge::onRendererSurfaceSizeChanged(jwidth, jheight);
     }
 
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_ApplicationBridgeRenderer_onRendererDrawFrame(JNIEnv* env, jobject thiz)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnRendererDrawFrame();
+        Enigma::Application::ApplicationBridge::onRendererDrawFrame();
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureLongPress(JNIEnv* env, jobject thiz, jfloat x, jfloat y)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureLongPress(x, y);
+        Enigma::Application::ApplicationBridge::onGestureLongPress(x, y);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureShowPress(JNIEnv* env, jobject thiz, jfloat x, jfloat y)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureShowPress(x, y);
+        Enigma::Application::ApplicationBridge::onGestureShowPress(x, y);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureDoubleTap(JNIEnv* env, jobject thiz, jfloat x, jfloat y)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureDoubleTap(x, y);
+        Enigma::Application::ApplicationBridge::onGestureDoubleTap(x, y);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureSingleTap(JNIEnv* env, jobject thiz, jfloat x, jfloat y)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureSingleTap(x, y);
+        Enigma::Application::ApplicationBridge::onGestureSingleTap(x, y);
     }
 
     JNIEXPORT void JNICALL
@@ -95,7 +95,7 @@ extern "C"
             jfloat deltaX, jfloat deltaY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureScroll(startX, startY, currentX, currentY, deltaX, deltaY);
+        Enigma::Application::ApplicationBridge::onGestureScroll(startX, startY, currentX, currentY, deltaX, deltaY);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureFling(JNIEnv* env, jobject thiz,
@@ -103,7 +103,7 @@ extern "C"
             jfloat velocityX, jfloat velocityY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureFling(startX, startY, currentX, currentY, velocityX, velocityY);
+        Enigma::Application::ApplicationBridge::onGestureFling(startX, startY, currentX, currentY, velocityX, velocityY);
     }
 
     JNIEXPORT void JNICALL
@@ -111,21 +111,21 @@ extern "C"
             jfloat factor, jfloat focusX, jfloat focusY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureScale(factor, focusX, focusY);
+        Enigma::Application::ApplicationBridge::onGestureScale(factor, focusX, focusY);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureScaleBegin(JNIEnv* env, jobject thiz,
             jfloat spanX, jfloat spanY, jfloat focusX, jfloat focusY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureScaleBegin(spanX, spanY, focusX, focusY);
+        Enigma::Application::ApplicationBridge::onGestureScaleBegin(spanX, spanY, focusX, focusY);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureScaleEnd(JNIEnv* env, jobject thiz,
             jfloat spanX, jfloat spanY, jfloat focusX, jfloat focusY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureScaleEnd(spanX, spanY, focusX, focusY);
+        Enigma::Application::ApplicationBridge::onGestureScaleEnd(spanX, spanY, focusX, focusY);
     }
 
     JNIEXPORT void JNICALL
@@ -133,21 +133,21 @@ extern "C"
             jfloat focusX, jfloat focusY, jfloat deltaX, jfloat deltaY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureShove(focusX, focusY, deltaX, deltaY);
+        Enigma::Application::ApplicationBridge::onGestureShove(focusX, focusY, deltaX, deltaY);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureShoveBegin(JNIEnv* env, jobject thiz,
             jfloat focusX, jfloat focusY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureShoveBegin(focusX, focusY);
+        Enigma::Application::ApplicationBridge::onGestureShoveBegin(focusX, focusY);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeGLSurfaceView_nativeGestureShoveEnd(JNIEnv* env, jobject thiz,
             jfloat focusX, jfloat focusY)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnGestureShoveEnd(focusX, focusY);
+        Enigma::Application::ApplicationBridge::onGestureShoveEnd(focusX, focusY);
     }
 
     JNIEXPORT void JNICALL
@@ -155,23 +155,23 @@ extern "C"
             jint index)
     {
         // bridge function
-        Enigma::Application::ApplicationBridge::OnTextEditingBegin(index);
+        Enigma::Application::ApplicationBridge::onTextEditingBegin(index);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeEditBoxHelper_editBoxEditingChanged(JNIEnv* env, jclass,
             jint index, jstring jtext)
     {
-        std::string text = Enigma::Platforms::AndroidBridge::StringFromJString(env, jtext);
+        std::string text = Enigma::Platforms::AndroidBridge::stringFromJString(env, jtext);
         // bridge function
-        Enigma::Application::ApplicationBridge::OnTextEditingChanged(index, text);
+        Enigma::Application::ApplicationBridge::onTextEditingChanged(index, text);
     }
     JNIEXPORT void JNICALL
         Java_lib_bridge_enigma_BridgeEditBoxHelper_editBoxEditingDidEnd(JNIEnv* env, jclass,
             jint index, jstring jtext)
     {
-        std::string text = Enigma::Platforms::AndroidBridge::StringFromJString(env, jtext);
+        std::string text = Enigma::Platforms::AndroidBridge::stringFromJString(env, jtext);
         // bridge function
-        Enigma::Application::ApplicationBridge::OnTextEditingEnd(index, text);
+        Enigma::Application::ApplicationBridge::onTextEditingEnd(index, text);
     }
 }
 

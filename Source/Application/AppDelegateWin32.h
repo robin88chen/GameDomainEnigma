@@ -27,51 +27,51 @@ namespace Enigma::Application
 
         static AppDelegate* instance() { return m_instance; };
 
-        virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
-                                const std::string & log_filename = "");
-        virtual void InitializeMountPaths() {};
+        virtual void initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
+            const std::string& log_filename = "");
+        virtual void initializeMountPaths() {};
 
-        virtual void InstallEngine() = 0;
-        virtual void RegisterMediaMountPaths(const std::string& media_path);
-        virtual void ShutdownEngine() = 0;
-        virtual void Finalize();
+        virtual void installEngine() = 0;
+        virtual void registerMediaMountPaths(const std::string& media_path);
+        virtual void shutdownEngine() = 0;
+        virtual void finalize();
 
-        virtual void Run();
+        virtual void run();
         virtual void frameUpdate();
-        virtual void PrepareRender() {};
-        virtual void RenderFrame() {};
+        virtual void prepareRender() {};
+        virtual void renderFrame() {};
 
-        virtual void OnFrameSizeChanged(int , int );
+        virtual void onFrameSizeChanged(int, int);
 
-        HWND GetWnd() { return m_hwnd; };
+        HWND getWnd() { return m_hwnd; };
     private:
         /// The event handler.
         static LRESULT CALLBACK WindowProcedure(HWND handle, UINT message,
             WPARAM wParam, LPARAM lParam);
 
-        void RegisterAppClass();
+        void registerAppClass();
         void create();
-        void Destroy();
+        void destroy();
 
         /// Processing Message
-        void OnMouseMove(WPARAM wParam, LPARAM lParam);
-        void OnMouseLeftDown(WPARAM wParam, LPARAM lParam);
-        void OnMouseLeftUp(WPARAM wParam, LPARAM lParam);
-        void OnMouseLeftDblClick(WPARAM wParam, LPARAM lParam);
-        void OnMouseRightDown(WPARAM wParam, LPARAM lParam);
-        void OnMouseRightUp(WPARAM wParam, LPARAM lParam);
-        void OnMouseRightDblClick(WPARAM wParam, LPARAM lParam);
-        void OnMouseMiddleDown(WPARAM wParam, LPARAM lParam);
-        void OnMouseMiddleUp(WPARAM wParam, LPARAM lParam);
-        void OnMouseMiddleDblClick(WPARAM wParam, LPARAM lParam);
-        void OnMouseWheel(WPARAM wParam, LPARAM lParam);
-        void OnKeyChar(WPARAM wParam, LPARAM lParam);
-        void OnKeyDown(WPARAM wParam, LPARAM lParam);
-        void OnKeyUp(WPARAM wParam, LPARAM lParam);
-        void OnClose(WPARAM wParam, LPARAM lParam);
-        void OnDestroy(WPARAM wParam, LPARAM lParam);
+        void onMouseMove(WPARAM wParam, LPARAM lParam);
+        void onMouseLeftDown(WPARAM wParam, LPARAM lParam);
+        void onMouseLeftUp(WPARAM wParam, LPARAM lParam);
+        void onMouseLeftDblClick(WPARAM wParam, LPARAM lParam);
+        void onMouseRightDown(WPARAM wParam, LPARAM lParam);
+        void onMouseRightUp(WPARAM wParam, LPARAM lParam);
+        void onMouseRightDblClick(WPARAM wParam, LPARAM lParam);
+        void onMouseMiddleDown(WPARAM wParam, LPARAM lParam);
+        void onMouseMiddleUp(WPARAM wParam, LPARAM lParam);
+        void onMouseMiddleDblClick(WPARAM wParam, LPARAM lParam);
+        void onMouseWheel(WPARAM wParam, LPARAM lParam);
+        void onKeyChar(WPARAM wParam, LPARAM lParam);
+        void onKeyDown(WPARAM wParam, LPARAM lParam);
+        void onKeyUp(WPARAM wParam, LPARAM lParam);
+        void onClose(WPARAM wParam, LPARAM lParam);
+        void onDestroy(WPARAM wParam, LPARAM lParam);
 
-        void OnIdle();
+        void onIdle();
     private:
         static AppDelegate* m_instance;
 

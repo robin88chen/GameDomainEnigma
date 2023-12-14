@@ -10,7 +10,7 @@ static pthread_key_t g_vm_thread_key;
 
 void _detachCurrentThread(void* a)
 {
-    AndroidBridge::GetJavaVM()->DetachCurrentThread();
+    AndroidBridge::getJavaVM()->DetachCurrentThread();
 }
 
 AAssetManager* AndroidBridge::m_assetManager = nullptr;
@@ -19,14 +19,14 @@ JavaVM* AndroidBridge::m_javaVM = nullptr;
 jobject AndroidBridge::m_activity = nullptr;
 std::unordered_map<JNIEnv*, std::vector<jobject>> AndroidBridge::m_localRefs;
 
-JavaVM* AndroidBridge::GetJavaVM()
+JavaVM* AndroidBridge::getJavaVM()
 {
     pthread_t thisthread = pthread_self();
     Debug::Printf("GetJavaVM(), pthread_self() = %ld", thisthread);
     return m_javaVM;
 }
 
-void AndroidBridge::SetJavaVM(JavaVM* javaVM)
+void AndroidBridge::setJavaVM(JavaVM* javaVM)
 {
     pthread_t thisthread = pthread_self();
     Debug::Printf("SetJavaVM(%p), pthread_self() = %ld", javaVM, thisthread);
@@ -35,7 +35,7 @@ void AndroidBridge::SetJavaVM(JavaVM* javaVM)
     pthread_key_create(&g_vm_thread_key, _detachCurrentThread);
 }
 
-JNIEnv* AndroidBridge::CacheEnv(JavaVM* jvm)
+JNIEnv* AndroidBridge::cacheEnv(JavaVM* jvm)
 {
     JNIEnv* _env = nullptr;
     // get jni environment
@@ -71,40 +71,40 @@ JNIEnv* AndroidBridge::CacheEnv(JavaVM* jvm)
     }
 }
 
-JNIEnv* AndroidBridge::GetEnv()
+JNIEnv* AndroidBridge::getEnv()
 {
     JNIEnv* _env = (JNIEnv*)pthread_getspecific(g_vm_thread_key);
     if (_env == nullptr)
-        _env = AndroidBridge::CacheEnv(m_javaVM);
+        _env = AndroidBridge::cacheEnv(m_javaVM);
     return _env;
 }
 
-jobject AndroidBridge::GetActivity()
+jobject AndroidBridge::getActivity()
 {
     return m_activity;
 }
 
-AAssetManager* AndroidBridge::GetAAssetManager()
+AAssetManager* AndroidBridge::getAAssetManager()
 {
     return m_assetManager;
 }
 
-void AndroidBridge::SetAAssetManager(AAssetManager* aasset_mgr)
+void AndroidBridge::setAAssetManager(AAssetManager* aasset_mgr)
 {
     m_assetManager = aasset_mgr;
 }
 
-const std::string& AndroidBridge::GetDataFilePath()
+const std::string& AndroidBridge::getDataFilePath()
 {
     return m_dataFilePath;
 }
 
-void AndroidBridge::SetDataFilePath(const std::string& file_path)
+void AndroidBridge::setDataFilePath(const std::string& file_path)
 {
     m_dataFilePath = file_path;
 }
 
-std::string AndroidBridge::StringFromJString(JNIEnv* env, jstring str)
+std::string AndroidBridge::stringFromJString(JNIEnv* env, jstring str)
 {
     jboolean isCopy;
     const char* native_str = env->GetStringUTFChars(str, &isCopy);
@@ -117,7 +117,7 @@ std::string AndroidBridge::StringFromJString(JNIEnv* env, jstring str)
     return ret_str;
 }
 
-bool AndroidBridge::GetStaticMethodInfo(JniMethodInfo& methodinfo,
+bool AndroidBridge::getStaticMethodInfo(JniMethodInfo& methodinfo,
     const char* className, const char* methodName, const char* paramCode)
 {
     if ((nullptr == className) || (nullptr == methodName) ||
@@ -126,7 +126,7 @@ bool AndroidBridge::GetStaticMethodInfo(JniMethodInfo& methodinfo,
         return false;
     }
 
-    JNIEnv* env = GetEnv();
+    JNIEnv* env = getEnv();
     if (!env)
     {
         Debug::ErrorPrintf("Failed to get JNIEnv");
@@ -153,19 +153,19 @@ bool AndroidBridge::GetStaticMethodInfo(JniMethodInfo& methodinfo,
     return true;
 }
 
-jstring AndroidBridge::Convert(JniMethodInfo& t, const char* x)
+jstring AndroidBridge::convert(JniMethodInfo& t, const char* x)
 {
     jstring ret = t.m_env->NewStringUTF(x ? x : "");
     m_localRefs[t.m_env].push_back(ret);
     return ret;
 }
 
-jstring AndroidBridge::Convert(JniMethodInfo& t, const std::string& x)
+jstring AndroidBridge::convert(JniMethodInfo& t, const std::string& x)
 {
-    return Convert(t, x.c_str());
+    return convert(t, x.c_str());
 }
 
-void AndroidBridge::DeleteLocalRefs(JNIEnv* env)
+void AndroidBridge::deleteLocalRefs(JNIEnv* env)
 {
     if (!env)
     {

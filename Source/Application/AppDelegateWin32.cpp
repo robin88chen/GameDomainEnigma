@@ -30,7 +30,7 @@ AppDelegate::AppDelegate(const std::string app_name)
 
 AppDelegate::~AppDelegate()
 {
-    Destroy();
+    destroy();
     if (m_atom)
     {
         UnregisterClass(m_appName.c_str(), 0);
@@ -38,7 +38,7 @@ AppDelegate::~AppDelegate()
     m_instance = nullptr;
 }
 
-void AppDelegate::RegisterAppClass()
+void AppDelegate::registerAppClass()
 {
     WNDCLASS wc;
     wc.style = CS_OWNDC;
@@ -62,7 +62,7 @@ void AppDelegate::create()
     UpdateWindow(m_hwnd);
 }
 
-void AppDelegate::Destroy()
+void AppDelegate::destroy()
 {
     //! 在 WM_CLOSE已經銷毀
     /*if (m_hwnd)
@@ -72,7 +72,7 @@ void AppDelegate::Destroy()
     }*/
 }
 
-void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
+void AppDelegate::initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
     const std::string& log_filename)
 {
     if (log_filename.length() > 0)
@@ -82,7 +82,7 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     }
 
     FileSystem::FileSystem::create();
-    InitializeMountPaths();
+    initializeMountPaths();
 
     m_graphicMain = menew Controllers::GraphicMain();
     m_graphicMain->installFrameworks();
@@ -91,15 +91,15 @@ void AppDelegate::Initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
 
     // 這兩個函式從建構子搬來，因為，在建構子裡，子類別的virtual function table 還沒成立
     // 而Create 會 call 很多window message，這樣的 m_instance 並不會導到子類別的函式上
-    RegisterAppClass();
+    registerAppClass();
     create();
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
-    InstallEngine();
+    installEngine();
 }
 
-void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
+void AppDelegate::registerMediaMountPaths(const std::string& media_path)
 {
     /*if (media_path.length() > 0)
     {
@@ -122,9 +122,9 @@ void AppDelegate::RegisterMediaMountPaths(const std::string& media_path)
     }*/
 }
 
-void AppDelegate::Finalize()
+void AppDelegate::finalize()
 {
-    ShutdownEngine();
+    shutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
     Graphics::IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
@@ -142,7 +142,7 @@ void AppDelegate::Finalize()
     CoUninitialize();
 }
 
-void AppDelegate::Run()
+void AppDelegate::run()
 {
     // 主訊息迴圈:
     MSG msg;
@@ -163,14 +163,14 @@ void AppDelegate::Run()
         }
         else
         {
-            OnIdle();
+            onIdle();
             //frameUpdate();
             //RenderFrame();
         }
     }  // end while
 }
 
-void AppDelegate::OnFrameSizeChanged(int w, int h)
+void AppDelegate::onFrameSizeChanged(int w, int h)
 {
     Frameworks::CommandBus::post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
         MathLib::Dimension<unsigned>{(unsigned)w, (unsigned)h}));
@@ -189,60 +189,60 @@ LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wP
         EndPaint(hWnd, &ps);
         break;
     case WM_MOUSEMOVE:
-        m_instance->OnMouseMove(wParam, lParam);
+        m_instance->onMouseMove(wParam, lParam);
         break;
     case WM_LBUTTONDOWN:
-        m_instance->OnMouseLeftDown(wParam, lParam);
+        m_instance->onMouseLeftDown(wParam, lParam);
         break;
     case WM_LBUTTONUP:
-        m_instance->OnMouseLeftUp(wParam, lParam);
+        m_instance->onMouseLeftUp(wParam, lParam);
         break;
     case WM_LBUTTONDBLCLK:
-        m_instance->OnMouseLeftDblClick(wParam, lParam);
+        m_instance->onMouseLeftDblClick(wParam, lParam);
         break;
     case WM_RBUTTONDOWN:
-        m_instance->OnMouseRightDown(wParam, lParam);
+        m_instance->onMouseRightDown(wParam, lParam);
         break;
     case WM_RBUTTONUP:
-        m_instance->OnMouseRightUp(wParam, lParam);
+        m_instance->onMouseRightUp(wParam, lParam);
         break;
     case WM_RBUTTONDBLCLK:
-        m_instance->OnMouseRightDblClick(wParam, lParam);
+        m_instance->onMouseRightDblClick(wParam, lParam);
         break;
     case WM_MBUTTONDOWN:
-        m_instance->OnMouseMiddleDown(wParam, lParam);
+        m_instance->onMouseMiddleDown(wParam, lParam);
         break;
     case WM_MBUTTONUP:
-        m_instance->OnMouseMiddleUp(wParam, lParam);
+        m_instance->onMouseMiddleUp(wParam, lParam);
         break;
     case WM_MBUTTONDBLCLK:
-        m_instance->OnMouseMiddleDblClick(wParam, lParam);
+        m_instance->onMouseMiddleDblClick(wParam, lParam);
         break;
     case WM_MOUSEHWHEEL:
     case WM_MOUSEWHEEL_LEGACY:
-        m_instance->OnMouseWheel(wParam, lParam);
+        m_instance->onMouseWheel(wParam, lParam);
         break;
     case WM_CHAR:
-        m_instance->OnKeyChar(wParam, lParam);
+        m_instance->onKeyChar(wParam, lParam);
         break;
     case WM_KEYDOWN:
-        m_instance->OnKeyDown(wParam, lParam);
+        m_instance->onKeyDown(wParam, lParam);
         break;
     case WM_KEYUP:
-        m_instance->OnKeyUp(wParam, lParam);
+        m_instance->onKeyUp(wParam, lParam);
         break;
     case WM_SIZE:
         if ((wParam != SIZE_MAXHIDE) && (wParam != SIZE_MINIMIZED))
         {
-            m_instance->OnFrameSizeChanged(LOWORD(lParam), HIWORD(lParam));
+            m_instance->onFrameSizeChanged(LOWORD(lParam), HIWORD(lParam));
         }
         break;
     case WM_CLOSE:
-        m_instance->OnClose(wParam, lParam);
+        m_instance->onClose(wParam, lParam);
         //PostQuitMessage(0);
         break;
     case WM_DESTROY:
-        m_instance->OnDestroy(wParam, lParam);
+        m_instance->onDestroy(wParam, lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -250,12 +250,12 @@ LRESULT CALLBACK AppDelegate::WindowProcedure(HWND hWnd, UINT message, WPARAM wP
     return 0;
 }
 
-void AppDelegate::OnIdle()
+void AppDelegate::onIdle()
 {
     frameUpdate();
 
-    PrepareRender();
-    RenderFrame();
+    prepareRender();
+    renderFrame();
 
     //todo : GPU 太慢的時候要睡久一點, 看要怎麼動態調整
     std::this_thread::sleep_for(5us);// std::chrono::microseconds(1)); // 要加sleep，否則render thread分不到時間, 換成 micro second 快一些些
@@ -266,7 +266,7 @@ void AppDelegate::frameUpdate()
     if (m_graphicMain) m_graphicMain->frameUpdate();
 }
 
-void AppDelegate::OnMouseMove(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseMove(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -274,7 +274,7 @@ void AppDelegate::OnMouseMove(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseLeftDown(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseLeftDown(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -283,7 +283,7 @@ void AppDelegate::OnMouseLeftDown(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseLeftUp(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseLeftUp(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -291,7 +291,7 @@ void AppDelegate::OnMouseLeftUp(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseLeftDblClick(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseLeftDblClick(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -299,7 +299,7 @@ void AppDelegate::OnMouseLeftDblClick(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseRightDown(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseRightDown(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -307,7 +307,7 @@ void AppDelegate::OnMouseRightDown(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseRightUp(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseRightUp(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -315,7 +315,7 @@ void AppDelegate::OnMouseRightUp(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseRightDblClick(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseRightDblClick(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -323,7 +323,7 @@ void AppDelegate::OnMouseRightDblClick(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseMiddleDown(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseMiddleDown(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -331,7 +331,7 @@ void AppDelegate::OnMouseMiddleDown(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseMiddleUp(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseMiddleUp(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -339,7 +339,7 @@ void AppDelegate::OnMouseMiddleUp(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseMiddleDblClick(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseMiddleDblClick(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -347,7 +347,7 @@ void AppDelegate::OnMouseMiddleDblClick(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnMouseWheel(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onMouseWheel(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
@@ -355,33 +355,33 @@ void AppDelegate::OnMouseWheel(WPARAM wParam, LPARAM lParam)
             MouseKeyFlags{ (unsigned int)wParam });
     }
 }
-void AppDelegate::OnKeyChar(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onKeyChar(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
         m_inputHandler.lock()->ProcessWinKeyChar((char)(wParam), (int)(short)LOWORD(lParam));
     }
 }
-void AppDelegate::OnKeyDown(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onKeyDown(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
         m_inputHandler.lock()->ProcessWinKeyPressDown((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
     }
 }
-void AppDelegate::OnKeyUp(WPARAM wParam, LPARAM lParam)
+void AppDelegate::onKeyUp(WPARAM wParam, LPARAM lParam)
 {
     if (!m_inputHandler.expired())
     {
         m_inputHandler.lock()->ProcessWinKeyPressUp((unsigned int)(wParam), (unsigned int)HIWORD(lParam));
     }
 }
-void AppDelegate::OnClose(WPARAM, LPARAM)
+void AppDelegate::onClose(WPARAM, LPARAM)
 {
     DestroyWindow(m_hwnd);
     m_hwnd = nullptr;
 }
-void AppDelegate::OnDestroy(WPARAM, LPARAM)
+void AppDelegate::onDestroy(WPARAM, LPARAM)
 {
     PostQuitMessage(0);
 }

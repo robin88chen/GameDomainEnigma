@@ -11,6 +11,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderableEvents.h"
+#include "GameEngine/PrimitiveCommands.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -51,11 +52,16 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
     m_buildPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->buildPrimitive(c); });
     CommandBus::subscribe(typeid(BuildRenderablePrimitive), m_buildPrimitive);
 
+    CommandBus::post(std::make_shared<RegisterPrimitiveFactory>(MeshPrimitive::TYPE_RTTI.getName(),
+        [=](const PrimitiveId& id) { return createMesh(id); },
+        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); }));
+
     m_meshBuilder = menew MeshPrimitiveBuilder();
     m_modelBuilder = menew ModelPrimitiveBuilder();
 
     return ServiceResult::Complete;
 }
+
 ServiceResult RenderablePrimitiveBuilder::onTick()
 {
     /*if (m_isCurrentBuilding) return ServiceResult::Pendding;

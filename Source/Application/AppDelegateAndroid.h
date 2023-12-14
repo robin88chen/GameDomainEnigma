@@ -25,23 +25,23 @@ namespace Enigma::Application
 
         static AppDelegate* instance() { return m_instance; };
 
-        virtual void Initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
+        virtual void initialize(Graphics::IGraphicAPI::APIVersion api_ver, Graphics::IGraphicAPI::AsyncType useAsyncDevice,
             const std::string& log_filename = "");
-        virtual void InitializeMountPaths() {};
-        virtual void InstallEngine() = 0;
-        virtual void RegisterMediaMountPaths(const std::string& media_path);
-        virtual void ShutdownEngine() = 0;
-        virtual void Finalize();
+        virtual void initializeMountPaths() {};
+        virtual void installEngine() = 0;
+        virtual void registerMediaMountPaths(const std::string& media_path);
+        virtual void shutdownEngine() = 0;
+        virtual void finalize();
 
-        virtual void Run();
+        virtual void run();
         virtual void frameUpdate();
-        virtual void PrepareRender() {};
-        virtual void RenderFrame() {};
+        virtual void prepareRender() {};
+        virtual void renderFrame() {};
 
-        virtual void OnFrameSizeChanged(int, int);
+        virtual void onFrameSizeChanged(int, int);
 
         /** for android graphic bridge callback */
-        void InitBridgeCallback();
+        void initBridgeCallback();
 
     private:
         static AppDelegate* m_instance;

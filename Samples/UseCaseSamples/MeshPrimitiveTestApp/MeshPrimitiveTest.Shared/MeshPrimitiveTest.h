@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MeshPrimitiveTest.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -34,19 +34,19 @@ public:
     MeshPrimitiveTest(const std::string app_name);
     ~MeshPrimitiveTest() override;
 
-    virtual void InitializeMountPaths() override;
+    virtual void initializeMountPaths() override;
 
-    virtual void InstallEngine() override final;
-    virtual void ShutdownEngine() override final;
+    virtual void installEngine() override final;
+    virtual void shutdownEngine() override final;
 
-    virtual void FrameUpdate() override;
-    virtual void RenderFrame() override;
+    virtual void frameUpdate() override;
+    virtual void renderFrame() override;
 
 protected:
-    void OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
-    void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;

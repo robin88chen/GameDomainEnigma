@@ -7,6 +7,9 @@
     <Filter Include="GeometryDataStoreMapper">
       <UniqueIdentifier>{04e43a0c-e812-4fee-b94e-f9abd68ab4fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PrimitiveStoreMapper">
+      <UniqueIdentifier>{ab8392d1-7ee2-466d-8363-f8a7fbc2be0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
@@ -15,6 +18,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.h">
       <Filter>GeometryDataStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.h">
+      <Filter>PrimitiveStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
@@ -22,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.cpp">
       <Filter>GeometryDataStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.cpp">
+      <Filter>PrimitiveStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ namespace Enigma::Engine
     class PrimitiveStoreMapper
     {
     public:
-        ~PrimitiveStoreMapper() = default;
+        virtual ~PrimitiveStoreMapper() = default;
 
         virtual std::error_code connect() = 0;
         virtual std::error_code disconnect() = 0;

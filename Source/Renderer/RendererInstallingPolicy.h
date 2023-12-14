@@ -29,9 +29,9 @@ namespace Enigma::Renderer
 
     class RendererInstallingPolicy : public Engine::InstallingPolicy
     {
-    public:
+    protected:
         RendererInstallingPolicy() = default;
-    };;
+    };
 
     class DefaultRendererInstallingPolicy : public RendererInstallingPolicy
     {

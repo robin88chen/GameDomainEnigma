@@ -21,6 +21,11 @@ namespace Enigma::FileStorage
     public:
         GeometryDataFileStoreMapper(const std::string& mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);
         ~GeometryDataFileStoreMapper() override;
+        GeometryDataFileStoreMapper(const GeometryDataFileStoreMapper&) = delete;
+        GeometryDataFileStoreMapper(GeometryDataFileStoreMapper&&) = delete;
+        GeometryDataFileStoreMapper& operator=(const GeometryDataFileStoreMapper&) = delete;
+        GeometryDataFileStoreMapper& operator=(GeometryDataFileStoreMapper&&) = delete;
+
         virtual std::error_code connect() override;
         virtual std::error_code disconnect() override;
 

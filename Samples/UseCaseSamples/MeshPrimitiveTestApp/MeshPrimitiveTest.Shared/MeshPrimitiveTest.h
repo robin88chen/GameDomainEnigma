@@ -43,17 +43,24 @@ public:
     virtual void renderFrame() override;
 
 protected:
+    void makeCamera();
+    void makeCube();
+
+    void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
     void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
+    Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
+    Enigma::Geometries::GeometryId m_cubeId;
+    Enigma::SceneGraph::SpatialId m_cameraId;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     Enigma::Renderer::MeshPrimitivePtr m_mesh;

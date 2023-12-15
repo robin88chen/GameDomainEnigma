@@ -66,6 +66,7 @@ error GraphicMain::installRenderEngine(const InstallingPolicyList& policies)
         error er = (*it)->install(m_serviceManager);
         if (er) return er;
     }
+    m_serviceManager->runToState(Frameworks::ServiceManager::ServiceState::WaitingToRun); // make sure all services initialized
     return ErrorCode::ok;
 }
 

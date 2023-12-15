@@ -2,7 +2,6 @@
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "CubeGeometryMaker.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
-#include "GameEngine/TextureLoadingPolicies.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
@@ -14,7 +13,12 @@ using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 
-std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveMaker::MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name)
+void MeshPrimitiveMaker::makeCubeMeshPrimitive(const std::string& mesh_name, const Enigma::Geometries::GeometryId& geo_id)
+{
+
+}
+
+/*std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveMaker::MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name)
 {
     auto policy = std::make_shared<MeshPrimitivePolicy>();
     policy->Name() = mesh_name;
@@ -60,3 +64,4 @@ EffectTextureMapPolicy MeshPrimitiveMaker::MakeTextureMapPolicy()
     policy.GetTuplePolicies().emplace_back(std::make_tuple( "DiffuseMap", TexturePolicy{"earth", "earth.png", "APK_PATH"}, std::nullopt));
     return policy;
 }
+*/

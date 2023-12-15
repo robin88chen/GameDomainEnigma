@@ -82,7 +82,7 @@ namespace Enigma::SceneGraph
         bool hasPortal(const std::string& name);
         std::shared_ptr<Portal> queryPortal(const std::string& name);
 
-        std::shared_ptr<Spatial> QuerySpatial(const std::string& name);
+        std::shared_ptr<Spatial> querySpatial(const std::string& name);
         std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
 
         bool hasNode(const std::string& name);
@@ -91,16 +91,16 @@ namespace Enigma::SceneGraph
         /** query entities */
         bool hasCamera(const SpatialId& id);
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
-        bool hasPawn(const SpatialId& id);
-        std::shared_ptr<Pawn> queryPawn(const SpatialId& id);
+        bool hasSpatial(const SpatialId& id);
+        std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
-        void putPawn(const std::shared_ptr<Pawn>& pawn);
+        void putSpatial(const std::shared_ptr<Spatial>& spatial);
 
         /** remove entities */
         void removeCamera(const SpatialId& id);
-        void removePawn(const SpatialId& id);
+        void removeSpatial(const SpatialId& id);
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
@@ -109,7 +109,13 @@ namespace Enigma::SceneGraph
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);
         void queryNode(const Frameworks::IQueryPtr& q);
-        void queryPawn(const Frameworks::IQueryPtr& q);
+        void querySpatial(const Frameworks::IQueryPtr& q);
+
+        void putCamera(const Frameworks::ICommandPtr& c);
+        void removeCamera(const Frameworks::ICommandPtr& c);
+        void putSpatial(const Frameworks::ICommandPtr& c);
+        void removeSpatial(const Frameworks::ICommandPtr& c);
+
         //void createCamera(const Frameworks::ICommandPtr& c);
         void createNode(const Frameworks::ICommandPtr& c);
 
@@ -123,8 +129,8 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
         std::recursive_mutex m_nodeMapLock;
-        std::unordered_map<SpatialId, std::shared_ptr<Pawn>, SpatialId::hash> m_pawns;
-        std::recursive_mutex m_pawnMapLock;
+        std::unordered_map<SpatialId, std::shared_ptr<Spatial>, SpatialId::hash> m_spatials;
+        std::recursive_mutex m_spatialMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
         std::recursive_mutex m_lightMapLock;
@@ -136,7 +142,13 @@ namespace Enigma::SceneGraph
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_queryNode;
-        Frameworks::QuerySubscriberPtr m_queryPawn;
+        Frameworks::QuerySubscriberPtr m_querySpatial;
+
+        Frameworks::CommandSubscriberPtr m_putCamera;
+        Frameworks::CommandSubscriberPtr m_removeCamera;
+        Frameworks::CommandSubscriberPtr m_putSpatial;
+        Frameworks::CommandSubscriberPtr m_removeSpatial;
+
         //Frameworks::CommandSubscriberPtr m_createCamera;
         Frameworks::CommandSubscriberPtr m_createNode;
     };

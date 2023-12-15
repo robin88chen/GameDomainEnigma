@@ -60,7 +60,7 @@ std::shared_ptr<GeometryData> GeometryDataFactory::create(const GeometryId& id, 
     return geo;
 }
 
-std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& id, const GenericDto& dto)
+std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& id, const GenericDto& dto, bool is_persisted)
 {
     auto constitutor = m_constitutors.find(dto.GetRtti().GetRttiName());
     if (constitutor == m_constitutors.end())
@@ -70,7 +70,7 @@ std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& 
         return nullptr;
     }
     auto geo = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<GeometryConstituted>(id, geo));
+    EventPublisher::post(std::make_shared<GeometryConstituted>(id, geo, is_persisted));
     return geo;
 }
 
@@ -138,5 +138,5 @@ void GeometryDataFactory::constituteGeometry(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(cmd->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
-    constitute(cmd->id(), cmd->dto());
+    constitute(cmd->id(), cmd->dto(), false);
 }

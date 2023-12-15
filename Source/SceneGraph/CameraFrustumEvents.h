@@ -62,13 +62,15 @@ namespace Enigma::SceneGraph
     class CameraConstituted : public Frameworks::IEvent
     {
     public:
-        CameraConstituted(const SpatialId& id, const std::shared_ptr<Camera>& camera) : m_id(id), m_camera(camera) {};
+        CameraConstituted(const SpatialId& id, const std::shared_ptr<Camera>& camera, bool is_persisted) : m_id(id), m_camera(camera), m_is_persisted(is_persisted) {};
         const SpatialId& id() const { return m_id; }
         std::shared_ptr<Camera> camera() { return m_camera; }
+        bool isPersisted() const { return m_is_persisted; }
 
     protected:
         SpatialId m_id;
         std::shared_ptr<Camera> m_camera;
+        bool m_is_persisted;
     };
     class ConstituteCameraFailed : public Frameworks::IEvent
     {
@@ -81,23 +83,45 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         std::error_code m_err;
     };
-
-    class ReplyCameraQuery : public Frameworks::IResponseEvent
+    class CameraPut : public Frameworks::IEvent
     {
     public:
-        ReplyCameraQuery(const Frameworks::Ruid& ruid, const std::shared_ptr<Camera>& camera) : IResponseEvent(ruid), m_camera(camera) {};
-        std::shared_ptr<Camera> GetCamera() const { return m_camera.lock(); }
+        CameraPut(const SpatialId& id) : m_id(id) {}
 
+        const SpatialId& id() const { return m_id; }
     protected:
-        std::weak_ptr<Camera> m_camera;
+        SpatialId m_id;
     };
-    class QueryCameraFailed : public Frameworks::IResponseEvent
+    class PutCameraFailed : public Frameworks::IEvent
     {
     public:
-        QueryCameraFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_err(err) {};
-        std::error_code GetError() const { return m_err; }
+        PutCameraFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
 
     protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class CameraRemoved : public Frameworks::IEvent
+    {
+    public:
+        CameraRemoved(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class RemoveCameraFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveCameraFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
         std::error_code m_err;
     };
 }

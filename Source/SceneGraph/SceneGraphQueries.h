@@ -36,10 +36,10 @@ namespace Enigma::SceneGraph
     protected:
         std::string m_name;
     };
-    class QueryPawn : public Frameworks::Query<std::shared_ptr<Pawn>>
+    class QuerySpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:
-        QueryPawn(const SpatialId& id) : m_id(id) {}
+        QuerySpatial(const SpatialId& id) : m_id(id) {}
 
         const SpatialId& id() const { return m_id; }
 

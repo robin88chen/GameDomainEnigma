@@ -17,7 +17,7 @@
 class MeshPrimitiveMaker
 {
 public:
-    static void makeCubeMeshPrimitive(const std::string& mesh_name, const Enigma::Geometries::GeometryId& geo_id);
+    static void makeCubeMeshPrimitive(const Enigma::Engine::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id);
 };
 
 #endif // _MESH_PRIMITIVE_MAKER_H

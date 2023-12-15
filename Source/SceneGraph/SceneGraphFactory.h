@@ -29,7 +29,7 @@ namespace Enigma::SceneGraph
         void unregisterHandlers();
 
         std::shared_ptr<Camera> createCamera(const SpatialId& id);
-        std::shared_ptr<Camera> constituteCamera(const SpatialId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Camera> constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted);
 
         std::shared_ptr<Pawn> createPawn(const SpatialId& id);
         std::shared_ptr<Pawn> constitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos);

@@ -129,6 +129,29 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         Engine::GenericDtoCollection m_dtos;
     };
+    //--------------------------- Repository operations ------------------------
+    class PutSpatial : public Frameworks::ICommand
+    {
+    public:
+        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
+
+        const SpatialId& id() { return m_id; }
+        const std::shared_ptr<Spatial>& spatial() { return m_spatial; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<Spatial> m_spatial;
+    };
+    class RemoveSpatial : public Frameworks::ICommand
+    {
+    public:
+        RemoveSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
 }
 
 #endif // _SCENE_GRAPH_COMMANDS_H

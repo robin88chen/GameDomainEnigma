@@ -39,6 +39,29 @@ namespace Enigma::Geometries
         Engine::GenericDto m_dto;
     };
 
+    class PutGeometry : public Frameworks::ICommand
+    {
+    public:
+        PutGeometry(const GeometryId& id, const std::shared_ptr<GeometryData>& geometry) : m_id(id), m_geometry(geometry) {}
+
+        const GeometryId& id() { return m_id; }
+        const std::shared_ptr<GeometryData>& geometry() { return m_geometry; }
+
+    protected:
+        GeometryId m_id;
+        std::shared_ptr<GeometryData> m_geometry;
+    };
+    class RemoveGeometry : public Frameworks::ICommand
+    {
+    public:
+        RemoveGeometry(const GeometryId& id) : m_id(id) {}
+
+        const GeometryId& id() { return m_id; }
+
+    protected:
+        GeometryId m_id;
+    };
+
     class RegisterGeometryFactory : public Frameworks::ICommand
     {
     public:

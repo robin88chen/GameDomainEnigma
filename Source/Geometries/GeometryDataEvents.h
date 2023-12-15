@@ -40,13 +40,15 @@ namespace Enigma::Geometries
     class GeometryConstituted : public Frameworks::IEvent
     {
     public:
-        GeometryConstituted(const GeometryId& id, const GeometryDataPtr& geo) :
-            m_id(id), m_geometry(geo) {};
+        GeometryConstituted(const GeometryId& id, const GeometryDataPtr& geo, bool is_persisted) :
+            m_id(id), m_geometry(geo), m_is_persisted(is_persisted) {};
         const GeometryId& id() { return m_id; }
         const GeometryDataPtr& geometryData() { return m_geometry; }
+        bool isPersisted() const { return m_is_persisted; }
     private:
         GeometryId m_id;
         GeometryDataPtr m_geometry;
+        bool m_is_persisted;
     };
     class ConstituteGeometryFailed : public Frameworks::IEvent
     {
@@ -59,6 +61,14 @@ namespace Enigma::Geometries
         GeometryId m_id;
         std::error_code m_error;
     };
+    class GeometryRemoved : public Frameworks::IEvent
+    {
+    public:
+        GeometryRemoved(const GeometryId& id) : m_id(id) {};
+        const GeometryId& id() { return m_id; }
+    private:
+        GeometryId m_id;
+    };
     class RemoveGeometryFailed : public Frameworks::IEvent
     {
     public:
@@ -69,6 +79,14 @@ namespace Enigma::Geometries
     private:
         GeometryId m_id;
         std::error_code m_error;
+    };
+    class GeometryPut : public Frameworks::IEvent
+    {
+    public:
+        GeometryPut(const GeometryId& id) : m_id(id) {};
+        const GeometryId& id() { return m_id; }
+    private:
+        GeometryId m_id;
     };
     class PutGeometryFailed : public Frameworks::IEvent
     {

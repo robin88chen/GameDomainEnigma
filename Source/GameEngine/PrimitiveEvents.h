@@ -39,13 +39,15 @@ namespace Enigma::Engine
     class PrimitiveConstituted : public Frameworks::IEvent
     {
     public:
-        PrimitiveConstituted(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive) :
-            m_id(id), m_primitive(primitive) {};
+        PrimitiveConstituted(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive, bool is_persisted) :
+            m_id(id), m_primitive(primitive), m_is_persisted(is_persisted) {};
         const PrimitiveId& id() { return m_id; }
         const std::shared_ptr<Primitive>& primitive() { return m_primitive; }
+        bool isPersisted() const { return m_is_persisted; }
     private:
         PrimitiveId m_id;
         std::shared_ptr<Primitive> m_primitive;
+        bool m_is_persisted;
     };
     class ConstitutePrimitiveFailed : public Frameworks::IEvent
     {

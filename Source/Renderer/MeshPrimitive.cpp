@@ -45,7 +45,7 @@ MeshPrimitive::MeshPrimitive(const Engine::PrimitiveId& id, const Engine::Generi
     }
     else if (mesh_dto.geometry())
     {
-        m_geometry = geometry_repository->factory()->constitute(mesh_dto.geometryId(), mesh_dto.geometry().value());
+        m_geometry = geometry_repository->factory()->constitute(mesh_dto.geometryId(), mesh_dto.geometry().value(), false);
         if (!m_geometry)
         {
             geometry_repository->putGeometryData(mesh_dto.geometryId(), m_geometry);

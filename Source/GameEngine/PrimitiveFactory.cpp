@@ -59,7 +59,7 @@ std::shared_ptr<Primitive> PrimitiveFactory::create(const PrimitiveId& id, const
     return prim;
 }
 
-std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, const Engine::GenericDto& dto)
+std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
     auto constitutor = m_constitutors.find(dto.GetRtti().GetRttiName());
     if (constitutor == m_constitutors.end())
@@ -69,7 +69,7 @@ std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, c
         return nullptr;
     }
     auto prim = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<PrimitiveConstituted>(id, prim));
+    EventPublisher::post(std::make_shared<PrimitiveConstituted>(id, prim, is_persisted));
     return prim;
 }
 
@@ -138,5 +138,5 @@ void PrimitiveFactory::constitutePrimitive(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstitutePrimitiveFailed>(cmd->id(), ErrorCode::primitiveEntityAlreadyExists));
         return;
     }
-    constitute(cmd->id(), cmd->dto());
+    constitute(cmd->id(), cmd->dto(), false);
 }

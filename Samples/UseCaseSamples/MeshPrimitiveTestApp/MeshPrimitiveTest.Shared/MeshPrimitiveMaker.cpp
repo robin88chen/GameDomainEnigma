@@ -1,21 +1,37 @@
 ﻿#include "MeshPrimitiveMaker.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "CubeGeometryMaker.h"
+#include "GameEngine/EffectDtoHelper.h"
 #include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Renderer/MeshPrimitive.h"
+#include "Frameworks/CommandBus.h"
+#include "GameEngine/PrimitiveCommands.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 
-void MeshPrimitiveMaker::makeCubeMeshPrimitive(const std::string& mesh_name, const Enigma::Geometries::GeometryId& geo_id)
+void MeshPrimitiveMaker::makeCubeMeshPrimitive(const Enigma::Engine::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id)
 {
+    MeshPrimitiveDto mesh_dto;
+    mesh_dto.id() = mesh_id;
+    mesh_dto.geometryId() = geo_id;
+    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
+    EffectMaterialDtoHelper effect_helper("basic_vtx_tex");
+    effect_helper.FilenameAtPath("basic_vtx_tex.efx", "APK_PATH");
+    mesh_dto.effects().emplace_back(effect_helper.toGenericDto());
+    EffectTextureMapDtoHelper texture_helper;
+    texture_helper.TextureMapping("earth.png", "APK_PATH", "earth", std::nullopt, "DiffuseMap");
+    mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
+    mesh_dto.renderListID() = Renderer::RenderListID::Scene;
+    mesh_dto.visualTechniqueSelection() = "Default";
 
+    Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::Engine::ConstitutePrimitive>(mesh_id, mesh_dto.toGenericDto()));
 }
 
 /*std::shared_ptr<MeshPrimitivePolicy> MeshPrimitiveMaker::MakeMeshPrimitivePolicy(const std::string& mesh_name, const std::string& geo_name)

@@ -70,7 +70,10 @@ std::shared_ptr<Primitive> PrimitiveRepository::queryPrimitive(const PrimitiveId
     assert(m_factory);
     const auto dto = m_storeMapper->queryPrimitive(id);
     assert(dto.has_value());
-    return m_factory->constitute(id, dto.value());
+    auto prim = m_factory->constitute(id, dto.value(), true);
+    assert(prim);
+    m_primitives.insert_or_assign(id, prim);
+    return prim;
 }
 
 void PrimitiveRepository::removePrimitive(const PrimitiveId& id)

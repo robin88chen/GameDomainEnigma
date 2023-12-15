@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "GeometryId.h"
 #include <memory>
 #include <mutex>
@@ -52,6 +53,9 @@ namespace Enigma::Geometries
     protected:
         void queryGeometryData(const Frameworks::IQueryPtr& q);
 
+        void putGeometryData(const Frameworks::ICommandPtr& c);
+        void removeGeometryData(const Frameworks::ICommandPtr& c);
+
     protected:
         std::shared_ptr<GeometryDataStoreMapper> m_storeMapper;
         GeometryDataFactory* m_factory;
@@ -59,6 +63,8 @@ namespace Enigma::Geometries
         std::recursive_mutex m_geometryLock;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;
+        Frameworks::CommandSubscriberPtr m_putGeometryData;
+        Frameworks::CommandSubscriberPtr m_removeGeometryData;
     };
 }
 

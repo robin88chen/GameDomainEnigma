@@ -69,10 +69,10 @@ std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
     return camera;
 }
 
-std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto)
+std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
     auto camera = std::make_shared<Camera>(id, dto);
-    EventPublisher::post(std::make_shared<CameraConstituted>(id, camera));
+    EventPublisher::post(std::make_shared<CameraConstituted>(id, camera, is_persisted));
     return camera;
 }
 
@@ -106,7 +106,7 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (constituteCamera(cmd->id(), cmd->dto()) == nullptr)
+    if (constituteCamera(cmd->id(), cmd->dto(), false) == nullptr)
     {
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -139,7 +139,7 @@ void SceneGraphFactory::createPawn(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreatePawn>(c);
     if (!cmd) return;
-    const auto query = std::make_shared<QueryPawn>(cmd->id());
+    const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
@@ -157,7 +157,7 @@ void SceneGraphFactory::constitutePawn(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ConstitutePawn>(c);
     if (!cmd) return;
-    const auto query = std::make_shared<QueryPawn>(cmd->id());
+    const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {

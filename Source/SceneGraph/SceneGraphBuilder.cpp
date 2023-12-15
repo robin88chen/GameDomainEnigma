@@ -35,7 +35,7 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
     m_host = host;
     m_dtoDeserializer = dto_deserializer;
     m_resolver = menew SpatialLinkageResolver([=](auto n) -> std::shared_ptr<Spatial>
-        { return m_host->QuerySpatial(n); });
+        { return m_host->querySpatial(n); });
 
     m_doRegisteringSpatialFactory =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoRegisteringSpatialFactory(c); });

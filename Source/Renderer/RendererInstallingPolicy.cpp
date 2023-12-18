@@ -17,8 +17,10 @@ error RenderSystemInstallingPolicy::install(Frameworks::ServiceManager* service_
     assert(service_manager);
     auto geometry_repository = service_manager->getSystemServiceAs<Geometries::GeometryRepository>();
     assert(geometry_repository);
+    auto primitive_repository = service_manager->getSystemServiceAs<Engine::PrimitiveRepository>();
+    assert(primitive_repository);
     service_manager->registerSystemService(std::make_shared<RendererManager>(service_manager));
-    service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager, geometry_repository, m_dtoDeserializer));
+    service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager, primitive_repository, geometry_repository, m_dtoDeserializer));
 
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
     Engine::PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);

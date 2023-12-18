@@ -15,6 +15,7 @@
 #include "GameEngine/Primitive.h"
 #include "GameEngine/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
+#include "GameEngine/PrimitiveRepository.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -30,7 +31,7 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
+        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder(RenderablePrimitiveBuilder&&) = delete;
         ~RenderablePrimitiveBuilder() override;
@@ -56,6 +57,7 @@ namespace Enigma::Renderer
         void buildPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
+        std::weak_ptr<Engine::PrimitiveRepository> m_primitiveRepository;
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;

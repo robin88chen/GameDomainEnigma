@@ -33,6 +33,9 @@
 #include "SceneGraph/CameraFrustumCommands.h"
 #include "Geometries/GeometryDataEvents.h"
 #include "Geometries/GeometryCommands.h"
+#include "GameEngine/PrimitiveEvents.h"
+#include "GameEngine/PrimitiveCommands.h"
+#include "GameEngine/PrimitiveQueries.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
@@ -88,6 +91,8 @@ void MeshPrimitiveTest::installEngine()
     EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
     m_onGeometryConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onGeometryConstituted(e); });
     EventPublisher::subscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
+    m_onPrimitiveConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onPrimitiveConstituted(e); });
+    EventPublisher::subscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
 
     m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
     EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
@@ -125,6 +130,8 @@ void MeshPrimitiveTest::shutdownEngine()
     m_onCameraConstituted = nullptr;
     EventPublisher::unsubscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
     m_onGeometryConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
+    m_onPrimitiveConstituted = nullptr;
 
     EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
     m_onRenderablePrimitiveBuilt = nullptr;
@@ -141,7 +148,7 @@ void MeshPrimitiveTest::shutdownEngine()
 void MeshPrimitiveTest::frameUpdate()
 {
     AppDelegate::frameUpdate();
-    if ((m_renderer) && (m_mesh))
+    if ((m_renderer) && (m_mesh) && (m_mesh->lazyStatus().isReady()))
     {
         m_mesh->insertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
     }
@@ -176,12 +183,11 @@ void MeshPrimitiveTest::makeCamera()
 void MeshPrimitiveTest::makeCube()
 {
     m_cubeId = GeometryId("test_geometry");
-    m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
     auto query = std::make_shared<QueryGeometryData>(m_cubeId);
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
-        MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+        makeMesh();
     }
     else
     {
@@ -189,6 +195,20 @@ void MeshPrimitiveTest::makeCube()
     }
 }
 
+void MeshPrimitiveTest::makeMesh()
+{
+    m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
+    auto query = std::make_shared<QueryPrimitive>(m_meshId);
+    QueryDispatcher::dispatch(query);
+    if (query->getResult())
+    {
+        m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(query->getResult());
+    }
+    else
+    {
+        MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    }
+}
 void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
@@ -209,7 +229,18 @@ void MeshPrimitiveTest::onGeometryConstituted(const Enigma::Frameworks::IEventPt
     if (ev->id() != m_cubeId) return;
     if (ev->isPersisted()) return;
     CommandBus::post(std::make_shared<PutGeometry>(m_cubeId, ev->geometryData()));
-    MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    makeMesh();
+}
+
+void MeshPrimitiveTest::onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PrimitiveConstituted>(e);
+    if (!ev) return;
+    if (ev->id() != m_meshId) return;
+    if (ev->isPersisted()) return;
+    m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->primitive());
+    CommandBus::post(std::make_shared<PutPrimitive>(m_meshId, ev->primitive()));
 }
 
 void MeshPrimitiveTest::onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)

@@ -36,6 +36,29 @@ namespace Enigma::Engine
         PrimitiveId m_id;
         GenericDto m_dto;
     };
+    class PutPrimitive : public Frameworks::ICommand
+    {
+    public:
+        PutPrimitive(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive) : m_id(id), m_primitive(primitive) {}
+
+        const PrimitiveId& id() { return m_id; }
+        const std::shared_ptr<Primitive>& primitive() { return m_primitive; }
+
+    protected:
+        PrimitiveId m_id;
+        std::shared_ptr<Primitive> m_primitive;
+    };
+    class RemovePrimitive : public Frameworks::ICommand
+    {
+    public:
+        RemovePrimitive(const PrimitiveId& id) : m_id(id) {}
+
+        const PrimitiveId& id() { return m_id; }
+
+    protected:
+        PrimitiveId m_id;
+    };
+
     class RegisterPrimitiveFactory : public Frameworks::ICommand
     {
     public:

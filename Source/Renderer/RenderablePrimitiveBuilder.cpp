@@ -19,8 +19,9 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 
-RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
+RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
 {
+    m_primitiveRepository = primitive_repository;
     m_geometryRepository = geometry_repository;
     m_dtoDeserializer = dto_deserializer;
     m_needTick = false;
@@ -52,9 +53,9 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
     m_buildPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->buildPrimitive(c); });
     CommandBus::subscribe(typeid(BuildRenderablePrimitive), m_buildPrimitive);
 
-    CommandBus::post(std::make_shared<RegisterPrimitiveFactory>(MeshPrimitive::TYPE_RTTI.getName(),
+    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(MeshPrimitive::TYPE_RTTI.getName(),
         [=](const PrimitiveId& id) { return createMesh(id); },
-        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); }));
+        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); });
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
     m_modelBuilder = menew ModelPrimitiveBuilder();

@@ -10,6 +10,7 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "PrimitiveId.h"
 #include <mutex>
 
@@ -45,6 +46,8 @@ namespace Enigma::Engine
 
     protected:
         void queryPrimitive(const Frameworks::IQueryPtr& q);
+        void putPrimitive(const Frameworks::ICommandPtr& c);
+        void removePrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
         std::shared_ptr<PrimitiveStoreMapper> m_storeMapper;
@@ -54,6 +57,9 @@ namespace Enigma::Engine
         std::recursive_mutex m_primitiveLock;
 
         Frameworks::QuerySubscriberPtr m_queryPrimitive;
+
+        Frameworks::CommandSubscriberPtr m_putPrimitive;
+        Frameworks::CommandSubscriberPtr m_removePrimitive;
     };
 }
 

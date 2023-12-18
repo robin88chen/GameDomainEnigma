@@ -9,6 +9,8 @@
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
+#include "PrimitiveCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -36,6 +38,11 @@ ServiceResult PrimitiveRepository::onInit()
     m_queryPrimitive = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPrimitive(q); });
     QueryDispatcher::subscribe(typeid(QueryPrimitive), m_queryPrimitive);
 
+    m_putPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putPrimitive(c); });
+    CommandBus::subscribe(typeid(PutPrimitive), m_putPrimitive);
+    m_removePrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removePrimitive(c); });
+    CommandBus::subscribe(typeid(RemovePrimitive), m_removePrimitive);
+
     m_storeMapper->connect();
 
     return ServiceResult::Complete;
@@ -48,6 +55,11 @@ ServiceResult PrimitiveRepository::onTerm()
 
     QueryDispatcher::unsubscribe(typeid(QueryPrimitive), m_queryPrimitive);
     m_queryPrimitive = nullptr;
+
+    CommandBus::unsubscribe(typeid(PutPrimitive), m_putPrimitive);
+    m_putPrimitive = nullptr;
+    CommandBus::unsubscribe(typeid(RemovePrimitive), m_removePrimitive);
+    m_removePrimitive = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -114,4 +126,20 @@ void PrimitiveRepository::queryPrimitive(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryPrimitive, IQuery>(q);
     if (!query) return;
     query->setResult(queryPrimitive(query->id()));
+}
+
+void PrimitiveRepository::putPrimitive(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<PutPrimitive>(c);
+    if (!cmd) return;
+    putPrimitive(cmd->id(), cmd->primitive());
+}
+
+void PrimitiveRepository::removePrimitive(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<RemovePrimitive>(c);
+    if (!cmd) return;
+    removePrimitive(cmd->id());
 }

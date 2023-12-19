@@ -44,21 +44,21 @@ namespace Enigma::Engine
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        bool HasEffectMaterial(const std::string& name);
-        EffectMaterialPtr QueryEffectMaterial(const std::string& name);
+        bool hasEffectMaterial(const std::string& name);
+        EffectMaterialPtr duplicateEffectMaterial(const std::string& name);
 
         //error CompileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
-        void OnCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void onCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e);
+        void onCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
 
-        void DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c);
+        void compileEffectMaterial(const Frameworks::ICommandPtr& c);
 
         /** release effect material source */
-        void ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
+        void releaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source);
 
-        void DumpUnreleasedMaterial();
+        void dumpUnreleasedMaterial();
 
     private:
         std::shared_ptr<IEffectCompilingProfileDeserializer> m_effectDeserializer;

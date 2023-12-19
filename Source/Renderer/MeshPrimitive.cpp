@@ -312,9 +312,9 @@ void MeshPrimitive::bindPrimitiveEffectTexture()
             auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
             if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
             // 改直接指定
-            (*eff_iter)->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
+            (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
                         std::get<TexturePtr>(eff_tex_set)->GetDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
-            /*(*eff_iter)->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
+            /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
                 [=](auto& var)
                 {
                     var.AssignValue(IShaderVariable::TextureVarTuple{
@@ -339,8 +339,8 @@ void MeshPrimitive::loosePrimitiveEffectTexture()
         {
             auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
             // 改直接指定
-            (*eff_iter)->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-            /*(*eff_iter)->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
+            (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+            /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
                 [=](auto& var)
                 {
                     var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
@@ -359,9 +359,9 @@ void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
         auto& eff_tex_set = (m_textures[index]).GetEffectSemanticTextureTuple(i);
         if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
         // 改直接指定
-        m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
+        m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
                     std::get<TexturePtr>(eff_tex_set)->GetDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
-        /*m_effects[index]->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
+        /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {
                 var.AssignValue(IShaderVariable::TextureVarTuple{
@@ -379,8 +379,8 @@ void MeshPrimitive::looseSegmentEffectTexture(unsigned index)
     {
         auto& eff_tex_set = m_textures[index].GetEffectSemanticTextureTuple(i);
         // 改直接指定
-        m_effects[index]->AssignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-        /*m_effects[index]->SetVariableAssignFunc(std::get<std::string>(eff_tex_set),
+        m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+        /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {
                 var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });

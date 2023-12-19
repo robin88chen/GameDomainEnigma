@@ -37,30 +37,30 @@ namespace Enigma::Engine
         static MaterialVariableMap* instance();
 
         /** insert variable function to map */
-        static void InsertAutoVariableFunctionToMap(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
+        static void insertAutoVariableFunctionToMap(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
 
         /** set variable assign function */
-        static void SetAutoVariableCommitFunction(EffectVariable& var);
+        static void setAutoVariableCommitFunction(EffectVariable& var);
 
         /** @name variable assign functions */
         //@{
-        static void AssignCameraViewTransform(EffectVariable& var);
-        static void AssignCameraViewInverseTransform(EffectVariable& var);
-        static void AssignCameraProjectionTransform(EffectVariable& var);
-        static void AssignCameraPosition(EffectVariable& var);
-        static void AssignWorldTransform(EffectVariable& var);
-        static void AssignWorldInverseTransform(EffectVariable& var);
-        static void AssignFaceToCameraWorldTransform(EffectVariable& var);
-        static void AssignCameraViewProjectionTransform(EffectVariable& var);
-        static void AssignWorldViewProjectionTransform(EffectVariable& var);
-        static void AssignWorldViewProjectionInverseTransform(EffectVariable& var);
-        static void AssignWorldViewInverseTransposeMatrix(EffectVariable& var);
-        static void AssignFrustumTangentFov(EffectVariable& var);
+        static void assignCameraViewTransform(EffectVariable& var);
+        static void assignCameraViewInverseTransform(EffectVariable& var);
+        static void assignCameraProjectionTransform(EffectVariable& var);
+        static void assignCameraPosition(EffectVariable& var);
+        static void assignWorldTransform(EffectVariable& var);
+        static void assignWorldInverseTransform(EffectVariable& var);
+        static void assignFaceToCameraWorldTransform(EffectVariable& var);
+        static void assignCameraViewProjectionTransform(EffectVariable& var);
+        static void assignWorldViewProjectionTransform(EffectVariable& var);
+        static void assignWorldViewProjectionInverseTransform(EffectVariable& var);
+        static void assignWorldViewInverseTransposeMatrix(EffectVariable& var);
+        static void assignFrustumTangentFov(EffectVariable& var);
         /*static void AssignEffectTexture(EffectVariable& var);
         static void AssignBoneAnimationMatrix(EffectVariable& var);*/
-        static void AssignAmbientLightColor(EffectVariable& var);
-        static void AssignSunLightColor(EffectVariable& var);
-        static void AssignSunLightDirection(EffectVariable& var);
+        static void assignAmbientLightColor(EffectVariable& var);
+        static void assignSunLightColor(EffectVariable& var);
+        static void assignSunLightDirection(EffectVariable& var);
         /*static void AssignDepthWriteFlag(EffectVariable& var);
         static void AssignTextureAnimOffsetU(EffectVariable& var);
         static void AssignTextureAnimOffsetV(EffectVariable& var);
@@ -70,31 +70,31 @@ namespace Enigma::Engine
         static void AssignSpecularPower(EffectVariable& var);
         static void AssignSpecularLighting(EffectVariable& var);
         static void AssignUseSpecularMap(EffectVariable& var);*/
-        static void AssignPointLightPosition(EffectVariable& var);
-        static void AssignPointLightColor(EffectVariable& var);
-        static void AssignPointLightAttenuation(EffectVariable& var);
-        static void AssignPointLightCount(EffectVariable& var);
+        static void assignPointLightPosition(EffectVariable& var);
+        static void assignPointLightColor(EffectVariable& var);
+        static void assignPointLightAttenuation(EffectVariable& var);
+        static void assignPointLightCount(EffectVariable& var);
         //static void AssignRasterizerState(EffectVariable& var);*/
-        static void AssignViewPortDimension(EffectVariable& var);
+        static void assignViewPortDimension(EffectVariable& var);
         //@}
 
         /** @name set parameter source object */
         //@{
-        static void UseCameraParameter(const MathLib::Vector3& pos, const MathLib::Matrix4& view, const MathLib::Matrix4& proj);
-        static void UseWorldTransform(const MathLib::Matrix4& mxWorld);
-        static void UseAmbientLightColor(const MathLib::ColorRGBA& ambient);
-        static void UseSunLight(const MathLib::ColorRGBA& color, const MathLib::Vector3& dir);
+        static void useCameraParameter(const MathLib::Vector3& pos, const MathLib::Matrix4& view, const MathLib::Matrix4& proj);
+        static void useWorldTransform(const MathLib::Matrix4& mxWorld);
+        static void useAmbientLightColor(const MathLib::ColorRGBA& ambient);
+        static void useSunLight(const MathLib::ColorRGBA& color, const MathLib::Vector3& dir);
         /*static void UseClipPlane(const Plane3& kPlane);
         static void UseDepthBias(float fDepthBias);*/
         /// pos_range : pos (x,y,z), w: light range
-        static void UsePointLight(MathLib::Vector4* pos_range, MathLib::ColorRGBA* color, MathLib::Vector4* attenuation, unsigned int count);
-        static void UseViewPortDimension(const Graphics::TargetViewPort& vp);
-        static void UseViewPortDimension(unsigned int width, unsigned int height, float min_z, float max_z);
+        static void usePointLight(MathLib::Vector4* pos_range, MathLib::ColorRGBA* color, MathLib::Vector4* attenuation, unsigned int count);
+        static void useViewPortDimension(const Graphics::TargetViewPort& vp);
+        static void useViewPortDimension(unsigned int width, unsigned int height, float min_z, float max_z);
         //@}
 
     private:
-        void InitializeFunctionMap();
-        void CalculateFaceToCameraWorldTransform();
+        void initializeFunctionMap();
+        void calculateFaceToCameraWorldTransform();
 
     private:
         static MaterialVariableMap* m_instance;

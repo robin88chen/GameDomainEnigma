@@ -86,12 +86,12 @@ EffectPass& EffectPass::operator=(EffectPass&& pass) noexcept
     return *this;
 }
 
-void EffectPass::MappingAutoVariables()
+void EffectPass::mappingAutoVariables()
 {
     if (!MaterialVariableMap::instance()) return;
     for (auto& var : m_variables)
     {
-        MaterialVariableMap::SetAutoVariableCommitFunction(var);
+        MaterialVariableMap::setAutoVariableCommitFunction(var);
     }
 }
 

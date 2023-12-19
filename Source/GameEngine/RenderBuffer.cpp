@@ -67,7 +67,7 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         Graphics::IGraphicAPI::instance()->Bind(m_indexBuffer);
     }
 
-    effectMaterial->ApplyFirstPass();
+    effectMaterial->applyFirstPass();
     if (m_indexBuffer)
     {
         Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
@@ -78,9 +78,9 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
     }
     // if multi-pass effect
-    while (effectMaterial->HasNextPass())
+    while (effectMaterial->hasNextPass())
     {
-        effectMaterial->ApplyNextPass();
+        effectMaterial->applyNextPass();
         if (m_indexBuffer)
         {
             Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,

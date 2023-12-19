@@ -99,7 +99,7 @@ namespace Enigma::Renderer
         void EnableSortBeforeDraw(RenderListID list_id, bool flag);
 
         /** select renderer technique */
-        void SelectRendererTechnique(const std::string& techniqueName);
+        void selectRendererTechnique(const std::string& techniqueName);
 
     protected:
         std::weak_ptr<RenderTarget> m_target;

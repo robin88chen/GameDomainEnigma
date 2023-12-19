@@ -66,7 +66,7 @@ const EffectPass& EffectTechnique::GetPassByIndex(unsigned index) const
     return m_effectPasses[index];
 }
 
-error EffectTechnique::ApplyFirstPass()
+error EffectTechnique::applyFirstPass()
 {
     m_currentApplyPass = m_effectPasses.begin();
     if (m_currentApplyPass == m_effectPasses.end())
@@ -78,7 +78,7 @@ error EffectTechnique::ApplyFirstPass()
     return ErrorCode::ok;
 }
 
-error EffectTechnique::ApplyNextPass()
+error EffectTechnique::applyNextPass()
 {
     if (m_currentApplyPass == m_effectPasses.end())
     {
@@ -94,7 +94,7 @@ error EffectTechnique::ApplyNextPass()
     return ErrorCode::ok;
 }
 
-bool EffectTechnique::HasNextPass()
+bool EffectTechnique::hasNextPass()
 {
     if (m_currentApplyPass < m_effectPasses.end() - 1) return true;
     return false;

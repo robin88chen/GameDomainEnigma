@@ -61,7 +61,7 @@ void SceneRendererService::CreateSceneRenderSystem(const std::string& renderer_n
     er = m_rendererManager.lock()->CreateRenderTarget(target_name, m_config->IsPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
     if (er) return;
     auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
-    renderer->SelectRendererTechnique(m_config->PrimaryRendererTechniqueName());
+    renderer->selectRendererTechnique(m_config->PrimaryRendererTechniqueName());
     auto target = m_rendererManager.lock()->GetRenderTarget(target_name);
     std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->SetRenderTarget(target);
     m_renderer = renderer;

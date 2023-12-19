@@ -65,10 +65,10 @@ EffectCompiler::CompilingProceed EffectCompiler::CompileEffectMaterial(const Eff
 {
     assert(m_hostManager);
     m_policy = policy;
-    if (m_hostManager->HasEffectMaterial(policy.Name()))
+    if (m_hostManager->hasEffectMaterial(policy.Name()))
     {
         Frameworks::EventPublisher::post(std::make_shared<EffectMaterialCompiled>(
-            policy.Name(), m_hostManager->QueryEffectMaterial(policy.Name()), true));
+            policy.Name(), m_hostManager->duplicateEffectMaterial(policy.Name()), true));
         return CompilingProceed::False;
     }
     else if (auto p = policy.GetProfile())

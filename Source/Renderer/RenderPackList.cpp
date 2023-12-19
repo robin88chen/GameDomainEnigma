@@ -11,10 +11,10 @@ bool compare_render_pack(const RenderPack& first, const RenderPack& second)
     // 排序的概念是，同樣的buffer通常有同樣的effect，但一個effect常常用在不同的buffer上，
     // 所以，先比對shader再比對buffer
     // 比對shader
-    if (static_cast<void*>(first.GetRenderElement()->getEffectMaterial()->GetEffectMaterialSource().get()) <
-        static_cast<void*>(second.GetRenderElement()->getEffectMaterial()->GetEffectMaterialSource().get())) return true;
-    if (static_cast<void*>(first.GetRenderElement()->getEffectMaterial()->GetEffectMaterialSource().get()) >
-        static_cast<void*>(second.GetRenderElement()->getEffectMaterial()->GetEffectMaterialSource().get())) return false;
+    if (static_cast<void*>(first.GetRenderElement()->getEffectMaterial()->getEffectMaterialSource().get()) <
+        static_cast<void*>(second.GetRenderElement()->getEffectMaterial()->getEffectMaterialSource().get())) return true;
+    if (static_cast<void*>(first.GetRenderElement()->getEffectMaterial()->getEffectMaterialSource().get()) >
+        static_cast<void*>(second.GetRenderElement()->getEffectMaterial()->getEffectMaterialSource().get())) return false;
     // 比對 render buffer
     if (static_cast<void*>(first.GetRenderElement()->GetRenderBuffer().get()) <
         static_cast<void*>(second.GetRenderElement()->GetRenderBuffer().get())) return true;

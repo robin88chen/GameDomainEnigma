@@ -6,7 +6,7 @@
 
 using namespace Enigma::Engine;
 
-std::function<void(const std::shared_ptr<EffectMaterialSource>&)> EffectMaterialSource::OnDuplicatedEmpty;
+std::function<void(const std::shared_ptr<EffectMaterialSource>&)> EffectMaterialSource::onDuplicatedEmpty;
 
 EffectMaterialSource::EffectMaterialSource()
 {
@@ -32,28 +32,28 @@ const std::string& EffectMaterialSource::getName() const
     return m_effectMaterial->getName();
 }
 
-void EffectMaterialSource::LinkSource()
+void EffectMaterialSource::linkSource()
 {
-    if (m_effectMaterial) m_effectMaterial->SetSource(shared_from_this());
+    if (m_effectMaterial) m_effectMaterial->setSource(shared_from_this());
 }
 
-EffectMaterialPtr EffectMaterialSource::CloneEffectMaterial()
+EffectMaterialPtr EffectMaterialSource::cloneEffectMaterial()
 {
     assert(m_effectMaterial);
     m_duplicateCount++;
-    return EffectMaterialPtr(menew EffectMaterial(*(m_effectMaterial.get())), [=](EffectMaterial* e) { this->DuplicatedEffectDeleter(e); });
+    return EffectMaterialPtr(menew EffectMaterial(*(m_effectMaterial.get())), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
 }
 
-void EffectMaterialSource::DuplicatedEffectDeleter(EffectMaterial* effect)
+void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
 {
     assert(effect != m_effectMaterial.get());
-    if (effect->GetEffectMaterialSource() == shared_from_this())
+    if (effect->getEffectMaterialSource() == shared_from_this())
     {
         m_duplicateCount--;
         assert(m_duplicateCount > 0);
         if (m_duplicateCount <= 1)
         {
-            OnDuplicatedEmpty(shared_from_this());
+            onDuplicatedEmpty(shared_from_this());
         }
     }
     delete effect;

@@ -30,23 +30,23 @@ EffectMaterialManager::~EffectMaterialManager()
     delete m_compiler;
     m_compiler = nullptr;
     m_effectDeserializer = nullptr;
-    DumpUnreleasedMaterial();
+    dumpUnreleasedMaterial();
     assert(m_sourceMaterials.empty());
 }
 
 Enigma::Frameworks::ServiceResult EffectMaterialManager::onInit()
 {
-    m_onCompilerEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerEffectMaterialCompiled(e); });
+    m_onCompilerEffectMaterialCompiled = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onCompilerEffectMaterialCompiled(e); });
     Frameworks::EventPublisher::subscribe(typeid(EffectCompiler::EffectMaterialCompiled), m_onCompilerEffectMaterialCompiled);
-    m_onCompilerCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnCompilerCompileEffectMaterialFailed(e); });
+    m_onCompilerCompileEffectMaterialFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onCompilerCompileEffectMaterialFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(EffectCompiler::CompileEffectMaterialFailed), m_onCompilerCompileEffectMaterialFailed);
 
-    m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCompilingEffectMaterial(c); });
+    m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->compileEffectMaterial(c); });
     Frameworks::CommandBus::subscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
 
-    EffectMaterialSource::OnDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
+    EffectMaterialSource::onDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
         {
-            ReleaseEffectMaterialSource(eff);
+            releaseEffectMaterialSource(eff);
         };
     return Frameworks::ServiceResult::Complete;
 }
@@ -84,18 +84,18 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
-bool EffectMaterialManager::HasEffectMaterial(const std::string& name)
+bool EffectMaterialManager::hasEffectMaterial(const std::string& name)
 {
     std::lock_guard<std::recursive_mutex> lock(m_sourceMapLock);
     return m_sourceMaterials.find(name) != m_sourceMaterials.end();
 }
 
-EffectMaterialPtr EffectMaterialManager::QueryEffectMaterial(const std::string& name)
+EffectMaterialPtr EffectMaterialManager::duplicateEffectMaterial(const std::string& name)
 {
     std::lock_guard<std::recursive_mutex> lock(m_sourceMapLock);
     auto iter = m_sourceMaterials.find(name);
     if (iter == m_sourceMaterials.end()) return nullptr;
-    return iter->second->CloneEffectMaterial();
+    return iter->second->cloneEffectMaterial();
 }
 
 /*error EffectMaterialManager::CompileEffectMaterial(const EffectMaterialPolicy& policy)
@@ -106,7 +106,7 @@ EffectMaterialPtr EffectMaterialManager::QueryEffectMaterial(const std::string& 
     return ErrorCode::ok;
 }*/
 
-void EffectMaterialManager::OnCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e)
+void EffectMaterialManager::onCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
     assert(m_compiler);
     if (!e) return;
@@ -118,15 +118,15 @@ void EffectMaterialManager::OnCompilerEffectMaterialCompiled(const Frameworks::I
     if (!ev->HasExisted())
     {
         EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
-        source->LinkSource();
+        source->linkSource();
         m_sourceMaterials.insert_or_assign(ev->getName(), source);
     }
     Frameworks::EventPublisher::post(std::make_shared<Engine::EffectMaterialCompiled>(
-        m_currentCompilingRuid, ev->getName(), QueryEffectMaterial(ev->getName())));
+        m_currentCompilingRuid, ev->getName(), duplicateEffectMaterial(ev->getName())));
     m_isCurrentCompiling = false;
 }
 
-void EffectMaterialManager::OnCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
+void EffectMaterialManager::onCompilerCompileEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EffectCompiler::CompileEffectMaterialFailed, Frameworks::IEvent>(e);
@@ -138,7 +138,7 @@ void EffectMaterialManager::OnCompilerCompileEffectMaterialFailed(const Framewor
     m_isCurrentCompiling = false;
 }
 
-void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::ICommandPtr& c)
+void EffectMaterialManager::compileEffectMaterial(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<CompileEffectMaterial>(c);
@@ -149,14 +149,14 @@ void EffectMaterialManager::DoCompilingEffectMaterial(const Frameworks::ICommand
     //CompileEffectMaterial(cmd->GetPolicy());
 }
 
-void EffectMaterialManager::ReleaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source)
+void EffectMaterialManager::releaseEffectMaterialSource(const std::shared_ptr<EffectMaterialSource>& eff_source)
 {
     if (!eff_source) return;
     std::lock_guard locker{ m_sourceMapLock };
     m_sourceMaterials.erase(eff_source->getName());
 }
 
-void EffectMaterialManager::DumpUnreleasedMaterial()
+void EffectMaterialManager::dumpUnreleasedMaterial()
 {
     if (!m_sourceMaterials.empty())
     {

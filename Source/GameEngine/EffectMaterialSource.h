@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterialSource.h
  * \brief  effect material source entity
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -28,14 +28,14 @@ namespace Enigma::Engine
 
         const std::string& getName() const;
 
-        void LinkSource();
+        void linkSource();
 
-        EffectMaterialPtr CloneEffectMaterial();
+        EffectMaterialPtr cloneEffectMaterial();
 
-        static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> OnDuplicatedEmpty;
+        static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> onDuplicatedEmpty;
 
     private:
-        void DuplicatedEffectDeleter(EffectMaterial* effect);
+        void duplicatedEffectDeleter(EffectMaterial* effect);
 
     private:
         std::shared_ptr<EffectMaterial> m_effectMaterial;

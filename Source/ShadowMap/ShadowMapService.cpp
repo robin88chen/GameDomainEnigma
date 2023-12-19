@@ -39,8 +39,8 @@ ShadowMapService::~ShadowMapService()
 ServiceResult ShadowMapService::onInit()
 {
     SubscribeEvents();
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
     return ServiceResult::Complete;
 }
 
@@ -93,7 +93,7 @@ void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name
     m_rendererManager.lock()->CreateRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
-    m_renderer.lock()->SelectRendererTechnique(m_configuration->ShadowMapTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->ShadowMapTechniqueName());
 
     m_shadowMapRenderTarget = m_rendererManager.lock()->GetRenderTarget(target_name);
     m_shadowMapRenderTarget.lock()->InitBackSurface(m_configuration->ShadowMapSurfaceName(), m_configuration->ShadowMapDimension(), Graphics::GraphicFormat::FMT_R32F);

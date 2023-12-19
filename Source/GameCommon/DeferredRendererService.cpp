@@ -138,7 +138,7 @@ void DeferredRendererService::CreateSceneRenderSystem(const std::string& rendere
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(rendererManager->GetRenderer(renderer_name));
-    m_renderer.lock()->SelectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
     m_renderer.lock()->SetRenderTarget(primaryTarget);
     if (primaryTarget->GetBackSurface() && primaryTarget->GetDepthStencilSurface())
     {

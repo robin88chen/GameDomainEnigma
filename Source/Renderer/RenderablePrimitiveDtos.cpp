@@ -107,7 +107,7 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
 {
     MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<MeshPrimitivePolicy>();
-    policy->Name() = mesh_dto.m_name;
+    policy->name() = mesh_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
     if (mesh_dto.m_geometry)
     {
@@ -268,7 +268,7 @@ std::shared_ptr<GenericPolicy> ModelPrimitiveDto::modelDtoConvertToPolicy(const 
 {
     ModelPrimitiveDto model_dto = ModelPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<ModelPrimitivePolicy>();
-    policy->Name() = model_dto.m_name;
+    policy->name() = model_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
     policy->nodeTreeDto() = MeshNodeTreeDto::fromGenericDto(model_dto.m_nodeTreeDto);
     if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.getName()))

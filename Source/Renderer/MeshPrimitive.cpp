@@ -93,7 +93,7 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
     }
     for (auto& tex : m_textures)
     {
-        if (!tex.IsAllResourceTexture()) continue;
+        if (!tex.isAllResourceTexture()) continue;
         dto.textureMaps().emplace_back(tex.serializeDto());
     }
     dto.renderListID() = m_renderListID;
@@ -307,9 +307,9 @@ void MeshPrimitive::bindPrimitiveEffectTexture()
         ++eff_iter, ++tex_iter)
     {
         if (*eff_iter == nullptr) continue;
-        for (unsigned i = 0; i < (*tex_iter).GetCount(); i++)
+        for (unsigned i = 0; i < (*tex_iter).getCount(); i++)
         {
-            auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
+            auto& eff_tex_set = (*tex_iter).getEffectSemanticTextureTuple(i);
             if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
             // 改直接指定
             (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
@@ -335,9 +335,9 @@ void MeshPrimitive::loosePrimitiveEffectTexture()
         ++eff_iter, ++tex_iter)
     {
         if (*eff_iter == nullptr) continue;
-        for (unsigned i = 0; i < (*tex_iter).GetCount(); i++)
+        for (unsigned i = 0; i < (*tex_iter).getCount(); i++)
         {
-            auto& eff_tex_set = (*tex_iter).GetEffectSemanticTextureTuple(i);
+            auto& eff_tex_set = (*tex_iter).getEffectSemanticTextureTuple(i);
             // 改直接指定
             (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
             /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
@@ -354,9 +354,9 @@ void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
     if (index >= m_effects.size()) return;
     if (index >= m_textures.size()) return;
     if (m_effects[index] == nullptr) return;
-    for (unsigned i = 0; i < m_textures[index].GetCount(); i++)
+    for (unsigned i = 0; i < m_textures[index].getCount(); i++)
     {
-        auto& eff_tex_set = (m_textures[index]).GetEffectSemanticTextureTuple(i);
+        auto& eff_tex_set = (m_textures[index]).getEffectSemanticTextureTuple(i);
         if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
         // 改直接指定
         m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
@@ -375,9 +375,9 @@ void MeshPrimitive::looseSegmentEffectTexture(unsigned index)
     if (index >= m_effects.size()) return;
     if (index >= m_textures.size()) return;
     if (m_effects[index] == nullptr) return;
-    for (unsigned i = 0; i < m_textures[index].GetCount(); i++)
+    for (unsigned i = 0; i < m_textures[index].getCount(); i++)
     {
-        auto& eff_tex_set = m_textures[index].GetEffectSemanticTextureTuple(i);
+        auto& eff_tex_set = m_textures[index].getEffectSemanticTextureTuple(i);
         // 改直接指定
         m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
         /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
@@ -392,7 +392,7 @@ std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string&
 {
     for (auto& eff_tex : m_textures)
     {
-        auto tex_tuple = eff_tex.FindSemanticTexture(semantic);
+        auto tex_tuple = eff_tex.findSemanticTexture(semantic);
         if (!tex_tuple) continue;
         if (auto tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
         {

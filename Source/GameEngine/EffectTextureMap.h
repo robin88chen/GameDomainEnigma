@@ -39,20 +39,20 @@ namespace Enigma::Engine
 
         error bindSemanticTexture(const EffectSemanticTextureTuple& tuple);
         error changeSemanticTexture(const EffectSemanticTextureTuple& tuple);
-        unsigned AppendTextureSemantic(const std::string& semantic);  ///< return index
-        std::shared_ptr<Texture> GetTexture(unsigned index);
-        std::shared_ptr<Texture> GetTexture(unsigned index) const;
-        const EffectSemanticTextureTuple& GetEffectSemanticTextureTuple(unsigned index);
-        const unsigned int GetCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
-        std::optional<EffectSemanticTextureTuple> FindSemanticTexture(const std::string& semantic) const;
+        unsigned appendTextureSemantic(const std::string& semantic);  ///< return index
+        std::shared_ptr<Texture> getTexture(unsigned index);
+        std::shared_ptr<Texture> getTexture(unsigned index) const;
+        const EffectSemanticTextureTuple& getEffectSemanticTextureTuple(unsigned index);
+        const unsigned int getCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
+        std::optional<EffectSemanticTextureTuple> findSemanticTexture(const std::string& semantic) const;
 
-        bool IsAllResourceTexture() const;
+        bool isAllResourceTexture() const;
 
         /// merge texture sets to target map, with respect to same semantic
-        void MergeTextureSetTo(EffectTextureMap& targetMap);
+        void mergeTextureSetTo(EffectTextureMap& targetMap);
 
     protected:
-        std::optional<unsigned> GetTextureIndexBySemantic(const std::string& semantic);
+        std::optional<unsigned> getTextureIndexBySemantic(const std::string& semantic);
 
     protected:
         SegmentEffectTextures m_effectTextures;

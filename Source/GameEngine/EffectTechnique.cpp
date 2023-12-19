@@ -49,18 +49,18 @@ EffectTechnique& EffectTechnique::operator=(const EffectTechnique& source_tech)
     return *this;
 }
 
-void EffectTechnique::AddPass(const EffectPass& pass)
+void EffectTechnique::addPass(const EffectPass& pass)
 {
     m_effectPasses.emplace_back(pass);
 }
 
-EffectPass& EffectTechnique::GetPassByIndex(unsigned index)
+EffectPass& EffectTechnique::getPassByIndex(unsigned index)
 {
     assert(index <= m_effectPasses.size());
     return m_effectPasses[index];
 }
 
-const EffectPass& EffectTechnique::GetPassByIndex(unsigned index) const
+const EffectPass& EffectTechnique::getPassByIndex(unsigned index) const
 {
     assert(index <= m_effectPasses.size());
     return m_effectPasses[index];
@@ -73,8 +73,8 @@ error EffectTechnique::applyFirstPass()
     {
         return ErrorCode::effectPassEnd;
     }
-    (*m_currentApplyPass).CommitVariables();
-    (*m_currentApplyPass).Apply();
+    (*m_currentApplyPass).commitVariables();
+    (*m_currentApplyPass).apply();
     return ErrorCode::ok;
 }
 
@@ -89,8 +89,8 @@ error EffectTechnique::applyNextPass()
     {
         return ErrorCode::effectPassEnd;
     }
-    (*m_currentApplyPass).CommitVariables();
-    (*m_currentApplyPass).Apply();
+    (*m_currentApplyPass).commitVariables();
+    (*m_currentApplyPass).apply();
     return ErrorCode::ok;
 }
 

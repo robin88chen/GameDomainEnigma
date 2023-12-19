@@ -90,7 +90,7 @@ EffectTextureMapPolicy EffectTextureMapDto::ConvertToPolicy()
     EffectTextureMapPolicy policy;
     for (auto& mapping : m_textureMappings)
     {
-        policy.GetTuplePolicies().emplace_back(mapping.ConvertToPolicy());
+        policy.textureTuplePolicies().emplace_back(mapping.ConvertToPolicy());
     }
     return policy;
 }

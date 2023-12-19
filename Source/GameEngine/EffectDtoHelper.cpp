@@ -6,12 +6,12 @@ using namespace Enigma::Engine;
 
 EffectMaterialDtoHelper::EffectMaterialDtoHelper(const std::string& name)
 {
-    m_dto.Name() = name;
+    m_dto.name() = name;
 }
 
 EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(m_dto.Name(), filename, path_id);
+    m_dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(m_dto.name(), filename, path_id);
     return *this;
 }
 

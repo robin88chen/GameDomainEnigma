@@ -49,7 +49,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     m_originalAssetDesc = policy->AssetFactoryDesc();
     if (m_policy->GetAssetPolicy())
     {
-        m_assetName = m_policy->GetAssetPolicy()->Name();
+        m_assetName = m_policy->GetAssetPolicy()->name();
         CommandBus::post(std::make_shared<BuildAnimationAsset>(m_policy->GetAssetPolicy()));
     }
     else

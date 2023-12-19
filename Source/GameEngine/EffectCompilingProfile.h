@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectCompilingProfile.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -57,12 +57,12 @@ namespace Enigma::Engine
     {
         std::string m_name;
         std::vector<EffectTechniqueProfile> m_techniques;
-        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithSamplerState(const std::string& name);
-        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithBlendState(const std::string& name);
-        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithDepthState(const std::string& name);
-        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithRasterizerState(const std::string& name);
-        std::vector<std::reference_wrapper<EffectPassProfile>> FindPassesWithProgram(const std::string& name);
-        std::optional<unsigned int> FindSamplerIndexInPass(const std::string& pass_name, const std::string& sampler_name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> findPassesWithSamplerState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> findPassesWithBlendState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> findPassesWithDepthState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> findPassesWithRasterizerState(const std::string& name);
+        std::vector<std::reference_wrapper<EffectPassProfile>> findPassesWithProgram(const std::string& name);
+        std::optional<unsigned int> findSamplerIndexInPass(const std::string& pass_name, const std::string& sampler_name);
     };
 
 }

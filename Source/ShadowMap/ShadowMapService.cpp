@@ -239,10 +239,10 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
 
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_lightViewProjectionTransform);
+    var.assignValue(m_lightViewProjectionTransform);
 }
 
 void ShadowMapService::AssignShadowMapDimension(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_shadowMapDimensionBiasDensity);
+    var.assignValue(m_shadowMapDimensionBiasDensity);
 }

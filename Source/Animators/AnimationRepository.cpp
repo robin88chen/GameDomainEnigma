@@ -80,7 +80,7 @@ bool AnimationRepository::PopAssetBuilding()
     if (m_assetPolicies.empty()) return false;
     assert(m_assetBuilder);
     m_assetBuilder->BuildAnimationAsset(m_assetPolicies.front());
-    m_buildingAssetName = m_assetPolicies.front()->Name();
+    m_buildingAssetName = m_assetPolicies.front()->name();
     m_assetPolicies.pop();
     m_isAssetCurrentBuilding = true;
     return true;

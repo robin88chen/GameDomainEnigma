@@ -35,10 +35,10 @@ namespace Enigma::Engine
         public:
             EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff, bool has_existed) :
                 m_name(name), m_effect(eff), m_hasExisted(has_existed) {};
-            const std::string& getName() { return m_name; }
-            bool HasEffect() { return m_effect != nullptr; }
-            std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
-            bool HasExisted() { return m_hasExisted; }
+            const std::string& name() { return m_name; }
+            bool hasEffect() { return m_effect != nullptr; }
+            std::shared_ptr<EffectMaterial> effect() { return m_effect; }
+            bool hasExisted() { return m_hasExisted; }
         private:
             std::string m_name;
             std::shared_ptr<EffectMaterial> m_effect;
@@ -49,8 +49,8 @@ namespace Enigma::Engine
         public:
             CompileEffectMaterialFailed(const std::string& name, std::error_code er) :
                 m_name(name), m_error(er) {};
-            const std::string& getName() { return m_name; }
-            std::error_code GetErrorCode() const { return m_error; }
+            const std::string& name() { return m_name; }
+            std::error_code error() const { return m_error; }
         private:
             std::string m_name;
             std::error_code m_error;
@@ -60,8 +60,8 @@ namespace Enigma::Engine
         public:
             CompilingProfileDeserialized(const Frameworks::Ruid& ruid, const EffectCompilingProfile& profile) :
                 m_ruid(ruid), m_profile(profile) {};
-            const Frameworks::Ruid& getRuid() { return m_ruid; }
-            const EffectCompilingProfile& GetProfile() { return m_profile; }
+            const Frameworks::Ruid& ruid() { return m_ruid; }
+            const EffectCompilingProfile& profile() { return m_profile; }
         private:
             Frameworks::Ruid m_ruid;
             EffectCompilingProfile m_profile;
@@ -71,8 +71,8 @@ namespace Enigma::Engine
         public:
             DeserializeCompilingProfileFailed(const Frameworks::Ruid& ruid, std::error_code er) :
                 m_ruid(ruid), m_error(er) {};
-            const Frameworks::Ruid& getRuid() { return m_ruid; }
-            std::error_code GetErrorCode() const { return m_error; }
+            const Frameworks::Ruid& ruid() { return m_ruid; }
+            std::error_code error() const { return m_error; }
         private:
             Frameworks::Ruid m_ruid;
             std::error_code m_error;
@@ -86,23 +86,23 @@ namespace Enigma::Engine
         EffectCompiler& operator=(const EffectCompiler&) = delete;
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
-        CompilingProceed CompileEffectMaterial(const EffectMaterialPolicy& policy);
+        CompilingProceed compileEffectMaterial(const EffectMaterialPolicy& policy);
 
     private:
-        void CompileEffect(const EffectCompilingProfile& profile);
+        void compileEffect(const EffectCompilingProfile& profile);
 
-        void OnCompilingProfileDeserialized(const Frameworks::IEventPtr& e);
-        void OnDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e);
-        void OnShaderProgramBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildProgramFailed(const Frameworks::IEventPtr& e);
-        void OnSamplerStateCreated(const Frameworks::IEventPtr& e);
-        void OnBlendStateCreated(const Frameworks::IEventPtr& e);
-        void OnDepthStateCreated(const Frameworks::IEventPtr& e);
-        void OnRasterizerStateCreated(const Frameworks::IEventPtr& e);
+        void onCompilingProfileDeserialized(const Frameworks::IEventPtr& e);
+        void onDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e);
+        void onShaderProgramBuilt(const Frameworks::IEventPtr& e);
+        void onBuildProgramFailed(const Frameworks::IEventPtr& e);
+        void onSamplerStateCreated(const Frameworks::IEventPtr& e);
+        void onBlendStateCreated(const Frameworks::IEventPtr& e);
+        void onDepthStateCreated(const Frameworks::IEventPtr& e);
+        void onRasterizerStateCreated(const Frameworks::IEventPtr& e);
 
-        void TryBuildEffectPass(const std::string& program_name);
-        void TryBuildEffectTechniques(const std::string& name);
-        void TryBuildEffectMaterial();
+        void tryBuildEffectPass(const std::string& program_name);
+        void tryBuildEffectTechniques(const std::string& name);
+        void tryBuildEffectMaterial();
 
     private:
         struct BuiltEffectPassMeta
@@ -115,8 +115,8 @@ namespace Enigma::Engine
             std::string m_name;
             std::vector<BuiltEffectPassMeta> m_passes;
             std::optional<EffectTechnique> m_technique;
-            bool HasAllPassBuilt();
-            std::vector<EffectPass> RetrieveEffectPasses();
+            bool hasAllPassBuilt();
+            std::vector<EffectPass> retrieveEffectPasses();
         };
     private:
         EffectMaterialManager* m_hostManager;

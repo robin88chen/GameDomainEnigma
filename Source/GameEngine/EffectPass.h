@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectPass.h
  * \brief  Effect pass value object
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
@@ -51,19 +51,19 @@ namespace Enigma::Engine
         EffectPass& operator=(const EffectPass& pass);
         EffectPass& operator=(EffectPass&& pass) noexcept;
 
-        const std::string& getName() { return m_name; }
+        const std::string& name() { return m_name; }
 
         void mappingAutoVariables();
-        void CommitVariables();
-        void Apply();
+        void commitVariables();
+        void apply();
 
-        stdext::optional_ref<EffectVariable> GetVariableByName(const std::string& name);
-        stdext::optional_ref<EffectVariable> GetVariableBySemantic(const std::string& semantic);
-        stdext::optional_ref<const EffectVariable> GetVariableByName(const std::string& name) const;
-        stdext::optional_ref<const EffectVariable> GetVariableBySemantic(const std::string& semantic) const;
+        stdext::optional_ref<EffectVariable> getVariableByName(const std::string& name);
+        stdext::optional_ref<EffectVariable> getVariableBySemantic(const std::string& semantic);
+        stdext::optional_ref<const EffectVariable> getVariableByName(const std::string& name) const;
+        stdext::optional_ref<const EffectVariable> getVariableBySemantic(const std::string& semantic) const;
 
     private:
-        void BuildVariables();
+        void buildVariables();
 
     private:
         std::string m_name;

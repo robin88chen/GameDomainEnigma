@@ -18,7 +18,7 @@ JsonFileDtoDeserializer::JsonFileDtoDeserializer() : IDtoDeserializer()
     m_gateway = std::make_shared<DtoJsonGateway>();
 }
 
-void JsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
+void JsonFileDtoDeserializer::invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
     assert(m_gateway);
     IFilePtr readFile = FileSystem::FileSystem::instance()->openFile(Filename(param), FileSystem::read | FileSystem::binary);

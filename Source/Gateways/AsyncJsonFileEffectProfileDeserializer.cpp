@@ -20,7 +20,7 @@ AsyncJsonFileEffectProfileDeserializer::AsyncJsonFileEffectProfileDeserializer()
 
 }
 
-void AsyncJsonFileEffectProfileDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
+void AsyncJsonFileEffectProfileDeserializer::invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
     Platforms::Debug::Printf("async invoke deserialize %s", param.c_str());
     m_ruid = ruid_deserializing;

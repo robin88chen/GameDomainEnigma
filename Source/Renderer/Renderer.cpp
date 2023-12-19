@@ -115,7 +115,7 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
 error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     SceneGraph::Spatial::SpatialFlags accept_filter, SceneGraph::Spatial::SpatialFlags reject_filter)
 {
-    const size_t count = visible_set.GetCount();
+    const size_t count = visible_set.getCount();
     if (count <= 0) return ErrorCode::ok;
     const SceneGraph::VisibleSet::SpatialVector& spatial_array = visible_set.GetObjectSet();
     for (const auto& sp : spatial_array)

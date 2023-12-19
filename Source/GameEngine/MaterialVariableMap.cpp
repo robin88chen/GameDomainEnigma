@@ -55,67 +55,67 @@ void MaterialVariableMap::insertAutoVariableFunctionToMap(const std::string& sem
 void MaterialVariableMap::setAutoVariableCommitFunction(EffectVariable& var)
 {
     assert(m_instance);
-    auto iter = m_instance->m_assignFuncMap.find(var.GetSemantic());
+    auto iter = m_instance->m_assignFuncMap.find(var.semantic());
     if (iter != m_instance->m_assignFuncMap.end())  // found
     {
-        var.SetValueAssignFunction(iter->second);
+        var.setValueAssignFunction(iter->second);
     }
 }
 
 void MaterialVariableMap::assignCameraViewTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxViewTransform);
+    var.assignValue(m_instance->m_mxViewTransform);
 }
 
 void MaterialVariableMap::assignCameraViewInverseTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxViewInvTransform);
+    var.assignValue(m_instance->m_mxViewInvTransform);
 }
 
 void MaterialVariableMap::assignCameraProjectionTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxProjTransform);
+    var.assignValue(m_instance->m_mxProjTransform);
 }
 
 void MaterialVariableMap::assignCameraPosition(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_vecCameraPos);
+    var.assignValue(m_instance->m_vecCameraPos);
 }
 
 void MaterialVariableMap::assignWorldTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxWorldTransform);
+    var.assignValue(m_instance->m_mxWorldTransform);
 }
 
 void MaterialVariableMap::assignWorldInverseTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxWorldInvTransform);
+    var.assignValue(m_instance->m_mxWorldInvTransform);
 }
 
 void MaterialVariableMap::assignFaceToCameraWorldTransform(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_mxFaceToCameraWorldTransform);
+    var.assignValue(m_instance->m_mxFaceToCameraWorldTransform);
 }
 
 void MaterialVariableMap::assignCameraViewProjectionTransform(EffectVariable& var)
 {
     assert(m_instance);
     Matrix4 vp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform;
-    var.AssignValue(vp);
+    var.assignValue(vp);
 }
 
 void MaterialVariableMap::assignWorldViewProjectionTransform(EffectVariable& var)
 {
     assert(m_instance);
     Matrix4 wvp = m_instance->m_mxProjTransform * m_instance->m_mxViewTransform * m_instance->m_mxWorldTransform;
-    var.AssignValue(wvp);
+    var.assignValue(wvp);
 }
 
 void MaterialVariableMap::assignWorldViewProjectionInverseTransform(EffectVariable& var)
@@ -123,7 +123,7 @@ void MaterialVariableMap::assignWorldViewProjectionInverseTransform(EffectVariab
     assert(m_instance);
     Matrix4 wvpInv = m_instance->m_mxWorldInvTransform * m_instance->m_mxViewInvTransform * m_instance->
         m_mxProjInvTransform;
-    var.AssignValue(wvpInv);
+    var.assignValue(wvpInv);
 }
 
 void MaterialVariableMap::assignWorldViewInverseTransposeMatrix(EffectVariable& var)
@@ -131,61 +131,61 @@ void MaterialVariableMap::assignWorldViewInverseTransposeMatrix(EffectVariable& 
     assert(m_instance);
     Matrix4 wvInvTrans = m_instance->m_mxWorldInvTransform * m_instance->m_mxViewInvTransform;
     wvInvTrans = wvInvTrans.Transpose();
-    var.AssignValue(wvInvTrans);
+    var.assignValue(wvInvTrans);
 }
 
 void MaterialVariableMap::assignFrustumTangentFov(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_vecTangentFov);
+    var.assignValue(m_instance->m_vecTangentFov);
 }
 
 void MaterialVariableMap::assignAmbientLightColor(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(Vector4((float*)m_instance->m_colorAmbientLight));
+    var.assignValue(Vector4((float*)m_instance->m_colorAmbientLight));
 }
 
 void MaterialVariableMap::assignSunLightColor(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(Vector4((float*)m_instance->m_colorSunLight));
+    var.assignValue(Vector4((float*)m_instance->m_colorSunLight));
 }
 
 void MaterialVariableMap::assignSunLightDirection(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_vecSunLightDir);
+    var.assignValue(m_instance->m_vecSunLightDir);
 }
 
 void MaterialVariableMap::assignPointLightPosition(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValues(m_instance->m_vecPointLightPos, m_instance->m_countPointLightInfo);
+    var.assignValues(m_instance->m_vecPointLightPos, m_instance->m_countPointLightInfo);
 }
 
 void MaterialVariableMap::assignPointLightColor(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValues(m_instance->m_vecPointLightColorInVector4, m_instance->m_countPointLightInfo);
+    var.assignValues(m_instance->m_vecPointLightColorInVector4, m_instance->m_countPointLightInfo);
 }
 
 void MaterialVariableMap::assignPointLightAttenuation(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValues(m_instance->m_vecPointLightAttenuation, m_instance->m_countPointLightInfo);
+    var.assignValues(m_instance->m_vecPointLightAttenuation, m_instance->m_countPointLightInfo);
 }
 
 void MaterialVariableMap::assignPointLightCount(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(static_cast<int>(m_instance->m_countPointLightInfo));
+    var.assignValue(static_cast<int>(m_instance->m_countPointLightInfo));
 }
 
 void MaterialVariableMap::assignViewPortDimension(EffectVariable& var)
 {
     assert(m_instance);
-    var.AssignValue(m_instance->m_vecViewPortDimension);
+    var.assignValue(m_instance->m_vecViewPortDimension);
 }
 void MaterialVariableMap::useCameraParameter(const Vector3& pos, const Matrix4& view, const Matrix4& proj)
 {

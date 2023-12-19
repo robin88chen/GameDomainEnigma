@@ -155,22 +155,22 @@ void CascadeShadowMapService::UpdateSunLightDirection(const MathLib::Vector3& di
 
 void CascadeShadowMapService::AssignLightViewProjectionTransforms(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_cascadeLightViewProjections, static_cast<unsigned>(m_cascadeLightViewProjections.size()));
+    var.assignValues(m_cascadeLightViewProjections, static_cast<unsigned>(m_cascadeLightViewProjections.size()));
 }
 
 void CascadeShadowMapService::AssignCascadeDistances(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_cascadeDistances);
+    var.assignValue(m_cascadeDistances);
 }
 
 void CascadeShadowMapService::AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_cascadeTextureCoordTransforms, static_cast<unsigned>(m_cascadeTextureCoordTransforms.size()));
+    var.assignValues(m_cascadeTextureCoordTransforms, static_cast<unsigned>(m_cascadeTextureCoordTransforms.size()));
 }
 
 void CascadeShadowMapService::AssignSliceCount(Engine::EffectVariable& var)
 {
-    var.AssignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
+    var.assignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
 }
 
 void CascadeShadowMapService::AssignSliceDimension(Engine::EffectVariable& var)

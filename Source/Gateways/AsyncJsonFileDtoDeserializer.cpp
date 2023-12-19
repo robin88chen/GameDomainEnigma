@@ -18,7 +18,7 @@ AsyncJsonFileDtoDeserializer::AsyncJsonFileDtoDeserializer() : IDtoDeserializer(
     m_gateway = std::make_shared<DtoJsonGateway>();
 }
 
-void AsyncJsonFileDtoDeserializer::InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
+void AsyncJsonFileDtoDeserializer::invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param)
 {
     Platforms::Debug::Printf("async invoke deserialize %s", param.c_str());
     m_ruid = ruid_deserializing;

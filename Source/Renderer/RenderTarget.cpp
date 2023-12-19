@@ -436,7 +436,7 @@ void RenderTarget::OnTextureCreated(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_backSurface) return;
     if (ev->getName() != m_backSurface->getName()) return;
-    m_renderTargetTexture = ev->GetTexture();
+    m_renderTargetTexture = ev->getTexture();
     m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
     Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->getName()));
 }

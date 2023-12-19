@@ -113,7 +113,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     {
         for (auto& t : m_metaDto->textureMaps()[i].TextureMappings())
         {
-            m_builtTextures[i].AppendTextureSemantic(t.Semantic());
+            m_builtTextures[i].appendTextureSemantic(t.Semantic());
             CommandBus::post(std::make_shared<LoadTexture>(std::get<TexturePolicy>(t.ConvertToPolicy())));
         }
     }
@@ -164,12 +164,12 @@ void MeshPrimitiveBuilder::onTextureLoadedOrCreated(const Frameworks::IEventPtr&
     if (const auto ev = std::dynamic_pointer_cast<TextureLoaded>(e))
     {
         tex_name = ev->getName();
-        tex_loaded = ev->GetTexture();
+        tex_loaded = ev->getTexture();
     }
     else if (const auto res = std::dynamic_pointer_cast<TextureCreated>(e))
     {
         tex_name = res->getName();
-        tex_loaded = res->GetTexture();
+        tex_loaded = res->getTexture();
     }
     else
     {
@@ -222,9 +222,9 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     }
     for (auto& tex : m_builtTextures)
     {
-        for (unsigned ti = 0; ti < tex.GetCount(); ti++)
+        for (unsigned ti = 0; ti < tex.getCount(); ti++)
         {
-            if (tex.GetTexture(ti) == nullptr) return;
+            if (tex.getTexture(ti) == nullptr) return;
         }
     }
     m_builtPrimitive->changeEffectMaterials(m_builtEffects);
@@ -244,7 +244,7 @@ std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const std:
     assert(m_metaDto);
     for (unsigned i = 0; i < m_metaDto->effects().size(); i++)
     {
-        if ((m_metaDto->effects()[i].Name() == name) && (m_builtEffects[i] == nullptr)) return i;
+        if ((m_metaDto->effects()[i].name() == name) && (m_builtEffects[i] == nullptr)) return i;
     }
     return std::nullopt;
 }
@@ -257,7 +257,7 @@ std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingT
         for (unsigned tp = 0; tp < m_metaDto->textureMaps()[tex].TextureMappings().size(); tp++)
         {
             if ((m_metaDto->textureMaps()[tex].TextureMappings()[tp].TextureName() == name)
-                && (m_builtTextures[tex].GetTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
+                && (m_builtTextures[tex].getTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
         }
     }
     return std::nullopt;

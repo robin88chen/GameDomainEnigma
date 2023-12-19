@@ -24,7 +24,7 @@ namespace Enigma::Engine
         IEffectCompilingProfileDeserializer& operator=(const IEffectCompilingProfileDeserializer&) = delete;
         IEffectCompilingProfileDeserializer& operator=(IEffectCompilingProfileDeserializer&&) = delete;
 
-        virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
+        virtual void invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
     };
 }
 

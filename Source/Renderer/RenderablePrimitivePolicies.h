@@ -33,8 +33,8 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const Engine::PrimitiveId& id() const { return m_id; }
         Engine::PrimitiveId& id() { return m_id; }
-        [[nodiscard]] const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        std::string& name() { return m_name; }
         [[nodiscard]] const std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() const { return m_dtoDeserializer; }
         std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() { return m_dtoDeserializer; }
 

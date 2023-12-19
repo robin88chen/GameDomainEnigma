@@ -26,7 +26,7 @@ namespace Enigma::Engine
             TextureLoaded(const std::string& name, const TexturePtr& tex) :
                 m_name(name), m_texture(tex) {};
             const std::string& GetTextureName() const { return m_name; }
-            const TexturePtr& GetTexture() const { return m_texture; }
+            const TexturePtr& getTexture() const { return m_texture; }
         private:
             std::string m_name;
             TexturePtr m_texture;

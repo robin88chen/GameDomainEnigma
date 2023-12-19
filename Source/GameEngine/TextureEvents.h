@@ -22,7 +22,7 @@ namespace Enigma::Engine
             : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
 
         const std::string& getName() { return m_name; }
-        std::shared_ptr<Texture> GetTexture() { return m_texture; }
+        std::shared_ptr<Texture> getTexture() { return m_texture; }
     private:
         std::string m_name;
         std::shared_ptr<Texture> m_texture;
@@ -47,7 +47,7 @@ namespace Enigma::Engine
             : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
 
         const std::string& getName() { return m_name; }
-        std::shared_ptr<Texture> GetTexture() { return m_texture; }
+        std::shared_ptr<Texture> getTexture() { return m_texture; }
     private:
         std::string m_name;
         std::shared_ptr<Texture> m_texture;

@@ -23,8 +23,8 @@ namespace Enigma::Engine
     public:
         EffectTextureMapPolicy() = default;
 
-        [[nodiscard]] const std::vector<TextureTuplePolicy>& GetTuplePolicies() const { return m_tuplePolicies; }
-        std::vector<TextureTuplePolicy>& GetTuplePolicies() { return m_tuplePolicies; }
+        [[nodiscard]] const std::vector<TextureTuplePolicy>& textureTuplePolicies() const { return m_tuplePolicies; }
+        std::vector<TextureTuplePolicy>& textureTuplePolicies() { return m_tuplePolicies; }
 
     protected:
         std::vector<TextureTuplePolicy> m_tuplePolicies;

@@ -14,7 +14,7 @@ EffectMaterialDto::EffectMaterialDto() : m_factoryDesc(EffectMaterial::TYPE_RTTI
 EffectMaterialDto EffectMaterialDto::fromGenericDto(const GenericDto& dto)
 {
     EffectMaterialDto effect;
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) effect.Name() = v.value();
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) effect.name() = v.value();
     effect.factoryDesc() = dto.GetRtti();
     return effect;
 }

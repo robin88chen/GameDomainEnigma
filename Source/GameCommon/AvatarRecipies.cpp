@@ -86,8 +86,8 @@ GenericDto ReplaceAvatarMaterial::serializeDto() const
 void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.Name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.Name()) return;
+    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.name().empty())) return;
+    if (m_oldMaterialName == m_newMaterialDto.name()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
     m_primitive = prim;
@@ -114,8 +114,8 @@ void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
 void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
 {
     if (!mesh) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.Name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.Name()) return;
+    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.name().empty())) return;
+    if (m_oldMaterialName == m_newMaterialDto.name()) return;
 
     unsigned int total_mat_count = mesh->getEffectMaterialCount();
     if (total_mat_count == 0) return;
@@ -237,7 +237,7 @@ void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getRequestRuid() != m_requsetRuid) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->changeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->changeSemanticTexture({ m_textureDto.Semantic(), ev->getTexture(), m_textureDto.ArrayIndex() });
 }
 
 void ChangeAvatarTexture::OnLoadTextureFailed(const Frameworks::IEventPtr& e)

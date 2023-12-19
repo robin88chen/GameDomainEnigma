@@ -30,7 +30,7 @@ namespace Enigma::SceneGraph
         VisibleSet& operator=(const VisibleSet&) = default;
         VisibleSet& operator=(VisibleSet&&) = default;
 
-        size_t GetCount() const;
+        size_t getCount() const;
         SpatialPtr GetVisibleObject(size_t index);
         const SpatialVector& GetObjectSet() const;
 

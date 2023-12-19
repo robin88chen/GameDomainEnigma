@@ -42,7 +42,7 @@ ModelAnimationAssetDto ModelAnimationAssetDto::fromGenericDto(const Engine::Gene
 {
     ModelAnimationAssetDto model;
     model.m_factoryDesc = dto.GetRtti();
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.Name() = v.value();
+    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.name() = v.value();
     if (const auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) model.MeshNodeNames() = v.value();
     if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_TIME_SRTS)) model.TimeSRTs() = v.value();
     return model;

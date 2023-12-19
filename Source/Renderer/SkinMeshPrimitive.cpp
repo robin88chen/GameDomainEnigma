@@ -134,6 +134,6 @@ void SkinMeshPrimitive::LooseSegmentBoneMatrix(unsigned index)
 
 void SkinMeshPrimitive::BoneMatrixAssign(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_boneEffectMatrix, static_cast<unsigned>(m_boneEffectMatrix.size()));
+    var.assignValues(m_boneEffectMatrix, static_cast<unsigned>(m_boneEffectMatrix.size()));
 }
 

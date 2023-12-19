@@ -63,10 +63,10 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onTick()
     assert(m_compiler);
     auto request = m_requests.front();
     m_currentCompilingRuid = request->getRuid();
-    m_currentCompilingEffectName = request->GetDto().Name();
+    m_currentCompilingEffectName = request->GetDto().name();
     m_requests.pop();
     auto policy = request->GetDto().ConvertToPolicy(m_effectDeserializer);
-    auto proceed = m_compiler->CompileEffectMaterial(policy);
+    auto proceed = m_compiler->compileEffectMaterial(policy);
     m_isCurrentCompiling = static_cast<bool>(proceed);
     return Frameworks::ServiceResult::Pendding;
 }
@@ -112,17 +112,17 @@ void EffectMaterialManager::onCompilerEffectMaterialCompiled(const Frameworks::I
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EffectCompiler::EffectMaterialCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_currentCompilingEffectName) return;
+    if (ev->name() != m_currentCompilingEffectName) return;
 
     std::lock_guard lock(m_sourceMapLock);
-    if (!ev->HasExisted())
+    if (!ev->hasExisted())
     {
-        EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->GetEffect());
+        EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->effect());
         source->linkSource();
-        m_sourceMaterials.insert_or_assign(ev->getName(), source);
+        m_sourceMaterials.insert_or_assign(ev->name(), source);
     }
     Frameworks::EventPublisher::post(std::make_shared<Engine::EffectMaterialCompiled>(
-        m_currentCompilingRuid, ev->getName(), duplicateEffectMaterial(ev->getName())));
+        m_currentCompilingRuid, ev->name(), duplicateEffectMaterial(ev->name())));
     m_isCurrentCompiling = false;
 }
 
@@ -132,9 +132,9 @@ void EffectMaterialManager::onCompilerCompileEffectMaterialFailed(const Framewor
     auto ev = std::dynamic_pointer_cast<EffectCompiler::CompileEffectMaterialFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n",
-        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->name().c_str(), ev->error().message().c_str());
     Frameworks::EventPublisher::post(std::make_shared<Engine::CompileEffectMaterialFailed>(
-        m_currentCompilingRuid, ev->getName(), ev->GetErrorCode()));
+        m_currentCompilingRuid, ev->name(), ev->error()));
     m_isCurrentCompiling = false;
 }
 

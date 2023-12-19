@@ -28,8 +28,8 @@ namespace Enigma::Engine
         EffectMaterialDto& operator=(const EffectMaterialDto&) = default;
         EffectMaterialDto& operator=(EffectMaterialDto&&) = default;
 
-        [[nodiscard]] const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        std::string& name() { return m_name; }
         [[nodiscard]] const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 

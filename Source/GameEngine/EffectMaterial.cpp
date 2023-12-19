@@ -76,7 +76,7 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
 GenericDto EffectMaterial::serializeDto()
 {
     EffectMaterialDto dto;
-    dto.Name() = m_name;
+    dto.name() = m_name;
     dto.factoryDesc() = m_factoryDesc;
     return dto.toGenericDto();
 }
@@ -142,7 +142,7 @@ std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::getEffectVaria
     {
         for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (auto eff_var = tech.GetPassByIndex(i).GetVariableByName(name))
+            if (auto eff_var = tech.getPassByIndex(i).getVariableByName(name))
                 result_list.emplace_back(eff_var.value());
         }
     }
@@ -158,7 +158,7 @@ std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::getEffectVaria
     {
         for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (auto eff_var = tech.GetPassByIndex(i).GetVariableBySemantic(semantic))
+            if (auto eff_var = tech.getPassByIndex(i).getVariableBySemantic(semantic))
                 result_list.emplace_back(eff_var.value());
         }
     }
@@ -172,8 +172,8 @@ stdext::optional_ref<EffectVariable> EffectMaterial::getEffectVariableInPassByNa
     {
         for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).getName() == pass_name)
-                return tech.GetPassByIndex(i).GetVariableByName(name);
+            if (tech.getPassByIndex(i).name() == pass_name)
+                return tech.getPassByIndex(i).getVariableByName(name);
         }
     }
     return std::nullopt;
@@ -186,8 +186,8 @@ stdext::optional_ref<EffectVariable> EffectMaterial::getEffectVariableInPassBySe
     {
         for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).getName() == pass_name)
-                return tech.GetPassByIndex(i).GetVariableBySemantic(semantic);
+            if (tech.getPassByIndex(i).name() == pass_name)
+                return tech.getPassByIndex(i).getVariableBySemantic(semantic);
         }
     }
     return std::nullopt;
@@ -199,7 +199,7 @@ void EffectMaterial::setVariableAssignFunc(const std::string& semantic, EffectVa
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().SetValueAssignFunction(fn);
+        var.get().setValueAssignFunction(fn);
     }
 }
 
@@ -228,7 +228,7 @@ void EffectMaterial::assignVariableValue(const std::string& semantic, std::any v
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().AssignValue(value);
+        var.get().assignValue(value);
     }
 }
 
@@ -238,20 +238,20 @@ void EffectMaterial::assignVariableValues(const std::string& semantic, std::any 
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().AssignValues(value_array, value_count);
+        var.get().assignValues(value_array, value_count);
     }
 }
 
 void EffectMaterial::assignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value)
 {
     auto var = getEffectVariableInPassBySemantic(pass_name, semantic);
-    if (var) var.value().get().AssignValue(std::move(value));
+    if (var) var.value().get().assignValue(std::move(value));
 }
 
 void EffectMaterial::assignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned value_count)
 {
     auto var = getEffectVariableInPassBySemantic(pass_name, semantic);
-    if (var) var.value().get().AssignValues(std::move(value_array), value_count);
+    if (var) var.value().get().assignValues(std::move(value_array), value_count);
 }
 
 void EffectMaterial::mappingAutoVariables()
@@ -261,7 +261,7 @@ void EffectMaterial::mappingAutoVariables()
     {
         for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            tech.GetPassByIndex(i).mappingAutoVariables();
+            tech.getPassByIndex(i).mappingAutoVariables();
         }
     }
 }
@@ -270,10 +270,10 @@ void EffectMaterial::selectTechnique()
 {
     std::string combinedTechName = m_selectedRendererTechName + "/" + m_selectedVisualTechName;
     if ((m_currentTechnique != m_effectTechniques.end())
-        && (m_currentTechnique->getName() == combinedTechName)) return;
+        && (m_currentTechnique->name() == combinedTechName)) return;
     if (m_effectTechniques.empty()) return;
     auto iter = std::find_if(m_effectTechniques.begin(), m_effectTechniques.end(),
-        [=](auto& t) -> bool { return t.getName() == combinedTechName; });
+        [=](auto& t) -> bool { return t.name() == combinedTechName; });
     if (iter != m_effectTechniques.end())
     {
         m_currentTechnique = iter;

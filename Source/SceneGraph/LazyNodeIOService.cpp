@@ -170,7 +170,7 @@ void LazyNodeIOService::InstanceNextLazyNode()
     if (m_dtoDeserializer)
     {
         m_ruidDeserializing = Ruid::generate();
-        m_dtoDeserializer->InvokeDeserialize(m_ruidDeserializing, node->factoryDesc().GetDeferredFilename());
+        m_dtoDeserializer->invokeDeserialize(m_ruidDeserializing, node->factoryDesc().GetDeferredFilename());
     }
     else
     {

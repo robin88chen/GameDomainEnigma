@@ -24,7 +24,7 @@ namespace Enigma::Engine
         IDtoDeserializer& operator=(const IDtoDeserializer&) = delete;
         IDtoDeserializer& operator=(IDtoDeserializer&&) = delete;
 
-        virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
+        virtual void invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) = 0;
     };
 }
 

@@ -102,7 +102,7 @@ void PrefabIOService::deserializePrefab(const Ruid& dto_ruid, const std::string&
     if (prefab_at_path.empty()) return failPrefabLoading(ErrorCode::emptyPrefabPath);
     if (!m_dtoDeserializer) return failPrefabLoading(ErrorCode::nullDeserializer);
 
-    m_dtoDeserializer->InvokeDeserialize(dto_ruid, prefab_at_path);
+    m_dtoDeserializer->invokeDeserialize(dto_ruid, prefab_at_path);
 }
 
 void PrefabIOService::completePawnPrefabLoading(const std::shared_ptr<SceneGraph::Pawn>& pawn)

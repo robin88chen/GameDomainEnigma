@@ -112,7 +112,7 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
 void ModelPrimitiveBuilder::CompleteModelPrimitive()
 {
     if (!m_policy) return;
-    EventPublisher::post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
+    EventPublisher::post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->name(), m_builtPrimitive));
 }
 
 void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
@@ -153,7 +153,7 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
     {
         /*if (meta.m_ruidPolicy == ev->ruid())
         {
-            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->error()));
+            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->error()));
             return;
         }*/
     }
@@ -180,5 +180,5 @@ void ModelPrimitiveBuilder::OnBuildModelAnimatorFailed(const Frameworks::IEventP
     const auto ev = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed>(e);
     if (!ev) return;
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
-    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->GetErrorCode()));
 }

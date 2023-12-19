@@ -153,14 +153,14 @@ void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<TextureLoader::TextureLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_textureMapLock };
-    m_textures.insert_or_assign(ev->GetTextureName(), ev->GetTexture());
+    m_textures.insert_or_assign(ev->GetTextureName(), ev->getTexture());
     if (m_currentJob == TexturePolicy::JobType::Load)
     {
-        Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture()));
+        Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(m_currentRequestRuid, ev->GetTextureName(), ev->getTexture()));
     }
     else if (m_currentJob == TexturePolicy::JobType::Create)
     {
-        Frameworks::EventPublisher::post(std::make_shared<TextureCreated>(m_currentRequestRuid, ev->GetTextureName(), ev->GetTexture()));
+        Frameworks::EventPublisher::post(std::make_shared<TextureCreated>(m_currentRequestRuid, ev->GetTextureName(), ev->getTexture()));
     }
     m_currentJob = TexturePolicy::JobType::None;
     m_currentRequesting = false;

@@ -12,13 +12,14 @@
 #include <memory>
 #include <functional>
 #include <atomic>
+#include <list>
 
 namespace Enigma::Engine
 {
     class EffectMaterialSource : public std::enable_shared_from_this<EffectMaterialSource>
     {
     public:
-        EffectMaterialSource();
+        EffectMaterialSource(const EffectMaterialId& id);
         EffectMaterialSource(std::shared_ptr<EffectMaterial> material);
         EffectMaterialSource(const EffectMaterialSource&) = delete;
         EffectMaterialSource(EffectMaterialSource&&) = delete;
@@ -26,7 +27,7 @@ namespace Enigma::Engine
         EffectMaterialSource& operator=(const EffectMaterialSource&) = delete;
         EffectMaterialSource& operator=(EffectMaterialSource&&) = delete;
 
-        const std::string& getName() const;
+        const EffectMaterialId& id() const { return m_id; };
 
         void linkSource();
 
@@ -38,7 +39,10 @@ namespace Enigma::Engine
         void duplicatedEffectDeleter(EffectMaterial* effect);
 
     private:
-        std::shared_ptr<EffectMaterial> m_effectMaterial;
+        EffectMaterialId m_id;
+        Frameworks::LazyStatus m_lazyStatus;
+        std::shared_ptr<EffectMaterial> m_sourceEffectMaterial;
+        std::list<std::shared_ptr<EffectMaterial>> m_duplicatedEffects;
         std::atomic_uint32_t m_duplicateCount;
     };
     using EffectMaterialSourcePtr = std::shared_ptr<EffectMaterialSource>;

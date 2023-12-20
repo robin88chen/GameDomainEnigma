@@ -6,12 +6,12 @@ using namespace Enigma::Engine;
 
 EffectMaterialDtoHelper::EffectMaterialDtoHelper(const std::string& name)
 {
-    m_dto.name() = name;
+    m_dto.id() = name;
 }
 
 EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(m_dto.name(), filename, path_id);
+    m_dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(m_dto.id().name(), filename, path_id);
     return *this;
 }
 
@@ -31,7 +31,7 @@ EffectTextureMapDtoHelper::EffectTextureMapDtoHelper()
 }
 
 EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const std::string& filename, const std::string& path_id,
-       const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic)
+    const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;
     tex.JobType() = TexturePolicy::JobType::Load;
@@ -44,7 +44,7 @@ EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const std::
     return *this;
 }
 
-EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const MathLib::Dimension<unsigned>& dimension, 
+EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const MathLib::Dimension<unsigned>& dimension,
     unsigned surface_count, const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;

@@ -244,7 +244,7 @@ std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const std:
     assert(m_metaDto);
     for (unsigned i = 0; i < m_metaDto->effects().size(); i++)
     {
-        if ((m_metaDto->effects()[i].name() == name) && (m_builtEffects[i] == nullptr)) return i;
+        if ((m_metaDto->effects()[i].id().name() == name) && (m_builtEffects[i] == nullptr)) return i;
     }
     return std::nullopt;
 }

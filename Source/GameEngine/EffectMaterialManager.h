@@ -72,7 +72,7 @@ namespace Enigma::Engine
         SourceMaterialMap m_sourceMaterials;
         std::recursive_mutex m_sourceMapLock;
 
-        EffectCompiler* m_compiler;
+        //EffectCompiler* m_compiler;
         std::queue<std::shared_ptr<CompileEffectMaterial>> m_requests;
         Frameworks::Ruid m_currentCompilingRuid;
         std::string m_currentCompilingEffectName;

@@ -79,7 +79,7 @@ namespace Enigma::Engine
         };
 
     public:
-        EffectCompiler(EffectMaterialManager* host);
+        EffectCompiler();
         EffectCompiler(const EffectCompiler&) = delete;
         EffectCompiler(EffectCompiler&&) = delete;
         ~EffectCompiler();
@@ -87,9 +87,9 @@ namespace Enigma::Engine
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
         CompilingProceed compileEffectMaterial(const EffectMaterialPolicy& policy);
+        void compileEffect(const EffectCompilingProfile& profile);
 
     private:
-        void compileEffect(const EffectCompilingProfile& profile);
 
         void onCompilingProfileDeserialized(const Frameworks::IEventPtr& e);
         void onDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e);

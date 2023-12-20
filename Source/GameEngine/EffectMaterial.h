@@ -13,6 +13,8 @@
 #include "GraphicKernel/IShaderProgram.h"
 #include "Frameworks/Rtti.h"
 #include "FactoryDesc.h"
+#include "EffectMaterialId.h"
+#include "Frameworks/LazyStatus.h"
 #include <string>
 #include <system_error>
 #include <list>
@@ -27,6 +29,7 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
+        EffectMaterial(const EffectMaterialId& id);
         EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
         EffectMaterial(const EffectMaterial&);
         EffectMaterial(EffectMaterial&&) noexcept;
@@ -36,10 +39,13 @@ namespace Enigma::Engine
 
         GenericDto serializeDto();
 
-        const std::string& getName() { return m_name; };
+        const EffectMaterialId& id() const { return m_id; };
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
+
+        const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
 
         void setSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
         std::shared_ptr<EffectMaterialSource> getEffectMaterialSource() { return m_sourceMaterial.lock(); };
@@ -80,9 +86,11 @@ namespace Enigma::Engine
             InstancedAssignFuncList;
 
     protected:
+        EffectMaterialId m_id;
         FactoryDesc m_factoryDesc;
 
-        std::string m_name;
+        Frameworks::LazyStatus m_lazyStatus;
+
         std::weak_ptr<EffectMaterialSource> m_sourceMaterial;
 
         EffectTechniqueArray m_effectTechniques;

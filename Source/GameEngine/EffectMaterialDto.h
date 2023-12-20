@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterialDto.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -10,6 +10,7 @@
 
 #include "FactoryDesc.h"
 #include "GenericDto.h"
+#include "EffectMaterialId.h"
 #include <string>
 #include <memory>
 
@@ -28,8 +29,8 @@ namespace Enigma::Engine
         EffectMaterialDto& operator=(const EffectMaterialDto&) = default;
         EffectMaterialDto& operator=(EffectMaterialDto&&) = default;
 
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        std::string& name() { return m_name; }
+        [[nodiscard]] const EffectMaterialId& id() const { return m_id; }
+        EffectMaterialId& id() { return m_id; }
         [[nodiscard]] const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
@@ -39,7 +40,7 @@ namespace Enigma::Engine
         EffectMaterialPolicy ConvertToPolicy(const std::shared_ptr<IEffectCompilingProfileDeserializer>& deserializer) const;
 
     protected:
-        std::string m_name;
+        EffectMaterialId m_id;
         FactoryDesc m_factoryDesc;
     };
 }

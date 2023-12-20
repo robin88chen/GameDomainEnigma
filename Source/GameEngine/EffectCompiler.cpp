@@ -14,9 +14,9 @@ using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 
-EffectCompiler::EffectCompiler(EffectMaterialManager* host) : m_ruidDeserializing()
+EffectCompiler::EffectCompiler() : m_ruidDeserializing()
 {
-    m_hostManager = host;
+    //m_hostManager = host;
     m_hasMaterialProduced = false;
 
     m_onCompilingProfileDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->onCompilingProfileDeserialized(e); });
@@ -309,7 +309,7 @@ void EffectCompiler::tryBuildEffectMaterial()
     auto effect_material = std::make_shared<EffectMaterial>(m_profile.m_name, effect_techniques);
     if (!m_policy.parameter().empty())
     {
-        effect_material->factoryDesc().ClaimFromResource(effect_material->getName(), m_policy.parameter());
+        effect_material->factoryDesc().ClaimFromResource(effect_material->id().name(), m_policy.parameter());
     }
     EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
     m_hasMaterialProduced = true;

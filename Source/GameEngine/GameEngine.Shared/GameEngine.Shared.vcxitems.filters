@@ -76,6 +76,9 @@
     <Filter Include="Queries">
       <UniqueIdentifier>{961b9d78-91ba-45af-999b-a803b3ceeb2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material\Repository">
+      <UniqueIdentifier>{0a23c628-c608-412e-acf6-5f02d5829c55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -291,6 +294,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -427,6 +439,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp">
+      <Filter>Effect Material\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp">
+      <Filter>Effect Material\Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

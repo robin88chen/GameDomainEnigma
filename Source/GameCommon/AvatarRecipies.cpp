@@ -86,8 +86,8 @@ GenericDto ReplaceAvatarMaterial::serializeDto() const
 void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.name()) return;
+    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.id().name().empty())) return;
+    if (m_oldMaterialName == m_newMaterialDto.id().name()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
     m_primitive = prim;
@@ -114,8 +114,8 @@ void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
 void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
 {
     if (!mesh) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.name()) return;
+    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.id().name().empty())) return;
+    if (m_oldMaterialName == m_newMaterialDto.id().name()) return;
 
     unsigned int total_mat_count = mesh->getEffectMaterialCount();
     if (total_mat_count == 0) return;
@@ -123,7 +123,7 @@ void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
     {
         EffectMaterialPtr eff = mesh->getEffectMaterial(i);
         if (!eff) continue;
-        if (eff->getName() == m_oldMaterialName)
+        if (eff->id().name() == m_oldMaterialName)
         {
             //todo: 先丟 request
             auto cmd = std::make_shared<CompileEffectMaterial>(m_newMaterialDto);

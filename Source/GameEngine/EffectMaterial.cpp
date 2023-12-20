@@ -8,11 +8,17 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(Engine, EffectMaterial);
 
+EffectMaterial::EffectMaterial(const EffectMaterialId& id) : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
+{
+    m_id = id;
+    m_currentTechnique = m_effectTechniques.end();
+}
+
 EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
     : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
 {
     m_factoryDesc.ClaimAsNative(name);
-    m_name = name;
+    //m_name = name;
     m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
     mappingAutoVariables();
@@ -20,7 +26,7 @@ EffectMaterial::EffectMaterial(const std::string& name, const std::vector<Effect
 
 EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_factoryDesc)
 {
-    m_name = eff.m_name;
+    //m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
@@ -29,7 +35,7 @@ EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_
 
 EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.factoryDesc())
 {
-    m_name = std::move(eff.m_name);
+    //m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
     m_effectTechniques = std::move(eff.m_effectTechniques);
     m_currentTechnique = m_effectTechniques.end();
@@ -49,7 +55,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 {
     if (this == &eff) return *this;
     m_factoryDesc = eff.m_factoryDesc;
-    m_name = eff.m_name;
+    //m_name = eff.m_name;
     m_sourceMaterial = eff.m_sourceMaterial.lock();
     m_effectTechniques = eff.m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
@@ -61,7 +67,7 @@ EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
 EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
 {
     m_factoryDesc = std::move(eff.m_factoryDesc);
-    m_name = std::move(eff.m_name);
+    //m_name = std::move(eff.m_name);
     m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
     m_effectTechniques = std::move(eff.m_effectTechniques);
     m_currentTechnique = m_effectTechniques.end();
@@ -76,7 +82,7 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
 GenericDto EffectMaterial::serializeDto()
 {
     EffectMaterialDto dto;
-    dto.name() = m_name;
+    dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     return dto.toGenericDto();
 }

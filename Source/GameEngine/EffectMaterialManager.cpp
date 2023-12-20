@@ -21,14 +21,14 @@ EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mng
 {
     m_effectDeserializer = effect_deserializer;
     m_needTick = false;
-    m_compiler = menew EffectCompiler(this);
+    //m_compiler = menew EffectCompiler(this);
     m_isCurrentCompiling = false;
 }
 
 EffectMaterialManager::~EffectMaterialManager()
 {
-    delete m_compiler;
-    m_compiler = nullptr;
+    //delete m_compiler;
+    //m_compiler = nullptr;
     m_effectDeserializer = nullptr;
     dumpUnreleasedMaterial();
     assert(m_sourceMaterials.empty());
@@ -60,14 +60,14 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onTick()
         m_needTick = false;
         return Frameworks::ServiceResult::Pendding;
     }
-    assert(m_compiler);
+    //assert(m_compiler);
     auto request = m_requests.front();
     m_currentCompilingRuid = request->getRuid();
-    m_currentCompilingEffectName = request->GetDto().name();
+    m_currentCompilingEffectName = request->GetDto().id().name();
     m_requests.pop();
     auto policy = request->GetDto().ConvertToPolicy(m_effectDeserializer);
-    auto proceed = m_compiler->compileEffectMaterial(policy);
-    m_isCurrentCompiling = static_cast<bool>(proceed);
+    //auto proceed = m_compiler->compileEffectMaterial(policy);
+    //m_isCurrentCompiling = static_cast<bool>(proceed);
     return Frameworks::ServiceResult::Pendding;
 }
 
@@ -108,7 +108,7 @@ EffectMaterialPtr EffectMaterialManager::duplicateEffectMaterial(const std::stri
 
 void EffectMaterialManager::onCompilerEffectMaterialCompiled(const Frameworks::IEventPtr& e)
 {
-    assert(m_compiler);
+    //assert(m_compiler);
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<EffectCompiler::EffectMaterialCompiled, Frameworks::IEvent>(e);
     if (!ev) return;
@@ -153,7 +153,7 @@ void EffectMaterialManager::releaseEffectMaterialSource(const std::shared_ptr<Ef
 {
     if (!eff_source) return;
     std::lock_guard locker{ m_sourceMapLock };
-    m_sourceMaterials.erase(eff_source->getName());
+    m_sourceMaterials.erase(eff_source->id().name());
 }
 
 void EffectMaterialManager::dumpUnreleasedMaterial()
@@ -162,7 +162,7 @@ void EffectMaterialManager::dumpUnreleasedMaterial()
     {
         for (auto& mat : m_sourceMaterials)
         {
-            std::string source_name = mat.second->getName();
+            std::string source_name = mat.second->id().name();
             Platforms::Debug::ErrorPrintf("un-released material %s", source_name.c_str());
         }
     }

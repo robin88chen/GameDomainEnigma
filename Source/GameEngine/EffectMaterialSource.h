@@ -29,9 +29,11 @@ namespace Enigma::Engine
 
         const EffectMaterialId& id() const { return m_id; };
 
-        void linkSource();
+        void linkSourceSelf();
+        const std::shared_ptr<EffectMaterial>& self() const { return m_sourceEffectMaterial; };
 
-        EffectMaterialPtr cloneEffectMaterial();
+        std::shared_ptr<EffectMaterial> cloneEffectMaterial();
+        std::shared_ptr<EffectMaterial> duplicateEffectMaterial();
 
         static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> onDuplicatedEmpty;
 
@@ -44,6 +46,7 @@ namespace Enigma::Engine
         std::shared_ptr<EffectMaterial> m_sourceEffectMaterial;
         std::list<std::shared_ptr<EffectMaterial>> m_duplicatedEffects;
         std::atomic_uint32_t m_duplicateCount;
+        std::uint32_t m_duplicatedSerial;
     };
     using EffectMaterialSourcePtr = std::shared_ptr<EffectMaterialSource>;
 }

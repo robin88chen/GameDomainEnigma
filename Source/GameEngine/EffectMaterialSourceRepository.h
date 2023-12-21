@@ -17,7 +17,7 @@
 namespace Enigma::Engine
 {
     class EffectMaterialSourceStoreMapper;
-    class EffectCompiler;
+    class EffectCompilingQueue;
     class EffectMaterial;
     class EffectMaterialSource;
 
@@ -41,7 +41,7 @@ namespace Enigma::Engine
 
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;
-        EffectCompiler* m_compiler;
+        EffectCompilingQueue* m_compilingQueue;
 
         typedef std::unordered_map<EffectMaterialId, std::shared_ptr<EffectMaterialSource>, EffectMaterialId::hash> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;

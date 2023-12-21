@@ -87,6 +87,20 @@ GenericDto EffectMaterial::serializeDto()
     return dto.toGenericDto();
 }
 
+void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
+{
+    if (other == nullptr) return;
+    m_factoryDesc = other->factoryDesc();
+    //m_name = other->m_name;
+    m_sourceMaterial = other->m_sourceMaterial.lock();
+    m_effectTechniques = other->m_effectTechniques;
+    m_currentTechnique = m_effectTechniques.end();
+    m_instancedAssignFuncList = other->m_instancedAssignFuncList;
+    m_selectedRendererTechName = other->m_selectedRendererTechName;
+    m_selectedVisualTechName = other->m_selectedVisualTechName;
+    mappingAutoVariables();
+}
+
 void EffectMaterial::setSource(const std::shared_ptr<EffectMaterialSource>& mat_source)
 {
     m_sourceMaterial = mat_source;

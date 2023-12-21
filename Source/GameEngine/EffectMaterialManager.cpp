@@ -118,7 +118,7 @@ void EffectMaterialManager::onCompilerEffectMaterialCompiled(const Frameworks::I
     if (!ev->hasExisted())
     {
         EffectMaterialSourcePtr source = std::make_shared<EffectMaterialSource>(ev->effect());
-        source->linkSource();
+        source->linkSourceSelf();
         m_sourceMaterials.insert_or_assign(ev->name(), source);
     }
     Frameworks::EventPublisher::post(std::make_shared<Engine::EffectMaterialCompiled>(

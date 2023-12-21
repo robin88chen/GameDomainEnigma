@@ -1,8 +1,7 @@
 ﻿#include "EffectMaterialSource.h"
 #include "EffectMaterial.h"
-#include <cassert>
-
 #include "Platforms/MemoryAllocMacro.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
@@ -12,6 +11,7 @@ EffectMaterialSource::EffectMaterialSource(const EffectMaterialId& id)
 {
     m_id = id;
     m_duplicateCount = 0;
+    m_duplicatedSerial = 0;
     m_sourceEffectMaterial = std::make_shared<EffectMaterial>(id);
 }
 
@@ -27,16 +27,31 @@ EffectMaterialSource::~EffectMaterialSource()
     m_sourceEffectMaterial = nullptr;
 }
 
-void EffectMaterialSource::linkSource()
+void EffectMaterialSource::linkSourceSelf()
 {
     if (m_sourceEffectMaterial) m_sourceEffectMaterial->setSource(shared_from_this());
 }
 
-EffectMaterialPtr EffectMaterialSource::cloneEffectMaterial()
+std::shared_ptr<EffectMaterial> EffectMaterialSource::cloneEffectMaterial()
 {
     assert(m_sourceEffectMaterial);
     m_duplicateCount++;
     return EffectMaterialPtr(menew EffectMaterial(*(m_sourceEffectMaterial.get())), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
+}
+
+std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
+{
+    assert(m_sourceEffectMaterial);
+    m_duplicateCount++;
+    m_duplicatedSerial++;
+    auto effect = std::shared_ptr<EffectMaterial>(menew EffectMaterial(EffectMaterialId(m_id, m_duplicatedSerial)), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
+    m_duplicatedEffects.emplace_back(effect);
+    if (m_sourceEffectMaterial->lazyStatus().isReady())
+    {
+        effect->copyFrom(m_sourceEffectMaterial);
+        effect->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
+    return effect;
 }
 
 void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)

@@ -23,6 +23,7 @@ namespace Enigma::Engine
 
         primitiveFactoryNotExists = 151,
         primitiveEntityAlreadyExists,
+        effectAlreadyCompiled,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,

@@ -1,6 +1,7 @@
 ﻿#include "EffectMaterialSourceRepository.h"
-#include "EffectCompiler.h"
+#include "EffectCompilingQueue.h"
 #include "EffectMaterialSourceStoreMapper.h"
+#include "EffectMaterialSource.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include <system_error>
@@ -18,12 +19,12 @@ using error = std::error_code;
 
 EffectMaterialSourceRepository::EffectMaterialSourceRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<EffectMaterialSourceStoreMapper>& store_mapper) : ISystemService(srv_mngr), m_storeMapper(store_mapper)
 {
-    m_compiler = menew EffectCompiler();
+    m_compilingQueue = menew EffectCompilingQueue();
 }
 
 EffectMaterialSourceRepository::~EffectMaterialSourceRepository()
 {
-    SAFE_DELETE(m_compiler);
+    SAFE_DELETE(m_compilingQueue);
 }
 
 ServiceResult EffectMaterialSourceRepository::onInit()
@@ -64,6 +65,12 @@ std::shared_ptr<EffectMaterial> EffectMaterialSourceRepository::duplicateEffectM
     if (it != m_sourceMaterials.end()) return it->second->cloneEffectMaterial();
     auto profile = m_storeMapper->queryEffectMaterial(id);
     assert(profile);
-    m_compiler->compileEffect(profile.value());
-    return nullptr;
+    auto source = std::make_shared<EffectMaterialSource>(id);
+    source->linkSourceSelf();
+    auto er = m_compilingQueue->enqueue(source->self(), profile.value());
+    if (er) return nullptr;
+    er = m_compilingQueue->compileNextEffect();
+    if (er) return nullptr;
+    m_sourceMaterials.emplace(id, source);
+    return source->duplicateEffectMaterial();
 }

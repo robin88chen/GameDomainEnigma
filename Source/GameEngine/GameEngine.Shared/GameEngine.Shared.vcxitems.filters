@@ -16,9 +16,6 @@
     <Filter Include="Effect Material\Technique Pass">
       <UniqueIdentifier>{3fab46e9-f3f8-4e2b-b31c-41fb9dd17f98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect Material\Effect Compiler">
-      <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderBuffer\BufferBuilder">
       <UniqueIdentifier>{deed8b56-b9cb-4947-981a-d040a23952fc}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     <Filter Include="Effect Material\Repository">
       <UniqueIdentifier>{0a23c628-c608-412e-acf6-5f02d5829c55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material\Repository\Effect Compiler">
+      <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -118,10 +118,10 @@
       <Filter>Effect Material\Technique Pass</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h">
       <Filter>Effect Material</Filter>
@@ -205,7 +205,7 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h">
       <Filter>Effect Material\Policy</Filter>
@@ -303,6 +303,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h">
       <Filter>Effect Material\Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h">
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -333,10 +336,10 @@
       <Filter>Effect Material\Technique Pass</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp">
       <Filter>Effect Material</Filter>
@@ -445,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp">
       <Filter>Effect Material\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp">
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

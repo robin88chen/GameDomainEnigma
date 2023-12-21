@@ -41,6 +41,8 @@ namespace Enigma::Engine
 
         const EffectMaterialId& id() const { return m_id; };
 
+        void copyFrom(const std::shared_ptr<EffectMaterial>& other);
+
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 

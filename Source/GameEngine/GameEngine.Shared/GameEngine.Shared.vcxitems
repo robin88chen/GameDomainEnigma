@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp" />

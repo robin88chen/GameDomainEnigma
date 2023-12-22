@@ -25,8 +25,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />

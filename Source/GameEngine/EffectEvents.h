@@ -41,6 +41,52 @@ namespace Enigma::Engine
         std::string m_name;
         std::error_code m_error;
     };
+    class EffectMaterialSourceCompiled : public Frameworks::IEvent
+    {
+    public:
+        EffectMaterialSourceCompiled(const EffectMaterialId& id) : m_id(id) {}
+
+        const EffectMaterialId& id() { return m_id; }
+
+    private:
+        EffectMaterialId m_id;
+    };
+    class CompileEffectMaterialSourceFailed : public Frameworks::IEvent
+    {
+    public:
+        CompileEffectMaterialSourceFailed(const EffectMaterialId& id, std::error_code er) : m_id(id), m_error(er) {};
+        const EffectMaterialId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    private:
+        EffectMaterialId m_id;
+        std::error_code m_error;
+    };
+    class EffectMaterialContented : public Frameworks::IEvent
+    {
+    public:
+        EffectMaterialContented(const EffectMaterialId& source_id, const EffectMaterialId& id) : m_sourceId(source_id), m_id(id) {}
+
+        const EffectMaterialId& sourceId() { return m_sourceId; }
+        const EffectMaterialId& id() { return m_id; }
+
+    private:
+        EffectMaterialId m_sourceId;
+        EffectMaterialId m_id;
+    };
+    class ContentEffectMaterialFailed : public Frameworks::IEvent
+    {
+    public:
+        ContentEffectMaterialFailed(const EffectMaterialId& source_id, const EffectMaterialId& id, std::error_code er) : m_sourceId(source_id), m_error(er) {};
+        const EffectMaterialId& sourceId() { return m_sourceId; }
+        const EffectMaterialId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    private:
+        EffectMaterialId m_sourceId;
+        EffectMaterialId m_id;
+        std::error_code m_error;
+    };
 }
 
 #endif // _EFFECT_RESPONSES_H

@@ -27,6 +27,8 @@ namespace Enigma::Engine
         bool operator==(const EffectMaterialId& other) const;
         bool operator!=(const EffectMaterialId& other) const;
 
+        bool isEqualSource(const EffectMaterialId& other) const;
+
         const std::string& name() const { return m_name; }
         bool isSource() const { return m_instance_serial == 0; }
 

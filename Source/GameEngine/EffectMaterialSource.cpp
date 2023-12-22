@@ -1,5 +1,7 @@
 ﻿#include "EffectMaterialSource.h"
 #include "EffectMaterial.h"
+#include "EffectEvents.h"
+#include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
 
@@ -52,6 +54,19 @@ std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
         effect->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::Ready);
     }
     return effect;
+}
+
+void EffectMaterialSource::contentDuplicatedEffects()
+{
+    assert(m_sourceEffectMaterial);
+    for (auto& effect : m_duplicatedEffects)
+    {
+        if (!effect->lazyStatus().isReady())
+        {
+            effect->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
+            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialContented>(m_id, effect->id()));
+        }
+    }
 }
 
 void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)

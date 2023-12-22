@@ -12,6 +12,7 @@
 #include "EffectMaterialPolicy.h"
 #include "EffectPass.h"
 #include "EffectTechnique.h"
+#include "EffectMaterialId.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/ruid.h"
 #include <unordered_map>
@@ -33,48 +34,23 @@ namespace Enigma::Engine
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:
-            EffectMaterialCompiled(const std::string& name, std::shared_ptr<EffectMaterial> eff, bool has_existed) :
-                m_name(name), m_effect(eff), m_hasExisted(has_existed) {};
-            const std::string& name() { return m_name; }
-            bool hasEffect() { return m_effect != nullptr; }
+            EffectMaterialCompiled(const EffectMaterialId& id, std::shared_ptr<EffectMaterial> eff) :
+                m_id(id), m_effect(eff) {};
+            const EffectMaterialId& id() { return m_id; }
             std::shared_ptr<EffectMaterial> effect() { return m_effect; }
-            bool hasExisted() { return m_hasExisted; }
         private:
-            std::string m_name;
+            EffectMaterialId m_id;
             std::shared_ptr<EffectMaterial> m_effect;
-            bool m_hasExisted;
         };
         class CompileEffectMaterialFailed : public Frameworks::IEvent
         {
         public:
-            CompileEffectMaterialFailed(const std::string& name, std::error_code er) :
-                m_name(name), m_error(er) {};
-            const std::string& name() { return m_name; }
+            CompileEffectMaterialFailed(const EffectMaterialId& id, std::error_code er) :
+                m_id(id), m_error(er) {};
+            const EffectMaterialId& id() { return m_id; }
             std::error_code error() const { return m_error; }
         private:
-            std::string m_name;
-            std::error_code m_error;
-        };
-        class CompilingProfileDeserialized : public Frameworks::IEvent
-        {
-        public:
-            CompilingProfileDeserialized(const Frameworks::Ruid& ruid, const EffectCompilingProfile& profile) :
-                m_ruid(ruid), m_profile(profile) {};
-            const Frameworks::Ruid& ruid() { return m_ruid; }
-            const EffectCompilingProfile& profile() { return m_profile; }
-        private:
-            Frameworks::Ruid m_ruid;
-            EffectCompilingProfile m_profile;
-        };
-        class DeserializeCompilingProfileFailed : public Frameworks::IEvent
-        {
-        public:
-            DeserializeCompilingProfileFailed(const Frameworks::Ruid& ruid, std::error_code er) :
-                m_ruid(ruid), m_error(er) {};
-            const Frameworks::Ruid& ruid() { return m_ruid; }
-            std::error_code error() const { return m_error; }
-        private:
-            Frameworks::Ruid m_ruid;
+            EffectMaterialId m_id;
             std::error_code m_error;
         };
 
@@ -86,13 +62,9 @@ namespace Enigma::Engine
         EffectCompiler& operator=(const EffectCompiler&) = delete;
         EffectCompiler& operator=(EffectCompiler&&) = delete;
 
-        CompilingProceed compileEffectMaterial(const EffectMaterialPolicy& policy);
-        void compileEffect(const EffectCompilingProfile& profile);
+        void compileEffect(const std::shared_ptr<EffectMaterial>& effect, const EffectCompilingProfile& profile);
 
     private:
-
-        void onCompilingProfileDeserialized(const Frameworks::IEventPtr& e);
-        void onDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e);
         void onShaderProgramBuilt(const Frameworks::IEventPtr& e);
         void onBuildProgramFailed(const Frameworks::IEventPtr& e);
         void onSamplerStateCreated(const Frameworks::IEventPtr& e);
@@ -119,14 +91,11 @@ namespace Enigma::Engine
             std::vector<EffectPass> retrieveEffectPasses();
         };
     private:
-        EffectMaterialManager* m_hostManager;
         EffectCompilingProfile m_profile;
+        std::shared_ptr<EffectMaterial> m_compilingEffect;
 
         Frameworks::Ruid m_ruidDeserializing;
         EffectMaterialPolicy m_policy;
-
-        Frameworks::EventSubscriberPtr m_onCompilingProfileDeserialized;
-        Frameworks::EventSubscriberPtr m_onDeserializeCompilingProfileFailed;
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onBuildProgramFailed;
         Frameworks::EventSubscriberPtr m_onSamplerStateCreated;

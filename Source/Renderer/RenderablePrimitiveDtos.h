@@ -50,8 +50,8 @@ namespace Enigma::Renderer
         std::optional<Engine::GenericDto>& geometry() { return m_geometry; }
         //[[nodiscard]] const Engine::FactoryDesc& geometryFactoryDesc() const { return m_geometryFactory; }
         //Engine::FactoryDesc& geometryFactoryDesc() { return m_geometryFactory; }
-        [[nodiscard]] const Engine::GenericDtoCollection& effects() const { return m_effects; }
-        Engine::GenericDtoCollection& effects() { return m_effects; }
+        [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
+        std::vector<Engine::EffectMaterialId>& effects() { return m_effects; }
         [[nodiscard]] const Engine::GenericDtoCollection& textureMaps() const { return m_textureMaps; }
         Engine::GenericDtoCollection& textureMaps() { return m_textureMaps; }
         [[nodiscard]] Renderer::RenderListID renderListID() const { return m_renderListID; }
@@ -71,7 +71,7 @@ namespace Enigma::Renderer
         Geometries::GeometryId m_geometryId;
         std::optional<Engine::GenericDto> m_geometry;
         //Engine::FactoryDesc m_geometryFactory;
-        Engine::GenericDtoCollection m_effects;
+        std::vector<Engine::EffectMaterialId> m_effects;
         Engine::GenericDtoCollection m_textureMaps;
         Renderer::RenderListID m_renderListID;
         std::string m_visualTechniqueSelection;
@@ -82,12 +82,12 @@ namespace Enigma::Renderer
     public:
         MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto);
 
-        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& effects() const { return m_effects; }
+        [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
 
         [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& textureMaps() const { return m_textureMaps; }
 
     protected:
-        std::vector<Engine::EffectMaterialDto> m_effects;
+        std::vector<Engine::EffectMaterialId> m_effects;
         std::vector<Engine::EffectTextureMapDto> m_textureMaps;
     };
 

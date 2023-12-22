@@ -49,3 +49,8 @@ bool EffectMaterialId::operator!=(const EffectMaterialId& other) const
 {
     return m_name != other.m_name || m_instance_serial != other.m_instance_serial;
 }
+
+bool EffectMaterialId::isEqualSource(const EffectMaterialId& other) const
+{
+    return m_name == other.m_name;
+}

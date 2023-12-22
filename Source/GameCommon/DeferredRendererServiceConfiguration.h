@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DeferredRendererServiceConfiguration.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -21,16 +21,10 @@ namespace Enigma::GameCommon
     public:
         DeferredRendererServiceConfiguration();
 
-        const std::string& AmbientPassFxFileName() const;
-        std::string& AmbientPassFxFileName();
         const std::string& AmbientEffectName() const;
         std::string& AmbientEffectName();
-        const std::string& SunLightPassFxFileName() const;
-        std::string& SunLightPassFxFileName();
         const std::string& SunLightEffectName() const;
         std::string& SunLightEffectName();
-        const std::string& LightVolumePassFxFileName() const;
-        std::string& LightVolumePassFxFileName();
         const std::string& LightVolumeEffectName() const;
         std::string& LightVolumeEffectName();
 
@@ -66,11 +60,8 @@ namespace Enigma::GameCommon
         SceneGraph::Spatial::SpatialFlags& SunLightSpatialFlags();
 
     protected:
-        std::string m_ambientPassFxFileName;
         std::string m_ambientEffectName;
-        std::string m_sunLightPassFxFileName;
         std::string m_sunLightEffectName;
-        std::string m_lightVolumePassFxFileName;
         std::string m_lightVolumeEffectName;
 
         std::string m_deferredRendererTechniqueName;

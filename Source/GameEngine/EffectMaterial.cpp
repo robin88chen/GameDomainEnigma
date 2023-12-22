@@ -79,14 +79,6 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
     return *this;
 }
 
-GenericDto EffectMaterial::serializeDto()
-{
-    EffectMaterialDto dto;
-    dto.id() = m_id;
-    dto.factoryDesc() = m_factoryDesc;
-    return dto.toGenericDto();
-}
-
 void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
 {
     if (other == nullptr) return;
@@ -99,6 +91,14 @@ void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
     m_selectedRendererTechName = other->m_selectedRendererTechName;
     m_selectedVisualTechName = other->m_selectedVisualTechName;
     mappingAutoVariables();
+}
+
+void EffectMaterial::instanceLazyContent(const std::vector<EffectTechnique>& techniques)
+{
+    m_effectTechniques = techniques;
+    m_currentTechnique = m_effectTechniques.end();
+    mappingAutoVariables();
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
 }
 
 void EffectMaterial::setSource(const std::shared_ptr<EffectMaterialSource>& mat_source)

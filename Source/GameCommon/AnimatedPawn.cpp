@@ -23,7 +23,7 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : P
     if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
     for (auto& avatar_dto : dto.AvatarRecipeDtos())
     {
-        m_avatarRecipeList.push_back(AvatarRecipe::CreateFromGenericDto(avatar_dto));
+        m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
     }
 }
 
@@ -96,6 +96,6 @@ void AnimatedPawn::BakeAvatarRecipes()
 {
     for (auto& recipe : m_avatarRecipeList)
     {
-        recipe->Bake(std::dynamic_pointer_cast<Pawn, Spatial>(shared_from_this()));
+        recipe->bake(std::dynamic_pointer_cast<Pawn, Spatial>(shared_from_this()));
     }
 }

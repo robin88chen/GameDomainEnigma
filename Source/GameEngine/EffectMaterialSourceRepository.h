@@ -10,6 +10,7 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
+#include "Frameworks/QuerySubscriber.h"
 #include "EffectMaterialId.h"
 #include <unordered_map>
 #include <mutex>
@@ -37,7 +38,10 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onTerm() override;
 
         bool hasEffectMaterial(const EffectMaterialId& id);
-        std::shared_ptr<EffectMaterial> duplicateEffectMaterial(const EffectMaterialId& id);
+        std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
+
+    private:
+        void queryEffectMaterial(const Frameworks::IQueryPtr& q);
 
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;
@@ -46,6 +50,8 @@ namespace Enigma::Engine
         typedef std::unordered_map<EffectMaterialId, std::shared_ptr<EffectMaterialSource>, EffectMaterialId::hash> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;
         std::recursive_mutex m_sourceMapLock;
+
+        Frameworks::QuerySubscriberPtr m_queryEffectMaterial;
     };
 }
 

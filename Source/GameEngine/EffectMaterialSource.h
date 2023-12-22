@@ -35,6 +35,8 @@ namespace Enigma::Engine
         std::shared_ptr<EffectMaterial> cloneEffectMaterial();
         std::shared_ptr<EffectMaterial> duplicateEffectMaterial();
 
+        void contentDuplicatedEffects();
+
         static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> onDuplicatedEmpty;
 
     private:

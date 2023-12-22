@@ -37,11 +37,11 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&) noexcept;
 
-        GenericDto serializeDto();
-
         const EffectMaterialId& id() const { return m_id; };
 
         void copyFrom(const std::shared_ptr<EffectMaterial>& other);
+        void instanceLazyContent(const std::vector<EffectTechnique>& techniques);
+        const std::vector<EffectTechnique>& effectTechniques() const { return m_effectTechniques; }
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }

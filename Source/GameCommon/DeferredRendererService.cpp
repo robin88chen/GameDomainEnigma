@@ -380,14 +380,12 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = quad_geo_name;
     mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.effects().emplace_back(m_configuration->AmbientEffectName());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
@@ -409,14 +407,12 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->SunLightEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->SunLightPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = quad_geo_name;
     mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.effects().emplace_back(m_configuration->SunLightEffectName());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
@@ -437,14 +433,12 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
     Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
     sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->LightVolumeEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->LightVolumePassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.name() = vol_geo_name;
     mesh_dto.geometryId() = vol_geo_name;
     mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(eff_dto_helper.toGenericDto());
+    mesh_dto.effects().emplace_back(m_configuration->LightVolumeEffectName());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");

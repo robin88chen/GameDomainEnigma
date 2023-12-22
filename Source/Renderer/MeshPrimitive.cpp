@@ -89,7 +89,7 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
     }
     for (auto& eff : m_effects)
     {
-        dto.effects().emplace_back(eff->serializeDto());
+        dto.effects().emplace_back(eff->id());
     }
     for (auto& tex : m_textures)
     {

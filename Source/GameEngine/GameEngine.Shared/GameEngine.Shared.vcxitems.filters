@@ -237,9 +237,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -305,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h">
       <Filter>Effect Material\Repository\Effect Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectQueries.h">
+      <Filter>Queries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

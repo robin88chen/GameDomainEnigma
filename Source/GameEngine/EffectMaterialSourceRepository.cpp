@@ -2,13 +2,12 @@
 #include "EffectCompilingQueue.h"
 #include "EffectMaterialSourceStoreMapper.h"
 #include "EffectMaterialSource.h"
+#include "EffectQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include <system_error>
 #include <cassert>
-
-#include "EffectMaterialSource.h"
-
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -32,6 +31,9 @@ ServiceResult EffectMaterialSourceRepository::onInit()
     assert(m_storeMapper);
     m_storeMapper->connect();
 
+    m_queryEffectMaterial = std::make_shared<QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryEffectMaterial(q); });
+    QueryDispatcher::subscribe(typeid(QueryEffectMaterial), m_queryEffectMaterial);
+
     return ServiceResult::Complete;
 }
 
@@ -45,6 +47,9 @@ ServiceResult EffectMaterialSourceRepository::onTerm()
     assert(m_storeMapper);
     m_storeMapper->disconnect();
 
+    QueryDispatcher::unsubscribe(typeid(QueryEffectMaterial), m_queryEffectMaterial);
+    m_queryEffectMaterial = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -57,12 +62,12 @@ bool EffectMaterialSourceRepository::hasEffectMaterial(const EffectMaterialId& i
     return m_storeMapper->hasEffectMaterial(id);
 }
 
-std::shared_ptr<EffectMaterial> EffectMaterialSourceRepository::duplicateEffectMaterial(const EffectMaterialId& id)
+std::shared_ptr<EffectMaterial> EffectMaterialSourceRepository::queryEffectMaterial(const EffectMaterialId& id)
 {
     assert(m_storeMapper);
     std::lock_guard locker{ m_sourceMapLock };
     const auto it = m_sourceMaterials.find(id);
-    if (it != m_sourceMaterials.end()) return it->second->cloneEffectMaterial();
+    if (it != m_sourceMaterials.end()) return it->second->duplicateEffectMaterial();
     auto profile = m_storeMapper->queryEffectMaterial(id);
     assert(profile);
     auto source = std::make_shared<EffectMaterialSource>(id);
@@ -73,4 +78,12 @@ std::shared_ptr<EffectMaterial> EffectMaterialSourceRepository::duplicateEffectM
     if (er) return nullptr;
     m_sourceMaterials.emplace(id, source);
     return source->duplicateEffectMaterial();
+}
+
+void EffectMaterialSourceRepository::queryEffectMaterial(const Frameworks::IQueryPtr& q)
+{
+    assert(m_storeMapper);
+    auto query = std::dynamic_pointer_cast<QueryEffectMaterial, IQuery>(q);
+    assert(query);
+    query->setResult(queryEffectMaterial(query->id()));
 }

@@ -61,11 +61,11 @@ MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
     }
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_GEOMETRY_ID)) mesh.geometryId() = v.value();
     if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.geometry() = v.value();
-    if (const auto ary = dto.TryGetValue<GenericDtoCollection>(TOKEN_EFFECTS))
+    if (const auto ary = dto.TryGetValue<std::vector<std::string>>(TOKEN_EFFECTS))
     {
-        for (auto& eff_dto : ary.value())
+        for (auto& eff_id : ary.value())
         {
-            mesh.effects().emplace_back(eff_dto);
+            mesh.effects().emplace_back(eff_id);
         }
     }
     if (const auto ary = dto.TryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPS))
@@ -136,7 +136,7 @@ MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
 {
     for (auto& eff : dto.effects())
     {
-        m_effects.emplace_back(EffectMaterialDto::fromGenericDto(eff));
+        m_effects.emplace_back(eff);
     }
     for (auto& tex : dto.textureMaps())
     {

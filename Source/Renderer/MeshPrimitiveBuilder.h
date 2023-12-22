@@ -69,14 +69,14 @@ namespace Enigma::Renderer
         void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
         void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
 
-        void onEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void onCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void onEffectMaterialContented(const Frameworks::IEventPtr& e);
+        void onContentEffectMaterialFailed(const Frameworks::IEventPtr& e);
         void onTextureLoadedOrCreated(const Frameworks::IEventPtr& e);
         void onLoadOrCreateTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
 
-        std::optional<unsigned> findBuildingEffectIndex(const std::string& name);
+        std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
         std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const std::string& name);
 
     protected:
@@ -93,8 +93,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
+        Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::EventSubscriberPtr m_onTextureCreated;

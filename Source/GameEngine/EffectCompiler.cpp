@@ -16,13 +16,7 @@ using namespace Enigma::Graphics;
 
 EffectCompiler::EffectCompiler() : m_ruidDeserializing()
 {
-    //m_hostManager = host;
     m_hasMaterialProduced = false;
-
-    m_onCompilingProfileDeserialized = std::make_shared<EventSubscriber>([=](auto e) { this->onCompilingProfileDeserialized(e); });
-    EventPublisher::subscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
-    m_onDeserializeCompilingProfileFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onDeserializeCompilingProfileFailed(e); });
-    EventPublisher::subscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
 
     m_onShaderProgramBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onShaderProgramBuilt(e); });
     EventPublisher::subscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
@@ -41,11 +35,6 @@ EffectCompiler::EffectCompiler() : m_ruidDeserializing()
 
 EffectCompiler::~EffectCompiler()
 {
-    EventPublisher::unsubscribe(typeid(CompilingProfileDeserialized), m_onCompilingProfileDeserialized);
-    m_onCompilingProfileDeserialized = nullptr;
-    EventPublisher::unsubscribe(typeid(DeserializeCompilingProfileFailed), m_onDeserializeCompilingProfileFailed);
-    m_onDeserializeCompilingProfileFailed = nullptr;
-
     EventPublisher::unsubscribe(typeid(ShaderProgramBuilt), m_onShaderProgramBuilt);
     m_onShaderProgramBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildProgramFailed);
@@ -61,35 +50,9 @@ EffectCompiler::~EffectCompiler()
     m_onRasterizerStateCreated = nullptr;
 }
 
-EffectCompiler::CompilingProceed EffectCompiler::compileEffectMaterial(const EffectMaterialPolicy& policy)
+void EffectCompiler::compileEffect(const std::shared_ptr<EffectMaterial>& effect, const EffectCompilingProfile& profile)
 {
-    assert(m_hostManager);
-    m_policy = policy;
-    if (m_hostManager->hasEffectMaterial(policy.name()))
-    {
-        Frameworks::EventPublisher::post(std::make_shared<EffectMaterialCompiled>(
-            policy.name(), m_hostManager->duplicateEffectMaterial(policy.name()), true));
-        return CompilingProceed::False;
-    }
-    else if (auto p = policy.profile())
-    {
-        compileEffect(p.value());
-    }
-    else if (policy.deserializer())
-    {
-        m_ruidDeserializing = Ruid::generate();
-        policy.deserializer()->invokeDeserialize(m_ruidDeserializing, policy.parameter());
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(policy.name(), ErrorCode::policyIncomplete));
-        return CompilingProceed::False;
-    }
-    return CompilingProceed::True;
-}
-
-void EffectCompiler::compileEffect(const EffectCompilingProfile& profile)
-{
+    m_compilingEffect = effect;
     m_profile = profile;
     m_builtPrograms.clear();
     m_builtPassStates.clear();
@@ -134,23 +97,6 @@ void EffectCompiler::compileEffect(const EffectCompilingProfile& profile)
         m_builtEffectTechniques.emplace_back(built_effect_technique);
     }
     m_hasMaterialProduced = false;
-}
-
-void EffectCompiler::onCompilingProfileDeserialized(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<CompilingProfileDeserialized, IEvent>(e);
-    if (!ev) return;
-    if (ev->ruid() != m_ruidDeserializing) return;
-    compileEffect(ev->profile());
-}
-
-void EffectCompiler::onDeserializeCompilingProfileFailed(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<DeserializeCompilingProfileFailed, IEvent>(e);
-    if (!ev) return;
-    EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_policy.name(), ev->error()));
 }
 
 void EffectCompiler::onShaderProgramBuilt(const Frameworks::IEventPtr& e)
@@ -299,6 +245,7 @@ void EffectCompiler::tryBuildEffectTechniques(const std::string& name)
 
 void EffectCompiler::tryBuildEffectMaterial()
 {
+    assert(m_compilingEffect);
     if (m_hasMaterialProduced) return;
     std::vector<EffectTechnique> effect_techniques;
     for (auto& built_tech : m_builtEffectTechniques)
@@ -306,12 +253,8 @@ void EffectCompiler::tryBuildEffectMaterial()
         if (!built_tech.m_technique) return;
         effect_techniques.emplace_back(built_tech.m_technique.value());
     }
-    auto effect_material = std::make_shared<EffectMaterial>(m_profile.m_name, effect_techniques);
-    if (!m_policy.parameter().empty())
-    {
-        effect_material->factoryDesc().ClaimFromResource(effect_material->id().name(), m_policy.parameter());
-    }
-    EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_profile.m_name, effect_material, false));
+    m_compilingEffect->instanceLazyContent(effect_techniques);
+    EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_compilingEffect->id(), m_compilingEffect));
     m_hasMaterialProduced = true;
 }
 

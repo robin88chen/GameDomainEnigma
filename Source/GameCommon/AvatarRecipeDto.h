@@ -10,6 +10,7 @@
 
 #include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/EffectMaterialId.h"
 
 namespace Enigma::GameCommon
 {
@@ -35,17 +36,17 @@ namespace Enigma::GameCommon
     public:
         AvatarRecipeReplaceMaterialDto();
 
-        std::string& OldMaterialName() { return m_oldMaterialName; }
-        [[nodiscard]] const std::string& OldMaterialName() const { return m_oldMaterialName; }
-        Engine::EffectMaterialDto& NewMaterialDto() { return m_newMaterialDto; }
-        [[nodiscard]] const Engine::EffectMaterialDto& NewMaterialDto() const { return m_newMaterialDto; }
+        Engine::EffectMaterialId& oldMaterialId() { return m_oldMaterialId; }
+        [[nodiscard]] const Engine::EffectMaterialId& oldMaterialId() const { return m_oldMaterialId; }
+        Engine::EffectMaterialId& newMaterialId() { return m_newMaterialId; }
+        [[nodiscard]] const Engine::EffectMaterialId& newMaterialId() const { return m_newMaterialId; }
 
         static AvatarRecipeReplaceMaterialDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     private:
-        std::string m_oldMaterialName;
-        Engine::EffectMaterialDto m_newMaterialDto;
+        Engine::EffectMaterialId m_oldMaterialId;
+        Engine::EffectMaterialId m_newMaterialId;
     };
 
     class AvatarRecipeChangeTextureDto : public AvatarRecipeDto

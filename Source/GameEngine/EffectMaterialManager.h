@@ -9,7 +9,6 @@
 #define EFFECT_MATERIAL_MANAGER_H
 
 #include "EffectMaterial.h"
-#include "EffectMaterialPolicy.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Event.h"
@@ -28,8 +27,7 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        EffectMaterialManager(Frameworks::ServiceManager* srv_mngr,
-            const std::shared_ptr<IEffectCompilingProfileDeserializer>& effect_deserializer);
+        EffectMaterialManager(Frameworks::ServiceManager* srv_mngr);
         EffectMaterialManager(const EffectMaterialManager&) = delete;
         EffectMaterialManager(EffectMaterialManager&&) = delete;
         virtual ~EffectMaterialManager() override;
@@ -60,7 +58,7 @@ namespace Enigma::Engine
         void dumpUnreleasedMaterial();
 
     private:
-        std::shared_ptr<IEffectCompilingProfileDeserializer> m_effectDeserializer;
+        //std::shared_ptr<IEffectCompilingProfileDeserializer> m_effectDeserializer;
 
         //Frameworks::EventSubscriberPtr m_onCompilerEffectMaterialCompiled;
         //Frameworks::EventSubscriberPtr m_onCompilerCompileEffectMaterialFailed;

@@ -1,19 +1,18 @@
 ﻿/*********************************************************************
  * \file   EffectDtoHelper.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
 #ifndef EFFECT_DTO_HELPER_H
 #define EFFECT_DTO_HELPER_H
 
-#include "EffectMaterialDto.h"
 #include "EffectTextureMapDto.h"
 
 namespace Enigma::Engine
 {
-    class EffectMaterialDtoHelper
+    /*class EffectMaterialDtoHelper
     {
     public:
         EffectMaterialDtoHelper(const std::string& name);
@@ -25,7 +24,7 @@ namespace Enigma::Engine
 
     protected:
         EffectMaterialDto m_dto;
-    };
+    };*/
 
     class EffectTextureMapDtoHelper
     {

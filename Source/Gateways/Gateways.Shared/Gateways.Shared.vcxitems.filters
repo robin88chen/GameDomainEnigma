@@ -10,9 +10,6 @@
     <Filter Include="EffectProfile">
       <UniqueIdentifier>{1434ebaa-5879-4041-8a37-5bdc02f751f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EffectProfile\Deserializer">
-      <UniqueIdentifier>{04da3665-eeb4-4e5f-af98-b79c224185f4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectProfileJsonGateway.h">
@@ -26,12 +23,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.h">
       <Filter>DtoDeserializer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.h">
-      <Filter>EffectProfile\Deserializer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.h">
-      <Filter>EffectProfile\Deserializer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoGateway.h">
       <Filter>DTOs</Filter>
@@ -49,12 +40,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileDtoDeserializer.cpp">
       <Filter>DtoDeserializer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\JsonFileEffectProfileDeserializer.cpp">
-      <Filter>EffectProfile\Deserializer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AsyncJsonFileEffectProfileDeserializer.cpp">
-      <Filter>EffectProfile\Deserializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

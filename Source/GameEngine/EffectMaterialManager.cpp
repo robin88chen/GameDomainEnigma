@@ -4,7 +4,6 @@
 #include "EffectCompiler.h"
 #include "EffectEvents.h"
 #include "EngineErrors.h"
-#include "EffectMaterialDto.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
@@ -15,10 +14,9 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Engine, EffectMaterialManager, ISystemService);
 
-EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mngr,
-    const std::shared_ptr<Engine::IEffectCompilingProfileDeserializer>& effect_deserializer) : ISystemService(srv_mngr), m_currentCompilingRuid()
+EffectMaterialManager::EffectMaterialManager(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr), m_currentCompilingRuid()
 {
-    m_effectDeserializer = effect_deserializer;
+    //m_effectDeserializer = effect_deserializer;
     m_needTick = false;
     //m_compiler = menew EffectCompiler(this);
     m_isCurrentCompiling = false;
@@ -28,7 +26,7 @@ EffectMaterialManager::~EffectMaterialManager()
 {
     //delete m_compiler;
     //m_compiler = nullptr;
-    m_effectDeserializer = nullptr;
+    //m_effectDeserializer = nullptr;
     dumpUnreleasedMaterial();
     assert(m_sourceMaterials.empty());
 }

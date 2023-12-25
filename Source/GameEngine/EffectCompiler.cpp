@@ -7,14 +7,13 @@
 #include "GraphicKernel/GraphicCommands.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "EffectMaterialManager.h"
-#include "EffectMaterialPolicy.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Graphics;
 
-EffectCompiler::EffectCompiler() : m_ruidDeserializing()
+EffectCompiler::EffectCompiler()
 {
     m_hasMaterialProduced = false;
 

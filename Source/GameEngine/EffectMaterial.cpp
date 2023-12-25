@@ -1,7 +1,6 @@
 ﻿#include "EffectMaterial.h"
 #include "EngineErrors.h"
 #include "Frameworks/Rtti.h"
-#include "EffectMaterialDto.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;

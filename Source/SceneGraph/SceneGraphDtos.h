@@ -11,7 +11,6 @@
 #include "MathLib/Matrix4.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "GameEngine/GenericDto.h"
 #include "SpatialId.h"
 #include <string>

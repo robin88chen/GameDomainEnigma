@@ -19,13 +19,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h" />
@@ -98,9 +96,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp" />

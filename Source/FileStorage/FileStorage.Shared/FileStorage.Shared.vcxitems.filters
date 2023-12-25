@@ -10,6 +10,9 @@
     <Filter Include="PrimitiveStoreMapper">
       <UniqueIdentifier>{ab8392d1-7ee2-466d-8363-f8a7fbc2be0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EffectMaterialSourceStoreMapper">
+      <UniqueIdentifier>{5d597823-bf35-45ff-b006-cdefe893c099}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
@@ -21,6 +24,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.h">
       <Filter>PrimitiveStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceFileStoreMapper.h">
+      <Filter>EffectMaterialSourceStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
@@ -31,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.cpp">
       <Filter>PrimitiveStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceFileStoreMapper.cpp">
+      <Filter>EffectMaterialSourceStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

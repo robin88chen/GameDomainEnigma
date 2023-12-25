@@ -9,7 +9,6 @@
 #define _AVATAR_RECIPES_H
 
 #include "SceneGraph/Pawn.h"
-#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
 #include "Frameworks/EventSubscriber.h"

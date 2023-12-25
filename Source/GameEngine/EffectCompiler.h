@@ -9,12 +9,10 @@
 #define EFFECT_COMPILER_H
 
 #include "EffectCompilingProfile.h"
-#include "EffectMaterialPolicy.h"
 #include "EffectPass.h"
 #include "EffectTechnique.h"
 #include "EffectMaterialId.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/ruid.h"
 #include <unordered_map>
 
 namespace Enigma::Engine
@@ -94,8 +92,6 @@ namespace Enigma::Engine
         EffectCompilingProfile m_profile;
         std::shared_ptr<EffectMaterial> m_compilingEffect;
 
-        Frameworks::Ruid m_ruidDeserializing;
-        EffectMaterialPolicy m_policy;
         Frameworks::EventSubscriberPtr m_onShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onBuildProgramFailed;
         Frameworks::EventSubscriberPtr m_onSamplerStateCreated;

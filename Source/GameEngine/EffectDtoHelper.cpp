@@ -4,7 +4,7 @@
 
 using namespace Enigma::Engine;
 
-EffectMaterialDtoHelper::EffectMaterialDtoHelper(const std::string& name)
+/*EffectMaterialDtoHelper::EffectMaterialDtoHelper(const std::string& name)
 {
     m_dto.id() = name;
 }
@@ -24,7 +24,7 @@ EffectMaterialDtoHelper& EffectMaterialDtoHelper::FilenameAtPath(const std::stri
 GenericDto EffectMaterialDtoHelper::toGenericDto()
 {
     return m_dto.toGenericDto();
-}
+}*/
 
 EffectTextureMapDtoHelper::EffectTextureMapDtoHelper()
 {

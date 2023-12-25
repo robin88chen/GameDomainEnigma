@@ -8,7 +8,6 @@
 #ifndef _AVATAR_RECIPE_DTO_H
 #define _AVATAR_RECIPE_DTO_H
 
-#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/EffectMaterialId.h"
 

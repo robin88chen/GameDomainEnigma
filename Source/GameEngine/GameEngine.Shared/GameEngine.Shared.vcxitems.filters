@@ -204,20 +204,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
-      <Filter>Effect Material\Repository\Effect Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h">
-      <Filter>Effect Material\Policy</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h">
       <Filter>Effect Material\Policy</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h">
-      <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h">
       <Filter>DTOs\Effect Dto</Filter>
@@ -305,6 +296,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectQueries.h">
       <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +392,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp">
       <Filter>Effect Material\Effect Texture Map</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp">
-      <Filter>DTOs\Effect Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp">
       <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
@@ -451,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp">
       <Filter>Effect Material\Repository\Effect Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

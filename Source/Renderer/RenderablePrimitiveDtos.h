@@ -17,7 +17,7 @@
 #include "Renderer.h"
 #include "GameEngine/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
-#include "GameEngine/EffectMaterialDto.h"
+#include "GameEngine/EffectMaterialId.h"
 #include <memory>
 #include <vector>
 

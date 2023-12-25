@@ -1,7 +1,6 @@
 ﻿#include "RenderablePrimitiveDtos.h"
 #include "RenderablePrimitivePolicies.h"
 #include "Geometries/GeometryData.h"
-#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/GenericDto.h"
 #include "Animators/ModelPrimitiveAnimator.h"

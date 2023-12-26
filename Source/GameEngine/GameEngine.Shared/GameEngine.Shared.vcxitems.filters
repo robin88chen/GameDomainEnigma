@@ -79,6 +79,9 @@
     <Filter Include="Effect Material\Repository\Effect Compiler">
       <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DTOs\Texture Dto">
+      <UniqueIdentifier>{e144ea47-8807-4106-b3f2-39e86ba3b02f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -300,6 +303,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureStoreMapper.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h">
+      <Filter>DTOs\Texture Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -445,6 +460,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureDto.cpp">
+      <Filter>DTOs\Texture Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp">
+      <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

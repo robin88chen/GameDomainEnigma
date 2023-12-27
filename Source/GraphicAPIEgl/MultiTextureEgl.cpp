@@ -28,7 +28,7 @@ MultiTextureEgl::~MultiTextureEgl()
     }
 }
 
-error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+error MultiTextureEgl::createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     assert(count == buffs.size());
     if (!m_textures.empty())
@@ -42,14 +42,14 @@ error MultiTextureEgl::CreateFromSystemMemories(const MathLib::Dimension<unsigne
     error er;
     for (unsigned i = 0; i < count; i++)
     {
-        er = CreateOneFromSystemMemory(i, dimension, buffs[i]);
+        er = createOneFromSystemMemory(i, dimension, buffs[i]);
         if (er) return er;
     }
     Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
     return er;
 }
 
-error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
+error MultiTextureEgl::loadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     assert(!img_buffs.empty());
 
@@ -84,7 +84,7 @@ error MultiTextureEgl::LoadTextureImages(const std::vector<byte_buffer>& img_buf
                 return ErrorCode::eglLoadTexture;
             }
 
-            CreateOneFromSystemMemory(i, MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
+            createOneFromSystemMemory(i, MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
             png_image_free(&image);
         }
     }
@@ -139,19 +139,19 @@ error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     return ErrorCode::ok;
 }
 
-GLuint MultiTextureEgl::GetTextureHandle(unsigned int idx) const
+GLuint MultiTextureEgl::getTextureHandle(unsigned int idx) const
 {
     assert(!m_textures.empty() && idx < m_textures.size());
     return m_textures[idx];
 }
 
-const std::vector<GLuint>& MultiTextureEgl::GetTextureHandlesArray() const
+const std::vector<GLuint>& MultiTextureEgl::getTextureHandlesArray() const
 {
     return m_textures;
 }
 
-error MultiTextureEgl::CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
-                                                 const byte_buffer& buff)
+error MultiTextureEgl::createOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
+    const byte_buffer& buff)
 {
     if (FATAL_LOG_EXPR((m_textures.empty()) || (index >= m_textures.size()))) return ErrorCode::nullEglTexture;
     glBindTexture(GL_TEXTURE_2D, m_textures[index]);

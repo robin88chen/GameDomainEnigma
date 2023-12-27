@@ -143,20 +143,20 @@ namespace Enigma::Graphics
         //@{
         void DoCreatingDevice(const Frameworks::ICommandPtr& c);
         void DoCleaningDevice(const Frameworks::ICommandPtr& c);
-        
+
         void DoBeginningScene(const Frameworks::ICommandPtr& c);
         void DoEndingScene(const Frameworks::ICommandPtr& c);
         void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
         void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
         void DoClearing(const Frameworks::ICommandPtr& c);
         void DoFlipping(const Frameworks::ICommandPtr& c);
-        
+
         void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
         void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
         void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
-        
+
         void DoCreatingVertexShader(const Frameworks::ICommandPtr& c);
         void DoCreatingPixelShader(const Frameworks::ICommandPtr& c);
         void DoCreatingShaderProgram(const Frameworks::ICommandPtr& c);
@@ -170,8 +170,8 @@ namespace Enigma::Graphics
         void DoCreatingBlendState(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c);
 
-        void DoCreatingTexture(const Frameworks::ICommandPtr& c);
-        void DoCreatingMultiTexture(const Frameworks::ICommandPtr& c);
+        void createTexture(const Frameworks::ICommandPtr& c);
+        void createMultiTexture(const Frameworks::ICommandPtr& c);
 
         void DoBindingBackSurface(const Frameworks::ICommandPtr& c);
         void DoBindingViewPort(const Frameworks::ICommandPtr& c);
@@ -295,11 +295,11 @@ namespace Enigma::Graphics
         /** @name Textures */
         //@{
         /** create texture */
-        virtual error CreateTexture(const std::string& tex_name) = 0;
-        virtual future_error AsyncCreateTexture(const std::string& tex_name);
+        virtual error createTexture(const std::string& tex_name) = 0;
+        virtual future_error asyncCreateTexture(const std::string& tex_name);
         /** create multi-texture */
-        virtual error CreateMultiTexture(const std::string& tex_name) = 0;
-        virtual future_error AsyncCreateMultiTexture(const std::string& tex_name);
+        virtual error createMultiTexture(const std::string& tex_name) = 0;
+        virtual future_error asyncCreateMultiTexture(const std::string& tex_name);
         //@}
 
         virtual error BindBackSurface(
@@ -386,8 +386,8 @@ namespace Enigma::Graphics
         Frameworks::CommandSubscriberPtr m_doCreatingDepthStencilState;
         Frameworks::CommandSubscriberPtr m_doCreatingBlendState;
 
-        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
-        Frameworks::CommandSubscriberPtr m_doCreatingMultiTexture;
+        Frameworks::CommandSubscriberPtr m_createTexture;
+        Frameworks::CommandSubscriberPtr m_createMultiTexture;
 
         Frameworks::CommandSubscriberPtr m_doBindingBackSurface;
         Frameworks::CommandSubscriberPtr m_doBindingViewPort;

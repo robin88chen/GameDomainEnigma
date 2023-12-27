@@ -28,8 +28,8 @@ namespace Enigma::Engine
         MathLib::Dimension<unsigned>& dimension() { return m_dimension; }
         [[nodiscard]] bool isCubeTexture() const { return m_isCubeTexture; }
         bool& isCubeTexture() { return m_isCubeTexture; }
-        [[nodiscard]] bool isMultiTexture() const { return m_isMultiTexture; }
-        bool& isMultiTexture() { return m_isMultiTexture; }
+        [[nodiscard]] unsigned surfaceCount() const { return m_surfaceCount; }
+        unsigned& surfaceCount() { return m_surfaceCount; }
         [[nodiscard]] const std::vector<std::string>& filePaths() const { return m_filePaths; }
         std::vector<std::string>& filePaths() { return m_filePaths; }
 
@@ -41,7 +41,7 @@ namespace Enigma::Engine
         Graphics::GraphicFormat m_format;
         MathLib::Dimension<unsigned> m_dimension;
         bool m_isCubeTexture = false;
-        bool m_isMultiTexture = false;
+        unsigned m_surfaceCount = 1;
         std::vector<std::string> m_filePaths;
     };
 }

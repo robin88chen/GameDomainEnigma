@@ -395,7 +395,7 @@ error GraphicAPIDx11::CreateDepthStencilState(const std::string& name, const Gra
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
+error GraphicAPIDx11::createTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureDx11{ tex_name } };
@@ -405,7 +405,7 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
+error GraphicAPIDx11::createMultiTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureDx11{ tex_name } };

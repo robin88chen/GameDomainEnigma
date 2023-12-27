@@ -25,37 +25,37 @@ void ITexture::create(const MathLib::Dimension<unsigned>& dimension, const byte_
     {
         IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), dimension, buff, this]()
-                -> error { return CreateFromSystemMemory(dimension, buff); });
+                -> error { return createFromSystemMemory(dimension, buff); });
     }
     else
     {
-        CreateFromSystemMemory(dimension, buff);
+        createFromSystemMemory(dimension, buff);
     }
 }
 
-void ITexture::Load(const byte_buffer& img_buff)
+void ITexture::load(const byte_buffer& img_buff)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), img_buff, this]() -> error { return LoadTextureImage(img_buff); });
+            PushTask([lifetime = shared_from_this(), img_buff, this]() -> error { return loadTextureImage(img_buff); });
     }
     else
     {
-        LoadTextureImage(img_buff);
+        loadTextureImage(img_buff);
     }
 }
 
-void ITexture::Load(const std::string& filename, const std::string& pathid)
+void ITexture::load(const std::string& filename, const std::string& pathid)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return LoadTextureImage(filename, pathid); });
+            PushTask([lifetime = shared_from_this(), filename, pathid, this]() -> error { return loadTextureImage(filename, pathid); });
     }
     else
     {
-        LoadTextureImage(filename, pathid);
+        loadTextureImage(filename, pathid);
     }
 }
 
@@ -99,7 +99,7 @@ void ITexture::Retrieve(const MathLib::Rect& rcSrc)
     }
 }
 
-error ITexture::LoadTextureImage(const std::string& filename, const std::string& pathid)
+error ITexture::loadTextureImage(const std::string& filename, const std::string& pathid)
 {
     FileSystem::Filename filename_at_path(filename, pathid);
     FileSystem::IFilePtr iFile = FileSystem::FileSystem::instance()->openFile(filename_at_path.getSubPathFileName(), FileSystem::read | FileSystem::binary, filename_at_path.getMountPathId());
@@ -114,7 +114,7 @@ error ITexture::LoadTextureImage(const std::string& filename, const std::string&
     FileSystem::FileSystem::instance()->closeFile(iFile);
     if (!buff) return ErrorCode::fileIO;
     if (buff.value().size() != file_size) return ErrorCode::fileIO;
-    return LoadTextureImage(buff.value());
+    return loadTextureImage(buff.value());
 }
 
 void ITexture::update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)

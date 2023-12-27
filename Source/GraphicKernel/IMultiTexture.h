@@ -25,27 +25,27 @@ namespace Enigma::Graphics
         IMultiTexture& operator=(const IMultiTexture&) = delete;
         IMultiTexture& operator=(IMultiTexture&&) = delete;
 
-        virtual void MultiLoad(const std::vector<byte_buffer>& img_buffs);
-        virtual void MultiLoad(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
+        virtual void multiLoad(const std::vector<byte_buffer>& img_buffs);
+        virtual void multiLoad(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
         virtual void MultiSave(const std::vector<FileSystem::IFilePtr>& files);
         virtual void MultiSave(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids);
 
-        virtual void MultiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
+        virtual void multiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
 
         virtual bool IsMultiTexture() override { return true; }
 
     protected:
-        virtual error CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;
+        virtual error createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;
 
-        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) = 0;
-        virtual future_error AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs);
+        virtual error loadTextureImages(const std::vector<byte_buffer>& img_buffs) = 0;
+        virtual future_error asyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs);
 
         virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) = 0;
         virtual future_error AsyncSaveTextureImages(const std::vector<FileSystem::IFilePtr>& files);
 
-        virtual error LoadTextureImages(const std::vector<std::string>& filenames,
+        virtual error loadTextureImages(const std::vector<std::string>& filenames,
             const std::vector<std::string>& pathids);
-        virtual future_error AsyncLoadTextureImages(const std::vector<std::string>& filenames,
+        virtual future_error asyncLoadTextureImages(const std::vector<std::string>& filenames,
             const std::vector<std::string>& pathids);
 
         virtual error SaveTextureImages(const std::vector<std::string>& filenames,
@@ -59,15 +59,15 @@ namespace Enigma::Graphics
           //  override final {
             //return ER_NOT_IMPLEMENT;
         //};
-        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>&, const byte_buffer&) override final
+        virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>&, const byte_buffer&) override final
         {
             return ErrorCode::notImplement;
         };
-        virtual error LoadTextureImage(const byte_buffer&) override final
+        virtual error loadTextureImage(const byte_buffer&) override final
         {
             return ErrorCode::notImplement;
         };
-        virtual error LoadTextureImage(const std::string& filename, const std::string& pathid) override final
+        virtual error loadTextureImage(const std::string& filename, const std::string& pathid) override final
         {
             return ErrorCode::notImplement;
         };

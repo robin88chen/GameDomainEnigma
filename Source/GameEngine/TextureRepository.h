@@ -16,6 +16,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "TextureCommands.h"
 #include "TexturePolicies.h"
+#include "TextureId.h"
 #include <queue>
 
 namespace Enigma::Engine
@@ -24,12 +25,14 @@ namespace Enigma::Engine
 
     class TextureLoader;
     class TextureImageUpdater;
+    class TextureStoreMapper;
+    class TextureFactory;
 
     class TextureRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        TextureRepository(Frameworks::ServiceManager* srv_manager);
+        TextureRepository(Frameworks::ServiceManager* srv_manager, const std::shared_ptr<TextureStoreMapper>& store_mapper);
         TextureRepository(const TextureRepository&) = delete;
         TextureRepository(TextureRepository&&) = delete;
         ~TextureRepository() override;
@@ -40,10 +43,13 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
+        TextureFactory* factory() { return m_factory; }
         //error LoadTexture(const TexturePolicy& policy);
 
-        bool HasTexture(const std::string& name);
-        std::shared_ptr<Texture> QueryTexture(const std::string& name);
+        bool hasTexture(const TextureId& id);
+        std::shared_ptr<Texture> queryTexture(const TextureId& id);
+        void removeTexture(const TextureId& id);
+        void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
 
     private:
         void OnTextureLoaded(const Frameworks::IEventPtr& e);
@@ -63,6 +69,9 @@ namespace Enigma::Engine
         void InvokeRequest(const std::shared_ptr<Frameworks::IRequestCommand>& request);
 
     private:
+        std::shared_ptr<TextureStoreMapper> m_storeMapper;
+        TextureFactory* m_factory;
+
         Frameworks::EventSubscriberPtr m_onTextureLoaded;
         Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::EventSubscriberPtr m_onTextureSaved;
@@ -78,8 +87,7 @@ namespace Enigma::Engine
         Frameworks::CommandSubscriberPtr m_doRetrievingTextureImage;
         Frameworks::CommandSubscriberPtr m_doUpdatingTextureImage;
 
-        using TextureMap = std::unordered_map<std::string, std::weak_ptr<Texture>>;
-
+        using TextureMap = std::unordered_map<TextureId, std::shared_ptr<Texture>, TextureId::hash>;
         TextureMap m_textures;
         std::recursive_mutex m_textureMapLock;
 

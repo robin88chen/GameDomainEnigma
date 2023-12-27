@@ -30,16 +30,16 @@ namespace Enigma::Devices
 
         //virtual void LoadImageDimension(const std::string& filename, const std::string& path_id) override;
 
-        ID3D11ShaderResourceView* GetD3DResourceView(unsigned int idx) const;
-        ID3D11ShaderResourceView** GetD3DResourceViewArray() const;
-        unsigned int GetResourceViewCount() const;
+        ID3D11ShaderResourceView* getD3DResourceView(unsigned int idx) const;
+        ID3D11ShaderResourceView** getD3DResourceViewArray() const;
+        unsigned int getResourceViewCount() const;
 
     protected:
-        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
+        virtual error loadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
         virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
-        virtual error CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
-        error CreateFromScratchImage(unsigned int index, DirectX::ScratchImage& scratchImage);
-        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
+        virtual error createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
+        error createFromScratchImage(unsigned int index, DirectX::ScratchImage& scratchImage);
+        error createOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
             const byte_buffer& buff);
 
     protected:

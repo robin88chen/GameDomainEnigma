@@ -189,12 +189,12 @@ error ShaderVariableEgl_Texture::Apply()
             glBindTexture(GL_TEXTURE_CUBE_MAP, tex_egl->GetTextureHandle());
         }
     }
-    else if ((m_texture) && (m_texture->IsMultiTexture()) &&(m_indexMultiTexture))
+    else if ((m_texture) && (m_texture->IsMultiTexture()) && (m_indexMultiTexture))
     {
         MultiTextureEgl* tex_egl = dynamic_cast<MultiTextureEgl*>(m_texture.get());
         assert(tex_egl);
         glActiveTexture(GL_TEXTURE0 + m_bindSlot);
-        glBindTexture(GL_TEXTURE_2D, tex_egl->GetTextureHandle(m_indexMultiTexture.value()));
+        glBindTexture(GL_TEXTURE_2D, tex_egl->getTextureHandle(m_indexMultiTexture.value()));
     }
     glUniform1i(loc, static_cast<GLint>(m_bindSlot));
     return ErrorCode::ok;

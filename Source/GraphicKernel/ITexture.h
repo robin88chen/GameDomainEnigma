@@ -44,8 +44,8 @@ namespace Enigma::Graphics
 
         const std::string& getName() { return m_name; }
 
-        virtual void Load(const byte_buffer& img_buff);
-        virtual void Load(const std::string& filename, const std::string& pathid);
+        virtual void load(const byte_buffer& img_buff);
+        virtual void load(const std::string& filename, const std::string& pathid);
         virtual void Save(const FileSystem::IFilePtr& file);
         virtual void Save(const std::string& filename, const std::string& pathid);
 
@@ -64,9 +64,9 @@ namespace Enigma::Graphics
         virtual bool IsMultiTexture() { return false; }
 
     protected:
-        virtual error LoadTextureImage(const byte_buffer& img_buff) = 0;
-        virtual error LoadTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
+        virtual error loadTextureImage(const byte_buffer& img_buff) = 0;
+        virtual error loadTextureImage(const std::string& filename, const std::string& pathid);
+        virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TextureEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -28,8 +28,8 @@ namespace Enigma::Devices
 
         GLuint GetTextureHandle() const { return m_texture; }
     protected:
-        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
-        virtual error LoadTextureImage(const byte_buffer& img_buff) override;
+        virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
+        virtual error loadTextureImage(const byte_buffer& img_buff) override;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) override;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;
         virtual error SaveTextureImage(const FileSystem::IFilePtr& file) override;

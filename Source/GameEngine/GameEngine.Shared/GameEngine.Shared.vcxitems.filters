@@ -315,6 +315,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h">
       <Filter>Textures</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">

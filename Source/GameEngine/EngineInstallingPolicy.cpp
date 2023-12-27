@@ -19,7 +19,7 @@ error EngineInstallingPolicy::install(Frameworks::ServiceManager* service_manage
     service_manager->registerSystemService(std::make_shared<ShaderRepository>(service_manager));
     //service_manager->registerSystemService(std::make_shared<EffectMaterialManager>(service_manager));
     //menew MaterialVariableMap;
-    service_manager->registerSystemService(std::make_shared<TextureRepository>(service_manager));
+    //service_manager->registerSystemService(std::make_shared<TextureRepository>(service_manager));
     service_manager->registerSystemService(std::make_shared<RenderBufferRepository>(service_manager));
     service_manager->registerSystemService(std::make_shared<TimerService>(service_manager));
     return ErrorCode::ok;

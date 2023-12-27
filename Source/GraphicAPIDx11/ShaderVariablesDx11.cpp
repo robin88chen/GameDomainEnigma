@@ -616,7 +616,7 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
         TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(tex.get());
         if (texDx11)
         {
-            resource[0] = texDx11->GetD3DResourceView();
+            resource[0] = texDx11->getD3DResourceView();
         }
         //Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
         /*unsigned int w, h;
@@ -628,7 +628,7 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
         MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(tex.get());
         if (texDx11)
         {
-            resource[0] = texDx11->GetD3DResourceView(indexMultiTexture.value());
+            resource[0] = texDx11->getD3DResourceView(indexMultiTexture.value());
         }
         /*unsigned int w, h;
         m_multiTexture->GetDimension(&w, &h);

@@ -13,43 +13,43 @@ IMultiTexture::~IMultiTexture()
 {
 }
 
-void IMultiTexture::MultiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+void IMultiTexture::multiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), dimension, count, buffs, this]()
-                -> error { return CreateFromSystemMemories(dimension, count, buffs); });
+                -> error { return createFromSystemMemories(dimension, count, buffs); });
     }
     else
     {
-        CreateFromSystemMemories(dimension, count, buffs);
+        createFromSystemMemories(dimension, count, buffs);
     }
 }
 
-void IMultiTexture::MultiLoad(const std::vector<byte_buffer>& img_buffs)
+void IMultiTexture::multiLoad(const std::vector<byte_buffer>& img_buffs)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), img_buffs, this]() -> error { return LoadTextureImages(img_buffs); });
+            PushTask([lifetime = shared_from_this(), img_buffs, this]() -> error { return loadTextureImages(img_buffs); });
     }
     else
     {
-        LoadTextureImages(img_buffs);
+        loadTextureImages(img_buffs);
     }
 }
 
-void IMultiTexture::MultiLoad(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids)
+void IMultiTexture::multiLoad(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return LoadTextureImages(filenames, pathids); });
+            PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return loadTextureImages(filenames, pathids); });
     }
     else
     {
-        LoadTextureImages(filenames, pathids);
+        loadTextureImages(filenames, pathids);
     }
 }
 
@@ -81,10 +81,10 @@ void IMultiTexture::MultiSave(const std::vector<std::string>& filenames, const s
 }
 
 
-future_error IMultiTexture::AsyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs)
+future_error IMultiTexture::asyncLoadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     return IGraphicAPI::instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), img_buffs, this]() -> error { return LoadTextureImages(img_buffs); });
+        PushTask([lifetime = shared_from_this(), img_buffs, this]() -> error { return loadTextureImages(img_buffs); });
 }
 
 
@@ -94,7 +94,7 @@ future_error IMultiTexture::AsyncSaveTextureImages(const std::vector<FileSystem:
         PushTask([lifetime = shared_from_this(), files, this]() -> error { return SaveTextureImages(files); });
 }
 
-error IMultiTexture::LoadTextureImages(const std::vector<std::string>& filenames,
+error IMultiTexture::loadTextureImages(const std::vector<std::string>& filenames,
     const std::vector<std::string>& pathids)
 {
     size_t count = filenames.size();
@@ -117,14 +117,14 @@ error IMultiTexture::LoadTextureImages(const std::vector<std::string>& filenames
         FileSystem::FileSystem::instance()->closeFile(iFile);
         if (read_bytes != file_size) return ErrorCode::fileIO;
     }
-    return LoadTextureImages(buffs);
+    return loadTextureImages(buffs);
 }
 
-future_error IMultiTexture::AsyncLoadTextureImages(const std::vector<std::string>& filenames,
+future_error IMultiTexture::asyncLoadTextureImages(const std::vector<std::string>& filenames,
     const std::vector<std::string>& pathids)
 {
     return IGraphicAPI::instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return LoadTextureImages(filenames, pathids); });
+        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return loadTextureImages(filenames, pathids); });
 }
 
 error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames,

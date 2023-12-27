@@ -13,6 +13,8 @@
 #include "GameEngine/EffectQueries.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
+#include "GameEngine/TextureQueries.h"
+#include "GameEngine/Texture.h"
 #include "GameEngine/FactoryCommands.h"
 
 using namespace Enigma::Renderer;
@@ -123,11 +125,19 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     bool all_texture_ready = true;
     for (unsigned i = 0; i < m_metaDto->textureMaps().size(); i++)
     {
-        for (auto& t : m_metaDto->textureMaps()[i].TextureMappings())
+        for (auto& t : m_metaDto->textureMaps()[i].textureMappings())
         {
-            m_builtTextures[i].appendTextureSemantic(t.Semantic());
-            CommandBus::post(std::make_shared<LoadTexture>(std::get<TexturePolicy>(t.ConvertToPolicy())));
-            all_texture_ready = false;
+            m_builtTextures[i].appendTextureSemantic(t.semantic());
+            auto query = std::make_shared<QueryTexture>(t.textureId());
+            QueryDispatcher::dispatch(query);
+            if (auto tex = query->getResult())
+            {
+                m_builtTextures[i].changeSemanticTexture({ t.semantic(), tex, t.arrayIndex() });
+                if (!tex->lazyStatus().isReady())
+                {
+                    all_texture_ready = false;
+                }
+            }
         }
     }
     if ((all_effect_ready) && (all_texture_ready))
@@ -178,31 +188,23 @@ void MeshPrimitiveBuilder::onTextureLoadedOrCreated(const Frameworks::IEventPtr&
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
     if (!e) return;
-    std::string tex_name;
-    std::shared_ptr<Texture> tex_loaded;
+    TextureId tex_id;
+
     if (const auto ev = std::dynamic_pointer_cast<TextureLoaded>(e))
     {
-        tex_name = ev->getName();
-        tex_loaded = ev->getTexture();
+        tex_id = ev->id();
     }
     else if (const auto res = std::dynamic_pointer_cast<TextureCreated>(e))
     {
-        tex_name = res->getName();
-        tex_loaded = res->getTexture();
+        tex_id = res->id();
     }
     else
     {
         assert(false);
     }
-    if (tex_name.empty()) return;
-    const auto found_idx = findLoadingTextureIndex(tex_name);
+    const auto found_idx = findLoadingTextureIndex(tex_id);
     if (!found_idx) return;
 
-    const unsigned tex_idx = std::get<0>(found_idx.value());
-    const unsigned tuple_idx = std::get<1>(found_idx.value());
-    auto semantic = m_metaDto->textureMaps()[tex_idx].TextureMappings()[tuple_idx].Semantic();
-    auto array_idx = m_metaDto->textureMaps()[tex_idx].TextureMappings()[tuple_idx].ArrayIndex();
-    m_builtTextures[tex_idx].changeSemanticTexture({ semantic, tex_loaded, array_idx });
     tryCompletingMesh();
 }
 
@@ -214,11 +216,11 @@ void MeshPrimitiveBuilder::onLoadOrCreateTextureFailed(const Frameworks::IEventP
     std::error_code err;
     if (const auto ev = std::dynamic_pointer_cast<LoadTextureFailed>(e))
     {
-        err = ev->GetErrorCode();
+        err = ev->error();
     }
     else if (const auto res = std::dynamic_pointer_cast<CreateTextureFailed>(e))
     {
-        err = res->GetErrorCode();
+        err = res->error();
     }
     else
     {
@@ -268,14 +270,14 @@ std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const Effe
     return std::nullopt;
 }
 
-std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingTextureIndex(const std::string& name)
+std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingTextureIndex(const TextureId& id)
 {
     assert(m_metaDto);
     for (unsigned tex = 0; tex < m_metaDto->textureMaps().size(); tex++)
     {
-        for (unsigned tp = 0; tp < m_metaDto->textureMaps()[tex].TextureMappings().size(); tp++)
+        for (unsigned tp = 0; tp < m_metaDto->textureMaps()[tex].textureMappings().size(); tp++)
         {
-            if ((m_metaDto->textureMaps()[tex].TextureMappings()[tp].TextureName() == name)
+            if ((m_metaDto->textureMaps()[tex].textureMappings()[tp].textureId() == id)
                 && (m_builtTextures[tex].getTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
         }
     }

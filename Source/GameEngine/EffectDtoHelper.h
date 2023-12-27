@@ -9,6 +9,7 @@
 #define EFFECT_DTO_HELPER_H
 
 #include "EffectTextureMapDto.h"
+#include "TextureId.h"
 
 namespace Enigma::Engine
 {
@@ -31,10 +32,7 @@ namespace Enigma::Engine
     public:
         EffectTextureMapDtoHelper();
 
-        EffectTextureMapDtoHelper& TextureMapping(const std::string& filename, const std::string& path_id,
-            const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic);
-        EffectTextureMapDtoHelper& TextureMapping(const MathLib::Dimension<unsigned>& dimension, unsigned surface_count,
-            const std::string& tex_name, std::optional<unsigned> array_index, const std::string& semantic);
+        EffectTextureMapDtoHelper& TextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
 
         GenericDto toGenericDto();
 

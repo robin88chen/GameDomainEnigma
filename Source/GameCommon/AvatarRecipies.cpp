@@ -7,8 +7,10 @@
 #include "GameEngine/EffectQueries.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
+#include "GameEngine/TextureQueries.h"
 #include "Renderer/ModelPrimitive.h"
 #include "AvatarRecipeDto.h"
+#include "GameEngine/Texture.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::GameCommon;
@@ -219,7 +221,6 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_meshName.empty()) return;
-    if (m_textureDto.TextureName().empty()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
     ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
@@ -241,12 +242,16 @@ void ChangeAvatarTexture::changeMeshTexture(const MeshPrimitivePtr& mesh)
 {
     if (!mesh) return;
     if (m_meshName.empty()) return;
-    if (m_textureDto.TextureName().empty()) return;
-    auto policy = m_textureDto.ConvertToPolicy();
-    auto req = std::make_shared<LoadTexture>(std::get<TexturePolicy>(policy));
-    m_requsetRuid = req->getRuid();
-    m_mesh = mesh;
-    CommandBus::post(req);
+    auto query = std::make_shared<QueryTexture>(m_textureDto.textureId());
+    QueryDispatcher::dispatch(query);
+    if ((query->getResult()) && (query->getResult()->lazyStatus().isReady()))
+    {
+        mesh->changeSemanticTexture({ m_textureDto.semantic(), query->getResult(), m_textureDto.arrayIndex() });
+    }
+    else
+    {
+        m_mesh = mesh;
+    }
 }
 
 void ChangeAvatarTexture::onTextureLoaded(const Frameworks::IEventPtr& e)
@@ -254,9 +259,9 @@ void ChangeAvatarTexture::onTextureLoaded(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureLoaded>(e);
     if (!ev) return;
-    if (ev->getRequestRuid() != m_requsetRuid) return;
+    if (ev->id() != m_textureDto.textureId()) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->changeSemanticTexture({ m_textureDto.Semantic(), ev->getTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->changeSemanticTexture({ m_textureDto.semantic(), ev->texture(), m_textureDto.arrayIndex() });
 }
 
 void ChangeAvatarTexture::onLoadTextureFailed(const Frameworks::IEventPtr& e)
@@ -264,7 +269,7 @@ void ChangeAvatarTexture::onLoadTextureFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LoadTextureFailed>(e);
     if (!ev) return;
-    if (ev->getRequestRuid() != m_requsetRuid) return;
-    Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+    if (ev->id() != m_textureDto.textureId()) return;
+    Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 

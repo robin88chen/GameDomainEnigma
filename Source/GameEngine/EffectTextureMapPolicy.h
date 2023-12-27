@@ -8,7 +8,7 @@
 #ifndef _EFFECT_TEXTURE_MAP_POLICY_H
 #define _EFFECT_TEXTURE_MAP_POLICY_H
 
-#include "TexturePolicies.h"
+#include "TextureId.h"
 #include <string>
 #include <optional>
 #include <tuple>
@@ -19,7 +19,7 @@ namespace Enigma::Engine
     class EffectTextureMapPolicy
     {
     public:
-        using TextureTuplePolicy = std::tuple<std::string, TexturePolicy, std::optional<unsigned>>;
+        using TextureTuplePolicy = std::tuple<std::string, TextureId, std::optional<unsigned>>;
     public:
         EffectTextureMapPolicy() = default;
 

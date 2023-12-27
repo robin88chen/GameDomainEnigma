@@ -11,57 +11,56 @@
 #include <system_error>
 #include "Frameworks/ExtentTypesDefine.h"
 #include "Frameworks/Event.h"
+#include "TextureId.h"
 
 namespace Enigma::Engine
 {
     class Texture;
-    class TextureLoaded : public Frameworks::IResponseEvent
+    class TextureLoaded : public Frameworks::IEvent
     {
     public:
-        TextureLoaded(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<Texture>& tex)
-            : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
+        TextureLoaded(const TextureId& id, const std::shared_ptr<Texture>& tex)
+            : m_id(id), m_texture(tex) {};
 
-        const std::string& getName() { return m_name; }
-        std::shared_ptr<Texture> getTexture() { return m_texture; }
+        const TextureId& id() { return m_id; }
+        std::shared_ptr<Texture> texture() { return m_texture; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::shared_ptr<Texture> m_texture;
     };
-    class LoadTextureFailed : public Frameworks::IResponseEvent
+    class LoadTextureFailed : public Frameworks::IEvent
     {
     public:
-        LoadTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        LoadTextureFailed(const TextureId& id, std::error_code er)
+            : m_id(id), m_error(er) {};
 
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::error_code m_error;
     };
 
-    class TextureCreated : public Frameworks::IResponseEvent
+    class TextureCreated : public Frameworks::IEvent
     {
     public:
-        TextureCreated(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<Texture>& tex)
-            : IResponseEvent(request_ruid), m_name(name), m_texture(tex) {};
+        TextureCreated(const TextureId& id, const std::shared_ptr<Texture>& tex) : m_id(id), m_texture(tex) {};
 
-        const std::string& getName() { return m_name; }
-        std::shared_ptr<Texture> getTexture() { return m_texture; }
+        const TextureId& id() { return m_id; }
+        std::shared_ptr<Texture> texture() { return m_texture; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::shared_ptr<Texture> m_texture;
     };
-    class CreateTextureFailed : public Frameworks::IResponseEvent
+    class CreateTextureFailed : public Frameworks::IEvent
     {
     public:
-        CreateTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        CreateTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {};
 
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::error_code m_error;
     };
 
@@ -133,6 +132,29 @@ namespace Enigma::Engine
         std::error_code GetErrorCode() const { return m_error; }
     private:
         std::string m_name;
+        std::error_code m_error;
+    };
+    //---------------- Repository Events ----------------
+    class RemoveTextureFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveTextureFailed(const TextureId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        TextureId m_id;
+        std::error_code m_error;
+    };
+    class PutTextureFailed : public Frameworks::IEvent
+    {
+    public:
+        PutTextureFailed(const TextureId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        TextureId m_id;
         std::error_code m_error;
     };
 }

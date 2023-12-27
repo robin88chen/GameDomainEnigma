@@ -29,9 +29,9 @@ void TextureImageUpdater::RetrieveTextureImage(const std::shared_ptr<Texture>& t
 {
     m_targetTextureName = name;
     m_targetTextureRect = image_rect;
-    if ((target_tex) && target_tex->GetDeviceTexture())
+    if ((target_tex) && target_tex->getDeviceTexture())
     {
-        target_tex->GetDeviceTexture()->Retrieve(m_targetTextureRect);
+        target_tex->getDeviceTexture()->Retrieve(m_targetTextureRect);
     }
     else
     {
@@ -43,9 +43,9 @@ void TextureImageUpdater::UpdateTextureImage(const std::shared_ptr<Texture>& tar
 {
     m_targetTextureName = name;
     m_targetTextureRect = image_rect;
-    if ((target_tex) && target_tex->GetDeviceTexture())
+    if ((target_tex) && target_tex->getDeviceTexture())
     {
-        target_tex->GetDeviceTexture()->update(m_targetTextureRect, image_buff);
+        target_tex->getDeviceTexture()->update(m_targetTextureRect, image_buff);
     }
     else
     {

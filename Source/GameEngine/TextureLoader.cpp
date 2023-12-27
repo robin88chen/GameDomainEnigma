@@ -62,10 +62,10 @@ TextureLoader::~TextureLoader()
 void TextureLoader::LoadTexture(const TexturePolicy& policy)
 {
     m_policy = policy;
-    if (m_hostRepository->HasTexture(m_policy.getName()))
+    if (m_hostRepository->hasTexture(m_policy.getName()))
     {
         Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(
-            m_policy.getName(), m_hostRepository->QueryTexture(m_policy.getName())));
+            m_policy.getName(), m_hostRepository->queryTexture(m_policy.getName())));
     }
     else
     {
@@ -88,14 +88,14 @@ void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, 
         Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
         return;
     }
-    if (!target_texture->GetDeviceTexture())
+    if (!target_texture->getDeviceTexture())
     {
         Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
         return;
     }
     m_savingTextureName = name;
-    m_savingDeviceTextureName = target_texture->GetDeviceTexture()->getName();
-    target_texture->GetDeviceTexture()->Save(file);
+    m_savingDeviceTextureName = target_texture->getDeviceTexture()->getName();
+    target_texture->getDeviceTexture()->Save(file);
 }
 
 void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -104,11 +104,11 @@ void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
     std::string tex_name;
     if (auto ev = std::dynamic_pointer_cast<Graphics::DeviceTextureCreated, Frameworks::IEvent>(e))
     {
-        tex_name = ev->GetTextureName();
+        tex_name = ev->textureName();
     }
     else if (auto ev = std::dynamic_pointer_cast<Graphics::DeviceMultiTextureCreated, Frameworks::IEvent>(e))
     {
-        tex_name = ev->GetTextureName();
+        tex_name = ev->textureName();
     }
     else return;
     auto texture = Graphics::IGraphicAPI::instance()
@@ -122,7 +122,7 @@ void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
     }
     if (m_policy.GetJobType() == TexturePolicy::JobType::Load)
     {
-        texture.value()->Load(m_policy.getFileName(), m_policy.getPathId());
+        texture.value()->load(m_policy.getFileName(), m_policy.getPathId());
     }
     else
     {
@@ -130,7 +130,7 @@ void TextureLoader::OnTextureCreated(const Enigma::Frameworks::IEventPtr& e)
         {
             std::vector<byte_buffer> buffers;
             buffers.resize(m_policy.GetSurfaceCount());
-            std::dynamic_pointer_cast<Graphics::IMultiTexture, Graphics::ITexture>(texture.value())->MultiCreate(m_policy.GetDimension(), m_policy.GetSurfaceCount(), buffers);
+            std::dynamic_pointer_cast<Graphics::IMultiTexture, Graphics::ITexture>(texture.value())->multiCreate(m_policy.GetDimension(), m_policy.GetSurfaceCount(), buffers);
         }
         else
         {

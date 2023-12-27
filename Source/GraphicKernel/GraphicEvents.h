@@ -102,7 +102,7 @@ namespace Enigma::Graphics
     public:
         DeviceTextureCreated(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };
@@ -111,7 +111,7 @@ namespace Enigma::Graphics
     public:
         DeviceMultiTextureCreated(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };

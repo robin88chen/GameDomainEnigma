@@ -77,7 +77,7 @@ namespace Enigma::Renderer
         void tryCompletingMesh();
 
         std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
-        std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const std::string& name);
+        std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
     protected:
         Engine::PrimitiveId m_buildingId;

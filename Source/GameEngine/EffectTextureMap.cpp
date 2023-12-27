@@ -38,12 +38,10 @@ GenericDto EffectTextureMap::serializeDto() const
         {
             if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
             TextureMappingDto mapping;
-            mapping.JobType() = TexturePolicy::JobType::Load;
-            mapping.Semantic() = std::get<std::string>(tex);
-            mapping.TextureName() = t->factoryDesc().GetResourceName();
-            mapping.Filename() = t->factoryDesc().GetResourceFilename();
-            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.ArrayIndex() = v.value();
-            dto.TextureMappings().emplace_back(mapping);
+            mapping.textureId() = t->id();
+            mapping.semantic() = std::get<std::string>(tex);
+            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.arrayIndex() = v.value();
+            dto.textureMappings().emplace_back(mapping);
         }
     }
     return dto.toGenericDto();

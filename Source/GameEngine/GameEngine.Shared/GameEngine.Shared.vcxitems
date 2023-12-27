@@ -86,6 +86,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />

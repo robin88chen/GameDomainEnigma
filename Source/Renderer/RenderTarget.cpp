@@ -220,7 +220,7 @@ error RenderTarget::Resize(const MathLib::Dimension<unsigned>& dimension)
     //todo : render target texture
     if (m_renderTargetTexture)
     {
-        m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
+        m_renderTargetTexture->getDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
     }
     if (m_depthStencilSurface)
     {
@@ -435,10 +435,10 @@ void RenderTarget::OnTextureCreated(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::TextureCreated>(e);
     if (!ev) return;
     if (!m_backSurface) return;
-    if (ev->getName() != m_backSurface->getName()) return;
-    m_renderTargetTexture = ev->getTexture();
-    m_renderTargetTexture->GetDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
-    Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->getName()));
+    if (ev->id().name() != m_backSurface->getName()) return;
+    m_renderTargetTexture = ev->texture();
+    m_renderTargetTexture->getDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
+    Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->id().name()));
 }
 
 void RenderTarget::OnCreateTextureFailed(const Frameworks::IEventPtr& e)
@@ -447,6 +447,6 @@ void RenderTarget::OnCreateTextureFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::CreateTextureFailed>(e);
     if (!ev) return;
     if (!m_backSurface) return;
-    if (ev->getName() != m_backSurface->getName()) return;
-    Frameworks::EventPublisher::post(std::make_shared<CreateRenderTargetTextureFailed>(ev->getName(), ev->GetErrorCode()));
+    if (ev->id().name() != m_backSurface->getName()) return;
+    Frameworks::EventPublisher::post(std::make_shared<CreateRenderTargetTextureFailed>(ev->id().name(), ev->error()));
 }

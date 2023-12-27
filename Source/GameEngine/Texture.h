@@ -15,6 +15,7 @@
 #include "Frameworks/LazyStatus.h"
 #include "TextureId.h"
 #include "GenericDto.h"
+#include "Frameworks/EventSubscriber.h"
 #include <string>
 
 namespace Enigma::Engine
@@ -34,27 +35,39 @@ namespace Enigma::Engine
 
         const TextureId& id() const { return m_id; }
 
-        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+
+        GenericDto serializeDto() const;
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        const std::string& getName() const { return m_name; }
+        const Graphics::ITexturePtr& getDeviceTexture() { return m_texture; }
 
-        const Graphics::ITexturePtr& GetDeviceTexture() { return m_texture; }
+        virtual const Graphics::GraphicFormat& format();
+        virtual const MathLib::Dimension<unsigned>& dimension();
+        virtual bool isCubeTexture();
+        virtual bool isMultiTexture();
 
-        virtual const Graphics::GraphicFormat& GetFormat();
-        virtual const MathLib::Dimension<unsigned>& GetDimension();
-        virtual bool IsCubeTexture();
-        virtual bool IsMultiTexture() { return m_texture ? m_texture->IsMultiTexture() : false; }
+    protected:
+        void instanceLazyContent();
+        void loadResourceTextures();
+        void createEmptyResourceTextures();
+
+        void onDeviceTextureCreated(const Enigma::Frameworks::IEventPtr& e);
 
     protected:
         TextureId m_id;
         Frameworks::LazyStatus m_lazyStatus;
+        Graphics::GraphicFormat m_format;
+        MathLib::Dimension<unsigned> m_dimension;
+        bool m_isCubeTexture;
+        unsigned m_surfaceCount;
+        std::vector<std::string> m_filePaths;
         FactoryDesc m_factoryDesc;
-        std::string m_name;
         Graphics::ITexturePtr m_texture;
+
+        Frameworks::EventSubscriberPtr m_onDeviceTextureCreated;
     };
     using TexturePtr = std::shared_ptr<Texture>;
 }

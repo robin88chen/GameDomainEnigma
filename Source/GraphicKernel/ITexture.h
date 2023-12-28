@@ -56,12 +56,12 @@ namespace Enigma::Graphics
 
         virtual void AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
 
-        virtual const GraphicFormat& GetFormat() { return m_format; };
-        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
+        virtual const GraphicFormat& format() { return m_format; };
+        virtual const MathLib::Dimension<unsigned>& dimension() { return m_dimension; };
         const byte_buffer& GetRetrievedBuffer() { return m_retrievedBuff; }
-        virtual bool IsCubeTexture() { return m_isCubeTexture; }
+        virtual bool isCubeTexture() { return m_isCubeTexture; }
 
-        virtual bool IsMultiTexture() { return false; }
+        virtual bool isMultiTexture() { return false; }
 
     protected:
         virtual error loadTextureImage(const byte_buffer& img_buff) = 0;

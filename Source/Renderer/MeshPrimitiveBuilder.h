@@ -71,8 +71,8 @@ namespace Enigma::Renderer
 
         void onEffectMaterialContented(const Frameworks::IEventPtr& e);
         void onContentEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void onTextureLoadedOrCreated(const Frameworks::IEventPtr& e);
-        void onLoadOrCreateTextureFailed(const Frameworks::IEventPtr& e);
+        void onTextureContented(const Frameworks::IEventPtr& e);
+        void onContentTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
 
@@ -95,10 +95,8 @@ namespace Enigma::Renderer
 
         Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
         Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
-        Frameworks::EventSubscriberPtr m_onTextureCreated;
-        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureContented;
+        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
     };
 }
 

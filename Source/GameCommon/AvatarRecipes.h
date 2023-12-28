@@ -8,10 +8,10 @@
 #ifndef _AVATAR_RECIPES_H
 #define _AVATAR_RECIPES_H
 
-#include "SceneGraph/Pawn.h"
+#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
-#include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/Pawn.h"
 
 namespace Enigma::GameCommon
 {
@@ -88,14 +88,14 @@ namespace Enigma::GameCommon
 
     private:
         void changeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
-        void onTextureLoaded(const Frameworks::IEventPtr& e);
-        void onLoadTextureFailed(const Frameworks::IEventPtr& e);
+        void onTextureContented(const Frameworks::IEventPtr& e);
+        void onContentTextureFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureContented;
+        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
         std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
         Frameworks::Ruid m_requsetRuid;
     };

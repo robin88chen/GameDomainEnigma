@@ -175,12 +175,12 @@ error ShaderVariableEgl_Texture::Apply()
     assert(glIsProgram(m_program));
     GLint loc = glGetUniformLocation(m_program, m_name.c_str());
     if (loc < 0) return ErrorCode::shaderVarLocation;
-    if ((m_texture) && (!m_texture->IsMultiTexture()))
+    if ((m_texture) && (!m_texture->isMultiTexture()))
     {
         TextureEgl* tex_egl = dynamic_cast<TextureEgl*>(m_texture.get());
         assert(tex_egl);
         glActiveTexture(GL_TEXTURE0 + m_bindSlot);
-        if (!tex_egl->IsCubeTexture())
+        if (!tex_egl->isCubeTexture())
         {
             glBindTexture(GL_TEXTURE_2D, tex_egl->GetTextureHandle());
         }
@@ -189,7 +189,7 @@ error ShaderVariableEgl_Texture::Apply()
             glBindTexture(GL_TEXTURE_CUBE_MAP, tex_egl->GetTextureHandle());
         }
     }
-    else if ((m_texture) && (m_texture->IsMultiTexture()) && (m_indexMultiTexture))
+    else if ((m_texture) && (m_texture->isMultiTexture()) && (m_indexMultiTexture))
     {
         MultiTextureEgl* tex_egl = dynamic_cast<MultiTextureEgl*>(m_texture.get());
         assert(tex_egl);

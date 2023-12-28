@@ -82,6 +82,9 @@
     <Filter Include="DTOs\Texture Dto">
       <UniqueIdentifier>{e144ea47-8807-4106-b3f2-39e86ba3b02f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Textures\ResourceProcessor">
+      <UniqueIdentifier>{c97ac5c6-b031-4a87-a005-f02d9df4ee96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -148,9 +151,6 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h">
       <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h">
@@ -318,6 +318,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureQueries.h">
       <Filter>Queries</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -366,9 +372,6 @@
       <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp">
-      <Filter>Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp">
@@ -469,6 +472,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp">
       <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

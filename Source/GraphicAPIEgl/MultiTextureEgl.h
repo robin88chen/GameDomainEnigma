@@ -29,6 +29,8 @@ namespace Enigma::Devices
 
         virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
 
+        virtual unsigned surfaceCount() override { return (unsigned)m_textures.size(); }
+
         GLuint getTextureHandle(unsigned int idx) const;
         const std::vector<GLuint>& getTextureHandlesArray() const;
         unsigned int getTextureHandleCount() const { return (unsigned int)m_textures.size(); }

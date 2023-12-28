@@ -1,17 +1,10 @@
-﻿#include "Texture.h"
-#include "TextureDto.h"
-#include "GraphicKernel/ITexture.h"
-#include "Frameworks/CommandBus.h"
-#include "GraphicKernel/GraphicCommands.h"
-#include "GraphicKernel/GraphicEvents.h"
-#include <cassert>
-
-#include "EngineErrors.h"
-#include "TextureEvents.h"
-#include "Frameworks/EventPublisher.h"
+﻿#include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/IMultiTexture.h"
-#include "Platforms/PlatformLayer.h"
+#include "GraphicKernel/ITexture.h"
+#include "Texture.h"
+#include "TextureDto.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -37,9 +30,15 @@ Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYP
     m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);
 }
 
-Texture::Texture(const std::string& name, const ITexturePtr& tex) : m_factoryDesc(TYPE_RTTI.getName())
+Texture::Texture(const TextureId& id, const ITexturePtr& tex) : m_factoryDesc(TYPE_RTTI.getName())
 {
+    m_id = id;
+    m_format = tex->format();
+    m_dimension = tex->dimension();
+    m_isCubeTexture = tex->isCubeTexture();
+    m_surfaceCount = tex->isMultiTexture() ? std::dynamic_pointer_cast<IMultiTexture>(tex)->surfaceCount() : 1;
     m_texture = tex;
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
 }
 
 Texture::~Texture()
@@ -58,103 +57,51 @@ GenericDto Texture::serializeDto() const
     return textureDto.toGenericDto();
 }
 
-const Enigma::MathLib::Dimension<unsigned>& Texture::dimension()
+const Enigma::MathLib::Dimension<unsigned>& Texture::dimension() const
 {
     return m_dimension;
 }
 
-const GraphicFormat& Texture::format()
+const GraphicFormat& Texture::format() const
 {
     return m_format;
 }
 
-bool Texture::isCubeTexture()
+bool Texture::isCubeTexture() const
 {
     return m_isCubeTexture;
 }
 
-bool Texture::isMultiTexture()
+bool Texture::isMultiTexture() const
 {
     return m_surfaceCount > 1;
 }
 
-void Texture::instanceLazyContent()
+const std::vector<std::string>& Texture::filePaths() const
 {
-    assert(m_lazyStatus.isGhost());
-    if (isMultiTexture())
-    {
-        CommandBus::post(std::make_shared<CreateMultiTexture>(m_id.name()));
-    }
-    else
-    {
-        CommandBus::post(std::make_shared<CreateTexture>(m_id.name()));
-    }
-    m_lazyStatus.changeStatus(LazyStatus::Status::Loading);
+    return m_filePaths;
 }
 
-void Texture::loadResourceTextures()
+std::vector<std::string>& Texture::filePaths()
 {
-    assert(m_lazyStatus.isLoading());
-    assert(m_texture);
-    if (isMultiTexture())
-    {
-        std::dynamic_pointer_cast<IMultiTexture>(m_texture)->multiLoad(m_filePaths, {});
-    }
-    else
-    {
-        m_texture->load(m_filePaths[0], "");
-    }
+    return m_filePaths;
 }
 
-void Texture::createEmptyResourceTextures()
+void Texture::instanceDeviceTexture(const Graphics::ITexturePtr& tex)
 {
     assert(m_lazyStatus.isLoading());
+    assert(m_isCubeTexture == tex->isCubeTexture());
+    assert(isMultiTexture() == tex->isMultiTexture());
+    assert(m_dimension == tex->dimension());
     if (isMultiTexture())
     {
-        std::vector<byte_buffer> buffers;
-        buffers.resize(m_surfaceCount);
-        std::dynamic_pointer_cast<IMultiTexture>(m_texture)->multiCreate(m_dimension, m_surfaceCount, buffers);
+        assert(m_surfaceCount == std::dynamic_pointer_cast<IMultiTexture>(tex)->surfaceCount());
     }
     else
     {
-        m_texture->create(m_dimension, byte_buffer{});
+        assert(m_surfaceCount == 1);
     }
+    m_texture = tex;
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
 }
 
-void Texture::onDeviceTextureCreated(const IEventPtr& e)
-{
-    assert(m_lazyStatus.isLoading());
-    if (const auto ev = std::dynamic_pointer_cast<DeviceTextureCreated>(e))
-    {
-        if (ev->textureName() != m_id.name()) return;
-        const auto texture = IGraphicAPI::instance()->TryFindGraphicAsset<ITexturePtr>(m_id.name());
-        if (!texture)
-        {
-            Platforms::Debug::Printf("can't get texture asset %s", m_id.name().c_str());
-            EventPublisher::post(std::make_shared<LoadTextureFailed>(m_id, ErrorCode::findStashedAssetFail));
-            return;
-        }
-        m_texture = texture.value();
-    }
-    else if (const auto ev = std::dynamic_pointer_cast<DeviceMultiTextureCreated>(e))
-    {
-        if (ev->textureName() != m_id.name()) return;
-        const auto texture = IGraphicAPI::instance()->TryFindGraphicAsset<ITexturePtr>(m_id.name());
-        if (!texture)
-        {
-            Platforms::Debug::Printf("can't get texture asset %s", m_id.name().c_str());
-            EventPublisher::post(std::make_shared<LoadTextureFailed>(m_id, ErrorCode::findStashedAssetFail));
-            return;
-        }
-        m_texture = texture.value();
-    }
-    else return;
-    if (!m_filePaths.empty())
-    {
-        loadResourceTextures();
-    }
-    else
-    {
-        createEmptyResourceTextures();
-    }
-}

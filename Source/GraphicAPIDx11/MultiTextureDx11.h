@@ -28,6 +28,7 @@ namespace Enigma::Devices
 
         virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&) override;
 
+        virtual unsigned surfaceCount() override { return m_resourceViewCount; }
         //virtual void LoadImageDimension(const std::string& filename, const std::string& path_id) override;
 
         ID3D11ShaderResourceView* getD3DResourceView(unsigned int idx) const;

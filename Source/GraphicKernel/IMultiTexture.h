@@ -32,7 +32,8 @@ namespace Enigma::Graphics
 
         virtual void multiCreate(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs);
 
-        virtual bool IsMultiTexture() override { return true; }
+        virtual bool isMultiTexture() override { return true; }
+        virtual unsigned surfaceCount() = 0;
 
     protected:
         virtual error createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) = 0;

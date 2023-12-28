@@ -8,11 +8,11 @@
 #ifndef TEXTURE_LOADER_H
 #define TEXTURE_LOADER_H
 
-#include <memory>
-
-#include "TexturePolicies.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Texture.h"
+#include "TextureDto.h"
+#include "TexturePolicies.h"
+#include <memory>
 
 namespace Enigma::Engine
 {
@@ -23,23 +23,23 @@ namespace Enigma::Engine
         class TextureLoaded : public Frameworks::IEvent
         {
         public:
-            TextureLoaded(const std::string& name, const TexturePtr& tex) :
-                m_name(name), m_texture(tex) {};
-            const std::string& GetTextureName() const { return m_name; }
-            const TexturePtr& getTexture() const { return m_texture; }
+            TextureLoaded(const TextureId& id, const std::shared_ptr<Texture>& tex) :
+                m_id(id), m_texture(tex) {};
+            const TextureId& id() const { return m_id; }
+            const std::shared_ptr<Texture>& texture() const { return m_texture; }
         private:
-            std::string m_name;
-            TexturePtr m_texture;
+            TextureId m_id;
+            std::shared_ptr<Texture> m_texture;
         };
         class LoadTextureFailed : public Frameworks::IEvent
         {
         public:
-            LoadTextureFailed(const std::string& name, std::error_code er) :
-                m_name(name), m_error(er) {};
-            const std::string& GetTextureName() const { return m_name; }
-            std::error_code GetError() const { return m_error; }
+            LoadTextureFailed(const TextureId& id, std::error_code er) :
+                m_id(id), m_error(er) {};
+            const TextureId& id() const { return m_id; }
+            std::error_code error() const { return m_error; }
         private:
-            std::string m_name;
+            TextureId m_id;
             std::error_code m_error;
         };
         class TextureSaved : public Frameworks::IEvent
@@ -62,26 +62,33 @@ namespace Enigma::Engine
             std::error_code m_error;
         };
     public:
-        TextureLoader(TextureRepository* host);
+        TextureLoader();
         TextureLoader(const TextureLoader&) = delete;
         TextureLoader(TextureLoader&&) = delete;
         ~TextureLoader();
         TextureLoader& operator=(TextureLoader&) = delete;
         TextureLoader& operator=(TextureLoader&&) = delete;
 
-        void LoadTexture(const TexturePolicy& policy);
+        void contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto);
         void SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file);
 
     private:
-        void OnTextureCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureCreateResourceFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onDeviceTextureCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e);
+        void onTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onTextureCreateResourceFailed(const Enigma::Frameworks::IEventPtr& e);
         void OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e);
         void OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
+        void loadResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
+        void createEmptyResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
+
+        void failContentingImage(std::error_code er);
     private:
+        TextureDto m_textureDto;
+        std::shared_ptr<Texture> m_contentingTexture;
+
         TextureRepository* m_hostRepository;
         TexturePolicy m_policy;
         std::string m_savingDeviceTextureName;

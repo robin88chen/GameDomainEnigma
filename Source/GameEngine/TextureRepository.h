@@ -52,8 +52,8 @@ namespace Enigma::Engine
         void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
 
     private:
-        void OnTextureLoaded(const Frameworks::IEventPtr& e);
-        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
+        //void OnTextureLoaded(const Frameworks::IEventPtr& e);
+        //void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
         void OnTextureSaved(const Frameworks::IEventPtr& e);
         void OnSaveTextureFailed(const Frameworks::IEventPtr& e);
         void OnTextureImageRetrieved(const Frameworks::IEventPtr& e);
@@ -61,7 +61,7 @@ namespace Enigma::Engine
         void OnTextureImageUpdated(const Frameworks::IEventPtr& e);
         void OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e);
 
-        void DoLoadingTexture(const Frameworks::ICommandPtr& c);
+        //void DoLoadingTexture(const Frameworks::ICommandPtr& c);
         void DoSavingTexture(const Frameworks::ICommandPtr& c);
         void DoRetrievingTextureImage(const Frameworks::ICommandPtr& c);
         void DoUpdatingTextureImage(const Frameworks::ICommandPtr& c);
@@ -72,8 +72,8 @@ namespace Enigma::Engine
         std::shared_ptr<TextureStoreMapper> m_storeMapper;
         TextureFactory* m_factory;
 
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
+        //Frameworks::EventSubscriberPtr m_onTextureLoaded;
+        //Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
         Frameworks::EventSubscriberPtr m_onTextureSaved;
         Frameworks::EventSubscriberPtr m_onSaveTextureFailed;
         Frameworks::EventSubscriberPtr m_onTextureImageRetrieved;
@@ -81,8 +81,8 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onTextureImageUpdated;
         Frameworks::EventSubscriberPtr m_onUpdateTextureImageFailed;
 
-        Frameworks::CommandSubscriberPtr m_doLoadingTexture;
-        Frameworks::CommandSubscriberPtr m_doCreatingTexture;
+        //Frameworks::CommandSubscriberPtr m_doLoadingTexture;
+        //Frameworks::CommandSubscriberPtr m_doCreatingTexture;
         Frameworks::CommandSubscriberPtr m_doSavingTexture;
         Frameworks::CommandSubscriberPtr m_doRetrievingTextureImage;
         Frameworks::CommandSubscriberPtr m_doUpdatingTextureImage;

@@ -8,31 +8,25 @@
 #ifndef _TEXTURE_COMMANDS_H
 #define _TEXTURE_COMMANDS_H
 
-#include "TexturePolicies.h"
-#include "Frameworks/Command.h"
 #include "FileSystem/IFile.h"
+#include "Frameworks/Command.h"
 #include "MathLib/Rect.h"
+#include "TextureId.h"
 
 namespace Enigma::Engine
 {
-    class LoadTexture : public Frameworks::IRequestCommand
+    class ConstituteTexture : public Frameworks::ICommand
     {
     public:
-        LoadTexture(const TexturePolicy& policy) : m_policy(policy) {}
-        const TexturePolicy& GetPolicy() { return m_policy; }
+        ConstituteTexture(const TextureId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
+        const TextureId& id() { return m_id; }
+        const GenericDto& dto() { return m_dto; }
 
     private:
-        TexturePolicy m_policy;
+        TextureId m_id;
+        GenericDto m_dto;
     };
-    class CreateTexture : public Frameworks::IRequestCommand
-    {
-    public:
-        CreateTexture(const TexturePolicy& policy) : m_policy(policy) {}
-        const TexturePolicy& GetPolicy() { return m_policy; }
 
-    private:
-        TexturePolicy m_policy;
-    };
     class SaveTexture : public Frameworks::IRequestCommand
     {
     public:

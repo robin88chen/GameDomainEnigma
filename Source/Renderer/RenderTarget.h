@@ -134,8 +134,8 @@ namespace Enigma::Renderer
         void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
         void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
-        void OnTextureCreated(const Frameworks::IEventPtr& e);
-        void OnCreateTextureFailed(const Frameworks::IEventPtr& e);
+        void onTextureContented(const Frameworks::IEventPtr& e);
+        void onContentTextureFailed(const Frameworks::IEventPtr& e);
 
     protected:
         bool m_isPrimary;
@@ -159,8 +159,8 @@ namespace Enigma::Renderer
         Frameworks::EventSubscriberPtr m_onBackSurfaceResized;
         Frameworks::EventSubscriberPtr m_onDepthSurfaceResized;
 
-        Frameworks::EventSubscriberPtr m_onTextureCreated;
-        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureContented;
+        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
 
         enum Resizing  //! 不能用 enum class, bitsets 操作會有問題
         {

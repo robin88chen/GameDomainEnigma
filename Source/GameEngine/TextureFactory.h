@@ -15,6 +15,7 @@
 namespace Enigma::Engine
 {
     class Texture;
+    class TextureResourceProcessor;
 
     class TextureFactory
     {
@@ -27,6 +28,9 @@ namespace Enigma::Engine
 
         std::shared_ptr<Texture> create(const TextureId& id);
         std::shared_ptr<Texture> constitute(const TextureId& id, const GenericDto& dto);
+
+    private:
+        TextureResourceProcessor* m_processor;
     };
 }
 

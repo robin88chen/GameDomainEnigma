@@ -22,7 +22,7 @@ TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager, co
     m_needTick = false;
     m_currentJob = TexturePolicy::JobType::None;
     m_currentRequesting = false;
-    m_loader = menew TextureLoader(this);
+    //m_loader = menew TextureLoader(this);
     m_updater = menew TextureImageUpdater(this);
 }
 
@@ -37,12 +37,12 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 {
     assert(m_storeMapper);
 
-    m_onTextureLoaded =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureLoaded(c); });
-    Frameworks::EventPublisher::subscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
-    m_onLoadTextureFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnLoadTextureFailed(c); });
-    Frameworks::EventPublisher::subscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
+    //m_onTextureLoaded =
+      //  std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureLoaded(c); });
+    //Frameworks::EventPublisher::subscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
+    //m_onLoadTextureFailed =
+      //  std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnLoadTextureFailed(c); });
+    //Frameworks::EventPublisher::subscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
     m_onTextureSaved =
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnTextureSaved(c); });
     Frameworks::EventPublisher::subscribe(typeid(TextureLoader::TextureSaved), m_onTextureSaved);
@@ -63,12 +63,12 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnUpdateTextureImageFailed(c); });
     Frameworks::EventPublisher::subscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
 
-    m_doLoadingTexture =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(LoadTexture), m_doLoadingTexture);
-    m_doCreatingTexture =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(CreateTexture), m_doCreatingTexture);
+    //m_doLoadingTexture =
+      //  std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
+    //Frameworks::CommandBus::subscribe(typeid(LoadTexture), m_doLoadingTexture);
+    //m_doCreatingTexture =
+      //  std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
+    //Frameworks::CommandBus::subscribe(typeid(CreateTexture), m_doCreatingTexture);
     m_doSavingTexture =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoSavingTexture(c); });
     Frameworks::CommandBus::subscribe(typeid(SaveTexture), m_doSavingTexture);
@@ -110,10 +110,10 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
     assert(m_storeMapper);
     m_storeMapper->disconnect();
 
-    Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
-    m_onTextureLoaded = nullptr;
-    Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
-    m_onLoadTextureFailed = nullptr;
+    //Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
+    //m_onTextureLoaded = nullptr;
+    //Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
+    //m_onLoadTextureFailed = nullptr;
     Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::TextureSaved), m_onTextureSaved);
     m_onTextureSaved = nullptr;
     Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::SaveTextureFailed), m_onSaveTextureFailed);
@@ -127,10 +127,10 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
     Frameworks::EventPublisher::unsubscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
     m_onUpdateTextureImageFailed = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(LoadTexture), m_doLoadingTexture);
-    m_doLoadingTexture = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(CreateTexture), m_doCreatingTexture);
-    m_doCreatingTexture = nullptr;
+    //Frameworks::CommandBus::unsubscribe(typeid(LoadTexture), m_doLoadingTexture);
+    //m_doLoadingTexture = nullptr;
+    //Frameworks::CommandBus::unsubscribe(typeid(CreateTexture), m_doCreatingTexture);
+    //m_doCreatingTexture = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(SaveTexture), m_doSavingTexture);
     m_doSavingTexture = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(RetrieveTextureImage), m_doRetrievingTextureImage);
@@ -191,21 +191,21 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
     }
 }
 
-void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
+/*void TextureRepository::OnTextureLoaded(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureLoader::TextureLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_textureMapLock };
-    m_textures.insert_or_assign(ev->GetTextureName(), ev->getTexture());
+    m_textures.insert_or_assign(ev->id(), ev->texture());
     if (m_currentJob == TexturePolicy::JobType::Load)
     {
-        Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(ev->getTexture()->id(), ev->getTexture()));
+        Frameworks::EventPublisher::post(std::make_shared<TextureContented>(ev->id(), ev->texture()));
     }
     else if (m_currentJob == TexturePolicy::JobType::Create)
     {
-        Frameworks::EventPublisher::post(std::make_shared<TextureCreated>(ev->getTexture()->id(), ev->getTexture()));
+        Frameworks::EventPublisher::post(std::make_shared<TextureContented>(ev->id(), ev->texture()));
     }
     m_currentJob = TexturePolicy::JobType::None;
     m_currentRequesting = false;
@@ -218,14 +218,14 @@ void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<TextureLoader::LoadTextureFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n",
-        ev->GetTextureName().c_str(), ev->GetError().message().c_str());
+        ev->id().name().c_str(), ev->error().message().c_str());
     if (m_currentJob == TexturePolicy::JobType::Load)
     {
-        Frameworks::EventPublisher::post(std::make_shared<LoadTextureFailed>(ev->GetTextureName(), ev->GetError()));
+        Frameworks::EventPublisher::post(std::make_shared<ContentTextureFailed>(ev->id(), ev->error()));
     }
     else if (m_currentJob == TexturePolicy::JobType::Create)
     {
-        Frameworks::EventPublisher::post(std::make_shared<CreateTextureFailed>(ev->GetTextureName(), ev->GetError()));
+        Frameworks::EventPublisher::post(std::make_shared<ContentTextureFailed>(ev->id(), ev->error()));
     }
     else
     {
@@ -233,7 +233,7 @@ void TextureRepository::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
     }
     m_currentJob = TexturePolicy::JobType::None;
     m_currentRequesting = false;
-}
+}*/
 
 void TextureRepository::OnTextureSaved(const Frameworks::IEventPtr& e)
 {
@@ -295,7 +295,7 @@ void TextureRepository::OnUpdateTextureImageFailed(const Frameworks::IEventPtr& 
     m_currentRequesting = false;
 }
 
-void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)
+/*void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     if (auto cmd = std::dynamic_pointer_cast<LoadTexture>(c))
@@ -316,7 +316,7 @@ void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)
     {
         assert(false);
     }
-}
+}*/
 
 void TextureRepository::DoSavingTexture(const Frameworks::ICommandPtr& c)
 {
@@ -367,7 +367,7 @@ void TextureRepository::InvokeRequest(const std::shared_ptr<Frameworks::IRequest
 {
     assert(m_loader);
     assert(m_updater);
-    if (auto load_request = std::dynamic_pointer_cast<LoadTexture>(request))
+    /*if (auto load_request = std::dynamic_pointer_cast<LoadTexture>(request))
     {
         m_loader->LoadTexture(load_request->GetPolicy());
         m_currentJob = TexturePolicy::JobType::Load;
@@ -377,7 +377,7 @@ void TextureRepository::InvokeRequest(const std::shared_ptr<Frameworks::IRequest
         m_loader->LoadTexture(create_request->GetPolicy());
         m_currentJob = TexturePolicy::JobType::Create;
     }
-    else if (auto save_request = std::dynamic_pointer_cast<SaveTexture>(request))
+    else*/ if (auto save_request = std::dynamic_pointer_cast<SaveTexture>(request))
     {
         m_loader->SaveTexture(save_request->GetTargetTexture(), save_request->GetTextureName(), save_request->GetFile());
     }

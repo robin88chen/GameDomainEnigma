@@ -83,6 +83,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp" />
   </ItemGroup>
 </Project>

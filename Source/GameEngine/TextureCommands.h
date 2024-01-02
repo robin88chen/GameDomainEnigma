@@ -26,7 +26,26 @@ namespace Enigma::Engine
         TextureId m_id;
         GenericDto m_dto;
     };
+    class PutTexture : public Frameworks::ICommand
+    {
+    public:
+        PutTexture(const TextureId& id, const std::shared_ptr<Texture>& texture) : m_id(id), m_texture(texture) {}
+        const TextureId& id() { return m_id; }
+        const std::shared_ptr<Texture>& texture() { return m_texture; }
 
+    private:
+        TextureId m_id;
+        std::shared_ptr<Texture> m_texture;
+    };
+    class RemoveTexture : public Frameworks::ICommand
+    {
+    public:
+        RemoveTexture(const TextureId& id) : m_id(id) {}
+        const TextureId& id() { return m_id; }
+
+    private:
+        TextureId m_id;
+    };
     class SaveTexture : public Frameworks::IRequestCommand
     {
     public:

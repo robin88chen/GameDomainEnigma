@@ -61,6 +61,9 @@ namespace Enigma::Engine
         void OnTextureImageUpdated(const Frameworks::IEventPtr& e);
         void OnUpdateTextureImageFailed(const Frameworks::IEventPtr& e);
 
+        void removeTexture(const Frameworks::ICommandPtr& c);
+        void putTexture(const Frameworks::ICommandPtr& c);
+
         //void DoLoadingTexture(const Frameworks::ICommandPtr& c);
         void DoSavingTexture(const Frameworks::ICommandPtr& c);
         void DoRetrievingTextureImage(const Frameworks::ICommandPtr& c);
@@ -80,6 +83,9 @@ namespace Enigma::Engine
         Frameworks::EventSubscriberPtr m_onRetrieveTextureImageFailed;
         Frameworks::EventSubscriberPtr m_onTextureImageUpdated;
         Frameworks::EventSubscriberPtr m_onUpdateTextureImageFailed;
+
+        Frameworks::CommandSubscriberPtr m_removeTexture;
+        Frameworks::CommandSubscriberPtr m_putTexture;
 
         //Frameworks::CommandSubscriberPtr m_doLoadingTexture;
         //Frameworks::CommandSubscriberPtr m_doCreatingTexture;

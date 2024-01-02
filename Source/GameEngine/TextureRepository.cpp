@@ -63,6 +63,11 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
         std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnUpdateTextureImageFailed(c); });
     Frameworks::EventPublisher::subscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
 
+    m_removeTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { removeTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(RemoveTexture), m_removeTexture);
+    m_putTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { putTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(PutTexture), m_putTexture);
+
     //m_doLoadingTexture =
       //  std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoLoadingTexture(c); });
     //Frameworks::CommandBus::subscribe(typeid(LoadTexture), m_doLoadingTexture);
@@ -127,6 +132,11 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
     Frameworks::EventPublisher::unsubscribe(typeid(TextureImageUpdater::UpdateTextureFailed), m_onUpdateTextureImageFailed);
     m_onUpdateTextureImageFailed = nullptr;
 
+    Frameworks::CommandBus::unsubscribe(typeid(RemoveTexture), m_removeTexture);
+    m_removeTexture = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(PutTexture), m_putTexture);
+    m_putTexture = nullptr;
+
     //Frameworks::CommandBus::unsubscribe(typeid(LoadTexture), m_doLoadingTexture);
     //m_doLoadingTexture = nullptr;
     //Frameworks::CommandBus::unsubscribe(typeid(CreateTexture), m_doCreatingTexture);
@@ -159,7 +169,7 @@ std::shared_ptr<Texture> TextureRepository::queryTexture(const TextureId& id)
     assert(m_factory);
     const auto dto = m_storeMapper->queryTexture(id);
     assert(dto.has_value());
-    auto tex = m_factory->constitute(id, dto.value());
+    auto tex = m_factory->constitute(id, dto.value(), true);
     assert(tex);
     m_textures.insert_or_assign(id, tex);
     return tex;
@@ -293,6 +303,22 @@ void TextureRepository::OnUpdateTextureImageFailed(const Frameworks::IEventPtr& 
     if (!ev) return;
     Frameworks::EventPublisher::post(std::make_shared<UpdateTextureImageFailed>(m_currentRequestRuid, ev->GetTextureName(), ev->GetError()));
     m_currentRequesting = false;
+}
+
+void TextureRepository::removeTexture(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<RemoveTexture>(c);
+    if (!cmd) return;
+    removeTexture(cmd->id());
+}
+
+void TextureRepository::putTexture(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PutTexture>(c);
+    if (!cmd) return;
+    putTexture(cmd->id(), cmd->texture());
 }
 
 /*void TextureRepository::DoLoadingTexture(const Frameworks::ICommandPtr& c)

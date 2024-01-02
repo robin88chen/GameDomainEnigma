@@ -10,6 +10,7 @@
 
 #include "TextureId.h"
 #include "GenericDto.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 
 namespace Enigma::Engine
@@ -27,10 +28,15 @@ namespace Enigma::Engine
         void unregisterHandlers();
 
         std::shared_ptr<Texture> create(const TextureId& id);
-        std::shared_ptr<Texture> constitute(const TextureId& id, const GenericDto& dto);
+        std::shared_ptr<Texture> constitute(const TextureId& id, const GenericDto& dto, bool is_persisted);
+
+    private:
+        void constituteTexture(const Frameworks::ICommandPtr& c);
 
     private:
         TextureResourceProcessor* m_processor;
+
+        Frameworks::CommandSubscriberPtr m_constituteTexture;
     };
 }
 

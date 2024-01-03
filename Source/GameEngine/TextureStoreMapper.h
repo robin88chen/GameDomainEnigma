@@ -20,7 +20,7 @@ namespace Enigma::Engine
     class TextureStoreMapper
     {
     public:
-        ~TextureStoreMapper() = default;
+        virtual ~TextureStoreMapper() = default;
 
         virtual std::error_code connect() = 0;
         virtual std::error_code disconnect() = 0;

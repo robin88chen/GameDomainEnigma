@@ -18,11 +18,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceFileStoreMapper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.cpp" />
   </ItemGroup>
 </Project>

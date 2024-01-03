@@ -22,6 +22,7 @@ Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYP
 {
     TextureDto textureDto = TextureDto::fromGenericDto(dto);
     m_id = id;
+    m_factoryDesc = textureDto.factoryDesc();
     m_format = textureDto.format();
     m_dimension = textureDto.dimension();
     m_isCubeTexture = textureDto.isCubeTexture();
@@ -49,6 +50,7 @@ Texture::~Texture()
 GenericDto Texture::serializeDto() const
 {
     TextureDto textureDto;
+    textureDto.factoryDesc() = m_factoryDesc;
     textureDto.format() = m_format;
     textureDto.dimension() = m_dimension;
     textureDto.isCubeTexture() = m_isCubeTexture;

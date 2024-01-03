@@ -9,6 +9,7 @@
 #include "GameCommon/SceneRendererInstallingPolicy.h"
 #include "GameEngine/PrimitiveRepositoryInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "Terrain/TerrainInstallingPolicy.h"
@@ -23,6 +24,7 @@ constexpr std::uint16_t OrderOfGeometryInstalling = 15;
 constexpr std::uint16_t OrderOfAnimatorInstalling = 20;
 constexpr std::uint16_t OrderOfPrimitiveInstalling = 25;
 constexpr std::uint16_t OrderOfEffectMaterialSourceRepositoryInstalling = 26;
+constexpr std::uint16_t OrderOfTextureInstalling = 27;
 constexpr std::uint16_t OrderOfRenderSystemInstalling = 30;
 constexpr std::uint16_t OrderOfSceneGraphInstalling = 40;
 constexpr std::uint16_t OrderOfTerrainInstalling = 45;
@@ -69,6 +71,7 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(Animators::AnimatorInstallingPolicy)] = OrderOfAnimatorInstalling;
     m_orderMap[typeid(Engine::PrimitiveRepositoryInstallingPolicy)] = OrderOfPrimitiveInstalling;
     m_orderMap[typeid(Engine::EffectMaterialSourceRepositoryInstallingPolicy)] = OrderOfEffectMaterialSourceRepositoryInstalling;
+    m_orderMap[typeid(Engine::TextureRepositoryInstallingPolicy)] = OrderOfTextureInstalling;
     m_orderMap[typeid(Renderer::RenderSystemInstallingPolicy)] = OrderOfRenderSystemInstalling;
     m_orderMap[typeid(Renderer::DefaultRendererInstallingPolicy)] = OrderOfDefaultRendererInstalling;
     m_orderMap[typeid(SceneGraph::SceneGraphInstallingPolicy)] = OrderOfSceneGraphInstalling;

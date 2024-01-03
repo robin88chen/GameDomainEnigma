@@ -1,5 +1,6 @@
 ﻿#include "TextureDto.h"
 #include "GenericDto.h"
+#include "Texture.h"
 
 using namespace Enigma::Engine;
 
@@ -11,9 +12,14 @@ static std::string TOKEN_IS_CUBE = "IsCube";
 static std::string TOKEN_SURFACE_COUNT = "SurfaceCount";
 static std::string TOKEN_FILE_PATHS = "FilePaths";
 
+TextureDto::TextureDto() : m_factoryDesc(Texture::TYPE_RTTI.getName())
+{
+}
+
 TextureDto TextureDto::fromGenericDto(const GenericDto& dto)
 {
     TextureDto textureDto;
+    textureDto.m_factoryDesc = dto.GetRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_ID)) textureDto.id() = v.value();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_FORMAT)) textureDto.format() = v.value();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_WIDTH)) textureDto.dimension().m_width = v.value();
@@ -27,6 +33,7 @@ TextureDto TextureDto::fromGenericDto(const GenericDto& dto)
 GenericDto TextureDto::toGenericDto() const
 {
     GenericDto dto;
+    dto.AddRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_ID, m_id.name());
     dto.AddOrUpdate(TOKEN_FORMAT, m_format.fmt);
     dto.AddOrUpdate(TOKEN_WIDTH, m_dimension.m_width);

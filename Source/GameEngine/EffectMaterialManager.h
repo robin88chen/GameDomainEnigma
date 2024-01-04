@@ -42,7 +42,7 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onTerm() override;
 
         bool hasEffectMaterial(const std::string& name);
-        EffectMaterialPtr duplicateEffectMaterial(const std::string& name);
+        std::shared_ptr<EffectMaterial> duplicateEffectMaterial(const std::string& name);
 
         //error CompileEffectMaterial(const EffectMaterialPolicy& policy);
 

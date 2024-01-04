@@ -1,4 +1,6 @@
 ﻿#include "Primitive.h"
+#include "PrimitiveQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::Engine;
 
@@ -12,6 +14,13 @@ Primitive::Primitive(const PrimitiveId& id) : m_id(id), m_factoryDesc(Primitive:
 
 Primitive::~Primitive()
 {
+}
+
+std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)
+{
+    const auto query = std::make_shared<QueryPrimitive>(id);
+    Frameworks::QueryDispatcher::dispatch(query);
+    return query->getResult();
 }
 
 void Primitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList)

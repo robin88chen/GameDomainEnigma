@@ -25,7 +25,6 @@ static std::string TOKEN_ID_SEQUENCE = "Id.Sequence";
 static std::string TOKEN_ID_RTTI = "Id.Rtti";
 static std::string TOKEN_GEOMETRY_ID = "GeometryId";
 static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
-static std::string TOKEN_GEOMETRY_FACTORY = "GeometryFactory";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
@@ -92,7 +91,16 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
     {
         dto.AddOrUpdate(TOKEN_RAW_GEOMETRY, m_geometry.value());
     }
-    dto.AddOrUpdate(TOKEN_EFFECTS, m_effects);
+    if (!m_effects.empty())
+    {
+        std::vector<std::string> effect_names;
+        effect_names.reserve(m_effects.size());
+        for (auto& eff : m_effects)
+        {
+            effect_names.emplace_back(eff.name());
+        }
+        dto.AddOrUpdate(TOKEN_EFFECTS, effect_names);
+    }
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPS, m_textureMaps);
     dto.AddOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
     if (!m_visualTechniqueSelection.empty())

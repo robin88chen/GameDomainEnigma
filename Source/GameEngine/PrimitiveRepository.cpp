@@ -52,6 +52,7 @@ ServiceResult PrimitiveRepository::onTerm()
 {
     assert(m_storeMapper);
     m_storeMapper->disconnect();
+    m_primitives.clear();
 
     QueryDispatcher::unsubscribe(typeid(QueryPrimitive), m_queryPrimitive);
     m_queryPrimitive = nullptr;

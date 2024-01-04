@@ -2,6 +2,8 @@
 #include "GeometryErrors.h"
 #include "Platforms/PlatformLayer.h"
 #include "MathLib/ContainmentBox3.h"
+#include "GeometryDataQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 
 using namespace Enigma::Geometries;
@@ -31,6 +33,13 @@ GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factor
 GeometryData::~GeometryData()
 {
 
+}
+
+std::shared_ptr<GeometryData> GeometryData::queryGeometryData(const GeometryId& id)
+{
+    const auto query = std::make_shared<QueryGeometryData>(id);
+    QueryDispatcher::dispatch(query);
+    return query->getResult();
 }
 
 GenericDto GeometryData::serializeDto() const

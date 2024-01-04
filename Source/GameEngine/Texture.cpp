@@ -4,6 +4,8 @@
 #include "GraphicKernel/ITexture.h"
 #include "Texture.h"
 #include "TextureDto.h"
+#include "TextureQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -45,6 +47,13 @@ Texture::Texture(const TextureId& id, const ITexturePtr& tex) : m_factoryDesc(TY
 Texture::~Texture()
 {
     m_texture = nullptr;
+}
+
+std::shared_ptr<Texture> Texture::queryTexture(const TextureId& id)
+{
+    auto query = std::make_shared<QueryTexture>(id);
+    QueryDispatcher::dispatch(query);
+    return query->getResult();
 }
 
 GenericDto Texture::serializeDto() const

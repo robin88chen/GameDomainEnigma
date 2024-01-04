@@ -32,7 +32,7 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        using EffectMaterialList = std::vector<Engine::EffectMaterialPtr>;
+        using EffectMaterialList = std::vector<std::shared_ptr<Engine::EffectMaterial>>;
         using TextureMapList = std::vector<Engine::EffectTextureMap>;
     public:
         MeshPrimitive(const Engine::PrimitiveId& id);
@@ -50,7 +50,7 @@ namespace Enigma::Renderer
         const Geometries::GeometryDataPtr& getGeometryData() const { return m_geometry; };
 
         /** get effect */
-        Engine::EffectMaterialPtr getEffectMaterial(unsigned index);
+        std::shared_ptr<Engine::EffectMaterial> getEffectMaterial(unsigned index);
         /** get material count */
         unsigned getEffectMaterialCount() const;
         /** get texture map */
@@ -92,7 +92,7 @@ namespace Enigma::Renderer
         /** link geometry object and render buffer */
         void linkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer);
         /** change segment's effect */
-        virtual void changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect);
+        virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect);
         /** change primitive's effect */
         virtual void changeEffectMaterials(const EffectMaterialList& effects);
         /** resize effect list */
@@ -133,7 +133,6 @@ namespace Enigma::Renderer
         TextureMapList m_textures;
         Renderer::RenderListID m_renderListID;  ///< default : render group scene
     };
-    using MeshPrimitivePtr = std::shared_ptr<MeshPrimitive>;
 }
 
 #endif // _MESH_PRIMITIVE_H

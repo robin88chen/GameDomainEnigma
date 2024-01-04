@@ -37,8 +37,6 @@ namespace Enigma::Engine
 
         void contentDuplicatedEffects();
 
-        static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> onDuplicatedEmpty;
-
     private:
         void duplicatedEffectDeleter(EffectMaterial* effect);
 
@@ -46,7 +44,7 @@ namespace Enigma::Engine
         EffectMaterialId m_id;
         Frameworks::LazyStatus m_lazyStatus;
         std::shared_ptr<EffectMaterial> m_sourceEffectMaterial;
-        std::list<std::shared_ptr<EffectMaterial>> m_duplicatedEffects;
+        std::list<std::weak_ptr<EffectMaterial>> m_duplicatedEffects;
         std::atomic_uint32_t m_duplicateCount;
         std::uint32_t m_duplicatedSerial;
     };

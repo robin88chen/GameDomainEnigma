@@ -12,6 +12,7 @@
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
 #include "SceneGraph/Pawn.h"
+#include "GameEngine/EffectMaterialId.h"
 
 namespace Enigma::GameCommon
 {
@@ -55,8 +56,8 @@ namespace Enigma::GameCommon
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void replaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
-        void replaceNewMeshMaterialInSegment(const Renderer::MeshPrimitivePtr& mesh, unsigned segment_index, const std::shared_ptr<Engine::EffectMaterial>& new_material);
+        void replaceMeshMaterial(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+        void replaceNewMeshMaterialInSegment(const std::shared_ptr<Renderer::MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<Engine::EffectMaterial>& new_material);
 
         void onEffectMaterialContented(const Frameworks::IEventPtr& e);
         void onContentMaterialFailed(const Frameworks::IEventPtr& e);
@@ -87,7 +88,7 @@ namespace Enigma::GameCommon
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void changeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
+        void changeMeshTexture(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
         void onTextureContented(const Frameworks::IEventPtr& e);
         void onContentTextureFailed(const Frameworks::IEventPtr& e);
 

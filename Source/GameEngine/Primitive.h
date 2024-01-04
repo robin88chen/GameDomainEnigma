@@ -46,6 +46,8 @@ namespace Enigma::Engine
         Primitive& operator=(const Primitive&) = delete;
         Primitive& operator=(Primitive&&) = delete;
 
+        static std::shared_ptr<Primitive> queryPrimitive(const PrimitiveId& id);
+
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 

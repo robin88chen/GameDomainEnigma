@@ -14,6 +14,18 @@ EffectTextureMap::EffectTextureMap()
 
 }
 
+EffectTextureMap::EffectTextureMap(const GenericDto& dto)
+{
+    EffectTextureMapDto effectTextureMapDto = EffectTextureMapDto::fromGenericDto(dto);
+    for (auto& mapping : effectTextureMapDto.textureMappings())
+    {
+        if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
+        {
+            m_effectTextures.emplace_back(std::make_tuple(mapping.semantic(), tex, mapping.arrayIndex()));
+        }
+    }
+}
+
 EffectTextureMap::EffectTextureMap(const EffectSemanticTextureTuple& tuple)
 {
     m_effectTextures.emplace_back(tuple);

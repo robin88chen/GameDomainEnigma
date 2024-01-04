@@ -10,7 +10,6 @@
 
 #include "GameEngine/Primitive.h"
 #include "MeshNodeTree.h"
-#include "MeshPrimitive.h"
 #include "GameEngine/Animator.h"
 #include <string>
 #include <vector>
@@ -20,6 +19,8 @@
 
 namespace Enigma::Renderer
 {
+    using error = std::error_code;
+    class MeshPrimitive;
     class ModelPrimitive : public Engine::Primitive
     {
         DECLARE_EN_RTTI;
@@ -42,8 +43,8 @@ namespace Enigma::Renderer
         /** get mesh primitive
         @param cached_index index in cached mesh primitive array
         */
-        MeshPrimitivePtr GetMeshPrimitive(unsigned int cached_index);
-        MeshPrimitivePtr FindMeshPrimitive(const std::string& name);
+        std::shared_ptr<MeshPrimitive> GetMeshPrimitive(unsigned int cached_index);
+        std::shared_ptr<MeshPrimitive> FindMeshPrimitive(const std::string& name);
         /** get mesh node
         @param cached_index index in cached mesh primitive array
         */

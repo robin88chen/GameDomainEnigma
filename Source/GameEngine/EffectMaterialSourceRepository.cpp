@@ -46,6 +46,7 @@ ServiceResult EffectMaterialSourceRepository::onTerm()
 {
     assert(m_storeMapper);
     m_storeMapper->disconnect();
+    m_sourceMaterials.clear();
 
     QueryDispatcher::unsubscribe(typeid(QueryEffectMaterial), m_queryEffectMaterial);
     m_queryEffectMaterial = nullptr;
@@ -86,4 +87,10 @@ void EffectMaterialSourceRepository::queryEffectMaterial(const Frameworks::IQuer
     auto query = std::dynamic_pointer_cast<QueryEffectMaterial, IQuery>(q);
     assert(query);
     query->setResult(queryEffectMaterial(query->id()));
+}
+
+void EffectMaterialSourceRepository::releaseEffectMaterial(const EffectMaterialId& id)
+{
+    std::lock_guard locker{ m_sourceMapLock };
+    m_sourceMaterials.erase(id);
 }

@@ -37,6 +37,8 @@ namespace Enigma::Engine
         EffectMaterial& operator=(const EffectMaterial&);
         EffectMaterial& operator=(EffectMaterial&&) noexcept;
 
+        static std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
+
         const EffectMaterialId& id() const { return m_id; };
 
         void copyFrom(const std::shared_ptr<EffectMaterial>& other);
@@ -101,7 +103,6 @@ namespace Enigma::Engine
         std::string m_selectedRendererTechName;
         std::string m_selectedVisualTechName;
     };
-    using EffectMaterialPtr = std::shared_ptr<EffectMaterial>;
 };
 
 #endif // EFFECT_MATERIAL_H

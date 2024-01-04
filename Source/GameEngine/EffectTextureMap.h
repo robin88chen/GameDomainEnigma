@@ -27,6 +27,7 @@ namespace Enigma::Engine
         using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
     public:
         EffectTextureMap();
+        EffectTextureMap(const GenericDto& dto);
         EffectTextureMap(const EffectSemanticTextureTuple& tuple);
         EffectTextureMap(const SegmentEffectTextures& textures);
         EffectTextureMap(const EffectTextureMap&) = default;

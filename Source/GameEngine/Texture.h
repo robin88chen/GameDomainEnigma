@@ -33,6 +33,8 @@ namespace Enigma::Engine
         Texture& operator=(const Texture&) = delete;
         Texture& operator=(Texture&&) = delete;
 
+        static std::shared_ptr<Texture> queryTexture(const TextureId& id);
+
         const TextureId& id() const { return m_id; }
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
@@ -64,7 +66,6 @@ namespace Enigma::Engine
         FactoryDesc m_factoryDesc;
         Graphics::ITexturePtr m_texture;
     };
-    using TexturePtr = std::shared_ptr<Texture>;
 }
 
 #endif // TEXTURE_H

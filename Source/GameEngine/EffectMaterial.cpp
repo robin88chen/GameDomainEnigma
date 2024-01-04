@@ -1,6 +1,8 @@
 ﻿#include "EffectMaterial.h"
 #include "EngineErrors.h"
+#include "EffectQueries.h"
 #include "Frameworks/Rtti.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
@@ -76,6 +78,13 @@ EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
     mappingAutoVariables();
 
     return *this;
+}
+
+std::shared_ptr<EffectMaterial> EffectMaterial::queryEffectMaterial(const EffectMaterialId& id)
+{
+    auto query = std::make_shared<QueryEffectMaterial>(id);
+    QueryDispatcher::dispatch(query);
+    return query->getResult();
 }
 
 void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)

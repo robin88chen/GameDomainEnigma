@@ -12,6 +12,7 @@
 #include "GameCommon/GameSceneService.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RendererManager.h"
+#include "GameEngine/EffectVariable.h"
 
 namespace Enigma::ShadowMap
 {

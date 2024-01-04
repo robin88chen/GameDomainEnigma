@@ -40,6 +40,8 @@ namespace Enigma::Geometries
         GeometryData& operator=(const GeometryData&) = delete;
         GeometryData& operator=(GeometryData&&) = delete;
 
+        static std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
+
         virtual Engine::GenericDto serializeDto() const;
 
         const GeometryId& id() { return m_id; }

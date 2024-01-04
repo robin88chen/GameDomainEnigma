@@ -39,9 +39,11 @@ namespace Enigma::Engine
 
         bool hasEffectMaterial(const EffectMaterialId& id);
         std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
+        void releaseEffectMaterial(const EffectMaterialId& id);
 
     private:
         void queryEffectMaterial(const Frameworks::IQueryPtr& q);
+
 
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;

@@ -1,5 +1,6 @@
 ﻿#include "MeshNodeTree.h"
 #include "RenderablePrimitiveDtos.h"
+#include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -90,7 +91,7 @@ stdext::optional_ref<const MeshNode> MeshNodeTree::GetMeshNode(unsigned index) c
     return m_meshNodes[index];
 }
 
-MeshPrimitivePtr MeshNodeTree::GetMeshPrimitiveInNode(unsigned index)
+std::shared_ptr<MeshPrimitive> MeshNodeTree::GetMeshPrimitiveInNode(unsigned index)
 {
     if (index >= m_meshNodes.size()) return nullptr;
     return m_meshNodes[index].GetMeshPrimitive();
@@ -116,7 +117,7 @@ void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelR
     if (parent_index)  // has parent node
     {
         m_meshNodes[index].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * mxLocal);
-        MeshPrimitivePtr mesh_prim = m_meshNodes[index].GetMeshPrimitive();
+        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].GetMeshPrimitive();
         if (mesh_prim)
         {
             mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
@@ -125,7 +126,7 @@ void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelR
     else
     {
         m_meshNodes[index].SetRootRefTransform(mxLocal);
-        MeshPrimitivePtr mesh_prim = m_meshNodes[index].GetMeshPrimitive();
+        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].GetMeshPrimitive();
         if (mesh_prim)
         {
             mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());

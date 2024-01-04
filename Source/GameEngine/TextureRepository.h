@@ -14,6 +14,7 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
 #include "TextureCommands.h"
 #include "TexturePolicies.h"
 #include "TextureId.h"
@@ -69,6 +70,7 @@ namespace Enigma::Engine
         void DoRetrievingTextureImage(const Frameworks::ICommandPtr& c);
         void DoUpdatingTextureImage(const Frameworks::ICommandPtr& c);
 
+        void queryTexture(const Frameworks::IQueryPtr& q);
         void InvokeRequest(const std::shared_ptr<Frameworks::IRequestCommand>& request);
 
     private:
@@ -92,6 +94,8 @@ namespace Enigma::Engine
         Frameworks::CommandSubscriberPtr m_doSavingTexture;
         Frameworks::CommandSubscriberPtr m_doRetrievingTextureImage;
         Frameworks::CommandSubscriberPtr m_doUpdatingTextureImage;
+
+        Frameworks::QuerySubscriberPtr m_queryTexture;
 
         using TextureMap = std::unordered_map<TextureId, std::shared_ptr<Texture>, TextureId::hash>;
         TextureMap m_textures;

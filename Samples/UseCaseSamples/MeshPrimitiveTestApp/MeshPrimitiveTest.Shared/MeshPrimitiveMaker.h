@@ -9,8 +9,6 @@
 #define _MESH_PRIMITIVE_MAKER_H
 
 #include "Renderer/RenderablePrimitivePolicies.h"
-#include "GameEngine/EffectMaterialPolicy.h"
-#include "GameEngine/EffectTextureMapPolicy.h"
 #include "Renderer/MeshPrimitive.h"
 #include <memory>
 

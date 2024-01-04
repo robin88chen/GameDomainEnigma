@@ -56,7 +56,15 @@ MeshPrimitive::MeshPrimitive(const Engine::PrimitiveId& id, const Engine::Generi
     m_renderListID = mesh_dto.renderListID();
     m_elements.clear();
     m_effects.clear();
+    for (auto& eff_id : mesh_dto.effects())
+    {
+        m_effects.emplace_back(EffectMaterial::queryEffectMaterial(eff_id));
+    }
     m_textures.clear();
+    for (auto& tex_map_dto : mesh_dto.textureMaps())
+    {
+        m_textures.emplace_back(tex_map_dto);
+    }
 }
 
 MeshPrimitive::~MeshPrimitive()
@@ -101,7 +109,7 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
     return dto;
 }
 
-EffectMaterialPtr MeshPrimitive::getEffectMaterial(unsigned index)
+std::shared_ptr<EffectMaterial> MeshPrimitive::getEffectMaterial(unsigned index)
 {
     if (index >= m_effects.size()) return nullptr;
     return m_effects[index];
@@ -240,7 +248,7 @@ void MeshPrimitive::linkGeometryData(const Geometries::GeometryDataPtr& geo, con
     m_bound = m_geometry->getBoundingVolume();
 }
 
-void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
+void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<EffectMaterial>& effect)
 {
     if (index >= m_effects.size()) return;
     looseSegmentEffectTexture(index);
@@ -310,10 +318,10 @@ void MeshPrimitive::bindPrimitiveEffectTexture()
         for (unsigned i = 0; i < (*tex_iter).getCount(); i++)
         {
             auto& eff_tex_set = (*tex_iter).getEffectSemanticTextureTuple(i);
-            if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
+            if (std::get<std::shared_ptr<Texture>>(eff_tex_set) == nullptr) continue;
             // 改直接指定
             (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
-                        std::get<TexturePtr>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
+                        std::get<std::shared_ptr<Texture>>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
             /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
                 [=](auto& var)
                 {
@@ -357,10 +365,10 @@ void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
     for (unsigned i = 0; i < m_textures[index].getCount(); i++)
     {
         auto& eff_tex_set = (m_textures[index]).getEffectSemanticTextureTuple(i);
-        if (std::get<TexturePtr>(eff_tex_set) == nullptr) continue;
+        if (std::get<std::shared_ptr<Texture>>(eff_tex_set) == nullptr) continue;
         // 改直接指定
         m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
-                    std::get<TexturePtr>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
+                    std::get<std::shared_ptr<Texture>>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
         /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {

@@ -39,7 +39,7 @@ void LightVolumePawn::ToggleCameraInside(bool is_inside)
 {
     if (is_inside != m_isCameraInside)
     {
-        MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(GetPrimitive());
+        std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(GetPrimitive());
         if (mesh)
         {
             if (is_inside)

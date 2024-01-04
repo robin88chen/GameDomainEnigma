@@ -98,13 +98,10 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
     m_builtRenderBuffer = ev->GetBuffer();
     std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
-    m_builtEffects.resize(m_metaDto->effects().size());
     bool all_effect_ready = true;
     for (auto& id : m_metaDto->effects())
     {
-        auto query = std::make_shared<QueryEffectMaterial>(id);
-        QueryDispatcher::dispatch(query);
-        if (auto eff = query->getResult())
+        if (auto eff = EffectMaterial::queryEffectMaterial(id))
         {
             m_builtEffects.push_back(eff);
             if (!eff->lazyStatus().isReady())
@@ -120,9 +117,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
         for (auto& t : m_metaDto->textureMaps()[i].textureMappings())
         {
             m_builtTextures[i].appendTextureSemantic(t.semantic());
-            auto query = std::make_shared<QueryTexture>(t.textureId());
-            QueryDispatcher::dispatch(query);
-            if (auto tex = query->getResult())
+            if (auto tex = Texture::queryTexture(t.textureId()))
             {
                 m_builtTextures[i].changeSemanticTexture({ t.semantic(), tex, t.arrayIndex() });
                 if (!tex->lazyStatus().isReady())
@@ -247,7 +242,9 @@ std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingT
         for (unsigned tp = 0; tp < m_metaDto->textureMaps()[tex].textureMappings().size(); tp++)
         {
             if ((m_metaDto->textureMaps()[tex].textureMappings()[tp].textureId() == id)
-                && (m_builtTextures[tex].getTexture(tp) == nullptr)) return std::make_tuple(tex, tp);
+                && (m_builtTextures.size() > tex) && (m_builtTextures[tex].getTexture(tp))
+                && (m_builtTextures[tex].getTexture(tp)->id() == id) && (m_builtTextures[tex].getTexture(tp)->lazyStatus().isReady()))
+                return std::make_tuple(tex, tp);
         }
     }
     return std::nullopt;

@@ -12,6 +12,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "RenderableEvents.h"
 #include "GameEngine/PrimitiveCommands.h"
+#include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;

@@ -41,10 +41,10 @@ Enigma::Frameworks::ServiceResult EffectMaterialManager::onInit()
     //m_doCompilingEffectMaterial = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->compileEffectMaterial(c); });
     //Frameworks::CommandBus::subscribe(typeid(CompileEffectMaterial), m_doCompilingEffectMaterial);
 
-    EffectMaterialSource::onDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
+    /*EffectMaterialSource::onDuplicatedEmpty = [this](const EffectMaterialSourcePtr& eff)
         {
             releaseEffectMaterialSource(eff);
-        };
+        };*/
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -87,7 +87,7 @@ bool EffectMaterialManager::hasEffectMaterial(const std::string& name)
     return m_sourceMaterials.find(name) != m_sourceMaterials.end();
 }
 
-EffectMaterialPtr EffectMaterialManager::duplicateEffectMaterial(const std::string& name)
+std::shared_ptr<EffectMaterial> EffectMaterialManager::duplicateEffectMaterial(const std::string& name)
 {
     std::lock_guard<std::recursive_mutex> lock(m_sourceMapLock);
     auto iter = m_sourceMaterials.find(name);

@@ -5,6 +5,7 @@
 #include "MeshPrimitiveRay3IntersectionFinder.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/unique_ptr_dynamic_cast.hpp"
+#include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -31,7 +32,7 @@ void ModelPrimitiveRay3IntersectionFinder::RegisterFactory()
 }
 
 Intersector::Result ModelPrimitiveRay3IntersectionFinder::Test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
-                                                               std::unique_ptr<IntersectorCache> cache) const
+    std::unique_ptr<IntersectorCache> cache) const
 {
     auto model = std::dynamic_pointer_cast<ModelPrimitive>(primitive);
     if (!model) return { false, std::move(cache) };
@@ -92,7 +93,7 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         if (i == mesh_cache_index) continue;
-        MeshPrimitivePtr mesh = model->GetMeshPrimitive(i);
+        std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(i);
         if (!mesh) continue;
         MeshPrimitiveRay3IntersectionFinder mesh_finder;
         auto res = mesh_finder.Test(mesh, ray, std::move(geo_cache));
@@ -131,7 +132,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     if (prim_cache) mesh_cache_index = prim_cache->GetCachedMeshPrimIndex();
     if (mesh_cache_index < mesh_count)
     {
-        if (MeshPrimitivePtr mesh = model->GetMeshPrimitive(mesh_cache_index))
+        if (std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(mesh_cache_index))
         {
             MeshPrimitiveRay3IntersectionFinder mesh_finder;
             auto [recs, res] = mesh_finder.Find(mesh, ray, prim_cache->GetIntrGeometryCache());
@@ -153,7 +154,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     {
         if (result_count >= req_result_total) break;
         if (m == mesh_cache_index) continue;
-        MeshPrimitivePtr mesh = model->GetMeshPrimitive(m);
+        std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(m);
         if (!mesh) continue;
 
         MeshPrimitiveRay3IntersectionFinder mesh_finder;

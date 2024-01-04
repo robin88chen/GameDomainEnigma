@@ -30,8 +30,8 @@
             "Value": 0
         },
         "Effects": {
-            "Type": "DataObjectArray",
-            "Value": []
+            "Type": "StringArray",
+            "Value": ["basic_vtx_tex"]
         },
         "RawGeometry": {
             "Type": "DataObject",
@@ -112,7 +112,21 @@
         },
         "TextureMaps": {
             "Type": "DataObjectArray",
-            "Value": []
+            "Value": [{
+                    "TextureMappings": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "TextureId.Name": {
+                                    "Type": "String",
+                                    "Value": "earth"
+                                },
+                                "Semantic": {
+                                    "Type": "String",
+                                    "Value": "DiffuseMap"
+                                }
+                            }]
+                    }
+                }]
         },
         "RenderListId": {
             "Type": "Uint32",

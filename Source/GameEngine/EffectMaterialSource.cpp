@@ -7,8 +7,6 @@
 
 using namespace Enigma::Engine;
 
-std::function<void(const std::shared_ptr<EffectMaterialSource>&)> EffectMaterialSource::onDuplicatedEmpty;
-
 EffectMaterialSource::EffectMaterialSource(const EffectMaterialId& id)
 {
     m_id = id;
@@ -38,7 +36,7 @@ std::shared_ptr<EffectMaterial> EffectMaterialSource::cloneEffectMaterial()
 {
     assert(m_sourceEffectMaterial);
     m_duplicateCount++;
-    return EffectMaterialPtr(menew EffectMaterial(*(m_sourceEffectMaterial.get())), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
+    return std::shared_ptr<EffectMaterial>(menew EffectMaterial(*(m_sourceEffectMaterial.get())), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
 }
 
 std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
@@ -47,6 +45,7 @@ std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
     m_duplicateCount++;
     m_duplicatedSerial++;
     auto effect = std::shared_ptr<EffectMaterial>(menew EffectMaterial(EffectMaterialId(m_id, m_duplicatedSerial)), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
+    effect->setSource(shared_from_this());
     m_duplicatedEffects.emplace_back(effect);
     if (m_sourceEffectMaterial->lazyStatus().isReady())
     {
@@ -61,10 +60,10 @@ void EffectMaterialSource::contentDuplicatedEffects()
     assert(m_sourceEffectMaterial);
     for (auto& effect : m_duplicatedEffects)
     {
-        if (!effect->lazyStatus().isReady())
+        if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
-            effect->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
-            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialContented>(m_id, effect->id()));
+            effect.lock()->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
+            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialContented>(m_id, effect.lock()->id()));
         }
     }
 }
@@ -74,12 +73,8 @@ void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
     assert(effect != m_sourceEffectMaterial.get());
     if (effect->getEffectMaterialSource() == shared_from_this())
     {
-        m_duplicateCount--;
         assert(m_duplicateCount > 0);
-        if (m_duplicateCount <= 1)
-        {
-            onDuplicatedEmpty(shared_from_this());
-        }
+        m_duplicateCount--;
     }
     delete effect;
 }

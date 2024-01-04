@@ -110,7 +110,7 @@ GenericDto MeshNode::serializeDto() const
     return dto.toGenericDto();
 }
 
-void MeshNode::SetMeshPrimitive(const MeshPrimitivePtr& mesh)
+void MeshNode::SetMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     m_meshPrimitive = mesh;
     if (const auto skin_prim = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh))

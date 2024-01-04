@@ -10,6 +10,7 @@
 
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
+#include "GameEngine/EffectVariable.h"
 #include <vector>
 
 namespace Enigma::Renderer
@@ -29,7 +30,7 @@ namespace Enigma::Renderer
 
         void BindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
-        virtual void changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect) override;
+        virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect) override;
         virtual void changeEffectMaterials(const EffectMaterialList& effects) override;
 
         void CreateBoneMatrixArray(unsigned int size);

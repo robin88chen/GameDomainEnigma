@@ -69,7 +69,7 @@ protected:
     Enigma::SceneGraph::SpatialId m_cameraId;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
-    Enigma::Renderer::MeshPrimitivePtr m_mesh;
+    std::shared_ptr<Enigma::Renderer::MeshPrimitive> m_mesh;
     bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };

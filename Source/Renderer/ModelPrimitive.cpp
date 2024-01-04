@@ -110,19 +110,19 @@ void ModelPrimitive::CacheMeshPrimitive()
     }
 }
 
-MeshPrimitivePtr ModelPrimitive::GetMeshPrimitive(unsigned cached_index)
+std::shared_ptr<MeshPrimitive> ModelPrimitive::GetMeshPrimitive(unsigned cached_index)
 {
     if (cached_index >= GetMeshPrimitiveCount()) return nullptr;
     return m_nodeTree.GetMeshPrimitiveInNode(m_meshPrimitiveIndexCache[cached_index]);
 }
 
-MeshPrimitivePtr ModelPrimitive::FindMeshPrimitive(const std::string& name)
+std::shared_ptr<MeshPrimitive> ModelPrimitive::FindMeshPrimitive(const std::string& name)
 {
     const unsigned mesh_count = GetMeshPrimitiveCount();
     if (mesh_count == 0) return nullptr;
     for (unsigned int i = 0; i < mesh_count; i++)
     {
-        MeshPrimitivePtr mesh_prim = GetMeshPrimitive(i);
+        std::shared_ptr<MeshPrimitive> mesh_prim = GetMeshPrimitive(i);
         if ((mesh_prim) && (mesh_prim->getName() == name)) return mesh_prim;
     }
     return nullptr;
@@ -236,7 +236,7 @@ void ModelPrimitive::calculateBoundingVolume(bool axis_align)
     {
         auto mesh_node = GetCachedMeshNode(i);
         if (!mesh_node) continue;
-        MeshPrimitivePtr mesh_prim = mesh_node.value().get().GetMeshPrimitive();
+        std::shared_ptr<MeshPrimitive> mesh_prim = mesh_node.value().get().GetMeshPrimitive();
         if (!mesh_prim) continue;
         if (!mesh_prim->testPrimitiveFlag(Primitive_UnBound))
         {

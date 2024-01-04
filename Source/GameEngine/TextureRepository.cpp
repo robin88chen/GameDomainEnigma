@@ -8,6 +8,8 @@
 #include "TextureEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
+#include "Frameworks/QueryDispatcher.h"
+#include "TextureQueries.h"
 #include "EngineErrors.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
@@ -29,7 +31,7 @@ TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager, co
 TextureRepository::~TextureRepository()
 {
     SAFE_DELETE(m_factory);
-    SAFE_DELETE(m_loader);
+    //SAFE_DELETE(m_loader);
     SAFE_DELETE(m_updater);
 }
 
@@ -84,6 +86,9 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoUpdatingTextureImage(c); });
     Frameworks::CommandBus::subscribe(typeid(UpdateTextureImage), m_doUpdatingTextureImage);
 
+    m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
+    Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
+
     m_storeMapper->connect();
 
     return Frameworks::ServiceResult::Complete;
@@ -115,6 +120,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
     assert(m_storeMapper);
     m_storeMapper->disconnect();
 
+    m_textures.clear();
     //Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::TextureLoaded), m_onTextureLoaded);
     //m_onTextureLoaded = nullptr;
     //Frameworks::EventPublisher::unsubscribe(typeid(TextureLoader::LoadTextureFailed), m_onLoadTextureFailed);
@@ -147,6 +153,9 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
     m_doRetrievingTextureImage = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(UpdateTextureImage), m_doUpdatingTextureImage);
     m_doUpdatingTextureImage = nullptr;
+
+    Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTexture), m_queryTexture);
+    m_queryTexture = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -387,6 +396,15 @@ void TextureRepository::DoUpdatingTextureImage(const Frameworks::ICommandPtr& c)
     {
         assert(false);
     }
+}
+
+void TextureRepository::queryTexture(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryTexture>(q);
+    if (!query) return;
+    auto tex = queryTexture(query->id());
+    query->setResult(tex);
 }
 
 void TextureRepository::InvokeRequest(const std::shared_ptr<Frameworks::IRequestCommand>& request)

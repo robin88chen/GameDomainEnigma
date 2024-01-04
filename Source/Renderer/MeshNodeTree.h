@@ -11,6 +11,7 @@
 
 #include "MeshNode.h"
 #include "MathLib/Matrix4.h"
+#include "Frameworks/optional_ref.hpp"
 #include <vector>
 #include <optional>
 
@@ -39,7 +40,7 @@ namespace Enigma::Renderer
         unsigned GetMeshNodeCount() const { return static_cast<unsigned>(m_meshNodes.size()); };
         stdext::optional_ref<MeshNode> GetMeshNode(unsigned index);
         stdext::optional_ref<const MeshNode> GetMeshNode(unsigned index) const;
-        MeshPrimitivePtr GetMeshPrimitiveInNode(unsigned index);
+        std::shared_ptr<MeshPrimitive> GetMeshPrimitiveInNode(unsigned index);
         /// is child node in sub-tree? (find parent mesh node from child mesh node)
         bool IsInSubTree(unsigned child_node_index, const std::string& parent_node_name);
 

@@ -522,7 +522,7 @@ void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGrap
     }
 }
 
-void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh)
+void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh)
 {
     assert(m_configuration);
     if (!mesh) return;

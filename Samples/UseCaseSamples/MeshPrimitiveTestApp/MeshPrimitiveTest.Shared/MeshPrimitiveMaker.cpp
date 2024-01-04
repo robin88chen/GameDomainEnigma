@@ -2,7 +2,6 @@
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "CubeGeometryMaker.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
@@ -22,11 +21,9 @@ void MeshPrimitiveMaker::makeCubeMeshPrimitive(const Enigma::Engine::PrimitiveId
     mesh_dto.id() = mesh_id;
     mesh_dto.geometryId() = geo_id;
     mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
-    EffectMaterialDtoHelper effect_helper("basic_vtx_tex");
-    effect_helper.FilenameAtPath("basic_vtx_tex.efx", "APK_PATH");
-    mesh_dto.effects().emplace_back(effect_helper.toGenericDto());
+    mesh_dto.effects().emplace_back(EffectMaterialId("basic_vtx_tex"));
     EffectTextureMapDtoHelper texture_helper;
-    texture_helper.TextureMapping("earth.png", "APK_PATH", "earth", std::nullopt, "DiffuseMap");
+    texture_helper.TextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
     mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
     mesh_dto.renderListID() = Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";

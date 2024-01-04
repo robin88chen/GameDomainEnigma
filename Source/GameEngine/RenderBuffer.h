@@ -9,7 +9,6 @@
 #define RENDER_BUFFER_H
 
 #include "RenderBufferSignature.h"
-#include "EffectMaterial.h"
 #include "Geometries/GeometrySegment.h"
 #include "GraphicKernel/IVertexBuffer.h"
 #include "GraphicKernel/IIndexBuffer.h"
@@ -19,6 +18,7 @@
 namespace Enigma::Engine
 {
     using error = std::error_code;
+    class EffectMaterial;
     /** render buffer */
     class RenderBuffer
     {
@@ -47,7 +47,7 @@ namespace Enigma::Engine
         bool IsDataEmpty() { return m_isDataEmpty; };
 
         /** draw */
-        error Draw(const EffectMaterialPtr& effectMaterial, const Geometries::GeometrySegment& segment);
+        error Draw(const std::shared_ptr<EffectMaterial>& effectMaterial, const Geometries::GeometrySegment& segment);
 
     protected:
         // todo: 這些func的 Async 由 Manager 負責以 Async 方式呼叫

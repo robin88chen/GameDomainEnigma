@@ -8,6 +8,8 @@
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Renderer/RendererEvents.h"
 #include "CubeGeometryMaker.h"
 #include "MeshPrimitiveMaker.h"
@@ -18,11 +20,12 @@
 #include "Renderer/MeshPrimitive.h"
 #include "GameEngine/Primitive.h"
 #include "CameraMaker.h"
-#include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
+#include "FileStorage/TextureFileStoreMapper.h"
 #include "Platforms/AndroidBridge.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "SceneGraph/CameraFrustumEvents.h"
@@ -106,14 +109,15 @@ void MeshPrimitiveTest::installEngine()
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt", std::make_shared<DtoJsonGateway>()));
-
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, scene_graph_policy });
+    auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, scene_graph_policy, effect_material_source_policy, texture_policy });
 
     makeCamera();
 

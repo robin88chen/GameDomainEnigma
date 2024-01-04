@@ -1,5 +1,6 @@
 ﻿#include "SkinMeshPrimitive.h"
 #include "RenderablePrimitiveDtos.h"
+#include "GameEngine/EffectMaterial.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
@@ -71,7 +72,7 @@ void SkinMeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
     BindPrimitiveBoneMatrix();
 }
 
-void SkinMeshPrimitive::changeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect)
+void SkinMeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect)
 {
     if (index >= m_effects.size()) return;
     looseSegmentEffectTexture(index);

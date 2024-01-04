@@ -15,7 +15,7 @@ RenderElement::RenderElement()
 }
 
 RenderElement::RenderElement(const std::shared_ptr<Engine::RenderBuffer>& renderBuffer,
-    const Engine::EffectMaterialPtr& effect, const Geometries::GeometrySegment& segment)
+    const std::shared_ptr<Engine::EffectMaterial>& effect, const Geometries::GeometrySegment& segment)
 {
     m_rendererStamp = 0;
     m_rendererActiveFrameFlag = 0;
@@ -47,7 +47,7 @@ error RenderElement::Draw(const MathLib::Matrix4& mxWorld,
     return er;
 }
 
-error RenderElement::DrawExternal(const MathLib::Matrix4& mxWorld, const Engine::EffectMaterialPtr& effect)
+error RenderElement::DrawExternal(const MathLib::Matrix4& mxWorld, const std::shared_ptr<Engine::EffectMaterial>& effect)
 {
     if (m_renderBuffer.expired()) return ErrorCode::nullRenderBuffer;
     if (!effect) return ErrorCode::nullEffectMaterial;

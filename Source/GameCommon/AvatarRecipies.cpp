@@ -98,21 +98,21 @@ void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
         unsigned int total_mesh_prim = model->GetMeshPrimitiveCount();
         for (unsigned int i = 0; i < total_mesh_prim; i++)
         {
-            MeshPrimitivePtr mesh = model->GetMeshPrimitive(i);
+            std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(i);
             if (mesh)
             {
                 replaceMeshMaterial(mesh);
             }
         }
     }
-    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
     if (mesh)
     {
         replaceMeshMaterial(mesh);
     }
 }
 
-void ReplaceAvatarMaterial::replaceMeshMaterial(const MeshPrimitivePtr& mesh)
+void ReplaceAvatarMaterial::replaceMeshMaterial(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
     if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
@@ -121,7 +121,7 @@ void ReplaceAvatarMaterial::replaceMeshMaterial(const MeshPrimitivePtr& mesh)
     if (total_mat_count == 0) return;
     for (unsigned int i = 0; i < total_mat_count; i++)
     {
-        EffectMaterialPtr eff = mesh->getEffectMaterial(i);
+        std::shared_ptr<EffectMaterial> eff = mesh->getEffectMaterial(i);
         if (!eff) continue;
         if (eff->id().isEqualSource(m_oldMaterialId))
         {
@@ -149,7 +149,7 @@ void ReplaceAvatarMaterial::replaceMeshMaterial(const MeshPrimitivePtr& mesh)
     }
 }
 
-void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const MeshPrimitivePtr& mesh, unsigned segment_index, const std::shared_ptr<EffectMaterial>& new_material)
+void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_ptr<MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<EffectMaterial>& new_material)
 {
     if (!mesh) return;
     if (!new_material) return;
@@ -231,7 +231,7 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
         if (!mesh) return;
         changeMeshTexture(mesh);
     }
-    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
     if (mesh)
     {
         if (mesh->getName() != m_meshName) return;
@@ -239,7 +239,7 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
     }
 }
 
-void ChangeAvatarTexture::changeMeshTexture(const MeshPrimitivePtr& mesh)
+void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
     if (m_meshName.empty()) return;

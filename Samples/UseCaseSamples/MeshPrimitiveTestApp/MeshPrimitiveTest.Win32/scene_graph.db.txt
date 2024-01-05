@@ -1,1 +1,1 @@
-camera,En.SceneGraph.Camera,camera.En.SceneGraph.Camera.json
+camera,En.SceneGraph.Camera,camera.cam@DataPath

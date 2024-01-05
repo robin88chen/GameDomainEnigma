@@ -10,7 +10,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.Renderer.MeshPrimitive",
-                "PrefabFilename": ""
+                "PrefabFilename": "test_mesh.mesh@DataPath"
             }
         },
         "Name": {

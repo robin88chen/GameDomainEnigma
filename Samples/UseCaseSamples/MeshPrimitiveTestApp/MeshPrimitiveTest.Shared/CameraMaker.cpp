@@ -25,6 +25,6 @@ void CameraMaker::makeCamera(const SpatialId& id)
     camera_dto.LookAtDirection() = Vector3(1.0f, -1.0f, 1.0f);
     camera_dto.UpVector() = Vector3::UNIT_Y;
     camera_dto.Frustum() = frustum_dto.toGenericDto();
-
+    camera_dto.factoryDesc() = Enigma::Engine::FactoryDesc(Camera::TYPE_RTTI.getName()).ClaimAsNative(id.name() + ".cam@DataPath");
     Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteCamera>(id, camera_dto.toGenericDto()));
 }

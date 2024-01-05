@@ -6,7 +6,7 @@
 #include "Frameworks/CommandBus.h"
 #include "GraphicKernel/GraphicCommands.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "EffectMaterialManager.h"
+#include "EffectMaterial.h"
 #include <cassert>
 
 using namespace Enigma::Engine;

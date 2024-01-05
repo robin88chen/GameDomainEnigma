@@ -15,12 +15,6 @@ EffectMaterialSource::EffectMaterialSource(const EffectMaterialId& id)
     m_sourceEffectMaterial = std::make_shared<EffectMaterial>(id);
 }
 
-EffectMaterialSource::EffectMaterialSource(std::shared_ptr<EffectMaterial> material)
-{
-    m_duplicateCount = 1;
-    m_sourceEffectMaterial = material;
-}
-
 EffectMaterialSource::~EffectMaterialSource()
 {
     assert(m_duplicateCount <= 1);
@@ -30,13 +24,6 @@ EffectMaterialSource::~EffectMaterialSource()
 void EffectMaterialSource::linkSourceSelf()
 {
     if (m_sourceEffectMaterial) m_sourceEffectMaterial->setSource(shared_from_this());
-}
-
-std::shared_ptr<EffectMaterial> EffectMaterialSource::cloneEffectMaterial()
-{
-    assert(m_sourceEffectMaterial);
-    m_duplicateCount++;
-    return std::shared_ptr<EffectMaterial>(menew EffectMaterial(*(m_sourceEffectMaterial.get())), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
 }
 
 std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()

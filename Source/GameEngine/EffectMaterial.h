@@ -30,12 +30,11 @@ namespace Enigma::Engine
         DECLARE_EN_RTTI_OF_BASE;
     public:
         EffectMaterial(const EffectMaterialId& id);
-        EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
-        EffectMaterial(const EffectMaterial&);
-        EffectMaterial(EffectMaterial&&) noexcept;
+        EffectMaterial(const EffectMaterial&) = delete;
+        EffectMaterial(EffectMaterial&&) noexcept = delete;
         virtual ~EffectMaterial();
-        EffectMaterial& operator=(const EffectMaterial&);
-        EffectMaterial& operator=(EffectMaterial&&) noexcept;
+        EffectMaterial& operator=(const EffectMaterial&) = delete;
+        EffectMaterial& operator=(EffectMaterial&&) noexcept = delete;
 
         static std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
 

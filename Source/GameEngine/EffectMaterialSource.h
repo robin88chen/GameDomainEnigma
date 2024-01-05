@@ -20,7 +20,6 @@ namespace Enigma::Engine
     {
     public:
         EffectMaterialSource(const EffectMaterialId& id);
-        EffectMaterialSource(std::shared_ptr<EffectMaterial> material);
         EffectMaterialSource(const EffectMaterialSource&) = delete;
         EffectMaterialSource(EffectMaterialSource&&) = delete;
         ~EffectMaterialSource();
@@ -32,7 +31,6 @@ namespace Enigma::Engine
         void linkSourceSelf();
         const std::shared_ptr<EffectMaterial>& self() const { return m_sourceEffectMaterial; };
 
-        std::shared_ptr<EffectMaterial> cloneEffectMaterial();
         std::shared_ptr<EffectMaterial> duplicateEffectMaterial();
 
         void contentDuplicatedEffects();

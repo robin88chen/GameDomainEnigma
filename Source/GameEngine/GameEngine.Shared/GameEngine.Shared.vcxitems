@@ -29,7 +29,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
@@ -39,7 +38,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterial.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectPass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTechnique.h" />
@@ -114,7 +112,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectPass.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTechnique.cpp" />

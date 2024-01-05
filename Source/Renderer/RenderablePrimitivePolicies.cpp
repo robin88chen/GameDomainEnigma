@@ -24,14 +24,6 @@ std::shared_ptr<MeshPrimitive> SkinMeshPrimitivePolicy::createPrimitive() const
     return nullptr; // std::make_shared<SkinMeshPrimitive>(m_name);
 }
 
-/*const EffectTextureMapPolicy::TextureTuplePolicy& MeshPrimitivePolicy::GetTextureTuplePolicy(
-    unsigned tex_idx, unsigned tuple_idx) const
-{
-    assert(tex_idx < m_texturePolicies.size());
-    assert(tuple_idx < m_texturePolicies[tex_idx].textureTuplePolicies().size());
-    return m_texturePolicies[tex_idx].textureTuplePolicies()[tuple_idx];
-}*/
-
 ModelPrimitivePolicy::ModelPrimitivePolicy() : RenderablePrimitivePolicy()
 {
 }

@@ -71,7 +71,6 @@ namespace Enigma::Renderer
         std::string& visualTechniqueSelection() { return m_visualTechniqueSelection; }
 
         virtual std::shared_ptr<MeshPrimitive> createPrimitive() const;
-        //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
 
     protected:
         Engine::FactoryDesc m_geometryFactoryDesc;

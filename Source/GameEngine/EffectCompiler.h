@@ -23,12 +23,6 @@ namespace Enigma::Engine
     class EffectCompiler
     {
     public:
-        enum class CompilingProceed : bool
-        {
-            False,
-            True,
-        };
-    public:
         class EffectMaterialCompiled : public Frameworks::IEvent
         {
         public:

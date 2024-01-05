@@ -15,69 +15,10 @@ EffectMaterial::EffectMaterial(const EffectMaterialId& id) : m_factoryDesc(Effec
     m_currentTechnique = m_effectTechniques.end();
 }
 
-EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
-    : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
-{
-    m_factoryDesc.ClaimAsNative(name);
-    //m_name = name;
-    m_effectTechniques = techniques;
-    m_currentTechnique = m_effectTechniques.end();
-    mappingAutoVariables();
-}
-
-EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_factoryDesc)
-{
-    //m_name = eff.m_name;
-    m_sourceMaterial = eff.m_sourceMaterial.lock();
-    m_effectTechniques = eff.m_effectTechniques;
-    m_currentTechnique = m_effectTechniques.end();
-    mappingAutoVariables();
-}
-
-EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.factoryDesc())
-{
-    //m_name = std::move(eff.m_name);
-    m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
-    m_effectTechniques = std::move(eff.m_effectTechniques);
-    m_currentTechnique = m_effectTechniques.end();
-    m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
-    m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
-    m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
-    mappingAutoVariables();
-}
-
 EffectMaterial::~EffectMaterial()
 {
     m_effectTechniques.clear();
     m_instancedAssignFuncList.clear();
-}
-
-EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
-{
-    if (this == &eff) return *this;
-    m_factoryDesc = eff.m_factoryDesc;
-    //m_name = eff.m_name;
-    m_sourceMaterial = eff.m_sourceMaterial.lock();
-    m_effectTechniques = eff.m_effectTechniques;
-    m_currentTechnique = m_effectTechniques.end();
-    mappingAutoVariables();
-
-    return *this;
-}
-
-EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
-{
-    m_factoryDesc = std::move(eff.m_factoryDesc);
-    //m_name = std::move(eff.m_name);
-    m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
-    m_effectTechniques = std::move(eff.m_effectTechniques);
-    m_currentTechnique = m_effectTechniques.end();
-    m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
-    m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
-    m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
-    mappingAutoVariables();
-
-    return *this;
 }
 
 std::shared_ptr<EffectMaterial> EffectMaterial::queryEffectMaterial(const EffectMaterialId& id)
@@ -91,7 +32,6 @@ void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
 {
     if (other == nullptr) return;
     m_factoryDesc = other->factoryDesc();
-    //m_name = other->m_name;
     m_sourceMaterial = other->m_sourceMaterial.lock();
     m_effectTechniques = other->m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();

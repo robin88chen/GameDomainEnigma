@@ -59,30 +59,30 @@ void ITexture::load(const std::string& filename, const std::string& pathid)
     }
 }
 
-void ITexture::Save(const FileSystem::IFilePtr& file)
+void ITexture::save(const FileSystem::IFilePtr& file)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), file, this]() -> error { return SaveTextureImage(file); });
+            PushTask([lifetime = shared_from_this(), file, this]() -> error { return saveTextureImage(file); });
     }
     else
     {
-        SaveTextureImage(file);
+        saveTextureImage(file);
     }
 }
 
-void ITexture::Save(const std::string& filename, const std::string& pathid)
+void ITexture::save(const std::string& filename, const std::string& pathid)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), filename, pathid, this]()
-                -> error { return SaveTextureImage(filename, pathid); });
+                -> error { return saveTextureImage(filename, pathid); });
     }
     else
     {
-        SaveTextureImage(filename, pathid);
+        saveTextureImage(filename, pathid);
     }
 }
 
@@ -131,12 +131,12 @@ void ITexture::update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
     }
 }
 
-error ITexture::SaveTextureImage(const std::string& filename, const std::string& pathid)
+error ITexture::saveTextureImage(const std::string& filename, const std::string& pathid)
 {
     FileSystem::Filename filename_at_path(filename, pathid);
     FileSystem::IFilePtr iFile = FileSystem::FileSystem::instance()->openFile(filename_at_path.getSubPathFileName(), FileSystem::write | FileSystem::openAlways | FileSystem::binary, filename_at_path.getMountPathId());
     if (!iFile) return ErrorCode::fileIO;
-    error er = SaveTextureImage(iFile);
+    error er = saveTextureImage(iFile);
     FileSystem::FileSystem::instance()->closeFile(iFile);
 
     return er;

@@ -318,6 +318,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureSaver.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -472,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureSaver.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

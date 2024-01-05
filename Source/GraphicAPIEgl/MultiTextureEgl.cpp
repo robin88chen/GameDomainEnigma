@@ -93,7 +93,7 @@ error MultiTextureEgl::loadTextureImages(const std::vector<byte_buffer>& img_buf
     return ErrorCode::ok;
 }
 
-error MultiTextureEgl::SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
+error MultiTextureEgl::saveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     if (FATAL_LOG_EXPR(m_textures.empty())) return ErrorCode::nullEglTexture;
     Platforms::Debug::Printf("GLES not support GetTexImage");

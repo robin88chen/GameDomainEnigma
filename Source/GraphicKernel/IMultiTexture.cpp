@@ -53,30 +53,30 @@ void IMultiTexture::multiLoad(const std::vector<std::string>& filenames, const s
     }
 }
 
-void IMultiTexture::MultiSave(const std::vector<FileSystem::IFilePtr>& files)
+void IMultiTexture::multiSave(const std::vector<FileSystem::IFilePtr>& files)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), files, this]() -> error { return SaveTextureImages(files); });
+            PushTask([lifetime = shared_from_this(), files, this]() -> error { return saveTextureImages(files); });
     }
     else
     {
-        SaveTextureImages(files);
+        saveTextureImages(files);
     }
 }
 
-void IMultiTexture::MultiSave(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids)
+void IMultiTexture::multiSave(const std::vector<std::string>& filenames, const std::vector<std::string>& pathids)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), filenames, pathids, this]()
-                -> error { return SaveTextureImages(filenames, pathids); });
+                -> error { return saveTextureImages(filenames, pathids); });
     }
     else
     {
-        SaveTextureImages(filenames, pathids);
+        saveTextureImages(filenames, pathids);
     }
 }
 
@@ -88,10 +88,10 @@ future_error IMultiTexture::asyncLoadTextureImages(const std::vector<byte_buffer
 }
 
 
-future_error IMultiTexture::AsyncSaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
+future_error IMultiTexture::asyncSaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     return IGraphicAPI::instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), files, this]() -> error { return SaveTextureImages(files); });
+        PushTask([lifetime = shared_from_this(), files, this]() -> error { return saveTextureImages(files); });
 }
 
 error IMultiTexture::loadTextureImages(const std::vector<std::string>& filenames,
@@ -127,7 +127,7 @@ future_error IMultiTexture::asyncLoadTextureImages(const std::vector<std::string
         PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return loadTextureImages(filenames, pathids); });
 }
 
-error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames,
+error IMultiTexture::saveTextureImages(const std::vector<std::string>& filenames,
     const std::vector<std::string>& pathids)
 {
     size_t count = filenames.size();
@@ -140,7 +140,7 @@ error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames
         if (!iFile) return ErrorCode::fileIO;
         files.emplace_back(iFile);
     }
-    error er = SaveTextureImages(files);
+    error er = saveTextureImages(files);
     for (auto file : files)
     {
         FileSystem::FileSystem::instance()->closeFile(file);
@@ -148,9 +148,9 @@ error IMultiTexture::SaveTextureImages(const std::vector<std::string>& filenames
     return er;
 }
 
-future_error IMultiTexture::AsyncSaveTextureImages(const std::vector<std::string>& filenames,
+future_error IMultiTexture::asyncSaveTextureImages(const std::vector<std::string>& filenames,
     const std::vector<std::string>& pathids)
 {
     return IGraphicAPI::instance()->GetGraphicThread()->
-        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return SaveTextureImages(filenames, pathids); });
+        PushTask([lifetime = shared_from_this(), filenames, pathids, this]() -> error { return saveTextureImages(filenames, pathids); });
 }

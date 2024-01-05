@@ -370,7 +370,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     return ErrorCode::ok;
 }
 
-error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
+error TextureDx11::saveTextureImage(const FileSystem::IFilePtr& file)
 {
     assert(file);
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());

@@ -42,7 +42,7 @@ namespace Enigma::Engine
             TextureId m_id;
             std::error_code m_error;
         };
-        class TextureSaved : public Frameworks::IEvent
+        /*class TextureSaved : public Frameworks::IEvent
         {
         public:
             TextureSaved(const std::string& name) : m_name(name) {};
@@ -60,7 +60,7 @@ namespace Enigma::Engine
         private:
             std::string m_name;
             std::error_code m_error;
-        };
+        };*/
     public:
         TextureLoader();
         TextureLoader(const TextureLoader&) = delete;
@@ -70,7 +70,7 @@ namespace Enigma::Engine
         TextureLoader& operator=(TextureLoader&&) = delete;
 
         void contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto);
-        void SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file);
+        //void SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file);
 
     private:
         void onDeviceTextureCreated(const Enigma::Frameworks::IEventPtr& e);
@@ -78,8 +78,8 @@ namespace Enigma::Engine
         void onTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr& e);
         void onTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e);
         void onTextureCreateResourceFailed(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e);
-        void OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr& e);
+        //void OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e);
+        //void OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void loadResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
         void createEmptyResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
@@ -91,8 +91,8 @@ namespace Enigma::Engine
 
         TextureRepository* m_hostRepository;
         TexturePolicy m_policy;
-        std::string m_savingDeviceTextureName;
-        std::string m_savingTextureName;
+        //std::string m_savingDeviceTextureName;
+        //std::string m_savingTextureName;
 
         Enigma::Frameworks::EventSubscriberPtr m_onTextureCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onMultiTextureCreated;
@@ -101,8 +101,8 @@ namespace Enigma::Engine
         Enigma::Frameworks::EventSubscriberPtr m_onTextureResourceCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onMultiTextureResourceCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTextureCreateResourceFailed;
-        Enigma::Frameworks::EventSubscriberPtr m_onTextureImageSaved;
-        Enigma::Frameworks::EventSubscriberPtr m_onTextureSaveImageFailed;
+        //Enigma::Frameworks::EventSubscriberPtr m_onTextureImageSaved;
+        //Enigma::Frameworks::EventSubscriberPtr m_onTextureSaveImageFailed;
     };
 }
 

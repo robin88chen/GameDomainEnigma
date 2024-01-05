@@ -123,7 +123,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
     return ErrorCode::ok;
 }
 
-error TextureEgl::SaveTextureImage(const FileSystem::IFilePtr& file)
+error TextureEgl::saveTextureImage(const FileSystem::IFilePtr& file)
 {
     if (FATAL_LOG_EXPR(m_texture == 0)) return ErrorCode::nullEglTexture;
     if (FATAL_LOG_EXPR(m_isCubeTexture)) return ErrorCode::saveTextureFile;

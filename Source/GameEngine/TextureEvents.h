@@ -53,26 +53,24 @@ namespace Enigma::Engine
         std::error_code m_error;
     };
 
-    class TextureSaved : public Frameworks::IResponseEvent
+    class TextureSaved : public Frameworks::IEvent
     {
     public:
-        TextureSaved(const Frameworks::Ruid& request_ruid, const std::string& name)
-            : IResponseEvent(request_ruid), m_name(name) {};
+        TextureSaved(const TextureId& id) : m_id(id) {}
 
-        const std::string& getName() { return m_name; }
+        const TextureId& id() { return m_id; }
     private:
-        std::string m_name;
+        TextureId m_id;
     };
-    class SaveTextureFailed : public Frameworks::IResponseEvent
+    class SaveTextureFailed : public Frameworks::IEvent
     {
     public:
-        SaveTextureFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        SaveTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {}
 
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::error_code m_error;
     };
 

@@ -34,10 +34,10 @@ TextureLoader::TextureLoader()
     Frameworks::EventPublisher::subscribe(typeid(Graphics::MultiTextureResourceFromMemoryCreated), m_onMultiTextureResourceCreated);
     m_onTextureCreateResourceFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onTextureCreateResourceFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
-    m_onTextureImageSaved = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureImageSaved(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
-    m_onTextureSaveImageFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureSaveImageFailed(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
+    //m_onTextureImageSaved = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureImageSaved(e); });
+    //Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
+    //m_onTextureSaveImageFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureSaveImageFailed(e); });
+    //Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
 }
 
 TextureLoader::~TextureLoader()
@@ -56,10 +56,10 @@ TextureLoader::~TextureLoader()
     m_onMultiTextureResourceCreated = nullptr;
     Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
     m_onTextureCreateResourceFailed = nullptr;
-    Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
-    m_onTextureImageSaved = nullptr;
-    Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
-    m_onTextureSaveImageFailed = nullptr;
+    //Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
+    //m_onTextureImageSaved = nullptr;
+    //Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
+    //m_onTextureSaveImageFailed = nullptr;
 }
 
 void TextureLoader::contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto)
@@ -77,7 +77,7 @@ void TextureLoader::contentImage(const std::shared_ptr<Texture>& texture, const 
     }
 }
 
-void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file)
+/*void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file)
 {
     assert(file);
     if (!target_texture)
@@ -92,8 +92,8 @@ void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, 
     }
     m_savingTextureName = name;
     m_savingDeviceTextureName = target_texture->getDeviceTexture()->getName();
-    target_texture->getDeviceTexture()->Save(file);
-}
+    target_texture->getDeviceTexture()->save(file);
+}*/
 
 void TextureLoader::loadResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex)
 {
@@ -166,11 +166,11 @@ void TextureLoader::onTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageLoaded, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_contentingTexture->id().name()) return;
+    if (ev->textureName() != m_contentingTexture->id().name()) return;
     Graphics::ITexturePtr dev_tex = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::ITexturePtr>(m_contentingTexture->id().name());
     if (!dev_tex)
     {
-        Platforms::Debug::Printf("can't get texture asset %s", ev->GetTextureName().c_str());
+        Platforms::Debug::Printf("can't get texture asset %s", ev->textureName().c_str());
         failContentingImage(ErrorCode::findStashedAssetFail);
         return;
     }
@@ -185,9 +185,9 @@ void TextureLoader::onTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceLoadImageFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_contentingTexture->id().name()) return;
+    if (ev->textureName() != m_contentingTexture->id().name()) return;
     Platforms::Debug::Printf("texture %s load image %s failed", m_contentingTexture->id().name().c_str(), m_textureDto.filePaths()[0].c_str());
-    failContentingImage(ev->GetError());
+    failContentingImage(ev->error());
 }
 
 void TextureLoader::onTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -197,11 +197,11 @@ void TextureLoader::onTextureResourceCreated(const Enigma::Frameworks::IEventPtr
     std::string tex_name;
     if (auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceFromMemoryCreated, Frameworks::IEvent>(e))
     {
-        tex_name = ev->GetTextureName();
+        tex_name = ev->textureName();
     }
     else if (auto ev = std::dynamic_pointer_cast<Graphics::MultiTextureResourceFromMemoryCreated, Frameworks::IEvent>(e))
     {
-        tex_name = ev->GetTextureName();
+        tex_name = ev->textureName();
     }
     else return;
     if (tex_name != m_contentingTexture->id().name()) return;
@@ -223,9 +223,9 @@ void TextureLoader::onTextureCreateResourceFailed(const Enigma::Frameworks::IEve
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceCreateFromMemoryFailed, Frameworks::IEvent>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_contentingTexture->id().name()) return;
+    if (ev->textureName() != m_contentingTexture->id().name()) return;
     Platforms::Debug::Printf("texture %s create from memory failed", m_contentingTexture->id().name().c_str());
-    failContentingImage(ev->GetError());
+    failContentingImage(ev->error());
 }
 
 void TextureLoader::failContentingImage(std::error_code er)
@@ -235,7 +235,7 @@ void TextureLoader::failContentingImage(std::error_code er)
     m_contentingTexture = nullptr;
 }
 
-void TextureLoader::OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e)
+/*void TextureLoader::OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageSaved, Frameworks::IEvent>(e);
@@ -251,4 +251,4 @@ void TextureLoader::OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr
     if (!ev) return;
     if (ev->GetTextureName() != m_savingDeviceTextureName) return;
     Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(m_savingTextureName, ev->GetError()));
-}
+}*/

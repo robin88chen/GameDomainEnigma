@@ -110,7 +110,7 @@ error MultiTextureDx11::loadTextureImages(const std::vector<byte_buffer>& img_bu
     return ErrorCode::ok;
 }
 
-error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
+error MultiTextureDx11::saveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     assert(!files.empty());
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());

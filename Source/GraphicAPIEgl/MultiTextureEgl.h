@@ -37,7 +37,7 @@ namespace Enigma::Devices
 
     protected:
         virtual error loadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
-        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
+        virtual error saveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
 
         virtual error createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
         error createOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,

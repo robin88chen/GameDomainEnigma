@@ -24,7 +24,6 @@ namespace Enigma::Engine
         primitiveFactoryNotExists = 151,
         primitiveEntityAlreadyExists,
         effectAlreadyCompiled,
-        textureAlreadyLoaded,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,
@@ -33,6 +32,8 @@ namespace Enigma::Engine
         textureSemantic,
 
         targetTextureNotExists = 301,
+        textureAlreadyLoaded,
+        textureNotReady,
     };
     class ErrorCategory : public std::error_category
     {

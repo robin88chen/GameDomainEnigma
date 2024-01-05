@@ -120,7 +120,7 @@ namespace Enigma::Graphics
     public:
         TextureResourceFromMemoryCreated(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };
@@ -129,8 +129,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceCreateFromMemoryFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetTextureName() const { return m_name; }
-        std::error_code GetError() const { return m_error; }
+        const std::string& textureName() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;
@@ -140,7 +140,7 @@ namespace Enigma::Graphics
     public:
         MultiTextureResourceFromMemoryCreated(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };
@@ -149,7 +149,7 @@ namespace Enigma::Graphics
     public:
         TextureResourceImageLoaded(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };
@@ -158,8 +158,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceLoadImageFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetTextureName() const { return m_name; }
-        std::error_code GetError() const { return m_error; }
+        const std::string& textureName() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;
@@ -169,7 +169,7 @@ namespace Enigma::Graphics
     public:
         MultiTextureResourceImagesLoaded(const std::string& texture_name) :
             m_textureName(texture_name) {};
-        const std::string& GetTextureName() { return m_textureName; }
+        const std::string& textureName() { return m_textureName; }
     private:
         std::string m_textureName;
     };
@@ -178,8 +178,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceImageSaved(const std::string& texture_name, const std::string& full_filename) :
             m_textureName(texture_name), m_fullFilename(full_filename) {};
-        const std::string& GetTextureName() { return m_textureName; }
-        const std::string& GetFullFilename() { return m_fullFilename; }
+        const std::string& textureName() { return m_textureName; }
+        const std::string& fullFilename() { return m_fullFilename; }
     private:
         std::string m_textureName;
         std::string m_fullFilename;
@@ -189,8 +189,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceSaveImageFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetTextureName() const { return m_name; }
-        std::error_code GetError() const { return m_error; }
+        const std::string& textureName() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;
@@ -200,8 +200,8 @@ namespace Enigma::Graphics
     public:
         MultiTextureResourceImagesSaved(const std::string& texture_name, const std::vector<std::string>& full_filenames) :
             m_textureName(texture_name), m_fullFilenames(full_filenames) {};
-        const std::string& GetTextureName() { return m_textureName; }
-        const std::vector<std::string>& GetFullFilenames() { return m_fullFilenames; }
+        const std::string& textureName() { return m_textureName; }
+        const std::vector<std::string>& fullFilenames() { return m_fullFilenames; }
     private:
         std::string m_textureName;
         std::vector<std::string>m_fullFilenames;

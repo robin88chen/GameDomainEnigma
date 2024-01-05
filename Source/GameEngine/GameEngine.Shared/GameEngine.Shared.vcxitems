@@ -90,6 +90,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureSaver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureSaver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp" />
   </ItemGroup>
 </Project>

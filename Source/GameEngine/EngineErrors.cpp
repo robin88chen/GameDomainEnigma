@@ -16,13 +16,14 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::primitiveFactoryNotExists: return "Primitive factory not exists";
     case ErrorCode::primitiveEntityAlreadyExists: return "Primitive entity already exists";
     case ErrorCode::effectAlreadyCompiled: return "Effect already compiled";
-    case ErrorCode::textureAlreadyLoaded: return "Texture already loaded";
     case ErrorCode::effectPassEnd: return "Effect pass ended";
     case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     case ErrorCode::noSelectedTechnique: return "No selected effect technique";
     case ErrorCode::nullMaterial: return "Null material";
     case ErrorCode::textureSemantic: return "texture semantic error";
     case ErrorCode::targetTextureNotExists: return "Target texture not exists";
+    case ErrorCode::textureAlreadyLoaded: return "Texture already loaded";
+    case ErrorCode::textureNotReady: return "Texture not ready";
     }
     return "Unknown";
 }

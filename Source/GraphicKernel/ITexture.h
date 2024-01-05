@@ -46,8 +46,8 @@ namespace Enigma::Graphics
 
         virtual void load(const byte_buffer& img_buff);
         virtual void load(const std::string& filename, const std::string& pathid);
-        virtual void Save(const FileSystem::IFilePtr& file);
-        virtual void Save(const std::string& filename, const std::string& pathid);
+        virtual void save(const FileSystem::IFilePtr& file);
+        virtual void save(const std::string& filename, const std::string& pathid);
 
         virtual void create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
 
@@ -67,10 +67,10 @@ namespace Enigma::Graphics
         virtual error loadTextureImage(const byte_buffer& img_buff) = 0;
         virtual error loadTextureImage(const std::string& filename, const std::string& pathid);
         virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
-        virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
+        virtual error saveTextureImage(const FileSystem::IFilePtr& file) = 0;
         virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
         virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
-        virtual error SaveTextureImage(const std::string& filename, const std::string& pathid);
+        virtual error saveTextureImage(const std::string& filename, const std::string& pathid);
         virtual error UseAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
 
     protected:

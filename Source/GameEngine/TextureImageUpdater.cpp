@@ -8,26 +8,26 @@
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
-TextureImageUpdater::TextureImageUpdater(TextureRepository* host)
+TextureImageUpdater::TextureImageUpdater()
 {
-    m_hostRepository = host;
-    m_onResourceImageRetrieved = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnResourceImageRetrieved(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceImageRetrieved), m_onResourceImageRetrieved);
-    m_onResourceImageUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnResourceImageUpdated(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceImageUpdated), m_onResourceImageUpdated);
+    m_onResourceImageRetrieved = std::make_shared<EventSubscriber>([=](auto e) { this->onResourceImageRetrieved(e); });
+    EventPublisher::subscribe(typeid(Graphics::TextureResourceImageRetrieved), m_onResourceImageRetrieved);
+    m_onResourceImageUpdated = std::make_shared<EventSubscriber>([=](auto e) { this->onResourceImageUpdated(e); });
+    EventPublisher::subscribe(typeid(Graphics::TextureResourceImageUpdated), m_onResourceImageUpdated);
 }
 
 TextureImageUpdater::~TextureImageUpdater()
 {
-    Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageRetrieved), m_onResourceImageRetrieved);
+    EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageRetrieved), m_onResourceImageRetrieved);
     m_onResourceImageRetrieved = nullptr;
-    Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageUpdated), m_onResourceImageUpdated);
+    EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageUpdated), m_onResourceImageUpdated);
     m_onResourceImageUpdated = nullptr;
 }
 
-void TextureImageUpdater::RetrieveTextureImage(const std::shared_ptr<Texture>& target_tex, const std::string& name, const MathLib::Rect& image_rect)
+void TextureImageUpdater::retrieveTextureImage(const std::shared_ptr<Texture>& target_tex, const MathLib::Rect& image_rect)
 {
-    m_targetTextureName = name;
+    assert(target_tex);
+    m_targetTexture = target_tex;
     m_targetTextureRect = image_rect;
     if ((target_tex) && target_tex->getDeviceTexture())
     {
@@ -35,13 +35,14 @@ void TextureImageUpdater::RetrieveTextureImage(const std::shared_ptr<Texture>& t
     }
     else
     {
-        EventPublisher::post(std::make_shared<RetrieveTextureFailed>(m_targetTextureName, ErrorCode::targetTextureNotExists));
+        EventPublisher::post(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
     }
 }
 
-void TextureImageUpdater::UpdateTextureImage(const std::shared_ptr<Texture>& target_tex, const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff)
+void TextureImageUpdater::updateTextureImage(const std::shared_ptr<Texture>& target_tex, const MathLib::Rect& image_rect, const byte_buffer& image_buff)
 {
-    m_targetTextureName = name;
+    assert(target_tex);
+    m_targetTexture = target_tex;
     m_targetTextureRect = image_rect;
     if ((target_tex) && target_tex->getDeviceTexture())
     {
@@ -49,28 +50,46 @@ void TextureImageUpdater::UpdateTextureImage(const std::shared_ptr<Texture>& tar
     }
     else
     {
-        EventPublisher::post(std::make_shared<UpdateTextureFailed>(m_targetTextureName, ErrorCode::targetTextureNotExists));
+        EventPublisher::post(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
     }
 }
 
-void TextureImageUpdater::OnResourceImageRetrieved(const Enigma::Frameworks::IEventPtr& e)
+void TextureImageUpdater::onResourceImageRetrieved(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageRetrieved, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageRetrieved>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_targetTextureName) return;
-    auto target_tex = ev->GetTargetTexture();
+    if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
+    auto target_tex = ev->targetDeviceTexture();
     if (!target_tex) return;
-    EventPublisher::post(std::make_shared<TextureImageRetrieved>(m_targetTextureName, target_tex->GetRetrievedBuffer()));
+    EventPublisher::post(std::make_shared<TextureImageRetrieved>(m_targetTexture->id(), target_tex->GetRetrievedBuffer()));
 }
 
-void TextureImageUpdater::OnResourceImageUpdated(const Enigma::Frameworks::IEventPtr& e)
+void TextureImageUpdater::onRetrieveResourceImageFailed(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageUpdated, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceRetrieveImageFailed>(e);
     if (!ev) return;
-    if (ev->GetTextureName() != m_targetTextureName) return;
-    auto target_tex = ev->GetTargetTexture();
+    if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
+    EventPublisher::post(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ev->error()));
+}
+
+void TextureImageUpdater::onResourceImageUpdated(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageUpdated>(e);
+    if (!ev) return;
+    if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
+    auto target_tex = ev->targetDeviceTexture();
     if (!target_tex) return;
-    EventPublisher::post(std::make_shared<TextureImageUpdated>(m_targetTextureName));
+    EventPublisher::post(std::make_shared<TextureImageUpdated>(m_targetTexture->id()));
+}
+
+void TextureImageUpdater::onUpdateResourceImageFailed(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceUpdateImageFailed>(e);
+    if (!ev) return;
+    if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
+    EventPublisher::post(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ev->error()));
 }

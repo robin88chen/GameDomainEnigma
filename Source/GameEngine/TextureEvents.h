@@ -74,51 +74,47 @@ namespace Enigma::Engine
         std::error_code m_error;
     };
 
-    class TextureImageRetrieved : public Frameworks::IResponseEvent
+    class TextureImageRetrieved : public Frameworks::IEvent
     {
     public:
-        TextureImageRetrieved(const Frameworks::Ruid& request_ruid, const std::string& name, const byte_buffer& image_buff)
-            : IResponseEvent(request_ruid), m_name(name), m_imageBuff(image_buff) {};
+        TextureImageRetrieved(const TextureId& id, const byte_buffer& image_buff) : m_id(id), m_imageBuff(image_buff) {};
 
-        const std::string& getName() { return m_name; }
-        const byte_buffer& GetImageBuffer() { return m_imageBuff; }
+        const TextureId& id() { return m_id; }
+        const byte_buffer& imageBuffer() { return m_imageBuff; }
     private:
-        std::string m_name;
+        TextureId m_id;
         byte_buffer m_imageBuff;
     };
-    class RetrieveTextureImageFailed : public Frameworks::IResponseEvent
+    class RetrieveTextureImageFailed : public Frameworks::IEvent
     {
     public:
-        RetrieveTextureImageFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        RetrieveTextureImageFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {};
 
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::error_code m_error;
     };
 
-    class TextureImageUpdated : public Frameworks::IResponseEvent
+    class TextureImageUpdated : public Frameworks::IEvent
     {
     public:
-        TextureImageUpdated(const Frameworks::Ruid& request_ruid, const std::string& name)
-            : IResponseEvent(request_ruid), m_name(name) {};
+        TextureImageUpdated(const TextureId& id) : m_id(id) {};
 
-        const std::string& getName() { return m_name; }
+        const TextureId& id() { return m_id; }
     private:
-        std::string m_name;
+        TextureId m_id;
     };
-    class UpdateTextureImageFailed : public Frameworks::IResponseEvent
+    class UpdateTextureImageFailed : public Frameworks::IEvent
     {
     public:
-        UpdateTextureImageFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        UpdateTextureImageFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {};
 
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        TextureId m_id;
         std::error_code m_error;
     };
     //---------------- Repository Events ----------------

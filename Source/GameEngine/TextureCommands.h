@@ -46,44 +46,39 @@ namespace Enigma::Engine
     private:
         TextureId m_id;
     };
-    class SaveTexture : public Frameworks::IRequestCommand
+    class EnqueueSavingTexture : public Frameworks::ICommand
     {
     public:
-        SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file) : m_targetTexture(target_texture), m_name(name), m_file(file) {}
-        std::shared_ptr<Texture> GetTargetTexture() const { return m_targetTexture.lock(); }
-        const std::string& GetTextureName() { return m_name; }
-        const FileSystem::IFilePtr& GetFile() const { return m_file; }
+        EnqueueSavingTexture(const std::shared_ptr<Texture>& target_texture, const FileSystem::IFilePtr& file) : m_targetTexture(target_texture), m_file(file) {}
+        std::shared_ptr<Texture> targetTexture() const { return m_targetTexture; }
+        const FileSystem::IFilePtr& file() const { return m_file; }
 
     private:
-        std::weak_ptr<Texture> m_targetTexture;
+        std::shared_ptr<Texture> m_targetTexture;
         std::string m_name;
         FileSystem::IFilePtr m_file;
     };
-    class RetrieveTextureImage : public Frameworks::IRequestCommand
+    class EnqueueRetrievingTextureImage : public Frameworks::ICommand
     {
     public:
-        RetrieveTextureImage(const std::shared_ptr<Texture>& target_texture, const std::string& name, const MathLib::Rect& image_rect) : m_targetTexture(target_texture), m_name(name), m_imageRect(image_rect) {}
-        std::shared_ptr<Texture> GetTargetTexture() const { return m_targetTexture.lock(); }
-        const std::string& GetTextureName() { return m_name; }
-        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
+        EnqueueRetrievingTextureImage(const std::shared_ptr<Texture>& target_texture, const MathLib::Rect& image_rect) : m_targetTexture(target_texture), m_imageRect(image_rect) {}
+        std::shared_ptr<Texture> targetTexture() const { return m_targetTexture; }
+        const MathLib::Rect& imageRect() const { return m_imageRect; }
 
     private:
-        std::weak_ptr<Texture> m_targetTexture;
-        std::string m_name;
+        std::shared_ptr<Texture> m_targetTexture;
         MathLib::Rect m_imageRect;
     };
-    class UpdateTextureImage : public Frameworks::IRequestCommand
+    class EnqueueUpdatingTextureImage : public Frameworks::ICommand
     {
     public:
-        UpdateTextureImage(const std::shared_ptr<Texture> target_texture, const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff) : m_targetTexture(target_texture), m_name(name), m_imageRect(image_rect), m_imageBuff(image_buff) {}
-        std::shared_ptr<Texture> GetTargetTexture() const { return m_targetTexture.lock(); }
-        const std::string& GetTextureName() { return m_name; }
-        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
-        const byte_buffer& GetImageBuffer() const { return m_imageBuff; }
+        EnqueueUpdatingTextureImage(const std::shared_ptr<Texture> target_texture, const MathLib::Rect& image_rect, const byte_buffer& image_buff) : m_targetTexture(target_texture), m_imageRect(image_rect), m_imageBuff(image_buff) {}
+        std::shared_ptr<Texture> targetTexture() const { return m_targetTexture; }
+        const MathLib::Rect& imageRect() const { return m_imageRect; }
+        const byte_buffer& imageBuffer() const { return m_imageBuff; }
 
     private:
-        std::weak_ptr<Texture> m_targetTexture;
-        std::string m_name;
+        std::shared_ptr<Texture> m_targetTexture;
         MathLib::Rect m_imageRect;
         byte_buffer m_imageBuff;
     };

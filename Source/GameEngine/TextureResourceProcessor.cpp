@@ -1,12 +1,15 @@
 ﻿#include "TextureResourceProcessor.h"
 #include "TextureLoader.h"
 #include "TextureSaver.h"
+#include "TextureImageUpdater.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
 #include "TextureDto.h"
 #include "EngineErrors.h"
 #include "TextureEvents.h"
+#include "TextureCommands.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Engine;
@@ -15,6 +18,7 @@ TextureResourceProcessor::TextureResourceProcessor()
 {
     m_loader = menew TextureLoader();
     m_saver = menew TextureSaver();
+    m_imageUpdater = menew TextureImageUpdater();
     registerHandlers();
 }
 
@@ -22,6 +26,7 @@ TextureResourceProcessor::~TextureResourceProcessor()
 {
     SAFE_DELETE(m_loader);
     SAFE_DELETE(m_saver);
+    SAFE_DELETE(m_imageUpdater);
     unregisterHandlers();
 }
 
@@ -35,6 +40,12 @@ void TextureResourceProcessor::registerHandlers()
     Frameworks::EventPublisher::subscribe(typeid(TextureSaver::TextureSaved), m_onSaverTextureSaved);
     m_onSaverSaveTextureFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { onSaverSaveTextureFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(TextureSaver::SaveTextureFailed), m_onSaverSaveTextureFailed);
+    m_enqueueSavingTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { enqueueSavingTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(EnqueueSavingTexture), m_enqueueSavingTexture);
+    m_enqueueRetrievingImage = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { enqueueRetrievingImage(c); });
+    Frameworks::CommandBus::subscribe(typeid(EnqueueRetrievingTextureImage), m_enqueueRetrievingImage);
+    m_enqueueUpdatingImage = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { enqueueUpdatingImage(c); });
+    Frameworks::CommandBus::subscribe(typeid(EnqueueUpdatingTextureImage), m_enqueueUpdatingImage);
 }
 
 void TextureResourceProcessor::unregisterHandlers()
@@ -47,6 +58,12 @@ void TextureResourceProcessor::unregisterHandlers()
     m_onSaverTextureSaved = nullptr;
     Frameworks::EventPublisher::unsubscribe(typeid(TextureSaver::SaveTextureFailed), m_onSaverSaveTextureFailed);
     m_onSaverSaveTextureFailed = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(EnqueueSavingTexture), m_enqueueSavingTexture);
+    m_enqueueSavingTexture = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(EnqueueRetrievingTextureImage), m_enqueueRetrievingImage);
+    m_enqueueRetrievingImage = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(EnqueueUpdatingTextureImage), m_enqueueUpdatingImage);
+    m_enqueueUpdatingImage = nullptr;
 }
 
 std::error_code TextureResourceProcessor::enqueueContentingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto)
@@ -104,6 +121,56 @@ std::error_code TextureResourceProcessor::saveNextTextureResource()
     return ErrorCode::ok;
 }
 
+std::error_code TextureResourceProcessor::enqueueRetrievingTexture(const std::shared_ptr<Texture>& texture, const MathLib::Rect& rect)
+{
+    assert(texture);
+    if (!texture->lazyStatus().isReady()) return ErrorCode::textureNotReady;
+    std::lock_guard locker{ m_retrievingQueueLock };
+    m_retrievingQueue.push({ texture, rect });
+    return ErrorCode::ok;
+}
+
+std::error_code TextureResourceProcessor::enqueueUpdatingTexture(const std::shared_ptr<Texture>& texture, const MathLib::Rect& rect, const byte_buffer& buff)
+{
+    assert(texture);
+    if (!texture->lazyStatus().isReady()) return ErrorCode::textureNotReady;
+    std::lock_guard locker{ m_updatingQueueLock };
+    m_updatingQueue.push({ texture, rect, buff });
+    return ErrorCode::ok;
+}
+
+std::error_code TextureResourceProcessor::processNextTextureResource()
+{
+    if (m_currentProcessingTexture) return ErrorCode::ok;
+    assert(m_imageUpdater);
+    std::lock_guard retrieve_locker{ m_retrievingQueueLock };
+    std::lock_guard update_locker{ m_updatingQueueLock };
+    if ((m_retrievingQueue.empty()) && (m_updatingQueue.empty()))
+    {
+        m_currentProcessingTexture = nullptr;
+        return ErrorCode::ok;
+    }
+    if (!m_retrievingQueue.empty())
+    {
+        auto& [texture, rect] = m_retrievingQueue.front();
+        m_currentProcessingTexture = texture;
+        m_imageUpdater->retrieveTextureImage(texture, rect);
+        m_retrievingQueue.pop();
+        return ErrorCode::ok;
+    }
+    else if (!m_updatingQueue.empty())
+    {
+        auto& [texture, rect, buff] = m_updatingQueue.front();
+        m_currentProcessingTexture = texture;
+        m_imageUpdater->updateTextureImage(texture, rect, buff);
+        m_updatingQueue.pop();
+        return ErrorCode::ok;
+    }
+    else
+        assert(false);
+    return ErrorCode::ok;
+}
+
 void TextureResourceProcessor::onLoaderTextureLoaded(const Frameworks::IEventPtr& e)
 {
     assert(m_loader);
@@ -150,4 +217,79 @@ void TextureResourceProcessor::onSaverSaveTextureFailed(const Frameworks::IEvent
     Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(ev->id(), ev->error()));
     m_currentSavingTexture = nullptr;
     auto er = saveNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::onUpdaterImageRetrieved(const Frameworks::IEventPtr& e)
+{
+    assert(m_imageUpdater);
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageRetrieved>(e);
+    if (!ev) return;
+    if (ev->id() != m_currentProcessingTexture->id()) return;
+    Frameworks::EventPublisher::post(std::make_shared<TextureImageRetrieved>(ev->id(), ev->buffer()));
+    m_currentProcessingTexture = nullptr;
+    auto er = processNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::onUpdaterRetrieveImageFailed(const Frameworks::IEventPtr& e)
+{
+    assert(m_imageUpdater);
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::RetrieveTextureFailed>(e);
+    if (!ev) return;
+    if (ev->id() != m_currentProcessingTexture->id()) return;
+    Frameworks::EventPublisher::post(std::make_shared<RetrieveTextureImageFailed>(ev->id(), ev->error()));
+    m_currentProcessingTexture = nullptr;
+    auto er = processNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::onUpdaterImageUpdated(const Frameworks::IEventPtr& e)
+{
+    assert(m_imageUpdater);
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageUpdated>(e);
+    if (!ev) return;
+    if (ev->id() != m_currentProcessingTexture->id()) return;
+    Frameworks::EventPublisher::post(std::make_shared<TextureImageUpdated>(ev->id()));
+    m_currentProcessingTexture = nullptr;
+    auto er = processNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::onUpdaterUpdateImageFailed(const Frameworks::IEventPtr& e)
+{
+    assert(m_imageUpdater);
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::UpdateTextureFailed>(e);
+    if (!ev) return;
+    if (ev->id() != m_currentProcessingTexture->id()) return;
+    Frameworks::EventPublisher::post(std::make_shared<UpdateTextureImageFailed>(ev->id(), ev->error()));
+    m_currentProcessingTexture = nullptr;
+    auto er = processNextTextureResource();
+}
+
+void TextureResourceProcessor::enqueueSavingTexture(const Frameworks::ICommandPtr& c)
+{
+    assert(c);
+    const auto command = std::dynamic_pointer_cast<EnqueueSavingTexture>(c);
+    assert(command);
+    auto er = enqueueSavingTexture(command->targetTexture(), command->file());
+    saveNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::enqueueRetrievingImage(const Frameworks::ICommandPtr& c)
+{
+    assert(c);
+    const auto command = std::dynamic_pointer_cast<EnqueueRetrievingTextureImage>(c);
+    assert(command);
+    auto er = enqueueRetrievingTexture(command->targetTexture(), command->imageRect());
+    processNextTextureResource();
+}
+
+void Enigma::Engine::TextureResourceProcessor::enqueueUpdatingImage(const Frameworks::ICommandPtr& c)
+{
+    assert(c);
+    const auto command = std::dynamic_pointer_cast<EnqueueUpdatingTextureImage>(c);
+    assert(command);
+    auto er = enqueueUpdatingTexture(command->targetTexture(), command->imageRect(), command->imageBuffer());
+    processNextTextureResource();
 }

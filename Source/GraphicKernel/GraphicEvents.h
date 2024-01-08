@@ -211,9 +211,9 @@ namespace Enigma::Graphics
     public:
         TextureResourceImageRetrieved(const std::shared_ptr<ITexture>& target_tex, const std::string& texture_name, const MathLib::Rect& rc) :
             m_targetTexture(target_tex), m_textureName(texture_name), m_imageRect(rc) {};
-        std::shared_ptr<ITexture> GetTargetTexture() const { return m_targetTexture.lock(); }
-        const std::string& GetTextureName() { return m_textureName; }
-        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
+        std::shared_ptr<ITexture> targetDeviceTexture() const { return m_targetTexture.lock(); }
+        const std::string& textureName() { return m_textureName; }
+        const MathLib::Rect& imageRect() const { return m_imageRect; }
     private:
         std::weak_ptr<ITexture> m_targetTexture;
         std::string m_textureName;
@@ -224,8 +224,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceRetrieveImageFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetTextureName() const { return m_name; }
-        std::error_code GetError() const { return m_error; }
+        const std::string& textureName() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;
@@ -235,9 +235,9 @@ namespace Enigma::Graphics
     public:
         TextureResourceImageUpdated(const std::shared_ptr<ITexture>& target_tex, const std::string& texture_name, const MathLib::Rect& rc) :
             m_targetTexture(target_tex), m_textureName(texture_name), m_imageRect(rc) {};
-        std::shared_ptr<ITexture> GetTargetTexture() const { return m_targetTexture.lock(); }
-        const std::string& GetTextureName() { return m_textureName; }
-        const MathLib::Rect& GetImageRect() const { return m_imageRect; }
+        std::shared_ptr<ITexture> targetDeviceTexture() const { return m_targetTexture.lock(); }
+        const std::string& textureName() { return m_textureName; }
+        const MathLib::Rect& imageRect() const { return m_imageRect; }
     private:
         std::weak_ptr<ITexture> m_targetTexture;
         std::string m_textureName;
@@ -248,8 +248,8 @@ namespace Enigma::Graphics
     public:
         TextureResourceUpdateImageFailed(const std::string& name, std::error_code err) :
             m_name(name), m_error(err) {};
-        const std::string& GetTextureName() const { return m_name; }
-        std::error_code GetError() const { return m_error; }
+        const std::string& textureName() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;

@@ -221,7 +221,7 @@ error RenderTarget::Resize(const MathLib::Dimension<unsigned>& dimension)
     //todo : render target texture
     if (m_renderTargetTexture)
     {
-        m_renderTargetTexture->getDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
+        m_renderTargetTexture->getDeviceTexture()->asBackSurface(m_backSurface, m_usages);
     }
     if (m_depthStencilSurface)
     {
@@ -442,7 +442,7 @@ void RenderTarget::onTextureContented(const Frameworks::IEventPtr& e)
     if (!m_backSurface) return;
     if (ev->id().name() != m_backSurface->getName()) return;
     m_renderTargetTexture = ev->texture();
-    m_renderTargetTexture->getDeviceTexture()->AsBackSurface(m_backSurface, m_usages);
+    m_renderTargetTexture->getDeviceTexture()->asBackSurface(m_backSurface, m_usages);
     Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->id().name()));
 }
 

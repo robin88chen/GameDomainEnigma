@@ -31,7 +31,7 @@ void TextureImageUpdater::retrieveTextureImage(const std::shared_ptr<Texture>& t
     m_targetTextureRect = image_rect;
     if ((target_tex) && target_tex->getDeviceTexture())
     {
-        target_tex->getDeviceTexture()->Retrieve(m_targetTextureRect);
+        target_tex->getDeviceTexture()->retrieve(m_targetTextureRect);
     }
     else
     {
@@ -62,7 +62,7 @@ void TextureImageUpdater::onResourceImageRetrieved(const IEventPtr& e)
     if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
     auto target_tex = ev->targetDeviceTexture();
     if (!target_tex) return;
-    EventPublisher::post(std::make_shared<TextureImageRetrieved>(m_targetTexture->id(), target_tex->GetRetrievedBuffer()));
+    EventPublisher::post(std::make_shared<TextureImageRetrieved>(m_targetTexture->id(), target_tex->getRetrievedBuffer()));
 }
 
 void TextureImageUpdater::onRetrieveResourceImageFailed(const IEventPtr& e)

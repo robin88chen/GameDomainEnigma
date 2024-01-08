@@ -51,14 +51,14 @@ namespace Enigma::Graphics
 
         virtual void create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
 
-        virtual void Retrieve(const MathLib::Rect& rcSrc);
+        virtual void retrieve(const MathLib::Rect& rcSrc);
         virtual void update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);
 
-        virtual void AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
+        virtual void asBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
 
         virtual const GraphicFormat& format() { return m_format; };
         virtual const MathLib::Dimension<unsigned>& dimension() { return m_dimension; };
-        const byte_buffer& GetRetrievedBuffer() { return m_retrievedBuff; }
+        const byte_buffer& getRetrievedBuffer() { return m_retrievedBuff; }
         virtual bool isCubeTexture() { return m_isCubeTexture; }
 
         virtual bool isMultiTexture() { return false; }
@@ -68,10 +68,10 @@ namespace Enigma::Graphics
         virtual error loadTextureImage(const std::string& filename, const std::string& pathid);
         virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
         virtual error saveTextureImage(const FileSystem::IFilePtr& file) = 0;
-        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
-        virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
+        virtual error retrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
+        virtual error updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
         virtual error saveTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error UseAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
+        virtual error useAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
 
     protected:
         std::string m_name;

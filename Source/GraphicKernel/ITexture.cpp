@@ -86,16 +86,16 @@ void ITexture::save(const std::string& filename, const std::string& pathid)
     }
 }
 
-void ITexture::Retrieve(const MathLib::Rect& rcSrc)
+void ITexture::retrieve(const MathLib::Rect& rcSrc)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), rcSrc, this]() -> error { return RetrieveTextureImage(rcSrc); });
+            PushTask([lifetime = shared_from_this(), rcSrc, this]() -> error { return retrieveTextureImage(rcSrc); });
     }
     else
     {
-        RetrieveTextureImage(rcSrc);
+        retrieveTextureImage(rcSrc);
     }
 }
 
@@ -123,11 +123,11 @@ void ITexture::update(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
     {
         IGraphicAPI::instance()->GetGraphicThread()->
             PushTask([lifetime = shared_from_this(), rcDest, img_buff, this]()
-                -> error { return UpdateTextureImage(rcDest, img_buff); });
+                -> error { return updateTextureImage(rcDest, img_buff); });
     }
     else
     {
-        UpdateTextureImage(rcDest, img_buff);
+        updateTextureImage(rcDest, img_buff);
     }
 }
 
@@ -142,15 +142,15 @@ error ITexture::saveTextureImage(const std::string& filename, const std::string&
     return er;
 }
 
-void ITexture::AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages)
+void ITexture::asBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages)
 {
     if (IGraphicAPI::instance()->UseAsync())
     {
         IGraphicAPI::instance()->GetGraphicThread()->
-            PushTask([lifetime = shared_from_this(), back_surf, usages, this]() -> error { return UseAsBackSurface(back_surf, usages); });
+            PushTask([lifetime = shared_from_this(), back_surf, usages, this]() -> error { return useAsBackSurface(back_surf, usages); });
     }
     else
     {
-        UseAsBackSurface(back_surf, usages);
+        useAsBackSurface(back_surf, usages);
     }
 }

@@ -27,7 +27,7 @@ namespace Enigma::Devices
         MultiTextureEgl& operator=(const MultiTextureEgl&) = delete;
         MultiTextureEgl& operator=(MultiTextureEgl&&) = delete;
 
-        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
+        virtual error useAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
 
         virtual unsigned surfaceCount() override { return (unsigned)m_textures.size(); }
 

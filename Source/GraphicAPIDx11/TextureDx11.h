@@ -31,10 +31,10 @@ namespace Enigma::Devices
     protected:
         virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
         virtual error loadTextureImage(const byte_buffer& img_buff) override;
-        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) override;
-        virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;
+        virtual error retrieveTextureImage(const MathLib::Rect& rcSrc) override;
+        virtual error updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;
         virtual error saveTextureImage(const FileSystem::IFilePtr& file) override;
-        virtual error UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
+        virtual error useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
 
         error createFromScratchImage(DirectX::ScratchImage& scratchImage);
         //void CreateCubeTextureFromScratchImage(DirectX::ScratchImage& scratchImage);

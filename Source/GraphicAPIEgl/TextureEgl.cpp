@@ -92,12 +92,12 @@ error TextureEgl::loadTextureImage(const byte_buffer& img_buff)
     return ErrorCode::pngFileFormat;
 }
 
-error TextureEgl::RetrieveTextureImage(const MathLib::Rect& rcSrc)
+error TextureEgl::retrieveTextureImage(const MathLib::Rect& rcSrc)
 {
     return ErrorCode::notImplement;
 }
 
-error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
+error TextureEgl::updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
@@ -148,7 +148,7 @@ error TextureEgl::saveTextureImage(const FileSystem::IFilePtr& file)
     return ErrorCode::ok;
 }
 
-error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
+error TextureEgl::useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     assert(m_texture != 0);
     BackSurfaceEgl* bb = dynamic_cast<BackSurfaceEgl*>(back_surf.get());

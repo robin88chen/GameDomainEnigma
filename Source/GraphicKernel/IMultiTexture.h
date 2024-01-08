@@ -72,11 +72,11 @@ namespace Enigma::Graphics
         {
             return ErrorCode::notImplement;
         };
-        virtual error UpdateTextureImage(const MathLib::Rect&, const byte_buffer&) override final
+        virtual error updateTextureImage(const MathLib::Rect&, const byte_buffer&) override final
         {
             return ErrorCode::notImplement;
         };
-        virtual error RetrieveTextureImage(const MathLib::Rect&) override final
+        virtual error retrieveTextureImage(const MathLib::Rect&) override final
         {
             return ErrorCode::notImplement;
         }

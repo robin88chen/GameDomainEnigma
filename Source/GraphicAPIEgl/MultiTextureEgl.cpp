@@ -100,7 +100,7 @@ error MultiTextureEgl::saveTextureImages(const std::vector<FileSystem::IFilePtr>
     return ErrorCode::notImplement;
 }
 
-error MultiTextureEgl::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
+error MultiTextureEgl::useAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     MultiBackSurfaceEgl* bb = dynamic_cast<MultiBackSurfaceEgl*>(back_surf.get());
     assert(bb);

@@ -18,8 +18,6 @@ using namespace Enigma::Frameworks;
 
 TextureLoader::TextureLoader()
 {
-    //m_hostRepository = host;
-
     m_onTextureCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onDeviceTextureCreated(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::DeviceTextureCreated), m_onTextureCreated);
     m_onMultiTextureCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onDeviceTextureCreated(e); });
@@ -34,10 +32,6 @@ TextureLoader::TextureLoader()
     Frameworks::EventPublisher::subscribe(typeid(Graphics::MultiTextureResourceFromMemoryCreated), m_onMultiTextureResourceCreated);
     m_onTextureCreateResourceFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onTextureCreateResourceFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
-    //m_onTextureImageSaved = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureImageSaved(e); });
-    //Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
-    //m_onTextureSaveImageFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnTextureSaveImageFailed(e); });
-    //Frameworks::EventPublisher::subscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
 }
 
 TextureLoader::~TextureLoader()
@@ -56,10 +50,6 @@ TextureLoader::~TextureLoader()
     m_onMultiTextureResourceCreated = nullptr;
     Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceCreateFromMemoryFailed), m_onTextureCreateResourceFailed);
     m_onTextureCreateResourceFailed = nullptr;
-    //Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceImageSaved), m_onTextureImageSaved);
-    //m_onTextureImageSaved = nullptr;
-    //Frameworks::EventPublisher::unsubscribe(typeid(Graphics::TextureResourceSaveImageFailed), m_onTextureSaveImageFailed);
-    //m_onTextureSaveImageFailed = nullptr;
 }
 
 void TextureLoader::contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto)
@@ -76,24 +66,6 @@ void TextureLoader::contentImage(const std::shared_ptr<Texture>& texture, const 
         CommandBus::post(std::make_shared<CreateDeviceTexture>(m_contentingTexture->id().name()));
     }
 }
-
-/*void TextureLoader::SaveTexture(const std::shared_ptr<Texture>& target_texture, const std::string& name, const FileSystem::IFilePtr& file)
-{
-    assert(file);
-    if (!target_texture)
-    {
-        Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
-        return;
-    }
-    if (!target_texture->getDeviceTexture())
-    {
-        Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(name, ErrorCode::targetTextureNotExists));
-        return;
-    }
-    m_savingTextureName = name;
-    m_savingDeviceTextureName = target_texture->getDeviceTexture()->getName();
-    target_texture->getDeviceTexture()->save(file);
-}*/
 
 void TextureLoader::loadResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex)
 {
@@ -234,21 +206,3 @@ void TextureLoader::failContentingImage(std::error_code er)
     EventPublisher::post(std::make_shared<LoadTextureFailed>(m_contentingTexture->id(), er));
     m_contentingTexture = nullptr;
 }
-
-/*void TextureLoader::OnTextureImageSaved(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceImageSaved, Frameworks::IEvent>(e);
-    if (!ev) return;
-    if (ev->GetTextureName() != m_savingDeviceTextureName) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureSaved>(m_savingTextureName));
-}
-
-void TextureLoader::OnTextureSaveImageFailed(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceSaveImageFailed, Frameworks::IEvent>(e);
-    if (!ev) return;
-    if (ev->GetTextureName() != m_savingDeviceTextureName) return;
-    Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(m_savingTextureName, ev->GetError()));
-}*/

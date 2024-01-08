@@ -180,7 +180,8 @@ void TextureResourceProcessor::onLoaderTextureLoaded(const Frameworks::IEventPtr
     if (ev->id() != m_currentContentingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<TextureContented>(ev->id(), ev->texture()));
     m_currentContentingTexture = nullptr;
-    auto er = contentNextTextureResource();
+    const auto er = contentNextTextureResource();
+    assert(!er);
 }
 
 void TextureResourceProcessor::onLoaderLoadTextureFailed(const Frameworks::IEventPtr& e)
@@ -192,7 +193,8 @@ void TextureResourceProcessor::onLoaderLoadTextureFailed(const Frameworks::IEven
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
     Frameworks::EventPublisher::post(std::make_shared<ContentTextureFailed>(ev->id(), ev->error()));
     m_currentContentingTexture = nullptr;
-    auto er = contentNextTextureResource();
+    const auto er = contentNextTextureResource();
+    assert(!er);
 }
 
 void TextureResourceProcessor::onSaverTextureSaved(const Frameworks::IEventPtr& e)
@@ -204,7 +206,8 @@ void TextureResourceProcessor::onSaverTextureSaved(const Frameworks::IEventPtr& 
     if (ev->id() != m_currentSavingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<TextureSaved>(ev->id()));
     m_currentSavingTexture = nullptr;
-    auto er = saveNextTextureResource();
+    const auto er = saveNextTextureResource();
+    assert(!er);
 }
 
 void TextureResourceProcessor::onSaverSaveTextureFailed(const Frameworks::IEventPtr& e)
@@ -216,10 +219,11 @@ void TextureResourceProcessor::onSaverSaveTextureFailed(const Frameworks::IEvent
     Platforms::Debug::ErrorPrintf("texture %s save failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
     Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(ev->id(), ev->error()));
     m_currentSavingTexture = nullptr;
-    auto er = saveNextTextureResource();
+    const auto er = saveNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::onUpdaterImageRetrieved(const Frameworks::IEventPtr& e)
+void TextureResourceProcessor::onUpdaterImageRetrieved(const Frameworks::IEventPtr& e)
 {
     assert(m_imageUpdater);
     if (!e) return;
@@ -228,10 +232,11 @@ void Enigma::Engine::TextureResourceProcessor::onUpdaterImageRetrieved(const Fra
     if (ev->id() != m_currentProcessingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<TextureImageRetrieved>(ev->id(), ev->buffer()));
     m_currentProcessingTexture = nullptr;
-    auto er = processNextTextureResource();
+    const auto er = processNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::onUpdaterRetrieveImageFailed(const Frameworks::IEventPtr& e)
+void TextureResourceProcessor::onUpdaterRetrieveImageFailed(const Frameworks::IEventPtr& e)
 {
     assert(m_imageUpdater);
     if (!e) return;
@@ -240,10 +245,11 @@ void Enigma::Engine::TextureResourceProcessor::onUpdaterRetrieveImageFailed(cons
     if (ev->id() != m_currentProcessingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<RetrieveTextureImageFailed>(ev->id(), ev->error()));
     m_currentProcessingTexture = nullptr;
-    auto er = processNextTextureResource();
+    const auto er = processNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::onUpdaterImageUpdated(const Frameworks::IEventPtr& e)
+void TextureResourceProcessor::onUpdaterImageUpdated(const Frameworks::IEventPtr& e)
 {
     assert(m_imageUpdater);
     if (!e) return;
@@ -252,10 +258,11 @@ void Enigma::Engine::TextureResourceProcessor::onUpdaterImageUpdated(const Frame
     if (ev->id() != m_currentProcessingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<TextureImageUpdated>(ev->id()));
     m_currentProcessingTexture = nullptr;
-    auto er = processNextTextureResource();
+    const auto er = processNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::onUpdaterUpdateImageFailed(const Frameworks::IEventPtr& e)
+void TextureResourceProcessor::onUpdaterUpdateImageFailed(const Frameworks::IEventPtr& e)
 {
     assert(m_imageUpdater);
     if (!e) return;
@@ -264,7 +271,8 @@ void Enigma::Engine::TextureResourceProcessor::onUpdaterUpdateImageFailed(const 
     if (ev->id() != m_currentProcessingTexture->id()) return;
     Frameworks::EventPublisher::post(std::make_shared<UpdateTextureImageFailed>(ev->id(), ev->error()));
     m_currentProcessingTexture = nullptr;
-    auto er = processNextTextureResource();
+    const auto er = processNextTextureResource();
+    assert(!er);
 }
 
 void TextureResourceProcessor::enqueueSavingTexture(const Frameworks::ICommandPtr& c)
@@ -273,23 +281,29 @@ void TextureResourceProcessor::enqueueSavingTexture(const Frameworks::ICommandPt
     const auto command = std::dynamic_pointer_cast<EnqueueSavingTexture>(c);
     assert(command);
     auto er = enqueueSavingTexture(command->targetTexture(), command->file());
-    saveNextTextureResource();
+    assert(!er);
+    er = saveNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::enqueueRetrievingImage(const Frameworks::ICommandPtr& c)
+void TextureResourceProcessor::enqueueRetrievingImage(const Frameworks::ICommandPtr& c)
 {
     assert(c);
     const auto command = std::dynamic_pointer_cast<EnqueueRetrievingTextureImage>(c);
     assert(command);
     auto er = enqueueRetrievingTexture(command->targetTexture(), command->imageRect());
-    processNextTextureResource();
+    assert(!er);
+    er = processNextTextureResource();
+    assert(!er);
 }
 
-void Enigma::Engine::TextureResourceProcessor::enqueueUpdatingImage(const Frameworks::ICommandPtr& c)
+void TextureResourceProcessor::enqueueUpdatingImage(const Frameworks::ICommandPtr& c)
 {
     assert(c);
     const auto command = std::dynamic_pointer_cast<EnqueueUpdatingTextureImage>(c);
     assert(command);
     auto er = enqueueUpdatingTexture(command->targetTexture(), command->imageRect(), command->imageBuffer());
-    processNextTextureResource();
+    assert(!er);
+    er = processNextTextureResource();
+    assert(!er);
 }

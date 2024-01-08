@@ -150,9 +150,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h">
       <Filter>Bounding Volume</Filter>
     </ClInclude>

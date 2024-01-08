@@ -1,5 +1,4 @@
 ﻿#include "EffectTextureMapDto.h"
-#include "GameEngine/TexturePolicies.h"
 
 using namespace Enigma::Engine;
 

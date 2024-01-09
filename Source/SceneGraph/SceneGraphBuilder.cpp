@@ -118,33 +118,33 @@ SceneGraphBuilder::~SceneGraphBuilder()
 
 void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
 {
-    auto factory = m_factories.find(dto.GetRtti().GetRttiName());
+    auto factory = m_factories.find(dto.getRtti().GetRttiName());
     if (factory == m_factories.end())
     {
-        Debug::Printf("Can't find dto factory of %s\n", dto.GetRtti().GetRttiName().c_str());
+        Debug::Printf("Can't find dto factory of %s\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::spatialFactoryNotFound));
         InterruptBuildingSceneGraph(ErrorCode::spatialFactoryNotFound);
         return;
     }
-    /*if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
+    /*if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
         PawnFactory(dto);
     }
-    else*/ if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
+    else*/ if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
     {
         NodeFactory(dto);
     }
-    else if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
+    else if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
     {
         PortalFactory(dto);
     }
-    else if (Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
+    else if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
     {
         LightFactory(dto);
     }
     else
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
     }
@@ -152,18 +152,18 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
 
 void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
 {
-    if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
+    if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for node factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     std::shared_ptr<Node> node;
-    if (dto.GetRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
         assert(!m_host->hasNode(dto.getName()));  // node name must be unique
-        node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+        node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
     }
     else
     {
@@ -173,7 +173,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
         }
         else
         {
-            node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+            node = std::dynamic_pointer_cast<Node, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
         }
     }
     node->resolveFactoryLinkage(dto, *m_resolver);
@@ -182,30 +182,30 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
 
 void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
 {
-    if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
+    if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for light factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasLight(dto.getName()));
-    auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+    auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
     light->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, light));
 }
 
 /*void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
 {
-    if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
+    if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for pawn factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->HasPawn(dto.getName()));
-    auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+    auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
     PawnDto pawn_dto = PawnDto::fromGenericDto(dto);
     if (auto prim = pawn_dto.primitive())
     {
@@ -217,15 +217,15 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
 
 void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
 {
-    if (!Rtti::isExactlyOrDerivedFrom(dto.GetRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
+    if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for portal factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
         InterruptBuildingSceneGraph(ErrorCode::factoryRttiMismatch);
         return;
     }
     assert(!m_host->hasPortal(dto.getName()));
-    auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_host->AddNewSpatial(m_factories[dto.GetRtti().GetRttiName()](dto)));
+    auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
     portal->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, portal));
 }
@@ -404,7 +404,7 @@ void SceneGraphBuilder::DoRegisteringSpatialFactory(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterSpatialDtoFactory, ICommand>(c);
     if (!cmd) return;
-    m_factories.insert_or_assign(cmd->GetRtti(), cmd->GetFactory());
+    m_factories.insert_or_assign(cmd->getRtti(), cmd->GetFactory());
 }
 
 void SceneGraphBuilder::DoUnRegisteringSpatialFactory(const ICommandPtr& c)
@@ -412,7 +412,7 @@ void SceneGraphBuilder::DoUnRegisteringSpatialFactory(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<UnRegisterSpatialDtoFactory, ICommand>(c);
     if (!cmd) return;
-    if (m_factories.find(cmd->GetRtti()) != m_factories.end()) m_factories.erase(cmd->GetRtti());
+    if (m_factories.find(cmd->getRtti()) != m_factories.end()) m_factories.erase(cmd->getRtti());
 }
 
 void SceneGraphBuilder::DoInvokingSpatialFactory(const ICommandPtr& c)

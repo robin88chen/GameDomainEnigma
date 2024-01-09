@@ -12,6 +12,7 @@
 #include "MeshNode.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/optional_ref.hpp"
+#include "GameEngine/GenericDto.h"
 #include <vector>
 #include <optional>
 
@@ -22,6 +23,7 @@ namespace Enigma::Renderer
         DECLARE_EN_RTTI_NON_BASE;
     public:
         MeshNodeTree();
+        MeshNodeTree(const Engine::GenericDto& dto);
         MeshNodeTree(const MeshNodeTree& tree);
         MeshNodeTree(MeshNodeTree&& tree) noexcept;
         ~MeshNodeTree();

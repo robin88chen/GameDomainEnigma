@@ -26,6 +26,7 @@ namespace Enigma::Renderer
         DECLARE_EN_RTTI;
     public:
         ModelPrimitive(const Engine::PrimitiveId& id);
+        ModelPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
         ModelPrimitive(const ModelPrimitive& prim) = delete;
         ModelPrimitive(ModelPrimitive&& prim) = delete;
         ~ModelPrimitive() override;

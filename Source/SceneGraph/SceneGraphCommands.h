@@ -67,7 +67,7 @@ namespace Enigma::SceneGraph
         RegisterSpatialDtoFactory(const std::string& rtti, const SpatialDtoFactory& factory)
             : m_rtti(rtti), m_factory(factory) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
         const SpatialDtoFactory& GetFactory() { return m_factory; }
 
     private:
@@ -79,7 +79,7 @@ namespace Enigma::SceneGraph
     public:
         UnRegisterSpatialDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
 
     private:
         std::string m_rtti;

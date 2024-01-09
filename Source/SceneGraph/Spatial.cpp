@@ -75,7 +75,7 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
 
 }
 
-Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
+Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
 {
     SpatialDto dto = SpatialDto::fromGenericDto(o);
     m_name = dto.name();
@@ -99,7 +99,7 @@ Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.GetRtti())
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
 }
 
-Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.GetRtti()), m_id(id)
+Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
 {
     SpatialDto dto = SpatialDto::fromGenericDto(o);
     m_name = dto.name();

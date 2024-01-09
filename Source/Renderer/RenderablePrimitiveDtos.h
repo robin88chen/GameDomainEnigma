@@ -42,8 +42,6 @@ namespace Enigma::Renderer
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        std::string& name() { return m_name; }
         [[nodiscard]] const Geometries::GeometryId& geometryId() const { return m_geometryId; }
         Geometries::GeometryId& geometryId() { return m_geometryId; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& geometry() const { return m_geometry; }
@@ -67,7 +65,6 @@ namespace Enigma::Renderer
     protected:
         Engine::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
-        std::string m_name;
         Geometries::GeometryId m_geometryId;
         std::optional<Engine::GenericDto> m_geometry;
         //Engine::FactoryDesc m_geometryFactory;
@@ -126,8 +123,8 @@ namespace Enigma::Renderer
         MathLib::Matrix4& localT_PosTransform() { return m_localT_PosTransform; }
         //[[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
         //MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
-        [[nodiscard]] const std::optional<Engine::GenericDto>& meshPrimitive() const { return m_meshPrimitive; }
-        std::optional<Engine::GenericDto>& meshPrimitive() { return m_meshPrimitive; }
+        [[nodiscard]] const std::optional<Engine::PrimitiveId>& meshPrimitiveId() const { return m_meshPrimitiveId; }
+        std::optional<Engine::PrimitiveId>& meshPrimitiveId() { return m_meshPrimitiveId; }
         [[nodiscard]] std::optional<unsigned> parentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& parentIndexInArray() { return m_parentIndexInArray; }
 
@@ -139,7 +136,7 @@ namespace Enigma::Renderer
         std::string m_name;
         MathLib::Matrix4 m_localT_PosTransform;
         //MathLib::Matrix4 m_rootRefTransform;
-        std::optional<Engine::GenericDto> m_meshPrimitive;
+        std::optional<Engine::PrimitiveId> m_meshPrimitiveId;
         std::optional<unsigned> m_parentIndexInArray;
     };
 
@@ -182,8 +179,6 @@ namespace Enigma::Renderer
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        std::string& name() { return m_name; }
         [[nodiscard]] const Engine::GenericDto& nodeTree() const { return m_nodeTreeDto; }
         Engine::GenericDto& nodeTree() { return m_nodeTreeDto; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& animator() const { return m_animatorDto; }
@@ -197,7 +192,6 @@ namespace Enigma::Renderer
     protected:
         Engine::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
-        std::string m_name;
         Engine::GenericDto m_nodeTreeDto;
         std::optional<Engine::GenericDto> m_animatorDto;
     };

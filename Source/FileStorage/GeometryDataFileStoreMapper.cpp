@@ -70,7 +70,7 @@ std::error_code GeometryDataFileStoreMapper::removeGeometry(const Geometries::Ge
 
 std::error_code GeometryDataFileStoreMapper::putGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& dto)
 {
-    auto filename = extractFilename(id, dto.GetRtti());
+    auto filename = extractFilename(id, dto.getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();

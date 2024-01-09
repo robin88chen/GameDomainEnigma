@@ -29,7 +29,7 @@ Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(Camera
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.GetRtti()), m_id(id)
+Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.getRtti()), m_id(id)
 {
     CameraDto camera_dto = CameraDto::fromGenericDto(dto);
     m_handSys = camera_dto.HandSystem();

@@ -34,12 +34,12 @@ void GenericDto::Remove(const std::string& attribute)
     m_values.erase(attribute);
 }
 
-void GenericDto::AddRtti(const FactoryDesc& rtti)
+void GenericDto::addRtti(const FactoryDesc& rtti)
 {
     AddOrUpdate(TOKEN_RTTI, rtti);
 }
 
-FactoryDesc GenericDto::GetRtti() const
+FactoryDesc GenericDto::getRtti() const
 {
     return Get<FactoryDesc>(TOKEN_RTTI);
 }
@@ -78,7 +78,7 @@ bool GenericDto::IsTopLevel() const
 std::shared_ptr<GenericPolicy> GenericDto::ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>& d) const
 {
     if (!HasValue(TOKEN_RTTI)) return nullptr;
-    auto it = m_converters.find(GetRtti().GetRttiName());
+    auto it = m_converters.find(getRtti().GetRttiName());
     if (it == m_converters.end()) return nullptr;
     if (it->second) return it->second(*this, d);
     return nullptr;

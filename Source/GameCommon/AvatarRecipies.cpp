@@ -27,13 +27,13 @@ AvatarRecipe::AvatarRecipe() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.getName())
 {
 }
 
-AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.GetRtti())
+AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.getRtti())
 {
 }
 
 std::shared_ptr<AvatarRecipe> AvatarRecipe::createFromGenericDto(const Engine::GenericDto& dto)
 {
-    std::string type = dto.GetRtti().GetRttiName();
+    std::string type = dto.getRtti().GetRttiName();
     if (type == ReplaceAvatarMaterial::TYPE_RTTI.getName())
     {
         return std::make_shared<ReplaceAvatarMaterial>(dto);

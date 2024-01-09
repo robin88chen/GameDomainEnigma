@@ -27,7 +27,7 @@ CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Cam
 CameraDto CameraDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     CameraDto camera;
-    camera.factoryDesc() = dto.GetRtti();
+    camera.factoryDesc() = dto.getRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_ID)) camera.id() = SpatialId(v.value(), Camera::TYPE_RTTI);
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_HAND_SYSTEM)) camera.HandSystem() = static_cast<GraphicCoordSys>(v.value());
     if (const auto v = dto.TryGetValue<Vector3>(TOKEN_EYE_POSITION)) camera.EyePosition() = v.value();
@@ -40,7 +40,7 @@ CameraDto CameraDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto CameraDto::toGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_ID, m_id.name());
     dto.AddOrUpdate(TOKEN_HAND_SYSTEM, static_cast<unsigned>(m_handSys));
     dto.AddOrUpdate(TOKEN_EYE_POSITION, m_eyePosition);
@@ -58,7 +58,7 @@ m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspe
 FrustumDto FrustumDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     FrustumDto frustum;
-    frustum.factoryDesc() = dto.GetRtti();
+    frustum.factoryDesc() = dto.getRtti();
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_HAND_SYSTEM)) frustum.HandSystem() = static_cast<GraphicCoordSys>(v.value());
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_PROJECTION_TYPE)) frustum.ProjectionType() = static_cast<Frustum::ProjectionType>(v.value());
     if (const auto v = dto.TryGetValue<float>(TOKEN_FOV)) frustum.Fov() = v.value();
@@ -73,7 +73,7 @@ FrustumDto FrustumDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto FrustumDto::toGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_HAND_SYSTEM, static_cast<unsigned>(m_handSys));
     dto.AddOrUpdate(TOKEN_PROJECTION_TYPE, static_cast<unsigned>(m_projectionType));
     dto.AddOrUpdate(TOKEN_FOV, m_fov);

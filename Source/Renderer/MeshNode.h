@@ -23,6 +23,7 @@ namespace Enigma::Renderer
     public:
         MeshNode(const std::string& name);
         MeshNode(const MeshNode& node);
+        MeshNode(const Engine::GenericDto& dto);
         MeshNode(MeshNode&& node) noexcept;
         ~MeshNode();
         MeshNode& operator=(const MeshNode& node);

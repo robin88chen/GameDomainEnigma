@@ -29,7 +29,7 @@ AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::fromGenericDto(co
 GenericDto AvatarRecipeReplaceMaterialDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_OLD_MATERIAL_ID, m_oldMaterialId.name());
     dto.AddOrUpdate(TOKEN_NEW_MATERIAL_ID, m_newMaterialId.name());
     return dto;
@@ -51,7 +51,7 @@ AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::fromGenericDto(const 
 GenericDto AvatarRecipeChangeTextureDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_MESH_NAME, m_meshName);
     dto.AddOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.toGenericDto());
     return dto;

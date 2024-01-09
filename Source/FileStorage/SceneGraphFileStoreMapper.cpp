@@ -77,7 +77,7 @@ std::error_code SceneGraphFileStoreMapper::removeCamera(const SceneGraph::Spatia
 std::error_code SceneGraphFileStoreMapper::putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos)
 {
     assert(!dtos.empty());
-    auto filename = extractFilename(id, dtos[0].GetRtti());
+    auto filename = extractFilename(id, dtos[0].getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();
@@ -106,7 +106,7 @@ Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::querySpatial(con
 std::error_code SceneGraphFileStoreMapper::putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos)
 {
     assert(!dtos.empty());
-    auto filename = extractFilename(id, dtos[0].GetRtti());
+    auto filename = extractFilename(id, dtos[0].getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();

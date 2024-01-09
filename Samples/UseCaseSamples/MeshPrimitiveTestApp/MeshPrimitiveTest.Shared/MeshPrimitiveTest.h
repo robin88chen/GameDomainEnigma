@@ -24,7 +24,6 @@
 #include "Renderer/Renderer.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
-#include "GameEngine/EffectMaterialManager.h"
 
 class MeshPrimitiveTest : public Enigma::Application::AppDelegate
 {

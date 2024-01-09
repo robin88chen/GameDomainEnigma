@@ -22,6 +22,13 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
     m_meshPrimitiveIndexCache.clear();
 }
 
+ModelPrimitive::ModelPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto) : Primitive(id)
+{
+    ModelPrimitiveDto primDto = ModelPrimitiveDto::fromGenericDto(dto);
+    m_factoryDesc = primDto.factoryDesc();
+    m_nodeTree = MeshNodeTree(primDto.nodeTree());
+}
+
 /*ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim) : Primitive(prim.m_id)
 {
     m_name = prim.m_name;
@@ -80,7 +87,6 @@ GenericDto ModelPrimitive::serializeDto() const
     ModelPrimitiveDto dto;
     dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
-    dto.name() = m_name;
     dto.nodeTree() = m_nodeTree.serializeDto();
     if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
         dto.animator() = ani->serializeDto().toGenericDto();

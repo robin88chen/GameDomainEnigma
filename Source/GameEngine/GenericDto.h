@@ -48,8 +48,8 @@ namespace Enigma::Engine
         }
 
         /** add Rtti */
-        void AddRtti(const FactoryDesc& rtti);
-        FactoryDesc GetRtti() const;
+        void addRtti(const FactoryDesc& rtti);
+        FactoryDesc getRtti() const;
 
         /** add Name */
         void AddName(const std::string& name);

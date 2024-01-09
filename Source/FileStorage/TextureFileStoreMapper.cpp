@@ -62,7 +62,7 @@ std::optional<Enigma::Engine::GenericDto> TextureFileStoreMapper::queryTexture(c
 
 std::error_code TextureFileStoreMapper::putTexture(const Engine::TextureId& id, const Engine::GenericDto& dto)
 {
-    auto filename = extractFilename(id, dto.GetRtti());
+    auto filename = extractFilename(id, dto.getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();

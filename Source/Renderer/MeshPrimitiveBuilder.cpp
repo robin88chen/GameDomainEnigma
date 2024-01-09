@@ -203,7 +203,7 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     if (!m_builtRenderBuffer) return;
     for (const auto& eff : m_builtEffects)
     {
-        if (!eff) return;
+        if ((!eff) || (!eff->lazyStatus().isReady())) return;
     }
     for (auto& tex : m_builtTextures)
     {

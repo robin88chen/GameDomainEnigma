@@ -61,10 +61,10 @@ std::shared_ptr<Primitive> PrimitiveFactory::create(const PrimitiveId& id, const
 
 std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto constitutor = m_constitutors.find(dto.GetRtti().GetRttiName());
+    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
     if (constitutor == m_constitutors.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<ConstitutePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
         return nullptr;
     }

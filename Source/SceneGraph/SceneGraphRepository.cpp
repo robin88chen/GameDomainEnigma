@@ -200,23 +200,23 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
 {
     assert(!hasNode(dto.getName()));
     std::shared_ptr<Node> node = nullptr;
-    if (dto.GetRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(dto);
     }
-    else if (dto.GetRtti().GetRttiName() == LazyNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == LazyNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<LazyNode>(dto);
     }
-    else if (dto.GetRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
     {
         node = createVisibilityManagedNode(VisibilityManagedNodeDto::fromGenericDto(dto));
     }
-    else if (dto.GetRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = createPortalZoneNode(PortalZoneNodeDto::fromGenericDto(dto));
     }
-    else if (dto.GetRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<PortalManagementNode>(dto);
     }

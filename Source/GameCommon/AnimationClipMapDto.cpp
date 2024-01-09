@@ -18,7 +18,7 @@ AnimationClipMapDto::AnimationClipMapDto() : m_factoryDesc(AnimationClipMap::TYP
 AnimationClipMapDto AnimationClipMapDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AnimationClipMapDto anim;
-    anim.m_factoryDesc = dto.GetRtti();
+    anim.m_factoryDesc = dto.getRtti();
     if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_ANIM_NAMES)) anim.AnimNames() = v.value();
     if (auto v = dto.TryGetValue<std::vector<float>>(TOKEN_START_OFFSETS)) anim.StartOffsets() = v.value();
     if (auto v = dto.TryGetValue<std::vector<float>>(TOKEN_LOOP_TIMES)) anim.LoopTimes() = v.value();
@@ -30,7 +30,7 @@ AnimationClipMapDto AnimationClipMapDto::fromGenericDto(const Engine::GenericDto
 GenericDto AnimationClipMapDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_ANIM_NAMES, m_animNames);
     dto.AddOrUpdate(TOKEN_START_OFFSETS, m_startOffsets);
     dto.AddOrUpdate(TOKEN_LOOP_TIMES, m_loopTimes);

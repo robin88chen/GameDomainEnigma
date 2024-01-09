@@ -14,7 +14,7 @@ QuadTreeRootDto::QuadTreeRootDto() : m_factoryDesc(SceneQuadTreeRoot::TYPE_RTTI.
 QuadTreeRootDto QuadTreeRootDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     QuadTreeRootDto quad_dto;
-    quad_dto.factoryDesc() = dto.GetRtti();
+    quad_dto.factoryDesc() = dto.getRtti();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) quad_dto.name() = v.value();
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_ROOT)) quad_dto.root() = v.value();
     return quad_dto;
@@ -23,7 +23,7 @@ QuadTreeRootDto QuadTreeRootDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto QuadTreeRootDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NAME, name());
     dto.AddOrUpdate(TOKEN_ROOT, root());
     return dto;

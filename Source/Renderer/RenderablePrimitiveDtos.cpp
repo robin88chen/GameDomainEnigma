@@ -29,7 +29,9 @@ static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
-static std::string TOKEN_MESH_PRIMITIVE_OBJECT = "MeshPrimitiveObject";
+static std::string TOKEN_MESH_ID_NAME = "MeshId.Name";
+static std::string TOKEN_MESH_ID_SEQUENCE = "MeshId.Sequence";
+static std::string TOKEN_MESH_ID_RTTI = "MeshId.Rtti";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";
 static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
@@ -43,8 +45,7 @@ MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.ge
 MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     MeshPrimitiveDto mesh;
-    mesh.factoryDesc() = dto.GetRtti();
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) mesh.name() = v.value();
+    mesh.factoryDesc() = dto.getRtti();
     if (auto n = dto.TryGetValue<std::string>(TOKEN_ID_NAME))
     {
         if (auto r = dto.TryGetValue<std::string>(TOKEN_ID_RTTI))
@@ -81,8 +82,7 @@ MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto MeshPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_ID_NAME, m_id.name());
     dto.AddOrUpdate(TOKEN_ID_SEQUENCE, m_id.sequence());
     dto.AddOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
@@ -119,7 +119,7 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
     if (mesh_dto.m_geometry)
     {
         policy->geometryPolicy() = GeometryDataPolicy(mesh_dto.m_geometryName, mesh_dto.m_geometry.value());
-        policy->geometryFactoryDesc() = mesh_dto.m_geometry.value().GetRtti();
+        policy->geometryFactoryDesc() = mesh_dto.m_geometry.value().getRtti();
     }
     else
     {
@@ -186,11 +186,22 @@ MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 MeshNodeDto MeshNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     MeshNodeDto node;
-    node.factoryDesc() = dto.GetRtti();
+    node.factoryDesc() = dto.getRtti();
     if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) node.name() = v.value();
     if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_T_POS_TRANSFORM)) node.localT_PosTransform() = v.value();
     //if (const auto v = dto.TryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
-    if (const auto v = dto.TryGetValue<GenericDto>(TOKEN_MESH_PRIMITIVE_OBJECT)) node.meshPrimitive() = v.value();
+    if (auto n = dto.TryGetValue<std::string>(TOKEN_MESH_ID_NAME))
+    {
+        if (auto r = dto.TryGetValue<std::string>(TOKEN_MESH_ID_RTTI))
+        {
+            std::uint64_t id_seq = 0;
+            if (auto s = dto.TryGetValue<std::uint64_t>(TOKEN_MESH_ID_SEQUENCE))
+            {
+                id_seq = s.value();
+            }
+            node.meshPrimitiveId() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
+        }
+    }
     if (const auto v = dto.TryGetValue<unsigned>(TOKEN_PARENT_NODE_INDEX)) node.parentIndexInArray() = v.value();
     return node;
 }
@@ -198,13 +209,15 @@ MeshNodeDto MeshNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto MeshNodeDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_LOCAL_T_POS_TRANSFORM, m_localT_PosTransform);
     //dto.AddOrUpdate(TOKEN_ROOT_REF_TRANSFORM, m_rootRefTransform);
-    if (m_meshPrimitive)
+    if (m_meshPrimitiveId)
     {
-        dto.AddOrUpdate(TOKEN_MESH_PRIMITIVE_OBJECT, m_meshPrimitive.value());
+        dto.AddOrUpdate(TOKEN_MESH_ID_NAME, m_meshPrimitiveId.value().name());
+        dto.AddOrUpdate(TOKEN_MESH_ID_SEQUENCE, m_meshPrimitiveId.value().sequence());
+        dto.AddOrUpdate(TOKEN_MESH_ID_RTTI, m_meshPrimitiveId.value().rtti().getName());
     }
     if (m_parentIndexInArray)
     {
@@ -220,7 +233,7 @@ MeshNodeTreeDto::MeshNodeTreeDto() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getNa
 MeshNodeTreeDto MeshNodeTreeDto::fromGenericDto(const GenericDto& dto)
 {
     MeshNodeTreeDto tree;
-    tree.m_factoryDesc = dto.GetRtti();
+    tree.m_factoryDesc = dto.getRtti();
     if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_MESH_NODES)) tree.meshNodes() = v.value();
     return tree;
 }
@@ -228,7 +241,7 @@ MeshNodeTreeDto MeshNodeTreeDto::fromGenericDto(const GenericDto& dto)
 GenericDto MeshNodeTreeDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_MESH_NODES, m_nodeDtos);
     return dto;
 }
@@ -240,7 +253,6 @@ ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI
 ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
 {
     ModelPrimitiveDto model;
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) model.name() = v.value();
     if (auto n = dto.TryGetValue<std::string>(TOKEN_ID_NAME))
     {
         if (auto r = dto.TryGetValue<std::string>(TOKEN_ID_RTTI))
@@ -261,8 +273,7 @@ ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
 GenericDto ModelPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_NAME, m_name);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_ID_NAME, m_id.name());
     dto.AddOrUpdate(TOKEN_ID_SEQUENCE, m_id.sequence());
     dto.AddOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
@@ -275,10 +286,9 @@ std::shared_ptr<GenericPolicy> ModelPrimitiveDto::modelDtoConvertToPolicy(const 
 {
     ModelPrimitiveDto model_dto = ModelPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<ModelPrimitivePolicy>();
-    policy->name() = model_dto.m_name;
     policy->TheDtoDeserializer() = deserializer;
     policy->nodeTreeDto() = MeshNodeTreeDto::fromGenericDto(model_dto.m_nodeTreeDto);
-    if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->GetRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.getName()))
+    if ((model_dto.m_animatorDto) && (model_dto.m_animatorDto->getRtti().GetRttiName() == ModelPrimitiveAnimator::TYPE_RTTI.getName()))
     {
         policy->modelAnimator() = ModelAnimatorDto::fromGenericDto(model_dto.m_animatorDto.value());
     }

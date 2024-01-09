@@ -71,7 +71,7 @@ std::error_code PrimitiveFileStoreMapper::removePrimitive(const Engine::Primitiv
 
 std::error_code PrimitiveFileStoreMapper::putPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto)
 {
-    auto filename = extractFilename(id, dto.GetRtti());
+    auto filename = extractFilename(id, dto.getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();

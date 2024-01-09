@@ -119,7 +119,7 @@ TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& 
 {
     TerrainGeometryDto terrain_dto;
     terrain_dto.deserializeNonVertexAttributesFromGenericDto(dto);
-    terrain_dto.factoryDesc() = dto.GetRtti();
+    terrain_dto.factoryDesc() = dto.getRtti();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
@@ -134,7 +134,7 @@ GenericDto TerrainGeometryDto::toGenericDto() const
 {
     GenericDto dto;
     serializeNonVertexAttributesToGenericDto(dto);
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NUM_ROWS, m_numRows);
     dto.AddOrUpdate(TOKEN_NUM_COLS, m_numCols);
     dto.AddOrUpdate(TOKEN_MIN_POSITION, m_minPosition);

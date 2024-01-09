@@ -13,6 +13,8 @@
 #include "RenderableEvents.h"
 #include "GameEngine/PrimitiveCommands.h"
 #include "MeshPrimitive.h"
+#include "SkinMeshPrimitive.h"
+#include "ModelPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
@@ -20,7 +22,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 
-RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
+RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
 {
     m_primitiveRepository = primitive_repository;
     m_geometryRepository = geometry_repository;
@@ -57,6 +59,12 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
     m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(MeshPrimitive::TYPE_RTTI.getName(),
         [=](const PrimitiveId& id) { return createMesh(id); },
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); });
+    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(SkinMeshPrimitive::TYPE_RTTI.getName(),
+        [=](const PrimitiveId& id) { return createSkinMesh(id); },
+        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteSkinMesh(id, dto); });
+    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(ModelPrimitive::TYPE_RTTI.getName(),
+        [=](const PrimitiveId& id) { return createModel(id); },
+        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteModel(id, dto); });
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
     m_modelBuilder = menew ModelPrimitiveBuilder();
@@ -78,15 +86,15 @@ ServiceResult RenderablePrimitiveBuilder::onTick()
     m_isCurrentBuilding = true;*/
     if (m_currentBuildingId.has_value()) return ServiceResult::Pendding;
     std::lock_guard locker{ m_primitiveDtosLock };
-    if (m_primitiveDtos.empty())
+    if (m_primitivePlans.empty())
     {
         m_needTick = false;
         return ServiceResult::Pendding;
     }
-    auto tuple = m_primitiveDtos.front();
-    buildRenderablePrimitive(std::get<PrimitiveId>(tuple), std::get<std::shared_ptr<Primitive>>(tuple), std::get<GenericDto>(tuple));
-    m_currentBuildingId = std::get<PrimitiveId>(tuple);
-    m_primitiveDtos.pop();
+    auto plan = m_primitivePlans.front();
+    buildRenderablePrimitive(plan);
+    m_currentBuildingId = plan.id();
+    m_primitivePlans.pop();
     return ServiceResult::Pendding;
 }
 
@@ -110,7 +118,7 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     return ServiceResult::Complete;
 }
 
-error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const Engine::GenericDto& dto)
+error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const GenericDto& dto)
 {
     auto policy = std::dynamic_pointer_cast<RenderablePrimitivePolicy>(dto.ConvertToPolicy(m_dtoDeserializer));
     if (!policy) return ErrorCode::invalidPrimitiveDto;
@@ -135,13 +143,13 @@ void RenderablePrimitiveBuilder::buildRenderablePrimitive(const Ruid& requester_
     }
 }
 
-void RenderablePrimitiveBuilder::buildRenderablePrimitive(const Engine::PrimitiveId& id, const std::shared_ptr<Engine::Primitive>& primitive, const Engine::GenericDto& dto)
+void RenderablePrimitiveBuilder::buildRenderablePrimitive(const PrimitiveBuildingPlan& plan)
 {
     assert(m_meshBuilder);
     assert(m_modelBuilder);
-    if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(primitive))
+    if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(plan.primitive()))
     {
-        m_meshBuilder->constituteLazyMeshPrimitive(p, dto);
+        m_meshBuilder->constituteLazyMeshPrimitive(p, plan.dto());
     }
     //else if (auto p = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(primitive))
     //{
@@ -159,10 +167,36 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteMesh(const Prim
     assert(!m_geometryRepository.expired());
     auto prim = std::make_shared<MeshPrimitive>(id, dto, m_geometryRepository.lock());
     std::lock_guard locker{ m_primitiveDtosLock };
-    m_primitiveDtos.push({ id, prim, dto });
+    m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_needTick = true;
     return prim;
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createSkinMesh(const PrimitiveId& id)
+{
+    return std::make_shared<SkinMeshPrimitive>(id);
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteSkinMesh(const PrimitiveId& id, const GenericDto& dto)
+{
+    assert(!m_geometryRepository.expired());
+    auto prim = std::make_shared<SkinMeshPrimitive>(id, dto, m_geometryRepository.lock());
+    std::lock_guard locker{ m_primitiveDtosLock };
+    m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
+    prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
+    m_needTick = true;
+    return prim;
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createModel(const PrimitiveId& id)
+{
+    return std::make_shared<ModelPrimitive>(id);
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const PrimitiveId& id, const GenericDto& dto)
+{
+    return std::make_shared<ModelPrimitive>(id, dto);
 }
 
 void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)

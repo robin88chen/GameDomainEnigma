@@ -39,6 +39,23 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
 
+MeshNode::MeshNode(const Engine::GenericDto& dto) : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
+{
+    MeshNodeDto mesh_node_dto = MeshNodeDto::fromGenericDto(dto);
+    m_name = mesh_node_dto.name();
+    m_mxT_PosTransform = mesh_node_dto.localT_PosTransform();
+    //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
+    if (mesh_node_dto.meshPrimitiveId())
+    {
+        m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(mesh_node_dto.meshPrimitiveId().value()));
+    }
+    if (mesh_node_dto.parentIndexInArray())
+    {
+        m_parentIndexInArray = mesh_node_dto.parentIndexInArray().value();
+    }
+    m_hasSkinMeshPrimitive = false;
+}
+
 MeshNode::MeshNode(MeshNode&& node) noexcept : m_factoryDesc(std::move(node.factoryDesc()))
 {
     m_name = std::move(node.m_name);
@@ -101,7 +118,7 @@ GenericDto MeshNode::serializeDto() const
     //dto.RootRefTransform() = m_mxRootRefTransform;
     if (m_meshPrimitive)
     {
-        dto.meshPrimitive() = m_meshPrimitive->serializeDto();
+        dto.meshPrimitiveId() = m_meshPrimitive->id();
     }
     if (m_parentIndexInArray)
     {

@@ -152,9 +152,9 @@ error AnimationRepository::BuildModelAnimator(const std::shared_ptr<ModelAnimato
 
 void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& dto)
 {
-    if (dto.GetRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.getName())
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.getRtti().GetRttiName().c_str());
         return;
     }
     auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::fromGenericDto(dto));

@@ -27,7 +27,7 @@ PawnPrefabDto::PawnPrefabDto() : m_factoryDesc(FactoryDesc(Pawn::TYPE_RTTI.getNa
 PawnPrefabDto PawnPrefabDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     PawnPrefabDto prefab_dto;
-    prefab_dto.factoryDesc() = dto.GetRtti();
+    prefab_dto.factoryDesc() = dto.getRtti();
     prefab_dto.m_isTopLevel = dto.IsTopLevel();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_NAME)) prefab_dto.name() = v.value();
     if (auto v = dto.TryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) prefab_dto.localTransform() = v.value();
@@ -43,7 +43,7 @@ PawnPrefabDto PawnPrefabDto::fromGenericDto(const Engine::GenericDto& dto)
 Enigma::Engine::GenericDto PawnPrefabDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     dto.AsTopLevel(m_isTopLevel);
     dto.AddOrUpdate(TOKEN_NAME, m_name);
     dto.AddOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);

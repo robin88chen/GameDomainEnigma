@@ -382,7 +382,6 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.name() = quad_geo_name;
     mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(m_configuration->AmbientEffectName());
@@ -409,7 +408,6 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.name() = quad_geo_name;
     mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(m_configuration->SunLightEffectName());
@@ -435,7 +433,6 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.name() = vol_geo_name;
     mesh_dto.geometryId() = vol_geo_name;
     mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(m_configuration->LightVolumeEffectName());

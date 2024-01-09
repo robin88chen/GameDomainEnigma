@@ -88,7 +88,7 @@ GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUs
 GeometryDataDto GeometryDataDto::fromGenericDto(const GenericDto& dto)
 {
     GeometryDataDto geometry;
-    geometry.factoryDesc() = dto.GetRtti();
+    geometry.factoryDesc() = dto.getRtti();
     geometry.deserializeNonVertexAttributesFromGenericDto(dto);
     if (dto.HasValue(TOKEN_POSITIONS_3))
     {
@@ -140,7 +140,7 @@ GeometryDataDto GeometryDataDto::fromGenericDto(const GenericDto& dto)
 GenericDto GeometryDataDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     serializeNonVertexAttributesToGenericDto(dto);
     if (m_position3s)
     {
@@ -231,7 +231,7 @@ TriangleListDto TriangleListDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto TriangleListDto::toGenericDto() const
 {
     GenericDto dto = GeometryDataDto::toGenericDto();
-    //dto.AddRtti(FactoryDesc(TriangleList::TYPE_RTTI.getName()));
+    //dto.addRtti(FactoryDesc(TriangleList::TYPE_RTTI.getName()));
 
     return dto;
 }

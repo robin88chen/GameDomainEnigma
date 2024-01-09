@@ -24,7 +24,7 @@ GeometryData::GeometryData(const GeometryId& id) : m_factoryDesc(GeometryData::T
     m_geometryBound = BoundingVolume{ Box3::UNIT_BOX };
 }
 
-GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.GetRtti()), m_id(id)
+GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
 {
     GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
     deserializeGeometryDto(dto);

@@ -67,10 +67,10 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
         {
             node.SetParentIndexInArray(v.value());
         }
-        if (auto prim = node_dto.meshPrimitive())
+        /*if (auto prim = node_dto.meshPrimitive())
         {
             PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
-        }
+        }*/
         m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
     }
     ContinueBuildInnerMesh();

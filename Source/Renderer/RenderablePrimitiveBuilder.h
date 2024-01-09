@@ -16,6 +16,7 @@
 #include "GameEngine/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
 #include "GameEngine/PrimitiveRepository.h"
+#include "PrimitiveBuildingPlan.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -47,9 +48,13 @@ namespace Enigma::Renderer
     protected:
         std::shared_ptr<Engine::Primitive> createMesh(const Engine::PrimitiveId& id);
         std::shared_ptr<Engine::Primitive> constituteMesh(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Engine::Primitive> createSkinMesh(const Engine::PrimitiveId& id);
+        std::shared_ptr<Engine::Primitive> constituteSkinMesh(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Engine::Primitive> createModel(const Engine::PrimitiveId& id);
+        std::shared_ptr<Engine::Primitive> constituteModel(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
 
         void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
-        void buildRenderablePrimitive(const Engine::PrimitiveId& id, const std::shared_ptr<Engine::Primitive>& primitive, const Engine::GenericDto& dto);
+        void buildRenderablePrimitive(const PrimitiveBuildingPlan& plan);
 
         void onPrimitiveBuilt(const Frameworks::IEventPtr& e);
         void onBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
@@ -61,7 +66,7 @@ namespace Enigma::Renderer
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
-        std::queue<std::tuple<Engine::PrimitiveId, std::shared_ptr<Engine::Primitive>, Engine::GenericDto>> m_primitiveDtos;
+        std::queue<PrimitiveBuildingPlan> m_primitivePlans;
         std::mutex m_policiesLock;
         std::mutex m_primitiveDtosLock;
         bool m_isCurrentBuilding;

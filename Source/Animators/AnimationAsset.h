@@ -31,7 +31,7 @@ namespace Enigma::Animators
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        virtual float GetAnimationLengthInSecond() = 0;
+        virtual float getAnimationLengthInSecond() = 0;
 
     protected:
         std::string m_name;

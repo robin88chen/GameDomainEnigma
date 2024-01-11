@@ -27,10 +27,10 @@ GenericDto AnimationClipMap::serializeDto() const
     for (auto& [name, clip] : m_animClips)
     {
         dto.AnimNames().push_back(name);
-        dto.StartOffsets().push_back(clip.GetClip().GetStartOffset());
-        dto.LoopTimes().push_back(clip.GetClip().GetLoopTime());
-        dto.WarpModes().push_back(static_cast<unsigned>(clip.GetClip().GetWarpMode()));
-        dto.DivideIndices().push_back(clip.GetClip().GetDivideIndex());
+        dto.StartOffsets().push_back(clip.GetClip().startOffset());
+        dto.LoopTimes().push_back(clip.GetClip().loopTime());
+        dto.WarpModes().push_back(static_cast<unsigned>(clip.GetClip().warpMode()));
+        dto.DivideIndices().push_back(clip.GetClip().divideIndex());
     }
     return dto.toGenericDto();
 }

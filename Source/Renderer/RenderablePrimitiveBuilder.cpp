@@ -202,10 +202,12 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const Pri
 void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
+    if (!m_currentBuildingId) return;
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e))
     {
-        if (ev->id() != m_currentBuildingId) return;
+        if (ev->id() != m_currentBuildingId.value()) return;
         EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(m_buildingRuid, ev->name(), ev->primitive()));
+        m_currentBuildingId = std::nullopt;
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::ModelPrimitiveBuilt, IEvent>(e))
@@ -219,12 +221,14 @@ void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)
 void RenderablePrimitiveBuilder::onBuildPrimitiveFailed(const IEventPtr& e)
 {
     if (!e) return;
+    if (!m_currentBuildingId) return;
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::BuildMeshPrimitiveFailed, IEvent>(e))
     {
-        if (ev->id() != m_currentBuildingId) return;
+        if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
         EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(m_buildingRuid, ev->name(), ev->error()));
+        m_currentBuildingId = std::nullopt;
         m_isCurrentBuilding = false;
     }
     else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::BuildModelPrimitiveFailed, IEvent>(e))

@@ -218,10 +218,10 @@ void ShadowMapService::BindShadowMapToPawn(const std::shared_ptr<Pawn>& pawn)
     if (!pawn->GetPrimitive()) return;
     if (const auto model = std::dynamic_pointer_cast<ModelPrimitive, Engine::Primitive>(pawn->GetPrimitive()))
     {
-        const auto mesh_count = model->GetMeshPrimitiveCount();
+        const auto mesh_count = model->getMeshPrimitiveCount();
         for (unsigned i = 0; i < mesh_count; i++)
         {
-            BindShadowMapToMesh(model->GetMeshPrimitive(i));
+            BindShadowMapToMesh(model->getMeshPrimitive(i));
         }
     }
     else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(pawn->GetPrimitive()))

@@ -60,18 +60,18 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
     {
         MeshNodeDto node_dto = MeshNodeDto::fromGenericDto(dto);
         MeshNode node(node_dto.name());
-        node.SetT_PosTransform(node_dto.localT_PosTransform());
+        node.setT_PosTransform(node_dto.localT_PosTransform());
         node.setLocalTransform(node_dto.localT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
         if (auto v = node_dto.parentIndexInArray())
         {
-            node.SetParentIndexInArray(v.value());
+            node.setParentIndexInArray(v.value());
         }
         /*if (auto prim = node_dto.meshPrimitive())
         {
             PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
         }*/
-        m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
+        m_builtPrimitive->getMeshNodeTree().addMeshNode(node);
     }
     ContinueBuildInnerMesh();
 }

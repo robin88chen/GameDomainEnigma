@@ -1,0 +1,3 @@
+2
+test_mesh,0,En.Renderer.MeshPrimitive,test_mesh.mesh@DataPath
+test_model,0,En.Renderer.ModelPrimitive,test_model.model@DataPath

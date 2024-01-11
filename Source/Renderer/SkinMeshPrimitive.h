@@ -29,25 +29,25 @@ namespace Enigma::Renderer
 
         virtual Engine::GenericDto serializeDto() const override;
 
-        void BindOwnerRootRefTransform(const MathLib::Matrix4& mx);
-        const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
+        void bindOwnerRootRefTransform(const MathLib::Matrix4& mx);
+        const MathLib::Matrix4& getOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
         virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect) override;
         virtual void changeEffectMaterials(const EffectMaterialList& effects) override;
 
-        void CreateBoneMatrixArray(unsigned int size);
-        void UpdateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);
+        void createBoneMatrixArray(unsigned int size);
+        void updateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);
 
         /** bind primitive bone matrix */
-        void BindPrimitiveBoneMatrix();
+        void bindPrimitiveBoneMatrix();
         /** bind segment bone matrix */
-        void BindSegmentBoneMatrix(unsigned int index);
+        void bindSegmentBoneMatrix(unsigned int index);
         /** un-bind primitive bone matrix */
-        void LoosePrimitiveBoneMatrix();
+        void loosePrimitiveBoneMatrix();
         /** un-bind segment bone matrix */
-        void LooseSegmentBoneMatrix(unsigned int index);
+        void looseSegmentBoneMatrix(unsigned int index);
 
     private:
-        void BoneMatrixAssign(Engine::EffectVariable& var);
+        void assignBoneMatrix(Engine::EffectVariable& var);
 
     protected:
         /** effect matrix = node animation matrix * node offset matrix

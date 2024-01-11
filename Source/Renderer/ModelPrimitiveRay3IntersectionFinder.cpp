@@ -63,7 +63,7 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
 {
     if (!model) return { false, std::move(cache) };
-    unsigned int mesh_count = model->GetMeshPrimitiveCount();
+    unsigned int mesh_count = model->getMeshPrimitiveCount();
     if (mesh_count <= 0) return { false, std::move(cache) };
 
     std::unique_ptr<IntrModelPrimitiveCache> prim_cache = nullptr;
@@ -73,7 +73,7 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     if (prim_cache) mesh_cache_index = prim_cache->GetCachedMeshPrimIndex();
     if (mesh_cache_index < mesh_count)
     {
-        if (auto mesh_prim = model->GetMeshPrimitive(mesh_cache_index))
+        if (auto mesh_prim = model->getMeshPrimitive(mesh_cache_index))
         {
             MeshPrimitiveRay3IntersectionFinder mesh_finder;
             auto res = mesh_finder.Test(mesh_prim, ray, prim_cache->GetIntrGeometryCache());
@@ -93,7 +93,7 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         if (i == mesh_cache_index) continue;
-        std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(i);
+        std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(i);
         if (!mesh) continue;
         MeshPrimitiveRay3IntersectionFinder mesh_finder;
         auto res = mesh_finder.Test(mesh, ray, std::move(geo_cache));
@@ -118,7 +118,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     std::vector<IntrPrimitiveRay3::ResultRecord> records;
 
     if (!model) return { records , Intersector::Result{ false, std::move(cache) } };
-    unsigned int mesh_count = model->GetMeshPrimitiveCount();
+    unsigned int mesh_count = model->getMeshPrimitiveCount();
     if (mesh_count <= 0) return { records , Intersector::Result{ false, std::move(cache) } };
 
     std::unique_ptr<IntrModelPrimitiveCache> prim_cache = nullptr;
@@ -132,7 +132,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     if (prim_cache) mesh_cache_index = prim_cache->GetCachedMeshPrimIndex();
     if (mesh_cache_index < mesh_count)
     {
-        if (std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(mesh_cache_index))
+        if (std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(mesh_cache_index))
         {
             MeshPrimitiveRay3IntersectionFinder mesh_finder;
             auto [recs, res] = mesh_finder.Find(mesh, ray, prim_cache->GetIntrGeometryCache());
@@ -154,7 +154,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     {
         if (result_count >= req_result_total) break;
         if (m == mesh_cache_index) continue;
-        std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(m);
+        std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(m);
         if (!mesh) continue;
 
         MeshPrimitiveRay3IntersectionFinder mesh_finder;

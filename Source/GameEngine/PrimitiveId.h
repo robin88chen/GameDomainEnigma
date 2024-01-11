@@ -31,6 +31,9 @@ namespace Enigma::Engine
         const std::uint64_t sequence() const { return m_sequence; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }
 
+        PrimitiveId origin() const { return PrimitiveId(m_name, 0, *m_rtti); }
+        PrimitiveId next() const;
+
         class hash
         {
         public:

@@ -44,6 +44,8 @@ MeshNode::MeshNode(const Engine::GenericDto& dto) : m_factoryDesc(MeshNode::TYPE
     MeshNodeDto mesh_node_dto = MeshNodeDto::fromGenericDto(dto);
     m_name = mesh_node_dto.name();
     m_mxT_PosTransform = mesh_node_dto.localT_PosTransform();
+    m_mxLocalTransform = m_mxT_PosTransform;
+    m_mxRootRefTransform = m_mxT_PosTransform;
     //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
     if (mesh_node_dto.meshPrimitiveId())
     {
@@ -127,29 +129,29 @@ GenericDto MeshNode::serializeDto() const
     return dto.toGenericDto();
 }
 
-void MeshNode::SetMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh)
+void MeshNode::setMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     m_meshPrimitive = mesh;
     if (const auto skin_prim = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh))
     {
         m_hasSkinMeshPrimitive = true;
-        skin_prim->BindOwnerRootRefTransform(m_mxRootRefTransform);
+        skin_prim->bindOwnerRootRefTransform(m_mxRootRefTransform);
     }
 }
 
-void MeshNode::SetParentIndexInArray(unsigned idx)
+void MeshNode::setParentIndexInArray(unsigned idx)
 {
     m_parentIndexInArray = idx;
 }
 
-void MeshNode::SetRootRefTransform(const MathLib::Matrix4& mx)
+void MeshNode::setRootRefTransform(const MathLib::Matrix4& mx)
 {
     m_mxRootRefTransform = mx;
     if ((m_hasSkinMeshPrimitive) && (m_meshPrimitive))
     {
         if (const auto skin_prim = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(m_meshPrimitive))
         {
-            skin_prim->BindOwnerRootRefTransform(m_mxRootRefTransform);
+            skin_prim->bindOwnerRootRefTransform(m_mxRootRefTransform);
         }
     }
 }

@@ -35,18 +35,18 @@ namespace Enigma::Renderer
 
         Engine::GenericDto serializeDto() const;
 
-        std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name) const;
+        std::optional<unsigned> findMeshNodeIndex(const std::string& node_name) const;
         /** add mesh node to tree
             @return  the index in array of this node */
-        unsigned AddMeshNode(const MeshNode& node);
-        unsigned GetMeshNodeCount() const { return static_cast<unsigned>(m_meshNodes.size()); };
-        stdext::optional_ref<MeshNode> GetMeshNode(unsigned index);
-        stdext::optional_ref<const MeshNode> GetMeshNode(unsigned index) const;
-        std::shared_ptr<MeshPrimitive> GetMeshPrimitiveInNode(unsigned index);
+        unsigned addMeshNode(const MeshNode& node);
+        unsigned getMeshNodeCount() const { return static_cast<unsigned>(m_meshNodes.size()); };
+        stdext::optional_ref<MeshNode> getMeshNode(unsigned index);
+        stdext::optional_ref<const MeshNode> getMeshNode(unsigned index) const;
+        std::shared_ptr<MeshPrimitive> getMeshPrimitiveInNode(unsigned index);
         /// is child node in sub-tree? (find parent mesh node from child mesh node)
-        bool IsInSubTree(unsigned child_node_index, const std::string& parent_node_name);
+        bool isInSubTree(unsigned child_node_index, const std::string& parent_node_name);
 
-        void UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal);
+        void updateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

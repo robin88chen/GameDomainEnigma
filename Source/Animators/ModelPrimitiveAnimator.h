@@ -37,38 +37,38 @@ namespace Enigma::Animators
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 
-        void SetControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
-        std::shared_ptr<Renderer::ModelPrimitive> GetControlledModel() const;
+        void setControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
+        std::shared_ptr<Renderer::ModelPrimitive> getControlledModel() const;
 
         /** link animation set, then re-calculate mapping */
-        void LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
+        void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
         /** calculate mesh node mapping */
-        virtual void CalculateMeshNodeMapping();
+        virtual void calculateMeshNodeMapping();
 
         /** link skin mesh */
-        void LinkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
-        void LinkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
+        void linkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
+        void linkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
             const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         /** get skin mesh animation operator,
                 model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/
-        const SkinAnimationOperator& GetSkinAnimOperator(unsigned int index);
-        unsigned GetSkinAnimationOperatorCount() const { return static_cast<unsigned>(m_skinAnimOperators.size()); };
+        const SkinAnimationOperator& getSkinAnimOperator(unsigned int index);
+        unsigned getSkinAnimationOperatorCount() const { return static_cast<unsigned>(m_skinAnimOperators.size()); };
 
         /** get animation key set */
-        const std::shared_ptr<ModelAnimationAsset>& GetAnimationAsset() { return m_animationAsset; };
+        const std::shared_ptr<ModelAnimationAsset>& getAnimationAsset() { return m_animationAsset; };
 
         /** play animation */
-        virtual void PlayAnimation(const AnimationClip& clip);
+        virtual void playAnimation(const AnimationClip& clip);
         /** fade in animation */
-        virtual void FadeInAnimation(float fading_time, const AnimationClip& clip);
+        virtual void fadeInAnimation(float fading_time, const AnimationClip& clip);
         /** stop animation */
-        virtual void StopAnimation();
+        virtual void stopAnimation();
 
     protected:
-        bool TimeValueUpdate();
+        bool updateTimeValue();
 
-        bool UpdateMeshNodeTransform();
-        bool UpdateMeshNodeTransformWithFading();
+        bool updateMeshNodeTransform();
+        bool updateMeshNodeTransformWithFading();
 
     protected:
         struct MeshNodeMappingData
@@ -96,7 +96,6 @@ namespace Enigma::Animators
 
         std::vector<SkinAnimationOperator> m_skinAnimOperators;
     };
-    using ModelPrimitiveAnimatorPtr = std::shared_ptr<ModelPrimitiveAnimator>;
 }
 
 #endif // _MODEL_PRIMITIVE_ANIMATOR_H

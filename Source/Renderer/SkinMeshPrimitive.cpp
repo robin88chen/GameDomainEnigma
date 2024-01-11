@@ -37,7 +37,7 @@ SkinMeshPrimitive::SkinMeshPrimitive(SkinMeshPrimitive&& skin) noexcept : MeshPr
 
 SkinMeshPrimitive::~SkinMeshPrimitive()
 {
-    LoosePrimitiveBoneMatrix();
+    loosePrimitiveBoneMatrix();
 }
 
 /*SkinMeshPrimitive& SkinMeshPrimitive::operator=(const SkinMeshPrimitive& skin)
@@ -62,7 +62,7 @@ GenericDto SkinMeshPrimitive::serializeDto() const
     return dto.toGenericDto();
 }
 
-void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)
+void SkinMeshPrimitive::bindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 {
     m_ownerNodeRootRefTransform = mx;
 }
@@ -70,36 +70,36 @@ void SkinMeshPrimitive::BindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 void SkinMeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
 {
     loosePrimitiveEffectTexture();
-    LoosePrimitiveBoneMatrix();
+    loosePrimitiveBoneMatrix();
     m_effects.clear();
     if (effects.size() == 0) return;
     m_effects = effects;
     bindPrimitiveEffectTexture();
-    BindPrimitiveBoneMatrix();
+    bindPrimitiveBoneMatrix();
 }
 
 void SkinMeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect)
 {
     if (index >= m_effects.size()) return;
     looseSegmentEffectTexture(index);
-    LooseSegmentBoneMatrix(index);
+    looseSegmentBoneMatrix(index);
     m_effects[index] = effect;
     bindSegmentEffectTexture(index);
-    BindSegmentBoneMatrix(index);
+    bindSegmentBoneMatrix(index);
 }
 
-void SkinMeshPrimitive::CreateBoneMatrixArray(unsigned size)
+void SkinMeshPrimitive::createBoneMatrixArray(unsigned size)
 {
     m_boneEffectMatrix.resize(size, Matrix4::IDENTITY);
 }
 
-void SkinMeshPrimitive::UpdateBoneEffectMatrix(unsigned idx, const MathLib::Matrix4& ref_mx)
+void SkinMeshPrimitive::updateBoneEffectMatrix(unsigned idx, const MathLib::Matrix4& ref_mx)
 {
     if (idx >= m_boneEffectMatrix.size()) return;
     m_boneEffectMatrix[idx] = ref_mx;
 }
 
-void SkinMeshPrimitive::BindPrimitiveBoneMatrix()
+void SkinMeshPrimitive::bindPrimitiveBoneMatrix()
 {
     if (m_effects.empty()) return;
     EffectMaterialList::iterator eff_iter;
@@ -108,20 +108,20 @@ void SkinMeshPrimitive::BindPrimitiveBoneMatrix()
         if (!(*eff_iter)) continue;
         (*eff_iter)->setVariableAssignFunc(SEMANTIC_BONE_MATRIX,
             [lifetime = weak_from_this()](EffectVariable& v)
-            { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->BoneMatrixAssign(v); });
+            { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });
     }
 }
 
-void SkinMeshPrimitive::BindSegmentBoneMatrix(unsigned index)
+void SkinMeshPrimitive::bindSegmentBoneMatrix(unsigned index)
 {
     if (index >= m_effects.size()) return;
     if (!m_effects[index]) return;
     m_effects[index]->setVariableAssignFunc(SEMANTIC_BONE_MATRIX,
         [lifetime = weak_from_this()](EffectVariable& v)
-        { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->BoneMatrixAssign(v); });
+        { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });
 }
 
-void SkinMeshPrimitive::LoosePrimitiveBoneMatrix()
+void SkinMeshPrimitive::loosePrimitiveBoneMatrix()
 {
     if (m_effects.empty()) return;
     EffectMaterialList::iterator eff_iter;
@@ -132,14 +132,14 @@ void SkinMeshPrimitive::LoosePrimitiveBoneMatrix()
     }
 }
 
-void SkinMeshPrimitive::LooseSegmentBoneMatrix(unsigned index)
+void SkinMeshPrimitive::looseSegmentBoneMatrix(unsigned index)
 {
     if (index >= m_effects.size()) return;
     if (!m_effects[index]) return;
     m_effects[index]->setVariableAssignFunc(SEMANTIC_BONE_MATRIX, nullptr);
 }
 
-void SkinMeshPrimitive::BoneMatrixAssign(Engine::EffectVariable& var)
+void SkinMeshPrimitive::assignBoneMatrix(Engine::EffectVariable& var)
 {
     var.assignValues(m_boneEffectMatrix, static_cast<unsigned>(m_boneEffectMatrix.size()));
 }

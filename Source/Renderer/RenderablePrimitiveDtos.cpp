@@ -253,6 +253,7 @@ ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI
 ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
 {
     ModelPrimitiveDto model;
+    model.factoryDesc() = dto.getRtti();
     if (auto n = dto.TryGetValue<std::string>(TOKEN_ID_NAME))
     {
         if (auto r = dto.TryGetValue<std::string>(TOKEN_ID_RTTI))

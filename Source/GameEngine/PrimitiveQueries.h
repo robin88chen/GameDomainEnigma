@@ -25,6 +25,16 @@ namespace Enigma::Engine
     protected:
         PrimitiveId m_id;
     };
+    class QueryPrimitiveNextSequenceNumber : public Frameworks::Query<std::uint64_t>
+    {
+    public:
+        QueryPrimitiveNextSequenceNumber(const PrimitiveId& id) : m_id(id) {}
+
+        const PrimitiveId& id() const { return m_id; }
+
+    protected:
+        PrimitiveId m_id;
+    };
 }
 
 #endif // PRIMITIVE_QUERIES_H

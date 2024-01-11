@@ -30,19 +30,19 @@ namespace Enigma::Animators
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
-        
-        void LinkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
-        void CalculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
-        void LinkNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
-        void UpdateSkinMeshBoneMatrix(const Renderer::MeshNodeTree& mesh_node_tree);
 
-        std::shared_ptr<Renderer::SkinMeshPrimitive> GetTargetSkinMeshPrimitive() const
+        void linkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
+        void calculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
+        void linkNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
+        void updateSkinMeshBoneMatrix(const Renderer::MeshNodeTree& mesh_node_tree);
+
+        std::shared_ptr<Renderer::SkinMeshPrimitive> getTargetSkinMeshPrimitive() const
         {
             if (!m_skinMeshPrim.expired()) return m_skinMeshPrim.lock();
             return nullptr;
         };
 
-        void ReLinkClonedSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim);
+        void relinkClonedSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

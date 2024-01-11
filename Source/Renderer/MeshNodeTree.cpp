@@ -62,7 +62,7 @@ GenericDto MeshNodeTree::serializeDto() const
     return dto.toGenericDto();
 }
 
-std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_name) const
+std::optional<unsigned> MeshNodeTree::findMeshNodeIndex(const std::string& node_name) const
 {
     if (m_meshNodes.empty()) return std::nullopt;
     unsigned count = static_cast<unsigned>(m_meshNodes.size());
@@ -73,73 +73,73 @@ std::optional<unsigned> MeshNodeTree::FindMeshNodeIndex(const std::string& node_
     return std::nullopt;
 }
 
-unsigned MeshNodeTree::AddMeshNode(const MeshNode& node)
+unsigned MeshNodeTree::addMeshNode(const MeshNode& node)
 {
     m_meshNodes.emplace_back(node);
     const unsigned idx = static_cast<unsigned>(m_meshNodes.size() - 1);
 
-    if (const auto parent_index = node.GetParentIndexInArray())  // has parent node
+    if (const auto parent_index = node.getParentIndexInArray())  // has parent node
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * m_meshNodes[idx].getLocalTransform());
+        m_meshNodes[idx].setRootRefTransform(m_meshNodes[parent_index.value()].getRootRefTransform() * m_meshNodes[idx].getLocalTransform());
     }
     else
     {
-        m_meshNodes[idx].SetRootRefTransform(m_meshNodes[idx].getLocalTransform());
+        m_meshNodes[idx].setRootRefTransform(m_meshNodes[idx].getLocalTransform());
     }
     return idx;
 }
 
-stdext::optional_ref<MeshNode> MeshNodeTree::GetMeshNode(unsigned index)
+stdext::optional_ref<MeshNode> MeshNodeTree::getMeshNode(unsigned index)
 {
     if (index >= m_meshNodes.size()) return std::nullopt;
     return m_meshNodes[index];
 }
 
-stdext::optional_ref<const MeshNode> MeshNodeTree::GetMeshNode(unsigned index) const
+stdext::optional_ref<const MeshNode> MeshNodeTree::getMeshNode(unsigned index) const
 {
     if (index >= m_meshNodes.size()) return std::nullopt;
     return m_meshNodes[index];
 }
 
-std::shared_ptr<MeshPrimitive> MeshNodeTree::GetMeshPrimitiveInNode(unsigned index)
+std::shared_ptr<MeshPrimitive> MeshNodeTree::getMeshPrimitiveInNode(unsigned index)
 {
     if (index >= m_meshNodes.size()) return nullptr;
-    return m_meshNodes[index].GetMeshPrimitive();
+    return m_meshNodes[index].getMeshPrimitive();
 }
 
-bool MeshNodeTree::IsInSubTree(unsigned child_node_index, const std::string& parent_node_name)
+bool MeshNodeTree::isInSubTree(unsigned child_node_index, const std::string& parent_node_name)
 {
     if (child_node_index >= m_meshNodes.size()) return false;
     std::optional<unsigned> curr_node_index = child_node_index;
     while (curr_node_index)
     {
         if (m_meshNodes[curr_node_index.value()].getName() == parent_node_name) return true;
-        curr_node_index = m_meshNodes[curr_node_index.value()].GetParentIndexInArray();
+        curr_node_index = m_meshNodes[curr_node_index.value()].getParentIndexInArray();
     }
     return false;
 }
 
-void MeshNodeTree::UpdateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal)
+void MeshNodeTree::updateMeshNodeLocalTransform(const MathLib::Matrix4& mxModelRootWorld, unsigned index, const MathLib::Matrix4& mxLocal)
 {
     if (index >= m_meshNodes.size()) return;
     m_meshNodes[index].setLocalTransform(mxLocal);
-    auto parent_index = m_meshNodes[index].GetParentIndexInArray();
+    auto parent_index = m_meshNodes[index].getParentIndexInArray();
     if (parent_index)  // has parent node
     {
-        m_meshNodes[index].SetRootRefTransform(m_meshNodes[parent_index.value()].GetRootRefTransform() * mxLocal);
-        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].GetMeshPrimitive();
+        m_meshNodes[index].setRootRefTransform(m_meshNodes[parent_index.value()].getRootRefTransform() * mxLocal);
+        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].getMeshPrimitive();
         if (mesh_prim)
         {
-            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
+            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].getRootRefTransform());
         }
     }
     else
     {
-        m_meshNodes[index].SetRootRefTransform(mxLocal);
-        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].GetMeshPrimitive();
+        m_meshNodes[index].setRootRefTransform(mxLocal);
+        std::shared_ptr<MeshPrimitive> mesh_prim = m_meshNodes[index].getMeshPrimitive();
         if (mesh_prim)
         {
-            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].GetRootRefTransform());
+            mesh_prim->updateWorldTransform(mxModelRootWorld * m_meshNodes[index].getRootRefTransform());
         }
     }
 }

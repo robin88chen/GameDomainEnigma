@@ -37,21 +37,21 @@ namespace Enigma::Renderer
 
         const std::string& getName() const { return m_name; }
 
-        const MeshNodeTree& GetMeshNodeTree() const { return m_nodeTree; };
-        MeshNodeTree& GetMeshNodeTree() { return m_nodeTree; };
-        unsigned GetMeshPrimitiveCount();
+        const MeshNodeTree& getMeshNodeTree() const { return m_nodeTree; };
+        MeshNodeTree& getMeshNodeTree() { return m_nodeTree; };
+        unsigned getMeshPrimitiveCount();
 
         /** get mesh primitive
         @param cached_index index in cached mesh primitive array
         */
-        std::shared_ptr<MeshPrimitive> GetMeshPrimitive(unsigned int cached_index);
-        std::shared_ptr<MeshPrimitive> FindMeshPrimitive(const std::string& name);
+        std::shared_ptr<MeshPrimitive> getMeshPrimitive(unsigned int cached_index);
+        std::shared_ptr<MeshPrimitive> findMeshPrimitive(const std::string& name);
         /** get mesh node
         @param cached_index index in cached mesh primitive array
         */
-        stdext::optional_ref<MeshNode> GetCachedMeshNode(unsigned int cached_index);
+        stdext::optional_ref<MeshNode> getCachedMeshNode(unsigned int cached_index);
 
-        void UpdateMeshNodeLocalTransform(unsigned int index, const MathLib::Matrix4& mxLocal);
+        void updateMeshNodeLocalTransform(unsigned int index, const MathLib::Matrix4& mxLocal);
 
         /** insert to renderer */
         virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
@@ -72,14 +72,13 @@ namespace Enigma::Renderer
 
     protected:
         /** sometimes we need re-cache */
-        void CacheMeshPrimitive();
+        void cacheMeshPrimitive();
 
     protected:
         std::string m_name;
         MeshNodeTree m_nodeTree;
         std::vector<unsigned int> m_meshPrimitiveIndexCache;  ///< 記錄哪個index的mesh node擁有mesh primitive
     };
-    using ModelPrimitivePtr = std::shared_ptr<ModelPrimitive>;
 }
 
 #endif // _MODEL_PRIMITIVE_H

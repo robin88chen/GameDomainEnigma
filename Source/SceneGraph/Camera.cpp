@@ -9,6 +9,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
+#include "SceneGraphQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 #include <memory>
 
@@ -19,10 +21,10 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
-Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(Camera::TYPE_RTTI.getName()), m_id(id)
+Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(TYPE_RTTI.getName()), m_id(id)
 {
     m_handSys = hand;
-    m_cullingFrustum = Frustum::fromPerspective(hand, MathLib::Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    m_cullingFrustum = Frustum::fromPerspective(hand, Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
     m_vecLocation = Vector3::ZERO;
     m_vecEyeToLookAt = Vector3::UNIT_Z;
     m_vecUp = Vector3::UNIT_Y;
@@ -39,6 +41,14 @@ Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.g
 
 Camera::~Camera()
 {
+}
+
+std::shared_ptr<Camera> Camera::queryCamera(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Camera::TYPE_RTTI));
+    auto query = std::make_shared<QueryCamera>(id);
+    QueryDispatcher::dispatch(query);
+    return query->getResult();
 }
 
 GenericDto Camera::serializeDto()

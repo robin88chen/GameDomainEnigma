@@ -358,10 +358,10 @@ void DeferredRendererService::DoBindingGBuffer(const Frameworks::ICommandPtr& c)
     if ((!cmd->GetPawn()) || (!cmd->GetPawn()->GetPrimitive())) return;
     if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(cmd->GetPawn()->GetPrimitive()))
     {
-        const auto mesh_count = model->GetMeshPrimitiveCount();
+        const auto mesh_count = model->getMeshPrimitiveCount();
         for (unsigned i = 0; i < mesh_count; i++)
         {
-            if (auto mesh = model->GetMeshPrimitive(i))
+            if (auto mesh = model->getMeshPrimitive(i))
             {
                 BindGBufferToLightingMesh(mesh);
             }

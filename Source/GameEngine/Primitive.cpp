@@ -1,6 +1,7 @@
 ﻿#include "Primitive.h"
 #include "PrimitiveQueries.h"
 #include "Frameworks/QueryDispatcher.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
@@ -18,6 +19,7 @@ Primitive::~Primitive()
 
 std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)
 {
+    assert(id.rtti().isDerived(Primitive::TYPE_RTTI));
     const auto query = std::make_shared<QueryPrimitive>(id);
     Frameworks::QueryDispatcher::dispatch(query);
     return query->getResult();

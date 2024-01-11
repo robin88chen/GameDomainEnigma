@@ -46,6 +46,7 @@ namespace Enigma::Engine
 
     protected:
         void queryPrimitive(const Frameworks::IQueryPtr& q);
+        void queryPrimitiveNextSequenceNumber(const Frameworks::IQueryPtr& q);
         void putPrimitive(const Frameworks::ICommandPtr& c);
         void removePrimitive(const Frameworks::ICommandPtr& c);
 
@@ -57,6 +58,7 @@ namespace Enigma::Engine
         std::recursive_mutex m_primitiveLock;
 
         Frameworks::QuerySubscriberPtr m_queryPrimitive;
+        Frameworks::QuerySubscriberPtr m_queryPrimitiveNextSequenceNumber;
 
         Frameworks::CommandSubscriberPtr m_putPrimitive;
         Frameworks::CommandSubscriberPtr m_removePrimitive;

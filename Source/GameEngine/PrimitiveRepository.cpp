@@ -19,7 +19,7 @@ DEFINE_RTTI(Engine, PrimitiveRepository, ISystemService);
 
 using error = std::error_code;
 
-PrimitiveRepository::PrimitiveRepository(Frameworks::ServiceManager* srv_manager, const std::shared_ptr<PrimitiveStoreMapper>& store_mapper)
+PrimitiveRepository::PrimitiveRepository(ServiceManager* srv_manager, const std::shared_ptr<PrimitiveStoreMapper>& store_mapper)
     : ISystemService(srv_manager), m_storeMapper(store_mapper)
 {
     m_factory = menew PrimitiveFactory();
@@ -37,6 +37,8 @@ ServiceResult PrimitiveRepository::onInit()
 
     m_queryPrimitive = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPrimitive(q); });
     QueryDispatcher::subscribe(typeid(QueryPrimitive), m_queryPrimitive);
+    m_queryPrimitiveNextSequenceNumber = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPrimitiveNextSequenceNumber(q); });
+    QueryDispatcher::subscribe(typeid(QueryPrimitiveNextSequenceNumber), m_queryPrimitiveNextSequenceNumber);
 
     m_putPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putPrimitive(c); });
     CommandBus::subscribe(typeid(PutPrimitive), m_putPrimitive);
@@ -56,6 +58,8 @@ ServiceResult PrimitiveRepository::onTerm()
 
     QueryDispatcher::unsubscribe(typeid(QueryPrimitive), m_queryPrimitive);
     m_queryPrimitive = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryPrimitiveNextSequenceNumber), m_queryPrimitiveNextSequenceNumber);
+    m_queryPrimitiveNextSequenceNumber = nullptr;
 
     CommandBus::unsubscribe(typeid(PutPrimitive), m_putPrimitive);
     m_putPrimitive = nullptr;
@@ -71,7 +75,7 @@ bool PrimitiveRepository::hasPrimitive(const PrimitiveId& id)
     std::lock_guard locker{ m_primitiveLock };
     const auto it = m_primitives.find(id);
     if (it != m_primitives.end()) return true;
-    return m_storeMapper->hasPrimitive(id);
+    return m_storeMapper->hasPrimitive(id.origin());
 }
 
 std::shared_ptr<Primitive> PrimitiveRepository::queryPrimitive(const PrimitiveId& id)
@@ -81,7 +85,7 @@ std::shared_ptr<Primitive> PrimitiveRepository::queryPrimitive(const PrimitiveId
     auto it = m_primitives.find(id);
     if (it != m_primitives.end()) return it->second;
     assert(m_factory);
-    const auto dto = m_storeMapper->queryPrimitive(id);
+    const auto dto = m_storeMapper->queryPrimitive(id.origin());
     assert(dto.has_value());
     auto prim = m_factory->constitute(id, dto.value(), true);
     assert(prim);
@@ -94,7 +98,7 @@ void PrimitiveRepository::removePrimitive(const PrimitiveId& id)
     if (!hasPrimitive(id)) return;
     std::lock_guard locker{ m_primitiveLock };
     m_primitives.erase(id);
-    error er = m_storeMapper->removePrimitive(id);
+    error er = m_storeMapper->removePrimitive(id.origin());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
@@ -107,7 +111,8 @@ void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_
     if (hasPrimitive(id)) return;
     std::lock_guard locker{ m_primitiveLock };
     m_primitives.insert_or_assign(id, primitive);
-    error er = m_storeMapper->putPrimitive(id, primitive->serializeDto());
+    if (id != id.origin()) return;  // only put origin primitive to store
+    error er = m_storeMapper->putPrimitive(id.origin(), primitive->serializeDto());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
@@ -121,7 +126,7 @@ std::uint64_t PrimitiveRepository::nextSequenceNumber()
     return m_storeMapper->nextSequenceNumber();
 }
 
-void PrimitiveRepository::queryPrimitive(const Frameworks::IQueryPtr& q)
+void PrimitiveRepository::queryPrimitive(const IQueryPtr& q)
 {
     if (!q) return;
     const auto query = std::dynamic_pointer_cast<QueryPrimitive, IQuery>(q);
@@ -129,7 +134,15 @@ void PrimitiveRepository::queryPrimitive(const Frameworks::IQueryPtr& q)
     query->setResult(queryPrimitive(query->id()));
 }
 
-void PrimitiveRepository::putPrimitive(const Frameworks::ICommandPtr& c)
+void PrimitiveRepository::queryPrimitiveNextSequenceNumber(const IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryPrimitiveNextSequenceNumber, IQuery>(q);
+    if (!query) return;
+    query->setResult(nextSequenceNumber());
+}
+
+void PrimitiveRepository::putPrimitive(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<PutPrimitive>(c);
@@ -137,7 +150,7 @@ void PrimitiveRepository::putPrimitive(const Frameworks::ICommandPtr& c)
     putPrimitive(cmd->id(), cmd->primitive());
 }
 
-void PrimitiveRepository::removePrimitive(const Frameworks::ICommandPtr& c)
+void PrimitiveRepository::removePrimitive(const ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<RemovePrimitive>(c);

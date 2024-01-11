@@ -16,7 +16,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_ModelPrimitiveTestApp_ModelPrimitiveTestApp_initBridgeCallback(JNIEnv * env, jobject thiz)
 {
-    g_app->InitBridgeCallback();
+    g_app->initBridgeCallback();
 }
 
 extern "C"

@@ -92,13 +92,13 @@ void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
     m_primitive = prim;
-    ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
     if (model)
     {
-        unsigned int total_mesh_prim = model->GetMeshPrimitiveCount();
+        unsigned int total_mesh_prim = model->getMeshPrimitiveCount();
         for (unsigned int i = 0; i < total_mesh_prim; i++)
         {
-            std::shared_ptr<MeshPrimitive> mesh = model->GetMeshPrimitive(i);
+            std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(i);
             if (mesh)
             {
                 replaceMeshMaterial(mesh);
@@ -224,10 +224,10 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
     if (m_meshName.empty()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
-    ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
     if (model)
     {
-        auto mesh = model->FindMeshPrimitive(m_meshName);
+        auto mesh = model->findMeshPrimitive(m_meshName);
         if (!mesh) return;
         changeMeshTexture(mesh);
     }

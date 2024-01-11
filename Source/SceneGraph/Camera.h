@@ -38,6 +38,8 @@ namespace Enigma::SceneGraph
         Camera& operator=(const Camera&) = delete;
         Camera& operator=(Camera&&) = delete;
 
+        static std::shared_ptr<Camera> queryCamera(const SpatialId& id);
+
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 

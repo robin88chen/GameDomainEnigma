@@ -1,5 +1,7 @@
 ﻿#include "PrimitiveId.h"
 #include "Frameworks/Rtti.h"
+#include "PrimitiveQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace  Enigma::Engine;
 
@@ -49,4 +51,11 @@ PrimitiveId& PrimitiveId::operator=(PrimitiveId&& other)
     m_sequence = std::move(other.m_sequence);
     m_rtti = std::move(other.m_rtti);
     return *this;
+}
+
+PrimitiveId PrimitiveId::next() const
+{
+    const auto query = std::make_shared<QueryPrimitiveNextSequenceNumber>(*this);
+    Frameworks::QueryDispatcher::dispatch(query);
+    return PrimitiveId(m_name, query->getResult(), *m_rtti);
 }

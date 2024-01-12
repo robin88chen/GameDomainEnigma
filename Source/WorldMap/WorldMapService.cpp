@@ -301,7 +301,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             }
             linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.name());
             parent_node_name = dto.name();
-            parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.modelBound()).Box().value();
+            parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.modelBound()).box().value();
             Matrix4 parent_inv_local_mx = dto.localTransform().Inverse();
             dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
             dest_box = dest_bv_in_node.BoundingBox3();

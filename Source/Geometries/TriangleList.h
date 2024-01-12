@@ -30,13 +30,13 @@ namespace Enigma::Geometries
 
         virtual Engine::GenericDto serializeDto() const override;
 
-        unsigned int GetTriangleCount();
-        void FetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);
-        void FetchTriangleTextureCoord(unsigned int idx, unsigned int tex_channel, MathLib::Vector2 uv[3]);
-        void FetchTriangleVertexIndex(unsigned int idx, unsigned int vtx_idx[3]);
+        unsigned int getTriangleCount();
+        void fetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);
+        void fetchTriangleTextureCoord(unsigned int idx, unsigned int tex_channel, MathLib::Vector2 uv[3]);
+        void fetchTriangleVertexIndex(unsigned int idx, unsigned int vtx_idx[3]);
 
         /** calculate tangent space */
-        error CalculateVertexTangentSpace(unsigned int tex_channel);
+        error calculateVertexTangentSpace(unsigned int tex_channel);
     };
     using TriangleListPtr = std::shared_ptr<TriangleList>;
 

@@ -73,7 +73,7 @@ void BoxBV::ZeroReset()
 
 void BoxBV::MergeBoundingVolume(const MathLib::Matrix4& mx, const std::unique_ptr<GenericBV>& source)
 {
-    assert(!m_box.IsEmpty());
+    assert(!m_box.isEmpty());
     BoxBV merge_bv{ MathLib::Box3::UNIT_BOX };
     merge_bv.CreateFromTransform(mx, source);
     m_box = MathLib::ContainmentBox3::MergeBoxes(merge_bv.m_box, m_box);

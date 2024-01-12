@@ -80,7 +80,7 @@ unsigned int TrianglePlaneClipper::ClipTriangle(const Plane3& clipPlane,
         bool isNegative[3];
         for (unsigned int vi = 0; vi < 3; vi++)
         {
-            Plane3::SideOfPlane side = clipPlane.WhichSide(srcTriangles[ti].Vector(vi));
+            Plane3::SideOfPlane side = clipPlane.WhichSide(srcTriangles[ti][vi]);
             isNegative[vi] = side == Plane3::SideOfPlane::Negative;
             if (isNegative[vi]) negativeCount++;
         }
@@ -131,14 +131,14 @@ bool TrianglePlaneClipper::SplitOneTriangleByPlane(const Triangle3& triangle, co
 
     // intersect Pt = ( P1 - P0 )t + P0
     // t = ( D - N dot P0 ) / ( N dot ( P1 - P0 ) )
-    float dt = plane.Constant() - plane.Normal().Dot(triangle.Vector(va));
-    float ndvb = plane.Normal().Dot(triangle.Vector(vb) - triangle.Vector(va));
+    float dt = plane.Constant() - plane.Normal().Dot(triangle[va]);
+    float ndvb = plane.Normal().Dot(triangle[vb] - triangle[va]);
     if (std::fabs(ndvb) < Math::Epsilon()) return false;
-    float ndvc = plane.Normal().Dot(triangle.Vector(vc) - triangle.Vector(va));
+    float ndvc = plane.Normal().Dot(triangle[vc] - triangle[va]);
     if (std::fabs(ndvc) < Math::Epsilon()) return false;
-    destTriangle.Vector(va) = triangle.Vector(va);
-    destTriangle.Vector(vb) = (dt / ndvb) * (triangle.Vector(vb) - triangle.Vector(va)) + triangle.Vector(va);
-    destTriangle.Vector(vc) = (dt / ndvc) * (triangle.Vector(vc) - triangle.Vector(va)) + triangle.Vector(va);
+    destTriangle[va] = triangle[va];
+    destTriangle[vb] = (dt / ndvb) * (triangle[vb] - triangle[va]) + triangle[va];
+    destTriangle[vc] = (dt / ndvc) * (triangle[vc] - triangle[va]) + triangle[va];
 
     return true;
 }
@@ -164,20 +164,20 @@ bool TrianglePlaneClipper::SplitTwoTriangleByPlane(const Triangle3& triangle, co
 
     // intersect Pt = ( P1 - P0 )t + P0
     // t = ( D - N dot P0 ) / ( N dot ( P1 - P0 ) )
-    float dt = plane.Constant() - plane.Normal().Dot(triangle.Vector(va));
-    float ndvb = plane.Normal().Dot(triangle.Vector(vb) - triangle.Vector(va));
+    float dt = plane.Constant() - plane.Normal().Dot(triangle[va]);
+    float ndvb = plane.Normal().Dot(triangle[vb] - triangle[va]);
     if (std::fabs(ndvb) < Math::Epsilon()) return false;
-    float ndvc = plane.Normal().Dot(triangle.Vector(vc) - triangle.Vector(va));
+    float ndvc = plane.Normal().Dot(triangle[vc] - triangle[va]);
     if (std::fabs(ndvc) < Math::Epsilon()) return false;
-    Vector3 vecInterAB = (dt / ndvb) * (triangle.Vector(vb) - triangle.Vector(va)) + triangle.Vector(va);
-    Vector3 vecInterAC = (dt / ndvc) * (triangle.Vector(vc) - triangle.Vector(va)) + triangle.Vector(va);
+    Vector3 vecInterAB = (dt / ndvb) * (triangle[vb] - triangle[va]) + triangle[va];
+    Vector3 vecInterAC = (dt / ndvc) * (triangle[vc] - triangle[va]) + triangle[va];
 
-    destTriangle1.Vector(va) = vecInterAB;
-    destTriangle1.Vector(vb) = triangle.Vector(vb);
-    destTriangle1.Vector(vc) = triangle.Vector(vc);
-    destTriangle2.Vector(va) = vecInterAC;
-    destTriangle2.Vector(vb) = vecInterAB;
-    destTriangle2.Vector(vc) = triangle.Vector(vc);
+    destTriangle1[va] = vecInterAB;
+    destTriangle1[vb] = triangle[vb];
+    destTriangle1[vc] = triangle[vc];
+    destTriangle2[va] = vecInterAC;
+    destTriangle2[vb] = vecInterAB;
+    destTriangle2[vc] = triangle[vc];
 
     return true;
 }

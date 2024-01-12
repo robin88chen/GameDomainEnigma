@@ -27,7 +27,7 @@ namespace Enigma::Renderer
         unsigned int GetRequiredResultCount() { return m_requiredResultCount; };
         void SetRequiredResultCount(unsigned int count)
         {
-            m_requiredResultCount = count; if (m_geoCache) m_geoCache->SetRequiredResultCount(count);
+            m_requiredResultCount = count; if (m_geoCache) m_geoCache->setRequiredResultCount(count);
         };
     private:
         std::unique_ptr<Geometries::IntrGeometryCache> m_geoCache;

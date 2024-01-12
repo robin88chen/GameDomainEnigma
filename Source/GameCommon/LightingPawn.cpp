@@ -32,7 +32,7 @@ void LightingPawn::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::
     LightingPawnDto pawn_dto = LightingPawnDto::fromGenericDto(dto);
     if (!pawn_dto.HostLightName().empty())
     {
-        resolver.TryResolveLinkage(pawn_dto.HostLightName(), [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(pawn_dto.HostLightName(), [lifetime = weak_from_this()](auto sp)
             {
                 if (!lifetime.expired())
                     std::dynamic_pointer_cast<LightingPawn, Spatial>(lifetime.lock())->SetHostLight(std::dynamic_pointer_cast<Light>(sp));

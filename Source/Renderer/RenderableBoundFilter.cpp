@@ -18,7 +18,7 @@ void RenderableBoundFilter::ComputeMergedBound(const SceneGraph::VisibleSet& vis
     for (auto spatial : visSet.GetObjectSet())
     {
         if (FilterOutSpatial(spatial)) continue;
-        if (m_mergedBound.IsEmpty())
+        if (m_mergedBound.isEmpty())
         {
             m_mergedBound = spatial->getWorldBound();
         }

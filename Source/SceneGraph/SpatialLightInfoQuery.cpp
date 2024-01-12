@@ -28,7 +28,7 @@ SpatialLightInfoQuery::~SpatialLightInfoQuery()
     m_countPointLight = 0;
 }
 
-void SpatialLightInfoQuery::Test(const LightInfo& info)
+void SpatialLightInfoQuery::test(const LightInfo& info)
 {
     if (!info.IsEnable()) return;
     if (info.GetLightType() == LightInfo::LightType::Unknown) return;

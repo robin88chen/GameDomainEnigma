@@ -31,7 +31,7 @@ bool Triangle3::operator !=(const Triangle3& tri) const
     return ((m_vec[0] != tri.m_vec[0]) || (m_vec[1] != tri.m_vec[1]) || (m_vec[2] != tri.m_vec[2]));
 }
 
-float Triangle3::DistanceTo(const Vector3& vec) const
+float Triangle3::distanceTo(const Vector3& vec) const
 {
     Vector3 diff = m_vec[0] - vec;
     Vector3 edge0 = m_vec[1] - m_vec[0], edge1 = m_vec[2] - m_vec[0];

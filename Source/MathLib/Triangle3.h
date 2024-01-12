@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Triangle3.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -25,8 +25,8 @@ namespace Enigma::MathLib
         Triangle3(const Vector3& vec0, const Vector3& vec1, const Vector3& vec2);
         Triangle3(const Vector3 vec[3]);
 
-        Vector3 Vector(int i) const { return m_vec[i]; }
-        Vector3& Vector(int i) { return m_vec[i]; }
+        Vector3 vector(int i) const { return m_vec[i]; }
+        Vector3& vector(int i) { return m_vec[i]; }
         operator const Vector3* () const { return &m_vec[0]; }
         operator Vector3* () { return &m_vec[0]; }
 
@@ -34,7 +34,7 @@ namespace Enigma::MathLib
         bool operator!= (const Triangle3& tri) const;
 
         // distance from the point Q to the triangle
-        float DistanceTo(const Vector3& vec) const;
+        float distanceTo(const Vector3& vec) const;
 
     protected:
         Vector3 m_vec[3];

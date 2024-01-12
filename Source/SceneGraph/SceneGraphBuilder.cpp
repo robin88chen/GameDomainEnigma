@@ -316,12 +316,12 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     for (auto meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
     {
         if (!meta.m_spatial) return;
-        if (meta.m_dto.IsTopLevel())
+        if (meta.m_dto.isTopLevel())
         {
             top_levels.emplace_back(meta.m_spatial.value());
         }
     }
-    auto unresolved_names = m_resolver->GetUnresolvedNames();
+    auto unresolved_names = m_resolver->getUnresolvedNames();
     for (auto name : unresolved_names)
     {
         Debug::ErrorPrintf("unresolved name %s\n", name.c_str());
@@ -340,7 +340,7 @@ void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
 
 /*std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
 {
-    if (auto p = primitive_dto.ConvertToPolicy(m_dtoDeserializer))
+    if (auto p = primitive_dto.convertToPolicy(m_dtoDeserializer))
     {
         return std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(p);
     }

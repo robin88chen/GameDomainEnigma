@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Ray3.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -25,17 +25,14 @@ namespace Enigma::MathLib
         Ray3() = default;
         Ray3(const Vector3& origin, const Vector3& direction);
 
-        Vector3 Origin() const { return m_origin; }
-        Vector3& Origin() { return m_origin; }
-        Vector3 Direction() const { return m_direction; }
-        Vector3& Direction() { return m_direction; }
+        Vector3 origin() const { return m_origin; }
+        Vector3& origin() { return m_origin; }
+        Vector3 direction() const { return m_direction; }
+        Vector3& direction() { return m_direction; }
 
         bool operator== (const Ray3& ray) const;    ///< 浮點數值比較
         bool operator!= (const Ray3& ray) const;    ///< 浮點數值比較
 
-        bool TestIntersectTriangle(Vector3 triangle[3]);
-        /// return value < 0, no intersect found
-        float FindIntersectTriangle(Vector3 triangle[3]);
     private:
         Vector3 m_origin;
         Vector3 m_direction;

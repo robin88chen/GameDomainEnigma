@@ -72,7 +72,7 @@ void Pawn::SetPrimitive(const Engine::PrimitivePtr& prim)
     m_primitive = prim;
 
     // update local bound, world bound
-    if ((m_primitive) && (!m_primitive->getBoundingVolume().IsEmpty()))
+    if ((m_primitive) && (!m_primitive->getBoundingVolume().isEmpty()))
     {
         m_modelBound = Engine::BoundingVolume{ m_primitive->getBoundingVolume() };
     }
@@ -88,7 +88,7 @@ void Pawn::CalculateModelBound(bool axis_align)
         m_primitive->calculateBoundingVolume(axis_align);
     }
     // update local bound, world bound
-    if ((m_primitive) && (!m_primitive->getBoundingVolume().IsEmpty()))
+    if ((m_primitive) && (!m_primitive->getBoundingVolume().isEmpty()))
     {
         m_modelBound = Engine::BoundingVolume{ m_primitive->getBoundingVolume() };
     }

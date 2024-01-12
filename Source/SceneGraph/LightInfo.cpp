@@ -27,7 +27,7 @@ LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::from
     m_type = dto.LightType();
     m_color = dto.Color();
     m_position = dto.Position();
-    m_dir = dto.Direction();
+    m_dir = dto.direction();
     m_attenuation = dto.Attenuation();
     m_range = dto.Range();
     m_isEnable = dto.IsEnable();
@@ -39,7 +39,7 @@ LightInfoDto LightInfo::serializeDto()
     dto.LightType() = m_type;
     dto.Color() = m_color;
     dto.Position() = m_position;
-    dto.Direction() = m_dir;
+    dto.direction() = m_dir;
     dto.Attenuation() = m_attenuation;
     dto.Range() = m_range;
     dto.IsEnable() = m_isEnable;

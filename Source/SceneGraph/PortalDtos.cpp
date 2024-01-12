@@ -25,16 +25,16 @@ PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNod
 PortalZoneNodeDto PortalZoneNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     PortalZoneNodeDto node_dto{ LazyNodeDto(dto) };
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NODE_NAME)) node_dto.portalManagementNodeName() = v.value();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_PORTAL_NAME)) node_dto.portalName() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NODE_NAME)) node_dto.portalManagementNodeName() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_PORTAL_NAME)) node_dto.portalName() = v.value();
     return node_dto;
 }
 
 GenericDto PortalZoneNodeDto::toGenericDto() const
 {
     GenericDto dto = LazyNodeDto::toGenericDto();
-    dto.AddOrUpdate(TOKEN_PORTAL_MANAGEMENT_NODE_NAME, m_portalManagementNodeName);
-    dto.AddOrUpdate(TOKEN_PORTAL_NAME, m_portalName);
+    dto.addOrUpdate(TOKEN_PORTAL_MANAGEMENT_NODE_NAME, m_portalManagementNodeName);
+    dto.addOrUpdate(TOKEN_PORTAL_NAME, m_portalName);
     return dto;
 }
 
@@ -51,16 +51,16 @@ PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m
 PortalDto PortalDto::fromGenericDto(const GenericDto& dto)
 {
     PortalDto portal_dto{ SpatialDto(dto) };
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_ADJACENT_NODE_NAME)) portal_dto.adjacentZoneNodeName() = v.value();
-    if (auto v = dto.TryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) portal_dto.isOpen() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_ADJACENT_NODE_NAME)) portal_dto.adjacentZoneNodeName() = v.value();
+    if (auto v = dto.tryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) portal_dto.isOpen() = v.value();
     return portal_dto;
 }
 
 GenericDto PortalDto::toGenericDto()
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    dto.AddOrUpdate(TOKEN_ADJACENT_NODE_NAME, m_adjacentZoneNodeName);
-    dto.AddOrUpdate(TOKEN_IS_PORTAL_OPEN, m_isOpen);
+    dto.addOrUpdate(TOKEN_ADJACENT_NODE_NAME, m_adjacentZoneNodeName);
+    dto.addOrUpdate(TOKEN_IS_PORTAL_OPEN, m_isOpen);
     return dto;
 }
 
@@ -77,13 +77,13 @@ PortalManagementNodeDto::PortalManagementNodeDto(const NodeDto& node_dto) : Node
 PortalManagementNodeDto PortalManagementNodeDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     PortalManagementNodeDto node_dto{ NodeDto(dto) };
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_OUTSIDE_NODE_NAME)) node_dto.outsideZoneNodeName() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_OUTSIDE_NODE_NAME)) node_dto.outsideZoneNodeName() = v.value();
     return node_dto;
 }
 
 GenericDto PortalManagementNodeDto::toGenericDto()
 {
     GenericDto dto = NodeDto::toGenericDto();
-    dto.AddOrUpdate(TOKEN_OUTSIDE_NODE_NAME, m_outsideZoneNodeName);
+    dto.addOrUpdate(TOKEN_OUTSIDE_NODE_NAME, m_outsideZoneNodeName);
     return dto;
 }

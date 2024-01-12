@@ -11,13 +11,13 @@ BoundingVolumeDto BoundingVolumeDto::fromGenericDto(const GenericDto& dto)
 {
     std::optional<Box3> box;
     std::optional<Sphere3> sphere;
-    if (dto.HasValue(TOKEN_BOXBV))
+    if (dto.hasValue(TOKEN_BOXBV))
     {
-        box = dto.TryGetValue<Box3>(TOKEN_BOXBV);
+        box = dto.tryGetValue<Box3>(TOKEN_BOXBV);
     }
-    else if (dto.HasValue(TOKEN_SPHEREBV))
+    else if (dto.hasValue(TOKEN_SPHEREBV))
     {
-        sphere = dto.TryGetValue<Sphere3>(TOKEN_SPHEREBV);
+        sphere = dto.tryGetValue<Sphere3>(TOKEN_SPHEREBV);
     }
     return BoundingVolumeDto{ box, sphere };
 }
@@ -27,11 +27,11 @@ GenericDto BoundingVolumeDto::toGenericDto() const
     GenericDto dto;
     if (m_box)
     {
-        dto.AddOrUpdate(TOKEN_BOXBV, m_box.value());
+        dto.addOrUpdate(TOKEN_BOXBV, m_box.value());
     }
     else if (m_sphere)
     {
-        dto.AddOrUpdate(TOKEN_SPHEREBV, m_sphere.value());
+        dto.addOrUpdate(TOKEN_SPHEREBV, m_sphere.value());
     }
     return dto;
 }

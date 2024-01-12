@@ -21,11 +21,11 @@ const Sphere3& IntrRay3Sphere3::GetSphere() const
     return m_sphere;
 }
 
-Intersector::Result IntrRay3Sphere3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Sphere3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
-    Vector3 l = m_sphere.Center() - m_ray.Origin();
-    float s = l.Dot(m_ray.Direction());
+    Vector3 l = m_sphere.Center() - m_ray.origin();
+    float s = l.Dot(m_ray.direction());
     float sq_l = l.SquaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
     if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
@@ -36,11 +36,11 @@ Intersector::Result IntrRay3Sphere3::Test(std::unique_ptr<IntersectorCache> /*la
     return { true, nullptr };
 }
 
-Intersector::Result IntrRay3Sphere3::Find(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Sphere3::find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
-    Vector3 l = m_sphere.Center() - m_ray.Origin();
-    float s = l.Dot(m_ray.Direction());
+    Vector3 l = m_sphere.Center() - m_ray.origin();
+    float s = l.Dot(m_ray.direction());
     float sq_l = l.SquaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
     if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
@@ -54,14 +54,14 @@ Intersector::Result IntrRay3Sphere3::Find(std::unique_ptr<IntersectorCache> /*la
         m_quantity = 2;
         m_tParam[0] = s - q;
         m_tParam[1] = s + q;
-        m_point[0] = m_tParam[0] * m_ray.Direction() + m_ray.Origin();
-        m_point[1] = m_tParam[1] * m_ray.Direction() + m_ray.Origin();
+        m_point[0] = m_tParam[0] * m_ray.direction() + m_ray.origin();
+        m_point[1] = m_tParam[1] * m_ray.direction() + m_ray.origin();
     }
     else
     {
         m_quantity = 1;
         m_tParam[0] = s + q;
-        m_point[0] = m_tParam[0] * m_ray.Direction() + m_ray.Origin();
+        m_point[0] = m_tParam[0] * m_ray.direction() + m_ray.origin();
     }
     return { true, nullptr };
 }

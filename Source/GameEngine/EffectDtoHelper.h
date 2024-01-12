@@ -32,7 +32,7 @@ namespace Enigma::Engine
     public:
         EffectTextureMapDtoHelper();
 
-        EffectTextureMapDtoHelper& TextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
+        EffectTextureMapDtoHelper& textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
 
         GenericDto toGenericDto();
 

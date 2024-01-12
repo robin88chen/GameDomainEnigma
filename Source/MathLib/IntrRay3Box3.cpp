@@ -22,18 +22,18 @@ const Box3& IntrRay3Box3::GetBox() const
     return m_box;
 }
 
-Intersector::Result IntrRay3Box3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Box3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RayOBB intersection, form Real-time Rendering p574 */
     float tmin = -Math::MAX_FLOAT;
     float tmax = Math::MAX_FLOAT;
-    Vector3 p = m_box.Center() - m_ray.Origin();
+    Vector3 p = m_box.Center() - m_ray.origin();
 
     for (int i = 0; i < 3; i++)
     {
         float e, f, t1, t2, tt;
         e = m_box.Axis(i).Dot(p);
-        f = m_box.Axis(i).Dot(m_ray.Direction());
+        f = m_box.Axis(i).Dot(m_ray.direction());
         if (fabs(f) > Math::ZERO_TOLERANCE) // 軸跟方向不是垂直的, 射線跟slab plane有交點
         {
             t1 = (e + m_box.Extent(i)) / f;
@@ -54,13 +54,13 @@ Intersector::Result IntrRay3Box3::Test(std::unique_ptr<IntersectorCache> /*last_
 
     if (tmin > 0.0f)
     {
-        m_point[m_quantity] = tmin * m_ray.Direction() + m_ray.Origin();
+        m_point[m_quantity] = tmin * m_ray.direction() + m_ray.origin();
         m_tParam[m_quantity] = tmin;
         m_quantity++;
     }
     if (tmax > 0.0f)
     {
-        m_point[m_quantity] = tmax * m_ray.Direction() + m_ray.Origin();
+        m_point[m_quantity] = tmax * m_ray.direction() + m_ray.origin();
         m_tParam[m_quantity] = tmax;
         m_quantity++;
     }
@@ -69,10 +69,10 @@ Intersector::Result IntrRay3Box3::Test(std::unique_ptr<IntersectorCache> /*last_
     return { true, nullptr };
 }
 
-Intersector::Result IntrRay3Box3::Find(std::unique_ptr<IntersectorCache> last_result)
+Intersector::Result IntrRay3Box3::find(std::unique_ptr<IntersectorCache> last_result)
 {
     // 因為沒有多少運算上的差異，所以直接呼叫Test
-    return Test(std::move(last_result));
+    return test(std::move(last_result));
 }
 
 int IntrRay3Box3::GetQuantity() const

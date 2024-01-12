@@ -23,35 +23,35 @@ bool GenericDto::operator==(const GenericDto& c) const
     return m_ruid == c.m_ruid;
 }
 
-bool GenericDto::HasValue(const std::string& attribute) const
+bool GenericDto::hasValue(const std::string& attribute) const
 {
     return m_values.find(attribute) != m_values.end();
 }
 
-void GenericDto::Remove(const std::string& attribute)
+void GenericDto::remove(const std::string& attribute)
 {
-    if (!HasValue(attribute)) return;
+    if (!hasValue(attribute)) return;
     m_values.erase(attribute);
 }
 
 void GenericDto::addRtti(const FactoryDesc& rtti)
 {
-    AddOrUpdate(TOKEN_RTTI, rtti);
+    addOrUpdate(TOKEN_RTTI, rtti);
 }
 
 FactoryDesc GenericDto::getRtti() const
 {
-    return Get<FactoryDesc>(TOKEN_RTTI);
+    return get<FactoryDesc>(TOKEN_RTTI);
 }
 
-void GenericDto::AddName(const std::string& name)
+void GenericDto::addName(const std::string& name)
 {
-   AddOrUpdate(TOKEN_NAME, name);
+   addOrUpdate(TOKEN_NAME, name);
 }
 
 std::string GenericDto::getName() const
 {
-   return Get<std::string>(TOKEN_NAME);
+   return get<std::string>(TOKEN_NAME);
 }
 
 /*void GenericDto::SetPolicyConverter(GenericPolicyConverter converter)
@@ -64,32 +64,32 @@ GenericPolicyConverter GenericDto::GetPolicyConverter() const
     return m_converter;
 }*/
 
-void GenericDto::AsTopLevel(bool is_top)
+void GenericDto::asTopLevel(bool is_top)
 {
-    AddOrUpdate(TOKEN_TOP_LEVEL, is_top);
+    addOrUpdate(TOKEN_TOP_LEVEL, is_top);
 }
 
-bool GenericDto::IsTopLevel() const
+bool GenericDto::isTopLevel() const
 {
-    if (!HasValue(TOKEN_TOP_LEVEL)) return false;
-    return Get<bool>(TOKEN_TOP_LEVEL);
+    if (!hasValue(TOKEN_TOP_LEVEL)) return false;
+    return get<bool>(TOKEN_TOP_LEVEL);
 }
 
-std::shared_ptr<GenericPolicy> GenericDto::ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>& d) const
+std::shared_ptr<GenericPolicy> GenericDto::convertToPolicy(const std::shared_ptr<IDtoDeserializer>& d) const
 {
-    if (!HasValue(TOKEN_RTTI)) return nullptr;
+    if (!hasValue(TOKEN_RTTI)) return nullptr;
     auto it = m_converters.find(getRtti().GetRttiName());
     if (it == m_converters.end()) return nullptr;
     if (it->second) return it->second(*this, d);
     return nullptr;
 }
 
-void GenericDto::RegisterConverter(const std::string& rtti, const GenericPolicyConverter& converter)
+void GenericDto::registerConverter(const std::string& rtti, const GenericPolicyConverter& converter)
 {
     m_converters.insert_or_assign(rtti, converter);
 }
 
-void GenericDto::UnregisterConverter(const std::string& rtti)
+void GenericDto::unregisterConverter(const std::string& rtti)
 {
     m_converters.erase(rtti);
 }

@@ -120,7 +120,7 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
 
 /*error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const GenericDto& dto)
 {
-    auto policy = std::dynamic_pointer_cast<RenderablePrimitivePolicy>(dto.ConvertToPolicy(m_dtoDeserializer));
+    auto policy = std::dynamic_pointer_cast<RenderablePrimitivePolicy>(dto.convertToPolicy(m_dtoDeserializer));
     if (!policy) return ErrorCode::invalidPrimitiveDto;
     std::lock_guard locker{ m_policiesLock };
     m_policies.push({ requester_ruid, policy });

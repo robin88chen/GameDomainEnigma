@@ -36,12 +36,12 @@ namespace Enigma::MathLib
         virtual ~Intersector();
 
         /** Static intersection queries.  The default implementations return 'false'. */
-        virtual Result Test(std::unique_ptr<IntersectorCache> last_result);
+        virtual Result test(std::unique_ptr<IntersectorCache> last_result);
 
-        /** Static intersection queries.  The default implementations call Test() (return 'false').
+        /** Static intersection queries.  The default implementations call test() (return 'false').
          Produces a set of intersection.  The derived class is responsible for providing access to that set, since the nature
          of the set is dependent on the object types. */
-        virtual Result Find(std::unique_ptr<IntersectorCache> last_result);
+        virtual Result find(std::unique_ptr<IntersectorCache> last_result);
 
         /** Intersection Type -- information about the intersection set */
         enum class IntersectionType
@@ -57,7 +57,7 @@ namespace Enigma::MathLib
             OTHER
         };
 
-        IntersectionType GetIntersectionType() const;
+        IntersectionType getIntersectionType() const;
 
     protected:
         Intersector();

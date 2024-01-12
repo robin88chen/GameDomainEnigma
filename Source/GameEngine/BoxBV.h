@@ -43,7 +43,7 @@ namespace Enigma::Engine
         virtual const MathLib::Vector3& GetCenterPos() override { return m_box.Center(); };
         virtual bool PointInside(const MathLib::Vector3& pos) override;
 
-        virtual bool IsEmpty() const override { return m_box.IsEmpty(); };
+        virtual bool isEmpty() const override { return m_box.isEmpty(); };
         /** point inside flags
         @remark BoxBV使用的函式。\n
         計算點位置是否在三個軸內，0x01, 0x02, 0x04 表示 0,1,2三個軸之內 \n

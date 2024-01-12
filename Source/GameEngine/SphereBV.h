@@ -38,7 +38,7 @@ namespace Enigma::Engine
         virtual const MathLib::Vector3& GetCenterPos() override { return m_sphere.Center(); };
         virtual bool PointInside(const MathLib::Vector3& vecPos) override;
 
-        virtual bool IsEmpty() const override { return m_sphere.IsEmpty(); };
+        virtual bool isEmpty() const override { return m_sphere.isEmpty(); };
 
         MathLib::Sphere3& GetSphere() { return m_sphere; };
 

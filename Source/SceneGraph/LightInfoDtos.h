@@ -32,8 +32,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] MathLib::ColorRGBA Color() const { return m_color; }
         MathLib::Vector3& Position() { return m_position; }
         [[nodiscard]] MathLib::Vector3 Position() const { return m_position; }
-        MathLib::Vector3& Direction() { return m_direction; }
-        [[nodiscard]] MathLib::Vector3 Direction() const { return m_direction; }
+        MathLib::Vector3& direction() { return m_direction; }
+        [[nodiscard]] MathLib::Vector3 direction() const { return m_direction; }
         float& Range() { return m_range; }
         [[nodiscard]] float Range() const { return m_range; }
         MathLib::Vector3& Attenuation() { return m_attenuation; }

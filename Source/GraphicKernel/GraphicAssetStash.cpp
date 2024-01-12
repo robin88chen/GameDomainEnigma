@@ -17,7 +17,7 @@ void AssetStash::Clear()
     m_dataValues.clear();
 }
 
-void AssetStash::Remove(const std::string& key)
+void AssetStash::remove(const std::string& key)
 {
     std::lock_guard locker{ m_lock };
     if (!HasData(key)) return;

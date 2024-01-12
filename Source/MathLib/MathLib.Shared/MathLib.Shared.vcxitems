@@ -33,6 +33,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Line3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.cpp" />
@@ -77,6 +78,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Box3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Plane3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Line3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathAlgorithm.h" />

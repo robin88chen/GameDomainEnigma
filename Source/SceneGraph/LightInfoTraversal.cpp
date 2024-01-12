@@ -118,7 +118,7 @@ void LightInfoTraversal::QuerySpatialLightInfo(SpatialLightInfoQuery& query)
     {
         if (!kv.second.expired())
         {
-            query.Test(kv.second.lock()->Info());
+            query.test(kv.second.lock()->Info());
         }
     }
 }

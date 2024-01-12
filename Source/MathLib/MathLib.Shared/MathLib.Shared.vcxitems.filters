@@ -161,6 +161,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Sphere3.cpp">
       <Filter>Intersector</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.cpp">
+      <Filter>Intersector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Vector2.h">
@@ -284,6 +287,9 @@
       <Filter>Intersector</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathLib.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.h">
+      <Filter>Intersector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)DesignRules.md" />

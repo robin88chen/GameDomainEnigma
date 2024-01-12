@@ -21,25 +21,25 @@ LightInfoDto::LightInfoDto()
 LightInfoDto LightInfoDto::fromGenericDto(const GenericDto& dto)
 {
     LightInfoDto light_dto;
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.LightType() = static_cast<LightInfo::LightType>(v.value());
-    if (auto v = dto.TryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) light_dto.Color() = v.value();
-    if (auto v = dto.TryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) light_dto.Position() = v.value();
-    if (auto v = dto.TryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.Direction() = v.value();
-    if (auto v = dto.TryGetValue<float>(TOKEN_LIGHT_RANGE)) light_dto.Range() = v.value();
-    if (auto v = dto.TryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) light_dto.Attenuation() = v.value();
-    if (auto v = dto.TryGetValue<bool>(TOKEN_LIGHT_ENABLE)) light_dto.IsEnable() = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.LightType() = static_cast<LightInfo::LightType>(v.value());
+    if (auto v = dto.tryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) light_dto.Color() = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) light_dto.Position() = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.direction() = v.value();
+    if (auto v = dto.tryGetValue<float>(TOKEN_LIGHT_RANGE)) light_dto.Range() = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) light_dto.Attenuation() = v.value();
+    if (auto v = dto.tryGetValue<bool>(TOKEN_LIGHT_ENABLE)) light_dto.IsEnable() = v.value();
     return light_dto;
 }
 
 GenericDto LightInfoDto::toGenericDto()
 {
     GenericDto dto;
-    dto.AddOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));
-    dto.AddOrUpdate(TOKEN_LIGHT_COLOR, m_color);
-    dto.AddOrUpdate(TOKEN_LIGHT_POSITION, m_position);
-    dto.AddOrUpdate(TOKEN_LIGHT_DIRECTION, m_direction);
-    dto.AddOrUpdate(TOKEN_LIGHT_RANGE, m_range);
-    dto.AddOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
-    dto.AddOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
+    dto.addOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));
+    dto.addOrUpdate(TOKEN_LIGHT_COLOR, m_color);
+    dto.addOrUpdate(TOKEN_LIGHT_POSITION, m_position);
+    dto.addOrUpdate(TOKEN_LIGHT_DIRECTION, m_direction);
+    dto.addOrUpdate(TOKEN_LIGHT_RANGE, m_range);
+    dto.addOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
+    dto.addOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
     return dto;
 }

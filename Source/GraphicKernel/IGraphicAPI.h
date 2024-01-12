@@ -119,7 +119,7 @@ namespace Enigma::Graphics
         /** Get graphic asset, assert if key not found */
         template <class T> T GetGraphicAsset(const std::string& asset_key)
         {
-            return m_stash->Get<T>(asset_key);
+            return m_stash->get<T>(asset_key);
         }
 
         /** Try find graphic asset, return nullopt if key not found.
@@ -239,7 +239,7 @@ namespace Enigma::Graphics
         //@}
 
         /** @name Shader */
-        //@{ 
+        //@{
         /** create vertex shader
         @param name shader name
         */

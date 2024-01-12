@@ -54,7 +54,7 @@ void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryL
     NodeDto nodeDto{ dto };
     for (auto& name : nodeDto.childNames())
     {
-        resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
             std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
     }
@@ -70,7 +70,7 @@ Enigma::Engine::GenericDtoCollection Node::serializeFlattenedTree()
     {
         collection.push_back(sp->serializeDto());
     }
-    collection[0].AsTopLevel(true);
+    collection[0].asTopLevel(true);
     return collection;
 }
 
@@ -198,7 +198,7 @@ error Node::_updateBoundData()
         ChildList::iterator iter = m_childList.begin();
         while (iter != m_childList.end())
         {
-            if (m_modelBound.IsEmpty())
+            if (m_modelBound.isEmpty())
             {
                 m_modelBound = Engine::BoundingVolume::CreateFromTransform((*iter)->getModelBound(), (*iter)->getLocalTransform());
             }

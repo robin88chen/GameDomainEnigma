@@ -233,7 +233,7 @@ error Culler::ComputeVisibleSet(const std::shared_ptr<Spatial>& scene)
 
 bool Culler::IsVisible(const Engine::BoundingVolume& bound)
 {
-    if (bound.IsEmpty()) return false;
+    if (bound.isEmpty()) return false;
 
     // Start with the last pushed plane, which is potentially the most
     // restrictive plane.
@@ -307,7 +307,7 @@ bool Culler::IsVisible(MathLib::Vector3* vecPos, unsigned quantity, bool isIgnor
 bool Culler::IsOutVisibility(const Engine::BoundingVolume& bound)
 {
     if (!m_isEnableOuterClipping) return false;  // if not enable, always not
-    if (bound.IsEmpty()) return true;  // if no bound, always out
+    if (bound.isEmpty()) return true;  // if no bound, always out
 
     for (unsigned int i = 0; i < m_countCullerPlane; i++)
     {

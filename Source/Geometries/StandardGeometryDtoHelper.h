@@ -20,10 +20,10 @@ namespace Enigma::Geometries
     {
     public:
         SquareQuadDtoHelper(const std::string& name);
-        SquareQuadDtoHelper& XYQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
-        SquareQuadDtoHelper& XZQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
-        SquareQuadDtoHelper& Normal();
-        SquareQuadDtoHelper& TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
+        SquareQuadDtoHelper& xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
+        SquareQuadDtoHelper& xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
+        SquareQuadDtoHelper& normal();
+        SquareQuadDtoHelper& textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
 
         Engine::GenericDto toGenericDto();
 
@@ -37,14 +37,14 @@ namespace Enigma::Geometries
     {
     public:
         CubeDtoHelper(const std::string& name);
-        CubeDtoHelper& Cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 8 vertices
-        CubeDtoHelper& FacedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 24 vertices
-        CubeDtoHelper& Normal();
-        CubeDtoHelper& FacedNormal();
-        CubeDtoHelper& TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
-        CubeDtoHelper& FacedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
-        CubeDtoHelper& TextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
-        CubeDtoHelper& FacedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
+        CubeDtoHelper& cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 8 vertices
+        CubeDtoHelper& facedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 24 vertices
+        CubeDtoHelper& normal();
+        CubeDtoHelper& facedNormal();
+        CubeDtoHelper& textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
+        CubeDtoHelper& facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
+        CubeDtoHelper& textureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
+        CubeDtoHelper& facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
 
         Engine::GenericDto toGenericDto();
 
@@ -57,11 +57,11 @@ namespace Enigma::Geometries
     {
     public:
         SphereDtoHelper(const std::string& name);
-        SphereDtoHelper& Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks);
-        SphereDtoHelper& Normal();
-        SphereDtoHelper& TextureCoord();
-        SphereDtoHelper& SphereBound();
-        SphereDtoHelper& BoxBound();
+        SphereDtoHelper& sphere(const MathLib::Vector3& center, float radius, int slices, int stacks);
+        SphereDtoHelper& normal();
+        SphereDtoHelper& textureCoord();
+        SphereDtoHelper& sphereBound();
+        SphereDtoHelper& boxBound();
 
         Engine::GenericDto toGenericDto();
 

@@ -27,24 +27,24 @@ const BoundingVolume& IntrBVRay3::GetBV() const
     return m_bv;
 }
 
-Intersector::Result IntrBVRay3::Test(std::unique_ptr<IntersectorCache>)
+Intersector::Result IntrBVRay3::test(std::unique_ptr<IntersectorCache>)
 {
     if (auto box = m_bv.BoundingBox3())
     {
         IntrRay3Box3 intr_box(m_ray, *box);
-        auto res = intr_box.Test(nullptr);
+        auto res = intr_box.test(nullptr);
         return res;
     }
     if (auto sphere = m_bv.BoundingSphere3())
     {
         IntrRay3Sphere3 intr_sphere(m_ray, *sphere);
-        auto res = intr_sphere.Test(nullptr);
+        auto res = intr_sphere.test(nullptr);
         return res;
     }
     return { false, nullptr };
 }
 
-Intersector::Result IntrBVRay3::Find(std::unique_ptr<IntersectorCache>)
+Intersector::Result IntrBVRay3::find(std::unique_ptr<IntersectorCache>)
 {
     m_points.clear();
     m_tParams.clear();
@@ -52,7 +52,7 @@ Intersector::Result IntrBVRay3::Find(std::unique_ptr<IntersectorCache>)
     if (auto box = m_bv.BoundingBox3())
     {
         IntrRay3Box3 intr_box(m_ray, *box);
-        auto res = intr_box.Find(nullptr);
+        auto res = intr_box.find(nullptr);
         if (res.m_hasIntersect)
         {
             for (int i = 0; i < intr_box.GetQuantity(); i++)
@@ -66,7 +66,7 @@ Intersector::Result IntrBVRay3::Find(std::unique_ptr<IntersectorCache>)
     if (auto sphere = m_bv.BoundingSphere3())
     {
         IntrRay3Sphere3 intr_sphere(m_ray, *sphere);
-        auto res = intr_sphere.Find(0);
+        auto res = intr_sphere.find(0);
         if (res.m_hasIntersect)
         {
             for (int i = 0; i < intr_sphere.GetQuantity(); i++)

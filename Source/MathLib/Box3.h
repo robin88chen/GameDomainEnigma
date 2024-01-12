@@ -52,7 +52,7 @@ namespace Enigma::MathLib
         bool operator== (const Box3& box) const; ///< 浮點數值比較
         bool operator!= (const Box3& box) const;    ///< 浮點數值比較
 
-        bool IsEmpty() const;
+        bool isEmpty() const;
 
         static const Box3 UNIT_BOX;
 

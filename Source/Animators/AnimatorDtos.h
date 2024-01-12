@@ -36,7 +36,7 @@ namespace Enigma::Animators
         static ModelAnimatorDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
-        std::shared_ptr<ModelAnimatorPolicy> ConvertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
+        std::shared_ptr<ModelAnimatorPolicy> convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
             const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
 
     private:

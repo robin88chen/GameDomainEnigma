@@ -10,11 +10,11 @@ BoundingVolume::BoundingVolume()
 
 BoundingVolume::BoundingVolume(const BoundingVolumeDto& dto)
 {
-    if (auto box = dto.Box())
+    if (auto box = dto.box())
     {
         m_bv = std::make_unique<BoxBV>(box.value());
     }
-    else if (auto sphere = dto.Sphere())
+    else if (auto sphere = dto.sphere())
     {
         m_bv = std::make_unique<SphereBV>(sphere.value());
     }
@@ -107,10 +107,10 @@ void BoundingVolume::Merge(const MathLib::Matrix4& to_mx, const BoundingVolume& 
     }
 }
 
-bool BoundingVolume::IsEmpty() const
+bool BoundingVolume::isEmpty() const
 {
     if (!m_bv) return true;
-    return m_bv->IsEmpty();
+    return m_bv->isEmpty();
 }
 
 std::optional<Enigma::MathLib::Box3> BoundingVolume::BoundingBox3() const

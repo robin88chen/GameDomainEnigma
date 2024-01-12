@@ -21,8 +21,8 @@ AvatarRecipeReplaceMaterialDto::AvatarRecipeReplaceMaterialDto() : AvatarRecipeD
 AvatarRecipeReplaceMaterialDto AvatarRecipeReplaceMaterialDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeReplaceMaterialDto recipe;
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_OLD_MATERIAL_ID)) recipe.oldMaterialId() = v.value();
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_NEW_MATERIAL_ID)) recipe.newMaterialId() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_OLD_MATERIAL_ID)) recipe.oldMaterialId() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_NEW_MATERIAL_ID)) recipe.newMaterialId() = v.value();
     return recipe;
 }
 
@@ -30,8 +30,8 @@ GenericDto AvatarRecipeReplaceMaterialDto::toGenericDto() const
 {
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_OLD_MATERIAL_ID, m_oldMaterialId.name());
-    dto.AddOrUpdate(TOKEN_NEW_MATERIAL_ID, m_newMaterialId.name());
+    dto.addOrUpdate(TOKEN_OLD_MATERIAL_ID, m_oldMaterialId.name());
+    dto.addOrUpdate(TOKEN_NEW_MATERIAL_ID, m_newMaterialId.name());
     return dto;
 }
 
@@ -43,8 +43,8 @@ AvatarRecipeChangeTextureDto::AvatarRecipeChangeTextureDto() : AvatarRecipeDto()
 AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AvatarRecipeChangeTextureDto recipe;
-    if (auto v = dto.TryGetValue<std::string>(TOKEN_MESH_NAME)) recipe.MeshName() = v.value();
-    if (auto v = dto.TryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.TextureDto() = TextureMappingDto::fromGenericDto(v.value());
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_MESH_NAME)) recipe.MeshName() = v.value();
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.TextureDto() = TextureMappingDto::fromGenericDto(v.value());
     return recipe;
 }
 
@@ -52,7 +52,7 @@ GenericDto AvatarRecipeChangeTextureDto::toGenericDto() const
 {
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_MESH_NAME, m_meshName);
-    dto.AddOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.toGenericDto());
+    dto.addOrUpdate(TOKEN_MESH_NAME, m_meshName);
+    dto.addOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.toGenericDto());
     return dto;
 }

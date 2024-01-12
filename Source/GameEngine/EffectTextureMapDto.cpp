@@ -10,20 +10,20 @@ static std::string TOKEN_TEXTURE_MAPPINGS = "TextureMappings";
 TextureMappingDto TextureMappingDto::fromGenericDto(const GenericDto& dto)
 {
     TextureMappingDto tex;
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_TEXTURE_ID_NAME)) tex.textureId() = v.value();
-    if (const auto v = dto.TryGetValue<std::string>(TOKEN_SEMANTIC)) tex.semantic() = v.value();
-    if (const auto v = dto.TryGetValue<unsigned>(TOKEN_ARRAY_INDEX)) tex.arrayIndex() = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_TEXTURE_ID_NAME)) tex.textureId() = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_SEMANTIC)) tex.semantic() = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_ARRAY_INDEX)) tex.arrayIndex() = v.value();
     return tex;
 }
 
 GenericDto TextureMappingDto::toGenericDto() const
 {
     GenericDto dto;
-    dto.AddOrUpdate(TOKEN_TEXTURE_ID_NAME, m_textureId.name());
-    dto.AddOrUpdate(TOKEN_SEMANTIC, m_semantic);
+    dto.addOrUpdate(TOKEN_TEXTURE_ID_NAME, m_textureId.name());
+    dto.addOrUpdate(TOKEN_SEMANTIC, m_semantic);
     if (m_arrayIndex)
     {
-        dto.AddOrUpdate(TOKEN_ARRAY_INDEX, m_arrayIndex.value());
+        dto.addOrUpdate(TOKEN_ARRAY_INDEX, m_arrayIndex.value());
     }
     return dto;
 }
@@ -31,7 +31,7 @@ GenericDto TextureMappingDto::toGenericDto() const
 EffectTextureMapDto EffectTextureMapDto::fromGenericDto(const GenericDto& dto)
 {
     EffectTextureMapDto effect;
-    if (const auto v = dto.TryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
+    if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
     {
         for (auto& mapping_dto : v.value())
         {
@@ -49,6 +49,6 @@ GenericDto EffectTextureMapDto::toGenericDto()
         mappings.emplace_back(tex.toGenericDto());
     }
     GenericDto dto;
-    dto.AddOrUpdate(TOKEN_TEXTURE_MAPPINGS, mappings);
+    dto.addOrUpdate(TOKEN_TEXTURE_MAPPINGS, mappings);
     return dto;
 }

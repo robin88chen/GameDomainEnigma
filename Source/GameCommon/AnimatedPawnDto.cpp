@@ -21,15 +21,15 @@ AnimatedPawnDto::AnimatedPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 AnimatedPawnDto AnimatedPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     AnimatedPawnDto pawn_dto{ PawnDto(dto) };
-    if (auto v = dto.TryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) pawn_dto.TheAnimationClipMapDto() = v.value();
-    if (auto v = dto.TryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) pawn_dto.AvatarRecipeDtos() = v.value();
+    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) pawn_dto.TheAnimationClipMapDto() = v.value();
+    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) pawn_dto.AvatarRecipeDtos() = v.value();
     return pawn_dto;
 }
 
 Enigma::Engine::GenericDto AnimatedPawnDto::toGenericDto() const
 {
     Engine::GenericDto dto = PawnDto::toGenericDto();
-    if (m_animationClipMapDto) dto.AddOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_animationClipMapDto.value());
-    dto.AddOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
+    if (m_animationClipMapDto) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_animationClipMapDto.value());
+    dto.addOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
     return dto;
 }

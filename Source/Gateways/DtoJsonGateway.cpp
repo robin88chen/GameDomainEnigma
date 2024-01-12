@@ -170,49 +170,49 @@ void DeserializeAttribute(GenericDto& dto, const std::string& attribute, const r
     if (!value.HasMember(VALUE_TOKEN)) return;
     std::string type = value[TYPE_TOKEN].GetString();
     if (type == DATA_OBJECT_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeDto(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeDto(value[VALUE_TOKEN]));
     else if (type == DATA_OBJECT_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeDtoArray(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeDtoArray(value[VALUE_TOKEN]));
     else if (type == FACTORY_DESC_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeFactoryDesc(value[VALUE_TOKEN]));
     else if (type == UINT64_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeUInt64(value[VALUE_TOKEN]));
     else if (type == UINT32_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeUInt32(value[VALUE_TOKEN]));
     else if (type == FLOAT_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeFloat(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeFloat(value[VALUE_TOKEN]));
     else if (type == STRING_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeString(value[VALUE_TOKEN]));
     else if (type == BOOLEAN_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeBoolean(value[VALUE_TOKEN]));
     else if (type == COLOR_RGBA_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeColorRGBA(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeColorRGBA(value[VALUE_TOKEN]));
     else if (type == COLOR_RGB_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeColorRGB(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeColorRGB(value[VALUE_TOKEN]));
     else if (type == VECTOR2_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector2(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector2(value[VALUE_TOKEN]));
     else if (type == VECTOR3_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector3(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector3(value[VALUE_TOKEN]));
     else if (type == VECTOR4_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector4(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector4(value[VALUE_TOKEN]));
     else if (type == BOX3_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeBox3(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeBox3(value[VALUE_TOKEN]));
     else if (type == MATRIX4_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeMatrix4(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeMatrix4(value[VALUE_TOKEN]));
     else if (type == STRING_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeStringArray(value[VALUE_TOKEN]));
     else if (type == UINT32_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeUInt32Array(value[VALUE_TOKEN]));
     else if (type == FLOAT_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeFloatArray(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeFloatArray(value[VALUE_TOKEN]));
     else if (type == VECTOR2_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector2Array(value[VALUE_TOKEN]));
     else if (type == VECTOR3_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector3Array(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector3Array(value[VALUE_TOKEN]));
     else if (type == VECTOR4_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeVector4Array(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeVector4Array(value[VALUE_TOKEN]));
     else if (type == MATRIX4_ARRAY_TOKEN)
-        dto.AddOrUpdate(attribute, DeserializeMatrix4Array(value[VALUE_TOKEN]));
+        dto.addOrUpdate(attribute, DeserializeMatrix4Array(value[VALUE_TOKEN]));
 }
 
 FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
@@ -420,7 +420,7 @@ std::vector<Matrix4> DeserializeMatrix4Array(const rapidjson::Value& value)
 //--------------------------------------------------------------------------
 rapidjson::Value serializeDto(const GenericDto& dto, rapidjson::MemoryPoolAllocator<>& allocator)
 {
-    if (dto.IsEmpty()) return rapidjson::Value();
+    if (dto.isEmpty()) return rapidjson::Value();
     rapidjson::Value json{ rapidjson::kObjectType };
     for (auto it : dto)
     {

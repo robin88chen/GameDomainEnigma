@@ -32,7 +32,7 @@ namespace Enigma::Engine
         FactoryLinkageResolver& operator=(const FactoryLinkageResolver&) = default;
         FactoryLinkageResolver& operator=(FactoryLinkageResolver&&) = default;
 
-        void TryResolveLinkage(const std::string& name, const LinkageResolver<T>& resolver)
+        void tryResolveLinkage(const std::string& name, const LinkageResolver<T>& resolver)
         {
             if (auto spawned = m_query(name))
             {
@@ -53,7 +53,7 @@ namespace Enigma::Engine
             }
         }
 
-        void InvokeLinkageResolver(const std::string& name, const std::shared_ptr<T>& spawned)
+        void invokeLinkageResolver(const std::string& name, const std::shared_ptr<T>& spawned)
         {
             auto iter = m_linkageResolverTable.find(name);
             if (iter == m_linkageResolverTable.end()) return;
@@ -64,7 +64,7 @@ namespace Enigma::Engine
             }
         }
 
-        std::vector<std::string> GetUnresolvedNames() const
+        std::vector<std::string> getUnresolvedNames() const
         {
             return std::vector<std::string>(m_unresolvedNames.begin(), m_unresolvedNames.end());
         }

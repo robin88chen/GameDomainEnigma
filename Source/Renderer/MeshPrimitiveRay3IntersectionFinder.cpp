@@ -29,7 +29,7 @@ void MeshPrimitiveRay3IntersectionFinder::RegisterFactory()
     PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), create);
 }
 
-Intersector::Result MeshPrimitiveRay3IntersectionFinder::Test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
+Intersector::Result MeshPrimitiveRay3IntersectionFinder::test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
     std::unique_ptr<IntersectorCache> cache) const
 {
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(primitive);
@@ -37,20 +37,20 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::Test(const std::shared_
     if (cache == nullptr)
     {
         auto geo_cache = std::make_unique<IntrGeometryCache>();
-        geo_cache->SetRequiredResultCount(m_requiredResultCount);
+        geo_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(geo_cache);
     }
     return TestMesh(mesh, ray, std::move(cache));
 }
 
-std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::Find(const std::shared_ptr<Primitive>& primitive, const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
+std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::find(const std::shared_ptr<Primitive>& primitive, const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
 {
     auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(primitive);
     if (!mesh) return { std::vector<IntrPrimitiveRay3::ResultRecord>{}, Intersector::Result(false, std::move(cache)) };
     if (cache == nullptr)
     {
         auto geo_cache = std::make_unique<IntrGeometryCache>();
-        geo_cache->SetRequiredResultCount(m_requiredResultCount);
+        geo_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(geo_cache);
     }
     return FindMesh(mesh, ray, std::move(cache));
@@ -65,7 +65,7 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::TestMesh(const std::sha
     std::tie(ray.Direction(), std::ignore) = inv_world.TransformVectorNormalized(ray.Direction());
 
     IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
-    return intr_geo.Test(std::move(cache));
+    return intr_geo.test(std::move(cache));
 }
 
 std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::FindMesh(
@@ -79,12 +79,12 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Me
 
     std::vector<IntrPrimitiveRay3::ResultRecord> records;
     IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
-    auto res = intr_geo.Find(std::move(cache));
+    auto res = intr_geo.find(std::move(cache));
     if (res.m_hasIntersect)
     {
-        for (unsigned int i = 0; i < intr_geo.GetQuantity(); i++)
+        for (unsigned int i = 0; i < intr_geo.getQuantity(); i++)
         {
-            float t = intr_geo.GetRayT(i) / dir_length;
+            float t = intr_geo.getRayT(i) / dir_length;
             records.emplace_back(IntrPrimitiveRay3::ResultRecord(t, t * point_ray.Direction() + point_ray.Origin(), mesh));
         }
     }

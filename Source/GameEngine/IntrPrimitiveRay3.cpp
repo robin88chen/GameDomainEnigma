@@ -39,21 +39,21 @@ const std::shared_ptr<Primitive>& IntrPrimitiveRay3::GetPrimitive()
     return m_primitive;
 }
 
-Intersector::Result IntrPrimitiveRay3::Test(std::unique_ptr<IntersectorCache> last_result)
+Intersector::Result IntrPrimitiveRay3::test(std::unique_ptr<IntersectorCache> last_result)
 {
     if (!m_primitive) return { false, std::move(last_result) };
     if (!m_intersectionFinder) return { false, std::move(last_result) };
 
-    return m_intersectionFinder->Test(m_primitive, m_ray, std::move(last_result));
+    return m_intersectionFinder->test(m_primitive, m_ray, std::move(last_result));
 }
 
-Intersector::Result IntrPrimitiveRay3::Find(std::unique_ptr<IntersectorCache> last_result)
+Intersector::Result IntrPrimitiveRay3::find(std::unique_ptr<IntersectorCache> last_result)
 {
     if (!m_primitive) return { false, std::move(last_result) };
     if (!m_intersectionFinder) return { false, std::move(last_result) };
 
     Intersector::Result result;
-    std::tie(m_resultRecords, result) = m_intersectionFinder->Find(m_primitive, m_ray, std::move(last_result));
+    std::tie(m_resultRecords, result) = m_intersectionFinder->find(m_primitive, m_ray, std::move(last_result));
     sort(m_resultRecords.begin(), m_resultRecords.end(), compare_result);
     return result;
 }

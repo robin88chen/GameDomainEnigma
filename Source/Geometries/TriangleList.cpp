@@ -33,13 +33,13 @@ GenericDto TriangleList::serializeDto() const
     return dto.toGenericDto();
 }
 
-unsigned TriangleList::GetTriangleCount()
+unsigned TriangleList::getTriangleCount()
 {
     if (m_idxUsedCount) return m_idxUsedCount / 3;
     return m_vtxUsedCount / 3;
 }
 
-void TriangleList::FetchTriangleVertexIndex(unsigned idx, unsigned vtx_idx[3])
+void TriangleList::fetchTriangleVertexIndex(unsigned idx, unsigned vtx_idx[3])
 {
     if ((m_idxUsedCount) && (!m_indexMemory.empty()))
     {
@@ -55,24 +55,24 @@ void TriangleList::FetchTriangleVertexIndex(unsigned idx, unsigned vtx_idx[3])
     }
 }
 
-void TriangleList::FetchTrianglePos(unsigned idx, MathLib::Vector3 tri[3])
+void TriangleList::fetchTrianglePos(unsigned idx, MathLib::Vector3 tri[3])
 {
     unsigned int vtx_idx[3];
-    FetchTriangleVertexIndex(idx, vtx_idx);
+    fetchTriangleVertexIndex(idx, vtx_idx);
     unsigned int vtx_pitch = sizeofVertex();
     memcpy(&tri[0], &m_vertexMemory[vtx_idx[0] * vtx_pitch], sizeof(Vector3));
     memcpy(&tri[1], &m_vertexMemory[vtx_idx[1] * vtx_pitch], sizeof(Vector3));
     memcpy(&tri[2], &m_vertexMemory[vtx_idx[2] * vtx_pitch], sizeof(Vector3));
 }
 
-void TriangleList::FetchTriangleTextureCoord(unsigned idx, unsigned tex_channel, MathLib::Vector2 uv[3])
+void TriangleList::fetchTriangleTextureCoord(unsigned idx, unsigned tex_channel, MathLib::Vector2 uv[3])
 {
     if (FATAL_LOG_EXPR(tex_channel >= VertexFormatCode::MAX_TEX_COORD)) return;
     if (m_vertexDesc.textureCoordOffset(tex_channel) < 0) return;
     if (m_vertexDesc.textureCoordSize(tex_channel) < 2) return;
 
     unsigned int vtx_idx[3];
-    FetchTriangleVertexIndex(idx, vtx_idx);
+    fetchTriangleVertexIndex(idx, vtx_idx);
 
     unsigned int vtx_pitch = sizeofVertex();
     unsigned int offset = m_vertexDesc.textureCoordOffset(tex_channel) * sizeof(float);
@@ -81,7 +81,7 @@ void TriangleList::FetchTriangleTextureCoord(unsigned idx, unsigned tex_channel,
     memcpy(&uv[2], &m_vertexMemory[vtx_idx[2] * vtx_pitch + offset], sizeof(Vector2));
 }
 
-error TriangleList::CalculateVertexTangentSpace(unsigned tex_channel)
+error TriangleList::calculateVertexTangentSpace(unsigned tex_channel)
 {
     if (FATAL_LOG_EXPR(tex_channel >= VertexFormatCode::MAX_TEX_COORD))
         return ErrorCode::invalidArrayIndex;
@@ -98,12 +98,12 @@ error TriangleList::CalculateVertexTangentSpace(unsigned tex_channel)
     Vector3 pos[3];
     Vector2 uv[3];
     unsigned int vtx_idx[3];
-    unsigned int triangle_count = GetTriangleCount();
+    unsigned int triangle_count = getTriangleCount();
     for (unsigned int ti = 0; ti < triangle_count; ti++)
     {
-        FetchTrianglePos(ti, pos);
-        FetchTriangleTextureCoord(ti, tex_channel, uv);
-        FetchTriangleVertexIndex(ti, vtx_idx);
+        fetchTrianglePos(ti, pos);
+        fetchTriangleTextureCoord(ti, tex_channel, uv);
+        fetchTriangleVertexIndex(ti, vtx_idx);
 
         auto [tangent, binormal] = MathAlgorithm::CalculateTangentVector(pos, uv);
         tangent_buf[vtx_idx[0]] += tangent;

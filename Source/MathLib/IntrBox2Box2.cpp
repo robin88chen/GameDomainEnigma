@@ -18,7 +18,7 @@ const Box2& IntrBox2Box2::GetBox1() const
     return m_box1;
 }
 
-Intersector::Result IntrBox2Box2::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrBox2Box2::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // convenience variables
     const Vector2* axisA = m_box0.Axis();

@@ -120,13 +120,13 @@ TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& 
     TerrainGeometryDto terrain_dto;
     terrain_dto.deserializeNonVertexAttributesFromGenericDto(dto);
     terrain_dto.factoryDesc() = dto.getRtti();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
-    if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
-    if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
-    if (auto v = dto.TryGetValue<Vector3>(TOKEN_MAX_POSITION)) terrain_dto.m_maxPosition = v.value();
-    if (auto v = dto.TryGetValue<Vector2>(TOKEN_MIN_TEXTURE_COORDINATE)) terrain_dto.m_minTextureCoordinate = v.value();
-    if (auto v = dto.TryGetValue<Vector2>(TOKEN_MAX_TEXTURE_COORDINATE)) terrain_dto.m_maxTextureCoordinate = v.value();
-    if (auto v = dto.TryGetValue<float_buffer>(TOKEN_HEIGHT_MAP)) terrain_dto.m_heightMap = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MAX_POSITION)) terrain_dto.m_maxPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MIN_TEXTURE_COORDINATE)) terrain_dto.m_minTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MAX_TEXTURE_COORDINATE)) terrain_dto.m_maxTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<float_buffer>(TOKEN_HEIGHT_MAP)) terrain_dto.m_heightMap = v.value();
     return terrain_dto;
 }
 
@@ -135,15 +135,15 @@ GenericDto TerrainGeometryDto::toGenericDto() const
     GenericDto dto;
     serializeNonVertexAttributesToGenericDto(dto);
     dto.addRtti(m_factoryDesc);
-    dto.AddOrUpdate(TOKEN_NUM_ROWS, m_numRows);
-    dto.AddOrUpdate(TOKEN_NUM_COLS, m_numCols);
-    dto.AddOrUpdate(TOKEN_MIN_POSITION, m_minPosition);
-    dto.AddOrUpdate(TOKEN_MAX_POSITION, m_maxPosition);
-    dto.AddOrUpdate(TOKEN_MIN_TEXTURE_COORDINATE, m_minTextureCoordinate);
-    dto.AddOrUpdate(TOKEN_MAX_TEXTURE_COORDINATE, m_maxTextureCoordinate);
+    dto.addOrUpdate(TOKEN_NUM_ROWS, m_numRows);
+    dto.addOrUpdate(TOKEN_NUM_COLS, m_numCols);
+    dto.addOrUpdate(TOKEN_MIN_POSITION, m_minPosition);
+    dto.addOrUpdate(TOKEN_MAX_POSITION, m_maxPosition);
+    dto.addOrUpdate(TOKEN_MIN_TEXTURE_COORDINATE, m_minTextureCoordinate);
+    dto.addOrUpdate(TOKEN_MAX_TEXTURE_COORDINATE, m_maxTextureCoordinate);
     if (m_heightMap)
     {
-        dto.AddOrUpdate(TOKEN_HEIGHT_MAP, m_heightMap.value());
+        dto.addOrUpdate(TOKEN_HEIGHT_MAP, m_heightMap.value());
     }
     return dto;
 }

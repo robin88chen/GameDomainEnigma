@@ -30,7 +30,7 @@ EffectTextureMapDtoHelper::EffectTextureMapDtoHelper()
 {
 }
 
-EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::TextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
+EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;
     tex.textureId() = id;

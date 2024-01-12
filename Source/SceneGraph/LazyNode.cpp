@@ -49,7 +49,7 @@ Enigma::Engine::GenericDtoCollection LazyNode::serializeFlattenedTree()
 {
     Engine::GenericDtoCollection collection;
     collection.push_back(serializeDto());
-    collection[0].AsTopLevel(true);
+    collection[0].asTopLevel(true);
 
     SceneNonLazyFlattenTraversal flatten_children;
     for (auto& child : m_childList)

@@ -48,7 +48,7 @@ Enigma::Engine::GenericDto Portal::serializeDto()
 void Portal::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     PortalDto portalDto = PortalDto::fromGenericDto(dto);
-    resolver.TryResolveLinkage(portalDto.adjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
+    resolver.tryResolveLinkage(portalDto.adjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
                 std::dynamic_pointer_cast<Portal, Spatial>(lifetime.lock())->setAdjacentZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));

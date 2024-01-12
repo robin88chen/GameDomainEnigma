@@ -38,17 +38,17 @@ namespace Enigma::Graphics
         }
 
         /** Remove key value data */
-        void Remove(const std::string& key);
+        void remove(const std::string& key);
 
         bool HasData(const std::string& key);
 
         /** Get data, assert if key not found */
-        template <class T> T Get(const std::string& key)
+        template <class T> T get(const std::string& key)
         {
             std::lock_guard locker{ m_lock };
             assert(HasData(key));
             T value = std::any_cast<T>(m_dataValues[key]);
-            Remove(key);
+            remove(key);
             return value;
         }
 

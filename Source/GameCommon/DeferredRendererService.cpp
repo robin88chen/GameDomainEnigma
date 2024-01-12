@@ -378,8 +378,8 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
     Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
-    quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-        .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+    quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
+        .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.geometryId() = quad_geo_name;
@@ -404,8 +404,8 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
     Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
-    quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-        .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+    quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
+        .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.geometryId() = quad_geo_name;
@@ -430,7 +430,7 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
     assert(lit);
     std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
     Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
-    sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
+    sphere_dto_helper.sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound();
 
     MeshPrimitiveDto mesh_dto;
     mesh_dto.geometryId() = vol_geo_name;
@@ -573,7 +573,7 @@ void DeferredRendererService::CheckLightVolumeBackfaceCulling(const std::shared_
     if (!lit_vol) return;
     if (!cam) return;
     const BoundingVolume& bv = lit_vol->getWorldBound();
-    if (bv.IsEmpty()) return;
+    if (bv.isEmpty()) return;
     if (bv.PointInside(cam->location()))
     {
         lit_vol->ToggleCameraInside(true);

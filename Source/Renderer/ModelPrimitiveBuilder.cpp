@@ -69,7 +69,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
         }
         /*if (auto prim = node_dto.meshPrimitive())
         {
-            PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
+            PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->convertToPolicy(m_policy->TheDtoDeserializer())));
         }*/
         m_builtPrimitive->getMeshNodeTree().addMeshNode(node);
     }
@@ -100,7 +100,7 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
     if (!m_policy) return;
     if (auto ani = m_policy->modelAnimator())
     {
-        m_animatorPolicy = ani->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
+        m_animatorPolicy = ani->convertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
         CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
     }
     else

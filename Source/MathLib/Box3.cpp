@@ -77,7 +77,7 @@ bool Box3::operator !=(const Box3& box) const
         || (!Math::IsEqual(m_extent[2], box.m_extent[2])));
 }
 
-bool Box3::IsEmpty() const
+bool Box3::isEmpty() const
 {
     if ((m_extent[0] <= 0.0f) || (m_extent[1] <= 0.0f) || (m_extent[2] <= 0.0f)) return true;
     return false;

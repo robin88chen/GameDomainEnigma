@@ -56,5 +56,5 @@ void SpatialLinkageResolver::OnFactorySpatialCreated(const Frameworks::IEventPtr
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
     if (!ev) return;
-    InvokeLinkageResolver(ev->GetSpatial()->getSpatialName(), ev->GetSpatial());
+    invokeLinkageResolver(ev->GetSpatial()->getSpatialName(), ev->GetSpatial());
 }

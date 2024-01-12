@@ -13,7 +13,7 @@ SquareQuadDtoHelper::SquareQuadDtoHelper(const std::string& name)
     m_dto.id() = name;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
+SquareQuadDtoHelper& SquareQuadDtoHelper::xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
@@ -36,7 +36,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XYQuad(const MathLib::Vector3& left_bo
     return *this;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::XZQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
+SquareQuadDtoHelper& SquareQuadDtoHelper::xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
@@ -60,7 +60,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::XZQuad(const MathLib::Vector3& left_bo
 
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::Normal()
+SquareQuadDtoHelper& SquareQuadDtoHelper::normal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(m_normal);
@@ -72,7 +72,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::Normal()
     return *this;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+SquareQuadDtoHelper& SquareQuadDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
@@ -113,7 +113,7 @@ CubeDtoHelper::CubeDtoHelper(const std::string& name)
     m_dto.id() = name;
 }
 
-CubeDtoHelper& CubeDtoHelper::Cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
+CubeDtoHelper& CubeDtoHelper::cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
 {
     std::vector<MathLib::Vector3> positions;
     MathLib::Vector3 xyz0 = center - axis_extent;
@@ -148,7 +148,7 @@ CubeDtoHelper& CubeDtoHelper::Cube(const MathLib::Vector3& center, const MathLib
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::FacedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
+CubeDtoHelper& CubeDtoHelper::facedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
 {
     std::vector<MathLib::Vector3> positions;
     MathLib::Vector3 xyz0 = center - axis_extent;
@@ -203,7 +203,7 @@ CubeDtoHelper& CubeDtoHelper::FacedCube(const MathLib::Vector3& center, const Ma
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::Normal()
+CubeDtoHelper& CubeDtoHelper::normal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(MathLib::Vector3(-1, -1, -1).Normalize());
@@ -219,7 +219,7 @@ CubeDtoHelper& CubeDtoHelper::Normal()
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::FacedNormal()
+CubeDtoHelper& CubeDtoHelper::facedNormal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(-MathLib::Vector3::UNIT_Y);
@@ -251,7 +251,7 @@ CubeDtoHelper& CubeDtoHelper::FacedNormal()
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
@@ -271,7 +271,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector2& left_bottom, 
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
@@ -307,7 +307,7 @@ CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector2& left_bot
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
+CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
 {
     std::vector<MathLib::Vector3> texcoords;
     texcoords.emplace_back(left_bottom_front);
@@ -327,7 +327,7 @@ CubeDtoHelper& CubeDtoHelper::TextureCoord(const MathLib::Vector3& left_bottom_f
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::FacedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
+CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
 {
     std::vector<MathLib::Vector3> texcoords;
     MathLib::Vector3 xyz0 = left_bottom_front;
@@ -399,7 +399,7 @@ SphereDtoHelper::SphereDtoHelper(const std::string& name)
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
 }
 
-SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
+SphereDtoHelper& SphereDtoHelper::sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
 {
     m_center = center;
     m_radius = radius;
@@ -557,14 +557,14 @@ SphereDtoHelper& SphereDtoHelper::Sphere(const MathLib::Vector3& center, float r
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::Normal()
+SphereDtoHelper& SphereDtoHelper::normal()
 {
     m_dto.normals() = m_normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::TextureCoord()
+SphereDtoHelper& SphereDtoHelper::textureCoord()
 {
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
@@ -575,14 +575,14 @@ SphereDtoHelper& SphereDtoHelper::TextureCoord()
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::SphereBound()
+SphereDtoHelper& SphereDtoHelper::sphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::BoxBound()
+SphereDtoHelper& SphereDtoHelper::boxBound()
 {
     MathLib::Box3 box;
     box.Center() = m_center;

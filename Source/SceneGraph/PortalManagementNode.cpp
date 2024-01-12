@@ -51,7 +51,7 @@ GenericDto PortalManagementNode::serializeDto()
 void PortalManagementNode::resolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
 {
     PortalManagementNodeDto nodeDto = PortalManagementNodeDto::fromGenericDto(dto);
-    resolver.TryResolveLinkage(nodeDto.outsideZoneNodeName(), [lifetime = weak_from_this()](auto sp)
+    resolver.tryResolveLinkage(nodeDto.outsideZoneNodeName(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
                 std::dynamic_pointer_cast<PortalManagementNode, Spatial>(lifetime.lock())->

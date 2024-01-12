@@ -41,7 +41,7 @@ void SphereBV::ZeroReset()
 
 void SphereBV::MergeBoundingVolume(const MathLib::Matrix4& mx, const std::unique_ptr<GenericBV>& source)
 {
-    assert(!m_sphere.IsEmpty());
+    assert(!m_sphere.isEmpty());
 
     SphereBV merge_bv{ MathLib::Sphere3::UNIT_SPHERE };
     merge_bv.CreateFromTransform(mx, source);

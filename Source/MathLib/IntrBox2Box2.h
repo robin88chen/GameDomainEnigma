@@ -24,7 +24,7 @@ namespace Enigma::MathLib
         const Box2& GetBox1() const;
 
         // static test-intersection query
-        virtual Result Test(std::unique_ptr<IntersectorCache> last_result) override;
+        virtual Result test(std::unique_ptr<IntersectorCache> last_result) override;
 
     private:
         // the objects to intersect

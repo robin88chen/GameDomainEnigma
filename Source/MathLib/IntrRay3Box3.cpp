@@ -22,7 +22,7 @@ const Box3& IntrRay3Box3::GetBox() const
     return m_box;
 }
 
-Intersector::Result IntrRay3Box3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Box3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RayOBB intersection, form Real-time Rendering p574 */
     float tmin = -Math::MAX_FLOAT;
@@ -69,10 +69,10 @@ Intersector::Result IntrRay3Box3::Test(std::unique_ptr<IntersectorCache> /*last_
     return { true, nullptr };
 }
 
-Intersector::Result IntrRay3Box3::Find(std::unique_ptr<IntersectorCache> last_result)
+Intersector::Result IntrRay3Box3::find(std::unique_ptr<IntersectorCache> last_result)
 {
     // 因為沒有多少運算上的差異，所以直接呼叫Test
-    return Test(std::move(last_result));
+    return test(std::move(last_result));
 }
 
 int IntrRay3Box3::GetQuantity() const

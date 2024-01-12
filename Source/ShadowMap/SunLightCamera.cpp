@@ -69,7 +69,7 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     m_effectiveViewerNearZ = m_viewerCamera.lock()->cullingFrustum().nearPlaneZ();
     m_effectiveViewerFarZ = m_viewerCamera.lock()->cullingFrustum().farPlaneZ();
 
-    if (sceneWorldBound.IsEmpty()) return;
+    if (sceneWorldBound.isEmpty()) return;
     auto cropBox = sceneWorldBound.BoundingBox3();
     if (!cropBox) return;
     // 如果攝影機在BB內，near z 不需調整
@@ -218,7 +218,7 @@ std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
 
 void SunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
 {
-    if (sceneWorldBound.IsEmpty()) return;
+    if (sceneWorldBound.isEmpty()) return;
     Matrix4 mxLightViewProj = m_cullingFrustum.projectionTransform() * viewTransform();
 
     Engine::BoundingVolume cropBound = Engine::BoundingVolume::CreateFromTransform(sceneWorldBound, mxLightViewProj);

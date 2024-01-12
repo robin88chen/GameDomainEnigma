@@ -26,24 +26,24 @@ namespace Enigma::Geometries
         virtual ~IntrGeometryRay3();
 
         // object access
-        const MathLib::Ray3& GetRay() const;
-        const GeometryDataPtr& GetGeometry();
+        const MathLib::Ray3& ray() const;
+        const GeometryDataPtr& geometry();
 
         // static test-intersection query
-        virtual Result Test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
-        virtual Result Find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
+        virtual Result test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
+        virtual Result find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
 
         // the intersection set
-        size_t GetQuantity() const;
-        const MathLib::Vector3& GetPoint(unsigned int i) const;
-        float GetRayT(unsigned int i) const;
+        size_t getQuantity() const;
+        const MathLib::Vector3& getPoint(unsigned int i) const;
+        float getRayT(unsigned int i) const;
 
-        const std::vector<MathLib::Vector3>& GetPointArray() const;
-        const std::vector<float>& GetParamArray() const;
+        const std::vector<MathLib::Vector3>& getPointArray() const;
+        const std::vector<float>& getParamArray() const;
 
     private:
-        Result TestForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
-        Result FindForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
+        Result testForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
+        Result findForTriangleList(std::unique_ptr<IntrGeometryCache> geo_cache);
 
     private:
         // the objects to intersect

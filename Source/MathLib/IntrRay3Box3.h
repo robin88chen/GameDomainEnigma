@@ -27,8 +27,8 @@ namespace Enigma::MathLib
         const Box3& GetBox() const;
 
         // static test-intersection query
-        virtual Result Test(std::unique_ptr<IntersectorCache> last_result) override;
-        virtual Result Find(std::unique_ptr<IntersectorCache> last_result) override;
+        virtual Result test(std::unique_ptr<IntersectorCache> last_result) override;
+        virtual Result find(std::unique_ptr<IntersectorCache> last_result) override;
 
         // the intersection set
         int GetQuantity() const;

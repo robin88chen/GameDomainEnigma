@@ -41,7 +41,7 @@ namespace Enigma::SceneGraph
         SpatialLightInfoQuery& operator=(SpatialLightInfoQuery&&) = default;
 
         void InitSpatialPosition(const MathLib::Vector3& spatialPos) { m_spatialPos = spatialPos; };
-        void Test(const LightInfo& info);
+        void test(const LightInfo& info);
 
         const LightInfoList& GetResultList() { return m_listLightInfo; };
         unsigned int GetPointLightCount() const { return m_countPointLight; };

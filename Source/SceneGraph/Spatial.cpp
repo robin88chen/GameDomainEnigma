@@ -89,8 +89,8 @@ Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
     assert(m_mxWorldTransform != Matrix4::ZERO);
     m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
     m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
-    assert(!m_modelBound.IsEmpty());
-    assert(!m_worldBound.IsEmpty());
+    assert(!m_modelBound.isEmpty());
+    assert(!m_worldBound.isEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
     EulerAngles angles{ 0.0f, 0.0f, 0.0f };
@@ -113,8 +113,8 @@ Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.get
     assert(m_mxWorldTransform != Matrix4::ZERO);
     m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
     m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
-    assert(!m_modelBound.IsEmpty());
-    assert(!m_worldBound.IsEmpty());
+    assert(!m_modelBound.isEmpty());
+    assert(!m_worldBound.isEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
     m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
     EulerAngles angles{ 0.0f, 0.0f, 0.0f };
@@ -330,7 +330,7 @@ error Spatial::_propagateSpatialRenderState()
 
 error Spatial::_updateBoundData()
 {
-    if (m_modelBound.IsEmpty()) m_modelBound = Engine::BoundingVolume(Box3::UNIT_BOX);
+    if (m_modelBound.isEmpty()) m_modelBound = Engine::BoundingVolume(Box3::UNIT_BOX);
     m_worldBound = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_mxWorldTransform);
 
     if (testNotifyFlag(Notify_Bounding))
@@ -381,7 +381,7 @@ error Spatial::_updateSpatialRenderState()
 error Spatial::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
     m_mxWorldTransform = mxParentWorld * m_mxLocalTransform;
-    if (m_modelBound.IsEmpty()) m_modelBound = Engine::BoundingVolume(Box3::UNIT_BOX);
+    if (m_modelBound.isEmpty()) m_modelBound = Engine::BoundingVolume(Box3::UNIT_BOX);
     m_worldBound = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_mxWorldTransform);
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
     _updateSpatialRenderState();

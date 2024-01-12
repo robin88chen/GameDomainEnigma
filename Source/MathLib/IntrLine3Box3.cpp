@@ -22,7 +22,7 @@ const Box3& IntrLine3Box3::GetBox() const
     return m_box;
 }
 
-Intersector::Result IntrLine3Box3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrLine3Box3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** algorism from 3D game engine architecture p.520~p.521 & wildmagic code */
     /** 有點複雜的理論，還跟Minkowski difference有關 */
@@ -58,7 +58,7 @@ Intersector::Result IntrLine3Box3::Test(std::unique_ptr<IntersectorCache> /*last
     return { true, nullptr };
 }
 
-Intersector::Result IntrLine3Box3::Find(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrLine3Box3::find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     float t0 = -Math::MAX_FLOAT, t1 = Math::MAX_FLOAT;
 

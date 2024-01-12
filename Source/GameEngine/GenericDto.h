@@ -36,13 +36,13 @@ namespace Enigma::Engine
 
         const Frameworks::Ruid& ruid() const { return m_ruid; }
 
-        bool IsTopLevel() const;
-        void AsTopLevel(bool is_top);
+        bool isTopLevel() const;
+        void asTopLevel(bool is_top);
 
-        bool IsEmpty() const { return m_values.empty(); }
+        bool isEmpty() const { return m_values.empty(); }
 
         /** Add or Update key value data */
-        template <class T> void AddOrUpdate(const std::string& attribute, const T& value)
+        template <class T> void addOrUpdate(const std::string& attribute, const T& value)
         {
             m_values.insert_or_assign(attribute, value);
         }
@@ -52,53 +52,53 @@ namespace Enigma::Engine
         FactoryDesc getRtti() const;
 
         /** add Name */
-        void AddName(const std::string& name);
+        void addName(const std::string& name);
         std::string getName() const;
 
         //GenericPolicyConverter GetPolicyConverter() const;
         //void SetPolicyConverter(GenericPolicyConverter converter);
 
         /** Remove key value data */
-        void Remove(const std::string& attribute);
+        void remove(const std::string& attribute);
 
-        bool HasValue(const std::string& attribute) const;
+        bool hasValue(const std::string& attribute) const;
 
         /** Get data, assert if key not found */
-        template <class T> T Get(const std::string& attribute)
+        template <class T> T get(const std::string& attribute)
         {
-            assert(HasValue(attribute));
+            assert(hasValue(attribute));
             return std::any_cast<T>(m_values.at(attribute));
         }
 
         /** Get data, assert if key not found */
-        template <class T> T Get(const std::string& attribute) const
+        template <class T> T get(const std::string& attribute) const
         {
-            assert(HasValue(attribute));
+            assert(hasValue(attribute));
             return std::any_cast<T>(m_values.at(attribute));
         }
 
         /** Try get data, return nullopt if key not found.
          *  return value is the copy.
          **/
-        template <class T> std::optional<T> TryGetValue(const std::string& attribute) const
+        template <class T> std::optional<T> tryGetValue(const std::string& attribute) const
         {
-            if (!HasValue(attribute)) return std::nullopt;
+            if (!hasValue(attribute)) return std::nullopt;
             return std::any_cast<T>(m_values.at(attribute));
         }
 
         /** Try get data, return nullopt if key not found.
          *  return value is the copy.
          **/
-        template <class T> std::optional<T> TryGetValue(const std::string& attribute)
+        template <class T> std::optional<T> tryGetValue(const std::string& attribute)
         {
-            if (!HasValue(attribute)) return std::nullopt;
+            if (!hasValue(attribute)) return std::nullopt;
             return std::any_cast<T>(m_values.at(attribute));
         }
 
-        static void RegisterConverter(const std::string& rtti, const GenericPolicyConverter& converter);
-        static void UnregisterConverter(const std::string& rtti);
+        static void registerConverter(const std::string& rtti, const GenericPolicyConverter& converter);
+        static void unregisterConverter(const std::string& rtti);
 
-        std::shared_ptr<GenericPolicy> ConvertToPolicy(const std::shared_ptr<IDtoDeserializer>&) const;
+        std::shared_ptr<GenericPolicy> convertToPolicy(const std::shared_ptr<IDtoDeserializer>&) const;
         AttributeValues::iterator begin() { return m_values.begin(); }
         AttributeValues::const_iterator begin() const { return m_values.begin(); }
         AttributeValues::iterator end() { return m_values.end(); }

@@ -43,8 +43,8 @@ namespace Enigma::Engine
         const std::shared_ptr<Primitive>& GetPrimitive();
 
         // static test-intersection query
-        virtual Result Test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
-        virtual Result Find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
+        virtual Result test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
+        virtual Result find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
 
         // the intersection set
         size_t GetQuantity() const;

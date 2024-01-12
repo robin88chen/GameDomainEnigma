@@ -63,7 +63,7 @@ namespace Enigma::Engine
         /** is inside */
         virtual bool PointInside(const MathLib::Vector3& pos) = 0;
 
-        virtual bool IsEmpty() const = 0;
+        virtual bool isEmpty() const = 0;
     };
 };
 

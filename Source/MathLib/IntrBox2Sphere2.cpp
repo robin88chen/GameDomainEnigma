@@ -18,7 +18,7 @@ const Sphere2& IntrBox2Sphere2::GetSphere() const
     return m_sphere;
 }
 
-Intersector::Result IntrBox2Sphere2::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrBox2Sphere2::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     // Test for intersection in the coordinate system of the box by
     // transforming the sphere into that coordinate system.

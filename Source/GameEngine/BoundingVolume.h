@@ -48,7 +48,7 @@ namespace Enigma::Engine
         static BoundingVolume CreateFromTransform(const BoundingVolume& source_bv, const MathLib::Matrix4& mx);
         void Merge(const MathLib::Matrix4& to_mx, const BoundingVolume& to_bv);
 
-        bool IsEmpty() const;
+        bool isEmpty() const;
 
         std::optional<MathLib::Box3> BoundingBox3() const;
         std::optional<MathLib::Sphere3> BoundingSphere3() const;

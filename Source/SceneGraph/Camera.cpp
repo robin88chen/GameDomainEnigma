@@ -62,7 +62,7 @@ GenericDto Camera::serializeDto()
     dto.UpVector() = m_vecUp;
     dto.Frustum() = m_cullingFrustum.serializeDto();
     GenericDto generic_dto = dto.toGenericDto();
-    generic_dto.AddName(m_id.name());
+    generic_dto.addName(m_id.name());
     return generic_dto;
 }
 
@@ -165,7 +165,7 @@ error Camera::shiftLookAt(const Vector3& vecLookAt)
     Plane3 horz_plane(Vector3::UNIT_Y, loc);
     Ray3 dir_ray(vecLookAt, -dir);
     IntrRay3Plane3 intr(dir_ray, horz_plane);
-    auto res = intr.Find(nullptr);
+    auto res = intr.find(nullptr);
     if (!res.m_hasIntersect) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
     error er = changeCameraFrame(new_loc, std::nullopt, std::nullopt);

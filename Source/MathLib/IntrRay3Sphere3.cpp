@@ -21,7 +21,7 @@ const Sphere3& IntrRay3Sphere3::GetSphere() const
     return m_sphere;
 }
 
-Intersector::Result IntrRay3Sphere3::Test(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Sphere3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.Origin();
@@ -36,7 +36,7 @@ Intersector::Result IntrRay3Sphere3::Test(std::unique_ptr<IntersectorCache> /*la
     return { true, nullptr };
 }
 
-Intersector::Result IntrRay3Sphere3::Find(std::unique_ptr<IntersectorCache> /*last_result*/)
+Intersector::Result IntrRay3Sphere3::find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.Origin();

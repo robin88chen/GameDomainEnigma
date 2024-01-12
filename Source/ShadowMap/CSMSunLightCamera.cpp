@@ -80,7 +80,7 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     m_adjustedViewerNearPlane = m_viewerCamera.lock()->cullingFrustum().nearPlaneZ();
     m_adjustedViewerFarPlane = m_viewerCamera.lock()->cullingFrustum().farPlaneZ();
 
-    if (sceneWorldBound.IsEmpty()) return;
+    if (sceneWorldBound.isEmpty()) return;
     auto cropBox = sceneWorldBound.BoundingBox3();
     if (!cropBox) return;
     // 如果攝影機在BB內，near z 不需調整

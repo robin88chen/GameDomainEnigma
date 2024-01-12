@@ -28,11 +28,11 @@ Intersector::Result IntrLine3Box3::test(std::unique_ptr<IntersectorCache> /*last
     /** 有點複雜的理論，還跟Minkowski difference有關 */
     float AWdU[3], AWxDdU[3], rhs;
 
-    Vector3 diff = m_line.Origin() - m_box.Center();
-    Vector3 WxD = m_line.Direction().Cross(diff);
+    Vector3 diff = m_line.origin() - m_box.Center();
+    Vector3 WxD = m_line.direction().Cross(diff);
 
-    AWdU[1] = fabs(m_line.Direction().Dot(m_box.Axis(1)));
-    AWdU[2] = fabs(m_line.Direction().Dot(m_box.Axis(2)));
+    AWdU[1] = fabs(m_line.direction().Dot(m_box.Axis(1)));
+    AWdU[2] = fabs(m_line.direction().Dot(m_box.Axis(2)));
     AWxDdU[0] = fabs(WxD.Dot(m_box.Axis(0)));
     rhs = m_box.Extent(1) * AWdU[2] + m_box.Extent(2) * AWdU[1];
     if (AWxDdU[0] > rhs)
@@ -40,7 +40,7 @@ Intersector::Result IntrLine3Box3::test(std::unique_ptr<IntersectorCache> /*last
         return { false, nullptr };
     }
 
-    AWdU[0] = fabs(m_line.Direction().Dot(m_box.Axis(0)));
+    AWdU[0] = fabs(m_line.direction().Dot(m_box.Axis(0)));
     AWxDdU[1] = fabs(WxD.Dot(m_box.Axis(1)));
     rhs = m_box.Extent(0) * AWdU[2] + m_box.Extent(2) * AWdU[0];
     if (AWxDdU[1] > rhs)
@@ -63,16 +63,16 @@ Intersector::Result IntrLine3Box3::find(std::unique_ptr<IntersectorCache> /*last
     float t0 = -Math::MAX_FLOAT, t1 = Math::MAX_FLOAT;
 
     // convert linear component to box coordinates
-    Vector3 diff = m_line.Origin() - m_box.Center();
+    Vector3 diff = m_line.origin() - m_box.Center();
     Vector3 BOrigin(
         diff.Dot(m_box.Axis(0)),
         diff.Dot(m_box.Axis(1)),
         diff.Dot(m_box.Axis(2))
     );
     Vector3 BDirection(
-        m_line.Direction().Dot(m_box.Axis(0)),
-        m_line.Direction().Dot(m_box.Axis(1)),
-        m_line.Direction().Dot(m_box.Axis(2))
+        m_line.direction().Dot(m_box.Axis(0)),
+        m_line.direction().Dot(m_box.Axis(1)),
+        m_line.direction().Dot(m_box.Axis(2))
     );
 
     bool isNotAllClipped =
@@ -88,15 +88,15 @@ Intersector::Result IntrLine3Box3::find(std::unique_ptr<IntersectorCache> /*last
         if (t1 > t0)
         {
             m_quantity = 2;
-            m_point[0] = m_line.Origin() + t0 * m_line.Direction();
-            m_point[1] = m_line.Origin() + t1 * m_line.Direction();
+            m_point[0] = m_line.origin() + t0 * m_line.direction();
+            m_point[1] = m_line.origin() + t1 * m_line.direction();
             m_lineT[0] = t0;
             m_lineT[1] = t1;
         }
         else
         {
             m_quantity = 1;
-            m_point[0] = m_line.Origin() + t0 * m_line.Direction();
+            m_point[0] = m_line.origin() + t0 * m_line.direction();
             m_lineT[0] = t0;
         }
     }

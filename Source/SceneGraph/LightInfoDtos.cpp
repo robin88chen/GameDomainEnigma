@@ -24,7 +24,7 @@ LightInfoDto LightInfoDto::fromGenericDto(const GenericDto& dto)
     if (auto v = dto.tryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.LightType() = static_cast<LightInfo::LightType>(v.value());
     if (auto v = dto.tryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) light_dto.Color() = v.value();
     if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) light_dto.Position() = v.value();
-    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.Direction() = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.direction() = v.value();
     if (auto v = dto.tryGetValue<float>(TOKEN_LIGHT_RANGE)) light_dto.Range() = v.value();
     if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) light_dto.Attenuation() = v.value();
     if (auto v = dto.tryGetValue<bool>(TOKEN_LIGHT_ENABLE)) light_dto.IsEnable() = v.value();

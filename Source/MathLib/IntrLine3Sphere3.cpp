@@ -23,18 +23,18 @@ const Sphere3& IntrLine3Sphere3::GetSphere() const
 
 Intersector::Result IntrLine3Sphere3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
-    Vector3 diff = m_line.Origin() - m_sphere.Center();
+    Vector3 diff = m_line.origin() - m_sphere.Center();
     float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();
-    float a1 = m_line.Direction().Dot(diff);
+    float a1 = m_line.direction().Dot(diff);
     float discr = a1 * a1 - a0;
     return { discr >= 0.0f, nullptr };
 }
 
 Intersector::Result IntrLine3Sphere3::find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
-    Vector3 diff = m_line.Origin() - m_sphere.Center();
+    Vector3 diff = m_line.origin() - m_sphere.Center();
     float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();
-    float a1 = m_line.Direction().Dot(diff);
+    float a1 = m_line.direction().Dot(diff);
     float discr = a1 * a1 - a0;
 
     if (discr < 0.0f)
@@ -46,14 +46,14 @@ Intersector::Result IntrLine3Sphere3::find(std::unique_ptr<IntersectorCache> /*l
         float root = sqrt(discr);
         m_lineT[0] = -a1 - root;
         m_lineT[1] = -a1 + root;
-        m_point[0] = m_line.Origin() + m_lineT[0] * m_line.Direction();
-        m_point[1] = m_line.Origin() + m_lineT[1] * m_line.Direction();
+        m_point[0] = m_line.origin() + m_lineT[0] * m_line.direction();
+        m_point[1] = m_line.origin() + m_lineT[1] * m_line.direction();
         m_quantity = 2;
     }
     else
     {
         m_lineT[0] = -a1;
-        m_point[0] = m_line.Origin() + m_lineT[0] * m_line.Direction();
+        m_point[0] = m_line.origin() + m_lineT[0] * m_line.direction();
         m_quantity = 1;
     }
 

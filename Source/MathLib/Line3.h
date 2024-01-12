@@ -24,10 +24,10 @@ namespace Enigma::MathLib
         Line3() = default;
         Line3(const Vector3& origin, const Vector3& direction);
 
-        Vector3 Origin() const { return m_origin; }
-        Vector3& Origin() { return m_origin; }
-        Vector3 Direction() const { return m_direction; }
-        Vector3& Direction() { return m_direction; }
+        Vector3 origin() const { return m_origin; }
+        Vector3& origin() { return m_origin; }
+        Vector3 direction() const { return m_direction; }
+        Vector3& direction() { return m_direction; }
 
         bool operator== (const Line3& line) const; ///< 浮點數值比較
         bool operator!= (const Line3& line) const;  ///< 浮點數值比較

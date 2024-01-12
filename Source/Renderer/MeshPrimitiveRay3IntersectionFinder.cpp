@@ -61,8 +61,8 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::TestMesh(const std::sha
 {
     Ray3 ray = point_ray;
     Matrix4 inv_world = mesh->getPrimitiveWorldTransform().Inverse();
-    ray.Origin() = inv_world.TransformCoord(ray.Origin());
-    std::tie(ray.Direction(), std::ignore) = inv_world.TransformVectorNormalized(ray.Direction());
+    ray.origin() = inv_world.TransformCoord(ray.origin());
+    std::tie(ray.direction(), std::ignore) = inv_world.TransformVectorNormalized(ray.direction());
 
     IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
     return intr_geo.test(std::move(cache));
@@ -74,8 +74,8 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Me
     Ray3 ray = point_ray;
     Matrix4 inv_world = mesh->getPrimitiveWorldTransform().Inverse();
     float dir_length;
-    ray.Origin() = inv_world.TransformCoord(ray.Origin());
-    std::tie(ray.Direction(), dir_length) = inv_world.TransformVectorNormalized(ray.Direction());
+    ray.origin() = inv_world.TransformCoord(ray.origin());
+    std::tie(ray.direction(), dir_length) = inv_world.TransformVectorNormalized(ray.direction());
 
     std::vector<IntrPrimitiveRay3::ResultRecord> records;
     IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
@@ -85,7 +85,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Me
         for (unsigned int i = 0; i < intr_geo.getQuantity(); i++)
         {
             float t = intr_geo.getRayT(i) / dir_length;
-            records.emplace_back(IntrPrimitiveRay3::ResultRecord(t, t * point_ray.Direction() + point_ray.Origin(), mesh));
+            records.emplace_back(IntrPrimitiveRay3::ResultRecord(t, t * point_ray.direction() + point_ray.origin(), mesh));
         }
     }
     return { records, Intersector::Result(res.m_hasIntersect, std::move(res.m_cache)) };

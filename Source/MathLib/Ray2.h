@@ -25,10 +25,10 @@ namespace Enigma::MathLib
         Ray2() = default;
         Ray2(const Vector2& origin, const Vector2& direction);
 
-        Vector2 Origin() const { return m_origin; }
-        Vector2& Origin() { return m_origin; }
-        Vector2 Direction() const { return m_direction; }
-        Vector2& Direction() { return m_direction; }
+        Vector2 origin() const { return m_origin; }
+        Vector2& origin() { return m_origin; }
+        Vector2 direction() const { return m_direction; }
+        Vector2& direction() { return m_direction; }
 
         bool operator== (const Ray2& ray) const;    ///< 浮點數值比較
         bool operator!= (const Ray2& ray) const;    ///< 浮點數值比較

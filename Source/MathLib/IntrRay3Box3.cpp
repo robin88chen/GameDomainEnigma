@@ -27,13 +27,13 @@ Intersector::Result IntrRay3Box3::test(std::unique_ptr<IntersectorCache> /*last_
     /** RayOBB intersection, form Real-time Rendering p574 */
     float tmin = -Math::MAX_FLOAT;
     float tmax = Math::MAX_FLOAT;
-    Vector3 p = m_box.Center() - m_ray.Origin();
+    Vector3 p = m_box.Center() - m_ray.origin();
 
     for (int i = 0; i < 3; i++)
     {
         float e, f, t1, t2, tt;
         e = m_box.Axis(i).Dot(p);
-        f = m_box.Axis(i).Dot(m_ray.Direction());
+        f = m_box.Axis(i).Dot(m_ray.direction());
         if (fabs(f) > Math::ZERO_TOLERANCE) // 軸跟方向不是垂直的, 射線跟slab plane有交點
         {
             t1 = (e + m_box.Extent(i)) / f;
@@ -54,13 +54,13 @@ Intersector::Result IntrRay3Box3::test(std::unique_ptr<IntersectorCache> /*last_
 
     if (tmin > 0.0f)
     {
-        m_point[m_quantity] = tmin * m_ray.Direction() + m_ray.Origin();
+        m_point[m_quantity] = tmin * m_ray.direction() + m_ray.origin();
         m_tParam[m_quantity] = tmin;
         m_quantity++;
     }
     if (tmax > 0.0f)
     {
-        m_point[m_quantity] = tmax * m_ray.Direction() + m_ray.Origin();
+        m_point[m_quantity] = tmax * m_ray.direction() + m_ray.origin();
         m_tParam[m_quantity] = tmax;
         m_quantity++;
     }

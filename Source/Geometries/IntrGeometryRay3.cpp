@@ -2,6 +2,7 @@
 #include "GameEngine/IntrBVRay3.h"
 #include "IntrGeometryCache.h"
 #include "TriangleList.h"
+#include "MathLib/IntrRay3Triangle3.h"
 #include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/unique_ptr_dynamic_cast.hpp"
 #include <cassert>
@@ -136,7 +137,7 @@ Intersector::Result IntrGeometryRay3::testForTriangleList(std::unique_ptr<IntrGe
         if ((tri_index < 0) || (tri_index >= (int)tri_count)) continue;
 
         tri_list->fetchTrianglePos(tri_index, triangle);
-        if (const_cast<Ray3&>(m_ray).TestIntersectTriangle(triangle)) continue;
+        if (!IntrRay3Triangle3(m_ray, triangle).test(nullptr).m_hasIntersect) continue;
 
         // if we got here, we found intersection
         if (geo_cache == nullptr) geo_cache = std::make_unique<IntrGeometryCache>();
@@ -183,7 +184,9 @@ Intersector::Result IntrGeometryRay3::findForTriangleList(std::unique_ptr<IntrGe
         if ((tri_index < 0) || (tri_index >= (int)tri_count)) continue;
 
         tri_list->fetchTrianglePos(tri_index, triangle);
-        float t = const_cast<Ray3&>(m_ray).FindIntersectTriangle(triangle);
+        IntrRay3Triangle3 intr(m_ray, triangle);
+        if (!intr.find(nullptr).m_hasIntersect) continue;
+        float t = intr.getRayT();
         if (t < 0.0f) continue;
 
         // if we got here, we found intersection
@@ -200,7 +203,7 @@ Intersector::Result IntrGeometryRay3::findForTriangleList(std::unique_ptr<IntrGe
     m_points.resize(m_tParams.size());
     for (unsigned int i = 0; i < m_tParams.size(); i++)
     {
-        m_points[i] = m_tParams[i] * m_ray.Direction() + m_ray.Origin();
+        m_points[i] = m_tParams[i] * m_ray.direction() + m_ray.origin();
     }
 
     return { true, std::move(geo_cache) };

@@ -86,9 +86,9 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     boxTriangles.resize(12);
     for (size_t face = 0; face < 12; face++)
     {
-        boxTriangles[face].Vector(0) = vecCropBox[nFaceIndex[face * 3]];
-        boxTriangles[face].Vector(1) = vecCropBox[nFaceIndex[face * 3 + 1]];
-        boxTriangles[face].Vector(2) = vecCropBox[nFaceIndex[face * 3 + 2]];
+        boxTriangles[face][0] = vecCropBox[nFaceIndex[face * 3]];
+        boxTriangles[face][1] = vecCropBox[nFaceIndex[face * 3 + 1]];
+        boxTriangles[face][2] = vecCropBox[nFaceIndex[face * 3 + 2]];
     }
     TrianglePlaneClipper tpClipper;
     tpClipper.SetPlanes(sceneCuller->GetPlanes());
@@ -97,18 +97,18 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     if (tpClipper.ClippedTriangleCount() == 0) return;
 
     Matrix4 mxView = m_viewerCamera.lock()->viewTransform();
-    Vector3 vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[0].Vector(0));
+    Vector3 vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[0][0]);
     Vector3 vecMin = vecBoxEdgeInView;
     Vector3 vecMax = vecBoxEdgeInView;
     for (unsigned int ei = 0; ei < tpClipper.ClippedTriangleCount(); ei++)
     {
-        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei].Vector(0));
+        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei][0]);
         vecMin = Math::MinVectorComponent(vecMin, vecBoxEdgeInView);
         vecMax = Math::MaxVectorComponent(vecMax, vecBoxEdgeInView);
-        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei].Vector(1));
+        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei][1]);
         vecMin = Math::MinVectorComponent(vecMin, vecBoxEdgeInView);
         vecMax = Math::MaxVectorComponent(vecMax, vecBoxEdgeInView);
-        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei].Vector(2));
+        vecBoxEdgeInView = mxView.TransformCoord(tpClipper.GetResultTriangles()[ei][2]);
         vecMin = Math::MinVectorComponent(vecMin, vecBoxEdgeInView);
         vecMax = Math::MaxVectorComponent(vecMax, vecBoxEdgeInView);
     }

@@ -151,7 +151,7 @@ TerrainPawnDtoHelper& TerrainPawnDtoHelper::spatialFlags(Spatial::SpatialFlags s
 
 TerrainPawnDtoHelper& TerrainPawnDtoHelper::terrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto)
 {
-    m_dto.primitive() = terrain_primitive_dto.toGenericDto();
+    m_dto.primitiveId() = terrain_primitive_dto.id();
     return *this;
 }
 

@@ -210,7 +210,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     }
     else if (dto.getRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
     {
-        node = createVisibilityManagedNode(VisibilityManagedNodeDto::fromGenericDto(dto));
+        node = createVisibilityManagedNode(VisibilityManagedNodeDto{ dto });
     }
     else if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {

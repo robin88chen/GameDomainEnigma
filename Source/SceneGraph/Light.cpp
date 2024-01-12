@@ -18,7 +18,7 @@ Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spati
 
 Light::Light(const Engine::GenericDto& o) : Spatial(o)
 {
-    LightDto dto = LightDto::fromGenericDto(o);
+    LightDto dto{ o };
     m_lightInfo = LightInfo(dto.lightInfo());
 }
 

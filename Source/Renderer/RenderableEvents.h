@@ -14,30 +14,28 @@
 
 namespace Enigma::Renderer
 {
-    class RenderablePrimitiveBuilt : public Frameworks::IResponseEvent
+    class RenderablePrimitiveBuilt : public Frameworks::IEvent
     {
     public:
-        RenderablePrimitiveBuilt(const Frameworks::Ruid& request_ruid, const std::string& name, const Engine::PrimitivePtr prim)
-            : IResponseEvent(request_ruid), m_name(name), m_prim(prim) {};
+        RenderablePrimitiveBuilt(const Engine::PrimitiveId& id, const std::shared_ptr<Engine::Primitive> prim) : m_id(id), m_prim(prim) {};
 
-        const std::string& getName() { return m_name; }
-        const Engine::PrimitivePtr& getPrimitive() { return m_prim; }
+        const Engine::PrimitiveId& id() { return m_id; }
+        const std::shared_ptr<Engine::Primitive>& primitive() { return m_prim; }
 
     private:
-        std::string m_name;
-        Engine::PrimitivePtr m_prim;
+        Engine::PrimitiveId m_id;
+        std::shared_ptr<Engine::Primitive> m_prim;
     };
-    class BuildRenderablePrimitiveFailed : public Frameworks::IResponseEvent
+    class BuildRenderablePrimitiveFailed : public Frameworks::IEvent
     {
     public:
-        BuildRenderablePrimitiveFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
+        BuildRenderablePrimitiveFailed(const Engine::PrimitiveId& id, std::error_code er) : m_id(id), m_error(er) {};
 
-        const std::string& getName() { return m_name; }
-        std::error_code errorCode() const { return m_error; }
+        const Engine::PrimitiveId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
 
     private:
-        std::string m_name;
+        Engine::PrimitiveId m_id;
         std::error_code m_error;
     };
 }

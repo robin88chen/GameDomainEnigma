@@ -32,7 +32,7 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer);
+        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder(RenderablePrimitiveBuilder&&) = delete;
         ~RenderablePrimitiveBuilder() override;
@@ -43,7 +43,7 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error buildPrimitive(const Frameworks::Ruid& requester_ruid, const Engine::GenericDto& dto);
+        //error buildPrimitive(const Frameworks::Ruid& requester_ruid, const Engine::GenericDto& dto);
 
     protected:
         std::shared_ptr<Engine::Primitive> createMesh(const Engine::PrimitiveId& id);
@@ -53,7 +53,7 @@ namespace Enigma::Renderer
         std::shared_ptr<Engine::Primitive> createModel(const Engine::PrimitiveId& id);
         std::shared_ptr<Engine::Primitive> constituteModel(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
 
-        void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
+        //void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
         void buildRenderablePrimitive(const PrimitiveBuildingPlan& plan);
 
         void onPrimitiveBuilt(const Frameworks::IEventPtr& e);
@@ -64,24 +64,24 @@ namespace Enigma::Renderer
     protected:
         std::weak_ptr<Engine::PrimitiveRepository> m_primitiveRepository;
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
-        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
+        //std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
+        //std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
         std::queue<PrimitiveBuildingPlan> m_primitivePlans;
-        std::mutex m_policiesLock;
-        std::mutex m_primitiveDtosLock;
-        bool m_isCurrentBuilding;
+        //std::mutex m_policiesLock;
+        std::mutex m_primitivePlansLock;
+        //bool m_isCurrentBuilding;
         std::optional<Engine::PrimitiveId> m_currentBuildingId;
-        Frameworks::Ruid m_buildingRuid;
+        //Frameworks::Ruid m_buildingRuid;
 
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildMeshPrimitiveFailed;
-        Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
+        //Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
+        //Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
 
         Frameworks::CommandSubscriberPtr m_buildPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
-        ModelPrimitiveBuilder* m_modelBuilder;
+        //ModelPrimitiveBuilder* m_modelBuilder;
     };
 }
 

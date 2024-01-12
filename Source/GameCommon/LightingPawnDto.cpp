@@ -18,7 +18,7 @@ LightingPawnDto::LightingPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 
 LightingPawnDto LightingPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    LightingPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
+    LightingPawnDto pawn_dto{ PawnDto(dto) };
     if (auto v = dto.TryGetValue<std::string>(TOKEN_HOST_LIGHT_NAME)) pawn_dto.HostLightName() = v.value();
     return pawn_dto;
 }

@@ -22,36 +22,36 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 
-RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository, const std::shared_ptr<IDtoDeserializer>& dto_deserializer) : ISystemService(mngr), m_buildingRuid()
+RenderablePrimitiveBuilder::RenderablePrimitiveBuilder(ServiceManager* mngr, const std::shared_ptr<PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : ISystemService(mngr) //, m_buildingRuid()
 {
     m_primitiveRepository = primitive_repository;
     m_geometryRepository = geometry_repository;
-    m_dtoDeserializer = dto_deserializer;
+    //m_dtoDeserializer = dto_deserializer;
     m_needTick = false;
-    m_isCurrentBuilding = false;
+    //m_isCurrentBuilding = false;
     m_meshBuilder = nullptr;
-    m_modelBuilder = nullptr;
+    //m_modelBuilder = nullptr;
 }
 
 RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
 {
-    std::lock_guard locker{ m_policiesLock };
+    /*std::lock_guard locker{ m_policiesLock };
     while (!m_policies.empty())
     {
         m_policies.pop();
-    }
+    }*/
 }
 
 ServiceResult RenderablePrimitiveBuilder::onInit()
 {
     m_onMeshPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
-    m_onModelPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
+    //m_onModelPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
     m_onBuildMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
-    m_onBuildModelPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
+    //m_onBuildModelPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
     EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
+    //EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
     EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
+    //EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
 
     m_buildPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->buildPrimitive(c); });
     CommandBus::subscribe(typeid(BuildRenderablePrimitive), m_buildPrimitive);
@@ -67,7 +67,7 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteModel(id, dto); });
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
-    m_modelBuilder = menew ModelPrimitiveBuilder();
+    //m_modelBuilder = menew ModelPrimitiveBuilder();
 
     return ServiceResult::Complete;
 }
@@ -85,13 +85,13 @@ ServiceResult RenderablePrimitiveBuilder::onTick()
     m_policies.pop();
     m_isCurrentBuilding = true;*/
     if (m_currentBuildingId.has_value()) return ServiceResult::Pendding;
-    std::lock_guard locker{ m_primitiveDtosLock };
+    std::lock_guard locker{ m_primitivePlansLock };
     if (m_primitivePlans.empty())
     {
         m_needTick = false;
         return ServiceResult::Pendding;
     }
-    auto plan = m_primitivePlans.front();
+    const auto plan = m_primitivePlans.front();
     buildRenderablePrimitive(plan);
     m_currentBuildingId = plan.id();
     m_primitivePlans.pop();
@@ -101,16 +101,16 @@ ServiceResult RenderablePrimitiveBuilder::onTick()
 ServiceResult RenderablePrimitiveBuilder::onTerm()
 {
     SAFE_DELETE(m_meshBuilder);
-    SAFE_DELETE(m_modelBuilder);
+    //SAFE_DELETE(m_modelBuilder);
 
     EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
+    //EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
     EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
-    EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
+    //EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
     m_onMeshPrimitiveBuilt = nullptr;
-    m_onModelPrimitiveBuilt = nullptr;
+    //m_onModelPrimitiveBuilt = nullptr;
     m_onBuildMeshPrimitiveFailed = nullptr;
-    m_onBuildModelPrimitiveFailed = nullptr;
+    //m_onBuildModelPrimitiveFailed = nullptr;
 
     CommandBus::unsubscribe(typeid(BuildRenderablePrimitive), m_buildPrimitive);
     m_buildPrimitive = nullptr;
@@ -118,7 +118,7 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     return ServiceResult::Complete;
 }
 
-error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const GenericDto& dto)
+/*error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, const GenericDto& dto)
 {
     auto policy = std::dynamic_pointer_cast<RenderablePrimitivePolicy>(dto.ConvertToPolicy(m_dtoDeserializer));
     if (!policy) return ErrorCode::invalidPrimitiveDto;
@@ -126,9 +126,9 @@ error RenderablePrimitiveBuilder::buildPrimitive(const Ruid& requester_ruid, con
     m_policies.push({ requester_ruid, policy });
     m_needTick = true;
     return ErrorCode::ok;
-}
+}*/
 
-void RenderablePrimitiveBuilder::buildRenderablePrimitive(const Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy)
+/*void RenderablePrimitiveBuilder::buildRenderablePrimitive(const Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy)
 {
     assert(m_meshBuilder);
     assert(m_modelBuilder);
@@ -141,12 +141,12 @@ void RenderablePrimitiveBuilder::buildRenderablePrimitive(const Ruid& requester_
     {
         m_modelBuilder->BuildModelPrimitive(m_buildingRuid, p);
     }
-}
+}*/
 
 void RenderablePrimitiveBuilder::buildRenderablePrimitive(const PrimitiveBuildingPlan& plan)
 {
     assert(m_meshBuilder);
-    assert(m_modelBuilder);
+    //assert(m_modelBuilder);
     if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(plan.primitive()))
     {
         m_meshBuilder->constituteLazyMeshPrimitive(p, plan.dto());
@@ -166,7 +166,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteMesh(const Prim
 {
     assert(!m_geometryRepository.expired());
     auto prim = std::make_shared<MeshPrimitive>(id, dto, m_geometryRepository.lock());
-    std::lock_guard locker{ m_primitiveDtosLock };
+    std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_needTick = true;
@@ -182,7 +182,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteSkinMesh(const 
 {
     assert(!m_geometryRepository.expired());
     auto prim = std::make_shared<SkinMeshPrimitive>(id, dto, m_geometryRepository.lock());
-    std::lock_guard locker{ m_primitiveDtosLock };
+    std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_needTick = true;
@@ -206,16 +206,16 @@ void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
-        EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(m_buildingRuid, ev->name(), ev->primitive()));
+        EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(ev->id(), ev->primitive()));
         m_currentBuildingId = std::nullopt;
-        m_isCurrentBuilding = false;
+        //m_isCurrentBuilding = false;
     }
-    else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::ModelPrimitiveBuilt, IEvent>(e))
+    /*else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::ModelPrimitiveBuilt, IEvent>(e))
     {
         if (ev->getRuid() != m_buildingRuid) return;
         EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(m_buildingRuid, ev->getName(), ev->GetPrimitive()));
         m_isCurrentBuilding = false;
-    }
+    }*/
 }
 
 void RenderablePrimitiveBuilder::onBuildPrimitiveFailed(const IEventPtr& e)
@@ -227,18 +227,18 @@ void RenderablePrimitiveBuilder::onBuildPrimitiveFailed(const IEventPtr& e)
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
-        EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(m_buildingRuid, ev->name(), ev->error()));
+        EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(ev->id(), ev->error()));
         m_currentBuildingId = std::nullopt;
-        m_isCurrentBuilding = false;
+        //m_isCurrentBuilding = false;
     }
-    else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::BuildModelPrimitiveFailed, IEvent>(e))
+    /*else if (const auto ev = std::dynamic_pointer_cast<ModelPrimitiveBuilder::BuildModelPrimitiveFailed, IEvent>(e))
     {
         if (ev->getRuid() != m_buildingRuid) return;
         Platforms::Debug::ErrorPrintf("model primitive %s build failed : %s\n",
             ev->getName().c_str(), ev->GetErrorCode().message().c_str());
         EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(m_buildingRuid, ev->getName(), ev->GetErrorCode()));
         m_isCurrentBuilding = false;
-    }
+    }*/
 }
 
 void RenderablePrimitiveBuilder::buildPrimitive(const ICommandPtr& c)
@@ -246,9 +246,9 @@ void RenderablePrimitiveBuilder::buildPrimitive(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<BuildRenderablePrimitive>(c);
     if (!cmd) return;
-    error er = buildPrimitive(cmd->getRuid(), cmd->primitiveDto());
+    /*error er = buildPrimitive(cmd->getRuid(), cmd->primitiveDto());
     if (er)
     {
         EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(m_buildingRuid, cmd->primitiveDto().getName(), er));
-    }
+    }*/
 }

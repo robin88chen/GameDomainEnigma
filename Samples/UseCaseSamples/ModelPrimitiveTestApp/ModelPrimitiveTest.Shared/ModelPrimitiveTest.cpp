@@ -106,7 +106,7 @@ void ModelPrimitiveTest::installEngine()
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
-    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
+    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
@@ -284,8 +284,8 @@ void ModelPrimitiveTest::onRenderablePrimitiveBuilt(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != "test_model") return;
-    auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->getPrimitive());
+    if (ev->id() != m_modelId) return;
+    /*auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->getPrimitive());
     if (!m_isPrefabBuilt)
     {
         //ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
@@ -296,7 +296,7 @@ void ModelPrimitiveTest::onRenderablePrimitiveBuilt(const IEventPtr& e)
     else
     {
         m_model = model;
-    }
+    }*/
 }
 
 void ModelPrimitiveTest::onBuildRenderablePrimitiveFailed(const IEventPtr& e)
@@ -304,5 +304,5 @@ void ModelPrimitiveTest::onBuildRenderablePrimitiveFailed(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->getName().c_str(), ev->errorCode().message().c_str());
+    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }

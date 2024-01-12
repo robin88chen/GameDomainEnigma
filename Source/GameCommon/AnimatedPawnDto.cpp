@@ -20,7 +20,7 @@ AnimatedPawnDto::AnimatedPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 
 AnimatedPawnDto AnimatedPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    AnimatedPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
+    AnimatedPawnDto pawn_dto{ PawnDto(dto) };
     if (auto v = dto.TryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) pawn_dto.TheAnimationClipMapDto() = v.value();
     if (auto v = dto.TryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) pawn_dto.AvatarRecipeDtos() = v.value();
     return pawn_dto;

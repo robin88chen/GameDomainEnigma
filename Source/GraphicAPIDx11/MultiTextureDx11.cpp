@@ -32,7 +32,7 @@ MultiTextureDx11::~MultiTextureDx11()
     SAFE_DELETE_ARRAY(m_d3dTextureResources);
 }
 
-error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
+error MultiTextureDx11::createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs)
 {
     assert(count == buffs.size());
     if ((m_d3dTextureResources) && (m_resourceViewCount > 0))
@@ -51,14 +51,14 @@ error MultiTextureDx11::CreateFromSystemMemories(const MathLib::Dimension<unsign
     error er;
     for (unsigned i = 0; i < count; i++)
     {
-        er = CreateOneFromSystemMemory(i, dimension, buffs[i]);
+        er = createOneFromSystemMemory(i, dimension, buffs[i]);
         if (er) return er;
     }
     Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
     return er;
 }
 
-error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_buffs)
+error MultiTextureDx11::loadTextureImages(const std::vector<byte_buffer>& img_buffs)
 {
     assert(!img_buffs.empty());
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
@@ -102,7 +102,7 @@ error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_bu
             }
         }
 
-        error er = CreateFromScratchImage(i, scratchImage);
+        error er = createFromScratchImage(i, scratchImage);
         if (er) return er;
     }
 
@@ -110,7 +110,7 @@ error MultiTextureDx11::LoadTextureImages(const std::vector<byte_buffer>& img_bu
     return ErrorCode::ok;
 }
 
-error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
+error MultiTextureDx11::saveTextureImages(const std::vector<FileSystem::IFilePtr>& files)
 {
     assert(!files.empty());
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
@@ -152,7 +152,7 @@ error MultiTextureDx11::SaveTextureImages(const std::vector<FileSystem::IFilePtr
     return ErrorCode::ok;
 }
 
-error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
+error MultiTextureDx11::useAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
@@ -198,33 +198,33 @@ error MultiTextureDx11::UseAsBackSurface(const Graphics::IBackSurfacePtr& back_s
     return ErrorCode::ok;
 }
 
-ID3D11ShaderResourceView* MultiTextureDx11::GetD3DResourceView(unsigned idx) const
+ID3D11ShaderResourceView* MultiTextureDx11::getD3DResourceView(unsigned idx) const
 {
     if ((m_d3dTextureResources) && (idx < m_resourceViewCount)) return m_d3dTextureResources[idx];
     return nullptr;
 }
 
-ID3D11ShaderResourceView** MultiTextureDx11::GetD3DResourceViewArray() const
+ID3D11ShaderResourceView** MultiTextureDx11::getD3DResourceViewArray() const
 {
     return m_d3dTextureResources;
 }
 
-unsigned int MultiTextureDx11::GetResourceViewCount() const
+unsigned int MultiTextureDx11::getResourceViewCount() const
 {
     return m_resourceViewCount;
 }
 
-error MultiTextureDx11::CreateFromScratchImage(unsigned index, DirectX::ScratchImage& scratchImage)
+error MultiTextureDx11::createFromScratchImage(unsigned index, DirectX::ScratchImage& scratchImage)
 {
     byte_buffer img_buff;
     img_buff.resize(scratchImage.GetPixelsSize());
     memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
-    return CreateOneFromSystemMemory(index,
+    return createOneFromSystemMemory(index,
         MathLib::Dimension<unsigned>{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
         img_buff);
 }
 
-error MultiTextureDx11::CreateOneFromSystemMemory(unsigned index, const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
+error MultiTextureDx11::createOneFromSystemMemory(unsigned index, const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);

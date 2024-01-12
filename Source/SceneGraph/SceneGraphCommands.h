@@ -67,7 +67,7 @@ namespace Enigma::SceneGraph
         RegisterSpatialDtoFactory(const std::string& rtti, const SpatialDtoFactory& factory)
             : m_rtti(rtti), m_factory(factory) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
         const SpatialDtoFactory& GetFactory() { return m_factory; }
 
     private:
@@ -79,7 +79,7 @@ namespace Enigma::SceneGraph
     public:
         UnRegisterSpatialDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
 
     private:
         std::string m_rtti;
@@ -128,6 +128,29 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
         Engine::GenericDtoCollection m_dtos;
+    };
+    //--------------------------- Repository operations ------------------------
+    class PutSpatial : public Frameworks::ICommand
+    {
+    public:
+        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
+
+        const SpatialId& id() { return m_id; }
+        const std::shared_ptr<Spatial>& spatial() { return m_spatial; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<Spatial> m_spatial;
+    };
+    class RemoveSpatial : public Frameworks::ICommand
+    {
+    public:
+        RemoveSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
     };
 }
 

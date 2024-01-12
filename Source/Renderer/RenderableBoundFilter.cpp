@@ -14,7 +14,7 @@ RenderableBoundFilter::~RenderableBoundFilter()
 
 void RenderableBoundFilter::ComputeMergedBound(const SceneGraph::VisibleSet& visSet)
 {
-    if (visSet.GetCount() == 0) return;
+    if (visSet.getCount() == 0) return;
     for (auto spatial : visSet.GetObjectSet())
     {
         if (FilterOutSpatial(spatial)) continue;

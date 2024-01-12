@@ -21,7 +21,7 @@ LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : N
 
 LazyNode::LazyNode(const GenericDto& o) : Node(o)
 {
-    LazyNodeDto lazy_node_dto = LazyNodeDto::fromGenericDto(o);
+    LazyNodeDto lazy_node_dto{ o };
     if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
     {
         m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);

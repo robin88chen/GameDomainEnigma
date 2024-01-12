@@ -20,7 +20,7 @@ namespace Enigma::Engine
         RegisterDtoFactory(const std::string& rtti, const DtoFactory& factory)
             : m_rtti(rtti), m_factory(factory) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
         const DtoFactory& GetFactory() { return m_factory; }
 
     private:
@@ -32,7 +32,7 @@ namespace Enigma::Engine
     public:
         UnRegisterDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
 
     private:
         std::string m_rtti;
@@ -53,7 +53,7 @@ namespace Enigma::Engine
         RegisterDtoPolicyConverter(const std::string& rtti, const GenericPolicyConverter& converter)
             : m_rtti(rtti), m_converter(converter) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
         const GenericPolicyConverter& GetPolicyConverter() { return m_converter; }
 
     private:
@@ -65,7 +65,7 @@ namespace Enigma::Engine
     public:
         UnRegisterDtoPolicyConverter(const std::string& rtti) : m_rtti(rtti) {}
 
-        const std::string& GetRtti() const { return m_rtti; }
+        const std::string& getRtti() const { return m_rtti; }
 
     private:
         std::string m_rtti;

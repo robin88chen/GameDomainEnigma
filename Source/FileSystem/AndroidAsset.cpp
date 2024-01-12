@@ -36,7 +36,7 @@ AndroidAsset::~AndroidAsset()
 std::optional<std::vector<unsigned char>> AndroidAsset::read(size_t offset, size_t size_request)
 {
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
-    Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset,  std::this_thread::get_id());
+    Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset, std::this_thread::get_id());
     if (!m_aasset)
     {
         makeErrorCode(ErrorCode::nullAndroidAsset);
@@ -87,12 +87,12 @@ size_t AndroidAsset::size()
 
 bool AndroidAsset::isExisted()
 {
-    if (!AndroidBridge::GetAAssetManager()) return false;
+    if (!AndroidBridge::getAAssetManager()) return false;
     if (m_filename.length() == 0) return false;
 
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
 
-    AAsset* aasset = AAssetManager_open(AndroidBridge::GetAAssetManager(), m_filename.c_str(), AASSET_MODE_UNKNOWN);
+    AAsset* aasset = AAssetManager_open(AndroidBridge::getAAssetManager(), m_filename.c_str(), AASSET_MODE_UNKNOWN);
     if (!aasset) return false;
     AAsset_close(aasset);
     return true;
@@ -102,9 +102,9 @@ error AndroidAsset::open()
 {
     if (m_fullPath.length() == 0) return ErrorCode::emptyFilePath;
     if (!m_rwOption.any()) return ErrorCode::emptyRWOption;
-    if (!AndroidBridge::GetAAssetManager()) return ErrorCode::androidAssetManagerError;
+    if (!AndroidBridge::getAAssetManager()) return ErrorCode::androidAssetManagerError;
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
-    m_aasset = AAssetManager_open(AndroidBridge::GetAAssetManager(), m_filename.c_str(), AASSET_MODE_UNKNOWN);
+    m_aasset = AAssetManager_open(AndroidBridge::getAAssetManager(), m_filename.c_str(), AASSET_MODE_UNKNOWN);
     if (!m_aasset) return ErrorCode::fileOpenError;
     return ErrorCode::ok;
 }

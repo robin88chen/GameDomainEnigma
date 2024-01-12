@@ -9,7 +9,7 @@ extern "C"
 {
     JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
     {
-        AndroidBridge::SetJavaVM(vm);
+        AndroidBridge::setJavaVM(vm);
 
         return JNI_VERSION_1_4;
     }
@@ -26,7 +26,7 @@ extern "C"
         {
             __android_log_print(ANDROID_LOG_VERBOSE, "EnigmaAndroidBridge", "get asset  manager from java");
         }
-        AndroidBridge::SetAAssetManager(assetMgr);
+        AndroidBridge::setAAssetManager(assetMgr);
     }
 
     JNIEXPORT void JNICALL
@@ -40,7 +40,7 @@ extern "C"
         }
         std::string path_dir(native_files_dir);
         env->ReleaseStringUTFChars(files_dir, native_files_dir);
-        AndroidBridge::SetDataFilePath(path_dir);
+        AndroidBridge::setDataFilePath(path_dir);
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   EffectMaterialSource.h
  * \brief  effect material source entity
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -12,34 +12,39 @@
 #include <memory>
 #include <functional>
 #include <atomic>
+#include <list>
 
 namespace Enigma::Engine
 {
     class EffectMaterialSource : public std::enable_shared_from_this<EffectMaterialSource>
     {
     public:
-        EffectMaterialSource();
-        EffectMaterialSource(std::shared_ptr<EffectMaterial> material);
+        EffectMaterialSource(const EffectMaterialId& id);
         EffectMaterialSource(const EffectMaterialSource&) = delete;
         EffectMaterialSource(EffectMaterialSource&&) = delete;
         ~EffectMaterialSource();
         EffectMaterialSource& operator=(const EffectMaterialSource&) = delete;
         EffectMaterialSource& operator=(EffectMaterialSource&&) = delete;
 
-        const std::string& getName() const;
+        const EffectMaterialId& id() const { return m_id; };
 
-        void LinkSource();
+        void linkSourceSelf();
+        const std::shared_ptr<EffectMaterial>& self() const { return m_sourceEffectMaterial; };
 
-        EffectMaterialPtr CloneEffectMaterial();
+        std::shared_ptr<EffectMaterial> duplicateEffectMaterial();
 
-        static std::function<void(const std::shared_ptr<EffectMaterialSource>&)> OnDuplicatedEmpty;
-
-    private:
-        void DuplicatedEffectDeleter(EffectMaterial* effect);
+        void contentDuplicatedEffects();
 
     private:
-        std::shared_ptr<EffectMaterial> m_effectMaterial;
+        void duplicatedEffectDeleter(EffectMaterial* effect);
+
+    private:
+        EffectMaterialId m_id;
+        Frameworks::LazyStatus m_lazyStatus;
+        std::shared_ptr<EffectMaterial> m_sourceEffectMaterial;
+        std::list<std::weak_ptr<EffectMaterial>> m_duplicatedEffects;
         std::atomic_uint32_t m_duplicateCount;
+        std::uint32_t m_duplicatedSerial;
     };
     using EffectMaterialSourcePtr = std::shared_ptr<EffectMaterialSource>;
 }

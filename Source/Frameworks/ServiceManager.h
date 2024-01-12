@@ -52,6 +52,8 @@ namespace Enigma::Frameworks
         void runOnce();
         /// run service once if service is on state
         void runForState(ServiceState st);
+        /// run service to state
+        void runToState(ServiceState st);
 
         ServiceState checkServiceState(const Rtti& service_type);
 

@@ -7,7 +7,7 @@
 
 using namespace Enigma::Animators;
 
-error AnimatorInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error AnimatorInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->registerSystemService(std::make_shared<AnimationRepository>(service_manager));
@@ -16,7 +16,7 @@ error AnimatorInstallingPolicy::Install(Frameworks::ServiceManager* service_mana
     return ErrorCode::ok;
 }
 
-error AnimatorInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error AnimatorInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(AnimationFrameListener::TYPE_RTTI);

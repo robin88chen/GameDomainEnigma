@@ -26,7 +26,7 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
 
-    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::ModelDtoConvertToPolicy));
+    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::modelDtoConvertToPolicy));
 }
 
 ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
@@ -55,23 +55,23 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
 
     m_buildingRuid = ruid;
     m_policy = policy;
-    m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->Name());
-    for (auto& dto : m_policy->NodeTreeDto().MeshNodes())
+    m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->id());
+    for (auto& dto : m_policy->nodeTreeDto().meshNodes())
     {
         MeshNodeDto node_dto = MeshNodeDto::fromGenericDto(dto);
-        MeshNode node(node_dto.Name());
-        node.SetT_PosTransform(node_dto.LocalT_PosTransform());
-        node.setLocalTransform(node_dto.LocalT_PosTransform());
+        MeshNode node(node_dto.name());
+        node.setT_PosTransform(node_dto.localT_PosTransform());
+        node.setLocalTransform(node_dto.localT_PosTransform());
         //node.SetRootRefTransform(node_dto.RootRefTransform());
-        if (auto v = node_dto.ParentIndexInArray())
+        if (auto v = node_dto.parentIndexInArray())
         {
-            node.SetParentIndexInArray(v.value());
+            node.setParentIndexInArray(v.value());
         }
-        if (auto prim = node_dto.TheMeshPrimitive())
+        /*if (auto prim = node_dto.meshPrimitive())
         {
-            PushInnerMesh(node_dto.Name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
-        }
-        m_builtPrimitive->GetMeshNodeTree().AddMeshNode(node);
+            PushInnerMesh(node_dto.name(), std::dynamic_pointer_cast<MeshPrimitivePolicy, Engine::GenericPolicy>(prim->ConvertToPolicy(m_policy->TheDtoDeserializer())));
+        }*/
+        m_builtPrimitive->getMeshNodeTree().addMeshNode(node);
     }
     ContinueBuildInnerMesh();
 }
@@ -90,15 +90,15 @@ void ModelPrimitiveBuilder::ContinueBuildInnerMesh()
         TryBuildAnimator();
         return;
     }
-    m_meshBuilder->BuildMeshPrimitive(std::get<Ruid>(m_meshPolicies.front()),
-        std::get<std::shared_ptr<MeshPrimitivePolicy>>(m_meshPolicies.front()));
+    //m_meshBuilder->BuildMeshPrimitive(std::get<Ruid>(m_meshPolicies.front()),
+      //  std::get<std::shared_ptr<MeshPrimitivePolicy>>(m_meshPolicies.front()));
     m_meshPolicies.pop();
 }
 
 void ModelPrimitiveBuilder::TryBuildAnimator()
 {
     if (!m_policy) return;
-    if (auto ani = m_policy->TheModelAnimator())
+    if (auto ani = m_policy->modelAnimator())
     {
         m_animatorPolicy = ani->ConvertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
         CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
@@ -112,7 +112,7 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
 void ModelPrimitiveBuilder::CompleteModelPrimitive()
 {
     if (!m_policy) return;
-    EventPublisher::post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->Name(), m_builtPrimitive));
+    EventPublisher::post(std::make_shared<ModelPrimitiveBuilt>(m_buildingRuid, m_policy->name(), m_builtPrimitive));
 }
 
 void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
@@ -121,12 +121,12 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->GetPrimitive());
+    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->primitive());
     if (!mesh_prim) return;
     bool has_mesh_built = false;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->getRuid())
+        /*if (meta.m_ruidPolicy == ev->ruid())
         {
             auto index = m_builtPrimitive->GetMeshNodeTree().FindMeshNodeIndex(meta.m_nodeName);
             if (index)
@@ -138,7 +138,7 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
                 }
             }
             break;
-        }
+        }*/
     }
     if (has_mesh_built) ContinueBuildInnerMesh();
 }
@@ -151,11 +151,11 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
     if (!ev) return;
     for (auto& meta : m_meshBuildingMetas)
     {
-        if (meta.m_ruidPolicy == ev->getRuid())
+        /*if (meta.m_ruidPolicy == ev->ruid())
         {
-            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+            EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->error()));
             return;
-        }
+        }*/
     }
 }
 
@@ -167,7 +167,7 @@ void ModelPrimitiveBuilder::OnModelAnimatorBuilt(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt>(e);
     if (!ev) return;
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
-    //auto anim = ev->GetAnimator();
+    //auto anim = ev->getAnimator();
     //anim->SetControlledModel(m_builtPrimitive);
     CompleteModelPrimitive();
 }
@@ -180,5 +180,5 @@ void ModelPrimitiveBuilder::OnBuildModelAnimatorFailed(const Frameworks::IEventP
     const auto ev = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed>(e);
     if (!ev) return;
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
-    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->GetErrorCode()));
 }

@@ -82,10 +82,10 @@ bool VertexFormatCode::operator <(const VertexFormatCode& data) const
     return false;
 };
 
-VertexDescription VertexFormatCode::CalculateVertexSize()
+VertexDescription VertexFormatCode::calculateVertexSize()
 {
     VertexDescription desc;
-    desc.Initialize();
+    desc.initialize();
     int size = 0;
     int offset = 0;
     int num_elements = 0;
@@ -468,10 +468,10 @@ std::string VertexFormatCode::ToString() const
 
 VertexDescription::VertexDescription()
 {
-    Initialize();
+    initialize();
 }
 
-void VertexDescription::Initialize()
+void VertexDescription::initialize()
 {
     m_totalVertexSize = 0;
     m_numElements = 0;
@@ -502,45 +502,45 @@ void VertexDescription::Initialize()
     m_texCoordSize[7] = 0;
 }
 
-int VertexDescription::WeightOffset(unsigned weight_idx) const
+int VertexDescription::weightOffset(unsigned weight_idx) const
 {
-    if (BlendWeightCount() <= static_cast<int>(weight_idx)) return -1;
-    return WeightOffset() + static_cast<int>(weight_idx);
+    if (blendWeightCount() <= static_cast<int>(weight_idx)) return -1;
+    return weightOffset() + static_cast<int>(weight_idx);
 }
 
-int VertexDescription::DiffuseColorOffset(ColorNumeric type) const
+int VertexDescription::diffuseColorOffset(ColorNumeric type) const
 {
     if ((type == ColorNumeric::UInt) && (m_colorDimension == 1)) return m_colorOffset;
     if ((type == ColorNumeric::Float) && (m_colorDimension == 4)) return m_colorOffset;
     return -1;
 }
 
-int VertexDescription::SpecularColorOffset(ColorNumeric type) const
+int VertexDescription::specularColorOffset(ColorNumeric type) const
 {
     if ((type == ColorNumeric::UInt) && (m_specularDimension == 1)) return m_specularOffset;
     if ((type == ColorNumeric::Float) && (m_specularDimension == 4)) return m_specularOffset;
     return -1;
 }
 
-int VertexDescription::TextureCoordOffset(unsigned stage) const
+int VertexDescription::textureCoordOffset(unsigned stage) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     return m_texCoordOffset[stage];
 }
 
-int VertexDescription::TextureCoordSize(unsigned stage) const
+int VertexDescription::textureCoordSize(unsigned stage) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     return m_texCoordSize[stage];
 }
 
-int VertexDescription::TangentOffset() const
+int VertexDescription::tangentOffset() const
 {
     if ((m_tangentOffset >= 0) && (m_tangentDimension == 4)) return m_tangentOffset;
     return -1;
 }
 
-bool VertexDescription::HasTextureCoord(unsigned stage, unsigned dimension) const
+bool VertexDescription::hasTextureCoord(unsigned stage, unsigned dimension) const
 {
     assert(stage < VertexFormatCode::MAX_TEX_COORD);
     assert((dimension > 0) && (dimension <= 3));

@@ -21,8 +21,8 @@ namespace Enigma::Prefabs
         PrefabInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
             : m_dtoDeserializer(dto_deserializer) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;

@@ -11,6 +11,7 @@
 #include "GameCommon/GameCameraService.h"
 #include "GameEngine/MaterialVariableMap.h"
 #include "SceneGraph/Pawn.h"
+#include "Renderer/MeshPrimitive.h"
 
 using namespace Enigma::ShadowMap;
 using namespace Enigma::Frameworks;
@@ -39,8 +40,8 @@ ShadowMapService::~ShadowMapService()
 ServiceResult ShadowMapService::onInit()
 {
     SubscribeEvents();
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
     return ServiceResult::Complete;
 }
 
@@ -93,7 +94,7 @@ void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name
     m_rendererManager.lock()->CreateRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
-    m_renderer.lock()->SelectRendererTechnique(m_configuration->ShadowMapTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->ShadowMapTechniqueName());
 
     m_shadowMapRenderTarget = m_rendererManager.lock()->GetRenderTarget(target_name);
     m_shadowMapRenderTarget.lock()->InitBackSurface(m_configuration->ShadowMapSurfaceName(), m_configuration->ShadowMapDimension(), Graphics::GraphicFormat::FMT_R32F);
@@ -217,10 +218,10 @@ void ShadowMapService::BindShadowMapToPawn(const std::shared_ptr<Pawn>& pawn)
     if (!pawn->GetPrimitive()) return;
     if (const auto model = std::dynamic_pointer_cast<ModelPrimitive, Engine::Primitive>(pawn->GetPrimitive()))
     {
-        const auto mesh_count = model->GetMeshPrimitiveCount();
+        const auto mesh_count = model->getMeshPrimitiveCount();
         for (unsigned i = 0; i < mesh_count; i++)
         {
-            BindShadowMapToMesh(model->GetMeshPrimitive(i));
+            BindShadowMapToMesh(model->getMeshPrimitive(i));
         }
     }
     else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(pawn->GetPrimitive()))
@@ -234,15 +235,15 @@ void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
     if (!mesh) return;
     if (m_shadowMapRenderTarget.expired()) return;
 
-    mesh->BindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
+    mesh->bindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
 }
 
 void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_lightViewProjectionTransform);
+    var.assignValue(m_lightViewProjectionTransform);
 }
 
 void ShadowMapService::AssignShadowMapDimension(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_shadowMapDimensionBiasDensity);
+    var.assignValue(m_shadowMapDimensionBiasDensity);
 }

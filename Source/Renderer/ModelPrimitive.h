@@ -10,7 +10,6 @@
 
 #include "GameEngine/Primitive.h"
 #include "MeshNodeTree.h"
-#include "MeshPrimitive.h"
 #include "GameEngine/Animator.h"
 #include <string>
 #include <vector>
@@ -20,64 +19,66 @@
 
 namespace Enigma::Renderer
 {
+    using error = std::error_code;
+    class MeshPrimitive;
     class ModelPrimitive : public Engine::Primitive
     {
         DECLARE_EN_RTTI;
     public:
-        ModelPrimitive(const std::string& name);
-        ModelPrimitive(const ModelPrimitive& prim);
-        ModelPrimitive(ModelPrimitive&& prim) noexcept;
+        ModelPrimitive(const Engine::PrimitiveId& id);
+        ModelPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
+        ModelPrimitive(const ModelPrimitive& prim) = delete;
+        ModelPrimitive(ModelPrimitive&& prim) = delete;
         ~ModelPrimitive() override;
-        ModelPrimitive& operator=(const ModelPrimitive& prim);
-        ModelPrimitive& operator=(ModelPrimitive&& prim) noexcept;
+        ModelPrimitive& operator=(const ModelPrimitive& prim) = delete;
+        ModelPrimitive& operator=(ModelPrimitive&& prim) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
 
         const std::string& getName() const { return m_name; }
 
-        const MeshNodeTree& GetMeshNodeTree() const { return m_nodeTree; };
-        MeshNodeTree& GetMeshNodeTree() { return m_nodeTree; };
-        unsigned GetMeshPrimitiveCount();
+        const MeshNodeTree& getMeshNodeTree() const { return m_nodeTree; };
+        MeshNodeTree& getMeshNodeTree() { return m_nodeTree; };
+        unsigned getMeshPrimitiveCount();
 
         /** get mesh primitive
         @param cached_index index in cached mesh primitive array
         */
-        MeshPrimitivePtr GetMeshPrimitive(unsigned int cached_index);
-        MeshPrimitivePtr FindMeshPrimitive(const std::string& name);
+        std::shared_ptr<MeshPrimitive> getMeshPrimitive(unsigned int cached_index);
+        std::shared_ptr<MeshPrimitive> findMeshPrimitive(const std::string& name);
         /** get mesh node
         @param cached_index index in cached mesh primitive array
         */
-        stdext::optional_ref<MeshNode> GetCachedMeshNode(unsigned int cached_index);
+        stdext::optional_ref<MeshNode> getCachedMeshNode(unsigned int cached_index);
 
-        void UpdateMeshNodeLocalTransform(unsigned int index, const MathLib::Matrix4& mxLocal);
+        void updateMeshNodeLocalTransform(unsigned int index, const MathLib::Matrix4& mxLocal);
 
         /** insert to renderer */
-        virtual error InsertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+        virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
             const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState) override;
         /** remove from renderer */
-        virtual error RemoveFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
+        virtual error removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) override;
 
         /** calculate bounding volume */
-        virtual void CalculateBoundingVolume(bool axis_align) override;
+        virtual void calculateBoundingVolume(bool axis_align) override;
 
         /** update world transform */
-        virtual void UpdateWorldTransform(const MathLib::Matrix4& mxWorld) override;
+        virtual void updateWorldTransform(const MathLib::Matrix4& mxWorld) override;
 
-        virtual void SelectVisualTechnique(const std::string& techniqueName) override;
+        virtual void selectVisualTechnique(const std::string& techniqueName) override;
 
         /** enum animator list deep, including geometry's animator */
-        virtual void EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList) override;
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList) override;
 
     protected:
         /** sometimes we need re-cache */
-        void CacheMeshPrimitive();
+        void cacheMeshPrimitive();
 
     protected:
         std::string m_name;
         MeshNodeTree m_nodeTree;
         std::vector<unsigned int> m_meshPrimitiveIndexCache;  ///< 記錄哪個index的mesh node擁有mesh primitive
     };
-    using ModelPrimitivePtr = std::shared_ptr<ModelPrimitive>;
 }
 
 #endif // _MODEL_PRIMITIVE_H

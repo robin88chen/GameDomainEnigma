@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainDtoHelper.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -22,16 +22,16 @@ namespace Enigma::Terrain
     public:
         TerrainGeometryDtoHelper(const std::string& name);
 
-        TerrainGeometryDtoHelper& NumRows(unsigned num_rows);
-        TerrainGeometryDtoHelper& NumCols(unsigned num_cols);
-        TerrainGeometryDtoHelper& MinPosition(const MathLib::Vector3& min_position);
-        TerrainGeometryDtoHelper& MaxPosition(const MathLib::Vector3& max_position);
-        TerrainGeometryDtoHelper& MinTextureCoordinate(const MathLib::Vector2& min_texture_coordinate);
-        TerrainGeometryDtoHelper& MaxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate);
-        TerrainGeometryDtoHelper& HeightMap(const float_buffer& height_map);
+        TerrainGeometryDtoHelper& numRows(unsigned num_rows);
+        TerrainGeometryDtoHelper& numCols(unsigned num_cols);
+        TerrainGeometryDtoHelper& minPosition(const MathLib::Vector3& min_position);
+        TerrainGeometryDtoHelper& maxPosition(const MathLib::Vector3& max_position);
+        TerrainGeometryDtoHelper& minTextureCoordinate(const MathLib::Vector2& min_texture_coordinate);
+        TerrainGeometryDtoHelper& maxTextureCoordinate(const MathLib::Vector2& max_texture_coordinate);
+        TerrainGeometryDtoHelper& heightMap(const float_buffer& height_map);
 
         Engine::GenericDto toGenericDto() const;
-        TerrainGeometryDto ToDto() const;
+        TerrainGeometryDto toDto() const;
 
     private:
         TerrainGeometryDto m_dto;
@@ -43,16 +43,16 @@ namespace Enigma::Terrain
     public:
         TerrainPawnDtoHelper(const std::string& name);
 
-        TerrainPawnDtoHelper& Factory(const Engine::FactoryDesc& factory);
-        TerrainPawnDtoHelper& LocalTransform(const MathLib::Matrix4& local_transform);
-        TerrainPawnDtoHelper& WorldTransform(const MathLib::Matrix4& world_transform);
-        TerrainPawnDtoHelper& ModelBound(const Engine::BoundingVolume& model_bound);
-        TerrainPawnDtoHelper& TopLevel(bool top_level);
-        TerrainPawnDtoHelper& CullingMode(SceneGraph::Spatial::CullingMode cull_mode);
-        TerrainPawnDtoHelper& NotifyFlags(SceneGraph::Spatial::NotifyFlags notify_flags);
-        TerrainPawnDtoHelper& SpatialFlags(SceneGraph::Spatial::SpatialFlags spatial_flags);
-        TerrainPawnDtoHelper& GraphDepth(unsigned graph_depth);
-        TerrainPawnDtoHelper& TerrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto);
+        TerrainPawnDtoHelper& factory(const Engine::FactoryDesc& factory);
+        TerrainPawnDtoHelper& localTransform(const MathLib::Matrix4& local_transform);
+        TerrainPawnDtoHelper& worldTransform(const MathLib::Matrix4& world_transform);
+        TerrainPawnDtoHelper& modelBound(const Engine::BoundingVolume& model_bound);
+        TerrainPawnDtoHelper& topLevel(bool top_level);
+        TerrainPawnDtoHelper& cullingMode(SceneGraph::Spatial::CullingMode cull_mode);
+        TerrainPawnDtoHelper& notifyFlags(SceneGraph::Spatial::NotifyFlags notify_flags);
+        TerrainPawnDtoHelper& spatialFlags(SceneGraph::Spatial::SpatialFlags spatial_flags);
+        TerrainPawnDtoHelper& graphDepth(unsigned graph_depth);
+        TerrainPawnDtoHelper& terrainPrimitive(const TerrainPrimitiveDto& terrain_primitive_dto);
 
         Engine::GenericDto toGenericDto() const;
 

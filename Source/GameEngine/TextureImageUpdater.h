@@ -9,10 +9,11 @@
 #define TEXTURE_IMAGE_UPDATER_H
 
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/ExtentTypesDefine.h"
+#include "MathLib/Rect.h"
+#include "TextureId.h"
 #include <string>
 #include <system_error>
-#include "RenderBuffer.h"
-#include "MathLib/Rect.h"
 
 namespace Enigma::Engine
 {
@@ -24,68 +25,70 @@ namespace Enigma::Engine
         class TextureImageRetrieved : public Frameworks::IEvent
         {
         public:
-            TextureImageRetrieved(const std::string& name, const byte_buffer& buff) : m_name(name), m_buffer(buff) {};
-            const std::string& GetTextureName() const { return m_name; }
-            const byte_buffer& GetImageBuffer() const { return m_buffer; }
+            TextureImageRetrieved(const TextureId& id, const byte_buffer& buff) : m_id(id), m_buffer(buff) {};
+            const TextureId& id() const { return m_id; }
+            const byte_buffer& buffer() const { return m_buffer; }
 
         private:
-            std::string m_name;
+            TextureId m_id;
             byte_buffer m_buffer;
         };
         class RetrieveTextureFailed : public Frameworks::IEvent
         {
         public:
-            RetrieveTextureFailed(const std::string& name, std::error_code er) : m_name(name), m_error(er) {};
-            const std::string& GetTextureName() const { return m_name; }
-            std::error_code GetError() const { return m_error; }
+            RetrieveTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {};
+            const TextureId& id() const { return m_id; }
+            std::error_code error() const { return m_error; }
 
         private:
-            std::string m_name;
+            TextureId m_id;
             std::error_code m_error;
         };
         class TextureImageUpdated : public Frameworks::IEvent
         {
         public:
-            TextureImageUpdated(const std::string& name) : m_name(name) {};
-            const std::string& GetTextureName() const { return m_name; }
+            TextureImageUpdated(const TextureId& id) : m_id(id) {};
+            const TextureId& id() const { return m_id; }
 
         private:
-            std::string m_name;
+            TextureId m_id;
         };
         class UpdateTextureFailed : public Frameworks::IEvent
         {
         public:
-            UpdateTextureFailed(const std::string& name, std::error_code er) : m_name(name), m_error(er) {};
-            const std::string& GetTextureName() const { return m_name; }
-            std::error_code GetError() const { return m_error; }
+            UpdateTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {};
+            const TextureId& id() const { return m_id; }
+            std::error_code error() const { return m_error; }
 
         private:
-            std::string m_name;
+            TextureId m_id;
             std::error_code m_error;
         };
     public:
-        TextureImageUpdater(TextureRepository* host);
+        TextureImageUpdater();
         TextureImageUpdater(const TextureImageUpdater&) = delete;
         TextureImageUpdater(TextureImageUpdater&&) = delete;
         ~TextureImageUpdater();
         TextureImageUpdater& operator=(const TextureImageUpdater&) = delete;
         TextureImageUpdater& operator=(TextureImageUpdater&&) = delete;
 
-        void RetrieveTextureImage(const std::shared_ptr<Texture>& target_texture, const std::string& name, const MathLib::Rect& image_rect);
-        void UpdateTextureImage(const std::shared_ptr<Texture>& target_texture, const std::string& name, const MathLib::Rect& image_rect, const byte_buffer& image_buff);
+        void retrieveTextureImage(const std::shared_ptr<Texture>& target_texture, const MathLib::Rect& image_rect);
+        void updateTextureImage(const std::shared_ptr<Texture>& target_texture, const MathLib::Rect& image_rect, const byte_buffer& image_buff);
 
     private:
-        void OnResourceImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
-        void OnResourceImageUpdated(const Enigma::Frameworks::IEventPtr& e);
+        void onResourceImageRetrieved(const Enigma::Frameworks::IEventPtr& e);
+        void onRetrieveResourceImageFailed(const Enigma::Frameworks::IEventPtr& e);
+        void onResourceImageUpdated(const Enigma::Frameworks::IEventPtr& e);
+        void onUpdateResourceImageFailed(const Enigma::Frameworks::IEventPtr& e);
 
     private:
-        TextureRepository* m_hostRepository;
-
-        std::string m_targetTextureName;
+        std::shared_ptr<Texture> m_targetTexture;
         MathLib::Rect m_targetTextureRect;
 
         Enigma::Frameworks::EventSubscriberPtr m_onResourceImageRetrieved;
+        Enigma::Frameworks::EventSubscriberPtr m_onRetrieveResourceImageFailed;
         Enigma::Frameworks::EventSubscriberPtr m_onResourceImageUpdated;
+        Enigma::Frameworks::EventSubscriberPtr m_onUpdateResourceImageFailed;
     };
 }
 

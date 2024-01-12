@@ -41,7 +41,7 @@ namespace Enigma::Graphics
 
         // Buffer size
         virtual unsigned int BufferSize() { return m_bufferSize; };
-        virtual unsigned int SizeofVertex() { return m_sizeofVertex; };
+        virtual unsigned int sizeofVertex() { return m_sizeofVertex; };
 
     protected:
         virtual error UpdateBuffer(const byte_buffer& dataVertex) = 0;

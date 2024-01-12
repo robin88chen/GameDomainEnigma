@@ -55,10 +55,10 @@ void GenericDtoFactories::UnregisterFactory(const std::string& rtti)
 
 void GenericDtoFactories::InvokeFactory(const GenericDto& dto)
 {
-    auto factory = m_factories.find(dto.GetRtti().GetRttiName());
+    auto factory = m_factories.find(dto.getRtti().GetRttiName());
     if (factory == m_factories.end())
     {
-        Debug::Printf("Can't find dto factory of %s", dto.GetRtti().GetRttiName().c_str());
+        Debug::Printf("Can't find dto factory of %s", dto.getRtti().GetRttiName().c_str());
         return;
     }
     return factory->second(dto);
@@ -69,7 +69,7 @@ void GenericDtoFactories::DoRegisteringFactory(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterDtoFactory, ICommand>(c);
     if (!cmd) return;
-    RegisterFactory(cmd->GetRtti(), cmd->GetFactory());
+    RegisterFactory(cmd->getRtti(), cmd->GetFactory());
 }
 
 void GenericDtoFactories::DoUnRegisteringFactory(const ICommandPtr& c)
@@ -77,7 +77,7 @@ void GenericDtoFactories::DoUnRegisteringFactory(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<UnRegisterDtoFactory, ICommand>(c);
     if (!cmd) return;
-    UnregisterFactory(cmd->GetRtti());
+    UnregisterFactory(cmd->getRtti());
 }
 
 void GenericDtoFactories::DoInvokingDtoFactory(const ICommandPtr& c)
@@ -93,7 +93,7 @@ void GenericDtoFactories::DoRegisteringConverter(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterDtoPolicyConverter, ICommand>(c);
     if (!cmd) return;
-    GenericDto::RegisterConverter(cmd->GetRtti(), cmd->GetPolicyConverter());
+    GenericDto::RegisterConverter(cmd->getRtti(), cmd->GetPolicyConverter());
 }
 
 void GenericDtoFactories::DoUnRegisteringConverter(const ICommandPtr& c)
@@ -101,5 +101,5 @@ void GenericDtoFactories::DoUnRegisteringConverter(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<UnRegisterDtoPolicyConverter, ICommand>(c);
     if (!cmd) return;
-    GenericDto::UnregisterConverter(cmd->GetRtti());
+    GenericDto::UnregisterConverter(cmd->getRtti());
 }

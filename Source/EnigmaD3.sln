@@ -180,6 +180,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileStorage.Android", "FileStorage\FileStorage.Android\FileStorage.Android.vcxproj", "{00AA3BAF-0477-4AEF-AA41-AFB5376FDA1A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometries.Shared", "Geometries\Geometries.Shared\Geometries.Shared.vcxitems", "{8929D95B-C230-46ED-BA91-B83AFF657D7D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometries.Win32", "Geometries\Geometries.Win32\Geometries.Win32.vcxproj", "{EB730131-D924-41E1-876B-48CB31C38BA4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geometries.Android", "Geometries\Geometries.Android\Geometries.Android.vcxproj", "{8440495A-BAA0-48AF-9EEE-8C7751B430C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -834,6 +840,38 @@ Global
 		{00AA3BAF-0477-4AEF-AA41-AFB5376FDA1A}.Release|x64.Build.0 = Release|x64
 		{00AA3BAF-0477-4AEF-AA41-AFB5376FDA1A}.Release|x86.ActiveCfg = Release|x86
 		{00AA3BAF-0477-4AEF-AA41-AFB5376FDA1A}.Release|x86.Build.0 = Release|x86
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|ARM.ActiveCfg = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|ARM.Build.0 = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|ARM64.ActiveCfg = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|ARM64.Build.0 = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|x64.ActiveCfg = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|x64.Build.0 = Debug|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|x86.ActiveCfg = Debug|Win32
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Debug|x86.Build.0 = Debug|Win32
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|ARM.ActiveCfg = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|ARM.Build.0 = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|ARM64.ActiveCfg = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|ARM64.Build.0 = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|x64.ActiveCfg = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|x64.Build.0 = Release|x64
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|x86.ActiveCfg = Release|Win32
+		{EB730131-D924-41E1-876B-48CB31C38BA4}.Release|x86.Build.0 = Release|Win32
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|ARM.Build.0 = Debug|ARM
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|ARM64.Build.0 = Debug|ARM64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|x64.ActiveCfg = Debug|x64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|x64.Build.0 = Debug|x64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|x86.ActiveCfg = Debug|x86
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Debug|x86.Build.0 = Debug|x86
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|ARM.ActiveCfg = Release|ARM
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|ARM.Build.0 = Release|ARM
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|ARM64.ActiveCfg = Release|ARM64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|ARM64.Build.0 = Release|ARM64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|x64.ActiveCfg = Release|x64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|x64.Build.0 = Release|x64
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|x86.ActiveCfg = Release|x86
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -922,6 +960,9 @@ Global
 		{08A1788E-57F5-403C-8E1D-3EB5CB9987FF} = {A31C8859-9E83-476B-B9ED-47967C0AB695}
 		{71FFC43B-4E3B-4DDA-BDB5-7D81AD4DD966} = {824B8E25-5014-4014-9F5B-BFB79B7663F6}
 		{00AA3BAF-0477-4AEF-AA41-AFB5376FDA1A} = {71FFC43B-4E3B-4DDA-BDB5-7D81AD4DD966}
+		{8929D95B-C230-46ED-BA91-B83AFF657D7D} = {36913BFA-16A7-4377-BDE8-02EADC0E04D7}
+		{EB730131-D924-41E1-876B-48CB31C38BA4} = {3CB77599-D745-430D-9ECF-D57D28A53DDB}
+		{8440495A-BAA0-48AF-9EEE-8C7751B430C1} = {44313F11-79BB-4751-B323-B2EE04E2CCAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB30DE-8D69-441D-A1DA-A2C3B6962EDF}
@@ -958,7 +999,9 @@ Global
 		GameCommon\GameCommon.Shared\GameCommon.Shared.vcxitems*{7cc65fdb-2daf-4489-9228-a86903b5dee3}*SharedItemsImports = 9
 		Prefabs\Prefabs.Shared\Prefabs.Shared.vcxitems*{813176a7-4410-4758-9962-a0a54c8f3ab8}*SharedItemsImports = 4
 		Terrain\Terrain.Shared\Terrain.Shared.vcxitems*{8206cc12-f3c4-4fda-9df9-7ff430e28d23}*SharedItemsImports = 4
+		Geometries\Geometries.Shared\Geometries.Shared.vcxitems*{8440495a-baa0-48af-9eee-8c7751b430c1}*SharedItemsImports = 4
 		Renderer\Renderer.Shared\Renderer.Shared.vcxitems*{861da396-6313-4405-a530-e8dd9f16def8}*SharedItemsImports = 4
+		Geometries\Geometries.Shared\Geometries.Shared.vcxitems*{8929d95b-c230-46ed-ba91-b83aff657d7d}*SharedItemsImports = 9
 		SceneGraph\SceneGraph.Shared\SceneGraph.Shared.vcxitems*{91273323-464f-460e-975b-68ffa7040067}*SharedItemsImports = 9
 		Frameworks\Frameworks.Shared\Frameworks.Shared.vcxitems*{94b70647-bb65-4dec-a94c-a954447adf2c}*SharedItemsImports = 4
 		WorldMap\WorldMap.Shared\WorldMap.Shared.vcxitems*{94df7c5c-73be-45f8-a0af-db109670a258}*SharedItemsImports = 4
@@ -979,6 +1022,7 @@ Global
 		Controllers\Controllers.Shared\Controllers.Shared.vcxitems*{e7495913-dd0c-4473-b0ea-c49436c78086}*SharedItemsImports = 4
 		SceneGraph\SceneGraph.Shared\SceneGraph.Shared.vcxitems*{e8b1e256-4f6c-4993-b5c9-6c4095f9c3d8}*SharedItemsImports = 4
 		InputHandlers\InputHandlers.Shared\InputHandlers.Shared.vcxitems*{eb59247d-20ef-4f37-98eb-b40e5867d14c}*SharedItemsImports = 9
+		Geometries\Geometries.Shared\Geometries.Shared.vcxitems*{eb730131-d924-41e1-876b-48cb31c38ba4}*SharedItemsImports = 4
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f25fe410-0680-4285-a5e5-ecff264f9782}*SharedItemsImports = 9
 		AssetPackage\AssetPackage.Shared\AssetPackage.Shared.vcxitems*{f29934fc-4c46-4f0a-b85d-a79b282066a0}*SharedItemsImports = 4
 		Gateways\Gateways.Shared\Gateways.Shared.vcxitems*{f6fba2f2-cd51-4688-9aa9-a9d0b48de5bb}*SharedItemsImports = 4

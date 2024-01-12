@@ -13,7 +13,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "GameEngine/StandardGeometryDtoHelper.h"
+#include "Geometries/StandardGeometryDtoHelper.h"
 #include "Renderer/RenderablePrimitiveDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
@@ -138,7 +138,7 @@ void DeferredRendererService::CreateSceneRenderSystem(const std::string& rendere
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(rendererManager->GetRenderer(renderer_name));
-    m_renderer.lock()->SelectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
     m_renderer.lock()->SetRenderTarget(primaryTarget);
     if (primaryTarget->GetBackSurface() && primaryTarget->GetDepthStencilSurface())
     {
@@ -358,10 +358,10 @@ void DeferredRendererService::DoBindingGBuffer(const Frameworks::ICommandPtr& c)
     if ((!cmd->GetPawn()) || (!cmd->GetPawn()->GetPrimitive())) return;
     if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(cmd->GetPawn()->GetPrimitive()))
     {
-        const auto mesh_count = model->GetMeshPrimitiveCount();
+        const auto mesh_count = model->getMeshPrimitiveCount();
         for (unsigned i = 0; i < mesh_count; i++)
         {
-            if (auto mesh = model->GetMeshPrimitive(i))
+            if (auto mesh = model->getMeshPrimitive(i))
             {
                 BindGBufferToLightingMesh(mesh);
             }
@@ -377,18 +377,15 @@ void DeferredRendererService::CreateAmbientLightQuad(const std::shared_ptr<Scene
 {
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->AmbientEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->AmbientPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = quad_geo_name;
-    mesh_dto.GeometryName() = quad_geo_name;
-    mesh_dto.TheGeometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.geometryId() = quad_geo_name;
+    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(m_configuration->AmbientEffectName());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.meshPrimitive(mesh_dto)
@@ -406,18 +403,15 @@ void DeferredRendererService::CreateSunLightQuad(const std::shared_ptr<SceneGrap
 {
     assert(lit);
     std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
+    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
     quad_dto_helper.XYQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
         .TextureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->SunLightEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->SunLightPassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = quad_geo_name;
-    mesh_dto.GeometryName() = quad_geo_name;
-    mesh_dto.TheGeometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.geometryId() = quad_geo_name;
+    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(m_configuration->SunLightEffectName());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
     pawn_helper.meshPrimitive(mesh_dto)
@@ -435,17 +429,14 @@ void DeferredRendererService::CreatePointLightVolume(const std::shared_ptr<Scene
 {
     assert(lit);
     std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
-    SphereDtoHelper sphere_dto_helper(vol_geo_name);
+    Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
     sphere_dto_helper.Sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).BoxBound();
-    EffectMaterialDtoHelper eff_dto_helper(m_configuration->LightVolumeEffectName());
-    eff_dto_helper.FilenameAtPath(m_configuration->LightVolumePassFxFileName());
 
     MeshPrimitiveDto mesh_dto;
-    mesh_dto.Name() = vol_geo_name;
-    mesh_dto.GeometryName() = vol_geo_name;
-    mesh_dto.TheGeometry() = sphere_dto_helper.toGenericDto();
-    mesh_dto.Effects().emplace_back(eff_dto_helper.toGenericDto());
-    mesh_dto.RenderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.geometryId() = vol_geo_name;
+    mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
+    mesh_dto.effects().emplace_back(m_configuration->LightVolumeEffectName());
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
     PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");
     pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).meshPrimitive(mesh_dto)
@@ -528,7 +519,7 @@ void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGrap
     }
 }
 
-void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrimitivePtr& mesh)
+void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh)
 {
     assert(m_configuration);
     if (!mesh) return;
@@ -540,13 +531,13 @@ void DeferredRendererService::BindGBufferToLightingMesh(const Renderer::MeshPrim
         { m_configuration->GbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
         { m_configuration->GbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
         { m_configuration->GbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
-    if (mesh->GetTextureMapCount() != 0)
+    if (mesh->getTextureMapCount() != 0)
     {
-        mesh->BindSegmentTextures(textures);
+        mesh->bindSemanticTextures(textures);
     }
     else
     {
-        mesh->ChangeTextureMaps({ textures });
+        mesh->changeTextureMaps({ textures });
     }
 }
 

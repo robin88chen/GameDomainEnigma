@@ -13,15 +13,17 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::policyIncomplete: return "Policy Incomplete";
     case ErrorCode::deserializeFail: return "Deserialize fail";
     case ErrorCode::fileIOError: return "File IO error";
+    case ErrorCode::primitiveFactoryNotExists: return "Primitive factory not exists";
+    case ErrorCode::primitiveEntityAlreadyExists: return "Primitive entity already exists";
+    case ErrorCode::effectAlreadyCompiled: return "Effect already compiled";
     case ErrorCode::effectPassEnd: return "Effect pass ended";
     case ErrorCode::compilingEmptyEffectTech: return "Compiling effect has no effect technique";
     case ErrorCode::noSelectedTechnique: return "No selected effect technique";
     case ErrorCode::nullMaterial: return "Null material";
     case ErrorCode::textureSemantic: return "texture semantic error";
-    case ErrorCode::invalidArrayIndex: return "Invalid array index";
-    case ErrorCode::nullMemoryBuffer: return "Null memory buffer";
-    case ErrorCode::zeroVertexSize: return "Zero vertex size";
     case ErrorCode::targetTextureNotExists: return "Target texture not exists";
+    case ErrorCode::textureAlreadyLoaded: return "Texture already loaded";
+    case ErrorCode::textureNotReady: return "Texture not ready";
     }
     return "Unknown";
 }

@@ -54,7 +54,7 @@ error DeferredRenderer::BeginScene()
         m_gbufferTarget.lock()->Bind();
         m_gbufferTarget.lock()->Clear();
         m_gbufferTarget.lock()->BindViewPort();
-        Engine::MaterialVariableMap::UseViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
+        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
     }
     std::shared_ptr<SceneGraph::Camera> camera;
     if (!m_associatedCamera.expired())
@@ -63,7 +63,7 @@ error DeferredRenderer::BeginScene()
     }
     if (camera)
     {
-        Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
+        Engine::MaterialVariableMap::useCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
     Graphics::IGraphicAPI::instance()->BeginScene();
@@ -77,9 +77,9 @@ error DeferredRenderer::BeginScene(const MathLib::Vector3& camera_loc, const Mat
         m_gbufferTarget.lock()->Bind();
         m_gbufferTarget.lock()->Clear();
         m_gbufferTarget.lock()->BindViewPort();
-        Engine::MaterialVariableMap::UseViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
+        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
     }
-    Engine::MaterialVariableMap::UseCameraParameter(camera_loc, mxView, mxProj);
+    Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
 
     Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
@@ -101,7 +101,7 @@ error DeferredRenderer::DrawScene()
                 m_target.lock()->Clear();
                 er_bind = m_target.lock()->BindViewPort();
                 if (er_bind) return er_bind;
-                Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
+                Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
             }
 
             Graphics::IGraphicAPI::instance()->BeginScene();

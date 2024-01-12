@@ -23,8 +23,8 @@ namespace Enigma::SceneGraph
         SceneGraphInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer, const std::shared_ptr<SceneGraphStoreMapper>& store_mapper)
             : m_dtoDeserializer(dto_deserializer), m_storeMapper(store_mapper) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;

@@ -23,6 +23,7 @@ void ServiceManager::registerSystemService(const std::shared_ptr<ISystemService>
     rec.m_isRegistered = true;
     m_services.emplace_back(rec);
     m_mapServices[service->typeIndex()] = service;
+    m_minServiceState = ServiceState::PreInit;
 }
 
 void ServiceManager::unregisterSystemService(const Rtti& service_type)
@@ -216,6 +217,16 @@ void ServiceManager::runForState(ServiceState st)
             EventPublisher::post(std::make_shared<AllServiceInitialized>());
         }
         m_minServiceState = tempMinState;
+    }
+}
+
+void ServiceManager::runToState(ServiceState st)
+{
+    if (m_services.empty()) return;
+    if (m_minServiceState >= st) return;
+    while (m_minServiceState < st)
+    {
+        runOnce();
     }
 }
 

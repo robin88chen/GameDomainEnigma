@@ -11,7 +11,7 @@
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
 
-error WorldMapInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error WorldMapInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_graph = service_manager->getSystemServiceAs<SceneGraphRepository>();
@@ -21,7 +21,7 @@ error WorldMapInstallingPolicy::Install(Frameworks::ServiceManager* service_mana
     return ErrorCode::ok;
 }
 
-error WorldMapInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error WorldMapInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(WorldMap::TYPE_RTTI.getName()));

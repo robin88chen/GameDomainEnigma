@@ -3,9 +3,11 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "Platforms/PlatformLayer.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include "EffectMaterial.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
+using namespace Enigma::Geometries;
 
 RenderBuffer::RenderBuffer(const RenderBufferSignature& signature,
     const Graphics::IVertexBufferPtr& vertex_buffer, const Graphics::IIndexBufferPtr& index_buffer)
@@ -36,7 +38,7 @@ error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffe
     return ErrorCode::ok;
 }
 
-error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer, 
+error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
     const std::optional<const Graphics::IIndexBuffer::ranged_buffer>& idxBuffer)
 {
     assert(m_vertexBuffer);
@@ -51,7 +53,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     return ErrorCode::ok;
 }
 
-error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
+error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     const GeometrySegment& segment)
 {
     //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
@@ -66,7 +68,7 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         Graphics::IGraphicAPI::instance()->Bind(m_indexBuffer);
     }
 
-    effectMaterial->ApplyFirstPass();
+    effectMaterial->applyFirstPass();
     if (m_indexBuffer)
     {
         Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
@@ -77,9 +79,9 @@ error RenderBuffer::Draw(const EffectMaterialPtr& effectMaterial,
         Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
     }
     // if multi-pass effect
-    while (effectMaterial->HasNextPass())
+    while (effectMaterial->hasNextPass())
     {
-        effectMaterial->ApplyNextPass();
+        effectMaterial->applyNextPass();
         if (m_indexBuffer)
         {
             Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,

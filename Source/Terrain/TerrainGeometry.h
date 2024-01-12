@@ -8,17 +8,17 @@
 #ifndef TERRAIN_GEOMETRY_H
 #define TERRAIN_GEOMETRY_H
 
-#include "GameEngine/TriangleList.h"
+#include "Geometries/TriangleList.h"
 #include "MathLib/AlgebraBasicTypes.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainGeometry : public Engine::TriangleList
+    class TerrainGeometry : public Geometries::TriangleList
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainGeometry(const std::string& name);
-        TerrainGeometry(const Engine::GenericDto& o);
+        TerrainGeometry(const Geometries::GeometryId& id);
+        TerrainGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& o);
         virtual ~TerrainGeometry() override;
         TerrainGeometry(const TerrainGeometry&) = delete;
         TerrainGeometry& operator=(const TerrainGeometry&) = delete;
@@ -27,24 +27,24 @@ namespace Enigma::Terrain
 
         virtual Engine::GenericDto serializeDto() const override;
 
-        void UpdateHeightMapToVertexMemory();
-        void RangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);
-        void UpdateVertexNormals();
-        void RangedUpdateVertexNormals(unsigned offset, unsigned count);
+        void updateHeightMapToVertexMemory();
+        void rangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);
+        void updateVertexNormals();
+        void rangedUpdateVertexNormals(unsigned offset, unsigned count);
 
-        MathLib::Dimension<float> GetCellDimension() const;
-        unsigned GetNumRows() const { return m_numRows; }
-        unsigned GetNumCols() const { return m_numCols; }
-        const MathLib::Vector3& GetMinPosition() const { return m_minPosition; }
-        const MathLib::Vector3& GetMaxPosition() const { return m_maxPosition; }
-        const float_buffer& GetHeightMap() const { return m_heightMap; }
-        float GetHeight(unsigned x, unsigned z) const;
-        void ChangeHeight(unsigned x, unsigned z, float new_height);
+        MathLib::Dimension<float> getCellDimension() const;
+        unsigned getNumRows() const { return m_numRows; }
+        unsigned getNumCols() const { return m_numCols; }
+        const MathLib::Vector3& getMinPosition() const { return m_minPosition; }
+        const MathLib::Vector3& getMaxPosition() const { return m_maxPosition; }
+        const float_buffer& getHeightMap() const { return m_heightMap; }
+        float getHeight(unsigned x, unsigned z) const;
+        void changeHeight(unsigned x, unsigned z, float new_height);
 
-        unsigned ConvertVertexIndex(unsigned x, unsigned z) const;
-        std::tuple<unsigned, unsigned> RevertVertexIndex(unsigned index) const;
+        unsigned convertVertexIndex(unsigned x, unsigned z) const;
+        std::tuple<unsigned, unsigned> revertVertexIndex(unsigned index) const;
 
-        std::tuple<unsigned, unsigned> LocateCell(const MathLib::Vector3& position) const;
+        std::tuple<unsigned, unsigned> locateCell(const MathLib::Vector3& position) const;
 
     protected:
         unsigned m_numRows;

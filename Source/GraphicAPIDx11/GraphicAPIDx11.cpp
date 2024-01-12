@@ -395,7 +395,7 @@ error GraphicAPIDx11::CreateDepthStencilState(const std::string& name, const Gra
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
+error GraphicAPIDx11::createTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureDx11{ tex_name } };
@@ -405,7 +405,7 @@ error GraphicAPIDx11::CreateTexture(const std::string& tex_name)
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::CreateMultiTexture(const std::string& tex_name)
+error GraphicAPIDx11::createMultiTexture(const std::string& tex_name)
 {
     Platforms::Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureDx11{ tex_name } };
@@ -501,7 +501,7 @@ error GraphicAPIDx11::BindVertexBuffer(const Graphics::IVertexBufferPtr& buffer,
     if (FATAL_LOG_EXPR(!buffDx11->GetD3DBuffer())) return ErrorCode::nullVertexBuffer;
     ID3D11Buffer* d3dBuffer = buffDx11->GetD3DBuffer();
     unsigned int offset = 0;
-    unsigned int sizeVertex = buffer->SizeofVertex();
+    unsigned int sizeVertex = buffer->sizeofVertex();
     m_d3dDeviceContext->IASetVertexBuffers(0, 1, &d3dBuffer, &sizeVertex, &offset);
     m_d3dDeviceContext->IASetPrimitiveTopology(ConvertTopologyD3D11(pt));
     m_boundVertexBuffer = buffer;

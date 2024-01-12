@@ -20,36 +20,36 @@ namespace  Enigma::Application
     class ApplicationBridge
     {
     public:
-        static void InitInputHandler(const std::shared_ptr<InputHandlers::InputHandlerService>& input_handler);
+        static void initInputHandler(const std::shared_ptr<InputHandlers::InputHandlerService>& input_handler);
         /// on Bridge Activity Create Callback, 先呼叫 m_onBridgeCreate, 再 m_initializeGraphicDevice, 再 m_afterDeviceCreated
-        static void OnBridgeCreate();
+        static void onBridgeCreate();
         /// on Bridge Activity Destroy Callback, 先呼叫 m_beforeDeviceCleaning, 再 m_finalizeGraphicDevice, 再 m_onBridgeDestroy
-        static void OnBridgeDestroy();
+        static void onBridgeDestroy();
         /// on Bridge Surface Create Callback, 設定 API後, 呼叫 m_onRendererSurfaceCreate
-        static void OnRendererSurfaceCreate(int width, int height, int* attribs);
+        static void onRendererSurfaceCreate(int width, int height, int* attribs);
         /// on Bridge Surface Size Changed, 設定 API後, 呼叫 m_onRendererSurfaceSizeChanged
-        static void OnRendererSurfaceSizeChanged(int width, int height);
+        static void onRendererSurfaceSizeChanged(int width, int height);
         /// on Renderer Draw Frame, 呼叫 m_onFrameUpdate, 再 m_onDrawFrame
-        static void OnRendererDrawFrame();
+        static void onRendererDrawFrame();
 
-        static void OnGestureLongPress(float x, float y);
-        static void OnGestureShowPress(float x, float y);
-        static void OnGestureDoubleTap(float x, float y);
-        static void OnGestureSingleTap(float x, float y);
-        static void OnGestureScroll(float startX, float startY, float currentX, float currentY,
+        static void onGestureLongPress(float x, float y);
+        static void onGestureShowPress(float x, float y);
+        static void onGestureDoubleTap(float x, float y);
+        static void onGestureSingleTap(float x, float y);
+        static void onGestureScroll(float startX, float startY, float currentX, float currentY,
             float deltaX, float deltaY);
-        static void OnGestureFling(float startX, float startY, float currentX, float currentY,
+        static void onGestureFling(float startX, float startY, float currentX, float currentY,
             float velocityX, float velocityY);
-        static void OnGestureScale(float factor, float focusX, float focusY);
-        static void OnGestureScaleBegin(float spanX, float spanY, float focusX, float focusY);
-        static void OnGestureScaleEnd(float spanX, float spanY, float focusX, float focusY);
-        static void OnGestureShove(float focusX, float focusY, float deltaX, float deltaY);
-        static void OnGestureShoveBegin(float focusX, float focusY);
-        static void OnGestureShoveEnd(float focusX, float focusY);
+        static void onGestureScale(float factor, float focusX, float focusY);
+        static void onGestureScaleBegin(float spanX, float spanY, float focusX, float focusY);
+        static void onGestureScaleEnd(float spanX, float spanY, float focusX, float focusY);
+        static void onGestureShove(float focusX, float focusY, float deltaX, float deltaY);
+        static void onGestureShoveBegin(float focusX, float focusY);
+        static void onGestureShoveEnd(float focusX, float focusY);
 
-        static void OnTextEditingBegin(int index);
-        static void OnTextEditingChanged(int index, const std::string& text);
-        static void OnTextEditingEnd(int index, const std::string& text);
+        static void onTextEditingBegin(int index);
+        static void onTextEditingChanged(int index, const std::string& text);
+        static void onTextEditingEnd(int index, const std::string& text);
 
     public:
         /** @name call back functors

@@ -92,7 +92,7 @@ Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>
         m_remainFadingTime -= elapse_time;
     }
 
-    const auto res = TimeValueUpdate();
+    const auto res = updateTimeValue();
 
     if (static_cast<bool>(next_to_stop))
     {
@@ -104,28 +104,28 @@ Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>
 void ModelPrimitiveAnimator::reset()
 {
     m_currentAnimClip.reset();
-    TimeValueUpdate();
+    updateTimeValue();
 }
 
-void ModelPrimitiveAnimator::SetControlledModel(const std::shared_ptr<ModelPrimitive>& model)
+void ModelPrimitiveAnimator::setControlledModel(const std::shared_ptr<ModelPrimitive>& model)
 {
     m_controlledPrimitive = model;
-    if (model) model->AttachAnimator(shared_from_this());
+    if (model) model->attachAnimator(shared_from_this());
 }
 
-std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::GetControlledModel() const
+std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::getControlledModel() const
 {
     if (m_controlledPrimitive.expired()) return nullptr;
     return m_controlledPrimitive.lock();
 }
 
-void ModelPrimitiveAnimator::LinkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset)
+void ModelPrimitiveAnimator::linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset)
 {
     m_animationAsset = anim_asset;
-    CalculateMeshNodeMapping();
+    calculateMeshNodeMapping();
 }
 
-void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
+void ModelPrimitiveAnimator::calculateMeshNodeMapping()
 {
     unsigned mesh_count = 0;
     if (m_controlledPrimitive.expired())
@@ -133,12 +133,12 @@ void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
         m_meshNodeMapping.clear();
         return;
     }
-    ModelPrimitivePtr model = m_controlledPrimitive.lock();
+    std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
     assert(model);
-    assert(model->GetMeshNodeTree().GetMeshNodeCount() > 0);
-    if (mesh_count < model->GetMeshNodeTree().GetMeshNodeCount())
+    assert(model->getMeshNodeTree().getMeshNodeCount() > 0);
+    if (mesh_count < model->getMeshNodeTree().getMeshNodeCount())
     {
-        mesh_count = model->GetMeshNodeTree().GetMeshNodeCount();
+        mesh_count = model->getMeshNodeTree().getMeshNodeCount();
     }
 
     if (mesh_count == 0)
@@ -151,64 +151,64 @@ void ModelPrimitiveAnimator::CalculateMeshNodeMapping()
     for (unsigned int m = 0; m < mesh_count; m++)
     {
         m_meshNodeMapping[m].m_nodeIndexInModel = m;
-        auto mesh_node = model->GetMeshNodeTree().GetMeshNode(m);
+        auto mesh_node = model->getMeshNodeTree().getMeshNode(m);
         if ((m_animationAsset) && (mesh_node))
         {
             m_meshNodeMapping[m].m_nodeIndexInAnimation =
-                m_animationAsset->FindMeshNodeIndex(mesh_node.value().get().getName());
+                m_animationAsset->findMeshNodeIndex(mesh_node.value().get().getName());
         }
     }
 }
 
-void ModelPrimitiveAnimator::LinkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
+void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
     const std::vector<std::string>& boneNodeNames)
 {
     SkinAnimationOperator skin_oper = SkinAnimationOperator();
-    skin_oper.LinkSkinMeshPrimitive(skin_prim, boneNodeNames);
+    skin_oper.linkSkinMeshPrimitive(skin_prim, boneNodeNames);
     if (!m_controlledPrimitive.expired())
     {
-        ModelPrimitivePtr model = m_controlledPrimitive.lock();
-        skin_oper.CalculateNodeOffsetMatrix(model, skin_prim->GetOwnerRootRefTransform());
+        std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
+        skin_oper.calculateNodeOffsetMatrix(model, skin_prim->getOwnerRootRefTransform());
     }
     m_skinAnimOperators.emplace_back(skin_oper);
 }
 
-void ModelPrimitiveAnimator::LinkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
+void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
     const std::vector<std::string>& boneNodeNames, const std::vector<MathLib::Matrix4>& boneNodeOffsets)
 {
     SkinAnimationOperator skin_oper = SkinAnimationOperator();
-    skin_oper.LinkSkinMeshPrimitive(skin_prim, boneNodeNames);
+    skin_oper.linkSkinMeshPrimitive(skin_prim, boneNodeNames);
     if (!m_controlledPrimitive.expired())
     {
-        ModelPrimitivePtr model = m_controlledPrimitive.lock();
-        skin_oper.LinkNodeOffsetMatrix(model, boneNodeOffsets);
+        std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
+        skin_oper.linkNodeOffsetMatrix(model, boneNodeOffsets);
     }
     m_skinAnimOperators.emplace_back(skin_oper);
 }
 
-const SkinAnimationOperator& ModelPrimitiveAnimator::GetSkinAnimOperator(unsigned index)
+const SkinAnimationOperator& ModelPrimitiveAnimator::getSkinAnimOperator(unsigned index)
 {
     assert(index < m_skinAnimOperators.size());
     return m_skinAnimOperators[index];
 }
 
-void ModelPrimitiveAnimator::PlayAnimation(const AnimationClip& clip)
+void ModelPrimitiveAnimator::playAnimation(const AnimationClip& clip)
 {
     m_currentAnimClip = clip;
     m_isOnPlay = true;
 }
 
-void ModelPrimitiveAnimator::FadeInAnimation(float fading_time, const AnimationClip& clip)
+void ModelPrimitiveAnimator::fadeInAnimation(float fading_time, const AnimationClip& clip)
 {
     if (!m_isOnPlay)
     {
-        PlayAnimation(clip);
+        playAnimation(clip);
     }
     else
     {
-        if (m_currentAnimClip.RemainLoopTime() < fading_time)  // 剩下的時間不夠做 fading
+        if (m_currentAnimClip.remainLoopTime() < fading_time)  // 剩下的時間不夠做 fading
         {
-            fading_time = m_currentAnimClip.RemainLoopTime();
+            fading_time = m_currentAnimClip.remainLoopTime();
         }
         m_fadeInAnimClip = clip;
         m_fadingTime = fading_time;
@@ -217,72 +217,72 @@ void ModelPrimitiveAnimator::FadeInAnimation(float fading_time, const AnimationC
     }
 }
 
-void ModelPrimitiveAnimator::StopAnimation()
+void ModelPrimitiveAnimator::stopAnimation()
 {
     m_isOnPlay = false;
 }
 
-bool ModelPrimitiveAnimator::TimeValueUpdate()
+bool ModelPrimitiveAnimator::updateTimeValue()
 {
     if (m_isFading)
     {
-        const bool hasUpdate = UpdateMeshNodeTransformWithFading();
+        const bool hasUpdate = updateMeshNodeTransformWithFading();
         if (!hasUpdate) return false;
     }
     else
     {  // none fading animation
-        const bool hasUpdate = UpdateMeshNodeTransform();
+        const bool hasUpdate = updateMeshNodeTransform();
         if (!hasUpdate) return false;
     }
     if (m_controlledPrimitive.expired()) return false;
-    ModelPrimitivePtr model = m_controlledPrimitive.lock();
+    std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
     if (!model) return false;
     if (m_skinAnimOperators.size() == 1)
     {
-        m_skinAnimOperators[0].UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
+        m_skinAnimOperators[0].updateSkinMeshBoneMatrix(model->getMeshNodeTree());
     }
     else
     {
         for (auto& op : m_skinAnimOperators)
         {
-            op.UpdateSkinMeshBoneMatrix(model->GetMeshNodeTree());
+            op.updateSkinMeshBoneMatrix(model->getMeshNodeTree());
         }
     }
 
     return true;
 }
 
-bool ModelPrimitiveAnimator::UpdateMeshNodeTransformWithFading()
+bool ModelPrimitiveAnimator::updateMeshNodeTransformWithFading()
 {
     if (m_meshNodeMapping.empty()) return false;
     if (m_controlledPrimitive.expired()) return false;
-    const ModelPrimitivePtr model = m_controlledPrimitive.lock();
+    const std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
     if (!model) return false;
-    if (model->GetMeshNodeTree().GetMeshNodeCount() == 0) return false;
+    if (model->getMeshNodeTree().getMeshNodeCount() == 0) return false;
     if (!m_animationAsset) return false;
 
-    const float current_time_value = m_currentAnimClip.CurrentTimeValue();
+    const float current_time_value = m_currentAnimClip.currentTimeValue();
     float fading_weight = m_remainFadingTime / m_fadingTime;
     if (m_remainFadingTime <= 0.0f) fading_weight = 0.0f;
 
-    float fadein_time_value = m_fadeInAnimClip.CurrentTimeValue();
-    const unsigned mesh_count = model->GetMeshNodeTree().GetMeshNodeCount();
+    float fadein_time_value = m_fadeInAnimClip.currentTimeValue();
+    const unsigned mesh_count = model->getMeshNodeTree().getMeshNodeCount();
     for (unsigned m = 0; m < mesh_count; m++)
     {
         auto mesh_index = m_meshNodeMapping[m].m_nodeIndexInModel;
         if (!mesh_index) continue;
-        auto mesh_node = model->GetMeshNodeTree().GetMeshNode(mesh_index.value());
+        auto mesh_node = model->getMeshNodeTree().getMeshNode(mesh_index.value());
         if (!mesh_node) continue;
         if (auto ani_index = m_meshNodeMapping[m].m_nodeIndexInAnimation)
         {
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(),
-                m_animationAsset->CalculateFadedTransformMatrix
+            model->updateMeshNodeLocalTransform(mesh_index.value(),
+                m_animationAsset->calculateFadedTransformMatrix
                 (ani_index.value(), current_time_value, fadein_time_value, fading_weight));
         }
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
+            model->updateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
 
@@ -294,32 +294,32 @@ bool ModelPrimitiveAnimator::UpdateMeshNodeTransformWithFading()
     return true;
 }
 
-bool ModelPrimitiveAnimator::UpdateMeshNodeTransform()
+bool ModelPrimitiveAnimator::updateMeshNodeTransform()
 {
     if (m_meshNodeMapping.empty()) return false;
     if (m_controlledPrimitive.expired()) return false;
-    const ModelPrimitivePtr model = m_controlledPrimitive.lock();
+    const std::shared_ptr<ModelPrimitive> model = m_controlledPrimitive.lock();
     if (!model) return false;
-    if (model->GetMeshNodeTree().GetMeshNodeCount() == 0) return false;
+    if (model->getMeshNodeTree().getMeshNodeCount() == 0) return false;
     if (!m_animationAsset) return false;
 
-    const float current_time_value = m_currentAnimClip.CurrentTimeValue();
-    const unsigned mesh_count = model->GetMeshNodeTree().GetMeshNodeCount();
+    const float current_time_value = m_currentAnimClip.currentTimeValue();
+    const unsigned mesh_count = model->getMeshNodeTree().getMeshNodeCount();
     for (unsigned m = 0; m < mesh_count; m++)
     {
         auto mesh_index = m_meshNodeMapping[m].m_nodeIndexInModel;
         if (!mesh_index) continue;
-        auto mesh_node = model->GetMeshNodeTree().GetMeshNode(mesh_index.value());
+        auto mesh_node = model->getMeshNodeTree().getMeshNode(mesh_index.value());
         if (!mesh_node) continue;
         if (auto ani_index = m_meshNodeMapping[m].m_nodeIndexInAnimation)
         {
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(),
-                m_animationAsset->CalculateTransformMatrix(ani_index.value(), current_time_value));
+            model->updateMeshNodeLocalTransform(mesh_index.value(),
+                m_animationAsset->calculateTransformMatrix(ani_index.value(), current_time_value));
         }
         else
         {
             // 沒有這個node 的 animation, 用 mesh node 的原始local transform 更新
-            model->UpdateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
+            model->updateMeshNodeLocalTransform(mesh_index.value(), mesh_node.value().get().getLocalTransform());
         }
     }
     return true;

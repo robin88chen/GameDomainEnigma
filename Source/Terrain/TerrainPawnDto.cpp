@@ -16,7 +16,7 @@ TerrainPawnDto::TerrainPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 
 TerrainPawnDto TerrainPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPawnDto pawn_dto(PawnDto::fromGenericDto(dto));
+    TerrainPawnDto pawn_dto{ PawnDto(dto) };
     return pawn_dto;
 }
 

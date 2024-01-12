@@ -321,6 +321,48 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         std::error_code m_err;
     };
+    //---------------- repository operation ----------------
+    class SpatialPut : public Frameworks::IEvent
+    {
+    public:
+        SpatialPut(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+    protected:
+        SpatialId m_id;
+    };
+    class PutSpatialFailed : public Frameworks::IEvent
+    {
+    public:
+        PutSpatialFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class SpatialRemoved : public Frameworks::IEvent
+    {
+    public:
+        SpatialRemoved(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class RemoveSpatialFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveSpatialFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
 }
 
 

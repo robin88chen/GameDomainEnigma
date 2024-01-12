@@ -18,8 +18,8 @@ namespace Enigma::SceneGraph
         PawnPolicy(const std::string& name, const std::string& deserialize_param,
             const std::shared_ptr<Engine::IDtoDeserializer>& deserializer) : m_name(name), m_parameter(deserialize_param), m_deserializer(deserializer) {}
 
-        [[nodiscard]] const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        std::string& name() { return m_name; }
 
         [[nodiscard]] const std::optional<Engine::GenericDto>& GetDto() const { return m_dto; }
 

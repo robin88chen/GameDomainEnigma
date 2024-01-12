@@ -33,11 +33,11 @@ CascadeShadowMapService::~CascadeShadowMapService()
 ServiceResult CascadeShadowMapService::onInit()
 {
     SubscribeEvents();
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransforms);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->CascadeDistanceSemantic(), AssignCascadeDistances);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->CascadeTextureCoordTransformSemantic(), AssignCascadeTextureCoordTransforms);
-    Engine::MaterialVariableMap::InsertAutoVariableFunctionToMap(m_configuration->CascadeSliceCountSemantic(), AssignSliceCount);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransforms);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeDistanceSemantic(), AssignCascadeDistances);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeTextureCoordTransformSemantic(), AssignCascadeTextureCoordTransforms);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeSliceCountSemantic(), AssignSliceCount);
     return ServiceResult::Complete;
 }
 
@@ -86,7 +86,7 @@ void CascadeShadowMapService::CreateShadowRenderSystem(const std::string& render
     m_rendererManager.lock()->CreateRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
-    m_renderer.lock()->SelectRendererTechnique(m_configuration->ShadowMapTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->ShadowMapTechniqueName());
     auto rendererCSM = std::dynamic_pointer_cast<CascadeShadowMapRenderer, Renderer::Renderer>(m_renderer.lock());
     rendererCSM->SetRenderTargetViewPorts(viewPorts);
 
@@ -155,22 +155,22 @@ void CascadeShadowMapService::UpdateSunLightDirection(const MathLib::Vector3& di
 
 void CascadeShadowMapService::AssignLightViewProjectionTransforms(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_cascadeLightViewProjections, static_cast<unsigned>(m_cascadeLightViewProjections.size()));
+    var.assignValues(m_cascadeLightViewProjections, static_cast<unsigned>(m_cascadeLightViewProjections.size()));
 }
 
 void CascadeShadowMapService::AssignCascadeDistances(Engine::EffectVariable& var)
 {
-    var.AssignValue(m_cascadeDistances);
+    var.assignValue(m_cascadeDistances);
 }
 
 void CascadeShadowMapService::AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var)
 {
-    var.AssignValues(m_cascadeTextureCoordTransforms, static_cast<unsigned>(m_cascadeTextureCoordTransforms.size()));
+    var.assignValues(m_cascadeTextureCoordTransforms, static_cast<unsigned>(m_cascadeTextureCoordTransforms.size()));
 }
 
 void CascadeShadowMapService::AssignSliceCount(Engine::EffectVariable& var)
 {
-    var.AssignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
+    var.assignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
 }
 
 void CascadeShadowMapService::AssignSliceDimension(Engine::EffectVariable& var)

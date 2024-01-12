@@ -113,7 +113,7 @@ std::shared_ptr<WorldMap> WorldMapService::deserializeWorldMap(const std::string
     return std::make_shared<WorldMap>(m_sceneGraphRepository.lock(), graph[0]);
     //WorldMapDto dto = WorldMapDto::fromGenericDto(graph[0]);
     //PortalZoneNodeDto portal_zone_dto = PortalZoneNodeDto::fromGenericDto(dto.portalRoot());
-    //auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.Name(), portal_zone_dto.factoryDesc()));
+    //auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(portal_zone_dto.name(), portal_zone_dto.factoryDesc()));
     //if (portal_management_node) portal_management_node->attachOutsideZone(root_node);
     //const auto world = std::make_shared<WorldMap>(name, dto.factoryDesc(), root_node);
     //return world;

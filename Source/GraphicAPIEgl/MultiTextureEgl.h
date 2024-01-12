@@ -27,18 +27,20 @@ namespace Enigma::Devices
         MultiTextureEgl& operator=(const MultiTextureEgl&) = delete;
         MultiTextureEgl& operator=(MultiTextureEgl&&) = delete;
 
-        virtual error UseAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
+        virtual error useAsBackSurface(const Graphics::IBackSurfacePtr& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
 
-        GLuint GetTextureHandle(unsigned int idx) const;
-        const std::vector<GLuint>& GetTextureHandlesArray() const;
-        unsigned int GetTextureHandleCount() const { return (unsigned int)m_textures.size(); }
+        virtual unsigned surfaceCount() override { return (unsigned)m_textures.size(); }
+
+        GLuint getTextureHandle(unsigned int idx) const;
+        const std::vector<GLuint>& getTextureHandlesArray() const;
+        unsigned int getTextureHandleCount() const { return (unsigned int)m_textures.size(); }
 
     protected:
-        virtual error LoadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
-        virtual error SaveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
+        virtual error loadTextureImages(const std::vector<byte_buffer>& img_buffs) override;
+        virtual error saveTextureImages(const std::vector<FileSystem::IFilePtr>& files) override;
 
-        virtual error CreateFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
-        error CreateOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
+        virtual error createFromSystemMemories(const MathLib::Dimension<unsigned>& dimension, unsigned count, const std::vector<byte_buffer>& buffs) override;
+        error createOneFromSystemMemory(unsigned int index, const MathLib::Dimension<unsigned>& dimension,
             const byte_buffer& buff);
     protected:
         std::vector<GLuint> m_textures;

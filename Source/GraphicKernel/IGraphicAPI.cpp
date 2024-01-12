@@ -116,12 +116,12 @@ void IGraphicAPI::SubscribeHandlers()
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDepthStencilState(c); });
     Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
 
-    m_doCreatingTexture =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
-    m_doCreatingMultiTexture =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
+    m_createTexture =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->createTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(CreateDeviceTexture), m_createTexture);
+    m_createMultiTexture =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->createMultiTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(CreateDeviceMultiTexture), m_createMultiTexture);
 
     m_doBindingBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBindingBackSurface(c); });
@@ -199,10 +199,10 @@ void IGraphicAPI::UnsubscribeHandlers()
     Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDepthStencilState), m_doCreatingDepthStencilState);
     m_doCreatingDepthStencilState = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateTexture), m_doCreatingTexture);
-    m_doCreatingTexture = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateMultiTexture), m_doCreatingMultiTexture);
-    m_doCreatingMultiTexture = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(CreateDeviceTexture), m_createTexture);
+    m_createTexture = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(CreateDeviceMultiTexture), m_createMultiTexture);
+    m_createMultiTexture = nullptr;
 
     Frameworks::CommandBus::unsubscribe(typeid(Graphics::BindBackSurface), m_doBindingBackSurface);
     m_doBindingBackSurface = nullptr;
@@ -654,33 +654,33 @@ void IGraphicAPI::DoCreatingDepthStencilState(const Frameworks::ICommandPtr& c)
     }
 }
 
-void IGraphicAPI::DoCreatingTexture(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::createTexture(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Graphics::CreateTexture, Frameworks::ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<CreateDeviceTexture, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateTexture(cmd->getName());
+        asyncCreateTexture(cmd->name());
     }
     else
     {
-        CreateTexture(cmd->getName());
+        createTexture(cmd->name());
     }
 }
 
-void IGraphicAPI::DoCreatingMultiTexture(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::createMultiTexture(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Graphics::CreateMultiTexture, Frameworks::ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<CreateDeviceMultiTexture, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateMultiTexture(cmd->getName());
+        asyncCreateMultiTexture(cmd->name());
     }
     else
     {
-        CreateMultiTexture(cmd->getName());
+        createMultiTexture(cmd->name());
     }
 }
 
@@ -868,14 +868,14 @@ future_error IGraphicAPI::AsyncCreateDepthStencilState(const std::string& name, 
     return m_workerThread->PushTask([=]() -> error { return this->CreateDepthStencilState(name, data); });
 }
 
-future_error IGraphicAPI::AsyncCreateTexture(const std::string& tex_name)
+future_error IGraphicAPI::asyncCreateTexture(const std::string& tex_name)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateTexture(tex_name); });
+    return m_workerThread->PushTask([=]() -> error { return this->createTexture(tex_name); });
 }
 
-future_error IGraphicAPI::AsyncCreateMultiTexture(const std::string& tex_name)
+future_error IGraphicAPI::asyncCreateMultiTexture(const std::string& tex_name)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateMultiTexture(tex_name); });
+    return m_workerThread->PushTask([=]() -> error { return this->createMultiTexture(tex_name); });
 }
 
 future_error IGraphicAPI::AsyncBindVertexBuffer(const IVertexBufferPtr& buffer, PrimitiveTopology pt)

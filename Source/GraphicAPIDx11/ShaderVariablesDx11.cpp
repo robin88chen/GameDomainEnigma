@@ -15,7 +15,7 @@ using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
 ShaderVariableDx11_Resource::ShaderVariableDx11_Resource(IShaderVariable::VarOwner var_of,
-    const std::string& name, const std::string& semantic,unsigned int bindPoint, unsigned int bindCount)
+    const std::string& name, const std::string& semantic, unsigned int bindPoint, unsigned int bindCount)
     : IShaderVariable(name, semantic)
 {
     m_varOf = var_of;
@@ -611,24 +611,24 @@ error ShaderVariableDx11_Texture::ApplyTexture(const Graphics::ITexturePtr& tex,
     assert(deviceContext);
 
     ID3D11ShaderResourceView* resource[1] = { nullptr /*m_texture->GetD3DResourceView() */ };
-    if ((tex) && (!tex->IsMultiTexture()))
+    if ((tex) && (!tex->isMultiTexture()))
     {
         TextureDx11* texDx11 = dynamic_cast<TextureDx11*>(tex.get());
         if (texDx11)
         {
-            resource[0] = texDx11->GetD3DResourceView();
+            resource[0] = texDx11->getD3DResourceView();
         }
         //Platforms::Debug::Printf("apply texture varibale %lx, with texture %lx\n", reinterpret_cast<std::uint64_t>(this), reinterpret_cast<std::uint64_t>(texDx11));
         /*unsigned int w, h;
         m_texture->GetDimension(&w, &h);
         DebugPrintf("Texture %s, %d, %d\n", m_texture->getName().String().c_str(), w, h);*/
     }
-    else if ((tex) && (tex->IsMultiTexture()) && (indexMultiTexture))
+    else if ((tex) && (tex->isMultiTexture()) && (indexMultiTexture))
     {
         MultiTextureDx11* texDx11 = dynamic_cast<MultiTextureDx11*>(tex.get());
         if (texDx11)
         {
-            resource[0] = texDx11->GetD3DResourceView(indexMultiTexture.value());
+            resource[0] = texDx11->getD3DResourceView(indexMultiTexture.value());
         }
         /*unsigned int w, h;
         m_multiTexture->GetDimension(&w, &h);

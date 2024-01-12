@@ -16,18 +16,19 @@
 
 namespace Enigma::Engine
 {
+    class EffectMaterial;
     class EffectMaterialCompiled : public Frameworks::IResponseEvent
     {
     public:
-        EffectMaterialCompiled(const Frameworks::Ruid& request_ruid, const std::string& name, EffectMaterialPtr eff)
-            : IResponseEvent(request_ruid), m_name(name), m_effect(std::move(eff)) {};
+        EffectMaterialCompiled(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<EffectMaterial>& eff)
+            : IResponseEvent(request_ruid), m_name(name), m_effect(eff) {};
         const std::string& getName() { return m_name; }
         bool HasEffect() { return m_effect != nullptr; }
-        EffectMaterialPtr GetEffect() { return m_effect; }
+        std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
 
     private:
         std::string m_name;
-        EffectMaterialPtr m_effect;
+        std::shared_ptr<EffectMaterial> m_effect;
     };
     class CompileEffectMaterialFailed : public Frameworks::IResponseEvent
     {
@@ -39,6 +40,52 @@ namespace Enigma::Engine
 
     private:
         std::string m_name;
+        std::error_code m_error;
+    };
+    class EffectMaterialSourceCompiled : public Frameworks::IEvent
+    {
+    public:
+        EffectMaterialSourceCompiled(const EffectMaterialId& id) : m_id(id) {}
+
+        const EffectMaterialId& id() { return m_id; }
+
+    private:
+        EffectMaterialId m_id;
+    };
+    class CompileEffectMaterialSourceFailed : public Frameworks::IEvent
+    {
+    public:
+        CompileEffectMaterialSourceFailed(const EffectMaterialId& id, std::error_code er) : m_id(id), m_error(er) {};
+        const EffectMaterialId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    private:
+        EffectMaterialId m_id;
+        std::error_code m_error;
+    };
+    class EffectMaterialContented : public Frameworks::IEvent
+    {
+    public:
+        EffectMaterialContented(const EffectMaterialId& source_id, const EffectMaterialId& id) : m_sourceId(source_id), m_id(id) {}
+
+        const EffectMaterialId& sourceId() { return m_sourceId; }
+        const EffectMaterialId& id() { return m_id; }
+
+    private:
+        EffectMaterialId m_sourceId;
+        EffectMaterialId m_id;
+    };
+    class ContentEffectMaterialFailed : public Frameworks::IEvent
+    {
+    public:
+        ContentEffectMaterialFailed(const EffectMaterialId& source_id, const EffectMaterialId& id, std::error_code er) : m_sourceId(source_id), m_error(er) {};
+        const EffectMaterialId& sourceId() { return m_sourceId; }
+        const EffectMaterialId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    private:
+        EffectMaterialId m_sourceId;
+        EffectMaterialId m_id;
         std::error_code m_error;
     };
 }

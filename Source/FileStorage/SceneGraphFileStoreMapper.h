@@ -21,6 +21,11 @@ namespace Enigma::FileStorage
     public:
         SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);
         ~SceneGraphFileStoreMapper() override;
+        SceneGraphFileStoreMapper(const SceneGraphFileStoreMapper&) = delete;
+        SceneGraphFileStoreMapper(SceneGraphFileStoreMapper&&) = delete;
+        SceneGraphFileStoreMapper& operator=(const SceneGraphFileStoreMapper&) = delete;
+        SceneGraphFileStoreMapper& operator=(SceneGraphFileStoreMapper&&) = delete;
+
         virtual std::error_code connect() override;
         virtual std::error_code disconnect() override;
 

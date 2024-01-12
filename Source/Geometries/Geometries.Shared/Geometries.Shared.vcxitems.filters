@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GeometryRepository">
+      <UniqueIdentifier>{17b5f7d9-c409-4e9a-860a-70d14e4a7771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeometryData">
+      <UniqueIdentifier>{a4bb3172-9728-4153-97f9-00543bf3a600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dtos">
+      <UniqueIdentifier>{ee7a8880-8c00-4039-be13-f70db68e6032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communications">
+      <UniqueIdentifier>{c7aaba72-23d5-4777-9b06-42df6052b561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection">
+      <UniqueIdentifier>{f4ebe86d-e73b-4a9c-b9fd-c0ef87004171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCode">
+      <UniqueIdentifier>{f3a03213-8a2c-4a7a-aff6-bbce8c40eaf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{c4405ef7-6abf-48c9-8697-0fc1e3db307e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
+      <Filter>GeometryData</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp">
+      <Filter>GeometryData</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp">
+      <Filter>GeometryRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp">
+      <Filter>GeometryRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
+      <Filter>Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp">
+      <Filter>Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryErrors.cpp">
+      <Filter>ErrorCode</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
+      <Filter>GeometryData</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h">
+      <Filter>GeometryData</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h">
+      <Filter>GeometryRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
+      <Filter>GeometryData</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h">
+      <Filter>GeometryRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h">
+      <Filter>GeometryRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h">
+      <Filter>GeometryData</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
+      <Filter>Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
+      <Filter>Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
+      <Filter>Communications</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
+      <Filter>Communications</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h">
+      <Filter>Communications</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryErrors.h">
+      <Filter>ErrorCode</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
+  </ItemGroup>
+</Project>

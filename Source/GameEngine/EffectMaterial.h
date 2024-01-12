@@ -13,6 +13,8 @@
 #include "GraphicKernel/IShaderProgram.h"
 #include "Frameworks/Rtti.h"
 #include "FactoryDesc.h"
+#include "EffectMaterialId.h"
+#include "Frameworks/LazyStatus.h"
 #include <string>
 #include <system_error>
 #include <list>
@@ -27,52 +29,59 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
-        EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques);
-        EffectMaterial(const EffectMaterial&);
-        EffectMaterial(EffectMaterial&&) noexcept;
+        EffectMaterial(const EffectMaterialId& id);
+        EffectMaterial(const EffectMaterial&) = delete;
+        EffectMaterial(EffectMaterial&&) noexcept = delete;
         virtual ~EffectMaterial();
-        EffectMaterial& operator=(const EffectMaterial&);
-        EffectMaterial& operator=(EffectMaterial&&) noexcept;
+        EffectMaterial& operator=(const EffectMaterial&) = delete;
+        EffectMaterial& operator=(EffectMaterial&&) noexcept = delete;
 
-        GenericDto serializeDto();
+        static std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
 
-        const std::string& getName() { return m_name; };
+        const EffectMaterialId& id() const { return m_id; };
+
+        void copyFrom(const std::shared_ptr<EffectMaterial>& other);
+        void instanceLazyContent(const std::vector<EffectTechnique>& techniques);
+        const std::vector<EffectTechnique>& effectTechniques() const { return m_effectTechniques; }
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        void SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
-        std::shared_ptr<EffectMaterialSource> GetEffectMaterialSource() { return m_sourceMaterial.lock(); };
+        const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
+        Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
+
+        void setSource(const std::shared_ptr<EffectMaterialSource>& mat_source);
+        std::shared_ptr<EffectMaterialSource> getEffectMaterialSource() { return m_sourceMaterial.lock(); };
 
         /** select renderer & visual technique */
-        void SelectRendererTechnique(const std::string& renderer_tech_name);
-        void SelectVisualTechnique(const std::string& visual_tech_name);
+        void selectRendererTechnique(const std::string& renderer_tech_name);
+        void selectVisualTechnique(const std::string& visual_tech_name);
 
-        unsigned int GetPassCount();
-        error ApplyFirstPass();
-        error ApplyNextPass();
-        bool HasNextPass();
+        unsigned int getPassCount();
+        error applyFirstPass();
+        error applyNextPass();
+        bool hasNextPass();
 
-        void CommitInstancedEffectVariables();
+        void commitInstancedEffectVariables();
 
-        std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesByName(const std::string& name);
-        std::list<std::reference_wrapper<EffectVariable>> GetEffectVariablesBySemantic(const std::string& semantic);
-        stdext::optional_ref<EffectVariable> GetEffectVariableInPassByName(const std::string& pass_name, const std::string& name);
-        stdext::optional_ref<EffectVariable> GetEffectVariableInPassBySemantic(const std::string& pass_name, const std::string& semantic);
+        std::list<std::reference_wrapper<EffectVariable>> getEffectVariablesByName(const std::string& name);
+        std::list<std::reference_wrapper<EffectVariable>> getEffectVariablesBySemantic(const std::string& semantic);
+        stdext::optional_ref<EffectVariable> getEffectVariableInPassByName(const std::string& pass_name, const std::string& name);
+        stdext::optional_ref<EffectVariable> getEffectVariableInPassBySemantic(const std::string& pass_name, const std::string& semantic);
 
-        void SetVariableAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
+        void setVariableAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
         /** 每個 material instance 已經是獨立的一份 var, 似乎沒有必要了，先留著就是 */
-        void SetInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
+        void setInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn);
 
-        void AssignVariableValue(const std::string& semantic, std::any value);
-        void AssignVariableValues(const std::string& semantic, std::any value_array, unsigned int value_count);
-        void AssignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value);
-        void AssignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned int value_count);
+        void assignVariableValue(const std::string& semantic, std::any value);
+        void assignVariableValues(const std::string& semantic, std::any value_array, unsigned int value_count);
+        void assignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value);
+        void assignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned int value_count);
 
-        void MappingAutoVariables();
+        void mappingAutoVariables();
 
     protected:
-        void SelectTechnique();
+        void selectTechnique();
 
     protected:
         typedef std::vector<EffectTechnique> EffectTechniqueArray;
@@ -80,9 +89,11 @@ namespace Enigma::Engine
             InstancedAssignFuncList;
 
     protected:
+        EffectMaterialId m_id;
         FactoryDesc m_factoryDesc;
 
-        std::string m_name;
+        Frameworks::LazyStatus m_lazyStatus;
+
         std::weak_ptr<EffectMaterialSource> m_sourceMaterial;
 
         EffectTechniqueArray m_effectTechniques;
@@ -91,7 +102,6 @@ namespace Enigma::Engine
         std::string m_selectedRendererTechName;
         std::string m_selectedVisualTechName;
     };
-    using EffectMaterialPtr = std::shared_ptr<EffectMaterial>;
 };
 
 #endif // EFFECT_MATERIAL_H

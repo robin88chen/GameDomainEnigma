@@ -346,7 +346,7 @@ error GraphicAPIEgl::CreateDepthStencilState(const std::string& name, const Grap
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateTexture(const std::string& tex_name)
+error GraphicAPIEgl::createTexture(const std::string& tex_name)
 {
     Debug::Printf("create texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureEgl{ tex_name } };
@@ -356,7 +356,7 @@ error GraphicAPIEgl::CreateTexture(const std::string& tex_name)
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CreateMultiTexture(const std::string& tex_name)
+error GraphicAPIEgl::createMultiTexture(const std::string& tex_name)
 {
     Debug::Printf("create multi-texture in thread %d\n", std::this_thread::get_id());
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureEgl{ tex_name } };
@@ -514,23 +514,23 @@ GLenum PrimitiveTopologyToGL(Enigma::Graphics::PrimitiveTopology pt)
     {
         return GL_LINES;
     }
-        case Enigma::Graphics::PrimitiveTopology::Topology_LineStrip:
+    case Enigma::Graphics::PrimitiveTopology::Topology_LineStrip:
     {
         return GL_LINE_STRIP;
     }
-        case Enigma::Graphics::PrimitiveTopology::Topology_PointList:
+    case Enigma::Graphics::PrimitiveTopology::Topology_PointList:
     {
         return GL_POINTS;
     }
-        case Enigma::Graphics::PrimitiveTopology::Topology_TriangleList:
+    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleList:
     {
         return GL_TRIANGLES;
     }
-        case Enigma::Graphics::PrimitiveTopology::Topology_TriangleStrip:
+    case Enigma::Graphics::PrimitiveTopology::Topology_TriangleStrip:
     {
         return GL_TRIANGLE_STRIP;
     }
-        default:
+    default:
         break;
     }
     return GL_TRIANGLES;
@@ -540,23 +540,23 @@ GLint GraphicFormatToGLSizedFormat(const Enigma::Graphics::GraphicFormat& fmt)
 {
     switch (fmt.fmt)
     {
-        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
-        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
-        {
-            return GL_RGBA8;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
-        {
-            return GL_RGB8;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
-        {
-            return GL_RGBA16F;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_R32F:
-        {
-            return GL_R32F;
-        }
+    case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+    case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+    {
+        return GL_RGBA8;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+    {
+        return GL_RGB8;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+    {
+        return GL_RGBA16F;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_R32F:
+    {
+        return GL_R32F;
+    }
     }
     return GL_RGBA8;
 }
@@ -565,20 +565,20 @@ GLenum GraphicFormatToGLFormat(const Enigma::Graphics::GraphicFormat& fmt)
 {
     switch (fmt.fmt)
     {
-        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
-        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
-        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
-        {
-            return GL_RGBA;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
-        {
-            return GL_RGB;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_R32F:
-        {
-            return GL_RED;
-        }
+    case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+    case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+    case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+    {
+        return GL_RGBA;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+    {
+        return GL_RGB;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_R32F:
+    {
+        return GL_RED;
+    }
     }
     return GL_RGBA;
 }
@@ -587,17 +587,17 @@ GLenum GraphicFormatToGLPixelType(const Enigma::Graphics::GraphicFormat& fmt)
 {
     switch (fmt.fmt)
     {
-        case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
-        case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
-        case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
-        {
-            return GL_UNSIGNED_BYTE;
-        }
-        case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
-        case Enigma::Graphics::GraphicFormat::FMT_R32F:
-        {
-            return GL_FLOAT;
-        }
+    case Enigma::Graphics::GraphicFormat::FMT_A8B8G8R8:
+    case Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8:
+    case Enigma::Graphics::GraphicFormat::FMT_R8G8B8:
+    {
+        return GL_UNSIGNED_BYTE;
+    }
+    case Enigma::Graphics::GraphicFormat::FMT_A16B16G16R16F:
+    case Enigma::Graphics::GraphicFormat::FMT_R32F:
+    {
+        return GL_FLOAT;
+    }
     }
     return GL_UNSIGNED_BYTE;
 }

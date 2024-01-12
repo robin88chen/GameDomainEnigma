@@ -23,7 +23,7 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : P
     if (auto clip = dto.TheAnimationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
     for (auto& avatar_dto : dto.AvatarRecipeDtos())
     {
-        m_avatarRecipeList.push_back(AvatarRecipe::CreateFromGenericDto(avatar_dto));
+        m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
     }
 }
 
@@ -52,16 +52,16 @@ void AnimatedPawn::PlayAnimation(const std::string& name)
     if (!action_clip) return;
 
     std::list<std::shared_ptr<Animator>> anim_list;
-    EnumAnimatorListDeep(anim_list);
+    enumAnimatorListDeep(anim_list);
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
             Frameworks::CommandBus::post(std::make_shared<AddListeningAnimator>(anim));
-            if (ModelPrimitiveAnimatorPtr model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
+            if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
-                model_ani->FadeInAnimation(0.3f, action_clip.value().get().GetClip());
+                model_ani->fadeInAnimation(0.3f, action_clip.value().get().GetClip());
             }
         }
     }
@@ -72,16 +72,16 @@ void AnimatedPawn::StopAnimation()
     if (!m_primitive) return;
 
     std::list<std::shared_ptr<Animator>> anim_list;
-    EnumAnimatorListDeep(anim_list);
+    enumAnimatorListDeep(anim_list);
     if (anim_list.size() == 0) return;
     for (auto& anim : anim_list)
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
             Frameworks::CommandBus::post(std::make_shared<RemoveListeningAnimator>(anim));
-            if (ModelPrimitiveAnimatorPtr model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
+            if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
-                model_ani->StopAnimation();
+                model_ani->stopAnimation();
             }
         }
     }
@@ -96,6 +96,6 @@ void AnimatedPawn::BakeAvatarRecipes()
 {
     for (auto& recipe : m_avatarRecipeList)
     {
-        recipe->Bake(std::dynamic_pointer_cast<Pawn, Spatial>(shared_from_this()));
+        recipe->bake(std::dynamic_pointer_cast<Pawn, Spatial>(shared_from_this()));
     }
 }

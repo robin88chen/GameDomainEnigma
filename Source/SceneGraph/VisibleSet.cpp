@@ -16,7 +16,7 @@ void VisibleSet::Clear()
     m_visibleObjSet.clear();
 }
 
-size_t VisibleSet::GetCount() const
+size_t VisibleSet::getCount() const
 {
     return m_visibleObjSet.size();
 }

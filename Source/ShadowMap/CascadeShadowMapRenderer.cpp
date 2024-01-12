@@ -27,10 +27,10 @@ error CascadeShadowMapRenderer::DrawScene()
     for (unsigned int pipeline = 0; pipeline < pipeline_count; pipeline++)
     {
         Graphics::IGraphicAPI::instance()->Bind(m_targetViewPorts[pipeline]);
-        MaterialVariableMap::UseViewPortDimension(
+        MaterialVariableMap::useViewPortDimension(
             m_targetViewPorts[pipeline].Width(), m_targetViewPorts[pipeline].Height(),
             m_targetViewPorts[pipeline].MinZ(), m_targetViewPorts[pipeline].MaxZ());
-        MaterialVariableMap::UseCameraParameter(m_sunLightCamera.lock()->GetLightCameraLocation(pipeline),
+        MaterialVariableMap::useCameraParameter(m_sunLightCamera.lock()->GetLightCameraLocation(pipeline),
                                                         m_sunLightCamera.lock()->GetLightViewTransform(pipeline),
                                                         m_sunLightCamera.lock()->GetLightProjectionTransform(pipeline));
         if (pipeline == 0) // first, remove dated element

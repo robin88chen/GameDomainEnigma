@@ -11,6 +11,7 @@
 #include "ShadowMapService.h"
 #include "CascadeShadowMapServiceConfiguration.h"
 #include "GraphicKernel/IDeviceRasterizerState.h"
+#include "GameEngine/EffectVariable.h"
 
 namespace Enigma::ShadowMap
 {

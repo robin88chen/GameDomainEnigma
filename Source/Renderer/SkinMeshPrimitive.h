@@ -10,6 +10,7 @@
 
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
+#include "GameEngine/EffectVariable.h"
 #include <vector>
 
 namespace Enigma::Renderer
@@ -18,34 +19,35 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        SkinMeshPrimitive(const std::string& name);
-        SkinMeshPrimitive(const SkinMeshPrimitive&);
-        SkinMeshPrimitive(SkinMeshPrimitive&&) noexcept;
+        SkinMeshPrimitive(const Engine::PrimitiveId& id);
+        SkinMeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
+        SkinMeshPrimitive(const SkinMeshPrimitive&) = delete;
+        SkinMeshPrimitive(SkinMeshPrimitive&&) = delete;
         ~SkinMeshPrimitive() override;
-        SkinMeshPrimitive& operator=(const SkinMeshPrimitive&);
-        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) noexcept;
+        SkinMeshPrimitive& operator=(const SkinMeshPrimitive&) = delete;
+        SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) = delete;
 
         virtual Engine::GenericDto serializeDto() const override;
 
-        void BindOwnerRootRefTransform(const MathLib::Matrix4& mx);
-        const MathLib::Matrix4& GetOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
-        virtual void ChangeEffectMaterialInSegment(unsigned index, const Engine::EffectMaterialPtr& effect) override;
-        virtual void ChangeEffectMaterial(const EffectMaterialList& effects) override;
+        void bindOwnerRootRefTransform(const MathLib::Matrix4& mx);
+        const MathLib::Matrix4& getOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
+        virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect) override;
+        virtual void changeEffectMaterials(const EffectMaterialList& effects) override;
 
-        void CreateBoneMatrixArray(unsigned int size);
-        void UpdateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);
+        void createBoneMatrixArray(unsigned int size);
+        void updateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);
 
         /** bind primitive bone matrix */
-        void BindPrimitiveBoneMatrix();
+        void bindPrimitiveBoneMatrix();
         /** bind segment bone matrix */
-        void BindSegmentBoneMatrix(unsigned int index);
+        void bindSegmentBoneMatrix(unsigned int index);
         /** un-bind primitive bone matrix */
-        void LoosePrimitiveBoneMatrix();
+        void loosePrimitiveBoneMatrix();
         /** un-bind segment bone matrix */
-        void LooseSegmentBoneMatrix(unsigned int index);
+        void looseSegmentBoneMatrix(unsigned int index);
 
     private:
-        void BoneMatrixAssign(Engine::EffectVariable& var);
+        void assignBoneMatrix(Engine::EffectVariable& var);
 
     protected:
         /** effect matrix = node animation matrix * node offset matrix

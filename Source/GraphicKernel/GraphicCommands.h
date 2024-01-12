@@ -134,7 +134,7 @@ namespace Enigma::Graphics
     public:
         CreateMultiBacksurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             unsigned int buff_count, const std::vector<GraphicFormat>& fmts)
-                : m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
+            : m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
         const std::string& GetBacksurfaceName() const { return m_backName; }
         const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
         unsigned int GetSurfaceCount() const { return m_buffCount; }
@@ -162,7 +162,7 @@ namespace Enigma::Graphics
     {
     public:
         ShareDepthStencilSurface(const std::string& depth_name, const IDepthStencilSurfacePtr& from_depth)
-        : m_depthName(depth_name), m_fromDepth(from_depth) {};
+            : m_depthName(depth_name), m_fromDepth(from_depth) {};
         const std::string& GetDepthStencilSurfaceName() const { return m_depthName; }
         const IDepthStencilSurfacePtr& GetSourceDepth() const { return m_fromDepth; }
     private:
@@ -311,19 +311,19 @@ namespace Enigma::Graphics
     };
 
     /** create texture */
-    class CreateTexture : public Frameworks::ICommand
+    class CreateDeviceTexture : public Frameworks::ICommand
     {
     public:
-        CreateTexture(const std::string& name) : m_name(name) {};
-        const std::string& getName() const { return m_name; }
+        CreateDeviceTexture(const std::string& name) : m_name(name) {};
+        const std::string& name() const { return m_name; }
     private:
         std::string m_name;
     };
-    class CreateMultiTexture : public Frameworks::ICommand
+    class CreateDeviceMultiTexture : public Frameworks::ICommand
     {
     public:
-        CreateMultiTexture(const std::string& name) : m_name(name) {};
-        const std::string& getName() const { return m_name; }
+        CreateDeviceMultiTexture(const std::string& name) : m_name(name) {};
+        const std::string& name() const { return m_name; }
     private:
         std::string m_name;
     };

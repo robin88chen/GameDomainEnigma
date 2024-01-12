@@ -71,64 +71,64 @@ AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
     return dto;
 }
 
-Matrix4 AnimationTimeSRT::CalculateTransformMatrix(float off_time)
+Matrix4 AnimationTimeSRT::calculateTransformMatrix(float off_time)
 {
-    auto [scale, rotate, translate] = CalculateLerpedSRT(off_time);
+    auto [scale, rotate, translate] = calculateLerpedSRT(off_time);
     return Matrix4::FromSRT(scale, rotate, translate);
 }
 
-SRTValueTie AnimationTimeSRT::CalculateLerpedSRT(float off_time)
+SRTValueTie AnimationTimeSRT::calculateLerpedSRT(float off_time)
 {
-    Vector3 scale = CalculateScaleKey(off_time);
-    Quaternion rotate = CalculateRotationKey(off_time);
-    Vector3 translate = CalculateTranslateKey(off_time);
+    Vector3 scale = calculateScaleKey(off_time);
+    Quaternion rotate = calculateRotationKey(off_time);
+    Vector3 translate = calculateTranslateKey(off_time);
     return std::make_tuple(scale, rotate, translate);
 }
 
-SRTValueTie AnimationTimeSRT::CalculateFadedLerpedSRT(float off_time_a, float off_time_b, float weight_a)
+SRTValueTie AnimationTimeSRT::calculateFadedLerpedSRT(float off_time_a, float off_time_b, float weight_a)
 {
     // 分開來寫二元搜尋內插 faded key, 或是寫成一個搜尋與內插的function 似乎差不多
     // 先用兩個function 分別 call offset time A, offset time B好了
     Vector3 vecScaleA, vecScaleB;
-    vecScaleA = CalculateScaleKey(off_time_a);
-    vecScaleB = CalculateScaleKey(off_time_b);
+    vecScaleA = calculateScaleKey(off_time_a);
+    vecScaleB = calculateScaleKey(off_time_b);
     Vector3 scale = vecScaleA * weight_a + vecScaleB * (1.0f - weight_a);
 
     Quaternion rotate, qtRotA, qtRotB;
-    qtRotA = CalculateRotationKey(off_time_a);
-    qtRotB = CalculateRotationKey(off_time_b);
+    qtRotA = calculateRotationKey(off_time_a);
+    qtRotB = calculateRotationKey(off_time_b);
     rotate.Slerp(weight_a, qtRotB, qtRotA);  // slerp 函式，第一個qt是weight=0,第二個qt是weight=1
 
     Vector3 vecTransA, vecTransB;
-    vecTransA = CalculateTranslateKey(off_time_a);
-    vecTransB = CalculateTranslateKey(off_time_b);
+    vecTransA = calculateTranslateKey(off_time_a);
+    vecTransB = calculateTranslateKey(off_time_b);
     Vector3 translate = vecTransA * weight_a + vecTransB * (1.0f - weight_a);
 
     return std::make_tuple(scale, rotate, translate);
 }
 
-Matrix4 AnimationTimeSRT::CalculateFadedTransformMatrix(float off_time_a, float off_time_b, float weight_a)
+Matrix4 AnimationTimeSRT::calculateFadedTransformMatrix(float off_time_a, float off_time_b, float weight_a)
 {
-    auto [scale, rotate, translate] = CalculateFadedLerpedSRT(off_time_a, off_time_b, weight_a);
+    auto [scale, rotate, translate] = calculateFadedLerpedSRT(off_time_a, off_time_b, weight_a);
     return Matrix4::FromSRT(scale, rotate, translate);
 }
 
-void AnimationTimeSRT::SetScaleKeyVector(const ScaleKeyVector& scale_key)
+void AnimationTimeSRT::setScaleKeyVector(const ScaleKeyVector& scale_key)
 {
     m_scaleKeyVector = scale_key;
 }
 
-void AnimationTimeSRT::SetRotationKeyVector(const RotationKeyVector& rot_key)
+void AnimationTimeSRT::setRotationKeyVector(const RotationKeyVector& rot_key)
 {
     m_rotationKeyVector = rot_key;
 }
 
-void AnimationTimeSRT::SetTranslateKeyVector(const TranslateKeyVector& trans_key)
+void AnimationTimeSRT::setTranslateKeyVector(const TranslateKeyVector& trans_key)
 {
     m_translateKeyVector = trans_key;
 }
 
-void AnimationTimeSRT::AppendScaleKeyVector(float time_offset, const ScaleKeyVector& scale_key)
+void AnimationTimeSRT::appendScaleKeyVector(float time_offset, const ScaleKeyVector& scale_key)
 {
     unsigned int org_size = static_cast<unsigned int>(m_scaleKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(scale_key.size());
@@ -140,7 +140,7 @@ void AnimationTimeSRT::AppendScaleKeyVector(float time_offset, const ScaleKeyVec
     }
 }
 
-void AnimationTimeSRT::AppendRotationKeyVector(float time_offset, const RotationKeyVector& rot_key)
+void AnimationTimeSRT::appendRotationKeyVector(float time_offset, const RotationKeyVector& rot_key)
 {
     unsigned int org_size = static_cast<unsigned int>(m_rotationKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(rot_key.size());
@@ -152,7 +152,7 @@ void AnimationTimeSRT::AppendRotationKeyVector(float time_offset, const Rotation
     }
 }
 
-void AnimationTimeSRT::AppendTranslateKeyVector(float time_offset, const TranslateKeyVector& trans_key)
+void AnimationTimeSRT::appendTranslateKeyVector(float time_offset, const TranslateKeyVector& trans_key)
 {
     unsigned int org_size = static_cast<unsigned int>(m_translateKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(trans_key.size());
@@ -164,7 +164,7 @@ void AnimationTimeSRT::AppendTranslateKeyVector(float time_offset, const Transla
     }
 }
 
-float AnimationTimeSRT::GetMaxAnimationTime() const
+float AnimationTimeSRT::getMaxAnimationTime() const
 {
     float ret_time = 0.0f;
     if (m_scaleKeyVector.size())
@@ -185,7 +185,7 @@ float AnimationTimeSRT::GetMaxAnimationTime() const
     return ret_time;
 }
 
-Vector3 AnimationTimeSRT::CalculateScaleKey(float offset_time)
+Vector3 AnimationTimeSRT::calculateScaleKey(float offset_time)
 {
     assert(!m_scaleKeyVector.empty());
 
@@ -243,7 +243,7 @@ Vector3 AnimationTimeSRT::CalculateScaleKey(float offset_time)
     return m_scaleKeyVector[0].m_vecKey;
 }
 
-Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
+Quaternion AnimationTimeSRT::calculateRotationKey(float offset_time)
 {
     assert(!m_rotationKeyVector.empty());
 
@@ -299,7 +299,7 @@ Quaternion AnimationTimeSRT::CalculateRotationKey(float offset_time)
     return m_rotationKeyVector[0].m_qtKey;
 }
 
-Vector3 AnimationTimeSRT::CalculateTranslateKey(float offset_time)
+Vector3 AnimationTimeSRT::calculateTranslateKey(float offset_time)
 {
     assert(!m_translateKeyVector.empty());
 

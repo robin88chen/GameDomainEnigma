@@ -27,18 +27,18 @@ namespace Enigma::Engine
 
         bool operator==(const EffectVariable& var);
 
-        const std::string& getName() { return m_name; };
-        const std::string& GetSemantic() { return m_semantic; };
-        const std::string& getName() const { return m_name; };
-        const std::string& GetSemantic() const { return m_semantic; };
+        const std::string& name() { return m_name; };
+        const std::string& semantic() { return m_semantic; };
+        const std::string& name() const { return m_name; };
+        const std::string& semantic() const { return m_semantic; };
 
-        void AssignValue(std::any value);
-        void AssignValues(std::any value_array, unsigned int value_count);
+        void assignValue(std::any value);
+        void assignValues(std::any value_array, unsigned int value_count);
 
         /** commit : 先呼叫從 Variable Map 或是其他外部掛入的 assign 函式, then set shader variable value(s) */
-        void Commit();
+        void commit();
         /** assign 函式 : assign value(s) */
-        void SetValueAssignFunction(VariableValueAssignFunc fn);
+        void setValueAssignFunction(VariableValueAssignFunc fn);
 
     private:
         Graphics::IShaderVariablePtr m_shaderVariable;

@@ -2,7 +2,7 @@
 
 using namespace Enigma::Engine;
 
-std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::FindPassesWithSamplerState(const std::string& name)
+std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::findPassesWithSamplerState(const std::string& name)
 {
     std::vector<std::reference_wrapper<EffectPassProfile>> passes;
     for (auto& tech : m_techniques)
@@ -24,7 +24,7 @@ std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::F
     return passes;
 }
 
-std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::FindPassesWithBlendState(const std::string& name)
+std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::findPassesWithBlendState(const std::string& name)
 {
     std::vector<std::reference_wrapper<EffectPassProfile>> passes;
     for (auto& tech : m_techniques)
@@ -38,7 +38,7 @@ std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::F
     return passes;
 }
 
-std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::FindPassesWithDepthState(const std::string& name)
+std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::findPassesWithDepthState(const std::string& name)
 {
     std::vector<std::reference_wrapper<EffectPassProfile>> passes;
     for (auto& tech : m_techniques)
@@ -52,7 +52,7 @@ std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::F
     return passes;
 }
 
-std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::FindPassesWithRasterizerState(const std::string& name)
+std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::findPassesWithRasterizerState(const std::string& name)
 {
     std::vector<std::reference_wrapper<EffectPassProfile>> passes;
     for (auto& tech : m_techniques)
@@ -66,7 +66,7 @@ std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::F
     return passes;
 }
 
-std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::FindPassesWithProgram(const std::string& name)
+std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::findPassesWithProgram(const std::string& name)
 {
     std::vector<std::reference_wrapper<EffectPassProfile>> passes;
     for (auto& tech : m_techniques)
@@ -80,7 +80,7 @@ std::vector<std::reference_wrapper<EffectPassProfile>> EffectCompilingProfile::F
     return passes;
 }
 
-std::optional<unsigned> EffectCompilingProfile::FindSamplerIndexInPass(const std::string& pass_name, const std::string& sampler_name)
+std::optional<unsigned> EffectCompilingProfile::findSamplerIndexInPass(const std::string& pass_name, const std::string& sampler_name)
 {
     for (auto& tech : m_techniques)
     {

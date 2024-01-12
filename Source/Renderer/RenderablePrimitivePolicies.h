@@ -9,12 +9,12 @@
 #define _RENDERABLE_PRIMITIVE_POLICIES_H
 
 #include <memory>
-#include "GameEngine/GeometryDataPolicy.h"
+#include "Geometries/GeometryDataPolicy.h"
 #include "RenderablePrimitiveDtos.h"
-#include "GameEngine/EffectMaterialDto.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericPolicy.h"
 #include "Animators/AnimatorDtos.h"
+#include "GameEngine/EffectMaterialId.h"
 #include <string>
 #include <vector>
 #include <optional>
@@ -31,12 +31,15 @@ namespace Enigma::Renderer
         RenderablePrimitivePolicy& operator=(const RenderablePrimitivePolicy&) = default;
         RenderablePrimitivePolicy& operator=(RenderablePrimitivePolicy&&) = default;
 
-        [[nodiscard]] const std::string& Name() const { return m_name; }
-        std::string& Name() { return m_name; }
+        [[nodiscard]] const Engine::PrimitiveId& id() const { return m_id; }
+        Engine::PrimitiveId& id() { return m_id; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        std::string& name() { return m_name; }
         [[nodiscard]] const std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() const { return m_dtoDeserializer; }
         std::shared_ptr<Engine::IDtoDeserializer>& TheDtoDeserializer() { return m_dtoDeserializer; }
 
     protected:
+        Engine::PrimitiveId m_id;
         std::string m_name;
         std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
     };
@@ -51,29 +54,28 @@ namespace Enigma::Renderer
         MeshPrimitivePolicy& operator=(const MeshPrimitivePolicy&) = default;
         MeshPrimitivePolicy& operator=(MeshPrimitivePolicy&&) = default;
 
-        [[nodiscard]] const Engine::FactoryDesc& GeometryFactoryDesc() const { return m_geometryFactoryDesc; }
-        Engine::FactoryDesc& GeometryFactoryDesc() { return m_geometryFactoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& geometryFactoryDesc() const { return m_geometryFactoryDesc; }
+        Engine::FactoryDesc& geometryFactoryDesc() { return m_geometryFactoryDesc; }
 
-        [[nodiscard]] const Engine::GeometryDataPolicy& GeometryPolicy() const { return m_geometryPolicy; }
-        Engine::GeometryDataPolicy& GeometryPolicy() { return m_geometryPolicy; }
+        [[nodiscard]] const Geometries::GeometryDataPolicy& geometryPolicy() const { return m_geometryPolicy; }
+        Geometries::GeometryDataPolicy& geometryPolicy() { return m_geometryPolicy; }
 
-        [[nodiscard]] const std::vector<Engine::EffectMaterialDto>& EffectDtos() const { return m_effectDtos; }
-        std::vector<Engine::EffectMaterialDto>& EffectDtos() { return m_effectDtos; }
+        [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
+        std::vector<Engine::EffectMaterialId>& effects() { return m_effects; }
 
-        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& TextureDtos() const { return m_textureDtos; }
-        std::vector<Engine::EffectTextureMapDto>& TextureDtos() { return m_textureDtos; }
-        [[nodiscard]] const Renderer::RenderListID& RenderListId() const { return m_renderListId; }
-        Renderer::RenderListID& RenderListId() { return m_renderListId; }
-        [[nodiscard]] const std::string& VisualTechniqueSelection() const { return m_visualTechniqueSelection; }
-        std::string& VisualTechniqueSelection() { return m_visualTechniqueSelection; }
+        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& textureDtos() const { return m_textureDtos; }
+        std::vector<Engine::EffectTextureMapDto>& textureDtos() { return m_textureDtos; }
+        [[nodiscard]] const Renderer::RenderListID& renderListId() const { return m_renderListId; }
+        Renderer::RenderListID& renderListId() { return m_renderListId; }
+        [[nodiscard]] const std::string& visualTechniqueSelection() const { return m_visualTechniqueSelection; }
+        std::string& visualTechniqueSelection() { return m_visualTechniqueSelection; }
 
-        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const;
-        //[[nodiscard]] const Engine::EffectTextureMapPolicy::TextureTuplePolicy& GetTextureTuplePolicy(unsigned tex_idx, unsigned tuple_idx) const;
+        virtual std::shared_ptr<MeshPrimitive> createPrimitive() const;
 
     protected:
         Engine::FactoryDesc m_geometryFactoryDesc;
-        Engine::GeometryDataPolicy m_geometryPolicy;
-        std::vector<Engine::EffectMaterialDto> m_effectDtos;
+        Geometries::GeometryDataPolicy m_geometryPolicy;
+        std::vector<Engine::EffectMaterialId> m_effects;
         std::vector<Engine::EffectTextureMapDto> m_textureDtos;
         Renderer::RenderListID m_renderListId;
         std::string m_visualTechniqueSelection;
@@ -90,7 +92,7 @@ namespace Enigma::Renderer
         SkinMeshPrimitivePolicy& operator=(const SkinMeshPrimitivePolicy&) = default;
         SkinMeshPrimitivePolicy& operator=(SkinMeshPrimitivePolicy&&) = default;
 
-        virtual std::shared_ptr<MeshPrimitive> CreatePrimitive() const override;
+        virtual std::shared_ptr<MeshPrimitive> createPrimitive() const override;
     };
 
     class ModelPrimitivePolicy : public RenderablePrimitivePolicy
@@ -103,11 +105,11 @@ namespace Enigma::Renderer
         ModelPrimitivePolicy& operator=(const ModelPrimitivePolicy&) = default;
         ModelPrimitivePolicy& operator=(ModelPrimitivePolicy&&) = default;
 
-        [[nodiscard]] const MeshNodeTreeDto& NodeTreeDto() const { return m_nodeTreeDto; }
-        MeshNodeTreeDto& NodeTreeDto() { return m_nodeTreeDto; }
+        [[nodiscard]] const MeshNodeTreeDto& nodeTreeDto() const { return m_nodeTreeDto; }
+        MeshNodeTreeDto& nodeTreeDto() { return m_nodeTreeDto; }
 
-        [[nodiscard]] const std::optional<Animators::ModelAnimatorDto>& TheModelAnimator() const { return m_animatorDto; }
-        std::optional<Animators::ModelAnimatorDto>& TheModelAnimator() { return m_animatorDto; }
+        [[nodiscard]] const std::optional<Animators::ModelAnimatorDto>& modelAnimator() const { return m_animatorDto; }
+        std::optional<Animators::ModelAnimatorDto>& modelAnimator() { return m_animatorDto; }
 
     protected:
         MeshNodeTreeDto m_nodeTreeDto;

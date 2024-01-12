@@ -62,8 +62,18 @@ ServiceResult SceneGraphRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
     m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
     QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
-    m_queryPawn = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPawn(q); });
-    QueryDispatcher::subscribe(typeid(QueryPawn), m_queryPawn);
+    m_querySpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { querySpatial(q); });
+    QueryDispatcher::subscribe(typeid(QuerySpatial), m_querySpatial);
+
+    m_putCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putCamera(c); });
+    CommandBus::subscribe(typeid(PutCamera), m_putCamera);
+    m_removeCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeCamera(c); });
+    CommandBus::subscribe(typeid(RemoveCamera), m_removeCamera);
+    m_putSpatial = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putSpatial(c); });
+    CommandBus::subscribe(typeid(PutSpatial), m_putSpatial);
+    m_removeSpatial = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeSpatial(c); });
+    CommandBus::subscribe(typeid(RemoveSpatial), m_removeSpatial);
+
     //m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
     //CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
@@ -84,8 +94,18 @@ ServiceResult SceneGraphRepository::onTerm()
     m_queryCamera = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
     m_queryNode = nullptr;
-    QueryDispatcher::unsubscribe(typeid(QueryPawn), m_queryPawn);
-    m_queryPawn = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QuerySpatial), m_querySpatial);
+    m_querySpatial = nullptr;
+
+    CommandBus::unsubscribe(typeid(PutCamera), m_putCamera);
+    m_putCamera = nullptr;
+    CommandBus::unsubscribe(typeid(RemoveCamera), m_removeCamera);
+    m_removeCamera = nullptr;
+    CommandBus::unsubscribe(typeid(PutSpatial), m_putSpatial);
+    m_putSpatial = nullptr;
+    CommandBus::unsubscribe(typeid(RemoveSpatial), m_removeSpatial);
+    m_removeSpatial = nullptr;
+
     //CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
     //m_createCamera = nullptr;
     CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
@@ -140,7 +160,10 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     if (it != m_cameras.end()) return it->second;
     auto dtos = m_storeMapper->queryCamera(id);
     assert(!dtos.empty());
-    return m_factory->constituteCamera(id, dtos[0]);
+    auto camera = m_factory->constituteCamera(id, dtos[0], true);
+    assert(camera);
+    m_cameras.insert_or_assign(id, camera);
+    return camera;
 }
 
 std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
@@ -177,23 +200,23 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
 {
     assert(!hasNode(dto.getName()));
     std::shared_ptr<Node> node = nullptr;
-    if (dto.GetRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(dto);
     }
-    else if (dto.GetRtti().GetRttiName() == LazyNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == LazyNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<LazyNode>(dto);
     }
-    else if (dto.GetRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == VisibilityManagedNode::TYPE_RTTI.getName())
     {
-        node = createVisibilityManagedNode(VisibilityManagedNodeDto::fromGenericDto(dto));
+        node = createVisibilityManagedNode(VisibilityManagedNodeDto{ dto });
     }
-    else if (dto.GetRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = createPortalZoneNode(PortalZoneNodeDto::fromGenericDto(dto));
     }
-    else if (dto.GetRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == PortalManagementNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<PortalManagementNode>(dto);
     }
@@ -253,24 +276,25 @@ std::shared_ptr<Node> SceneGraphRepository::queryNode(const std::string& name)
     return pawn;
 }*/
 
-bool SceneGraphRepository::hasPawn(const SpatialId& id)
+bool SceneGraphRepository::hasSpatial(const SpatialId& id)
 {
     assert(m_storeMapper);
     assert(id.rtti().isDerived(Pawn::TYPE_RTTI));
-    std::lock_guard locker{ m_pawnMapLock };
-    auto it = m_pawns.find(id);
-    if (it != m_pawns.end()) return true;
+    std::lock_guard locker{ m_spatialMapLock };
+    auto it = m_spatials.find(id);
+    if (it != m_spatials.end()) return true;
     return m_storeMapper->hasSpatial(id);
 }
 
-std::shared_ptr<Pawn> SceneGraphRepository::queryPawn(const SpatialId& id)
+std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
 {
-    if (!hasPawn(id)) return nullptr;
-    std::lock_guard locker{ m_pawnMapLock };
-    auto it = m_pawns.find(id);
-    if (it != m_pawns.end()) return it->second;
+    if (!hasSpatial(id)) return nullptr;
+    std::lock_guard locker{ m_spatialMapLock };
+    auto it = m_spatials.find(id);
+    if (it != m_spatials.end()) return it->second;
     auto dtos = m_storeMapper->querySpatial(id);
     assert(!dtos.empty());
+    //todo : constitute spatial
     return m_factory->constitutePawn(id, dtos);
 }
 
@@ -325,7 +349,7 @@ std::shared_ptr<Portal> SceneGraphRepository::queryPortal(const std::string& nam
     return it->second.lock();
 }
 
-std::shared_ptr<Spatial> SceneGraphRepository::QuerySpatial(const std::string& name)
+std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const std::string& name)
 {
     if (auto node = queryNode(name)) return node;
     //if (auto pawn = queryPawn(name)) return pawn;
@@ -388,7 +412,15 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(camera->id(), camera);
     auto camera_dto = camera->serializeDto();
-    m_storeMapper->putCamera(camera->id(), { camera_dto });
+    auto er = m_storeMapper->putCamera(camera->id(), { camera_dto });
+    if (!er)
+    {
+        EventPublisher::post(std::make_shared<CameraPut>(camera->id()));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<PutCameraFailed>(camera->id(), er));
+    }
 }
 
 void SceneGraphRepository::removeCamera(const SpatialId& id)
@@ -396,25 +428,49 @@ void SceneGraphRepository::removeCamera(const SpatialId& id)
     if (!hasCamera(id)) return;
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.erase(id);
-    m_storeMapper->removeCamera(id);
+    auto er = m_storeMapper->removeCamera(id);
+    if (!er)
+    {
+        EventPublisher::post(std::make_shared<CameraRemoved>(id));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<RemoveCameraFailed>(id, er));
+    }
 }
 
-void SceneGraphRepository::putPawn(const std::shared_ptr<Pawn>& pawn)
+void SceneGraphRepository::putSpatial(const std::shared_ptr<Spatial>& spatial)
 {
     assert(m_storeMapper);
-    assert(pawn);
-    std::lock_guard locker{ m_pawnMapLock };
-    m_pawns.insert_or_assign(pawn->id(), pawn);
-    auto pawn_dto = pawn->serializeDto();
-    m_storeMapper->putSpatial(pawn->id(), { pawn_dto });
+    assert(spatial);
+    std::lock_guard locker{ m_spatialMapLock };
+    m_spatials.insert_or_assign(spatial->id(), spatial);
+    auto dto = spatial->serializeDto();
+    auto er = m_storeMapper->putSpatial(spatial->id(), { dto });
+    if (!er)
+    {
+        EventPublisher::post(std::make_shared<SpatialPut>(spatial->id()));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<PutSpatialFailed>(spatial->id(), er));
+    }
 }
 
-void SceneGraphRepository::removePawn(const SpatialId& id)
+void SceneGraphRepository::removeSpatial(const SpatialId& id)
 {
-    if (!hasPawn(id)) return;
-    std::lock_guard locker{ m_pawnMapLock };
-    m_pawns.erase(id);
-    m_storeMapper->removeSpatial(id);
+    if (!hasSpatial(id)) return;
+    std::lock_guard locker{ m_spatialMapLock };
+    m_spatials.erase(id);
+    auto er = m_storeMapper->removeSpatial(id);
+    if (!er)
+    {
+        EventPublisher::post(std::make_shared<SpatialRemoved>(id));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<RemoveSpatialFailed>(id, er));
+    }
 }
 
 void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
@@ -425,12 +481,44 @@ void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
     query->setResult(queryNode(query->nodeName()));
 }
 
-void SceneGraphRepository::queryPawn(const Frameworks::IQueryPtr& q)
+void SceneGraphRepository::querySpatial(const Frameworks::IQueryPtr& q)
 {
     if (!q) return;
-    const auto query = std::dynamic_pointer_cast<QueryPawn>(q);
+    const auto query = std::dynamic_pointer_cast<QuerySpatial>(q);
     assert(query);
-    query->setResult(queryPawn(query->id()));
+    query->setResult(querySpatial(query->id()));
+}
+
+void SceneGraphRepository::putCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<PutCamera>(c);
+    assert(cmd);
+    putCamera(cmd->camera());
+}
+
+void SceneGraphRepository::removeCamera(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<RemoveCamera>(c);
+    assert(cmd);
+    removeCamera(cmd->id());
+}
+
+void SceneGraphRepository::putSpatial(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<PutSpatial>(c);
+    assert(cmd);
+    putSpatial(cmd->spatial());
+}
+
+void SceneGraphRepository::removeSpatial(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<RemoveSpatial>(c);
+    assert(cmd);
+    removeSpatial(cmd->id());
 }
 
 /*void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)

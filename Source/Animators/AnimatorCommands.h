@@ -28,7 +28,7 @@ namespace Enigma::Animators
     {
     public:
         AddListeningAnimator(const std::shared_ptr<Engine::Animator>& animator) : m_animator(animator) {}
-        const std::shared_ptr<Engine::Animator>& GetAnimator() { return m_animator; }
+        const std::shared_ptr<Engine::Animator>& getAnimator() { return m_animator; }
 
     private:
         std::shared_ptr<Engine::Animator> m_animator;
@@ -37,7 +37,7 @@ namespace Enigma::Animators
     {
     public:
         RemoveListeningAnimator(const std::shared_ptr<Engine::Animator>& animator) : m_animator(animator) {}
-        const std::shared_ptr<Engine::Animator>& GetAnimator() { return m_animator; }
+        const std::shared_ptr<Engine::Animator>& getAnimator() { return m_animator; }
 
     private:
         std::shared_ptr<Engine::Animator> m_animator;

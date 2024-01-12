@@ -1,11 +1,12 @@
 ﻿#include "MeshPrimitiveRay3IntersectionFinder.h"
 #include "GameEngine/IntersectionFinderFactories.h"
-#include "GameEngine/IntrGeometryRay3.h"
-#include "GameEngine/IntrGeometryCache.h"
+#include "Geometries/IntrGeometryRay3.h"
+#include "Geometries/IntrGeometryCache.h"
 #include "MeshPrimitive.h"
 
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
+using namespace Enigma::Geometries;
 using namespace Enigma::MathLib;
 
 MeshPrimitiveRay3IntersectionFinder::MeshPrimitiveRay3IntersectionFinder()
@@ -59,11 +60,11 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::TestMesh(const std::sha
     const Ray3& point_ray, std::unique_ptr<IntersectorCache> cache) const
 {
     Ray3 ray = point_ray;
-    Matrix4 inv_world = mesh->GetPrimitiveWorldTransform().Inverse();
+    Matrix4 inv_world = mesh->getPrimitiveWorldTransform().Inverse();
     ray.Origin() = inv_world.TransformCoord(ray.Origin());
     std::tie(ray.Direction(), std::ignore) = inv_world.TransformVectorNormalized(ray.Direction());
 
-    IntrGeometryRay3 intr_geo(mesh->GetGeometryData(), ray);
+    IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
     return intr_geo.Test(std::move(cache));
 }
 
@@ -71,13 +72,13 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Me
     const std::shared_ptr<MeshPrimitive>& mesh, const Ray3& point_ray, std::unique_ptr<IntersectorCache> cache) const
 {
     Ray3 ray = point_ray;
-    Matrix4 inv_world = mesh->GetPrimitiveWorldTransform().Inverse();
+    Matrix4 inv_world = mesh->getPrimitiveWorldTransform().Inverse();
     float dir_length;
     ray.Origin() = inv_world.TransformCoord(ray.Origin());
     std::tie(ray.Direction(), dir_length) = inv_world.TransformVectorNormalized(ray.Direction());
 
     std::vector<IntrPrimitiveRay3::ResultRecord> records;
-    IntrGeometryRay3 intr_geo(mesh->GetGeometryData(), ray);
+    IntrGeometryRay3 intr_geo(mesh->getGeometryData(), ray);
     auto res = intr_geo.Find(std::move(cache));
     if (res.m_hasIntersect)
     {

@@ -108,7 +108,7 @@ void GameCameraService::constitutePrimaryCamera(const SceneGraph::SpatialId& id,
     }
     else
     {
-        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(id, dto);
+        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(id, dto, false);
         m_sceneGraphRepository.lock()->putCamera(m_primaryCamera);
     }
     assert(m_sceneGraphRepository.lock()->hasCamera(id));

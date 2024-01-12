@@ -205,7 +205,7 @@ namespace Enigma::SceneGraph
 
         /** enum animator list deep, including geometry's animator */
         //todo : animators
-        //virtual void EnumAnimatorListDeep(AnimatorList& resultList) override;
+        //virtual void enumAnimatorListDeep(AnimatorList& resultList) override;
 
         /** add spatial notify flag */
         void addNotifyFlag(NotifyFlags flag)

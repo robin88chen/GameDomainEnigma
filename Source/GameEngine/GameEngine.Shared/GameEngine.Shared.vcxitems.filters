@@ -16,9 +16,6 @@
     <Filter Include="Effect Material\Technique Pass">
       <UniqueIdentifier>{3fab46e9-f3f8-4e2b-b31c-41fb9dd17f98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect Material\Effect Compiler">
-      <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderBuffer\BufferBuilder">
       <UniqueIdentifier>{deed8b56-b9cb-4947-981a-d040a23952fc}</UniqueIdentifier>
     </Filter>
@@ -37,29 +34,14 @@
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry Repository">
-      <UniqueIdentifier>{a1a7b622-6eb9-4187-a2fd-1ed4ac1333b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry Repository\Geometry Datas">
-      <UniqueIdentifier>{f0f85a76-37c8-4177-9009-85996962e2cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry Repository\Geometry Datas\Policy">
-      <UniqueIdentifier>{108a32c0-3939-481c-a9c3-84d22d345a4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DTOs">
       <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
     </Filter>
     <Filter Include="DTOs\BV Dto">
       <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DTOs\Geometry Dto">
-      <UniqueIdentifier>{1b22230c-2658-4a18-bcba-ded60c5bbd5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect Material\Effect Texture Map">
       <UniqueIdentifier>{cb5ad250-41d0-4f9f-8832-8dd059098647}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Effect Material\Policy">
-      <UniqueIdentifier>{b133a405-2a7c-4b1e-a87d-63113fc8b5c0}</UniqueIdentifier>
     </Filter>
     <Filter Include="DTOs\Effect Dto">
       <UniqueIdentifier>{6d277dec-bcd4-4379-8e49-98880421cc8a}</UniqueIdentifier>
@@ -84,6 +66,21 @@
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{9dfda7b0-36c4-4ff6-9aed-96ec854e83ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Queries">
+      <UniqueIdentifier>{961b9d78-91ba-45af-999b-a803b3ceeb2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect Material\Repository">
+      <UniqueIdentifier>{0a23c628-c608-412e-acf6-5f02d5829c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect Material\Repository\Effect Compiler">
+      <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTOs\Texture Dto">
+      <UniqueIdentifier>{e144ea47-8807-4106-b3f2-39e86ba3b02f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Textures\ResourceProcessor">
+      <UniqueIdentifier>{c97ac5c6-b031-4a87-a005-f02d9df4ee96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,19 +121,13 @@
       <Filter>Effect Material\Technique Pass</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.h">
-      <Filter>Effect Material</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBuffer.h">
       <Filter>RenderBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderBufferRepository.h">
       <Filter>RenderBuffer</Filter>
@@ -156,13 +147,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepository.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TexturePolicies.h">
       <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h">
@@ -195,29 +180,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
       <Filter>DTOs</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h">
-      <Filter>Geometry Repository\Geometry Datas\Policy</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.h">
-      <Filter>Geometry Repository</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h">
       <Filter>DTOs\BV Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
-      <Filter>DTOs\Geometry Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h">
       <Filter>DTOs</Filter>
@@ -234,23 +198,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfileDeserializer.h">
-      <Filter>Effect Material\Effect Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialPolicy.h">
-      <Filter>Effect Material\Policy</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapPolicy.h">
-      <Filter>Effect Material\Policy</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.h">
-      <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h">
       <Filter>DTOs\Effect Dto</Filter>
@@ -270,9 +219,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h">
       <Filter>Installing Policies</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -282,9 +228,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
-      <Filter>DTOs\Geometry Dto</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
@@ -292,12 +235,6 @@
       <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
-      <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h">
-      <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h">
       <Filter>Intersect</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h">
@@ -309,8 +246,77 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h">
       <Filter>Intersect\IntersectionFinder</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveId.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveStoreMapper.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h">
+      <Filter>Effect Material\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h">
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureStoreMapper.h">
       <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h">
+      <Filter>DTOs\Texture Dto</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureLoader.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureSaver.h">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
+      <Filter>Textures\ResourceProcessor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -342,13 +348,10 @@
       <Filter>Effect Material\Technique Pass</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp">
-      <Filter>Effect Material\Effect Compiler</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp">
-      <Filter>Effect Material\Effect Compiler</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialManager.cpp">
-      <Filter>Effect Material</Filter>
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderBuffer.cpp">
       <Filter>RenderBuffer</Filter>
@@ -360,9 +363,6 @@
       <Filter>RenderBuffer\BufferBuilder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp">
-      <Filter>Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp">
@@ -389,26 +389,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MaterialVariableMap.cpp">
       <Filter>Effect Material</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp">
-      <Filter>Geometry Repository\Geometry Datas</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp">
-      <Filter>Geometry Repository</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryBuilder.cpp">
-      <Filter>Geometry Repository</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp">
       <Filter>DTOs\BV Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
-      <Filter>DTOs\Geometry Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp">
       <Filter>DTOs</Filter>
@@ -418,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp">
       <Filter>Effect Material\Effect Texture Map</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialDto.cpp">
-      <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp">
       <Filter>DTOs\Effect Dto</Filter>
@@ -437,16 +419,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp">
-      <Filter>DTOs\Geometry Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
       <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
-      <Filter>Intersect</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
       <Filter>Intersect</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp">
@@ -455,8 +431,50 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp">
       <Filter>Intersect\IntersectionFinder</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp">
+      <Filter>Effect Material\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp">
+      <Filter>Effect Material\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp">
+      <Filter>Effect Material\Repository\Effect Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureDto.cpp">
+      <Filter>DTOs\Texture Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp">
       <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureSaver.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
+      <Filter>Textures\ResourceProcessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

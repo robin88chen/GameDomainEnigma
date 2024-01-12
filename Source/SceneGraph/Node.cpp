@@ -51,7 +51,7 @@ NodeDto Node::serializeNodeDto()
 
 void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    NodeDto nodeDto = NodeDto::fromGenericDto(dto);
+    NodeDto nodeDto{ dto };
     for (auto& name : nodeDto.childNames())
     {
         resolver.TryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)

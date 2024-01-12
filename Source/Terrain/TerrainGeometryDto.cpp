@@ -30,15 +30,15 @@ TerrainGeometryDto::TerrainGeometryDto(const TriangleListDto& triangle_dto) : Tr
     m_numRows = m_numCols = 1;
 }
 
-void TerrainGeometryDto::ConvertGeometryVertices()
+void TerrainGeometryDto::convertGeometryVertices()
 {
     assert((m_numRows != 0) && (m_numCols != 0));
     Vector3 terrain_size = m_maxPosition - m_minPosition;
     Vector2 uv_range = m_maxTextureCoordinate - m_minTextureCoordinate;
 
-    m_vtxCapacity = CalculateGeometryVertexCount();
+    m_vtxCapacity = calculateGeometryVertexCount();
     m_vtxUsedCount = m_vtxCapacity;
-    m_idxCapacity = CalculateGeometryIndexCount();
+    m_idxCapacity = calculateGeometryIndexCount();
     m_idxUsedCount = m_idxCapacity;
     m_segments = { 0, m_vtxUsedCount, 0, m_idxUsedCount };
     m_position3s = std::vector<Vector3>(m_vtxUsedCount);
@@ -72,28 +72,28 @@ void TerrainGeometryDto::ConvertGeometryVertices()
         m_indices.value()[cell_i * 6 + 4] = (zi + 1) * (m_numCols + 1) + xi + 1;
         m_indices.value()[cell_i * 6 + 5] = zi * (m_numCols + 1) + xi + 1;
     }
-    TextureCoordDto tex_coord_dto;
-    TextureCoordDto alpha_coord_dto;
-    tex_coord_dto.Texture2DCoords() = tex_coords;
-    alpha_coord_dto.Texture2DCoords() = alpha_coords;
+    Geometries::TextureCoordDto tex_coord_dto;
+    Geometries::TextureCoordDto alpha_coord_dto;
+    tex_coord_dto.texture2DCoords() = tex_coords;
+    alpha_coord_dto.texture2DCoords() = alpha_coords;
     m_texCoords = { tex_coord_dto.toGenericDto(), alpha_coord_dto.toGenericDto() };
 
     m_vertexFormat = "xyz_nor_tex2(2,2)";
     m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    m_geometryBound = CalculateGeometryBounding().serializeDto().toGenericDto();
+    m_geometryBound = calculateGeometryBounding().serializeDto().toGenericDto();
 }
 
-unsigned TerrainGeometryDto::CalculateGeometryVertexCount() const
+unsigned TerrainGeometryDto::calculateGeometryVertexCount() const
 {
     return (m_numRows + 1) * (m_numCols + 1);
 }
 
-unsigned TerrainGeometryDto::CalculateGeometryIndexCount() const
+unsigned TerrainGeometryDto::calculateGeometryIndexCount() const
 {
     return m_numRows * m_numCols * 6;
 }
 
-BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
+BoundingVolume TerrainGeometryDto::calculateGeometryBounding()
 {
     assert((m_numRows != 0) && (m_numCols != 0));
     float min_height = 0.0f;
@@ -118,8 +118,8 @@ BoundingVolume TerrainGeometryDto::CalculateGeometryBounding()
 TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     TerrainGeometryDto terrain_dto;
-    terrain_dto.DeserializeNonVertexAttributesFromGenericDto(dto);
-    terrain_dto.factoryDesc() = dto.GetRtti();
+    terrain_dto.deserializeNonVertexAttributesFromGenericDto(dto);
+    terrain_dto.factoryDesc() = dto.getRtti();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_ROWS)) terrain_dto.m_numRows = v.value();
     if (auto v = dto.TryGetValue<unsigned>(TOKEN_NUM_COLS)) terrain_dto.m_numCols = v.value();
     if (auto v = dto.TryGetValue<Vector3>(TOKEN_MIN_POSITION)) terrain_dto.m_minPosition = v.value();
@@ -133,8 +133,8 @@ TerrainGeometryDto TerrainGeometryDto::fromGenericDto(const Engine::GenericDto& 
 GenericDto TerrainGeometryDto::toGenericDto() const
 {
     GenericDto dto;
-    SerializeNonVertexAttributesToGenericDto(dto);
-    dto.AddRtti(m_factoryDesc);
+    serializeNonVertexAttributesToGenericDto(dto);
+    dto.addRtti(m_factoryDesc);
     dto.AddOrUpdate(TOKEN_NUM_ROWS, m_numRows);
     dto.AddOrUpdate(TOKEN_NUM_COLS, m_numCols);
     dto.AddOrUpdate(TOKEN_MIN_POSITION, m_minPosition);

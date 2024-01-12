@@ -27,7 +27,7 @@ WorldMap::WorldMap(const std::string& name, const Engine::FactoryDesc& factory_d
     m_root = root;
 }
 
-WorldMap::WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(o.GetRtti())
+WorldMap::WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(o.getRtti())
 {
     WorldMapDto world = WorldMapDto::fromGenericDto(o);
     m_name = world.name();

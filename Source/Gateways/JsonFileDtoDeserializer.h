@@ -20,7 +20,7 @@ namespace Enigma::Gateways
     public:
         JsonFileDtoDeserializer();
 
-        virtual void InvokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
+        virtual void invokeDeserialize(const Frameworks::Ruid& ruid_deserializing, const std::string& param) override;
 
     private:
         std::shared_ptr<IDtoGateway> m_gateway;

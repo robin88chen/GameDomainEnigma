@@ -94,7 +94,7 @@ void PrefabIOService::loadNextPrefab()
     }
     m_currentCommand = m_loadingCommands.front();
     m_loadingCommands.pop_front();
-    deserializePrefab(m_currentCommand->getPawnDto().GetId(), m_currentCommand->getPawnDto().GetRtti().GetPrefab());
+    deserializePrefab(m_currentCommand->getPawnDto().ruid(), m_currentCommand->getPawnDto().getRtti().GetPrefab());
 }
 
 void PrefabIOService::deserializePrefab(const Ruid& dto_ruid, const std::string& prefab_at_path)
@@ -102,14 +102,14 @@ void PrefabIOService::deserializePrefab(const Ruid& dto_ruid, const std::string&
     if (prefab_at_path.empty()) return failPrefabLoading(ErrorCode::emptyPrefabPath);
     if (!m_dtoDeserializer) return failPrefabLoading(ErrorCode::nullDeserializer);
 
-    m_dtoDeserializer->InvokeDeserialize(dto_ruid, prefab_at_path);
+    m_dtoDeserializer->invokeDeserialize(dto_ruid, prefab_at_path);
 }
 
 void PrefabIOService::completePawnPrefabLoading(const std::shared_ptr<SceneGraph::Pawn>& pawn)
 {
     assert(pawn);
     assert(m_currentCommand);
-    EventPublisher::post(std::make_shared<PawnPrefabLoaded>(m_currentCommand->getRuid(), m_currentCommand->getPawnDto().GetRtti().GetPrefab(), pawn));
+    EventPublisher::post(std::make_shared<PawnPrefabLoaded>(m_currentCommand->getRuid(), m_currentCommand->getPawnDto().getRtti().GetPrefab(), pawn));
     m_currentCommand = nullptr;
     m_loadedPawn = nullptr;
     loadNextPrefab();
@@ -129,7 +129,7 @@ void PrefabIOService::onDtoDeserialized(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GenericDtoDeserialized>(e);
     if (!ev) return;
-    if (ev->getRuid() != m_currentCommand->getPawnDto().GetId()) return;
+    if (ev->getRuid() != m_currentCommand->getPawnDto().ruid()) return;
     CommandBus::post(std::make_shared<BuildSceneGraph>(m_currentCommand->getPawnDto().getName(), ev->GetDtos()));
 }
 
@@ -139,7 +139,7 @@ void PrefabIOService::onDeserializeDtoFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed>(e);
     if (!ev) return;
-    if (ev->getRuid() != m_currentCommand->getPawnDto().GetId()) return;
+    if (ev->getRuid() != m_currentCommand->getPawnDto().ruid()) return;
     failPrefabLoading(ev->GetErrorCode());
 }
 

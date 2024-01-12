@@ -31,7 +31,7 @@ TextureEgl::~TextureEgl()
     }
 }
 
-error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
+error TextureEgl::createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     if (m_texture != 0)
     {
@@ -55,7 +55,7 @@ error TextureEgl::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dim
     return ErrorCode::ok;
 }
 
-error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
+error TextureEgl::loadTextureImage(const byte_buffer& img_buff)
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
@@ -82,7 +82,7 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
             return ErrorCode::eglLoadTexture;
         }
 
-        CreateFromSystemMemory(MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
+        createFromSystemMemory(MathLib::Dimension<unsigned>{ image.width, image.height }, raw_buffer);
         png_image_free(&image);
 
         Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
@@ -92,12 +92,12 @@ error TextureEgl::LoadTextureImage(const byte_buffer& img_buff)
     return ErrorCode::pngFileFormat;
 }
 
-error TextureEgl::RetrieveTextureImage(const MathLib::Rect& rcSrc)
+error TextureEgl::retrieveTextureImage(const MathLib::Rect& rcSrc)
 {
     return ErrorCode::notImplement;
 }
 
-error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
+error TextureEgl::updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
@@ -123,7 +123,7 @@ error TextureEgl::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buf
     return ErrorCode::ok;
 }
 
-error TextureEgl::SaveTextureImage(const FileSystem::IFilePtr& file)
+error TextureEgl::saveTextureImage(const FileSystem::IFilePtr& file)
 {
     if (FATAL_LOG_EXPR(m_texture == 0)) return ErrorCode::nullEglTexture;
     if (FATAL_LOG_EXPR(m_isCubeTexture)) return ErrorCode::saveTextureFile;
@@ -148,7 +148,7 @@ error TextureEgl::SaveTextureImage(const FileSystem::IFilePtr& file)
     return ErrorCode::ok;
 }
 
-error TextureEgl::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
+error TextureEgl::useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     assert(m_texture != 0);
     BackSurfaceEgl* bb = dynamic_cast<BackSurfaceEgl*>(back_surf.get());

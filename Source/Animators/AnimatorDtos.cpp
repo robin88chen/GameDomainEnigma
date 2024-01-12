@@ -23,7 +23,7 @@ ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_
 ModelAnimatorDto ModelAnimatorDto::fromGenericDto(const GenericDto& dto)
 {
     ModelAnimatorDto model;
-    model.factoryDesc() = dto.GetRtti();
+    model.factoryDesc() = dto.getRtti();
     if (auto v = dto.TryGetValue<GenericDto>(TOKEN_ASSET_OBJECT)) model.AnimationAssetDto() = v.value();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_ANIMATION_NAME)) model.AssetName() = v.value();
     if (auto v = dto.TryGetValue<FactoryDesc>(TOKEN_ANIMATION_FACTORY)) model.AssetFactoryDesc() = v.value();
@@ -34,7 +34,7 @@ ModelAnimatorDto ModelAnimatorDto::fromGenericDto(const GenericDto& dto)
 GenericDto ModelAnimatorDto::toGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     if (m_animationAssetDto) dto.AddOrUpdate(TOKEN_ASSET_OBJECT, m_animationAssetDto.value());
     dto.AddOrUpdate(TOKEN_ANIMATION_NAME, m_assetName);
     dto.AddOrUpdate(TOKEN_ANIMATION_FACTORY, m_assetFactory);
@@ -51,7 +51,7 @@ std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::ConvertToPolicy(const std
     {
         asset_policy = std::make_shared<AnimationAssetPolicy>(m_assetName, m_animationAssetDto.value());
         policy = std::make_shared<ModelAnimatorPolicy>(controlled, asset_policy);
-        policy->AssetFactoryDesc() = m_animationAssetDto.value().GetRtti();
+        policy->AssetFactoryDesc() = m_animationAssetDto.value().getRtti();
     }
     else
     {
@@ -73,7 +73,7 @@ SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_R
 SkinOperatorDto SkinOperatorDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     SkinOperatorDto op;
-    op.factoryDesc() = dto.GetRtti();
+    op.factoryDesc() = dto.getRtti();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NAME)) op.SkinMeshName() = v.value();
     if (auto v = dto.TryGetValue<std::string>(TOKEN_SKIN_MESH_NODE_NAME)) op.SkinMeshNodeName() = v.value();
     if (auto v = dto.TryGetValue<std::vector<std::string>>(TOKEN_BONE_NODE_NAMES)) op.BoneNodeNames() = v.value();
@@ -84,7 +84,7 @@ SkinOperatorDto SkinOperatorDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto SkinOperatorDto::toGenericDto()
 {
     GenericDto dto;
-    dto.AddRtti(m_factoryDesc);
+    dto.addRtti(m_factoryDesc);
     if (m_skinMeshName) dto.AddOrUpdate(TOKEN_SKIN_MESH_NAME, m_skinMeshName.value());
     if (m_skinMeshNodeName) dto.AddOrUpdate(TOKEN_SKIN_MESH_NODE_NAME, m_skinMeshNodeName.value());
     dto.AddOrUpdate(TOKEN_BONE_NODE_NAMES, m_boneNodeNames);

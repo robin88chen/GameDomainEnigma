@@ -14,6 +14,18 @@ EffectTextureMap::EffectTextureMap()
 
 }
 
+EffectTextureMap::EffectTextureMap(const GenericDto& dto)
+{
+    EffectTextureMapDto effectTextureMapDto = EffectTextureMapDto::fromGenericDto(dto);
+    for (auto& mapping : effectTextureMapDto.textureMappings())
+    {
+        if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
+        {
+            m_effectTextures.emplace_back(std::make_tuple(mapping.semantic(), tex, mapping.arrayIndex()));
+        }
+    }
+}
+
 EffectTextureMap::EffectTextureMap(const EffectSemanticTextureTuple& tuple)
 {
     m_effectTextures.emplace_back(tuple);
@@ -38,20 +50,18 @@ GenericDto EffectTextureMap::serializeDto() const
         {
             if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
             TextureMappingDto mapping;
-            mapping.JobType() = TexturePolicy::JobType::Load;
-            mapping.Semantic() = std::get<std::string>(tex);
-            mapping.TextureName() = t->factoryDesc().GetResourceName();
-            mapping.Filename() = t->factoryDesc().GetResourceFilename();
-            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.ArrayIndex() = v.value();
-            dto.TextureMappings().emplace_back(mapping);
+            mapping.textureId() = t->id();
+            mapping.semantic() = std::get<std::string>(tex);
+            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.arrayIndex() = v.value();
+            dto.textureMappings().emplace_back(mapping);
         }
     }
     return dto.toGenericDto();
 }
 
-error EffectTextureMap::BindSemanticTexture(const EffectSemanticTextureTuple& tuple)
+error EffectTextureMap::bindSemanticTexture(const EffectSemanticTextureTuple& tuple)
 {
-    auto index = GetTextureIndexBySemantic(std::get<std::string>(tuple));
+    auto index = getTextureIndexBySemantic(std::get<std::string>(tuple));
     if (!index) // semantic not match
     {
         m_effectTextures.emplace_back(tuple);
@@ -61,42 +71,42 @@ error EffectTextureMap::BindSemanticTexture(const EffectSemanticTextureTuple& tu
     return ErrorCode::ok;
 }
 
-error EffectTextureMap::ChangeSemanticTexture(const EffectSemanticTextureTuple& tuple)
+error EffectTextureMap::changeSemanticTexture(const EffectSemanticTextureTuple& tuple)
 {
-    auto index = GetTextureIndexBySemantic(std::get<std::string>(tuple));
+    auto index = getTextureIndexBySemantic(std::get<std::string>(tuple));
     if (!index) return ErrorCode::textureSemantic;
     m_effectTextures[index.value()] = tuple;
     return ErrorCode::ok;
 }
 
-unsigned EffectTextureMap::AppendTextureSemantic(const std::string& semantic)
+unsigned EffectTextureMap::appendTextureSemantic(const std::string& semantic)
 {
-    auto index = GetTextureIndexBySemantic(semantic);
+    auto index = getTextureIndexBySemantic(semantic);
     if (index) return index.value();
 
     m_effectTextures.emplace_back(std::make_tuple(semantic, nullptr, std::nullopt));
     return static_cast<unsigned>(m_effectTextures.size()) - 1;
 }
 
-std::shared_ptr<Texture> EffectTextureMap::GetTexture(unsigned index)
+std::shared_ptr<Texture> EffectTextureMap::getTexture(unsigned index)
 {
     if (index >= m_effectTextures.size()) return nullptr;
     return std::get<std::shared_ptr<Texture>>(m_effectTextures[index]);
 }
 
-std::shared_ptr<Texture> EffectTextureMap::GetTexture(unsigned index) const
+std::shared_ptr<Texture> EffectTextureMap::getTexture(unsigned index) const
 {
     if (index >= m_effectTextures.size()) return nullptr;
     return std::get<std::shared_ptr<Texture>>(m_effectTextures[index]);
 }
 
-const EffectTextureMap::EffectSemanticTextureTuple& EffectTextureMap::GetEffectSemanticTextureTuple(unsigned index)
+const EffectTextureMap::EffectSemanticTextureTuple& EffectTextureMap::getEffectSemanticTextureTuple(unsigned index)
 {
     assert(index < m_effectTextures.size());
     return m_effectTextures[index];
 }
 
-std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::FindSemanticTexture(const std::string& semantic) const
+std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::findSemanticTexture(const std::string& semantic) const
 {
     for (auto& tuple : m_effectTextures)
     {
@@ -105,7 +115,7 @@ std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::Fi
     return std::nullopt;
 }
 
-bool EffectTextureMap::IsAllResourceTexture() const
+bool EffectTextureMap::isAllResourceTexture() const
 {
     for (auto& tuple : m_effectTextures)
     {
@@ -117,7 +127,7 @@ bool EffectTextureMap::IsAllResourceTexture() const
     return true;
 }
 
-void EffectTextureMap::MergeTextureSetTo(EffectTextureMap& targetMap)
+void EffectTextureMap::mergeTextureSetTo(EffectTextureMap& targetMap)
 {
     for (auto& tex : m_effectTextures)
     {
@@ -125,11 +135,11 @@ void EffectTextureMap::MergeTextureSetTo(EffectTextureMap& targetMap)
         if (std::get<std::shared_ptr<Texture>>(tex) == nullptr) continue;
         if (std::get<std::string>(tex).empty()) continue;
 
-        targetMap.BindSemanticTexture(tex);
+        targetMap.bindSemanticTexture(tex);
     }
 }
 
-std::optional<unsigned> EffectTextureMap::GetTextureIndexBySemantic(const std::string& semantic)
+std::optional<unsigned> EffectTextureMap::getTextureIndexBySemantic(const std::string& semantic)
 {
     if (m_effectTextures.empty()) return std::nullopt;
     for (unsigned i = 0; i < m_effectTextures.size(); i++)

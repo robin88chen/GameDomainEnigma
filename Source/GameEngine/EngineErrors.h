@@ -21,17 +21,19 @@ namespace Enigma::Engine
         deserializeFail,
         fileIOError,
 
+        primitiveFactoryNotExists = 151,
+        primitiveEntityAlreadyExists,
+        effectAlreadyCompiled,
+
         effectPassEnd = 201,
         compilingEmptyEffectTech,
         noSelectedTechnique,
         nullMaterial,
         textureSemantic,
 
-        invalidArrayIndex = 301,
-        nullMemoryBuffer,
-        zeroVertexSize,
-
-        targetTextureNotExists = 401,
+        targetTextureNotExists = 301,
+        textureAlreadyLoaded,
+        textureNotReady,
     };
     class ErrorCategory : public std::error_category
     {

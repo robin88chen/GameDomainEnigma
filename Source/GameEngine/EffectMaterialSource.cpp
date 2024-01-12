@@ -1,60 +1,67 @@
 ﻿#include "EffectMaterialSource.h"
 #include "EffectMaterial.h"
-#include <cassert>
-
+#include "EffectEvents.h"
+#include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryAllocMacro.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
-std::function<void(const std::shared_ptr<EffectMaterialSource>&)> EffectMaterialSource::OnDuplicatedEmpty;
-
-EffectMaterialSource::EffectMaterialSource()
+EffectMaterialSource::EffectMaterialSource(const EffectMaterialId& id)
 {
+    m_id = id;
     m_duplicateCount = 0;
-    m_effectMaterial = nullptr;
-}
-
-EffectMaterialSource::EffectMaterialSource(std::shared_ptr<EffectMaterial> material)
-{
-    m_duplicateCount = 1;
-    m_effectMaterial = material;
+    m_duplicatedSerial = 0;
+    m_sourceEffectMaterial = std::make_shared<EffectMaterial>(id);
 }
 
 EffectMaterialSource::~EffectMaterialSource()
 {
     assert(m_duplicateCount <= 1);
-    m_effectMaterial = nullptr;
+    m_sourceEffectMaterial = nullptr;
 }
 
-const std::string& EffectMaterialSource::getName() const
+void EffectMaterialSource::linkSourceSelf()
 {
-    assert(m_effectMaterial);
-    return m_effectMaterial->getName();
+    if (m_sourceEffectMaterial) m_sourceEffectMaterial->setSource(shared_from_this());
 }
 
-void EffectMaterialSource::LinkSource()
+std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
 {
-    if (m_effectMaterial) m_effectMaterial->SetSource(shared_from_this());
-}
-
-EffectMaterialPtr EffectMaterialSource::CloneEffectMaterial()
-{
-    assert(m_effectMaterial);
+    assert(m_sourceEffectMaterial);
     m_duplicateCount++;
-    return EffectMaterialPtr(menew EffectMaterial(*(m_effectMaterial.get())), [=](EffectMaterial* e) { this->DuplicatedEffectDeleter(e); });
+    m_duplicatedSerial++;
+    auto effect = std::shared_ptr<EffectMaterial>(menew EffectMaterial(EffectMaterialId(m_id, m_duplicatedSerial)), [=](EffectMaterial* e) { this->duplicatedEffectDeleter(e); });
+    effect->setSource(shared_from_this());
+    m_duplicatedEffects.emplace_back(effect);
+    if (m_sourceEffectMaterial->lazyStatus().isReady())
+    {
+        effect->copyFrom(m_sourceEffectMaterial);
+        effect->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
+    return effect;
 }
 
-void EffectMaterialSource::DuplicatedEffectDeleter(EffectMaterial* effect)
+void EffectMaterialSource::contentDuplicatedEffects()
 {
-    assert(effect != m_effectMaterial.get());
-    if (effect->GetEffectMaterialSource() == shared_from_this())
+    assert(m_sourceEffectMaterial);
+    for (auto& effect : m_duplicatedEffects)
     {
-        m_duplicateCount--;
-        assert(m_duplicateCount > 0);
-        if (m_duplicateCount <= 1)
+        if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
-            OnDuplicatedEmpty(shared_from_this());
+            effect.lock()->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
+            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialContented>(m_id, effect.lock()->id()));
         }
+    }
+}
+
+void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
+{
+    assert(effect != m_sourceEffectMaterial.get());
+    if (effect->getEffectMaterialSource() == shared_from_this())
+    {
+        assert(m_duplicateCount > 0);
+        m_duplicateCount--;
     }
     delete effect;
 }

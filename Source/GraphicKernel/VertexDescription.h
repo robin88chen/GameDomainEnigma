@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   VertexDescription.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   November 2022
  *********************************************************************/
@@ -60,7 +60,7 @@ namespace Enigma::Graphics
         bool operator !=(const VertexFormatCode& data) const;
         bool operator <(const VertexFormatCode& data) const;
 
-        VertexDescription CalculateVertexSize();
+        VertexDescription calculateVertexSize();
         /** Make Code From String
         @remarks
         string format: \n  字串以底線連接token, 每個token表示為: \n
@@ -95,39 +95,39 @@ namespace Enigma::Graphics
         VertexDescription& operator=(const VertexDescription&) = default;
         VertexDescription& operator=(VertexDescription&&) = default;
 
-        void Initialize();
+        void initialize();
 
-        int PositionOffset() const { return m_positionOffset; }
-        int WeightOffset() const { return m_weightOffset; }
-        int WeightOffset(unsigned weight_idx) const;
-        int PaletteIndexOffset() const { return m_paletteIndexOffset; }
-        int NormalOffset() const { return m_normalOffset; }
-        int DiffuseColorOffset() const { return m_colorOffset; }
-        int DiffuseColorOffset(ColorNumeric type) const;
-        int SpecularColorOffset() const { return m_specularOffset; }
-        int SpecularColorOffset(ColorNumeric type) const;
-        int TextureCoordOffset(unsigned stage) const;
-        int TextureCoordSize(unsigned stage) const;
-        int TangentOffset() const;
-        int BiNormalOffset() const { return m_biNormalOffset; }
-        int BlendWeightCount() const { return m_blendWeightCount; }
-        int TotalVertexSize() const { return m_totalVertexSize; }
-        int NumberOfElements() const { return m_numElements; }
+        int positionOffset() const { return m_positionOffset; }
+        int weightOffset() const { return m_weightOffset; }
+        int weightOffset(unsigned weight_idx) const;
+        int paletteIndexOffset() const { return m_paletteIndexOffset; }
+        int normalOffset() const { return m_normalOffset; }
+        int diffuseColorOffset() const { return m_colorOffset; }
+        int diffuseColorOffset(ColorNumeric type) const;
+        int specularColorOffset() const { return m_specularOffset; }
+        int specularColorOffset(ColorNumeric type) const;
+        int textureCoordOffset(unsigned stage) const;
+        int textureCoordSize(unsigned stage) const;
+        int tangentOffset() const;
+        int binormalOffset() const { return m_biNormalOffset; }
+        int blendWeightCount() const { return m_blendWeightCount; }
+        int totalVertexSize() const { return m_totalVertexSize; }
+        int numberOfElements() const { return m_numElements; }
 
-        int PositionDimension() const { return m_posVecDimension; }
-        int DiffuseColorDimension() const { return m_colorDimension; }
-        int SpecularColorDimension() const { return m_specularDimension; }
-        int TangentDimension() const { return m_tangentDimension; }
+        int positionDimension() const { return m_posVecDimension; }
+        int diffuseColorDimension() const { return m_colorDimension; }
+        int specularColorDimension() const { return m_specularDimension; }
+        int tangentDimension() const { return m_tangentDimension; }
 
-        bool HasPosition3() const { return (PositionOffset() >= 0) && (PositionDimension() == 3); }
-        bool HasPosition4() const { return (PositionOffset() >= 0) && (PositionDimension() == 4); }
-        bool HasNormal() const { return NormalOffset() >= 0; }
-        bool HasDiffuseColor(ColorNumeric type) const { return DiffuseColorOffset(type) >= 0; }
-        bool HasSpecularColor(ColorNumeric type) const { return SpecularColorOffset(type) >= 0; }
-        bool HasTextureCoord(unsigned stage, unsigned dimension) const;
-        bool HasPaletteIndex() const { return PaletteIndexOffset() >= 0; }
-        bool HasBlendWeight() const { return (WeightOffset() >= 0) && (BlendWeightCount() > 0); }
-        bool HasTangent() const { return TangentOffset() >= 0; }
+        bool hasPosition3() const { return (positionOffset() >= 0) && (positionDimension() == 3); }
+        bool hasPosition4() const { return (positionOffset() >= 0) && (positionDimension() == 4); }
+        bool hasNormal() const { return normalOffset() >= 0; }
+        bool hasDiffuseColor(ColorNumeric type) const { return diffuseColorOffset(type) >= 0; }
+        bool hasSpecularColor(ColorNumeric type) const { return specularColorOffset(type) >= 0; }
+        bool hasTextureCoord(unsigned stage, unsigned dimension) const;
+        bool hasPaletteIndex() const { return paletteIndexOffset() >= 0; }
+        bool hasBlendWeight() const { return (weightOffset() >= 0) && (blendWeightCount() > 0); }
+        bool hasTangent() const { return tangentOffset() >= 0; }
 
     private:
         friend VertexFormatCode;

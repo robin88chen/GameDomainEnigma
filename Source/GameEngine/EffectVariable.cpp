@@ -69,18 +69,18 @@ bool EffectVariable::operator==(const EffectVariable& var)
     return true;
 }
 
-void EffectVariable::AssignValue(std::any value)
+void EffectVariable::assignValue(std::any value)
 {
     m_value = std::move(value);
 }
 
-void EffectVariable::AssignValues(std::any value_array, unsigned value_count)
+void EffectVariable::assignValues(std::any value_array, unsigned value_count)
 {
     m_value = std::move(value_array);
     m_valueCount = value_count;
 }
 
-void EffectVariable::Commit()
+void EffectVariable::commit()
 {
     if (m_assign) m_assign(*this);
     if (!m_shaderVariable) return;
@@ -95,7 +95,7 @@ void EffectVariable::Commit()
     }
 }
 
-void EffectVariable::SetValueAssignFunction(VariableValueAssignFunc fn)
+void EffectVariable::setValueAssignFunction(VariableValueAssignFunc fn)
 {
     m_assign = std::move(fn);
 }

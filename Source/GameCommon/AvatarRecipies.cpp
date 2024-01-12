@@ -1,15 +1,17 @@
-﻿#include "AvatarRecipes.h"
+﻿#include "AvatarRecipeDto.h"
+#include "AvatarRecipes.h"
+#include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandBus.h"
-#include "Frameworks/ResponseBus.h"
-#include "GameEngine/EffectCommands.h"
+#include "Frameworks/QueryDispatcher.h"
 #include "GameEngine/EffectEvents.h"
+#include "GameEngine/EffectQueries.h"
+#include "GameEngine/Texture.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
-#include "Renderer/ModelPrimitive.h"
-#include "AvatarRecipeDto.h"
+#include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
+#include "Renderer/ModelPrimitive.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -25,13 +27,13 @@ AvatarRecipe::AvatarRecipe() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.getName())
 {
 }
 
-AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.GetRtti())
+AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.getRtti())
 {
 }
 
-std::shared_ptr<AvatarRecipe> AvatarRecipe::CreateFromGenericDto(const Engine::GenericDto& dto)
+std::shared_ptr<AvatarRecipe> AvatarRecipe::createFromGenericDto(const Engine::GenericDto& dto)
 {
-    std::string type = dto.GetRtti().GetRttiName();
+    std::string type = dto.getRtti().GetRttiName();
     if (type == ReplaceAvatarMaterial::TYPE_RTTI.getName())
     {
         return std::make_shared<ReplaceAvatarMaterial>(dto);
@@ -44,33 +46,33 @@ std::shared_ptr<AvatarRecipe> AvatarRecipe::CreateFromGenericDto(const Engine::G
 }
 
 
-ReplaceAvatarMaterial::ReplaceAvatarMaterial(const std::string& old_material_name, const EffectMaterialDto& new_material_dto)
-    : m_oldMaterialName(old_material_name), m_newMaterialDto(new_material_dto)
+ReplaceAvatarMaterial::ReplaceAvatarMaterial(const EffectMaterialId& old_material_id, const EffectMaterialId& new_material_id)
+    : m_oldMaterialId(old_material_id), m_newMaterialId(new_material_id)
 {
     m_factoryDesc = FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
-    m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
-    EventPublisher::subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onCompileEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompileEffectMaterialFailed(e); });
-    EventPublisher::subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    m_onEffectMaterialContented = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialContented(e); });
+    EventPublisher::subscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
+    m_onContentEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentMaterialFailed(e); });
+    EventPublisher::subscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::fromGenericDto(o);
-    m_oldMaterialName = dto.OldMaterialName();
-    m_newMaterialDto = dto.NewMaterialDto();
-    m_onEffectMaterialCompiled = std::make_shared<EventSubscriber>([=](auto e) { this->OnEffectMaterialCompiled(e); });
-    EventPublisher::subscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onCompileEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnCompileEffectMaterialFailed(e); });
-    EventPublisher::subscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
+    m_oldMaterialId = dto.oldMaterialId();
+    m_newMaterialId = dto.newMaterialId();
+    m_onEffectMaterialContented = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialContented(e); });
+    EventPublisher::subscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
+    m_onContentEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentMaterialFailed(e); });
+    EventPublisher::subscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 {
-    EventPublisher::unsubscribe(typeid(EffectMaterialCompiled), m_onEffectMaterialCompiled);
-    m_onEffectMaterialCompiled = nullptr;
-    EventPublisher::unsubscribe(typeid(CompileEffectMaterialFailed), m_onCompileEffectMaterialFailed);
-    m_onCompileEffectMaterialFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
+    m_onEffectMaterialContented = nullptr;
+    EventPublisher::unsubscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
+    m_onContentEffectMaterialFailed = nullptr;
     m_changeSpecifyMaterialMap.clear();
 }
 
@@ -78,95 +80,114 @@ GenericDto ReplaceAvatarMaterial::serializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.OldMaterialName() = m_oldMaterialName;
-    dto.NewMaterialDto() = m_newMaterialDto;
+    dto.oldMaterialId() = m_oldMaterialId;
+    dto.newMaterialId() = m_newMaterialId;
     return dto.toGenericDto();
 }
 
-void ReplaceAvatarMaterial::Bake(const std::shared_ptr<Pawn>& pawn)
+void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.Name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.Name()) return;
+    if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
     m_primitive = prim;
-    ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
     if (model)
     {
-        unsigned int total_mesh_prim = model->GetMeshPrimitiveCount();
+        unsigned int total_mesh_prim = model->getMeshPrimitiveCount();
         for (unsigned int i = 0; i < total_mesh_prim; i++)
         {
-            MeshPrimitivePtr mesh = model->GetMeshPrimitive(i);
+            std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(i);
             if (mesh)
             {
-                ReplaceMeshMaterial(mesh);
+                replaceMeshMaterial(mesh);
             }
         }
     }
-    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
     if (mesh)
     {
-        ReplaceMeshMaterial(mesh);
+        replaceMeshMaterial(mesh);
     }
 }
 
-void ReplaceAvatarMaterial::ReplaceMeshMaterial(const MeshPrimitivePtr& mesh)
+void ReplaceAvatarMaterial::replaceMeshMaterial(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
-    if ((m_oldMaterialName.empty()) || (m_newMaterialDto.Name().empty())) return;
-    if (m_oldMaterialName == m_newMaterialDto.Name()) return;
+    if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
 
-    unsigned int total_mat_count = mesh->GetEffectMaterialCount();
+    unsigned int total_mat_count = mesh->getEffectMaterialCount();
     if (total_mat_count == 0) return;
     for (unsigned int i = 0; i < total_mat_count; i++)
     {
-        EffectMaterialPtr eff = mesh->GetEffectMaterial(i);
+        std::shared_ptr<EffectMaterial> eff = mesh->getEffectMaterial(i);
         if (!eff) continue;
-        if (eff->getName() == m_oldMaterialName)
+        if (eff->id().isEqualSource(m_oldMaterialId))
         {
-            //todo: 先丟 request
-            auto cmd = std::make_shared<CompileEffectMaterial>(m_newMaterialDto);
-            m_changeSpecifyMaterialMap[cmd->getRuid()] = [mesh, i, this](const EffectMaterialPtr& eff_new)
+            auto query = std::make_shared<QueryEffectMaterial>(m_newMaterialId);
+            QueryDispatcher::dispatch(query);
+            if (auto eff_new = query->getResult())
+            {
+                if (eff_new->lazyStatus().isReady())
                 {
-                    mesh->ChangeEffectMaterialInSegment(i, eff_new);
-                    mesh->CreateRenderElements();
-                    if (!m_primitive.expired())
-                    {
-                        m_primitive.lock()->SelectVisualTechnique(m_primitive.lock()->GetSelectedVisualTechnique());
-                    }
-                };
-            CommandBus::post(cmd);
+                    replaceNewMeshMaterialInSegment(mesh, i, eff_new);
+                }
+                else
+                {
+                    m_changeSpecifyMaterialMap[eff_new->id()] = [=](const EffectMaterialId& id)
+                        {
+                            if (id == eff_new->id()) replaceNewMeshMaterialInSegment(mesh, i, eff_new);
+                        };
+                }
+            }
+            else
+            {
+                Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::ReplaceMeshMaterial: cannot find new material %s\n", m_newMaterialId.name().c_str());
+            }
         }
     }
 }
 
-void ReplaceAvatarMaterial::OnEffectMaterialCompiled(const IEventPtr& e)
+void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_ptr<MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<EffectMaterial>& new_material)
 {
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<EffectMaterialCompiled>(e);
-    if (!ev) return;
-    auto it = m_changeSpecifyMaterialMap.find(ev->getRequestRuid());
-    if (it == m_changeSpecifyMaterialMap.end()) return;
-    it->second(ev->GetEffect());
+    if (!mesh) return;
+    if (!new_material) return;
+    if (segment_index >= mesh->getEffectMaterialCount()) return;
+    mesh->changeEffectMaterialInSegment(segment_index, new_material);
+    mesh->createRenderElements();
+    if (!m_primitive.expired())
+    {
+        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->getSelectedVisualTechnique());
+    }
 }
 
-void ReplaceAvatarMaterial::OnCompileEffectMaterialFailed(const IEventPtr& e)
+void ReplaceAvatarMaterial::onEffectMaterialContented(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<CompileEffectMaterialFailed>(e);
+    const auto ev = std::dynamic_pointer_cast<EffectMaterialContented>(e);
     if (!ev) return;
-    Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnCompileEffectMaterialFailed: %s, %s\n", ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+    auto it = m_changeSpecifyMaterialMap.find(ev->id());
+    if (it == m_changeSpecifyMaterialMap.end()) return;
+    it->second(ev->id());
+}
+
+void ReplaceAvatarMaterial::onContentMaterialFailed(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<ContentEffectMaterialFailed>(e);
+    if (!ev) return;
+    Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
     : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
-    m_onTextureLoaded = std::make_shared<EventSubscriber>([=](auto e) { this->OnTextureLoaded(e); });
-    EventPublisher::subscribe(typeid(TextureLoaded), m_onTextureLoaded);
-    m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
-    EventPublisher::subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    m_onTextureContented = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
+    EventPublisher::subscribe(typeid(TextureContented), m_onTextureContented);
+    m_onContentTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
+    EventPublisher::subscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
@@ -174,17 +195,18 @@ ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRe
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
     m_meshName = dto.MeshName();
     m_textureDto = dto.TextureDto();
-    EventPublisher::subscribe(typeid(TextureLoaded), m_onTextureLoaded);
-    m_onLoadTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnLoadTextureFailed(e); });
-    EventPublisher::subscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
+    m_onTextureContented = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
+    EventPublisher::subscribe(typeid(TextureContented), m_onTextureContented);
+    m_onContentTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
+    EventPublisher::subscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
-    EventPublisher::unsubscribe(typeid(TextureLoaded), m_onTextureLoaded);
-    m_onTextureLoaded = nullptr;
-    EventPublisher::unsubscribe(typeid(LoadTextureFailed), m_onLoadTextureFailed);
-    m_onLoadTextureFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(TextureContented), m_onTextureContented);
+    m_onTextureContented = nullptr;
+    EventPublisher::unsubscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
+    m_onContentTextureFailed = nullptr;
 }
 
 GenericDto ChangeAvatarTexture::serializeDto() const
@@ -196,56 +218,59 @@ GenericDto ChangeAvatarTexture::serializeDto() const
     return dto.toGenericDto();
 }
 
-void ChangeAvatarTexture::Bake(const std::shared_ptr<Pawn>& pawn)
+void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_meshName.empty()) return;
-    if (m_textureDto.TextureName().empty()) return;
     PrimitivePtr prim = pawn->GetPrimitive();
     if (!prim) return;
-    ModelPrimitivePtr model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
     if (model)
     {
-        auto mesh = model->FindMeshPrimitive(m_meshName);
+        auto mesh = model->findMeshPrimitive(m_meshName);
         if (!mesh) return;
-        ChangeMeshTexture(mesh);
+        changeMeshTexture(mesh);
     }
-    MeshPrimitivePtr mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
     if (mesh)
     {
         if (mesh->getName() != m_meshName) return;
-        ChangeMeshTexture(mesh);
+        changeMeshTexture(mesh);
     }
 }
 
-void ChangeAvatarTexture::ChangeMeshTexture(const MeshPrimitivePtr& mesh)
+void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
     if (m_meshName.empty()) return;
-    if (m_textureDto.TextureName().empty()) return;
-    auto policy = m_textureDto.ConvertToPolicy();
-    auto req = std::make_shared<LoadTexture>(std::get<TexturePolicy>(policy));
-    m_requsetRuid = req->getRuid();
-    m_mesh = mesh;
-    CommandBus::post(req);
+    auto query = std::make_shared<QueryTexture>(m_textureDto.textureId());
+    QueryDispatcher::dispatch(query);
+    if ((query->getResult()) && (query->getResult()->lazyStatus().isReady()))
+    {
+        mesh->changeSemanticTexture({ m_textureDto.semantic(), query->getResult(), m_textureDto.arrayIndex() });
+    }
+    else
+    {
+        m_mesh = mesh;
+    }
 }
 
-void ChangeAvatarTexture::OnTextureLoaded(const Frameworks::IEventPtr& e)
+void ChangeAvatarTexture::onTextureContented(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<TextureLoaded>(e);
+    auto ev = std::dynamic_pointer_cast<TextureContented>(e);
     if (!ev) return;
-    if (ev->getRequestRuid() != m_requsetRuid) return;
+    if (ev->id() != m_textureDto.textureId()) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->ChangeSemanticTexture({ m_textureDto.Semantic(), ev->GetTexture(), m_textureDto.ArrayIndex() });
+    m_mesh.lock()->changeSemanticTexture({ m_textureDto.semantic(), ev->texture(), m_textureDto.arrayIndex() });
 }
 
-void ChangeAvatarTexture::OnLoadTextureFailed(const Frameworks::IEventPtr& e)
+void ChangeAvatarTexture::onContentTextureFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<LoadTextureFailed>(e);
+    auto ev = std::dynamic_pointer_cast<ContentTextureFailed>(e);
     if (!ev) return;
-    if (ev->getRequestRuid() != m_requsetRuid) return;
-    Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+    if (ev->id() != m_textureDto.textureId()) return;
+    Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 

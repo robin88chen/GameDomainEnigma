@@ -1,42 +1,18 @@
 ﻿#include "EffectMaterial.h"
 #include "EngineErrors.h"
+#include "EffectQueries.h"
 #include "Frameworks/Rtti.h"
-#include "EffectMaterialDto.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(Engine, EffectMaterial);
 
-EffectMaterial::EffectMaterial(const std::string& name, const std::vector<EffectTechnique>& techniques)
-    : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
+EffectMaterial::EffectMaterial(const EffectMaterialId& id) : m_factoryDesc(EffectMaterial::TYPE_RTTI.getName())
 {
-    m_factoryDesc.ClaimAsNative(name);
-    m_name = name;
-    m_effectTechniques = techniques;
+    m_id = id;
     m_currentTechnique = m_effectTechniques.end();
-    MappingAutoVariables();
-}
-
-EffectMaterial::EffectMaterial(const EffectMaterial& eff) : m_factoryDesc(eff.m_factoryDesc)
-{
-    m_name = eff.m_name;
-    m_sourceMaterial = eff.m_sourceMaterial.lock();
-    m_effectTechniques = eff.m_effectTechniques;
-    m_currentTechnique = m_effectTechniques.end();
-    MappingAutoVariables();
-}
-
-EffectMaterial::EffectMaterial(EffectMaterial&& eff) noexcept : m_factoryDesc(eff.factoryDesc())
-{
-    m_name = std::move(eff.m_name);
-    m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
-    m_effectTechniques = std::move(eff.m_effectTechniques);
-    m_currentTechnique = m_effectTechniques.end();
-    m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
-    m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
-    m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
-    MappingAutoVariables();
 }
 
 EffectMaterial::~EffectMaterial()
@@ -45,84 +21,76 @@ EffectMaterial::~EffectMaterial()
     m_instancedAssignFuncList.clear();
 }
 
-EffectMaterial& EffectMaterial::operator=(const EffectMaterial& eff)
+std::shared_ptr<EffectMaterial> EffectMaterial::queryEffectMaterial(const EffectMaterialId& id)
 {
-    if (this == &eff) return *this;
-    m_factoryDesc = eff.m_factoryDesc;
-    m_name = eff.m_name;
-    m_sourceMaterial = eff.m_sourceMaterial.lock();
-    m_effectTechniques = eff.m_effectTechniques;
+    auto query = std::make_shared<QueryEffectMaterial>(id);
+    QueryDispatcher::dispatch(query);
+    return query->getResult();
+}
+
+void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
+{
+    if (other == nullptr) return;
+    m_factoryDesc = other->factoryDesc();
+    m_sourceMaterial = other->m_sourceMaterial.lock();
+    m_effectTechniques = other->m_effectTechniques;
     m_currentTechnique = m_effectTechniques.end();
-    MappingAutoVariables();
-
-    return *this;
+    m_instancedAssignFuncList = other->m_instancedAssignFuncList;
+    m_selectedRendererTechName = other->m_selectedRendererTechName;
+    m_selectedVisualTechName = other->m_selectedVisualTechName;
+    mappingAutoVariables();
 }
 
-EffectMaterial& EffectMaterial::operator=(EffectMaterial&& eff) noexcept
+void EffectMaterial::instanceLazyContent(const std::vector<EffectTechnique>& techniques)
 {
-    m_factoryDesc = std::move(eff.m_factoryDesc);
-    m_name = std::move(eff.m_name);
-    m_sourceMaterial = std::move(eff.m_sourceMaterial.lock());
-    m_effectTechniques = std::move(eff.m_effectTechniques);
+    m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
-    m_instancedAssignFuncList = std::move(eff.m_instancedAssignFuncList);
-    m_selectedRendererTechName = std::move(eff.m_selectedRendererTechName);
-    m_selectedVisualTechName = std::move(eff.m_selectedVisualTechName);
-    MappingAutoVariables();
-
-    return *this;
+    mappingAutoVariables();
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
 }
 
-GenericDto EffectMaterial::serializeDto()
-{
-    EffectMaterialDto dto;
-    dto.Name() = m_name;
-    dto.factoryDesc() = m_factoryDesc;
-    return dto.toGenericDto();
-}
-
-void EffectMaterial::SetSource(const std::shared_ptr<EffectMaterialSource>& mat_source)
+void EffectMaterial::setSource(const std::shared_ptr<EffectMaterialSource>& mat_source)
 {
     m_sourceMaterial = mat_source;
 }
 
-void EffectMaterial::SelectRendererTechnique(const std::string& renderer_tech_name)
+void EffectMaterial::selectRendererTechnique(const std::string& renderer_tech_name)
 {
     m_selectedRendererTechName = renderer_tech_name;
-    SelectTechnique();
+    selectTechnique();
 }
 
-void EffectMaterial::SelectVisualTechnique(const std::string& visual_tech_name)
+void EffectMaterial::selectVisualTechnique(const std::string& visual_tech_name)
 {
     m_selectedVisualTechName = visual_tech_name;
-    SelectTechnique();
+    selectTechnique();
 }
 
-unsigned int EffectMaterial::GetPassCount()
+unsigned int EffectMaterial::getPassCount()
 {
     if (m_currentTechnique == m_effectTechniques.end()) return 0;
-    return m_currentTechnique->GetPassCount();
+    return m_currentTechnique->getPassCount();
 }
 
-error EffectMaterial::ApplyFirstPass()
+error EffectMaterial::applyFirstPass()
 {
     if (m_currentTechnique == m_effectTechniques.end()) return ErrorCode::noSelectedTechnique;
-    return m_currentTechnique->ApplyFirstPass();
+    return m_currentTechnique->applyFirstPass();
 }
 
-error EffectMaterial::ApplyNextPass()
+error EffectMaterial::applyNextPass()
 {
     if (m_currentTechnique == m_effectTechniques.end()) return ErrorCode::noSelectedTechnique;
-    return m_currentTechnique->ApplyNextPass();
+    return m_currentTechnique->applyNextPass();
 }
 
-bool EffectMaterial::HasNextPass()
+bool EffectMaterial::hasNextPass()
 {
     if (m_currentTechnique == m_effectTechniques.end()) return false;
-    return m_currentTechnique->HasNextPass();
+    return m_currentTechnique->hasNextPass();
 }
 
-void EffectMaterial::CommitInstancedEffectVariables()
+void EffectMaterial::commitInstancedEffectVariables()
 {
     if (m_instancedAssignFuncList.size() > 0)
     {
@@ -133,79 +101,79 @@ void EffectMaterial::CommitInstancedEffectVariables()
     }
 }
 
-std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::GetEffectVariablesByName(const std::string& name)
+std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::getEffectVariablesByName(const std::string& name)
 {
     std::list<std::reference_wrapper<EffectVariable>> result_list;
     result_list.clear();
     if (m_effectTechniques.empty()) return result_list;
     for (auto& tech : m_effectTechniques)
     {
-        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (auto eff_var = tech.GetPassByIndex(i).GetVariableByName(name))
+            if (auto eff_var = tech.getPassByIndex(i).getVariableByName(name))
                 result_list.emplace_back(eff_var.value());
         }
     }
     return result_list;
 }
 
-std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::GetEffectVariablesBySemantic(const std::string& semantic)
+std::list<std::reference_wrapper<EffectVariable>> EffectMaterial::getEffectVariablesBySemantic(const std::string& semantic)
 {
     std::list<std::reference_wrapper<EffectVariable>> result_list;
     result_list.clear();
     if (m_effectTechniques.empty()) return result_list;
     for (auto& tech : m_effectTechniques)
     {
-        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (auto eff_var = tech.GetPassByIndex(i).GetVariableBySemantic(semantic))
+            if (auto eff_var = tech.getPassByIndex(i).getVariableBySemantic(semantic))
                 result_list.emplace_back(eff_var.value());
         }
     }
     return result_list;
 }
 
-stdext::optional_ref<EffectVariable> EffectMaterial::GetEffectVariableInPassByName(const std::string& pass_name, const std::string& name)
+stdext::optional_ref<EffectVariable> EffectMaterial::getEffectVariableInPassByName(const std::string& pass_name, const std::string& name)
 {
     if (m_effectTechniques.empty()) return std::nullopt;
     for (auto& tech : m_effectTechniques)
     {
-        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).getName() == pass_name)
-                return tech.GetPassByIndex(i).GetVariableByName(name);
+            if (tech.getPassByIndex(i).name() == pass_name)
+                return tech.getPassByIndex(i).getVariableByName(name);
         }
     }
     return std::nullopt;
 }
 
-stdext::optional_ref<EffectVariable> EffectMaterial::GetEffectVariableInPassBySemantic(const std::string& pass_name, const std::string& semantic)
+stdext::optional_ref<EffectVariable> EffectMaterial::getEffectVariableInPassBySemantic(const std::string& pass_name, const std::string& semantic)
 {
     if (m_effectTechniques.empty()) return std::nullopt;
     for (auto& tech : m_effectTechniques)
     {
-        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            if (tech.GetPassByIndex(i).getName() == pass_name)
-                return tech.GetPassByIndex(i).GetVariableBySemantic(semantic);
+            if (tech.getPassByIndex(i).name() == pass_name)
+                return tech.getPassByIndex(i).getVariableBySemantic(semantic);
         }
     }
     return std::nullopt;
 }
 
-void EffectMaterial::SetVariableAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn)
+void EffectMaterial::setVariableAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn)
 {
-    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    auto vars_list = getEffectVariablesBySemantic(semantic);
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().SetValueAssignFunction(fn);
+        var.get().setValueAssignFunction(fn);
     }
 }
 
-void EffectMaterial::SetInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn)
+void EffectMaterial::setInstancedAssignFunc(const std::string& semantic, EffectVariable::VariableValueAssignFunc fn)
 {
-    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    auto vars_list = getEffectVariablesBySemantic(semantic);
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
@@ -222,58 +190,58 @@ void EffectMaterial::SetInstancedAssignFunc(const std::string& semantic, EffectV
     }
 }
 
-void EffectMaterial::AssignVariableValue(const std::string& semantic, std::any value)
+void EffectMaterial::assignVariableValue(const std::string& semantic, std::any value)
 {
-    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    auto vars_list = getEffectVariablesBySemantic(semantic);
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().AssignValue(value);
+        var.get().assignValue(value);
     }
 }
 
-void EffectMaterial::AssignVariableValues(const std::string& semantic, std::any value_array, unsigned value_count)
+void EffectMaterial::assignVariableValues(const std::string& semantic, std::any value_array, unsigned value_count)
 {
-    auto vars_list = GetEffectVariablesBySemantic(semantic);
+    auto vars_list = getEffectVariablesBySemantic(semantic);
     if (vars_list.empty()) return;
     for (auto& var : vars_list)
     {
-        var.get().AssignValues(value_array, value_count);
+        var.get().assignValues(value_array, value_count);
     }
 }
 
-void EffectMaterial::AssignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value)
+void EffectMaterial::assignInPassVariableValue(const std::string& pass_name, const std::string& semantic, std::any value)
 {
-    auto var = GetEffectVariableInPassBySemantic(pass_name, semantic);
-    if (var) var.value().get().AssignValue(std::move(value));
+    auto var = getEffectVariableInPassBySemantic(pass_name, semantic);
+    if (var) var.value().get().assignValue(std::move(value));
 }
 
-void EffectMaterial::AssignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned value_count)
+void EffectMaterial::assignInPassVariableValues(const std::string& pass_name, const std::string& semantic, std::any value_array, unsigned value_count)
 {
-    auto var = GetEffectVariableInPassBySemantic(pass_name, semantic);
-    if (var) var.value().get().AssignValues(std::move(value_array), value_count);
+    auto var = getEffectVariableInPassBySemantic(pass_name, semantic);
+    if (var) var.value().get().assignValues(std::move(value_array), value_count);
 }
 
-void EffectMaterial::MappingAutoVariables()
+void EffectMaterial::mappingAutoVariables()
 {
     if (m_effectTechniques.empty()) return;
     for (auto& tech : m_effectTechniques)
     {
-        for (unsigned int i = 0; i < tech.GetPassCount(); i++)
+        for (unsigned int i = 0; i < tech.getPassCount(); i++)
         {
-            tech.GetPassByIndex(i).MappingAutoVariables();
+            tech.getPassByIndex(i).mappingAutoVariables();
         }
     }
 }
 
-void EffectMaterial::SelectTechnique()
+void EffectMaterial::selectTechnique()
 {
     std::string combinedTechName = m_selectedRendererTechName + "/" + m_selectedVisualTechName;
     if ((m_currentTechnique != m_effectTechniques.end())
-        && (m_currentTechnique->getName() == combinedTechName)) return;
+        && (m_currentTechnique->name() == combinedTechName)) return;
     if (m_effectTechniques.empty()) return;
     auto iter = std::find_if(m_effectTechniques.begin(), m_effectTechniques.end(),
-        [=](auto& t) -> bool { return t.getName() == combinedTechName; });
+        [=](auto& t) -> bool { return t.name() == combinedTechName; });
     if (iter != m_effectTechniques.end())
     {
         m_currentTechnique = iter;

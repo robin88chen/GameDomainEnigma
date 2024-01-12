@@ -82,7 +82,7 @@ error Renderer::BeginScene()
         m_target.lock()->Bind();
         m_target.lock()->Clear();
         m_target.lock()->BindViewPort();
-        Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
+        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
     }
     std::shared_ptr<SceneGraph::Camera> camera;
     if (!m_associatedCamera.expired())
@@ -91,7 +91,7 @@ error Renderer::BeginScene()
     }
     if (camera)
     {
-        Engine::MaterialVariableMap::UseCameraParameter(camera->location(),
+        Engine::MaterialVariableMap::useCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
     Graphics::IGraphicAPI::instance()->BeginScene();
@@ -105,9 +105,9 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
         m_target.lock()->Bind();
         m_target.lock()->Clear();
         m_target.lock()->BindViewPort();
-        Engine::MaterialVariableMap::UseViewPortDimension(m_target.lock()->GetViewPort());
+        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
     }
-    Engine::MaterialVariableMap::UseCameraParameter(camera_loc, mxView, mxProj);
+    Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
     Graphics::IGraphicAPI::instance()->BeginScene();
     return ErrorCode::ok;
 }
@@ -115,7 +115,7 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
 error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     SceneGraph::Spatial::SpatialFlags accept_filter, SceneGraph::Spatial::SpatialFlags reject_filter)
 {
-    const size_t count = visible_set.GetCount();
+    const size_t count = visible_set.getCount();
     if (count <= 0) return ErrorCode::ok;
     const SceneGraph::VisibleSet::SpatialVector& spatial_array = visible_set.GetObjectSet();
     for (const auto& sp : spatial_array)
@@ -167,7 +167,7 @@ void Renderer::EnableSortBeforeDraw(RenderListID list_id, bool flag)
     m_renderPacksArray[static_cast<size_t>(list_id)].EnableSortBeforeDraw(flag);
 }
 
-void Renderer::SelectRendererTechnique(const std::string& techniqueName)
+void Renderer::selectRendererTechnique(const std::string& techniqueName)
 {
     m_rendererTechniqueName = techniqueName;
 }

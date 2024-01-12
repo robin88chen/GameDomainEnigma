@@ -9,7 +9,7 @@
 
 using namespace Enigma::ShadowMap;
 
-error ShadowMapInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error ShadowMapInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_service = service_manager->getSystemServiceAs<GameCommon::GameSceneService>();
@@ -21,14 +21,14 @@ error ShadowMapInstallingPolicy::Install(Frameworks::ServiceManager* service_man
     return error();
 }
 
-error ShadowMapInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error ShadowMapInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->shutdownSystemService(ShadowMapService::TYPE_RTTI);
     return error();
 }
 
-error CascadeShadowMapInstallingPolicy::Install(Frameworks::ServiceManager* service_manager)
+error CascadeShadowMapInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     auto scene_service = service_manager->getSystemServiceAs<GameCommon::GameSceneService>();
@@ -41,7 +41,7 @@ error CascadeShadowMapInstallingPolicy::Install(Frameworks::ServiceManager* serv
     return error();
 }
 
-error CascadeShadowMapInstallingPolicy::Shutdown(Frameworks::ServiceManager* service_manager)
+error CascadeShadowMapInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
     service_manager->removeHashAsService(ShadowMapService::TYPE_RTTI);

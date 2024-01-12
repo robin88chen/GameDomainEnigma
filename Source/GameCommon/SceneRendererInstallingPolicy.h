@@ -22,8 +22,8 @@ namespace Enigma::GameCommon
         SceneRendererInstallingPolicy(const std::string& renderer_name, const std::string& target_name, const std::shared_ptr<SceneRendererServiceConfiguration>& config)
             : m_rendererName(renderer_name), m_targetName(target_name), m_config(config) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::string m_rendererName;
@@ -36,8 +36,8 @@ namespace Enigma::GameCommon
     public:
         DeferredRendererInstallingPolicy(const std::string& renderer_name, const std::string& target_name, const std::shared_ptr<DeferredRendererServiceConfiguration>& config)
             : m_rendererName(renderer_name), m_targetName(target_name), m_config(config) {}
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::string m_rendererName;

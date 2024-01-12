@@ -1,0 +1,1 @@
+basic_vtx_tex,basic_vtx_tex.efx@APK_PATH

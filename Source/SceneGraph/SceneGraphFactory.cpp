@@ -64,12 +64,16 @@ void SceneGraphFactory::unregisterHandlers()
 
 std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
 {
-    return std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
+    auto camera = std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
+    EventPublisher::post(std::make_shared<CameraCreated>(id, camera));
+    return camera;
 }
 
-std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto)
+std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    return std::make_shared<Camera>(id, dto);
+    auto camera = std::make_shared<Camera>(id, dto);
+    EventPublisher::post(std::make_shared<CameraConstituted>(id, camera, is_persisted));
+    return camera;
 }
 
 void SceneGraphFactory::createCamera(const ICommandPtr& c)
@@ -84,11 +88,7 @@ void SceneGraphFactory::createCamera(const ICommandPtr& c)
         EventPublisher::post(std::make_shared<CreateCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto camera = createCamera(cmd->id()))
-    {
-        EventPublisher::post(std::make_shared<CameraCreated>(cmd->id(), camera));
-    }
-    else
+    if (createCamera(cmd->id()) == nullptr)
     {
         EventPublisher::post(std::make_shared<CreateCameraFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -106,11 +106,7 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto camera = constituteCamera(cmd->id(), cmd->dto()))
-    {
-        EventPublisher::post(std::make_shared<CameraConstituted>(cmd->id(), camera));
-    }
-    else
+    if (constituteCamera(cmd->id(), cmd->dto(), false) == nullptr)
     {
         EventPublisher::post(std::make_shared<ConstituteCameraFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -118,20 +114,23 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
 
 std::shared_ptr<Pawn> SceneGraphFactory::createPawn(const SpatialId& id)
 {
-    return std::make_shared<Pawn>(id);
+    auto pawn = std::make_shared<Pawn>(id);
+    EventPublisher::post(std::make_shared<PawnCreated>(id, pawn));
+    return pawn;
 }
 
 std::shared_ptr<Pawn> SceneGraphFactory::constitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos)
 {
     auto pawn = std::make_shared<Pawn>(id, dtos[0]);
-    PawnDto pawn_dto = PawnDto::fromGenericDto(dtos[0]);
+    /*PawnDto pawn_dto = PawnDto::fromGenericDto(dtos[0]);
     if (pawn_dto.primitive().has_value())
     {
         auto cmd = std::make_shared<Renderer::BuildRenderablePrimitive>(pawn_dto.primitive().value());
         std::lock_guard<std::recursive_mutex> lock(m_buildingPrimitiveLock);
         m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn });
         CommandBus::post(cmd);
-    }
+    }*/
+    EventPublisher::post(std::make_shared<PawnConstituted>(id, pawn));
     return pawn;
 }
 
@@ -140,18 +139,14 @@ void SceneGraphFactory::createPawn(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreatePawn>(c);
     if (!cmd) return;
-    const auto query = std::make_shared<QueryPawn>(cmd->id());
+    const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
         EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto pawn = createPawn(cmd->id()))
-    {
-        EventPublisher::post(std::make_shared<PawnCreated>(cmd->id(), pawn));
-    }
-    else
+    if (createPawn(cmd->id()) == nullptr)
     {
         EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -162,18 +157,14 @@ void SceneGraphFactory::constitutePawn(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ConstitutePawn>(c);
     if (!cmd) return;
-    const auto query = std::make_shared<QueryPawn>(cmd->id());
+    const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
         EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (auto pawn = constitutePawn(cmd->id(), cmd->dtos()))
-    {
-        EventPublisher::post(std::make_shared<PawnConstituted>(cmd->id(), pawn));
-    }
-    else
+    if (constitutePawn(cmd->id(), cmd->dtos()) == nullptr)
     {
         EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
@@ -181,7 +172,7 @@ void SceneGraphFactory::constitutePawn(const Frameworks::ICommandPtr& c)
 
 void SceneGraphFactory::onPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Renderer::RenderablePrimitiveBuilt>(e);
     if (!ev) return;
     if (m_buildingPawnPrimitives.empty()) return;
@@ -191,12 +182,12 @@ void SceneGraphFactory::onPrimitiveBuilt(const Frameworks::IEventPtr& e)
     if (!it->second) return;
     it->second->SetPrimitive(ev->getPrimitive());
     EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(it->second));
-    m_buildingPawnPrimitives.erase(it);
+    m_buildingPawnPrimitives.erase(it);*/
 }
 
 void SceneGraphFactory::onBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Renderer::BuildRenderablePrimitiveFailed>(e);
     if (!ev) return;
     if (m_buildingPawnPrimitives.empty()) return;
@@ -211,5 +202,5 @@ void SceneGraphFactory::onBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
             EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(it->second, ev->errorCode()));
         }
     }
-    m_buildingPawnPrimitives.erase(it);
+    m_buildingPawnPrimitives.erase(it);*/
 }

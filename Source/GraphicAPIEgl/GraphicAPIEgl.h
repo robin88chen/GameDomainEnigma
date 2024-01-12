@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GraphicAPIEgl.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2022
  *********************************************************************/
@@ -24,7 +24,7 @@ namespace Enigma::Devices
         virtual ~GraphicAPIEgl() override;
         GraphicAPIEgl& operator=(const GraphicAPIEgl&) = delete;
         GraphicAPIEgl& operator=(GraphicAPIEgl&&) = delete;
-        
+
         void SetFormat(int* attrb);
         void SetDimension(const MathLib::Dimension<unsigned>& dim);
 
@@ -66,8 +66,8 @@ namespace Enigma::Devices
         virtual error CreateRasterizerState(const std::string& name, const Graphics::IDeviceRasterizerState::RasterizerStateData& data) override;
         virtual error CreateAlphaBlendState(const std::string& name, const Graphics::IDeviceAlphaBlendState::BlendStateData& data) override;
         virtual error CreateDepthStencilState(const std::string& name, const Graphics::IDeviceDepthStencilState::DepthStencilData& data) override;
-        virtual error CreateTexture(const std::string& tex_name) override;
-        virtual error CreateMultiTexture(const std::string& tex_name) override;
+        virtual error createTexture(const std::string& tex_name) override;
+        virtual error createMultiTexture(const std::string& tex_name) override;
 
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;

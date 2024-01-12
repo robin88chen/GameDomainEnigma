@@ -45,11 +45,11 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     m_policy = policy;
     m_assetName = "";
     m_builtAnimator = std::make_shared<ModelPrimitiveAnimator>();
-    m_builtAnimator->SetControlledModel(m_policy->ControlledPrimitive());
+    m_builtAnimator->setControlledModel(m_policy->ControlledPrimitive());
     m_originalAssetDesc = policy->AssetFactoryDesc();
     if (m_policy->GetAssetPolicy())
     {
-        m_assetName = m_policy->GetAssetPolicy()->Name();
+        m_assetName = m_policy->GetAssetPolicy()->name();
         CommandBus::post(std::make_shared<BuildAnimationAsset>(m_policy->GetAssetPolicy()));
     }
     else
@@ -60,7 +60,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
 
 void ModelAnimatorBuilder::LinkSkinMeshOperators()
 {
-    if (!m_builtAnimator->GetControlledModel()) return;
+    if (!m_builtAnimator->getControlledModel()) return;
 
     for (auto& op : m_policy->SkinOperators())
     {
@@ -68,24 +68,24 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
         std::shared_ptr<MeshPrimitive> mesh = nullptr;
         if (auto mesh_name = op.SkinMeshName())
         {
-            mesh = m_builtAnimator->GetControlledModel()->FindMeshPrimitive(mesh_name.value());
+            mesh = m_builtAnimator->getControlledModel()->findMeshPrimitive(mesh_name.value());
         }
         else if (auto node_name = op.SkinMeshNodeName())
         {
-            auto& node_tree = m_builtAnimator->GetControlledModel()->GetMeshNodeTree();
-            auto node_idx = node_tree.FindMeshNodeIndex(node_name.value());
-            if (node_idx) mesh = node_tree.GetMeshPrimitiveInNode(node_idx.value());
+            auto& node_tree = m_builtAnimator->getControlledModel()->getMeshNodeTree();
+            auto node_idx = node_tree.findMeshNodeIndex(node_name.value());
+            if (node_idx) mesh = node_tree.getMeshPrimitiveInNode(node_idx.value());
         }
         if (!mesh) continue;
         auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh);
         if (!skin_mesh) continue;
         if (auto offsets = op.NodeOffsets())
         {
-            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames(), offsets.value());
+            m_builtAnimator->linkSkinMesh(skin_mesh, op.BoneNodeNames(), offsets.value());
         }
         else
         {
-            m_builtAnimator->LinkSkinMesh(skin_mesh, op.BoneNodeNames());
+            m_builtAnimator->linkSkinMesh(skin_mesh, op.BoneNodeNames());
         }
     }
 }
@@ -104,7 +104,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
         return;
     }
     model_anim->factoryDesc() = m_originalAssetDesc;
-    m_builtAnimator->LinkAnimationAsset(model_anim);
+    m_builtAnimator->linkAnimationAsset(model_anim);
     if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
     EventPublisher::post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));
 }

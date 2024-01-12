@@ -21,3 +21,13 @@ bool LazyStatus::isReady() const
 {
     return m_status == Status::Ready;
 }
+
+bool LazyStatus::isInQueue() const
+{
+    return m_status == Status::InQueue;
+}
+
+bool LazyStatus::isLoading() const
+{
+    return m_status == Status::Loading;
+}

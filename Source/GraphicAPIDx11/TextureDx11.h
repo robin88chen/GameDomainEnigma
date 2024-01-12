@@ -26,17 +26,17 @@ namespace Enigma::Devices
         TextureDx11& operator=(const TextureDx11&) = delete;
         TextureDx11& operator=(TextureDx11&&) = delete;
 
-        ID3D11ShaderResourceView* GetD3DResourceView() const { return m_d3dTextureResource; }
+        ID3D11ShaderResourceView* getD3DResourceView() const { return m_d3dTextureResource; }
 
     protected:
-        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
-        virtual error LoadTextureImage(const byte_buffer& img_buff) override;
-        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) override;
-        virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;
-        virtual error SaveTextureImage(const FileSystem::IFilePtr& file) override;
-        virtual error UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
+        virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) override;
+        virtual error loadTextureImage(const byte_buffer& img_buff) override;
+        virtual error retrieveTextureImage(const MathLib::Rect& rcSrc) override;
+        virtual error updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) override;
+        virtual error saveTextureImage(const FileSystem::IFilePtr& file) override;
+        virtual error useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>& usages) override;
 
-        error CreateFromScratchImage(DirectX::ScratchImage& scratchImage);
+        error createFromScratchImage(DirectX::ScratchImage& scratchImage);
         //void CreateCubeTextureFromScratchImage(DirectX::ScratchImage& scratchImage);
 
     protected:

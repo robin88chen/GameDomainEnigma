@@ -34,7 +34,7 @@ namespace Enigma::Engine
 
         bool operator==(const GenericDto&) const;
 
-        const Frameworks::Ruid& GetId() const { return m_ruid; }
+        const Frameworks::Ruid& ruid() const { return m_ruid; }
 
         bool IsTopLevel() const;
         void AsTopLevel(bool is_top);
@@ -48,8 +48,8 @@ namespace Enigma::Engine
         }
 
         /** add Rtti */
-        void AddRtti(const FactoryDesc& rtti);
-        FactoryDesc GetRtti() const;
+        void addRtti(const FactoryDesc& rtti);
+        FactoryDesc getRtti() const;
 
         /** add Name */
         void AddName(const std::string& name);

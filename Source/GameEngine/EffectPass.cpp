@@ -19,7 +19,7 @@ EffectPass::EffectPass(const std::string& name, const Graphics::IShaderProgramPt
     if (states.m_rasterizer) m_rasterizerState = states.m_rasterizer.value();
     if (states.m_depth) m_depthState = states.m_depth.value();
     if (states.m_blend) m_blendState = states.m_blend.value();
-    BuildVariables();
+    buildVariables();
 }
 
 EffectPass::EffectPass(const EffectPass& pass)
@@ -86,35 +86,35 @@ EffectPass& EffectPass::operator=(EffectPass&& pass) noexcept
     return *this;
 }
 
-void EffectPass::MappingAutoVariables()
+void EffectPass::mappingAutoVariables()
 {
     if (!MaterialVariableMap::instance()) return;
     for (auto& var : m_variables)
     {
-        MaterialVariableMap::SetAutoVariableCommitFunction(var);
+        MaterialVariableMap::setAutoVariableCommitFunction(var);
     }
 }
 
-void EffectPass::CommitVariables()
+void EffectPass::commitVariables()
 {
     if (!m_samplers.empty())
     {
         for (unsigned int i = 0; i < m_samplers.size(); i++)
         {
-            auto var = GetVariableByName(m_samplerNames[i]);
+            auto var = getVariableByName(m_samplerNames[i]);
             if (var)
             {
-                var.value().get().AssignValue(m_samplers[i]);
+                var.value().get().assignValue(m_samplers[i]);
             }
         }
     }
     for (auto& var : m_variables)
     {
-        var.Commit();
+        var.commit();
     }
 }
 
-void EffectPass::Apply()
+void EffectPass::apply()
 {
     // 每個 api call 會自行處理 async
     if (m_shader)
@@ -136,48 +136,48 @@ void EffectPass::Apply()
     }
 }
 
-stdext::optional_ref<EffectVariable> EffectPass::GetVariableByName(const std::string& name)
+stdext::optional_ref<EffectVariable> EffectPass::getVariableByName(const std::string& name)
 {
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].getName() == name) return m_variables[i];
+        if (m_variables[i].name() == name) return m_variables[i];
     }
 
     return std::nullopt;
 }
 
-stdext::optional_ref<EffectVariable> EffectPass::GetVariableBySemantic(const std::string& semantic)
+stdext::optional_ref<EffectVariable> EffectPass::getVariableBySemantic(const std::string& semantic)
 {
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].GetSemantic() == semantic) return m_variables[i];
+        if (m_variables[i].semantic() == semantic) return m_variables[i];
     }
     return std::nullopt;
 }
 
-stdext::optional_ref<const EffectVariable> EffectPass::GetVariableByName(const std::string& name) const
+stdext::optional_ref<const EffectVariable> EffectPass::getVariableByName(const std::string& name) const
 {
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].getName() == name) return m_variables[i];
+        if (m_variables[i].name() == name) return m_variables[i];
     }
     return std::nullopt;
 }
 
-stdext::optional_ref<const EffectVariable> EffectPass::GetVariableBySemantic(const std::string& semantic) const
+stdext::optional_ref<const EffectVariable> EffectPass::getVariableBySemantic(const std::string& semantic) const
 {
     if (m_variables.empty()) return std::nullopt;
     for (unsigned int i = 0; i < m_variables.size(); i++)
     {
-        if (m_variables[i].GetSemantic() == semantic) return m_variables[i];
+        if (m_variables[i].semantic() == semantic) return m_variables[i];
     }
     return std::nullopt;
 }
 
-void EffectPass::BuildVariables()
+void EffectPass::buildVariables()
 {
     assert(m_shader);
     if (m_shader->GetVariableCount() == 0) return;

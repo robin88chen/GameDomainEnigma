@@ -36,11 +36,11 @@ void RenderLightingState::SetPointLightArray(const std::vector<MathLib::Vector4>
 
 void RenderLightingState::CommitState() const
 {
-    MaterialVariableMap::UseAmbientLightColor(m_colorAmbient);
-    MaterialVariableMap::UseSunLight(m_colorSun, m_vecSunDir);
+    MaterialVariableMap::useAmbientLightColor(m_colorAmbient);
+    MaterialVariableMap::useSunLight(m_colorSun, m_vecSunDir);
     if (m_lightPositions.size() > 0)
     {
-        MaterialVariableMap::UsePointLight(
+        MaterialVariableMap::usePointLight(
             const_cast<MathLib::Vector4*>(&m_lightPositions[0]), const_cast<MathLib::ColorRGBA*>(&m_lightColors[0]),
             const_cast<MathLib::Vector4*>(&m_lightAttenuations[0]), static_cast<unsigned int>(m_lightPositions.size()));
     }

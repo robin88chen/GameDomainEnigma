@@ -5,6 +5,7 @@
 #include "SceneGraphDtos.h"
 #include "Renderer/RenderableCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "GameEngine/Primitive.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -20,6 +21,8 @@ Pawn::Pawn(const SpatialId& id) : Spatial(id)
 
 Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
+    PawnDto pawn_dto{ dto };
+    if (pawn_dto.primitiveId()) m_primitive = Engine::Primitive::queryPrimitive(pawn_dto.primitiveId().value());
 }
 
 Pawn::~Pawn()
@@ -37,7 +40,7 @@ PawnDto Pawn::SerializePawnDto()
     PawnDto dto(serializeSpatialDto());
     if (m_primitive)
     {
-        dto.primitive() = m_primitive->serializeDto();
+        dto.primitiveId() = m_primitive->id();
     }
     return dto;
 }
@@ -60,7 +63,7 @@ error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
     assert(render);
     if (!m_primitive) return ErrorCode::nullPrimitive;
 
-    error er = m_primitive->InsertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
+    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
     return er;
 }
 
@@ -69,9 +72,9 @@ void Pawn::SetPrimitive(const Engine::PrimitivePtr& prim)
     m_primitive = prim;
 
     // update local bound, world bound
-    if ((m_primitive) && (!m_primitive->GetBoundingVolume().IsEmpty()))
+    if ((m_primitive) && (!m_primitive->getBoundingVolume().IsEmpty()))
     {
-        m_modelBound = Engine::BoundingVolume{ m_primitive->GetBoundingVolume() };
+        m_modelBound = Engine::BoundingVolume{ m_primitive->getBoundingVolume() };
     }
 
     _updateBoundData();
@@ -82,12 +85,12 @@ void Pawn::CalculateModelBound(bool axis_align)
 {
     if (m_primitive)
     {
-        m_primitive->CalculateBoundingVolume(axis_align);
+        m_primitive->calculateBoundingVolume(axis_align);
     }
     // update local bound, world bound
-    if ((m_primitive) && (!m_primitive->GetBoundingVolume().IsEmpty()))
+    if ((m_primitive) && (!m_primitive->getBoundingVolume().IsEmpty()))
     {
-        m_modelBound = Engine::BoundingVolume{ m_primitive->GetBoundingVolume() };
+        m_modelBound = Engine::BoundingVolume{ m_primitive->getBoundingVolume() };
     }
 
     _updateBoundData();
@@ -96,18 +99,18 @@ void Pawn::CalculateModelBound(bool axis_align)
 error Pawn::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 {
     error er = Spatial::_updateLocalTransform(mxLocal);
-    if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
+    if (m_primitive) m_primitive->updateWorldTransform(m_mxWorldTransform);
     return er;
 }
 
 error Pawn::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
     error er = Spatial::_updateWorldData(mxParentWorld);
-    if (m_primitive) m_primitive->UpdateWorldTransform(m_mxWorldTransform);
+    if (m_primitive) m_primitive->updateWorldTransform(m_mxWorldTransform);
     return er;
 }
 
-void Pawn::EnumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+void Pawn::enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
 {
-    if (m_primitive) m_primitive->EnumAnimatorListDeep(resultList);
+    if (m_primitive) m_primitive->enumAnimatorListDeep(resultList);
 }

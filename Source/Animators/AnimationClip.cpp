@@ -20,7 +20,7 @@ AnimationClip::AnimationClip(float start_offset, float loop_time, WarpMode warp,
     m_divideIndex = divide_index;
 }
 
-void AnimationClip::SyncPhase(const AnimationClip& clip)
+void AnimationClip::syncPhase(const AnimationClip& clip)
 {
     m_currentPhaseTime = clip.m_currentPhaseTime;
     if (m_currentPhaseTime > m_loopTime) m_currentPhaseTime -= m_loopTime;

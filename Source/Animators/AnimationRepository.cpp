@@ -80,7 +80,7 @@ bool AnimationRepository::PopAssetBuilding()
     if (m_assetPolicies.empty()) return false;
     assert(m_assetBuilder);
     m_assetBuilder->BuildAnimationAsset(m_assetPolicies.front());
-    m_buildingAssetName = m_assetPolicies.front()->Name();
+    m_buildingAssetName = m_assetPolicies.front()->name();
     m_assetPolicies.pop();
     m_isAssetCurrentBuilding = true;
     return true;
@@ -152,13 +152,13 @@ error AnimationRepository::BuildModelAnimator(const std::shared_ptr<ModelAnimato
 
 void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& dto)
 {
-    if (dto.GetRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() != ModelAnimationAsset::TYPE_RTTI.getName())
     {
-        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.GetRtti().GetRttiName().c_str());
+        Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.getRtti().GetRttiName().c_str());
         return;
     }
     auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::fromGenericDto(dto));
-    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.GetId(), animation));
+    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.ruid(), animation));
 }
 
 std::string AnimationRepository::MakeAssetKey(const std::string& rtti_name, const std::string& name)

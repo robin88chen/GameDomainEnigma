@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainPrimitivePolicy.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -12,7 +12,7 @@
 
 namespace Enigma::Terrain
 {
-    class TerrainPrimitivePolicy: public Renderer::MeshPrimitivePolicy
+    class TerrainPrimitivePolicy : public Renderer::MeshPrimitivePolicy
     {
     public:
         TerrainPrimitivePolicy();
@@ -23,7 +23,7 @@ namespace Enigma::Terrain
         TerrainPrimitivePolicy& operator=(TerrainPrimitivePolicy&&) = default;
         ~TerrainPrimitivePolicy() = default;
 
-        virtual std::shared_ptr<Renderer::MeshPrimitive> CreatePrimitive() const override;
+        virtual std::shared_ptr<Renderer::MeshPrimitive> createPrimitive() const override;
     };
 }
 #endif // TERRAIN_PRIMITIVE_POLICY_H

@@ -30,17 +30,17 @@ namespace Enigma::Animators
         /// return true if this clip is going to stop
         GoingToStop update(float elapse_time);
 
-        void SyncPhase(const AnimationClip& clip);
-        void SetPhaseTime(float phase_time) { m_currentPhaseTime = phase_time; };
+        void syncPhase(const AnimationClip& clip);
+        void setPhaseTime(float phase_time) { m_currentPhaseTime = phase_time; };
 
-        float GetStartOffset() const { return m_startOffset; };
-        float GetLoopTime() const { return m_loopTime; };
-        WarpMode GetWarpMode() const { return m_warpMode; };
-        unsigned int GetDivideIndex() const { return m_divideIndex; };
+        float startOffset() const { return m_startOffset; };
+        float loopTime() const { return m_loopTime; };
+        WarpMode warpMode() const { return m_warpMode; };
+        unsigned int divideIndex() const { return m_divideIndex; };
 
         void reset() { m_currentPhaseTime = 0.0f; };
-        float CurrentTimeValue() const { return m_currentPhaseTime + m_startOffset; };
-        float RemainLoopTime() const { return m_loopTime - m_currentPhaseTime; };
+        float currentTimeValue() const { return m_currentPhaseTime + m_startOffset; };
+        float remainLoopTime() const { return m_loopTime - m_currentPhaseTime; };
 
     protected:
         float m_startOffset;

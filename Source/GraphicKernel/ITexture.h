@@ -44,34 +44,34 @@ namespace Enigma::Graphics
 
         const std::string& getName() { return m_name; }
 
-        virtual void Load(const byte_buffer& img_buff);
-        virtual void Load(const std::string& filename, const std::string& pathid);
-        virtual void Save(const FileSystem::IFilePtr& file);
-        virtual void Save(const std::string& filename, const std::string& pathid);
+        virtual void load(const byte_buffer& img_buff);
+        virtual void load(const std::string& filename, const std::string& pathid);
+        virtual void save(const FileSystem::IFilePtr& file);
+        virtual void save(const std::string& filename, const std::string& pathid);
 
         virtual void create(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff);
 
-        virtual void Retrieve(const MathLib::Rect& rcSrc);
+        virtual void retrieve(const MathLib::Rect& rcSrc);
         virtual void update(const MathLib::Rect& rcDest, const byte_buffer& img_buff);
 
-        virtual void AsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
+        virtual void asBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>&);
 
-        virtual const GraphicFormat& GetFormat() { return m_format; };
-        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
-        const byte_buffer& GetRetrievedBuffer() { return m_retrievedBuff; }
-        virtual bool IsCubeTexture() { return m_isCubeTexture; }
+        virtual const GraphicFormat& format() { return m_format; };
+        virtual const MathLib::Dimension<unsigned>& dimension() { return m_dimension; };
+        const byte_buffer& getRetrievedBuffer() { return m_retrievedBuff; }
+        virtual bool isCubeTexture() { return m_isCubeTexture; }
 
-        virtual bool IsMultiTexture() { return false; }
+        virtual bool isMultiTexture() { return false; }
 
     protected:
-        virtual error LoadTextureImage(const byte_buffer& img_buff) = 0;
-        virtual error LoadTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
-        virtual error SaveTextureImage(const FileSystem::IFilePtr& file) = 0;
-        virtual error RetrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
-        virtual error UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
-        virtual error SaveTextureImage(const std::string& filename, const std::string& pathid);
-        virtual error UseAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
+        virtual error loadTextureImage(const byte_buffer& img_buff) = 0;
+        virtual error loadTextureImage(const std::string& filename, const std::string& pathid);
+        virtual error createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff) = 0;
+        virtual error saveTextureImage(const FileSystem::IFilePtr& file) = 0;
+        virtual error retrieveTextureImage(const MathLib::Rect& rcSrc) = 0;
+        virtual error updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff) = 0;
+        virtual error saveTextureImage(const std::string& filename, const std::string& pathid);
+        virtual error useAsBackSurface(const IBackSurfacePtr& back_surf, const std::vector<RenderTextureUsage>& usages) = 0;
 
     protected:
         std::string m_name;

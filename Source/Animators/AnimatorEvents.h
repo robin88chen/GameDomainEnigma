@@ -21,7 +21,7 @@ namespace Enigma::Animators
         ModelAnimatorBuilt(const Frameworks::Ruid& ruid, const std::shared_ptr<ModelPrimitiveAnimator>& ani) :
             m_ruid(ruid), m_animator(ani) {};
         const Frameworks::Ruid& getRuid() { return m_ruid; }
-        const std::shared_ptr<ModelPrimitiveAnimator>& GetAnimator() { return m_animator; }
+        const std::shared_ptr<ModelPrimitiveAnimator>& getAnimator() { return m_animator; }
     private:
         Frameworks::Ruid m_ruid;
         std::shared_ptr<ModelPrimitiveAnimator> m_animator;

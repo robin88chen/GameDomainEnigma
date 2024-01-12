@@ -41,30 +41,30 @@ void AnimationAssetBuilder::BuildAnimationAsset(const std::shared_ptr<AnimationA
 {
     assert(m_repository);
     m_policy = policy;
-    if (m_repository->HasAnimationAsset(policy->RttiName(), policy->Name()))
+    if (m_repository->HasAnimationAsset(policy->RttiName(), policy->name()))
     {
-        EventPublisher::post(std::make_shared<AnimationAssetBuilt>(policy->Name(),
-            m_repository->QueryAnimationAsset(policy->RttiName(), policy->Name())));
+        EventPublisher::post(std::make_shared<AnimationAssetBuilt>(policy->name(),
+            m_repository->QueryAnimationAsset(policy->RttiName(), policy->name())));
     }
     else if (auto dto = policy->GetDto())
     {
-        CreateFromDto(policy->Name(), dto.value());
+        CreateFromDto(policy->name(), dto.value());
     }
     else if (policy->GetDeserializer())
     {
         m_ruidDeserializing = Ruid::generate();
-        policy->GetDeserializer()->InvokeDeserialize(m_ruidDeserializing, policy->Parameter());
+        policy->GetDeserializer()->invokeDeserialize(m_ruidDeserializing, policy->Parameter());
     }
     else
     {
-        EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(policy->Name(), ErrorCode::policyIncomplete));
+        EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(policy->name(), ErrorCode::policyIncomplete));
     }
 }
 
 void AnimationAssetBuilder::CreateFromDto(const std::string& name, const GenericDto& dto)
 {
     assert(m_repository);
-    m_ruidConstructing = dto.GetId();
+    m_ruidConstructing = dto.ruid();
     CommandBus::post(std::make_shared<InvokeDtoFactory>(dto));
 }
 
@@ -74,7 +74,7 @@ void AnimationAssetBuilder::OnDtoAnimationAssetCreated(const Frameworks::IEventP
     auto ev = std::dynamic_pointer_cast<FactoryAnimationAssetCreated, IEvent>(e);
     if (!ev) return;
     if (ev->GetConstructingRuid() != m_ruidConstructing) return;
-    EventPublisher::post(std::make_shared<AnimationAssetBuilt>(m_policy->Name(), ev->GetAnimationAsset()));
+    EventPublisher::post(std::make_shared<AnimationAssetBuilt>(m_policy->name(), ev->GetAnimationAsset()));
 }
 
 void AnimationAssetBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
@@ -85,10 +85,10 @@ void AnimationAssetBuilder::OnDtoDeserialized(const Frameworks::IEventPtr& e)
     if (ev->getRuid() != m_ruidDeserializing) return;
     if (ev->GetDtos().empty())
     {
-        EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(m_policy->Name(), ErrorCode::deserializeFail));
+        EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(m_policy->name(), ErrorCode::deserializeFail));
         return;
     }
-    CreateFromDto(m_policy->Name(), ev->GetDtos()[0]);
+    CreateFromDto(m_policy->name(), ev->GetDtos()[0]);
 }
 
 void AnimationAssetBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& e)
@@ -97,5 +97,5 @@ void AnimationAssetBuilder::OnDeserializeDtoFailed(const Frameworks::IEventPtr& 
     auto ev = std::dynamic_pointer_cast<DeserializeDtoFailed, IEvent>(e);
     if (!ev) return;
     if (ev->getRuid() != m_ruidDeserializing) return;
-    EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(m_policy->Name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildAnimationAssetFailed>(m_policy->name(), ev->GetErrorCode()));
 }

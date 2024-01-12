@@ -9,45 +9,49 @@
 #define _MESH_PRIMITIVE_BUILDER_H
 
 #include "RenderablePrimitivePolicies.h"
-#include "GameEngine/GeometryData.h"
+#include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
-#include "MeshPrimitive.h"
+#include "RenderablePrimitiveDtos.h"
+#include "GameEngine/PrimitiveId.h"
 #include <memory>
 
 namespace Enigma::Renderer
 {
+    class MeshPrimitive;
+    class MeshPrimitiveMetaDto;
+
     class MeshPrimitiveBuilder
     {
     public:
         class MeshPrimitiveBuilt : public Frameworks::IEvent
         {
         public:
-            MeshPrimitiveBuilt(const Frameworks::Ruid& ruid, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
-                : m_ruid(ruid), m_name(name), m_prim(prim) {};
-            const Frameworks::Ruid& getRuid() const { return m_ruid; }
-            const std::string& getName() const { return m_name; }
-            const std::shared_ptr<MeshPrimitive>& GetPrimitive() { return m_prim; }
+            MeshPrimitiveBuilt(const Engine::PrimitiveId& id, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
+                : m_id(id), m_name(name), m_prim(prim) {};
+            const Engine::PrimitiveId& id() const { return m_id; }
+            const std::string& name() const { return m_name; }
+            const std::shared_ptr<MeshPrimitive>& primitive() { return m_prim; }
 
         private:
-            Frameworks::Ruid m_ruid;
+            Engine::PrimitiveId m_id;
             std::string m_name;
             std::shared_ptr<MeshPrimitive> m_prim;
         };
         class BuildMeshPrimitiveFailed : public Frameworks::IEvent
         {
         public:
-            BuildMeshPrimitiveFailed(const Frameworks::Ruid& ruid, const std::string& name, std::error_code er)
-                : m_ruid(ruid), m_name(name), m_error(er) {};
+            BuildMeshPrimitiveFailed(const Engine::PrimitiveId& id, const std::string& name, std::error_code er)
+                : m_id(id), m_name(name), m_error(er) {};
 
-            const Frameworks::Ruid& getRuid() const { return m_ruid; }
-            const std::string& getName() const { return m_name; }
-            std::error_code GetErrorCode() const { return m_error; }
+            const Engine::PrimitiveId& id() const { return m_id; }
+            const std::string& name() const { return m_name; }
+            std::error_code error() const { return m_error; }
 
         private:
-            Frameworks::Ruid m_ruid;
+            Engine::PrimitiveId m_id;
             std::string m_name;
             std::error_code m_error;
         };
@@ -59,46 +63,40 @@ namespace Enigma::Renderer
         MeshPrimitiveBuilder& operator=(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder& operator=(MeshPrimitiveBuilder&&) = delete;
 
-        void BuildMeshPrimitive(const Frameworks::Ruid& ruid, const std::shared_ptr<MeshPrimitivePolicy>& policy);
+        void constituteLazyMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto);
 
     protected:
-        void OnGeometryDataBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildGeometryDataFailed(const Frameworks::IEventPtr& e);
-        void OnRenderBufferBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
+        void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
+        void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
 
-        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void OnTextureLoadedOrCreated(const Frameworks::IEventPtr& e);
-        void OnLoadOrCreateTextureFailed(const Frameworks::IEventPtr& e);
+        void onEffectMaterialContented(const Frameworks::IEventPtr& e);
+        void onContentEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void onTextureContented(const Frameworks::IEventPtr& e);
+        void onContentTextureFailed(const Frameworks::IEventPtr& e);
 
-        void TryCompletingMesh();
+        void tryCompletingMesh();
 
-        std::optional<unsigned> FindBuildingEffectIndex(const std::string& name);
-        std::optional<std::tuple<unsigned, unsigned>> FindLoadingTextureIndex(const std::string& name);
+        std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
+        std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
     protected:
-        Frameworks::Ruid m_buildingRuid;
-        std::shared_ptr<MeshPrimitivePolicy> m_policy;
+        Engine::PrimitiveId m_buildingId;
+        std::optional<MeshPrimitiveDto> m_buildingDto;
+        std::unique_ptr<MeshPrimitiveMetaDto> m_metaDto;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
-        std::shared_ptr<Engine::GeometryData> m_builtGeometry;
-        Engine::FactoryDesc m_originalGeometryDesc;
+        std::shared_ptr<Geometries::GeometryData> m_builtGeometry;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
         std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
         std::vector<Engine::EffectTextureMap> m_builtTextures;
 
-        Frameworks::EventSubscriberPtr m_onGeometryDataBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildGeometryDataFailed;
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
-        Frameworks::EventSubscriberPtr m_onTextureCreated;
-        Frameworks::EventSubscriberPtr m_onCreateTextureFailed;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
+        Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onTextureContented;
+        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
     };
 }
 

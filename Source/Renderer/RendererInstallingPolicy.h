@@ -18,20 +18,17 @@ namespace Enigma::Renderer
     class RenderSystemInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        RenderSystemInstallingPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer) : m_dtoDeserializer(dto_deserializer) {}
+        RenderSystemInstallingPolicy() {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
-
-    protected:
-        std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
     };
 
     class RendererInstallingPolicy : public Engine::InstallingPolicy
     {
-    public:
+    protected:
         RendererInstallingPolicy() = default;
-    };;
+    };
 
     class DefaultRendererInstallingPolicy : public RendererInstallingPolicy
     {
@@ -39,8 +36,8 @@ namespace Enigma::Renderer
         DefaultRendererInstallingPolicy(const std::string& renderer_name, const std::string& primary_target_name)
             : m_rendererName(renderer_name), m_primaryTargetName(primary_target_name) {}
 
-        virtual error Install(Frameworks::ServiceManager* service_manager) override;
-        virtual error Shutdown(Frameworks::ServiceManager* service_manager) override;
+        virtual error install(Frameworks::ServiceManager* service_manager) override;
+        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         std::string m_rendererName;

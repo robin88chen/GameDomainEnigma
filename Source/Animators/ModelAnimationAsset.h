@@ -42,34 +42,34 @@ namespace Enigma::Animators
         ModelAnimationAssetDto serializeDto();
 
         /** reserve data array capacity */
-        void ReserveCapacity(unsigned int mesh_node_count);
+        void reserveCapacity(unsigned int mesh_node_count);
         /** add SRT data */
-        void AddMeshNodeTimeSRTData(const std::string& mesh_node_name, const AnimationTimeSRT& srt_data);
+        void addMeshNodeTimeSRTData(const std::string& mesh_node_name, const AnimationTimeSRT& srt_data);
 
         /** calculate transform matrix */
-        MathLib::Matrix4 CalculateTransformMatrix(unsigned int ani_node_index, float off_time);
+        MathLib::Matrix4 calculateTransformMatrix(unsigned int ani_node_index, float off_time);
         /** calculate lerped SRT */
-        SRTValueTie CalculateLerpedSRT(unsigned int ani_node_index, float off_time);
+        SRTValueTie calculateLerpedSRT(unsigned int ani_node_index, float off_time);
         /** calculate faded transform matrix \n
         animation matrix = clip a's * weight_a + clip b's * (1.0 - weight_a)
         */
-        MathLib::Matrix4 CalculateFadedTransformMatrix(unsigned int ani_node_index, float off_time_a, float off_time_b, float weight_a);
+        MathLib::Matrix4 calculateFadedTransformMatrix(unsigned int ani_node_index, float off_time_a, float off_time_b, float weight_a);
         /** calculate Faded Lerped SRT \n
         animation SRT = clip a's lerped SRT * weight_a + clip b's lerped SRT * (1.0 - weight_a)
         */
-        SRTValueTie CalculateFadedLerpedSRT(unsigned int ani_node_index,
+        SRTValueTie calculateFadedLerpedSRT(unsigned int ani_node_index,
             float off_time_a, float off_time_b, float weight_a);
 
         /** find mesh node in data array, return array index */
-        std::optional<unsigned> FindMeshNodeIndex(const std::string& node_name);
+        std::optional<unsigned> findMeshNodeIndex(const std::string& node_name);
 
-        unsigned int GetMeshNodeDataCount() const { return static_cast<unsigned int>(m_meshNodeKeyArray.size()); };
+        unsigned int getMeshNodeDataCount() const { return static_cast<unsigned int>(m_meshNodeKeyArray.size()); };
 
         /** get animation length (in second) */
-        virtual float GetAnimationLengthInSecond() override;
+        virtual float getAnimationLengthInSecond() override;
 
         /** append Model Animation Asset from src */
-        void AppendModelAnimationAsset(float offset_time, const std::shared_ptr<ModelAnimationAsset>& src_asset);
+        void appendModelAnimationAsset(float offset_time, const std::shared_ptr<ModelAnimationAsset>& src_asset);
 
     protected:
         std::vector<MeshNodeTimeSRTData> m_meshNodeKeyArray;

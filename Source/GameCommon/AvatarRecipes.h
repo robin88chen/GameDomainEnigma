@@ -8,11 +8,11 @@
 #ifndef _AVATAR_RECIPES_H
 #define _AVATAR_RECIPES_H
 
-#include "SceneGraph/Pawn.h"
-#include "GameEngine/EffectMaterialDto.h"
+#include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "Renderer/MeshPrimitive.h"
-#include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/Pawn.h"
+#include "GameEngine/EffectMaterialId.h"
 
 namespace Enigma::GameCommon
 {
@@ -31,10 +31,10 @@ namespace Enigma::GameCommon
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        virtual void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
+        virtual void bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) = 0;
         virtual Engine::GenericDto serializeDto() const = 0;
 
-        static std::shared_ptr<AvatarRecipe> CreateFromGenericDto(const Engine::GenericDto& dto);
+        static std::shared_ptr<AvatarRecipe> createFromGenericDto(const Engine::GenericDto& dto);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -44,7 +44,7 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        ReplaceAvatarMaterial(const std::string& old_material_name, const Engine::EffectMaterialDto& new_material_dto);
+        ReplaceAvatarMaterial(const Engine::EffectMaterialId& old_material_id, const Engine::EffectMaterialId& new_material_id);
         ReplaceAvatarMaterial(const Engine::GenericDto& o);
         ReplaceAvatarMaterial(const ReplaceAvatarMaterial&) = delete;
         ReplaceAvatarMaterial(ReplaceAvatarMaterial&&) = delete;
@@ -52,24 +52,25 @@ namespace Enigma::GameCommon
         ReplaceAvatarMaterial& operator=(const ReplaceAvatarMaterial&) = delete;
         ReplaceAvatarMaterial& operator=(ReplaceAvatarMaterial&&) = delete;
 
-        void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
+        void bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void ReplaceMeshMaterial(const Renderer::MeshPrimitivePtr& mesh);
+        void replaceMeshMaterial(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+        void replaceNewMeshMaterialInSegment(const std::shared_ptr<Renderer::MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<Engine::EffectMaterial>& new_material);
 
-        void OnEffectMaterialCompiled(const Frameworks::IEventPtr& e);
-        void OnCompileEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void onEffectMaterialContented(const Frameworks::IEventPtr& e);
+        void onContentMaterialFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::weak_ptr<Engine::Primitive> m_primitive;
-        std::string m_oldMaterialName;
-        Engine::EffectMaterialDto m_newMaterialDto;
+        Engine::EffectMaterialId m_oldMaterialId;
+        Engine::EffectMaterialId m_newMaterialId;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialCompiled;
-        Frameworks::EventSubscriberPtr m_onCompileEffectMaterialFailed;
-        using ChangeSpecifyMaterial = std::function<void(const std::shared_ptr<Engine::EffectMaterial>&)>;
-        std::unordered_map<Frameworks::Ruid, ChangeSpecifyMaterial, Frameworks::Ruid::HashFunc> m_changeSpecifyMaterialMap;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
+        Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
+        using ChangeSpecifyMaterial = std::function<void(const Engine::EffectMaterialId&)>;
+        std::unordered_map<Engine::EffectMaterialId, ChangeSpecifyMaterial, Engine::EffectMaterialId::hash> m_changeSpecifyMaterialMap;
     };
     class ChangeAvatarTexture : public AvatarRecipe
     {
@@ -83,19 +84,19 @@ namespace Enigma::GameCommon
         ChangeAvatarTexture& operator=(const ChangeAvatarTexture&) = delete;
         ChangeAvatarTexture& operator=(ChangeAvatarTexture&&) = delete;
 
-        void Bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
+        void bake(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn) override;
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void ChangeMeshTexture(const Renderer::MeshPrimitivePtr& mesh);
-        void OnTextureLoaded(const Frameworks::IEventPtr& e);
-        void OnLoadTextureFailed(const Frameworks::IEventPtr& e);
+        void changeMeshTexture(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+        void onTextureContented(const Frameworks::IEventPtr& e);
+        void onContentTextureFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
-        Frameworks::EventSubscriberPtr m_onTextureLoaded;
-        Frameworks::EventSubscriberPtr m_onLoadTextureFailed;
+        Frameworks::EventSubscriberPtr m_onTextureContented;
+        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
         std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
         Frameworks::Ruid m_requsetRuid;
     };

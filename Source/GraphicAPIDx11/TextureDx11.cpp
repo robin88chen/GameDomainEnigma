@@ -27,7 +27,7 @@ TextureDx11::~TextureDx11()
     SAFE_RELEASE(m_d3dTextureResource);
 }
 
-error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
+error TextureDx11::createFromSystemMemory(const MathLib::Dimension<unsigned>& dimension, const byte_buffer& buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
@@ -110,7 +110,7 @@ error TextureDx11::CreateFromSystemMemory(const MathLib::Dimension<unsigned>& di
     return ErrorCode::ok;
 }
 
-error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
+error TextureDx11::loadTextureImage(const byte_buffer& img_buff)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
@@ -147,14 +147,14 @@ error TextureDx11::LoadTextureImage(const byte_buffer& img_buff)
         }
     }
     m_isCubeTexture = metaData.arraySize == 6;
-    error er = CreateFromScratchImage(scratchImage);
+    error er = createFromScratchImage(scratchImage);
     if (er) return er;
 
     Frameworks::EventPublisher::post(std::make_shared<Graphics::TextureResourceImageLoaded>(m_name));
     return ErrorCode::ok;
 }
 
-error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
+error TextureDx11::retrieveTextureImage(const MathLib::Rect& rcSrc)
 {
     m_retrievedBuff.clear();
 
@@ -256,7 +256,7 @@ error TextureDx11::RetrieveTextureImage(const MathLib::Rect& rcSrc)
     return ErrorCode::ok;
 }
 
-error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
+error TextureDx11::updateTextureImage(const MathLib::Rect& rcDest, const byte_buffer& img_buff)
 {
     if (FATAL_LOG_EXPR(img_buff.empty()))
     {
@@ -370,7 +370,7 @@ error TextureDx11::UpdateTextureImage(const MathLib::Rect& rcDest, const byte_bu
     return ErrorCode::ok;
 }
 
-error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
+error TextureDx11::saveTextureImage(const FileSystem::IFilePtr& file)
 {
     assert(file);
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
@@ -445,7 +445,7 @@ error TextureDx11::SaveTextureImage(const FileSystem::IFilePtr& file)
     return ErrorCode::ok;
 }
 
-error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
+error TextureDx11::useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>& back_surf, const std::vector<Graphics::RenderTextureUsage>&)
 {
     GraphicAPIDx11* api_dx11 = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(api_dx11);
@@ -493,14 +493,14 @@ error TextureDx11::UseAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
     return ErrorCode::ok;
 }
 
-error TextureDx11::CreateFromScratchImage(DirectX::ScratchImage& scratchImage)
+error TextureDx11::createFromScratchImage(DirectX::ScratchImage& scratchImage)
 {
     if (!m_isCubeTexture)
     {
         byte_buffer img_buff;
         img_buff.resize(scratchImage.GetPixelsSize());
         memcpy(&img_buff[0], scratchImage.GetPixels(), scratchImage.GetPixelsSize());
-        return CreateFromSystemMemory(
+        return createFromSystemMemory(
             MathLib::Dimension<unsigned>{ static_cast<unsigned int>(scratchImage.GetMetadata().width), static_cast<unsigned int>(scratchImage.GetMetadata().height) },
             img_buff);
     }

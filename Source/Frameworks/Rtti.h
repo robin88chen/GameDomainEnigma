@@ -87,18 +87,19 @@ namespace Enigma::Frameworks
         static bool isDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
         static bool isExactlyOrDerivedFrom(const std::string& type_token, const std::string& base_rtti_token);
 
+        class hash
+        {
+        public:
+            size_t operator()(const Rtti& rtti) const
+            {
+                return std::hash<std::string>()(rtti.getName());
+            }
+        };
+
     private:
         std::string m_name;
         const Rtti* m_base;
         static std::unique_ptr<std::unordered_map<std::string, const Rtti*>> m_valueMap; // base 的 rtti 未必比 derived 早建立，為了用name 查衍生關係，所以要建個反查表
-    };
-    class RttiHashFunc
-    {
-    public:
-        size_t operator()(const Rtti& rtti) const
-        {
-            return std::hash<std::string>()(rtti.getName());
-        }
     };
 };
 

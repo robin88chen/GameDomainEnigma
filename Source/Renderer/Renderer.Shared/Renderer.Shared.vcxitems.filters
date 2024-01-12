@@ -135,6 +135,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveBuildingPlan.h">
+      <Filter>Renderable Primitives\Builders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererManager.cpp">

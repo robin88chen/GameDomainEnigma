@@ -17,6 +17,7 @@
 #include <vector>
 #include <deque>
 #include <system_error>
+#include <mutex>
 
 namespace Enigma::SceneGraph
 {

@@ -4,15 +4,51 @@
     <Filter Include="SceneGraphStoreMapper">
       <UniqueIdentifier>{009607fa-1b76-4834-a218-61776abfc543}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GeometryDataStoreMapper">
+      <UniqueIdentifier>{04e43a0c-e812-4fee-b94e-f9abd68ab4fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PrimitiveStoreMapper">
+      <UniqueIdentifier>{ab8392d1-7ee2-466d-8363-f8a7fbc2be0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectMaterialSourceStoreMapper">
+      <UniqueIdentifier>{5d597823-bf35-45ff-b006-cdefe893c099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureStoreMapper">
+      <UniqueIdentifier>{d8abdc87-2dec-493e-b38e-3d311d8c9b11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
       <Filter>SceneGraphStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.h">
+      <Filter>GeometryDataStoreMapper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.h">
+      <Filter>PrimitiveStoreMapper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceFileStoreMapper.h">
+      <Filter>EffectMaterialSourceStoreMapper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.h">
+      <Filter>TextureStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
       <Filter>SceneGraphStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFileStoreMapper.cpp">
+      <Filter>GeometryDataStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.cpp">
+      <Filter>PrimitiveStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceFileStoreMapper.cpp">
+      <Filter>EffectMaterialSourceStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.cpp">
+      <Filter>TextureStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

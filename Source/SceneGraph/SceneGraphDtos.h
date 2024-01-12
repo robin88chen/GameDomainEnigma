@@ -11,8 +11,8 @@
 #include "MathLib/Matrix4.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
-#include "GameEngine/EffectCompilingProfileDeserializer.h"
 #include "GameEngine/GenericDto.h"
+#include "GameEngine/PrimitiveId.h"
 #include "SpatialId.h"
 #include <string>
 #include <vector>
@@ -27,6 +27,7 @@ namespace Enigma::SceneGraph
     {
     public:
         SpatialDto();
+        SpatialDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
@@ -55,7 +56,7 @@ namespace Enigma::SceneGraph
         [[nodiscard]] unsigned int notifyFlag() const { return m_notifyFlag; }
         unsigned int& notifyFlag() { return m_notifyFlag; }
 
-        static SpatialDto fromGenericDto(const Engine::GenericDto& dto);
+        //static SpatialDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -79,11 +80,12 @@ namespace Enigma::SceneGraph
     public:
         NodeDto();
         NodeDto(const SpatialDto& spatial_dto);
+        NodeDto(const Engine::GenericDto& dto);
 
         const std::vector<std::string>& childNames() const { return m_childNames; }
         std::vector<std::string>& childNames() { return m_childNames; }
 
-        static NodeDto fromGenericDto(const Engine::GenericDto& dto);
+        //static NodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -95,11 +97,12 @@ namespace Enigma::SceneGraph
     public:
         LightDto();
         LightDto(const SpatialDto& spatial_dto);
+        LightDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] Engine::GenericDto lightInfo() const { return m_lightInfo; }
         Engine::GenericDto& lightInfo() { return m_lightInfo; }
 
-        static LightDto fromGenericDto(const Engine::GenericDto& dto);
+        //static LightDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -111,18 +114,19 @@ namespace Enigma::SceneGraph
     public:
         PawnDto();
         PawnDto(const SpatialDto& spatial_dto);
+        PawnDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::optional<Engine::GenericDto>& primitive() const { return m_primitive; }
-        std::optional<Engine::GenericDto>& primitive() { return m_primitive; }
+        [[nodiscard]] const std::optional<Engine::PrimitiveId>& primitiveId() const { return m_primitiveId; }
+        std::optional<Engine::PrimitiveId>& primitiveId() { return m_primitiveId; }
         //[[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
         //Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
 
-        static PawnDto fromGenericDto(const Engine::GenericDto& dto);
+        //static PawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
-        std::shared_ptr<PawnPolicy> convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
+        //std::shared_ptr<PawnPolicy> convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
-        std::optional<Engine::GenericDto> m_primitive;
+        std::optional<Engine::PrimitiveId> m_primitiveId;
         //todo : prefab support
         //Engine::FactoryDesc m_primitiveFactory;
     };
@@ -132,8 +136,9 @@ namespace Enigma::SceneGraph
     public:
         LazyNodeDto();
         LazyNodeDto(const NodeDto& node_dto);
+        LazyNodeDto(const Engine::GenericDto& dto);
 
-        static LazyNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        //static LazyNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     };
 
@@ -142,8 +147,9 @@ namespace Enigma::SceneGraph
     public:
         VisibilityManagedNodeDto();
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
+        VisibilityManagedNodeDto(const Engine::GenericDto& dto);
 
-        static VisibilityManagedNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        //static VisibilityManagedNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     };
 }

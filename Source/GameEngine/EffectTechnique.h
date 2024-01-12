@@ -1,7 +1,7 @@
 ﻿/*****************************************************************//**
  * \file   EffectTechnique.h
  * \brief  Effect technique value object
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -27,16 +27,16 @@ namespace Enigma::Engine
         EffectTechnique& operator=(const EffectTechnique& source_tech);
         EffectTechnique& operator=(EffectTechnique&& source_tech) noexcept;
 
-        const std::string& getName() { return m_name; }
+        const std::string& name() { return m_name; }
 
-        void AddPass(const EffectPass& pass);
-        unsigned int GetPassCount() { return static_cast<unsigned int>(m_effectPasses.size()); };
-        EffectPass& GetPassByIndex(unsigned int index);
-        const EffectPass& GetPassByIndex(unsigned int index) const;
+        void addPass(const EffectPass& pass);
+        unsigned int getPassCount() { return static_cast<unsigned int>(m_effectPasses.size()); };
+        EffectPass& getPassByIndex(unsigned int index);
+        const EffectPass& getPassByIndex(unsigned int index) const;
 
-        error ApplyFirstPass();
-        error ApplyNextPass();
-        bool HasNextPass();
+        error applyFirstPass();
+        error applyNextPass();
+        bool hasNextPass();
 
     protected:
         using EffectPassArray = std::vector<EffectPass>;

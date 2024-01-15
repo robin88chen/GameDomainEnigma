@@ -15,8 +15,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_NAME = "Name";
-static std::string TOKEN_ID_NAME = "Id.Name";
-static std::string TOKEN_ID_RTTI = "Id.Rtti";
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
 static std::string TOKEN_WORLD_TRANSFORM = "WorldTransform";
@@ -28,9 +27,7 @@ static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_CHILD_NAMES = "ChildNames";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
-static std::string TOKEN_PAWN_PRIMITIVE_ID_NAME = "PawnPrimitiveId.Name";
-static std::string TOKEN_PAWN_PRIMITIVE_ID_SEQUENCE = "PawnPrimitiveId.Sequence";
-static std::string TOKEN_PAWN_PRIMITIVE_ID_RTTI = "PawnPrimitiveId.Rtti";
+static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
@@ -47,13 +44,7 @@ SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::T
     factoryDesc() = dto.getRtti();
     m_isTopLevel = dto.isTopLevel();
     if (auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) name() = v.value();
-    if (auto n = dto.tryGetValue<std::string>(TOKEN_ID_NAME))
-    {
-        if (auto r = dto.tryGetValue<std::string>(TOKEN_ID_RTTI))
-        {
-            id() = SpatialId(n.value(), Frameworks::Rtti::fromName(r.value()));
-        }
-    }
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) id() = SpatialId(v.value());
     if (auto v = dto.tryGetValue<std::string>(TOKEN_PARENT_NAME)) parentName() = v.value();
     if (auto v = dto.tryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) localTransform() = v.value();
     if (auto v = dto.tryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) worldTransform() = v.value();
@@ -71,8 +62,7 @@ GenericDto SpatialDto::toGenericDto() const
     dto.addRtti(m_factoryDesc);
     dto.asTopLevel(m_isTopLevel);
     dto.addOrUpdate(TOKEN_NAME, m_name);
-    dto.addOrUpdate(TOKEN_ID_NAME, m_id.name());
-    dto.addOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
+    dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     if (!m_parentName.empty()) dto.addOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     dto.addOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
     dto.addOrUpdate(TOKEN_WORLD_TRANSFORM, m_worldTransform);
@@ -159,18 +149,7 @@ PawnDto::PawnDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 PawnDto::PawnDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.getName()));
-    if (auto n = dto.tryGetValue<std::string>(TOKEN_PAWN_PRIMITIVE_ID_NAME))
-    {
-        if (auto r = dto.tryGetValue<std::string>(TOKEN_PAWN_PRIMITIVE_ID_RTTI))
-        {
-            std::uint64_t id_seq = 0;
-            if (auto s = dto.tryGetValue<std::uint64_t>(TOKEN_PAWN_PRIMITIVE_ID_SEQUENCE))
-            {
-                id_seq = s.value();
-            }
-            primitiveId() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
-        }
-    }
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PAWN_PRIMITIVE_ID)) m_primitiveId = v.value();
     //if (auto v = dto.tryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) m_primitiveFactory = v.value();
 }
 
@@ -187,9 +166,7 @@ GenericDto PawnDto::toGenericDto() const
     GenericDto dto = SpatialDto::toGenericDto();
     if (m_primitiveId)
     {
-        dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID_NAME, m_primitiveId.value().name());
-        dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID_SEQUENCE, m_primitiveId.value().sequence());
-        dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID_RTTI, primitiveId().value().rtti().getName());
+        dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID, m_primitiveId.value().tokens());
     }
     //dto.addOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;

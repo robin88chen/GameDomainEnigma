@@ -20,16 +20,14 @@ using namespace Enigma::Animators;
 using namespace Enigma::Geometries;
 
 static std::string TOKEN_NAME = "Name";
-static std::string TOKEN_ID_NAME = "Id.Name";
-static std::string TOKEN_ID_SEQUENCE = "Id.Sequence";
-static std::string TOKEN_ID_RTTI = "Id.Rtti";
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_GEOMETRY_ID = "GeometryId";
 static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
 static std::string TOKEN_EFFECTS = "Effects";
 static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
-static std::string TOKEN_MESH_ID_NAME = "MeshId.Name";
+static std::string TOKEN_MESH_ID = "MeshId";
 static std::string TOKEN_MESH_ID_SEQUENCE = "MeshId.Sequence";
 static std::string TOKEN_MESH_ID_RTTI = "MeshId.Rtti";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
@@ -46,18 +44,7 @@ MeshPrimitiveDto MeshPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     MeshPrimitiveDto mesh;
     mesh.factoryDesc() = dto.getRtti();
-    if (auto n = dto.tryGetValue<std::string>(TOKEN_ID_NAME))
-    {
-        if (auto r = dto.tryGetValue<std::string>(TOKEN_ID_RTTI))
-        {
-            std::uint64_t id_seq = 0;
-            if (auto s = dto.tryGetValue<std::uint64_t>(TOKEN_ID_SEQUENCE))
-            {
-                id_seq = s.value();
-            }
-            mesh.id() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
-        }
-    }
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) mesh.id() = v.value();
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_GEOMETRY_ID)) mesh.geometryId() = v.value();
     if (const auto v = dto.tryGetValue<GenericDto>(TOKEN_RAW_GEOMETRY)) mesh.geometry() = v.value();
     if (const auto ary = dto.tryGetValue<std::vector<std::string>>(TOKEN_EFFECTS))
@@ -83,9 +70,7 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
-    dto.addOrUpdate(TOKEN_ID_NAME, m_id.name());
-    dto.addOrUpdate(TOKEN_ID_SEQUENCE, m_id.sequence());
-    dto.addOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
+    dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     dto.addOrUpdate(TOKEN_GEOMETRY_ID, m_geometryId.name());
     if (m_geometry)
     {
@@ -190,18 +175,7 @@ MeshNodeDto MeshNodeDto::fromGenericDto(const Engine::GenericDto& dto)
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) node.name() = v.value();
     if (const auto v = dto.tryGetValue<MathLib::Matrix4>(TOKEN_LOCAL_T_POS_TRANSFORM)) node.localT_PosTransform() = v.value();
     //if (const auto v = dto.tryGetValue<MathLib::Matrix4>(TOKEN_ROOT_REF_TRANSFORM)) node.RootRefTransform() = v.value();
-    if (auto n = dto.tryGetValue<std::string>(TOKEN_MESH_ID_NAME))
-    {
-        if (auto r = dto.tryGetValue<std::string>(TOKEN_MESH_ID_RTTI))
-        {
-            std::uint64_t id_seq = 0;
-            if (auto s = dto.tryGetValue<std::uint64_t>(TOKEN_MESH_ID_SEQUENCE))
-            {
-                id_seq = s.value();
-            }
-            node.meshPrimitiveId() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
-        }
-    }
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_ID)) node.meshPrimitiveId() = v.value();
     if (const auto v = dto.tryGetValue<unsigned>(TOKEN_PARENT_NODE_INDEX)) node.parentIndexInArray() = v.value();
     return node;
 }
@@ -213,12 +187,7 @@ GenericDto MeshNodeDto::toGenericDto() const
     dto.addOrUpdate(TOKEN_NAME, m_name);
     dto.addOrUpdate(TOKEN_LOCAL_T_POS_TRANSFORM, m_localT_PosTransform);
     //dto.addOrUpdate(TOKEN_ROOT_REF_TRANSFORM, m_rootRefTransform);
-    if (m_meshPrimitiveId)
-    {
-        dto.addOrUpdate(TOKEN_MESH_ID_NAME, m_meshPrimitiveId.value().name());
-        dto.addOrUpdate(TOKEN_MESH_ID_SEQUENCE, m_meshPrimitiveId.value().sequence());
-        dto.addOrUpdate(TOKEN_MESH_ID_RTTI, m_meshPrimitiveId.value().rtti().getName());
-    }
+    if (m_meshPrimitiveId) dto.addOrUpdate(TOKEN_MESH_ID, m_meshPrimitiveId.value().tokens());
     if (m_parentIndexInArray)
     {
         dto.addOrUpdate(TOKEN_PARENT_NODE_INDEX, m_parentIndexInArray.value());
@@ -254,18 +223,7 @@ ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
 {
     ModelPrimitiveDto model;
     model.factoryDesc() = dto.getRtti();
-    if (auto n = dto.tryGetValue<std::string>(TOKEN_ID_NAME))
-    {
-        if (auto r = dto.tryGetValue<std::string>(TOKEN_ID_RTTI))
-        {
-            std::uint64_t id_seq = 0;
-            if (auto s = dto.tryGetValue<std::uint64_t>(TOKEN_ID_SEQUENCE))
-            {
-                id_seq = s.value();
-            }
-            model.id() = PrimitiveId(n.value(), id_seq, Frameworks::Rtti::fromName(r.value()));
-        }
-    }
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) model.id() = v.value();
     if (const auto v = dto.tryGetValue<GenericDto>(TOKEN_MESH_NODE_TREE)) model.nodeTree() = v.value();
     if (const auto v = dto.tryGetValue<GenericDto>(TOKEN_MODEL_ANIMATOR)) model.animator() = v.value();
     return model;
@@ -275,9 +233,7 @@ GenericDto ModelPrimitiveDto::toGenericDto() const
 {
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
-    dto.addOrUpdate(TOKEN_ID_NAME, m_id.name());
-    dto.addOrUpdate(TOKEN_ID_SEQUENCE, m_id.sequence());
-    dto.addOrUpdate(TOKEN_ID_RTTI, m_id.rtti().getName());
+    dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     dto.addOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
     if (m_animatorDto) dto.addOrUpdate(TOKEN_MODEL_ANIMATOR, m_animatorDto.value());
     return dto;

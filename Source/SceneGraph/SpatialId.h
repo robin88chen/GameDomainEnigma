@@ -10,6 +10,7 @@
 
 #include "Frameworks/Rtti.h"
 #include <string>
+#include <vector>
 
 namespace Enigma::SceneGraph
 {
@@ -18,6 +19,7 @@ namespace Enigma::SceneGraph
     public:
         SpatialId() = default;
         SpatialId(const std::string& name, const Frameworks::Rtti& rtti);
+        SpatialId(const std::vector<std::string>& tokens);
         ~SpatialId();
         SpatialId(const SpatialId& other);
         SpatialId& operator=(const SpatialId& other);
@@ -27,6 +29,7 @@ namespace Enigma::SceneGraph
         bool operator==(const SpatialId& other) const { return m_name == other.m_name && m_rtti == other.m_rtti; }
         bool operator!=(const SpatialId& other) const { return m_name != other.m_name || m_rtti != other.m_rtti; }
 
+        std::vector<std::string> tokens() const;
         const std::string& name() const { return m_name; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }
 

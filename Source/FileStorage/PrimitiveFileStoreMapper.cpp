@@ -96,7 +96,7 @@ void PrimitiveFileStoreMapper::deserializeMapperFile(const std::string& mapper_f
     {
         auto tokens = split_token(line, ",");
         if (tokens.size() != 4) continue; // then, skip first line
-        Engine::PrimitiveId id{ tokens[0], std::stoul(tokens[1]), Frameworks::Rtti::fromName(tokens[2]) };
+        Engine::PrimitiveId id{ tokens[0], std::stoull(tokens[1]), Frameworks::Rtti::fromName(tokens[2]) };
         m_filename_map.insert_or_assign(id, tokens[3]);
     }
 }

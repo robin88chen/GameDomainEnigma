@@ -9,6 +9,8 @@
 #define PRIMITIVE_ID_H
 
 #include "Frameworks/Rtti.h"
+#include <string>
+#include <vector>
 
 namespace Enigma::Engine
 {
@@ -18,6 +20,7 @@ namespace Enigma::Engine
         PrimitiveId() = default;
         PrimitiveId(const std::string& name, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::string& name, std::uint64_t sequence, const Frameworks::Rtti& rtti);
+        PrimitiveId(const std::vector<std::string>& tokens);
         ~PrimitiveId();
         PrimitiveId(const PrimitiveId& other);
         PrimitiveId& operator=(const PrimitiveId& other);
@@ -27,6 +30,7 @@ namespace Enigma::Engine
         bool operator==(const PrimitiveId& other) const { return m_name == other.m_name && m_sequence == other.m_sequence && m_rtti == other.m_rtti; }
         bool operator!=(const PrimitiveId& other) const { return m_name != other.m_name || m_sequence != other.m_sequence || m_rtti != other.m_rtti; }
 
+        std::vector<std::string> tokens() const;
         const std::string& name() const { return m_name; }
         const std::uint64_t sequence() const { return m_sequence; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }

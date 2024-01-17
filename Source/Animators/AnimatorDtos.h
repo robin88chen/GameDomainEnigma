@@ -21,6 +21,11 @@ namespace Enigma::Animators
     public:
         ModelAnimatorDto();
 
+        [[nodiscard]] const Engine::AnimatorId& id() const { return m_id; }
+        Engine::AnimatorId& id() { return m_id; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
+
         [[nodiscard]] const std::string& AssetName() const { return m_assetName; }
         std::string& AssetName() { return m_assetName; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& AnimationAssetDto() const { return m_animationAssetDto; }
@@ -30,9 +35,6 @@ namespace Enigma::Animators
         [[nodiscard]] const Engine::GenericDtoCollection& SkinOperators() const { return m_skinOperators; }
         Engine::GenericDtoCollection& SkinOperators() { return m_skinOperators; }
 
-        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
-
         static ModelAnimatorDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
@@ -40,11 +42,12 @@ namespace Enigma::Animators
             const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
 
     private:
+        Engine::AnimatorId m_id;
+        Engine::FactoryDesc m_factoryDesc;
         std::string m_assetName;
         std::optional<Engine::GenericDto> m_animationAssetDto;
         Engine::FactoryDesc m_assetFactory;
         Engine::GenericDtoCollection m_skinOperators;
-        Engine::FactoryDesc m_factoryDesc;
     };
 
     class SkinOperatorDto

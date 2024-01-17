@@ -41,7 +41,8 @@ ModelAnimatorBuilder::~ModelAnimatorBuilder()
 
 void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimatorPolicy>& policy)
 {
-    assert(m_repository);
+    //todo: 先收起來
+    /*assert(m_repository);
     m_policy = policy;
     m_assetName = "";
     m_builtAnimator = std::make_shared<ModelPrimitiveAnimator>();
@@ -55,7 +56,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     else
     {
         EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::policyIncomplete));
-    }
+    }*/
 }
 
 void ModelAnimatorBuilder::LinkSkinMeshOperators()

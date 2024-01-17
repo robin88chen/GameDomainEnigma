@@ -3,7 +3,6 @@
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryErrors.h"
 #include "MathLib/MathAlgorithm.h"
-#include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;

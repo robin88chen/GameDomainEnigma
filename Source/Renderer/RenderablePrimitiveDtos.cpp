@@ -11,7 +11,6 @@
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "GameEngine/GenericPolicy.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -28,12 +27,10 @@ static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_LOCAL_T_POS_TRANSFORM = "LocalT_PosTransform";
 static std::string TOKEN_MESH_ID = "MeshId";
-static std::string TOKEN_MESH_ID_SEQUENCE = "MeshId.Sequence";
-static std::string TOKEN_MESH_ID_RTTI = "MeshId.Rtti";
 static std::string TOKEN_PARENT_NODE_INDEX = "ParentNodeIndex";
 static std::string TOKEN_MESH_NODES = "MeshNodes";
 static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
-static std::string TOKEN_MODEL_ANIMATOR = "ModelAnimator";
+static std::string TOKEN_MODEL_ANIMATOR_ID = "ModelAnimatorId";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
 MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_renderListID(Renderer::RenderListID::Scene)
@@ -225,7 +222,7 @@ ModelPrimitiveDto ModelPrimitiveDto::fromGenericDto(const GenericDto& dto)
     model.factoryDesc() = dto.getRtti();
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) model.id() = v.value();
     if (const auto v = dto.tryGetValue<GenericDto>(TOKEN_MESH_NODE_TREE)) model.nodeTree() = v.value();
-    if (const auto v = dto.tryGetValue<GenericDto>(TOKEN_MODEL_ANIMATOR)) model.animator() = v.value();
+    if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MODEL_ANIMATOR_ID)) model.animatorId() = v.value();
     return model;
 }
 
@@ -235,11 +232,11 @@ GenericDto ModelPrimitiveDto::toGenericDto() const
     dto.addRtti(m_factoryDesc);
     dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     dto.addOrUpdate(TOKEN_MESH_NODE_TREE, m_nodeTreeDto);
-    if (m_animatorDto) dto.addOrUpdate(TOKEN_MODEL_ANIMATOR, m_animatorDto.value());
+    if (m_animatorId) dto.addOrUpdate(TOKEN_MODEL_ANIMATOR_ID, m_animatorId.value());
     return dto;
 }
 
-std::shared_ptr<GenericPolicy> ModelPrimitiveDto::modelDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
+/*std::shared_ptr<GenericPolicy> ModelPrimitiveDto::modelDtoConvertToPolicy(const GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     ModelPrimitiveDto model_dto = ModelPrimitiveDto::fromGenericDto(dto);
     auto policy = std::make_shared<ModelPrimitivePolicy>();
@@ -250,4 +247,4 @@ std::shared_ptr<GenericPolicy> ModelPrimitiveDto::modelDtoConvertToPolicy(const 
         policy->modelAnimator() = ModelAnimatorDto::fromGenericDto(model_dto.m_animatorDto.value());
     }
     return policy;
-}
+}*/

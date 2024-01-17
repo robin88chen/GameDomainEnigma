@@ -3,7 +3,6 @@
 #include "IntrGeometryCache.h"
 #include "TriangleList.h"
 #include "MathLib/IntrRay3Triangle3.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/unique_ptr_dynamic_cast.hpp"
 #include <cassert>
 

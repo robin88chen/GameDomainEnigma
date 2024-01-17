@@ -3,7 +3,6 @@
 #include "ModelPrimitive.h"
 #include "IntrModelPrimitiveCache.h"
 #include "MeshPrimitiveRay3IntersectionFinder.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Frameworks/unique_ptr_dynamic_cast.hpp"
 #include "MeshPrimitive.h"
 

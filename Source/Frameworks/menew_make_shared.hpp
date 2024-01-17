@@ -8,7 +8,7 @@
 #ifndef MENEW_MAKE_SHARED_HPP
 #define MENEW_MAKE_SHARED_HPP
 
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <memory>
 #include <utility>
 

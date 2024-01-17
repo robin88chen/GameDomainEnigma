@@ -318,6 +318,27 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures\ResourceProcessor</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h">
+      <Filter>Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h">
+      <Filter>Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h">
+      <Filter>Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h">
+      <Filter>Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -475,6 +496,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp">
+      <Filter>Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp">
+      <Filter>Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp">
+      <Filter>Animator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

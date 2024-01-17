@@ -13,24 +13,13 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Animators, ModelPrimitiveAnimator, Animator);
 
-ModelPrimitiveAnimator::ModelPrimitiveAnimator() : Animator()
+ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(id)
 {
     m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
 
-    m_remainFadingTime = 0.0f;
-    m_fadingTime = 0.1f;
-    m_isFading = false;
-    m_isOnPlay = false;
-}
-
-ModelPrimitiveAnimator::ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) : Animator(ani)
-{
-    m_animationAsset = ani.m_animationAsset;
-    m_meshNodeMapping = ani.m_meshNodeMapping;
-    m_skinAnimOperators = ani.m_skinAnimOperators;
     m_remainFadingTime = 0.0f;
     m_fadingTime = 0.1f;
     m_isFading = false;
@@ -44,26 +33,12 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
     m_skinAnimOperators.clear();
 }
 
-ModelPrimitiveAnimator& ModelPrimitiveAnimator::operator=(const ModelPrimitiveAnimator& ani)
-{
-    if (this == &ani) return *this;
-    Animator::operator=(ani);
-    m_animationAsset = ani.m_animationAsset;
-    m_meshNodeMapping = ani.m_meshNodeMapping;
-    m_skinAnimOperators = ani.m_skinAnimOperators;
-    m_remainFadingTime = 0.0f;
-    m_fadingTime = 0.1f;
-    m_isFading = false;
-    m_isOnPlay = false;
-
-    return *this;
-}
-
-ModelAnimatorDto ModelPrimitiveAnimator::serializeDto()
+GenericDto ModelPrimitiveAnimator::serializeDto() const
 {
     ModelAnimatorDto dto;
-    if (!m_animationAsset) return dto;
+    dto.id() = id();
     dto.factoryDesc() = m_factoryDesc;
+    if (!m_animationAsset) return dto.toGenericDto();
     dto.AssetName() = m_animationAsset->getName();
     dto.AssetFactoryDesc() = m_animationAsset->factoryDesc();
     if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
@@ -75,7 +50,7 @@ ModelAnimatorDto ModelPrimitiveAnimator::serializeDto()
     {
         dto.SkinOperators().emplace_back(op.serializeDto().toGenericDto());
     }
-    return dto;
+    return dto.toGenericDto();
 }
 
 Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)

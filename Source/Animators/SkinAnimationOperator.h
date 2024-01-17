@@ -26,7 +26,7 @@ namespace Enigma::Animators
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
         SkinAnimationOperator& operator=(SkinAnimationOperator&& op) noexcept;
 
-        SkinOperatorDto serializeDto();
+        SkinOperatorDto serializeDto() const;
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

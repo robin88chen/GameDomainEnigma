@@ -42,10 +42,6 @@ PrimitiveId::PrimitiveId(PrimitiveId&& other)
     m_rtti = std::move(other.m_rtti);
 }
 
-PrimitiveId::~PrimitiveId()
-{
-}
-
 PrimitiveId& PrimitiveId::operator=(const PrimitiveId& other)
 {
     m_name = other.m_name;

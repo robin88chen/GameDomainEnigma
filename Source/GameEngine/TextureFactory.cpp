@@ -1,5 +1,4 @@
-﻿#include "Platforms/MemoryAllocMacro.h"
-#include "Platforms/MemoryMacro.h"
+﻿#include "Platforms/MemoryMacro.h"
 #include "Texture.h"
 #include "TextureFactory.h"
 #include "TextureResourceProcessor.h"

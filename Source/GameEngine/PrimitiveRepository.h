@@ -36,7 +36,7 @@ namespace Enigma::Engine
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        PrimitiveFactory* factory() { return m_factory; }
+        PrimitiveFactory* factory() const { return m_factory; }
 
         std::uint64_t nextSequenceNumber();
         bool hasPrimitive(const PrimitiveId& id);

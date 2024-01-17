@@ -26,14 +26,15 @@ namespace Enigma::Animators
     {
         DECLARE_EN_RTTI
     public:
-        ModelPrimitiveAnimator();
-        ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani);
+        ModelPrimitiveAnimator(const Engine::AnimatorId& id);
+        ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator(ModelPrimitiveAnimator&& ani) = delete;
         ~ModelPrimitiveAnimator() override;
-        ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani);
+        ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
-        ModelAnimatorDto serializeDto();
+        virtual Engine::GenericDto serializeDto() const override;
+        //ModelAnimatorDto serializeDto();
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 

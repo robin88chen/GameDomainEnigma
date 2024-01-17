@@ -1,6 +1,5 @@
 ﻿#include "AppDelegateAndroid.h"
 #include "ApplicationBridge.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Controllers/GraphicMain.h"
 #include "FileSystem/FileSystem.h"
 #include "Platforms/MemoryMacro.h"

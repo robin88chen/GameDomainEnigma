@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AnimationFrameListener.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
@@ -35,17 +35,17 @@ namespace Enigma::Animators
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error AddListeningAnimator(const Engine::AnimatorPtr& ani);
-        error RemoveListeningAnimator(const Engine::AnimatorPtr& ani);
+        error addListeningAnimator(const std::shared_ptr<Engine::Animator>& ani);
+        error removeListeningAnimator(const std::shared_ptr<Engine::Animator>& ani);
         /** update listened animator
         @return true: some animator has update, false: no update */
-        bool UpdateAnimator(const std::unique_ptr<Frameworks::Timer>& timer);
+        bool updateAnimator(const std::unique_ptr<Frameworks::Timer>& timer);
 
     private:
-        void RemoveExpiredAnimator();
+        void removeExpiredAnimator();
 
-        void DoAddingListeningAnimator(const Frameworks::ICommandPtr& c);
-        void DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c);
+        void addListeningAnimator(const Frameworks::ICommandPtr& c);
+        void removeListeningAnimator(const Frameworks::ICommandPtr& c);
 
     private:
         std::weak_ptr<Engine::TimerService> m_timer;
@@ -54,8 +54,8 @@ namespace Enigma::Animators
         ListeningList m_listeningAnimators;
         bool m_hasExpiredAnimator;
 
-        Frameworks::CommandSubscriberPtr m_doAddingListeningAnimator;
-        Frameworks::CommandSubscriberPtr m_doRemovingListeningAnimator;
+        Frameworks::CommandSubscriberPtr m_addListeningAnimator;
+        Frameworks::CommandSubscriberPtr m_removeListeningAnimator;
     };
 }
 

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  * \file   Animator.h
- * \brief  animator base class, value object, use shared_ptr
+ * \brief  animator base class, entity, use shared_ptr
  *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
@@ -11,6 +11,8 @@
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Timer.h"
 #include "FactoryDesc.h"
+#include "GenericDto.h"
+#include "AnimatorId.h"
 #include <memory>
 
 namespace Enigma::Engine
@@ -25,12 +27,17 @@ namespace Enigma::Engine
             True
         };
     public:
-        Animator();
-        Animator(const Animator& ani);
-        Animator(Animator&& ani) noexcept;
+        Animator(const AnimatorId& id);
+        Animator(const Animator& ani) = delete;
+        Animator(Animator&& ani) noexcept = delete;
         virtual ~Animator();
-        Animator& operator=(const Animator&);
-        Animator& operator=(Animator&&) noexcept;
+        Animator& operator=(const Animator&) = delete;
+        Animator& operator=(Animator&&) noexcept = delete;
+
+        static std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
+
+        const AnimatorId& id() const { return m_id; }
+        virtual GenericDto serializeDto() const = 0;
 
         /** animation update
         @return has update something or not */
@@ -39,21 +46,21 @@ namespace Enigma::Engine
         virtual void reset() {};
 
         /** called after animator add to listening list */
-        virtual void ProcessAfterAddListening() {};
+        virtual void processAfterAddListening() {};
         /** called before animator remove from listening list */
-        virtual void ProcessBeforeRemoveListening() {};
+        virtual void processBeforeRemoveListening() {};
 
-        bool IsListened() { return m_isListened; };
-        void SetListened(bool flag) { m_isListened = flag; };
+        bool isListened() const { return m_isListened; };
+        void setListened(bool flag) { m_isListened = flag; };
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
+        AnimatorId m_id;
         bool m_isListened;
         FactoryDesc m_factoryDesc;
     };
-    using AnimatorPtr = std::shared_ptr<Animator>;
 }
 
 #endif // _ANIMATOR_H

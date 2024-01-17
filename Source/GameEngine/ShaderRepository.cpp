@@ -7,7 +7,6 @@
 #include "GraphicKernel/IVertexDeclaration.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <cassert>

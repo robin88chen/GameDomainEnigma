@@ -2,7 +2,7 @@
 #include "EffectMaterial.h"
 #include "EffectEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 using namespace Enigma::Engine;

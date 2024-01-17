@@ -18,7 +18,7 @@
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "GraphicKernel/GraphicThread.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "MathLib/ColorRGBA.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID

@@ -21,7 +21,7 @@ namespace Enigma::Engine
         PrimitiveId(const std::string& name, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::string& name, std::uint64_t sequence, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::vector<std::string>& tokens);
-        ~PrimitiveId();
+        ~PrimitiveId() = default;
         PrimitiveId(const PrimitiveId& other);
         PrimitiveId& operator=(const PrimitiveId& other);
         PrimitiveId(PrimitiveId&& other);

@@ -7,7 +7,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 #include "Platforms/PlatformLayer.h"
@@ -158,7 +158,7 @@ error RendererManager::InsertRenderer(const std::string& name, const Engine::IRe
     unsigned int stamp = 1;
     while (m_accumulateRendererStamp & stamp)
     {
-               stamp = stamp << 1;
+        stamp = stamp << 1;
     }
     m_accumulateRendererStamp |= stamp;
     renderer->SetStampBitMask(stamp);

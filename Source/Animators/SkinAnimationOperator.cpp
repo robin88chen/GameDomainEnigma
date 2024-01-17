@@ -53,7 +53,7 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
     return *this;
 }
 
-SkinOperatorDto SkinAnimationOperator::serializeDto()
+SkinOperatorDto SkinAnimationOperator::serializeDto() const
 {
     SkinOperatorDto dto;
     dto.factoryDesc() = m_factoryDesc;

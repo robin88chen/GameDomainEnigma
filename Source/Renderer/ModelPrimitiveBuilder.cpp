@@ -1,6 +1,5 @@
 ﻿#include "ModelPrimitiveBuilder.h"
 #include "MeshPrimitiveBuilder.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "RenderablePrimitiveDtos.h"
 #include "Frameworks/EventPublisher.h"
@@ -26,12 +25,12 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
 
-    CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::modelDtoConvertToPolicy));
+    //CommandBus::post(std::make_shared<Engine::RegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveDto::modelDtoConvertToPolicy));
 }
 
 ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
 {
-    CommandBus::post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName()));
+    //CommandBus::post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName()));
 
     EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
     EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);

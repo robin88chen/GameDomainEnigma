@@ -6,7 +6,6 @@
 #include "Primitive.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "PrimitiveCommands.h"

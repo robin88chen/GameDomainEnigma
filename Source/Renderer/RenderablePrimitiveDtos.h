@@ -18,6 +18,7 @@
 #include "GameEngine/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
 #include "GameEngine/EffectMaterialId.h"
+#include "GameEngine/AnimatorId.h"
 #include <memory>
 #include <vector>
 
@@ -181,19 +182,19 @@ namespace Enigma::Renderer
 
         [[nodiscard]] const Engine::GenericDto& nodeTree() const { return m_nodeTreeDto; }
         Engine::GenericDto& nodeTree() { return m_nodeTreeDto; }
-        [[nodiscard]] const std::optional<Engine::GenericDto>& animator() const { return m_animatorDto; }
-        std::optional<Engine::GenericDto>& animator() { return m_animatorDto; }
+        [[nodiscard]] const std::optional<Engine::AnimatorId>& animatorId() const { return m_animatorId; }
+        std::optional<Engine::AnimatorId>& animatorId() { return m_animatorId; }
 
         static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
-        static std::shared_ptr<Engine::GenericPolicy> modelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
+        //static std::shared_ptr<Engine::GenericPolicy> modelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         Engine::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Engine::GenericDto m_nodeTreeDto;
-        std::optional<Engine::GenericDto> m_animatorDto;
+        std::optional<Engine::AnimatorId> m_animatorId;
     };
 }
 

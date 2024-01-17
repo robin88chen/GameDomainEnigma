@@ -93,8 +93,8 @@ void PrimitiveFactory::unregisterPrimitiveFactory(const std::string& rtti)
     }
     m_creators.erase(rtti);
     m_constitutors.erase(rtti);
-
 }
+
 void PrimitiveFactory::registerPrimitiveFactory(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;

@@ -27,6 +27,10 @@ ModelPrimitive::ModelPrimitive(const Engine::PrimitiveId& id, const Engine::Gene
     ModelPrimitiveDto primDto = ModelPrimitiveDto::fromGenericDto(dto);
     m_factoryDesc = primDto.factoryDesc();
     m_nodeTree = MeshNodeTree(primDto.nodeTree());
+    if (primDto.animatorId())
+    {
+        m_animator = Animator::queryAnimator(primDto.animatorId().value());
+    }
 }
 
 /*ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim) : Primitive(prim.m_id)
@@ -88,8 +92,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
-    if (auto ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(m_animator))
-        dto.animator() = ani->serializeDto().toGenericDto();
+    if (m_animator) dto.animatorId() = m_animator->id();
     return dto.toGenericDto();
 }
 

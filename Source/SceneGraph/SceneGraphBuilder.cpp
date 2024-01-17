@@ -13,7 +13,7 @@
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"

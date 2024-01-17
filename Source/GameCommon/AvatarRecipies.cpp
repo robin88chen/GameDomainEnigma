@@ -181,7 +181,7 @@ void ReplaceAvatarMaterial::onContentMaterialFailed(const IEventPtr& e)
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
-    : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
+    : m_meshName(mesh_name), m_textureDto(texture_dto)
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureContented = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
@@ -190,7 +190,7 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
     EventPublisher::subscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
+ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
     m_meshName = dto.MeshName();

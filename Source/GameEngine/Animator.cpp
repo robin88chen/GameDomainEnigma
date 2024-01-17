@@ -1,20 +1,12 @@
 ﻿#include "Animator.h"
+#include "AnimatorQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Engine, Animator);
 
-Animator::Animator() : m_isListened(false), m_factoryDesc(Animator::TYPE_RTTI.getName())
-{
-
-}
-
-Animator::Animator(const Animator& ani) : m_isListened(false), m_factoryDesc(ani.m_factoryDesc)
-{
-
-}
-
-Animator::Animator(Animator&& ani) noexcept : m_isListened(ani.m_isListened), m_factoryDesc(ani.m_factoryDesc)
+Animator::Animator(const AnimatorId& id) : m_id(id), m_isListened(false), m_factoryDesc(Animator::TYPE_RTTI.getName())
 {
 
 }
@@ -24,16 +16,10 @@ Animator::~Animator()
 
 }
 
-Animator& Animator::operator=(const Animator& ani)
+std::shared_ptr<Animator> Animator::queryAnimator(const AnimatorId& id)
 {
-    m_isListened = false;
-    m_factoryDesc = ani.m_factoryDesc;
-    return *this;
-}
-
-Animator& Animator::operator=(Animator&& ani) noexcept
-{
-    m_isListened = ani.m_isListened;
-    m_factoryDesc = ani.m_factoryDesc;
-    return *this;
+    assert(id.rtti().isDerived(Animator::TYPE_RTTI));
+    const auto query = std::make_shared<QueryAnimator>(id);
+    Frameworks::QueryDispatcher::dispatch(query);
+    return query->getResult();
 }

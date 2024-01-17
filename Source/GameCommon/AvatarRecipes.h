@@ -98,7 +98,6 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onTextureContented;
         Frameworks::EventSubscriberPtr m_onContentTextureFailed;
         std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
-        Frameworks::Ruid m_requsetRuid;
     };
 }
 

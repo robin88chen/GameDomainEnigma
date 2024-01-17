@@ -15,6 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
@@ -95,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />

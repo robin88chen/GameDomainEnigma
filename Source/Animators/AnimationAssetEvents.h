@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AnimationAssetEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
@@ -10,23 +10,22 @@
 
 #include "Frameworks/Event.h"
 #include "Frameworks/ruid.h"
+#include "GameEngine/AnimationAsset.h"
 #include <string>
 #include <memory>
 
 namespace Enigma::Animators
 {
-    class AnimationAsset;
-
     class AnimationAssetBuilt : public Frameworks::IEvent
     {
     public:
-        AnimationAssetBuilt(const std::string& name, const std::shared_ptr<AnimationAsset>& ani) :
+        AnimationAssetBuilt(const std::string& name, const std::shared_ptr<Engine::AnimationAsset>& ani) :
             m_name(name), m_animation(ani) {};
         const std::string& getName() { return m_name; }
-        const std::shared_ptr<AnimationAsset>& GetAnimationAsset() { return m_animation; }
+        const std::shared_ptr<Engine::AnimationAsset>& GetAnimationAsset() { return m_animation; }
     private:
         std::string m_name;
-        std::shared_ptr<AnimationAsset> m_animation;
+        std::shared_ptr<Engine::AnimationAsset> m_animation;
     };
     class BuildAnimationAssetFailed : public Frameworks::IEvent
     {
@@ -42,15 +41,15 @@ namespace Enigma::Animators
     class FactoryAnimationAssetCreated : public Frameworks::IEvent
     {
     public:
-        FactoryAnimationAssetCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<AnimationAsset>& ani)
+        FactoryAnimationAssetCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<Engine::AnimationAsset>& ani)
             : m_ruid(ruid), m_animation(ani) {};
 
         const Frameworks::Ruid& GetConstructingRuid() const { return m_ruid; }
-        const std::shared_ptr<AnimationAsset>& GetAnimationAsset() { return m_animation; }
+        const std::shared_ptr<Engine::AnimationAsset>& GetAnimationAsset() { return m_animation; }
 
     protected:
         Frameworks::Ruid m_ruid;
-        std::shared_ptr<AnimationAsset> m_animation;
+        std::shared_ptr<Engine::AnimationAsset> m_animation;
     };
 }
 

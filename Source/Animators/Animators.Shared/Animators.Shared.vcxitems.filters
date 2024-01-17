@@ -36,9 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
-      <Filter>Animation Assets</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
-      <Filter>Animation Assets</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>

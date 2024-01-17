@@ -14,7 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h" />
@@ -36,7 +35,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />

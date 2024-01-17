@@ -82,6 +82,9 @@
     <Filter Include="Textures\ResourceProcessor">
       <UniqueIdentifier>{c97ac5c6-b031-4a87-a005-f02d9df4ee96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimationAsset">
+      <UniqueIdentifier>{be84610b-4ef6-4ccf-96f2-c1c4edfb716e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -339,6 +342,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
+      <Filter>AnimationAsset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -505,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp">
       <Filter>Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
+      <Filter>AnimationAsset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

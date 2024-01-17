@@ -125,7 +125,7 @@ bool AnimationRepository::HasAnimationAsset(const std::string& rtti_name, const 
     return ((it != m_assets.end()) && (!it->second.expired()));
 }
 
-std::shared_ptr<AnimationAsset> AnimationRepository::QueryAnimationAsset(const std::string& rtti_name, const std::string& name)
+std::shared_ptr<Enigma::Engine::AnimationAsset> AnimationRepository::QueryAnimationAsset(const std::string& rtti_name, const std::string& name)
 {
     std::lock_guard locker{ m_assetsLock };
     auto it = m_assets.find(MakeAssetKey(rtti_name, name));

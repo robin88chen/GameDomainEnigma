@@ -16,7 +16,7 @@ using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 
-ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(AnimationAsset::TYPE_RTTI.getName())
+ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(Engine::AnimationAsset::TYPE_RTTI.getName())
 {
     m_repository = host;
     m_builtAnimator = nullptr;
@@ -98,7 +98,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->getName() != m_assetName) return;
-    auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset, AnimationAsset>(ev->GetAnimationAsset());
+    auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset, Engine::AnimationAsset>(ev->GetAnimationAsset());
     if (!model_anim)
     {
         EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));

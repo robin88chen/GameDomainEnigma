@@ -8,7 +8,7 @@
 #ifndef _MODEL_ANIMATION_ASSET_H
 #define _MODEL_ANIMATION_ASSET_H
 
-#include "AnimationAsset.h"
+#include "GameEngine/AnimationAsset.h"
 #include "AnimationTimeSRT.h"
 #include <vector>
 #include <optional>
@@ -17,7 +17,7 @@ namespace Enigma::Animators
 {
     class ModelAnimationAssetDto;
 
-    class ModelAnimationAsset : public AnimationAsset
+    class ModelAnimationAsset : public Engine::AnimationAsset
     {
         DECLARE_EN_RTTI
     protected:

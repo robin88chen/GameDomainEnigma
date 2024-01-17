@@ -1,6 +1,6 @@
 ﻿#include "AnimationAssetBuilder.h"
 #include "AnimationAssetPolicies.h"
-#include "AnimationRepository.h"
+#include "ModelAnimationRepository.h"
 #include "Frameworks/EventPublisher.h"
 #include "AnimationAssetEvents.h"
 #include "Frameworks/CommandBus.h"

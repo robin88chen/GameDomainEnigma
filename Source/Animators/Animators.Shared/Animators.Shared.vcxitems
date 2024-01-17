@@ -16,11 +16,11 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommand.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h" />
@@ -36,9 +36,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp" />

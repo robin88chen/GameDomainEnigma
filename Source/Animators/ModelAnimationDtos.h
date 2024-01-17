@@ -1,16 +1,18 @@
 ﻿/*********************************************************************
- * \file   AnimationAssetDtos.h
+ * \file   ModelAnimationDtos.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATION_ASSET_DTOS_H
-#define _ANIMATION_ASSET_DTOS_H
+#ifndef _MODEL_ANIMATION_DTOS_H
+#define _MODEL_ANIMATION_DTOS_H
 
 #include "GameEngine/GenericDto.h"
+#include "GameEngine/AnimationAssetDtos.h"
 #include <string>
 #include <vector>
+
 
 namespace Enigma::Animators
 {
@@ -37,23 +39,7 @@ namespace Enigma::Animators
         std::vector<float> m_translateTimeKeys;
     };
 
-    class AnimationAssetDto
-    {
-    public:
-        AnimationAssetDto();
-
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        std::string& name() { return m_name; }
-
-        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
-
-    protected:
-        std::string m_name;
-        Engine::FactoryDesc m_factoryDesc;
-    };
-
-    class ModelAnimationAssetDto : public AnimationAssetDto
+    class ModelAnimationAssetDto : public Engine::AnimationAssetDto
     {
     public:
         ModelAnimationAssetDto();
@@ -72,4 +58,4 @@ namespace Enigma::Animators
     };
 }
 
-#endif // _ANIMATION_ASSET_DTOS_H
+#endif // _MODEL_ANIMATION_DTOS_H

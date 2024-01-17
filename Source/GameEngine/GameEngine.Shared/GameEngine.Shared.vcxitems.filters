@@ -85,6 +85,9 @@
     <Filter Include="AnimationAsset">
       <UniqueIdentifier>{be84610b-4ef6-4ccf-96f2-c1c4edfb716e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DTOs\Animation Asset Dto">
+      <UniqueIdentifier>{2622eae4-c441-40b8-9983-f02362244ae4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -345,6 +348,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
       <Filter>AnimationAsset</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetId.h">
+      <Filter>AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
+      <Filter>DTOs\Animation Asset Dto</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -514,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
       <Filter>AnimationAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
+      <Filter>DTOs\Animation Asset Dto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

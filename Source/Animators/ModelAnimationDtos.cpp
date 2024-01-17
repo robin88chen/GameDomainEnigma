@@ -1,4 +1,4 @@
-﻿#include "AnimationAssetDtos.h"
+﻿#include "ModelAnimationDtos.h"
 #include "ModelAnimationAsset.h"
 
 using namespace Enigma::Animators;
@@ -7,7 +7,7 @@ using namespace Enigma::Engine;
 static std::string TOKEN_SCALE_TIME_KEYS = "ScaleTimeKeys";
 static std::string TOKEN_ROTATE_TIME_KEYS = "RotateTimeKeys";
 static std::string TOKEN_TRANSLATE_TIME_KEYS = "TranslateTimeKeys";
-static std::string TOKEN_NAME = "Name";
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_MESH_NODE_NAMES = "MeshNodeNames";
 static std::string TOKEN_TIME_SRTS = "TimeSRTs";
 
@@ -29,9 +29,6 @@ GenericDto AnimationTimeSRTDto::toGenericDto()
     return dto;
 }
 
-AnimationAssetDto::AnimationAssetDto() : m_factoryDesc(AnimationAsset::TYPE_RTTI.getName())
-{
-}
 
 ModelAnimationAssetDto::ModelAnimationAssetDto() : AnimationAssetDto()
 {
@@ -42,7 +39,7 @@ ModelAnimationAssetDto ModelAnimationAssetDto::fromGenericDto(const Engine::Gene
 {
     ModelAnimationAssetDto model;
     model.m_factoryDesc = dto.getRtti();
-    if (const auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) model.name() = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) model.id() = v.value();
     if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) model.MeshNodeNames() = v.value();
     if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TIME_SRTS)) model.TimeSRTs() = v.value();
     return model;
@@ -52,7 +49,7 @@ GenericDto ModelAnimationAssetDto::toGenericDto()
 {
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
-    dto.addOrUpdate(TOKEN_NAME, m_name);
+    dto.addOrUpdate(TOKEN_ID, m_id.name());
     dto.addOrUpdate(TOKEN_MESH_NODE_NAMES, m_meshNodeNames);
     dto.addOrUpdate(TOKEN_TIME_SRTS, m_timeSrtDtos);
     return dto;

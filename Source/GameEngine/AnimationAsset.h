@@ -10,8 +10,8 @@
 
 #include "Frameworks/Rtti.h"
 #include "FactoryDesc.h"
+#include "AnimationAssetId.h"
 #include <string>
-#include <memory>
 
 namespace Enigma::Engine
 {
@@ -19,14 +19,16 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI_OF_BASE
     public:
-        AnimationAsset(const std::string& name);
+        AnimationAsset(const AnimationAssetId& id);
         AnimationAsset(const AnimationAsset&) = delete;
         AnimationAsset(AnimationAsset&&) = delete;
         virtual ~AnimationAsset();
         AnimationAsset& operator=(const AnimationAsset&) = delete;
         AnimationAsset& operator=(AnimationAsset&&) = delete;
 
-        const std::string& getName() { return m_name; }
+        const AnimationAssetId& id() { return m_id; }
+
+        static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }
@@ -34,7 +36,7 @@ namespace Enigma::Engine
         virtual float getAnimationLengthInSecond() = 0;
 
     protected:
-        std::string m_name;
+        AnimationAssetId m_id;
         FactoryDesc m_factoryDesc;
     };
 }

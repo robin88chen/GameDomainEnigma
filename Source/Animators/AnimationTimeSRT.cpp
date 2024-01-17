@@ -1,6 +1,6 @@
 ﻿#include "AnimationTimeSRT.h"
 #include "MathLib/MathAlgorithm.h"
-#include "AnimationAssetDtos.h"
+#include "ModelAnimationDtos.h"
 #include <cassert>
 
 using namespace Enigma::MathLib;

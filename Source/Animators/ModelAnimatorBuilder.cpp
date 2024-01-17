@@ -1,5 +1,5 @@
 ﻿#include "ModelAnimatorBuilder.h"
-#include "AnimationRepository.h"
+#include "ModelAnimationRepository.h"
 #include "AnimatorPolicies.h"
 #include "AnimationAssetPolicies.h"
 #include "ModelPrimitiveAnimator.h"

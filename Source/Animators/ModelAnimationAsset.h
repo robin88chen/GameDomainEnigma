@@ -31,7 +31,7 @@ namespace Enigma::Animators
             AnimationTimeSRT m_timeSRTData;
         };
     public:
-        ModelAnimationAsset(const std::string& name);
+        ModelAnimationAsset(const Engine::AnimationAssetId& id);
         ModelAnimationAsset(const ModelAnimationAssetDto& dto);
         ModelAnimationAsset(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset(ModelAnimationAsset&&) = delete;

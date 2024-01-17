@@ -1,5 +1,5 @@
 ﻿#include "ModelAnimationAsset.h"
-#include "AnimationAssetDtos.h"
+#include "ModelAnimationDtos.h"
 
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
@@ -7,12 +7,12 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(Animators, ModelAnimationAsset, AnimationAsset);
 
-ModelAnimationAsset::ModelAnimationAsset(const std::string& name) : AnimationAsset(name)
+ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : AnimationAsset(id)
 {
     m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
-ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.name())
+ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.id())
 {
     m_factoryDesc = dto.factoryDesc();
     m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
@@ -30,7 +30,7 @@ ModelAnimationAsset::~ModelAnimationAsset()
 ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
-    dto.name() = m_name;
+    dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     std::vector<std::string> names;
     GenericDtoCollection srts;

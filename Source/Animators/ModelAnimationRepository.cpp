@@ -1,4 +1,4 @@
-﻿#include "AnimationRepository.h"
+﻿#include "ModelAnimationRepository.h"
 #include "AnimatorErrors.h"
 #include "Frameworks/CommandBus.h"
 #include "AnimationAssetCommand.h"
@@ -12,7 +12,7 @@
 #include "ModelAnimatorBuilder.h"
 #include "AnimatorCommands.h"
 #include "Frameworks/StringFormat.h"
-#include "AnimationAssetDtos.h"
+#include "ModelAnimationDtos.h"
 #include "AnimationAssetPolicies.h"
 #include "AnimatorPolicies.h"
 #include <cassert>

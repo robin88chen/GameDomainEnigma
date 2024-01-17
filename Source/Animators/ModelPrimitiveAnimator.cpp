@@ -1,5 +1,5 @@
 ﻿#include "ModelPrimitiveAnimator.h"
-#include "AnimationAssetDtos.h"
+#include "ModelAnimationDtos.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
@@ -39,7 +39,7 @@ GenericDto ModelPrimitiveAnimator::serializeDto() const
     dto.id() = id();
     dto.factoryDesc() = m_factoryDesc;
     if (!m_animationAsset) return dto.toGenericDto();
-    dto.AssetName() = m_animationAsset->getName();
+    dto.AssetName() = m_animationAsset->id().name();
     dto.AssetFactoryDesc() = m_animationAsset->factoryDesc();
     if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
         || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))

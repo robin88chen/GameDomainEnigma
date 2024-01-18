@@ -99,8 +99,8 @@ void ModelPrimitiveBuilder::TryBuildAnimator()
     if (!m_policy) return;
     if (auto ani = m_policy->modelAnimator())
     {
-        m_animatorPolicy = ani->convertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
-        CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
+        //m_animatorPolicy = ani->convertToPolicy(m_builtPrimitive, m_policy->TheDtoDeserializer());
+        //CommandBus::post(std::make_shared<Animators::BuildModelAnimator>(m_animatorPolicy));
     }
     else
     {

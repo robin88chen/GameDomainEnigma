@@ -39,16 +39,10 @@ GenericDto ModelPrimitiveAnimator::serializeDto() const
     dto.id() = id();
     dto.factoryDesc() = m_factoryDesc;
     if (!m_animationAsset) return dto.toGenericDto();
-    dto.AssetName() = m_animationAsset->id().name();
-    dto.AssetFactoryDesc() = m_animationAsset->factoryDesc();
-    if ((m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-        || (m_animationAsset->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
-    {
-        dto.AnimationAssetDto() = m_animationAsset->serializeDto().toGenericDto();
-    }
+    dto.animationAssetId() = m_animationAsset->id();
     for (auto& op : m_skinAnimOperators)
     {
-        dto.SkinOperators().emplace_back(op.serializeDto().toGenericDto());
+        dto.skinOperators().emplace_back(op.serializeDto().toGenericDto());
     }
     return dto.toGenericDto();
 }

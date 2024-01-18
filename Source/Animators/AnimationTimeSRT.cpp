@@ -10,11 +10,12 @@ AnimationTimeSRT::AnimationTimeSRT()
 {
 }
 
-AnimationTimeSRT::AnimationTimeSRT(const AnimationTimeSRTDto& dto)
+AnimationTimeSRT::AnimationTimeSRT(const Engine::GenericDto& dto)
 {
-    auto& scale_keys = dto.ScaleTimeKeys();
-    auto& rotate_keys = dto.RotateTimeKeys();
-    auto& translate_keys = dto.TranslateTimeKeys();
+    AnimationTimeSRTDto srt_dto(dto);
+    auto& scale_keys = srt_dto.scaleTimeKeys();
+    auto& rotate_keys = srt_dto.rotateTimeKeys();
+    auto& translate_keys = srt_dto.translateTimeKeys();
     const unsigned scale_size = static_cast<unsigned>(scale_keys.size());
     const unsigned rotate_size = static_cast<unsigned>(rotate_keys.size());
     const unsigned translate_size = static_cast<unsigned>(translate_keys.size());
@@ -37,7 +38,7 @@ AnimationTimeSRT::AnimationTimeSRT(const AnimationTimeSRTDto& dto)
     }
 }
 
-AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
+Enigma::Engine::GenericDto AnimationTimeSRT::serializeDto()
 {
     AnimationTimeSRTDto dto;
     std::vector<float> scale_keys;
@@ -48,7 +49,7 @@ AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
         scale_keys.emplace_back(key.m_vecKey.Y());
         scale_keys.emplace_back(key.m_vecKey.Z());
     }
-    dto.ScaleTimeKeys() = scale_keys;
+    dto.scaleTimeKeys() = scale_keys;
     std::vector<float> rotate_keys;
     for (auto& key : m_rotationKeyVector)
     {
@@ -58,7 +59,7 @@ AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
         rotate_keys.emplace_back(key.m_qtKey.Y());
         rotate_keys.emplace_back(key.m_qtKey.Z());
     }
-    dto.RotateTimeKeys() = rotate_keys;
+    dto.rotateTimeKeys() = rotate_keys;
     std::vector<float> translate_keys;
     for (auto& key : m_translateKeyVector)
     {
@@ -67,8 +68,8 @@ AnimationTimeSRTDto AnimationTimeSRT::serializeDto()
         translate_keys.emplace_back(key.m_vecKey.Y());
         translate_keys.emplace_back(key.m_vecKey.Z());
     }
-    dto.TranslateTimeKeys() = translate_keys;
-    return dto;
+    dto.translateTimeKeys() = translate_keys;
+    return dto.toGenericDto();
 }
 
 Matrix4 AnimationTimeSRT::calculateTransformMatrix(float off_time)

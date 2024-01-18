@@ -7,42 +7,37 @@
 using namespace Enigma::Animators;
 using namespace Enigma::Engine;
 
-static std::string TOKEN_ANIMATION_NAME = "AnimationName";
-static std::string TOKEN_ASSET_OBJECT = "AssetObject";
-static std::string TOKEN_ANIMATION_FACTORY = "AnimationFactory";
+static std::string TOKEN_ID = "Id";
+static std::string TOKEN_ASSET_ID = "AssetId";
 static std::string TOKEN_SKIN_OPERATORS = "SkinOperators";
 static std::string TOKEN_SKIN_MESH_NAME = "SkinMeshName";
 static std::string TOKEN_SKIN_MESH_NODE_NAME = "SkinMeshNodeName";
 static std::string TOKEN_BONE_NODE_NAMES = "BoneNodeNames";
 static std::string TOKEN_NODE_OFFSETS = "NodeOffsets";
 
-ModelAnimatorDto::ModelAnimatorDto() : m_assetFactory(ModelAnimationAsset::TYPE_RTTI.getName()), m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName())
+ModelAnimatorDto::ModelAnimatorDto() : m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName())
 {
 }
 
-ModelAnimatorDto ModelAnimatorDto::fromGenericDto(const GenericDto& dto)
+ModelAnimatorDto::ModelAnimatorDto(const GenericDto& dto) : m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName())
 {
-    ModelAnimatorDto model;
-    model.factoryDesc() = dto.getRtti();
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_ASSET_OBJECT)) model.AnimationAssetDto() = v.value();
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_ANIMATION_NAME)) model.AssetName() = v.value();
-    if (auto v = dto.tryGetValue<FactoryDesc>(TOKEN_ANIMATION_FACTORY)) model.AssetFactoryDesc() = v.value();
-    if (auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_SKIN_OPERATORS)) model.SkinOperators() = v.value();
-    return model;
+    factoryDesc() = dto.getRtti();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) id() = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_ASSET_ID)) animationAssetId() = v.value();
+    if (auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_SKIN_OPERATORS)) skinOperators() = v.value();
 }
 
 GenericDto ModelAnimatorDto::toGenericDto()
 {
     GenericDto dto;
+    dto.addOrUpdate(TOKEN_ID, id().tokens());
     dto.addRtti(m_factoryDesc);
-    if (m_animationAssetDto) dto.addOrUpdate(TOKEN_ASSET_OBJECT, m_animationAssetDto.value());
-    dto.addOrUpdate(TOKEN_ANIMATION_NAME, m_assetName);
-    dto.addOrUpdate(TOKEN_ANIMATION_FACTORY, m_assetFactory);
+    if (m_animationAssetId) dto.addOrUpdate(TOKEN_ASSET_ID, m_animationAssetId.value().name());
     dto.addOrUpdate(TOKEN_SKIN_OPERATORS, m_skinOperators);
     return dto;
 }
 
-std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
+/*std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
     const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
 {
     std::shared_ptr<AnimationAssetPolicy> asset_policy;
@@ -64,7 +59,7 @@ std::shared_ptr<ModelAnimatorPolicy> ModelAnimatorDto::convertToPolicy(const std
         policy->SkinOperators().emplace_back(SkinOperatorDto::fromGenericDto(op));
     }
     return policy;
-}
+}*/
 
 SkinOperatorDto::SkinOperatorDto() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
 {

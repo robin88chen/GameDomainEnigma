@@ -24,8 +24,6 @@ namespace Enigma::Geometries
     class GeometryData;
     class GeometryDataStoreMapper;
     class GeometryDataFactory;
-    class TriangleListDto;
-    class GeometryBuilder;
 
     class GeometryRepository : public Frameworks::ISystemService
     {

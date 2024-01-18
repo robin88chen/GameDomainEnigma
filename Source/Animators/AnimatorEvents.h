@@ -5,8 +5,8 @@
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATOR_EVENTS_H
-#define _ANIMATOR_EVENTS_H
+#ifndef ANI_ANIMATOR_EVENTS_H
+#define ANI_ANIMATOR_EVENTS_H
 
 #include "Frameworks/ruid.h"
 #include <memory>
@@ -40,4 +40,4 @@ namespace Enigma::Animators
 
 }
 
-#endif // _ANIMATOR_EVENTS_H
+#endif // ANI_ANIMATOR_EVENTS_H

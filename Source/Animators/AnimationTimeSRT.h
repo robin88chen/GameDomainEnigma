@@ -11,6 +11,7 @@
 #include "MathLib/Matrix4.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/Quaternion.h"
+#include "GameEngine/GenericDto.h"
 #include <tuple>
 #include <vector>
 
@@ -56,9 +57,9 @@ namespace Enigma::Animators
 
     public:
         AnimationTimeSRT();
-        AnimationTimeSRT(const AnimationTimeSRTDto& dto);
+        AnimationTimeSRT(const Engine::GenericDto& dto);
 
-        AnimationTimeSRTDto serializeDto();
+        Engine::GenericDto serializeDto();
 
         MathLib::Matrix4 calculateTransformMatrix(float off_time);
         SRTValueTie calculateLerpedSRT(float off_time);

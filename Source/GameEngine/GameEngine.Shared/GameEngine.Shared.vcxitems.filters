@@ -354,6 +354,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
       <Filter>DTOs\Animation Asset Dto</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h">
+      <Filter>AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetStoreMapper.h">
+      <Filter>AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.h">
+      <Filter>AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -526,6 +544,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
       <Filter>DTOs\Animation Asset Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp">
+      <Filter>AnimationAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp">
+      <Filter>AnimationAsset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

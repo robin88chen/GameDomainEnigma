@@ -12,13 +12,14 @@ ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : Animation
     m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
-ModelAnimationAsset::ModelAnimationAsset(const ModelAnimationAssetDto& dto) : AnimationAsset(dto.id())
+ModelAnimationAsset::ModelAnimationAsset(const Engine::AnimationAssetId& id, const GenericDto& dto) : AnimationAsset(id)
 {
-    m_factoryDesc = dto.factoryDesc();
-    m_meshNodeKeyArray.reserve(dto.MeshNodeNames().size());
-    for (unsigned i = 0; i < dto.MeshNodeNames().size(); i++)
+    ModelAnimationAssetDto model_dto(dto);
+    m_factoryDesc = model_dto.factoryDesc();
+    m_meshNodeKeyArray.reserve(model_dto.meshNodeNames().size());
+    for (unsigned i = 0; i < model_dto.meshNodeNames().size(); i++)
     {
-        addMeshNodeTimeSRTData(dto.MeshNodeNames()[i], AnimationTimeSRT(AnimationTimeSRTDto::fromGenericDto(dto.TimeSRTs()[i])));
+        addMeshNodeTimeSRTData(model_dto.meshNodeNames()[i], AnimationTimeSRT(model_dto.timeSRTs()[i]));
     }
 }
 
@@ -27,7 +28,7 @@ ModelAnimationAsset::~ModelAnimationAsset()
     m_meshNodeKeyArray.clear();
 }
 
-ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
+GenericDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
     dto.id() = m_id;
@@ -37,11 +38,11 @@ ModelAnimationAssetDto ModelAnimationAsset::serializeDto()
     for (auto& key : m_meshNodeKeyArray)
     {
         names.emplace_back(key.m_meshNodeName);
-        srts.emplace_back(key.m_timeSRTData.serializeDto().toGenericDto());
+        srts.emplace_back(key.m_timeSRTData.serializeDto());
     }
-    dto.MeshNodeNames() = names;
-    dto.TimeSRTs() = srts;
-    return dto;
+    dto.meshNodeNames() = names;
+    dto.timeSRTs() = srts;
+    return dto.toGenericDto();
 }
 
 void ModelAnimationAsset::reserveCapacity(unsigned mesh_node_count)

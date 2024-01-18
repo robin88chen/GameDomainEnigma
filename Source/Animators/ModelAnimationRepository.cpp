@@ -157,8 +157,8 @@ void AnimationRepository::ModelAnimationAssetFactory(const Engine::GenericDto& d
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for geometry factory", dto.getRtti().GetRttiName().c_str());
         return;
     }
-    auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::fromGenericDto(dto));
-    EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.ruid(), animation));
+    //auto animation = std::make_shared<ModelAnimationAsset>(ModelAnimationAssetDto::fromGenericDto(dto));
+    //EventPublisher::post(std::make_shared<FactoryAnimationAssetCreated>(dto.ruid(), animation));
 }
 
 std::string AnimationRepository::MakeAssetKey(const std::string& rtti_name, const std::string& name)

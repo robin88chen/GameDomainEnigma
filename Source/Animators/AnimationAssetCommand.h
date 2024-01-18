@@ -5,8 +5,8 @@
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATION_ASSET_COMMAND_H
-#define _ANIMATION_ASSET_COMMAND_H
+#ifndef ANI_ANIMATION_ASSET_COMMAND_H
+#define ANI_ANIMATION_ASSET_COMMAND_H
 
 #include "Frameworks/Command.h"
 #include <memory>

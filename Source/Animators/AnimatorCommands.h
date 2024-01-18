@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
  * \file   AnimatorCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATOR_COMMANDS_H
-#define _ANIMATOR_COMMANDS_H
+#ifndef ANI_ANIMATOR_COMMANDS_H
+#define ANI_ANIMATOR_COMMANDS_H
 
 #include "Frameworks/Command.h"
 #include "GameEngine/Animator.h"
@@ -44,4 +44,4 @@ namespace Enigma::Animators
     };
 }
 
-#endif // _ANIMATOR_COMMANDS_H
+#endif // ANI_ANIMATOR_COMMANDS_H

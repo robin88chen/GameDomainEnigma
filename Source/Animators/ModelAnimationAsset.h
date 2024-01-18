@@ -32,14 +32,14 @@ namespace Enigma::Animators
         };
     public:
         ModelAnimationAsset(const Engine::AnimationAssetId& id);
-        ModelAnimationAsset(const ModelAnimationAssetDto& dto);
+        ModelAnimationAsset(const Engine::AnimationAssetId& id, const Engine::GenericDto& dto);
         ModelAnimationAsset(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset(ModelAnimationAsset&&) = delete;
         virtual ~ModelAnimationAsset() override;
         ModelAnimationAsset& operator=(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset& operator=(ModelAnimationAsset&&) = delete;
 
-        ModelAnimationAssetDto serializeDto();
+        Engine::GenericDto serializeDto() override;
 
         /** reserve data array capacity */
         void reserveCapacity(unsigned int mesh_node_count);

@@ -5,12 +5,13 @@
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef ANIMATOR_DTOS_H
-#define ANIMATOR_DTOS_H
+#ifndef ANI_ANIMATOR_DTOS_H
+#define ANI_ANIMATOR_DTOS_H
 
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
 #include "Renderer/ModelPrimitive.h"
+#include "GameEngine/AnimationAssetId.h"
 
 namespace Enigma::Animators
 {
@@ -20,33 +21,27 @@ namespace Enigma::Animators
     {
     public:
         ModelAnimatorDto();
+        ModelAnimatorDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const Engine::AnimatorId& id() const { return m_id; }
         Engine::AnimatorId& id() { return m_id; }
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::string& AssetName() const { return m_assetName; }
-        std::string& AssetName() { return m_assetName; }
-        [[nodiscard]] const std::optional<Engine::GenericDto>& AnimationAssetDto() const { return m_animationAssetDto; }
-        std::optional<Engine::GenericDto>& AnimationAssetDto() { return m_animationAssetDto; }
-        [[nodiscard]] const Engine::FactoryDesc& AssetFactoryDesc() const { return m_assetFactory; }
-        Engine::FactoryDesc& AssetFactoryDesc() { return m_assetFactory; }
-        [[nodiscard]] const Engine::GenericDtoCollection& SkinOperators() const { return m_skinOperators; }
-        Engine::GenericDtoCollection& SkinOperators() { return m_skinOperators; }
+        [[nodiscard]] const std::optional<Engine::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
+        std::optional<Engine::AnimationAssetId>& animationAssetId() { return m_animationAssetId; }
+        [[nodiscard]] const Engine::GenericDtoCollection& skinOperators() const { return m_skinOperators; }
+        Engine::GenericDtoCollection& skinOperators() { return m_skinOperators; }
 
-        static ModelAnimatorDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
-        std::shared_ptr<ModelAnimatorPolicy> convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
-            const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
+        //std::shared_ptr<ModelAnimatorPolicy> convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
+          //  const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
 
     private:
         Engine::AnimatorId m_id;
         Engine::FactoryDesc m_factoryDesc;
-        std::string m_assetName;
-        std::optional<Engine::GenericDto> m_animationAssetDto;
-        Engine::FactoryDesc m_assetFactory;
+        std::optional<Engine::AnimationAssetId> m_animationAssetId;
         Engine::GenericDtoCollection m_skinOperators;
     };
 

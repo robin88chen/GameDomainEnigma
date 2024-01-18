@@ -5,8 +5,8 @@
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef _ANIMATION_ASSET_EVENTS_H
-#define _ANIMATION_ASSET_EVENTS_H
+#ifndef ANI_ANIMATION_ASSET_EVENTS_H
+#define ANI_ANIMATION_ASSET_EVENTS_H
 
 #include "Frameworks/Event.h"
 #include "Frameworks/ruid.h"

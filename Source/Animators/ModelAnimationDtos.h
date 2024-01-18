@@ -22,15 +22,15 @@ namespace Enigma::Animators
     {
     public:
         AnimationTimeSRTDto() = default;
+        AnimationTimeSRTDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::vector<float>& ScaleTimeKeys() const { return m_scaleTimeKeys; }
-        std::vector<float>& ScaleTimeKeys() { return m_scaleTimeKeys; }
-        [[nodiscard]] const std::vector<float>& RotateTimeKeys() const { return m_rotateTimeKeys; }
-        std::vector<float>& RotateTimeKeys() { return m_rotateTimeKeys; }
-        [[nodiscard]] const std::vector<float>& TranslateTimeKeys() const { return m_translateTimeKeys; }
-        std::vector<float>& TranslateTimeKeys() { return m_translateTimeKeys; }
+        [[nodiscard]] const std::vector<float>& scaleTimeKeys() const { return m_scaleTimeKeys; }
+        std::vector<float>& scaleTimeKeys() { return m_scaleTimeKeys; }
+        [[nodiscard]] const std::vector<float>& rotateTimeKeys() const { return m_rotateTimeKeys; }
+        std::vector<float>& rotateTimeKeys() { return m_rotateTimeKeys; }
+        [[nodiscard]] const std::vector<float>& translateTimeKeys() const { return m_translateTimeKeys; }
+        std::vector<float>& translateTimeKeys() { return m_translateTimeKeys; }
 
-        static AnimationTimeSRTDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
     protected:
@@ -43,13 +43,13 @@ namespace Enigma::Animators
     {
     public:
         ModelAnimationAssetDto();
+        ModelAnimationAssetDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::vector<std::string>& MeshNodeNames() const { return m_meshNodeNames; }
-        std::vector<std::string>& MeshNodeNames() { return m_meshNodeNames; }
-        [[nodiscard]] const Engine::GenericDtoCollection& TimeSRTs() const { return m_timeSrtDtos; }
-        Engine::GenericDtoCollection& TimeSRTs() { return m_timeSrtDtos; }
+        [[nodiscard]] const std::vector<std::string>& meshNodeNames() const { return m_meshNodeNames; }
+        std::vector<std::string>& meshNodeNames() { return m_meshNodeNames; }
+        [[nodiscard]] const Engine::GenericDtoCollection& timeSRTs() const { return m_timeSrtDtos; }
+        Engine::GenericDtoCollection& timeSRTs() { return m_timeSrtDtos; }
 
-        static ModelAnimationAssetDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
     protected:

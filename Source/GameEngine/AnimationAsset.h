@@ -11,6 +11,7 @@
 #include "Frameworks/Rtti.h"
 #include "FactoryDesc.h"
 #include "AnimationAssetId.h"
+#include "GenericDto.h"
 #include <string>
 
 namespace Enigma::Engine
@@ -27,6 +28,8 @@ namespace Enigma::Engine
         AnimationAsset& operator=(AnimationAsset&&) = delete;
 
         const AnimationAssetId& id() { return m_id; }
+
+        virtual GenericDto serializeDto() = 0;
 
         static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
 

@@ -1,16 +1,15 @@
 ﻿#include "AnimationFrameListener.h"
-#include "AnimatorErrors.h"
+#include "EngineErrors.h"
 #include "AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
 #include <cassert>
 
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
-using namespace Enigma::Animators;
 
-DEFINE_RTTI(Animators, AnimationFrameListener, ISystemService);
+DEFINE_RTTI(Engine, AnimationFrameListener, ISystemService);
 
-AnimationFrameListener::AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer)
+AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<TimerService>& timer)
     : ISystemService(manager), m_hasExpiredAnimator(false)
 {
     assert(timer);
@@ -51,7 +50,7 @@ ServiceResult AnimationFrameListener::onTerm()
     return ServiceResult::Complete;
 }
 
-error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Engine::Animator>& ani)
+error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Animator>& ani)
 {
     if (!ani) return ErrorCode::nullAnimator;
     if (ani->isListened()) return ErrorCode::animatorMultiListening;
@@ -63,7 +62,7 @@ error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Engine:
     return ErrorCode::ok;
 }
 
-error AnimationFrameListener::removeListeningAnimator(const std::shared_ptr<Engine::Animator>& ani)
+error AnimationFrameListener::removeListeningAnimator(const std::shared_ptr<Animator>& ani)
 {
     if (!ani) return ErrorCode::nullAnimator;
     if (!ani->isListened()) return ErrorCode::ok;
@@ -79,7 +78,7 @@ error AnimationFrameListener::removeListeningAnimator(const std::shared_ptr<Engi
     return ErrorCode::ok;
 }
 
-bool AnimationFrameListener::updateAnimator(const std::unique_ptr<Frameworks::Timer>& timer)
+bool AnimationFrameListener::updateAnimator(const std::unique_ptr<Timer>& timer)
 {
     if (!timer) return false;
 
@@ -129,18 +128,18 @@ void AnimationFrameListener::removeExpiredAnimator()
     }
 }
 
-void AnimationFrameListener::addListeningAnimator(const Frameworks::ICommandPtr& c)
+void AnimationFrameListener::addListeningAnimator(const ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::AddListeningAnimator, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<AddListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    addListeningAnimator(cmd->getAnimator());
+    addListeningAnimator(cmd->animator());
 }
 
-void AnimationFrameListener::removeListeningAnimator(const Frameworks::ICommandPtr& c)
+void AnimationFrameListener::removeListeningAnimator(const ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::RemoveListeningAnimator, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<RemoveListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    removeListeningAnimator(cmd->getAnimator());
+    removeListeningAnimator(cmd->animator());
 }

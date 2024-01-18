@@ -21,7 +21,11 @@ namespace Enigma::Engine
     {
     public:
         AnimationAssetFactory();
+        AnimationAssetFactory(const AnimationAssetFactory&) = delete;
+        AnimationAssetFactory(AnimationAssetFactory&&) = delete;
         ~AnimationAssetFactory();
+        AnimationAssetFactory& operator=(const AnimationAssetFactory&) = delete;
+        AnimationAssetFactory& operator=(AnimationAssetFactory&&) = delete;
 
         void registerHandlers();
         void unregisterHandlers();

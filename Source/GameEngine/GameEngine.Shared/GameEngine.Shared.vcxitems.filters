@@ -88,6 +88,9 @@
     <Filter Include="DTOs\Animation Asset Dto">
       <UniqueIdentifier>{2622eae4-c441-40b8-9983-f02362244ae4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimationFrameListener">
+      <UniqueIdentifier>{63f4dfed-d302-4383-ab53-7a9f872207c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -372,6 +375,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
+      <Filter>AnimationFrameListener</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h">
+      <Filter>Installing Policies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -550,6 +559,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp">
       <Filter>AnimationAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
+      <Filter>AnimationFrameListener</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp">
+      <Filter>Installing Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

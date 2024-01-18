@@ -84,6 +84,24 @@ namespace Enigma::Engine
     private:
         std::string m_rtti;
     };
+    class AddListeningAnimator : public Frameworks::ICommand
+    {
+    public:
+        AddListeningAnimator(const std::shared_ptr<Animator>& animator) : m_animator(animator) {}
+        const std::shared_ptr<Animator>& animator() { return m_animator; }
+
+    private:
+        std::shared_ptr<Animator> m_animator;
+    };
+    class RemoveListeningAnimator : public Frameworks::ICommand
+    {
+    public:
+        RemoveListeningAnimator(const std::shared_ptr<Animator>& animator) : m_animator(animator) {}
+        const std::shared_ptr<Animator>& animator() { return m_animator; }
+
+    private:
+        std::shared_ptr<Animator> m_animator;
+    };
 }
 
 

@@ -19,7 +19,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
@@ -27,7 +26,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h" />
@@ -37,13 +35,11 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp" />

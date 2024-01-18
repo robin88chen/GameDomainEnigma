@@ -28,12 +28,6 @@
     <Filter Include="AnimationRepository\Builder">
       <UniqueIdentifier>{6d8abe21-60d5-45fb-8c27-965dd768d03e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animation Listener">
-      <UniqueIdentifier>{633d9104-2f6f-42c1-8133-92e051d8b698}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Installing">
-      <UniqueIdentifier>{eca6a755-78d6-4fb3-96d7-2d9ab00d79a4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
@@ -84,14 +78,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
       <Filter>Commands &amp; Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
-      <Filter>Animation Listener</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h">
       <Filter>Animators</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h">
-      <Filter>Installing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,14 +113,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorDtos.cpp">
       <Filter>Dtos &amp; Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
-      <Filter>Animation Listener</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp">
       <Filter>Animators</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp">
-      <Filter>Installing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

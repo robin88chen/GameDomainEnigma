@@ -4,6 +4,7 @@
 #include "Animators/ModelPrimitiveAnimator.h"
 #include "AvatarRecipes.h"
 #include "AnimatedPawnDto.h"
+#include "GameEngine/AnimatorCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;

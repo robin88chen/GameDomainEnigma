@@ -8,11 +8,12 @@
 #ifndef TERRAIN_PRIMITIVE_POLICY_H
 #define TERRAIN_PRIMITIVE_POLICY_H
 
-#include "Renderer/RenderablePrimitivePolicies.h"
+#include "Renderables/RenderablePrimitivePolicies.h"
+#include "Renderables/MeshPrimitive.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainPrimitivePolicy : public Renderer::MeshPrimitivePolicy
+    class TerrainPrimitivePolicy : public Renderables::MeshPrimitivePolicy
     {
     public:
         TerrainPrimitivePolicy();
@@ -23,7 +24,7 @@ namespace Enigma::Terrain
         TerrainPrimitivePolicy& operator=(TerrainPrimitivePolicy&&) = default;
         ~TerrainPrimitivePolicy() = default;
 
-        virtual std::shared_ptr<Renderer::MeshPrimitive> createPrimitive() const override;
+        virtual std::shared_ptr<Renderables::MeshPrimitive> createPrimitive() const override;
     };
 }
 #endif // TERRAIN_PRIMITIVE_POLICY_H

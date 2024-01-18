@@ -15,22 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveBuildingPlan.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderElement.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h" />
@@ -42,22 +26,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererErrors.cpp" />
@@ -66,6 +37,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderPackList.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderTarget.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
   </ItemGroup>
 </Project>

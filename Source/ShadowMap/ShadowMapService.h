@@ -57,7 +57,7 @@ namespace Enigma::ShadowMap
         virtual void UpdateSunLightDirection(const MathLib::Vector3& dir);
 
         void BindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
-        void BindShadowMapToMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+        void BindShadowMapToMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
 
         static void AssignShadowMapDimension(Engine::EffectVariable& var);
 

@@ -14,7 +14,7 @@
 
 using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 
 ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(Engine::AnimationAsset::TYPE_RTTI.getName())
 {

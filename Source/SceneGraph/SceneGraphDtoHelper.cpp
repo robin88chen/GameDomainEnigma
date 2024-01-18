@@ -217,7 +217,7 @@ PawnDtoHelper& PawnDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::meshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto)
+PawnDtoHelper& PawnDtoHelper::meshPrimitive(const Renderables::MeshPrimitiveDto& mesh_dto)
 {
     m_dto.primitiveId() = mesh_dto.id();
     return *this;

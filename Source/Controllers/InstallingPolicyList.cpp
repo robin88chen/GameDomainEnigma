@@ -15,6 +15,7 @@
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "WorldMap/WorldMapInstallingPolicy.h"
 #include "Prefabs/PrefabInstallingPolicy.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
 
@@ -26,6 +27,7 @@ constexpr std::uint16_t OrderOfEffectMaterialSourceRepositoryInstalling = 25;
 constexpr std::uint16_t OrderOfTextureInstalling = 26;
 constexpr std::uint16_t OrderOfPrimitiveInstalling = 29;
 constexpr std::uint16_t OrderOfRenderSystemInstalling = 30;
+constexpr std::uint16_t OrderOfRenderableInstalling = 35;
 constexpr std::uint16_t OrderOfSceneGraphInstalling = 40;
 constexpr std::uint16_t OrderOfTerrainInstalling = 45;
 constexpr std::uint16_t OrderOfWorldMapInstalling = 46;
@@ -73,6 +75,7 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(Engine::EffectMaterialSourceRepositoryInstallingPolicy)] = OrderOfEffectMaterialSourceRepositoryInstalling;
     m_orderMap[typeid(Engine::TextureRepositoryInstallingPolicy)] = OrderOfTextureInstalling;
     m_orderMap[typeid(Renderer::RenderSystemInstallingPolicy)] = OrderOfRenderSystemInstalling;
+    m_orderMap[typeid(Renderables::RenderablesInstallingPolicy)] = OrderOfRenderableInstalling;
     m_orderMap[typeid(Renderer::DefaultRendererInstallingPolicy)] = OrderOfDefaultRendererInstalling;
     m_orderMap[typeid(SceneGraph::SceneGraphInstallingPolicy)] = OrderOfSceneGraphInstalling;
     m_orderMap[typeid(Terrain::TerrainInstallingPolicy)] = OrderOfTerrainInstalling;

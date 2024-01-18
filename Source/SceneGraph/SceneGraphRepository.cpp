@@ -21,15 +21,12 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
-#include "Renderer/ModelPrimitive.h"
 #include "Platforms/MemoryMacro.h"
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
 #include "PortalDtos.h"
 #include <cassert>
-
-#include "CameraFrustumDtos.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;

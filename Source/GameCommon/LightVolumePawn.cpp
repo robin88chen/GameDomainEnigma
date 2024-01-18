@@ -1,12 +1,12 @@
 ﻿#include "LightVolumePawn.h"
-#include "Renderer/MeshPrimitive.h"
+#include "Renderables/MeshPrimitive.h"
 #include "GameCommonErrors.h"
 #include "LightingPawnDto.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 
 DEFINE_RTTI(GameCommon, LightVolumePawn, LightingPawn);

@@ -3,7 +3,7 @@
 #include "SceneGraphErrors.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphDtos.h"
-#include "Renderer/RenderableCommands.h"
+#include "Renderables/RenderableCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "Primitives/Primitive.h"
 #include <cassert>

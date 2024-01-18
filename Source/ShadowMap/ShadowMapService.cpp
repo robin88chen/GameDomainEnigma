@@ -11,11 +11,12 @@
 #include "GameCommon/GameCameraService.h"
 #include "GameEngine/MaterialVariableMap.h"
 #include "SceneGraph/Pawn.h"
-#include "Renderer/MeshPrimitive.h"
+#include "Renderables/MeshPrimitive.h"
 
 using namespace Enigma::ShadowMap;
 using namespace Enigma::Frameworks;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Renderables;
 using namespace Enigma::Renderer;
 
 DEFINE_RTTI(ShadowMap, ShadowMapService, ISystemService);

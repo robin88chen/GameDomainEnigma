@@ -12,8 +12,8 @@
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/RenderableCommands.h"
-#include "Renderer/RenderableEvents.h"
+#include "Renderables/RenderableCommands.h"
+#include "Renderables/RenderableEvents.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -40,9 +40,9 @@ void SceneGraphFactory::registerHandlers()
     CommandBus::subscribe(typeid(ConstitutePawn), m_constitutePawn);
 
     m_onPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(Renderer::RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(Renderables::RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     m_onBuildPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(Renderer::BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    EventPublisher::subscribe(typeid(Renderables::BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
 }
 
 void SceneGraphFactory::unregisterHandlers()
@@ -56,9 +56,9 @@ void SceneGraphFactory::unregisterHandlers()
     CommandBus::unsubscribe(typeid(ConstitutePawn), m_constitutePawn);
     m_constitutePawn = nullptr;
 
-    EventPublisher::unsubscribe(typeid(Renderer::RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(Renderables::RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     m_onPrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(Renderer::BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(Renderables::BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
     m_onBuildPrimitiveFailed = nullptr;
 }
 

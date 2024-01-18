@@ -8,8 +8,8 @@
 #ifndef _SKIN_ANIMATION_OPERATOR_H
 #define _SKIN_ANIMATION_OPERATOR_H
 
-#include "Renderer/SkinMeshPrimitive.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/SkinMeshPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "AnimatorDtos.h"
 #include "GameEngine/FactoryDesc.h"
 
@@ -31,22 +31,22 @@ namespace Enigma::Animators
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        void linkSkinMeshPrimitive(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
-        void calculateNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
-        void linkNodeOffsetMatrix(const std::shared_ptr<Renderer::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
-        void updateSkinMeshBoneMatrix(const Renderer::MeshNodeTree& mesh_node_tree);
+        void linkSkinMeshPrimitive(const std::shared_ptr<Renderables::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
+        void calculateNodeOffsetMatrix(const std::shared_ptr<Renderables::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
+        void linkNodeOffsetMatrix(const std::shared_ptr<Renderables::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
+        void updateSkinMeshBoneMatrix(const Renderables::MeshNodeTree& mesh_node_tree);
 
-        std::shared_ptr<Renderer::SkinMeshPrimitive> getTargetSkinMeshPrimitive() const
+        std::shared_ptr<Renderables::SkinMeshPrimitive> getTargetSkinMeshPrimitive() const
         {
             if (!m_skinMeshPrim.expired()) return m_skinMeshPrim.lock();
             return nullptr;
         };
 
-        void relinkClonedSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& prim);
+        void relinkClonedSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& prim);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
-        std::weak_ptr<Renderer::SkinMeshPrimitive> m_skinMeshPrim;
+        std::weak_ptr<Renderables::SkinMeshPrimitive> m_skinMeshPrim;
         std::vector<std::string> m_boneNodeNames;
         std::vector<MathLib::Matrix4> m_nodeOffsets;
         std::vector<std::optional<unsigned>> m_skinNodeIndexMapping;  ///< index : bone effect matrix index in skin mesh, element : node index in model primitive

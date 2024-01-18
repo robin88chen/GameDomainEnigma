@@ -10,7 +10,7 @@
 
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "GameEngine/AnimationAssetId.h"
 
 namespace Enigma::Animators

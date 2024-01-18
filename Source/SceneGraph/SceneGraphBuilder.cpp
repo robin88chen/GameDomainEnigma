@@ -19,14 +19,14 @@
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/ResponseBus.h"
 #include "Frameworks/RequestBus.h"
-#include "Renderer/RenderableCommands.h"
-#include "Renderer/RenderableEvents.h"
-#include "Renderer/SkinMeshPrimitive.h"
+#include "Renderables/RenderableCommands.h"
+#include "Renderables/RenderableEvents.h"
+#include "Renderables/SkinMeshPrimitive.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Platforms;
 
 SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)

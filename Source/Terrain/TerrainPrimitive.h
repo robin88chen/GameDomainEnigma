@@ -8,11 +8,11 @@
 #ifndef TERRAIN_PRIMITIVE_H
 #define TERRAIN_PRIMITIVE_H
 
-#include "Renderer/MeshPrimitive.h"
+#include "Renderables/MeshPrimitive.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainPrimitive : public Renderer::MeshPrimitive
+    class TerrainPrimitive : public Renderables::MeshPrimitive
     {
         DECLARE_EN_RTTI;
     public:

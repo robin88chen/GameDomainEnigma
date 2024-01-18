@@ -1,14 +1,14 @@
 ﻿#include "ModelPrimitiveAnimator.h"
 #include "ModelAnimationDtos.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
 #include "SkinAnimationOperator.h"
 #include <cassert>
 
 using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(Animators, ModelPrimitiveAnimator, Animator);

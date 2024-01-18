@@ -1,8 +1,8 @@
 ﻿#include "SkinAnimationOperator.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/SkinMeshPrimitive.h"
+#include "Renderables/SkinMeshPrimitive.h"
 
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
 

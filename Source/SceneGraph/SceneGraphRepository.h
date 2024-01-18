@@ -12,7 +12,7 @@
 #include "GameEngine/DtoDeserializer.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
-#include "Renderer/RenderablePrimitivePolicies.h"
+#include "Renderables/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "GameEngine/FactoryDesc.h"

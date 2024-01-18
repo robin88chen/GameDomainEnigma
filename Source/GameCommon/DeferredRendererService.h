@@ -9,7 +9,7 @@
 #define DEFERRED_RENDERER_SERVICE_H
 
 #include "SceneRendererService.h"
-#include "Renderer/MeshPrimitive.h"
+#include "Renderables/MeshPrimitive.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphEvents.h"
@@ -57,7 +57,7 @@ namespace Enigma::GameCommon
         void UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
-        void BindGBufferToLightingMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
+        void BindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
         void BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
 
         void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);

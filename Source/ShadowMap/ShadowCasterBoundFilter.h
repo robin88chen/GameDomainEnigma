@@ -1,19 +1,19 @@
 ﻿/*********************************************************************
  * \file   ShadowCasterBoundFilter.h
  * \brief  過濾掉不是 Shadow Caster
- * 
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
 #ifndef _SHADOW_CASTER_BOUND_FILTER_H
 #define _SHADOW_CASTER_BOUND_FILTER_H
 
-#include "Renderer/RenderableBoundFilter.h"
+#include "Renderables/RenderableBoundFilter.h"
 
 namespace Enigma::ShadowMap
 {
     /** Shadow caster Bound Filter */
-    class ShadowCasterBoundFilter : public Renderer::RenderableBoundFilter
+    class ShadowCasterBoundFilter : public Renderables::RenderableBoundFilter
     {
     public:
         ShadowCasterBoundFilter();

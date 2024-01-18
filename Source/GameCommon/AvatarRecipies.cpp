@@ -11,12 +11,12 @@
 #include "GameEngine/TextureEvents.h"
 #include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AvatarRecipe);

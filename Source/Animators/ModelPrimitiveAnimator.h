@@ -11,8 +11,8 @@
 
 #include "GameEngine/Animator.h"
 #include "AnimationClip.h"
-#include "Renderer/ModelPrimitive.h"
-#include "Renderer/SkinMeshPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
+#include "Renderables/SkinMeshPrimitive.h"
 #include "SkinAnimationOperator.h"
 #include "AnimatorDtos.h"
 #include <optional>
@@ -38,8 +38,8 @@ namespace Enigma::Animators
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 
-        void setControlledModel(const std::shared_ptr<Renderer::ModelPrimitive>& model);
-        std::shared_ptr<Renderer::ModelPrimitive> getControlledModel() const;
+        void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
+        std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
 
         /** link animation set, then re-calculate mapping */
         void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
@@ -47,8 +47,8 @@ namespace Enigma::Animators
         virtual void calculateMeshNodeMapping();
 
         /** link skin mesh */
-        void linkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
-        void linkSkinMesh(const std::shared_ptr<Renderer::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
+        void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
+        void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
             const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         /** get skin mesh animation operator,
                 model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/
@@ -80,7 +80,7 @@ namespace Enigma::Animators
         typedef std::vector<MeshNodeMappingData> MeshNodeMappingArray;
 
     protected:
-        std::weak_ptr<Renderer::ModelPrimitive> m_controlledPrimitive; ///< 控制的物件，不會跟著深層複製
+        std::weak_ptr<Renderables::ModelPrimitive> m_controlledPrimitive; ///< 控制的物件，不會跟著深層複製
 
         std::shared_ptr<ModelAnimationAsset> m_animationAsset;
         MeshNodeMappingArray m_meshNodeMapping;

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   IntersectionFinderFactories.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -11,7 +11,7 @@
 #include "Frameworks/Rtti.h"
 #include <functional>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class PrimitiveRay3IntersectionFinder;
 

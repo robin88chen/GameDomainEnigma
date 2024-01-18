@@ -12,7 +12,7 @@
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
-#include "GameEngine/PrimitiveId.h"
+#include "Primitives/PrimitiveId.h"
 #include "SpatialId.h"
 #include <string>
 #include <vector>
@@ -116,8 +116,8 @@ namespace Enigma::SceneGraph
         PawnDto(const SpatialDto& spatial_dto);
         PawnDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::optional<Engine::PrimitiveId>& primitiveId() const { return m_primitiveId; }
-        std::optional<Engine::PrimitiveId>& primitiveId() { return m_primitiveId; }
+        [[nodiscard]] const std::optional<Primitives::PrimitiveId>& primitiveId() const { return m_primitiveId; }
+        std::optional<Primitives::PrimitiveId>& primitiveId() { return m_primitiveId; }
         //[[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
         //Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
 
@@ -126,7 +126,7 @@ namespace Enigma::SceneGraph
 
         //std::shared_ptr<PawnPolicy> convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
-        std::optional<Engine::PrimitiveId> m_primitiveId;
+        std::optional<Primitives::PrimitiveId> m_primitiveId;
         //todo : prefab support
         //Engine::FactoryDesc m_primitiveFactory;
     };

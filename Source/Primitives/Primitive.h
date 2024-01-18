@@ -8,24 +8,22 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include "RenderLightingState.h"
-#include "BoundingVolume.h"
+#include "GameEngine/RenderLightingState.h"
+#include "GameEngine/BoundingVolume.h"
 #include "PrimitiveId.h"
+#include "GameEngine/IRenderer.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/LazyStatus.h"
+#include "GameEngine/Animator.h"
 #include <memory>
 #include <bitset>
 #include <system_error>
 #include <list>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     using error = std::error_code;
-
-    class IRenderer;
-    class GenericDto;
-    class Animator;
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
@@ -48,24 +46,24 @@ namespace Enigma::Engine
 
         static std::shared_ptr<Primitive> queryPrimitive(const PrimitiveId& id);
 
-        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         const PrimitiveId& id() const { return m_id; }
 
-        virtual GenericDto serializeDto() const = 0;
+        virtual Engine::GenericDto serializeDto() const = 0;
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
 
         /** insert to renderer */
-        virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
-            const MathLib::Matrix4& mxWorld, const RenderLightingState& lightingState) = 0;
+        virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
+            const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState) = 0;
         /** remove from renderer */
-        virtual error removeFromRenderer(const std::shared_ptr<IRenderer>& renderer) = 0;
+        virtual error removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer) = 0;
 
         /** get bounding volume */
-        virtual const BoundingVolume& getBoundingVolume() { return m_bound; };
+        virtual const Engine::BoundingVolume& getBoundingVolume() { return m_bound; };
         /** calculate bounding volume */
         virtual void calculateBoundingVolume(bool axis_align) = 0;
 
@@ -80,11 +78,11 @@ namespace Enigma::Engine
         /** get selected visual technique */
         virtual std::string& getSelectedVisualTechnique() { return m_selectedVisualTech; };
 
-        virtual void attachAnimator(const std::shared_ptr<Animator>& animator) { m_animator = animator; }
-        virtual const std::shared_ptr<Animator>& getAnimator() { return m_animator; }
+        virtual void attachAnimator(const std::shared_ptr<Engine::Animator>& animator) { m_animator = animator; }
+        virtual const std::shared_ptr<Engine::Animator>& getAnimator() { return m_animator; }
 
         /** enum animator list deep, including geometry's animator */
-        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList);
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
 
         /** add primitive flag */
         void addPrimitiveFlag(PrimitiveFlags flag)
@@ -106,13 +104,13 @@ namespace Enigma::Engine
 
     protected:
         PrimitiveId m_id;
-        FactoryDesc m_factoryDesc;
+        Engine::FactoryDesc m_factoryDesc;
         Frameworks::LazyStatus m_lazyStatus;
-        BoundingVolume m_bound;
+        Engine::BoundingVolume m_bound;
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;
         std::string m_selectedVisualTech;
-        std::shared_ptr<Animator> m_animator;
+        std::shared_ptr<Engine::Animator> m_animator;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

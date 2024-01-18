@@ -1,9 +1,9 @@
 ﻿#include "PrimitiveRepositoryInstallingPolicy.h"
 #include "PrimitiveRepository.h"
-#include "EngineErrors.h"
+#include "PrimitiveErrors.h"
 #include <cassert>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 
 error PrimitiveRepositoryInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {

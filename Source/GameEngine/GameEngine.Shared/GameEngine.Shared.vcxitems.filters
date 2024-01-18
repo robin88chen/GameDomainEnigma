@@ -28,9 +28,6 @@
     <Filter Include="Bounding Volume\Implementing">
       <UniqueIdentifier>{785fed8a-f44b-4e98-b211-4377f5b8624b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Primitive">
-      <UniqueIdentifier>{380d5092-147a-44f8-990a-8023f1ec3ece}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer Interface States">
       <UniqueIdentifier>{e9bc4d0b-ae44-42f0-8b61-88dba61954e6}</UniqueIdentifier>
     </Filter>
@@ -57,9 +54,6 @@
     </Filter>
     <Filter Include="Intersect">
       <UniqueIdentifier>{47ac7be6-0a7d-4a65-9752-d8105c263d46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Intersect\IntersectionFinder">
-      <UniqueIdentifier>{4f93cc7f-2492-456c-a6c6-96f937ec8754}</UniqueIdentifier>
     </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{6d23edce-f35a-4ed6-9773-32bf1337250f}</UniqueIdentifier>
@@ -174,9 +168,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h">
       <Filter>Renderer Interface States</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderLightingState.h">
       <Filter>Renderer Interface States</Filter>
     </ClInclude>
@@ -245,39 +236,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
       <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h">
-      <Filter>Intersect</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.h">
-      <Filter>Intersect\IntersectionFinder</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRay3IntersectionFinder.h">
-      <Filter>Intersect\IntersectionFinder</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveId.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveStoreMapper.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveQueries.h">
-      <Filter>Queries</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.h">
-      <Filter>Installing Policies</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h">
       <Filter>Effect Material\Repository</Filter>
@@ -443,9 +401,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp">
       <Filter>Bounding Volume\Implementing</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderLightingState.cpp">
       <Filter>Renderer Interface States</Filter>
     </ClCompile>
@@ -487,24 +442,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
       <Filter>Intersect</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp">
-      <Filter>Intersect</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\IntersectionFinderFactories.cpp">
-      <Filter>Intersect\IntersectionFinder</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepository.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveRepositoryInstallingPolicy.cpp">
-      <Filter>Installing Policies</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp">
       <Filter>Effect Material\Repository</Filter>

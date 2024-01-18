@@ -10,9 +10,10 @@
 
 #include "Frameworks/Command.h"
 #include "PrimitiveFactory.h"
+#include "GameEngine/GenericDto.h"
 #include <string>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class CreatePrimitive : public Frameworks::ICommand
     {
@@ -28,13 +29,13 @@ namespace Enigma::Engine
     class ConstitutePrimitive : public Frameworks::ICommand
     {
     public:
-        ConstitutePrimitive(const PrimitiveId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
+        ConstitutePrimitive(const PrimitiveId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
         const PrimitiveId& id() { return m_id; }
-        const GenericDto& dto() { return m_dto; }
+        const Engine::GenericDto& dto() { return m_dto; }
 
     private:
         PrimitiveId m_id;
-        GenericDto m_dto;
+        Engine::GenericDto m_dto;
     };
     class PutPrimitive : public Frameworks::ICommand
     {

@@ -15,7 +15,7 @@
 #include <memory>
 #include <vector>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class Primitive;
     class PrimitiveRay3IntersectionFinder;

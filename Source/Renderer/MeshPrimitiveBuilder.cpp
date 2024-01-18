@@ -97,7 +97,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
     m_builtRenderBuffer = ev->GetBuffer();
-    std::dynamic_pointer_cast<MeshPrimitive, Primitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
+    std::dynamic_pointer_cast<MeshPrimitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     bool all_effect_ready = true;
     for (auto& id : m_metaDto->effects())
     {

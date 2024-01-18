@@ -1,5 +1,5 @@
 ﻿#include "ModelPrimitiveRay3IntersectionFinder.h"
-#include "GameEngine/IntersectionFinderFactories.h"
+#include "Primitives/PrimitiveIntersectionFinderFactories.h"
 #include "ModelPrimitive.h"
 #include "IntrModelPrimitiveCache.h"
 #include "MeshPrimitiveRay3IntersectionFinder.h"
@@ -9,6 +9,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
+using namespace Enigma::Primitives;
 
 ModelPrimitiveRay3IntersectionFinder::ModelPrimitiveRay3IntersectionFinder()
 {

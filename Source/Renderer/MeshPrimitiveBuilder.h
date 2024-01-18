@@ -15,7 +15,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
 #include "RenderablePrimitiveDtos.h"
-#include "GameEngine/PrimitiveId.h"
+#include "Primitives/PrimitiveId.h"
 #include <memory>
 
 namespace Enigma::Renderer
@@ -29,29 +29,29 @@ namespace Enigma::Renderer
         class MeshPrimitiveBuilt : public Frameworks::IEvent
         {
         public:
-            MeshPrimitiveBuilt(const Engine::PrimitiveId& id, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
+            MeshPrimitiveBuilt(const Primitives::PrimitiveId& id, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
                 : m_id(id), m_name(name), m_prim(prim) {};
-            const Engine::PrimitiveId& id() const { return m_id; }
+            const Primitives::PrimitiveId& id() const { return m_id; }
             const std::string& name() const { return m_name; }
             const std::shared_ptr<MeshPrimitive>& primitive() { return m_prim; }
 
         private:
-            Engine::PrimitiveId m_id;
+            Primitives::PrimitiveId m_id;
             std::string m_name;
             std::shared_ptr<MeshPrimitive> m_prim;
         };
         class BuildMeshPrimitiveFailed : public Frameworks::IEvent
         {
         public:
-            BuildMeshPrimitiveFailed(const Engine::PrimitiveId& id, const std::string& name, std::error_code er)
+            BuildMeshPrimitiveFailed(const Primitives::PrimitiveId& id, const std::string& name, std::error_code er)
                 : m_id(id), m_name(name), m_error(er) {};
 
-            const Engine::PrimitiveId& id() const { return m_id; }
+            const Primitives::PrimitiveId& id() const { return m_id; }
             const std::string& name() const { return m_name; }
             std::error_code error() const { return m_error; }
 
         private:
-            Engine::PrimitiveId m_id;
+            Primitives::PrimitiveId m_id;
             std::string m_name;
             std::error_code m_error;
         };
@@ -80,7 +80,7 @@ namespace Enigma::Renderer
         std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
     protected:
-        Engine::PrimitiveId m_buildingId;
+        Primitives::PrimitiveId m_buildingId;
         std::optional<MeshPrimitiveDto> m_buildingDto;
         std::unique_ptr<MeshPrimitiveMetaDto> m_metaDto;
 

@@ -120,7 +120,7 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive, Engine::Primitive>(ev->primitive());
+    auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive>(ev->primitive());
     if (!mesh_prim) return;
     bool has_mesh_built = false;
     for (auto& meta : m_meshBuildingMetas)

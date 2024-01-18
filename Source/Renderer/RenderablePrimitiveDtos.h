@@ -15,7 +15,7 @@
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "Renderer.h"
-#include "GameEngine/PrimitiveId.h"
+#include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
 #include "GameEngine/EffectMaterialId.h"
 #include "GameEngine/AnimatorId.h"
@@ -38,8 +38,8 @@ namespace Enigma::Renderer
         MeshPrimitiveDto& operator=(const MeshPrimitiveDto&) = default;
         MeshPrimitiveDto& operator=(MeshPrimitiveDto&&) = default;
 
-        [[nodiscard]] const Engine::PrimitiveId& id() const { return m_id; }
-        Engine::PrimitiveId& id() { return m_id; }
+        [[nodiscard]] const Primitives::PrimitiveId& id() const { return m_id; }
+        Primitives::PrimitiveId& id() { return m_id; }
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
@@ -64,7 +64,7 @@ namespace Enigma::Renderer
         //static std::shared_ptr<Engine::GenericPolicy> meshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
-        Engine::PrimitiveId m_id;
+        Primitives::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Geometries::GeometryId m_geometryId;
         std::optional<Engine::GenericDto> m_geometry;
@@ -124,8 +124,8 @@ namespace Enigma::Renderer
         MathLib::Matrix4& localT_PosTransform() { return m_localT_PosTransform; }
         //[[nodiscard]] const MathLib::Matrix4& RootRefTransform() const { return m_rootRefTransform; }
         //MathLib::Matrix4& RootRefTransform() { return m_rootRefTransform; }
-        [[nodiscard]] const std::optional<Engine::PrimitiveId>& meshPrimitiveId() const { return m_meshPrimitiveId; }
-        std::optional<Engine::PrimitiveId>& meshPrimitiveId() { return m_meshPrimitiveId; }
+        [[nodiscard]] const std::optional<Primitives::PrimitiveId>& meshPrimitiveId() const { return m_meshPrimitiveId; }
+        std::optional<Primitives::PrimitiveId>& meshPrimitiveId() { return m_meshPrimitiveId; }
         [[nodiscard]] std::optional<unsigned> parentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& parentIndexInArray() { return m_parentIndexInArray; }
 
@@ -137,7 +137,7 @@ namespace Enigma::Renderer
         std::string m_name;
         MathLib::Matrix4 m_localT_PosTransform;
         //MathLib::Matrix4 m_rootRefTransform;
-        std::optional<Engine::PrimitiveId> m_meshPrimitiveId;
+        std::optional<Primitives::PrimitiveId> m_meshPrimitiveId;
         std::optional<unsigned> m_parentIndexInArray;
     };
 
@@ -175,8 +175,8 @@ namespace Enigma::Renderer
         ModelPrimitiveDto& operator=(const ModelPrimitiveDto&) = default;
         ModelPrimitiveDto& operator=(ModelPrimitiveDto&&) = default;
 
-        [[nodiscard]] const Engine::PrimitiveId& id() const { return m_id; }
-        Engine::PrimitiveId& id() { return m_id; }
+        [[nodiscard]] const Primitives::PrimitiveId& id() const { return m_id; }
+        Primitives::PrimitiveId& id() { return m_id; }
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
@@ -191,7 +191,7 @@ namespace Enigma::Renderer
         //static std::shared_ptr<Engine::GenericPolicy> modelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
-        Engine::PrimitiveId m_id;
+        Primitives::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Engine::GenericDto m_nodeTreeDto;
         std::optional<Engine::AnimatorId> m_animatorId;

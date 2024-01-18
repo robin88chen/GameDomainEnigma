@@ -12,6 +12,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::Graphics;
 using namespace Enigma::MathLib;
 using namespace Enigma::Animators;
+using namespace Enigma::Primitives;
 
 DEFINE_RTTI(Renderer, ModelPrimitive, Primitive);
 
@@ -22,7 +23,7 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
     m_meshPrimitiveIndexCache.clear();
 }
 
-ModelPrimitive::ModelPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto) : Primitive(id)
+ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto) : Primitive(id)
 {
     ModelPrimitiveDto primDto = ModelPrimitiveDto::fromGenericDto(dto);
     m_factoryDesc = primDto.factoryDesc();

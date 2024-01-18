@@ -14,7 +14,7 @@
 #include "PrimitiveId.h"
 #include <mutex>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class Primitive;
     class PrimitiveStoreMapper;

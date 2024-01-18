@@ -16,7 +16,7 @@ namespace Enigma::Terrain
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainPrimitive(const Engine::PrimitiveId& id);
+        TerrainPrimitive(const Primitives::PrimitiveId& id);
         virtual ~TerrainPrimitive() override;
         TerrainPrimitive(const TerrainPrimitive&) = delete;
         TerrainPrimitive& operator=(const TerrainPrimitive&) = delete;

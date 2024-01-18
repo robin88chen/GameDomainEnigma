@@ -2,11 +2,11 @@
 #include "Primitive.h"
 #include "PrimitiveRay3IntersectionFinder.h"
 #include "Platforms/MemoryMacro.h"
-#include "IntersectionFinderFactories.h"
+#include "PrimitiveIntersectionFinderFactories.h"
 #include <cassert>
 #include <algorithm>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 using namespace Enigma::MathLib;
 
 bool compare_result(const IntrPrimitiveRay3::ResultRecord& rec1,

@@ -7,7 +7,7 @@
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "GameCommon/SceneRendererInstallingPolicy.h"
-#include "GameEngine/PrimitiveRepositoryInstallingPolicy.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Geometries/GeometryInstallingPolicy.h"
@@ -69,7 +69,7 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(Engine::EngineInstallingPolicy)] = OrderOfEngineInstalling;
     m_orderMap[typeid(Geometries::GeometryInstallingPolicy)] = OrderOfGeometryInstalling;
     m_orderMap[typeid(Engine::AnimatorInstallingPolicy)] = OrderOfAnimatorInstalling;
-    m_orderMap[typeid(Engine::PrimitiveRepositoryInstallingPolicy)] = OrderOfPrimitiveInstalling;
+    m_orderMap[typeid(Primitives::PrimitiveRepositoryInstallingPolicy)] = OrderOfPrimitiveInstalling;
     m_orderMap[typeid(Engine::EffectMaterialSourceRepositoryInstallingPolicy)] = OrderOfEffectMaterialSourceRepositoryInstalling;
     m_orderMap[typeid(Engine::TextureRepositoryInstallingPolicy)] = OrderOfTextureInstalling;
     m_orderMap[typeid(Renderer::RenderSystemInstallingPolicy)] = OrderOfRenderSystemInstalling;

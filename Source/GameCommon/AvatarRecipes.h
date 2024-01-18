@@ -63,7 +63,7 @@ namespace Enigma::GameCommon
         void onContentMaterialFailed(const Frameworks::IEventPtr& e);
 
     private:
-        std::weak_ptr<Engine::Primitive> m_primitive;
+        std::weak_ptr<Primitives::Primitive> m_primitive;
         Engine::EffectMaterialId m_oldMaterialId;
         Engine::EffectMaterialId m_newMaterialId;
 

@@ -8,13 +8,16 @@
 #ifndef PRIMITIVE_REPOSITORY_INSTALLING_POLICY_H
 #define PRIMITIVE_REPOSITORY_INSTALLING_POLICY_H
 
-#include "InstallingPolicy.h"
+#include "GameEngine/InstallingPolicy.h"
+#include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
+    using error = std::error_code;
+
     class PrimitiveStoreMapper;
 
-    class PrimitiveRepositoryInstallingPolicy : public InstallingPolicy
+    class PrimitiveRepositoryInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
         PrimitiveRepositoryInstallingPolicy(const std::shared_ptr<PrimitiveStoreMapper>& store_mapper) : m_storeMapper(store_mapper) {}

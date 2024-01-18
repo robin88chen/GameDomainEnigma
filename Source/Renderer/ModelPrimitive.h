@@ -8,7 +8,8 @@
 #ifndef _MODEL_PRIMITIVE_H
 #define _MODEL_PRIMITIVE_H
 
-#include "GameEngine/Primitive.h"
+#include "Primitives/PrimitiveId.h"
+#include "Primitives/Primitive.h"
 #include "MeshNodeTree.h"
 #include "GameEngine/Animator.h"
 #include <string>
@@ -16,17 +17,18 @@
 #include <optional>
 #include <memory>
 #include <list>
+#include <system_error>
 
 namespace Enigma::Renderer
 {
     using error = std::error_code;
     class MeshPrimitive;
-    class ModelPrimitive : public Engine::Primitive
+    class ModelPrimitive : public Primitives::Primitive
     {
         DECLARE_EN_RTTI;
     public:
-        ModelPrimitive(const Engine::PrimitiveId& id);
-        ModelPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
+        ModelPrimitive(const Primitives::PrimitiveId& id);
+        ModelPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
         ModelPrimitive(const ModelPrimitive& prim) = delete;
         ModelPrimitive(ModelPrimitive&& prim) = delete;
         ~ModelPrimitive() override;

@@ -1,7 +1,7 @@
-#include "IntersectionFinderFactories.h"
+﻿#include "PrimitiveIntersectionFinderFactories.h"
 #include <algorithm>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 
 std::unordered_map<std::string, PrimitiveRay3IntersectionFinderCreator> PrimitiveRay3IntersectionFinderFactory::m_creators;
 

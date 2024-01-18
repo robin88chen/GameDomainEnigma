@@ -4,11 +4,12 @@
 
 using namespace Enigma::Renderer;
 using namespace Enigma::MathLib;
+using namespace Enigma::Primitives;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderer, MeshNode);
 
-MeshNode::MeshNode(const std::string& name) : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
+MeshNode::MeshNode(const std::string& name) : m_factoryDesc(TYPE_RTTI.getName())
 {
     m_name = name;
     m_mxT_PosTransform = Matrix4::IDENTITY;
@@ -39,7 +40,7 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
 
-MeshNode::MeshNode(const Engine::GenericDto& dto) : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
+MeshNode::MeshNode(const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
 {
     MeshNodeDto mesh_node_dto = MeshNodeDto::fromGenericDto(dto);
     m_name = mesh_node_dto.name();
@@ -144,7 +145,7 @@ void MeshNode::setParentIndexInArray(unsigned idx)
     m_parentIndexInArray = idx;
 }
 
-void MeshNode::setRootRefTransform(const MathLib::Matrix4& mx)
+void MeshNode::setRootRefTransform(const Matrix4& mx)
 {
     m_mxRootRefTransform = mx;
     if ((m_hasSkinMeshPrimitive) && (m_meshPrimitive))

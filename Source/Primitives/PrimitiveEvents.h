@@ -12,7 +12,7 @@
 #include "Frameworks/Event.h"
 #include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class PrimitiveCreated : public Frameworks::IEvent
     {

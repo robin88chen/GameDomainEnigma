@@ -6,6 +6,7 @@ using namespace Enigma::Renderer;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 using namespace Enigma::Frameworks;
+using namespace Enigma::Primitives;
 
 const std::string SEMANTIC_BONE_MATRIX = "BoneMatrix";
 
@@ -17,7 +18,7 @@ SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id) : MeshPrimitive(id)
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
-SkinMeshPrimitive::SkinMeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
+SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
 {
     m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;

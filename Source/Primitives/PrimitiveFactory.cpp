@@ -4,11 +4,11 @@
 #include "Platforms/PlatformLayer.h"
 #include "PrimitiveCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "EngineErrors.h"
+#include "PrimitiveErrors.h"
 #include "PrimitiveQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 
-using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 using namespace Enigma::Frameworks;
 
 PrimitiveFactory::PrimitiveFactory()

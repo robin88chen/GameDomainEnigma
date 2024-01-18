@@ -9,10 +9,10 @@
 #define PRIMITIVE_STORE_MAPPER_H
 
 #include "PrimitiveId.h"
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class PrimitiveStoreMapper
     {
@@ -23,9 +23,9 @@ namespace Enigma::Engine
         virtual std::error_code disconnect() = 0;
 
         virtual bool hasPrimitive(const PrimitiveId& id) = 0;
-        virtual std::optional<GenericDto> queryPrimitive(const PrimitiveId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryPrimitive(const PrimitiveId& id) = 0;
         virtual std::error_code removePrimitive(const PrimitiveId& id) = 0;
-        virtual std::error_code putPrimitive(const PrimitiveId& id, const GenericDto& dto) = 0;
+        virtual std::error_code putPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto) = 0;
 
         virtual std::uint64_t nextSequenceNumber() = 0;
     };

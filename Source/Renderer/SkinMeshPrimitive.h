@@ -19,8 +19,8 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        SkinMeshPrimitive(const Engine::PrimitiveId& id);
-        SkinMeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
+        SkinMeshPrimitive(const Primitives::PrimitiveId& id);
+        SkinMeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         SkinMeshPrimitive(const SkinMeshPrimitive&) = delete;
         SkinMeshPrimitive(SkinMeshPrimitive&&) = delete;
         ~SkinMeshPrimitive() override;

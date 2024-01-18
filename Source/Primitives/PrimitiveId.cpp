@@ -4,7 +4,7 @@
 #include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 
-using namespace  Enigma::Engine;
+using namespace  Enigma::Primitives;
 
 PrimitiveId::PrimitiveId(const std::string& name, const Frameworks::Rtti& rtti)
 {

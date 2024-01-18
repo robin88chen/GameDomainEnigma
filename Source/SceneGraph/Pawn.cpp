@@ -5,7 +5,7 @@
 #include "SceneGraphDtos.h"
 #include "Renderer/RenderableCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/Primitive.h"
+#include "Primitives/Primitive.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -22,7 +22,7 @@ Pawn::Pawn(const SpatialId& id) : Spatial(id)
 Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
     PawnDto pawn_dto{ dto };
-    if (pawn_dto.primitiveId()) m_primitive = Engine::Primitive::queryPrimitive(pawn_dto.primitiveId().value());
+    if (pawn_dto.primitiveId()) m_primitive = Primitives::Primitive::queryPrimitive(pawn_dto.primitiveId().value());
 }
 
 Pawn::~Pawn()
@@ -67,7 +67,7 @@ error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
     return er;
 }
 
-void Pawn::SetPrimitive(const Engine::PrimitivePtr& prim)
+void Pawn::SetPrimitive(const std::shared_ptr<Primitives::Primitive>& prim)
 {
     m_primitive = prim;
 

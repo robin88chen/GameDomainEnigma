@@ -11,7 +11,7 @@
 #include "Frameworks/Query.h"
 #include "PrimitiveId.h"
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class Primitive;
 

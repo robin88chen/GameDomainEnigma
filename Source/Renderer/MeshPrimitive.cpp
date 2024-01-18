@@ -19,7 +19,7 @@ using namespace Enigma::Graphics;
 
 DEFINE_RTTI(Renderer, MeshPrimitive, Primitive);
 
-MeshPrimitive::MeshPrimitive(const PrimitiveId& id) : Primitive(id)
+MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id) : Primitive(id)
 {
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
     m_factoryDesc = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName());
@@ -32,7 +32,7 @@ MeshPrimitive::MeshPrimitive(const PrimitiveId& id) : Primitive(id)
     m_textures.clear();
 }
 
-MeshPrimitive::MeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : Primitive(id)
+MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : Primitive(id)
 {
     assert(geometry_repository);
     MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);

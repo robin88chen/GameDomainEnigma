@@ -11,10 +11,10 @@
 #include "PrimitiveCommands.h"
 #include "Frameworks/CommandBus.h"
 
-using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(Engine, PrimitiveRepository, ISystemService);
+DEFINE_RTTI(Primitives, PrimitiveRepository, ISystemService);
 
 using error = std::error_code;
 

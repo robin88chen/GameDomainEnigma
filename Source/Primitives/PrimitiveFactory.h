@@ -8,11 +8,11 @@
 #ifndef PRIMITIVE_FACTORY_H
 #define PRIMITIVE_FACTORY_H
 
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include "PrimitiveId.h"
 #include "Frameworks/CommandSubscriber.h"
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class Primitive;
     using PrimitiveCreator = std::function<std::shared_ptr<Primitive>(const PrimitiveId& id)>;

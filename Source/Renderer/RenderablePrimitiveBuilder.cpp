@@ -10,7 +10,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderableEvents.h"
-#include "GameEngine/PrimitiveCommands.h"
+#include "Primitives/PrimitiveCommands.h"
 #include "MeshPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "ModelPrimitive.h"
@@ -18,6 +18,7 @@
 using namespace Enigma::Renderer;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
+using namespace Enigma::Primitives;
 
 DEFINE_RTTI(Renderer, RenderablePrimitiveBuilder, ISystemService);
 

@@ -12,10 +12,10 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "GameEngine/Primitive.h"
-#include "GameEngine/PrimitiveId.h"
+#include "Primitives/Primitive.h"
+#include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
-#include "GameEngine/PrimitiveRepository.h"
+#include "Primitives/PrimitiveRepository.h"
 #include "PrimitiveBuildingPlan.h"
 #include <queue>
 #include <mutex>
@@ -32,7 +32,7 @@ namespace Enigma::Renderer
     {
         DECLARE_EN_RTTI;
     public:
-        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Engine::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
+        RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Primitives::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder(RenderablePrimitiveBuilder&&) = delete;
         ~RenderablePrimitiveBuilder() override;
@@ -46,12 +46,12 @@ namespace Enigma::Renderer
         //error buildPrimitive(const Frameworks::Ruid& requester_ruid, const Engine::GenericDto& dto);
 
     protected:
-        std::shared_ptr<Engine::Primitive> createMesh(const Engine::PrimitiveId& id);
-        std::shared_ptr<Engine::Primitive> constituteMesh(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
-        std::shared_ptr<Engine::Primitive> createSkinMesh(const Engine::PrimitiveId& id);
-        std::shared_ptr<Engine::Primitive> constituteSkinMesh(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
-        std::shared_ptr<Engine::Primitive> createModel(const Engine::PrimitiveId& id);
-        std::shared_ptr<Engine::Primitive> constituteModel(const Engine::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Primitives::Primitive> createMesh(const Primitives::PrimitiveId& id);
+        std::shared_ptr<Primitives::Primitive> constituteMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Primitives::Primitive> createSkinMesh(const Primitives::PrimitiveId& id);
+        std::shared_ptr<Primitives::Primitive> constituteSkinMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Primitives::Primitive> createModel(const Primitives::PrimitiveId& id);
+        std::shared_ptr<Primitives::Primitive> constituteModel(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
 
         //void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
         void buildRenderablePrimitive(const PrimitiveBuildingPlan& plan);
@@ -62,7 +62,7 @@ namespace Enigma::Renderer
         void buildPrimitive(const Frameworks::ICommandPtr& c);
 
     protected:
-        std::weak_ptr<Engine::PrimitiveRepository> m_primitiveRepository;
+        std::weak_ptr<Primitives::PrimitiveRepository> m_primitiveRepository;
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
         //std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         //std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
@@ -70,7 +70,7 @@ namespace Enigma::Renderer
         //std::mutex m_policiesLock;
         std::mutex m_primitivePlansLock;
         //bool m_isCurrentBuilding;
-        std::optional<Engine::PrimitiveId> m_currentBuildingId;
+        std::optional<Primitives::PrimitiveId> m_currentBuildingId;
         //Frameworks::Ruid m_buildingRuid;
 
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;

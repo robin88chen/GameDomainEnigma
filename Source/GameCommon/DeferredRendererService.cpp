@@ -544,7 +544,7 @@ void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Re
 void DeferredRendererService::BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
     if (!lighting_pawn) return;
-    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(lighting_pawn->GetPrimitive());
+    auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(lighting_pawn->GetPrimitive());
     if (mesh) BindGBufferToLightingMesh(mesh);
 }
 

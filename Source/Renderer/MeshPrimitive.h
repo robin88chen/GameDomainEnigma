@@ -8,7 +8,7 @@
 #ifndef _MESH_PRIMITIVE_H
 #define _MESH_PRIMITIVE_H
 
-#include "GameEngine/Primitive.h"
+#include "Primitives/Primitive.h"
 #include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectTextureMap.h"
@@ -28,15 +28,15 @@ namespace Enigma::Renderer
     class RenderElement;
     class MeshPrimitiveDto;
 
-    class MeshPrimitive : public Engine::Primitive
+    class MeshPrimitive : public Primitives::Primitive
     {
         DECLARE_EN_RTTI;
     public:
         using EffectMaterialList = std::vector<std::shared_ptr<Engine::EffectMaterial>>;
         using TextureMapList = std::vector<Engine::EffectTextureMap>;
     public:
-        MeshPrimitive(const Engine::PrimitiveId& id);
-        MeshPrimitive(const Engine::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
+        MeshPrimitive(const Primitives::PrimitiveId& id);
+        MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         MeshPrimitive(const MeshPrimitive&) = delete;  // non-copyable
         MeshPrimitive(MeshPrimitive&&) = delete;
         ~MeshPrimitive() override;

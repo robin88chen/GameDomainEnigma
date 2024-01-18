@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   PrimitiveRay3IntersectionFinder.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -13,7 +13,7 @@
 #include "MathLib/Ray3.h"
 #include "IntrPrimitiveRay3.h"
 
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     class Primitive;
 

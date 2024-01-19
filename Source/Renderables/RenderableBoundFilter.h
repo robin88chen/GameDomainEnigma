@@ -26,10 +26,10 @@ namespace Enigma::Renderables
         RenderableBoundFilter& operator=(const RenderableBoundFilter&) = delete;
         RenderableBoundFilter& operator=(RenderableBoundFilter&&) = delete;
 
-        virtual void ComputeMergedBound(const SceneGraph::VisibleSet& visSet);
-        const Engine::BoundingVolume& GetMergedBound() { return m_mergedBound; };
+        virtual void computeMergedBound(const SceneGraph::VisibleSet& visSet);
+        const Engine::BoundingVolume& getMergedBound() { return m_mergedBound; };
 
-        virtual bool FilterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial);
+        virtual bool filterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial);
 
     protected:
         Engine::BoundingVolume m_mergedBound;

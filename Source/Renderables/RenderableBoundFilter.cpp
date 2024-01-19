@@ -12,12 +12,12 @@ RenderableBoundFilter::~RenderableBoundFilter()
 {
 }
 
-void RenderableBoundFilter::ComputeMergedBound(const SceneGraph::VisibleSet& visSet)
+void RenderableBoundFilter::computeMergedBound(const SceneGraph::VisibleSet& visSet)
 {
     if (visSet.getCount() == 0) return;
     for (auto spatial : visSet.GetObjectSet())
     {
-        if (FilterOutSpatial(spatial)) continue;
+        if (filterOutSpatial(spatial)) continue;
         if (m_mergedBound.isEmpty())
         {
             m_mergedBound = spatial->getWorldBound();
@@ -29,7 +29,7 @@ void RenderableBoundFilter::ComputeMergedBound(const SceneGraph::VisibleSet& vis
     }
 }
 
-bool RenderableBoundFilter::FilterOutSpatial(const std::shared_ptr<Spatial>& spatial)
+bool RenderableBoundFilter::filterOutSpatial(const std::shared_ptr<Spatial>& spatial)
 {
     if ((!spatial) || (!(spatial->isRenderable()))) return true;
     return false;

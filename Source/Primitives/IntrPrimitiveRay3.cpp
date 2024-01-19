@@ -20,7 +20,7 @@ IntrPrimitiveRay3::IntrPrimitiveRay3(const std::shared_ptr<Primitive>& primitive
 {
     assert(m_primitive);
     m_intersectionType = IntersectionType::POINT;
-    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::CreatePrimitiveRay3IntersectionFinder(m_primitive->typeInfo());
+    m_intersectionFinder = PrimitiveRay3IntersectionFinderFactory::createPrimitiveRay3IntersectionFinder(m_primitive->typeInfo());
 }
 
 IntrPrimitiveRay3::~IntrPrimitiveRay3()
@@ -29,12 +29,12 @@ IntrPrimitiveRay3::~IntrPrimitiveRay3()
     SAFE_DELETE(m_intersectionFinder);
 }
 
-const Ray3& IntrPrimitiveRay3::GetRay() const
+const Ray3& IntrPrimitiveRay3::ray() const
 {
     return m_ray;
 }
 
-const std::shared_ptr<Primitive>& IntrPrimitiveRay3::GetPrimitive()
+const std::shared_ptr<Primitive>& IntrPrimitiveRay3::primitive()
 {
     return m_primitive;
 }
@@ -58,35 +58,35 @@ Intersector::Result IntrPrimitiveRay3::find(std::unique_ptr<IntersectorCache> la
     return result;
 }
 
-size_t IntrPrimitiveRay3::GetQuantity() const
+size_t IntrPrimitiveRay3::getQuantity() const
 {
     return m_resultRecords.size();
 }
 
-const Vector3& IntrPrimitiveRay3::GetPoint(unsigned int i) const
+const Vector3& IntrPrimitiveRay3::getPoint(unsigned int i) const
 {
     assert(i < m_resultRecords.size());
     return m_resultRecords[i].m_vecPoint;
 }
 
-float IntrPrimitiveRay3::GetRayT(unsigned int i) const
+float IntrPrimitiveRay3::getRayT(unsigned int i) const
 {
     assert(i < m_resultRecords.size());
     return m_resultRecords[i].m_tParam;
 }
 
-std::shared_ptr<Primitive> IntrPrimitiveRay3::GetResultPrimitive(unsigned int i) const
+std::shared_ptr<Primitive> IntrPrimitiveRay3::getResultPrimitive(unsigned int i) const
 {
     assert(i < m_resultRecords.size());
     return m_resultRecords[i].m_primitive.lock();
 }
 
-void IntrPrimitiveRay3::SetRequiredResultCount(unsigned count)
+void IntrPrimitiveRay3::setRequiredResultCount(unsigned count)
 {
-    if (m_intersectionFinder) m_intersectionFinder->SetRequiredResultCount(count);
+    if (m_intersectionFinder) m_intersectionFinder->setRequiredResultCount(count);
 }
 
-const std::vector<IntrPrimitiveRay3::ResultRecord>& IntrPrimitiveRay3::GetResultRecord() const
+const std::vector<IntrPrimitiveRay3::ResultRecord>& IntrPrimitiveRay3::getResultRecord() const
 {
     return m_resultRecords;
 }

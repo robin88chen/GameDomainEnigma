@@ -28,7 +28,7 @@ PrimitiveRay3IntersectionFinder* MeshPrimitiveRay3IntersectionFinder::create()
 
 void MeshPrimitiveRay3IntersectionFinder::RegisterFactory()
 {
-    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(MeshPrimitive::TYPE_RTTI.getName(), create);
+    PrimitiveRay3IntersectionFinderFactory::registerCreator(MeshPrimitive::TYPE_RTTI.getName(), create);
 }
 
 Intersector::Result MeshPrimitiveRay3IntersectionFinder::test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
@@ -42,7 +42,7 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::test(const std::shared_
         geo_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(geo_cache);
     }
-    return TestMesh(mesh, ray, std::move(cache));
+    return testMesh(mesh, ray, std::move(cache));
 }
 
 std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::find(const std::shared_ptr<Primitive>& primitive, const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
@@ -55,10 +55,10 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Me
         geo_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(geo_cache);
     }
-    return FindMesh(mesh, ray, std::move(cache));
+    return findMesh(mesh, ray, std::move(cache));
 }
 
-Intersector::Result MeshPrimitiveRay3IntersectionFinder::TestMesh(const std::shared_ptr<MeshPrimitive>& mesh,
+Intersector::Result MeshPrimitiveRay3IntersectionFinder::testMesh(const std::shared_ptr<MeshPrimitive>& mesh,
     const Ray3& point_ray, std::unique_ptr<IntersectorCache> cache) const
 {
     Ray3 ray = point_ray;
@@ -70,7 +70,7 @@ Intersector::Result MeshPrimitiveRay3IntersectionFinder::TestMesh(const std::sha
     return intr_geo.test(std::move(cache));
 }
 
-std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::FindMesh(
+std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> MeshPrimitiveRay3IntersectionFinder::findMesh(
     const std::shared_ptr<MeshPrimitive>& mesh, const Ray3& point_ray, std::unique_ptr<IntersectorCache> cache) const
 {
     Ray3 ray = point_ray;

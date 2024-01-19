@@ -20,8 +20,8 @@ namespace Enigma::Primitives
     class PrimitiveRay3IntersectionFinderFactory
     {
     public:
-        static PrimitiveRay3IntersectionFinder* CreatePrimitiveRay3IntersectionFinder(const Frameworks::Rtti& primitive_rtti);
-        static void RegisterCreator(const std::string& primitive_rtti_name, PrimitiveRay3IntersectionFinderCreator creator);
+        static PrimitiveRay3IntersectionFinder* createPrimitiveRay3IntersectionFinder(const Frameworks::Rtti& primitive_rtti);
+        static void registerCreator(const std::string& primitive_rtti_name, PrimitiveRay3IntersectionFinderCreator creator);
 
     private:
         static std::unordered_map<std::string, PrimitiveRay3IntersectionFinderCreator> m_creators;

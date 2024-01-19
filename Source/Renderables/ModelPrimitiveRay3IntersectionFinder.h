@@ -22,16 +22,16 @@ namespace Enigma::Renderables
 
         static PrimitiveRay3IntersectionFinder* create();
 
-        static void RegisterFactory();
+        static void registerFactory();
 
         virtual MathLib::Intersector::Result test(const std::shared_ptr<Primitives::Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const override;
         virtual std::tuple<std::vector<Primitives::IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
             find(const std::shared_ptr<Primitives::Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const override;
 
     private:
-        MathLib::Intersector::Result TestModel(const std::shared_ptr<ModelPrimitive>& model, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
+        MathLib::Intersector::Result testModel(const std::shared_ptr<ModelPrimitive>& model, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
         std::tuple<std::vector<Primitives::IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
-            FindModel(const std::shared_ptr<ModelPrimitive>& model, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
+            findModel(const std::shared_ptr<ModelPrimitive>& model, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
     };
 }
 

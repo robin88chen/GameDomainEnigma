@@ -20,12 +20,12 @@ namespace Enigma::Renderables
         IntrModelPrimitiveCache() : m_geoCache(nullptr), m_meshPrimIndex{ 0 }, m_requiredResultCount{ 0 } {};
         ~IntrModelPrimitiveCache() {}
 
-        unsigned int GetCachedMeshPrimIndex() { return m_meshPrimIndex; };
-        void SetCachedMeshPrimIndex(unsigned int index) { m_meshPrimIndex = index; };
-        std::unique_ptr<MathLib::IntersectorCache> GetIntrGeometryCache() { return std::move(m_geoCache); };
-        void SetIntrGeometryCache(std::unique_ptr<MathLib::IntersectorCache> cache) { m_geoCache = stdext::dynamic_pointer_cast<Geometries::IntrGeometryCache>(std::move(cache)); };
-        unsigned int GetRequiredResultCount() { return m_requiredResultCount; };
-        void SetRequiredResultCount(unsigned int count)
+        unsigned int getCachedMeshPrimIndex() { return m_meshPrimIndex; };
+        void setCachedMeshPrimIndex(unsigned int index) { m_meshPrimIndex = index; };
+        std::unique_ptr<MathLib::IntersectorCache> getIntrGeometryCache() { return std::move(m_geoCache); };
+        void setIntrGeometryCache(std::unique_ptr<MathLib::IntersectorCache> cache) { m_geoCache = stdext::dynamic_pointer_cast<Geometries::IntrGeometryCache>(std::move(cache)); };
+        unsigned int getRequiredResultCount() { return m_requiredResultCount; };
+        void setRequiredResultCount(unsigned int count)
         {
             m_requiredResultCount = count; if (m_geoCache) m_geoCache->setRequiredResultCount(count);
         };

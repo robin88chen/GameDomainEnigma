@@ -55,13 +55,13 @@ void CSMSunLightCamera::CalcLightCameraSystemMatrix(Culler* culler)
     if (!culler) return;
 
     ShadowCasterBoundFilter filterShadowBound;
-    filterShadowBound.ComputeMergedBound(culler->GetVisibleSet());
+    filterShadowBound.computeMergedBound(culler->GetVisibleSet());
 
-    CalcSceneBoundFrustumPlane(culler, filterShadowBound.GetMergedBound());
+    CalcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
 
     CalcLightCameraFrustum();
 
-    CalcSceneCropMatrix(filterShadowBound.GetMergedBound());
+    CalcSceneCropMatrix(filterShadowBound.getMergedBound());
 
     RefreshTextureCoordTransform();
 }

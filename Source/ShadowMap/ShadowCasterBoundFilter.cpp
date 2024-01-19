@@ -8,9 +8,9 @@ ShadowCasterBoundFilter::ShadowCasterBoundFilter() : RenderableBoundFilter()
 {
 }
 
-bool ShadowCasterBoundFilter::FilterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial)
+bool ShadowCasterBoundFilter::filterOutSpatial(const std::shared_ptr<SceneGraph::Spatial>& spatial)
 {
-    if (RenderableBoundFilter::FilterOutSpatial(spatial)) return true;
+    if (RenderableBoundFilter::filterOutSpatial(spatial)) return true;
     // 保留可render 的 caster
     if (spatial->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster)) return false;
     return true;

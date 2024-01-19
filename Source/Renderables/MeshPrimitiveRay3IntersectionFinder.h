@@ -32,9 +32,9 @@ namespace Enigma::Renderables
             find(const std::shared_ptr<Primitives::Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const override;
 
     private:
-        MathLib::Intersector::Result TestMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
+        MathLib::Intersector::Result testMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
         std::tuple<std::vector<Primitives::IntrPrimitiveRay3::ResultRecord>, MathLib::Intersector::Result>
-            FindMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
+            findMesh(const std::shared_ptr<MeshPrimitive>& mesh, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const;
     };
 }
 

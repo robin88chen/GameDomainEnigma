@@ -26,9 +26,9 @@ PrimitiveRay3IntersectionFinder* ModelPrimitiveRay3IntersectionFinder::create()
     return new ModelPrimitiveRay3IntersectionFinder();
 }
 
-void ModelPrimitiveRay3IntersectionFinder::RegisterFactory()
+void ModelPrimitiveRay3IntersectionFinder::registerFactory()
 {
-    PrimitiveRay3IntersectionFinderFactory::RegisterCreator(ModelPrimitive::TYPE_RTTI.getName(), create);
+    PrimitiveRay3IntersectionFinderFactory::registerCreator(ModelPrimitive::TYPE_RTTI.getName(), create);
 }
 
 Intersector::Result ModelPrimitiveRay3IntersectionFinder::test(const std::shared_ptr<Primitive>& primitive, const Ray3& ray,
@@ -39,10 +39,10 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::test(const std::shared
     if (cache == nullptr)
     {
         auto model_cache = std::make_unique<IntrModelPrimitiveCache>();
-        model_cache->SetRequiredResultCount(m_requiredResultCount);
+        model_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(model_cache);
     }
-    return TestModel(model, ray, std::move(cache));
+    return testModel(model, ray, std::move(cache));
 }
 
 std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> ModelPrimitiveRay3IntersectionFinder::find(const std::shared_ptr<
@@ -53,13 +53,13 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     if (cache == nullptr)
     {
         auto model_cache = std::make_unique<IntrModelPrimitiveCache>();
-        model_cache->SetRequiredResultCount(m_requiredResultCount);
+        model_cache->setRequiredResultCount(m_requiredResultCount);
         cache = std::move(model_cache);
     }
-    return FindModel(model, ray, std::move(cache));
+    return findModel(model, ray, std::move(cache));
 }
 
-Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::shared_ptr<ModelPrimitive>& model,
+Intersector::Result ModelPrimitiveRay3IntersectionFinder::testModel(const std::shared_ptr<ModelPrimitive>& model,
     const Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
 {
     if (!model) return { false, std::move(cache) };
@@ -70,26 +70,26 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     if (cache) prim_cache = stdext::dynamic_pointer_cast<IntrModelPrimitiveCache>(std::move(cache));
     // check cached mesh index first
     unsigned int mesh_cache_index = 0xffffffff;
-    if (prim_cache) mesh_cache_index = prim_cache->GetCachedMeshPrimIndex();
+    if (prim_cache) mesh_cache_index = prim_cache->getCachedMeshPrimIndex();
     if (mesh_cache_index < mesh_count)
     {
         if (auto mesh_prim = model->getMeshPrimitive(mesh_cache_index))
         {
             MeshPrimitiveRay3IntersectionFinder mesh_finder;
-            auto res = mesh_finder.test(mesh_prim, ray, prim_cache->GetIntrGeometryCache());
+            auto res = mesh_finder.test(mesh_prim, ray, prim_cache->getIntrGeometryCache());
             if (res.m_hasIntersect)
             {
                 if (prim_cache)
                 {
-                    prim_cache->SetCachedMeshPrimIndex(mesh_cache_index);
-                    prim_cache->SetIntrGeometryCache(std::move(res.m_cache));
+                    prim_cache->setCachedMeshPrimIndex(mesh_cache_index);
+                    prim_cache->setIntrGeometryCache(std::move(res.m_cache));
                 }
                 return { res.m_hasIntersect, std::move(prim_cache) };
             }
         }
     }
     std::unique_ptr<IntersectorCache> geo_cache = nullptr;
-    if (prim_cache) geo_cache = prim_cache->GetIntrGeometryCache();
+    if (prim_cache) geo_cache = prim_cache->getIntrGeometryCache();
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         if (i == mesh_cache_index) continue;
@@ -102,8 +102,8 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
             if (prim_cache == nullptr) prim_cache = std::make_unique<IntrModelPrimitiveCache>();
             if (prim_cache)
             {
-                prim_cache->SetCachedMeshPrimIndex(i);
-                prim_cache->SetIntrGeometryCache(std::move(res.m_cache));
+                prim_cache->setCachedMeshPrimIndex(i);
+                prim_cache->setIntrGeometryCache(std::move(res.m_cache));
             }
             return { res.m_hasIntersect, std::move(prim_cache) };
         }
@@ -112,7 +112,7 @@ Intersector::Result ModelPrimitiveRay3IntersectionFinder::TestModel(const std::s
     return { false, std::move(prim_cache) };
 }
 
-std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> ModelPrimitiveRay3IntersectionFinder::FindModel(const std::shared_ptr<ModelPrimitive>& model, const
+std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> ModelPrimitiveRay3IntersectionFinder::findModel(const std::shared_ptr<ModelPrimitive>& model, const
     Ray3& ray, std::unique_ptr<IntersectorCache> cache) const
 {
     std::vector<IntrPrimitiveRay3::ResultRecord> records;
@@ -124,24 +124,24 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
     std::unique_ptr<IntrModelPrimitiveCache> prim_cache = nullptr;
     if (cache) prim_cache = stdext::dynamic_pointer_cast<IntrModelPrimitiveCache>(std::move(cache));
     unsigned int req_result_total = 0xffffffff;
-    if ((prim_cache) && (prim_cache->GetRequiredResultCount())) req_result_total = prim_cache->GetRequiredResultCount();
+    if ((prim_cache) && (prim_cache->getRequiredResultCount())) req_result_total = prim_cache->getRequiredResultCount();
     unsigned int result_count = 0;
 
     // check cached mesh index first
     unsigned int mesh_cache_index = 0xffffffff;
-    if (prim_cache) mesh_cache_index = prim_cache->GetCachedMeshPrimIndex();
+    if (prim_cache) mesh_cache_index = prim_cache->getCachedMeshPrimIndex();
     if (mesh_cache_index < mesh_count)
     {
         if (std::shared_ptr<MeshPrimitive> mesh = model->getMeshPrimitive(mesh_cache_index))
         {
             MeshPrimitiveRay3IntersectionFinder mesh_finder;
-            auto [recs, res] = mesh_finder.find(mesh, ray, prim_cache->GetIntrGeometryCache());
+            auto [recs, res] = mesh_finder.find(mesh, ray, prim_cache->getIntrGeometryCache());
             if (res.m_hasIntersect)
             {
                 if (prim_cache)
                 {
-                    prim_cache->SetCachedMeshPrimIndex(mesh_cache_index);
-                    prim_cache->SetIntrGeometryCache(std::move(res.m_cache));
+                    prim_cache->setCachedMeshPrimIndex(mesh_cache_index);
+                    prim_cache->setIntrGeometryCache(std::move(res.m_cache));
                 }
                 result_count += static_cast<unsigned int>(recs.size());
                 records.insert(records.end(), recs.begin(), recs.end());
@@ -149,7 +149,7 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
         }
     }
     std::unique_ptr<IntersectorCache> geo_cache = nullptr;
-    if (prim_cache) geo_cache = prim_cache->GetIntrGeometryCache();
+    if (prim_cache) geo_cache = prim_cache->getIntrGeometryCache();
     for (unsigned int m = 0; m < mesh_count; m++)
     {
         if (result_count >= req_result_total) break;
@@ -164,8 +164,8 @@ std::tuple<std::vector<IntrPrimitiveRay3::ResultRecord>, Intersector::Result> Mo
             if (prim_cache == nullptr) prim_cache = std::make_unique<IntrModelPrimitiveCache>();
             if (prim_cache)
             {
-                prim_cache->SetCachedMeshPrimIndex(m);
-                prim_cache->SetIntrGeometryCache(std::move(res.m_cache));
+                prim_cache->setCachedMeshPrimIndex(m);
+                prim_cache->setIntrGeometryCache(std::move(res.m_cache));
             }
             result_count += static_cast<unsigned int>(recs.size());
             records.insert(records.end(), recs.begin(), recs.end());

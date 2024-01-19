@@ -39,22 +39,22 @@ namespace Enigma::Primitives
         virtual ~IntrPrimitiveRay3() override;
 
         // object access
-        const MathLib::Ray3& GetRay() const;
-        const std::shared_ptr<Primitive>& GetPrimitive();
+        const MathLib::Ray3& ray() const;
+        const std::shared_ptr<Primitive>& primitive();
 
         // static test-intersection query
         virtual Result test(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
         virtual Result find(std::unique_ptr<MathLib::IntersectorCache> last_result) override;
 
         // the intersection set
-        size_t GetQuantity() const;
-        const MathLib::Vector3& GetPoint(unsigned int i) const;
-        float GetRayT(unsigned int i) const;
-        std::shared_ptr<Primitive> GetResultPrimitive(unsigned int i) const;
+        size_t getQuantity() const;
+        const MathLib::Vector3& getPoint(unsigned int i) const;
+        float getRayT(unsigned int i) const;
+        std::shared_ptr<Primitive> getResultPrimitive(unsigned int i) const;
 
-        void SetRequiredResultCount(unsigned count);
+        void setRequiredResultCount(unsigned count);
 
-        const std::vector<ResultRecord>& GetResultRecord() const;
+        const std::vector<ResultRecord>& getResultRecord() const;
 
     private:
         // the objects to intersect

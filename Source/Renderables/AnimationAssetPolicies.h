@@ -14,7 +14,7 @@
 #include <memory>
 #include <optional>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class AnimationAssetPolicy
     {

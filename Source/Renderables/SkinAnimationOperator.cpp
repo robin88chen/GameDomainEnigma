@@ -1,12 +1,11 @@
 ﻿#include "SkinAnimationOperator.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/SkinMeshPrimitive.h"
-
+#include "ModelAnimatorDtos.h"
 using namespace Enigma::Renderables;
-using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
 
-DEFINE_RTTI_OF_BASE(Animators, SkinAnimationOperator);
+DEFINE_RTTI_OF_BASE(Renderables, SkinAnimationOperator);
 
 SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
 {

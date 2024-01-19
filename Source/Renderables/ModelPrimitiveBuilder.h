@@ -12,7 +12,7 @@
 #include "RenderablePrimitivePolicies.h"
 #include "RenderablePrimitiveBuilder.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Animators/AnimatorPolicies.h"
+#include "AnimatorPolicies.h"
 #include <vector>
 
 namespace Enigma::Renderables
@@ -88,7 +88,7 @@ namespace Enigma::Renderables
         std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<MeshPrimitivePolicy>>> m_meshPolicies;
         std::vector<MeshBuildingMeta> m_meshBuildingMetas;
 
-        std::shared_ptr<Animators::ModelAnimatorPolicy> m_animatorPolicy;
+        std::shared_ptr<ModelAnimatorPolicy> m_animatorPolicy;
 
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;
         Frameworks::EventSubscriberPtr m_onBuildMeshPrimitiveFailed;

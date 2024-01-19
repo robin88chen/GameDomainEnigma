@@ -8,7 +8,7 @@
 #ifndef _ANIMATION_CLIP_H
 #define _ANIMATION_CLIP_H
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class AnimationClip
     {

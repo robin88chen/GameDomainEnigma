@@ -1,6 +1,6 @@
-﻿#include "AnimatorErrors.h"
+﻿#include "RenderableErrors.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 
 const ErrorCategory ErrorCategory::ms_category;
 
@@ -20,9 +20,9 @@ std::string ErrorCategory::message(int err) const
 
 const char* ErrorCategory::name() const noexcept
 {
-    return "Animators Error Category";
+    return "Renderables Error Category";
 }
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     std::error_code make_error_code(ErrorCode ec)
     {

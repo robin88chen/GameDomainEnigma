@@ -1,14 +1,13 @@
 ﻿#include "AnimatedPawn.h"
-#include "Animators/AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "Animators/ModelPrimitiveAnimator.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
 #include "AvatarRecipes.h"
 #include "AnimatedPawnDto.h"
 #include "GameEngine/AnimatorCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);

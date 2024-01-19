@@ -1,11 +1,11 @@
 ﻿#include "ModelAnimationAsset.h"
 #include "ModelAnimationDtos.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Animators, ModelAnimationAsset, AnimationAsset);
+DEFINE_RTTI(Renderables, ModelAnimationAsset, AnimationAsset);
 
 ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : AnimationAsset(id)
 {

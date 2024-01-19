@@ -4,15 +4,14 @@
 #include "AnimationAssetPolicies.h"
 #include "ModelPrimitiveAnimator.h"
 #include "Frameworks/CommandBus.h"
-#include "AnimationAssetCommand.h"
+#include "RenderableCommands.h"
 #include "Frameworks/EventPublisher.h"
-#include "AnimatorErrors.h"
-#include "AnimatorEvents.h"
-#include "AnimationAssetEvents.h"
+#include "RenderableErrors.h"
+#include "RenderableEvents.h"
 #include "ModelAnimationAsset.h"
 #include <cassert>
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 

@@ -1,10 +1,8 @@
-﻿#include "AnimatorDtos.h"
-#include "AnimationAssetPolicies.h"
-#include "AnimatorPolicies.h"
+﻿#include "ModelAnimatorDtos.h"
 #include "ModelAnimationAsset.h"
 #include "ModelPrimitiveAnimator.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_ID = "Id";

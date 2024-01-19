@@ -1,7 +1,7 @@
 ﻿#include "ModelAnimationDtos.h"
 #include "ModelAnimationAsset.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_SCALE_TIME_KEYS = "ScaleTimeKeys";

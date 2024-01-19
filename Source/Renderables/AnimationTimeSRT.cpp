@@ -4,7 +4,7 @@
 #include <cassert>
 
 using namespace Enigma::MathLib;
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 
 AnimationTimeSRT::AnimationTimeSRT()
 {

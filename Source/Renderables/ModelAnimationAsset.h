@@ -13,7 +13,7 @@
 #include <vector>
 #include <optional>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class ModelAnimationAssetDto;
 

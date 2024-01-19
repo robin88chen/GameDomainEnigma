@@ -4,15 +4,6 @@
     <Filter Include="Primitives">
       <UniqueIdentifier>{1b09a671-79e0-420c-8a68-354671fddf99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Primitive Builders">
-      <UniqueIdentifier>{847688a9-1fc0-4c78-be6e-7bbb521c7cea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Primitive Dtos">
-      <UniqueIdentifier>{06e7a9c5-c85b-4009-b0e6-5e20db6ad5b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Intersection">
-      <UniqueIdentifier>{744e549a-ea77-452e-992f-d08d7c8503bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{f8709523-9a26-4d09-9c27-15371ea55350}</UniqueIdentifier>
     </Filter>
@@ -24,6 +15,33 @@
     </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{f05f6c5c-80d6-45bf-8d47-5bfab0dac347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives\Primitive Builders">
+      <UniqueIdentifier>{847688a9-1fc0-4c78-be6e-7bbb521c7cea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives\Primitive Dtos">
+      <UniqueIdentifier>{06e7a9c5-c85b-4009-b0e6-5e20db6ad5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives\Intersection">
+      <UniqueIdentifier>{744e549a-ea77-452e-992f-d08d7c8503bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators">
+      <UniqueIdentifier>{814741c3-b92e-4aeb-8246-7d2507c928c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators\AnimationClip">
+      <UniqueIdentifier>{4b7068be-0597-4bd1-8dbf-d052228984f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators\AnimationAsset">
+      <UniqueIdentifier>{c7b2b233-5561-414d-a414-abab0501705e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators\Dtos">
+      <UniqueIdentifier>{b64b6472-cbf7-4477-aca2-a706616a9ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators\Builders">
+      <UniqueIdentifier>{720451e9-40c1-4ea8-966e-e778a1766225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCodes">
+      <UniqueIdentifier>{11038c2a-d22a-427a-937d-d2b62bfb5f98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,31 +61,64 @@
       <Filter>Primitives</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp">
-      <Filter>Primitive Dtos</Filter>
+      <Filter>Primitives\Primitive Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp">
-      <Filter>Intersection</Filter>
+      <Filter>Primitives\Intersection</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp">
-      <Filter>Intersection</Filter>
+      <Filter>Primitives\Intersection</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp">
-      <Filter>Primitive Dtos</Filter>
+      <Filter>Primitives\Primitive Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp">
       <Filter>Bounding</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp">
+      <Filter>Animators\AnimationClip</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp">
+      <Filter>Animators\AnimationAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp">
+      <Filter>Animators\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp">
+      <Filter>Animators\AnimationAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp">
+      <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp">
+      <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp">
+      <Filter>Animators\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.cpp">
+      <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
+      <Filter>Animators\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
+      <Filter>Animators\Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp">
+      <Filter>ErrorCodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,31 +138,31 @@
       <Filter>Primitives</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveBuildingPlan.h">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h">
-      <Filter>Primitive Builders</Filter>
+      <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h">
-      <Filter>Primitive Dtos</Filter>
+      <Filter>Primitives\Primitive Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h">
-      <Filter>Intersection</Filter>
+      <Filter>Primitives\Intersection</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h">
-      <Filter>Intersection</Filter>
+      <Filter>Primitives\Intersection</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h">
-      <Filter>Intersection</Filter>
+      <Filter>Primitives\Intersection</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h">
-      <Filter>Primitive Dtos</Filter>
+      <Filter>Primitives\Primitive Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
       <Filter>Events</Filter>
@@ -124,6 +175,45 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.h">
       <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h">
+      <Filter>Animators\AnimationClip</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
+      <Filter>Animators\AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h">
+      <Filter>Animators\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h">
+      <Filter>Animators\AnimationAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h">
+      <Filter>Animators\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.h">
+      <Filter>Animators</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h">
+      <Filter>Animators\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h">
+      <Filter>Animators\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h">
+      <Filter>Animators\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h">
+      <Filter>Animators\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h">
+      <Filter>ErrorCodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

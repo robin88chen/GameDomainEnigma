@@ -2,14 +2,14 @@
 #include "AnimationAssetPolicies.h"
 #include "ModelAnimationRepository.h"
 #include "Frameworks/EventPublisher.h"
-#include "AnimationAssetEvents.h"
+#include "RenderableEvents.h"
 #include "Frameworks/CommandBus.h"
 #include "GameEngine/DtoEvents.h"
 #include "GameEngine/FactoryCommands.h"
-#include "AnimatorErrors.h"
+#include "RenderableErrors.h"
 #include <memory>
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 

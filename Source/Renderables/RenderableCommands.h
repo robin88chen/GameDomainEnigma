@@ -13,6 +13,9 @@
 
 namespace Enigma::Renderables
 {
+    class AnimationAssetPolicy;
+    class ModelAnimatorPolicy;
+
     class BuildRenderablePrimitive : public Frameworks::IRequestCommand
     {
     public:
@@ -21,6 +24,26 @@ namespace Enigma::Renderables
 
     private:
         Engine::GenericDto m_primitiveDto;
+    };
+
+    class BuildAnimationAsset : public Frameworks::ICommand
+    {
+    public:
+        BuildAnimationAsset(const std::shared_ptr<AnimationAssetPolicy>& policy) : m_policy(policy) {}
+        const std::shared_ptr<AnimationAssetPolicy>& GetPolicy() { return m_policy; }
+
+    private:
+        std::shared_ptr<AnimationAssetPolicy> m_policy;
+    };
+
+    class BuildModelAnimator : public Frameworks::ICommand
+    {
+    public:
+        BuildModelAnimator(const std::shared_ptr<ModelAnimatorPolicy>& policy) : m_policy(policy) {}
+        const std::shared_ptr<ModelAnimatorPolicy>& GetPolicy() { return m_policy; }
+
+    private:
+        std::shared_ptr<ModelAnimatorPolicy> m_policy;
     };
 }
 

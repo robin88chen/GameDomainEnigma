@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class AnimationRepository;
     class ModelAnimatorPolicy;

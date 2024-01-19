@@ -18,7 +18,7 @@
 #include <mutex>
 #include <queue>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     using error = std::error_code;
     class AnimationAssetPolicy;

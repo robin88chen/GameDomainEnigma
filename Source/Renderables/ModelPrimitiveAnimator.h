@@ -11,14 +11,13 @@
 
 #include "GameEngine/Animator.h"
 #include "AnimationClip.h"
-#include "Renderables/ModelPrimitive.h"
-#include "Renderables/SkinMeshPrimitive.h"
+#include "ModelPrimitive.h"
+#include "SkinMeshPrimitive.h"
 #include "SkinAnimationOperator.h"
-#include "AnimatorDtos.h"
 #include <optional>
 #include <memory>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class ModelAnimationAsset;
 

@@ -11,7 +11,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
-#include "Animators/AnimationClip.h"
+#include "Renderables/AnimationClip.h"
 #include "Frameworks/optional_ref.hpp"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/GenericDto.h"
@@ -28,18 +28,18 @@ namespace Enigma::GameCommon
         {
         public:
             AnimClip() {};
-            AnimClip(const std::string& name, const Animators::AnimationClip& clip)
+            AnimClip(const std::string& name, const Renderables::AnimationClip& clip)
             {
                 m_actionName = name; m_animClip = clip;
             };
             // copy-er, move-er, destructor 會自動建立
             const std::string& getName() const { return m_actionName; };
-            void ChangeClip(const Animators::AnimationClip& clip) { m_animClip = clip; };
-            const Animators::AnimationClip& GetClip() const { return m_animClip; };
+            void ChangeClip(const Renderables::AnimationClip& clip) { m_animClip = clip; };
+            const Renderables::AnimationClip& GetClip() const { return m_animClip; };
 
         private:
             std::string m_actionName;
-            Animators::AnimationClip m_animClip;
+            Renderables::AnimationClip m_animClip;
         };
         typedef std::unordered_map<std::string, AnimClip> ClipMap;
     public:

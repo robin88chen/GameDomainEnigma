@@ -13,7 +13,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericPolicy.h"
-#include "Animators/AnimatorDtos.h"
+#include "ModelAnimatorDtos.h"
 #include "GameEngine/EffectMaterialId.h"
 #include <string>
 #include <vector>
@@ -108,12 +108,12 @@ namespace Enigma::Renderables
         [[nodiscard]] const MeshNodeTreeDto& nodeTreeDto() const { return m_nodeTreeDto; }
         MeshNodeTreeDto& nodeTreeDto() { return m_nodeTreeDto; }
 
-        [[nodiscard]] const std::optional<Animators::ModelAnimatorDto>& modelAnimator() const { return m_animatorDto; }
-        std::optional<Animators::ModelAnimatorDto>& modelAnimator() { return m_animatorDto; }
+        [[nodiscard]] const std::optional<ModelAnimatorDto>& modelAnimator() const { return m_animatorDto; }
+        std::optional<ModelAnimatorDto>& modelAnimator() { return m_animatorDto; }
 
     protected:
         MeshNodeTreeDto m_nodeTreeDto;
-        std::optional<Animators::ModelAnimatorDto> m_animatorDto;
+        std::optional<ModelAnimatorDto> m_animatorDto;
     };
 }
 

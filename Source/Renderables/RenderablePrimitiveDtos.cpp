@@ -3,8 +3,6 @@
 #include "Geometries/GeometryData.h"
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/GenericDto.h"
-#include "Animators/ModelPrimitiveAnimator.h"
-#include "Animators/AnimatorDtos.h"
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
 #include "MeshNodeTree.h"
@@ -15,7 +13,6 @@
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
-using namespace Enigma::Animators;
 using namespace Enigma::Geometries;
 
 static std::string TOKEN_NAME = "Name";

@@ -1,6 +1,6 @@
 ﻿#include "AnimationClip.h"
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 
 AnimationClip::AnimationClip()
 {

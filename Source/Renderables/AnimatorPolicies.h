@@ -8,11 +8,11 @@
 #ifndef _ANIMATOR_POLICIES_H
 #define _ANIMATOR_POLICIES_H
 
-#include "Renderables/ModelPrimitive.h"
-#include "AnimatorDtos.h"
+#include "ModelPrimitive.h"
+#include "ModelAnimatorDtos.h"
 #include <memory>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class AnimationAssetPolicy;
 

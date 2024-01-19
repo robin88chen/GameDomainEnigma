@@ -8,12 +8,12 @@
 #ifndef _SKIN_ANIMATION_OPERATOR_H
 #define _SKIN_ANIMATION_OPERATOR_H
 
-#include "Renderables/SkinMeshPrimitive.h"
-#include "Renderables/ModelPrimitive.h"
-#include "AnimatorDtos.h"
+#include "SkinMeshPrimitive.h"
+#include "ModelPrimitive.h"
+#include "ModelAnimatorDtos.h"
 #include "GameEngine/FactoryDesc.h"
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     class SkinAnimationOperator
     {

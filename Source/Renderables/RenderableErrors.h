@@ -10,7 +10,7 @@
 
 #include <system_error>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     enum class ErrorCode
     {
@@ -43,7 +43,7 @@ namespace std
 {
     // let compiler know that ErrorCode is compatible with std::error_code
     template <>
-    struct is_error_code_enum<Enigma::Animators::ErrorCode> : true_type {};
+    struct is_error_code_enum<Enigma::Renderables::ErrorCode> : true_type {};
 }
 
 

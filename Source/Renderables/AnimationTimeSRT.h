@@ -15,7 +15,7 @@
 #include <tuple>
 #include <vector>
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
     using SRTValueTie = std::tuple<MathLib::Vector3, MathLib::Quaternion, MathLib::Vector3>;
 

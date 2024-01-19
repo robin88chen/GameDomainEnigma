@@ -1,22 +1,20 @@
 ﻿/*********************************************************************
- * \file   AnimatorDtos.h
+ * \file   ModelAnimatorDtos.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
-#ifndef ANI_ANIMATOR_DTOS_H
-#define ANI_ANIMATOR_DTOS_H
+#ifndef MODEL_ANIMATOR_DTOS_H
+#define MODEL_ANIMATOR_DTOS_H
 
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
 #include "Renderables/ModelPrimitive.h"
 #include "GameEngine/AnimationAssetId.h"
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
-    class ModelAnimatorPolicy;
-
     class ModelAnimatorDto
     {
     public:

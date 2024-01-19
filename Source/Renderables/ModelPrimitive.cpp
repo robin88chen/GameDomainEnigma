@@ -4,14 +4,13 @@
 #include "Renderer/RendererErrors.h"
 #include "MathLib/Matrix4.h"
 #include "RenderablePrimitiveDtos.h"
-#include "Animators/ModelPrimitiveAnimator.h"
+#include "ModelPrimitiveAnimator.h"
 #include <memory>
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 using namespace Enigma::Graphics;
 using namespace Enigma::MathLib;
-using namespace Enigma::Animators;
 using namespace Enigma::Primitives;
 
 DEFINE_RTTI(Renderables, ModelPrimitive, Primitive);

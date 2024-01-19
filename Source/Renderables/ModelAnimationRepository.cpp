@@ -1,27 +1,25 @@
 ﻿#include "ModelAnimationRepository.h"
-#include "AnimatorErrors.h"
+#include "RenderableErrors.h"
 #include "Frameworks/CommandBus.h"
-#include "AnimationAssetCommand.h"
+#include "RenderableCommands.h"
 #include "AnimationAssetBuilder.h"
 #include "GameEngine/FactoryCommands.h"
 #include "ModelAnimationAsset.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/EventPublisher.h"
-#include "AnimationAssetEvents.h"
-#include "AnimatorEvents.h"
+#include "RenderableEvents.h"
 #include "ModelAnimatorBuilder.h"
-#include "AnimatorCommands.h"
 #include "Frameworks/StringFormat.h"
 #include "ModelAnimationDtos.h"
 #include "AnimationAssetPolicies.h"
 #include "AnimatorPolicies.h"
 #include <cassert>
 
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 
-DEFINE_RTTI(Animators, AnimationRepository, ISystemService);
+DEFINE_RTTI(Renderables, AnimationRepository, ISystemService);
 
 AnimationRepository::AnimationRepository(ServiceManager* manager) : ISystemService(manager), m_constructingAnimatorRuid()
 {
@@ -46,17 +44,17 @@ ServiceResult AnimationRepository::onInit()
 {
     m_doBuildingAnimationAsset = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingAnimationAsset(c); });
     m_doBuildingModelAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingModelAnimator(c); });
-    CommandBus::subscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
-    CommandBus::subscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
+    CommandBus::subscribe(typeid(Renderables::BuildAnimationAsset), m_doBuildingAnimationAsset);
+    CommandBus::subscribe(typeid(Renderables::BuildModelAnimator), m_doBuildingModelAnimator);
 
     m_onAnimationAssetBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnAnimationAssetBuilt(e); });
     m_onBuildAnimationAssetFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildAnimationAssetFailed(e); });
     m_onAnimatorBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnAnimatorBuilt(e); });
     m_onBuildAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildAnimatorFailed(e); });
-    EventPublisher::subscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
-    EventPublisher::subscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
-    EventPublisher::subscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
-    EventPublisher::subscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
+    EventPublisher::subscribe(typeid(AnimationAssetBuilt), m_onAnimationAssetBuilt);
+    EventPublisher::subscribe(typeid(BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
+    EventPublisher::subscribe(typeid(ModelAnimatorBuilt), m_onAnimatorBuilt);
+    EventPublisher::subscribe(typeid(BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
 
     return ServiceResult::Complete;
 }
@@ -101,15 +99,15 @@ bool AnimationRepository::PopAnimatorBuilding()
 
 ServiceResult AnimationRepository::onTerm()
 {
-    CommandBus::unsubscribe(typeid(Animators::BuildAnimationAsset), m_doBuildingAnimationAsset);
-    CommandBus::unsubscribe(typeid(Animators::BuildModelAnimator), m_doBuildingModelAnimator);
+    CommandBus::unsubscribe(typeid(Renderables::BuildAnimationAsset), m_doBuildingAnimationAsset);
+    CommandBus::unsubscribe(typeid(Renderables::BuildModelAnimator), m_doBuildingModelAnimator);
     m_doBuildingAnimationAsset = nullptr;
     m_doBuildingModelAnimator = nullptr;
 
-    EventPublisher::unsubscribe(typeid(Animators::AnimationAssetBuilt), m_onAnimationAssetBuilt);
-    EventPublisher::unsubscribe(typeid(Animators::BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
-    EventPublisher::unsubscribe(typeid(Animators::ModelAnimatorBuilt), m_onAnimatorBuilt);
-    EventPublisher::unsubscribe(typeid(Animators::BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
+    EventPublisher::unsubscribe(typeid(AnimationAssetBuilt), m_onAnimationAssetBuilt);
+    EventPublisher::unsubscribe(typeid(BuildAnimationAssetFailed), m_onBuildAnimationAssetFailed);
+    EventPublisher::unsubscribe(typeid(ModelAnimatorBuilt), m_onAnimatorBuilt);
+    EventPublisher::unsubscribe(typeid(BuildModelAnimatorFailed), m_onBuildAnimatorFailed);
     m_onAnimationAssetBuilt = nullptr;
     m_onBuildAnimationAssetFailed = nullptr;
     m_onAnimatorBuilt = nullptr;
@@ -169,7 +167,7 @@ std::string AnimationRepository::MakeAssetKey(const std::string& rtti_name, cons
 void AnimationRepository::DoBuildingAnimationAsset(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::BuildAnimationAsset, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<Renderables::BuildAnimationAsset, ICommand>(c);
     if (!cmd) return;
     BuildAnimationAsset(cmd->GetPolicy());
 }
@@ -177,7 +175,7 @@ void AnimationRepository::DoBuildingAnimationAsset(const Frameworks::ICommandPtr
 void AnimationRepository::DoBuildingModelAnimator(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::BuildModelAnimator, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<Renderables::BuildModelAnimator, ICommand>(c);
     if (!cmd) return;
     BuildModelAnimator(cmd->GetPolicy());
 }
@@ -185,7 +183,7 @@ void AnimationRepository::DoBuildingModelAnimator(const Frameworks::ICommandPtr&
 void AnimationRepository::OnAnimationAssetBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Animators::AnimationAssetBuilt, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->getName() != m_buildingAssetName) return;
     m_isAssetCurrentBuilding = false;
@@ -194,7 +192,7 @@ void AnimationRepository::OnAnimationAssetBuilt(const Frameworks::IEventPtr& e)
 void AnimationRepository::OnBuildAnimationAssetFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Animators::BuildAnimationAssetFailed, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<BuildAnimationAssetFailed, IEvent>(e);
     if (!ev) return;
     if (ev->getName() != m_buildingAssetName) return;
     Platforms::Debug::ErrorPrintf("animation asset %s build failed : %s\n",
@@ -206,7 +204,7 @@ void AnimationRepository::OnAnimatorBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     Ruid ruid_in_event{};
-    auto ev_model = std::dynamic_pointer_cast<Animators::ModelAnimatorBuilt, IEvent>(e);
+    auto ev_model = std::dynamic_pointer_cast<ModelAnimatorBuilt, IEvent>(e);
     if (ev_model)
     {
         ruid_in_event = ev_model->getRuid();
@@ -220,7 +218,7 @@ void AnimationRepository::OnBuildAnimatorFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     Ruid ruid_in_event{};
     std::string err_msg;
-    auto ev_model = std::dynamic_pointer_cast<Animators::BuildModelAnimatorFailed, IEvent>(e);
+    auto ev_model = std::dynamic_pointer_cast<BuildModelAnimatorFailed, IEvent>(e);
     if (ev_model)
     {
         ruid_in_event = ev_model->getRuid();

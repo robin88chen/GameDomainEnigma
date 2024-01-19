@@ -14,10 +14,8 @@
 #include <vector>
 
 
-namespace Enigma::Animators
+namespace Enigma::Renderables
 {
-    class AnimationAssetPolicy;
-
     class AnimationTimeSRTDto
     {
     public:

@@ -15,7 +15,7 @@
 #include "MathLib/Matrix4.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/LazyStatus.h"
-#include "GameEngine/Animator.h"
+#include "Animators/Animator.h"
 #include <memory>
 #include <bitset>
 #include <system_error>
@@ -78,11 +78,11 @@ namespace Enigma::Primitives
         /** get selected visual technique */
         virtual std::string& getSelectedVisualTechnique() { return m_selectedVisualTech; };
 
-        virtual void attachAnimator(const std::shared_ptr<Engine::Animator>& animator) { m_animator = animator; }
-        virtual const std::shared_ptr<Engine::Animator>& getAnimator() { return m_animator; }
+        virtual void attachAnimator(const std::shared_ptr<Animators::Animator>& animator) { m_animator = animator; }
+        virtual const std::shared_ptr<Animators::Animator>& getAnimator() { return m_animator; }
 
         /** enum animator list deep, including geometry's animator */
-        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
 
         /** add primitive flag */
         void addPrimitiveFlag(PrimitiveFlags flag)
@@ -110,7 +110,7 @@ namespace Enigma::Primitives
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;
         std::string m_selectedVisualTech;
-        std::shared_ptr<Engine::Animator> m_animator;
+        std::shared_ptr<Animators::Animator> m_animator;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

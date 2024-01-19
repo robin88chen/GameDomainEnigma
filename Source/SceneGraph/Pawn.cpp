@@ -110,7 +110,7 @@ error Pawn::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
     return er;
 }
 
-void Pawn::enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+void Pawn::enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList)
 {
     if (m_primitive) m_primitive->enumAnimatorListDeep(resultList);
 }

@@ -8,7 +8,7 @@
 #ifndef ANIMATION_ASSET_STORE_MAPPER_H
 #define ANIMATION_ASSET_STORE_MAPPER_H
 
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include "AnimationAssetId.h"
 #include <system_error>
 

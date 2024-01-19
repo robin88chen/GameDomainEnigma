@@ -3,8 +3,6 @@
 #include "AnimatorPolicies.h"
 #include "AnimationAssetPolicies.h"
 #include "ModelPrimitiveAnimator.h"
-#include "Frameworks/CommandBus.h"
-#include "RenderableCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "RenderableErrors.h"
 #include "RenderableEvents.h"
@@ -15,7 +13,7 @@ using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 
-ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(Engine::AnimationAsset::TYPE_RTTI.getName())
+ModelAnimatorBuilder::ModelAnimatorBuilder(AnimationRepository* host) : m_originalAssetDesc(Animators::AnimationAsset::TYPE_RTTI.getName())
 {
     m_repository = host;
     m_builtAnimator = nullptr;
@@ -97,7 +95,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->getName() != m_assetName) return;
-    auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset, Engine::AnimationAsset>(ev->GetAnimationAsset());
+    auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset>(ev->GetAnimationAsset());
     if (!model_anim)
     {
         EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));

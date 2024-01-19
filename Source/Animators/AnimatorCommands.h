@@ -12,7 +12,7 @@
 #include "AnimatorFactory.h"
 #include <string>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class CreateAnimator : public Frameworks::ICommand
     {
@@ -28,13 +28,13 @@ namespace Enigma::Engine
     class ConstituteAnimator : public Frameworks::ICommand
     {
     public:
-        ConstituteAnimator(const AnimatorId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
+        ConstituteAnimator(const AnimatorId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
         const AnimatorId& id() { return m_id; }
-        const GenericDto& dto() { return m_dto; }
+        const Engine::GenericDto& dto() { return m_dto; }
 
     private:
         AnimatorId m_id;
-        GenericDto m_dto;
+        Engine::GenericDto m_dto;
     };
     class PutAnimator : public Frameworks::ICommand
     {

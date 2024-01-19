@@ -8,7 +8,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "EngineErrors.h"
 
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 
 

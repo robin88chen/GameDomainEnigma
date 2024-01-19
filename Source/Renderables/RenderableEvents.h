@@ -10,7 +10,7 @@
 
 #include "Frameworks/Event.h"
 #include "Primitives/Primitive.h"
-#include "GameEngine/AnimationAsset.h"
+#include "Animators/AnimationAsset.h"
 #include <system_error>
 
 namespace Enigma::Renderables
@@ -67,13 +67,13 @@ namespace Enigma::Renderables
     class AnimationAssetBuilt : public Frameworks::IEvent
     {
     public:
-        AnimationAssetBuilt(const std::string& name, const std::shared_ptr<Engine::AnimationAsset>& ani) :
+        AnimationAssetBuilt(const std::string& name, const std::shared_ptr<Animators::AnimationAsset>& ani) :
             m_name(name), m_animation(ani) {};
         const std::string& getName() { return m_name; }
-        const std::shared_ptr<Engine::AnimationAsset>& GetAnimationAsset() { return m_animation; }
+        const std::shared_ptr<Animators::AnimationAsset>& GetAnimationAsset() { return m_animation; }
     private:
         std::string m_name;
-        std::shared_ptr<Engine::AnimationAsset> m_animation;
+        std::shared_ptr<Animators::AnimationAsset> m_animation;
     };
     class BuildAnimationAssetFailed : public Frameworks::IEvent
     {
@@ -89,15 +89,15 @@ namespace Enigma::Renderables
     class FactoryAnimationAssetCreated : public Frameworks::IEvent
     {
     public:
-        FactoryAnimationAssetCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<Engine::AnimationAsset>& ani)
+        FactoryAnimationAssetCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<Animators::AnimationAsset>& ani)
             : m_ruid(ruid), m_animation(ani) {};
 
         const Frameworks::Ruid& GetConstructingRuid() const { return m_ruid; }
-        const std::shared_ptr<Engine::AnimationAsset>& GetAnimationAsset() { return m_animation; }
+        const std::shared_ptr<Animators::AnimationAsset>& GetAnimationAsset() { return m_animation; }
 
     protected:
         Frameworks::Ruid m_ruid;
-        std::shared_ptr<Engine::AnimationAsset> m_animation;
+        std::shared_ptr<Animators::AnimationAsset> m_animation;
     };
 }
 

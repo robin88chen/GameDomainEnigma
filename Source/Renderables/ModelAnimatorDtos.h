@@ -8,10 +8,9 @@
 #ifndef MODEL_ANIMATOR_DTOS_H
 #define MODEL_ANIMATOR_DTOS_H
 
-#include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
 #include "Renderables/ModelPrimitive.h"
-#include "GameEngine/AnimationAssetId.h"
+#include "Animators/AnimationAssetId.h"
 
 namespace Enigma::Renderables
 {
@@ -21,13 +20,13 @@ namespace Enigma::Renderables
         ModelAnimatorDto();
         ModelAnimatorDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const Engine::AnimatorId& id() const { return m_id; }
-        Engine::AnimatorId& id() { return m_id; }
+        [[nodiscard]] const Animators::AnimatorId& id() const { return m_id; }
+        Animators::AnimatorId& id() { return m_id; }
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::optional<Engine::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
-        std::optional<Engine::AnimationAssetId>& animationAssetId() { return m_animationAssetId; }
+        [[nodiscard]] const std::optional<Animators::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
+        std::optional<Animators::AnimationAssetId>& animationAssetId() { return m_animationAssetId; }
         [[nodiscard]] const Engine::GenericDtoCollection& skinOperators() const { return m_skinOperators; }
         Engine::GenericDtoCollection& skinOperators() { return m_skinOperators; }
 
@@ -37,9 +36,9 @@ namespace Enigma::Renderables
           //  const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
 
     private:
-        Engine::AnimatorId m_id;
+        Animators::AnimatorId m_id;
         Engine::FactoryDesc m_factoryDesc;
-        std::optional<Engine::AnimationAssetId> m_animationAssetId;
+        std::optional<Animators::AnimationAssetId> m_animationAssetId;
         Engine::GenericDtoCollection m_skinOperators;
     };
 

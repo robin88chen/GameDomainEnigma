@@ -13,7 +13,7 @@
 #include "Frameworks/Event.h"
 #include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimatorCreated : public Frameworks::IEvent
     {

@@ -11,12 +11,12 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "GameEngine/TimerService.h"
-#include "GameEngine/Animator.h"
+#include "Animator.h"
 #include "Frameworks/CommandSubscriber.h"
 #include <system_error>
 #include <memory>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     using error = std::error_code;
 
@@ -24,7 +24,7 @@ namespace Enigma::Engine
     {
         DECLARE_EN_RTTI;
     public:
-        AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<TimerService>& timer);
+        AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer);
         AnimationFrameListener(const AnimationFrameListener&) = delete;
         AnimationFrameListener(AnimationFrameListener&&) = delete;
         ~AnimationFrameListener() override;
@@ -48,7 +48,7 @@ namespace Enigma::Engine
         void removeListeningAnimator(const Frameworks::ICommandPtr& c);
 
     private:
-        std::weak_ptr<TimerService> m_timer;
+        std::weak_ptr<Engine::TimerService> m_timer;
 
         using ListeningList = std::list<std::weak_ptr<Animator>>;
         ListeningList m_listeningAnimators;

@@ -43,9 +43,6 @@
     <Filter Include="DTOs\Effect Dto">
       <UniqueIdentifier>{6d277dec-bcd4-4379-8e49-98880421cc8a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animator">
-      <UniqueIdentifier>{19ab70b1-527b-4690-9653-b9785fc12717}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Timer Service">
       <UniqueIdentifier>{50528cc3-7ae8-4eee-87bc-e3d9dc1ec9d6}</UniqueIdentifier>
     </Filter>
@@ -75,15 +72,6 @@
     </Filter>
     <Filter Include="Textures\ResourceProcessor">
       <UniqueIdentifier>{c97ac5c6-b031-4a87-a005-f02d9df4ee96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AnimationAsset">
-      <UniqueIdentifier>{be84610b-4ef6-4ccf-96f2-c1c4edfb716e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DTOs\Animation Asset Dto">
-      <UniqueIdentifier>{2622eae4-c441-40b8-9983-f02362244ae4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AnimationFrameListener">
-      <UniqueIdentifier>{63f4dfed-d302-4383-ab53-7a9f872207c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -204,9 +192,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
-      <Filter>Animator</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h">
       <Filter>Timer Service</Filter>
     </ClInclude>
@@ -284,60 +269,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures\ResourceProcessor</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h">
-      <Filter>Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h">
-      <Filter>Queries</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h">
-      <Filter>Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h">
-      <Filter>Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h">
-      <Filter>Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
-      <Filter>AnimationAsset</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetId.h">
-      <Filter>AnimationAsset</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
-      <Filter>DTOs\Animation Asset Dto</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h">
-      <Filter>AnimationAsset</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetStoreMapper.h">
-      <Filter>AnimationAsset</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.h">
-      <Filter>AnimationAsset</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetQueries.h">
-      <Filter>Queries</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
-      <Filter>AnimationFrameListener</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h">
-      <Filter>Installing Policies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +356,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp">
       <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
-      <Filter>Animator</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp">
       <Filter>Timer Service</Filter>
     </ClCompile>
@@ -475,33 +403,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures\ResourceProcessor</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp">
-      <Filter>Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp">
-      <Filter>Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp">
-      <Filter>Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
-      <Filter>AnimationAsset</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
-      <Filter>DTOs\Animation Asset Dto</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp">
-      <Filter>AnimationAsset</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp">
-      <Filter>AnimationAsset</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
-      <Filter>AnimationFrameListener</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp">
-      <Filter>Installing Policies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,14 +10,14 @@
 
 #include "GameEngine/InstallingPolicy.h"
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimatorStoreMapper;
     class AnimationAssetStoreMapper;
 
     using error = std::error_code;
 
-    class AnimatorInstallingPolicy : public InstallingPolicy
+    class AnimatorInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
         AnimatorInstallingPolicy(const std::shared_ptr<AnimatorStoreMapper>& animator_store, const std::shared_ptr<AnimationAssetStoreMapper>& animation_asset_store) : m_animatorStore(animator_store), m_animationAssetStore(animation_asset_store) {}

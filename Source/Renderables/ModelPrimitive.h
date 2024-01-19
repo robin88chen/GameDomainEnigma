@@ -11,7 +11,7 @@
 #include "Primitives/PrimitiveId.h"
 #include "Primitives/Primitive.h"
 #include "MeshNodeTree.h"
-#include "GameEngine/Animator.h"
+#include "Animators/Animator.h"
 #include <string>
 #include <vector>
 #include <optional>
@@ -70,7 +70,7 @@ namespace Enigma::Renderables
         virtual void selectVisualTechnique(const std::string& techniqueName) override;
 
         /** enum animator list deep, including geometry's animator */
-        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList) override;
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList) override;
 
     protected:
         /** sometimes we need re-cache */

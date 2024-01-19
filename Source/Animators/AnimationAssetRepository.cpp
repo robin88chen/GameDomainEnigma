@@ -11,10 +11,10 @@
 #include "Platforms/PlatformLayer.h"
 #include <cassert>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 
-DEFINE_RTTI(Engine, AnimationAssetRepository, ISystemService);
+DEFINE_RTTI(Animators, AnimationAssetRepository, ISystemService);
 
 using error = std::error_code;
 

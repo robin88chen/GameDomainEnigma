@@ -8,8 +8,9 @@
 #ifndef _MODEL_ANIMATION_ASSET_H
 #define _MODEL_ANIMATION_ASSET_H
 
-#include "GameEngine/AnimationAsset.h"
+#include "Animators/AnimationAsset.h"
 #include "AnimationTimeSRT.h"
+#include "Frameworks/Rtti.h"
 #include <vector>
 #include <optional>
 
@@ -17,7 +18,7 @@ namespace Enigma::Renderables
 {
     class ModelAnimationAssetDto;
 
-    class ModelAnimationAsset : public Engine::AnimationAsset
+    class ModelAnimationAsset : public Animators::AnimationAsset
     {
         DECLARE_EN_RTTI
     protected:
@@ -31,8 +32,8 @@ namespace Enigma::Renderables
             AnimationTimeSRT m_timeSRTData;
         };
     public:
-        ModelAnimationAsset(const Engine::AnimationAssetId& id);
-        ModelAnimationAsset(const Engine::AnimationAssetId& id, const Engine::GenericDto& dto);
+        ModelAnimationAsset(const Animators::AnimationAssetId& id);
+        ModelAnimationAsset(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto);
         ModelAnimationAsset(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset(ModelAnimationAsset&&) = delete;
         virtual ~ModelAnimationAsset() override;

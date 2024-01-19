@@ -12,7 +12,7 @@
 #include "AnimationAsset.h"
 #include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAssetCreated : public Frameworks::IEvent
     {

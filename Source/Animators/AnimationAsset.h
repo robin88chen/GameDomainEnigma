@@ -9,12 +9,12 @@
 #define _ANIMATION_ASSET_H
 
 #include "Frameworks/Rtti.h"
-#include "FactoryDesc.h"
+#include "GameEngine/FactoryDesc.h"
 #include "AnimationAssetId.h"
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include <string>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAsset
     {
@@ -29,18 +29,18 @@ namespace Enigma::Engine
 
         const AnimationAssetId& id() { return m_id; }
 
-        virtual GenericDto serializeDto() = 0;
+        virtual Engine::GenericDto serializeDto() = 0;
 
         static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
 
-        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
         virtual float getAnimationLengthInSecond() = 0;
 
     protected:
         AnimationAssetId m_id;
-        FactoryDesc m_factoryDesc;
+        Engine::FactoryDesc m_factoryDesc;
     };
 }
 

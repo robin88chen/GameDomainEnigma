@@ -9,10 +9,10 @@
 #define ANIMATION_ASSET_FACTORY_H
 
 #include "AnimationAsset.h"
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include "Frameworks/CommandSubscriber.h"
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     using AnimationAssetCreator = std::function<std::shared_ptr<AnimationAsset>(const AnimationAssetId& id)>;
     using AnimationAssetConstitutor = std::function<std::shared_ptr<AnimationAsset>(const AnimationAssetId& id, const GenericDto& dto)>;

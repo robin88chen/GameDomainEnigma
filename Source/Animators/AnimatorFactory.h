@@ -8,12 +8,12 @@
 #ifndef ANIMATOR_FACTORY_H
 #define ANIMATOR_FACTORY_H
 
-#include "GenericDto.h"
+#include "GameEngine/GenericDto.h"
 #include "AnimatorId.h"
 #include "Frameworks/CommandSubscriber.h"
 #include <unordered_map>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class Animator;
     using AnimatorCreator = std::function<std::shared_ptr<Animator>(const AnimatorId& id)>;

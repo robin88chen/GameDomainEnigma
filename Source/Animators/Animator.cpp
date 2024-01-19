@@ -2,9 +2,9 @@
 #include "AnimatorQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
-DEFINE_RTTI_OF_BASE(Engine, Animator);
+DEFINE_RTTI_OF_BASE(Animators, Animator);
 
 Animator::Animator(const AnimatorId& id) : m_id(id), m_isListened(false), m_factoryDesc(Animator::TYPE_RTTI.getName())
 {

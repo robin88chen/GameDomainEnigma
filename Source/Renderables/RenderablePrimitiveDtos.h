@@ -18,7 +18,7 @@
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
 #include "GameEngine/EffectMaterialId.h"
-#include "GameEngine/AnimatorId.h"
+#include "Animators/AnimatorId.h"
 #include <memory>
 #include <vector>
 
@@ -182,8 +182,8 @@ namespace Enigma::Renderables
 
         [[nodiscard]] const Engine::GenericDto& nodeTree() const { return m_nodeTreeDto; }
         Engine::GenericDto& nodeTree() { return m_nodeTreeDto; }
-        [[nodiscard]] const std::optional<Engine::AnimatorId>& animatorId() const { return m_animatorId; }
-        std::optional<Engine::AnimatorId>& animatorId() { return m_animatorId; }
+        [[nodiscard]] const std::optional<Animators::AnimatorId>& animatorId() const { return m_animatorId; }
+        std::optional<Animators::AnimatorId>& animatorId() { return m_animatorId; }
 
         static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
@@ -194,7 +194,7 @@ namespace Enigma::Renderables
         Primitives::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Engine::GenericDto m_nodeTreeDto;
-        std::optional<Engine::AnimatorId> m_animatorId;
+        std::optional<Animators::AnimatorId> m_animatorId;
     };
 }
 

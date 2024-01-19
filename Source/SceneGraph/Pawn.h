@@ -11,7 +11,7 @@
 #include "Spatial.h"
 #include "GameEngine/IRenderer.h"
 #include "Primitives/Primitive.h"
-#include "GameEngine/Animator.h"
+#include "Animators/Animator.h"
 #include <string>
 #include <list>
 
@@ -55,7 +55,7 @@ namespace Enigma::SceneGraph
         virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         /** enum animator list deep, including geometry's animator */
-        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
 
     protected:
         PawnDto SerializePawnDto();

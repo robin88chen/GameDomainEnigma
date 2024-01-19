@@ -14,7 +14,7 @@
 #include "AnimatorId.h"
 #include <mutex>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class Animator;
     class AnimatorStoreMapper;

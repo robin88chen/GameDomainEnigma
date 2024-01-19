@@ -9,9 +9,9 @@
 #define ANIMATION_ASSET_DTOS_H
 
 #include "AnimationAssetId.h"
-#include "FactoryDesc.h"
+#include "GameEngine/FactoryDesc.h"
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAssetDto
     {
@@ -21,12 +21,12 @@ namespace Enigma::Engine
         [[nodiscard]] const AnimationAssetId& id() const { return m_id; }
         AnimationAssetId& id() { return m_id; }
 
-        [[nodiscard]] const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         AnimationAssetId m_id;
-        FactoryDesc m_factoryDesc;
+        Engine::FactoryDesc m_factoryDesc;
     };
 }
 

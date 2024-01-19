@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAssetId
     {

@@ -1,15 +1,16 @@
 ﻿#include "AnimationFrameListener.h"
-#include "EngineErrors.h"
+#include "AnimatorErrors.h"
 #include "AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "GameEngine/TimerService.h"
 #include <cassert>
 
 using namespace Enigma::Frameworks;
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
-DEFINE_RTTI(Engine, AnimationFrameListener, ISystemService);
+DEFINE_RTTI(Animators, AnimationFrameListener, ISystemService);
 
-AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<TimerService>& timer)
+AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer)
     : ISystemService(manager), m_hasExpiredAnimator(false)
 {
     assert(timer);

@@ -10,7 +10,7 @@
 
 #include "AnimationAssetId.h"
 #include "Frameworks/Query.h"
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAsset;
 

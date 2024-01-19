@@ -3,16 +3,17 @@
 
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
+using namespace Enigma::Animators;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderables, ModelAnimationAsset, AnimationAsset);
 
 ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : AnimationAsset(id)
 {
-    m_factoryDesc = FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
 }
 
-ModelAnimationAsset::ModelAnimationAsset(const Engine::AnimationAssetId& id, const GenericDto& dto) : AnimationAsset(id)
+ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id, const GenericDto& dto) : AnimationAsset(id)
 {
     ModelAnimationAssetDto model_dto(dto);
     m_factoryDesc = model_dto.factoryDesc();

@@ -8,21 +8,22 @@
 #include <memory>
 
 using namespace Enigma::Renderables;
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 using namespace Enigma::Graphics;
 using namespace Enigma::MathLib;
 using namespace Enigma::Primitives;
+using namespace Enigma::Engine;
 
 DEFINE_RTTI(Renderables, ModelPrimitive, Primitive);
 
 ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_name = id.name();
     m_meshPrimitiveIndexCache.clear();
 }
 
-ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto) : Primitive(id)
+ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : Primitive(id)
 {
     ModelPrimitiveDto primDto = ModelPrimitiveDto::fromGenericDto(dto);
     m_factoryDesc = primDto.factoryDesc();
@@ -143,15 +144,15 @@ stdext::optional_ref<MeshNode> ModelPrimitive::getCachedMeshNode(unsigned cached
     return m_nodeTree.getMeshNode(m_meshPrimitiveIndexCache[cached_index]);
 }
 
-void ModelPrimitive::updateMeshNodeLocalTransform(unsigned index, const MathLib::Matrix4& mxLocal)
+void ModelPrimitive::updateMeshNodeLocalTransform(unsigned index, const Matrix4& mxLocal)
 {
     m_nodeTree.updateMeshNodeLocalTransform(m_mxPrimitiveWorld, index, mxLocal);
 }
 
-error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
-    const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
+error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr<IRenderer>& renderer,
+    const Matrix4& mxWorld, const RenderLightingState& lightingState)
 {
-    const auto render = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer);
+    const auto render = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
     if (testPrimitiveFlag(Primitive_UnRenderable)) return Renderer::ErrorCode::ok;
@@ -181,9 +182,9 @@ error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_pt
     return Renderer::ErrorCode::ok;
 }
 
-error ModelPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
+error ModelPrimitive::removeFromRenderer(const std::shared_ptr<IRenderer>& renderer)
 {
-    const auto render = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer);
+    const auto render = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(renderer);
     if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
     if (m_nodeTree.getMeshNodeCount() == 0) return Renderer::ErrorCode::ok; // no mesh node
     const unsigned int mesh_count = getMeshPrimitiveCount();
@@ -208,7 +209,7 @@ error ModelPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer
     return Renderer::ErrorCode::ok;
 }
 
-void ModelPrimitive::updateWorldTransform(const MathLib::Matrix4& mxWorld)
+void ModelPrimitive::updateWorldTransform(const Matrix4& mxWorld)
 {
     m_mxPrimitiveWorld = mxWorld;
 
@@ -282,7 +283,7 @@ void ModelPrimitive::selectVisualTechnique(const std::string& techniqueName)
     }
 }
 
-void ModelPrimitive::enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList)
+void ModelPrimitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList)
 {
     if (m_animator) resultList.push_back(m_animator);
     if (m_nodeTree.getMeshNodeCount() == 0) return;  // no mesh node

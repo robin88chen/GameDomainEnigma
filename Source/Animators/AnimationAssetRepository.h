@@ -14,7 +14,7 @@
 #include "AnimationAsset.h"
 #include <mutex>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAssetStoreMapper;
     class AnimationAssetFactory;

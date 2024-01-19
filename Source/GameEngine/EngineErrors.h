@@ -24,10 +24,6 @@ namespace Enigma::Engine
         primitiveFactoryNotExists = 151,
         primitiveEntityAlreadyExists,
         effectAlreadyCompiled,
-        animatorFactoryNotExists,
-        animatorEntityAlreadyExists,
-        animationFactoryNotExists,
-        animationAssetAlreadyExists,
 
         effectPassEnd = 201,
         compilingEmptyEffectTech,
@@ -38,9 +34,6 @@ namespace Enigma::Engine
         targetTextureNotExists = 301,
         textureAlreadyLoaded,
         textureNotReady,
-
-        nullAnimator = 401,
-        animatorMultiListening,
     };
     class ErrorCategory : public std::error_category
     {

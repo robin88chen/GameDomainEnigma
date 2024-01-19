@@ -14,25 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetId.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetQueries.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetStoreMapper.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
@@ -100,16 +81,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />

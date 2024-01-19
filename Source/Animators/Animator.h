@@ -10,12 +10,12 @@
 
 #include "Frameworks/Rtti.h"
 #include "Frameworks/Timer.h"
-#include "FactoryDesc.h"
-#include "GenericDto.h"
+#include "GameEngine/FactoryDesc.h"
+#include "GameEngine/GenericDto.h"
 #include "AnimatorId.h"
 #include <memory>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class Animator : public std::enable_shared_from_this<Animator>
     {
@@ -37,7 +37,7 @@ namespace Enigma::Engine
         static std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
 
         const AnimatorId& id() const { return m_id; }
-        virtual GenericDto serializeDto() const = 0;
+        virtual Engine::GenericDto serializeDto() const = 0;
 
         /** animation update
         @return has update something or not */
@@ -53,13 +53,13 @@ namespace Enigma::Engine
         bool isListened() const { return m_isListened; };
         void setListened(bool flag) { m_isListened = flag; };
 
-        const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
     protected:
         AnimatorId m_id;
         bool m_isListened;
-        FactoryDesc m_factoryDesc;
+        Engine::FactoryDesc m_factoryDesc;
     };
 }
 

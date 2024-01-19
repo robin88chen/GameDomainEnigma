@@ -11,6 +11,7 @@ using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 DEFINE_RTTI(Renderables, ModelPrimitiveAnimator, Animator);
 

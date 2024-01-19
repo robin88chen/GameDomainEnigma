@@ -13,7 +13,7 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/GenericDto.h"
-#include "GameEngine/AnimationAsset.h"
+#include "Animators/AnimationAsset.h"
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -45,7 +45,7 @@ namespace Enigma::Renderables
         virtual Frameworks::ServiceResult onTerm() override;
 
         bool HasAnimationAsset(const std::string& rtti_name, const std::string& name);
-        std::shared_ptr<Engine::AnimationAsset> QueryAnimationAsset(const std::string& rtti_name, const std::string& name);
+        std::shared_ptr<Animators::AnimationAsset> QueryAnimationAsset(const std::string& rtti_name, const std::string& name);
 
         error BuildAnimationAsset(const std::shared_ptr<AnimationAssetPolicy>& policy);
         error BuildModelAnimator(const std::shared_ptr<ModelAnimatorPolicy>& policy);
@@ -66,7 +66,7 @@ namespace Enigma::Renderables
         void OnAnimatorBuilt(const Frameworks::IEventPtr& e);
         void OnBuildAnimatorFailed(const Frameworks::IEventPtr& e);
     private:
-        std::unordered_map<std::string, std::weak_ptr<Engine::AnimationAsset>> m_assets;
+        std::unordered_map<std::string, std::weak_ptr<Animators::AnimationAsset>> m_assets;
         std::recursive_mutex m_assetsLock;
 
         std::unique_ptr<AnimationAssetBuilder> m_assetBuilder;

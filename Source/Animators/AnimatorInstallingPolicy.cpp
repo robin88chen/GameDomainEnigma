@@ -3,10 +3,10 @@
 #include "AnimationAssetRepository.h"
 #include "AnimationFrameListener.h"
 #include "GameEngine/TimerService.h"
-#include "EngineErrors.h"
+#include "AnimatorErrors.h"
 #include <cassert>
 
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 error AnimatorInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {

@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimatorId
     {

@@ -4,9 +4,9 @@
 #include "AnimationAssetEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
-#include "GameEngine/EngineErrors.h"
+#include "AnimatorErrors.h"
 
-using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;
 
 AnimationAssetFactory::AnimationAssetFactory()

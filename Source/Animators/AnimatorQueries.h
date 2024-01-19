@@ -11,7 +11,7 @@
 #include "Frameworks/Query.h"
 #include "AnimatorId.h"
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class Animator;
 

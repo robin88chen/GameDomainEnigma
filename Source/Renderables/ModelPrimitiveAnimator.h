@@ -9,7 +9,7 @@
 #ifndef _MODEL_PRIMITIVE_ANIMATOR_H
 #define _MODEL_PRIMITIVE_ANIMATOR_H
 
-#include "GameEngine/Animator.h"
+#include "Animators/Animator.h"
 #include "AnimationClip.h"
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
@@ -21,11 +21,11 @@ namespace Enigma::Renderables
 {
     class ModelAnimationAsset;
 
-    class ModelPrimitiveAnimator : public Engine::Animator
+    class ModelPrimitiveAnimator : public Animators::Animator
     {
         DECLARE_EN_RTTI
     public:
-        ModelPrimitiveAnimator(const Engine::AnimatorId& id);
+        ModelPrimitiveAnimator(const Animators::AnimatorId& id);
         ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator(ModelPrimitiveAnimator&& ani) = delete;
         ~ModelPrimitiveAnimator() override;

@@ -6,7 +6,7 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "AnimatorQueries.h"
 #include "Platforms/PlatformLayer.h"
-#include "EngineErrors.h"
+#include "AnimatorErrors.h"
 
 using namespace Enigma::Animators;
 using namespace Enigma::Frameworks;

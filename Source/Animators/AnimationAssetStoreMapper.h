@@ -12,7 +12,7 @@
 #include "AnimationAssetId.h"
 #include <system_error>
 
-namespace Enigma::Engine
+namespace Enigma::Animators
 {
     class AnimationAssetStoreMapper
     {
@@ -23,9 +23,9 @@ namespace Enigma::Engine
         virtual std::error_code disconnect() = 0;
 
         virtual bool hasAnimationAsset(const AnimationAssetId& id) = 0;
-        virtual std::optional<GenericDto> queryAnimationAsset(const AnimationAssetId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryAnimationAsset(const AnimationAssetId& id) = 0;
         virtual std::error_code removeAnimationAsset(const AnimationAssetId& id) = 0;
-        virtual std::error_code putAnimationAsset(const AnimationAssetId& id, const GenericDto& dto) = 0;
+        virtual std::error_code putAnimationAsset(const AnimationAssetId& id, const Engine::GenericDto& dto) = 0;
     };
 }
 

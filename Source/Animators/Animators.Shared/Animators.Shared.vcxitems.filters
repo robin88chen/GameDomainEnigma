@@ -33,14 +33,23 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
+      <Filter>Dtos</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
+      <Filter>FrameListener</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp">
       <Filter>Animators</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp">
+      <Filter>ErrorCodes</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp">
       <Filter>Animators</Filter>
@@ -48,25 +57,25 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp">
       <Filter>Animators</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp">
-      <Filter>Animators</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp">
-      <Filter>ErrorCodes</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
-      <Filter>Dtos</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp">
-      <Filter>FrameListener</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp">
+      <Filter>Animators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">
       <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
+      <Filter>Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.h">
       <Filter>Animation Assets</Filter>
@@ -74,20 +83,29 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetId.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetStoreMapper.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h">
-      <Filter>Commands</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
+      <Filter>FrameListener</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
+      <Filter>Animators</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Animator.h">
-      <Filter>Animators</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h">
+      <Filter>ErrorCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h">
       <Filter>Animators</Filter>
@@ -95,35 +113,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h">
       <Filter>Animators</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h">
+      <Filter>Queries</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h">
       <Filter>Animators</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h">
       <Filter>Animators</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.h">
-      <Filter>ErrorCodes</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetQueries.h">
-      <Filter>Queries</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h">
-      <Filter>Queries</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
-      <Filter>Dtos</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.h">
-      <Filter>FrameListener</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h">
-      <Filter>Installing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

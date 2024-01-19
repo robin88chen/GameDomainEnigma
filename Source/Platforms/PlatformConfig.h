@@ -1,14 +1,14 @@
 ﻿/*********************************************************************
  * \file   PlatformConfig.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
 #ifndef _PLATFORM_CONFIG_H
 #define _PLATFORM_CONFIG_H
 
-// define supported target platform.
+ // define supported target platform.
 #define PLATFORM_UNKNOWN            0
 #define PLATFORM_WIN32              1
 #define PLATFORM_ANDROID            2

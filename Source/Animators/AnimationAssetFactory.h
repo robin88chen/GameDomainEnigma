@@ -15,7 +15,7 @@
 namespace Enigma::Animators
 {
     using AnimationAssetCreator = std::function<std::shared_ptr<AnimationAsset>(const AnimationAssetId& id)>;
-    using AnimationAssetConstitutor = std::function<std::shared_ptr<AnimationAsset>(const AnimationAssetId& id, const GenericDto& dto)>;
+    using AnimationAssetConstitutor = std::function<std::shared_ptr<AnimationAsset>(const AnimationAssetId& id, const Engine::GenericDto& dto)>;
 
     class AnimationAssetFactory
     {

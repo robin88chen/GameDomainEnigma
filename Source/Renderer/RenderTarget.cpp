@@ -256,10 +256,10 @@ void RenderTarget::SubscribeHandler()
         [=](auto e) { this->OnDepthSurfaceResized(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
 
-    m_onTextureContented = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onTextureContented(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Engine::TextureContented), m_onTextureContented);
-    m_onContentTextureFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
-    Frameworks::EventPublisher::subscribe(typeid(Engine::ContentTextureFailed), m_onContentTextureFailed);
+    m_onTextureHydrated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
+    Frameworks::EventPublisher::subscribe(typeid(Engine::TextureHydrated), m_onTextureHydrated);
+    m_onHydrateTextureFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
+    Frameworks::EventPublisher::subscribe(typeid(Engine::HydrateTextureFailed), m_onHydrateTextureFailed);
 }
 
 void RenderTarget::UnsubscribeHandler()
@@ -278,10 +278,10 @@ void RenderTarget::UnsubscribeHandler()
     Frameworks::EventPublisher::unsubscribe(typeid(Graphics::DepthSurfaceResized), m_onDepthSurfaceResized);
     m_onDepthSurfaceResized = nullptr;
 
-    Frameworks::EventPublisher::unsubscribe(typeid(Engine::TextureContented), m_onTextureContented);
-    m_onTextureContented = nullptr;
-    Frameworks::EventPublisher::unsubscribe(typeid(Engine::ContentTextureFailed), m_onContentTextureFailed);
-    m_onContentTextureFailed = nullptr;
+    Frameworks::EventPublisher::unsubscribe(typeid(Engine::TextureHydrated), m_onTextureHydrated);
+    m_onTextureHydrated = nullptr;
+    Frameworks::EventPublisher::unsubscribe(typeid(Engine::HydrateTextureFailed), m_onHydrateTextureFailed);
+    m_onHydrateTextureFailed = nullptr;
 }
 
 void RenderTarget::CreateRenderTargetTexture()
@@ -434,10 +434,10 @@ void RenderTarget::OnDepthSurfaceResized(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderTarget::onTextureContented(const Frameworks::IEventPtr& e)
+void RenderTarget::onTextureHydrated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Engine::TextureContented>(e);
+    auto ev = std::dynamic_pointer_cast<Engine::TextureHydrated>(e);
     if (!ev) return;
     if (!m_backSurface) return;
     if (ev->id().name() != m_backSurface->getName()) return;
@@ -446,10 +446,10 @@ void RenderTarget::onTextureContented(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->id().name()));
 }
 
-void RenderTarget::onContentTextureFailed(const Frameworks::IEventPtr& e)
+void RenderTarget::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Engine::ContentTextureFailed>(e);
+    auto ev = std::dynamic_pointer_cast<Engine::HydrateTextureFailed>(e);
     if (!ev) return;
     if (!m_backSurface) return;
     if (ev->id().name() != m_backSurface->getName()) return;

@@ -62,13 +62,13 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
 
     for (auto& op : m_policy->SkinOperators())
     {
-        if ((!op.SkinMeshName()) && (!op.SkinMeshNodeName())) continue;
+        if ((!op.skinMeshId()) && (!op.skinMeshNodeName())) continue;
         std::shared_ptr<MeshPrimitive> mesh = nullptr;
-        if (auto mesh_name = op.SkinMeshName())
+        if (auto mesh_name = op.skinMeshId())
         {
-            mesh = m_builtAnimator->getControlledModel()->findMeshPrimitive(mesh_name.value());
+            mesh = m_builtAnimator->getControlledModel()->findMeshPrimitive(mesh_name.value().name());
         }
-        else if (auto node_name = op.SkinMeshNodeName())
+        else if (auto node_name = op.skinMeshNodeName())
         {
             auto& node_tree = m_builtAnimator->getControlledModel()->getMeshNodeTree();
             auto node_idx = node_tree.findMeshNodeIndex(node_name.value());
@@ -77,13 +77,13 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
         if (!mesh) continue;
         auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive, MeshPrimitive>(mesh);
         if (!skin_mesh) continue;
-        if (auto offsets = op.NodeOffsets())
+        if (auto offsets = op.nodeOffsets())
         {
-            m_builtAnimator->linkSkinMesh(skin_mesh, op.BoneNodeNames(), offsets.value());
+            m_builtAnimator->linkSkinMesh(skin_mesh, op.boneNodeNames(), offsets.value());
         }
         else
         {
-            m_builtAnimator->linkSkinMesh(skin_mesh, op.BoneNodeNames());
+            m_builtAnimator->linkSkinMesh(skin_mesh, op.boneNodeNames());
         }
     }
 }

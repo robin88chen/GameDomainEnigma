@@ -65,31 +65,31 @@ void TextureResourceProcessor::unregisterHandlers()
     m_enqueueUpdatingImage = nullptr;
 }
 
-std::error_code TextureResourceProcessor::enqueueContentingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto)
+std::error_code TextureResourceProcessor::enqueueHydratingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto)
 {
     assert(texture);
     if (!texture->lazyStatus().isGhost()) return ErrorCode::textureAlreadyLoaded;
-    std::lock_guard locker{ m_contentingQueueLock };
-    m_contentingQueue.push({ texture, TextureDto::fromGenericDto(dto) });
+    std::lock_guard locker{ m_hydratingQueueLock };
+    m_hydratingQueue.push({ texture, TextureDto::fromGenericDto(dto) });
     texture->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::InQueue);
     return ErrorCode::ok;
 }
 
-std::error_code TextureResourceProcessor::contentNextTextureResource()
+std::error_code TextureResourceProcessor::hydrateNextTextureResource()
 {
-    if (m_currentContentingTexture) return ErrorCode::ok;
+    if (m_currentHydratingTexture) return ErrorCode::ok;
     assert(m_loader);
-    std::lock_guard locker{ m_contentingQueueLock };
-    if (m_contentingQueue.empty())
+    std::lock_guard locker{ m_hydratingQueueLock };
+    if (m_hydratingQueue.empty())
     {
-        m_currentContentingTexture = nullptr;
+        m_currentHydratingTexture = nullptr;
         return ErrorCode::ok;
     }
-    auto& [texture, dto] = m_contentingQueue.front();
-    m_currentContentingTexture = texture;
-    m_loader->contentImage(texture, dto);
+    auto& [texture, dto] = m_hydratingQueue.front();
+    m_currentHydratingTexture = texture;
+    m_loader->loadImage(texture, dto);
     texture->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::Loading);
-    m_contentingQueue.pop();
+    m_hydratingQueue.pop();
     return ErrorCode::ok;
 }
 
@@ -176,10 +176,10 @@ void TextureResourceProcessor::onLoaderTextureLoaded(const Frameworks::IEventPtr
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureLoader::TextureLoaded>(e);
     if (!ev) return;
-    if (ev->id() != m_currentContentingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureContented>(ev->id(), ev->texture()));
-    m_currentContentingTexture = nullptr;
-    const auto er = contentNextTextureResource();
+    if (ev->id() != m_currentHydratingTexture->id()) return;
+    Frameworks::EventPublisher::post(std::make_shared<TextureHydrated>(ev->id(), ev->texture()));
+    m_currentHydratingTexture = nullptr;
+    const auto er = hydrateNextTextureResource();
     assert(!er);
 }
 
@@ -190,9 +190,9 @@ void TextureResourceProcessor::onLoaderLoadTextureFailed(const Frameworks::IEven
     auto ev = std::dynamic_pointer_cast<TextureLoader::LoadTextureFailed>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-    Frameworks::EventPublisher::post(std::make_shared<ContentTextureFailed>(ev->id(), ev->error()));
-    m_currentContentingTexture = nullptr;
-    const auto er = contentNextTextureResource();
+    Frameworks::EventPublisher::post(std::make_shared<HydrateTextureFailed>(ev->id(), ev->error()));
+    m_currentHydratingTexture = nullptr;
+    const auto er = hydrateNextTextureResource();
     assert(!er);
 }
 

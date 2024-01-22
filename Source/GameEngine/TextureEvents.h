@@ -30,10 +30,10 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> m_texture;
         bool m_isPersisted;
     };
-    class TextureContented : public Frameworks::IEvent
+    class TextureHydrated : public Frameworks::IEvent
     {
     public:
-        TextureContented(const TextureId& id, const std::shared_ptr<Texture>& tex) : m_id(id), m_texture(tex) {}
+        TextureHydrated(const TextureId& id, const std::shared_ptr<Texture>& tex) : m_id(id), m_texture(tex) {}
 
         const TextureId& id() { return m_id; }
         std::shared_ptr<Texture> texture() { return m_texture; }
@@ -41,10 +41,10 @@ namespace Enigma::Engine
         TextureId m_id;
         std::shared_ptr<Texture> m_texture;
     };
-    class ContentTextureFailed : public Frameworks::IEvent
+    class HydrateTextureFailed : public Frameworks::IEvent
     {
     public:
-        ContentTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {}
+        HydrateTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {}
 
         const TextureId& id() { return m_id; }
         std::error_code error() const { return m_error; }

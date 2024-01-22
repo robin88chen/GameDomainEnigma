@@ -26,6 +26,7 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI
     public:
         ModelPrimitiveAnimator(const Animators::AnimatorId& id);
+        ModelPrimitiveAnimator(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
         ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator(ModelPrimitiveAnimator&& ani) = delete;
         ~ModelPrimitiveAnimator() override;

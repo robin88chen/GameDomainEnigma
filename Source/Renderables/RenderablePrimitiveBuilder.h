@@ -16,7 +16,7 @@
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
 #include "Primitives/PrimitiveRepository.h"
-#include "PrimitiveBuildingPlan.h"
+#include "PrimitiveHydratingPlan.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -54,10 +54,10 @@ namespace Enigma::Renderables
         std::shared_ptr<Primitives::Primitive> constituteModel(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
 
         //void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
-        void buildRenderablePrimitive(const PrimitiveBuildingPlan& plan);
+        void hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan);
 
-        void onPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void onBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
+        void onPrimitiveHydrated(const Frameworks::IEventPtr& e);
+        void onHydratePrimitiveFailed(const Frameworks::IEventPtr& e);
 
         void buildPrimitive(const Frameworks::ICommandPtr& c);
 
@@ -66,15 +66,15 @@ namespace Enigma::Renderables
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
         //std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
         //std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
-        std::queue<PrimitiveBuildingPlan> m_primitivePlans;
+        std::queue<PrimitiveHydratingPlan> m_primitivePlans;
         //std::mutex m_policiesLock;
         std::mutex m_primitivePlansLock;
         //bool m_isCurrentBuilding;
         std::optional<Primitives::PrimitiveId> m_currentBuildingId;
         //Frameworks::Ruid m_buildingRuid;
 
-        Frameworks::EventSubscriberPtr m_onMeshPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildMeshPrimitiveFailed;
+        Frameworks::EventSubscriberPtr m_onMeshPrimitiveHydrated;
+        Frameworks::EventSubscriberPtr m_onHydrateMeshPrimitiveFailed;
         //Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
         //Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
 

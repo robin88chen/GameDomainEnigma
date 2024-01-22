@@ -143,7 +143,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveBuildingPlan.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveHydratingPlan.h">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h">

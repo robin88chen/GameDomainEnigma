@@ -26,10 +26,10 @@ namespace Enigma::Renderables
     class MeshPrimitiveBuilder
     {
     public:
-        class MeshPrimitiveBuilt : public Frameworks::IEvent
+        class MeshPrimitiveHydrated : public Frameworks::IEvent
         {
         public:
-            MeshPrimitiveBuilt(const Primitives::PrimitiveId& id, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
+            MeshPrimitiveHydrated(const Primitives::PrimitiveId& id, const std::string& name, const std::shared_ptr<MeshPrimitive>& prim)
                 : m_id(id), m_name(name), m_prim(prim) {};
             const Primitives::PrimitiveId& id() const { return m_id; }
             const std::string& name() const { return m_name; }
@@ -40,10 +40,10 @@ namespace Enigma::Renderables
             std::string m_name;
             std::shared_ptr<MeshPrimitive> m_prim;
         };
-        class BuildMeshPrimitiveFailed : public Frameworks::IEvent
+        class HydrateMeshPrimitiveFailed : public Frameworks::IEvent
         {
         public:
-            BuildMeshPrimitiveFailed(const Primitives::PrimitiveId& id, const std::string& name, std::error_code er)
+            HydrateMeshPrimitiveFailed(const Primitives::PrimitiveId& id, const std::string& name, std::error_code er)
                 : m_id(id), m_name(name), m_error(er) {};
 
             const Primitives::PrimitiveId& id() const { return m_id; }
@@ -63,7 +63,7 @@ namespace Enigma::Renderables
         MeshPrimitiveBuilder& operator=(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder& operator=(MeshPrimitiveBuilder&&) = delete;
 
-        void constituteLazyMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto);
+        void hydrateMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto);
 
     protected:
         void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
@@ -93,10 +93,10 @@ namespace Enigma::Renderables
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
-        Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
-        Frameworks::EventSubscriberPtr m_onTextureContented;
-        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialHydrated;
+        Frameworks::EventSubscriberPtr m_onHydrateEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onTextureHydrated;
+        Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
     };
 }
 

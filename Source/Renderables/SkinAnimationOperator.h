@@ -20,13 +20,14 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI_NON_BASE
     public:
         SkinAnimationOperator();
+        SkinAnimationOperator(const Engine::GenericDto& dto, const std::shared_ptr<ModelPrimitive>& model);
         SkinAnimationOperator(const SkinAnimationOperator& op);
         SkinAnimationOperator(SkinAnimationOperator&& op) noexcept;
         ~SkinAnimationOperator();
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
         SkinAnimationOperator& operator=(SkinAnimationOperator&& op) noexcept;
 
-        SkinOperatorDto serializeDto() const;
+        Engine::GenericDto serializeDto() const;
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

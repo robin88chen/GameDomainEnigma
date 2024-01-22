@@ -49,7 +49,7 @@ namespace Enigma::Engine
         TextureLoader& operator=(TextureLoader&) = delete;
         TextureLoader& operator=(TextureLoader&&) = delete;
 
-        void contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto);
+        void loadImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto);
 
     private:
         void onDeviceTextureCreated(const Enigma::Frameworks::IEventPtr& e);
@@ -61,7 +61,7 @@ namespace Enigma::Engine
         void loadResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
         void createEmptyResourceTextures(const std::shared_ptr<Graphics::ITexture>& dev_tex);
 
-        void failContentingImage(std::error_code er);
+        void failLoadingImage(std::error_code er);
     private:
         TextureDto m_textureDto;
         std::shared_ptr<Texture> m_contentingTexture;

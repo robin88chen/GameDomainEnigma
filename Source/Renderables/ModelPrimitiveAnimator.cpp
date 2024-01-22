@@ -5,6 +5,7 @@
 #include "Renderables/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
 #include "SkinAnimationOperator.h"
+#include "ModelAnimatorDtos.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -28,6 +29,33 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(
     m_isOnPlay = false;
 }
 
+ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, const Engine::GenericDto& dto) : Animator(id)
+{
+    ModelAnimatorDto model_ani_dto(dto);
+    m_factoryDesc = model_ani_dto.factoryDesc();
+    if (model_ani_dto.animationAssetId())
+    {
+        m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_ani_dto.animationAssetId().value()));
+    }
+    else
+    {
+        m_animationAsset = nullptr;
+    }
+    m_meshNodeMapping.clear();
+    m_skinAnimOperators.clear();
+    if (model_ani_dto.controlledPrimitiveId())
+    {
+        m_controlledPrimitive = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_ani_dto.controlledPrimitiveId().value()));
+    }
+    if (!model_ani_dto.skinOperators().empty())
+    {
+        for (auto& op_dto : model_ani_dto.skinOperators())
+        {
+            m_skinAnimOperators.emplace_back(op_dto, m_controlledPrimitive.lock());
+        }
+    }
+}
+
 ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 {
     m_animationAsset = nullptr;
@@ -40,11 +68,15 @@ GenericDto ModelPrimitiveAnimator::serializeDto() const
     ModelAnimatorDto dto;
     dto.id() = id();
     dto.factoryDesc() = m_factoryDesc;
+    if (!m_controlledPrimitive.expired())
+    {
+        dto.controlledPrimitiveId() = m_controlledPrimitive.lock()->id();
+    }
     if (!m_animationAsset) return dto.toGenericDto();
     dto.animationAssetId() = m_animationAsset->id();
     for (auto& op : m_skinAnimOperators)
     {
-        dto.skinOperators().emplace_back(op.serializeDto().toGenericDto());
+        dto.skinOperators().emplace_back(op.serializeDto());
     }
     return dto.toGenericDto();
 }

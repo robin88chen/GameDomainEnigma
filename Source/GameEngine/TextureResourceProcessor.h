@@ -33,8 +33,8 @@ namespace Enigma::Engine
         TextureResourceProcessor();
         ~TextureResourceProcessor();
 
-        std::error_code enqueueContentingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto);
-        std::error_code contentNextTextureResource();
+        std::error_code enqueueHydratingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto);
+        std::error_code hydrateNextTextureResource();
 
         std::error_code enqueueSavingTexture(const std::shared_ptr<Texture>& texture, const std::shared_ptr<FileSystem::IFile>& file);
         std::error_code saveNextTextureResource();
@@ -63,9 +63,9 @@ namespace Enigma::Engine
         TextureLoader* m_loader;
         TextureSaver* m_saver;
         TextureImageUpdater* m_imageUpdater;
-        std::queue<std::pair<std::shared_ptr<Texture>, TextureDto>> m_contentingQueue;
-        std::recursive_mutex m_contentingQueueLock;
-        std::shared_ptr<Texture> m_currentContentingTexture;
+        std::queue<std::pair<std::shared_ptr<Texture>, TextureDto>> m_hydratingQueue;
+        std::recursive_mutex m_hydratingQueueLock;
+        std::shared_ptr<Texture> m_currentHydratingTexture;
 
         std::queue<std::pair<std::shared_ptr<Texture>, std::shared_ptr<FileSystem::IFile>>> m_savingQueue;
         std::recursive_mutex m_savingQueueLock;

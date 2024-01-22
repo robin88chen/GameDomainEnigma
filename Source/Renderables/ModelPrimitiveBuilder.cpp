@@ -19,8 +19,8 @@ ModelPrimitiveBuilder::ModelPrimitiveBuilder() : m_buildingRuid()
     m_onBuildMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildMeshPrimitiveFailed(e); });
     m_onModelAnimatorBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnModelAnimatorBuilt(e); });
     m_onBuildModelAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) { this->OnBuildModelAnimatorFailed(e); });
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
     EventPublisher::subscribe(typeid(ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::subscribe(typeid(BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
 
@@ -31,8 +31,8 @@ ModelPrimitiveBuilder::~ModelPrimitiveBuilder()
 {
     //CommandBus::post(std::make_shared<Engine::UnRegisterDtoPolicyConverter>(ModelPrimitive::TYPE_RTTI.getName()));
 
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
     EventPublisher::unsubscribe(typeid(ModelAnimatorBuilt), m_onModelAnimatorBuilt);
     EventPublisher::unsubscribe(typeid(BuildModelAnimatorFailed), m_onBuildModelAnimatorFailed);
     m_onMeshPrimitiveBuilt = nullptr;
@@ -117,7 +117,7 @@ void ModelPrimitiveBuilder::OnMeshPrimitiveBuilt(const Frameworks::IEventPtr& e)
 {
     if (!m_policy) return;
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e);
     if (!ev) return;
     auto mesh_prim = std::dynamic_pointer_cast<MeshPrimitive>(ev->primitive());
     if (!mesh_prim) return;
@@ -145,7 +145,7 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
 {
     if (!m_policy) return;
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::BuildMeshPrimitiveFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed, IEvent>(e);
     if (!ev) return;
     for (auto& meta : m_meshBuildingMetas)
     {

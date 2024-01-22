@@ -11,6 +11,21 @@ SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOper
 {
 }
 
+SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto, const std::shared_ptr<ModelPrimitive>& model) : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
+{
+    SkinOperatorDto skin_op_dto(dto);
+    m_factoryDesc = skin_op_dto.factoryDesc();
+    if (skin_op_dto.skinMeshId())
+    {
+        auto skin = std::dynamic_pointer_cast<SkinMeshPrimitive>(Primitives::Primitive::queryPrimitive(skin_op_dto.skinMeshId().value()));
+        linkSkinMeshPrimitive(skin, skin_op_dto.boneNodeNames());
+    }
+    if ((model) && (skin_op_dto.nodeOffsets()))
+    {
+        linkNodeOffsetMatrix(model, skin_op_dto.nodeOffsets().value());
+    }
+}
+
 SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : m_factoryDesc(op.m_factoryDesc)
 {
     if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
@@ -52,14 +67,14 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
     return *this;
 }
 
-SkinOperatorDto SkinAnimationOperator::serializeDto() const
+Enigma::Engine::GenericDto SkinAnimationOperator::serializeDto() const
 {
     SkinOperatorDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    if (!m_skinMeshPrim.expired()) dto.SkinMeshName() = m_skinMeshPrim.lock()->getName();
-    dto.BoneNodeNames() = m_boneNodeNames;
-    dto.NodeOffsets() = m_nodeOffsets;
-    return dto;
+    if (!m_skinMeshPrim.expired()) dto.skinMeshId() = m_skinMeshPrim.lock()->id();
+    dto.boneNodeNames() = m_boneNodeNames;
+    dto.nodeOffsets() = m_nodeOffsets;
+    return dto.toGenericDto();
 }
 
 void SkinAnimationOperator::updateSkinMeshBoneMatrix(const MeshNodeTree& mesh_node_tree)

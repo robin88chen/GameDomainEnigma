@@ -52,7 +52,7 @@ TextureLoader::~TextureLoader()
     m_onTextureCreateResourceFailed = nullptr;
 }
 
-void TextureLoader::contentImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto)
+void TextureLoader::loadImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto)
 {
     assert(texture);
     m_contentingTexture = texture;
@@ -119,7 +119,7 @@ void TextureLoader::onDeviceTextureCreated(const IEventPtr& e)
     if (!texture)
     {
         Platforms::Debug::Printf("can't get texture asset %s", tex_name.c_str());
-        failContentingImage(ErrorCode::findStashedAssetFail);
+        failLoadingImage(ErrorCode::findStashedAssetFail);
         return;
     }
     if (!m_textureDto.filePaths().empty())
@@ -143,7 +143,7 @@ void TextureLoader::onTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
     if (!dev_tex)
     {
         Platforms::Debug::Printf("can't get texture asset %s", ev->textureName().c_str());
-        failContentingImage(ErrorCode::findStashedAssetFail);
+        failLoadingImage(ErrorCode::findStashedAssetFail);
         return;
     }
     m_contentingTexture->instanceDeviceTexture(dev_tex);
@@ -159,7 +159,7 @@ void TextureLoader::onTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr
     if (!ev) return;
     if (ev->textureName() != m_contentingTexture->id().name()) return;
     Platforms::Debug::Printf("texture %s load image %s failed", m_contentingTexture->id().name().c_str(), m_textureDto.filePaths()[0].c_str());
-    failContentingImage(ev->error());
+    failLoadingImage(ev->error());
 }
 
 void TextureLoader::onTextureResourceCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -181,7 +181,7 @@ void TextureLoader::onTextureResourceCreated(const Enigma::Frameworks::IEventPtr
     if (!dev_tex)
     {
         Platforms::Debug::Printf("can't get texture asset %s", tex_name.c_str());
-        failContentingImage(ErrorCode::findStashedAssetFail);
+        failLoadingImage(ErrorCode::findStashedAssetFail);
         return;
     }
     m_contentingTexture->instanceDeviceTexture(dev_tex);
@@ -197,10 +197,10 @@ void TextureLoader::onTextureCreateResourceFailed(const Enigma::Frameworks::IEve
     if (!ev) return;
     if (ev->textureName() != m_contentingTexture->id().name()) return;
     Platforms::Debug::Printf("texture %s create from memory failed", m_contentingTexture->id().name().c_str());
-    failContentingImage(ev->error());
+    failLoadingImage(ev->error());
 }
 
-void TextureLoader::failContentingImage(std::error_code er)
+void TextureLoader::failLoadingImage(std::error_code er)
 {
     assert(m_contentingTexture);
     EventPublisher::post(std::make_shared<LoadTextureFailed>(m_contentingTexture->id(), er));

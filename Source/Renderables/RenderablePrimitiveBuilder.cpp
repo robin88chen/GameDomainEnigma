@@ -44,13 +44,13 @@ RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
 
 ServiceResult RenderablePrimitiveBuilder::onInit()
 {
-    m_onMeshPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
+    m_onMeshPrimitiveHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveHydrated(e); });
     //m_onModelPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveBuilt(e); });
-    m_onBuildMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
+    m_onHydrateMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydratePrimitiveFailed(e); });
     //m_onBuildModelPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildPrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
     //EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onHydrateMeshPrimitiveFailed);
     //EventPublisher::subscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
 
     m_buildPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->buildPrimitive(c); });
@@ -92,7 +92,7 @@ ServiceResult RenderablePrimitiveBuilder::onTick()
         return ServiceResult::Pendding;
     }
     const auto plan = m_primitivePlans.front();
-    buildRenderablePrimitive(plan);
+    hydrateRenderablePrimitive(plan);
     m_currentBuildingId = plan.id();
     m_primitivePlans.pop();
     return ServiceResult::Pendding;
@@ -103,13 +103,13 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     SAFE_DELETE(m_meshBuilder);
     //SAFE_DELETE(m_modelBuilder);
 
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveBuilt), m_onMeshPrimitiveBuilt);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
     //EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::ModelPrimitiveBuilt), m_onModelPrimitiveBuilt);
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::BuildMeshPrimitiveFailed), m_onBuildMeshPrimitiveFailed);
+    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onHydrateMeshPrimitiveFailed);
     //EventPublisher::unsubscribe(typeid(ModelPrimitiveBuilder::BuildModelPrimitiveFailed), m_onBuildModelPrimitiveFailed);
-    m_onMeshPrimitiveBuilt = nullptr;
+    m_onMeshPrimitiveHydrated = nullptr;
     //m_onModelPrimitiveBuilt = nullptr;
-    m_onBuildMeshPrimitiveFailed = nullptr;
+    m_onHydrateMeshPrimitiveFailed = nullptr;
     //m_onBuildModelPrimitiveFailed = nullptr;
 
     CommandBus::unsubscribe(typeid(BuildRenderablePrimitive), m_buildPrimitive);
@@ -143,13 +143,13 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     }
 }*/
 
-void RenderablePrimitiveBuilder::buildRenderablePrimitive(const PrimitiveBuildingPlan& plan)
+void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan)
 {
     assert(m_meshBuilder);
     //assert(m_modelBuilder);
     if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(plan.primitive()))
     {
-        m_meshBuilder->constituteLazyMeshPrimitive(p, plan.dto());
+        m_meshBuilder->hydrateMeshPrimitive(p, plan.dto());
     }
     //else if (auto p = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(primitive))
     //{
@@ -167,7 +167,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteMesh(const Prim
     assert(!m_geometryRepository.expired());
     auto prim = std::make_shared<MeshPrimitive>(id, dto, m_geometryRepository.lock());
     std::lock_guard locker{ m_primitivePlansLock };
-    m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
+    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_needTick = true;
     return prim;
@@ -183,7 +183,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteSkinMesh(const 
     assert(!m_geometryRepository.expired());
     auto prim = std::make_shared<SkinMeshPrimitive>(id, dto, m_geometryRepository.lock());
     std::lock_guard locker{ m_primitivePlansLock };
-    m_primitivePlans.emplace(PrimitiveBuildingPlan{ id, prim, dto });
+    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_needTick = true;
     return prim;
@@ -199,11 +199,11 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const Pri
     return std::make_shared<ModelPrimitive>(id, dto);
 }
 
-void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)
+void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
 {
     if (!e) return;
     if (!m_currentBuildingId) return;
-    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveBuilt, IEvent>(e))
+    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
         EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(ev->id(), ev->primitive()));
@@ -218,11 +218,11 @@ void RenderablePrimitiveBuilder::onPrimitiveBuilt(const IEventPtr& e)
     }*/
 }
 
-void RenderablePrimitiveBuilder::onBuildPrimitiveFailed(const IEventPtr& e)
+void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
 {
     if (!e) return;
     if (!m_currentBuildingId) return;
-    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::BuildMeshPrimitiveFailed, IEvent>(e))
+    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",

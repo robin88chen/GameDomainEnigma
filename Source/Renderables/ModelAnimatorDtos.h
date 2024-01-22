@@ -11,6 +11,7 @@
 #include "GameEngine/GenericDto.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Animators/AnimationAssetId.h"
+#include "Primitives/PrimitiveId.h"
 
 namespace Enigma::Renderables
 {
@@ -25,6 +26,9 @@ namespace Enigma::Renderables
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
+        [[nodiscard]] const std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() const { return m_controlledPrimitiveId; }
+        std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() { return m_controlledPrimitiveId; }
+
         [[nodiscard]] const std::optional<Animators::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
         std::optional<Animators::AnimationAssetId>& animationAssetId() { return m_animationAssetId; }
         [[nodiscard]] const Engine::GenericDtoCollection& skinOperators() const { return m_skinOperators; }
@@ -38,6 +42,7 @@ namespace Enigma::Renderables
     private:
         Animators::AnimatorId m_id;
         Engine::FactoryDesc m_factoryDesc;
+        std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
         std::optional<Animators::AnimationAssetId> m_animationAssetId;
         Engine::GenericDtoCollection m_skinOperators;
     };
@@ -46,25 +51,25 @@ namespace Enigma::Renderables
     {
     public:
         SkinOperatorDto();
+        SkinOperatorDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        [[nodiscard]] const std::optional<std::string>& SkinMeshName() const { return m_skinMeshName; }
-        std::optional<std::string>& SkinMeshName() { return m_skinMeshName; }
-        [[nodiscard]] const std::optional<std::string>& SkinMeshNodeName() const { return m_skinMeshNodeName; }
-        std::optional<std::string>& SkinMeshNodeName() { return m_skinMeshNodeName; }
-        [[nodiscard]] const std::vector<std::string>& BoneNodeNames() const { return m_boneNodeNames; }
-        std::vector<std::string>& BoneNodeNames() { return m_boneNodeNames; }
-        [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() const { return m_nodeOffsets; }
-        std::optional<std::vector<MathLib::Matrix4>>& NodeOffsets() { return m_nodeOffsets; }
+        [[nodiscard]] const std::optional<Primitives::PrimitiveId>& skinMeshId() const { return m_skinMeshId; }
+        std::optional<Primitives::PrimitiveId>& skinMeshId() { return m_skinMeshId; }
+        [[nodiscard]] const std::optional<std::string>& skinMeshNodeName() const { return m_skinMeshNodeName; }
+        std::optional<std::string>& skinMeshNodeName() { return m_skinMeshNodeName; }
+        [[nodiscard]] const std::vector<std::string>& boneNodeNames() const { return m_boneNodeNames; }
+        std::vector<std::string>& boneNodeNames() { return m_boneNodeNames; }
+        [[nodiscard]] const std::optional<std::vector<MathLib::Matrix4>>& nodeOffsets() const { return m_nodeOffsets; }
+        std::optional<std::vector<MathLib::Matrix4>>& nodeOffsets() { return m_nodeOffsets; }
 
-        static SkinOperatorDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
     private:
         Engine::FactoryDesc m_factoryDesc;
-        std::optional<std::string> m_skinMeshName;
+        std::optional<Primitives::PrimitiveId> m_skinMeshId;
         std::optional<std::string> m_skinMeshNodeName;
         std::vector<std::string> m_boneNodeNames;
         std::optional<std::vector<MathLib::Matrix4>> m_nodeOffsets;

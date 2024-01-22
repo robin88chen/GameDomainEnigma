@@ -63,10 +63,10 @@ namespace Enigma::Engine
         EffectMaterialId m_id;
         std::error_code m_error;
     };
-    class EffectMaterialContented : public Frameworks::IEvent
+    class EffectMaterialHydrated : public Frameworks::IEvent
     {
     public:
-        EffectMaterialContented(const EffectMaterialId& source_id, const EffectMaterialId& id) : m_sourceId(source_id), m_id(id) {}
+        EffectMaterialHydrated(const EffectMaterialId& source_id, const EffectMaterialId& id) : m_sourceId(source_id), m_id(id) {}
 
         const EffectMaterialId& sourceId() { return m_sourceId; }
         const EffectMaterialId& id() { return m_id; }
@@ -75,10 +75,10 @@ namespace Enigma::Engine
         EffectMaterialId m_sourceId;
         EffectMaterialId m_id;
     };
-    class ContentEffectMaterialFailed : public Frameworks::IEvent
+    class HydrateEffectMaterialFailed : public Frameworks::IEvent
     {
     public:
-        ContentEffectMaterialFailed(const EffectMaterialId& source_id, const EffectMaterialId& id, std::error_code er) : m_sourceId(source_id), m_error(er) {};
+        HydrateEffectMaterialFailed(const EffectMaterialId& source_id, const EffectMaterialId& id, std::error_code er) : m_sourceId(source_id), m_error(er) {};
         const EffectMaterialId& sourceId() { return m_sourceId; }
         const EffectMaterialId& id() { return m_id; }
         std::error_code error() const { return m_error; }

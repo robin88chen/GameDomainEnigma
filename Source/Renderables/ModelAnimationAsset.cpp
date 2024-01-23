@@ -29,6 +29,16 @@ ModelAnimationAsset::~ModelAnimationAsset()
     m_meshNodeKeyArray.clear();
 }
 
+std::shared_ptr<AnimationAsset> ModelAnimationAsset::create(const Animators::AnimationAssetId& id)
+{
+    return std::make_shared<ModelAnimationAsset>(id);
+}
+
+std::shared_ptr<AnimationAsset> ModelAnimationAsset::constitute(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<ModelAnimationAsset>(id, dto);
+}
+
 GenericDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;

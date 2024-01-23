@@ -33,6 +33,8 @@ namespace Enigma::Renderables
         ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
+        static std::shared_ptr<Animator> create(const Animators::AnimatorId& id);
+        static std::shared_ptr<Animator> constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
         virtual Engine::GenericDto serializeDto() const override;
         //ModelAnimatorDto serializeDto();
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;

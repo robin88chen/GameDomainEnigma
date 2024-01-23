@@ -64,6 +64,16 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
     m_skinAnimOperators.clear();
 }
 
+std::shared_ptr<Animator> ModelPrimitiveAnimator::create(const Animators::AnimatorId& id)
+{
+    return std::make_shared<ModelPrimitiveAnimator>(id);
+}
+
+std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<ModelPrimitiveAnimator>(id, dto);
+}
+
 GenericDto ModelPrimitiveAnimator::serializeDto() const
 {
     ModelAnimatorDto dto;

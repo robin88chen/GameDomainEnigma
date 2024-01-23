@@ -40,6 +40,9 @@ namespace Enigma::Renderables
         ModelAnimationAsset& operator=(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset& operator=(ModelAnimationAsset&&) = delete;
 
+        static std::shared_ptr<AnimationAsset> create(const Animators::AnimationAssetId& id);
+        static std::shared_ptr<AnimationAsset> constitute(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto);
+
         Engine::GenericDto serializeDto() override;
 
         /** reserve data array capacity */

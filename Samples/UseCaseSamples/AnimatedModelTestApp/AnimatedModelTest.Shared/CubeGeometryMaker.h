@@ -8,13 +8,13 @@
 #ifndef _CUBE_GEOMETRY_MAKER_H
 #define _CUBE_GEOMETRY_MAKER_H
 
-#include "GameEngine/GeometryDataPolicy.h"
+#include "Geometries/GeometryId.h"
+#include "GameEngine/GenericDto.h"
 
 class CubeGeometryMaker
 {
 public:
-    static void MakeSavedCube(const std::string& name);
-    static Enigma::Engine::GeometryDataPolicy MakeGeometryPolicy(const std::string& name);
+    static void makeCube(const Enigma::Geometries::GeometryId& id);
 };
 
 #endif // _CUBE_GEOMETRY_MAKER_H

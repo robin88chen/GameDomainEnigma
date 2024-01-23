@@ -1,5 +1,5 @@
 ﻿#include "ModelAnimatorMaker.h"
-#include "Animators/ModelAnimationAsset.h"
+/*#include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationTimeSRT.h"
 #include "Animators/ModelPrimitiveAnimator.h"
 #include "Animators/AnimationAssetDtos.h"
@@ -58,4 +58,4 @@ std::shared_ptr<ModelPrimitiveAnimator> ModelAnimatorMaker::MakeModelAnimator(
     std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>();
     animator->LinkAnimationAsset(anim);
     return animator;
-}
+}*/

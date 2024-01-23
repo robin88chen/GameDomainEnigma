@@ -19,7 +19,7 @@ const char* ErrorCategory::name() const noexcept
 {
     return "Primitive Error Category";
 }
-namespace Enigma::Engine
+namespace Enigma::Primitives
 {
     std::error_code make_error_code(ErrorCode ec)
     {

@@ -33,9 +33,14 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
 {
     ModelAnimatorDto model_ani_dto(dto);
     m_factoryDesc = model_ani_dto.factoryDesc();
+    if (model_ani_dto.controlledPrimitiveId())
+    {
+        m_controlledPrimitive = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_ani_dto.controlledPrimitiveId().value()));
+    }
     if (model_ani_dto.animationAssetId())
     {
-        m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_ani_dto.animationAssetId().value()));
+        auto animation = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_ani_dto.animationAssetId().value()));
+        linkAnimationAsset(animation);
     }
     else
     {
@@ -43,10 +48,6 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
     }
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
-    if (model_ani_dto.controlledPrimitiveId())
-    {
-        m_controlledPrimitive = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_ani_dto.controlledPrimitiveId().value()));
-    }
     if (!model_ani_dto.skinOperators().empty())
     {
         for (auto& op_dto : model_ani_dto.skinOperators())

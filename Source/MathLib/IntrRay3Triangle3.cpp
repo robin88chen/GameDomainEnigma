@@ -24,19 +24,19 @@ Intersector::Result IntrRay3Triangle3::test(std::unique_ptr<IntersectorCache> /*
 {
     Vector3 e1 = m_triangle[1] - m_triangle[0];
     Vector3 e2 = m_triangle[2] - m_triangle[0];
-    Vector3 q = m_ray.direction().Cross(e2);
-    float a = e1.Dot(q);
+    Vector3 q = m_ray.direction().cross(e2);
+    float a = e1.dot(q);
     if ((a > -Math::Epsilon()) && (a < Math::Epsilon())) return { false, nullptr };
     float f = 1.0f / a;
     Vector3 s = m_ray.origin() - m_triangle[0];
-    float u = f * (s.Dot(q));
+    float u = f * (s.dot(q));
     if (u < 0.0f || u > 1.0f) return { false, nullptr };
-    Vector3 r = s.Cross(e1);
-    float v = f * (m_ray.direction().Dot(r));
+    Vector3 r = s.cross(e1);
+    float v = f * (m_ray.direction().dot(r));
     if ((v < 0.0f) || (u + v > 1.0f)) return { false, nullptr };
 
     // if we got here, we found intersection
-    float t = f * (e2.Dot(r));
+    float t = f * (e2.dot(r));
     m_quantity = 1;
     m_tParam = t;
     m_point = t * m_ray.direction() + m_ray.origin();

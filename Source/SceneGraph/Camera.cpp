@@ -76,7 +76,7 @@ error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
     assert(eye_to_lookat.has_value() == up.has_value());  // must be both set or both not set
     if (eye_to_lookat)
     {
-        Vector3 _eye_to_lookat = eye_to_lookat.value().Normalize();
+        Vector3 _eye_to_lookat = eye_to_lookat.value().normalize();
         m_vecEyeToLookAt = _eye_to_lookat;
         if (m_handSys == GraphicCoordSys::LeftHand)
         {
@@ -89,10 +89,10 @@ error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
     }
     if (up)
     {
-        Vector3 _up = up.value().Normalize();
-        Vector3 _right = _up.Cross(m_vecCameraForward);
-        m_vecRight = _right.Normalize();
-        m_vecUp = m_vecCameraForward.Cross(m_vecRight);
+        Vector3 _up = up.value().normalize();
+        Vector3 _right = _up.cross(m_vecCameraForward);
+        m_vecRight = _right.normalize();
+        m_vecUp = m_vecCameraForward.cross(m_vecRight);
     }
 
     _updateViewTransform();
@@ -113,9 +113,9 @@ error Camera::sphereRotate(float horz_angle, float vert_angle, const Vector3& ce
     {
         Vector3 eye = m_vecLocation;
         Vector3 dir = m_vecEyeToLookAt;
-        if (std::fabs(dir.Y()) > Math::Epsilon())
+        if (std::fabs(dir.y()) > Math::Epsilon())
         {
-            float t = (-eye.Y()) / dir.Y();
+            float t = (-eye.y()) / dir.y();
             vecCenter = eye + t * dir;
         }
     }
@@ -129,7 +129,7 @@ error Camera::sphereRotate(float horz_angle, float vert_angle, const Vector3& ce
         Quaternion(Vector3(0.0f, 1.0f, 0.0f), horz_angle) * m_vecUp; // 對XZ軸做旋轉
     float radius;
     Vector3 dist = m_vecLocation - vecCenter;
-    radius = dist.Length();
+    radius = dist.length();
     Vector3 loc = vecCenter - radius * dir;  // 新的camera位置
 
     error er = changeCameraFrame(loc, dir, up);
@@ -142,8 +142,8 @@ error Camera::move(float dir_dist, float slide_dist)
     Vector3 right = m_vecRight;
     Vector3 up = Vector3::UNIT_Y;
 
-    Vector3 move_dir = right.Cross(up);
-    Vector3 move_right = up.Cross(move_dir);
+    Vector3 move_dir = right.cross(up);
+    Vector3 move_right = up.cross(move_dir);
     Vector3 pos = m_vecLocation + dir_dist * move_dir + slide_dist * move_right;
 
     error er = changeCameraFrame(pos, std::nullopt, std::nullopt);
@@ -219,9 +219,9 @@ void Camera::changeFrustumFov(float fov)
 void Camera::_updateViewTransform()
 {
     Vector3 trans;
-    trans.X() = m_vecRight.Dot(m_vecLocation);
-    trans.Y() = m_vecUp.Dot(m_vecLocation);
-    trans.Z() = m_vecCameraForward.Dot(m_vecLocation);
+    trans.x() = m_vecRight.dot(m_vecLocation);
+    trans.y() = m_vecUp.dot(m_vecLocation);
+    trans.z() = m_vecCameraForward.dot(m_vecLocation);
     m_mxViewTransform = Matrix4(m_vecRight, m_vecUp, m_vecCameraForward, -trans, false);
 }
 

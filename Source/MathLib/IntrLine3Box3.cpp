@@ -29,26 +29,26 @@ Intersector::Result IntrLine3Box3::test(std::unique_ptr<IntersectorCache> /*last
     float AWdU[3], AWxDdU[3], rhs;
 
     Vector3 diff = m_line.origin() - m_box.Center();
-    Vector3 WxD = m_line.direction().Cross(diff);
+    Vector3 WxD = m_line.direction().cross(diff);
 
-    AWdU[1] = fabs(m_line.direction().Dot(m_box.Axis(1)));
-    AWdU[2] = fabs(m_line.direction().Dot(m_box.Axis(2)));
-    AWxDdU[0] = fabs(WxD.Dot(m_box.Axis(0)));
+    AWdU[1] = fabs(m_line.direction().dot(m_box.Axis(1)));
+    AWdU[2] = fabs(m_line.direction().dot(m_box.Axis(2)));
+    AWxDdU[0] = fabs(WxD.dot(m_box.Axis(0)));
     rhs = m_box.Extent(1) * AWdU[2] + m_box.Extent(2) * AWdU[1];
     if (AWxDdU[0] > rhs)
     {
         return { false, nullptr };
     }
 
-    AWdU[0] = fabs(m_line.direction().Dot(m_box.Axis(0)));
-    AWxDdU[1] = fabs(WxD.Dot(m_box.Axis(1)));
+    AWdU[0] = fabs(m_line.direction().dot(m_box.Axis(0)));
+    AWxDdU[1] = fabs(WxD.dot(m_box.Axis(1)));
     rhs = m_box.Extent(0) * AWdU[2] + m_box.Extent(2) * AWdU[0];
     if (AWxDdU[1] > rhs)
     {
         return { false, nullptr };
     }
 
-    AWxDdU[2] = fabs(WxD.Dot(m_box.Axis(2)));
+    AWxDdU[2] = fabs(WxD.dot(m_box.Axis(2)));
     rhs = m_box.Extent(0) * AWdU[1] + m_box.Extent(1) * AWdU[0];
     if (AWxDdU[2] > rhs)
     {
@@ -65,23 +65,23 @@ Intersector::Result IntrLine3Box3::find(std::unique_ptr<IntersectorCache> /*last
     // convert linear component to box coordinates
     Vector3 diff = m_line.origin() - m_box.Center();
     Vector3 BOrigin(
-        diff.Dot(m_box.Axis(0)),
-        diff.Dot(m_box.Axis(1)),
-        diff.Dot(m_box.Axis(2))
+        diff.dot(m_box.Axis(0)),
+        diff.dot(m_box.Axis(1)),
+        diff.dot(m_box.Axis(2))
     );
     Vector3 BDirection(
-        m_line.direction().Dot(m_box.Axis(0)),
-        m_line.direction().Dot(m_box.Axis(1)),
-        m_line.direction().Dot(m_box.Axis(2))
+        m_line.direction().dot(m_box.Axis(0)),
+        m_line.direction().dot(m_box.Axis(1)),
+        m_line.direction().dot(m_box.Axis(2))
     );
 
     bool isNotAllClipped =
-        Clip(+BDirection.X(), -BOrigin.X() - m_box.Extent(0), t0, t1) &&
-        Clip(-BDirection.X(), +BOrigin.X() - m_box.Extent(0), t0, t1) &&
-        Clip(+BDirection.Y(), -BOrigin.Y() - m_box.Extent(1), t0, t1) &&
-        Clip(-BDirection.Y(), +BOrigin.Y() - m_box.Extent(1), t0, t1) &&
-        Clip(+BDirection.Z(), -BOrigin.Z() - m_box.Extent(2), t0, t1) &&
-        Clip(-BDirection.Z(), +BOrigin.Z() - m_box.Extent(2), t0, t1);
+        Clip(+BDirection.x(), -BOrigin.x() - m_box.Extent(0), t0, t1) &&
+        Clip(-BDirection.x(), +BOrigin.x() - m_box.Extent(0), t0, t1) &&
+        Clip(+BDirection.y(), -BOrigin.y() - m_box.Extent(1), t0, t1) &&
+        Clip(-BDirection.y(), +BOrigin.y() - m_box.Extent(1), t0, t1) &&
+        Clip(+BDirection.z(), -BOrigin.z() - m_box.Extent(2), t0, t1) &&
+        Clip(-BDirection.z(), +BOrigin.z() - m_box.Extent(2), t0, t1);
 
     if (isNotAllClipped)
     {

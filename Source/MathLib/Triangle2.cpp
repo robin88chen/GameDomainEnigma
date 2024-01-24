@@ -35,12 +35,12 @@ float Triangle2::distanceTo(const Vector2& vec) const
 {
     Vector2 diff = m_vec[0] - vec;
     Vector2 edge0 = m_vec[1] - m_vec[0], edge1 = m_vec[2] - m_vec[0];
-    float a00 = edge0.SquaredLength();
-    float a01 = edge0.Dot(edge1);
-    float a11 = edge1.SquaredLength();
-    float b0 = diff.Dot(edge0);
-    float b1 = diff.Dot(edge1);
-    float c = diff.SquaredLength();
+    float a00 = edge0.squaredLength();
+    float a01 = edge0.dot(edge1);
+    float a11 = edge1.squaredLength();
+    float b0 = diff.dot(edge0);
+    float b1 = diff.dot(edge1);
+    float c = diff.squaredLength();
     float det = std::fabs(a00 * a11 - a01 * a01);
     float s = a01 * b1 - a11 * b0;
     float t = a01 * b0 - a00 * b1;

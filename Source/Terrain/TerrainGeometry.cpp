@@ -73,7 +73,7 @@ void TerrainGeometry::rangedUpdateHeightMapToVertexMemory(unsigned offset, unsig
     for (unsigned i = offset; i < offset + count; i++)
     {
         auto pos = getPosition3(i);
-        pos.Y() = m_heightMap[i];
+        pos.y() = m_heightMap[i];
         setPosition3(i, pos);
     }
 }
@@ -130,20 +130,20 @@ void TerrainGeometry::rangedUpdateVertexNormals(unsigned offset, unsigned count)
             {
                 h6 = m_heightMap[(iz - 1) * vtx_num_x + ix - 1] - h0;
             }
-            Vector3 vecEdge1 = Vector3(dimension.m_width, h1, 0.0f).Normalize();
-            Vector3 vecEdge2 = Vector3(0.0f, h2, -dimension.m_height).Normalize();
-            Vector3 vecEdge3 = Vector3(-dimension.m_width, h3, 0.0f).Normalize();
-            Vector3 vecEdge4 = Vector3(0.0f, h4, dimension.m_height).Normalize();
-            Vector3 vecEdge5 = Vector3(dimension.m_width, h5, dimension.m_height).Normalize();
-            Vector3 vecEdge6 = Vector3(-dimension.m_width, h6, -dimension.m_height).Normalize();
-            Vector3 vecFace1 = vecEdge1.Cross(vecEdge2);
-            Vector3 vecFace2 = vecEdge2.Cross(vecEdge6);
-            Vector3 vecFace3 = vecEdge6.Cross(vecEdge3);
-            Vector3 vecFace4 = vecEdge3.Cross(vecEdge4);
-            Vector3 vecFace5 = vecEdge4.Cross(vecEdge5);
-            Vector3 vecFace6 = vecEdge5.Cross(vecEdge1);
+            Vector3 vecEdge1 = Vector3(dimension.m_width, h1, 0.0f).normalize();
+            Vector3 vecEdge2 = Vector3(0.0f, h2, -dimension.m_height).normalize();
+            Vector3 vecEdge3 = Vector3(-dimension.m_width, h3, 0.0f).normalize();
+            Vector3 vecEdge4 = Vector3(0.0f, h4, dimension.m_height).normalize();
+            Vector3 vecEdge5 = Vector3(dimension.m_width, h5, dimension.m_height).normalize();
+            Vector3 vecEdge6 = Vector3(-dimension.m_width, h6, -dimension.m_height).normalize();
+            Vector3 vecFace1 = vecEdge1.cross(vecEdge2);
+            Vector3 vecFace2 = vecEdge2.cross(vecEdge6);
+            Vector3 vecFace3 = vecEdge6.cross(vecEdge3);
+            Vector3 vecFace4 = vecEdge3.cross(vecEdge4);
+            Vector3 vecFace5 = vecEdge4.cross(vecEdge5);
+            Vector3 vecFace6 = vecEdge5.cross(vecEdge1);
             Vector3 vecNor = vecFace1 + vecFace2 + vecFace3 + vecFace4 + vecFace5 + vecFace6;
-            vecNor.NormalizeSelf();
+            vecNor.normalizeSelf();
 
             // vtx idx
             int vtxIdx = iz * vtx_num_x + ix;
@@ -156,8 +156,8 @@ Enigma::MathLib::Dimension<float> TerrainGeometry::getCellDimension() const
 {
     assert(m_numCols > 0 && m_numRows > 0);
     MathLib::Dimension<float> cell_dimension;
-    cell_dimension.m_width = (m_maxPosition.X() - m_minPosition.X()) / static_cast<float>(m_numCols);
-    cell_dimension.m_height = (m_maxPosition.Z() - m_minPosition.Z()) / static_cast<float>(m_numRows);
+    cell_dimension.m_width = (m_maxPosition.x() - m_minPosition.x()) / static_cast<float>(m_numCols);
+    cell_dimension.m_height = (m_maxPosition.z() - m_minPosition.z()) / static_cast<float>(m_numRows);
 
     return cell_dimension;
 }
@@ -179,8 +179,8 @@ void TerrainGeometry::changeHeight(unsigned x, unsigned z, float new_height)
 std::tuple<unsigned, unsigned> TerrainGeometry::locateCell(const MathLib::Vector3& position) const
 {
     auto dimension = getCellDimension();
-    unsigned cell_x = static_cast<unsigned>(std::floorf((position.X() - m_minPosition.X()) / dimension.m_width + 0.5f));
-    unsigned cell_z = static_cast<unsigned>(std::floorf((position.Z() - m_minPosition.Z()) / dimension.m_height + 0.5f));
+    unsigned cell_x = static_cast<unsigned>(std::floorf((position.x() - m_minPosition.x()) / dimension.m_width + 0.5f));
+    unsigned cell_z = static_cast<unsigned>(std::floorf((position.z() - m_minPosition.z()) / dimension.m_height + 0.5f));
     return std::make_tuple(cell_x, cell_z);
 }
 

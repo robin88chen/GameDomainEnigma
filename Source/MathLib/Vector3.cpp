@@ -52,32 +52,32 @@ float& Vector3::operator[] (int i)
     return m_tuple[i];
 }
 
-float Vector3::X() const
+float Vector3::x() const
 {
     return m_tuple[0];
 }
 
-float& Vector3::X()
+float& Vector3::x()
 {
     return m_tuple[0];
 }
 
-float Vector3::Y() const
+float Vector3::y() const
 {
     return m_tuple[1];
 }
 
-float& Vector3::Y()
+float& Vector3::y()
 {
     return m_tuple[1];
 }
 
-float Vector3::Z() const
+float Vector3::z() const
 {
     return m_tuple[2];
 }
 
-float& Vector3::Z()
+float& Vector3::z()
 {
     return m_tuple[2];
 }
@@ -90,7 +90,7 @@ Vector3& Vector3::operator= (const Vector4& v)
     return *this;
 }
 
-int Vector3::CompareArrays(const Vector3& v) const
+int Vector3::compareArrays(const Vector3& v) const
 {
     return memcmp(m_tuple, v.m_tuple, 3 * sizeof(float));
 }
@@ -109,22 +109,22 @@ bool Vector3::operator!= (const Vector3& v) const
 
 bool Vector3::operator< (const Vector3& v) const
 {
-    return CompareArrays(v) < 0;
+    return compareArrays(v) < 0;
 }
 
 bool Vector3::operator<= (const Vector3& v) const
 {
-    return CompareArrays(v) <= 0;
+    return compareArrays(v) <= 0;
 }
 
 bool Vector3::operator> (const Vector3& v) const
 {
-    return CompareArrays(v) > 0;
+    return compareArrays(v) > 0;
 }
 
 bool Vector3::operator>= (const Vector3& v) const
 {
-    return CompareArrays(v) >= 0;
+    return compareArrays(v) >= 0;
 }
 
 Vector3 Vector3::operator+ (const Vector3& v) const
@@ -223,7 +223,7 @@ Vector3& Vector3::operator/= (float scalar)
     return *this;
 }
 
-float Vector3::Length() const
+float Vector3::length() const
 {
     return sqrt(
         m_tuple[0] * m_tuple[0] +
@@ -231,7 +231,7 @@ float Vector3::Length() const
         m_tuple[2] * m_tuple[2]);
 }
 
-float Vector3::SquaredLength() const
+float Vector3::squaredLength() const
 {
     return
         m_tuple[0] * m_tuple[0] +
@@ -239,44 +239,44 @@ float Vector3::SquaredLength() const
         m_tuple[2] * m_tuple[2];
 }
 
-float Vector3::Dot(const Vector3& v) const
+float Vector3::dot(const Vector3& v) const
 {
     return
         m_tuple[0] * v.m_tuple[0] +
         m_tuple[1] * v.m_tuple[1] +
         m_tuple[2] * v.m_tuple[2];
 }
-void Vector3::NormalizeSelf()
+void Vector3::normalizeSelf()
 {
-    float length = Length();
+    float leng = length();
 
-    if (length > Math::ZERO_TOLERANCE)
+    if (leng > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        m_tuple[0] /= length;
-        m_tuple[1] /= length;
-        m_tuple[2] /= length;
+        m_tuple[0] /= leng;
+        m_tuple[1] /= leng;
+        m_tuple[2] /= leng;
     }
     else
     {
-        length = (float)0.0;
+        leng = (float)0.0;
         m_tuple[0] = (float)0.0;
         m_tuple[1] = (float)0.0;
         m_tuple[2] = (float)0.0;
     }
 }
 
-Vector3 Vector3::Normalize() const
+Vector3 Vector3::normalize() const
 {
-    float length = Length();
+    float leng = length();
 
     Vector3 v;
-    if (length > Math::ZERO_TOLERANCE)
+    if (leng > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        v.m_tuple[0] = m_tuple[0] / length;
-        v.m_tuple[1] = m_tuple[1] / length;
-        v.m_tuple[2] = m_tuple[2] / length;
+        v.m_tuple[0] = m_tuple[0] / leng;
+        v.m_tuple[1] = m_tuple[1] / leng;
+        v.m_tuple[2] = m_tuple[2] / leng;
     }
     else
     {
@@ -288,7 +288,7 @@ Vector3 Vector3::Normalize() const
     return v;
 }
 
-Vector3 Vector3::Cross(const Vector3& v) const
+Vector3 Vector3::cross(const Vector3& v) const
 {
     return Vector3(
         m_tuple[1] * v.m_tuple[2] - m_tuple[2] * v.m_tuple[1],
@@ -296,13 +296,13 @@ Vector3 Vector3::Cross(const Vector3& v) const
         m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0]);
 }
 
-Vector3 Vector3::UnitCross(const Vector3& v) const
+Vector3 Vector3::unitCross(const Vector3& v) const
 {
     Vector3 cross(
         m_tuple[1] * v.m_tuple[2] - m_tuple[2] * v.m_tuple[1],
         m_tuple[2] * v.m_tuple[0] - m_tuple[0] * v.m_tuple[2],
         m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0]);
-    return cross.Normalize();
+    return cross.normalize();
 }
 
 namespace Enigma::MathLib

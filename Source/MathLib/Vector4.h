@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Vector4.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -29,14 +29,14 @@ namespace Enigma::MathLib
         operator float* ();
         float operator[] (int i) const;
         float& operator[] (int i);
-        float X() const;
-        float& X();
-        float Y() const;
-        float& Y();
-        float Z() const;
-        float& Z();
-        float W() const;
-        float& W();
+        float x() const;
+        float& x();
+        float y() const;
+        float& y();
+        float z() const;
+        float& z();
+        float w() const;
+        float& w();
         //@}
 
         /// assignment
@@ -72,11 +72,11 @@ namespace Enigma::MathLib
 
         /** @name vector operations */
         //@{
-        float Length() const;
-        float SquaredLength() const;
-        float Dot(const Vector4& v) const;
-        void NormalizeSelf();
-        Vector4 Normalize() const;
+        float length() const;
+        float squaredLength() const;
+        float dot(const Vector4& v) const;
+        void normalizeSelf();
+        Vector4 normalize() const;
         //@}
 
         /** @name special vectors */
@@ -90,7 +90,7 @@ namespace Enigma::MathLib
 
     private:
         // support for none-equal comparisons
-        int CompareArrays(const Vector4& v) const;
+        int compareArrays(const Vector4& v) const;
         /** member data */
         union
         {

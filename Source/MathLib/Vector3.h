@@ -27,12 +27,12 @@ namespace Enigma::MathLib
         operator float* ();
         float operator[] (int i) const;
         float& operator[] (int i);
-        float X() const;
-        float& X();
-        float Y() const;
-        float& Y();
-        float Z() const;
-        float& Z();
+        float x() const;
+        float& x();
+        float y() const;
+        float& y();
+        float z() const;
+        float& z();
         //@}
 
         /** @name assignment */
@@ -69,15 +69,15 @@ namespace Enigma::MathLib
 
         /** @name vector operations */
         //@{
-        float Length() const;
-        float SquaredLength() const;
-        float Dot(const Vector3& v) const;
-        void NormalizeSelf();
-        Vector3 Normalize() const;
+        float length() const;
+        float squaredLength() const;
+        float dot(const Vector3& v) const;
+        void normalizeSelf();
+        Vector3 normalize() const;
         /// The cross products are computed using the left-handed rule.
-        Vector3 Cross(const Vector3& v) const;
+        Vector3 cross(const Vector3& v) const;
         /// The cross products are computed using the left-handed rule.
-        Vector3 UnitCross(const Vector3& v) const;
+        Vector3 unitCross(const Vector3& v) const;
         //@}
 
         /** @name special vectors */
@@ -90,7 +90,7 @@ namespace Enigma::MathLib
 
     private:
         // support for none-equal comparisons
-        int CompareArrays(const Vector3& v) const;
+        int compareArrays(const Vector3& v) const;
         /** member data */
         union
         {

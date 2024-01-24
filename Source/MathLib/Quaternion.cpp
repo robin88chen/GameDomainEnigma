@@ -32,12 +32,12 @@ Quaternion::Quaternion(const Vector3& axis, float angle)
     ImplicitFromAxisAngle(axis, angle);
 }
 
-Quaternion::operator const float*() const
+Quaternion::operator const float* () const
 {
     return m_tuple;
 }
 
-Quaternion::operator float*()
+Quaternion::operator float* ()
 {
     return m_tuple;
 }
@@ -54,48 +54,48 @@ float& Quaternion::operator[](int i)
     return m_tuple[i];
 }
 
-float Quaternion::W() const
+float Quaternion::w() const
 {
     return m_w;
 }
 
-float& Quaternion::W()
+float& Quaternion::w()
 {
     return m_w;
 }
 
-float Quaternion::X() const
+float Quaternion::x() const
 {
     return m_x;
 }
 
-float& Quaternion::X()
+float& Quaternion::x()
 {
     return m_x;
 }
 
-float Quaternion::Y() const
+float Quaternion::y() const
 {
     return m_y;
 }
 
-float& Quaternion::Y()
+float& Quaternion::y()
 {
     return m_y;
 }
 
-float Quaternion::Z() const
+float Quaternion::z() const
 {
     return m_z;
 }
 
-float& Quaternion::Z()
+float& Quaternion::z()
 {
     return m_z;
 }
 
 
-int Quaternion::CompareArrays(const Quaternion& quat) const
+int Quaternion::compareArrays(const Quaternion& quat) const
 {
     return memcmp(m_tuple, quat.m_tuple, sizeof(m_tuple));
 }
@@ -114,22 +114,22 @@ bool Quaternion::operator!=(const Quaternion& quat) const
 
 bool Quaternion::operator<(const Quaternion& quat) const
 {
-    return CompareArrays(quat) < 0;
+    return compareArrays(quat) < 0;
 }
 
 bool Quaternion::operator<=(const Quaternion& quat) const
 {
-    return CompareArrays(quat) <= 0;
+    return compareArrays(quat) <= 0;
 }
 
 bool Quaternion::operator>(const Quaternion& quat) const
 {
-    return CompareArrays(quat) > 0;
+    return compareArrays(quat) > 0;
 }
 
 bool Quaternion::operator>=(const Quaternion& quat) const
 {
-    return CompareArrays(quat) >= 0;
+    return compareArrays(quat) >= 0;
 }
 
 Quaternion Quaternion::operator+(const Quaternion& quat) const
@@ -191,8 +191,8 @@ Vector3 Quaternion::operator*(const Vector3& v) const
     // nVidia SDK implementation
     Vector3 uv, uuv;
     Vector3 qvec(m_x, m_y, m_z);
-    uv = qvec.Cross(v);
-    uuv = qvec.Cross(uv);
+    uv = qvec.cross(v);
+    uuv = qvec.cross(uv);
     uv *= ((float)2.0 * m_w);
     uuv *= (float)2.0;
 
@@ -204,8 +204,8 @@ namespace Enigma::MathLib
     Quaternion operator*(float scalar, const Quaternion& quat)
     {
         return Quaternion(
-            scalar * quat.W(), scalar * quat.X(),
-            scalar * quat.Y(), scalar * quat.Z());
+            scalar * quat.w(), scalar * quat.x(),
+            scalar * quat.y(), scalar * quat.z());
     }
 }
 
@@ -375,32 +375,32 @@ std::tuple<Vector3, float> Quaternion::ToAxisAngle() const
     return { axis, angle };
 }
 
-float Quaternion::Length() const
+float Quaternion::length() const
 {
     return sqrt(
         m_w * m_w + m_x * m_x +
         m_y * m_y + m_z * m_z);
 }
 
-float Quaternion::SquaredLength() const
+float Quaternion::squaredLength() const
 {
     return
         m_w * m_w + m_x * m_x +
         m_y * m_y + m_z * m_z;
 }
 
-float Quaternion::Dot(const Quaternion& quat) const
+float Quaternion::dot(const Quaternion& quat) const
 {
     return m_w * quat.m_w + m_x * quat.m_x + m_y * quat.m_y + m_z * quat.m_z;
 }
 
-Quaternion Quaternion::Normalize() const
+Quaternion Quaternion::normalize() const
 {
-    float length = Length();
+    float leng = length();
     Quaternion q;
-    if (length > Math::ZERO_TOLERANCE)
+    if (leng > Math::ZERO_TOLERANCE)
     {
-        float invLength = (float)1.0 / length;
+        float invLength = (float)1.0 / leng;
         q.m_w = m_w * invLength;
         q.m_x = m_x * invLength;
         q.m_y = m_y * invLength;
@@ -522,7 +522,7 @@ Vector3 Quaternion::Rotate(const Vector3& vec) const
 
 Quaternion Quaternion::Slerp(float t, const Quaternion& p, const Quaternion& q, bool shortestPath)
 {
-    float cs = p.Dot(q);
+    float cs = p.dot(q);
     float angle = acos(cs);
 
     if (fabs(angle) >= Math::ZERO_TOLERANCE)
@@ -539,7 +539,7 @@ Quaternion Quaternion::Slerp(float t, const Quaternion& p, const Quaternion& q, 
 
         // taking the complement requires renormalisation
         Quaternion r(coeff0 * p + coeff1 * q);
-        return r.Normalize();
+        return r.normalize();
         //}
         //else
         //{
@@ -554,7 +554,7 @@ Quaternion Quaternion::Slerp(float t, const Quaternion& p, const Quaternion& q, 
 
 Quaternion Quaternion::SlerpExtraSpins(float t, const Quaternion& p, const Quaternion& q, int extraSpins)
 {
-    float cs = p.Dot(q);
+    float cs = p.dot(q);
     float angle = acos(cs);
 
     if (fabs(angle) >= Math::ZERO_TOLERANCE)
@@ -593,19 +593,19 @@ Quaternion Quaternion::Squad(float t, const Quaternion& q0, const Quaternion& a0
 Quaternion Quaternion::Align(const Vector3& vec1, const Vector3& vec2)
 {
     // If V1 and V2 are not parallel, the axis of rotation is the unit-length
-    // vector U = Cross(V1,V2)/Length(Cross(V1,V2)).  The angle of rotation,
+    // vector U = cross(V1,V2)/length(cross(V1,V2)).  The angle of rotation,
     // A, is the angle between V1 and V2.  The quaternion for the rotation is
     // q = cos(A/2) + sin(A/2)*(ux*i+uy*j+uz*k) where U = (ux,uy,uz).
     //
-    // (1) Rather than extract A = acos(Dot(V1,V2)), multiply by 1/2, then
+    // (1) Rather than extract A = acos(dot(V1,V2)), multiply by 1/2, then
     //     compute sin(A/2) and cos(A/2), we reduce the computational costs by
-    //     computing the bisector B = (V1+V2)/Length(V1+V2), so cos(A/2) =
-    //     Dot(V1,B).
+    //     computing the bisector B = (V1+V2)/length(V1+V2), so cos(A/2) =
+    //     dot(V1,B).
     //
-    // (2) The rotation axis is U = Cross(V1,B)/Length(Cross(V1,B)), but
-    //     Length(Cross(V1,B)) = Length(V1)*Length(B)*sin(A/2) = sin(A/2), in
+    // (2) The rotation axis is U = cross(V1,B)/length(cross(V1,B)), but
+    //     length(cross(V1,B)) = length(V1)*length(B)*sin(A/2) = sin(A/2), in
     //     which case sin(A/2)*(ux*i+uy*j+uz*k) = (cx*i+cy*j+cz*k) where
-    //     C = Cross(V1,B).
+    //     C = cross(V1,B).
     //
     // If V1 and V2 are parallel, or nearly parallel as far as the Realing
     // point calculations are concerned, the calculation of B will produce
@@ -617,19 +617,19 @@ Quaternion Quaternion::Align(const Vector3& vec1, const Vector3& vec2)
 
     Quaternion q;
     Vector3 bisector = vec1 + vec2;
-    bisector.NormalizeSelf();
+    bisector.normalizeSelf();
 
-    float cosHalfAngle = vec1.Dot(bisector);
+    float cosHalfAngle = vec1.dot(bisector);
     Vector3 cross;
 
     q.m_w = cosHalfAngle;
 
     if (cosHalfAngle != (float)0)
     {
-        cross = vec1.Cross(bisector);
-        q.m_x = cross.X();
-        q.m_y = cross.Y();
-        q.m_z = cross.Z();
+        cross = vec1.cross(bisector);
+        q.m_x = cross.x();
+        q.m_y = cross.y();
+        q.m_z = cross.z();
     }
     else
     {

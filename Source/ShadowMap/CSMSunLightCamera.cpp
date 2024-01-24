@@ -42,7 +42,7 @@ void CSMSunLightCamera::SetPartitionCount(unsigned partition)
 void CSMSunLightCamera::SetSunLightDir(const Vector3& sun_dir)
 {
     m_sunLightDir = sun_dir;
-    m_sunLightDir.NormalizeSelf();
+    m_sunLightDir.normalizeSelf();
 }
 
 void CSMSunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
@@ -123,8 +123,8 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
         vecMin = Math::MinVectorComponent(vecMin, vecBoxEdgeInView);
         vecMax = Math::MaxVectorComponent(vecMax, vecBoxEdgeInView);
     }
-    if ((m_adjustedViewerNearPlane < vecMin.Z()) && (!isCameraInBox)) m_adjustedViewerNearPlane = vecMin.Z();
-    if (m_adjustedViewerFarPlane > vecMax.Z()) m_adjustedViewerFarPlane = vecMax.Z();
+    if ((m_adjustedViewerNearPlane < vecMin.z()) && (!isCameraInBox)) m_adjustedViewerNearPlane = vecMin.z();
+    if (m_adjustedViewerFarPlane > vecMax.z()) m_adjustedViewerFarPlane = vecMax.z();
 }
 
 void CSMSunLightCamera::CalcLightCameraFrustum()
@@ -143,9 +143,9 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         vecViewerFrustumCenter /= 8.0f;
 
         Vector3 trans;
-        trans.X() = vecLightFrustumAxis[0].Dot(vecViewerFrustumCenter);
-        trans.Y() = vecLightFrustumAxis[1].Dot(vecViewerFrustumCenter);
-        trans.Z() = vecLightFrustumAxis[2].Dot(vecViewerFrustumCenter);
+        trans.x() = vecLightFrustumAxis[0].dot(vecViewerFrustumCenter);
+        trans.y() = vecLightFrustumAxis[1].dot(vecViewerFrustumCenter);
+        trans.z() = vecLightFrustumAxis[2].dot(vecViewerFrustumCenter);
         Matrix4 mxLightViewTransform = Matrix4(
             vecLightFrustumAxis[0], vecLightFrustumAxis[1], vecLightFrustumAxis[2], -trans, false);
 
@@ -162,19 +162,19 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         }
 
         // now can get light camera pos
-        float lightCameraMoveBack = -vecMinLightBox.Z() + 0.2f;  // add some bias
+        float lightCameraMoveBack = -vecMinLightBox.z() + 0.2f;  // add some bias
         // move light camera back from dir axis
         Vector3 vecLightCameraPos = vecViewerFrustumCenter - lightCameraMoveBack * m_sunLightDir;
         // and set light camera frame
         SetLightCameraViewTransform(frusta, vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
         // frustum plane w
-        float fPlaneW = -vecMinLightBox.X();
-        if (fPlaneW < vecMaxLightBox.X()) fPlaneW = vecMaxLightBox.X();
+        float fPlaneW = -vecMinLightBox.x();
+        if (fPlaneW < vecMaxLightBox.x()) fPlaneW = vecMaxLightBox.x();
         // frustum plane h
-        float fPlaneH = -vecMinLightBox.Y();
-        if (fPlaneH < vecMaxLightBox.Y()) fPlaneH = vecMaxLightBox.Y();
+        float fPlaneH = -vecMinLightBox.y();
+        if (fPlaneH < vecMaxLightBox.y()) fPlaneH = vecMaxLightBox.y();
         // frustum far z
-        float fFarZ = vecMaxLightBox.Z() - vecMinLightBox.Z() + 0.0f;
+        float fFarZ = vecMaxLightBox.z() - vecMinLightBox.z() + 0.0f;
         m_lightFrustums[frusta] = Frustum::fromOrtho(m_handSys, fPlaneW * 2.0f, fPlaneH * 2.0f, 0.1f, fFarZ);
         m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].projectionTransform();
     }
@@ -186,17 +186,17 @@ std::array<Vector3, 3> CSMSunLightCamera::CalcLightCameraFrame() const
 {
     std::array<Vector3, 3> vecLightCameraFrame;
     vecLightCameraFrame[2] = m_sunLightDir;
-    vecLightCameraFrame[2].NormalizeSelf();
+    vecLightCameraFrame[2].normalizeSelf();
     Vector3 vecUp = Vector3::UNIT_Y;
-    if ((std::fabs(vecLightCameraFrame[2].Y()) - 1.0f < Math::Epsilon())
-        && (std::fabs(vecLightCameraFrame[2].Y()) - 1.0f > -Math::Epsilon()))
+    if ((std::fabs(vecLightCameraFrame[2].y()) - 1.0f < Math::Epsilon())
+        && (std::fabs(vecLightCameraFrame[2].y()) - 1.0f > -Math::Epsilon()))
     {
         vecUp = Vector3::UNIT_X;
     }
-    vecLightCameraFrame[0] = vecUp.Cross(vecLightCameraFrame[2]);
-    vecLightCameraFrame[0].NormalizeSelf();
-    vecLightCameraFrame[1] = vecLightCameraFrame[2].Cross(vecLightCameraFrame[0]);
-    vecLightCameraFrame[1].NormalizeSelf();
+    vecLightCameraFrame[0] = vecUp.cross(vecLightCameraFrame[2]);
+    vecLightCameraFrame[0].normalizeSelf();
+    vecLightCameraFrame[1] = vecLightCameraFrame[2].cross(vecLightCameraFrame[0]);
+    vecLightCameraFrame[1].normalizeSelf();
     return vecLightCameraFrame;
 }
 
@@ -258,13 +258,13 @@ void CSMSunLightCamera::SetLightCameraViewTransform(unsigned frustaIndex,
     const MathLib::Vector3& eye, const MathLib::Vector3& dir, const MathLib::Vector3& up, const MathLib::Vector3& right)
 {
     assert(frustaIndex < m_partitionCount);
-    Vector3 _dir = dir.Normalize();
-    Vector3 _up = up.Normalize();
-    Vector3 _right = right.Normalize();
+    Vector3 _dir = dir.normalize();
+    Vector3 _up = up.normalize();
+    Vector3 _right = right.normalize();
     Vector3 trans;
-    trans.X() = _right.Dot(eye);
-    trans.Y() = _up.Dot(eye);
-    trans.Z() = _dir.Dot(eye);
+    trans.x() = _right.dot(eye);
+    trans.y() = _up.dot(eye);
+    trans.z() = _dir.dot(eye);
     m_mxLightViewTransforms[frustaIndex] = Matrix4(_right, _up, _dir, -trans, false);
     m_vecLightCameraLocations[frustaIndex] = eye;
 }
@@ -309,17 +309,17 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
         }
         //vecMin = Math::MaxVectorComponent(vecMin, Vector3(-1.0f, -1.0f, 0.0f));
         //vecMax = Math::MinVectorComponent(vecMax, Vector3(1.0f, 1.0f, 1.0f));
-        //DebugPrintf("frusta %d, vecMin %f, %f, %f, vecMax %f, %f, %f\n", frusta, vecMin.X(), vecMin.Y(), vecMin.Z(),
-        //    vecMax.X(), vecMax.Y(), vecMax.Z());
-        //vecMin.Z() = 0.0f;
+        //DebugPrintf("frusta %d, vecMin %f, %f, %f, vecMax %f, %f, %f\n", frusta, vecMin.x(), vecMin.y(), vecMin.z(),
+        //    vecMax.x(), vecMax.y(), vecMax.z());
+        //vecMin.z() = 0.0f;
         float scaleX, scaleY; // , scaleZ;
         float offsetX, offsetY; // , offsetZ;
-        scaleX = 2.0f / (vecMax.X() - vecMin.X());
-        scaleY = 2.0f / (vecMax.Y() - vecMin.Y());
-        //scaleZ = 1.0f / (vecMax.Z() - vecMin.Z());
-        offsetX = -0.5f * (vecMax.X() + vecMin.X()) * scaleX;
-        offsetY = -0.5f * (vecMax.Y() + vecMin.Y()) * scaleY;
-        //offsetZ = -vecMin.Z() * scaleZ;
+        scaleX = 2.0f / (vecMax.x() - vecMin.x());
+        scaleY = 2.0f / (vecMax.y() - vecMin.y());
+        //scaleZ = 1.0f / (vecMax.z() - vecMin.z());
+        offsetX = -0.5f * (vecMax.x() + vecMin.x()) * scaleX;
+        offsetY = -0.5f * (vecMax.y() + vecMin.y()) * scaleY;
+        //offsetZ = -vecMin.z() * scaleZ;
         m_mxSceneCrops[frusta] = Matrix4(scaleX, 0.0f, 0.0f, offsetX,
             0.0f, scaleY, 0.0f, offsetY,
             0.0f, 0.0f, 1.0f, 0.0f, //scaleZ, offsetZ,

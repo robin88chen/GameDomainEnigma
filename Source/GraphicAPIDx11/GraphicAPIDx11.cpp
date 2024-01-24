@@ -263,8 +263,8 @@ error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
     d3dvp.Height = static_cast<FLOAT>(m_boundViewPort.Height());
     d3dvp.MinDepth = m_boundViewPort.MinZ();
     d3dvp.MaxDepth = m_boundViewPort.MaxZ();
-    d3dvp.TopLeftX = static_cast<FLOAT>(m_boundViewPort.X());
-    d3dvp.TopLeftY = static_cast<FLOAT>(m_boundViewPort.Y());
+    d3dvp.TopLeftX = static_cast<FLOAT>(m_boundViewPort.x());
+    d3dvp.TopLeftY = static_cast<FLOAT>(m_boundViewPort.y());
     m_d3dDeviceContext->RSSetViewports(1, &d3dvp);
     return ErrorCode::ok;
 }

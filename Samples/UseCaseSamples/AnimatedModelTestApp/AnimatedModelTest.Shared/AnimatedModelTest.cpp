@@ -10,6 +10,7 @@
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EngineInstallingPolicy.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Animators/AnimatorInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
@@ -22,6 +23,8 @@
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "Renderables/MeshPrimitive.h"
 #include "SceneGraph/CameraFrustumEvents.h"
@@ -48,6 +51,7 @@ using namespace Enigma::FileStorage;
 using namespace Enigma::Primitives;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Gateways;
+using namespace Enigma::Animators;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -112,11 +116,12 @@ void AnimatedModelTest::installEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
     makeCamera();
     makeCube();

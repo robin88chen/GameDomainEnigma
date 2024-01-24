@@ -32,6 +32,8 @@ namespace Enigma::Renderables
             ScaleKey() : m_time(0.0f), m_vecKey(MathLib::Vector3(1.0f, 1.0f, 1.0f)) {}
             ScaleKey(float t, const MathLib::Vector3& vec) : m_time(t), m_vecKey(vec) {}
             ScaleKey(float t, float x, float y, float z) : m_time(t), m_vecKey(MathLib::Vector3(x, y, z)) {}
+            ScaleKey(const std::vector<float>& values) : m_time(values[0]), m_vecKey(MathLib::Vector3(values[1], values[2], values[3])) {}
+            std::vector<float> values() const { return { m_time, m_vecKey.x(), m_vecKey.y(), m_vecKey.z() }; }
         };
         typedef std::vector<ScaleKey> ScaleKeyVector;
 
@@ -42,6 +44,8 @@ namespace Enigma::Renderables
             RotationKey() : m_time(0.0f), m_qtKey(MathLib::Quaternion::IDENTITY) {}
             RotationKey(float t, const MathLib::Quaternion& q) : m_time(t), m_qtKey(q) {}
             RotationKey(float t, float w, float x, float y, float z) : m_time(t), m_qtKey(MathLib::Quaternion(w, x, y, z)) {}
+            RotationKey(const std::vector<float>& values) : m_time(values[0]), m_qtKey(MathLib::Quaternion(values[1], values[2], values[3], values[4])) {}
+            std::vector<float> values() const { return { m_time, m_qtKey.w(), m_qtKey.x(), m_qtKey.y(), m_qtKey.z() }; }
         };
         typedef std::vector<RotationKey> RotationKeyVector;
 
@@ -52,6 +56,8 @@ namespace Enigma::Renderables
             TranslateKey() : m_time(0.0f), m_vecKey(MathLib::Vector3::ZERO) {}
             TranslateKey(float t, const MathLib::Vector3& vec) : m_time(t), m_vecKey(vec) {}
             TranslateKey(float t, float x, float y, float z) : m_time(t), m_vecKey(MathLib::Vector3(x, y, z)) {}
+            TranslateKey(const std::vector<float>& values) : m_time(values[0]), m_vecKey(MathLib::Vector3(values[1], values[2], values[3])) {}
+            std::vector<float> values() const { return { m_time, m_vecKey.x(), m_vecKey.y(), m_vecKey.z() }; }
         };
         typedef std::vector<TranslateKey> TranslateKeyVector;
 

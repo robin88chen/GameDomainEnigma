@@ -36,13 +36,13 @@ Box3 ContainmentBox3::MergeBoxes(const Box3& box0, const Box3& box1)
     Quaternion q0, q1;
     q0 = Quaternion::FromRotationMatrix(Matrix3(boxMajor0.Axis(), true));
     q1 = Quaternion::FromRotationMatrix(Matrix3(boxMajor1.Axis(), true));
-    if (q0.Dot(q1) < 0.0f)
+    if (q0.dot(q1) < 0.0f)
     {
         q1 = -q1;
     }
 
     Quaternion q = q0 + q1;
-    float invLength = 1.0f / std::sqrt(q.Dot(q));
+    float invLength = 1.0f / std::sqrt(q.dot(q));
     q = invLength * q;
     Matrix3 rotMerge = q.ToRotationMatrix();
     boxMerge.Axis(0) = rotMerge.GetColumn(0);
@@ -72,7 +72,7 @@ Box3 ContainmentBox3::MergeBoxes(const Box3& box0, const Box3& box1)
         diff = vertex[i] - boxMerge.Center();
         for (j = 0; j < 3; j++)
         {
-            dot = diff.Dot(boxMerge.Axis(j));
+            dot = diff.dot(boxMerge.Axis(j));
             if (dot > vecMax[j])
             {
                 vecMax[j] = dot;
@@ -90,7 +90,7 @@ Box3 ContainmentBox3::MergeBoxes(const Box3& box0, const Box3& box1)
         diff = vertex[i] - boxMerge.Center();
         for (j = 0; j < 3; j++)
         {
-            dot = diff.Dot(boxMerge.Axis(j));
+            dot = diff.dot(boxMerge.Axis(j));
             if (dot > vecMax[j])
             {
                 vecMax[j] = dot;
@@ -123,37 +123,37 @@ Box3 ContainmentBox3::MergeAlignedBoxes(const Box3& box0, const Box3& box1)
     Vector3 vecMax1 = box1.Center() + Vector3(box1.Extent());
     Vector3 vecMin1 = box1.Center() - Vector3(box1.Extent());
 
-    if (vecMax.X() < vecMax1.X())
+    if (vecMax.x() < vecMax1.x())
     {
-        vecMax.X() = vecMax1.X();
+        vecMax.x() = vecMax1.x();
     }
-    if (vecMax.Y() < vecMax1.Y())
+    if (vecMax.y() < vecMax1.y())
     {
-        vecMax.Y() = vecMax1.Y();
+        vecMax.y() = vecMax1.y();
     }
-    if (vecMax.Z() < vecMax1.Z())
+    if (vecMax.z() < vecMax1.z())
     {
-        vecMax.Z() = vecMax1.Z();
+        vecMax.z() = vecMax1.z();
     }
-    if (vecMin.X() > vecMin1.X())
+    if (vecMin.x() > vecMin1.x())
     {
-        vecMin.X() = vecMin1.X();
+        vecMin.x() = vecMin1.x();
     }
-    if (vecMin.Y() > vecMin1.Y())
+    if (vecMin.y() > vecMin1.y())
     {
-        vecMin.Y() = vecMin1.Y();
+        vecMin.y() = vecMin1.y();
     }
-    if (vecMin.Z() > vecMin1.Z())
+    if (vecMin.z() > vecMin1.z())
     {
-        vecMin.Z() = vecMin1.Z();
+        vecMin.z() = vecMin1.z();
     }
 
     Box3 box;
     box.Center() = 0.5f * (vecMax + vecMin);
     Vector3 vecDiff = vecMax - box.Center();
-    box.Extent(0) = vecDiff.X();
-    box.Extent(1) = vecDiff.Y();
-    box.Extent(2) = vecDiff.Z();
+    box.Extent(0) = vecDiff.x();
+    box.Extent(1) = vecDiff.y();
+    box.Extent(2) = vecDiff.z();
 
     return box;
 }
@@ -169,22 +169,22 @@ Box3 ContainmentBox3::ComputeAlignedBox(const Vector3* pos, unsigned int quantit
     vecMin = pos[0];
     for (unsigned int i = 1; i < quantity; i++)
     {
-        if (pos[i].X() > vecMax.X()) vecMax.X() = pos[i].X();
-        if (pos[i].Y() > vecMax.Y()) vecMax.Y() = pos[i].Y();
-        if (pos[i].Z() > vecMax.Z()) vecMax.Z() = pos[i].Z();
-        if (pos[i].X() < vecMin.X()) vecMin.X() = pos[i].X();
-        if (pos[i].Y() < vecMin.Y()) vecMin.Y() = pos[i].Y();
-        if (pos[i].Z() < vecMin.Z()) vecMin.Z() = pos[i].Z();
+        if (pos[i].x() > vecMax.x()) vecMax.x() = pos[i].x();
+        if (pos[i].y() > vecMax.y()) vecMax.y() = pos[i].y();
+        if (pos[i].z() > vecMax.z()) vecMax.z() = pos[i].z();
+        if (pos[i].x() < vecMin.x()) vecMin.x() = pos[i].x();
+        if (pos[i].y() < vecMin.y()) vecMin.y() = pos[i].y();
+        if (pos[i].z() < vecMin.z()) vecMin.z() = pos[i].z();
     }
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
-    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
-    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
+    if (extend.x() <= Math::Epsilon()) extend.x() = Math::Epsilon() * 10.0f;
+    if (extend.y() <= Math::Epsilon()) extend.y() = Math::Epsilon() * 10.0f;
+    if (extend.z() <= Math::Epsilon()) extend.z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
-        extend.X(), extend.Y(), extend.Z());
+        extend.x(), extend.y(), extend.z());
 }
 
 Box3 ContainmentBox3::ComputeAlignedBox(const Vector4* pos, unsigned int quantity)
@@ -192,26 +192,26 @@ Box3 ContainmentBox3::ComputeAlignedBox(const Vector4* pos, unsigned int quantit
     assert(pos != 0);
     assert(quantity != 0);
 
-    Vector3 vecMin = Vector3(pos[0].X(), pos[0].Y(), pos[0].Z());
+    Vector3 vecMin = Vector3(pos[0].x(), pos[0].y(), pos[0].z());
     Vector3 vecMax = vecMin;
     for (unsigned int i = 1; i < quantity; i++)
     {
-        if (pos[i].X() > vecMax.X()) vecMax.X() = pos[i].X();
-        if (pos[i].Y() > vecMax.Y()) vecMax.Y() = pos[i].Y();
-        if (pos[i].Z() > vecMax.Z()) vecMax.Z() = pos[i].Z();
-        if (pos[i].X() < vecMin.X()) vecMin.X() = pos[i].X();
-        if (pos[i].Y() < vecMin.Y()) vecMin.Y() = pos[i].Y();
-        if (pos[i].Z() < vecMin.Z()) vecMin.Z() = pos[i].Z();
+        if (pos[i].x() > vecMax.x()) vecMax.x() = pos[i].x();
+        if (pos[i].y() > vecMax.y()) vecMax.y() = pos[i].y();
+        if (pos[i].z() > vecMax.z()) vecMax.z() = pos[i].z();
+        if (pos[i].x() < vecMin.x()) vecMin.x() = pos[i].x();
+        if (pos[i].y() < vecMin.y()) vecMin.y() = pos[i].y();
+        if (pos[i].z() < vecMin.z()) vecMin.z() = pos[i].z();
     }
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
-    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
-    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
+    if (extend.x() <= Math::Epsilon()) extend.x() = Math::Epsilon() * 10.0f;
+    if (extend.y() <= Math::Epsilon()) extend.y() = Math::Epsilon() * 10.0f;
+    if (extend.z() <= Math::Epsilon()) extend.z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
-        extend.X(), extend.Y(), extend.Z());
+        extend.x(), extend.y(), extend.z());
 }
 
 Box3 ContainmentBox3::ComputeAlignedBox(const float* vert, unsigned int pitch, unsigned int quantity)
@@ -224,23 +224,23 @@ Box3 ContainmentBox3::ComputeAlignedBox(const float* vert, unsigned int pitch, u
     unsigned int index = pitch;
     for (unsigned int i = 1; i < quantity; i++)
     {
-        if (vert[index] > vecMax.X()) vecMax.X() = vert[index];
-        if (vert[index + 1] > vecMax.Y()) vecMax.Y() = vert[index + 1];
-        if (vert[index + 2] > vecMax.Z()) vecMax.Z() = vert[index + 2];
-        if (vert[index] < vecMin.X()) vecMin.X() = vert[index];
-        if (vert[index + 1] < vecMin.Y()) vecMin.Y() = vert[index + 1];
-        if (vert[index + 2] < vecMin.Z()) vecMin.Z() = vert[index + 2];
+        if (vert[index] > vecMax.x()) vecMax.x() = vert[index];
+        if (vert[index + 1] > vecMax.y()) vecMax.y() = vert[index + 1];
+        if (vert[index + 2] > vecMax.z()) vecMax.z() = vert[index + 2];
+        if (vert[index] < vecMin.x()) vecMin.x() = vert[index];
+        if (vert[index + 1] < vecMin.y()) vecMin.y() = vert[index + 1];
+        if (vert[index + 2] < vecMin.z()) vecMin.z() = vert[index + 2];
         index += pitch;
     }
     Vector3 center = 0.5f * (vecMax + vecMin);
     Vector3 extend = vecMax - center;
     // 加一個基本大小
-    if (extend.X() <= Math::Epsilon()) extend.X() = Math::Epsilon() * 10.0f;
-    if (extend.Y() <= Math::Epsilon()) extend.Y() = Math::Epsilon() * 10.0f;
-    if (extend.Z() <= Math::Epsilon()) extend.Z() = Math::Epsilon() * 10.0f;
+    if (extend.x() <= Math::Epsilon()) extend.x() = Math::Epsilon() * 10.0f;
+    if (extend.y() <= Math::Epsilon()) extend.y() = Math::Epsilon() * 10.0f;
+    if (extend.z() <= Math::Epsilon()) extend.z() = Math::Epsilon() * 10.0f;
     return Box3(
         center, Vector3::UNIT_X, Vector3::UNIT_Y, Vector3::UNIT_Z,
-        extend.X(), extend.Y(), extend.Z());
+        extend.x(), extend.y(), extend.z());
 }
 
 Box3 ContainmentBox3::ComputeOrientedBox(const Vector3* pos, unsigned int quantity)
@@ -260,12 +260,12 @@ Box3 ContainmentBox3::ComputeOrientedBox(const Vector3* pos, unsigned int quanti
     for (unsigned int i = 0; i < quantity; i++)
     {
         Vector3 diff = pos[i] - center;
-        sum_xx += diff.X() * diff.X();
-        sum_xy += diff.X() * diff.Y();
-        sum_xz += diff.X() * diff.Z();
-        sum_yy += diff.Y() * diff.Y();
-        sum_yz += diff.Y() * diff.Z();
-        sum_zz += diff.Z() * diff.Z();
+        sum_xx += diff.x() * diff.x();
+        sum_xy += diff.x() * diff.y();
+        sum_xz += diff.x() * diff.z();
+        sum_yy += diff.y() * diff.y();
+        sum_yz += diff.y() * diff.z();
+        sum_zz += diff.z() * diff.z();
     }
     sum_xx *= inv_quantity;
     sum_xy *= inv_quantity;
@@ -294,28 +294,28 @@ Box3 ContainmentBox3::ComputeOrientedBox(const Vector3* pos, unsigned int quanti
     box.Axis(2) = eigen_decompose.m_rot.GetColumn(2);
 
     Vector3 vecTrans = pos[0] - box.Center();
-    Vector3 vecMin = Vector3(vecTrans.Dot(box.Axis(0)), vecTrans.Dot(box.Axis(1)), vecTrans.Dot(box.Axis(2)));
+    Vector3 vecMin = Vector3(vecTrans.dot(box.Axis(0)), vecTrans.dot(box.Axis(1)), vecTrans.dot(box.Axis(2)));
     Vector3 vecMax = vecMin;
     for (unsigned int i = 1; i < quantity; i++)
     {
         vecTrans = pos[i] - box.Center();
-        float dot = vecTrans.Dot(box.Axis(0));
-        if (dot < vecMin.X()) vecMin.X() = dot;
-        if (dot > vecMax.X()) vecMax.X() = dot;
-        dot = vecTrans.Dot(box.Axis(1));
-        if (dot < vecMin.Y()) vecMin.Y() = dot;
-        if (dot > vecMax.Y()) vecMax.Y() = dot;
-        dot = vecTrans.Dot(box.Axis(2));
-        if (dot < vecMin.Z()) vecMin.Z() = dot;
-        if (dot > vecMax.Z()) vecMax.Z() = dot;
+        float dot = vecTrans.dot(box.Axis(0));
+        if (dot < vecMin.x()) vecMin.x() = dot;
+        if (dot > vecMax.x()) vecMax.x() = dot;
+        dot = vecTrans.dot(box.Axis(1));
+        if (dot < vecMin.y()) vecMin.y() = dot;
+        if (dot > vecMax.y()) vecMax.y() = dot;
+        dot = vecTrans.dot(box.Axis(2));
+        if (dot < vecMin.z()) vecMin.z() = dot;
+        if (dot > vecMax.z()) vecMax.z() = dot;
     }
 
-    box.Center() += (0.5f * (vecMin.X() + vecMax.X()) * box.Axis(0)
-        + 0.5f * (vecMin.Y() + vecMax.Y()) * box.Axis(1)
-        + 0.5f * (vecMin.Z() + vecMax.Z()) * box.Axis(2));
-    box.Extent(0) = 0.5f * (vecMax.X() - vecMin.X());
-    box.Extent(1) = 0.5f * (vecMax.Y() - vecMin.Y());
-    box.Extent(2) = 0.5f * (vecMax.Z() - vecMin.Z());
+    box.Center() += (0.5f * (vecMin.x() + vecMax.x()) * box.Axis(0)
+        + 0.5f * (vecMin.y() + vecMax.y()) * box.Axis(1)
+        + 0.5f * (vecMin.z() + vecMax.z()) * box.Axis(2));
+    box.Extent(0) = 0.5f * (vecMax.x() - vecMin.x());
+    box.Extent(1) = 0.5f * (vecMax.y() - vecMin.y());
+    box.Extent(2) = 0.5f * (vecMax.z() - vecMin.z());
 
     // 將axis 0,1,2調整到主要為x,y,z (測試一下看merge box會不會比較正確)
     return box.SwapToMajorAxis();
@@ -329,7 +329,7 @@ Box3 ContainmentBox3::ComputeOrientedBox(const Vector4* pos4, unsigned int quant
     std::vector<Vector3> pos(quantity);
     for (unsigned int i = 0; i < quantity; i++)
     {
-        pos[i] = Vector3(pos4[i].X(), pos4[i].Y(), pos4[i].Z());
+        pos[i] = Vector3(pos4[i].x(), pos4[i].y(), pos4[i].z());
     }
 
     Box3 box = ComputeOrientedBox(&pos[0], quantity);

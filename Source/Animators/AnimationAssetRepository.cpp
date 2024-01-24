@@ -37,6 +37,7 @@ ServiceResult AnimationAssetRepository::onInit()
     m_removeAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeAnimationAsset(c); });
     CommandBus::subscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
     m_putAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putAnimationAsset(c); });
+    CommandBus::subscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
 
     return ServiceResult::Complete;
 }

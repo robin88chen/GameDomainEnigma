@@ -163,29 +163,29 @@ bool Matrix2::operator !=(const Matrix2& mx) const
     return false;
 }
 
-int Matrix2::CompareArrays(const Matrix2& mx) const
+int Matrix2::compareArrays(const Matrix2& mx) const
 {
     return memcmp(m_entry, mx.m_entry, 4 * sizeof(float));
 }
 
 bool Matrix2::operator<(const Matrix2& mx) const
 {
-    return CompareArrays(mx) < 0;
+    return compareArrays(mx) < 0;
 }
 
 bool Matrix2::operator<=(const Matrix2& mx) const
 {
-    return CompareArrays(mx) <= 0;
+    return compareArrays(mx) <= 0;
 }
 
 bool Matrix2::operator>(const Matrix2& mx) const
 {
-    return CompareArrays(mx) > 0;
+    return compareArrays(mx) > 0;
 }
 
 bool Matrix2::operator>=(const Matrix2& mx) const
 {
-    return CompareArrays(mx) >= 0;
+    return compareArrays(mx) >= 0;
 }
 
 Matrix2 Matrix2::operator+(const Matrix2& mx) const
@@ -309,8 +309,8 @@ Matrix2& Matrix2::operator/=(float scalar)
 Vector2 Matrix2::operator*(const Vector2& v) const
 {
     Vector2 prod;
-    prod.X() = m_11 * v.X() + m_12 * v.Y();
-    prod.Y() = m_21 * v.X() + m_22 * v.Y();
+    prod.x() = m_11 * v.x() + m_12 * v.y();
+    prod.y() = m_21 * v.x() + m_22 * v.y();
     return prod;
 }
 

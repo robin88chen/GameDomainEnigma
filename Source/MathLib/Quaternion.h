@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Quaternion.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -41,14 +41,14 @@ namespace Enigma::MathLib
         operator float* ();
         float operator[] (int i) const;
         float& operator[] (int i);
-        float W() const;
-        float& W();
-        float X() const;
-        float& X();
-        float Y() const;
-        float& Y();
-        float Z() const;
-        float& Z();
+        float w() const;
+        float& w();
+        float x() const;
+        float& x();
+        float y() const;
+        float& y();
+        float z() const;
+        float& z();
         //@}
 
         /** @name assignment */
@@ -100,10 +100,10 @@ namespace Enigma::MathLib
 
         /**  @name functions of a quaternion */
         //@{
-        float Length() const;  ///< length of 4-tuple
-        float SquaredLength() const;  ///< squared length of 4-tuple
-        float Dot(const Quaternion& quat) const;  ///< dot product of 4-tuples
-        Quaternion Normalize() const;  ///< make the 4-tuple unit length
+        float length() const;  ///< length of 4-tuple
+        float squaredLength() const;  ///< squared length of 4-tuple
+        float dot(const Quaternion& quat) const;  ///< dot product of 4-tuples
+        Quaternion normalize() const;  ///< make the 4-tuple unit length
         Quaternion Inverse() const;  ///< apply to non-zero quaternion
         Quaternion Conjugate() const;
         Quaternion Exp() const;  ///< apply to quaternion with w = 0
@@ -145,7 +145,7 @@ namespace Enigma::MathLib
          quaternion.  If V1 is the input axis and V2 is the rotation of V1 by
          q, q_swing represents the rotation about the axis perpendicular to
          V1 and V2 (see Quaternion::Align), and q_twist is a rotation about V1. */
-        QuaternionDecompose DecomposeSwingTimesTwist(const Vector3 & vec1) const;
+        QuaternionDecompose DecomposeSwingTimesTwist(const Vector3& vec1) const;
         //@}
 
         /** @name special values */
@@ -160,7 +160,7 @@ namespace Enigma::MathLib
         void ImplicitFromAxisAngle(const Vector3& axis, float angle);
 
         // support for comparisons
-        int CompareArrays(const Quaternion& quat) const;
+        int compareArrays(const Quaternion& quat) const;
 
         union
         {

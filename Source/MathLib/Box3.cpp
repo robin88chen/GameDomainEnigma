@@ -93,7 +93,7 @@ Box3 Box3::SwapToMajorAxis() const
 void Box3::ImplicitSwapToMajorAxis()
 {
     // 將m_axis 0,1,2調整到主要為x,y,z
-    if (m_axis[1].X() * m_axis[1].X() > m_axis[0].X() * m_axis[0].X())
+    if (m_axis[1].x() * m_axis[1].x() > m_axis[0].x() * m_axis[0].x())
     {
         // y <--> x
         float extend_save;
@@ -105,7 +105,7 @@ void Box3::ImplicitSwapToMajorAxis()
         m_axis[0] = m_axis[1];
         m_axis[1] = axis_save;
     }
-    if (m_axis[2].X() * m_axis[2].X() > m_axis[0].X() * m_axis[0].X())
+    if (m_axis[2].x() * m_axis[2].x() > m_axis[0].x() * m_axis[0].x())
     {
         // z <--> x
         float extend_save;
@@ -117,7 +117,7 @@ void Box3::ImplicitSwapToMajorAxis()
         m_axis[0] = m_axis[2];
         m_axis[2] = axis_save;
     }
-    if (m_axis[2].Y() * m_axis[2].Y() > m_axis[1].Y() * m_axis[1].Y())
+    if (m_axis[2].y() * m_axis[2].y() > m_axis[1].y() * m_axis[1].y())
     {
         // z <--> y
         float extend_save;
@@ -130,12 +130,12 @@ void Box3::ImplicitSwapToMajorAxis()
         m_axis[2] = axis_save;
     }
     // 把軸都調整到正向
-    if (m_axis[0].X() < 0.0f) m_axis[0] = -m_axis[0];
-    if (m_axis[1].Y() < 0.0f) m_axis[1] = -m_axis[1];
-    if (m_axis[2].Z() < 0.0f) m_axis[2] = -m_axis[2];
+    if (m_axis[0].x() < 0.0f) m_axis[0] = -m_axis[0];
+    if (m_axis[1].y() < 0.0f) m_axis[1] = -m_axis[1];
+    if (m_axis[2].z() < 0.0f) m_axis[2] = -m_axis[2];
     // 調整正交規則
-    Vector3 cross = m_axis[0].Cross(m_axis[1]);
-    if (cross.Dot(m_axis[2]) < 0.0f)
+    Vector3 cross = m_axis[0].cross(m_axis[1]);
+    if (cross.dot(m_axis[2]) < 0.0f)
     {
         m_axis[0] = -m_axis[0];
     }

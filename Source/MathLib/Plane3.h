@@ -14,7 +14,7 @@ namespace Enigma::MathLib
 {
     /** Math Lib Plane3
     @remarks
-     The plane is represented as Dot(N,X) = c where N is a unit-length
+     The plane is represented as dot(N,X) = c where N is a unit-length
      normal vector, c is the plane constant, and X is any point on the
      plane.  The user must ensure that the normal vector satisfies this
      condition.
@@ -32,9 +32,9 @@ namespace Enigma::MathLib
         Plane3();
         /** specify N and c directly */
         Plane3(const Vector3& normal, float constant);
-        /** N is specified, c = Dot(N,P) where P is on the plane */
+        /** N is specified, c = dot(N,P) where P is on the plane */
         Plane3(const Vector3& normal, const Vector3& p);
-        /** N = Cross(P1-P0,P2-P0)/Length(Cross(P1-P0,P2-P0)), c = Dot(N,P0) where
+        /** N = cross(P1-P0,P2-P0)/length(cross(P1-P0,P2-P0)), c = dot(N,P0) where
          P0, P1, P2 are points on the plane. */
         Plane3(const Vector3& p0, const Vector3& p1, const Vector3& p2);
 
@@ -57,7 +57,7 @@ namespace Enigma::MathLib
 
         /** distance to plane
         @remarks
-         Compute d = Dot(N,Q)-c where N is the plane normal and c is the plane
+         Compute d = dot(N,Q)-c where N is the plane normal and c is the plane
          constant.  This is a signed distance.  The sign of the return value is
          positive if the point is on the positive side of the plane, negative if
          the point is on the negative side, and zero if the point is on the

@@ -621,41 +621,41 @@ rapidjson::Value SerializeColorRGB(const ColorRGB& color, rapidjson::MemoryPoolA
 rapidjson::Value SerializeVector2(const Vector2& vec, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
-    value.PushBack(vec.X(), allocator);
-    value.PushBack(vec.Y(), allocator);
+    value.PushBack(vec.x(), allocator);
+    value.PushBack(vec.y(), allocator);
     return value;
 }
 
 rapidjson::Value SerializeVector3(const Vector3& vec, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
-    value.PushBack(vec.X(), allocator);
-    value.PushBack(vec.Y(), allocator);
-    value.PushBack(vec.Z(), allocator);
+    value.PushBack(vec.x(), allocator);
+    value.PushBack(vec.y(), allocator);
+    value.PushBack(vec.z(), allocator);
     return value;
 }
 
 rapidjson::Value SerializeVector4(const Vector4& vec, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
-    value.PushBack(vec.X(), allocator);
-    value.PushBack(vec.Y(), allocator);
-    value.PushBack(vec.Z(), allocator);
-    value.PushBack(vec.W(), allocator);
+    value.PushBack(vec.x(), allocator);
+    value.PushBack(vec.y(), allocator);
+    value.PushBack(vec.z(), allocator);
+    value.PushBack(vec.w(), allocator);
     return value;
 }
 
 rapidjson::Value SerializeBox3(const Box3& box, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value(rapidjson::kArrayType);
-    value.PushBack(box.Center().X(), allocator);
-    value.PushBack(box.Center().Y(), allocator);
-    value.PushBack(box.Center().Z(), allocator);
+    value.PushBack(box.Center().x(), allocator);
+    value.PushBack(box.Center().y(), allocator);
+    value.PushBack(box.Center().z(), allocator);
     for (int i = 0; i < 3; i++)
     {
-        value.PushBack(box.Axis(i).X(), allocator);
-        value.PushBack(box.Axis(i).Y(), allocator);
-        value.PushBack(box.Axis(i).Z(), allocator);
+        value.PushBack(box.Axis(i).x(), allocator);
+        value.PushBack(box.Axis(i).y(), allocator);
+        value.PushBack(box.Axis(i).z(), allocator);
     }
     value.PushBack(box.Extent(0), allocator);
     value.PushBack(box.Extent(1), allocator);

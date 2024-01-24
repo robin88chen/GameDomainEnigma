@@ -24,17 +24,18 @@ AnimationTimeSRT::AnimationTimeSRT(const Engine::GenericDto& dto)
     assert(translate_size % 4 == 0);
     for (unsigned i = 0; i < scale_size; i += 4)
     {
-        m_scaleKeyVector.emplace_back(ScaleKey(scale_keys[i], scale_keys[i + 1], scale_keys[i + 2], scale_keys[i + 3]));
+        m_scaleKeyVector.emplace_back(std::vector<float>(scale_keys.begin() + i, scale_keys.begin() + i + 4));
+        //m_scaleKeyVector.emplace_back(ScaleKey(scale_keys[i], scale_keys[i + 1], scale_keys[i + 2], scale_keys[i + 3]));
     }
     for (unsigned i = 0; i < rotate_size; i += 5)
     {
-        m_rotationKeyVector.emplace_back(RotationKey(rotate_keys[i], rotate_keys[i + 1],
-            rotate_keys[i + 2], rotate_keys[i + 3], rotate_keys[i + 4]));
+        m_rotationKeyVector.emplace_back(std::vector<float>(rotate_keys.begin() + i, rotate_keys.begin() + i + 5));
+        //m_rotationKeyVector.emplace_back(RotationKey(rotate_keys[i], rotate_keys[i + 1], rotate_keys[i + 2], rotate_keys[i + 3], rotate_keys[i + 4]));
     }
     for (unsigned i = 0; i < translate_size; i += 4)
     {
-        m_translateKeyVector.emplace_back(TranslateKey(translate_keys[i],
-            translate_keys[i + 1], translate_keys[i + 2], translate_keys[i + 3]));
+        m_translateKeyVector.emplace_back(std::vector<float>(translate_keys.begin() + i, translate_keys.begin() + i + 4));
+        //m_translateKeyVector.emplace_back(TranslateKey(translate_keys[i], translate_keys[i + 1], translate_keys[i + 2], translate_keys[i + 3]));
     }
 }
 
@@ -44,29 +45,35 @@ Enigma::Engine::GenericDto AnimationTimeSRT::serializeDto()
     std::vector<float> scale_keys;
     for (auto& key : m_scaleKeyVector)
     {
-        scale_keys.emplace_back(key.m_time);
-        scale_keys.emplace_back(key.m_vecKey.X());
-        scale_keys.emplace_back(key.m_vecKey.Y());
-        scale_keys.emplace_back(key.m_vecKey.Z());
+        auto values = key.values();
+        scale_keys.insert(scale_keys.end(), values.begin(), values.end());
+        //scale_keys.emplace_back(key.m_time);
+        //scale_keys.emplace_back(key.m_vecKey.x());
+        //scale_keys.emplace_back(key.m_vecKey.y());
+        //scale_keys.emplace_back(key.m_vecKey.z());
     }
     dto.scaleTimeKeys() = scale_keys;
     std::vector<float> rotate_keys;
     for (auto& key : m_rotationKeyVector)
     {
-        rotate_keys.emplace_back(key.m_time);
-        rotate_keys.emplace_back(key.m_qtKey.W());
-        rotate_keys.emplace_back(key.m_qtKey.X());
-        rotate_keys.emplace_back(key.m_qtKey.Y());
-        rotate_keys.emplace_back(key.m_qtKey.Z());
+        auto values = key.values();
+        rotate_keys.insert(rotate_keys.end(), values.begin(), values.end());
+        //rotate_keys.emplace_back(key.m_time);
+        //rotate_keys.emplace_back(key.m_qtKey.w());
+        //rotate_keys.emplace_back(key.m_qtKey.x());
+        //rotate_keys.emplace_back(key.m_qtKey.y());
+        //rotate_keys.emplace_back(key.m_qtKey.z());
     }
     dto.rotateTimeKeys() = rotate_keys;
     std::vector<float> translate_keys;
     for (auto& key : m_translateKeyVector)
     {
-        translate_keys.emplace_back(key.m_time);
-        translate_keys.emplace_back(key.m_vecKey.X());
-        translate_keys.emplace_back(key.m_vecKey.Y());
-        translate_keys.emplace_back(key.m_vecKey.Z());
+        auto values = key.values();
+        translate_keys.insert(translate_keys.end(), values.begin(), values.end());
+        //translate_keys.emplace_back(key.m_time);
+        //translate_keys.emplace_back(key.m_vecKey.x());
+        //translate_keys.emplace_back(key.m_vecKey.y());
+        //translate_keys.emplace_back(key.m_vecKey.z());
     }
     dto.translateTimeKeys() = translate_keys;
     return dto.toGenericDto();

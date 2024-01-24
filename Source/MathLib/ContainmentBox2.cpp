@@ -17,17 +17,17 @@ Box2 ContainmentBox2::MergeBoxes(const Box2& box0, const Box2& box1)
     // The merged box axes are the averages of the input box axes.  The
     // axes of the second box are negated, if necessary, so they form acute
     // angles with the axes of the first box.
-    if (box0.Axis(0).Dot(box1.Axis(0)) >= 0.0f)
+    if (box0.Axis(0).dot(box1.Axis(0)) >= 0.0f)
     {
         box.Axis(0) = 0.5f * (box0.Axis(0) + box1.Axis(0));
-        box.Axis(0).NormalizeSelf();
+        box.Axis(0).normalizeSelf();
     }
     else
     {
         box.Axis(0) = 0.5f * (box0.Axis(0) - box1.Axis(0));
-        box.Axis(0).NormalizeSelf();
+        box.Axis(0).normalizeSelf();
     }
-    box.Axis(1) = -box.Axis(0).Perp();
+    box.Axis(1) = -box.Axis(0).perp();
 
     // Project the input box vertices onto the merged-box axes.  Each axis
     // D[i] containing the current center C has a minimum projected value
@@ -52,7 +52,7 @@ Box2 ContainmentBox2::MergeBoxes(const Box2& box0, const Box2& box1)
         diff = vertex[i] - box.Center();
         for (j = 0; j < 2; ++j)
         {
-            dot = diff.Dot(box.Axis(j));
+            dot = diff.dot(box.Axis(j));
             if (dot > pmax[j])
             {
                 pmax[j] = dot;
@@ -70,7 +70,7 @@ Box2 ContainmentBox2::MergeBoxes(const Box2& box0, const Box2& box1)
         diff = vertex[i] - box.Center();
         for (j = 0; j < 2; ++j)
         {
-            dot = diff.Dot(box.Axis(j));
+            dot = diff.dot(box.Axis(j));
             if (dot > pmax[j])
             {
                 pmax[j] = dot;
@@ -100,8 +100,8 @@ bool ContainmentBox2::TestBox2EnvelopBox2(const Box2& box0, const Box2& box1)
     for (unsigned int i = 0; i < 4; i++)
     {
         Vector2 diff = vertex[i] - box0.Center();
-        if (std::fabs(diff.Dot(box0.Axis(0))) > box0.Extent(0)) return false;
-        if (std::fabs(diff.Dot(box0.Axis(1))) > box0.Extent(1)) return false;
+        if (std::fabs(diff.dot(box0.Axis(0))) > box0.Extent(0)) return false;
+        if (std::fabs(diff.dot(box0.Axis(1))) > box0.Extent(1)) return false;
     }
     return true;
 }
@@ -109,7 +109,7 @@ bool ContainmentBox2::TestBox2EnvelopBox2(const Box2& box0, const Box2& box1)
 bool ContainmentBox2::TestBox2EnvelopSphere2(const Box2& box0, const Sphere2& sphere1)
 {
     Vector2 diff = sphere1.Center() - box0.Center();
-    if (std::fabs(diff.Dot(box0.Axis(0))) + sphere1.Radius() > box0.Extent(0)) return false;
-    if (std::fabs(diff.Dot(box0.Axis(1))) + sphere1.Radius() > box0.Extent(1)) return false;
+    if (std::fabs(diff.dot(box0.Axis(0))) + sphere1.Radius() > box0.Extent(0)) return false;
+    if (std::fabs(diff.dot(box0.Axis(1))) + sphere1.Radius() > box0.Extent(1)) return false;
     return true;
 }

@@ -8,7 +8,7 @@ using namespace Enigma::MathLib;
 Sphere3 ContainmentSphere3::MergeSpheres(const Sphere3& sphere0, const Sphere3& sphere1)
 {
     Vector3 centerDiff = sphere1.Center() - sphere0.Center();
-    float sqrLength = centerDiff.SquaredLength();
+    float sqrLength = centerDiff.squaredLength();
     float radiusDiff = sphere1.Radius() - sphere0.Radius();
     float radiusDiffSqr = radiusDiff * radiusDiff;
 
@@ -49,7 +49,7 @@ Sphere3 ContainmentSphere3::ComputeAverageSphere(const Vector3* pos, unsigned in
     for (unsigned int i = 0; i < quantity; i++)
     {
         Vector3 diff = pos[i] - center;
-        float diff_length = diff.SquaredLength();
+        float diff_length = diff.squaredLength();
         if (diff_length > sq_radius) sq_radius = diff_length;
     }
     return Sphere3(center, std::sqrt(sq_radius));
@@ -59,17 +59,17 @@ Sphere3 ContainmentSphere3::ComputeAverageSphere(const Vector4* pos, unsigned in
 {
     assert(pos != 0);
     assert(quantity != 0);
-    Vector3 center = Vector3(pos[0].X(), pos[0].Y(), pos[0].Z());
+    Vector3 center = Vector3(pos[0].x(), pos[0].y(), pos[0].z());
     for (unsigned int i = 1; i < quantity; i++)
     {
-        center += Vector3(pos[i].X(), pos[i].Y(), pos[i].Z());
+        center += Vector3(pos[i].x(), pos[i].y(), pos[i].z());
     }
     center /= (float)(quantity);
     float sq_radius = 0.0f;
     for (unsigned int i = 0; i < quantity; i++)
     {
-        Vector3 diff = Vector3(pos[i].X(), pos[i].Y(), pos[i].Z()) - center;
-        float diff_length = diff.SquaredLength();
+        Vector3 diff = Vector3(pos[i].x(), pos[i].y(), pos[i].z()) - center;
+        float diff_length = diff.squaredLength();
         if (diff_length > sq_radius) sq_radius = diff_length;
     }
     return Sphere3(center, std::sqrt(sq_radius));
@@ -92,7 +92,7 @@ Sphere3 ContainmentSphere3::ComputeAverageSphere(const float* vert, unsigned int
     for (unsigned int i = 0; i < quantity; i++)
     {
         Vector3 diff = Vector3(vert[index], vert[index + 1], vert[index + 2]) - center;
-        float diff_length = diff.SquaredLength();
+        float diff_length = diff.squaredLength();
         if (diff_length > sq_radius) sq_radius = diff_length;
     }
     return Sphere3(center, std::sqrt(sq_radius));

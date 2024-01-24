@@ -127,9 +127,9 @@ void Culler::UpdateFrustumPlanes()
 
     MathLib::Vector3 nor, pos;
     // Left Plane
-    vec.X() = xCos;
-    vec.Y() = 0.0f;
-    vec.Z() = xSin;
+    vec.x() = xCos;
+    vec.y() = 0.0f;
+    vec.z() = xSin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
     m_clipPlanes[static_cast<size_t>(CullerPlane::Left)] = MathLib::Plane3(nor, pos);
@@ -139,9 +139,9 @@ void Culler::UpdateFrustumPlanes()
         m_outerClipPlanes[static_cast<size_t>(CullerPlane::Left)] = MathLib::Plane3(nor, pos);
     }
     // Right Plane
-    vec.X() = -xCos;
-    vec.Y() = 0.0f;
-    vec.Z() = xSin;
+    vec.x() = -xCos;
+    vec.y() = 0.0f;
+    vec.z() = xSin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
     m_clipPlanes[static_cast<size_t>(CullerPlane::Right)] = MathLib::Plane3(nor, pos);
@@ -152,9 +152,9 @@ void Culler::UpdateFrustumPlanes()
     }
 
     // Top Plane
-    vec.X() = 0.0f;
-    vec.Y() = -yCos;
-    vec.Z() = ySin;
+    vec.x() = 0.0f;
+    vec.y() = -yCos;
+    vec.z() = ySin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
     m_clipPlanes[static_cast<size_t>(CullerPlane::Top)] = MathLib::Plane3(nor, pos);
@@ -165,9 +165,9 @@ void Culler::UpdateFrustumPlanes()
     }
 
     // Bottom Plane
-    vec.X() = 0.0f;
-    vec.Y() = yCos;
-    vec.Z() = ySin;
+    vec.x() = 0.0f;
+    vec.y() = yCos;
+    vec.z() = ySin;
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);
     pos = mxCameraWorldTransform.TransformCoord(MathLib::Vector3(0.0f, 0.0f, 0.0f));
     m_clipPlanes[static_cast<size_t>(CullerPlane::Bottom)] = MathLib::Plane3(nor, pos);
@@ -178,14 +178,14 @@ void Culler::UpdateFrustumPlanes()
     }
 
     // Far Plane
-    vec.X() = 0.0f;
-    vec.Y() = 0.0f;
-    vec.Z() = -1.0f;
+    vec.x() = 0.0f;
+    vec.y() = 0.0f;
+    vec.z() = -1.0f;
     float far_z = frustum.farPlaneZ();
     float out_far_z = frustum.farPlaneZ() + m_outerClipShiftZ;
     if (frustum.getCoordHandSys() == GraphicCoordSys::RightHand)
     {
-        vec.Z() = 1.0f;
+        vec.z() = 1.0f;
         far_z = -far_z;
         out_far_z = -out_far_z;
     }
@@ -199,13 +199,13 @@ void Culler::UpdateFrustumPlanes()
     }
 
     // Near Plane
-    vec.X() = 0.0f;
-    vec.Y() = 0.0f;
-    vec.Z() = 1.0f;
+    vec.x() = 0.0f;
+    vec.y() = 0.0f;
+    vec.z() = 1.0f;
     float out_near_z = -m_outerClipShiftZ;
     if (frustum.getCoordHandSys() == GraphicCoordSys::RightHand)
     {
-        vec.Z() = -1.0f;
+        vec.z() = -1.0f;
         out_near_z = -out_near_z;
     }
     std::tie(nor, std::ignore) = mxCameraWorldTransform.TransformVectorNormalized(vec);

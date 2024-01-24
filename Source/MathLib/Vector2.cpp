@@ -50,27 +50,27 @@ float& Vector2::operator[] (int i)
     return m_tuple[i];
 }
 
-float Vector2::X() const
+float Vector2::x() const
 {
     return m_tuple[0];
 }
 
-float& Vector2::X()
+float& Vector2::x()
 {
     return m_tuple[0];
 }
 
-float Vector2::Y() const
+float Vector2::y() const
 {
     return m_tuple[1];
 }
 
-float& Vector2::Y()
+float& Vector2::y()
 {
     return m_tuple[1];
 }
 
-int Vector2::CompareArrays(const Vector2& v) const
+int Vector2::compareArrays(const Vector2& v) const
 {
     return memcmp(m_tuple, v.m_tuple, 2 * sizeof(float));
 }
@@ -87,22 +87,22 @@ bool Vector2::operator!= (const Vector2& v) const
 
 bool Vector2::operator< (const Vector2& v) const
 {
-    return CompareArrays(v) < 0;
+    return compareArrays(v) < 0;
 }
 
 bool Vector2::operator<= (const Vector2& v) const
 {
-    return CompareArrays(v) <= 0;
+    return compareArrays(v) <= 0;
 }
 
 bool Vector2::operator> (const Vector2& v) const
 {
-    return CompareArrays(v) > 0;
+    return compareArrays(v) > 0;
 }
 
 bool Vector2::operator>= (const Vector2& v) const
 {
-    return CompareArrays(v) >= 0;
+    return compareArrays(v) >= 0;
 }
 
 Vector2 Vector2::operator+ (const Vector2& v) const
@@ -190,36 +190,36 @@ Vector2& Vector2::operator/= (float scalar)
     return *this;
 }
 
-float Vector2::Length() const
+float Vector2::length() const
 {
     return sqrt(
         m_tuple[0] * m_tuple[0] +
         m_tuple[1] * m_tuple[1]);
 }
 
-float Vector2::SquaredLength() const
+float Vector2::squaredLength() const
 {
     return
         m_tuple[0] * m_tuple[0] +
         m_tuple[1] * m_tuple[1];
 }
 
-float Vector2::Dot(const Vector2& v) const
+float Vector2::dot(const Vector2& v) const
 {
     return
         m_tuple[0] * v.m_tuple[0] +
         m_tuple[1] * v.m_tuple[1];
 }
 
-Vector2 Vector2::Normalize() const
+Vector2 Vector2::normalize() const
 {
-    float length = Length();
+    float leng = length();
     Vector2 v;
-    if (length > Math::ZERO_TOLERANCE)
+    if (leng > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        v.m_tuple[0] = m_tuple[0] / length;
-        v.m_tuple[1] = m_tuple[1] / length;
+        v.m_tuple[0] = m_tuple[0] / leng;
+        v.m_tuple[1] = m_tuple[1] / leng;
     }
     else
     {
@@ -230,14 +230,14 @@ Vector2 Vector2::Normalize() const
     return v;
 }
 
-void Vector2::NormalizeSelf()
+void Vector2::normalizeSelf()
 {
-    float length = Length();
-    if (length > Math::ZERO_TOLERANCE)
+    float leng = length();
+    if (leng > Math::ZERO_TOLERANCE)
     {
         //float invLength = ((float)1.0) / length;
-        m_tuple[0] = m_tuple[0] / length;
-        m_tuple[1] = m_tuple[1] / length;
+        m_tuple[0] = m_tuple[0] / leng;
+        m_tuple[1] = m_tuple[1] / leng;
     }
     else
     {
@@ -246,18 +246,18 @@ void Vector2::NormalizeSelf()
     }
 }
 
-Vector2 Vector2::Perp() const
+Vector2 Vector2::perp() const
 {
     return Vector2(m_tuple[1], -m_tuple[0]);
 }
 
-Vector2 Vector2::UnitPerp() const
+Vector2 Vector2::unitPerp() const
 {
     Vector2 kPerp(m_tuple[1], -m_tuple[0]);
-    return kPerp.Normalize();
+    return kPerp.normalize();
 }
 
-float Vector2::DotPerp(const Vector2& v) const
+float Vector2::dotPerp(const Vector2& v) const
 {
     return m_tuple[0] * v.m_tuple[1] - m_tuple[1] * v.m_tuple[0];
 }

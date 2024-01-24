@@ -33,18 +33,18 @@ bool Math::IsEqual(float l, float r)
 Vector3 Math::MaxVectorComponent(const Vector3& vec1, const Vector3& vec2)
 {
     Vector3 vecRet = vec1;
-    if (vec2.X() > vecRet.X()) vecRet.X() = vec2.X();
-    if (vec2.Y() > vecRet.Y()) vecRet.Y() = vec2.Y();
-    if (vec2.Z() > vecRet.Z()) vecRet.Z() = vec2.Z();
+    if (vec2.x() > vecRet.x()) vecRet.x() = vec2.x();
+    if (vec2.y() > vecRet.y()) vecRet.y() = vec2.y();
+    if (vec2.z() > vecRet.z()) vecRet.z() = vec2.z();
     return vecRet;
 }
 
 Vector3 Math::MinVectorComponent(const Vector3& vec1, const Vector3& vec2)
 {
     Vector3 vecRet = vec1;
-    if (vec2.X() < vecRet.X()) vecRet.X() = vec2.X();
-    if (vec2.Y() < vecRet.Y()) vecRet.Y() = vec2.Y();
-    if (vec2.Z() < vecRet.Z()) vecRet.Z() = vec2.Z();
+    if (vec2.x() < vecRet.x()) vecRet.x() = vec2.x();
+    if (vec2.y() < vecRet.y()) vecRet.y() = vec2.y();
+    if (vec2.z() < vecRet.z()) vecRet.z() = vec2.z();
     return vecRet;
 }
 

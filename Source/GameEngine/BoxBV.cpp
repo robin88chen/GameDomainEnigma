@@ -51,8 +51,8 @@ void BoxBV::CreateFromTransform(const MathLib::Matrix4& mx, const std::unique_pt
     for (int i = 0; i < 3; i++)
     {
         m_box.Axis(i) = mx.TransformVector(axis[i]);
-        float len = m_box.Axis(i).Length();
-        m_box.Axis(i).NormalizeSelf();
+        float len = m_box.Axis(i).length();
+        m_box.Axis(i).normalizeSelf();
         m_box.Extent(i) = len * extent[i];
     }
 }
@@ -81,10 +81,10 @@ void BoxBV::MergeBoundingVolume(const MathLib::Matrix4& mx, const std::unique_pt
 
 Enigma::MathLib::Plane3::SideOfPlane BoxBV::WhichSide(const MathLib::Plane3& plane) const
 {
-    float projCenter = plane.Normal().Dot(m_box.Center()) - plane.Constant();
-    float abs0 = std::fabs(plane.Normal().Dot(m_box.Axis(0)));
-    float abs1 = std::fabs(plane.Normal().Dot(m_box.Axis(1)));
-    float abs2 = std::fabs(plane.Normal().Dot(m_box.Axis(2)));
+    float projCenter = plane.Normal().dot(m_box.Center()) - plane.Constant();
+    float abs0 = std::fabs(plane.Normal().dot(m_box.Axis(0)));
+    float abs1 = std::fabs(plane.Normal().dot(m_box.Axis(1)));
+    float abs2 = std::fabs(plane.Normal().dot(m_box.Axis(2)));
     float projRadius = m_box.Extent(0) * abs0 + m_box.Extent(1) * abs1 +
         m_box.Extent(2) * abs2;
 
@@ -146,17 +146,17 @@ void BoxBV::ComputeFromData(const float* vert, unsigned pitch, unsigned quantity
 bool BoxBV::PointInside(const MathLib::Vector3& pos)
 {
     MathLib::Vector3 diff = pos - m_box.Center();
-    float d = diff.Dot(m_box.Axis(0));
+    float d = diff.dot(m_box.Axis(0));
     if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(0)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(0)))
     {
         return false;
     }
-    d = diff.Dot(m_box.Axis(1));
+    d = diff.dot(m_box.Axis(1));
     if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(1)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(1)))
     {
         return false;
     }
-    d = diff.Dot(m_box.Axis(2));
+    d = diff.dot(m_box.Axis(2));
     if (((d + MathLib::Math::Epsilon()) < -m_box.Extent(2)) || ((d - MathLib::Math::Epsilon()) > m_box.Extent(2)))
     {
         return false;
@@ -169,17 +169,17 @@ BoxBV::FlagBits BoxBV::PointInsideFlags(const MathLib::Vector3& pos)
 {
     FlagBits flags{0x0};
     MathLib::Vector3 diff = pos - m_box.Center();
-    float d = diff.Dot(m_box.Axis(0));
+    float d = diff.dot(m_box.Axis(0));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(0)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(0)))
     {
         flags.set(static_cast<size_t>(Axis::x));
     }
-    d = diff.Dot(m_box.Axis(1));
+    d = diff.dot(m_box.Axis(1));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(1)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(1)))
     {
         flags.set(static_cast<size_t>(Axis::y));
     }
-    d = diff.Dot(m_box.Axis(2));
+    d = diff.dot(m_box.Axis(2));
     if (((d + MathLib::Math::Epsilon()) > -m_box.Extent(2)) && ((d - MathLib::Math::Epsilon()) < m_box.Extent(2)))
     {
         flags.set(static_cast<size_t>(Axis::z));

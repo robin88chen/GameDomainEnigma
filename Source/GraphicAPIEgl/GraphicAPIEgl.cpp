@@ -224,7 +224,7 @@ error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
     if (m_boundViewPort == vp) return ErrorCode::ok;
     m_boundViewPort = vp;
 
-    glViewport(static_cast<GLint>(m_boundViewPort.X()), static_cast<GLint>(m_boundViewPort.Y()),
+    glViewport(static_cast<GLint>(m_boundViewPort.x()), static_cast<GLint>(m_boundViewPort.y()),
         static_cast<GLsizei>(m_boundViewPort.Width()), static_cast<GLsizei>(m_boundViewPort.Height()));
     glDepthRangef(m_boundViewPort.MinZ(), m_boundViewPort.MaxZ());
 

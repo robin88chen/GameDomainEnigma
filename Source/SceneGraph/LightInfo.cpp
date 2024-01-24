@@ -58,7 +58,7 @@ void LightInfo::SetLightPosition(const MathLib::Vector3& vec)
 
 void LightInfo::SetLightDirection(const MathLib::Vector3& vec)
 {
-    m_dir = vec.Normalize();
+    m_dir = vec.normalize();
 }
 
 void LightInfo::SetLightAttenuation(const MathLib::Vector3& attenuation)

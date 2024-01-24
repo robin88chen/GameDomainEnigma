@@ -86,7 +86,7 @@ error Portal::cullVisibleSet(Culler* culler, bool noCull)
     bool isPortalPass = culler->IsVisible(&m_vecPortalQuadWorldPos[0], PORTAL_VERTEX_COUNT, true);
     if ((!noCull) && (!isPortalPass)) return ErrorCode::ok;  // not pass portal, so not in visible set
 
-    if ((!noCull) && (m_quadWorldPlane.Normal().Dot(culler->GetCamera()->eyeToLookatVector()) < 0))
+    if ((!noCull) && (m_quadWorldPlane.Normal().dot(culler->GetCamera()->eyeToLookatVector()) < 0))
         return ErrorCode::ok;  // not see through
 
     //Todo: 這裡要先把Frustum縮小再繼續

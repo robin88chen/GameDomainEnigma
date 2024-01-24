@@ -31,30 +31,30 @@ Plane3::SideOfPlane IntrBox3Plane3::PlaneSideTest()
         Vector3 vecMax = m_box.Center() + Vector3((float*)m_box.Extent());
         Vector3 vecMin = m_box.Center() - Vector3((float*)m_box.Extent());
         float t;
-        if (m_plane.Normal().X() < 0.0f)
+        if (m_plane.Normal().x() < 0.0f)
         {
-            t = vecMax.X(); vecMax.X() = vecMin.X(); vecMin.X() = t;
+            t = vecMax.x(); vecMax.x() = vecMin.x(); vecMin.x() = t;
         }
-        if (m_plane.Normal().Y() < 0.0f)
+        if (m_plane.Normal().y() < 0.0f)
         {
-            t = vecMax.Y(); vecMax.Y() = vecMin.Y(); vecMin.Y() = t;
+            t = vecMax.y(); vecMax.y() = vecMin.y(); vecMin.y() = t;
         }
-        if (m_plane.Normal().Z() < 0.0f)
+        if (m_plane.Normal().z() < 0.0f)
         {
-            t = vecMax.Z(); vecMax.Z() = vecMin.Z(); vecMin.Z() = t;
+            t = vecMax.z(); vecMax.z() = vecMin.z(); vecMin.z() = t;
         }
 
-        if (m_plane.Normal().Dot(vecMin) > m_plane.Constant()) return Plane3::SideOfPlane::Positive;
-        if (m_plane.Normal().Dot(vecMax) < m_plane.Constant()) return Plane3::SideOfPlane::Negative;
+        if (m_plane.Normal().dot(vecMin) > m_plane.Constant()) return Plane3::SideOfPlane::Positive;
+        if (m_plane.Normal().dot(vecMax) < m_plane.Constant()) return Plane3::SideOfPlane::Negative;
         return Plane3::SideOfPlane::Overlap;
     }
     else
     {
         float tmp[3] =
         {
-            m_box.Extent(0) * (m_plane.Normal().Dot(m_box.Axis(0))),
-            m_box.Extent(1) * (m_plane.Normal().Dot(m_box.Axis(1))),
-            m_box.Extent(2) * (m_plane.Normal().Dot(m_box.Axis(2))),
+            m_box.Extent(0) * (m_plane.Normal().dot(m_box.Axis(0))),
+            m_box.Extent(1) * (m_plane.Normal().dot(m_box.Axis(1))),
+            m_box.Extent(2) * (m_plane.Normal().dot(m_box.Axis(2))),
         };
 
         float radius = fabs(tmp[0]) + fabs(tmp[1]) + fabs(tmp[2]);

@@ -32,29 +32,29 @@ Intersector::Result IntrBox2Box2::test(std::unique_ptr<IntersectorCache> /*last_
     float absADotB[2][2], absADotD, sum;
 
     // axis C0+t*A0
-    absADotB[0][0] = fabs(axisA[0].Dot(axisB[0]));
-    absADotB[0][1] = fabs(axisA[0].Dot(axisB[1]));
-    absADotD = fabs(axisA[0].Dot(vecD));
+    absADotB[0][0] = fabs(axisA[0].dot(axisB[0]));
+    absADotB[0][1] = fabs(axisA[0].dot(axisB[1]));
+    absADotD = fabs(axisA[0].dot(vecD));
     sum = extentA[0] + extentB[0] * absADotB[0][0] + extentB[1] * absADotB[0][1];
     if (absADotD > sum)
         return { false, nullptr };
 
     // axis C0+t*A1
-    absADotB[1][0] = fabs(axisA[1].Dot(axisB[0]));
-    absADotB[1][1] = fabs(axisA[1].Dot(axisB[1]));
-    absADotD = fabs(axisA[1].Dot(vecD));
+    absADotB[1][0] = fabs(axisA[1].dot(axisB[0]));
+    absADotB[1][1] = fabs(axisA[1].dot(axisB[1]));
+    absADotD = fabs(axisA[1].dot(vecD));
     sum = extentA[1] + extentB[0] * absADotB[1][0] + extentB[1] * absADotB[1][1];
     if (absADotD > sum)
         return { false, nullptr };
 
     // axis C0+t*B0
-    absADotD = fabs(axisB[0].Dot(vecD));
+    absADotD = fabs(axisB[0].dot(vecD));
     sum = extentB[0] + extentA[0] * absADotB[0][0] + extentA[1] * absADotB[1][0];
     if (absADotD > sum)
         return { false, nullptr };
 
     // axis C0+t*B1
-    absADotD = fabs(axisB[1].Dot(vecD));
+    absADotD = fabs(axisB[1].dot(vecD));
     sum = extentB[1] + extentA[0] * absADotB[0][1] + extentA[1] * absADotB[1][1];
     if (absADotD > sum)
         return { false, nullptr };

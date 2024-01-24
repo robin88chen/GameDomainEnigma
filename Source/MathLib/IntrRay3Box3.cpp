@@ -32,8 +32,8 @@ Intersector::Result IntrRay3Box3::test(std::unique_ptr<IntersectorCache> /*last_
     for (int i = 0; i < 3; i++)
     {
         float e, f, t1, t2, tt;
-        e = m_box.Axis(i).Dot(p);
-        f = m_box.Axis(i).Dot(m_ray.direction());
+        e = m_box.Axis(i).dot(p);
+        f = m_box.Axis(i).dot(m_ray.direction());
         if (fabs(f) > Math::ZERO_TOLERANCE) // 軸跟方向不是垂直的, 射線跟slab plane有交點
         {
             t1 = (e + m_box.Extent(i)) / f;

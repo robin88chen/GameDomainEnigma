@@ -17,9 +17,9 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::xyQuad(const MathLib::Vector3& left_bo
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
-    positions.emplace_back(MathLib::Vector3(left_bottom.X(), right_top.Y(), left_bottom.Z()));
-    positions.emplace_back(MathLib::Vector3(right_top.X(), right_top.Y(), left_bottom.Z()));
-    positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
+    positions.emplace_back(MathLib::Vector3(left_bottom.x(), right_top.y(), left_bottom.z()));
+    positions.emplace_back(MathLib::Vector3(right_top.x(), right_top.y(), left_bottom.z()));
+    positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), left_bottom.z()));
     m_dto.position3s() = positions;
     m_normal = MathLib::Vector3(0, 0, 1);
     uint_buffer indices =
@@ -40,9 +40,9 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::xzQuad(const MathLib::Vector3& left_bo
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
-    positions.emplace_back(MathLib::Vector3(left_bottom.X(), left_bottom.Y(), right_top.Z()));
-    positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), right_top.Z()));
-    positions.emplace_back(MathLib::Vector3(right_top.X(), left_bottom.Y(), left_bottom.Z()));
+    positions.emplace_back(MathLib::Vector3(left_bottom.x(), left_bottom.y(), right_top.z()));
+    positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), right_top.z()));
+    positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), left_bottom.z()));
     m_dto.position3s() = positions;
     m_normal = MathLib::Vector3(0, 1, 0);
     uint_buffer indices =
@@ -76,9 +76,9 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::textureCoord(const MathLib::Vector2& l
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.texture2DCoords() = texcoords;
@@ -119,13 +119,13 @@ CubeDtoHelper& CubeDtoHelper::cube(const MathLib::Vector3& center, const MathLib
     MathLib::Vector3 xyz0 = center - axis_extent;
     MathLib::Vector3 xyz1 = center + axis_extent;
     positions.emplace_back(xyz0);
-    positions.emplace_back(MathLib::Vector3(xyz1.X(), xyz0.Y(), xyz0.Z()));
-    positions.emplace_back(MathLib::Vector3(xyz1.X(), xyz0.Y(), xyz1.Z()));
-    positions.emplace_back(MathLib::Vector3(xyz0.X(), xyz0.Y(), xyz1.Z()));
-    positions.emplace_back(MathLib::Vector3(xyz0.X(), xyz1.Y(), xyz0.Z()));
-    positions.emplace_back(MathLib::Vector3(xyz1.X(), xyz1.Y(), xyz0.Z()));
+    positions.emplace_back(MathLib::Vector3(xyz1.x(), xyz0.y(), xyz0.z()));
+    positions.emplace_back(MathLib::Vector3(xyz1.x(), xyz0.y(), xyz1.z()));
+    positions.emplace_back(MathLib::Vector3(xyz0.x(), xyz0.y(), xyz1.z()));
+    positions.emplace_back(MathLib::Vector3(xyz0.x(), xyz1.y(), xyz0.z()));
+    positions.emplace_back(MathLib::Vector3(xyz1.x(), xyz1.y(), xyz0.z()));
     positions.emplace_back(xyz1);
-    positions.emplace_back(MathLib::Vector3(xyz0.X(), xyz1.Y(), xyz1.Z()));
+    positions.emplace_back(MathLib::Vector3(xyz0.x(), xyz1.y(), xyz1.z()));
     m_dto.position3s() = positions;
     uint_buffer indices =
     {
@@ -153,12 +153,12 @@ CubeDtoHelper& CubeDtoHelper::facedCube(const MathLib::Vector3& center, const Ma
     std::vector<MathLib::Vector3> positions;
     MathLib::Vector3 xyz0 = center - axis_extent;
     MathLib::Vector3 xyz6 = center + axis_extent;
-    MathLib::Vector3 xyz1(xyz6.X(), xyz0.Y(), xyz0.Z());
-    MathLib::Vector3 xyz2(xyz6.X(), xyz0.Y(), xyz6.Z());
-    MathLib::Vector3 xyz3(xyz0.X(), xyz0.Y(), xyz6.Z());
-    MathLib::Vector3 xyz4(xyz0.X(), xyz6.Y(), xyz0.Z());
-    MathLib::Vector3 xyz5(xyz6.X(), xyz6.Y(), xyz0.Z());
-    MathLib::Vector3 xyz7(xyz0.X(), xyz6.Y(), xyz6.Z());
+    MathLib::Vector3 xyz1(xyz6.x(), xyz0.y(), xyz0.z());
+    MathLib::Vector3 xyz2(xyz6.x(), xyz0.y(), xyz6.z());
+    MathLib::Vector3 xyz3(xyz0.x(), xyz0.y(), xyz6.z());
+    MathLib::Vector3 xyz4(xyz0.x(), xyz6.y(), xyz0.z());
+    MathLib::Vector3 xyz5(xyz6.x(), xyz6.y(), xyz0.z());
+    MathLib::Vector3 xyz7(xyz0.x(), xyz6.y(), xyz6.z());
     positions.emplace_back(xyz0);
     positions.emplace_back(xyz1);
     positions.emplace_back(xyz2);
@@ -206,14 +206,14 @@ CubeDtoHelper& CubeDtoHelper::facedCube(const MathLib::Vector3& center, const Ma
 CubeDtoHelper& CubeDtoHelper::normal()
 {
     std::vector<MathLib::Vector3> normals;
-    normals.emplace_back(MathLib::Vector3(-1, -1, -1).Normalize());
-    normals.emplace_back(MathLib::Vector3(1, -1, -1).Normalize());
-    normals.emplace_back(MathLib::Vector3(1, -1, 1).Normalize());
-    normals.emplace_back(MathLib::Vector3(-1, -1, 1).Normalize());
-    normals.emplace_back(MathLib::Vector3(-1, 1, -1).Normalize());
-    normals.emplace_back(MathLib::Vector3(1, 1, -1).Normalize());
-    normals.emplace_back(MathLib::Vector3(1, 1, 1).Normalize());
-    normals.emplace_back(MathLib::Vector3(-1, 1, 1).Normalize());
+    normals.emplace_back(MathLib::Vector3(-1, -1, -1).normalize());
+    normals.emplace_back(MathLib::Vector3(1, -1, -1).normalize());
+    normals.emplace_back(MathLib::Vector3(1, -1, 1).normalize());
+    normals.emplace_back(MathLib::Vector3(-1, -1, 1).normalize());
+    normals.emplace_back(MathLib::Vector3(-1, 1, -1).normalize());
+    normals.emplace_back(MathLib::Vector3(1, 1, -1).normalize());
+    normals.emplace_back(MathLib::Vector3(1, 1, 1).normalize());
+    normals.emplace_back(MathLib::Vector3(-1, 1, 1).normalize());
     m_dto.normals() = normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
@@ -255,13 +255,13 @@ CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, 
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.texture2DCoords() = texcoords;
@@ -274,30 +274,30 @@ CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, 
 CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     texcoords.emplace_back(left_bottom);
-    texcoords.emplace_back(MathLib::Vector2(left_bottom.X(), right_top.Y()));
+    texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
-    texcoords.emplace_back(MathLib::Vector2(right_top.X(), left_bottom.Y()));
+    texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.texture2DCoords() = texcoords;
@@ -311,13 +311,13 @@ CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector3& left_bottom_f
 {
     std::vector<MathLib::Vector3> texcoords;
     texcoords.emplace_back(left_bottom_front);
-    texcoords.emplace_back(MathLib::Vector3(right_top_back.X(), left_bottom_front.Y(), left_bottom_front.Z()));
-    texcoords.emplace_back(MathLib::Vector3(right_top_back.X(), left_bottom_front.Y(), right_top_back.Z()));
-    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.X(), left_bottom_front.Y(), right_top_back.Z()));
-    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.X(), right_top_back.Y(), left_bottom_front.Z()));
-    texcoords.emplace_back(MathLib::Vector3(right_top_back.X(), right_top_back.Y(), left_bottom_front.Z()));
+    texcoords.emplace_back(MathLib::Vector3(right_top_back.x(), left_bottom_front.y(), left_bottom_front.z()));
+    texcoords.emplace_back(MathLib::Vector3(right_top_back.x(), left_bottom_front.y(), right_top_back.z()));
+    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.x(), left_bottom_front.y(), right_top_back.z()));
+    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.x(), right_top_back.y(), left_bottom_front.z()));
+    texcoords.emplace_back(MathLib::Vector3(right_top_back.x(), right_top_back.y(), left_bottom_front.z()));
     texcoords.emplace_back(MathLib::Vector3(right_top_back));
-    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.X(), right_top_back.Y(), right_top_back.Z()));
+    texcoords.emplace_back(MathLib::Vector3(left_bottom_front.x(), right_top_back.y(), right_top_back.z()));
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
     tex_dto.texture3DCoords() = texcoords;
@@ -332,12 +332,12 @@ CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector3& left_bot
     std::vector<MathLib::Vector3> texcoords;
     MathLib::Vector3 xyz0 = left_bottom_front;
     MathLib::Vector3 xyz6 = right_top_back;
-    MathLib::Vector3 xyz1(xyz6.X(), xyz0.Y(), xyz0.Z());
-    MathLib::Vector3 xyz2(xyz6.X(), xyz0.Y(), xyz6.Z());
-    MathLib::Vector3 xyz3(xyz0.X(), xyz0.Y(), xyz6.Z());
-    MathLib::Vector3 xyz4(xyz0.X(), xyz6.Y(), xyz0.Z());
-    MathLib::Vector3 xyz5(xyz6.X(), xyz6.Y(), xyz0.Z());
-    MathLib::Vector3 xyz7(xyz0.X(), xyz6.Y(), xyz6.Z());
+    MathLib::Vector3 xyz1(xyz6.x(), xyz0.y(), xyz0.z());
+    MathLib::Vector3 xyz2(xyz6.x(), xyz0.y(), xyz6.z());
+    MathLib::Vector3 xyz3(xyz0.x(), xyz0.y(), xyz6.z());
+    MathLib::Vector3 xyz4(xyz0.x(), xyz6.y(), xyz0.z());
+    MathLib::Vector3 xyz5(xyz6.x(), xyz6.y(), xyz0.z());
+    MathLib::Vector3 xyz7(xyz0.x(), xyz6.y(), xyz6.z());
     texcoords.emplace_back(xyz0);
     texcoords.emplace_back(xyz1);
     texcoords.emplace_back(xyz2);
@@ -464,7 +464,7 @@ SphereDtoHelper& SphereDtoHelper::sphere(const MathLib::Vector3& center, float r
 
             // 球的中心點在(0,0,0), normal 就跟位置是一樣的
             normal = vecPos[i];
-            vecNor[i] = normal.Normalize();
+            vecNor[i] = normal.normalize();
             vecPos[i] += center;
 
             tcoord[0] = radialFraction;

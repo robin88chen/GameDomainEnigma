@@ -206,7 +206,7 @@ Matrix4 Spatial::getParentWorldTransform() const
 error Spatial::setLocalPosition(const Vector3& pos)
 {
     m_vecLocalPosition = pos;
-    m_mxLocalTransform.SetColumn(3, Vector4(pos.X(), pos.Y(), pos.Z(), 1.0f));
+    m_mxLocalTransform.SetColumn(3, Vector4(pos.x(), pos.y(), pos.z(), 1.0f));
     return _updateLocalTransform(m_mxLocalTransform);
 }
 
@@ -235,7 +235,7 @@ error Spatial::setLocalRotation(const Quaternion& qt)
 error Spatial::setLocalEulerAngle(const Vector3& angle)
 {
     m_vecLocalEulerAngle = angle;
-    m_mxLocalRotation = Matrix3::FromEulerAnglesXYZ({ m_vecLocalEulerAngle.X(), m_vecLocalEulerAngle.Y(), m_vecLocalEulerAngle.Z() });
+    m_mxLocalRotation = Matrix3::FromEulerAnglesXYZ({ m_vecLocalEulerAngle.x(), m_vecLocalEulerAngle.y(), m_vecLocalEulerAngle.z() });
     m_qtLocalQuaternion = Quaternion::FromRotationMatrix(m_mxLocalRotation);
     m_mxLocalTransform = Matrix4::FromSRT(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition);
     return _updateLocalTransform(m_mxLocalTransform);
@@ -276,7 +276,7 @@ void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
         vecLocalPos = mxNewParentWorldInv.TransformCoord(vecWorldPos);
     }
     Matrix4 mxNewLocalTransform = m_mxLocalTransform;
-    mxNewLocalTransform.SetColumn(3, Vector4(vecLocalPos.X(), vecLocalPos.Y(), vecLocalPos.Z(), 1.0f));
+    mxNewLocalTransform.SetColumn(3, Vector4(vecLocalPos.x(), vecLocalPos.y(), vecLocalPos.z(), 1.0f));
     // change parent node or not?
     if (getParent() != targetParentNode)
     {

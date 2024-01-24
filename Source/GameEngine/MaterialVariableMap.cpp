@@ -190,11 +190,11 @@ void MaterialVariableMap::assignViewPortDimension(EffectVariable& var)
 void MaterialVariableMap::useCameraParameter(const Vector3& pos, const Matrix4& view, const Matrix4& proj)
 {
     assert(m_instance);
-    m_instance->m_vecCameraPos = Vector4(pos.X(), pos.Y(), pos.Z(), 1.0f);
+    m_instance->m_vecCameraPos = Vector4(pos.x(), pos.y(), pos.z(), 1.0f);
     m_instance->m_mxViewTransform = view;
     m_instance->m_mxProjTransform = proj;
-    m_instance->m_vecTangentFov.X() = 1.0f / proj[0][0];
-    m_instance->m_vecTangentFov.Y() = 1.0f / proj[1][1];
+    m_instance->m_vecTangentFov.x() = 1.0f / proj[0][0];
+    m_instance->m_vecTangentFov.y() = 1.0f / proj[1][1];
     m_instance->m_mxViewInvTransform = view.Inverse();
     m_instance->m_mxProjInvTransform = proj.Inverse();
     m_instance->calculateFaceToCameraWorldTransform();
@@ -217,7 +217,7 @@ void MaterialVariableMap::useSunLight(const ColorRGBA& color, const Vector3& dir
 {
     assert(m_instance);
     m_instance->m_colorSunLight = color;
-    m_instance->m_vecSunLightDir = Vector4(-dir.X(), -dir.Y(), -dir.Z(), 1.0f);  // shader裡面使用反方向
+    m_instance->m_vecSunLightDir = Vector4(-dir.x(), -dir.y(), -dir.z(), 1.0f);  // shader裡面使用反方向
 }
 
 void MaterialVariableMap::usePointLight(Vector4* pos_range, ColorRGBA* color, Vector4* attenuation, unsigned int count)

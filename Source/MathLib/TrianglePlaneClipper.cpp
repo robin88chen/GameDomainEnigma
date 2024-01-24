@@ -131,10 +131,10 @@ bool TrianglePlaneClipper::SplitOneTriangleByPlane(const Triangle3& triangle, co
 
     // intersect Pt = ( P1 - P0 )t + P0
     // t = ( D - N dot P0 ) / ( N dot ( P1 - P0 ) )
-    float dt = plane.Constant() - plane.Normal().Dot(triangle[va]);
-    float ndvb = plane.Normal().Dot(triangle[vb] - triangle[va]);
+    float dt = plane.Constant() - plane.Normal().dot(triangle[va]);
+    float ndvb = plane.Normal().dot(triangle[vb] - triangle[va]);
     if (std::fabs(ndvb) < Math::Epsilon()) return false;
-    float ndvc = plane.Normal().Dot(triangle[vc] - triangle[va]);
+    float ndvc = plane.Normal().dot(triangle[vc] - triangle[va]);
     if (std::fabs(ndvc) < Math::Epsilon()) return false;
     destTriangle[va] = triangle[va];
     destTriangle[vb] = (dt / ndvb) * (triangle[vb] - triangle[va]) + triangle[va];
@@ -164,10 +164,10 @@ bool TrianglePlaneClipper::SplitTwoTriangleByPlane(const Triangle3& triangle, co
 
     // intersect Pt = ( P1 - P0 )t + P0
     // t = ( D - N dot P0 ) / ( N dot ( P1 - P0 ) )
-    float dt = plane.Constant() - plane.Normal().Dot(triangle[va]);
-    float ndvb = plane.Normal().Dot(triangle[vb] - triangle[va]);
+    float dt = plane.Constant() - plane.Normal().dot(triangle[va]);
+    float ndvb = plane.Normal().dot(triangle[vb] - triangle[va]);
     if (std::fabs(ndvb) < Math::Epsilon()) return false;
-    float ndvc = plane.Normal().Dot(triangle[vc] - triangle[va]);
+    float ndvc = plane.Normal().dot(triangle[vc] - triangle[va]);
     if (std::fabs(ndvc) < Math::Epsilon()) return false;
     Vector3 vecInterAB = (dt / ndvb) * (triangle[vb] - triangle[va]) + triangle[va];
     Vector3 vecInterAC = (dt / ndvc) * (triangle[vc] - triangle[va]) + triangle[va];

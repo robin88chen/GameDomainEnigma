@@ -55,7 +55,7 @@ namespace Enigma::Animators
         virtual void processBeforeRemoveListening() {};
 
         bool isListened() const { return m_isListened; };
-        void setListened(bool flag) { m_isListened = flag; };
+        void isListened(bool flag) { m_isListened = flag; };
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

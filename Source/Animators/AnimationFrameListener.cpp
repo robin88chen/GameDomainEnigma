@@ -56,7 +56,7 @@ error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Animato
     if (!ani) return ErrorCode::nullAnimator;
     if (ani->isListened()) return ErrorCode::animatorMultiListening;
     m_listeningAnimators.emplace_back(ani);
-    ani->setListened(true);
+    ani->isListened(true);
     ani->processAfterAddListening();
 
     m_needTick = true;
@@ -68,7 +68,7 @@ error AnimationFrameListener::removeListeningAnimator(const std::shared_ptr<Anim
     if (!ani) return ErrorCode::nullAnimator;
     if (!ani->isListened()) return ErrorCode::ok;
 
-    ani->setListened(false);
+    ani->isListened(false);
     ani->processBeforeRemoveListening();
     m_listeningAnimators.remove_if([=](std::weak_ptr<Animator> wp)
         { return ((!wp.expired()) && (wp.lock() == ani)); });
@@ -104,7 +104,7 @@ bool AnimationFrameListener::updateAnimator(const std::unique_ptr<Timer>& timer)
         all_res |= res;
         if (!res)  // no update, remove this animator and continue
         {
-            ani->setListened(false);
+            ani->isListened(false);
             ani->processBeforeRemoveListening();
             m_hasExpiredAnimator = true;
             ++iter;

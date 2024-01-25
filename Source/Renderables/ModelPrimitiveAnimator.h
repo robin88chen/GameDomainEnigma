@@ -14,6 +14,7 @@
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "SkinAnimationOperator.h"
+#include "MeshNodeTree.h"
 #include <optional>
 #include <memory>
 
@@ -43,12 +44,10 @@ namespace Enigma::Renderables
         //void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
         //std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
 
-        void onAttachingControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
+        void onAttachingMeshNodeTree(const MeshNodeTree& mesh_node_tree);
 
         /** link animation set, then re-calculate mapping */
         //void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
-        /** calculate mesh node mapping */
-        void calculateMeshNodeMapping();
 
         /** link skin mesh */
         void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
@@ -74,6 +73,9 @@ namespace Enigma::Renderables
 
         bool updateMeshNodeTransform();
         bool updateMeshNodeTransformWithFading();
+
+        /** calculate mesh node mapping */
+        void calculateMeshNodeMapping(const MeshNodeTree& mesh_node_tree);
 
         std::shared_ptr<Renderables::ModelPrimitive> cacheControlledModel();
 

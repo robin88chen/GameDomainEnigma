@@ -20,7 +20,7 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI_NON_BASE
     public:
         SkinAnimationOperator();
-        SkinAnimationOperator(const Engine::GenericDto& dto, const std::shared_ptr<ModelPrimitive>& model);
+        SkinAnimationOperator(const Engine::GenericDto& dto, const Primitives::PrimitiveId& model_id);
         SkinAnimationOperator(const SkinAnimationOperator& op);
         SkinAnimationOperator(SkinAnimationOperator&& op) noexcept;
         ~SkinAnimationOperator();
@@ -34,7 +34,7 @@ namespace Enigma::Renderables
 
         void linkSkinMeshPrimitive(const std::shared_ptr<Renderables::SkinMeshPrimitive>& prim, const std::vector<std::string>& boneNodeNames);
         void calculateNodeOffsetMatrix(const std::shared_ptr<Renderables::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
-        void linkNodeOffsetMatrix(const std::shared_ptr<Renderables::ModelPrimitive>& model, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
+        void linkNodeOffsetMatrix(const Primitives::PrimitiveId& model_id, const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         void updateSkinMeshBoneMatrix(const Renderables::MeshNodeTree& mesh_node_tree);
 
         std::shared_ptr<Renderables::SkinMeshPrimitive> getTargetSkinMeshPrimitive() const

@@ -30,7 +30,9 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : P
     m_nodeTree = MeshNodeTree(primDto.nodeTree());
     if (primDto.animatorId())
     {
-        m_animator = Animator::queryAnimator(primDto.animatorId().value());
+        ModelPrimitive::animatorId(primDto.animatorId().value());
+        //m_animatorId = primDto.animatorId().value();
+        //m_animator = Animator::queryAnimator(primDto.animatorId().value());
     }
 }
 
@@ -93,7 +95,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
-    if (m_animator) dto.animatorId() = m_animator->id();
+    dto.animatorId() = m_animatorId;
     return dto.toGenericDto();
 }
 
@@ -283,9 +285,20 @@ void ModelPrimitive::selectVisualTechnique(const std::string& techniqueName)
     }
 }
 
+void ModelPrimitive::animatorId(const Animators::AnimatorId& animator_id)
+{
+    if (m_animatorId == animator_id) return;
+    m_animatorId = animator_id;
+    const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(animator_id));
+    if (animator)
+    {
+        animator->onAttachingControlledModel(std::dynamic_pointer_cast<ModelPrimitive>(shared_from_this()));
+    }
+}
+
 void ModelPrimitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animator>>& resultList)
 {
-    if (m_animator) resultList.push_back(m_animator);
+    if (const auto animator = getAnimator()) resultList.push_back(animator);
     if (m_nodeTree.getMeshNodeCount() == 0) return;  // no mesh node
     unsigned int mesh_count = getMeshPrimitiveCount();
     if (mesh_count == 0) return;

@@ -11,7 +11,7 @@ SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOper
 {
 }
 
-SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto, const std::shared_ptr<ModelPrimitive>& model) : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
+SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto, const Primitives::PrimitiveId& model_id) : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
 {
     SkinOperatorDto skin_op_dto(dto);
     m_factoryDesc = skin_op_dto.factoryDesc();
@@ -20,9 +20,9 @@ SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto, cons
         auto skin = std::dynamic_pointer_cast<SkinMeshPrimitive>(Primitives::Primitive::queryPrimitive(skin_op_dto.skinMeshId().value()));
         linkSkinMeshPrimitive(skin, skin_op_dto.boneNodeNames());
     }
-    if ((model) && (skin_op_dto.nodeOffsets()))
+    if (skin_op_dto.nodeOffsets())
     {
-        linkNodeOffsetMatrix(model, skin_op_dto.nodeOffsets().value());
+        linkNodeOffsetMatrix(model_id, skin_op_dto.nodeOffsets().value());
     }
 }
 
@@ -126,9 +126,10 @@ void SkinAnimationOperator::linkSkinMeshPrimitive(const std::shared_ptr<SkinMesh
     }
 }
 
-void SkinAnimationOperator::linkNodeOffsetMatrix(const std::shared_ptr<ModelPrimitive>& model,
+void SkinAnimationOperator::linkNodeOffsetMatrix(const Primitives::PrimitiveId& model_id,
     const std::vector<Matrix4>& boneNodeOffsets)
 {
+    const auto model = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_id));
     // 前提是，bone name & bone offset 順序是相同的
     if (FATAL_LOG_EXPR(!model)) return;
     if (FATAL_LOG_EXPR(!m_boneNodeNames.size())) return;

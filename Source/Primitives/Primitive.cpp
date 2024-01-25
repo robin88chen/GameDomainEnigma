@@ -27,5 +27,11 @@ std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)
 
 void Primitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList)
 {
-    if (m_animator) resultList.push_back(m_animator);
+    if (const auto animator = getAnimator()) resultList.push_back(animator);
+    //if (m_animator) resultList.push_back(m_animator);
+}
+
+std::shared_ptr<Enigma::Animators::Animator> Primitive::getAnimator()
+{
+    return Animators::Animator::queryAnimator(m_animatorId);
 }

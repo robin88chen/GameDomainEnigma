@@ -13,6 +13,7 @@
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/GenericDto.h"
 #include "AnimatorId.h"
+#include "Primitives/PrimitiveId.h"
 #include <memory>
 
 namespace Enigma::Animators
@@ -39,6 +40,9 @@ namespace Enigma::Animators
         const AnimatorId& id() const { return m_id; }
         virtual Engine::GenericDto serializeDto() const = 0;
 
+        std::optional<Primitives::PrimitiveId> controlledPrimitiveId() const { return m_controlledPrimitiveId; }
+        std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() { return m_controlledPrimitiveId; }
+
         /** animation update
         @return has update something or not */
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>&) { return HasUpdated::False; /* base class do nothing */ };
@@ -60,6 +64,7 @@ namespace Enigma::Animators
         AnimatorId m_id;
         bool m_isListened;
         Engine::FactoryDesc m_factoryDesc;
+        std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
     };
 }
 

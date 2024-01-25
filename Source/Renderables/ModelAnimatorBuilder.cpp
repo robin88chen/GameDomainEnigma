@@ -58,7 +58,7 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
 
 void ModelAnimatorBuilder::LinkSkinMeshOperators()
 {
-    if (!m_builtAnimator->getControlledModel()) return;
+    /*if (!m_builtAnimator->getControlledModel()) return;
 
     for (auto& op : m_policy->SkinOperators())
     {
@@ -85,7 +85,7 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
         {
             m_builtAnimator->linkSkinMesh(skin_mesh, op.boneNodeNames());
         }
-    }
+    }*/
 }
 
 void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
@@ -102,7 +102,7 @@ void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
         return;
     }
     model_anim->factoryDesc() = m_originalAssetDesc;
-    m_builtAnimator->linkAnimationAsset(model_anim);
+    //m_builtAnimator->linkAnimationAsset(model_anim);
     if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
     EventPublisher::post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));
 }

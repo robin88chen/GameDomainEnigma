@@ -78,8 +78,10 @@ namespace Enigma::Primitives
         /** get selected visual technique */
         virtual std::string& getSelectedVisualTechnique() { return m_selectedVisualTech; };
 
-        virtual void attachAnimator(const std::shared_ptr<Animators::Animator>& animator) { m_animator = animator; }
-        virtual const std::shared_ptr<Animators::Animator>& getAnimator() { return m_animator; }
+        virtual const Animators::AnimatorId& animatorId() const { return m_animatorId; }
+        virtual void animatorId(const Animators::AnimatorId& animator_id) { m_animatorId = animator_id; }
+        //virtual void attachAnimator(const std::shared_ptr<Animators::Animator>& animator) { m_animator = animator; }
+        //virtual const std::shared_ptr<Animators::Animator>& getAnimator() { return m_animator; }
 
         /** enum animator list deep, including geometry's animator */
         virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
@@ -103,6 +105,9 @@ namespace Enigma::Primitives
         }
 
     protected:
+        virtual std::shared_ptr<Animators::Animator> getAnimator();
+
+    protected:
         PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Frameworks::LazyStatus m_lazyStatus;
@@ -110,7 +115,8 @@ namespace Enigma::Primitives
         PrimitiveFlags m_primitiveFlags;
         MathLib::Matrix4 m_mxPrimitiveWorld;
         std::string m_selectedVisualTech;
-        std::shared_ptr<Animators::Animator> m_animator;
+        Animators::AnimatorId m_animatorId;
+        //std::shared_ptr<Animators::Animator> m_animator;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

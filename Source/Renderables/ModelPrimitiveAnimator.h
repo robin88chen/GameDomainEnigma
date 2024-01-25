@@ -40,13 +40,15 @@ namespace Enigma::Renderables
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 
-        void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
-        std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
+        //void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
+        //std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
+
+        void onAttachingControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
 
         /** link animation set, then re-calculate mapping */
-        void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
+        //void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
         /** calculate mesh node mapping */
-        virtual void calculateMeshNodeMapping();
+        void calculateMeshNodeMapping();
 
         /** link skin mesh */
         void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
@@ -73,6 +75,8 @@ namespace Enigma::Renderables
         bool updateMeshNodeTransform();
         bool updateMeshNodeTransformWithFading();
 
+        std::shared_ptr<Renderables::ModelPrimitive> cacheControlledModel();
+
     protected:
         struct MeshNodeMappingData
         {
@@ -82,7 +86,7 @@ namespace Enigma::Renderables
         typedef std::vector<MeshNodeMappingData> MeshNodeMappingArray;
 
     protected:
-        std::weak_ptr<Renderables::ModelPrimitive> m_controlledPrimitive; ///< 控制的物件，不會跟著深層複製
+        std::weak_ptr<Renderables::ModelPrimitive> m_controlledModel; ///< 控制的物件，不會跟著深層複製
 
         std::shared_ptr<ModelAnimationAsset> m_animationAsset;
         MeshNodeMappingArray m_meshNodeMapping;

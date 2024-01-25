@@ -33,9 +33,12 @@
 #include "Geometries/GeometryCommands.h"
 #include "Primitives/PrimitiveEvents.h"
 #include "Primitives/PrimitiveCommands.h"
+#include "Animators/AnimationAssetEvents.h"
+#include "Animators/AnimationAssetCommands.h"
 #include "CubeGeometryMaker.h"
 #include "CameraMaker.h"
 #include "ModelPrimitiveMaker.h"
+#include "ModelAnimatorMaker.h"
 #include "Geometries/GeometryData.h"
 #include "Platforms/AndroidBridge.h"
 
@@ -98,6 +101,10 @@ void AnimatedModelTest::installEngine()
     EventPublisher::subscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
     m_onPrimitiveConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onPrimitiveConstituted(e); });
     EventPublisher::subscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
+    m_onAnimationAssetConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onAnimationAssetConstituted(e); });
+    EventPublisher::subscribe(typeid(AnimationAssetConstituted), m_onAnimationAssetConstituted);
+    m_onConstituteAnimationAssetFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimationAssetFailed(e); });
+    EventPublisher::subscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
 
     m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
     EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
@@ -123,8 +130,10 @@ void AnimatedModelTest::installEngine()
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
+    m_meshNodeNames = { "test_model_node_0", "test_model_node_1", "test_model_node_2", "test_model_node_3" };
     makeCamera();
     makeCube();
+    makeAnimation();
 }
 
 void AnimatedModelTest::shutdownEngine()
@@ -140,6 +149,10 @@ void AnimatedModelTest::shutdownEngine()
     m_onGeometryConstituted = nullptr;
     EventPublisher::unsubscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
     m_onPrimitiveConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(AnimationAssetConstituted), m_onAnimationAssetConstituted);
+    m_onAnimationAssetConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
+    m_onConstituteAnimationAssetFailed = nullptr;
 
     EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
     m_onRenderablePrimitiveBuilt = nullptr;
@@ -222,7 +235,19 @@ void AnimatedModelTest::makeModel()
     }
     else
     {
-        ModelPrimitiveMaker::makeModelPrimitive(m_modelId, m_meshId);
+        ModelPrimitiveMaker::makeModelPrimitive(m_modelId, m_meshId, m_meshNodeNames);
+    }
+}
+
+void AnimatedModelTest::makeAnimation()
+{
+    m_animationId = AnimationAssetId("test_animation");
+    if (auto animation = AnimationAsset::queryAnimationAsset(m_animationId))
+    {
+    }
+    else
+    {
+        ModelAnimatorMaker::makeModelAnimationAsset(m_animationId, m_meshNodeNames[0]);
     }
 }
 
@@ -322,4 +347,22 @@ void AnimatedModelTest::onBuildRenderablePrimitiveFailed(const Enigma::Framework
     const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
     if (!ev) return;
     //Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
+}
+
+void AnimatedModelTest::onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<AnimationAssetConstituted, IEvent>(e);
+    if (!ev) return;
+    if (ev->id() != m_animationId) return;
+    if (ev->isPersisted()) return;
+    CommandBus::post(std::make_shared<PutAnimationAsset>(m_animationId, ev->animation()));
+}
+
+void AnimatedModelTest::onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<ConstituteAnimationAssetFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("animation asset %s constitute failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }

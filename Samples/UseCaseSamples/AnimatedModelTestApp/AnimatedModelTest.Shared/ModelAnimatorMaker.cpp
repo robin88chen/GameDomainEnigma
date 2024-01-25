@@ -3,6 +3,7 @@
 #include "Renderables/ModelAnimationDtos.h"
 #include "Renderables/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetCommands.h"
+#include "Animators/AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
 
 using namespace Enigma::Animators;
@@ -46,6 +47,15 @@ void ModelAnimatorMaker::makeModelAnimationAsset(const Enigma::Animators::Animat
     model_animation_asset_dto.meshNodeNames() = std::vector<std::string>{ mesh_node_name };
     model_animation_asset_dto.timeSRTs().push_back(anim_srt_dto.toGenericDto());
     Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimationAsset>(animation_id, model_animation_asset_dto.toGenericDto()));
+}
+
+void ModelAnimatorMaker::makeModelAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_id, const Enigma::Primitives::PrimitiveId& model_id)
+{
+    ModelAnimatorDto model_animator_dto;
+    model_animator_dto.id() = animator_id;
+    model_animator_dto.animationAssetId() = animation_id;
+    model_animator_dto.controlledPrimitiveId() = model_id;
+    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimator>(animator_id, model_animator_dto.toGenericDto()));
 }
 
 /*std::shared_ptr<ModelAnimationAsset> ModelAnimatorMaker::MakeModelAnimationAsset(

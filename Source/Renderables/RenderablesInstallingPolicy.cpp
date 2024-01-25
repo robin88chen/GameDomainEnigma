@@ -8,8 +8,10 @@
 #include "ModelPrimitiveAnimator.h"
 #include "ModelAnimationAsset.h"
 #include "Frameworks/CommandBus.h"
-#include "Animators/AnimatorCommands.h"
-#include "Animators/AnimationAssetCommands.h"
+#include "Animators/AnimatorRepository.h"
+#include "Animators/AnimatorFactory.h"
+#include "Animators/AnimationAssetRepository.h"
+#include "Animators/AnimationAssetFactory.h"
 #include <system_error>
 
 using namespace Enigma::Renderables;
@@ -23,8 +25,13 @@ error RenderablesInstallingPolicy::install(Frameworks::ServiceManager* service_m
     assert(primitive_repository);
     service_manager->registerSystemService(std::make_shared<RenderablePrimitiveBuilder>(service_manager, primitive_repository, geometry_repository));
 
-    Frameworks::CommandBus::post(std::make_shared<Animators::RegisterAnimatorFactory>(ModelPrimitiveAnimator::TYPE_RTTI.getName(), ModelPrimitiveAnimator::create, ModelPrimitiveAnimator::constitute));
-    Frameworks::CommandBus::post(std::make_shared<Animators::RegisterAnimationAssetFactory>(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute));
+    auto animator_repository = service_manager->getSystemServiceAs<Animators::AnimatorRepository>();
+    assert(animator_repository);
+    animator_repository->factory()->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), ModelPrimitiveAnimator::create, ModelPrimitiveAnimator::constitute);
+    auto animation_asset_repository = service_manager->getSystemServiceAs<Animators::AnimationAssetRepository>();
+    assert(animation_asset_repository);
+    animation_asset_repository->factory()->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute);
+
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);
     return std::error_code();

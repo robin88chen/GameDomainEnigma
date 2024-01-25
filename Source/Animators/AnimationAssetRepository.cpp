@@ -32,6 +32,8 @@ AnimationAssetRepository::~AnimationAssetRepository()
 
 ServiceResult AnimationAssetRepository::onInit()
 {
+    assert(m_storeMapper);
+
     m_queryAnimationAsset = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryAnimationAsset(q); });
     QueryDispatcher::subscribe(typeid(QueryAnimationAsset), m_queryAnimationAsset);
     m_removeAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeAnimationAsset(c); });
@@ -39,11 +41,13 @@ ServiceResult AnimationAssetRepository::onInit()
     m_putAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putAnimationAsset(c); });
     CommandBus::subscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
 
+    m_storeMapper->connect();
     return ServiceResult::Complete;
 }
 
 ServiceResult AnimationAssetRepository::onTerm()
 {
+    assert(m_storeMapper);
     QueryDispatcher::unsubscribe(typeid(QueryAnimationAsset), m_queryAnimationAsset);
     m_queryAnimationAsset = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
@@ -51,6 +55,7 @@ ServiceResult AnimationAssetRepository::onTerm()
     CommandBus::unsubscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
     m_putAnimationAsset = nullptr;
 
+    m_storeMapper->disconnect();
     return ServiceResult::Complete;
 }
 

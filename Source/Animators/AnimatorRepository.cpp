@@ -28,6 +28,7 @@ AnimatorRepository::AnimatorRepository(Frameworks::ServiceManager* srv_manager, 
 AnimatorRepository::~AnimatorRepository()
 {
     SAFE_DELETE(m_factory);
+    m_animators.clear();
 }
 
 ServiceResult AnimatorRepository::onInit()

@@ -12,13 +12,13 @@ using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 using namespace Enigma::Frameworks;
 
-void ModelPrimitiveMaker::makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id)
+void ModelPrimitiveMaker::makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const std::vector<std::string>& mesh_node_names)
 {
     MeshNodeTreeDto tree;
     for (unsigned i = 0; i < 4; i++)
     {
         MeshNodeDto node;
-        node.name() = string_format("%s_node_%d", model_id.name().c_str(), i);
+        node.name() = mesh_node_names[i];
         node.localT_PosTransform() = Matrix4::MakeTranslateTransform((float)i * 0.5f, (float)i * 0.3f, (float)i * 0.2f);
         if (i != 0)
         {

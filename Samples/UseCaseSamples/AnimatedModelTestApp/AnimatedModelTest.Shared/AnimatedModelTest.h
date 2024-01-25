@@ -23,6 +23,7 @@
 #include "Renderables/ModelPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
+#include "Animators/AnimationAssetId.h"
 
 class AnimatedModelTest : public Enigma::Application::AppDelegate
 {
@@ -45,12 +46,15 @@ protected:
     void makeCube();
     void makeMesh();
     void makeModel();
+    void makeAnimation();
 
     void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
     void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
@@ -60,11 +64,15 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
     Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
+    Enigma::Frameworks::EventSubscriberPtr m_onAnimationAssetConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimationAssetFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
+    std::vector<std::string> m_meshNodeNames;
     Enigma::SceneGraph::SpatialId m_cameraId;
     Enigma::Geometries::GeometryId m_cubeId;
+    Enigma::Animators::AnimationAssetId m_animationId;
     Enigma::Primitives::PrimitiveId m_meshId;
     Enigma::Primitives::PrimitiveId m_modelId;
     Enigma::Renderer::RendererPtr m_renderer;

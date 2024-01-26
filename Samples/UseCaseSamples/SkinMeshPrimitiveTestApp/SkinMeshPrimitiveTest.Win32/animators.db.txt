@@ -1,0 +1,2 @@
+0
+test_animator,0,En.Renderables.ModelPrimitiveAnimator,test_animator.animator@DataPath

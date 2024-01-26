@@ -47,6 +47,7 @@ protected:
     void makeMesh();
     void makeModel();
     void makeAnimation();
+    void makeAnimator();
 
     void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
@@ -55,6 +56,8 @@ protected:
     void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onAnimatorConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onConstituteAnimatorFailed(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
@@ -66,6 +69,8 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onAnimationAssetConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimationAssetFailed;
+    Enigma::Frameworks::EventSubscriberPtr m_onAnimatorConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimatorFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
@@ -73,6 +78,7 @@ protected:
     Enigma::SceneGraph::SpatialId m_cameraId;
     Enigma::Geometries::GeometryId m_cubeId;
     Enigma::Animators::AnimationAssetId m_animationId;
+    Enigma::Animators::AnimatorId m_animatorId;
     Enigma::Primitives::PrimitiveId m_meshId;
     Enigma::Primitives::PrimitiveId m_modelId;
     Enigma::Renderer::RendererPtr m_renderer;

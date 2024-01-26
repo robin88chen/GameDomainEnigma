@@ -1,46 +1,49 @@
 ﻿#include "AnimatedModelTest.h"
-#include "FileSystem/FileSystem.h"
-#include "FileSystem/StdMountPath.h"
-#include "FileSystem/AndroidMountPath.h"
-#include "Frameworks/EventPublisher.h"
-#include "Frameworks/CommandBus.h"
-#include "Renderables/RenderableEvents.h"
-#include "Renderer/RendererEvents.h"
+#include "Animators/AnimationAssetCommands.h"
+#include "Animators/AnimationAssetEvents.h"
 #include "Animators/AnimatorCommands.h"
-#include "GameEngine/DeviceCreatingPolicy.h"
-#include "GameEngine/EngineInstallingPolicy.h"
-#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Animators/AnimatorCommands.h"
+#include "Animators/AnimatorEvents.h"
 #include "Animators/AnimatorInstallingPolicy.h"
-#include "Renderer/RendererInstallingPolicy.h"
-#include "Geometries/GeometryInstallingPolicy.h"
-#include "SceneGraph/SceneGraphInstallingPolicy.h"
-#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
-#include "GameEngine/TextureRepositoryInstallingPolicy.h"
-#include "Renderables/RenderablesInstallingPolicy.h"
-#include "Gateways/JsonFileDtoDeserializer.h"
+#include "CameraMaker.h"
+#include "CubeGeometryMaker.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
-#include "FileStorage/AnimatorFileStoreMapper.h"
-#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileSystem/AndroidMountPath.h"
+#include "FileSystem/FileSystem.h"
+#include "FileSystem/StdMountPath.h"
+#include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
+#include "GameEngine/DeviceCreatingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "Renderables/MeshPrimitive.h"
-#include "SceneGraph/CameraFrustumEvents.h"
-#include "SceneGraph/CameraFrustumCommands.h"
-#include "Geometries/GeometryDataEvents.h"
+#include "Gateways/JsonFileDtoDeserializer.h"
 #include "Geometries/GeometryCommands.h"
-#include "Primitives/PrimitiveEvents.h"
-#include "Primitives/PrimitiveCommands.h"
-#include "Animators/AnimationAssetEvents.h"
-#include "Animators/AnimationAssetCommands.h"
-#include "CubeGeometryMaker.h"
-#include "CameraMaker.h"
-#include "ModelPrimitiveMaker.h"
-#include "ModelAnimatorMaker.h"
 #include "Geometries/GeometryData.h"
+#include "Geometries/GeometryDataEvents.h"
+#include "Geometries/GeometryInstallingPolicy.h"
+#include "ModelAnimatorMaker.h"
+#include "ModelPrimitiveMaker.h"
 #include "Platforms/AndroidBridge.h"
+#include "Primitives/PrimitiveCommands.h"
+#include "Primitives/PrimitiveEvents.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Renderables/MeshPrimitive.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
+#include "Renderables/RenderableEvents.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "Renderer/RendererEvents.h"
+#include "Renderer/RendererInstallingPolicy.h"
+#include "SceneGraph/CameraFrustumCommands.h"
+#include "SceneGraph/CameraFrustumEvents.h"
+#include "SceneGraph/SceneGraphInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
 using namespace Enigma::FileSystem;
@@ -105,6 +108,10 @@ void AnimatedModelTest::installEngine()
     EventPublisher::subscribe(typeid(AnimationAssetConstituted), m_onAnimationAssetConstituted);
     m_onConstituteAnimationAssetFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimationAssetFailed(e); });
     EventPublisher::subscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
+    m_onAnimatorConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onAnimatorConstituted(e); });
+    EventPublisher::subscribe(typeid(AnimatorConstituted), m_onAnimatorConstituted);
+    m_onConstituteAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimatorFailed(e); });
+    EventPublisher::subscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
 
     m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
     EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
@@ -131,8 +138,13 @@ void AnimatedModelTest::installEngine()
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
     m_meshNodeNames = { "test_model_node_0", "test_model_node_1", "test_model_node_2", "test_model_node_3" };
+    m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
+    m_cubeId = GeometryId("test_geometry");
+    m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
+    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
+    m_animationId = AnimationAssetId("test_animation");
+    m_animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
     makeCamera();
-    makeCube();
     makeAnimation();
 }
 
@@ -153,6 +165,10 @@ void AnimatedModelTest::shutdownEngine()
     m_onAnimationAssetConstituted = nullptr;
     EventPublisher::unsubscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
     m_onConstituteAnimationAssetFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(AnimatorConstituted), m_onAnimatorConstituted);
+    m_onAnimatorConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
+    m_onConstituteAnimatorFailed = nullptr;
 
     EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
     m_onRenderablePrimitiveBuilt = nullptr;
@@ -187,7 +203,6 @@ void AnimatedModelTest::renderFrame()
 
 void AnimatedModelTest::makeCamera()
 {
-    m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
     if (const auto camera = Camera::queryCamera(m_cameraId))
     {
         m_camera = camera;
@@ -201,7 +216,6 @@ void AnimatedModelTest::makeCamera()
 
 void AnimatedModelTest::makeCube()
 {
-    m_cubeId = GeometryId("test_geometry");
     if (GeometryData::queryGeometryData(m_cubeId))
     {
         makeMesh();
@@ -214,7 +228,6 @@ void AnimatedModelTest::makeCube()
 
 void AnimatedModelTest::makeMesh()
 {
-    m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
     if (Primitive::queryPrimitive(m_meshId))
     {
         makeModel();
@@ -227,7 +240,6 @@ void AnimatedModelTest::makeMesh()
 
 void AnimatedModelTest::makeModel()
 {
-    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
     if (auto model = Primitive::queryPrimitive(m_modelId))
     {
         m_model = std::dynamic_pointer_cast<ModelPrimitive>(model);
@@ -235,19 +247,31 @@ void AnimatedModelTest::makeModel()
     }
     else
     {
-        ModelPrimitiveMaker::makeModelPrimitive(m_modelId, m_meshId, m_meshNodeNames);
+        ModelPrimitiveMaker::makeModelPrimitive(m_modelId, m_meshId, m_animatorId, m_meshNodeNames);
     }
 }
 
 void AnimatedModelTest::makeAnimation()
 {
-    m_animationId = AnimationAssetId("test_animation");
     if (auto animation = AnimationAsset::queryAnimationAsset(m_animationId))
     {
+        makeAnimator();
     }
     else
     {
         ModelAnimatorMaker::makeModelAnimationAsset(m_animationId, m_meshNodeNames[0]);
+    }
+}
+
+void AnimatedModelTest::makeAnimator()
+{
+    if (auto animator = Animator::queryAnimator(m_animatorId))
+    {
+        makeCube();
+    }
+    else
+    {
+        ModelAnimatorMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId);
     }
 }
 
@@ -287,6 +311,11 @@ void AnimatedModelTest::onPrimitiveConstituted(const Enigma::Frameworks::IEventP
     }
     else if (ev->id() == m_modelId)
     {
+        if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
+        {
+            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 4.0f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+        }
+        CommandBus::post(std::make_shared<AddListeningAnimator>(Animator::queryAnimator(m_animatorId)));
         if (ev->isPersisted()) return;
         m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->primitive());
         CommandBus::post(std::make_shared<PutPrimitive>(m_modelId, ev->primitive()));
@@ -357,6 +386,7 @@ void AnimatedModelTest::onAnimationAssetConstituted(const Enigma::Frameworks::IE
     if (ev->id() != m_animationId) return;
     if (ev->isPersisted()) return;
     CommandBus::post(std::make_shared<PutAnimationAsset>(m_animationId, ev->animation()));
+    makeAnimator();
 }
 
 void AnimatedModelTest::onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e)
@@ -365,4 +395,23 @@ void AnimatedModelTest::onConstituteAnimationAssetFailed(const Enigma::Framework
     const auto ev = std::dynamic_pointer_cast<ConstituteAnimationAssetFailed, IEvent>(e);
     if (!ev) return;
     Enigma::Platforms::Debug::ErrorPrintf("animation asset %s constitute failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
+}
+
+void AnimatedModelTest::onAnimatorConstituted(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<AnimatorConstituted, IEvent>(e);
+    if (!ev) return;
+    if (ev->id() != m_animatorId) return;
+    if (ev->isPersisted()) return;
+    CommandBus::post(std::make_shared<PutAnimator>(m_animatorId, ev->animator()));
+    makeCube();
+}
+
+void AnimatedModelTest::onConstituteAnimatorFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<ConstituteAnimatorFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("animator %s constitute failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }

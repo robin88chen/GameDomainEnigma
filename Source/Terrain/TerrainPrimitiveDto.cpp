@@ -20,7 +20,7 @@ TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderables::MeshPrimitiveDto& dt
 
 TerrainPrimitiveDto TerrainPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPrimitiveDto terrain_dto(MeshPrimitiveDto::fromGenericDto(dto));
+    TerrainPrimitiveDto terrain_dto{ MeshPrimitiveDto{dto} };
     return terrain_dto;
 }
 

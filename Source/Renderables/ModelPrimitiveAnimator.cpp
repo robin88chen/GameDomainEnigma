@@ -33,8 +33,13 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
 {
     ModelAnimatorDto model_ani_dto(dto);
     m_factoryDesc = model_ani_dto.factoryDesc();
+    m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
+    m_remainFadingTime = 0.0f;
+    m_fadingTime = 0.1f;
+    m_isFading = false;
+    m_isOnPlay = false;
     if (model_ani_dto.controlledPrimitiveId())
     {
         m_controlledPrimitiveId = model_ani_dto.controlledPrimitiveId().value();

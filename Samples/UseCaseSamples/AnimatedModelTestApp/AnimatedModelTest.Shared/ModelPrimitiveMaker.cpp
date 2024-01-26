@@ -12,7 +12,7 @@ using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 using namespace Enigma::Frameworks;
 
-void ModelPrimitiveMaker::makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const std::vector<std::string>& mesh_node_names)
+void ModelPrimitiveMaker::makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Animators::AnimatorId& animator_id, const std::vector<std::string>& mesh_node_names)
 {
     MeshNodeTreeDto tree;
     for (unsigned i = 0; i < 4; i++)
@@ -34,6 +34,7 @@ void ModelPrimitiveMaker::makeModelPrimitive(const Enigma::Primitives::Primitive
     model_dto.id() = model_id;
     model_dto.factoryDesc() = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName()).ClaimAsNative(model_id.name() + ".model@DataPath");
     model_dto.nodeTree() = tree.toGenericDto();
+    model_dto.animatorId() = animator_id;
     Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::Primitives::ConstitutePrimitive>(model_id, model_dto.toGenericDto()));
 }
 

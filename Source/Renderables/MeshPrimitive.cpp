@@ -35,7 +35,7 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id) : Primitive(id)
 MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : Primitive(id)
 {
     assert(geometry_repository);
-    MeshPrimitiveDto mesh_dto = MeshPrimitiveDto::fromGenericDto(dto);
+    MeshPrimitiveDto mesh_dto(dto);
     m_factoryDesc = mesh_dto.factoryDesc();
     m_name = id.name();
     m_geometry = nullptr;

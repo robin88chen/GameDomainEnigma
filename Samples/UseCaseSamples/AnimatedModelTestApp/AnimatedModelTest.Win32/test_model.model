@@ -127,5 +127,9 @@
                         }]
                 }
             }
+        },
+        "ModelAnimatorId": {
+            "Type": "StringArray",
+            "Value": ["test_animator", "0", "En.Renderables.ModelPrimitiveAnimator"]
         }
     }]

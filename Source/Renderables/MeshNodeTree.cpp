@@ -14,7 +14,7 @@ MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 
 MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
-    MeshNodeTreeDto mesh_node_tree_dto = MeshNodeTreeDto::fromGenericDto(dto);
+    MeshNodeTreeDto mesh_node_tree_dto(dto);
     m_factoryDesc = mesh_node_tree_dto.factoryDesc();
     for (auto& node_dto : mesh_node_tree_dto.meshNodes())
     {

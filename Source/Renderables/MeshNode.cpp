@@ -42,7 +42,7 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
 
 MeshNode::MeshNode(const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
 {
-    MeshNodeDto mesh_node_dto = MeshNodeDto::fromGenericDto(dto);
+    MeshNodeDto mesh_node_dto(dto);
     m_name = mesh_node_dto.name();
     m_mxT_PosTransform = mesh_node_dto.localT_PosTransform();
     m_mxLocalTransform = m_mxT_PosTransform;

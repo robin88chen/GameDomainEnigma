@@ -39,7 +39,7 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder()
     m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
 
-    CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::skinMeshDtoConvertToPolicy));
+    //CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::skinMeshDtoConvertToPolicy));
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
@@ -65,7 +65,7 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 
 void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto)
 {
-    m_buildingDto = MeshPrimitiveDto::fromGenericDto(dto);
+    m_buildingDto = MeshPrimitiveDto(dto);
     m_metaDto = std::make_unique<MeshPrimitiveMetaDto>(m_buildingDto.value());
     m_buildingId = mesh->id();
     m_builtPrimitive = mesh;

@@ -32,6 +32,7 @@ namespace Enigma::Renderables
     {
     public:
         MeshPrimitiveDto();
+        MeshPrimitiveDto(const Engine::GenericDto& dto);
         MeshPrimitiveDto(const MeshPrimitiveDto&) = default;
         MeshPrimitiveDto(MeshPrimitiveDto&&) = default;
         ~MeshPrimitiveDto() = default;
@@ -58,7 +59,7 @@ namespace Enigma::Renderables
         [[nodiscard]] const std::string& visualTechniqueSelection() const { return m_visualTechniqueSelection; }
         std::string& visualTechniqueSelection() { return m_visualTechniqueSelection; }
 
-        static MeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        //static MeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
         //static std::shared_ptr<Engine::GenericPolicy> meshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
@@ -93,6 +94,7 @@ namespace Enigma::Renderables
     {
     public:
         SkinMeshPrimitiveDto();
+        SkinMeshPrimitiveDto(const Engine::GenericDto& dto);
         SkinMeshPrimitiveDto(const MeshPrimitiveDto&);
         SkinMeshPrimitiveDto(const SkinMeshPrimitiveDto&) = default;
         SkinMeshPrimitiveDto(SkinMeshPrimitiveDto&&) = default;
@@ -100,15 +102,16 @@ namespace Enigma::Renderables
         SkinMeshPrimitiveDto& operator=(const SkinMeshPrimitiveDto&) = default;
         SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
 
-        static SkinMeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        //static SkinMeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-        static std::shared_ptr<Engine::GenericPolicy> skinMeshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
+        //static std::shared_ptr<Engine::GenericPolicy> skinMeshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 
     class MeshNodeDto
     {
     public:
         MeshNodeDto();
+        MeshNodeDto(const Engine::GenericDto& dto);
         MeshNodeDto(const MeshNodeDto&) = default;
         MeshNodeDto(MeshNodeDto&&) = default;
         ~MeshNodeDto() = default;
@@ -129,7 +132,7 @@ namespace Enigma::Renderables
         [[nodiscard]] std::optional<unsigned> parentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& parentIndexInArray() { return m_parentIndexInArray; }
 
-        static MeshNodeDto fromGenericDto(const Engine::GenericDto& dto);
+        //static MeshNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -145,6 +148,7 @@ namespace Enigma::Renderables
     {
     public:
         MeshNodeTreeDto();
+        MeshNodeTreeDto(const Engine::GenericDto& dto);
         MeshNodeTreeDto(const MeshNodeTreeDto&) = default;
         MeshNodeTreeDto(MeshNodeTreeDto&&) = default;
         ~MeshNodeTreeDto() = default;
@@ -157,7 +161,7 @@ namespace Enigma::Renderables
         [[nodiscard]] const Engine::GenericDtoCollection& meshNodes() const { return m_nodeDtos; }
         Engine::GenericDtoCollection& meshNodes() { return m_nodeDtos; }
 
-        static MeshNodeTreeDto fromGenericDto(const Engine::GenericDto& dto);
+        //static MeshNodeTreeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -169,6 +173,7 @@ namespace Enigma::Renderables
     {
     public:
         ModelPrimitiveDto();
+        ModelPrimitiveDto(const Engine::GenericDto& dto);
         ModelPrimitiveDto(const ModelPrimitiveDto&) = default;
         ModelPrimitiveDto(ModelPrimitiveDto&&) = default;
         ~ModelPrimitiveDto() = default;
@@ -185,7 +190,7 @@ namespace Enigma::Renderables
         [[nodiscard]] const std::optional<Animators::AnimatorId>& animatorId() const { return m_animatorId; }
         std::optional<Animators::AnimatorId>& animatorId() { return m_animatorId; }
 
-        static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
+        //static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
         //static std::shared_ptr<Engine::GenericPolicy> modelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);

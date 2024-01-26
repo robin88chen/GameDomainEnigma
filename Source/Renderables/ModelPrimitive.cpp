@@ -25,7 +25,7 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
 
 ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : Primitive(id)
 {
-    ModelPrimitiveDto primDto = ModelPrimitiveDto::fromGenericDto(dto);
+    ModelPrimitiveDto primDto(dto);
     m_factoryDesc = primDto.factoryDesc();
     m_nodeTree = MeshNodeTree(primDto.nodeTree());
     if (primDto.animatorId())

@@ -10,11 +10,12 @@
 
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
+#include "Animators/AnimatorId.h"
 
 class ModelPrimitiveMaker
 {
 public:
-    static void makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const std::vector<std::string>& mesh_node_names);
+    static void makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Animators::AnimatorId& animator_id, const std::vector<std::string>& mesh_node_names);
     static void makeCubeMeshPrimitive(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id);
 };
 

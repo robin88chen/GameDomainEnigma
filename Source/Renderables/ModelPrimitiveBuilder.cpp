@@ -56,7 +56,7 @@ void ModelPrimitiveBuilder::BuildModelPrimitive(const Frameworks::Ruid& ruid, co
     m_builtPrimitive = std::make_shared<ModelPrimitive>(m_policy->id());
     for (auto& dto : m_policy->nodeTreeDto().meshNodes())
     {
-        MeshNodeDto node_dto = MeshNodeDto::fromGenericDto(dto);
+        MeshNodeDto node_dto(dto);
         MeshNode node(node_dto.name());
         node.setT_PosTransform(node_dto.localT_PosTransform());
         node.setLocalTransform(node_dto.localT_PosTransform());

@@ -101,7 +101,7 @@ stdext::optional_ref<const MeshNode> MeshNodeTree::getMeshNode(unsigned index) c
     return m_meshNodes[index];
 }
 
-std::shared_ptr<MeshPrimitive> MeshNodeTree::getMeshPrimitiveInNode(unsigned index)
+std::shared_ptr<MeshPrimitive> MeshNodeTree::getMeshPrimitiveInNode(unsigned index) const
 {
     if (index >= m_meshNodes.size()) return nullptr;
     return m_meshNodes[index].getMeshPrimitive();

@@ -44,15 +44,15 @@ namespace Enigma::Renderables
         //void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
         //std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
 
-        void onAttachingMeshNodeTree(const MeshNodeTree& mesh_node_tree);
+        void onAttachingMeshNodeTree(const Primitives::PrimitiveId& model_id, const MeshNodeTree& mesh_node_tree);
 
         /** link animation set, then re-calculate mapping */
         //void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
 
         /** link skin mesh */
-        void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
-        void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
-            const std::vector<MathLib::Matrix4>& boneNodeOffsets);
+        //void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
+        //void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
+        //const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         /** get skin mesh animation operator,
                 model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/
         const SkinAnimationOperator& getSkinAnimOperator(unsigned int index);

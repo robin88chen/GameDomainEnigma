@@ -6,7 +6,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.Renderables.SkinMeshPrimitive",
-                "PrefabFilename": ""
+                "PrefabFilename": "test_mesh.mesh@DataPath"
             }
         },
         "GeometryId": {

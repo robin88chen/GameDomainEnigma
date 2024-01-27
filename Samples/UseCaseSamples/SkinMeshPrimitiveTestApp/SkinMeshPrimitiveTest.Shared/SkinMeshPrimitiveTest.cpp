@@ -357,11 +357,11 @@ void SkinMeshPrimitiveTest::onPrimitiveConstituted(const Enigma::Frameworks::IEv
     }
     else if (ev->id() == m_modelId)
     {
-        /*if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
+        if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
         {
-            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 4.0f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
         }
-        CommandBus::post(std::make_shared<AddListeningAnimator>(Animator::queryAnimator(m_animatorId)));*/
+        CommandBus::post(std::make_shared<AddListeningAnimator>(Animator::queryAnimator(m_animatorId)));
         if (ev->isPersisted()) return;
         m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->primitive());
         CommandBus::post(std::make_shared<PutPrimitive>(m_modelId, ev->primitive()));

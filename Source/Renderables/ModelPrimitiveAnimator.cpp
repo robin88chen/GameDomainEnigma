@@ -57,7 +57,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
     {
         for (auto& op_dto : model_ani_dto.skinOperators())
         {
-            m_skinAnimOperators.emplace_back(op_dto, m_controlledPrimitiveId.value());
+            m_skinAnimOperators.emplace_back(op_dto);
         }
     }
 }
@@ -127,9 +127,14 @@ void ModelPrimitiveAnimator::reset()
     updateTimeValue();
 }
 
-void ModelPrimitiveAnimator::onAttachingMeshNodeTree(const MeshNodeTree& mesh_node_tree)
+void ModelPrimitiveAnimator::onAttachingMeshNodeTree(const Primitives::PrimitiveId& model_id, const MeshNodeTree& mesh_node_tree)
 {
+    m_controlledPrimitiveId = model_id;
     calculateMeshNodeMapping(mesh_node_tree);
+    for (auto& op : m_skinAnimOperators)
+    {
+        op.onAttachingMeshNodeTree(mesh_node_tree);
+    }
 }
 
 /*void ModelPrimitiveAnimator::setControlledModel(const std::shared_ptr<ModelPrimitive>& model)
@@ -172,7 +177,7 @@ void ModelPrimitiveAnimator::calculateMeshNodeMapping(const MeshNodeTree& mesh_n
     }
 }
 
-void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
+/*void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
     const std::vector<std::string>& boneNodeNames)
 {
     SkinAnimationOperator skin_oper = SkinAnimationOperator();
@@ -196,7 +201,7 @@ void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitiv
         skin_oper.linkNodeOffsetMatrix(model->id(), boneNodeOffsets);
     }
     m_skinAnimOperators.emplace_back(skin_oper);
-}
+}*/
 
 const SkinAnimationOperator& ModelPrimitiveAnimator::getSkinAnimOperator(unsigned index)
 {

@@ -291,7 +291,7 @@ void ModelPrimitive::animatorId(const Animators::AnimatorId& animator_id)
     m_animatorId = animator_id;
     if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(animator_id)))
     {
-        animator->onAttachingMeshNodeTree(m_nodeTree);
+        animator->onAttachingMeshNodeTree(m_id, m_nodeTree);
     }
 }
 

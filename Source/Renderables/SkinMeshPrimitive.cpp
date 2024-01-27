@@ -20,7 +20,7 @@ SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id) : MeshPrimitive(id)
 
 SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
 {
-    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
+    m_factoryDesc = dto.getRtti();
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 

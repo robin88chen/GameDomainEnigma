@@ -42,7 +42,7 @@ namespace Enigma::Renderables
         unsigned getMeshNodeCount() const { return static_cast<unsigned>(m_meshNodes.size()); };
         stdext::optional_ref<MeshNode> getMeshNode(unsigned index);
         stdext::optional_ref<const MeshNode> getMeshNode(unsigned index) const;
-        std::shared_ptr<MeshPrimitive> getMeshPrimitiveInNode(unsigned index);
+        std::shared_ptr<MeshPrimitive> getMeshPrimitiveInNode(unsigned index) const;
         /// is child node in sub-tree? (find parent mesh node from child mesh node)
         bool isInSubTree(unsigned child_node_index, const std::string& parent_node_name);
 

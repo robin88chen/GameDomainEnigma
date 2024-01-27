@@ -142,7 +142,7 @@ void SkinMeshPrimitiveTest::installEngine()
     m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
     m_cubeId = GeometryId("test_geometry");
     m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
+    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI).next();
     m_animationId = AnimationAssetId("test_animation");
     m_animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
 
@@ -242,7 +242,7 @@ void SkinMeshPrimitiveTest::makeAnimator()
     }
     else
     {
-        SkinAnimationMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId, m_meshId, m_meshNodeNames);
+        SkinAnimationMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId.origin(), m_meshId, m_meshNodeNames);
     }
 }
 
@@ -274,12 +274,18 @@ void SkinMeshPrimitiveTest::makeModel()
 {
     if (auto model = Primitive::queryPrimitive(m_modelId))
     {
+        m_animatorId = model->animatorId();
+        if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
+        {
+            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+        }
+        CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
         m_model = std::dynamic_pointer_cast<ModelPrimitive>(model);
         m_model->updateWorldTransform(Matrix4::IDENTITY);
     }
     else
     {
-        SkinMeshModelMaker::makeModelPrimitive(m_modelId, m_meshId, m_animatorId, m_meshNodeNames);
+        SkinMeshModelMaker::makeModelPrimitive(m_modelId.origin(), m_meshId, m_animatorId, m_meshNodeNames);
     }
 }
 
@@ -355,16 +361,17 @@ void SkinMeshPrimitiveTest::onPrimitiveConstituted(const Enigma::Frameworks::IEv
         CommandBus::post(std::make_shared<PutPrimitive>(m_meshId, ev->primitive()));
         makeModel();
     }
-    else if (ev->id() == m_modelId)
+    else if (ev->id().origin() == m_modelId.origin())
     {
+        if (ev->isPersisted()) return;
+        m_animatorId = ev->primitive()->animatorId();
         if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
         {
             animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
         }
-        CommandBus::post(std::make_shared<AddListeningAnimator>(Animator::queryAnimator(m_animatorId)));
-        if (ev->isPersisted()) return;
+        CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
         m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->primitive());
-        CommandBus::post(std::make_shared<PutPrimitive>(m_modelId, ev->primitive()));
+        CommandBus::post(std::make_shared<PutPrimitive>(m_modelId.origin(), ev->primitive()));
         m_model->updateWorldTransform(Matrix4::IDENTITY);
     }
 }

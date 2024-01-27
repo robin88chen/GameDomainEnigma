@@ -87,20 +87,20 @@ namespace Enigma::Animators
     class AddListeningAnimator : public Frameworks::ICommand
     {
     public:
-        AddListeningAnimator(const std::shared_ptr<Animator>& animator) : m_animator(animator) {}
-        const std::shared_ptr<Animator>& animator() { return m_animator; }
+        AddListeningAnimator(const AnimatorId& id) : m_id(id) {}
+        const AnimatorId& id() { return m_id; }
 
     private:
-        std::shared_ptr<Animator> m_animator;
+        AnimatorId m_id;
     };
     class RemoveListeningAnimator : public Frameworks::ICommand
     {
     public:
-        RemoveListeningAnimator(const std::shared_ptr<Animator>& animator) : m_animator(animator) {}
-        const std::shared_ptr<Animator>& animator() { return m_animator; }
+        RemoveListeningAnimator(const AnimatorId& id) : m_id(id) {}
+        const AnimatorId& id() { return m_id; }
 
     private:
-        std::shared_ptr<Animator> m_animator;
+        AnimatorId m_id;
     };
 }
 

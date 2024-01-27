@@ -85,7 +85,7 @@ std::error_code AnimatorFileStoreMapper::putAnimator(const Animators::AnimatorId
 std::uint64_t AnimatorFileStoreMapper::nextSequenceNumber()
 {
     std::lock_guard locker{ m_file_map_lock };
-    return m_sequence_number++;
+    return ++m_sequence_number;
 }
 
 void AnimatorFileStoreMapper::deserializeMapperFile(const std::string& mapper_file_content)

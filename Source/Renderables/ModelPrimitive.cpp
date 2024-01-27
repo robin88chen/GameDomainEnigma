@@ -95,7 +95,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
-    dto.animatorId() = m_animatorId;
+    dto.animatorId() = m_animatorId.origin();
     return dto.toGenericDto();
 }
 
@@ -288,8 +288,8 @@ void ModelPrimitive::selectVisualTechnique(const std::string& techniqueName)
 void ModelPrimitive::animatorId(const Animators::AnimatorId& animator_id)
 {
     if (m_animatorId == animator_id) return;
-    m_animatorId = animator_id;
-    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(animator_id)))
+    m_animatorId = animator_id == animator_id.origin() ? animator_id.next() : animator_id;
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(m_animatorId)))
     {
         animator->onAttachingMeshNodeTree(m_id, m_nodeTree);
     }

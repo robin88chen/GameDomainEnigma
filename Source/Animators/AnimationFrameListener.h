@@ -19,12 +19,13 @@
 namespace Enigma::Animators
 {
     using error = std::error_code;
+    class AnimatorRepository;
 
     class AnimationFrameListener : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer);
+        AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<AnimatorRepository>& repository, const std::shared_ptr<Engine::TimerService>& timer);
         AnimationFrameListener(const AnimationFrameListener&) = delete;
         AnimationFrameListener(AnimationFrameListener&&) = delete;
         ~AnimationFrameListener() override;
@@ -35,8 +36,8 @@ namespace Enigma::Animators
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error addListeningAnimator(const std::shared_ptr<Animator>& ani);
-        error removeListeningAnimator(const std::shared_ptr<Animator>& ani);
+        error addListeningAnimator(const AnimatorId& animator_id);
+        error removeListeningAnimator(const AnimatorId& animator_id);
         /** update listened animator
         @return true: some animator has update, false: no update */
         bool updateAnimator(const std::unique_ptr<Frameworks::Timer>& timer);
@@ -48,6 +49,7 @@ namespace Enigma::Animators
         void removeListeningAnimator(const Frameworks::ICommandPtr& c);
 
     private:
+        std::weak_ptr<AnimatorRepository> m_repository;
         std::weak_ptr<Engine::TimerService> m_timer;
 
         using ListeningList = std::list<std::weak_ptr<Animator>>;

@@ -11,10 +11,11 @@ using namespace Enigma::Animators;
 error AnimatorInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->registerSystemService(std::make_shared<AnimatorRepository>(service_manager, m_animatorStore));
+    auto repository = std::make_shared<AnimatorRepository>(service_manager, m_animatorStore);
+    service_manager->registerSystemService(repository);
     service_manager->registerSystemService(std::make_shared<AnimationAssetRepository>(service_manager, m_animationAssetStore));
     auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
-    service_manager->registerSystemService(std::make_shared<AnimationFrameListener>(service_manager, timer));
+    service_manager->registerSystemService(std::make_shared<AnimationFrameListener>(service_manager, repository, timer));
     return ErrorCode::ok;
 }
 

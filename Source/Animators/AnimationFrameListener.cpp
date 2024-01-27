@@ -5,15 +5,18 @@
 #include "GameEngine/TimerService.h"
 #include <cassert>
 
+#include "AnimatorRepository.h"
+
 using namespace Enigma::Frameworks;
 using namespace Enigma::Animators;
 
 DEFINE_RTTI(Animators, AnimationFrameListener, ISystemService);
 
-AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer)
+AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<AnimatorRepository>& repository, const std::shared_ptr<Engine::TimerService>& timer)
     : ISystemService(manager), m_hasExpiredAnimator(false)
 {
     assert(timer);
+    m_repository = repository;
     m_timer = timer;
     m_needTick = false;
 }
@@ -51,8 +54,11 @@ ServiceResult AnimationFrameListener::onTerm()
     return ServiceResult::Complete;
 }
 
-error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Animator>& ani)
+error AnimationFrameListener::addListeningAnimator(const AnimatorId& animator_id)
 {
+    assert(!m_repository.expired());
+    if (!m_repository.lock()->hasAnimator(animator_id)) return ErrorCode::nullAnimator;
+    auto ani = m_repository.lock()->queryAnimator(animator_id);
     if (!ani) return ErrorCode::nullAnimator;
     if (ani->isListened()) return ErrorCode::animatorMultiListening;
     m_listeningAnimators.emplace_back(ani);
@@ -63,8 +69,11 @@ error AnimationFrameListener::addListeningAnimator(const std::shared_ptr<Animato
     return ErrorCode::ok;
 }
 
-error AnimationFrameListener::removeListeningAnimator(const std::shared_ptr<Animator>& ani)
+error AnimationFrameListener::removeListeningAnimator(const AnimatorId& animator_id)
 {
+    assert(!m_repository.expired());
+    if (!m_repository.lock()->hasAnimator(animator_id)) return ErrorCode::nullAnimator;
+    const auto ani = m_repository.lock()->queryAnimator(animator_id);
     if (!ani) return ErrorCode::nullAnimator;
     if (!ani->isListened()) return ErrorCode::ok;
 
@@ -134,7 +143,7 @@ void AnimationFrameListener::addListeningAnimator(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<AddListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    addListeningAnimator(cmd->animator());
+    addListeningAnimator(cmd->id());
 }
 
 void AnimationFrameListener::removeListeningAnimator(const ICommandPtr& c)
@@ -142,5 +151,5 @@ void AnimationFrameListener::removeListeningAnimator(const ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RemoveListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    removeListeningAnimator(cmd->animator());
+    removeListeningAnimator(cmd->id());
 }

@@ -142,12 +142,6 @@ void SkinMeshPrimitiveTest::installEngine()
 
     makeCamera();
     makeAnimation();
-    //CubeGeometryMaker::MakeSavedCube("test_geometry");
-    //auto prim_policy = SkinMeshModelMaker::MakeModelPrimitivePolicy("test_model", "test_geometry");
-    //CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(prim_policy));
-
-    //m_camera = CameraMaker::MakeCamera();
-
 }
 
 void SkinMeshPrimitiveTest::shutdownEngine()

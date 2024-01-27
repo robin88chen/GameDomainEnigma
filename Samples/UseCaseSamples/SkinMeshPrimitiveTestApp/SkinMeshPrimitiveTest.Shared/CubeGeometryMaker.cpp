@@ -149,20 +149,4 @@ void CubeGeometryMaker::makeCube(const GeometryId& id)
     dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
 
     Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteGeometry>(id, dto.toGenericDto()));
-
-    /*GenericDto gen_dto = dto.ToGenericDto();
-    FactoryDesc desc(TriangleList::TYPE_RTTI.GetName());
-    desc.ClaimAsResourceAsset(name, name + ".geo", "DataPath");
-    gen_dto.AddRtti(desc);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{gen_dto});
-
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(name + ".geo@DataPath"), "w+b");
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);*/
 }
-
-/*GeometryDataPolicy CubeGeometryMaker::MakeGeometryPolicy(const std::string& name)
-{
-    return GeometryDataPolicy{ name, name + ".geo@DataPath", std::make_shared<JsonFileDtoDeserializer>() };
-}*/

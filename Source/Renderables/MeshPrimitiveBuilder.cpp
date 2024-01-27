@@ -38,8 +38,6 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder()
     EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
     m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
-
-    //CommandBus::post(std::make_shared<RegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName(), SkinMeshPrimitiveDto::skinMeshDtoConvertToPolicy));
 }
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()

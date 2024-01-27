@@ -13,6 +13,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/RendererManager.h"
 #include "GameEngine/EffectVariable.h"
+#include "Renderables/MeshPrimitive.h"
 
 namespace Enigma::ShadowMap
 {

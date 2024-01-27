@@ -12,6 +12,7 @@
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/Node.h"
+#include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include <string>
 #include <memory>

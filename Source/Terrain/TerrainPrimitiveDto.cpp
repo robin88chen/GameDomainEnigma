@@ -1,8 +1,6 @@
 ﻿#include "TerrainPrimitiveDto.h"
 #include "TerrainGeometry.h"
 #include "TerrainPrimitive.h"
-#include "TerrainPrimitivePolicy.h"
-//#include "Renderer/RenderablePrimitivePolicies.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Engine;

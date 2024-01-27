@@ -8,7 +8,6 @@
 #ifndef _RENDERABLE_PRIMITIVE_BUILDER_H
 #define _RENDERABLE_PRIMITIVE_BUILDER_H
 
-#include "RenderablePrimitivePolicies.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -43,8 +42,6 @@ namespace Enigma::Renderables
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        //error buildPrimitive(const Frameworks::Ruid& requester_ruid, const Engine::GenericDto& dto);
-
     protected:
         std::shared_ptr<Primitives::Primitive> createMesh(const Primitives::PrimitiveId& id);
         std::shared_ptr<Primitives::Primitive> constituteMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
@@ -53,35 +50,22 @@ namespace Enigma::Renderables
         std::shared_ptr<Primitives::Primitive> createModel(const Primitives::PrimitiveId& id);
         std::shared_ptr<Primitives::Primitive> constituteModel(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
 
-        //void buildRenderablePrimitive(const Frameworks::Ruid& requester_ruid, const std::shared_ptr<RenderablePrimitivePolicy>& policy);
         void hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan);
 
         void onPrimitiveHydrated(const Frameworks::IEventPtr& e);
         void onHydratePrimitiveFailed(const Frameworks::IEventPtr& e);
 
-        void buildPrimitive(const Frameworks::ICommandPtr& c);
-
     protected:
         std::weak_ptr<Primitives::PrimitiveRepository> m_primitiveRepository;
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
-        //std::shared_ptr<Engine::IDtoDeserializer> m_dtoDeserializer;
-        //std::queue<std::tuple<Frameworks::Ruid, std::shared_ptr<RenderablePrimitivePolicy>>> m_policies;
         std::queue<PrimitiveHydratingPlan> m_primitivePlans;
-        //std::mutex m_policiesLock;
         std::mutex m_primitivePlansLock;
-        //bool m_isCurrentBuilding;
         std::optional<Primitives::PrimitiveId> m_currentBuildingId;
-        //Frameworks::Ruid m_buildingRuid;
 
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveHydrated;
         Frameworks::EventSubscriberPtr m_onHydrateMeshPrimitiveFailed;
-        //Frameworks::EventSubscriberPtr m_onModelPrimitiveBuilt;
-        //Frameworks::EventSubscriberPtr m_onBuildModelPrimitiveFailed;
-
-        Frameworks::CommandSubscriberPtr m_buildPrimitive;
 
         MeshPrimitiveBuilder* m_meshBuilder;
-        //ModelPrimitiveBuilder* m_modelBuilder;
     };
 }
 

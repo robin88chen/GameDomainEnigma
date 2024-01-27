@@ -22,7 +22,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp" />
@@ -33,6 +32,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp" />
   </ItemGroup>
 </Project>

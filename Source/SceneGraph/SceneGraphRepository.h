@@ -12,10 +12,10 @@
 #include "GameEngine/DtoDeserializer.h"
 #include "SceneGraphDefines.h"
 #include "Frustum.h"
-#include "Renderables/RenderablePrimitivePolicies.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "GameEngine/FactoryDesc.h"
+#include "SpatialId.h"
 #include <memory>
 #include <string>
 #include <unordered_map>

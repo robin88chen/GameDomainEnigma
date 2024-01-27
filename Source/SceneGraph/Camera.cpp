@@ -7,10 +7,9 @@
 #include "MathLib/IntrRay3Plane3.h"
 #include "MathLib/MathGlobal.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/CommandBus.h"
-#include "Platforms/PlatformLayer.h"
 #include "SceneGraphQueries.h"
 #include "Frameworks/QueryDispatcher.h"
+#include "MathLib/Quaternion.h"
 #include <cassert>
 #include <memory>
 

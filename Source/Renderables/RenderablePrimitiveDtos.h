@@ -11,9 +11,7 @@
 #include "GameEngine/GenericDto.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/EffectTextureMapDto.h"
-#include "Geometries/GeometryDataDto.h"
 #include "GameEngine/FactoryDesc.h"
-#include "GameEngine/DtoDeserializer.h"
 #include "Renderer/Renderer.h"
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
@@ -48,8 +46,6 @@ namespace Enigma::Renderables
         Geometries::GeometryId& geometryId() { return m_geometryId; }
         [[nodiscard]] const std::optional<Engine::GenericDto>& geometry() const { return m_geometry; }
         std::optional<Engine::GenericDto>& geometry() { return m_geometry; }
-        //[[nodiscard]] const Engine::FactoryDesc& geometryFactoryDesc() const { return m_geometryFactory; }
-        //Engine::FactoryDesc& geometryFactoryDesc() { return m_geometryFactory; }
         [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
         std::vector<Engine::EffectMaterialId>& effects() { return m_effects; }
         [[nodiscard]] const Engine::GenericDtoCollection& textureMaps() const { return m_textureMaps; }
@@ -59,17 +55,13 @@ namespace Enigma::Renderables
         [[nodiscard]] const std::string& visualTechniqueSelection() const { return m_visualTechniqueSelection; }
         std::string& visualTechniqueSelection() { return m_visualTechniqueSelection; }
 
-        //static MeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-
-        //static std::shared_ptr<Engine::GenericPolicy> meshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         Primitives::PrimitiveId m_id;
         Engine::FactoryDesc m_factoryDesc;
         Geometries::GeometryId m_geometryId;
         std::optional<Engine::GenericDto> m_geometry;
-        //Engine::FactoryDesc m_geometryFactory;
         std::vector<Engine::EffectMaterialId> m_effects;
         Engine::GenericDtoCollection m_textureMaps;
         Renderer::Renderer::RenderListID m_renderListID;
@@ -102,9 +94,7 @@ namespace Enigma::Renderables
         SkinMeshPrimitiveDto& operator=(const SkinMeshPrimitiveDto&) = default;
         SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
 
-        //static SkinMeshPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-        //static std::shared_ptr<Engine::GenericPolicy> skinMeshDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 
     class MeshNodeDto
@@ -132,7 +122,6 @@ namespace Enigma::Renderables
         [[nodiscard]] std::optional<unsigned> parentIndexInArray() const { return m_parentIndexInArray; }
         std::optional<unsigned>& parentIndexInArray() { return m_parentIndexInArray; }
 
-        //static MeshNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -161,7 +150,6 @@ namespace Enigma::Renderables
         [[nodiscard]] const Engine::GenericDtoCollection& meshNodes() const { return m_nodeDtos; }
         Engine::GenericDtoCollection& meshNodes() { return m_nodeDtos; }
 
-        //static MeshNodeTreeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -190,10 +178,7 @@ namespace Enigma::Renderables
         [[nodiscard]] const std::optional<Animators::AnimatorId>& animatorId() const { return m_animatorId; }
         std::optional<Animators::AnimatorId>& animatorId() { return m_animatorId; }
 
-        //static ModelPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-
-        //static std::shared_ptr<Engine::GenericPolicy> modelDtoConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
 
     protected:
         Primitives::PrimitiveId m_id;

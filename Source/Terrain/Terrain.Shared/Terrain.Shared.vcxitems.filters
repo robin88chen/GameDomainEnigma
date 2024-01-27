@@ -30,9 +30,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h">
       <Filter>Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
@@ -57,9 +54,6 @@
       <Filter>Primitive</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitivePolicy.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp">

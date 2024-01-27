@@ -8,7 +8,6 @@
 #ifndef _MESH_PRIMITIVE_BUILDER_H
 #define _MESH_PRIMITIVE_BUILDER_H
 
-#include "RenderablePrimitivePolicies.h"
 #include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"

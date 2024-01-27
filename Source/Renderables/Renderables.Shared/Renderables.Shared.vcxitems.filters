@@ -37,9 +37,6 @@
     <Filter Include="Animators\Dtos">
       <UniqueIdentifier>{b64b6472-cbf7-4477-aca2-a706616a9ce2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animators\Builders">
-      <UniqueIdentifier>{720451e9-40c1-4ea8-966e-e778a1766225}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ErrorCodes">
       <UniqueIdentifier>{11038c2a-d22a-427a-937d-d2b62bfb5f98}</UniqueIdentifier>
     </Filter>
@@ -63,9 +60,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp">
-      <Filter>Primitives\Primitive Builders</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
@@ -77,9 +71,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp">
       <Filter>Primitives\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp">
-      <Filter>Primitives\Primitive Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp">
       <Filter>Bounding</Filter>
@@ -108,9 +99,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp">
       <Filter>Animators\Dtos</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
-      <Filter>Animators\Builders</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp">
       <Filter>ErrorCodes</Filter>
     </ClCompile>
@@ -134,9 +122,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h">
-      <Filter>Primitives\Primitive Builders</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveHydratingPlan.h">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
@@ -154,9 +139,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h">
       <Filter>Primitives\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h">
-      <Filter>Primitives\Primitive Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
       <Filter>Events</Filter>
@@ -190,9 +172,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h">
       <Filter>Animators\Dtos</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h">
-      <Filter>Animators\Builders</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h">
       <Filter>ErrorCodes</Filter>

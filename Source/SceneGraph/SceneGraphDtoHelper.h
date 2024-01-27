@@ -12,6 +12,8 @@
 #include "CameraFrustumDtos.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphDtos.h"
+#include "SceneGraph/Spatial.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 
 namespace Enigma::SceneGraph
 {

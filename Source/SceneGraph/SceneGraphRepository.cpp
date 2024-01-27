@@ -32,7 +32,6 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
-using namespace Enigma::Renderer;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 

@@ -9,9 +9,10 @@
 #define MODEL_ANIMATOR_DTOS_H
 
 #include "GameEngine/GenericDto.h"
-#include "Renderables/ModelPrimitive.h"
 #include "Animators/AnimationAssetId.h"
+#include "Animators/AnimatorId.h"
 #include "Primitives/PrimitiveId.h"
+#include "MathLib/Matrix4.h"
 
 namespace Enigma::Renderables
 {
@@ -35,9 +36,6 @@ namespace Enigma::Renderables
         Engine::GenericDtoCollection& skinOperators() { return m_skinOperators; }
 
         Engine::GenericDto toGenericDto();
-
-        //std::shared_ptr<ModelAnimatorPolicy> convertToPolicy(const std::shared_ptr<Renderer::ModelPrimitive>& controlled,
-          //  const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
 
     private:
         Animators::AnimatorId m_id;

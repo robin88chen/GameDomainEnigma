@@ -19,18 +19,15 @@ SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto) : m_
     {
         m_skinMeshId = skin_op_dto.skinMeshId().value();
         m_boneNodeNames = skin_op_dto.boneNodeNames();
-        //linkSkinMeshPrimitive(skin_op_dto.boneNodeNames());
     }
     if (skin_op_dto.nodeOffsets())
     {
         m_t_posNodeOffsets = skin_op_dto.nodeOffsets().value();
-        //linkNodeOffsetMatrix(skin_op_dto.nodeOffsets().value());
     }
 }
 
 SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : m_factoryDesc(op.m_factoryDesc)
 {
-    //if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
     m_skinMeshId = op.m_skinMeshId;
     m_boneNodeNames = op.m_boneNodeNames;
     m_nodeOffsets = op.m_nodeOffsets;
@@ -40,7 +37,6 @@ SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : 
 
 SkinAnimationOperator::SkinAnimationOperator(SkinAnimationOperator&& op) noexcept : m_factoryDesc(op.m_factoryDesc)
 {
-    //if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_skinMeshId = op.m_skinMeshId;
     m_boneNodeNames = std::move(op.m_boneNodeNames);
     m_nodeOffsets = std::move(op.m_nodeOffsets);
@@ -56,7 +52,6 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOpera
 {
     if (this == &op) return *this;
     m_factoryDesc = op.m_factoryDesc;
-    //if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = op.m_skinMeshPrim.lock();
     m_skinMeshId = op.m_skinMeshId;
     m_boneNodeNames = op.m_boneNodeNames;
     m_nodeOffsets = op.m_nodeOffsets;
@@ -68,7 +63,6 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(const SkinAnimationOpera
 SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& op) noexcept
 {
     m_factoryDesc = op.m_factoryDesc;
-    //if (!op.m_skinMeshPrim.expired()) m_skinMeshPrim = std::move(op.m_skinMeshPrim.lock());
     m_skinMeshId = op.m_skinMeshId;
     m_boneNodeNames = std::move(op.m_boneNodeNames);
     m_nodeOffsets = std::move(op.m_nodeOffsets);
@@ -81,7 +75,6 @@ Enigma::Engine::GenericDto SkinAnimationOperator::serializeDto() const
 {
     SkinOperatorDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    //if (!m_skinMeshPrim.expired()) dto.skinMeshId() = m_skinMeshPrim.lock()->id();
     dto.skinMeshId() = m_skinMeshId;
     dto.boneNodeNames() = m_boneNodeNames;
     if (!m_t_posNodeOffsets.empty())
@@ -151,59 +144,3 @@ Matrix4 SkinAnimationOperator::t_posNodeOffset(unsigned index, stdext::optional_
     return Matrix4::IDENTITY;
 }
 
-/*void SkinAnimationOperator::calculateNodeOffsetMatrix(const std::shared_ptr<ModelPrimitive>& model, const Matrix4& root_ref_trans)
-{
-    if (FATAL_LOG_EXPR(!model)) return;
-    if (FATAL_LOG_EXPR(!m_boneNodeNames.size())) return;
-    const unsigned bone_count = static_cast<unsigned>(m_boneNodeNames.size());
-    m_nodeOffsets.resize(bone_count);
-    m_skinNodeIndexMapping.resize(bone_count);
-    for (unsigned int i = 0; i < bone_count; i++)
-    {
-        auto node_idx = model->getMeshNodeTree().findMeshNodeIndex(m_boneNodeNames[i]);
-        m_skinNodeIndexMapping[i] = node_idx;
-        if (!node_idx) continue;
-        auto mesh_node = model->getMeshNodeTree().getMeshNode(node_idx.value());
-        if (!mesh_node) continue;
-        m_nodeOffsets[i] = mesh_node.value().get().getRootRefTransform().Inverse() * root_ref_trans;
-    }
-    if (!m_skinMeshPrim.expired()) m_skinMeshPrim.lock()->createBoneMatrixArray(bone_count);
-}*/
-
-/*void SkinAnimationOperator::linkSkinMeshPrimitive(const std::vector<std::string>& boneNodeNames)
-{
-    m_boneNodeNames = boneNodeNames;
-    if (const auto skin = cacheSkinMesh())
-    {
-        skin->bindPrimitiveBoneMatrix();
-    }
-}*/
-
-/*void SkinAnimationOperator::linkNodeOffsetMatrix(const std::vector<Matrix4>& boneNodeOffsets)
-{
-    const auto model = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_id));
-    // 前提是，bone name & bone offset 順序是相同的
-    if (FATAL_LOG_EXPR(!model)) return;
-    if (FATAL_LOG_EXPR(!m_boneNodeNames.size())) return;
-    const unsigned bone_count = static_cast<unsigned>(m_boneNodeNames.size());
-    m_nodeOffsets.resize(bone_count);
-    m_skinNodeIndexMapping.resize(bone_count);
-    for (unsigned int i = 0; i < bone_count; i++)
-    {
-        auto node_idx = model->getMeshNodeTree().findMeshNodeIndex(m_boneNodeNames[i]);
-        m_skinNodeIndexMapping[i] = node_idx;
-        if (!node_idx) continue;
-        m_nodeOffsets[i] = boneNodeOffsets[i];
-    }
-    if (!m_skinMeshPrim.expired()) m_skinMeshPrim.lock()->createBoneMatrixArray(bone_count);
-}
-
-void SkinAnimationOperator::relinkClonedSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& prim)
-{
-    assert(prim);
-    m_skinMeshPrim = prim;
-    if (!m_skinMeshPrim.expired())
-    {
-        m_skinMeshPrim.lock()->bindPrimitiveBoneMatrix();
-    }
-}*/

@@ -14,6 +14,7 @@
 #include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericPolicy.h"
 #include "ModelAnimatorDtos.h"
+#include "MeshPrimitive.h"
 #include "GameEngine/EffectMaterialId.h"
 #include <string>
 #include <vector>

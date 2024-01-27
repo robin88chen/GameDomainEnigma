@@ -14,11 +14,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
@@ -41,13 +39,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h" />

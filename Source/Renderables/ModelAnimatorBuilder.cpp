@@ -1,5 +1,4 @@
-﻿#include "ModelAnimatorBuilder.h"
-#include "ModelAnimationRepository.h"
+﻿/*#include "ModelAnimatorBuilder.h"
 #include "AnimatorPolicies.h"
 #include "AnimationAssetPolicies.h"
 #include "ModelPrimitiveAnimator.h"
@@ -54,10 +53,10 @@ void ModelAnimatorBuilder::BuildModelAnimator(const std::shared_ptr<ModelAnimato
     {
         EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::policyIncomplete));
     }*/
-}
+    /*}
 
-void ModelAnimatorBuilder::LinkSkinMeshOperators()
-{
+    void ModelAnimatorBuilder::LinkSkinMeshOperators()
+    {*/
     /*if (!m_builtAnimator->getControlledModel()) return;
 
     for (auto& op : m_policy->SkinOperators())
@@ -86,32 +85,32 @@ void ModelAnimatorBuilder::LinkSkinMeshOperators()
             m_builtAnimator->linkSkinMesh(skin_mesh, op.boneNodeNames());
         }
     }*/
-}
+    /*}
 
-void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
-{
-    assert(m_builtAnimator);
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
-    if (!ev) return;
-    if (ev->getName() != m_assetName) return;
-    auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset>(ev->GetAnimationAsset());
-    if (!model_anim)
+    void ModelAnimatorBuilder::OnAnimationAssetBuilt(const IEventPtr& e)
     {
-        EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));
-        return;
+        assert(m_builtAnimator);
+        if (!e) return;
+        const auto ev = std::dynamic_pointer_cast<AnimationAssetBuilt, IEvent>(e);
+        if (!ev) return;
+        if (ev->getName() != m_assetName) return;
+        auto model_anim = std::dynamic_pointer_cast<ModelAnimationAsset>(ev->GetAnimationAsset());
+        if (!model_anim)
+        {
+            EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ErrorCode::dynamicCastFail));
+            return;
+        }
+        model_anim->factoryDesc() = m_originalAssetDesc;
+        //m_builtAnimator->linkAnimationAsset(model_anim);
+        if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
+        EventPublisher::post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));
     }
-    model_anim->factoryDesc() = m_originalAssetDesc;
-    //m_builtAnimator->linkAnimationAsset(model_anim);
-    if (!m_policy->SkinOperators().empty()) LinkSkinMeshOperators();
-    EventPublisher::post(std::make_shared<ModelAnimatorBuilt>(m_policy->getRuid(), m_builtAnimator));
-}
 
-void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<BuildAnimationAssetFailed, IEvent>(e);
-    if (!ev) return;
-    if (ev->getName() != m_assetName) return;
-    EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ev->GetErrorCode()));
-}
+    void ModelAnimatorBuilder::OnBuildAnimationAssetFailed(const IEventPtr& e)
+    {
+        if (!e) return;
+        const auto ev = std::dynamic_pointer_cast<BuildAnimationAssetFailed, IEvent>(e);
+        if (!ev) return;
+        if (ev->getName() != m_assetName) return;
+        EventPublisher::post(std::make_shared<BuildModelAnimatorFailed>(m_policy->getRuid(), ev->GetErrorCode()));
+    }*/

@@ -37,22 +37,12 @@ namespace Enigma::Renderables
         static std::shared_ptr<Animator> create(const Animators::AnimatorId& id);
         static std::shared_ptr<Animator> constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
         virtual Engine::GenericDto serializeDto() const override;
-        //ModelAnimatorDto serializeDto();
+
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;
 
-        //void setControlledModel(const std::shared_ptr<Renderables::ModelPrimitive>& model);
-        //std::shared_ptr<Renderables::ModelPrimitive> getControlledModel() const;
-
         void onAttachingMeshNodeTree(const Primitives::PrimitiveId& model_id, const MeshNodeTree& mesh_node_tree);
 
-        /** link animation set, then re-calculate mapping */
-        //void linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset);
-
-        /** link skin mesh */
-        //void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames);
-        //void linkSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& skin_prim, const std::vector<std::string>& boneNodeNames,
-        //const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         /** get skin mesh animation operator,
                 model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/
         const SkinAnimationOperator& getSkinAnimOperator(unsigned int index);

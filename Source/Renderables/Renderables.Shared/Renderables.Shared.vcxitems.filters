@@ -108,12 +108,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp">
       <Filter>Animators\Dtos</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.cpp">
-      <Filter>Animators</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.cpp">
-      <Filter>Animators\Builders</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.cpp">
       <Filter>Animators\Builders</Filter>
     </ClCompile>
@@ -197,20 +191,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h">
       <Filter>Animators\Dtos</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationRepository.h">
-      <Filter>Animators</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetBuilder.h">
-      <Filter>Animators\Builders</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorBuilder.h">
       <Filter>Animators\Builders</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetPolicies.h">
-      <Filter>Animators\Dtos</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPolicies.h">
-      <Filter>Animators\Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h">
       <Filter>ErrorCodes</Filter>

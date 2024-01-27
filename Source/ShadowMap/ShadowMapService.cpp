@@ -12,6 +12,7 @@
 #include "GameEngine/MaterialVariableMap.h"
 #include "SceneGraph/Pawn.h"
 #include "Renderables/MeshPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 
 using namespace Enigma::ShadowMap;
 using namespace Enigma::Frameworks;

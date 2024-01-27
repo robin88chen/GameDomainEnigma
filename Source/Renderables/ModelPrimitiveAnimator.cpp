@@ -43,7 +43,6 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
     if (model_ani_dto.controlledPrimitiveId())
     {
         m_controlledPrimitiveId = model_ani_dto.controlledPrimitiveId().value();
-        //m_controlledPrimitive = std::dynamic_pointer_cast<ModelPrimitive>(Primitives::Primitive::queryPrimitive(model_ani_dto.controlledPrimitiveId().value()));
     }
     if (model_ani_dto.animationAssetId())
     {
@@ -85,10 +84,6 @@ GenericDto ModelPrimitiveAnimator::serializeDto() const
     dto.id() = id();
     dto.factoryDesc() = m_factoryDesc;
     if (m_controlledPrimitiveId) dto.controlledPrimitiveId() = m_controlledPrimitiveId.value();
-    //if (!m_controlledPrimitive.expired())
-    //{
-      //  dto.controlledPrimitiveId() = m_controlledPrimitive.lock()->id();
-    //}
     if (!m_animationAsset) return dto.toGenericDto();
     dto.animationAssetId() = m_animationAsset->id();
     for (auto& op : m_skinAnimOperators)
@@ -137,24 +132,6 @@ void ModelPrimitiveAnimator::onAttachingMeshNodeTree(const Primitives::Primitive
     }
 }
 
-/*void ModelPrimitiveAnimator::setControlledModel(const std::shared_ptr<ModelPrimitive>& model)
-{
-    m_controlledPrimitive = model;
-    if (model) model->attachAnimator(shared_from_this());
-}
-
-std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::getControlledModel() const
-{
-    if (m_controlledPrimitive.expired()) return nullptr;
-    return m_controlledPrimitive.lock();
-}*/
-
-/*void ModelPrimitiveAnimator::linkAnimationAsset(const std::shared_ptr<ModelAnimationAsset>& anim_asset)
-{
-    m_animationAsset = anim_asset;
-    calculateMeshNodeMapping();
-}*/
-
 void ModelPrimitiveAnimator::calculateMeshNodeMapping(const MeshNodeTree& mesh_node_tree)
 {
     const unsigned mesh_count = mesh_node_tree.getMeshNodeCount();
@@ -176,32 +153,6 @@ void ModelPrimitiveAnimator::calculateMeshNodeMapping(const MeshNodeTree& mesh_n
         }
     }
 }
-
-/*void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
-    const std::vector<std::string>& boneNodeNames)
-{
-    SkinAnimationOperator skin_oper = SkinAnimationOperator();
-    skin_oper.linkSkinMeshPrimitive(skin_prim, boneNodeNames);
-    if (!m_controlledModel.expired())
-    {
-        std::shared_ptr<ModelPrimitive> model = m_controlledModel.lock();
-        skin_oper.calculateNodeOffsetMatrix(model, skin_prim->getOwnerRootRefTransform());
-    }
-    m_skinAnimOperators.emplace_back(skin_oper);
-}
-
-void ModelPrimitiveAnimator::linkSkinMesh(const std::shared_ptr<SkinMeshPrimitive>& skin_prim,
-    const std::vector<std::string>& boneNodeNames, const std::vector<MathLib::Matrix4>& boneNodeOffsets)
-{
-    SkinAnimationOperator skin_oper = SkinAnimationOperator();
-    skin_oper.linkSkinMeshPrimitive(skin_prim, boneNodeNames);
-    if (!m_controlledModel.expired())
-    {
-        std::shared_ptr<ModelPrimitive> model = m_controlledModel.lock();
-        skin_oper.linkNodeOffsetMatrix(model->id(), boneNodeOffsets);
-    }
-    m_skinAnimOperators.emplace_back(skin_oper);
-}*/
 
 const SkinAnimationOperator& ModelPrimitiveAnimator::getSkinAnimOperator(unsigned index)
 {
@@ -251,8 +202,7 @@ bool ModelPrimitiveAnimator::updateTimeValue()
         const bool hasUpdate = updateMeshNodeTransform();
         if (!hasUpdate) return false;
     }
-    //if (m_controlledModel.expired()) return false;
-    const std::shared_ptr<ModelPrimitive> model = cacheControlledModel(); // m_controlledModel.lock();
+    const std::shared_ptr<ModelPrimitive> model = cacheControlledModel();
     if (!model) return false;
     if (m_skinAnimOperators.size() == 1)
     {
@@ -272,8 +222,7 @@ bool ModelPrimitiveAnimator::updateTimeValue()
 bool ModelPrimitiveAnimator::updateMeshNodeTransformWithFading()
 {
     if (m_meshNodeMapping.empty()) return false;
-    //if (m_controlledModel.expired()) return false;
-    const std::shared_ptr<ModelPrimitive> model = cacheControlledModel(); // m_controlledModel.lock();
+    const std::shared_ptr<ModelPrimitive> model = cacheControlledModel();
     if (!model) return false;
     if (model->getMeshNodeTree().getMeshNodeCount() == 0) return false;
     if (!m_animationAsset) return false;
@@ -323,7 +272,6 @@ std::shared_ptr<ModelPrimitive> ModelPrimitiveAnimator::cacheControlledModel()
 bool ModelPrimitiveAnimator::updateMeshNodeTransform()
 {
     if (m_meshNodeMapping.empty()) return false;
-    //if (m_controlledModel.expired()) return false;
     const std::shared_ptr<ModelPrimitive> model = cacheControlledModel(); // m_controlledModel.lock();
     if (!model) return false;
     if (model->getMeshNodeTree().getMeshNodeCount() == 0) return false;

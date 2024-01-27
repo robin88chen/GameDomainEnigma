@@ -32,20 +32,9 @@ namespace Enigma::Renderables
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        //void linkSkinMeshPrimitive(const std::vector<std::string>& boneNodeNames);
-        //void calculateNodeOffsetMatrix(const std::shared_ptr<Renderables::ModelPrimitive>& model, const MathLib::Matrix4& root_ref_trans);
-        //void linkNodeOffsetMatrix(const std::vector<MathLib::Matrix4>& boneNodeOffsets);
         void updateSkinMeshBoneMatrix(const Renderables::MeshNodeTree& mesh_node_tree);
 
         void onAttachingMeshNodeTree(const MeshNodeTree& mesh_node_tree);
-
-        /*std::shared_ptr<Renderables::SkinMeshPrimitive> getTargetSkinMeshPrimitive() const
-        {
-            if (!m_skinMeshPrim.expired()) return m_skinMeshPrim.lock();
-            return nullptr;
-        };*/
-
-        //void relinkClonedSkinMesh(const std::shared_ptr<Renderables::SkinMeshPrimitive>& prim);
 
     protected:
         std::shared_ptr<Renderables::SkinMeshPrimitive> cacheSkinMesh();

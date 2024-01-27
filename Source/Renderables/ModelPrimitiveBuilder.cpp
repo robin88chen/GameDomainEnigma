@@ -159,7 +159,7 @@ void ModelPrimitiveBuilder::OnBuildMeshPrimitiveFailed(const Frameworks::IEventP
 
 void ModelPrimitiveBuilder::OnModelAnimatorBuilt(const Frameworks::IEventPtr& e)
 {
-    if (!m_policy) return;
+    /*if (!m_policy) return;
     if (!m_animatorPolicy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<ModelAnimatorBuilt>(e);
@@ -167,16 +167,16 @@ void ModelPrimitiveBuilder::OnModelAnimatorBuilt(const Frameworks::IEventPtr& e)
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
     //auto anim = ev->getAnimator();
     //anim->SetControlledModel(m_builtPrimitive);
-    CompleteModelPrimitive();
+    CompleteModelPrimitive();*/
 }
 
 void ModelPrimitiveBuilder::OnBuildModelAnimatorFailed(const Frameworks::IEventPtr& e)
 {
-    if (!m_policy) return;
+    /*if (!m_policy) return;
     if (!m_animatorPolicy) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildModelAnimatorFailed>(e);
     if (!ev) return;
     if (m_animatorPolicy->getRuid() != ev->getRuid()) return;
-    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->GetErrorCode()));
+    EventPublisher::post(std::make_shared<BuildModelPrimitiveFailed>(m_buildingRuid, m_policy->name(), ev->GetErrorCode()));*/
 }

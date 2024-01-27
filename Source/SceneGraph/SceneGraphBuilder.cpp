@@ -17,10 +17,6 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
-#include "Frameworks/ResponseBus.h"
-#include "Frameworks/RequestBus.h"
-#include "Renderables/RenderableCommands.h"
-#include "Renderables/RenderableEvents.h"
 #include "Renderables/SkinMeshPrimitive.h"
 
 using namespace Enigma::SceneGraph;
@@ -96,10 +92,10 @@ SceneGraphBuilder::~SceneGraphBuilder()
     m_doBuildingSceneGraph = nullptr;
     m_doInPlaceBuildingSceneGraph = nullptr;
 
-    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    m_onPrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
-    m_onBuildPrimitiveFailed = nullptr;
+    //EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    //m_onPrimitiveBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    //m_onBuildPrimitiveFailed = nullptr;
 
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName()));
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName()));

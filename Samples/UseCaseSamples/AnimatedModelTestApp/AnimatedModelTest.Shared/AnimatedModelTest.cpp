@@ -37,7 +37,6 @@
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
-#include "Renderables/RenderableEvents.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderer/RendererEvents.h"
 #include "Renderer/RendererInstallingPolicy.h"
@@ -113,10 +112,6 @@ void AnimatedModelTest::installEngine()
     m_onConstituteAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimatorFailed(e); });
     EventPublisher::subscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
 
-    m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onBuildRenderablePrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onBuildRenderablePrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderTargetCreated(e); });
@@ -170,10 +165,6 @@ void AnimatedModelTest::shutdownEngine()
     EventPublisher::unsubscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
     m_onConstituteAnimatorFailed = nullptr;
 
-    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onRenderablePrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
-    m_onBuildRenderablePrimitiveFailed = nullptr;
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
@@ -347,42 +338,6 @@ void AnimatedModelTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e
     m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
     m_renderer->SetAssociatedCamera(m_camera);
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
-}
-
-void AnimatedModelTest::onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    if (ev->id() != m_modelId) return;
-    /*auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
-    if (!m_isPrefabBuilt)
-    {
-        ModelPrimitiveMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
-        auto policy = ModelPrimitiveMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
-        CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
-        m_isPrefabBuilt = true;
-    }
-    else
-    {
-        m_model = model;
-        if (auto ani = m_model->GetAnimator())
-        {
-            CommandBus::Post(std::make_shared<Enigma::Animators::AddListeningAnimator>(ani));
-            if (auto model_ani = std::dynamic_pointer_cast<Enigma::Animators::ModelPrimitiveAnimator, Enigma::Engine::Animator>(ani))
-            {
-                model_ani->PlayAnimation(Enigma::Animators::AnimationClip{ 0.0f, 2.0f, Enigma::Animators::AnimationClip::WarpMode::Loop, 0 });
-            }
-        }
-    }*/
-}
-
-void AnimatedModelTest::onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
-    if (!ev) return;
-    //Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->GetName().c_str(), ev->GetErrorCode().message().c_str());
 }
 
 void AnimatedModelTest::onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e)

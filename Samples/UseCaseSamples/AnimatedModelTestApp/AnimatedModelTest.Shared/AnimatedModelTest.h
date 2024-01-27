@@ -52,8 +52,6 @@ protected:
     void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e);
-    void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e);
     void onAnimatorConstituted(const Enigma::Frameworks::IEventPtr& e);
@@ -65,8 +63,6 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onGeometryConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
-    Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onAnimationAssetConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimationAssetFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onAnimatorConstituted;

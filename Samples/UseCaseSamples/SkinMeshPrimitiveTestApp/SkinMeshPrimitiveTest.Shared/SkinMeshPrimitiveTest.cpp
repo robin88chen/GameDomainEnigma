@@ -3,8 +3,6 @@
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
 #include "Frameworks/EventPublisher.h"
-#include "Renderables/RenderableEvents.h"
-#include "Renderables/RenderableCommands.h"
 #include "Renderer/RendererEvents.h"
 #include "Controllers/GraphicMain.h"
 #include "Frameworks/CommandBus.h"
@@ -114,10 +112,6 @@ void SkinMeshPrimitiveTest::installEngine()
     m_onPrimitiveConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onPrimitiveConstituted(e); });
     EventPublisher::subscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
 
-    m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onBuildRenderablePrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onBuildRenderablePrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderTargetCreated(e); });
@@ -178,10 +172,6 @@ void SkinMeshPrimitiveTest::shutdownEngine()
     EventPublisher::unsubscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
     m_onPrimitiveConstituted = nullptr;
 
-    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onRenderablePrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
-    m_onBuildRenderablePrimitiveFailed = nullptr;
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
@@ -393,52 +383,5 @@ void SkinMeshPrimitiveTest::onRenderTargetCreated(const IEventPtr& e)
     if (!ev) return;
     m_renderTarget = ev->GetRenderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
-}
-
-void SkinMeshPrimitiveTest::onRenderablePrimitiveBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    //if (ev->GetName() != "test_model") return;
-    //auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->GetPrimitive());
-    //m_model = model;
-    /*if (auto animator = m_model->GetAnimator())
-    {
-        animator->Reset();
-    }
-    auto mesh = m_model->GetMeshPrimitive(0);*/
-
-    /*if (!m_isPrefabBuilt)
-    {
-        SkinMeshModelMaker::SaveModelPrimitiveDto(model, "test_model.model@DataPath");
-        auto policy = SkinMeshModelMaker::LoadModelPrimitivePolicy("test_model.model@DataPath");
-        CommandBus::Post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
-        m_isPrefabBuilt = true;
-    }
-    else
-    {
-        m_model = model;
-        if (auto ani = m_model->GetAnimator())
-        {
-            //ani->Reset();
-            CommandBus::Post(std::make_shared<Enigma::Animators::AddListeningAnimator>(ani));
-            if (auto model_ani = std::dynamic_pointer_cast<Enigma::Animators::ModelPrimitiveAnimator, Enigma::Engine::Animator>(ani))
-            {
-                model_ani->PlayAnimation(Enigma::Animators::AnimationClip{ 0.0f, 2.0f, Enigma::Animators::AnimationClip::WarpMode::Loop, 0 });
-            }
-        }
-        if (auto animator = m_model->GetAnimator())
-        {
-        }
-    }*/
-}
-
-void SkinMeshPrimitiveTest::onBuildRenderablePrimitiveFailed(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
-    if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 

@@ -4,12 +4,6 @@
     <Filter Include="Primitives">
       <UniqueIdentifier>{1b09a671-79e0-420c-8a68-354671fddf99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{f8709523-9a26-4d09-9c27-15371ea55350}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Commands">
-      <UniqueIdentifier>{e7d81285-2e8a-40f6-8e88-80d3fb352d2f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Bounding">
       <UniqueIdentifier>{14aaa24a-f517-49fd-b9d5-10abceb7ff6c}</UniqueIdentifier>
     </Filter>
@@ -139,12 +133,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h">
       <Filter>Primitives\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableCommands.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h">
       <Filter>Bounding</Filter>

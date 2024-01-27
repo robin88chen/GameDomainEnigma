@@ -4,10 +4,8 @@
 #include "Renderer/RendererErrors.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "RenderableCommands.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
-#include "RenderableEvents.h"
 #include "Primitives/PrimitiveCommands.h"
 #include "MeshPrimitive.h"
 #include "SkinMeshPrimitive.h"
@@ -140,7 +138,6 @@ void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
-        EventPublisher::post(std::make_shared<RenderablePrimitiveBuilt>(ev->id(), ev->primitive()));
         m_currentBuildingId = std::nullopt;
     }
 }
@@ -154,7 +151,6 @@ void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
-        EventPublisher::post(std::make_shared<BuildRenderablePrimitiveFailed>(ev->id(), ev->error()));
         m_currentBuildingId = std::nullopt;
     }
 }

@@ -56,8 +56,6 @@ protected:
     void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e);
 
-    void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
@@ -70,8 +68,6 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onGeometryConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
 
-    Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 

@@ -2,7 +2,7 @@
 #include "AnimationClipMap.h"
 
 using namespace Enigma::GameCommon;
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 static std::string TOKEN_ANIM_NAMES = "AnimationNames";

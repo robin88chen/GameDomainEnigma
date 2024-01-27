@@ -198,7 +198,7 @@ Ray3 GameCameraService::getPickerRay(float clip_space_x, float clip_space_y)
     Vector3 world_vec = mxView.TransformCoord(camera_vec);
 
     Vector3 ray_dir = world_vec - m_primaryCamera->location();
-    ray_dir.NormalizeSelf();
+    ray_dir.normalizeSelf();
 
     return Ray3(m_primaryCamera->location(), ray_dir);
 }
@@ -240,7 +240,7 @@ void GameCameraService::onGestureScroll(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GestureScroll, IEvent>(e);
     if (!ev) return;
-    sphereRotate(ev->m_delta.X() * 0.001f, -ev->m_delta.Y() * 0.001f);
+    sphereRotate(ev->m_delta.x() * 0.001f, -ev->m_delta.y() * 0.001f);
 #endif
 }
 

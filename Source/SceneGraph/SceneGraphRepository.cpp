@@ -21,8 +21,6 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "SceneGraphBuilder.h"
 #include "Platforms/PlatformLayerUtilities.h"
-#include "Platforms/MemoryAllocMacro.h"
-#include "Renderer/ModelPrimitive.h"
 #include "Platforms/MemoryMacro.h"
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
@@ -30,13 +28,10 @@
 #include "PortalDtos.h"
 #include <cassert>
 
-#include "CameraFrustumDtos.h"
-
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::Platforms;
-using namespace Enigma::Renderer;
 
 DEFINE_RTTI(SceneGraph, SceneGraphRepository, ISystemService);
 

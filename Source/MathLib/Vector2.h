@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   Vector2.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -25,10 +25,10 @@ namespace Enigma::MathLib
         operator float* ();
         float operator[] (int i) const;
         float& operator[] (int i);
-        float X() const;
-        float& X();
-        float Y() const;
-        float& Y();
+        float x() const;
+        float& x();
+        float y() const;
+        float& y();
         //@}
 
 
@@ -61,20 +61,20 @@ namespace Enigma::MathLib
 
         /** @name vector operations */
         //@{
-        float Length() const;
-        float SquaredLength() const;
-        float Dot(const Vector2& v) const;
-        Vector2 Normalize() const;
-        void NormalizeSelf();
+        float length() const;
+        float squaredLength() const;
+        float dot(const Vector2& v) const;
+        Vector2 normalize() const;
+        void normalizeSelf();
 
         /// returns (y,-x)
-        Vector2 Perp() const;
+        Vector2 perp() const;
 
         /// returns (y,-x)/sqrt(x*x+y*y)
-        Vector2 UnitPerp() const;
+        Vector2 unitPerp() const;
 
-        /// returns DotPerp((x,y),(V.x,V.y)) = x*V.y - y*V.x
-        float DotPerp(const Vector2& v) const;
+        /// returns dotPerp((x,y),(V.x,V.y)) = x*V.y - y*V.x
+        float dotPerp(const Vector2& v) const;
         //@}
 
         /** @name special vectors */
@@ -86,7 +86,7 @@ namespace Enigma::MathLib
 
     private:
         // support for none-equal comparisons
-        int CompareArrays(const Vector2& v) const;
+        int compareArrays(const Vector2& v) const;
         /** member data */
         union
         {

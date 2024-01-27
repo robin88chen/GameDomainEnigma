@@ -7,7 +7,7 @@ using namespace Enigma::MathLib;
 Sphere2 ContainmentSphere2::MergeSpheres(const Sphere2& sphere0, const Sphere2& sphere1)
 {
     Vector2 centerDiff = sphere1.Center() - sphere0.Center();
-    float sqrLength = centerDiff.SquaredLength(); // 圓心的距離
+    float sqrLength = centerDiff.squaredLength(); // 圓心的距離
     float radiusDiff = sphere1.Radius() - sphere0.Radius();
     float radiusDiffSqr = radiusDiff * radiusDiff; // 半徑的差距
 

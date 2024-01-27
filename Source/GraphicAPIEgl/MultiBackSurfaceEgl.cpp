@@ -2,7 +2,6 @@
 #include "Frameworks/EventPublisher.h"
 #include "GraphicKernel/GraphicErrors.h"
 #include "GraphicKernel/GraphicEvents.h"
-#include "Platforms/MemoryAllocMacro.h"
 
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 

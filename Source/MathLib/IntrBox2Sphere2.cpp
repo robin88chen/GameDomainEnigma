@@ -24,8 +24,8 @@ Intersector::Result IntrBox2Sphere2::test(std::unique_ptr<IntersectorCache> /*la
     // transforming the sphere into that coordinate system.
     Vector2 centerDiff = m_sphere.Center() - m_box.Center();
 
-    float ax = fabs(centerDiff.Dot(m_box.Axis(0)));
-    float ay = fabs(centerDiff.Dot(m_box.Axis(1)));
+    float ax = fabs(centerDiff.dot(m_box.Axis(0)));
+    float ay = fabs(centerDiff.dot(m_box.Axis(1)));
     float dx = ax - m_box.Extent(0);
     float dy = ay - m_box.Extent(1);
 

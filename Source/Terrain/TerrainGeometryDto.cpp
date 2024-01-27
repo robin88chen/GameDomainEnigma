@@ -53,9 +53,9 @@ void TerrainGeometryDto::convertGeometryVertices()
         float x_ratio = static_cast<float>(xi) / static_cast<float>(m_numCols + 1);
         float z_ratio = static_cast<float>(zi) / static_cast<float>(m_numRows + 1);
         float height = m_heightMap ? m_heightMap.value()[vi] : 0.0f;
-        m_position3s.value()[vi] = Vector3(x_ratio * terrain_size.X() + m_minPosition.X(), height, z_ratio * terrain_size.Z() + m_minPosition.Z());
+        m_position3s.value()[vi] = Vector3(x_ratio * terrain_size.x() + m_minPosition.x(), height, z_ratio * terrain_size.z() + m_minPosition.z());
         m_normals.value()[vi] = Vector3(0.0f, 1.0f, 0.0f);
-        tex_coords[vi] = Vector2(x_ratio * uv_range.X() + m_minTextureCoordinate.X(), (1.0f - z_ratio) * uv_range.Y() + m_minTextureCoordinate.Y());
+        tex_coords[vi] = Vector2(x_ratio * uv_range.x() + m_minTextureCoordinate.x(), (1.0f - z_ratio) * uv_range.y() + m_minTextureCoordinate.y());
         alpha_coords[vi] = Vector2(x_ratio, (1.0f - z_ratio));
     }
 
@@ -109,8 +109,8 @@ BoundingVolume TerrainGeometryDto::calculateGeometryBounding()
             if (heights[vi] > max_height) max_height = heights[vi];
         }
     }
-    const Vector3 box_corner[2] = { Vector3(m_minPosition.X(), min_height, m_minPosition.Z()),
-        Vector3(m_maxPosition.X(), max_height, m_maxPosition.Z()) };
+    const Vector3 box_corner[2] = { Vector3(m_minPosition.x(), min_height, m_minPosition.z()),
+        Vector3(m_maxPosition.x(), max_height, m_maxPosition.z()) };
     const Box3 bb_box = ContainmentBox3::ComputeAlignedBox(box_corner, 2);
     return BoundingVolume{ bb_box };
 }

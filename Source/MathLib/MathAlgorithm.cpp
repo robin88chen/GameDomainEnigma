@@ -76,10 +76,10 @@ Matrix4 MathAlgorithm::MakeLookAtTransformLH(const Vector3& eye, const Vector3& 
     Matrix3 rotation;
 
     axisZ = at - eye;
-    axisZ.NormalizeSelf();
-    axisX = up.Cross(axisZ);
-    axisX.NormalizeSelf();
-    axisY = axisZ.Cross(axisX);
+    axisZ.normalizeSelf();
+    axisX = up.cross(axisZ);
+    axisX.normalizeSelf();
+    axisY = axisZ.cross(axisX);
     rotation = Matrix3(axisX, axisY, axisZ, false);
     tran = rotation * eye;
     return Matrix4(axisX, axisY, axisZ, -tran, false);
@@ -112,18 +112,18 @@ MathAlgorithm::TangentBinormalPair MathAlgorithm::CalculateTangentVector(const V
 
     Vector3 e1 = vec[1] - vec[0];
     Vector3 e2 = vec[2] - vec[0];
-    if ((e1.Length() <= Math::ZERO_TOLERANCE) || (e2.Length() <= Math::ZERO_TOLERANCE))
+    if ((e1.length() <= Math::ZERO_TOLERANCE) || (e2.length() <= Math::ZERO_TOLERANCE))
     {
         return { tan, binor};
     }
 
     Vector2 st1 = uv[1] - uv[0];
     Vector2 st2 = uv[2] - uv[0];
-    float st_perp = st1.DotPerp(st2);
+    float st_perp = st1.dotPerp(st2);
     if (std::fabs(st_perp) <= Math::ZERO_TOLERANCE) return { tan, binor };
 
     float r = 1.0f / st_perp;
-    tan = r * (st2.Y() * e1 - st1.Y() * e2);
-    binor = r * (st1.X() * e2 - st2.X() * e1);
+    tan = r * (st2.y() * e1 - st1.y() * e2);
+    binor = r * (st1.x() * e2 - st2.x() * e1);
     return { tan,binor };
 }

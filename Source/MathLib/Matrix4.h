@@ -216,7 +216,7 @@ namespace Enigma::MathLib
         };
     private:
         // support for none-equal comparisons
-        int CompareArrays(const Matrix4& mx) const;
+        int compareArrays(const Matrix4& mx) const;
         // minor matrix determinant
         float MinorDet(const int r0, const int r1, const int r2, const int c0, const int c1, const int c2) const;
 

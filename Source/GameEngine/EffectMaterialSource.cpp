@@ -2,7 +2,7 @@
 #include "EffectMaterial.h"
 #include "EffectEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -50,7 +50,7 @@ void EffectMaterialSource::contentDuplicatedEffects()
         if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
             effect.lock()->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
-            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialContented>(m_id, effect.lock()->id()));
+            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
         }
     }
 }

@@ -1,24 +1,25 @@
 ﻿#include "SkinAnimationMaker.h"
-#include "GameEngine/GenericDto.h"
-#include "Animators/ModelAnimationAsset.h"
+#include "Renderables/ModelAnimatorDtos.h"
+#include "Renderables/ModelAnimationDtos.h"
+#include "Renderables/ModelAnimationAsset.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
 #include "Animators/AnimationAssetDtos.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
-#include "FileSystem/IFile.h"
-#include "Platforms/PlatformLayer.h"
-#include "Frameworks/ExtentTypesDefine.h"
+#include "Animators/AnimationAssetCommands.h"
+#include "Animators/AnimatorCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 
-std::shared_ptr<ModelAnimationAsset> SkinAnimationMaker::MakeSkinAnimationAsset(
-    const std::string& model_name, const std::vector<std::string>& bone_node_names)
+void SkinAnimationMaker::makeSkinMeshAnimationAsset(const Enigma::Animators::AnimationAssetId& animation_id, const std::vector<std::string>& bone_node_names)
 {
-    std::string anim_name = model_name + "_anim";
-    std::shared_ptr<ModelAnimationAsset> animation_asset = std::make_shared<ModelAnimationAsset>(anim_name);
+    AnimationTimeSRTDto anim_srt_dto;
     AnimationTimeSRT::ScaleKeyVector scale_key;
     scale_key.push_back(AnimationTimeSRT::ScaleKey(0.0f, Vector3(1.0f, 1.0f, 1.0f)));
     scale_key.push_back(AnimationTimeSRT::ScaleKey(1.0f, Vector3(0.5f, 0.5f, 0.5f)));
@@ -31,35 +32,40 @@ std::shared_ptr<ModelAnimationAsset> SkinAnimationMaker::MakeSkinAnimationAsset(
     trans_key.push_back(AnimationTimeSRT::TranslateKey(0.0f, Vector3(2.0f, 2.0f, 0.0f)));
     trans_key.push_back(AnimationTimeSRT::TranslateKey(1.0f, Vector3(-1.2f, 1.2f, 0.0f)));
     trans_key.push_back(AnimationTimeSRT::TranslateKey(2.0f, Vector3(2.0f, 2.0f, 0.0f)));
-    AnimationTimeSRT anim_srt;
-    anim_srt.SetScaleKeyVector(scale_key);
-    anim_srt.SetRotationKeyVector(rot_key);
-    anim_srt.SetTranslateKeyVector(trans_key);
-    animation_asset->AddMeshNodeTimeSRTData(bone_node_names[bone_node_names.size() - 1], anim_srt);
-
-    GenericDto dto = animation_asset->SerializeDto().ToGenericDto();
-    FactoryDesc desc(ModelAnimationAsset::TYPE_RTTI.GetName());
-    desc.ClaimAsResourceAsset(anim_name, anim_name + ".ani", "DataPath");
-    dto.AddRtti(desc);
-    std::string json = DtoJsonGateway::Serialize(std::vector<GenericDto>{dto});
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(anim_name + ".ani@DataPath"), "w+b");
-    if (FATAL_LOG_EXPR(!iFile)) return animation_asset;
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
-
-    return animation_asset;
+    for (auto& key : scale_key)
+    {
+        auto values = key.values();
+        anim_srt_dto.scaleTimeKeys().insert(anim_srt_dto.scaleTimeKeys().end(), values.begin(), values.end());
+    }
+    for (auto& key : rot_key)
+    {
+        auto values = key.values();
+        anim_srt_dto.rotateTimeKeys().insert(anim_srt_dto.rotateTimeKeys().end(), values.begin(), values.end());
+    }
+    for (auto& key : trans_key)
+    {
+        auto values = key.values();
+        anim_srt_dto.translateTimeKeys().insert(anim_srt_dto.translateTimeKeys().end(), values.begin(), values.end());
+    }
+    ModelAnimationAssetDto model_animation_asset_dto;
+    model_animation_asset_dto.id() = animation_id;
+    model_animation_asset_dto.factoryDesc() = Enigma::Engine::FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName()).ClaimAsResourceAsset(animation_id.name(), animation_id.name() + ".ani", "DataPath");
+    model_animation_asset_dto.meshNodeNames() = std::vector<std::string>{ bone_node_names[bone_node_names.size() - 1] };
+    model_animation_asset_dto.timeSRTs().push_back(anim_srt_dto.toGenericDto());
+    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimationAsset>(animation_id, model_animation_asset_dto.toGenericDto()));
 }
 
-ModelAnimatorDto SkinAnimationMaker::MakeModelAnimatorDto(
-    const std::shared_ptr<ModelAnimationAsset>& anim, const std::string& skinmesh_name, const std::vector<std::string>& bone_node_names)
+void SkinAnimationMaker::makeModelAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& skin_mesh_id, const std::vector<std::string>& bone_node_names)
 {
-    std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>();
-    animator->LinkAnimationAsset(anim);
-    auto dto = animator->SerializeDto();
-    SkinOperatorDto operator_dto;
-    operator_dto.BoneNodeNames() = bone_node_names;
-    operator_dto.SkinMeshName() = skinmesh_name;
-    dto.SkinOperators().emplace_back(operator_dto.ToGenericDto());
-    return dto;
-}
 
+    ModelAnimatorDto model_animator_dto;
+    model_animator_dto.id() = animator_id;
+    model_animator_dto.animationAssetId() = animation_id;
+    model_animator_dto.controlledPrimitiveId() = model_id;
+    model_animator_dto.factoryDesc() = Enigma::Engine::FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName()).ClaimAsNative(animator_id.name() + ".animator@DataPath");
+    SkinOperatorDto operator_dto;
+    operator_dto.boneNodeNames() = bone_node_names;
+    operator_dto.skinMeshId() = skin_mesh_id;
+    model_animator_dto.skinOperators().emplace_back(operator_dto.toGenericDto());
+    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimator>(animator_id, model_animator_dto.toGenericDto()));
+}

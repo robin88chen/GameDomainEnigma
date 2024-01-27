@@ -94,10 +94,10 @@ void LightInfoTraversal::QueryNextRequest()
         case LightInfo::LightType::Point:
         {
             MathLib::Vector3 pos = (*iter).m_lightInfo.GetLightPosition();
-            light_positions.emplace_back(MathLib::Vector4(pos.X(), pos.Y(), pos.Z(), (*iter).m_lightInfo.GetLightRange()));
+            light_positions.emplace_back(MathLib::Vector4(pos.x(), pos.y(), pos.z(), (*iter).m_lightInfo.GetLightRange()));
             light_colors.emplace_back((*iter).m_lightInfo.GetLightColor());
             MathLib::Vector3 attn = (*iter).m_lightInfo.GetLightAttenuation();
-            light_attenuations.emplace_back(MathLib::Vector4(attn.X(), attn.Y(), attn.Z(), 1.0f));
+            light_attenuations.emplace_back(MathLib::Vector4(attn.x(), attn.y(), attn.z(), 1.0f));
         }
         break;
         default:

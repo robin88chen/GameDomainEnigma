@@ -2,7 +2,7 @@
 #include "EffectMaterialSourceRepository.h"
 #include "EngineErrors.h"
 #include "MaterialVariableMap.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <cassert>
 
 using namespace Enigma::Engine;

@@ -25,8 +25,8 @@ Intersector::Result IntrRay3Sphere3::test(std::unique_ptr<IntersectorCache> /*la
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.origin();
-    float s = l.Dot(m_ray.direction());
-    float sq_l = l.SquaredLength();
+    float s = l.dot(m_ray.direction());
+    float sq_l = l.squaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
     if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
 
@@ -40,8 +40,8 @@ Intersector::Result IntrRay3Sphere3::find(std::unique_ptr<IntersectorCache> /*la
 {
     /** RaySphere intersection, form Real-time Rendering */
     Vector3 l = m_sphere.Center() - m_ray.origin();
-    float s = l.Dot(m_ray.direction());
-    float sq_l = l.SquaredLength();
+    float s = l.dot(m_ray.direction());
+    float sq_l = l.squaredLength();
     float sq_r = m_sphere.Radius() * m_sphere.Radius();
     if ((s < 0.0f) && (sq_l > sq_r)) return { false, nullptr };
 

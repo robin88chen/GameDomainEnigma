@@ -309,29 +309,29 @@ bool Matrix4::operator !=(const Matrix4& mx) const
     return false;
 }
 
-int Matrix4::CompareArrays(const Matrix4& mx) const
+int Matrix4::compareArrays(const Matrix4& mx) const
 {
     return memcmp(m_entry, mx.m_entry, sizeof(m_entry));
 }
 
 bool Matrix4::operator<(const Matrix4& mx) const
 {
-    return CompareArrays(mx) < 0;
+    return compareArrays(mx) < 0;
 }
 
 bool Matrix4::operator<=(const Matrix4& mx) const
 {
-    return CompareArrays(mx) <= 0;
+    return compareArrays(mx) <= 0;
 }
 
 bool Matrix4::operator>(const Matrix4& mx) const
 {
-    return CompareArrays(mx) > 0;
+    return compareArrays(mx) > 0;
 }
 
 bool Matrix4::operator>=(const Matrix4& mx) const
 {
-    return CompareArrays(mx) >= 0;
+    return compareArrays(mx) >= 0;
 }
 
 Matrix4 Matrix4::operator+(const Matrix4& mx) const
@@ -599,20 +599,20 @@ Matrix4& Matrix4::operator/=(float scalar)
 Vector4 Matrix4::operator*(const Vector4& vec) const
 {
     Vector4 prod;
-    prod.X() = m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z() + m_14 * vec.W();
-    prod.Y() = m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z() + m_24 * vec.W();
-    prod.Z() = m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z() + m_34 * vec.W();
-    prod.W() = m_41 * vec.X() + m_42 * vec.Y() + m_43 * vec.Z() + m_44 * vec.W();
+    prod.x() = m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z() + m_14 * vec.w();
+    prod.y() = m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z() + m_24 * vec.w();
+    prod.z() = m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z() + m_34 * vec.w();
+    prod.w() = m_41 * vec.x() + m_42 * vec.y() + m_43 * vec.z() + m_44 * vec.w();
     return prod;
 }
 
 Vector3 Matrix4::operator*(const Vector3& vec) const
 {
     Vector3 prod;
-    float invW = (float)1.0 / (m_41 * vec.X() + m_42 * vec.Y() + m_43 * vec.Z() + m_44);
-    prod.X() = (m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z() + m_14) * invW;
-    prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z() + m_24) * invW;
-    prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z() + m_34) * invW;
+    float invW = (float)1.0 / (m_41 * vec.x() + m_42 * vec.y() + m_43 * vec.z() + m_44);
+    prod.x() = (m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z() + m_14) * invW;
+    prod.y() = (m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z() + m_24) * invW;
+    prod.z() = (m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z() + m_34) * invW;
     return prod;
 }
 
@@ -684,39 +684,39 @@ Matrix4 Matrix4::Inverse() const
 Vector3 Matrix4::TransformCoord(const Vector3& vec) const
 {
     Vector3 prod;
-    float invW = (float)1.0 / (m_41 * vec.X() + m_42 * vec.Y() + m_43 * vec.Z() + m_44);
-    prod.X() = (m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z() + m_14) * invW;
-    prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z() + m_24) * invW;
-    prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z() + m_34) * invW;
+    float invW = (float)1.0 / (m_41 * vec.x() + m_42 * vec.y() + m_43 * vec.z() + m_44);
+    prod.x() = (m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z() + m_14) * invW;
+    prod.y() = (m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z() + m_24) * invW;
+    prod.z() = (m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z() + m_34) * invW;
     return prod;
 }
 
 Vector3 Matrix4::Transform(const Vector3& vec) const
 {
     Vector3 prod;
-    prod.X() = (m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z() + m_14);
-    prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z() + m_24);
-    prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z() + m_34);
+    prod.x() = (m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z() + m_14);
+    prod.y() = (m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z() + m_24);
+    prod.z() = (m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z() + m_34);
     return prod;
 }
 
 Vector3 Matrix4::TransformVector(const Vector3& vec) const
 {
     Vector3 prod;
-    prod.X() = (m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z());
-    prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z());
-    prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z());
+    prod.x() = (m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z());
+    prod.y() = (m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z());
+    prod.z() = (m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z());
     return prod;
 }
 
 std::tuple<Vector3, float> Matrix4::TransformVectorNormalized(const Vector3& vec) const
 {
     Vector3 prod;
-    prod.X() = (m_11 * vec.X() + m_12 * vec.Y() + m_13 * vec.Z());
-    prod.Y() = (m_21 * vec.X() + m_22 * vec.Y() + m_23 * vec.Z());
-    prod.Z() = (m_31 * vec.X() + m_32 * vec.Y() + m_33 * vec.Z());
-    float length = prod.Length();
-    prod.NormalizeSelf();
+    prod.x() = (m_11 * vec.x() + m_12 * vec.y() + m_13 * vec.z());
+    prod.y() = (m_21 * vec.x() + m_22 * vec.y() + m_23 * vec.z());
+    prod.z() = (m_31 * vec.x() + m_32 * vec.y() + m_33 * vec.z());
+    float length = prod.length();
+    prod.normalizeSelf();
     return { prod, length };
 }
 
@@ -732,9 +732,9 @@ Matrix4 Matrix4::MakeTranslateTransform(const float tx, const float ty, const fl
 Matrix4 Matrix4::MakeTranslateTransform(const Vector3& vec)
 {
     Matrix4 mx = MakeIdentity();
-    mx.m_14 = vec.X();
-    mx.m_24 = vec.Y();
-    mx.m_34 = vec.Z();
+    mx.m_14 = vec.x();
+    mx.m_24 = vec.y();
+    mx.m_34 = vec.z();
     return mx;
 }
 
@@ -750,9 +750,9 @@ Matrix4 Matrix4::MakeScaleTransform(const float sx, const float sy, const float 
 Matrix4 Matrix4::MakeScaleTransform(const Vector3& vec)
 {
     Matrix4 mx = MakeIdentity();
-    mx.m_11 = vec.X();
-    mx.m_22 = vec.Y();
-    mx.m_33 = vec.Z();
+    mx.m_11 = vec.x();
+    mx.m_22 = vec.y();
+    mx.m_33 = vec.z();
     return mx;
 }
 
@@ -834,18 +834,18 @@ Matrix4 Matrix4::FromSRT(const Vector3& scale, const Matrix3& rot, const Vector3
 {
     Matrix4 rm = Matrix4::IDENTITY;
 
-    rm[0][0] = scale.X() * rot[0][0];
-    rm[0][1] = scale.Y() * rot[0][1];
-    rm[0][2] = scale.Z() * rot[0][2];
-    rm[0][3] = trans.X();
-    rm[1][0] = scale.X() * rot[1][0];
-    rm[1][1] = scale.Y() * rot[1][1];
-    rm[1][2] = scale.Z() * rot[1][2];
-    rm[1][3] = trans.Y();
-    rm[2][0] = scale.X() * rot[2][0];
-    rm[2][1] = scale.Y() * rot[2][1];
-    rm[2][2] = scale.Z() * rot[2][2];
-    rm[2][3] = trans.Z();
+    rm[0][0] = scale.x() * rot[0][0];
+    rm[0][1] = scale.y() * rot[0][1];
+    rm[0][2] = scale.z() * rot[0][2];
+    rm[0][3] = trans.x();
+    rm[1][0] = scale.x() * rot[1][0];
+    rm[1][1] = scale.y() * rot[1][1];
+    rm[1][2] = scale.z() * rot[1][2];
+    rm[1][3] = trans.y();
+    rm[2][0] = scale.x() * rot[2][0];
+    rm[2][1] = scale.y() * rot[2][1];
+    rm[2][2] = scale.z() * rot[2][2];
+    rm[2][3] = trans.z();
 
     return rm;
 }
@@ -854,10 +854,10 @@ Matrix4 Matrix4::FromSRT(const Vector3& scale, const Quaternion& rot, const Vect
 {
     Matrix4 rm = Matrix4::IDENTITY;
     float x, y, z, w;
-    x = rot.X();
-    y = rot.Y();
-    z = rot.Z();
-    w = rot.W();
+    x = rot.x();
+    y = rot.y();
+    z = rot.z();
+    w = rot.w();
 
     float tx = (float)2.0 * x;
     float ty = (float)2.0 * y;
@@ -872,18 +872,18 @@ Matrix4 Matrix4::FromSRT(const Vector3& scale, const Quaternion& rot, const Vect
     float tyz = tz * y;
     float tzz = tz * z;
 
-    rm[0][0] = scale.X() * ((float)1.0 - (tyy + tzz));
-    rm[0][1] = scale.Y() * (txy - twz);
-    rm[0][2] = scale.Z() * (txz + twy);
-    rm[0][3] = trans.X();
-    rm[1][0] = scale.X() * (txy + twz);
-    rm[1][1] = scale.Y() * ((float)1.0 - (txx + tzz));
-    rm[1][2] = scale.Z() * (tyz - twx);
-    rm[1][3] = trans.Y();
-    rm[2][0] = scale.X() * (txz - twy);
-    rm[2][1] = scale.Y() * (tyz + twx);
-    rm[2][2] = scale.Z() * ((float)1.0 - (txx + tyy));
-    rm[2][3] = trans.Z();
+    rm[0][0] = scale.x() * ((float)1.0 - (tyy + tzz));
+    rm[0][1] = scale.y() * (txy - twz);
+    rm[0][2] = scale.z() * (txz + twy);
+    rm[0][3] = trans.x();
+    rm[1][0] = scale.x() * (txy + twz);
+    rm[1][1] = scale.y() * ((float)1.0 - (txx + tzz));
+    rm[1][2] = scale.z() * (tyz - twx);
+    rm[1][3] = trans.y();
+    rm[2][0] = scale.x() * (txz - twy);
+    rm[2][1] = scale.y() * (tyz + twx);
+    rm[2][2] = scale.z() * ((float)1.0 - (txx + tyy));
+    rm[2][3] = trans.z();
 
     return rm;
 }
@@ -891,9 +891,9 @@ Matrix4 Matrix4::FromSRT(const Vector3& scale, const Quaternion& rot, const Vect
 Vector3 Matrix4::UnMatrixTranslate() const
 {
     Vector3 v;
-    v.X() = m_14;
-    v.Y() = m_24;
-    v.Z() = m_34;
+    v.x() = m_14;
+    v.y() = m_24;
+    v.z() = m_34;
     return v;
 }
 
@@ -903,11 +903,11 @@ Vector3 Matrix4::UnMatrixScale() const
     Vector3 v0 = Vector3(m_11, m_21, m_31);
     Vector3 v1 = Vector3(m_12, m_22, m_32);
     Vector3 v2 = Vector3(m_13, m_23, m_33);
-    s.X() = v0.Length();
-    s.Y() = v1.Length();
-    s.Z() = v2.Length();
-    Vector3 nor = v0.Cross(v1);
-    if (nor.Dot(v2) < (float)0.0)
+    s.x() = v0.length();
+    s.y() = v1.length();
+    s.z() = v2.length();
+    Vector3 nor = v0.cross(v1);
+    if (nor.dot(v2) < (float)0.0)
     {
         // 有-1的scale, 但是不知道是哪個軸, 用eigen找mirror plane
         Matrix3 eigen_solve(*this);
@@ -917,17 +917,17 @@ Vector3 Matrix4::UnMatrixScale() const
         {
             // 不多做計算了，最大的那個軸就抓出來反向
             Vector3 axis = Vector3(fabs(eigen.m_rot[0][0]), fabs(eigen.m_rot[1][0]), fabs(eigen.m_rot[2][0]));
-            if ((axis.X() > axis.Y()) && (axis.X() > axis.Z()))
+            if ((axis.x() > axis.y()) && (axis.x() > axis.z()))
             {
-                s.X() *= (float)-1.0;
+                s.x() *= (float)-1.0;
             }
-            else if ((axis.Y() > axis.X()) && (axis.Y() > axis.Z()))
+            else if ((axis.y() > axis.x()) && (axis.y() > axis.z()))
             {
-                s.Y() *= (float)-1.0;
+                s.y() *= (float)-1.0;
             }
             else
             {
-                s.Z() *= (float)-1.0;
+                s.z() *= (float)-1.0;
             }
         }
     }
@@ -938,17 +938,17 @@ Matrix4 Matrix4::UnMatrixRotation() const
 {
     Matrix4 r;
     Vector3 s = UnMatrixScale();
-    r.m_11 = m_11 / s.X();
-    r.m_21 = m_21 / s.X();
-    r.m_31 = m_31 / s.X();
+    r.m_11 = m_11 / s.x();
+    r.m_21 = m_21 / s.x();
+    r.m_31 = m_31 / s.x();
     r.m_41 = (float)0.0;
-    r.m_12 = m_12 / s.Y();
-    r.m_22 = m_22 / s.Y();
-    r.m_32 = m_32 / s.Y();
+    r.m_12 = m_12 / s.y();
+    r.m_22 = m_22 / s.y();
+    r.m_32 = m_32 / s.y();
     r.m_42 = (float)0.0;
-    r.m_13 = m_13 / s.Z();
-    r.m_23 = m_23 / s.Z();
-    r.m_33 = m_33 / s.Z();
+    r.m_13 = m_13 / s.z();
+    r.m_23 = m_23 / s.z();
+    r.m_33 = m_33 / s.z();
     r.m_43 = (float)0.0;
     r.m_14 = (float)0.0;
     r.m_24 = (float)0.0;
@@ -967,19 +967,19 @@ std::tuple<Vector3, Quaternion, Vector3> Matrix4::UnMatrixSRT() const
 std::tuple<Vector3, Matrix3, Vector3> Matrix4::UnMatrixSRT_WithRotateMatrix() const
 {
     Vector3 trans;
-    trans.X() = m_14;
-    trans.Y() = m_24;
-    trans.Z() = m_34;
+    trans.x() = m_14;
+    trans.y() = m_24;
+    trans.z() = m_34;
 
     Vector3 s;
     Vector3 v0(m_11, m_21, m_31);
     Vector3 v1(m_12, m_22, m_32);
     Vector3 v2(m_13, m_23, m_33);
-    s.X() = v0.Length();
-    s.Y() = v1.Length();
-    s.Z() = v2.Length();
-    Vector3 nor = v0.Cross(v1);
-    if (nor.Dot(v2) < (float)0.0)
+    s.x() = v0.length();
+    s.y() = v1.length();
+    s.z() = v2.length();
+    Vector3 nor = v0.cross(v1);
+    if (nor.dot(v2) < (float)0.0)
     {
         // 有-1的scale, 但是不知道是哪個軸, 用eigen找mirror plane
         Matrix3 eigenm_solve(*this);
@@ -989,31 +989,31 @@ std::tuple<Vector3, Matrix3, Vector3> Matrix4::UnMatrixSRT_WithRotateMatrix() co
         {
             // 不多做計算了，最大的那個軸就抓出來反向
             Vector3 axis = Vector3(fabs(eigen.m_rot[0][0]), fabs(eigen.m_rot[1][0]), fabs(eigen.m_rot[2][0]));
-            if ((axis.X() > axis.Y()) && (axis.X() > axis.Z()))
+            if ((axis.x() > axis.y()) && (axis.x() > axis.z()))
             {
-                s.X() *= (float)-1.0;
+                s.x() *= (float)-1.0;
             }
-            else if ((axis.Y() > axis.X()) && (axis.Y() > axis.Z()))
+            else if ((axis.y() > axis.x()) && (axis.y() > axis.z()))
             {
-                s.Y() *= (float)-1.0;
+                s.y() *= (float)-1.0;
             }
             else
             {
-                s.Z() *= (float)-1.0;
+                s.z() *= (float)-1.0;
             }
         }
     }
 
     Matrix3 r;
-    r[0][0] = m_11 / s.X();
-    r[1][0] = m_21 / s.X();
-    r[2][0] = m_31 / s.X();
-    r[0][1] = m_12 / s.Y();
-    r[1][1] = m_22 / s.Y();
-    r[2][1] = m_32 / s.Y();
-    r[0][2] = m_13 / s.Z();
-    r[1][2] = m_23 / s.Z();
-    r[2][2] = m_33 / s.Z();
+    r[0][0] = m_11 / s.x();
+    r[1][0] = m_21 / s.x();
+    r[2][0] = m_31 / s.x();
+    r[0][1] = m_12 / s.y();
+    r[1][1] = m_22 / s.y();
+    r[2][1] = m_32 / s.y();
+    r[0][2] = m_13 / s.z();
+    r[1][2] = m_23 / s.z();
+    r[2][2] = m_33 / s.z();
     return { s, r, trans };
 }
 
@@ -1027,8 +1027,8 @@ namespace Enigma::MathLib
 float Matrix4::GetMaxScale() const
 {
     Vector3 scale = UnMatrixScale();
-    float max_s = fabs(scale.X());
-    if (fabs(scale.Y()) > max_s) max_s = fabs(scale.Y());
-    if (fabs(scale.Z()) > max_s) max_s = fabs(scale.Z());
+    float max_s = fabs(scale.x());
+    if (fabs(scale.y()) > max_s) max_s = fabs(scale.y());
+    if (fabs(scale.z()) > max_s) max_s = fabs(scale.z());
     return max_s;
 }

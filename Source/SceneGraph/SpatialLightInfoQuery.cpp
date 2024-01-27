@@ -35,7 +35,7 @@ void SpatialLightInfoQuery::test(const LightInfo& info)
 
     if (info.GetLightType() == LightInfo::LightType::Point)
     {
-        float length = (info.GetLightPosition() - m_spatialPos).Length();
+        float length = (info.GetLightPosition() - m_spatialPos).length();
         if (length > info.GetLightRange()) return;
         m_countPointLight++;
         m_listLightInfo.emplace_back(LightInfoDistance{ info, length });

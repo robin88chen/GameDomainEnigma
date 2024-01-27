@@ -24,9 +24,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PlatformLayerUtilities.h">
       <Filter>Platform Layer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryAllocMacro.h">
-      <Filter>Memory Macros</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MemoryMacro.h">
       <Filter>Memory Macros</Filter>
     </ClInclude>

@@ -13,20 +13,16 @@
 #include "PortalZoneNode.h"
 #include "Portal.h"
 #include "PortalManagementNode.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
-#include "Frameworks/ResponseBus.h"
-#include "Frameworks/RequestBus.h"
-#include "Renderer/RenderableCommands.h"
-#include "Renderer/RenderableEvents.h"
-#include "Renderer/SkinMeshPrimitive.h"
+#include "Renderables/SkinMeshPrimitive.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Platforms;
 
 SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
@@ -96,10 +92,10 @@ SceneGraphBuilder::~SceneGraphBuilder()
     m_doBuildingSceneGraph = nullptr;
     m_doInPlaceBuildingSceneGraph = nullptr;
 
-    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
-    m_onPrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
-    m_onBuildPrimitiveFailed = nullptr;
+    //EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
+    //m_onPrimitiveBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildPrimitiveFailed);
+    //m_onBuildPrimitiveFailed = nullptr;
 
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Node::TYPE_RTTI.getName()));
     CommandBus::send(std::make_shared<UnRegisterSpatialDtoFactory>(Light::TYPE_RTTI.getName()));

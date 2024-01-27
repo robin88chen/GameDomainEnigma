@@ -2,18 +2,21 @@
 #include "AnimatorErrors.h"
 #include "AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
+#include "GameEngine/TimerService.h"
 #include <cassert>
 
+#include "AnimatorRepository.h"
+
 using namespace Enigma::Frameworks;
-using namespace Enigma::Engine;
 using namespace Enigma::Animators;
 
 DEFINE_RTTI(Animators, AnimationFrameListener, ISystemService);
 
-AnimationFrameListener::AnimationFrameListener(Frameworks::ServiceManager* manager, const std::shared_ptr<Engine::TimerService>& timer)
+AnimationFrameListener::AnimationFrameListener(ServiceManager* manager, const std::shared_ptr<AnimatorRepository>& repository, const std::shared_ptr<Engine::TimerService>& timer)
     : ISystemService(manager), m_hasExpiredAnimator(false)
 {
     assert(timer);
+    m_repository = repository;
     m_timer = timer;
     m_needTick = false;
 }
@@ -25,10 +28,10 @@ AnimationFrameListener::~AnimationFrameListener()
 
 ServiceResult AnimationFrameListener::onInit()
 {
-    m_doAddingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingListeningAnimator(c); });
-    m_doRemovingListeningAnimator = std::make_shared<CommandSubscriber>([=](auto c) { this->DoRemovingListeningAnimator(c); });
-    CommandBus::subscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::subscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
+    m_addListeningAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->addListeningAnimator(c); });
+    m_removeListeningAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->removeListeningAnimator(c); });
+    CommandBus::subscribe(typeid(AddListeningAnimator), m_addListeningAnimator);
+    CommandBus::subscribe(typeid(RemoveListeningAnimator), m_removeListeningAnimator);
     return ServiceResult::Complete;
 }
 
@@ -36,40 +39,46 @@ ServiceResult AnimationFrameListener::onTick()
 {
     if (!m_timer.expired())
     {
-        UpdateAnimator(m_timer.lock()->GetGameTimer());
+        updateAnimator(m_timer.lock()->GetGameTimer());
     }
-    if (m_hasExpiredAnimator) RemoveExpiredAnimator();
+    if (m_hasExpiredAnimator) removeExpiredAnimator();
     return ServiceResult::Pendding;
 }
 
 ServiceResult AnimationFrameListener::onTerm()
 {
-    CommandBus::unsubscribe(typeid(Animators::AddListeningAnimator), m_doAddingListeningAnimator);
-    CommandBus::unsubscribe(typeid(Animators::RemoveListeningAnimator), m_doRemovingListeningAnimator);
-    m_doAddingListeningAnimator = nullptr;
-    m_doRemovingListeningAnimator = nullptr;
+    CommandBus::unsubscribe(typeid(AddListeningAnimator), m_addListeningAnimator);
+    CommandBus::unsubscribe(typeid(RemoveListeningAnimator), m_removeListeningAnimator);
+    m_addListeningAnimator = nullptr;
+    m_removeListeningAnimator = nullptr;
     return ServiceResult::Complete;
 }
 
-error AnimationFrameListener::AddListeningAnimator(const Engine::AnimatorPtr& ani)
+error AnimationFrameListener::addListeningAnimator(const AnimatorId& animator_id)
 {
+    assert(!m_repository.expired());
+    if (!m_repository.lock()->hasAnimator(animator_id)) return ErrorCode::nullAnimator;
+    auto ani = m_repository.lock()->queryAnimator(animator_id);
     if (!ani) return ErrorCode::nullAnimator;
-    if (ani->IsListened()) return ErrorCode::animatorMultiListening;
+    if (ani->isListened()) return ErrorCode::animatorMultiListening;
     m_listeningAnimators.emplace_back(ani);
-    ani->SetListened(true);
-    ani->ProcessAfterAddListening();
+    ani->isListened(true);
+    ani->processAfterAddListening();
 
     m_needTick = true;
     return ErrorCode::ok;
 }
 
-error AnimationFrameListener::RemoveListeningAnimator(const Engine::AnimatorPtr& ani)
+error AnimationFrameListener::removeListeningAnimator(const AnimatorId& animator_id)
 {
+    assert(!m_repository.expired());
+    if (!m_repository.lock()->hasAnimator(animator_id)) return ErrorCode::nullAnimator;
+    const auto ani = m_repository.lock()->queryAnimator(animator_id);
     if (!ani) return ErrorCode::nullAnimator;
-    if (!ani->IsListened()) return ErrorCode::ok;
+    if (!ani->isListened()) return ErrorCode::ok;
 
-    ani->SetListened(false);
-    ani->ProcessBeforeRemoveListening();
+    ani->isListened(false);
+    ani->processBeforeRemoveListening();
     m_listeningAnimators.remove_if([=](std::weak_ptr<Animator> wp)
         { return ((!wp.expired()) && (wp.lock() == ani)); });
     if (m_listeningAnimators.empty())
@@ -79,7 +88,7 @@ error AnimationFrameListener::RemoveListeningAnimator(const Engine::AnimatorPtr&
     return ErrorCode::ok;
 }
 
-bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Timer>& timer)
+bool AnimationFrameListener::updateAnimator(const std::unique_ptr<Timer>& timer)
 {
     if (!timer) return false;
 
@@ -93,7 +102,7 @@ bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Ti
             ++iter;
             continue;
         }
-        const AnimatorPtr& ani = iter->lock();
+        const std::shared_ptr<Animator>& ani = iter->lock();
         if (!ani)
         {
             ++iter;
@@ -104,8 +113,8 @@ bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Ti
         all_res |= res;
         if (!res)  // no update, remove this animator and continue
         {
-            ani->SetListened(false);
-            ani->ProcessBeforeRemoveListening();
+            ani->isListened(false);
+            ani->processBeforeRemoveListening();
             m_hasExpiredAnimator = true;
             ++iter;
         }
@@ -117,11 +126,11 @@ bool AnimationFrameListener::UpdateAnimator(const std::unique_ptr<Frameworks::Ti
     return all_res;
 }
 
-void AnimationFrameListener::RemoveExpiredAnimator()
+void AnimationFrameListener::removeExpiredAnimator()
 {
     if (!m_hasExpiredAnimator) return;
     m_listeningAnimators.remove_if([=](std::weak_ptr<Animator> wp)
-        { return (wp.expired()) || (!wp.lock()->IsListened()); });
+        { return (wp.expired()) || (!wp.lock()->isListened()); });
     m_hasExpiredAnimator = false;
     if (m_listeningAnimators.empty())
     {
@@ -129,18 +138,18 @@ void AnimationFrameListener::RemoveExpiredAnimator()
     }
 }
 
-void AnimationFrameListener::DoAddingListeningAnimator(const Frameworks::ICommandPtr& c)
+void AnimationFrameListener::addListeningAnimator(const ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::AddListeningAnimator, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<AddListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    AddListeningAnimator(cmd->getAnimator());
+    addListeningAnimator(cmd->id());
 }
 
-void AnimationFrameListener::DoRemovingListeningAnimator(const Frameworks::ICommandPtr& c)
+void AnimationFrameListener::removeListeningAnimator(const ICommandPtr& c)
 {
     if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<Animators::RemoveListeningAnimator, ICommand>(c);
+    auto cmd = std::dynamic_pointer_cast<RemoveListeningAnimator, ICommand>(c);
     if (!cmd) return;
-    RemoveListeningAnimator(cmd->getAnimator());
+    removeListeningAnimator(cmd->id());
 }

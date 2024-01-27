@@ -13,35 +13,11 @@
     <Filter Include="Render Packs">
       <UniqueIdentifier>{249a22d1-8c85-45f8-aa95-bcc5461bbea1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderable Primitives">
-      <UniqueIdentifier>{112fa852-2d10-4574-9862-87b2d961cb25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Mesh">
-      <UniqueIdentifier>{f58e3171-484c-4e29-a7e1-23d120c5324f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Policies">
-      <UniqueIdentifier>{c48db79f-e678-409e-8ee7-f146eebb23b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Model">
-      <UniqueIdentifier>{15df78de-5dd8-4106-b161-e4ab7b64c103}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Dtos">
-      <UniqueIdentifier>{0ea6b75e-f5d9-43ef-a09b-c432743bac74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Builders">
-      <UniqueIdentifier>{09448a4b-37e5-47fa-a6f9-d9fbc6706c79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Skin Mesh">
-      <UniqueIdentifier>{e291082e-92ce-4840-90d3-fd21d298b2f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{5d4c5d57-c9e4-49a9-b825-7cd36a651139}</UniqueIdentifier>
     </Filter>
     <Filter Include="RenderableBoundFilter">
       <UniqueIdentifier>{229f3bbb-1de2-44a5-826f-e1c26eafb48d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderable Primitives\Intersection">
-      <UniqueIdentifier>{bac101d5-00e8-4b9f-894b-14e1534632c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{13c7f2bd-b156-43de-9468-46a028f1bef9}</UniqueIdentifier>
@@ -75,68 +51,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTargetClearingProperties.h">
       <Filter>Render Target</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h">
-      <Filter>Renderable Primitives\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.h">
-      <Filter>Renderable Primitives\Policies</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.h">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h">
-      <Filter>Renderable Primitives\Dtos</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h">
-      <Filter>Renderable Primitives\Skin Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h">
-      <Filter>RenderableBoundFilter</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h">
-      <Filter>Renderable Primitives\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h">
-      <Filter>Renderable Primitives\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h">
-      <Filter>Renderable Primitives\Intersection</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
       <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveBuildingPlan.h">
-      <Filter>Renderable Primitives\Builders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,50 +86,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
-      <Filter>Renderable Primitives\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitivePolicies.cpp">
-      <Filter>Renderable Primitives\Policies</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp">
-      <Filter>Renderable Primitives\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveBuilder.cpp">
-      <Filter>Renderable Primitives\Builders</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp">
-      <Filter>Renderable Primitives\Dtos</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp">
-      <Filter>Renderable Primitives\Skin Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.cpp">
       <Filter>Installing</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp">
-      <Filter>RenderableBoundFilter</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp">
-      <Filter>Renderable Primitives\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp">
-      <Filter>Renderable Primitives\Intersection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

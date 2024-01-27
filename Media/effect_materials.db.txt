@@ -1,1 +1,2 @@
 basic_vtx_tex,basic_vtx_tex.efx@APK_PATH
+skin_mesh_prim_test,skin_mesh_prim_test.efx@APK_PATH

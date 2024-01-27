@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SkinMeshPrimitiveTest.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   February 2023
  *********************************************************************/
@@ -18,9 +18,11 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
+#include "Geometries/GeometryId.h"
+#include "Animators/AnimationAssetId.h"
 
 class SkinMeshPrimitiveTest : public Enigma::Application::AppDelegate
 {
@@ -30,29 +32,55 @@ public:
     SkinMeshPrimitiveTest(const std::string app_name);
     ~SkinMeshPrimitiveTest() override;
 
-    virtual void InitializeMountPaths() override;
+    virtual void initializeMountPaths() override;
 
-    virtual void InstallEngine() override final;
-    virtual void ShutdownEngine() override final;
+    virtual void installEngine() override final;
+    virtual void shutdownEngine() override final;
 
-    virtual void FrameUpdate() override;
-    virtual void RenderFrame() override;
-
-protected:
-    void OnRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
-    void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    virtual void frameUpdate() override;
+    virtual void renderFrame() override;
 
 protected:
-    Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
+    void makeCamera();
+    void makeAnimation();
+    void makeAnimator();
+    void makeCube();
+    void makeMesh();
+    void makeModel();
+
+    void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onAnimatorConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onConstituteAnimatorFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
+    void onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e);
+
+    void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+
+protected:
+    Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onAnimationAssetConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimationAssetFailed;
+    Enigma::Frameworks::EventSubscriberPtr m_onAnimatorConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onConstituteAnimatorFailed;
+    Enigma::Frameworks::EventSubscriberPtr m_onGeometryConstituted;
+    Enigma::Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
+
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
+    std::vector<std::string> m_meshNodeNames;
+    Enigma::SceneGraph::SpatialId m_cameraId;
+    Enigma::Geometries::GeometryId m_cubeId;
+    Enigma::Animators::AnimationAssetId m_animationId;
+    Enigma::Animators::AnimatorId m_animatorId;
+    Enigma::Primitives::PrimitiveId m_meshId;
+    Enigma::Primitives::PrimitiveId m_modelId;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
-    Enigma::Renderer::ModelPrimitivePtr m_model;
+    std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };

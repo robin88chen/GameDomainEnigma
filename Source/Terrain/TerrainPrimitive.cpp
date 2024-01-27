@@ -6,7 +6,7 @@ using namespace Enigma::Renderer;
 
 DEFINE_RTTI(Terrain, TerrainPrimitive, MeshPrimitive);
 
-TerrainPrimitive::TerrainPrimitive(const Engine::PrimitiveId& id) : MeshPrimitive(id)
+TerrainPrimitive::TerrainPrimitive(const Primitives::PrimitiveId& id) : MeshPrimitive(id)
 {
     m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()).ClaimAsInstanced(id.name() + ".terrain");
 }

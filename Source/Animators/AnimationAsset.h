@@ -10,8 +10,9 @@
 
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
+#include "AnimationAssetId.h"
+#include "GameEngine/GenericDto.h"
 #include <string>
-#include <memory>
 
 namespace Enigma::Animators
 {
@@ -19,14 +20,18 @@ namespace Enigma::Animators
     {
         DECLARE_EN_RTTI_OF_BASE
     public:
-        AnimationAsset(const std::string& name);
+        AnimationAsset(const AnimationAssetId& id);
         AnimationAsset(const AnimationAsset&) = delete;
         AnimationAsset(AnimationAsset&&) = delete;
         virtual ~AnimationAsset();
         AnimationAsset& operator=(const AnimationAsset&) = delete;
         AnimationAsset& operator=(AnimationAsset&&) = delete;
 
-        const std::string& getName() { return m_name; }
+        const AnimationAssetId& id() { return m_id; }
+
+        virtual Engine::GenericDto serializeDto() = 0;
+
+        static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
@@ -34,10 +39,9 @@ namespace Enigma::Animators
         virtual float getAnimationLengthInSecond() = 0;
 
     protected:
-        std::string m_name;
+        AnimationAssetId m_id;
         Engine::FactoryDesc m_factoryDesc;
     };
-    using AnimationAssetPtr = std::shared_ptr<AnimationAsset>;
 }
 
 #endif // _ANIMATION_ASSET_H

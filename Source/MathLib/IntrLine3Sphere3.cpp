@@ -24,8 +24,8 @@ const Sphere3& IntrLine3Sphere3::GetSphere() const
 Intersector::Result IntrLine3Sphere3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     Vector3 diff = m_line.origin() - m_sphere.Center();
-    float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();
-    float a1 = m_line.direction().Dot(diff);
+    float a0 = diff.dot(diff) - m_sphere.Radius() * m_sphere.Radius();
+    float a1 = m_line.direction().dot(diff);
     float discr = a1 * a1 - a0;
     return { discr >= 0.0f, nullptr };
 }
@@ -33,8 +33,8 @@ Intersector::Result IntrLine3Sphere3::test(std::unique_ptr<IntersectorCache> /*l
 Intersector::Result IntrLine3Sphere3::find(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
     Vector3 diff = m_line.origin() - m_sphere.Center();
-    float a0 = diff.Dot(diff) - m_sphere.Radius() * m_sphere.Radius();
-    float a1 = m_line.direction().Dot(diff);
+    float a0 = diff.dot(diff) - m_sphere.Radius() * m_sphere.Radius();
+    float a1 = m_line.direction().dot(diff);
     float discr = a1 * a1 - a0;
 
     if (discr < 0.0f)

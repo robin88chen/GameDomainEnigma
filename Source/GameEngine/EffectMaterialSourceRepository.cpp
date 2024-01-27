@@ -4,7 +4,6 @@
 #include "EffectMaterialSource.h"
 #include "EffectQueries.h"
 #include "Frameworks/QueryDispatcher.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include <system_error>
 #include <cassert>

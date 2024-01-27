@@ -4,7 +4,7 @@
 #include "Frameworks/RequestBus.h"
 #include "Frameworks/ResponseBus.h"
 #include "Frameworks/QueryDispatcher.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "ControllerErrors.h"
 #include "ControllerEvents.h"
 #include <cassert>

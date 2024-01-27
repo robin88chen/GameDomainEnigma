@@ -1,5 +1,4 @@
-﻿#include "Platforms/MemoryAllocMacro.h"
-#include "Platforms/MemoryMacro.h"
+﻿#include "Platforms/MemoryMacro.h"
 #include "Texture.h"
 #include "TextureFactory.h"
 #include "TextureResourceProcessor.h"
@@ -44,9 +43,9 @@ std::shared_ptr<Texture> TextureFactory::create(const TextureId& id)
 std::shared_ptr<Texture> TextureFactory::constitute(const TextureId& id, const GenericDto& dto, bool is_persisted)
 {
     auto texture = std::make_shared<Texture>(id, dto);
-    auto er = m_processor->enqueueContentingDto(texture, dto);
+    auto er = m_processor->enqueueHydratingDto(texture, dto);
     if (er) return nullptr;
-    er = m_processor->contentNextTextureResource();
+    er = m_processor->hydrateNextTextureResource();
     if (er) return nullptr;
     Frameworks::EventPublisher::post(std::make_shared<TextureConstituted>(id, texture, is_persisted));
     return texture;

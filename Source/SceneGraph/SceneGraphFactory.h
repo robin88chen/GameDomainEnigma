@@ -40,9 +40,6 @@ namespace Enigma::SceneGraph
         void createPawn(const Frameworks::ICommandPtr& c);
         void constitutePawn(const Frameworks::ICommandPtr& c);
 
-        void onPrimitiveBuilt(const Frameworks::IEventPtr& e);
-        void onBuildPrimitiveFailed(const Frameworks::IEventPtr& e);
-
     protected:
         Frameworks::CommandSubscriberPtr m_createCamera;
         Frameworks::CommandSubscriberPtr m_constituteCamera;
@@ -51,9 +48,6 @@ namespace Enigma::SceneGraph
 
         std::unordered_map<Frameworks::Ruid, std::shared_ptr<Pawn>, Frameworks::Ruid::HashFunc> m_buildingPawnPrimitives; // policy ruid -> pawn
         std::recursive_mutex m_buildingPrimitiveLock;
-
-        Frameworks::EventSubscriberPtr m_onPrimitiveBuilt;
-        Frameworks::EventSubscriberPtr m_onBuildPrimitiveFailed;
     };
 }
 

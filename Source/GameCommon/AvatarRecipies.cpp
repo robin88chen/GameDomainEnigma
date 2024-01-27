@@ -11,12 +11,12 @@
 #include "GameEngine/TextureEvents.h"
 #include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AvatarRecipe);
@@ -50,10 +50,10 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const EffectMaterialId& old_materia
     : m_oldMaterialId(old_material_id), m_newMaterialId(new_material_id)
 {
     m_factoryDesc = FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
-    m_onEffectMaterialContented = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialContented(e); });
-    EventPublisher::subscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
-    m_onContentEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentMaterialFailed(e); });
-    EventPublisher::subscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
+    m_onEffectMaterialHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialHydrated(e); });
+    EventPublisher::subscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
+    m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateMaterialFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
@@ -61,18 +61,18 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : Avat
     AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::fromGenericDto(o);
     m_oldMaterialId = dto.oldMaterialId();
     m_newMaterialId = dto.newMaterialId();
-    m_onEffectMaterialContented = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialContented(e); });
-    EventPublisher::subscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
-    m_onContentEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentMaterialFailed(e); });
-    EventPublisher::subscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
+    m_onEffectMaterialHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialHydrated(e); });
+    EventPublisher::subscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
+    m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateMaterialFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
 }
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 {
-    EventPublisher::unsubscribe(typeid(EffectMaterialContented), m_onEffectMaterialContented);
-    m_onEffectMaterialContented = nullptr;
-    EventPublisher::unsubscribe(typeid(ContentEffectMaterialFailed), m_onContentEffectMaterialFailed);
-    m_onContentEffectMaterialFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
+    m_onEffectMaterialHydrated = nullptr;
+    EventPublisher::unsubscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
+    m_onHydrateEffectMaterialFailed = nullptr;
     m_changeSpecifyMaterialMap.clear();
 }
 
@@ -89,10 +89,10 @@ void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
-    PrimitivePtr prim = pawn->GetPrimitive();
+    std::shared_ptr<Primitives::Primitive> prim = pawn->GetPrimitive();
     if (!prim) return;
     m_primitive = prim;
-    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive>(prim);
     if (model)
     {
         unsigned int total_mesh_prim = model->getMeshPrimitiveCount();
@@ -105,7 +105,7 @@ void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
             }
         }
     }
-    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive>(prim);
     if (mesh)
     {
         replaceMeshMaterial(mesh);
@@ -162,51 +162,51 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
     }
 }
 
-void ReplaceAvatarMaterial::onEffectMaterialContented(const IEventPtr& e)
+void ReplaceAvatarMaterial::onEffectMaterialHydrated(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<EffectMaterialContented>(e);
+    const auto ev = std::dynamic_pointer_cast<EffectMaterialHydrated>(e);
     if (!ev) return;
     auto it = m_changeSpecifyMaterialMap.find(ev->id());
     if (it == m_changeSpecifyMaterialMap.end()) return;
     it->second(ev->id());
 }
 
-void ReplaceAvatarMaterial::onContentMaterialFailed(const IEventPtr& e)
+void ReplaceAvatarMaterial::onHydrateMaterialFailed(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<ContentEffectMaterialFailed>(e);
+    const auto ev = std::dynamic_pointer_cast<HydrateEffectMaterialFailed>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
 ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
-    : m_meshName(mesh_name), m_textureDto(texture_dto), m_requsetRuid()
+    : m_meshName(mesh_name), m_textureDto(texture_dto)
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
-    m_onTextureContented = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
-    EventPublisher::subscribe(typeid(TextureContented), m_onTextureContented);
-    m_onContentTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
-    EventPublisher::subscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
+    m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
+    EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
+    m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onTextureHydrated);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o), m_requsetRuid()
+ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
     m_meshName = dto.MeshName();
     m_textureDto = dto.TextureDto();
-    m_onTextureContented = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
-    EventPublisher::subscribe(typeid(TextureContented), m_onTextureContented);
-    m_onContentTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
-    EventPublisher::subscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
+    m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
+    EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
+    m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
 }
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
-    EventPublisher::unsubscribe(typeid(TextureContented), m_onTextureContented);
-    m_onTextureContented = nullptr;
-    EventPublisher::unsubscribe(typeid(ContentTextureFailed), m_onContentTextureFailed);
-    m_onContentTextureFailed = nullptr;
+    EventPublisher::unsubscribe(typeid(TextureHydrated), m_onTextureHydrated);
+    m_onTextureHydrated = nullptr;
+    EventPublisher::unsubscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
+    m_onHydrateTextureFailed = nullptr;
 }
 
 GenericDto ChangeAvatarTexture::serializeDto() const
@@ -222,16 +222,16 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_meshName.empty()) return;
-    PrimitivePtr prim = pawn->GetPrimitive();
+    std::shared_ptr<Primitives::Primitive> prim = pawn->GetPrimitive();
     if (!prim) return;
-    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
+    std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive>(prim);
     if (model)
     {
         auto mesh = model->findMeshPrimitive(m_meshName);
         if (!mesh) return;
         changeMeshTexture(mesh);
     }
-    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(prim);
+    std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive>(prim);
     if (mesh)
     {
         if (mesh->getName() != m_meshName) return;
@@ -255,20 +255,20 @@ void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>
     }
 }
 
-void ChangeAvatarTexture::onTextureContented(const Frameworks::IEventPtr& e)
+void ChangeAvatarTexture::onTextureHydrated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<TextureContented>(e);
+    auto ev = std::dynamic_pointer_cast<TextureHydrated>(e);
     if (!ev) return;
     if (ev->id() != m_textureDto.textureId()) return;
     if (m_mesh.expired()) return;
     m_mesh.lock()->changeSemanticTexture({ m_textureDto.semantic(), ev->texture(), m_textureDto.arrayIndex() });
 }
 
-void ChangeAvatarTexture::onContentTextureFailed(const Frameworks::IEventPtr& e)
+void ChangeAvatarTexture::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<ContentTextureFailed>(e);
+    auto ev = std::dynamic_pointer_cast<HydrateTextureFailed>(e);
     if (!ev) return;
     if (ev->id() != m_textureDto.textureId()) return;
     Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());

@@ -12,6 +12,8 @@
 #include "CameraFrustumDtos.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphDtos.h"
+#include "SceneGraph/Spatial.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 
 namespace Enigma::SceneGraph
 {
@@ -72,7 +74,7 @@ namespace Enigma::SceneGraph
         PawnDtoHelper& notifyFlags(Spatial::NotifyFlags notify_flags);
         PawnDtoHelper& spatialFlags(Spatial::SpatialFlags spatial_flags);
         PawnDtoHelper& graphDepth(unsigned graph_depth);
-        PawnDtoHelper& meshPrimitive(const Renderer::MeshPrimitiveDto& mesh_dto);
+        PawnDtoHelper& meshPrimitive(const Renderables::MeshPrimitiveDto& mesh_dto);
 
         PawnDto toPawnDto();
         Engine::GenericDto toGenericDto();

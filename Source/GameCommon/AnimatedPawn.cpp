@@ -1,14 +1,15 @@
 ﻿#include "AnimatedPawn.h"
-#include "Animators/AnimatorCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "Animators/ModelPrimitiveAnimator.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
 #include "AvatarRecipes.h"
 #include "AnimatedPawnDto.h"
+#include "Animators/AnimatorCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
+using namespace Enigma::Animators;
 
 DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 
@@ -58,7 +59,7 @@ void AnimatedPawn::PlayAnimation(const std::string& name)
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::post(std::make_shared<AddListeningAnimator>(anim));
+            Frameworks::CommandBus::post(std::make_shared<AddListeningAnimator>(anim->id()));
             if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->fadeInAnimation(0.3f, action_clip.value().get().GetClip());
@@ -78,7 +79,7 @@ void AnimatedPawn::StopAnimation()
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::post(std::make_shared<RemoveListeningAnimator>(anim));
+            Frameworks::CommandBus::post(std::make_shared<RemoveListeningAnimator>(anim->id()));
             if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->stopAnimation();

@@ -136,7 +136,7 @@ namespace Enigma::MathLib
 
     private:
         // support for none-equal comparisons
-        int CompareArrays(const Matrix2& mx) const;
+        int compareArrays(const Matrix2& mx) const;
         /** data members */
         union
         {

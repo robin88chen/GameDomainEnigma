@@ -10,7 +10,7 @@
 
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMapDto.h"
-#include "Renderer/MeshPrimitive.h"
+#include "Renderables/MeshPrimitive.h"
 #include "SceneGraph/Pawn.h"
 #include "GameEngine/EffectMaterialId.h"
 
@@ -56,19 +56,19 @@ namespace Enigma::GameCommon
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void replaceMeshMaterial(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
-        void replaceNewMeshMaterialInSegment(const std::shared_ptr<Renderer::MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<Engine::EffectMaterial>& new_material);
+        void replaceMeshMaterial(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
+        void replaceNewMeshMaterialInSegment(const std::shared_ptr<Renderables::MeshPrimitive>& mesh, unsigned segment_index, const std::shared_ptr<Engine::EffectMaterial>& new_material);
 
-        void onEffectMaterialContented(const Frameworks::IEventPtr& e);
-        void onContentMaterialFailed(const Frameworks::IEventPtr& e);
+        void onEffectMaterialHydrated(const Frameworks::IEventPtr& e);
+        void onHydrateMaterialFailed(const Frameworks::IEventPtr& e);
 
     private:
-        std::weak_ptr<Engine::Primitive> m_primitive;
+        std::weak_ptr<Primitives::Primitive> m_primitive;
         Engine::EffectMaterialId m_oldMaterialId;
         Engine::EffectMaterialId m_newMaterialId;
 
-        Frameworks::EventSubscriberPtr m_onEffectMaterialContented;
-        Frameworks::EventSubscriberPtr m_onContentEffectMaterialFailed;
+        Frameworks::EventSubscriberPtr m_onEffectMaterialHydrated;
+        Frameworks::EventSubscriberPtr m_onHydrateEffectMaterialFailed;
         using ChangeSpecifyMaterial = std::function<void(const Engine::EffectMaterialId&)>;
         std::unordered_map<Engine::EffectMaterialId, ChangeSpecifyMaterial, Engine::EffectMaterialId::hash> m_changeSpecifyMaterialMap;
     };
@@ -88,17 +88,16 @@ namespace Enigma::GameCommon
         Engine::GenericDto serializeDto() const override;
 
     private:
-        void changeMeshTexture(const std::shared_ptr<Renderer::MeshPrimitive>& mesh);
-        void onTextureContented(const Frameworks::IEventPtr& e);
-        void onContentTextureFailed(const Frameworks::IEventPtr& e);
+        void changeMeshTexture(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
+        void onTextureHydrated(const Frameworks::IEventPtr& e);
+        void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
     private:
         std::string m_meshName;
         Engine::TextureMappingDto m_textureDto;
-        Frameworks::EventSubscriberPtr m_onTextureContented;
-        Frameworks::EventSubscriberPtr m_onContentTextureFailed;
-        std::weak_ptr<Renderer::MeshPrimitive> m_mesh;
-        Frameworks::Ruid m_requsetRuid;
+        Frameworks::EventSubscriberPtr m_onTextureHydrated;
+        Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
+        std::weak_ptr<Renderables::MeshPrimitive> m_mesh;
     };
 }
 

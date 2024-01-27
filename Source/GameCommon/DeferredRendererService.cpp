@@ -14,7 +14,7 @@
 #include "SceneGraph/Light.h"
 #include "GameEngine/EffectDtoHelper.h"
 #include "Geometries/StandardGeometryDtoHelper.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
@@ -22,14 +22,14 @@
 #include "GameCommon/GameCameraService.h"
 #include "LightingPawnDto.h"
 #include "DeferredRenderingCommands.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
-
+using namespace Enigma::Renderer;
 
 DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
 
@@ -519,7 +519,7 @@ void DeferredRendererService::UpdateSunLightQuad(const std::shared_ptr<SceneGrap
     }
 }
 
-void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Renderer::MeshPrimitive>& mesh)
+void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh)
 {
     assert(m_configuration);
     if (!mesh) return;
@@ -544,7 +544,7 @@ void DeferredRendererService::BindGBufferToLightingMesh(const std::shared_ptr<Re
 void DeferredRendererService::BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
     if (!lighting_pawn) return;
-    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(lighting_pawn->GetPrimitive());
+    auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(lighting_pawn->GetPrimitive());
     if (mesh) BindGBufferToLightingMesh(mesh);
 }
 

@@ -97,10 +97,10 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findFittingNodeFromRoot(const Engine::B
     Vector3 root_box_max = root_local_box->Center() + Vector3(root_local_box->Extent());
     Vector3 local_pos = bv_in_root.Center();
     // if out of map bounding, return null
-    if ((local_pos.X() < root_box_min.X())
-        || (local_pos.X() > root_box_max.X())
-        || (local_pos.Z() < root_box_min.Z())
-        || (local_pos.Z() > root_box_max.Z())) return nullptr;
+    if ((local_pos.x() < root_box_min.x())
+        || (local_pos.x() > root_box_max.x())
+        || (local_pos.z() < root_box_min.z())
+        || (local_pos.z() > root_box_max.z())) return nullptr;
 
     return findFittingLeaf(bv_in_root);
 }
@@ -139,23 +139,23 @@ std::tuple<Box3, unsigned> SceneQuadTreeRoot::locateSubTreeBoxAndIndex(const Mat
 {
     Vector3 sub_quad_center;
     unsigned leaf_index = 0;
-    if (local_pos.X() > parent_box.Center().X())
+    if (local_pos.x() > parent_box.Center().x())
     {
         leaf_index |= 0x01;
-        sub_quad_center.X() = parent_box.Center().X() + parent_box.Extent()[0] / 2.0f;
+        sub_quad_center.x() = parent_box.Center().x() + parent_box.Extent()[0] / 2.0f;
     }
     else
     {
-        sub_quad_center.X() = parent_box.Center().X() - parent_box.Extent()[0] / 2.0f;
+        sub_quad_center.x() = parent_box.Center().x() - parent_box.Extent()[0] / 2.0f;
     }
-    if (local_pos.Z() > parent_box.Center().Z())
+    if (local_pos.z() > parent_box.Center().z())
     {
         leaf_index |= 0x02;
-        sub_quad_center.Z() = parent_box.Center().Z() + parent_box.Extent()[2] / 2.0f;
+        sub_quad_center.z() = parent_box.Center().z() + parent_box.Extent()[2] / 2.0f;
     }
     else
     {
-        sub_quad_center.Z() = parent_box.Center().Z() - parent_box.Extent()[2] / 2.0f;
+        sub_quad_center.z() = parent_box.Center().z() - parent_box.Extent()[2] / 2.0f;
     }
     Box3 box_sub_tree;
     box_sub_tree.Center() = sub_quad_center;
@@ -167,20 +167,20 @@ std::tuple<Box3, unsigned> SceneQuadTreeRoot::locateSubTreeBoxAndIndex(const Mat
 
 bool SceneQuadTreeRoot::testSubTreeQuadEnvelop(const MathLib::Box3& quad_box_in_parent, const Engine::BoundingVolume& bv_in_parent) const
 {
-    Box2 box_q(Vector2(quad_box_in_parent.Center().X(), quad_box_in_parent.Center().Z()),
-        Vector2(quad_box_in_parent.Axis()[0].X(), quad_box_in_parent.Axis()[0].Z()),
-        Vector2(quad_box_in_parent.Axis()[2].X(), quad_box_in_parent.Axis()[2].Z()), quad_box_in_parent.Extent()[0], quad_box_in_parent.Extent()[2]);
+    Box2 box_q(Vector2(quad_box_in_parent.Center().x(), quad_box_in_parent.Center().z()),
+        Vector2(quad_box_in_parent.Axis()[0].x(), quad_box_in_parent.Axis()[0].z()),
+        Vector2(quad_box_in_parent.Axis()[2].x(), quad_box_in_parent.Axis()[2].z()), quad_box_in_parent.Extent()[0], quad_box_in_parent.Extent()[2]);
     if (auto bv_box = bv_in_parent.BoundingBox3()) // model bound is box
     {
         Box3 box_model = bv_box.value();
-        Box2 box_m(Vector2(box_model.Center().X(), box_model.Center().Z()), Vector2::UNIT_X, Vector2::UNIT_Y,
+        Box2 box_m(Vector2(box_model.Center().x(), box_model.Center().z()), Vector2::UNIT_X, Vector2::UNIT_Y,
             box_model.Extent()[0], box_model.Extent()[2]);
         return ContainmentBox2::TestBox2EnvelopBox2(box_q, box_m);
     }
     if (auto bv_sphere = bv_in_parent.BoundingSphere3())
     {
         Sphere3 sphere_model = bv_sphere.value();
-        Sphere2 sphere_m(Vector2(sphere_model.Center().X(), sphere_model.Center().Z()), sphere_model.Radius());
+        Sphere2 sphere_m(Vector2(sphere_model.Center().x(), sphere_model.Center().z()), sphere_model.Radius());
         return ContainmentBox2::TestBox2EnvelopSphere2(box_q, sphere_m);
     }
     return false;

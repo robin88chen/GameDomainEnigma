@@ -68,7 +68,7 @@ Enigma::MathLib::Plane3::SideOfPlane SphereBV::WhichSide(const MathLib::Plane3& 
 bool SphereBV::PointInside(const MathLib::Vector3& vecPos)
 {
     MathLib::Vector3 vecDiff = vecPos - m_sphere.Center();
-    float r = vecDiff.Length();
+    float r = vecDiff.length();
     if (r > m_sphere.Radius()) return false;
     return true;
 }

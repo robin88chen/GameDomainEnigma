@@ -3,7 +3,6 @@
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryErrors.h"
 #include "MathLib/MathAlgorithm.h"
-#include "Platforms/MemoryAllocMacro.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;
@@ -120,15 +119,15 @@ error TriangleList::calculateVertexTangentSpace(unsigned tex_channel)
     for (unsigned int vi = 0; vi < m_vtxUsedCount; vi++)
     {
         Vector3 nor = getVertexNormal(vi);
-        Vector3 tangent = tangent_buf[vi] - nor * nor.Dot(tangent_buf[vi]);
-        tangent.NormalizeSelf();
+        Vector3 tangent = tangent_buf[vi] - nor * nor.dot(tangent_buf[vi]);
+        tangent.normalizeSelf();
         float binor_w = 1.0f;
-        Vector3 nxt = nor.Cross(tangent_buf[vi]);
-        if (nxt.Dot(binormal_buf[vi]) < 0.0f)
+        Vector3 nxt = nor.cross(tangent_buf[vi]);
+        if (nxt.dot(binormal_buf[vi]) < 0.0f)
         {
             binor_w = -1.0f;
         }
-        vtxTangent[vi] = Vector4(tangent.X(), tangent.Y(), tangent.Z(), binor_w);
+        vtxTangent[vi] = Vector4(tangent.x(), tangent.y(), tangent.z(), binor_w);
     }
 
     setVertexTangentArray(vtxTangent);

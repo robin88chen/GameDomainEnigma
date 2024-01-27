@@ -26,10 +26,10 @@ namespace Enigma::Graphics
         TargetViewPort& operator=(const TargetViewPort&) = default;
         TargetViewPort& operator=(TargetViewPort&&) = default;
 
-        inline unsigned int X() const { return m_x; };
-        inline unsigned int& X() { return m_x; };
-        inline unsigned int Y() const { return m_y; };
-        inline unsigned int& Y() { return m_y; };
+        inline unsigned int x() const { return m_x; };
+        inline unsigned int& x() { return m_x; };
+        inline unsigned int y() const { return m_y; };
+        inline unsigned int& y() { return m_y; };
         inline unsigned int Width() const { return m_width; };
         inline unsigned int& Width() { return m_width; };
         inline unsigned int Height() const { return m_height; };

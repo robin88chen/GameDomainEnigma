@@ -9,23 +9,24 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
-    case ErrorCode::policyIncomplete: return "policy incomplete error";
-    case ErrorCode::deserializeFail: return "deserialize dto failed";
-    case ErrorCode::dynamicCastFail: return "dynamic cast fail";
-    case ErrorCode::nullAnimator: return "null animator";
-    case ErrorCode::animatorMultiListening: return "animator multi listening";
+    case ErrorCode::animatorFactoryNotExists: return "Animator factory not exists";
+    case ErrorCode::animatorEntityAlreadyExists: return "Animator entity already exists";
+    case ErrorCode::animationFactoryNotExists: return "Animation factory not exists";
+    case ErrorCode::animationAssetAlreadyExists: return "Animation asset already exists";
+    case ErrorCode::nullAnimator: return "Null animator";
+    case ErrorCode::animatorMultiListening: return "Animator multi listening";
     }
     return "Unknown";
 }
 
 const char* ErrorCategory::name() const noexcept
 {
-    return "Animators Error Category";
+    return "Animator Error Category";
 }
 namespace Enigma::Animators
 {
     std::error_code make_error_code(ErrorCode ec)
     {
-        return std::error_code{ static_cast<int>(ec), ErrorCategory::get() };
+        return std::error_code(static_cast<int>(ec), ErrorCategory::get());
     }
 }

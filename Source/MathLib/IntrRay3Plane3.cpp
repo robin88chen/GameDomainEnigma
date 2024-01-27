@@ -22,9 +22,9 @@ const Plane3& IntrRay3Plane3::GetPlane() const
 
 Intersector::Result IntrRay3Plane3::test(std::unique_ptr<IntersectorCache> /*last_result*/)
 {
-    float e = m_plane.Normal().Dot(m_ray.direction());
+    float e = m_plane.Normal().dot(m_ray.direction());
     if ((e <= Math::Epsilon()) && (e >= -Math::Epsilon())) return { false, nullptr };
-    float t = (m_plane.Constant() - m_plane.Normal().Dot(m_ray.origin())) / e;
+    float t = (m_plane.Constant() - m_plane.Normal().dot(m_ray.origin())) / e;
     if (t < 0.0f) return { false, nullptr };
     m_quantity = 1;
     m_tParam = t;

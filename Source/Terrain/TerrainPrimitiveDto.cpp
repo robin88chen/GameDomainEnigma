@@ -1,8 +1,6 @@
 ﻿#include "TerrainPrimitiveDto.h"
 #include "TerrainGeometry.h"
 #include "TerrainPrimitive.h"
-#include "TerrainPrimitivePolicy.h"
-#include "Renderer/RenderablePrimitivePolicies.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Engine;
@@ -13,14 +11,14 @@ TerrainPrimitiveDto::TerrainPrimitiveDto() : MeshPrimitiveDto()
     //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto) : MeshPrimitiveDto(dto)
+TerrainPrimitiveDto::TerrainPrimitiveDto(const Renderables::MeshPrimitiveDto& dto) : MeshPrimitiveDto(dto)
 {
     //m_geometryFactory = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
 TerrainPrimitiveDto TerrainPrimitiveDto::fromGenericDto(const Engine::GenericDto& dto)
 {
-    TerrainPrimitiveDto terrain_dto(MeshPrimitiveDto::fromGenericDto(dto));
+    TerrainPrimitiveDto terrain_dto{ MeshPrimitiveDto{dto} };
     return terrain_dto;
 }
 

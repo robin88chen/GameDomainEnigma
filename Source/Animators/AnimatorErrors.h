@@ -3,10 +3,10 @@
  * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   January 2023
+ * \date   January 2024
  *********************************************************************/
-#ifndef _ANIMATOR_ERRORS_H
-#define _ANIMATOR_ERRORS_H
+#ifndef ANIMATOR_ERRORS_H
+#define ANIMATOR_ERRORS_H
 
 #include <system_error>
 
@@ -16,11 +16,11 @@ namespace Enigma::Animators
     {
         ok = 0,
 
-        policyIncomplete = 101,
-        deserializeFail,
-        dynamicCastFail,
-
-        nullAnimator = 201,
+        animatorFactoryNotExists = 100,
+        animatorEntityAlreadyExists,
+        animationFactoryNotExists,
+        animationAssetAlreadyExists,
+        nullAnimator,
         animatorMultiListening,
     };
     class ErrorCategory : public std::error_category
@@ -47,4 +47,4 @@ namespace std
 }
 
 
-#endif // _ANIMATOR_ERRORS_H
+#endif // ANIMATOR_ERRORS_H

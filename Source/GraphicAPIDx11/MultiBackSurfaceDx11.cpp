@@ -6,7 +6,6 @@
 #include "GraphicKernel/GraphicEvents.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
-#include <Platforms/MemoryAllocMacro.h>
 #include <cassert>
 
 using namespace Enigma::Devices;

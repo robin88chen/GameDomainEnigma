@@ -291,29 +291,29 @@ bool Matrix3::operator !=(const Matrix3& mx) const
     return false;
 }
 
-int Matrix3::CompareArrays(const Matrix3& mx) const
+int Matrix3::compareArrays(const Matrix3& mx) const
 {
     return memcmp(m_entry, mx.m_entry, 9 * sizeof(float));
 }
 
 bool Matrix3::operator<(const Matrix3& mx) const
 {
-    return CompareArrays(mx) < 0;
+    return compareArrays(mx) < 0;
 }
 
 bool Matrix3::operator<=(const Matrix3& mx) const
 {
-    return CompareArrays(mx) <= 0;
+    return compareArrays(mx) <= 0;
 }
 
 bool Matrix3::operator>(const Matrix3& mx) const
 {
-    return CompareArrays(mx) > 0;
+    return compareArrays(mx) > 0;
 }
 
 bool Matrix3::operator>=(const Matrix3& mx) const
 {
-    return CompareArrays(mx) >= 0;
+    return compareArrays(mx) >= 0;
 }
 
 Matrix3 Matrix3::operator+(const Matrix3& mx) const
@@ -497,9 +497,9 @@ Matrix3& Matrix3::operator/=(float scalar)
 Vector3 Matrix3::operator*(const Vector3& v) const
 {
     Vector3 prod;
-    prod.X() = m_11 * v.X() + m_12 * v.Y() + m_13 * v.Z();
-    prod.Y() = m_21 * v.X() + m_22 * v.Y() + m_23 * v.Z();
-    prod.Z() = m_31 * v.X() + m_32 * v.Y() + m_33 * v.Z();
+    prod.x() = m_11 * v.x() + m_12 * v.y() + m_13 * v.z();
+    prod.y() = m_21 * v.x() + m_22 * v.y() + m_23 * v.z();
+    prod.z() = m_31 * v.x() + m_32 * v.y() + m_33 * v.z();
     return prod;
 }
 
@@ -600,7 +600,7 @@ std::tuple<Vector3, float> Matrix3::ToAxisAngle() const
             axis[0] = m_32 - m_23;
             axis[1] = m_13 - m_31;
             axis[2] = m_21 - m_12;
-            axis.NormalizeSelf();
+            axis.normalizeSelf();
         }
         else
         {
@@ -1209,35 +1209,35 @@ namespace Enigma::MathLib
 Vector2 Matrix3::TransformCoord(const Vector2& v) const
 {
     Vector2 prod;
-    float invZ = (float)1.0 / (m_31 * v.X() + m_32 * v.Y() + m_33);
-    prod.X() = (m_11 * v.X() + m_12 * v.Y() + m_13) * invZ;
-    prod.Y() = (m_21 * v.X() + m_22 * v.Y() + m_23) * invZ;
+    float invZ = (float)1.0 / (m_31 * v.x() + m_32 * v.y() + m_33);
+    prod.x() = (m_11 * v.x() + m_12 * v.y() + m_13) * invZ;
+    prod.y() = (m_21 * v.x() + m_22 * v.y() + m_23) * invZ;
     return prod;
 }
 
 Vector2 Matrix3::Transform(const Vector2& v) const
 {
     Vector2 prod;
-    prod.X() = (m_11 * v.X() + m_12 * v.Y() + m_13);
-    prod.Y() = (m_21 * v.X() + m_22 * v.Y() + m_23);
+    prod.x() = (m_11 * v.x() + m_12 * v.y() + m_13);
+    prod.y() = (m_21 * v.x() + m_22 * v.y() + m_23);
     return prod;
 }
 
 Vector2 Matrix3::TransformVector(const Vector2& v) const
 {
     Vector2 prod;
-    prod.X() = (m_11 * v.X() + m_12 * v.Y());
-    prod.Y() = (m_21 * v.X() + m_22 * v.Y());
+    prod.x() = (m_11 * v.x() + m_12 * v.y());
+    prod.y() = (m_21 * v.x() + m_22 * v.y());
     return prod;
 }
 
 std::tuple<Vector2, float> Matrix3::TransformVectorNormalized(const Vector2& v) const
 {
     Vector2 prod;
-    prod.X() = (m_11 * v.X() + m_12 * v.Y());
-    prod.Y() = (m_21 * v.X() + m_22 * v.Y());
-    float length = prod.Length();
-    prod.NormalizeSelf();
+    prod.x() = (m_11 * v.x() + m_12 * v.y());
+    prod.y() = (m_21 * v.x() + m_22 * v.y());
+    float length = prod.length();
+    prod.normalizeSelf();
     return { prod, length };
 }
 
@@ -1245,8 +1245,8 @@ float Matrix3::GetMaxScale() const
 {
     Vector2 v0 = Vector2(m_11, m_21);
     Vector2 v1 = Vector2(m_12, m_22);
-    float max_s = v0.Length();
-    if (v1.Length() > max_s) max_s = v1.Length();
+    float max_s = v0.length();
+    if (v1.length() > max_s) max_s = v1.length();
     return max_s;
 }
 

@@ -1,57 +1,104 @@
 ﻿/*********************************************************************
  * \file   AnimationAssetEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
- * \date   January 2023
+ * \date   January 2024
  *********************************************************************/
-#ifndef _ANIMATION_ASSET_EVENTS_H
-#define _ANIMATION_ASSET_EVENTS_H
+#ifndef ANIMATION_ASSET_EVENTS_H
+#define ANIMATION_ASSET_EVENTS_H
 
 #include "Frameworks/Event.h"
-#include "Frameworks/ruid.h"
-#include <string>
-#include <memory>
+#include "AnimationAsset.h"
+#include <system_error>
 
 namespace Enigma::Animators
 {
-    class AnimationAsset;
-
-    class AnimationAssetBuilt : public Frameworks::IEvent
+    class AnimationAssetCreated : public Frameworks::IEvent
     {
     public:
-        AnimationAssetBuilt(const std::string& name, const std::shared_ptr<AnimationAsset>& ani) :
-            m_name(name), m_animation(ani) {};
-        const std::string& getName() { return m_name; }
-        const std::shared_ptr<AnimationAsset>& GetAnimationAsset() { return m_animation; }
+        AnimationAssetCreated(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& animation) :
+            m_id(id), m_animation(animation) {};
+        const AnimationAssetId& id() { return m_id; }
+        const std::shared_ptr<AnimationAsset>& animation() { return m_animation; }
     private:
-        std::string m_name;
+        AnimationAssetId m_id;
         std::shared_ptr<AnimationAsset> m_animation;
     };
-    class BuildAnimationAssetFailed : public Frameworks::IEvent
+    class CreateAnimationAssetFailed : public Frameworks::IEvent
     {
     public:
-        BuildAnimationAssetFailed(const std::string& name, std::error_code er) :
-            m_name(name), m_error(er) {};
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        CreateAnimationAssetFailed(const AnimationAssetId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const AnimationAssetId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
     private:
-        std::string m_name;
+        AnimationAssetId m_id;
         std::error_code m_error;
     };
-    class FactoryAnimationAssetCreated : public Frameworks::IEvent
+    class AnimationAssetConstituted : public Frameworks::IEvent
     {
     public:
-        FactoryAnimationAssetCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<AnimationAsset>& ani)
-            : m_ruid(ruid), m_animation(ani) {};
-
-        const Frameworks::Ruid& GetConstructingRuid() const { return m_ruid; }
-        const std::shared_ptr<AnimationAsset>& GetAnimationAsset() { return m_animation; }
-
-    protected:
-        Frameworks::Ruid m_ruid;
+        AnimationAssetConstituted(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& animation, bool is_persisted) :
+            m_id(id), m_animation(animation), m_is_persisted(is_persisted) {};
+        const AnimationAssetId& id() { return m_id; }
+        const std::shared_ptr<AnimationAsset>& animation() { return m_animation; }
+        bool isPersisted() const { return m_is_persisted; }
+    private:
+        AnimationAssetId m_id;
         std::shared_ptr<AnimationAsset> m_animation;
+        bool m_is_persisted;
     };
+    class ConstituteAnimationAssetFailed : public Frameworks::IEvent
+    {
+    public:
+        ConstituteAnimationAssetFailed(const AnimationAssetId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const AnimationAssetId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        AnimationAssetId m_id;
+        std::error_code m_error;
+    };
+    class AnimationAssetRemoved : public Frameworks::IEvent
+    {
+    public:
+        AnimationAssetRemoved(const AnimationAssetId& id) : m_id(id) {};
+        const AnimationAssetId& id() { return m_id; }
+    private:
+        AnimationAssetId m_id;
+    };
+    class RemoveAnimationAssetFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveAnimationAssetFailed(const AnimationAssetId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const AnimationAssetId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        AnimationAssetId m_id;
+        std::error_code m_error;
+    };
+    class AnimationAssetPut : public Frameworks::IEvent
+    {
+    public:
+        AnimationAssetPut(const AnimationAssetId& id) : m_id(id) {};
+        const AnimationAssetId& id() { return m_id; }
+    private:
+        AnimationAssetId m_id;
+    };
+    class PutAnimationAssetFailed : public Frameworks::IEvent
+    {
+    public:
+        PutAnimationAssetFailed(const AnimationAssetId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const AnimationAssetId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        AnimationAssetId m_id;
+        std::error_code m_error;
+    };
+
 }
 
-#endif // _ANIMATION_ASSET_EVENTS_H
+#endif // ANIMATION_ASSET_EVENTS_H

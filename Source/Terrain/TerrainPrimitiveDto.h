@@ -1,24 +1,24 @@
 ﻿/*********************************************************************
  * \file   TerrainPrimitiveDto.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
 #ifndef TERRAIN_PRIMITIVE_DTO_H
 #define TERRAIN_PRIMITIVE_DTO_H
 
-#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 
 namespace Enigma::Terrain
 {
     class TerrainPrimitivePolicy;
 
-    class TerrainPrimitiveDto : public Renderer::MeshPrimitiveDto
+    class TerrainPrimitiveDto : public Renderables::MeshPrimitiveDto
     {
     public:
         TerrainPrimitiveDto();
-        TerrainPrimitiveDto(const Renderer::MeshPrimitiveDto& dto);
+        TerrainPrimitiveDto(const Renderables::MeshPrimitiveDto& dto);
         TerrainPrimitiveDto(const TerrainPrimitiveDto&) = default;
         TerrainPrimitiveDto(TerrainPrimitiveDto&&) = default;
         TerrainPrimitiveDto& operator=(const TerrainPrimitiveDto&) = default;

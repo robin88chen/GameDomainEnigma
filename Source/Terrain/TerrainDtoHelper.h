@@ -11,7 +11,7 @@
 #include "TerrainGeometryDto.h"
 #include "TerrainPawnDto.h"
 #include "GameEngine/BoundingVolume.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 #include "TerrainPrimitiveDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
 

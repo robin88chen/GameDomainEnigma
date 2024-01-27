@@ -16,6 +16,12 @@
     <Filter Include="TextureStoreMapper">
       <UniqueIdentifier>{d8abdc87-2dec-493e-b38e-3d311d8c9b11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnimatorStoreMapper">
+      <UniqueIdentifier>{ded9a245-4173-4f31-b641-3f239ef02ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnimationAssetStoreMapper">
+      <UniqueIdentifier>{759374ca-d249-44c1-bd56-773c0c2221e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
@@ -33,6 +39,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.h">
       <Filter>TextureStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFileStoreMapper.h">
+      <Filter>AnimatorStoreMapper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFileStoreMapper.h">
+      <Filter>AnimationAssetStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
@@ -49,6 +61,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.cpp">
       <Filter>TextureStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFileStoreMapper.cpp">
+      <Filter>AnimatorStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFileStoreMapper.cpp">
+      <Filter>AnimationAssetStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

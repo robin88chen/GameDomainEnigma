@@ -10,8 +10,8 @@
 
 #include "Spatial.h"
 #include "GameEngine/IRenderer.h"
-#include "GameEngine/Primitive.h"
-#include "GameEngine/Animator.h"
+#include "Primitives/Primitive.h"
+#include "Animators/Animator.h"
 #include <string>
 #include <list>
 
@@ -42,11 +42,11 @@ namespace Enigma::SceneGraph
         virtual error insertToRenderer(const Engine::IRendererPtr& render) override;
 
         /** set entity's primitive */
-        void SetPrimitive(const Engine::PrimitivePtr& prim);
+        void SetPrimitive(const std::shared_ptr<Primitives::Primitive>& prim);
         /** set primitive with primitive's rtti & geometry name, 還沒有用到的實作 */
         //void SetPrimitive(const Rtti& type_rtti, const std::string& geo_name);
         /** get primitive */
-        const Engine::PrimitivePtr& GetPrimitive() const { return m_primitive; };
+        const std::shared_ptr<Primitives::Primitive>& GetPrimitive() const { return m_primitive; };
 
         /** calculate model bound */
         virtual void CalculateModelBound(bool axis_align);
@@ -55,13 +55,13 @@ namespace Enigma::SceneGraph
         virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         /** enum animator list deep, including geometry's animator */
-        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Engine::Animator>>& resultList);
+        virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
 
     protected:
         PawnDto SerializePawnDto();
 
     protected:
-        Engine::PrimitivePtr m_primitive;
+        std::shared_ptr<Primitives::Primitive> m_primitive;
     };
     using PawnPtr = std::shared_ptr<Pawn>;
 }

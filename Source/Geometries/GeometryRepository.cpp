@@ -5,7 +5,6 @@
 #include "GeometryDataPolicy.h"
 #include "GeometryBuilder.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "Frameworks/CommandBus.h"

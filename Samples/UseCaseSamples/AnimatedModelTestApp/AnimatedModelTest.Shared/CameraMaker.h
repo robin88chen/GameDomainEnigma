@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CameraMaker.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
@@ -13,7 +13,7 @@
 class CameraMaker
 {
 public:
-    static std::shared_ptr<Enigma::SceneGraph::Camera> MakeCamera();
+    static void makeCamera(const Enigma::SceneGraph::SpatialId& id);
 };
 
 #endif // CAMERA_MAKER_H

@@ -240,7 +240,7 @@ namespace Enigma::MathLib
         bool QLAlgorithm(float diag[3], float subd[2]);
 
         // support for none-equal comparisons
-        int CompareArrays(const Matrix3& mx) const;
+        int compareArrays(const Matrix3& mx) const;
         /** data members */
         union
         {

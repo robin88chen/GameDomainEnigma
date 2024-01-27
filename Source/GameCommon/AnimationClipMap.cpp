@@ -5,7 +5,7 @@
 #include <optional>
 
 using namespace Enigma::GameCommon;
-using namespace Enigma::Animators;
+using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);

@@ -6,7 +6,6 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "Frameworks/EventPublisher.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "GraphicKernel/GraphicThread.h"

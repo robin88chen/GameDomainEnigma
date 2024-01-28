@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Forms">
+      <UniqueIdentifier>{53856c50-2155-4b05-89e4-2bbcced6f9d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{98db3ded-a188-49b3-ac38-77200acf6685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SchemeColor">
+      <UniqueIdentifier>{e7f11a30-8e53-4833-bb75-29031c4d6b71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainForm.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="SchemeColorDef.h">
+      <Filter>SchemeColor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApplication.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="SchemeColorDef.cpp">
+      <Filter>SchemeColor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

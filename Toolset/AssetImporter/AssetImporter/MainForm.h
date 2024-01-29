@@ -13,6 +13,7 @@
 #include "nana/gui/widgets/tabbar.hpp"
 #include "nana/gui/widgets/listbox.hpp"
 #include "TextureFileStore.h"
+#include "EffectFileStore.h"
 
 namespace AssetImporter
 {
@@ -43,6 +44,8 @@ namespace AssetImporter
 
         void refreshTextureAssetList();
         void importTextureAsset();
+        void refreshEffectAssetList();
+        void importEffectAsset();
 
         std::string filePathOnApkPath(const std::filesystem::path& file_path);
     private:
@@ -52,6 +55,7 @@ namespace AssetImporter
         nana::tabbar<int>* m_tabbar;
         nana::listbox* m_assetListbox;
         TextureFileStore* m_textureFileStoreMapper;
+        EffectFileStore* m_effectFileStoreMapper;
     };
 }
 

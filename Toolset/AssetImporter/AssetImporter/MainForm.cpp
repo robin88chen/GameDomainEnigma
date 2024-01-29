@@ -23,6 +23,7 @@ MainForm::MainForm()
     m_tabbar = nullptr;
     m_assetListbox = nullptr;
     m_textureFileStoreMapper = nullptr;
+    m_effectFileStoreMapper = nullptr;
 }
 
 MainForm::~MainForm()
@@ -36,7 +37,11 @@ MainForm::~MainForm()
         m_textureFileStoreMapper->disconnect();
         SAFE_DELETE(m_textureFileStoreMapper);
     }
-
+    if (m_effectFileStoreMapper)
+    {
+        m_effectFileStoreMapper->disconnect();
+        SAFE_DELETE(m_effectFileStoreMapper);
+    }
     delete FileSystem::instance();
 }
 
@@ -118,6 +123,9 @@ void MainForm::handleOpenEffectStorage(nana::menu::item_proxy& menu_item)
     m_importType = ImportType::effect;
     m_menubar->at(0).enabled(0, false); // disable texture storage
     m_menubar->at(1).text(0, "Import Effect");
+    m_effectFileStoreMapper = new EffectFileStore{ "effect_materials.db.txt@APK_PATH" };
+    m_effectFileStoreMapper->connect();
+    refreshEffectAssetList();
 }
 
 void MainForm::handleImportAsset(nana::menu::item_proxy& menu_item)
@@ -125,6 +133,10 @@ void MainForm::handleImportAsset(nana::menu::item_proxy& menu_item)
     if (m_importType == ImportType::texture)
     {
         importTextureAsset();
+    }
+    else if (m_importType == ImportType::effect)
+    {
+        importEffectAsset();
     }
 }
 
@@ -138,6 +150,7 @@ void MainForm::refreshTextureAssetList()
         categ->append({ id.name(), filename });
     }
 }
+
 void MainForm::importTextureAsset()
 {
     nana::filebox file_dlg{ *this, true };
@@ -165,6 +178,37 @@ void MainForm::importTextureAsset()
         }
     }
     refreshTextureAssetList();
+}
+
+void MainForm::refreshEffectAssetList()
+{
+    if (!m_effectFileStoreMapper) return;
+    m_assetListbox->clear();
+    auto categ = m_assetListbox->at(0);
+    for (auto& [id, filename] : m_effectFileStoreMapper->filenameMap())
+    {
+        categ->append({ id.name(), filename });
+    }
+}
+
+void MainForm::importEffectAsset()
+{
+    nana::filebox file_dlg{ *this, true };
+    auto paths = file_dlg.add_filter({ {"Effect File(*.efx)", "*.efx"} }).title("Import Effect").allow_multi_select(true).show();
+    if (paths.empty()) return;
+    for (auto& filepath : paths)
+    {
+        if (fs::is_regular_file(filepath))
+        {
+            auto sub_path_filename = filePathOnApkPath(filepath);
+            auto dot_pos = sub_path_filename.find_last_of('.');
+            auto material_id = sub_path_filename.substr(0, dot_pos);
+            auto asset_filename = sub_path_filename + "@APK_PATH";
+            m_effectFileStoreMapper->appendEffectMaterial(material_id, asset_filename);
+        }
+    }
+    m_effectFileStoreMapper->serializeMapperFile();
+    refreshEffectAssetList();
 }
 
 std::string MainForm::filePathOnApkPath(const std::filesystem::path& file_path)

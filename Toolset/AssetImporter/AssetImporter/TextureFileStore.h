@@ -17,7 +17,7 @@ namespace AssetImporter
     public:
         TextureFileStore(const std::string& mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway) : Enigma::FileStorage::TextureFileStoreMapper(mapper_filename, gateway) {}
 
-        std::unordered_map<Enigma::Engine::TextureId, std::string, Enigma::Engine::TextureId::hash> filenameMap() { return m_filename_map; }
+        const std::unordered_map<Enigma::Engine::TextureId, std::string, Enigma::Engine::TextureId::hash>& filenameMap() { return m_filename_map; }
     };
 }
 

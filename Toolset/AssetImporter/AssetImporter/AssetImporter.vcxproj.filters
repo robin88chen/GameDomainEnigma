@@ -25,6 +25,9 @@
     <ClInclude Include="TextureFileStore.h">
       <Filter>FileStorages</Filter>
     </ClInclude>
+    <ClInclude Include="EffectFileStore.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -38,6 +41,9 @@
       <Filter>SchemeColor</Filter>
     </ClCompile>
     <ClCompile Include="TextureFileStore.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectFileStore.cpp">
       <Filter>FileStorages</Filter>
     </ClCompile>
   </ItemGroup>

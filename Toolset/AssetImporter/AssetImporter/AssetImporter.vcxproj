@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EffectFileStore.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="pch.cpp">
@@ -142,6 +143,7 @@
     <ClCompile Include="TextureFileStore.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EffectFileStore.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SchemeColorDef.h" />

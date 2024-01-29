@@ -37,10 +37,10 @@ namespace AssetImporter
         void initMenu();
         void initAssetList();
 
-        void handleClose(nana::menu::item_proxy& menu_item);
-        void handleOpenTextureStorage(nana::menu::item_proxy& menu_item);
-        void handleOpenEffectStorage(nana::menu::item_proxy& menu_item);
-        void handleImportAsset(nana::menu::item_proxy& menu_item);
+        void close(nana::menu::item_proxy& menu_item);
+        void openTextureStorage(nana::menu::item_proxy& menu_item);
+        void openEffectStorage(nana::menu::item_proxy& menu_item);
+        void importAsset(nana::menu::item_proxy& menu_item);
 
         void refreshTextureAssetList();
         void importTextureAsset();

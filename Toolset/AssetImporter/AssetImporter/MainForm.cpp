@@ -80,12 +80,12 @@ void MainForm::initMenu()
     m_menubar->scheme().body_highlight = UISchemeColors::HIGHLIGHT_BG;
     m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     m_menubar->push_back("&FILE");
-    m_menubar->at(0).append("Open Texture Storage", [=](auto item) { handleOpenTextureStorage(item); });
-    m_menubar->at(0).append("Open Effect Storage", [=](auto item) { handleOpenEffectStorage(item); });
+    m_menubar->at(0).append("Open Texture Storage", [=](nana::menu::item_proxy& item) { openTextureStorage(item); });
+    m_menubar->at(0).append("Open Effect Storage", [=](nana::menu::item_proxy& item) { openEffectStorage(item); });
     m_menubar->at(0).append_splitter();
-    m_menubar->at(0).append("Exit", [=](auto item) { handleClose(item); });
+    m_menubar->at(0).append("Exit", [=](nana::menu::item_proxy& item) { close(item); });
     m_menubar->push_back("&Import");
-    m_menubar->at(1).append("Import Asset", [=](auto item) { handleImportAsset(item); });
+    m_menubar->at(1).append("Import Asset", [=](nana::menu::item_proxy& item) { importAsset(item); });
     m_place->field("menubar") << *m_menubar;
 }
 
@@ -98,17 +98,22 @@ void MainForm::initAssetList()
     m_place->collocate();
 }
 
-void MainForm::handleClose(nana::menu::item_proxy& menu_item)
+void MainForm::close(nana::menu::item_proxy& menu_item)
 {
     if (m_textureFileStoreMapper)
     {
         m_textureFileStoreMapper->disconnect();
         SAFE_DELETE(m_textureFileStoreMapper);
     }
-    close();
+    if (m_effectFileStoreMapper)
+    {
+        m_effectFileStoreMapper->disconnect();
+        SAFE_DELETE(m_effectFileStoreMapper);
+    }
+    nana::form::close();
 }
 
-void MainForm::handleOpenTextureStorage(nana::menu::item_proxy& menu_item)
+void MainForm::openTextureStorage(nana::menu::item_proxy& menu_item)
 {
     m_importType = ImportType::texture;
     m_menubar->at(0).enabled(1, false); // disable effect storage
@@ -118,7 +123,7 @@ void MainForm::handleOpenTextureStorage(nana::menu::item_proxy& menu_item)
     refreshTextureAssetList();
 }
 
-void MainForm::handleOpenEffectStorage(nana::menu::item_proxy& menu_item)
+void MainForm::openEffectStorage(nana::menu::item_proxy& menu_item)
 {
     m_importType = ImportType::effect;
     m_menubar->at(0).enabled(0, false); // disable texture storage
@@ -128,7 +133,7 @@ void MainForm::handleOpenEffectStorage(nana::menu::item_proxy& menu_item)
     refreshEffectAssetList();
 }
 
-void MainForm::handleImportAsset(nana::menu::item_proxy& menu_item)
+void MainForm::importAsset(nana::menu::item_proxy& menu_item)
 {
     if (m_importType == ImportType::texture)
     {

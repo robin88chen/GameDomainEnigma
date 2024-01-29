@@ -153,20 +153,15 @@ void MainForm::importTextureAsset()
             auto texture_id = sub_path_filename.substr(0, dot_pos);
             auto asset_filename = texture_id + ".tex@APK_PATH";
             auto image_filename = sub_path_filename + "@APK_PATH";
+            nana::paint::image img{ filepath.generic_string() };
             dto.id() = texture_id;
             dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename);
             dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
+            dto.dimension() = Enigma::MathLib::Dimension<unsigned>{ img.size().width, img.size().height };
             dto.isCubeTexture() = false;
             dto.surfaceCount() = 1;
             dto.filePaths().push_back(image_filename);
             m_textureFileStoreMapper->putTexture(dto.id(), dto.toGenericDto());
-            /*auto id = Engine::TextureId{ filename };
-            auto dto = Engine::GenericDto{};
-            dto.set("filename", filename);
-            dto.set("filepath", filepath.generic_string());
-            m_textureFileStoreMapper->putTexture(id, dto);
-            auto categ = m_assetListbox->at(0);
-            categ->append({ id.name(), filepath.generic_string() });*/
         }
     }
     refreshTextureAssetList();

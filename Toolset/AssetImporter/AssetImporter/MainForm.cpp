@@ -1,16 +1,23 @@
 ﻿#include "MainForm.h"
 #include "SchemeColorDef.h"
+#include "TextureFileStore.h"
 #include "Platforms/MemoryMacro.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Gateways/DtoJsonGateway.h"
+#include "GameEngine/TextureDto.h"
+#include "GameEngine/Texture.h"
+#include "nana/gui/filebox.hpp"
 
 using namespace AssetImporter;
 using namespace Enigma::FileSystem;
 using namespace Enigma::Gateways;
 
+namespace fs = std::filesystem;
+
 MainForm::MainForm()
 {
+    m_importType = ImportType::none;
     m_menubar = nullptr;
     m_place = nullptr;
     m_tabbar = nullptr;
@@ -24,7 +31,11 @@ MainForm::~MainForm()
     SAFE_DELETE(m_place);
     SAFE_DELETE(m_tabbar);
     SAFE_DELETE(m_assetListbox);
-    SAFE_DELETE(m_textureFileStoreMapper);
+    if (m_textureFileStoreMapper)
+    {
+        m_textureFileStoreMapper->disconnect();
+        SAFE_DELETE(m_textureFileStoreMapper);
+    }
 
     delete FileSystem::instance();
 }
@@ -66,9 +77,10 @@ void MainForm::initMenu()
     m_menubar->push_back("&FILE");
     m_menubar->at(0).append("Open Texture Storage", [=](auto item) { handleOpenTextureStorage(item); });
     m_menubar->at(0).append("Open Effect Storage", [=](auto item) { handleOpenEffectStorage(item); });
-    //    m_menubar->at(0).append("Open Package", [=](auto item) { OnOpenPackage(item); });
     m_menubar->at(0).append_splitter();
     m_menubar->at(0).append("Exit", [=](auto item) { handleClose(item); });
+    m_menubar->push_back("&Import");
+    m_menubar->at(1).append("Import Asset", [=](auto item) { handleImportAsset(item); });
     m_place->field("menubar") << *m_menubar;
 }
 
@@ -93,12 +105,84 @@ void MainForm::handleClose(nana::menu::item_proxy& menu_item)
 
 void MainForm::handleOpenTextureStorage(nana::menu::item_proxy& menu_item)
 {
+    m_importType = ImportType::texture;
     m_menubar->at(0).enabled(1, false); // disable effect storage
-    m_textureFileStoreMapper = new Enigma::FileStorage::TextureFileStoreMapper{ "textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>() };
+    m_menubar->at(1).text(0, "Import Texture");
+    m_textureFileStoreMapper = new TextureFileStore{ "textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>() };
     m_textureFileStoreMapper->connect();
+    refreshTextureAssetList();
 }
 
 void MainForm::handleOpenEffectStorage(nana::menu::item_proxy& menu_item)
 {
+    m_importType = ImportType::effect;
     m_menubar->at(0).enabled(0, false); // disable texture storage
+    m_menubar->at(1).text(0, "Import Effect");
+}
+
+void MainForm::handleImportAsset(nana::menu::item_proxy& menu_item)
+{
+    if (m_importType == ImportType::texture)
+    {
+        importTextureAsset();
+    }
+}
+
+void MainForm::refreshTextureAssetList()
+{
+    if (!m_textureFileStoreMapper) return;
+    m_assetListbox->clear();
+    auto categ = m_assetListbox->at(0);
+    for (auto& [id, filename] : m_textureFileStoreMapper->filenameMap())
+    {
+        categ->append({ id.name(), filename });
+    }
+}
+void MainForm::importTextureAsset()
+{
+    nana::filebox file_dlg{ *this, true };
+    auto paths = file_dlg.add_filter({ {"PNG File(*.png)", "*.png"},{"Bitmap File(*.bmp)", "*.bmp"} }).title("Import Texture").allow_multi_select(true).show();
+    if (paths.empty()) return;
+    for (auto& filepath : paths)
+    {
+        if (fs::is_regular_file(filepath))
+        {
+            auto sub_path_filename = filePathOnApkPath(filepath);
+            Enigma::Engine::TextureDto dto;
+            auto dot_pos = sub_path_filename.find_last_of('.');
+            auto texture_id = sub_path_filename.substr(0, dot_pos);
+            auto asset_filename = texture_id + ".tex@APK_PATH";
+            auto image_filename = sub_path_filename + "@APK_PATH";
+            dto.id() = texture_id;
+            dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename);
+            dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
+            dto.isCubeTexture() = false;
+            dto.surfaceCount() = 1;
+            dto.filePaths().push_back(image_filename);
+            m_textureFileStoreMapper->putTexture(dto.id(), dto.toGenericDto());
+            /*auto id = Engine::TextureId{ filename };
+            auto dto = Engine::GenericDto{};
+            dto.set("filename", filename);
+            dto.set("filepath", filepath.generic_string());
+            m_textureFileStoreMapper->putTexture(id, dto);
+            auto categ = m_assetListbox->at(0);
+            categ->append({ id.name(), filepath.generic_string() });*/
+        }
+    }
+    refreshTextureAssetList();
+}
+
+std::string MainForm::filePathOnApkPath(const std::filesystem::path& file_path)
+{
+    const std::list<IMountPathPtr> mount_paths = FileSystem::instance()->getMountPathsWithPathId("APK_PATH");
+    if (mount_paths.empty()) return file_path.filename().string();
+    std::filesystem::path parent_path = file_path.parent_path().parent_path(); // 暫時只往上一層尋找
+    for (auto mp : mount_paths)
+    {
+        if (mp->equalMountPath(parent_path))
+        {
+            return (--(--file_path.end()))->string() + "/" + file_path.filename().string(); // +"@" + mp->GetPathID();
+        }
+    }
+    return file_path.filename().string();
 }

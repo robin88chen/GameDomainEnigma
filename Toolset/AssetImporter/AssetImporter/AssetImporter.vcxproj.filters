@@ -10,6 +10,9 @@
     <Filter Include="SchemeColor">
       <UniqueIdentifier>{e7f11a30-8e53-4833-bb75-29031c4d6b71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FileStorages">
+      <UniqueIdentifier>{673f1ede-df27-48d9-ba50-486bf48a5eb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -18,6 +21,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="SchemeColorDef.h">
       <Filter>SchemeColor</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFileStore.h">
+      <Filter>FileStorages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +36,9 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="SchemeColorDef.cpp">
       <Filter>SchemeColor</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFileStore.cpp">
+      <Filter>FileStorages</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -139,11 +139,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SchemeColorDef.cpp" />
+    <ClCompile Include="TextureFileStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SchemeColorDef.h" />
+    <ClInclude Include="TextureFileStore.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

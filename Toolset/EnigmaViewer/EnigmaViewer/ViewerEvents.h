@@ -20,10 +20,10 @@ namespace EnigmaViewer
             const std::string& old_text, const std::string& new_text)
             : m_catIdx{ cat_idx }, m_itemIdx{ item_idx }, m_oldText{ old_text }, m_newText{ new_text } {}
 
-        unsigned int GetCategoryIndex() const { return m_catIdx; }
-        unsigned int GetItemIndex() const { return m_itemIdx; }
-        const std::string& GetOldText() const { return m_oldText; }
-        const std::string& GetNewText() const { return m_newText; }
+        unsigned int categoryIndex() const { return m_catIdx; }
+        unsigned int itemIndex() const { return m_itemIdx; }
+        const std::string& oldText() const { return m_oldText; }
+        const std::string& newText() const { return m_newText; }
 
     private:
         unsigned int m_catIdx;

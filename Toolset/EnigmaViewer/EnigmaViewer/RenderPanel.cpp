@@ -33,18 +33,18 @@ Enigma::InputHandlers::MouseKeyFlags WheelArgToKeyFlags(const nana::arg_wheel& a
 }
 RenderPanel::RenderPanel(nana::window wd) : nana::nested_form{ wd, nana::appear::bald<>{} }
 {
-    events().mouse_down([this](const nana::arg_mouse& arg) { this->OnMouseDown(arg); });
-    events().mouse_up([this](const nana::arg_mouse& arg) { this->OnMouseUp(arg); });
-    events().mouse_move([this](const nana::arg_mouse& arg) { this->OnMouseMove(arg); });
-    events().mouse_wheel([this](const nana::arg_wheel& arg) { this->OnMouseWheel(arg); });
-    events().resized([this](const nana::arg_resized& arg) { this->OnResized(arg); });
+    events().mouse_down([this](const nana::arg_mouse& arg) { this->onMouseDown(arg); });
+    events().mouse_up([this](const nana::arg_mouse& arg) { this->onMouseUp(arg); });
+    events().mouse_move([this](const nana::arg_mouse& arg) { this->onMouseMove(arg); });
+    events().mouse_wheel([this](const nana::arg_wheel& arg) { this->onMouseWheel(arg); });
+    events().resized([this](const nana::arg_resized& arg) { this->onResized(arg); });
 }
 
 RenderPanel::~RenderPanel()
 {
 }
 
-void RenderPanel::OnMouseDown(const nana::arg_mouse& arg)
+void RenderPanel::onMouseDown(const nana::arg_mouse& arg)
 {
     if (!m_inputHandler.expired())
     {
@@ -67,7 +67,7 @@ void RenderPanel::OnMouseDown(const nana::arg_mouse& arg)
     }
 }
 
-void RenderPanel::OnMouseMove(const nana::arg_mouse& arg)
+void RenderPanel::onMouseMove(const nana::arg_mouse& arg)
 {
     if (!m_inputHandler.expired())
     {
@@ -76,7 +76,7 @@ void RenderPanel::OnMouseMove(const nana::arg_mouse& arg)
     }
 }
 
-void RenderPanel::OnMouseUp(const nana::arg_mouse& arg)
+void RenderPanel::onMouseUp(const nana::arg_mouse& arg)
 {
     if (!m_inputHandler.expired())
     {
@@ -98,7 +98,7 @@ void RenderPanel::OnMouseUp(const nana::arg_mouse& arg)
     }
 }
 
-void RenderPanel::OnMouseWheel(const nana::arg_wheel& arg)
+void RenderPanel::onMouseWheel(const nana::arg_wheel& arg)
 {
     if (!m_inputHandler.expired())
     {
@@ -107,25 +107,25 @@ void RenderPanel::OnMouseWheel(const nana::arg_wheel& arg)
     }
 }
 
-void RenderPanel::OnResized(const nana::arg_resized& arg)
+void RenderPanel::onResized(const nana::arg_resized& arg)
 {
     // hmm... decouple from renderer and render target, depend on more stable framework service, that's better!!
     CommandBus::post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ arg.width, arg.height }));
 }
 
-void RenderPanel::SubscribeHandlers()
+void RenderPanel::subscribeHandlers()
 {
-    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { this->OnRenderTargetCreated(e); });
+    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { this->onRenderTargetCreated(e); });
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
 }
 
-void RenderPanel::UnsubscribeHandlers()
+void RenderPanel::unsubscribeHandlers()
 {
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
 }
 
-void RenderPanel::OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
+void RenderPanel::onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);

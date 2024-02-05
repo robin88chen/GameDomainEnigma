@@ -69,6 +69,7 @@ namespace Enigma::Renderables
 
         virtual void selectVisualTechnique(const std::string& techniqueName) override;
 
+        virtual const Animators::AnimatorId& animatorId() const override { return m_animatorId; }
         virtual void animatorId(const Animators::AnimatorId& animator_id) override;
 
         /** enum animator list deep, including geometry's animator */

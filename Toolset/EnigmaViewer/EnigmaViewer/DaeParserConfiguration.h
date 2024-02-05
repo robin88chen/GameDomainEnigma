@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DaeParserConfiguration.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -18,16 +18,16 @@ namespace EnigmaViewer
     public:
         DaeParserConfiguration() = default;
 
-        void LoadConfig();
+        void loadConfig();
 
-        std::string DefaultColorMeshEffectName();
-        std::string DefaultColorMeshEffectFilename();
+        std::string defaultColorMeshEffectName();
+        std::string defaultColorMeshEffectFilename();
 
-        std::string DefaultTexturedMeshEffectName();
-        std::string DefaultTexturedMeshEffectFilename();
+        std::string defaultTexturedMeshEffectName();
+        std::string defaultTexturedMeshEffectFilename();
 
-        std::string DefaultTexturedSkinMeshEffectName();
-        std::string DefaultTexturedSkinMeshEffectFilename();
+        std::string defaultTexturedSkinMeshEffectName();
+        std::string defaultTexturedSkinMeshEffectFilename();
 
     private:
         Enigma::Engine::GenericDto m_configDto;

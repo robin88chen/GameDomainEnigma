@@ -27,17 +27,17 @@ namespace EnigmaViewer
         MainForm();
         virtual ~MainForm();
 
-        void Initialize();
-        ViewerAppDelegate* GetAppDelegate() { return m_appDelegate; }
+        void initialize();
+        ViewerAppDelegate* appDelegate() { return m_appDelegate; }
     private:
-        void InitMenu();
+        void initMenu();
 
-        void OnCloseCommand(const nana::menu::item_proxy& menu_item);
-        void OnImportDaeFile(const nana::menu::item_proxy& menu_item);
-        void OnSaveAnimatedPawn(const nana::menu::item_proxy& menu_item);
-        void OnLoadAnimatedPawn(const nana::menu::item_proxy& menu_item);
+        void onCloseCommand(const nana::menu::item_proxy& menu_item);
+        void onImportDaeFile(const nana::menu::item_proxy& menu_item);
+        void onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item);
+        void onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item);
 
-        void Finalize();
+        void finalize();
 
     private:
         nana::menubar* m_menubar;

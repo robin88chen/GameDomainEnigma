@@ -3,16 +3,10 @@
 #include "FileSystem/IFile.h"
 #include "ViewerCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "Renderer/ModelPrimitive.h"
-#include "GameEngine/GeometryDataDto.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
 #include "FileSystem/Filename.h"
 #include "MathLib/ContainmentBox3.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "GameEngine/TriangleList.h"
 #include "SceneGraph/Pawn.h"
-#include "Animators/AnimatorDtos.h"
-#include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
 #include "ShadowMap/SpatialShadowFlags.h"
 #include <sstream>
@@ -20,7 +14,7 @@
 using namespace EnigmaViewer;
 using namespace Enigma::FileSystem;
 using namespace Enigma::Frameworks;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
@@ -94,10 +88,10 @@ using namespace Enigma::ShadowMap;
 
 #define MAX_WEIGHT_COUNT 4
 
-DaeParser::DaeParser(const std::shared_ptr<GeometryRepository>& geometry_repository)
+DaeParser::DaeParser(const std::shared_ptr<Enigma::Geometries::GeometryRepository>& geometry_repository)
 {
     m_geometryRepository = geometry_repository;
-    m_config.LoadConfig();
+    m_config.loadConfig();
 }
 
 DaeParser::~DaeParser()
@@ -105,7 +99,7 @@ DaeParser::~DaeParser()
 
 }
 
-void DaeParser::LoadDaeFile(const std::string& filename)
+void DaeParser::loadDaeFile(const std::string& filename)
 {
     IFilePtr file = FileSystem::instance()->openFile(filename, read | binary, "");
     if (!file) return;
@@ -114,31 +108,31 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     FileSystem::instance()->closeFile(file);
     if (!read_buf)
     {
-        OutputLog(filename + " read fail!!");
+        outputLog(filename + " read fail!!");
         return;
     }
     pugi::xml_document dae_doc;
     pugi::xml_parse_result res = dae_doc.load_buffer(&((read_buf.value())[0]), file_size);
     if (res.status != pugi::xml_parse_status::status_ok)
     {
-        OutputLog(filename + " parse error!!");
+        outputLog(filename + " parse error!!");
         return;
     }
     else
     {
-        OutputLog(filename + " parse done.");
+        outputLog(filename + " parse done.");
     }
     m_filename = filename;
     pugi::xml_node collada_root = dae_doc.root().child("COLLADA");
     if (!collada_root)
     {
-        OutputLog(filename + " not a COLLADA file!!");
+        outputLog(filename + " not a COLLADA file!!");
     }
     m_pawn = AnimatedPawnDto();
-    ParseScene(collada_root);
-    ParseAnimations(collada_root);
+    parseScene(collada_root);
+    parseAnimations(collada_root);
 
-    ComposeModelPrimitiveDto();
+    composeModelPrimitiveDto();
     m_pawn.isTopLevel() = true;
     /*if ((m_model) && (m_animation))
     {
@@ -165,14 +159,14 @@ void DaeParser::LoadDaeFile(const std::string& filename)
     mefree(file_buf);*/
 }
 
-void DaeParser::OutputLog(const std::string& msg)
+void DaeParser::outputLog(const std::string& msg)
 {
     CommandBus::post(std::make_shared<OutputMessage>(msg));
 }
 
-void DaeParser::ComposeModelPrimitiveDto()
+void DaeParser::composeModelPrimitiveDto()
 {
-    ModelAnimatorDto animator_dto;
+    /*ModelAnimatorDto animator_dto;
     animator_dto.AssetName() = m_animationAssetDto.getName();
     animator_dto.AssetFactoryDesc() = m_animationAssetDto.GetRtti();
     if ((animator_dto.AssetFactoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
@@ -197,12 +191,12 @@ void DaeParser::ComposeModelPrimitiveDto()
     m_pawn.worldTransform() = Matrix4::IDENTITY;
     m_pawn.modelBound() = unit_bv.serializeDto().toGenericDto();
     m_pawn.worldBound() = unit_bv.serializeDto().toGenericDto();
-    m_pawn.spatialFlag() = static_cast<unsigned>(SpatialShadowFlags::Spatial_ShadowCaster);
+    m_pawn.spatialFlag() = static_cast<unsigned>(SpatialShadowFlags::Spatial_ShadowCaster);*/
 }
 
-void DaeParser::ParseScene(const pugi::xml_node& collada_root)
+void DaeParser::parseScene(const pugi::xml_node& collada_root)
 {
-    OutputLog("Start parse scene...");
+    /*OutputLog("Start parse scene...");
     pugi::xml_node scene_node = collada_root.child(TOKEN_SCENE);
     if (!scene_node)
     {
@@ -232,10 +226,10 @@ void DaeParser::ParseScene(const pugi::xml_node& collada_root)
         OutputLog("can't find visual scene node " + scene_id + "!!");
         return;
     }
-    ParseModelSceneNode(model_scene_node);
+    ParseModelSceneNode(model_scene_node);*/
 }
 
-void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
+/*void DaeParser::parseModelSceneNode(const pugi::xml_node& model_scene_node)
 {
     OutputLog(" Parse model scene node "
         + std::string(model_scene_node.attribute(TOKEN_ID).as_string()) + "...");
@@ -267,7 +261,7 @@ void DaeParser::ParseModelSceneNode(const pugi::xml_node& model_scene_node)
     }*/
 
     //m_model->SelectVisualTechnique("Default");
-}
+/*}
 
 void DaeParser::ParseSceneNode(MeshNodeTreeDto& node_tree, const pugi::xml_node& scene_node_xml, std::optional<unsigned> parent_node_array_index)
 {
@@ -356,416 +350,416 @@ void DaeParser::ParseSceneNodeForSkin(MeshNodeTreeDto& node_tree, const pugi::xm
     {
         m_model->GetMeshNodeTree()->AddMeshNode(mesh_node);
     }*/
-}
+    /*}
 
-void DaeParser::ParseGeometryInstanceNode(MeshNodeDto& mesh_node, const pugi::xml_node& geometry_inst)
-{
-    std::string geometry_url = &(geometry_inst.attribute(TOKEN_URL).as_string()[1]);
-    pugi::xml_node geometry_node = geometry_inst.root().find_node([=](pugi::xml_node node) -> bool
-        {
-            if ((strcmp(node.name(), TOKEN_GEOMETRY) == 0) && (node.attribute(TOKEN_ID))
-                && (geometry_url == node.attribute(TOKEN_ID).as_string())) return true;
-            return false;
-        });
-    if (!geometry_node)
+    void DaeParser::ParseGeometryInstanceNode(MeshNodeDto& mesh_node, const pugi::xml_node& geometry_inst)
     {
-        OutputLog("can't find geometry " + geometry_url + "!!");
-        return;
-    }
-    ClearParsedDatas();
-    ParseSingleGeometry(mesh_node, geometry_node, false);
-}
-
-void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node& geometry_node, bool is_skin)
-{
-    pugi::xml_attribute attr_name = geometry_node.attribute(TOKEN_NAME);
-    if (!attr_name)
-    {
-        OutputLog("geometry do not have name!!");
-    }
-    std::string geo_name = m_modelName + "." + attr_name.as_string();
-    OutputLog("  Parse Geometry " + std::string(attr_name.as_string()));
-    GeometryValueOffsets offsets;
-    std::string material_id = "";
-    std::tie(material_id, offsets) = ParseGeometryMesh(geometry_node.child(TOKEN_MESH));
-    bool is_split_vertex = true;
-    if (offsets.nor_offset >= 0)
-    {
-        is_split_vertex = false;
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        if (offsets.tex_offset[i] >= 0) is_split_vertex = false;
-    }
-    std::string texmap_filename = "";
-    if (material_id.length() > 0)
-    {
-        texmap_filename = FindMaterialTexImageFilename(geometry_node.root(), material_id);
-    }
-    SplitVertexPositions(offsets.pos_offset, 0, offsets.tex_offset[0], is_split_vertex, is_skin);
-    CollapseVertexNormals(offsets.pos_offset, offsets.nor_offset, is_split_vertex);
-    CollapseIndexArray(offsets.pos_offset, is_split_vertex);
-
-    auto geo_dto = ComposeTriangleListDto(geo_name, is_skin);
-    if (is_skin)
-    {
-        SkinMeshPrimitiveDto dto;
-        dto.Name() = attr_name.as_string();
-        dto.GeometryName() = geo_name;
-        dto.GeometryFactoryDesc() = geo_dto.GetRtti();
-        //dto.TheGeometry() = geo_dto;
-        if (texmap_filename.empty())
-        {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
-        }
-        else
-        {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedSkinMeshEffectName(), m_config.DefaultTexturedSkinMeshEffectFilename()).toGenericDto());
-            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
-        }
-        mesh_node.TheMeshPrimitive() = dto.toGenericDto();
-    }
-    else
-    {
-        MeshPrimitiveDto dto;
-        dto.Name() = attr_name.as_string();
-        dto.GeometryName() = geo_name;
-        dto.GeometryFactoryDesc() = geo_dto.GetRtti();
-        //dto.TheGeometry() = geo_dto;
-        if (texmap_filename.empty())
-        {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
-        }
-        else
-        {
-            dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedMeshEffectName(), m_config.DefaultTexturedMeshEffectFilename()).toGenericDto());
-            dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
-        }
-        mesh_node.TheMeshPrimitive() = dto.toGenericDto();
-    }
-}
-
-void DaeParser::ParseSkinMesh(MeshNodeDto& mesh_node, const pugi::xml_node& skin_node_xml)
-{
-    pugi::xml_node matrix_xml_node = skin_node_xml.child(TOKEN_BIND_SHAPE_MATRIX);
-    if (matrix_xml_node)
-    {
-        Matrix4 mx;
-        std::stringstream ss(std::string(matrix_xml_node.text().as_string()));
-        for (int i = 0; i < 16; i++)
-        {
-            ss >> ((float*)mx)[i];
-        }
-        mesh_node.LocalT_PosTransform() = mx;
-    }
-
-    pugi::xml_node vertex_weights_node_xml = skin_node_xml.child(TOKEN_VERTEX_WEIGHTS);
-    if (!vertex_weights_node_xml)
-    {
-        OutputLog("no vertex weights define!!");
-        return;
-    }
-    ParseVertexWeights(mesh_node, skin_node_xml, vertex_weights_node_xml);
-    std::string geometry_url = &(skin_node_xml.attribute(TOKEN_SOURCE).as_string()[1]);
-    pugi::xml_node geometry_node = FindNodeWithId(skin_node_xml.root(), TOKEN_GEOMETRY, geometry_url);
-    if (!geometry_node)
-    {
-        OutputLog("can't find geometry " + geometry_url + "!!");
-        return;
-    }
-    ParseSingleGeometry(mesh_node, geometry_node, true);
-
-}
-
-std::tuple<std::string, DaeParser::GeometryValueOffsets> DaeParser::ParseGeometryMesh(const pugi::xml_node& mesh_node)
-{
-    std::string material_id = "";
-    GeometryValueOffsets offsets;
-    memset(offsets.tex_offset, 0xff, sizeof(offsets.tex_offset));
-    if (!mesh_node)
-    {
-        OutputLog("no mesh node!!");
-        return { material_id, offsets };
-    }
-    pugi::xml_node triangles_node = mesh_node.child(TOKEN_TRIANGLES);
-    if (!triangles_node)
-    {
-        OutputLog("no triangles define!!");
-        return { material_id, offsets };
-    }
-    int triangle_count = triangles_node.attribute(TOKEN_COUNT).as_int();
-    if (triangles_node.attribute(TOKEN_MATERIAL))
-    {
-        material_id = triangles_node.attribute(TOKEN_MATERIAL).as_string();
-    }
-    pugi::xml_node input_source = triangles_node.child(TOKEN_INPUT);
-    while (input_source)
-    {
-        if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_VERTEX_SEMANTIC) == 0)
-        {
-            std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
-            offsets.pos_offset = input_source.attribute(TOKEN_OFFSET).as_int();
-            pugi::xml_node vertices_node = FindNodeWithId(mesh_node, TOKEN_VERTICES, source_id);
-            if (vertices_node)
+        std::string geometry_url = &(geometry_inst.attribute(TOKEN_URL).as_string()[1]);
+        pugi::xml_node geometry_node = geometry_inst.root().find_node([=](pugi::xml_node node) -> bool
             {
-                pugi::xml_node vertices_input = vertices_node.child(TOKEN_INPUT);
-                while (vertices_input)
-                {
-                    if (!vertices_input.attribute(TOKEN_SEMANTIC))
-                    {
-                        vertices_input = vertices_input.next_sibling(TOKEN_INPUT);
-                        continue;
-                    }
-                    if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_POSITION_SEMANTIC) == 0)
-                    {
-                        std::string position_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
-                        pugi::xml_node position_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, position_source_id);
-                        if (position_source)
-                        {
-                            ParsePositionSource(position_source);
-                        }
-                    }
-                    else if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_NORMAL_SEMANTIC) == 0)
-                    {
-                        std::string normal_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
-                        pugi::xml_node normal_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, normal_source_id);
-                        if (normal_source)
-                        {
-                            ParseNormalSource(normal_source);
-                        }
-                    }
-                    else if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_TEXCOORD_SEMANTIC) == 0)
-                    {
-                        std::string texc_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
-                        pugi::xml_node texcoord_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, texc_source_id);
-                        if (texcoord_source)
-                        {
-                            ParseTexcoordSource(texcoord_source, 0);
-                        }
-                    }
-                    vertices_input = vertices_input.next_sibling(TOKEN_INPUT);
-                }
+                if ((strcmp(node.name(), TOKEN_GEOMETRY) == 0) && (node.attribute(TOKEN_ID))
+                    && (geometry_url == node.attribute(TOKEN_ID).as_string())) return true;
+                return false;
+            });
+        if (!geometry_node)
+        {
+            OutputLog("can't find geometry " + geometry_url + "!!");
+            return;
+        }
+        ClearParsedDatas();
+        ParseSingleGeometry(mesh_node, geometry_node, false);
+    }
+
+    void DaeParser::ParseSingleGeometry(MeshNodeDto& mesh_node, const pugi::xml_node& geometry_node, bool is_skin)
+    {
+        pugi::xml_attribute attr_name = geometry_node.attribute(TOKEN_NAME);
+        if (!attr_name)
+        {
+            OutputLog("geometry do not have name!!");
+        }
+        std::string geo_name = m_modelName + "." + attr_name.as_string();
+        OutputLog("  Parse Geometry " + std::string(attr_name.as_string()));
+        GeometryValueOffsets offsets;
+        std::string material_id = "";
+        std::tie(material_id, offsets) = ParseGeometryMesh(geometry_node.child(TOKEN_MESH));
+        bool is_split_vertex = true;
+        if (offsets.nor_offset >= 0)
+        {
+            is_split_vertex = false;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            if (offsets.tex_offset[i] >= 0) is_split_vertex = false;
+        }
+        std::string texmap_filename = "";
+        if (material_id.length() > 0)
+        {
+            texmap_filename = FindMaterialTexImageFilename(geometry_node.root(), material_id);
+        }
+        SplitVertexPositions(offsets.pos_offset, 0, offsets.tex_offset[0], is_split_vertex, is_skin);
+        CollapseVertexNormals(offsets.pos_offset, offsets.nor_offset, is_split_vertex);
+        CollapseIndexArray(offsets.pos_offset, is_split_vertex);
+
+        auto geo_dto = ComposeTriangleListDto(geo_name, is_skin);
+        if (is_skin)
+        {
+            SkinMeshPrimitiveDto dto;
+            dto.Name() = attr_name.as_string();
+            dto.GeometryName() = geo_name;
+            dto.GeometryFactoryDesc() = geo_dto.GetRtti();
+            //dto.TheGeometry() = geo_dto;
+            if (texmap_filename.empty())
+            {
+                dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
             }
             else
             {
-                OutputLog("no vertices node!!");
+                dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedSkinMeshEffectName(), m_config.DefaultTexturedSkinMeshEffectFilename()).toGenericDto());
+                dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
             }
+            mesh_node.TheMeshPrimitive() = dto.toGenericDto();
         }
-        else if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_NORMAL_SEMANTIC) == 0)
+        else
         {
-            std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
-            offsets.nor_offset = input_source.attribute(TOKEN_OFFSET).as_int();
-            pugi::xml_node normal_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, source_id);
-            if (normal_source)
+            MeshPrimitiveDto dto;
+            dto.Name() = attr_name.as_string();
+            dto.GeometryName() = geo_name;
+            dto.GeometryFactoryDesc() = geo_dto.GetRtti();
+            //dto.TheGeometry() = geo_dto;
+            if (texmap_filename.empty())
             {
-                ParseNormalSource(normal_source);
+                dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultColorMeshEffectName(), m_config.DefaultColorMeshEffectFilename()).toGenericDto());
             }
-        }
-        else if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_TEXCOORD_SEMANTIC) == 0)
-        {
-            std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
-            int texcoord_set = input_source.attribute(TOKEN_SET).as_int();
-            offsets.tex_offset[texcoord_set] = input_source.attribute(TOKEN_OFFSET).as_int();
-            pugi::xml_node texcoord_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, source_id);
-            if (texcoord_source)
+            else
             {
-                ParseTexcoordSource(texcoord_source, texcoord_set);
+                dto.Effects().emplace_back(MakeMaterialDto(m_config.DefaultTexturedMeshEffectName(), m_config.DefaultTexturedMeshEffectFilename()).toGenericDto());
+                dto.TextureMaps().emplace_back(MakeEffectTextureMapDto(texmap_filename, texmap_filename, DIFFUSE_MAP_SEMANTIC).toGenericDto());
             }
+            mesh_node.TheMeshPrimitive() = dto.toGenericDto();
         }
-        input_source = input_source.next_sibling();
     }
-    pugi::xml_node index_ary_node = triangles_node.child(TOKEN_INDEX_ARRAY);
-    if (index_ary_node)
-    {
-        ParseIndexArray(index_ary_node, triangle_count);
-    }
-    return { material_id, offsets };
-}
 
-void DaeParser::ParsePositionSource(const pugi::xml_node& position_source)
-{
-    OutputLog("    Parse position source " + std::string(position_source.attribute(TOKEN_ID).as_string()));
-    pugi::xml_node data_ary_node = position_source.child(TOKEN_FLOAT_ARRAY);
-    if (!data_ary_node)
+    void DaeParser::ParseSkinMesh(MeshNodeDto& mesh_node, const pugi::xml_node& skin_node_xml)
     {
-        OutputLog("no float array in position!!");
-    }
-    int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
-    m_positions.resize(data_count / 3);
-    std::stringstream ss(std::string(data_ary_node.text().as_string()));
-    for (int i = 0; i < data_count / 3; i++)
-    {
-        // y,z 互換不做了
-        //ss >> m_positions[i].X() >> m_positions[i].Z() >> m_positions[i].Y();
-        ss >> m_positions[i].X() >> m_positions[i].Y() >> m_positions[i].Z();
-    }
-}
-
-void DaeParser::ParseNormalSource(const pugi::xml_node& normal_source)
-{
-    OutputLog("    Parse normal source " + std::string(normal_source.attribute(TOKEN_ID).as_string()));
-    pugi::xml_node data_ary_node = normal_source.child(TOKEN_FLOAT_ARRAY);
-    if (!data_ary_node)
-    {
-        OutputLog("no float array in normal!!");
-    }
-    int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
-    m_normals.resize(data_count / 3);
-    std::stringstream ss(std::string(data_ary_node.text().as_string()));
-    for (int i = 0; i < data_count / 3; i++)
-    {
-        // y,z 互換不做了
-        //ss >> m_normals[i].X() >> m_normals[i].Z() >> m_normals[i].Y();
-        ss >> m_normals[i].X() >> m_normals[i].Y() >> m_normals[i].Z();
-    }
-}
-
-void DaeParser::ParseTexcoordSource(const pugi::xml_node& texcoord_source, int texcoord_set)
-{
-    OutputLog("    Parse tex coord source " + std::string(texcoord_source.attribute(TOKEN_ID).as_string()));
-    pugi::xml_node data_ary_node = texcoord_source.child(TOKEN_FLOAT_ARRAY);
-    if (!data_ary_node)
-    {
-        OutputLog("no float array in texcoord!!");
-    }
-    int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
-    m_texcoords[texcoord_set].resize(data_count / 2);
-    std::stringstream ss(std::string(data_ary_node.text().as_string()));
-    for (int i = 0; i < data_count / 2; i++)
-    {
-        ss >> m_texcoords[texcoord_set][i].X() >> m_texcoords[texcoord_set][i].Y();
-        m_texcoords[texcoord_set][i].Y() = 1.0f - m_texcoords[texcoord_set][i].Y();  // y 反向
-    }
-}
-
-void DaeParser::ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count)
-{
-    OutputLog("    Parse index array ");
-    m_primitiveIndices.resize(triangle_count * 3 * 3);
-    std::stringstream ss(std::string(index_ary_node.text().as_string()));
-    for (int i = 0; i < triangle_count * 3 * 3; i++)
-    {
-        ss >> m_primitiveIndices[i];
-    }
-}
-
-void DaeParser::ParseVertexWeights(MeshNodeDto& mesh_node, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml)
-{
-    OutputLog("  Parse Vertex Weights for " + mesh_node.Name());
-    pugi::xml_node input_xml = vertex_weights_xml.child(TOKEN_INPUT);
-    while (input_xml)
-    {
-        if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_JOINT_SEMANTIC) == 0)
+        pugi::xml_node matrix_xml_node = skin_node_xml.child(TOKEN_BIND_SHAPE_MATRIX);
+        if (matrix_xml_node)
         {
-            std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
-            pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
-            if (source_xml)
+            Matrix4 mx;
+            std::stringstream ss(std::string(matrix_xml_node.text().as_string()));
+            for (int i = 0; i < 16; i++)
             {
-                ParseJointNameSource(mesh_node, source_xml);
+                ss >> ((float*)mx)[i];
             }
+            mesh_node.LocalT_PosTransform() = mx;
         }
-        else if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_WEIGHT_SEMANTIC) == 0)
+
+        pugi::xml_node vertex_weights_node_xml = skin_node_xml.child(TOKEN_VERTEX_WEIGHTS);
+        if (!vertex_weights_node_xml)
         {
-            std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
-            pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
-            if (source_xml)
+            OutputLog("no vertex weights define!!");
+            return;
+        }
+        ParseVertexWeights(mesh_node, skin_node_xml, vertex_weights_node_xml);
+        std::string geometry_url = &(skin_node_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+        pugi::xml_node geometry_node = FindNodeWithId(skin_node_xml.root(), TOKEN_GEOMETRY, geometry_url);
+        if (!geometry_node)
+        {
+            OutputLog("can't find geometry " + geometry_url + "!!");
+            return;
+        }
+        ParseSingleGeometry(mesh_node, geometry_node, true);
+
+    }
+
+    std::tuple<std::string, DaeParser::GeometryValueOffsets> DaeParser::ParseGeometryMesh(const pugi::xml_node& mesh_node)
+    {
+        std::string material_id = "";
+        GeometryValueOffsets offsets;
+        memset(offsets.tex_offset, 0xff, sizeof(offsets.tex_offset));
+        if (!mesh_node)
+        {
+            OutputLog("no mesh node!!");
+            return { material_id, offsets };
+        }
+        pugi::xml_node triangles_node = mesh_node.child(TOKEN_TRIANGLES);
+        if (!triangles_node)
+        {
+            OutputLog("no triangles define!!");
+            return { material_id, offsets };
+        }
+        int triangle_count = triangles_node.attribute(TOKEN_COUNT).as_int();
+        if (triangles_node.attribute(TOKEN_MATERIAL))
+        {
+            material_id = triangles_node.attribute(TOKEN_MATERIAL).as_string();
+        }
+        pugi::xml_node input_source = triangles_node.child(TOKEN_INPUT);
+        while (input_source)
+        {
+            if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_VERTEX_SEMANTIC) == 0)
             {
-                ParseWeightsArraySource(source_xml);
+                std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
+                offsets.pos_offset = input_source.attribute(TOKEN_OFFSET).as_int();
+                pugi::xml_node vertices_node = FindNodeWithId(mesh_node, TOKEN_VERTICES, source_id);
+                if (vertices_node)
+                {
+                    pugi::xml_node vertices_input = vertices_node.child(TOKEN_INPUT);
+                    while (vertices_input)
+                    {
+                        if (!vertices_input.attribute(TOKEN_SEMANTIC))
+                        {
+                            vertices_input = vertices_input.next_sibling(TOKEN_INPUT);
+                            continue;
+                        }
+                        if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_POSITION_SEMANTIC) == 0)
+                        {
+                            std::string position_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
+                            pugi::xml_node position_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, position_source_id);
+                            if (position_source)
+                            {
+                                ParsePositionSource(position_source);
+                            }
+                        }
+                        else if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_NORMAL_SEMANTIC) == 0)
+                        {
+                            std::string normal_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
+                            pugi::xml_node normal_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, normal_source_id);
+                            if (normal_source)
+                            {
+                                ParseNormalSource(normal_source);
+                            }
+                        }
+                        else if (strcmp(vertices_input.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_TEXCOORD_SEMANTIC) == 0)
+                        {
+                            std::string texc_source_id = &(vertices_input.attribute(TOKEN_SOURCE).as_string()[1]);
+                            pugi::xml_node texcoord_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, texc_source_id);
+                            if (texcoord_source)
+                            {
+                                ParseTexcoordSource(texcoord_source, 0);
+                            }
+                        }
+                        vertices_input = vertices_input.next_sibling(TOKEN_INPUT);
+                    }
+                }
+                else
+                {
+                    OutputLog("no vertices node!!");
+                }
             }
+            else if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_NORMAL_SEMANTIC) == 0)
+            {
+                std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
+                offsets.nor_offset = input_source.attribute(TOKEN_OFFSET).as_int();
+                pugi::xml_node normal_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, source_id);
+                if (normal_source)
+                {
+                    ParseNormalSource(normal_source);
+                }
+            }
+            else if (strcmp(input_source.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_TEXCOORD_SEMANTIC) == 0)
+            {
+                std::string source_id = &(input_source.attribute(TOKEN_SOURCE).as_string()[1]);
+                int texcoord_set = input_source.attribute(TOKEN_SET).as_int();
+                offsets.tex_offset[texcoord_set] = input_source.attribute(TOKEN_OFFSET).as_int();
+                pugi::xml_node texcoord_source = FindNodeWithId(mesh_node, TOKEN_SOURCE, source_id);
+                if (texcoord_source)
+                {
+                    ParseTexcoordSource(texcoord_source, texcoord_set);
+                }
+            }
+            input_source = input_source.next_sibling();
         }
-        input_xml = input_xml.next_sibling(TOKEN_INPUT);
-    }
-    pugi::xml_node weight_count_xml = vertex_weights_xml.child(TOKEN_VERTEX_WEIGHT_COUNT);
-    if (!weight_count_xml)
-    {
-        OutputLog("no weight count define!!");
-        return;
-    }
-    int data_count = vertex_weights_xml.attribute(TOKEN_COUNT).as_int();
-    int max_weight_count = 0;
-    m_weightCounts.resize(data_count);
-    std::stringstream ss(std::string(weight_count_xml.text().as_string()));
-    for (int i = 0; i < data_count; i++)
-    {
-        ss >> m_weightCounts[i];
-        if (m_weightCounts[i] > max_weight_count) max_weight_count = m_weightCounts[i];
-    }
-    if (max_weight_count > MAX_WEIGHT_COUNT)
-    {
-        OutputLog("(not supported) max weight count > 4!!");
-    }
-    pugi::xml_node influence_pair_xml = vertex_weights_xml.child(TOKEN_JOINT_WEIGHT_PAIR);
-    if (!influence_pair_xml)
-    {
-        OutputLog("no influence pair!!");
-        return;
-    }
-    m_weightPaletteIndices.resize(data_count, 0xffffffff);
-    m_vertexWeights.resize(data_count * MAX_WEIGHT_COUNT, 0.0f);
-    ss = std::stringstream(std::string(influence_pair_xml.text().as_string()));
-    for (int i = 0; i < data_count; i++)
-    {
-        unsigned char p[4] = { 0xff, 0xff, 0xff, 0xff };
-        float w[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-        for (int j = 0; j < m_weightCounts[i]; j++)
+        pugi::xml_node index_ary_node = triangles_node.child(TOKEN_INDEX_ARRAY);
+        if (index_ary_node)
         {
-            unsigned int b_idx;
-            ss >> b_idx;
-            unsigned int w_index;
-            ss >> w_index;
-            if (j >= MAX_WEIGHT_COUNT) continue;  // 超過max weight count, 不處理
-            p[j] = (unsigned char)b_idx;
-            //ss >> p[j];
-            m_vertexWeights[i * MAX_WEIGHT_COUNT + j] = m_weightSource[w_index];
+            ParseIndexArray(index_ary_node, triangle_count);
         }
-        m_weightPaletteIndices[i] = (unsigned int)(p[3] << 24) + (unsigned int)(p[2] << 16)
-            + (unsigned int)(p[1] << 8) + (unsigned int)(p[0]);
+        return { material_id, offsets };
     }
-}
 
-void DaeParser::ParseJointNameSource(MeshNodeDto& mesh_node, const pugi::xml_node& bone_names_xml)
-{
-    pugi::xml_node name_array_xml = bone_names_xml.child(TOKEN_NAME_ARRAY);
-    if (!name_array_xml)
+    void DaeParser::ParsePositionSource(const pugi::xml_node& position_source)
     {
-        OutputLog("no bone name array define!!");
-        return;
+        OutputLog("    Parse position source " + std::string(position_source.attribute(TOKEN_ID).as_string()));
+        pugi::xml_node data_ary_node = position_source.child(TOKEN_FLOAT_ARRAY);
+        if (!data_ary_node)
+        {
+            OutputLog("no float array in position!!");
+        }
+        int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
+        m_positions.resize(data_count / 3);
+        std::stringstream ss(std::string(data_ary_node.text().as_string()));
+        for (int i = 0; i < data_count / 3; i++)
+        {
+            // y,z 互換不做了
+            //ss >> m_positions[i].X() >> m_positions[i].Z() >> m_positions[i].Y();
+            ss >> m_positions[i].X() >> m_positions[i].Y() >> m_positions[i].Z();
+        }
     }
-    int data_count = name_array_xml.attribute(TOKEN_COUNT).as_int();
-    std::vector<std::string> bone_names;
-    bone_names.resize(data_count, "");
-    std::stringstream ss(std::string(name_array_xml.text().as_string()));
-    for (int i = 0; i < data_count; i++)
-    {
-        ss >> bone_names[i];
-    }
-    m_skinBoneNames[mesh_node.Name()] = bone_names;
-    for (std::string& joint : m_skinBoneNames[mesh_node.Name()])
-    {
-        joint = m_nodeJointIdMapping[joint];
-    }
-}
 
-void DaeParser::ParseWeightsArraySource(const pugi::xml_node& weights_array_xml)
-{
-    pugi::xml_node data_array_xml = weights_array_xml.child(TOKEN_FLOAT_ARRAY);
-    if (!data_array_xml)
+    void DaeParser::ParseNormalSource(const pugi::xml_node& normal_source)
     {
-        OutputLog("no weight array source define!!");
-        return;
+        OutputLog("    Parse normal source " + std::string(normal_source.attribute(TOKEN_ID).as_string()));
+        pugi::xml_node data_ary_node = normal_source.child(TOKEN_FLOAT_ARRAY);
+        if (!data_ary_node)
+        {
+            OutputLog("no float array in normal!!");
+        }
+        int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
+        m_normals.resize(data_count / 3);
+        std::stringstream ss(std::string(data_ary_node.text().as_string()));
+        for (int i = 0; i < data_count / 3; i++)
+        {
+            // y,z 互換不做了
+            //ss >> m_normals[i].X() >> m_normals[i].Z() >> m_normals[i].Y();
+            ss >> m_normals[i].X() >> m_normals[i].Y() >> m_normals[i].Z();
+        }
     }
-    int data_count = data_array_xml.attribute(TOKEN_COUNT).as_int();
-    m_weightSource.resize(data_count, 0.0f);
-    std::stringstream ss(std::string(data_array_xml.text().as_string()));
-    for (int i = 0; i < data_count; i++)
-    {
-        ss >> m_weightSource[i];
-    }
-}
 
-void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
+    void DaeParser::ParseTexcoordSource(const pugi::xml_node& texcoord_source, int texcoord_set)
+    {
+        OutputLog("    Parse tex coord source " + std::string(texcoord_source.attribute(TOKEN_ID).as_string()));
+        pugi::xml_node data_ary_node = texcoord_source.child(TOKEN_FLOAT_ARRAY);
+        if (!data_ary_node)
+        {
+            OutputLog("no float array in texcoord!!");
+        }
+        int data_count = data_ary_node.attribute(TOKEN_COUNT).as_int();
+        m_texcoords[texcoord_set].resize(data_count / 2);
+        std::stringstream ss(std::string(data_ary_node.text().as_string()));
+        for (int i = 0; i < data_count / 2; i++)
+        {
+            ss >> m_texcoords[texcoord_set][i].X() >> m_texcoords[texcoord_set][i].Y();
+            m_texcoords[texcoord_set][i].Y() = 1.0f - m_texcoords[texcoord_set][i].Y();  // y 反向
+        }
+    }
+
+    void DaeParser::ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count)
+    {
+        OutputLog("    Parse index array ");
+        m_primitiveIndices.resize(triangle_count * 3 * 3);
+        std::stringstream ss(std::string(index_ary_node.text().as_string()));
+        for (int i = 0; i < triangle_count * 3 * 3; i++)
+        {
+            ss >> m_primitiveIndices[i];
+        }
+    }
+
+    void DaeParser::ParseVertexWeights(MeshNodeDto& mesh_node, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml)
+    {
+        OutputLog("  Parse Vertex Weights for " + mesh_node.Name());
+        pugi::xml_node input_xml = vertex_weights_xml.child(TOKEN_INPUT);
+        while (input_xml)
+        {
+            if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_JOINT_SEMANTIC) == 0)
+            {
+                std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+                pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
+                if (source_xml)
+                {
+                    ParseJointNameSource(mesh_node, source_xml);
+                }
+            }
+            else if (strcmp(input_xml.attribute(TOKEN_SEMANTIC).as_string(), TOKEN_WEIGHT_SEMANTIC) == 0)
+            {
+                std::string source_id = &(input_xml.attribute(TOKEN_SOURCE).as_string()[1]);
+                pugi::xml_node source_xml = FindNodeWithId(skin_host_xml, TOKEN_SOURCE, source_id);
+                if (source_xml)
+                {
+                    ParseWeightsArraySource(source_xml);
+                }
+            }
+            input_xml = input_xml.next_sibling(TOKEN_INPUT);
+        }
+        pugi::xml_node weight_count_xml = vertex_weights_xml.child(TOKEN_VERTEX_WEIGHT_COUNT);
+        if (!weight_count_xml)
+        {
+            OutputLog("no weight count define!!");
+            return;
+        }
+        int data_count = vertex_weights_xml.attribute(TOKEN_COUNT).as_int();
+        int max_weight_count = 0;
+        m_weightCounts.resize(data_count);
+        std::stringstream ss(std::string(weight_count_xml.text().as_string()));
+        for (int i = 0; i < data_count; i++)
+        {
+            ss >> m_weightCounts[i];
+            if (m_weightCounts[i] > max_weight_count) max_weight_count = m_weightCounts[i];
+        }
+        if (max_weight_count > MAX_WEIGHT_COUNT)
+        {
+            OutputLog("(not supported) max weight count > 4!!");
+        }
+        pugi::xml_node influence_pair_xml = vertex_weights_xml.child(TOKEN_JOINT_WEIGHT_PAIR);
+        if (!influence_pair_xml)
+        {
+            OutputLog("no influence pair!!");
+            return;
+        }
+        m_weightPaletteIndices.resize(data_count, 0xffffffff);
+        m_vertexWeights.resize(data_count * MAX_WEIGHT_COUNT, 0.0f);
+        ss = std::stringstream(std::string(influence_pair_xml.text().as_string()));
+        for (int i = 0; i < data_count; i++)
+        {
+            unsigned char p[4] = { 0xff, 0xff, 0xff, 0xff };
+            float w[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            for (int j = 0; j < m_weightCounts[i]; j++)
+            {
+                unsigned int b_idx;
+                ss >> b_idx;
+                unsigned int w_index;
+                ss >> w_index;
+                if (j >= MAX_WEIGHT_COUNT) continue;  // 超過max weight count, 不處理
+                p[j] = (unsigned char)b_idx;
+                //ss >> p[j];
+                m_vertexWeights[i * MAX_WEIGHT_COUNT + j] = m_weightSource[w_index];
+            }
+            m_weightPaletteIndices[i] = (unsigned int)(p[3] << 24) + (unsigned int)(p[2] << 16)
+                + (unsigned int)(p[1] << 8) + (unsigned int)(p[0]);
+        }
+    }
+
+    void DaeParser::ParseJointNameSource(MeshNodeDto& mesh_node, const pugi::xml_node& bone_names_xml)
+    {
+        pugi::xml_node name_array_xml = bone_names_xml.child(TOKEN_NAME_ARRAY);
+        if (!name_array_xml)
+        {
+            OutputLog("no bone name array define!!");
+            return;
+        }
+        int data_count = name_array_xml.attribute(TOKEN_COUNT).as_int();
+        std::vector<std::string> bone_names;
+        bone_names.resize(data_count, "");
+        std::stringstream ss(std::string(name_array_xml.text().as_string()));
+        for (int i = 0; i < data_count; i++)
+        {
+            ss >> bone_names[i];
+        }
+        m_skinBoneNames[mesh_node.Name()] = bone_names;
+        for (std::string& joint : m_skinBoneNames[mesh_node.Name()])
+        {
+            joint = m_nodeJointIdMapping[joint];
+        }
+    }
+
+    void DaeParser::ParseWeightsArraySource(const pugi::xml_node& weights_array_xml)
+    {
+        pugi::xml_node data_array_xml = weights_array_xml.child(TOKEN_FLOAT_ARRAY);
+        if (!data_array_xml)
+        {
+            OutputLog("no weight array source define!!");
+            return;
+        }
+        int data_count = data_array_xml.attribute(TOKEN_COUNT).as_int();
+        m_weightSource.resize(data_count, 0.0f);
+        std::stringstream ss(std::string(data_array_xml.text().as_string()));
+        for (int i = 0; i < data_count; i++)
+        {
+            ss >> m_weightSource[i];
+        }
+    }*/
+
+void DaeParser::parseAnimations(const pugi::xml_node& collada_root)
 {
-    if (!collada_root) return;
+    /*if (!collada_root) return;
     pugi::xml_node anim_lib_node = collada_root.child(TOKEN_LIB_ANIMATIONS);
     if (!anim_lib_node)
     {
@@ -796,10 +790,10 @@ void DaeParser::ParseAnimations(const pugi::xml_node& collada_root)
     iFile->write(0, convert_to_buffer(json));
     FileSystem::instance()->closeFile(iFile);
     desc.ClaimFromResource(m_modelName, "pawns/" + m_modelName + ".ani", "APK_PATH");
-    m_animationAssetDto.AddRtti(desc);
+    m_animationAssetDto.AddRtti(desc);*/
 }
 
-void DaeParser::ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node)
+/*void DaeParser::ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node)
 {
     if (!anim_node)
     {
@@ -1175,218 +1169,217 @@ void DaeParser::CollapseIndexArray(int pos_offset, bool is_split_vertex)
             m_collapsedIndices[p * 3 + 1] = m_collapsedIndices[p * 3 + 2];
             m_collapsedIndices[p * 3 + 2] = t;
         }*/
-        return;
-    }
-    int prim_set_count = static_cast<int>(m_primitiveIndices.size()) / 3;
-    m_collapsedIndices.resize(prim_set_count);
-    for (int p = 0; p < prim_set_count; p++)
-    {
-        m_collapsedIndices[p] = m_primitiveIndices[p * 3 + pos_offset];
-    }
-    /*int prim_count = m_collapsedIndices.size() / 3;
-    // index 反向
-    for (int p = 0; p < prim_count; p++)
-    {
-        int t = m_collapsedIndices[p * 3 + 1];
-        m_collapsedIndices[p * 3 + 1] = m_collapsedIndices[p * 3 + 2];
-        m_collapsedIndices[p * 3 + 2] = t;
-    }*/
-}
 
-GenericDto DaeParser::ComposeTriangleListDto(const std::string& geo_name, bool is_skin)
-{
-    TriangleListDto geo_dto;
-    std::string vtx_fmt = "xyz_nor_tex1(2)";
-    if (is_skin)
-    {
-        vtx_fmt = "xyzb5_nor_tex1(2)_betabyte";
-    }
-    geo_dto.Name() = geo_name;
-    geo_dto.VertexFormat() = vtx_fmt;
-    geo_dto.Position3s() = m_splitedPositions;
-    geo_dto.Normals() = m_collapsedNormals;
-    geo_dto.Indices() = m_collapsedIndices;
-    geo_dto.VertexCapacity() = static_cast<unsigned>(m_splitedPositions.size());
-    geo_dto.IndexCapacity() = static_cast<unsigned>(m_collapsedIndices.size());
-    geo_dto.VertexUsedCount() = static_cast<unsigned>(m_splitedPositions.size());
-    geo_dto.IndexUsedCount() = static_cast<unsigned>(m_collapsedIndices.size());
-    geo_dto.Segments() = { 0, static_cast<unsigned>(m_splitedPositions.size()), 0, static_cast<unsigned>(m_collapsedIndices.size()) };
-    geo_dto.Topology() = static_cast<unsigned>(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (is_skin)
-    {
-        geo_dto.PaletteIndices() = m_splitedWeightIndices;
-        geo_dto.Weights() = m_splitedVertexWeights;
-    }
-    TextureCoordDto tex_dto;
-    tex_dto.Texture2DCoords() = m_splitedTexCoord[0];
-    geo_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&m_splitedPositions[0], static_cast<unsigned>(m_splitedPositions.size()));
-    BoundingVolume bounding = BoundingVolume{ box };
-    geo_dto.GeometryBound() = bounding.serializeDto().toGenericDto();
-    auto generic_dto = geo_dto.toGenericDto();
-    auto filename = Filename("pawns/" + geo_name + ".geo@APK_PATH");
-    std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto> { generic_dto });
-    IFilePtr iFile = FileSystem::instance()->openFile(filename, write | openAlways | binary);
-    iFile->write(0, convert_to_buffer(json));
-    FileSystem::instance()->closeFile(iFile);
-    FactoryDesc desc = generic_dto.GetRtti();
-    desc.ClaimFromResource(geo_name, filename.getSubPathFileName(), "APK_PATH");
-    generic_dto.AddRtti(desc);
-    return generic_dto;
-}
-
-EffectMaterialDto DaeParser::MakeMaterialDto(const std::string& eff_name, const std::string& eff_filename)
-{
-    EffectMaterialDto dto;
-    dto.Name() = eff_name;
-    dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(eff_name, eff_filename, "APK_PATH");
-    return dto;
-}
-
-EffectTextureMapDto DaeParser::MakeEffectTextureMapDto(const std::string& filename, const std::string& tex_name, const std::string& semantic)
-{
-    EffectTextureMapDto dto;
-    TextureMappingDto tex;
-    tex.JobType() = TexturePolicy::JobType::Load;
-    tex.Filename() = filename;
-    tex.Semantic() = semantic;
-    tex.TextureName() = tex_name;
-    tex.PathId() = "APK_PATH";
-    dto.TextureMappings().emplace_back(tex);
-    return dto;
-}
-
-pugi::xml_node DaeParser::FindNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
-{
-    return node_root.find_node([=](pugi::xml_node node) -> bool
+        /*int prim_set_count = static_cast<int>(m_primitiveIndices.size()) / 3;
+        m_collapsedIndices.resize(prim_set_count);
+        for (int p = 0; p < prim_set_count; p++)
         {
-            if ((token_name == node.name()) && (node.attribute(TOKEN_ID))
-                && (id == node.attribute(TOKEN_ID).as_string())) return true;
-            return false;
-        });
-}
-
-std::string DaeParser::FindMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id)
-{
-    if (!collada_root) return "";
-    if (material_id.length() == 0) return "";
-    pugi::xml_node material_node = FindNodeWithId(collada_root, TOKEN_MATERIAL, material_id);
-    if (!material_node)
-    {
-        OutputLog("can't find material " + material_id);
-        return "";
-    }
-    pugi::xml_node effect_inst_node = material_node.child(TOKEN_INSTANCE_EFFECT);
-    if (!effect_inst_node)
-    {
-        OutputLog("no instance effect in material");
-        return "";
-    }
-    std::string fx_url = "";
-    if (effect_inst_node.attribute(TOKEN_URL)) fx_url = &(effect_inst_node.attribute(TOKEN_URL).as_string()[1]);
-    if (fx_url == "")
-    {
-        OutputLog("no fx url define");
-        return "";
-    }
-    pugi::xml_node effect_node = FindNodeWithId(collada_root, TOKEN_EFFECT, fx_url);
-    if (!effect_node)
-    {
-        OutputLog("can't find effect " + fx_url);
-        return "";
-    }
-    pugi::xml_node diffuse_node = effect_node.find_node([=](pugi::xml_node node) -> bool
-        { return (strcmp(node.name(), TOKEN_DIFFUSE) == 0); });
-    if (!diffuse_node)
-    {
-        OutputLog("no diffuse node define");
-        return "";
-    }
-    pugi::xml_node texture_node = diffuse_node.child(TOKEN_TEXTURE);
-    if (!texture_node)
-    {
-        OutputLog("no texture node define");
-        return "";
-    }
-    std::string image_or_sampler_id = "";
-    if (texture_node.attribute(TOKEN_TEXTURE)) image_or_sampler_id = texture_node.attribute(TOKEN_TEXTURE).as_string();
-    if (image_or_sampler_id == "")
-    {
-        OutputLog("no image id define");
-        return "";
-    }
-    pugi::xml_node image_node;
-    if (image_or_sampler_id.rfind(SUFFIX_IMAGE) == image_or_sampler_id.length() - std::string{ SUFFIX_IMAGE }.length())
-    {
-        image_node = FindNodeWithId(collada_root, TOKEN_IMAGE, image_or_sampler_id);
-    }
-    else if (image_or_sampler_id.rfind(SUFFIX_SAMPLER)
-        == image_or_sampler_id.length() - std::string{ SUFFIX_SAMPLER }.length())
-    {
-        pugi::xml_node surface_node = effect_node.find_node([=](pugi::xml_node node) -> bool
-            { return (strcmp(node.name(), TOKEN_SURFACE) == 0); });
-        if (!surface_node)
-        {
-            OutputLog("can't find sampler surface node");
-            return "";
+            m_collapsedIndices[p] = m_primitiveIndices[p * 3 + pos_offset];
         }
-        pugi::xml_node surface_init_from = surface_node.child(TOKEN_INIT_FROM);
-        if (!surface_init_from)
+        /*int prim_count = m_collapsedIndices.size() / 3;
+        // index 反向
+        for (int p = 0; p < prim_count; p++)
         {
-            OutputLog("surface no init_from node!!");
-            return "";
-        }
-        image_node = FindNodeWithId(collada_root, TOKEN_IMAGE, surface_init_from.text().as_string());
-    }
-    if (!image_node)
-    {
-        OutputLog("can't find image " + image_or_sampler_id);
-        return "";
-    }
-    pugi::xml_node init_from = image_node.child(TOKEN_INIT_FROM);
-    if (!init_from)
-    {
-        OutputLog("image no init_from node!!");
-        return "";
-    }
-    std::string file_url = init_from.text().as_string();
-    std::size_t pos = file_url.find_first_of("//");
-    Filename filename;
-    if (pos != std::string::npos)
-    {
-        filename = Filename(file_url.substr(pos + 2));
-    }
-    else
-    {
-        filename = Filename(file_url);
-    }
-    OutputLog("    " + material_id + " image file name: " + filename.getFileName());
-    return "image/" + filename.getFileName();
-}
+            int t = m_collapsedIndices[p * 3 + 1];
+            m_collapsedIndices[p * 3 + 1] = m_collapsedIndices[p * 3 + 2];
+            m_collapsedIndices[p * 3 + 2] = t;
+        }*/
+        /*}
 
-void DaeParser::ClearParsedDatas()
-{
-    m_positions.clear();
-    m_normals.clear();
-    m_texcoords[0].clear();
-    m_texcoords[1].clear();
-    m_texcoords[2].clear();
-    m_texcoords[3].clear();
-    m_primitiveIndices.clear();
-    m_collapsedIndices.clear();
-    m_splitedPositions.clear();
-    m_collapsedNormals.clear();
-    m_splitedTexCoord[0].clear();
-    m_splitedTexCoord[1].clear();
-    m_splitedTexCoord[2].clear();
-    m_splitedTexCoord[3].clear();
-    m_weightCounts.clear();
-    m_weightPaletteIndices.clear();
-    m_splitedWeightIndices.clear();
-    m_vertexWeights.clear();
-    m_splitedVertexWeights.clear();
-    m_weightSource.clear();
-    //m_skinBoneNames.clear();
-    m_timeValues.clear();
-    m_animMatrixs.clear();
-}
+        GenericDto DaeParser::ComposeTriangleListDto(const std::string& geo_name, bool is_skin)
+        {
+            TriangleListDto geo_dto;
+            std::string vtx_fmt = "xyz_nor_tex1(2)";
+            if (is_skin)
+            {
+                vtx_fmt = "xyzb5_nor_tex1(2)_betabyte";
+            }
+            geo_dto.Name() = geo_name;
+            geo_dto.VertexFormat() = vtx_fmt;
+            geo_dto.Position3s() = m_splitedPositions;
+            geo_dto.Normals() = m_collapsedNormals;
+            geo_dto.Indices() = m_collapsedIndices;
+            geo_dto.VertexCapacity() = static_cast<unsigned>(m_splitedPositions.size());
+            geo_dto.IndexCapacity() = static_cast<unsigned>(m_collapsedIndices.size());
+            geo_dto.VertexUsedCount() = static_cast<unsigned>(m_splitedPositions.size());
+            geo_dto.IndexUsedCount() = static_cast<unsigned>(m_collapsedIndices.size());
+            geo_dto.Segments() = { 0, static_cast<unsigned>(m_splitedPositions.size()), 0, static_cast<unsigned>(m_collapsedIndices.size()) };
+            geo_dto.Topology() = static_cast<unsigned>(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
+            if (is_skin)
+            {
+                geo_dto.PaletteIndices() = m_splitedWeightIndices;
+                geo_dto.Weights() = m_splitedVertexWeights;
+            }
+            TextureCoordDto tex_dto;
+            tex_dto.Texture2DCoords() = m_splitedTexCoord[0];
+            geo_dto.TextureCoords().emplace_back(tex_dto.toGenericDto());
+            Box3 box = ContainmentBox3::ComputeAlignedBox(&m_splitedPositions[0], static_cast<unsigned>(m_splitedPositions.size()));
+            BoundingVolume bounding = BoundingVolume{ box };
+            geo_dto.GeometryBound() = bounding.serializeDto().toGenericDto();
+            auto generic_dto = geo_dto.toGenericDto();
+            auto filename = Filename("pawns/" + geo_name + ".geo@APK_PATH");
+            std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto> { generic_dto });
+            IFilePtr iFile = FileSystem::instance()->openFile(filename, write | openAlways | binary);
+            iFile->write(0, convert_to_buffer(json));
+            FileSystem::instance()->closeFile(iFile);
+            FactoryDesc desc = generic_dto.GetRtti();
+            desc.ClaimFromResource(geo_name, filename.getSubPathFileName(), "APK_PATH");
+            generic_dto.AddRtti(desc);
+            return generic_dto;
+        }
+
+        EffectMaterialDto DaeParser::MakeMaterialDto(const std::string& eff_name, const std::string& eff_filename)
+        {
+            EffectMaterialDto dto;
+            dto.Name() = eff_name;
+            dto.factoryDesc() = FactoryDesc(EffectMaterial::TYPE_RTTI.getName()).ClaimFromResource(eff_name, eff_filename, "APK_PATH");
+            return dto;
+        }
+
+        EffectTextureMapDto DaeParser::MakeEffectTextureMapDto(const std::string& filename, const std::string& tex_name, const std::string& semantic)
+        {
+            EffectTextureMapDto dto;
+            TextureMappingDto tex;
+            tex.JobType() = TexturePolicy::JobType::Load;
+            tex.Filename() = filename;
+            tex.Semantic() = semantic;
+            tex.TextureName() = tex_name;
+            tex.PathId() = "APK_PATH";
+            dto.TextureMappings().emplace_back(tex);
+            return dto;
+        }
+
+        pugi::xml_node DaeParser::FindNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
+        {
+            return node_root.find_node([=](pugi::xml_node node) -> bool
+                {
+                    if ((token_name == node.name()) && (node.attribute(TOKEN_ID))
+                        && (id == node.attribute(TOKEN_ID).as_string())) return true;
+                    return false;
+                });
+        }
+
+        std::string DaeParser::FindMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id)
+        {
+            if (!collada_root) return "";
+            if (material_id.length() == 0) return "";
+            pugi::xml_node material_node = FindNodeWithId(collada_root, TOKEN_MATERIAL, material_id);
+            if (!material_node)
+            {
+                OutputLog("can't find material " + material_id);
+                return "";
+            }
+            pugi::xml_node effect_inst_node = material_node.child(TOKEN_INSTANCE_EFFECT);
+            if (!effect_inst_node)
+            {
+                OutputLog("no instance effect in material");
+                return "";
+            }
+            std::string fx_url = "";
+            if (effect_inst_node.attribute(TOKEN_URL)) fx_url = &(effect_inst_node.attribute(TOKEN_URL).as_string()[1]);
+            if (fx_url == "")
+            {
+                OutputLog("no fx url define");
+                return "";
+            }
+            pugi::xml_node effect_node = FindNodeWithId(collada_root, TOKEN_EFFECT, fx_url);
+            if (!effect_node)
+            {
+                OutputLog("can't find effect " + fx_url);
+                return "";
+            }
+            pugi::xml_node diffuse_node = effect_node.find_node([=](pugi::xml_node node) -> bool
+                { return (strcmp(node.name(), TOKEN_DIFFUSE) == 0); });
+            if (!diffuse_node)
+            {
+                OutputLog("no diffuse node define");
+                return "";
+            }
+            pugi::xml_node texture_node = diffuse_node.child(TOKEN_TEXTURE);
+            if (!texture_node)
+            {
+                OutputLog("no texture node define");
+                return "";
+            }
+            std::string image_or_sampler_id = "";
+            if (texture_node.attribute(TOKEN_TEXTURE)) image_or_sampler_id = texture_node.attribute(TOKEN_TEXTURE).as_string();
+            if (image_or_sampler_id == "")
+            {
+                OutputLog("no image id define");
+                return "";
+            }
+            pugi::xml_node image_node;
+            if (image_or_sampler_id.rfind(SUFFIX_IMAGE) == image_or_sampler_id.length() - std::string{ SUFFIX_IMAGE }.length())
+            {
+                image_node = FindNodeWithId(collada_root, TOKEN_IMAGE, image_or_sampler_id);
+            }
+            else if (image_or_sampler_id.rfind(SUFFIX_SAMPLER)
+                == image_or_sampler_id.length() - std::string{ SUFFIX_SAMPLER }.length())
+            {
+                pugi::xml_node surface_node = effect_node.find_node([=](pugi::xml_node node) -> bool
+                    { return (strcmp(node.name(), TOKEN_SURFACE) == 0); });
+                if (!surface_node)
+                {
+                    OutputLog("can't find sampler surface node");
+                    return "";
+                }
+                pugi::xml_node surface_init_from = surface_node.child(TOKEN_INIT_FROM);
+                if (!surface_init_from)
+                {
+                    OutputLog("surface no init_from node!!");
+                    return "";
+                }
+                image_node = FindNodeWithId(collada_root, TOKEN_IMAGE, surface_init_from.text().as_string());
+            }
+            if (!image_node)
+            {
+                OutputLog("can't find image " + image_or_sampler_id);
+                return "";
+            }
+            pugi::xml_node init_from = image_node.child(TOKEN_INIT_FROM);
+            if (!init_from)
+            {
+                OutputLog("image no init_from node!!");
+                return "";
+            }
+            std::string file_url = init_from.text().as_string();
+            std::size_t pos = file_url.find_first_of("//");
+            Filename filename;
+            if (pos != std::string::npos)
+            {
+                filename = Filename(file_url.substr(pos + 2));
+            }
+            else
+            {
+                filename = Filename(file_url);
+            }
+            OutputLog("    " + material_id + " image file name: " + filename.getFileName());
+            return "image/" + filename.getFileName();
+        }
+
+        void DaeParser::ClearParsedDatas()
+        {
+            m_positions.clear();
+            m_normals.clear();
+            m_texcoords[0].clear();
+            m_texcoords[1].clear();
+            m_texcoords[2].clear();
+            m_texcoords[3].clear();
+            m_primitiveIndices.clear();
+            m_collapsedIndices.clear();
+            m_splitedPositions.clear();
+            m_collapsedNormals.clear();
+            m_splitedTexCoord[0].clear();
+            m_splitedTexCoord[1].clear();
+            m_splitedTexCoord[2].clear();
+            m_splitedTexCoord[3].clear();
+            m_weightCounts.clear();
+            m_weightPaletteIndices.clear();
+            m_splitedWeightIndices.clear();
+            m_vertexWeights.clear();
+            m_splitedVertexWeights.clear();
+            m_weightSource.clear();
+            //m_skinBoneNames.clear();
+            m_timeValues.clear();
+            m_animMatrixs.clear();
+        }*/

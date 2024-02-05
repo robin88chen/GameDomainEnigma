@@ -29,22 +29,22 @@ namespace EnigmaViewer
         AnimationInfoPanel(const nana::window& wd);
         virtual ~AnimationInfoPanel();
 
-        void Initialize();
-        void OnAddActionButton(const nana::arg_click& ev);
-        void OnDeleteActionButton(const nana::arg_click& ev);
+        void initialize();
+        void onAddActionButton(const nana::arg_click& ev);
+        void onDeleteActionButton(const nana::arg_click& ev);
 
-        void OnActionComboTextChanged(const nana::arg_combox& ev);
+        void onActionComboTextChanged(const nana::arg_combox& ev);
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
     private:
-        void OnAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e);
-        void OnAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e);
+        void onAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e);
 
-        void DoRefreshingAnimClipMap(const Enigma::Frameworks::ICommandPtr& c);
+        void refreshAnimClipMap(const Enigma::Frameworks::ICommandPtr& c);
 
-        void RefreshActionCombo();
+        void refreshActionCombo();
     private:
         nana::place* m_place;
         nana::group* m_tableGroup;
@@ -61,7 +61,7 @@ namespace EnigmaViewer
         Enigma::Frameworks::EventSubscriberPtr m_onAnimationClipMapChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onAnimationClipItemUpdated;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_doRefreshingAnimClipMap;
+        Enigma::Frameworks::CommandSubscriberPtr m_refreshAnimClipMap;
     };
 }
 

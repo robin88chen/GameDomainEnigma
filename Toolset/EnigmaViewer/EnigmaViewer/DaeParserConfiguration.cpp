@@ -12,7 +12,7 @@
 
 using namespace EnigmaViewer;
 
-void DaeParserConfiguration::LoadConfig()
+void DaeParserConfiguration::loadConfig()
 {
     const Enigma::FileSystem::IFilePtr iFile = Enigma::FileSystem::FileSystem::instance()->openFile("DaeParser.cfg", Enigma::FileSystem::read | Enigma::FileSystem::binary, "");
     const size_t file_size = iFile->size();
@@ -25,44 +25,44 @@ void DaeParserConfiguration::LoadConfig()
     }
 }
 
-std::string DaeParserConfiguration::DefaultColorMeshEffectFilename()
+std::string DaeParserConfiguration::defaultColorMeshEffectFilename()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_COLOR_MESH_EFFECT_FILENAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_COLOR_MESH_EFFECT_FILENAME)) return v.value();
     return "";
 }
 
-std::string DaeParserConfiguration::DefaultColorMeshEffectName()
+std::string DaeParserConfiguration::defaultColorMeshEffectName()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_COLOR_MESH_EFFECT_NAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_COLOR_MESH_EFFECT_NAME)) return v.value();
     return "";
 }
 
-std::string DaeParserConfiguration::DefaultTexturedMeshEffectFilename()
+std::string DaeParserConfiguration::defaultTexturedMeshEffectFilename()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_FILENAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_FILENAME)) return v.value();
     return "";
 }
 
-std::string DaeParserConfiguration::DefaultTexturedMeshEffectName()
+std::string DaeParserConfiguration::defaultTexturedMeshEffectName()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_NAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_NAME)) return v.value();
     return "";
 }
 
-std::string DaeParserConfiguration::DefaultTexturedSkinMeshEffectFilename()
+std::string DaeParserConfiguration::defaultTexturedSkinMeshEffectFilename()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_TEXTURED_SKIN_MESH_EFFECT_FILENAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_SKIN_MESH_EFFECT_FILENAME)) return v.value();
     return "";
 }
 
-std::string DaeParserConfiguration::DefaultTexturedSkinMeshEffectName()
+std::string DaeParserConfiguration::defaultTexturedSkinMeshEffectName()
 {
-    assert(!m_configDto.IsEmpty());
-    if (auto v = m_configDto.TryGetValue<std::string>(TOKEN_TEXTURED_SKIN_MESH_EFFECT_NAME)) return v.value();
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_SKIN_MESH_EFFECT_NAME)) return v.value();
     return "";
 }

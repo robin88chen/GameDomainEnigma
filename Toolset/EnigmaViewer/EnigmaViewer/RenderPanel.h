@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderPanel.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -22,19 +22,19 @@ namespace EnigmaViewer
         RenderPanel(nana::window wd);
         virtual ~RenderPanel();
 
-        void OnMouseDown(const nana::arg_mouse& arg);
-        void OnMouseUp(const nana::arg_mouse& arg);
-        void OnMouseMove(const nana::arg_mouse& arg);
-        void OnMouseWheel(const nana::arg_wheel& arg);
+        void onMouseDown(const nana::arg_mouse& arg);
+        void onMouseUp(const nana::arg_mouse& arg);
+        void onMouseMove(const nana::arg_mouse& arg);
+        void onMouseWheel(const nana::arg_wheel& arg);
 
-        void OnResized(const nana::arg_resized& arg);
+        void onResized(const nana::arg_resized& arg);
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
-        void InitInputHandler(const std::shared_ptr<Enigma::InputHandlers::InputHandlerService>& input_handler) { m_inputHandler = input_handler; }
+        void initInputHandler(const std::shared_ptr<Enigma::InputHandlers::InputHandlerService>& input_handler) { m_inputHandler = input_handler; }
     private:
-        void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
     private:
         bool m_isDraging;

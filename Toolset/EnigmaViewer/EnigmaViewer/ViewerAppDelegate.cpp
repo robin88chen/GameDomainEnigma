@@ -1,5 +1,4 @@
 ﻿#include "ViewerAppDelegate.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "FileSystem/FileSystem.h"
@@ -13,7 +12,6 @@
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "GameCommon/SceneRendererInstallingPolicy.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
-#include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
@@ -23,7 +21,6 @@
 #include "GameCommon/GameSceneService.h"
 #include "ViewerCommands.h"
 #include "Animators/AnimatorCommands.h"
-#include "Animators/ModelPrimitiveAnimator.h"
 #include "GameCommon/AvatarRecipes.h"
 #include <memory>
 #include <Gateways/DtoJsonGateway.h>
@@ -33,9 +30,14 @@
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/SpatialShadowFlags.h"
-#include "GameEngine/StandardGeometryDtoHelper.h"
 #include "GameEngine/EffectDtoHelper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "Renderables/ModelPrimitive.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
+#include "Geometries/StandardGeometryDtoHelper.h"
+#include "Primitives/Primitive.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -52,6 +54,10 @@ using namespace Enigma::Gateways;
 using namespace Enigma::Frameworks;
 using namespace Enigma::ShadowMap;
 using namespace Enigma::MathLib;
+using namespace Enigma::FileStorage;
+using namespace Enigma::Renderables;
+using namespace Enigma::Primitives;
+using namespace Enigma::Geometries;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -71,7 +77,7 @@ ViewerAppDelegate::~ViewerAppDelegate()
 {
 }
 
-void ViewerAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI::AsyncType useAsyncDevice,
+void ViewerAppDelegate::initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI::AsyncType useAsyncDevice,
     const std::string& log_filename, HWND hwnd)
 {
     m_hwnd = hwnd;
@@ -82,27 +88,27 @@ void ViewerAppDelegate::Initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI:
     }
 
     FileSystem::create();
-    InitializeMountPaths();
+    initializeMountPaths();
 
     m_graphicMain = menew GraphicMain();
-    m_graphicMain->InstallFrameworks();
+    m_graphicMain->installFrameworks();
 
     menew GraphicAPIDx11(useAsyncDevice);
 
     CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
-    InstallEngine();
+    installEngine();
 }
 
-void ViewerAppDelegate::Finalize()
+void ViewerAppDelegate::finalize()
 {
-    ShutdownEngine();
+    shutdownEngine();
 
     std::this_thread::sleep_for(std::chrono::seconds(1)); // 放一點時間給thread 執行 cleanup
     IGraphicAPI::instance()->TerminateGraphicThread(); // 先跳出thread
     delete IGraphicAPI::instance();
 
-    m_graphicMain->ShutdownFrameworks();
+    m_graphicMain->shutdownFrameworks();
     SAFE_DELETE(m_graphicMain);
 
     if (m_hasLogFile)
@@ -114,7 +120,7 @@ void ViewerAppDelegate::Finalize()
     CoUninitialize();
 }
 
-void ViewerAppDelegate::InitializeMountPaths()
+void ViewerAppDelegate::initializeMountPaths()
 {
     if (FileSystem::instance())
     {
@@ -125,32 +131,32 @@ void ViewerAppDelegate::InitializeMountPaths()
     }
 }
 
-void ViewerAppDelegate::InstallEngine()
+void ViewerAppDelegate::installEngine()
 {
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnPawnPrimitiveBuilt(e); });
+    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPawnPrimitiveBuilt(e); });
     EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-    m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphRootCreated(e); });
+    m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphRootCreated(e); });
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
+    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphBuilt(e); });
     EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
 
-    m_doChangingMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingMeshTexture(c); });
-    CommandBus::subscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
-    m_doAddingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoAddingAnimationClip(c); });
-    CommandBus::subscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
-    m_doDeletingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoDeletingAnimationClip(c); });
-    CommandBus::subscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
-    m_doPlayingAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->DoPlayingAnimationClip(c); });
-    CommandBus::subscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
-    m_doChangingAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->DoChangingAnimationTimeValue(c); });
-    CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
+    m_changeMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->changeMeshTexture(c); });
+    CommandBus::subscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
+    m_addAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->addAnimationClip(c); });
+    CommandBus::subscribe(typeid(AddAnimationClip), m_addAnimationClip);
+    m_deleteAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->deleteAnimationClip(c); });
+    CommandBus::subscribe(typeid(DeleteAnimationClip), m_deleteAnimationClip);
+    m_playAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->playAnimationClip(c); });
+    CommandBus::subscribe(typeid(PlayAnimationClip), m_playAnimationClip);
+    m_changeAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->changeAnimationTimeValue(c); });
+    CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
 
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
-    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
-    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>();
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt", std::make_shared<DtoJsonGateway>()));
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
@@ -159,8 +165,7 @@ void ViewerAppDelegate::InstallEngine()
         .frustum(Frustum::ProjectionType::Perspective).frustumFov(Enigma::MathLib::Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f)
         .frustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
-    deferred_config->SunLightEffectName() = "DeferredShadingWithShadowSunLightPass";
-    deferred_config->SunLightPassFxFileName() = "fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH";
+    deferred_config->SunLightEffectName() = "fx/DeferredShadingWithShadowSunLightPass";
     deferred_config->SunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
@@ -170,18 +175,18 @@ void ViewerAppDelegate::InstallEngine()
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
         input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
 }
 
-void ViewerAppDelegate::RegisterMediaMountPaths(const std::string& media_path)
+void ViewerAppDelegate::registerMediaMountPaths(const std::string& media_path)
 {
 }
 
-void ViewerAppDelegate::ShutdownEngine()
+void ViewerAppDelegate::shutdownEngine()
 {
     m_pawn = nullptr;
     m_sceneRoot = nullptr;
@@ -194,32 +199,32 @@ void ViewerAppDelegate::ShutdownEngine()
     EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphBuilt = nullptr;
 
-    CommandBus::unsubscribe(typeid(ChangeMeshTexture), m_doChangingMeshTexture);
-    m_doChangingMeshTexture = nullptr;
-    CommandBus::unsubscribe(typeid(AddAnimationClip), m_doAddingAnimationClip);
-    m_doAddingAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(DeleteAnimationClip), m_doDeletingAnimationClip);
-    m_doDeletingAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(PlayAnimationClip), m_doPlayingAnimationClip);
-    m_doPlayingAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(ChangeAnimationTimeValue), m_doChangingAnimationTimeValue);
-    m_doChangingAnimationTimeValue = nullptr;
+    CommandBus::unsubscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
+    m_changeMeshTexture = nullptr;
+    CommandBus::unsubscribe(typeid(AddAnimationClip), m_addAnimationClip);
+    m_addAnimationClip = nullptr;
+    CommandBus::unsubscribe(typeid(DeleteAnimationClip), m_deleteAnimationClip);
+    m_deleteAnimationClip = nullptr;
+    CommandBus::unsubscribe(typeid(PlayAnimationClip), m_playAnimationClip);
+    m_playAnimationClip = nullptr;
+    CommandBus::unsubscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
+    m_changeAnimationTimeValue = nullptr;
 
-    m_graphicMain->ShutdownRenderEngine();
+    m_graphicMain->shutdownRenderEngine();
 }
 
-void ViewerAppDelegate::FrameUpdate()
+void ViewerAppDelegate::frameUpdate()
 {
-    if (m_graphicMain) m_graphicMain->FrameUpdate();
+    if (m_graphicMain) m_graphicMain->frameUpdate();
 }
 
-void ViewerAppDelegate::PrepareRender()
+void ViewerAppDelegate::prepareRender()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
     if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->PrepareGameScene();
 }
 
-void ViewerAppDelegate::RenderFrame()
+void ViewerAppDelegate::renderFrame()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->RenderShadowScene();
     if (!m_sceneRenderer.expired())
@@ -229,34 +234,34 @@ void ViewerAppDelegate::RenderFrame()
     }
 }
 
-void ViewerAppDelegate::OnTimerElapsed()
+void ViewerAppDelegate::onTimerElapsed()
 {
     if (!m_graphicMain) return;
 
-    FrameUpdate();
+    frameUpdate();
 
-    PrepareRender();
-    RenderFrame();
+    prepareRender();
+    renderFrame();
 }
 
-void ViewerAppDelegate::LoadPawn(const AnimatedPawnDto& pawn_dto)
+void ViewerAppDelegate::loadPawn(const AnimatedPawnDto& pawn_dto)
 {
     CommandBus::post(std::make_shared<OutputMessage>("Load Pawn " + pawn_dto.name()));
     CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
 }
 
-void ViewerAppDelegate::SavePawnFile(const std::filesystem::path& filepath)
+void ViewerAppDelegate::savePawnFile(const std::filesystem::path& filepath)
 {
     if (!m_pawn) return;
     auto pawn_dto = m_pawn->serializeDto();
-    pawn_dto.AsTopLevel(true);
+    pawn_dto.asTopLevel(true);
     std::string json = std::make_shared<DtoJsonGateway>()->serialize(std::vector<GenericDto>{pawn_dto});
     IFilePtr iFile = FileSystem::instance()->openFile(filepath.generic_string(), write | openAlways | binary);
     iFile->write(0, convert_to_buffer(json));
     FileSystem::instance()->closeFile(iFile);
 }
 
-void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
+void ViewerAppDelegate::loadPawnFile(const std::filesystem::path& filepath)
 {
     if (m_pawn)
     {
@@ -272,24 +277,24 @@ void ViewerAppDelegate::LoadPawnFile(const std::filesystem::path& filepath)
     CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }
 
-void ViewerAppDelegate::OnPawnPrimitiveBuilt(const IEventPtr& e)
+void ViewerAppDelegate::onPawnPrimitiveBuilt(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
     if (ev->GetPawn() == m_pawn)
     {
-        OnViewingPawnPrimitiveBuilt();
+        onViewingPawnPrimitiveBuilt();
     }
     else if (ev->GetPawn() == m_floor)
     {
-        OnFloorPrimitiveBuilt();
+        onFloorPrimitiveBuilt();
     }
 }
 
-void ViewerAppDelegate::OnViewingPawnPrimitiveBuilt()
+void ViewerAppDelegate::onViewingPawnPrimitiveBuilt()
 {
-    m_pawn->GetPrimitive()->SelectVisualTechnique("Default");
+    m_pawn->GetPrimitive()->selectVisualTechnique("Default");
     m_pawn->BakeAvatarRecipes();
     CommandBus::post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
     auto scene_service = m_graphicMain->getSystemServiceAs<GameSceneService>();
@@ -300,24 +305,24 @@ void ViewerAppDelegate::OnViewingPawnPrimitiveBuilt()
         auto model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
         if (!model) return;
         CommandBus::post(std::make_shared<RefreshModelNodeTree>(model));
-        if (auto ani = model->GetAnimator())
+        if (auto ani = Animator::queryAnimator(model->animatorId()))
         {
             ani->reset();
-            CommandBus::post(std::make_shared<AddListeningAnimator>(ani));
+            CommandBus::post(std::make_shared<AddListeningAnimator>(ani->id()));
             if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
             {
-                model_ani->PlayAnimation(AnimationClip{ 0.0f, 20.0f, AnimationClip::WarpMode::Loop, 0 });
+                model_ani->playAnimation(AnimationClip{ 0.0f, 20.0f, AnimationClip::WarpMode::Loop, 0 });
             }
         }
     }
 }
 
-void ViewerAppDelegate::OnFloorPrimitiveBuilt()
+void ViewerAppDelegate::onFloorPrimitiveBuilt()
 {
-    m_floor->GetPrimitive()->SelectVisualTechnique("ShadowMapReceiver");
+    m_floor->GetPrimitive()->selectVisualTechnique("ShadowMapReceiver");
 }
 
-void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
@@ -327,10 +332,10 @@ void ViewerAppDelegate::OnSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     CommandBus::post(std::make_shared<CreateSunLight>(SceneRootName, "sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
     CommandBus::post(std::make_shared<CreatePointLight>(SceneRootName, mx, "point_lit", Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
-    CreateFloorReceiver();
+    createFloorReceiver();
 }
 
-void ViewerAppDelegate::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
@@ -350,101 +355,99 @@ void ViewerAppDelegate::OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e
     }
 }
 
-void ViewerAppDelegate::DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
+void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<ChangeMeshTexture, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
     TextureMappingDto tex_dto;
-    tex_dto.JobType() = TexturePolicy::JobType::Load;
-    tex_dto.Filename() = "image/" + cmd->GetTextureFilename();
-    tex_dto.TextureName() = cmd->GetTextureFilename();
-    tex_dto.PathId() = "APK_PATH";
-    tex_dto.Semantic() = "DiffuseMap";
-    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->GetMeshName(), tex_dto);
+    tex_dto.textureId() = cmd->textureId();
+    tex_dto.semantic() = "DiffuseMap";
+    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshName(), tex_dto);
     m_pawn->AddAvatarRecipe(recipe);
     m_pawn->BakeAvatarRecipes();
 }
 
-void ViewerAppDelegate::DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<AddAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetName()); !act_clip)
+    if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->name()); !act_clip)
     {
-        AnimationClipMap::AnimClip act_clip_new(cmd->GetName(), cmd->GetClip());
+        AnimationClipMap::AnimClip act_clip_new(cmd->name(), cmd->clip());
         m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
     }
     else
     {
-        act_clip.value().get().ChangeClip(cmd->GetClip());
+        act_clip.value().get().ChangeClip(cmd->clip());
     }
 }
 
-void ViewerAppDelegate::DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+void ViewerAppDelegate::deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<DeleteAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    m_pawn->TheAnimationClipMap().RemoveClip(cmd->GetName());
+    m_pawn->TheAnimationClipMap().RemoveClip(cmd->name());
 }
 
-void ViewerAppDelegate::DoPlayingAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
+void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<PlayAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    m_pawn->PlayAnimation(cmd->GetName());
+    m_pawn->PlayAnimation(cmd->name());
 }
 
-void ViewerAppDelegate::DoChangingAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
+void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<ChangeAnimationTimeValue, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
     bool isNameChanged = false;
-    if ((m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetOldName()))
-        && (cmd->GetOldName() != cmd->GetNewName()))
+    if ((m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->oldName()))
+        && (cmd->oldName() != cmd->newName()))
     {
         isNameChanged = true;
     }
 
     if (!isNameChanged)
     {
-        if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->GetNewName()); act_clip)
+        if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->newName()); act_clip)
         {
-            act_clip.value().get().ChangeClip(cmd->GetClip());
+            act_clip.value().get().ChangeClip(cmd->clip());
         }
     }
     else
     {
-        m_pawn->TheAnimationClipMap().RemoveClip(cmd->GetOldName());
-        Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->GetNewName(), cmd->GetClip());
+        m_pawn->TheAnimationClipMap().RemoveClip(cmd->oldName());
+        Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->newName(), cmd->clip());
         m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
     }
 }
 
-void ViewerAppDelegate::CreateFloorReceiver()
+void ViewerAppDelegate::createFloorReceiver()
 {
     PawnDtoHelper pawn_dto(FloorReceiverName);
     MeshPrimitiveDto mesh_dto;
     SquareQuadDtoHelper floor_dto("floor");
-    floor_dto.XZQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).Normal().TextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
-    mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
+    floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
     EffectTextureMapDtoHelper tex_dto;
-    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "DiffuseMap");
-    mesh_dto.Name() = "floor_mesh";
-    mesh_dto.Effects().emplace_back(mat_dto.toGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto.toGenericDto());
-    mesh_dto.GeometryName() = "floor";
-    mesh_dto.TheGeometry() = floor_dto.toGenericDto();
+    tex_dto.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
+    auto mesh_id = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
+    mesh_dto.id() = mesh_id;
+    mesh_dto.factoryDesc() = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_id.name() + ".mesh@DataPath");
+    mesh_dto.effects().emplace_back(EffectMaterialId("fx/default_textured_mesh_effect"));
+    mesh_dto.textureMaps().emplace_back(tex_dto.toGenericDto());
+    mesh_dto.geometry() = floor_dto.toGenericDto();
+    mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
+    mesh_dto.visualTechniqueSelection() = "Default";
 
     pawn_dto.meshPrimitive(mesh_dto).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
     auto dtos = { pawn_dto.toGenericDto() };

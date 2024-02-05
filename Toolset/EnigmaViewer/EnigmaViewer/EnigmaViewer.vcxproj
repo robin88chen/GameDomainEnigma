@@ -148,6 +148,7 @@
     <ClInclude Include="ViewerAppDelegate.h" />
     <ClInclude Include="ViewerCommands.h" />
     <ClInclude Include="ViewerEvents.h" />
+    <ClInclude Include="ViewerQueries.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />

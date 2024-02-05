@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AnimationClipInfoItem.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
@@ -10,14 +10,14 @@
 
 #include <string>
 #include "nana/gui/widgets/listbox.hpp"
-#include "Animators/AnimationClip.h"
+#include "Renderables/AnimationClip.h"
 
 namespace EnigmaViewer
 {
     struct AnimClipInfoItem
     {
         std::string m_name;
-        Enigma::Animators::AnimationClip m_clip;
+        Enigma::Renderables::AnimationClip m_clip;
         AnimClipInfoItem(const std::string& name) : m_name{ name } {}
     };
 
@@ -26,23 +26,23 @@ namespace EnigmaViewer
         float start, loop;
         unsigned int div;
         std::string wrap;
-        Enigma::Animators::AnimationClip::WarpMode mode = Enigma::Animators::AnimationClip::WarpMode::Loop;
+        Enigma::Renderables::AnimationClip::WarpMode mode = Enigma::Renderables::AnimationClip::WarpMode::Loop;
 
         ires >> item.m_name >> start >> loop >> div >> wrap;
-        if (wrap == "Clamp") mode = Enigma::Animators::AnimationClip::WarpMode::Clamp;
-        item.m_clip = Enigma::Animators::AnimationClip{ start, loop, mode, div };
+        if (wrap == "Clamp") mode = Enigma::Renderables::AnimationClip::WarpMode::Clamp;
+        item.m_clip = Enigma::Renderables::AnimationClip{ start, loop, mode, div };
         return ires;
     }
     //Overload the operator<< for oresolver to resolve the person type
     nana::listbox::oresolver& operator<<(nana::listbox::oresolver& ores, const AnimClipInfoItem& item)
     {
         std::string warp = "Loop";
-        if (item.m_clip.GetWarpMode() == Enigma::Animators::AnimationClip::WarpMode::Clamp)
+        if (item.m_clip.warpMode() == Enigma::Renderables::AnimationClip::WarpMode::Clamp)
         {
             warp = "Clamp";
         }
-        return ores << item.m_name << item.m_clip.GetStartOffset() << item.m_clip.GetLoopTime()
-            << item.m_clip.GetDivideIndex() << warp;
+        return ores << item.m_name << item.m_clip.startOffset() << item.m_clip.loopTime()
+            << item.m_clip.divideIndex() << warp;
     }
 }
 

@@ -70,6 +70,9 @@
     <ClInclude Include="DaeParserConfiguration.h">
       <Filter>Dae Parser</Filter>
     </ClInclude>
+    <ClInclude Include="ViewerQueries.h">
+      <Filter>Events &amp; Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">

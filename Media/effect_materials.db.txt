@@ -1,2 +1,12 @@
-basic_vtx_tex,basic_vtx_tex.efx@APK_PATH
 skin_mesh_prim_test,skin_mesh_prim_test.efx@APK_PATH
+basic_vtx_tex,basic_vtx_tex.efx@APK_PATH
+fx/default_color_mesh_effect,fx/default_color_mesh_effect.efx@APK_PATH
+fx/basic_floor_mesh,fx/basic_floor_mesh.efx@APK_PATH
+fx/default_textured_mesh_effect,fx/default_textured_mesh_effect.efx@APK_PATH
+fx/DeferredShadingDecalGeometry,fx/DeferredShadingDecalGeometry.efx@APK_PATH
+fx/default_textured_skinmesh_effect,fx/default_textured_skinmesh_effect.efx@APK_PATH
+fx/DeferredShadingAmbientPass,fx/DeferredShadingAmbientPass.efx@APK_PATH
+fx/DeferredShadingLightVolume,fx/DeferredShadingLightVolume.efx@APK_PATH
+fx/DeferredShadingSunLightPass,fx/DeferredShadingSunLightPass.efx@APK_PATH
+fx/DeferredShadingWithShadowSunLightPass,fx/DeferredShadingWithShadowSunLightPass.efx@APK_PATH
+fx/TerrainMesh,fx/TerrainMesh.efx@APK_PATH

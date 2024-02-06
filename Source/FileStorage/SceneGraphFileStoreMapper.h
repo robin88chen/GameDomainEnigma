@@ -30,22 +30,22 @@ namespace Enigma::FileStorage
         virtual std::error_code disconnect() override;
 
         virtual bool hasCamera(const SceneGraph::SpatialId& id) override;
-        virtual Engine::GenericDtoCollection queryCamera(const SceneGraph::SpatialId& id) override;
+        virtual std::optional<Engine::GenericDto> queryCamera(const SceneGraph::SpatialId& id) override;
         virtual std::error_code removeCamera(const SceneGraph::SpatialId& id) override;
-        virtual std::error_code putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos) override;
+        virtual std::error_code putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) override;
 
         virtual bool hasSpatial(const SceneGraph::SpatialId& id) override;
-        virtual Engine::GenericDtoCollection querySpatial(const SceneGraph::SpatialId& id) override;
+        virtual std::optional<Engine::GenericDto> querySpatial(const SceneGraph::SpatialId& id) override;
         virtual std::error_code removeSpatial(const SceneGraph::SpatialId& id) override;
-        virtual std::error_code putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos) override;
+        virtual std::error_code putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) override;
 
     protected:
         std::error_code serializeMapperFile();
         void deserializeMapperFile(const std::string& mapper_file_content);
         std::string extractFilename(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc);
 
-        std::error_code serializeDataTransferObjects(const std::string& filename, const Engine::GenericDtoCollection& dtos);
-        Engine::GenericDtoCollection deserializeDataTransferObjects(const std::string& filename);
+        std::error_code serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto);
+        Engine::GenericDto deserializeDataTransferObjects(const std::string& filename);
 
     protected:
         bool m_has_connected;

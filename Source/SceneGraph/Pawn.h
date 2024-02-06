@@ -31,6 +31,9 @@ namespace Enigma::SceneGraph
         Pawn& operator=(const Pawn&) = delete;
         Pawn& operator=(Pawn&&) = delete;
 
+        static std::shared_ptr<Pawn> create(const SpatialId& id);
+        static std::shared_ptr<Pawn> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
 
         /** on cull visible, insert this object to culler */

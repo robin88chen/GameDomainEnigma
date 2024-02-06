@@ -277,21 +277,21 @@ namespace Enigma::SceneGraph
     protected:
         std::error_code m_error;
     };
-    class PawnCreated : public Frameworks::IEvent
+    class SpatialCreated : public Frameworks::IEvent
     {
     public:
-        PawnCreated(const SpatialId& id, const std::shared_ptr<Pawn>& pawn) : m_id(id), m_pawn(pawn) {};
+        SpatialCreated(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {};
         const SpatialId& id() const { return m_id; }
-        std::shared_ptr<Pawn> pawn() { return m_pawn; }
+        std::shared_ptr<Spatial> spatial() { return m_spatial; }
 
     protected:
         SpatialId m_id;
-        std::shared_ptr<Pawn> m_pawn;
+        std::shared_ptr<Spatial> m_spatial;
     };
-    class CreatePawnFailed : public Frameworks::IEvent
+    class CreateSpatialFailed : public Frameworks::IEvent
     {
     public:
-        CreatePawnFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        CreateSpatialFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
         const SpatialId& id() const { return m_id; }
         std::error_code error() const { return m_err; }
 
@@ -299,21 +299,23 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         std::error_code m_err;
     };
-    class PawnConstituted : public Frameworks::IEvent
+    class SpatialConstituted : public Frameworks::IEvent
     {
     public:
-        PawnConstituted(const SpatialId& id, const std::shared_ptr<Pawn>& pawn) : m_id(id), m_pawn(pawn) {};
+        SpatialConstituted(const SpatialId& id, const std::shared_ptr<Spatial>& spatial, bool is_persisted) : m_id(id), m_spatial(spatial), m_isPersisted(is_persisted) {};
         const SpatialId& id() const { return m_id; }
-        std::shared_ptr<Pawn> pawn() { return m_pawn; }
+        std::shared_ptr<Spatial> spatial() { return m_spatial; }
+        bool isPersisted() const { return m_isPersisted; }
 
     protected:
         SpatialId m_id;
-        std::shared_ptr<Pawn> m_pawn;
+        std::shared_ptr<Spatial> m_spatial;
+        bool m_isPersisted;
     };
-    class ConstitutePawnFailed : public Frameworks::IEvent
+    class ConstituteSpatialFailed : public Frameworks::IEvent
     {
     public:
-        ConstitutePawnFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        ConstituteSpatialFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
         const SpatialId& id() const { return m_id; }
         std::error_code error() const { return m_err; }
 

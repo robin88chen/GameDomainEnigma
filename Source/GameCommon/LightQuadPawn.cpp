@@ -23,6 +23,16 @@ LightQuadPawn::~LightQuadPawn()
 {
 }
 
+std::shared_ptr<LightQuadPawn> LightQuadPawn::create(const SceneGraph::SpatialId& id)
+{
+    return std::make_shared<LightQuadPawn>(id);
+}
+
+std::shared_ptr<LightQuadPawn> LightQuadPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<LightQuadPawn>(id, dto);
+}
+
 GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());

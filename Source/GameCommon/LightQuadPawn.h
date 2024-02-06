@@ -25,6 +25,9 @@ namespace Enigma::GameCommon
         LightQuadPawn& operator=(const LightQuadPawn&) = delete;
         LightQuadPawn& operator=(LightQuadPawn&&) = delete;
 
+        static std::shared_ptr<LightQuadPawn> create(const SceneGraph::SpatialId& id);
+        static std::shared_ptr<LightQuadPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
 
         /// 影響的光源就是自己所帶的光源

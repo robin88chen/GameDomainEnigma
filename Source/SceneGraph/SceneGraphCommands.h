@@ -10,6 +10,7 @@
 
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
+#include "SceneGraphFactory.h"
 #include "SpatialId.h"
 #include <string>
 #include <vector>
@@ -94,6 +95,31 @@ namespace Enigma::SceneGraph
     private:
         Engine::GenericDto m_dto;
     };
+    class RegisterSpatialFactory : public Frameworks::ICommand
+    {
+    public:
+        RegisterSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
+            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+
+        const std::string& rttiName() const { return m_rtti; }
+        const SpatialCreator& creator() { return m_creator; }
+        const SpatialConstitutor& constitutor() { return m_constitutor; }
+
+    private:
+        std::string m_rtti;
+        SpatialCreator m_creator;
+        SpatialConstitutor m_constitutor;
+    };
+    class UnregisterSpatialFactory : public Frameworks::ICommand
+    {
+    public:
+        UnregisterSpatialFactory(const std::string& rtti) : m_rtti(rtti) {}
+
+        const std::string& rttiName() const { return m_rtti; }
+
+    private:
+        std::string m_rtti;
+    };
     //--------------------------- Creator --------------------------------------
     class CreateNode : public Frameworks::IRequestCommand
     {
@@ -107,27 +133,27 @@ namespace Enigma::SceneGraph
         std::string m_name;
         Engine::FactoryDesc m_factory_desc;
     };
-    class CreatePawn : public Frameworks::ICommand
+    class CreateSpatial : public Frameworks::ICommand
     {
     public:
-        CreatePawn(const SpatialId& id) : m_id(id) {}
+        CreateSpatial(const SpatialId& id) : m_id(id) {}
 
         const SpatialId& id() { return m_id; }
 
     protected:
         SpatialId m_id;
     };
-    class ConstitutePawn : public Frameworks::ICommand
+    class ConstituteSpatial : public Frameworks::ICommand
     {
     public:
-        ConstitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos) : m_id(id), m_dtos(dtos) {}
+        ConstituteSpatial(const SpatialId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
 
         const SpatialId& id() { return m_id; }
-        const Engine::GenericDtoCollection& dtos() { return m_dtos; }
+        const Engine::GenericDto& dto() { return m_dto; }
 
     protected:
         SpatialId m_id;
-        Engine::GenericDtoCollection m_dtos;
+        Engine::GenericDto m_dto;
     };
     //--------------------------- Repository operations ------------------------
     class PutSpatial : public Frameworks::ICommand

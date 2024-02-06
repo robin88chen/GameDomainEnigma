@@ -75,13 +75,11 @@ ServiceResult SceneGraphRepository::onInit()
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
 
     m_storeMapper->connect();
-    m_factory->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
     m_storeMapper->disconnect();
-    m_factory->unregisterHandlers();
 
     m_cameras.clear();
 
@@ -153,9 +151,9 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(id);
     if (it != m_cameras.end()) return it->second;
-    auto dtos = m_storeMapper->queryCamera(id);
-    assert(!dtos.empty());
-    auto camera = m_factory->constituteCamera(id, dtos[0], true);
+    auto dto = m_storeMapper->queryCamera(id);
+    assert(dto.has_value());
+    auto camera = m_factory->constituteCamera(id, dto.value(), true);
     assert(camera);
     m_cameras.insert_or_assign(id, camera);
     return camera;
@@ -287,10 +285,9 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
     std::lock_guard locker{ m_spatialMapLock };
     auto it = m_spatials.find(id);
     if (it != m_spatials.end()) return it->second;
-    auto dtos = m_storeMapper->querySpatial(id);
-    assert(!dtos.empty());
-    //todo : constitute spatial
-    return m_factory->constitutePawn(id, dtos);
+    auto dto = m_storeMapper->querySpatial(id);
+    assert(dto.has_value());
+    return m_factory->constituteSpatial(id, dto.value(), true);
 }
 
 std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name, const LightInfo& info)

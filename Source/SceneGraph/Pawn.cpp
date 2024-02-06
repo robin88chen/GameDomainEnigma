@@ -29,6 +29,16 @@ Pawn::~Pawn()
     m_primitive = nullptr;
 }
 
+std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
+{
+    return std::make_shared<Pawn>(id);
+}
+
+std::shared_ptr<Pawn> Pawn::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<Pawn>(id, dto);
+}
+
 Enigma::Engine::GenericDto Pawn::serializeDto()
 {
     return SerializePawnDto().toGenericDto();

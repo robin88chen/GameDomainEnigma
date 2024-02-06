@@ -18,36 +18,44 @@ using namespace Enigma::Frameworks;
 
 SceneGraphFactory::SceneGraphFactory()
 {
-
+    registerHandlers();
 }
 
 SceneGraphFactory::~SceneGraphFactory()
 {
-
+    unregisterHandlers();
 }
 
 void SceneGraphFactory::registerHandlers()
 {
+    m_registerSpatialFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { registerSpatialFactory(c); });
+    CommandBus::subscribe(typeid(RegisterSpatialFactory), m_registerSpatialFactory);
+    m_unregisterSpatialFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { unregisterSpatialFactory(c); });
+    CommandBus::subscribe(typeid(UnregisterSpatialFactory), m_unregisterSpatialFactory);
     m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
     CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     m_constituteCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteCamera(c); });
     CommandBus::subscribe(typeid(ConstituteCamera), m_constituteCamera);
-    m_createPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createPawn(c); });
-    CommandBus::subscribe(typeid(CreatePawn), m_createPawn);
-    m_constitutePawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constitutePawn(c); });
-    CommandBus::subscribe(typeid(ConstitutePawn), m_constitutePawn);
+    m_createSpatial = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createSpatial(c); });
+    CommandBus::subscribe(typeid(CreateSpatial), m_createSpatial);
+    m_constituteSpatial = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteSpatial(c); });
+    CommandBus::subscribe(typeid(ConstituteSpatial), m_constituteSpatial);
 }
 
 void SceneGraphFactory::unregisterHandlers()
 {
+    CommandBus::unsubscribe(typeid(RegisterSpatialFactory), m_registerSpatialFactory);
+    m_registerSpatialFactory = nullptr;
+    CommandBus::unsubscribe(typeid(UnregisterSpatialFactory), m_unregisterSpatialFactory);
+    m_unregisterSpatialFactory = nullptr;
     CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
     m_createCamera = nullptr;
     CommandBus::unsubscribe(typeid(ConstituteCamera), m_constituteCamera);
     m_constituteCamera = nullptr;
-    CommandBus::unsubscribe(typeid(CreatePawn), m_createPawn);
-    m_createPawn = nullptr;
-    CommandBus::unsubscribe(typeid(ConstitutePawn), m_constitutePawn);
-    m_constitutePawn = nullptr;
+    CommandBus::unsubscribe(typeid(CreateSpatial), m_createSpatial);
+    m_createSpatial = nullptr;
+    CommandBus::unsubscribe(typeid(ConstituteSpatial), m_constituteSpatial);
+    m_constituteSpatial = nullptr;
 }
 
 std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
@@ -100,52 +108,104 @@ void SceneGraphFactory::constituteCamera(const Frameworks::ICommandPtr& c)
     }
 }
 
-std::shared_ptr<Pawn> SceneGraphFactory::createPawn(const SpatialId& id)
+std::shared_ptr<Spatial> SceneGraphFactory::createSpatial(const SpatialId& id)
 {
-    auto pawn = std::make_shared<Pawn>(id);
-    EventPublisher::post(std::make_shared<PawnCreated>(id, pawn));
-    return pawn;
+    auto creator = m_creators.find(id.rtti().getName());
+    if (creator == m_creators.end())
+    {
+        Platforms::Debug::Printf("Can't find creator of %s\n", id.rtti().getName().c_str());
+        EventPublisher::post(std::make_shared<CreateSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
+        return nullptr;
+    }
+    auto spatial = creator->second(id);
+    EventPublisher::post(std::make_shared<SpatialCreated>(id, spatial));
+    return spatial;
 }
 
-std::shared_ptr<Pawn> SceneGraphFactory::constitutePawn(const SpatialId& id, const Engine::GenericDtoCollection& dtos)
+std::shared_ptr <Spatial> SceneGraphFactory::constituteSpatial(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto pawn = std::make_shared<Pawn>(id, dtos[0]);
-    EventPublisher::post(std::make_shared<PawnConstituted>(id, pawn));
-    return pawn;
+    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
+    if (constitutor == m_constitutors.end())
+    {
+        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
+        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
+        return nullptr;
+    }
+    auto spatial = constitutor->second(id, dto);
+    EventPublisher::post(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
+    return spatial;
 }
 
-void SceneGraphFactory::createPawn(const Frameworks::ICommandPtr& c)
+void SceneGraphFactory::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
+{
+    if (m_creators.find(rtti) != m_creators.end())
+    {
+        Platforms::Debug::Printf("Primitive factory of %s already exists\n", rtti.c_str());
+        return;
+    }
+    m_creators[rtti] = creator;
+    m_constitutors[rtti] = constitutor;
+}
+
+void SceneGraphFactory::unregisterSpatialFactory(const std::string& rtti)
+{
+    if (m_creators.find(rtti) == m_creators.end())
+    {
+        Platforms::Debug::Printf("Primitive factory of %s doesn't exist\n", rtti.c_str());
+        return;
+    }
+    m_creators.erase(rtti);
+    m_constitutors.erase(rtti);
+}
+
+void SceneGraphFactory::registerSpatialFactory(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<CreatePawn>(c);
+    auto cmd = std::dynamic_pointer_cast<RegisterSpatialFactory>(c);
+    if (!cmd) return;
+    registerSpatialFactory(cmd->rttiName(), cmd->creator(), cmd->constitutor());
+}
+
+void SceneGraphFactory::unregisterSpatialFactory(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<UnregisterSpatialFactory>(c);
+    if (!cmd) return;
+    unregisterSpatialFactory(cmd->rttiName());
+}
+
+void SceneGraphFactory::createSpatial(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<CreateSpatial>(c);
     if (!cmd) return;
     const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
-        EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::post(std::make_shared<CreateSpatialFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (createPawn(cmd->id()) == nullptr)
+    if (createSpatial(cmd->id()) == nullptr)
     {
-        EventPublisher::post(std::make_shared<CreatePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
+        EventPublisher::post(std::make_shared<CreateSpatialFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
 }
 
-void SceneGraphFactory::constitutePawn(const Frameworks::ICommandPtr& c)
+void SceneGraphFactory::constituteSpatial(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<ConstitutePawn>(c);
+    const auto cmd = std::dynamic_pointer_cast<ConstituteSpatial>(c);
     if (!cmd) return;
     const auto query = std::make_shared<QuerySpatial>(cmd->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
-        EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(cmd->id(), ErrorCode::entityAlreadyExists));
         return;
     }
-    if (constitutePawn(cmd->id(), cmd->dtos()) == nullptr)
+    if (constituteSpatial(cmd->id(), cmd->dto(), false) == nullptr)
     {
-        EventPublisher::post(std::make_shared<ConstitutePawnFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
+        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(cmd->id(), ErrorCode::sceneFactoryFailed));
     }
 }

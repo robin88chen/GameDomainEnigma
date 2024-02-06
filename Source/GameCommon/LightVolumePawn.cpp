@@ -28,6 +28,16 @@ LightVolumePawn::~LightVolumePawn()
 
 }
 
+std::shared_ptr<LightVolumePawn> LightVolumePawn::create(const SceneGraph::SpatialId& id)
+{
+    return std::make_shared<LightVolumePawn>(id);
+}
+
+std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<LightVolumePawn>(id, dto);
+}
+
 GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());

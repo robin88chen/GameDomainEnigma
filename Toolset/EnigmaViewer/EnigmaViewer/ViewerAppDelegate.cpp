@@ -1,43 +1,52 @@
-﻿#include "ViewerAppDelegate.h"
-#include "Platforms/MemoryMacro.h"
-#include "Platforms/PlatformLayerUtilities.h"
-#include "FileSystem/FileSystem.h"
-#include "GraphicAPIDx11/GraphicAPIDx11.h"
-#include "GameEngine/DeviceCreatingPolicy.h"
-#include "GameEngine/EngineInstallingPolicy.h"
-#include "Renderer/RendererInstallingPolicy.h"
+﻿#include "Animators/AnimatorCommands.h"
 #include "Animators/AnimatorInstallingPolicy.h"
-#include "SceneGraph/SceneGraphInstallingPolicy.h"
-#include "InputHandlers/InputHandlerInstallingPolicy.h"
-#include "GameCommon/GameCommonInstallingPolicies.h"
-#include "GameCommon/SceneRendererInstallingPolicy.h"
-#include "Gateways/JsonFileDtoDeserializer.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "FileStorage/PrimitiveFileStoreMapper.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
+#include "FileStorage/TextureFileStoreMapper.h"
+#include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "SceneGraph/SceneGraphCommands.h"
-#include "SceneGraph/SceneGraphEvents.h"
-#include "SceneGraph/Pawn.h"
-#include "GameCommon/GameSceneService.h"
-#include "ViewerCommands.h"
-#include "Animators/AnimatorCommands.h"
 #include "GameCommon/AvatarRecipes.h"
-#include <memory>
-#include <Gateways/DtoJsonGateway.h>
+#include "GameCommon/GameCommonInstallingPolicies.h"
 #include "GameCommon/GameLightCommands.h"
 #include "GameCommon/GameSceneEvents.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
-#include "ShadowMap/ShadowMapServiceConfiguration.h"
-#include "ShadowMap/ShadowMapInstallingPolicies.h"
-#include "ShadowMap/SpatialShadowFlags.h"
+#include "GameCommon/GameSceneService.h"
+#include "GameCommon/SceneRendererInstallingPolicy.h"
+#include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "FileStorage/AnimatorFileStoreMapper.h"
-#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
+#include "Gateways/DtoJsonGateway.h"
+#include "Gateways/JsonFileDtoDeserializer.h"
+#include "Geometries/GeometryInstallingPolicy.h"
+#include "Geometries/StandardGeometryDtoHelper.h"
+#include "GraphicAPIDx11/GraphicAPIDx11.h"
+#include "InputHandlers/InputHandlerInstallingPolicy.h"
+#include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayerUtilities.h"
+#include "Primitives/Primitive.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
-#include "Geometries/StandardGeometryDtoHelper.h"
-#include "Primitives/Primitive.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "Renderer/RendererInstallingPolicy.h"
+#include "SceneGraph/Pawn.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphDtoHelper.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphInstallingPolicy.h"
+#include "ShadowMap/ShadowMapInstallingPolicies.h"
+#include "ShadowMap/ShadowMapServiceConfiguration.h"
+#include "ShadowMap/SpatialShadowFlags.h"
+#include "ViewerAppDelegate.h"
+#include "ViewerCommands.h"
+#include <memory>
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -156,9 +165,14 @@ void ViewerAppDelegate::installEngine()
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
+    auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(
         std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<Enigma::FileStorage::SceneGraphFileStoreMapper>("scene_graph.db.txt", std::make_shared<DtoJsonGateway>()));
+    auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
+    auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
         CameraDtoHelper("camera").eyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).upDirection(Enigma::MathLib::Vector3::UNIT_Y)
@@ -176,7 +190,8 @@ void ViewerAppDelegate::installEngine()
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy });
+        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy, geometry_policy, primitive_policy,
+        effect_material_source_policy, texture_policy, renderables_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
@@ -221,7 +236,7 @@ void ViewerAppDelegate::frameUpdate()
 void ViewerAppDelegate::prepareRender()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
-    if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->PrepareGameScene();
+    if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->prepareGameScene();
 }
 
 void ViewerAppDelegate::renderFrame()
@@ -229,8 +244,8 @@ void ViewerAppDelegate::renderFrame()
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->RenderShadowScene();
     if (!m_sceneRenderer.expired())
     {
-        m_sceneRenderer.lock()->RenderGameScene();
-        m_sceneRenderer.lock()->Flip();
+        m_sceneRenderer.lock()->renderGameScene();
+        m_sceneRenderer.lock()->flip();
     }
 }
 
@@ -450,7 +465,7 @@ void ViewerAppDelegate::createFloorReceiver()
     mesh_dto.visualTechniqueSelection() = "Default";
 
     pawn_dto.meshPrimitive(mesh_dto).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto dtos = { pawn_dto.toGenericDto() };
-    CommandBus::post(std::make_shared<ConstitutePawn>(pawn_dto.toPawnDto().id(), dtos));
+    //auto dtos = { pawn_dto.toGenericDto() };
+    CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_dto.toPawnDto().id(), pawn_dto.toGenericDto()));
     //CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

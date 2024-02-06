@@ -9,6 +9,7 @@
 #define DEFERRED_RENDERER_SERVICE_H
 
 #include "SceneRendererService.h"
+#include "SceneGraph/SpatialId.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
@@ -41,47 +42,47 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
-        virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
+        virtual void createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
+        virtual void destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
-        virtual void PrepareGameScene() override;
+        virtual void prepareGameScene() override;
 
     private:
-        void CreateGBuffer(const Renderer::RenderTargetPtr& primary_target);
+        void createGBuffer(const Renderer::RenderTargetPtr& primary_target);
 
-        void CreateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
-        void CreateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
-        void CreatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
-        void RemoveLightingPawn(const std::string& name);
-        void UpdateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
-        void UpdateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
-        void UpdatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void createAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createPointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
+        void removeLightingPawn(const std::string& name);
+        void updateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void updateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
+        void updatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
-        void BindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
-        void BindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
+        void bindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
+        void bindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
 
-        void OnPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
-        void OnPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
-        void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
-        void OnSceneGraphChanged(const Frameworks::IEventPtr& e);
-        void OnGBufferTextureCreated(const Frameworks::IEventPtr& e);
-        void OnGameLightCreated(const Frameworks::IEventPtr& e);
-        void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
-        void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
-        void OnSceneGraphBuilt(const Frameworks::IEventPtr& e);
-        void OnLightingPawnCreated(const Frameworks::IEventPtr& e);
-        void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void onPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
+        void onPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
+        void onGameCameraUpdated(const Frameworks::IEventPtr& e);
+        void onSceneGraphChanged(const Frameworks::IEventPtr& e);
+        void onGBufferTextureCreated(const Frameworks::IEventPtr& e);
+        void onGameLightCreated(const Frameworks::IEventPtr& e);
+        void onLightInfoDeleted(const Frameworks::IEventPtr& e);
+        void onLightInfoUpdated(const Frameworks::IEventPtr& e);
+        void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
+        void onLightingPawnCreated(const Frameworks::IEventPtr& e);
+        void onPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
-        void DoBindingGBuffer(const Frameworks::ICommandPtr& c);
+        void bindGBuffer(const Frameworks::ICommandPtr& c);
 
-        void OnLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
+        void onLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
 
-        std::shared_ptr<LightingPawn> FindLightingPawn(const std::string& name);
+        std::shared_ptr<LightingPawn> findLightingPawn(const std::string& name);
 
-        void CheckLightVolumeBackfaceCulling(const std::string& lit_name);
-        void CheckLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
+        void checkLightVolumeBackfaceCulling(const std::string& lit_name);
+        void checkLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
-        void InsertLightPawnBuildingMeta(const std::string& pawn_name, const std::shared_ptr<SceneGraph::Light>& lit);
+        void insertLightPawnBuildingMeta(const SceneGraph::SpatialId& pawn_id, const std::shared_ptr<SceneGraph::Light>& lit);
 
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
@@ -94,7 +95,7 @@ namespace Enigma::GameCommon
             std::string m_parentNodeName;
             MathLib::Matrix4 m_localTransform;
         };
-        using SceneGraphLightPawnMetaMap = std::unordered_map<std::string, SceneGraphLightPawnMeta>;
+        using SceneGraphLightPawnMetaMap = std::unordered_map<SceneGraph::SpatialId, SceneGraphLightPawnMeta, SceneGraph::SpatialId::hash>;
         SceneGraphLightPawnMetaMap m_buildingLightPawns;
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
@@ -111,7 +112,7 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onLightingPawnCreated;
         Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
 
-        Frameworks::CommandSubscriberPtr m_doBindingGBuffer;
+        Frameworks::CommandSubscriberPtr m_bindGBuffer;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

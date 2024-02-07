@@ -22,6 +22,9 @@
     <Filter Include="Events &amp; Commands">
       <UniqueIdentifier>{a1f98a01-408e-4d7d-a466-d412805b2362}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{03453ef5-ca31-4811-9cd7-bbb3a1eb2630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -73,6 +76,9 @@
     <ClInclude Include="ViewerQueries.h">
       <Filter>Events &amp; Commands</Filter>
     </ClInclude>
+    <ClInclude Include="GeometryCreationHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -114,6 +120,9 @@
     </ClCompile>
     <ClCompile Include="DaeParserConfiguration.cpp">
       <Filter>Dae Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryCreationHelper.cpp">
+      <Filter>Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -451,7 +451,7 @@ void ViewerAppDelegate::createFloorReceiver()
 {
     PawnDtoHelper pawn_dto(FloorReceiverName);
     MeshPrimitiveDto mesh_dto;
-    SquareQuadDtoHelper floor_dto("floor");
+    SquareQuadDtoHelper floor_dto(GeometryId("floor"));
     floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
     EffectTextureMapDtoHelper tex_dto;
     tex_dto.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");

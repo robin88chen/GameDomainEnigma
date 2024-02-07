@@ -28,10 +28,10 @@ void GeometryDataFactory::registerHandlers()
     CommandBus::subscribe(typeid(RegisterGeometryFactory), m_registerGeometryFactory);
     m_unregisterGeometryFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { unregisterGeometryFactory(c); });
     CommandBus::subscribe(typeid(UnRegisterGeometryFactory), m_unregisterGeometryFactory);
-    m_createGeometry = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createGeometry(c); });
-    CommandBus::subscribe(typeid(CreateGeometry), m_createGeometry);
-    m_constituteGeometry = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteGeometry(c); });
-    CommandBus::subscribe(typeid(ConstituteGeometry), m_constituteGeometry);
+    m_requestGeometryCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryCreation(r); });
+    QueryDispatcher::subscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
+    m_requestGeometryConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryConstitution(r); });
+    QueryDispatcher::subscribe(typeid(RequestGeometryConstitution), m_requestGeometryConstitution);
 }
 
 void GeometryDataFactory::unregisterHandlers()
@@ -40,10 +40,10 @@ void GeometryDataFactory::unregisterHandlers()
     m_registerGeometryFactory = nullptr;
     CommandBus::unsubscribe(typeid(UnRegisterGeometryFactory), m_unregisterGeometryFactory);
     m_unregisterGeometryFactory = nullptr;
-    CommandBus::unsubscribe(typeid(CreateGeometry), m_createGeometry);
-    m_createGeometry = nullptr;
-    CommandBus::unsubscribe(typeid(ConstituteGeometry), m_constituteGeometry);
-    m_constituteGeometry = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
+    m_requestGeometryCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestGeometryConstitution), m_requestGeometryConstitution);
+    m_requestGeometryConstitution = nullptr;
 }
 
 std::shared_ptr<GeometryData> GeometryDataFactory::create(const GeometryId& id, const Rtti& rtti)
@@ -111,32 +111,34 @@ void GeometryDataFactory::unregisterGeometryFactory(const ICommandPtr& c)
     unregisterGeometryFactory(cmd->rttiName());
 }
 
-void GeometryDataFactory::createGeometry(const Frameworks::ICommandPtr& c)
+void GeometryDataFactory::requestGeometryCreation(const IQueryPtr& r)
 {
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<CreateGeometry>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryGeometryData>(cmd->id());
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestGeometryCreation>(r);
+    if (!request) return;
+    const auto query = std::make_shared<QueryGeometryData>(request->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
-        EventPublisher::post(std::make_shared<CreateGeometryFailed>(cmd->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::post(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
-    create(cmd->id(), cmd->rtti());
+
+    request->setResult(create(request->id(), request->rtti()));
 }
 
-void GeometryDataFactory::constituteGeometry(const Frameworks::ICommandPtr& c)
+void GeometryDataFactory::requestGeometryConstitution(const IQueryPtr& r)
 {
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ConstituteGeometry>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryGeometryData>(cmd->id());
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestGeometryConstitution>(r);
+    if (!request) return;
+    const auto query = std::make_shared<QueryGeometryData>(request->id());
     QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
-        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(cmd->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::post(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
-    constitute(cmd->id(), cmd->dto(), false);
+
+    request->setResult(constitute(request->id(), request->dto(), false));
 }

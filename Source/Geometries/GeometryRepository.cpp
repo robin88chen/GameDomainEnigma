@@ -12,6 +12,7 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "GeometryDataFactory.h"
 #include "GeometryCommands.h"
+#include "GeometryErrors.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;
@@ -40,6 +41,10 @@ ServiceResult GeometryRepository::onInit()
 {
     m_queryGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { return this->queryGeometryData(q); });
     QueryDispatcher::subscribe(typeid(QueryGeometryData), m_queryGeometryData);
+    m_requestGeometryCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryCreation(r); });
+    QueryDispatcher::subscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
+    m_requestGeometryConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryConstitution(r); });
+    QueryDispatcher::subscribe(typeid(RequestGeometryConstitution), m_requestGeometryConstitution);
 
     m_putGeometryData = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { return this->putGeometryData(c); });
     CommandBus::subscribe(typeid(PutGeometry), m_putGeometryData);
@@ -58,6 +63,10 @@ ServiceResult GeometryRepository::onTerm()
 
     QueryDispatcher::unsubscribe(typeid(QueryGeometryData), m_queryGeometryData);
     m_queryGeometryData = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
+    m_requestGeometryCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestGeometryConstitution), m_requestGeometryConstitution);
+    m_requestGeometryConstitution = nullptr;
 
     CommandBus::unsubscribe(typeid(PutGeometry), m_putGeometryData);
     m_putGeometryData = nullptr;
@@ -97,6 +106,53 @@ void GeometryRepository::queryGeometryData(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryGeometryData, IQuery>(q);
     if (!query) return;
     query->setResult(queryGeometryData(query->id()));
+}
+
+void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestGeometryCreation>(r);
+    if (!request) return;
+    if (hasGeometryData(request->id()))
+    {
+        EventPublisher::post(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        return;
+    }
+    auto geometry = m_factory->create(request->id(), request->rtti());
+    if (request->persistenceLevel() == RequestGeometryCreation::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_geometryLock };
+        m_geometries.insert_or_assign(request->id(), geometry);
+    }
+    else if (request->persistenceLevel() == RequestGeometryCreation::PersistenceLevel::Store)
+    {
+        putGeometryData(request->id(), geometry);
+    }
+    request->setResult(geometry);
+}
+
+void GeometryRepository::requestGeometryConstitution(const IQueryPtr& r)
+{
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestGeometryConstitution>(r);
+    if (!request) return;
+    if (hasGeometryData(request->id()))
+    {
+        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        return;
+    }
+    auto geometry = m_factory->constitute(request->id(), request->dto(), false);
+    if (request->persistenceLevel() == RequestGeometryConstitution::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_geometryLock };
+        m_geometries.insert_or_assign(request->id(), geometry);
+    }
+    else if (request->persistenceLevel() == RequestGeometryConstitution::PersistenceLevel::Store)
+    {
+        putGeometryData(request->id(), geometry);
+    }
+    request->setResult(geometry);
 }
 
 void GeometryRepository::putGeometryData(const Frameworks::ICommandPtr& c)

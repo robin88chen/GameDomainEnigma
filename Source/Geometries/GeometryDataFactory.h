@@ -38,8 +38,6 @@ namespace Enigma::Geometries
     private:
         void registerGeometryFactory(const Frameworks::ICommandPtr& c);
         void unregisterGeometryFactory(const Frameworks::ICommandPtr& c);
-        void requestGeometryCreation(const Frameworks::IQueryPtr& r);
-        void requestGeometryConstitution(const Frameworks::IQueryPtr& r);
 
     private:
         std::unordered_map<std::string, GeometryCreator> m_creators; // rtti name -> creator
@@ -47,8 +45,6 @@ namespace Enigma::Geometries
 
         Frameworks::CommandSubscriberPtr m_registerGeometryFactory;
         Frameworks::CommandSubscriberPtr m_unregisterGeometryFactory;
-        Frameworks::QuerySubscriberPtr m_requestGeometryCreation;
-        Frameworks::QuerySubscriberPtr m_requestGeometryConstitution;
     };
 }
 

@@ -47,6 +47,8 @@ namespace Enigma::Primitives
     protected:
         void queryPrimitive(const Frameworks::IQueryPtr& q);
         void queryPrimitiveNextSequenceNumber(const Frameworks::IQueryPtr& q);
+        void requestPrimitiveCreation(const Frameworks::IQueryPtr& r);
+        void requestPrimitiveConstitution(const Frameworks::IQueryPtr& r);
         void putPrimitive(const Frameworks::ICommandPtr& c);
         void removePrimitive(const Frameworks::ICommandPtr& c);
 
@@ -59,6 +61,8 @@ namespace Enigma::Primitives
 
         Frameworks::QuerySubscriberPtr m_queryPrimitive;
         Frameworks::QuerySubscriberPtr m_queryPrimitiveNextSequenceNumber;
+        Frameworks::QuerySubscriberPtr m_requestPrimitiveCreation;
+        Frameworks::QuerySubscriberPtr m_requestPrimitiveConstitution;
 
         Frameworks::CommandSubscriberPtr m_putPrimitive;
         Frameworks::CommandSubscriberPtr m_removePrimitive;

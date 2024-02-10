@@ -36,8 +36,6 @@ namespace Enigma::Primitives
     private:
         void registerPrimitiveFactory(const Frameworks::ICommandPtr& c);
         void unregisterPrimitiveFactory(const Frameworks::ICommandPtr& c);
-        void createPrimitive(const Frameworks::ICommandPtr& c);
-        void constitutePrimitive(const Frameworks::ICommandPtr& c);
 
     private:
         std::unordered_map<std::string, PrimitiveCreator> m_creators; // rtti name -> creator
@@ -45,8 +43,6 @@ namespace Enigma::Primitives
 
         Frameworks::CommandSubscriberPtr m_registerPrimitiveFactory;
         Frameworks::CommandSubscriberPtr m_unregisterPrimitiveFactory;
-        Frameworks::CommandSubscriberPtr m_createPrimitive;
-        Frameworks::CommandSubscriberPtr m_constitutePrimitive;
     };
 }
 

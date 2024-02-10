@@ -4,6 +4,7 @@
 #include "PrimitiveEvents.h"
 #include "PrimitiveQueries.h"
 #include "Primitive.h"
+#include "PrimitiveErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryMacro.h"
@@ -38,6 +39,10 @@ ServiceResult PrimitiveRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryPrimitive), m_queryPrimitive);
     m_queryPrimitiveNextSequenceNumber = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPrimitiveNextSequenceNumber(q); });
     QueryDispatcher::subscribe(typeid(QueryPrimitiveNextSequenceNumber), m_queryPrimitiveNextSequenceNumber);
+    m_requestPrimitiveCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestPrimitiveCreation(r); });
+    QueryDispatcher::subscribe(typeid(RequestPrimitiveCreation), m_requestPrimitiveCreation);
+    m_requestPrimitiveConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestPrimitiveConstitution(r); });
+    QueryDispatcher::subscribe(typeid(RequestPrimitiveConstitution), m_requestPrimitiveConstitution);
 
     m_putPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putPrimitive(c); });
     CommandBus::subscribe(typeid(PutPrimitive), m_putPrimitive);
@@ -59,6 +64,10 @@ ServiceResult PrimitiveRepository::onTerm()
     m_queryPrimitive = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryPrimitiveNextSequenceNumber), m_queryPrimitiveNextSequenceNumber);
     m_queryPrimitiveNextSequenceNumber = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestPrimitiveCreation), m_requestPrimitiveCreation);
+    m_requestPrimitiveCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestPrimitiveConstitution), m_requestPrimitiveConstitution);
+    m_requestPrimitiveConstitution = nullptr;
 
     CommandBus::unsubscribe(typeid(PutPrimitive), m_putPrimitive);
     m_putPrimitive = nullptr;
@@ -139,6 +148,53 @@ void PrimitiveRepository::queryPrimitiveNextSequenceNumber(const IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryPrimitiveNextSequenceNumber, IQuery>(q);
     if (!query) return;
     query->setResult(nextSequenceNumber());
+}
+
+void PrimitiveRepository::requestPrimitiveCreation(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestPrimitiveCreation>(r);
+    if (!request) return;
+    if (hasPrimitive(request->id()))
+    {
+        EventPublisher::post(std::make_shared<CreatePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
+        return;
+    }
+    auto primitive = m_factory->create(request->id(), request->rtti());
+    if (request->persistenceLevel() == RequestPrimitiveCreation::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_primitiveLock };
+        m_primitives.insert_or_assign(request->id(), primitive);
+    }
+    else if (request->persistenceLevel() == RequestPrimitiveCreation::PersistenceLevel::Store)
+    {
+        putPrimitive(request->id(), primitive);
+    }
+    request->setResult(primitive);
+}
+
+void PrimitiveRepository::requestPrimitiveConstitution(const Frameworks::IQueryPtr& r)
+{
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestPrimitiveConstitution>(r);
+    if (!request) return;
+    if (hasPrimitive(request->id()))
+    {
+        EventPublisher::post(std::make_shared<ConstitutePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
+        return;
+    }
+    auto primitive = m_factory->constitute(request->id(), request->dto(), false);
+    if (request->persistenceLevel() == RequestPrimitiveConstitution::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_primitiveLock };
+        m_primitives.insert_or_assign(request->id(), primitive);
+    }
+    else if (request->persistenceLevel() == RequestPrimitiveConstitution::PersistenceLevel::Store)
+    {
+        putPrimitive(request->id(), primitive);
+    }
+    request->setResult(primitive);
 }
 
 void PrimitiveRepository::putPrimitive(const ICommandPtr& c)

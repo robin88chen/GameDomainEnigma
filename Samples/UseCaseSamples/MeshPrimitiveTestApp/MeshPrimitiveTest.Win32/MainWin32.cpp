@@ -1,5 +1,5 @@
 ﻿#include "MeshPrimitiveTest.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <windows.h>
 #include <tchar.h>
 #include <assert.h>

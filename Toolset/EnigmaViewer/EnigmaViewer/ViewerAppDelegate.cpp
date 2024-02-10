@@ -46,6 +46,7 @@
 #include "ShadowMap/SpatialShadowFlags.h"
 #include "ViewerAppDelegate.h"
 #include "ViewerCommands.h"
+#include "GeometryCreationHelper.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -449,6 +450,7 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
 
 void ViewerAppDelegate::createFloorReceiver()
 {
+    auto geometry = GeometryCreationHelper::createSquareXZQuad(GeometryId("floor"));
     PawnDtoHelper pawn_dto(FloorReceiverName);
     MeshPrimitiveDto mesh_dto;
     SquareQuadDtoHelper floor_dto(GeometryId("floor"));

@@ -31,63 +31,13 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : P
     if (primDto.animatorId())
     {
         ModelPrimitive::animatorId(primDto.animatorId().value());
-        //m_animatorId = primDto.animatorId().value();
-        //m_animator = Animator::queryAnimator(primDto.animatorId().value());
     }
 }
-
-/*ModelPrimitive::ModelPrimitive(const ModelPrimitive& prim) : Primitive(prim.m_id)
-{
-    m_name = prim.m_name;
-    m_bound = prim.m_bound;
-    m_mxPrimitiveWorld = prim.m_mxPrimitiveWorld;
-    m_primitiveFlags = prim.m_primitiveFlags;
-    m_nodeTree = prim.m_nodeTree;
-    m_meshPrimitiveIndexCache = prim.m_meshPrimitiveIndexCache;
-    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
-}
-
-ModelPrimitive::ModelPrimitive(ModelPrimitive&& prim) noexcept : Primitive(prim.m_id)
-{
-    m_name = std::move(prim.m_name);
-    m_bound = std::move(prim.m_bound);
-    m_mxPrimitiveWorld = std::move(prim.m_mxPrimitiveWorld);
-    m_primitiveFlags = std::move(prim.m_primitiveFlags);
-    m_nodeTree = std::move(prim.m_nodeTree);
-    m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
-    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
-}*/
 
 ModelPrimitive::~ModelPrimitive()
 {
     m_meshPrimitiveIndexCache.clear();
 }
-
-/*ModelPrimitive& ModelPrimitive::operator=(const ModelPrimitive& prim)
-{
-    m_id = prim.m_id;
-    m_name = prim.m_name;
-    m_bound = prim.m_bound;
-    m_mxPrimitiveWorld = prim.m_mxPrimitiveWorld;
-    m_primitiveFlags = prim.m_primitiveFlags;
-    m_nodeTree = prim.m_nodeTree;
-    m_meshPrimitiveIndexCache = prim.m_meshPrimitiveIndexCache;
-    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
-    return *this;
-}
-
-ModelPrimitive& ModelPrimitive::operator=(ModelPrimitive&& prim) noexcept
-{
-    m_id = prim.m_id;
-    m_name = std::move(prim.m_name);
-    m_nodeTree = std::move(prim.m_nodeTree);
-    m_bound = std::move(prim.m_bound);
-    m_mxPrimitiveWorld = std::move(prim.m_mxPrimitiveWorld);
-    m_primitiveFlags = std::move(prim.m_primitiveFlags);
-    m_meshPrimitiveIndexCache = std::move(prim.m_meshPrimitiveIndexCache);
-    ModelPrimitive::selectVisualTechnique(prim.m_selectedVisualTech);
-    return *this;
-}*/
 
 GenericDto ModelPrimitive::serializeDto() const
 {
@@ -95,7 +45,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.id() = m_id;
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
-    dto.animatorId() = m_animatorId.origin();
+    if (m_animatorId.isValid()) dto.animatorId() = m_animatorId.origin();
     return dto.toGenericDto();
 }
 

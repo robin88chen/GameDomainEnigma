@@ -1,51 +1,25 @@
 [{
-        "GeometryId": {
-            "Type": "String",
-            "Value": "test_geometry"
-        },
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
                 "InstanceType": 0,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.Renderer.MeshPrimitive",
+                "RttiName": "En.Renderables.MeshPrimitive",
                 "PrefabFilename": "test_mesh.mesh@DataPath"
             }
         },
-        "Id.Name": {
+        "GeometryId": {
             "Type": "String",
-            "Value": "test_mesh"
+            "Value": "test_geometry"
         },
-        "TextureMaps": {
-            "Type": "DataObjectArray",
-            "Value": [{
-                    "TextureMappings": {
-                        "Type": "DataObjectArray",
-                        "Value": [{
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "earth"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "DiffuseMap"
-                                }
-                            }]
-                    }
-                }]
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
         },
-        "Id.Rtti": {
-            "Type": "String",
-            "Value": "En.Renderer.MeshPrimitive"
-        },
-        "Id.Sequence": {
-            "Type": "Uint64",
-            "Value": 0
-        },
-        "Effects": {
+        "Id": {
             "Type": "StringArray",
-            "Value": ["basic_vtx_tex"]
+            "Value": ["test_mesh", "0", "En.Renderables.MeshPrimitive"]
         },
         "RawGeometry": {
             "Type": "DataObject",
@@ -124,8 +98,26 @@
                 }
             }
         },
-        "RenderListId": {
-            "Type": "Uint32",
-            "Value": 1
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["basic_vtx_tex"]
+        },
+        "TextureMaps": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "TextureMappings": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "TextureId.Name": {
+                                    "Type": "String",
+                                    "Value": "earth"
+                                },
+                                "Semantic": {
+                                    "Type": "String",
+                                    "Value": "DiffuseMap"
+                                }
+                            }]
+                    }
+                }]
         }
     }]

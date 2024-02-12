@@ -80,8 +80,6 @@ namespace Enigma::Primitives
 
         virtual const Animators::AnimatorId& animatorId() const { return m_animatorId; }
         virtual void animatorId(const Animators::AnimatorId& animator_id) { m_animatorId = animator_id; }
-        //virtual void attachAnimator(const std::shared_ptr<Animators::Animator>& animator) { m_animator = animator; }
-        //virtual const std::shared_ptr<Animators::Animator>& getAnimator() { return m_animator; }
 
         /** enum animator list deep, including geometry's animator */
         virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
@@ -116,7 +114,6 @@ namespace Enigma::Primitives
         MathLib::Matrix4 m_mxPrimitiveWorld;
         std::string m_selectedVisualTech;
         Animators::AnimatorId m_animatorId;
-        //std::shared_ptr<Animators::Animator> m_animator;
     };
 
     using PrimitivePtr = std::shared_ptr<Primitive>;

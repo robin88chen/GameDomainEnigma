@@ -41,8 +41,6 @@ public:
 
 protected:
     void makeCamera();
-    void makeCube();
-    void makeMesh();
     void makeModel();
 
     void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);

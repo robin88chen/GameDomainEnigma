@@ -28,10 +28,6 @@ void AnimatorFactory::registerHandlers()
     CommandBus::subscribe(typeid(RegisterAnimatorFactory), m_registerAnimatorFactory);
     m_unregisterAnimatorFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { unregisterAnimatorFactory(c); });
     CommandBus::subscribe(typeid(UnregisterAnimatorFactory), m_unregisterAnimatorFactory);
-    m_createAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createAnimator(c); });
-    CommandBus::subscribe(typeid(CreateAnimator), m_createAnimator);
-    m_constituteAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteAnimator(c); });
-    CommandBus::subscribe(typeid(ConstituteAnimator), m_constituteAnimator);
 }
 
 void AnimatorFactory::unregisterHandlers()
@@ -40,10 +36,6 @@ void AnimatorFactory::unregisterHandlers()
     m_registerAnimatorFactory = nullptr;
     CommandBus::unsubscribe(typeid(UnregisterAnimatorFactory), m_unregisterAnimatorFactory);
     m_unregisterAnimatorFactory = nullptr;
-    CommandBus::unsubscribe(typeid(CreateAnimator), m_createAnimator);
-    m_createAnimator = nullptr;
-    CommandBus::unsubscribe(typeid(ConstituteAnimator), m_constituteAnimator);
-    m_constituteAnimator = nullptr;
 }
 
 std::shared_ptr<Animator> AnimatorFactory::create(const AnimatorId& id, const Frameworks::Rtti& rtti)
@@ -110,34 +102,4 @@ void AnimatorFactory::unregisterAnimatorFactory(const Frameworks::ICommandPtr& c
     auto cmd = std::dynamic_pointer_cast<UnregisterAnimatorFactory>(c);
     if (!cmd) return;
     unregisterAnimatorFactory(cmd->rttiName());
-}
-
-void AnimatorFactory::createAnimator(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<CreateAnimator>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryAnimator>(cmd->id());
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        EventPublisher::post(std::make_shared<CreateAnimatorFailed>(cmd->id(), ErrorCode::animatorEntityAlreadyExists));
-        return;
-    }
-    create(cmd->id(), cmd->rtti());
-}
-
-void AnimatorFactory::constituteAnimator(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ConstituteAnimator>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryAnimator>(cmd->id());
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        EventPublisher::post(std::make_shared<CreateAnimatorFailed>(cmd->id(), ErrorCode::animatorEntityAlreadyExists));
-        return;
-    }
-    constitute(cmd->id(), cmd->dto(), false);
 }

@@ -108,8 +108,12 @@ namespace Enigma::SceneGraph
 
     private:
         void queryCamera(const Frameworks::IQueryPtr& q);
+        void requestCameraCreation(const Frameworks::IQueryPtr& r);
+        void requestCameraConstitution(const Frameworks::IQueryPtr& r);
         void queryNode(const Frameworks::IQueryPtr& q);
         void querySpatial(const Frameworks::IQueryPtr& q);
+        void requestSpatialCreation(const Frameworks::IQueryPtr& r);
+        void requestSpatialConstitution(const Frameworks::IQueryPtr& r);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -141,8 +145,12 @@ namespace Enigma::SceneGraph
         SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
+        Frameworks::QuerySubscriberPtr m_requestCameraCreation;
+        Frameworks::QuerySubscriberPtr m_requestCameraConstitution;
         Frameworks::QuerySubscriberPtr m_queryNode;
         Frameworks::QuerySubscriberPtr m_querySpatial;
+        Frameworks::QuerySubscriberPtr m_requestSpatialCreation;
+        Frameworks::QuerySubscriberPtr m_requestSpatialConstitution;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;

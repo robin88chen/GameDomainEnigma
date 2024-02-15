@@ -23,6 +23,7 @@
 #include "LightingPawnDto.h"
 #include "DeferredRenderingCommands.h"
 #include "Renderables/ModelPrimitive.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -428,7 +429,8 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
+    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
     //auto dtos = { pawn_dto };
     //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
     insertLightPawnBuildingMeta(pawn_id, lit);
@@ -457,7 +459,8 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
+    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
     //auto dtos = { pawn_dto };
     //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
     insertLightPawnBuildingMeta(pawn_id, lit);

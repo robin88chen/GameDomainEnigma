@@ -10,33 +10,10 @@
 
 #include "Frameworks/Command.h"
 #include "AnimationAssetFactory.h"
-#include "GameEngine/GenericDto.h"
 #include <string>
 
 namespace Enigma::Animators
 {
-    class CreateAnimationAsset : public Frameworks::ICommand
-    {
-    public:
-        CreateAnimationAsset(const AnimationAssetId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
-        const AnimationAssetId& id() { return m_id; }
-        const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
-
-    private:
-        AnimationAssetId m_id;
-        std::string m_rtti;
-    };
-    class ConstituteAnimationAsset : public Frameworks::ICommand
-    {
-    public:
-        ConstituteAnimationAsset(const AnimationAssetId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
-        const AnimationAssetId& id() { return m_id; }
-        const Engine::GenericDto& dto() { return m_dto; }
-
-    private:
-        AnimationAssetId m_id;
-        Engine::GenericDto m_dto;
-    };
     class PutAnimationAsset : public Frameworks::ICommand
     {
     public:

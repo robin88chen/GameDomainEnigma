@@ -31,8 +31,6 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "SceneGraph/CameraFrustumCommands.h"
 #include "SceneGraph/CameraFrustumEvents.h"
-#include "Geometries/GeometryCommands.h"
-#include "Geometries/GeometryDataEvents.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Renderables/ModelPrimitive.h"
 
@@ -164,32 +162,6 @@ void ModelPrimitiveTest::makeCamera()
     else
     {
         CameraMaker::makeCamera(m_cameraId);
-    }
-}
-
-void ModelPrimitiveTest::makeCube()
-{
-    m_cubeId = GeometryId("test_geometry");
-    if (GeometryData::queryGeometryData(m_cubeId))
-    {
-        makeMesh();
-    }
-    else
-    {
-        CubeGeometryMaker::makeCube(m_cubeId);
-    }
-}
-
-void ModelPrimitiveTest::makeMesh()
-{
-    m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    if (Primitive::queryPrimitive(m_meshId))
-    {
-        makeModel();
-    }
-    else
-    {
-        ModelPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
     }
 }
 

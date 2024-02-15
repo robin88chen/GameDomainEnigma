@@ -39,8 +39,6 @@ namespace Enigma::Animators
     private:
         void registerAnimationAssetFactory(const Frameworks::ICommandPtr& c);
         void unregisterAnimationAssetFactory(const Frameworks::ICommandPtr& c);
-        void createAnimationAsset(const Frameworks::ICommandPtr& c);
-        void constituteAnimationAsset(const Frameworks::ICommandPtr& c);
 
     private:
         std::unordered_map<std::string, AnimationAssetCreator> m_creators; // rtti name -> creator
@@ -48,8 +46,6 @@ namespace Enigma::Animators
 
         Frameworks::CommandSubscriberPtr m_registerAnimationAssetFactory;
         Frameworks::CommandSubscriberPtr m_unregisterAnimationAssetFactory;
-        Frameworks::CommandSubscriberPtr m_createAnimationAsset;
-        Frameworks::CommandSubscriberPtr m_constituteAnimationAsset;
     };
 }
 

@@ -14,28 +14,6 @@
 
 namespace Enigma::Animators
 {
-    class CreateAnimator : public Frameworks::ICommand
-    {
-    public:
-        CreateAnimator(const AnimatorId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
-        const AnimatorId& id() { return m_id; }
-        const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
-
-    private:
-        AnimatorId m_id;
-        std::string m_rtti;
-    };
-    class ConstituteAnimator : public Frameworks::ICommand
-    {
-    public:
-        ConstituteAnimator(const AnimatorId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
-        const AnimatorId& id() { return m_id; }
-        const Engine::GenericDto& dto() { return m_dto; }
-
-    private:
-        AnimatorId m_id;
-        Engine::GenericDto m_dto;
-    };
     class PutAnimator : public Frameworks::ICommand
     {
     public:

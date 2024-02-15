@@ -4,7 +4,6 @@
 #include "Frameworks/StringFormat.h"
 #include "Renderables/MeshPrimitive.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "Frameworks/CommandBus.h"
 #include "Primitives/PrimitiveQueries.h"
 
 using namespace Enigma::Engine;

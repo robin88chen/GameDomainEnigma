@@ -41,10 +41,6 @@ namespace Enigma::SceneGraph
     protected:
         void registerSpatialFactory(const Frameworks::ICommandPtr& c);
         void unregisterSpatialFactory(const Frameworks::ICommandPtr& c);
-        void createCamera(const Frameworks::ICommandPtr& c);
-        void constituteCamera(const Frameworks::ICommandPtr& c);
-        void createSpatial(const Frameworks::ICommandPtr& c);
-        void constituteSpatial(const Frameworks::ICommandPtr& c);
 
     protected:
         std::unordered_map<std::string, SpatialCreator> m_creators; // rtti name -> creator
@@ -52,10 +48,6 @@ namespace Enigma::SceneGraph
 
         Frameworks::CommandSubscriberPtr m_registerSpatialFactory;
         Frameworks::CommandSubscriberPtr m_unregisterSpatialFactory;
-        Frameworks::CommandSubscriberPtr m_createCamera;
-        Frameworks::CommandSubscriberPtr m_constituteCamera;
-        Frameworks::CommandSubscriberPtr m_createSpatial;
-        Frameworks::CommandSubscriberPtr m_constituteSpatial;
     };
 }
 

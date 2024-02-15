@@ -133,28 +133,6 @@ namespace Enigma::SceneGraph
         std::string m_name;
         Engine::FactoryDesc m_factory_desc;
     };
-    class CreateSpatial : public Frameworks::ICommand
-    {
-    public:
-        CreateSpatial(const SpatialId& id) : m_id(id) {}
-
-        const SpatialId& id() { return m_id; }
-
-    protected:
-        SpatialId m_id;
-    };
-    class ConstituteSpatial : public Frameworks::ICommand
-    {
-    public:
-        ConstituteSpatial(const SpatialId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
-
-        const SpatialId& id() { return m_id; }
-        const Engine::GenericDto& dto() { return m_dto; }
-
-    protected:
-        SpatialId m_id;
-        Engine::GenericDto m_dto;
-    };
     //--------------------------- Repository operations ------------------------
     class PutSpatial : public Frameworks::ICommand
     {

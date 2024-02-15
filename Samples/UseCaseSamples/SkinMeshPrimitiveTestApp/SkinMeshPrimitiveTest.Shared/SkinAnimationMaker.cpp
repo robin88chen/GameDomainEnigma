@@ -6,9 +6,8 @@
 #include "Animators/AnimationAssetDtos.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
-#include "Animators/AnimationAssetCommands.h"
-#include "Animators/AnimatorCommands.h"
-#include "Frameworks/CommandBus.h"
+#include "Animators/AnimationAssetQueries.h"
+#include "Animators/AnimatorQueries.h"
 
 using namespace Enigma::Animators;
 using namespace Enigma::MathLib;
@@ -17,8 +16,10 @@ using namespace Enigma::Engine;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 
-void SkinAnimationMaker::makeSkinMeshAnimationAsset(const Enigma::Animators::AnimationAssetId& animation_id, const std::vector<std::string>& bone_node_names)
+std::shared_ptr<AnimationAsset> SkinAnimationMaker::makeSkinMeshAnimationAsset(const Enigma::Animators::AnimationAssetId& animation_id, const std::vector<std::string>& bone_node_names)
 {
+    if (auto anim = AnimationAsset::queryAnimationAsset(animation_id)) return anim;
+
     AnimationTimeSRTDto anim_srt_dto;
     AnimationTimeSRT::ScaleKeyVector scale_key;
     scale_key.push_back(AnimationTimeSRT::ScaleKey(0.0f, Vector3(1.0f, 1.0f, 1.0f)));
@@ -52,12 +53,12 @@ void SkinAnimationMaker::makeSkinMeshAnimationAsset(const Enigma::Animators::Ani
     model_animation_asset_dto.factoryDesc() = Enigma::Engine::FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName()).ClaimAsResourceAsset(animation_id.name(), animation_id.name() + ".ani", "DataPath");
     model_animation_asset_dto.meshNodeNames() = std::vector<std::string>{ bone_node_names[bone_node_names.size() - 1] };
     model_animation_asset_dto.timeSRTs().push_back(anim_srt_dto.toGenericDto());
-    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimationAsset>(animation_id, model_animation_asset_dto.toGenericDto()));
+    return std::make_shared<RequestAnimationAssetConstitution>(animation_id, model_animation_asset_dto.toGenericDto(), RequestAnimationAssetConstitution::PersistenceLevel::Store)->dispatch();
 }
 
-void SkinAnimationMaker::makeModelAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& skin_mesh_id, const std::vector<std::string>& bone_node_names)
+std::shared_ptr<Animator> SkinAnimationMaker::makeModelAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& skin_mesh_id, const std::vector<std::string>& bone_node_names)
 {
-
+    if (auto anim = Animator::queryAnimator(animator_id)) return anim;
     ModelAnimatorDto model_animator_dto;
     model_animator_dto.id() = animator_id;
     model_animator_dto.animationAssetId() = animation_id;
@@ -67,5 +68,6 @@ void SkinAnimationMaker::makeModelAnimator(const Enigma::Animators::AnimatorId& 
     operator_dto.boneNodeNames() = bone_node_names;
     operator_dto.skinMeshId() = skin_mesh_id;
     model_animator_dto.skinOperators().emplace_back(operator_dto.toGenericDto());
-    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteAnimator>(animator_id, model_animator_dto.toGenericDto()));
+
+    return std::make_shared<RequestAnimatorConstitution>(animator_id, model_animator_dto.toGenericDto(), RequestAnimatorConstitution::PersistenceLevel::Store)->dispatch();
 }

@@ -32,6 +32,7 @@
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Primitives/Primitive.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Primitives/PrimitiveQueries.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
@@ -41,6 +42,7 @@
 #include "SceneGraph/SceneGraphDtoHelper.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
+#include "SceneGraph/SceneGraphQueries.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
 #include "ShadowMap/SpatialShadowFlags.h"
@@ -176,22 +178,22 @@ void ViewerAppDelegate::installEngine()
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI),
-        CameraDtoHelper("camera").eyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).upDirection(Enigma::MathLib::Vector3::UNIT_Y)
+        CameraDtoHelper(Enigma::SceneGraph::SpatialId("camera", Camera::TYPE_RTTI)).eyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).upDirection(Enigma::MathLib::Vector3::UNIT_Y)
         .frustum(Frustum::ProjectionType::Perspective).frustumFov(Enigma::MathLib::Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f)
         .frustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
-    auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
-    deferred_config->SunLightEffectName() = "fx/DeferredShadingWithShadowSunLightPass";
-    deferred_config->SunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
-    auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
-    //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
-    //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
+    //auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
+    //deferred_config->sunLightEffect() = EffectMaterialId("fx/DeferredShadingWithShadowSunLightPass");
+    //deferred_config->sunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
+    //auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
+    auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
+    auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(SceneRootName, PortalManagementName);
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, deferred_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy, geometry_policy, primitive_policy,
+        input_handler_policy, game_camera_policy, /*deferred_renderer_policy*/ scene_renderer_policy, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy, geometry_policy, primitive_policy,
         effect_material_source_policy, texture_policy, renderables_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
@@ -450,24 +452,29 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
 
 void ViewerAppDelegate::createFloorReceiver()
 {
-    auto geometry = GeometryCreationHelper::createSquareXZQuad(GeometryId("floor"));
-    PawnDtoHelper pawn_dto(FloorReceiverName);
+    m_floorGeometryId = GeometryId("floor");
+    auto geometry = GeometryCreationHelper::createSquareXZQuad(m_floorGeometryId);
+    m_floorPawnId = SpatialId(FloorReceiverName, Pawn::TYPE_RTTI);
+    PawnDtoHelper pawn_dto(m_floorPawnId);
     MeshPrimitiveDto mesh_dto;
-    SquareQuadDtoHelper floor_dto(GeometryId("floor"));
-    floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
+    /*SquareQuadDtoHelper floor_dto(m_floorGeometryId);
+    floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));*/
     EffectTextureMapDtoHelper tex_dto;
     tex_dto.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
-    auto mesh_id = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.id() = mesh_id;
-    mesh_dto.factoryDesc() = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_id.name() + ".mesh@DataPath");
+    m_floorMeshId = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
+    mesh_dto.id() = m_floorMeshId;
+    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(m_floorMeshId.name() + ".mesh@DataPath");
     mesh_dto.effects().emplace_back(EffectMaterialId("fx/default_textured_mesh_effect"));
     mesh_dto.textureMaps().emplace_back(tex_dto.toGenericDto());
-    mesh_dto.geometry() = floor_dto.toGenericDto();
+    mesh_dto.geometryId() = m_floorGeometryId;
     mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";
 
-    pawn_dto.meshPrimitive(mesh_dto).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
+    auto mesh = std::make_shared<RequestPrimitiveConstitution>(m_floorMeshId, mesh_dto.toGenericDto(), RequestPrimitiveConstitution::PersistenceLevel::Repository)->dispatch();
+    pawn_dto.primitive(m_floorMeshId).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
+    m_floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(m_floorPawnId, pawn_dto.toGenericDto(), RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch());
+    if (m_sceneRoot) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
     //auto dtos = { pawn_dto.toGenericDto() };
-    CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_dto.toPawnDto().id(), pawn_dto.toGenericDto()));
+    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_dto.toPawnDto().id(), pawn_dto.toGenericDto()));
     //CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

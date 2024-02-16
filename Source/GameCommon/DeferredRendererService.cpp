@@ -14,7 +14,9 @@
 #include "SceneGraph/Light.h"
 #include "GameEngine/EffectDtoHelper.h"
 #include "Geometries/StandardGeometryDtoHelper.h"
+#include "Geometries/GeometryDataQueries.h"
 #include "Renderables/RenderablePrimitiveDtos.h"
+#include "Primitives/PrimitiveQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
 #include "SceneGraph/SceneGraphCommands.h"
@@ -47,8 +49,8 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
 {
     m_configuration = configuration;
-    LightVolumePawn::SetDefaultVisualTech(m_configuration->VisualTechniqueNameForCameraDefault());
-    LightVolumePawn::SetInsideVisualTech(m_configuration->VisualTechniqueNameForCameraInside());
+    LightVolumePawn::SetDefaultVisualTech(m_configuration->visualTechniqueNameForCameraDefault());
+    LightVolumePawn::SetInsideVisualTech(m_configuration->visualTechniqueNameForCameraInside());
 }
 
 DeferredRendererService::~DeferredRendererService()
@@ -139,7 +141,7 @@ void DeferredRendererService::createSceneRenderSystem(const std::string& rendere
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(rendererManager->GetRenderer(renderer_name));
-    m_renderer.lock()->selectRendererTechnique(m_configuration->DeferredRendererTechniqueName());
+    m_renderer.lock()->selectRendererTechnique(m_configuration->deferredRendererTechniqueName());
     m_renderer.lock()->SetRenderTarget(primaryTarget);
     if (primaryTarget->GetBackSurface() && primaryTarget->GetDepthStencilSurface())
     {
@@ -152,7 +154,7 @@ void DeferredRendererService::destroySceneRenderSystem(const std::string& render
     assert(!m_rendererManager.expired());
     assert(m_configuration);
     m_rendererManager.lock()->DestroyRenderTarget(target_name);
-    m_rendererManager.lock()->DestroyRenderTarget(m_configuration->GbufferTargetName());
+    m_rendererManager.lock()->DestroyRenderTarget(m_configuration->gbufferTargetName());
     m_rendererManager.lock()->DestroyRenderer(renderer_name);
 }
 
@@ -169,14 +171,14 @@ void DeferredRendererService::createGBuffer(const RenderTargetPtr& primary_targe
 
     auto [width, height] = primary_target->GetDimension();
 
-    m_rendererManager.lock()->CreateRenderTarget(m_configuration->GbufferTargetName(), RenderTarget::PrimaryType::NotPrimary,
-        m_configuration->GbufferUsages());
-    m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->GbufferTargetName());
+    m_rendererManager.lock()->CreateRenderTarget(m_configuration->gbufferTargetName(), RenderTarget::PrimaryType::NotPrimary,
+        m_configuration->gbufferUsages());
+    m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->gbufferTargetName());
     if (!m_gBuffer.expired())
     {
-        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->GbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->GbufferFormats().size()),
-            m_configuration->GbufferFormats());
-        m_gBuffer.lock()->ShareDepthStencilSurface(m_configuration->GbufferDepthName(), primary_target->GetDepthStencilSurface());
+        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->gbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->gbufferFormats().size()),
+            m_configuration->gbufferFormats());
+        m_gBuffer.lock()->ShareDepthStencilSurface(m_configuration->gbufferDepthName(), primary_target->GetDepthStencilSurface());
     }
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
     {
@@ -377,21 +379,48 @@ void DeferredRendererService::bindGBuffer(const ICommandPtr& c)
 void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
-    quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-        .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
-    mesh_dto.geometryId() = quad_geo_name;
-    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->AmbientEffectName());
-    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-
-    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
-    pawn_helper.meshPrimitive(mesh_dto)
+    m_ambientLightQuadId = Geometries::GeometryId(lit->getSpatialName() + "_lit_quad" + ".geo");
+    auto quad_geo = Geometries::GeometryData::queryGeometryData(m_ambientLightQuadId);
+    if (!quad_geo)
+    {
+        Geometries::SquareQuadDtoHelper quad_dto_helper(m_ambientLightQuadId);
+        quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
+            .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+        quad_geo = std::make_shared<Geometries::RequestGeometryConstitution>(m_ambientLightQuadId, quad_dto_helper.toGenericDto(), Geometries::RequestGeometryConstitution::PersistenceLevel::Repository)->dispatch();
+    }
+    m_ambientLightMeshId = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
+    auto lit_mesh = Primitives::Primitive::queryPrimitive(m_ambientLightMeshId);
+    if (!lit_mesh)
+    {
+        MeshPrimitiveDto mesh_dto;
+        mesh_dto.id() = m_ambientLightMeshId;
+        mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
+        mesh_dto.geometryId() = m_ambientLightQuadId;
+        mesh_dto.effects().emplace_back(m_configuration->ambientEffect());
+        mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::RequestPrimitiveConstitution::PersistenceLevel::Repository)->dispatch();
+    }
+    m_ambientLightPawnId = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
+    auto lit_pawn = std::make_shared<QuerySpatial>(m_ambientLightPawnId)->dispatch();
+    if (!lit_pawn)
+    {
+        PawnDtoHelper pawn_helper(m_ambientLightPawnId);
+        pawn_helper.primitive(m_ambientLightMeshId).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
+        lighting_pawn_dto.id() = m_ambientLightPawnId;
+        lighting_pawn_dto.HostLightName() = lit->getSpatialName();
+        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(m_ambientLightPawnId, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+        if (lit_pawn)
+        {
+            if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+            {
+                parent->attachChild(lit_pawn, lit->getLocalTransform());
+            }
+        }
+    }
+    /*PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
+    pawn_helper.primitive(mesh_dto.id())
         .topLevel(true)
         .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
@@ -401,7 +430,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
     auto dtos = { pawn_dto };
     CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
-    insertLightPawnBuildingMeta(pawn_id, lit);
+    insertLightPawnBuildingMeta(pawn_id, lit);*/
 }
 
 void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& lit)
@@ -417,12 +446,12 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
     mesh_dto.geometryId() = quad_geo_name;
     mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->SunLightEffectName());
+    mesh_dto.effects().emplace_back(m_configuration->sunLightEffect());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
-    pawn_helper.meshPrimitive(mesh_dto)
-        .spatialFlags(m_configuration->SunLightSpatialFlags()).topLevel(true)
+    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI));
+    pawn_helper.primitive(mesh_dto.id())
+        .spatialFlags(m_configuration->sunLightSpatialFlags()).topLevel(true)
         .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
     auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightQuadPawn::TYPE_RTTI);
@@ -448,11 +477,11 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
     mesh_dto.geometryId() = vol_geo_name;
     mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->LightVolumeEffectName());
+    mesh_dto.effects().emplace_back(m_configuration->lightVolumeEffect());
     mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
 
-    PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_volume");
-    pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).meshPrimitive(mesh_dto)
+    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_volume", LightVolumePawn::TYPE_RTTI));
+    pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(mesh_dto.id())
         .topLevel(true).localTransform(lit->getLocalTransform());
     LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
     auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightVolumePawn::TYPE_RTTI);
@@ -544,10 +573,10 @@ void DeferredRendererService::bindGBufferToLightingMesh(const std::shared_ptr<Me
     if (!m_gBuffer.lock()->GetRenderTargetTexture()) return;
 
     EffectTextureMap::SegmentEffectTextures textures = {
-        { m_configuration->GbufferNormalSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
-        { m_configuration->GbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
-        { m_configuration->GbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
-        { m_configuration->GbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
+        { m_configuration->gbufferNormalSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
+        { m_configuration->gbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
+        { m_configuration->gbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
+        { m_configuration->gbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
     if (mesh->getTextureMapCount() != 0)
     {
         mesh->bindSemanticTextures(textures);

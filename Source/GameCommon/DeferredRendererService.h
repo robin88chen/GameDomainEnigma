@@ -100,6 +100,13 @@ namespace Enigma::GameCommon
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
 
+        Geometries::GeometryId m_ambientLightQuadId;
+        Geometries::GeometryId m_sunLightQuadId;
+        Primitives::PrimitiveId m_ambientLightMeshId;
+        Primitives::PrimitiveId m_sunLightMeshId;
+        SceneGraph::SpatialId m_ambientLightPawnId;
+        SceneGraph::SpatialId m_sunLightPawnId;
+
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetResized;
         Frameworks::EventSubscriberPtr m_onGameCameraUpdated;

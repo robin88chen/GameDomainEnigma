@@ -88,6 +88,9 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
+        Enigma::Geometries::GeometryId m_floorGeometryId;
+        Enigma::Primitives::PrimitiveId m_floorMeshId;
+        Enigma::SceneGraph::SpatialId m_floorPawnId;
     };
 }
 

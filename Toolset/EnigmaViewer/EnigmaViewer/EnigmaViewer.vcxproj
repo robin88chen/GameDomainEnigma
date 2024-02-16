@@ -136,6 +136,7 @@
     <ClInclude Include="AnimationInfoPanel.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
+    <ClInclude Include="GeometryCreationHelper.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
     <ClInclude Include="MainForm.h" />
@@ -148,11 +149,13 @@
     <ClInclude Include="ViewerAppDelegate.h" />
     <ClInclude Include="ViewerCommands.h" />
     <ClInclude Include="ViewerEvents.h" />
+    <ClInclude Include="ViewerQueries.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
+    <ClCompile Include="GeometryCreationHelper.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />
     <ClCompile Include="MainApplication.cpp" />

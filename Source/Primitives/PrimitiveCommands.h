@@ -15,28 +15,6 @@
 
 namespace Enigma::Primitives
 {
-    class CreatePrimitive : public Frameworks::ICommand
-    {
-    public:
-        CreatePrimitive(const PrimitiveId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
-        const PrimitiveId& id() { return m_id; }
-        const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
-
-    private:
-        PrimitiveId m_id;
-        std::string m_rtti;
-    };
-    class ConstitutePrimitive : public Frameworks::ICommand
-    {
-    public:
-        ConstitutePrimitive(const PrimitiveId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
-        const PrimitiveId& id() { return m_id; }
-        const Engine::GenericDto& dto() { return m_dto; }
-
-    private:
-        PrimitiveId m_id;
-        Engine::GenericDto m_dto;
-    };
     class PutPrimitive : public Frameworks::ICommand
     {
     public:

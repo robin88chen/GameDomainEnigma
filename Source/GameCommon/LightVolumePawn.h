@@ -26,6 +26,8 @@ namespace Enigma::GameCommon
         LightVolumePawn& operator=(const LightVolumePawn&) = delete;
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
+        static std::shared_ptr<LightVolumePawn> create(const SceneGraph::SpatialId& id);
+        static std::shared_ptr<LightVolumePawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
         virtual Engine::GenericDto serializeDto() override;
 
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變

@@ -42,6 +42,8 @@ namespace Enigma::Animators
 
     protected:
         void queryAnimationAsset(const Frameworks::IQueryPtr& q);
+        void requestAnimationAssetCreation(const Frameworks::IQueryPtr& r);
+        void requestAnimationAssetConstitution(const Frameworks::IQueryPtr& r);
         void removeAnimationAsset(const Frameworks::ICommandPtr& c);
         void putAnimationAsset(const Frameworks::ICommandPtr& c);
 
@@ -52,6 +54,8 @@ namespace Enigma::Animators
         std::recursive_mutex m_animationAssetLock;
 
         Frameworks::QuerySubscriberPtr m_queryAnimationAsset;
+        Frameworks::QuerySubscriberPtr m_requestAnimationAssetCreation;
+        Frameworks::QuerySubscriberPtr m_requestAnimationAssetConstitution;
         Frameworks::CommandSubscriberPtr m_removeAnimationAsset;
         Frameworks::CommandSubscriberPtr m_putAnimationAsset;
     };

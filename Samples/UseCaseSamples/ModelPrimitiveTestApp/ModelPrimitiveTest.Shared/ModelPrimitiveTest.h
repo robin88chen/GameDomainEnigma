@@ -19,7 +19,7 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
 
@@ -41,34 +41,24 @@ public:
 
 protected:
     void makeCamera();
-    void makeCube();
-    void makeMesh();
     void makeModel();
 
     void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
-    void onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e);
-    void onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e);
-    void onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
-    Enigma::Frameworks::EventSubscriberPtr m_onGeometryConstituted;
-    Enigma::Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
-    Enigma::Frameworks::EventSubscriberPtr m_onRenderablePrimitiveBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onBuildRenderablePrimitiveFailed;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
     Enigma::SceneGraph::SpatialId m_cameraId;
     Enigma::Geometries::GeometryId m_cubeId;
-    Enigma::Engine::PrimitiveId m_meshId;
-    Enigma::Engine::PrimitiveId m_modelId;
+    Enigma::Primitives::PrimitiveId m_meshId;
+    Enigma::Primitives::PrimitiveId m_modelId;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
-    std::shared_ptr<Enigma::Renderer::ModelPrimitive> m_model;
+    std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     bool m_isPrefabBuilt;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
 };

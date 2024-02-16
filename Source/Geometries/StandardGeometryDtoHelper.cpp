@@ -8,9 +8,9 @@
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;
 
-SquareQuadDtoHelper::SquareQuadDtoHelper(const std::string& name)
+SquareQuadDtoHelper::SquareQuadDtoHelper(const GeometryId& id)
 {
-    m_dto.id() = name;
+    m_dto.id() = id;
 }
 
 SquareQuadDtoHelper& SquareQuadDtoHelper::xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
@@ -108,9 +108,9 @@ GenericDto SquareQuadDtoHelper::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-CubeDtoHelper::CubeDtoHelper(const std::string& name)
+CubeDtoHelper::CubeDtoHelper(const GeometryId& id)
 {
-    m_dto.id() = name;
+    m_dto.id() = id;
 }
 
 CubeDtoHelper& CubeDtoHelper::cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
@@ -391,10 +391,10 @@ GenericDto CubeDtoHelper::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-SphereDtoHelper::SphereDtoHelper(const std::string& name)
+SphereDtoHelper::SphereDtoHelper(const GeometryId& id)
 {
     m_radius = 1.0f;
-    m_dto.id() = name;
+    m_dto.id() = id;
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
 }

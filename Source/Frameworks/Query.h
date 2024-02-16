@@ -13,7 +13,7 @@
 
 namespace Enigma::Frameworks
 {
-    class IQuery
+    class IQuery : public std::enable_shared_from_this<IQuery>
     {
     public:
         IQuery() {};
@@ -23,6 +23,10 @@ namespace Enigma::Frameworks
         IQuery& operator=(const IQuery&) = delete;
         IQuery& operator=(IQuery&&) = delete;
         virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
+
+    protected:
+        // ReSharper disable once CppHiddenFunction
+        void dispatch();
     };
 
     template<typename R>
@@ -31,6 +35,9 @@ namespace Enigma::Frameworks
     public:
         void setResult(const R& result) { m_result = result; }
         R getResult() const { return m_result; }
+
+        // ReSharper disable once CppHidingFunction
+        R dispatch() { IQuery::dispatch(); return m_result; }
 
     protected:
         R m_result;

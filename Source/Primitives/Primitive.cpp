@@ -23,9 +23,7 @@ Primitive::~Primitive()
 std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)
 {
     assert(id.rtti().isDerived(Primitive::TYPE_RTTI));
-    const auto query = std::make_shared<QueryPrimitive>(id);
-    Frameworks::QueryDispatcher::dispatch(query);
-    return query->getResult();
+    return std::make_shared<QueryPrimitive>(id)->dispatch();
 }
 
 void Primitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList)

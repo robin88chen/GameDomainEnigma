@@ -1,14 +1,15 @@
 ﻿#include "CameraMaker.h"
 #include "SceneGraph/CameraFrustumDtos.h"
 #include "MathLib/MathGlobal.h"
-#include "Frameworks/CommandBus.h"
-#include "SceneGraph/CameraFrustumCommands.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 
-void CameraMaker::makeCamera(const SpatialId& id)
+std::shared_ptr<Camera> CameraMaker::makeCamera(const SpatialId& id)
 {
+    if (auto cam = Camera::queryCamera(id)) return cam;
+
     FrustumDto frustum_dto;
     frustum_dto.HandSystem() = GraphicCoordSys::LeftHand;
     frustum_dto.ProjectionType() = Frustum::ProjectionType::Perspective;
@@ -26,5 +27,5 @@ void CameraMaker::makeCamera(const SpatialId& id)
     camera_dto.UpVector() = Vector3::UNIT_Y;
     camera_dto.Frustum() = frustum_dto.toGenericDto();
     camera_dto.factoryDesc() = Enigma::Engine::FactoryDesc(Camera::TYPE_RTTI.getName()).ClaimAsNative(id.name() + ".cam@DataPath");
-    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteCamera>(id, camera_dto.toGenericDto()));
+    return std::make_shared<RequestCameraConstitution>(id, camera_dto.toGenericDto(), RequestCameraConstitution::PersistenceLevel::Store)->dispatch();
 }

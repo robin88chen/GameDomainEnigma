@@ -28,10 +28,6 @@ void GeometryDataFactory::registerHandlers()
     CommandBus::subscribe(typeid(RegisterGeometryFactory), m_registerGeometryFactory);
     m_unregisterGeometryFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { unregisterGeometryFactory(c); });
     CommandBus::subscribe(typeid(UnRegisterGeometryFactory), m_unregisterGeometryFactory);
-    m_createGeometry = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createGeometry(c); });
-    CommandBus::subscribe(typeid(CreateGeometry), m_createGeometry);
-    m_constituteGeometry = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteGeometry(c); });
-    CommandBus::subscribe(typeid(ConstituteGeometry), m_constituteGeometry);
 }
 
 void GeometryDataFactory::unregisterHandlers()
@@ -40,10 +36,6 @@ void GeometryDataFactory::unregisterHandlers()
     m_registerGeometryFactory = nullptr;
     CommandBus::unsubscribe(typeid(UnRegisterGeometryFactory), m_unregisterGeometryFactory);
     m_unregisterGeometryFactory = nullptr;
-    CommandBus::unsubscribe(typeid(CreateGeometry), m_createGeometry);
-    m_createGeometry = nullptr;
-    CommandBus::unsubscribe(typeid(ConstituteGeometry), m_constituteGeometry);
-    m_constituteGeometry = nullptr;
 }
 
 std::shared_ptr<GeometryData> GeometryDataFactory::create(const GeometryId& id, const Rtti& rtti)
@@ -111,32 +103,3 @@ void GeometryDataFactory::unregisterGeometryFactory(const ICommandPtr& c)
     unregisterGeometryFactory(cmd->rttiName());
 }
 
-void GeometryDataFactory::createGeometry(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<CreateGeometry>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryGeometryData>(cmd->id());
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        EventPublisher::post(std::make_shared<CreateGeometryFailed>(cmd->id(), ErrorCode::geometryEntityAlreadyExists));
-        return;
-    }
-    create(cmd->id(), cmd->rtti());
-}
-
-void GeometryDataFactory::constituteGeometry(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ConstituteGeometry>(c);
-    if (!cmd) return;
-    const auto query = std::make_shared<QueryGeometryData>(cmd->id());
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(cmd->id(), ErrorCode::geometryEntityAlreadyExists));
-        return;
-    }
-    constitute(cmd->id(), cmd->dto(), false);
-}

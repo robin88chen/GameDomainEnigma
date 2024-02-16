@@ -1,6 +1,6 @@
 ﻿#include <windows.h>
 #include "MainForm.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -10,7 +10,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int n
     meInitMemoryCheck();
     //_CrtSetBreakAlloc(2350);
     EnigmaViewer::MainForm form;
-    form.Initialize();
+    form.initialize();
     form.caption("Enigma Viewer");
     form.size(nana::size(1024, 768));
     form.move(nana::point(60, 60));

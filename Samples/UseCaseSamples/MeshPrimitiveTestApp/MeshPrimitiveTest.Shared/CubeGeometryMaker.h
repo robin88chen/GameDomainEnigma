@@ -9,12 +9,12 @@
 #define _CUBE_GEOMETRY_MAKER_H
 
 #include "Geometries/GeometryId.h"
-#include "GameEngine/GenericDto.h"
+#include "Geometries/GeometryData.h"
 
 class CubeGeometryMaker
 {
 public:
-    static void makeCube(const Enigma::Geometries::GeometryId& id);
+    static std::shared_ptr<Enigma::Geometries::GeometryData> makeCube(const Enigma::Geometries::GeometryId& id);
 };
 
 #endif // _CUBE_GEOMETRY_MAKER_H

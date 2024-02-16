@@ -56,11 +56,11 @@ bool SceneGraphFileStoreMapper::hasCamera(const SceneGraph::SpatialId& id)
     return m_filename_map.find(id) != m_filename_map.end();
 }
 
-Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::queryCamera(const SceneGraph::SpatialId& id)
+std::optional<Enigma::Engine::GenericDto> SceneGraphFileStoreMapper::queryCamera(const SceneGraph::SpatialId& id)
 {
     assert(id.rtti().isDerived(SceneGraph::Camera::TYPE_RTTI));
     auto it = m_filename_map.find(id);
-    if (it == m_filename_map.end()) return {};
+    if (it == m_filename_map.end()) return std::nullopt;
     return deserializeDataTransferObjects(it->second);
 }
 
@@ -74,15 +74,14 @@ std::error_code SceneGraphFileStoreMapper::removeCamera(const SceneGraph::Spatia
     return SceneGraph::ErrorCode::ok;
 }
 
-std::error_code SceneGraphFileStoreMapper::putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos)
+std::error_code SceneGraphFileStoreMapper::putCamera(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
 {
-    assert(!dtos.empty());
-    auto filename = extractFilename(id, dtos[0].getRtti());
+    auto filename = extractFilename(id, dto.getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();
     if (er) return er;
-    er = serializeDataTransferObjects(filename, dtos);
+    er = serializeDataTransferObjects(filename, dto);
     if (er) return er;
     return SceneGraph::ErrorCode::ok;
 }
@@ -95,23 +94,22 @@ bool SceneGraphFileStoreMapper::hasSpatial(const SceneGraph::SpatialId& id)
     return m_filename_map.find(id) != m_filename_map.end();
 }
 
-Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::querySpatial(const SceneGraph::SpatialId& id)
+std::optional<Enigma::Engine::GenericDto> SceneGraphFileStoreMapper::querySpatial(const SceneGraph::SpatialId& id)
 {
     assert(id.rtti().isDerived(SceneGraph::Spatial::TYPE_RTTI));
     auto it = m_filename_map.find(id);
-    if (it == m_filename_map.end()) return {};
+    if (it == m_filename_map.end()) return std::nullopt;
     return deserializeDataTransferObjects(it->second);
 }
 
-std::error_code SceneGraphFileStoreMapper::putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDtoCollection& dtos)
+std::error_code SceneGraphFileStoreMapper::putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
 {
-    assert(!dtos.empty());
-    auto filename = extractFilename(id, dtos[0].getRtti());
+    auto filename = extractFilename(id, dto.getRtti());
     std::lock_guard locker{ m_fileMapLock };
     m_filename_map.insert_or_assign(id, filename);
     auto er = serializeMapperFile();
     if (er) return er;
-    er = serializeDataTransferObjects(filename, dtos);
+    er = serializeDataTransferObjects(filename, dto);
     if (er) return er;
     return SceneGraph::ErrorCode::ok;
 }
@@ -161,20 +159,19 @@ std::string SceneGraphFileStoreMapper::extractFilename(const SceneGraph::Spatial
     return id.name() + "." + factory_desc.GetRttiName() + ".json";
 }
 
-std::error_code SceneGraphFileStoreMapper::serializeDataTransferObjects(const std::string& filename, const Engine::GenericDtoCollection& dtos)
+std::error_code SceneGraphFileStoreMapper::serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto)
 {
     assert(m_gateway);
-    assert(!dtos.empty());
     FileSystem::IFilePtr dto_file = FileSystem::FileSystem::instance()->openFile(filename, FileSystem::write | FileSystem::binary);
     if (!dto_file) return FileSystem::ErrorCode::fileOpenError;
-    auto content = m_gateway->serialize(dtos);
+    auto content = m_gateway->serialize({ dto });
     auto write_size = dto_file->write(0, { content.begin(), content.end() });
     FileSystem::FileSystem::instance()->closeFile(dto_file);
     if (write_size != content.size()) return FileSystem::ErrorCode::writeFail;
     return FileSystem::ErrorCode::ok;
 }
 
-Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::deserializeDataTransferObjects(const std::string& filename)
+Enigma::Engine::GenericDto SceneGraphFileStoreMapper::deserializeDataTransferObjects(const std::string& filename)
 {
     assert(m_gateway);
     auto dto_file = FileSystem::FileSystem::instance()->openFile(filename, FileSystem::read | FileSystem::binary);
@@ -182,5 +179,7 @@ Enigma::Engine::GenericDtoCollection SceneGraphFileStoreMapper::deserializeDataT
     auto content = dto_file->read(0, file_size);
     assert(content.has_value());
     FileSystem::FileSystem::instance()->closeFile(dto_file);
-    return m_gateway->deserialize(std::string(content.value().begin(), content.value().end()));
+    const auto dtos = m_gateway->deserialize(std::string(content.value().begin(), content.value().end()));
+    assert(!dtos.empty());
+    return dtos[0];
 }

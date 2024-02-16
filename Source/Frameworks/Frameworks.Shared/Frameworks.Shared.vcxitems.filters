@@ -105,6 +105,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.cpp">
       <Filter>Query</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Query.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h">

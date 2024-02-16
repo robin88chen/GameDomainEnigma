@@ -5,21 +5,13 @@
                 "InstanceType": 0,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.Renderer.ModelPrimitive",
+                "RttiName": "En.Renderables.ModelPrimitive",
                 "PrefabFilename": "test_model.model@DataPath"
             }
         },
-        "Id.Name": {
-            "Type": "String",
-            "Value": "test_model"
-        },
-        "Id.Sequence": {
-            "Type": "Uint64",
-            "Value": 0
-        },
-        "Id.Rtti": {
-            "Type": "String",
-            "Value": "En.Renderer.ModelPrimitive"
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["test_model", "0", "En.Renderables.ModelPrimitive"]
         },
         "MeshNodeTree": {
             "Type": "DataObject",
@@ -30,30 +22,22 @@
                         "InstanceType": 0,
                         "ResourceName": "",
                         "ResourceFilename": "",
-                        "RttiName": "En.Renderer.MeshNodeTree",
+                        "RttiName": "En.Renderables.MeshNodeTree",
                         "PrefabFilename": ""
                     }
                 },
                 "MeshNodes": {
                     "Type": "DataObjectArray",
                     "Value": [{
-                            "MeshId.Rtti": {
-                                "Type": "String",
-                                "Value": "En.Renderer.MeshPrimitive"
-                            },
                             "Rtti": {
                                 "Type": "FactoryDesc",
                                 "Value": {
                                     "InstanceType": 0,
                                     "ResourceName": "",
                                     "ResourceFilename": "",
-                                    "RttiName": "En.Renderer.MeshNode",
+                                    "RttiName": "En.Renderables.MeshNode",
                                     "PrefabFilename": ""
                                 }
-                            },
-                            "MeshId.Name": {
-                                "Type": "String",
-                                "Value": "test_mesh"
                             },
                             "Name": {
                                 "Type": "String",
@@ -63,9 +47,9 @@
                                 "Type": "Matrix4",
                                 "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
                             },
-                            "MeshId.Sequence": {
-                                "Type": "Uint64",
-                                "Value": 1
+                            "MeshId": {
+                                "Type": "StringArray",
+                                "Value": ["test_mesh", "1", "En.Renderables.MeshPrimitive"]
                             }
                         }, {
                             "Rtti": {
@@ -74,7 +58,7 @@
                                     "InstanceType": 0,
                                     "ResourceName": "",
                                     "ResourceFilename": "",
-                                    "RttiName": "En.Renderer.MeshNode",
+                                    "RttiName": "En.Renderables.MeshNode",
                                     "PrefabFilename": ""
                                 }
                             },
@@ -97,7 +81,7 @@
                                     "InstanceType": 0,
                                     "ResourceName": "",
                                     "ResourceFilename": "",
-                                    "RttiName": "En.Renderer.MeshNode",
+                                    "RttiName": "En.Renderables.MeshNode",
                                     "PrefabFilename": ""
                                 }
                             },
@@ -120,21 +104,13 @@
                                     "InstanceType": 0,
                                     "ResourceName": "",
                                     "ResourceFilename": "",
-                                    "RttiName": "En.Renderer.MeshNode",
+                                    "RttiName": "En.Renderables.MeshNode",
                                     "PrefabFilename": ""
                                 }
-                            },
-                            "MeshId.Rtti": {
-                                "Type": "String",
-                                "Value": "En.Renderer.MeshPrimitive"
                             },
                             "Name": {
                                 "Type": "String",
                                 "Value": "test_model_node_3"
-                            },
-                            "MeshId.Name": {
-                                "Type": "String",
-                                "Value": "test_mesh"
                             },
                             "LocalT_PosTransform": {
                                 "Type": "Matrix4",
@@ -144,9 +120,9 @@
                                 "Type": "Uint32",
                                 "Value": 2
                             },
-                            "MeshId.Sequence": {
-                                "Type": "Uint64",
-                                "Value": 2
+                            "MeshId": {
+                                "Type": "StringArray",
+                                "Value": ["test_mesh", "2", "En.Renderables.MeshPrimitive"]
                             }
                         }]
                 }

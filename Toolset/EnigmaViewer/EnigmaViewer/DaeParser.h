@@ -8,14 +8,11 @@
 #ifndef _DAE_PARSER_H
 #define _DAE_PARSER_H
 
-#include "GameEngine/GeometryRepository.h"
-#include "GameEngine/EffectTextureMapDto.h"
-#include "GameEngine/EffectMaterialDto.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
 #include "SceneGraph/SceneGraphDtos.h"
-#include "Animators/ModelAnimationAsset.h"
 #include "Animators/AnimationAssetDtos.h"
 #include "GameCommon/AnimatedPawnDto.h"
+#include "Geometries/GeometryData.h"
+#include "Geometries/GeometryRepository.h"
 #include "DaeParserConfiguration.h"
 #include "pugixml.hpp"
 #include <string>
@@ -26,12 +23,12 @@ namespace EnigmaViewer
     class DaeParser
     {
     public:
-        DaeParser(const std::shared_ptr<Enigma::Engine::GeometryRepository>& geometry_repository);
+        DaeParser(const std::shared_ptr<Enigma::Geometries::GeometryRepository>& geometry_repository);
         virtual ~DaeParser();
 
-        void LoadDaeFile(const std::string& filename);
+        void loadDaeFile(const std::string& filename);
 
-        const Enigma::GameCommon::AnimatedPawnDto& GetPawnDto() { return m_pawn; }
+        const Enigma::GameCommon::AnimatedPawnDto& pawnDto() { return m_pawn; }
 
     private:
         struct GeometryValueOffsets
@@ -41,10 +38,10 @@ namespace EnigmaViewer
             int tex_offset[4];
         };
     private:
-        void OutputLog(const std::string& msg);
+        void outputLog(const std::string& msg);
 
-        void ParseScene(const pugi::xml_node& collada_root);
-        void ParseModelSceneNode(const pugi::xml_node& model_scene_node);
+        void parseScene(const pugi::xml_node& collada_root);
+        /*void ParseModelSceneNode(const pugi::xml_node& model_scene_node);
         void ParseSceneNode(Enigma::Renderer::MeshNodeTreeDto& node_tree, const pugi::xml_node& scene_node_xml, std::optional<unsigned> parent_node_array_index);
 
         void ParseGeometryInstanceNode(Enigma::Renderer::MeshNodeDto& mesh_node, const pugi::xml_node& geometry_inst);
@@ -60,10 +57,10 @@ namespace EnigmaViewer
         void ParsePositionSource(const pugi::xml_node& position_source);
         void ParseNormalSource(const pugi::xml_node& normal_source);
         void ParseTexcoordSource(const pugi::xml_node& texcoord_source, int texcoord_set);
-        void ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);
+        void ParseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);*/
 
-        void ParseAnimations(const pugi::xml_node& collada_root);
-        void ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node);
+        void parseAnimations(const pugi::xml_node& collada_root);
+        /*void ParseSingleAnimation(Enigma::Animators::ModelAnimationAssetDto& asset_dto, const pugi::xml_node& anim_node);
         void ParseAnimationSample(Enigma::Animators::AnimationTimeSRTDto& srt_data, const pugi::xml_node& sampler_node,
             const pugi::xml_node& anim_node);
         void ParseTimeValue(const pugi::xml_node& time_value_source);
@@ -81,19 +78,19 @@ namespace EnigmaViewer
 
         Enigma::Engine::GenericDto ComposeTriangleListDto(const std::string& geo_name, bool is_skin);
         Enigma::Engine::EffectMaterialDto MakeMaterialDto(const std::string& eff_name, const std::string& eff_filename);
-        Enigma::Engine::EffectTextureMapDto MakeEffectTextureMapDto(const std::string& filename, const std::string& tex_name, const std::string& semantic);
+        Enigma::Engine::EffectTextureMapDto MakeEffectTextureMapDto(const std::string& filename, const std::string& tex_name, const std::string& semantic);*/
 
-        void ComposeModelPrimitiveDto();
+        void composeModelPrimitiveDto();
 
     private:
         DaeParserConfiguration m_config;
-        std::weak_ptr<Enigma::Engine::GeometryRepository> m_geometryRepository;
+        std::weak_ptr<Enigma::Geometries::GeometryRepository> m_geometryRepository;
+        Enigma::GameCommon::AnimatedPawnDto m_pawn;
 
         std::string m_filename;
-        std::string m_modelName;
+        /*std::string m_modelName;
 
         Enigma::Renderer::ModelPrimitiveDto m_model;
-        Enigma::GameCommon::AnimatedPawnDto m_pawn;
         Enigma::Engine::GenericDto m_animationAssetDto;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;
@@ -117,7 +114,7 @@ namespace EnigmaViewer
         std::vector<Enigma::MathLib::Matrix4> m_animMatrixs;
 
         std::unordered_map<std::string, std::string> m_nodeIdNameMapping;
-        std::unordered_map<std::string, std::string> m_nodeJointIdMapping;
+        std::unordered_map<std::string, std::string> m_nodeJointIdMapping;*/
     };
 }
 #endif // DAEPARSER_H

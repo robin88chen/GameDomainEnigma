@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ModelInfoPanel.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -13,7 +13,7 @@
 #include "nana/gui/widgets/label.hpp"
 #include "nana/gui/widgets/treebox.hpp"
 #include "nana/gui/widgets/menu.hpp"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "Frameworks/CommandSubscriber.h"
 
 namespace EnigmaViewer
@@ -26,20 +26,20 @@ namespace EnigmaViewer
         ModelInfoPanel(const nana::window& wd);
         virtual ~ModelInfoPanel();
 
-        void Initialize(MainForm* main_form);
+        void initialize(MainForm* main_form);
 
-        void SetModelFileName(const std::string& filename);
-        void EnumModelMeshNode(const std::shared_ptr<Enigma::Renderer::ModelPrimitive>& model);
-        void OnMeshNodeTreeMouseDown(const nana::arg_mouse& arg);
-        void OnAddCloudParticle(const nana::menu::item_proxy& menu_item);
-        void OnAddSuperSprayParticle(const nana::menu::item_proxy& menu_item);
-        void OnChangeMeshTexture(const nana::menu::item_proxy& menu_item);
+        void setModelFileName(const std::string& filename);
+        void enumModelMeshNode(const std::shared_ptr<Enigma::Renderables::ModelPrimitive>& model);
+        void onMeshNodeTreeMouseDown(const nana::arg_mouse& arg);
+        void onAddCloudParticle(const nana::menu::item_proxy& menu_item);
+        void onAddSuperSprayParticle(const nana::menu::item_proxy& menu_item);
+        void onChangeMeshTexture(const nana::menu::item_proxy& menu_item);
 
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
     private:
-        void DoRefreshingModelNodeTree(const Enigma::Frameworks::ICommandPtr& c);
+        void refreshModelNodeTree(const Enigma::Frameworks::ICommandPtr& c);
 
     private:
         MainForm* m_main;
@@ -49,7 +49,7 @@ namespace EnigmaViewer
         nana::treebox* m_meshNodeTree;
         nana::menu* m_popupMenu;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_doRefreshingModelNodeTree;
+        Enigma::Frameworks::CommandSubscriberPtr m_refreshModelNodeTree;
     };
 }
 

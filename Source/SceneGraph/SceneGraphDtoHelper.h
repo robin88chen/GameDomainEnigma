@@ -20,7 +20,7 @@ namespace Enigma::SceneGraph
     class CameraDtoHelper
     {
     public:
-        CameraDtoHelper(const std::string& name);
+        CameraDtoHelper(const SpatialId& id);
 
         CameraDtoHelper& eyePosition(const MathLib::Vector3& eye_position);
         CameraDtoHelper& lookAt(const MathLib::Vector3& look_at);
@@ -42,7 +42,7 @@ namespace Enigma::SceneGraph
     class SpatialDtoHelper
     {
     public:
-        SpatialDtoHelper(const std::string& name);
+        SpatialDtoHelper(const SpatialId& id);
 
         SpatialDtoHelper& localTransform(const MathLib::Matrix4& local_transform);
         SpatialDtoHelper& worldTransform(const MathLib::Matrix4& world_transform);
@@ -63,7 +63,7 @@ namespace Enigma::SceneGraph
     class PawnDtoHelper
     {
     public:
-        PawnDtoHelper(const std::string& name);
+        PawnDtoHelper(const SpatialId& id);
 
         PawnDtoHelper& factory(const Engine::FactoryDesc& factory);
         PawnDtoHelper& localTransform(const MathLib::Matrix4& local_transform);
@@ -74,7 +74,7 @@ namespace Enigma::SceneGraph
         PawnDtoHelper& notifyFlags(Spatial::NotifyFlags notify_flags);
         PawnDtoHelper& spatialFlags(Spatial::SpatialFlags spatial_flags);
         PawnDtoHelper& graphDepth(unsigned graph_depth);
-        PawnDtoHelper& meshPrimitive(const Renderables::MeshPrimitiveDto& mesh_dto);
+        PawnDtoHelper& primitive(const Primitives::PrimitiveId& primitive_id);
 
         PawnDto toPawnDto();
         Engine::GenericDto toGenericDto();

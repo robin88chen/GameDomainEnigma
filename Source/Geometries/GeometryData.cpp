@@ -37,9 +37,7 @@ GeometryData::~GeometryData()
 
 std::shared_ptr<GeometryData> GeometryData::queryGeometryData(const GeometryId& id)
 {
-    const auto query = std::make_shared<QueryGeometryData>(id);
-    QueryDispatcher::dispatch(query);
-    return query->getResult();
+    return std::make_shared<QueryGeometryData>(id)->dispatch();
 }
 
 GenericDto GeometryData::serializeDto() const

@@ -19,7 +19,7 @@ namespace Enigma::Geometries
     class SquareQuadDtoHelper
     {
     public:
-        SquareQuadDtoHelper(const std::string& name);
+        SquareQuadDtoHelper(const GeometryId& id);
         SquareQuadDtoHelper& xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
         SquareQuadDtoHelper& xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
         SquareQuadDtoHelper& normal();
@@ -36,7 +36,7 @@ namespace Enigma::Geometries
     class CubeDtoHelper
     {
     public:
-        CubeDtoHelper(const std::string& name);
+        CubeDtoHelper(const GeometryId& id);
         CubeDtoHelper& cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 8 vertices
         CubeDtoHelper& facedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent); // 24 vertices
         CubeDtoHelper& normal();
@@ -56,7 +56,7 @@ namespace Enigma::Geometries
     class SphereDtoHelper
     {
     public:
-        SphereDtoHelper(const std::string& name);
+        SphereDtoHelper(const GeometryId& id);
         SphereDtoHelper& sphere(const MathLib::Vector3& center, float radius, int slices, int stacks);
         SphereDtoHelper& normal();
         SphereDtoHelper& textureCoord();

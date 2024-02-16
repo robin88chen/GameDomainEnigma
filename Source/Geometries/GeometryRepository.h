@@ -50,6 +50,8 @@ namespace Enigma::Geometries
 
     protected:
         void queryGeometryData(const Frameworks::IQueryPtr& q);
+        void requestGeometryCreation(const Frameworks::IQueryPtr& r);
+        void requestGeometryConstitution(const Frameworks::IQueryPtr& r);
 
         void putGeometryData(const Frameworks::ICommandPtr& c);
         void removeGeometryData(const Frameworks::ICommandPtr& c);
@@ -61,6 +63,8 @@ namespace Enigma::Geometries
         std::recursive_mutex m_geometryLock;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;
+        Frameworks::QuerySubscriberPtr m_requestGeometryCreation;
+        Frameworks::QuerySubscriberPtr m_requestGeometryConstitution;
         Frameworks::CommandSubscriberPtr m_putGeometryData;
         Frameworks::CommandSubscriberPtr m_removeGeometryData;
     };

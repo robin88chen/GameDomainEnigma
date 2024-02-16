@@ -11,7 +11,7 @@
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "Geometries/TriangleList.h"
 #include "Frameworks/CommandBus.h"
-#include "Geometries/GeometryCommands.h"
+#include "Geometries/GeometryDataQueries.h"
 
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
@@ -19,8 +19,10 @@ using namespace Enigma::FileSystem;
 using namespace Enigma::Gateways;
 using namespace Enigma::Geometries;
 
-void CubeGeometryMaker::makeCube(const GeometryId& id)
+std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
 {
+    if (auto geo = GeometryData::queryGeometryData(id)) return geo;
+
     std::vector<Vector3> vtx_pos =
     {
         { Vector3(-0.5f, -0.5f, -0.5f) },
@@ -148,5 +150,5 @@ void CubeGeometryMaker::makeCube(const GeometryId& id)
     dto.geometryBound() = bv.serializeDto().toGenericDto();
     dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
 
-    Enigma::Frameworks::CommandBus::post(std::make_shared<ConstituteGeometry>(id, dto.toGenericDto()));
+    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), RequestGeometryConstitution::PersistenceLevel::Store)->dispatch();
 }

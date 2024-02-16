@@ -3,12 +3,13 @@
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Graphics;
+using namespace Enigma::Engine;
 
 DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
 {
-    m_ambientEffectName = "DeferredShadingAmbientPass";
-    m_sunLightEffectName = "DeferredShadingSunLightPass";
-    m_lightVolumeEffectName = "DeferredShadingLightVolume";
+    m_ambientEffect = EffectMaterialId("fx/DeferredShadingAmbientPass");
+    m_sunLightEffect = EffectMaterialId("fx/DeferredShadingSunLightPass");
+    m_lightVolumeEffect = EffectMaterialId("fx/DeferredShadingLightVolume");
 
     m_deferredRendererTechniqueName = "DeferredRenderer";
     m_visualTechniqueNameForCameraDefault = "Default";
@@ -28,176 +29,176 @@ DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
     m_sunLightSpatialFlags = SceneGraph::Spatial::Spatial_None;
 }
 
-std::string& DeferredRendererServiceConfiguration::AmbientEffectName()
+EffectMaterialId& DeferredRendererServiceConfiguration::ambientEffect()
 {
-    return m_ambientEffectName;
+    return m_ambientEffect;
 }
 
-const std::string& DeferredRendererServiceConfiguration::AmbientEffectName() const
+const EffectMaterialId& DeferredRendererServiceConfiguration::ambientEffect() const
 {
-    assert(!m_ambientEffectName.empty());
-    return m_ambientEffectName;
+    assert(!m_ambientEffect.name().empty());
+    return m_ambientEffect;
 }
 
-std::string& DeferredRendererServiceConfiguration::SunLightEffectName()
+EffectMaterialId& DeferredRendererServiceConfiguration::sunLightEffect()
 {
-    return m_sunLightEffectName;
+    return m_sunLightEffect;
 }
 
-const std::string& DeferredRendererServiceConfiguration::SunLightEffectName() const
+const EffectMaterialId& DeferredRendererServiceConfiguration::sunLightEffect() const
 {
-    assert(!m_sunLightEffectName.empty());
-    return m_sunLightEffectName;
+    assert(!m_sunLightEffect.name().empty());
+    return m_sunLightEffect;
 }
 
-std::string& DeferredRendererServiceConfiguration::LightVolumeEffectName()
+EffectMaterialId& DeferredRendererServiceConfiguration::lightVolumeEffect()
 {
-    return m_lightVolumeEffectName;
+    return m_lightVolumeEffect;
 }
 
-const std::string& DeferredRendererServiceConfiguration::LightVolumeEffectName() const
+const EffectMaterialId& DeferredRendererServiceConfiguration::lightVolumeEffect() const
 {
-    assert(!m_lightVolumeEffectName.empty());
-    return m_lightVolumeEffectName;
+    assert(!m_lightVolumeEffect.name().empty());
+    return m_lightVolumeEffect;
 }
 
-std::string& DeferredRendererServiceConfiguration::DeferredRendererTechniqueName()
+std::string& DeferredRendererServiceConfiguration::deferredRendererTechniqueName()
 {
     return m_deferredRendererTechniqueName;
 }
 
-const std::string& DeferredRendererServiceConfiguration::DeferredRendererTechniqueName() const
+const std::string& DeferredRendererServiceConfiguration::deferredRendererTechniqueName() const
 {
     assert(!m_deferredRendererTechniqueName.empty());
     return m_deferredRendererTechniqueName;
 }
 
-std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraDefault()
+std::string& DeferredRendererServiceConfiguration::visualTechniqueNameForCameraDefault()
 {
     return m_visualTechniqueNameForCameraDefault;
 }
 
-const std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraDefault() const
+const std::string& DeferredRendererServiceConfiguration::visualTechniqueNameForCameraDefault() const
 {
     assert(!m_visualTechniqueNameForCameraDefault.empty());
     return m_visualTechniqueNameForCameraDefault;
 }
 
-std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraInside()
+std::string& DeferredRendererServiceConfiguration::visualTechniqueNameForCameraInside()
 {
     return m_visualTechniqueNameForCameraInside;
 }
 
-const std::string& DeferredRendererServiceConfiguration::VisualTechniqueNameForCameraInside() const
+const std::string& DeferredRendererServiceConfiguration::visualTechniqueNameForCameraInside() const
 {
     assert(!m_visualTechniqueNameForCameraInside.empty());
     return m_visualTechniqueNameForCameraInside;
 }
-std::string& DeferredRendererServiceConfiguration::GbufferTargetName()
+std::string& DeferredRendererServiceConfiguration::gbufferTargetName()
 {
     return m_gbufferTargetName;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferTargetName() const
+const std::string& DeferredRendererServiceConfiguration::gbufferTargetName() const
 {
     assert(!m_gbufferTargetName.empty());
     return m_gbufferTargetName;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferSurfaceName()
+std::string& DeferredRendererServiceConfiguration::gbufferSurfaceName()
 {
     return m_gbufferSurfaceName;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferSurfaceName() const
+const std::string& DeferredRendererServiceConfiguration::gbufferSurfaceName() const
 {
     assert(!m_gbufferSurfaceName.empty());
     return m_gbufferSurfaceName;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferDepthName()
+std::string& DeferredRendererServiceConfiguration::gbufferDepthName()
 {
     return m_gbufferDepthName;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferDepthName() const
+const std::string& DeferredRendererServiceConfiguration::gbufferDepthName() const
 {
     assert(!m_gbufferDepthName.empty());
     return m_gbufferDepthName;
 }
 
-std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::GbufferUsages()
+std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::gbufferUsages()
 {
     return m_gbufferUsages;
 }
 
-const std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::GbufferUsages() const
+const std::vector<Enigma::Graphics::RenderTextureUsage>& DeferredRendererServiceConfiguration::gbufferUsages() const
 {
     assert(!m_gbufferUsages.empty());
     return m_gbufferUsages;
 }
 
-std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::GbufferFormats()
+std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::gbufferFormats()
 {
     return m_gbufferFormats;
 }
 
-const std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::GbufferFormats() const
+const std::vector<Enigma::Graphics::GraphicFormat>& DeferredRendererServiceConfiguration::gbufferFormats() const
 {
     assert(!m_gbufferFormats.empty());
     return m_gbufferFormats;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferNormalSemantic()
+std::string& DeferredRendererServiceConfiguration::gbufferNormalSemantic()
 {
     return m_gbufferNormalSemantic;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferNormalSemantic() const
+const std::string& DeferredRendererServiceConfiguration::gbufferNormalSemantic() const
 {
     assert(!m_gbufferNormalSemantic.empty());
     return m_gbufferNormalSemantic;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferDiffuseSemantic()
+std::string& DeferredRendererServiceConfiguration::gbufferDiffuseSemantic()
 {
     return m_gbufferDiffuseSemantic;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferDiffuseSemantic() const
+const std::string& DeferredRendererServiceConfiguration::gbufferDiffuseSemantic() const
 {
     assert(!m_gbufferDiffuseSemantic.empty());
     return m_gbufferDiffuseSemantic;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferSpecularSemantic()
+std::string& DeferredRendererServiceConfiguration::gbufferSpecularSemantic()
 {
     return m_gbufferSpecularSemantic;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferSpecularSemantic() const
+const std::string& DeferredRendererServiceConfiguration::gbufferSpecularSemantic() const
 {
     assert(!m_gbufferSpecularSemantic.empty());
     return m_gbufferSpecularSemantic;
 }
 
-std::string& DeferredRendererServiceConfiguration::GbufferDepthSemantic()
+std::string& DeferredRendererServiceConfiguration::gbufferDepthSemantic()
 {
     return m_gbufferDepthSemantic;
 }
 
-const std::string& DeferredRendererServiceConfiguration::GbufferDepthSemantic() const
+const std::string& DeferredRendererServiceConfiguration::gbufferDepthSemantic() const
 {
     assert(!m_gbufferDepthSemantic.empty());
     return m_gbufferDepthSemantic;
 }
 
-Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::SunLightSpatialFlags()
+Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::sunLightSpatialFlags()
 {
     return m_sunLightSpatialFlags;
 }
 
-const Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::SunLightSpatialFlags() const
+const Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfiguration::sunLightSpatialFlags() const
 {
     return m_sunLightSpatialFlags;
 }

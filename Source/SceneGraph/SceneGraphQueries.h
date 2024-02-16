@@ -26,6 +26,36 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
+    class RequestCameraCreation : public Frameworks::Query<std::shared_ptr<Camera>>
+    {
+    public:
+        enum class PersistenceLevel { None, Repository, Store };
+    public:
+        RequestCameraCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+
+        const SpatialId& id() { return m_id; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+
+    protected:
+        SpatialId m_id;
+        PersistenceLevel m_persistenceLevel;
+    };
+    class RequestCameraConstitution : public Frameworks::Query<std::shared_ptr<Camera>>
+    {
+    public:
+        enum class PersistenceLevel { None, Repository, Store };
+    public:
+        RequestCameraConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+
+        const SpatialId& id() { return m_id; }
+        const Engine::GenericDto& dto() { return m_dto; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+
+    protected:
+        SpatialId m_id;
+        Engine::GenericDto m_dto;
+        PersistenceLevel m_persistenceLevel;
+    };
     class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
     {
     public:
@@ -45,6 +75,36 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_id;
+    };
+    class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
+    {
+    public:
+        enum class PersistenceLevel { None, Repository, Store };
+    public:
+        RequestSpatialCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+
+        const SpatialId& id() { return m_id; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+
+    protected:
+        SpatialId m_id;
+        PersistenceLevel m_persistenceLevel;
+    };
+    class RequestSpatialConstitution : public Frameworks::Query<std::shared_ptr<Spatial>>
+    {
+    public:
+        enum class PersistenceLevel { None, Repository, Store };
+    public:
+        RequestSpatialConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+
+        const SpatialId& id() { return m_id; }
+        const Engine::GenericDto& dto() { return m_dto; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+
+    protected:
+        SpatialId m_id;
+        Engine::GenericDto m_dto;
+        PersistenceLevel m_persistenceLevel;
     };
 }
 

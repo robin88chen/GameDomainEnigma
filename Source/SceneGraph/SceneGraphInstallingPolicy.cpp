@@ -1,9 +1,11 @@
 ﻿#include "SceneGraphInstallingPolicy.h"
 #include "GameEngine/TimerService.h"
 #include "SceneGraphRepository.h"
+#include "SceneGraphFactory.h"
 #include "LazyNodeIOService.h"
 #include "LightInfoTraversal.h"
 #include "SceneGraphErrors.h"
+#include "Pawn.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -13,7 +15,9 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     assert(service_manager);
     const auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
     assert(timer);
-    service_manager->registerSystemService(std::make_shared<SceneGraphRepository>(service_manager, m_dtoDeserializer, m_storeMapper));
+    auto scene_graph_repository = std::make_shared<SceneGraphRepository>(service_manager, m_dtoDeserializer, m_storeMapper);
+    scene_graph_repository->factory()->registerSpatialFactory(Pawn::TYPE_RTTI.getName(), Pawn::create, Pawn::constitute);
+    service_manager->registerSystemService(scene_graph_repository);
     service_manager->registerSystemService(std::make_shared<LazyNodeIOService>(service_manager, timer, m_dtoDeserializer));
     service_manager->registerSystemService(std::make_shared<LightInfoTraversal>(service_manager));
     return ErrorCode::ok;

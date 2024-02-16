@@ -20,7 +20,7 @@ error SceneRendererInstallingPolicy::install(Frameworks::ServiceManager* service
     auto scene_renderer_service = std::make_shared<SceneRendererService>(service_manager,
         scene_service, camera_service, render_manager, m_config);
     service_manager->registerSystemService(scene_renderer_service);
-    scene_renderer_service->CreateSceneRenderSystem(m_rendererName, m_targetName);
+    scene_renderer_service->createSceneRenderSystem(m_rendererName, m_targetName);
     return error();
 }
 
@@ -42,11 +42,9 @@ error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* serv
     service_manager->registerSystemService(deferred_renderer_service);
     service_manager->insertHashAsService(SceneRendererService::TYPE_RTTI, deferred_renderer_service);
 
-    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.getName(),
-      //  [=](auto dto) { return new LightVolumePawn(dto); }));
-    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.getName(),
-      //  [=](auto dto) { return new LightQuadPawn(dto); }));
-    deferred_renderer_service->CreateSceneRenderSystem(m_rendererName, m_targetName);
+    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightVolumePawn::TYPE_RTTI.getName(), LightVolumePawn::create, LightVolumePawn::constitute));
+    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightQuadPawn::TYPE_RTTI.getName(), LightQuadPawn::create, LightQuadPawn::constitute));
+    deferred_renderer_service->createSceneRenderSystem(m_rendererName, m_targetName);
     return error();
 }
 

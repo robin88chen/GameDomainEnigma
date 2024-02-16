@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SceneRendererService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -36,18 +36,18 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        virtual void CreateSceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
-        virtual void DestroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
+        virtual void createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
+        virtual void destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
 
-        virtual void PrepareGameScene();
-        virtual void RenderGameScene();
-        virtual void Flip();
+        virtual void prepareGameScene();
+        virtual void renderGameScene();
+        virtual void flip();
 
     protected:
-        void AttachCamera();
+        void attachCamera();
 
-        void OnPrimaryCameraCreated(const Frameworks::IEventPtr& e);
-        void OnPrimaryTargetCreated(const Frameworks::IEventPtr& e);
+        void onPrimaryCameraCreated(const Frameworks::IEventPtr& e);
+        void onPrimaryTargetCreated(const Frameworks::IEventPtr& e);
 
     private:
         std::shared_ptr<SceneRendererServiceConfiguration> m_config;

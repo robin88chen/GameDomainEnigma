@@ -46,7 +46,7 @@ AnimationInfoPanel::~AnimationInfoPanel()
     SAFE_DELETE(m_speedSlider);
 }
 
-void AnimationInfoPanel::Initialize()
+void AnimationInfoPanel::initialize()
 {
     m_place = menew nana::place{ *this };
     m_place->div("margin=[4,4,4,4] vert<table_group><row_play_action weight=28><row_speed weight=28>");
@@ -60,9 +60,9 @@ void AnimationInfoPanel::Initialize()
     m_addActionButton = menew nana::button{ *m_tableGroup, "Add" };
     m_addActionButton->transparent(true).enable_focus_color(false);
     UISchemeColors::ApplySchemaColors(m_addActionButton->scheme());
-    m_addActionButton->events().click([this](const nana::arg_click& a) { this->OnAddActionButton(a); });
+    m_addActionButton->events().click([this](const nana::arg_click& a) { this->onAddActionButton(a); });
     m_deleteActionButton = menew nana::button{ *m_tableGroup, "Delete" };
-    m_deleteActionButton->events().click([this](const nana::arg_click& a) { this->OnDeleteActionButton(a); });
+    m_deleteActionButton->events().click([this](const nana::arg_click& a) { this->onDeleteActionButton(a); });
     m_deleteActionButton->transparent(true).enable_focus_color(false);
     UISchemeColors::ApplySchemaColors(m_deleteActionButton->scheme());
     (*m_tableGroup)["row_btn"] << *m_addActionButton << *m_deleteActionButton;
@@ -101,7 +101,7 @@ void AnimationInfoPanel::Initialize()
     m_actionPrompt = menew nana::label{ *this, "Play" };
     UISchemeColors::ApplySchemaColors(m_actionPrompt->scheme());
     m_actionCombox = menew nana::combox{ *this };
-    m_actionCombox->events().text_changed([this](const nana::arg_combox& a) { this->OnActionComboTextChanged(a); });
+    m_actionCombox->events().text_changed([this](const nana::arg_combox& a) { this->onActionComboTextChanged(a); });
     // background 沒有作用，所以顏色都不要變了
     //UISchemeColors::ApplySchemaColors(m_actionCombox->scheme());
     (*m_actionCombox).push_back("one").push_back("two").push_back("three");
@@ -119,7 +119,7 @@ void AnimationInfoPanel::Initialize()
     m_place->collocate();
 }
 
-void AnimationInfoPanel::OnAddActionButton(const nana::arg_click& ev)
+void AnimationInfoPanel::onAddActionButton(const nana::arg_click& ev)
 {
     if (!m_actionTableBox) return;
     auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
@@ -130,7 +130,7 @@ void AnimationInfoPanel::OnAddActionButton(const nana::arg_click& ev)
     Enigma::Frameworks::CommandBus::post(std::make_shared<AddAnimationClip>(clip.m_name, clip.m_clip));
 }
 
-void AnimationInfoPanel::OnDeleteActionButton(const nana::arg_click& ev)
+void AnimationInfoPanel::onDeleteActionButton(const nana::arg_click& ev)
 {
     if (!m_actionTableBox) return;
     auto idx_pairs = m_actionTableBox->selected();
@@ -145,38 +145,38 @@ void AnimationInfoPanel::OnDeleteActionButton(const nana::arg_click& ev)
     m_actionTableBox->erase(idx_pairs);
 }
 
-void AnimationInfoPanel::OnActionComboTextChanged(const nana::arg_combox& ev)
+void AnimationInfoPanel::onActionComboTextChanged(const nana::arg_combox& ev)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<PlayAnimationClip>(ev.widget.caption()));
 }
 
-void AnimationInfoPanel::SubscribeHandlers()
+void AnimationInfoPanel::subscribeHandlers()
 {
-    m_onAnimationClipMapChanged = std::make_shared<EventSubscriber>([=](auto e) { OnAnimationClipMapChanged(e); });
+    m_onAnimationClipMapChanged = std::make_shared<EventSubscriber>([=](auto e) { onAnimationClipMapChanged(e); });
     EventPublisher::subscribe(typeid(Enigma::GameCommon::AnimationClipMapChanged), m_onAnimationClipMapChanged);
-    m_onAnimationClipItemUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnAnimationClipItemUpdated(e); });
+    m_onAnimationClipItemUpdated = std::make_shared<EventSubscriber>([=](auto e) { onAnimationClipItemUpdated(e); });
     EventPublisher::subscribe(typeid(AnimationClipItemUpdated), m_onAnimationClipItemUpdated);
 
-    m_doRefreshingAnimClipMap = std::make_shared<CommandSubscriber>([=](auto c) { DoRefreshingAnimClipMap(c); });
-    CommandBus::subscribe(typeid(RefreshAnimationClipList), m_doRefreshingAnimClipMap);
+    m_refreshAnimClipMap = std::make_shared<CommandSubscriber>([=](auto c) { refreshAnimClipMap(c); });
+    CommandBus::subscribe(typeid(RefreshAnimationClipList), m_refreshAnimClipMap);
 }
 
-void AnimationInfoPanel::UnsubscribeHandlers()
+void AnimationInfoPanel::unsubscribeHandlers()
 {
     EventPublisher::unsubscribe(typeid(Enigma::GameCommon::AnimationClipMapChanged), m_onAnimationClipMapChanged);
     m_onAnimationClipMapChanged = nullptr;
     EventPublisher::unsubscribe(typeid(AnimationClipItemUpdated), m_onAnimationClipItemUpdated);
     m_onAnimationClipItemUpdated = nullptr;
 
-    CommandBus::unsubscribe(typeid(RefreshAnimationClipList), m_doRefreshingAnimClipMap);
-    m_doRefreshingAnimClipMap = nullptr;
+    CommandBus::unsubscribe(typeid(RefreshAnimationClipList), m_refreshAnimClipMap);
+    m_refreshAnimClipMap = nullptr;
 }
 
-void AnimationInfoPanel::RefreshActionCombo()
+void AnimationInfoPanel::refreshActionCombo()
 {
 }
 
-void AnimationInfoPanel::OnAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e)
+void AnimationInfoPanel::onAnimationClipMapChanged(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::AnimationClipMapChanged, Enigma::Frameworks::IEvent>(e);
@@ -188,26 +188,26 @@ void AnimationInfoPanel::OnAnimationClipMapChanged(const Enigma::Frameworks::IEv
     }
 }
 
-void AnimationInfoPanel::OnAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e)
+void AnimationInfoPanel::onAnimationClipItemUpdated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<AnimationClipItemUpdated, IEvent>(e);
     if (!ev) return;
-    auto cat = m_actionTableBox->at(ev->GetCategoryIndex());
-    auto item = cat.at(ev->GetItemIndex());
+    auto cat = m_actionTableBox->at(ev->categoryIndex());
+    auto item = cat.at(ev->itemIndex());
     AnimClipInfoItem clip{ "" };
     item->resolve_to(clip);
-    CommandBus::post(std::make_shared<ChangeAnimationTimeValue>(ev->GetOldText(), clip.m_name, clip.m_clip));
+    CommandBus::post(std::make_shared<ChangeAnimationTimeValue>(ev->oldText(), clip.m_name, clip.m_clip));
 }
 
-void AnimationInfoPanel::DoRefreshingAnimClipMap(const Enigma::Frameworks::ICommandPtr& c)
+void AnimationInfoPanel::refreshAnimClipMap(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RefreshAnimationClipList, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
     m_actionCombox->clear();
     auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
-    for (auto clip : cmd->GetClipMap().GetAnimationClipMap())
+    for (auto clip : cmd->clipMap().GetAnimationClipMap())
     {
         AnimClipInfoItem clip_info{ clip.second.getName() };
         clip_info.m_clip = clip.second.GetClip();

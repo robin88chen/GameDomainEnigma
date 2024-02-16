@@ -12,6 +12,7 @@
 #include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
 
 namespace Enigma::Geometries
 {
@@ -37,8 +38,6 @@ namespace Enigma::Geometries
     private:
         void registerGeometryFactory(const Frameworks::ICommandPtr& c);
         void unregisterGeometryFactory(const Frameworks::ICommandPtr& c);
-        void createGeometry(const Frameworks::ICommandPtr& c);
-        void constituteGeometry(const Frameworks::ICommandPtr& c);
 
     private:
         std::unordered_map<std::string, GeometryCreator> m_creators; // rtti name -> creator
@@ -46,8 +45,6 @@ namespace Enigma::Geometries
 
         Frameworks::CommandSubscriberPtr m_registerGeometryFactory;
         Frameworks::CommandSubscriberPtr m_unregisterGeometryFactory;
-        Frameworks::CommandSubscriberPtr m_createGeometry;
-        Frameworks::CommandSubscriberPtr m_constituteGeometry;
     };
 }
 

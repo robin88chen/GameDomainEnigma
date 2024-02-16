@@ -19,7 +19,5 @@ Animator::~Animator()
 std::shared_ptr<Animator> Animator::queryAnimator(const AnimatorId& id)
 {
     assert(id.rtti().isDerived(Animator::TYPE_RTTI));
-    const auto query = std::make_shared<QueryAnimator>(id);
-    Frameworks::QueryDispatcher::dispatch(query);
-    return query->getResult();
+    return std::make_shared<QueryAnimator>(id)->dispatch();
 }

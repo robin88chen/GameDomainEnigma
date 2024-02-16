@@ -29,18 +29,11 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "Geometries/GeometryInstallingPolicy.h"
-#include "Geometries/GeometryCommands.h"
-#include "Geometries/GeometryDataEvents.h"
 #include "Animators/AnimatorInstallingPolicy.h"
-#include "Animators/AnimationAssetEvents.h"
-#include "Animators/AnimationAssetCommands.h"
-#include "Animators/AnimatorEvents.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "SceneGraph/CameraFrustumCommands.h"
 #include "SceneGraph/CameraFrustumEvents.h"
-#include "Primitives/PrimitiveCommands.h"
-#include "Primitives/PrimitiveEvents.h"
 #include <string>
 
 using namespace Enigma::Controllers;
@@ -99,18 +92,6 @@ void SkinMeshPrimitiveTest::installEngine()
 {
     m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
     EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
-    m_onAnimationAssetConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onAnimationAssetConstituted(e); });
-    EventPublisher::subscribe(typeid(AnimationAssetConstituted), m_onAnimationAssetConstituted);
-    m_onConstituteAnimationAssetFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimationAssetFailed(e); });
-    EventPublisher::subscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
-    m_onAnimatorConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onAnimatorConstituted(e); });
-    EventPublisher::subscribe(typeid(AnimatorConstituted), m_onAnimatorConstituted);
-    m_onConstituteAnimatorFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onConstituteAnimatorFailed(e); });
-    EventPublisher::subscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
-    m_onGeometryConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onGeometryConstituted(e); });
-    EventPublisher::subscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
-    m_onPrimitiveConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onPrimitiveConstituted(e); });
-    EventPublisher::subscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
 
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
@@ -141,7 +122,7 @@ void SkinMeshPrimitiveTest::installEngine()
     m_animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
 
     makeCamera();
-    makeAnimation();
+    makeModel();
 }
 
 void SkinMeshPrimitiveTest::shutdownEngine()
@@ -153,18 +134,6 @@ void SkinMeshPrimitiveTest::shutdownEngine()
 
     EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
     m_onCameraConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(AnimationAssetConstituted), m_onAnimationAssetConstituted);
-    m_onAnimationAssetConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(ConstituteAnimationAssetFailed), m_onConstituteAnimationAssetFailed);
-    m_onConstituteAnimationAssetFailed = nullptr;
-    EventPublisher::unsubscribe(typeid(AnimatorConstituted), m_onAnimatorConstituted);
-    m_onAnimatorConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(ConstituteAnimatorFailed), m_onConstituteAnimatorFailed);
-    m_onConstituteAnimatorFailed = nullptr;
-    EventPublisher::unsubscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
-    m_onGeometryConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
-    m_onPrimitiveConstituted = nullptr;
 
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
@@ -206,71 +175,20 @@ void SkinMeshPrimitiveTest::makeCamera()
     }
 }
 
-void SkinMeshPrimitiveTest::makeAnimation()
-{
-    if (auto animation = AnimationAsset::queryAnimationAsset(m_animationId))
-    {
-        makeAnimator();
-    }
-    else
-    {
-        SkinAnimationMaker::makeSkinMeshAnimationAsset(m_animationId, m_meshNodeNames);
-    }
-}
-
-void SkinMeshPrimitiveTest::makeAnimator()
-{
-    if (auto animator = Animator::queryAnimator(m_animatorId))
-    {
-        makeCube();
-    }
-    else
-    {
-        SkinAnimationMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId.origin(), m_meshId, m_meshNodeNames);
-    }
-}
-
-void SkinMeshPrimitiveTest::makeCube()
-{
-    if (GeometryData::queryGeometryData(m_cubeId))
-    {
-        makeMesh();
-    }
-    else
-    {
-        CubeGeometryMaker::makeCube(m_cubeId);
-    }
-}
-
-void SkinMeshPrimitiveTest::makeMesh()
-{
-    if (Primitive::queryPrimitive(m_meshId))
-    {
-        makeModel();
-    }
-    else
-    {
-        SkinMeshModelMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
-    }
-}
-
 void SkinMeshPrimitiveTest::makeModel()
 {
-    if (auto model = Primitive::queryPrimitive(m_modelId))
+    auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(m_animationId, m_meshNodeNames);
+    auto animator = SkinAnimationMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId.origin(), m_meshId, m_meshNodeNames);
+    auto cube = CubeGeometryMaker::makeCube(m_cubeId);
+    auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    m_model = SkinMeshModelMaker::makeModelPrimitive(m_modelId.origin(), m_meshId, m_animatorId, m_meshNodeNames);
+    m_animatorId = m_model->animatorId();
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
     {
-        m_animatorId = model->animatorId();
-        if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
-        {
-            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
-        }
-        CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
-        m_model = std::dynamic_pointer_cast<ModelPrimitive>(model);
-        m_model->updateWorldTransform(Matrix4::IDENTITY);
+        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
-    else
-    {
-        SkinMeshModelMaker::makeModelPrimitive(m_modelId.origin(), m_meshId, m_animatorId, m_meshNodeNames);
-    }
+    CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
+    m_model->updateWorldTransform(Matrix4::IDENTITY);
 }
 
 void SkinMeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
@@ -283,81 +201,6 @@ void SkinMeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEvent
     m_camera = ev->camera();
     if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
     CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
-}
-
-void SkinMeshPrimitiveTest::onAnimationAssetConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<AnimationAssetConstituted, IEvent>(e);
-    if (!ev) return;
-    if (ev->id() != m_animationId) return;
-    if (ev->isPersisted()) return;
-    CommandBus::post(std::make_shared<PutAnimationAsset>(m_animationId, ev->animation()));
-    makeAnimator();
-}
-
-void SkinMeshPrimitiveTest::onConstituteAnimationAssetFailed(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<ConstituteAnimationAssetFailed, IEvent>(e);
-    if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("animation asset %s constitute failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-}
-
-void SkinMeshPrimitiveTest::onAnimatorConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<AnimatorConstituted, IEvent>(e);
-    if (!ev) return;
-    if (ev->id() != m_animatorId) return;
-    if (ev->isPersisted()) return;
-    CommandBus::post(std::make_shared<PutAnimator>(m_animatorId, ev->animator()));
-    makeCube();
-}
-
-void SkinMeshPrimitiveTest::onConstituteAnimatorFailed(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<ConstituteAnimatorFailed, IEvent>(e);
-    if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("animator %s constitute failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-}
-
-void SkinMeshPrimitiveTest::onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<GeometryConstituted>(e);
-    if (!ev) return;
-    if (ev->id() != m_cubeId) return;
-    if (ev->isPersisted()) return;
-    CommandBus::post(std::make_shared<PutGeometry>(m_cubeId, ev->geometryData()));
-    makeMesh();
-}
-
-void SkinMeshPrimitiveTest::onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PrimitiveConstituted>(e);
-    if (!ev) return;
-    if (ev->id() == m_meshId)
-    {
-        if (ev->isPersisted()) return;
-        CommandBus::post(std::make_shared<PutPrimitive>(m_meshId, ev->primitive()));
-        makeModel();
-    }
-    else if (ev->id().origin() == m_modelId.origin())
-    {
-        if (ev->isPersisted()) return;
-        m_animatorId = ev->primitive()->animatorId();
-        if (auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
-        {
-            animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
-        }
-        CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
-        m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(ev->primitive());
-        CommandBus::post(std::make_shared<PutPrimitive>(m_modelId.origin(), ev->primitive()));
-        m_model->updateWorldTransform(Matrix4::IDENTITY);
-    }
 }
 
 void SkinMeshPrimitiveTest::onRendererCreated(const IEventPtr& e)

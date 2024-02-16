@@ -4,6 +4,7 @@
 #include "AnimationAssetCommands.h"
 #include "AnimationAssetQueries.h"
 #include "AnimationAssetEvents.h"
+#include "AnimatorErrors.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/EventPublisher.h"
@@ -36,6 +37,10 @@ ServiceResult AnimationAssetRepository::onInit()
 
     m_queryAnimationAsset = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryAnimationAsset(q); });
     QueryDispatcher::subscribe(typeid(QueryAnimationAsset), m_queryAnimationAsset);
+    m_requestAnimationAssetCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestAnimationAssetCreation(q); });
+    QueryDispatcher::subscribe(typeid(RequestAnimationAssetCreation), m_requestAnimationAssetCreation);
+    m_requestAnimationAssetConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestAnimationAssetConstitution(q); });
+    QueryDispatcher::subscribe(typeid(RequestAnimationAssetConstitution), m_requestAnimationAssetConstitution);
     m_removeAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeAnimationAsset(c); });
     CommandBus::subscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
     m_putAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putAnimationAsset(c); });
@@ -50,6 +55,10 @@ ServiceResult AnimationAssetRepository::onTerm()
     assert(m_storeMapper);
     QueryDispatcher::unsubscribe(typeid(QueryAnimationAsset), m_queryAnimationAsset);
     m_queryAnimationAsset = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestAnimationAssetCreation), m_requestAnimationAssetCreation);
+    m_requestAnimationAssetCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestAnimationAssetConstitution), m_requestAnimationAssetConstitution);
+    m_requestAnimationAssetConstitution = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
     m_removeAnimationAsset = nullptr;
     CommandBus::unsubscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
@@ -123,6 +132,53 @@ void AnimationAssetRepository::queryAnimationAsset(const IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryAnimationAsset>(q);
     if (!query) return;
     query->setResult(queryAnimationAsset(query->id()));
+}
+
+void AnimationAssetRepository::requestAnimationAssetCreation(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestAnimationAssetCreation>(r);
+    if (!request) return;
+    if (hasAnimationAsset(request->id()))
+    {
+        EventPublisher::post(std::make_shared<CreateAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        return;
+    }
+    auto animation = m_factory->create(request->id(), request->rtti());
+    if (request->persistenceLevel() == RequestAnimationAssetCreation::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_animationAssetLock };
+        m_animationAssets.insert_or_assign(request->id(), animation);
+    }
+    else if (request->persistenceLevel() == RequestAnimationAssetCreation::PersistenceLevel::Store)
+    {
+        putAnimationAsset(request->id(), animation);
+    }
+    request->setResult(animation);
+}
+
+void AnimationAssetRepository::requestAnimationAssetConstitution(const Frameworks::IQueryPtr& r)
+{
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestAnimationAssetConstitution>(r);
+    if (!request) return;
+    if (hasAnimationAsset(request->id()))
+    {
+        EventPublisher::post(std::make_shared<ConstituteAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        return;
+    }
+    auto animation = m_factory->constitute(request->id(), request->dto(), false);
+    if (request->persistenceLevel() == RequestAnimationAssetConstitution::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_animationAssetLock };
+        m_animationAssets.insert_or_assign(request->id(), animation);
+    }
+    else if (request->persistenceLevel() == RequestAnimationAssetConstitution::PersistenceLevel::Store)
+    {
+        putAnimationAsset(request->id(), animation);
+    }
+    request->setResult(animation);
 }
 
 void AnimationAssetRepository::removeAnimationAsset(const ICommandPtr& c)

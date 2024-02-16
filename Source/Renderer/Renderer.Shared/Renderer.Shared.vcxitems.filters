@@ -16,9 +16,6 @@
     <Filter Include="Installing">
       <UniqueIdentifier>{5d4c5d57-c9e4-49a9-b825-7cd36a651139}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderableBoundFilter">
-      <UniqueIdentifier>{229f3bbb-1de2-44a5-826f-e1c26eafb48d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{13c7f2bd-b156-43de-9468-46a028f1bef9}</UniqueIdentifier>
     </Filter>

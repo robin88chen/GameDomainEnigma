@@ -13,6 +13,7 @@
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "SceneRendererServiceConfiguration.h"
 #include "SceneGraph/Spatial.h"
+#include "GameEngine/EffectMaterialId.h"
 
 namespace Enigma::GameCommon
 {
@@ -21,48 +22,48 @@ namespace Enigma::GameCommon
     public:
         DeferredRendererServiceConfiguration();
 
-        const std::string& AmbientEffectName() const;
-        std::string& AmbientEffectName();
-        const std::string& SunLightEffectName() const;
-        std::string& SunLightEffectName();
-        const std::string& LightVolumeEffectName() const;
-        std::string& LightVolumeEffectName();
+        const Engine::EffectMaterialId& ambientEffect() const;
+        Engine::EffectMaterialId& ambientEffect();
+        const Engine::EffectMaterialId& sunLightEffect() const;
+        Engine::EffectMaterialId& sunLightEffect();
+        const Engine::EffectMaterialId& lightVolumeEffect() const;
+        Engine::EffectMaterialId& lightVolumeEffect();
 
-        const std::string& DeferredRendererTechniqueName() const;
-        std::string& DeferredRendererTechniqueName();
-        const std::string& VisualTechniqueNameForCameraDefault() const;
-        std::string& VisualTechniqueNameForCameraDefault();
-        const std::string& VisualTechniqueNameForCameraInside() const;
-        std::string& VisualTechniqueNameForCameraInside();
+        const std::string& deferredRendererTechniqueName() const;
+        std::string& deferredRendererTechniqueName();
+        const std::string& visualTechniqueNameForCameraDefault() const;
+        std::string& visualTechniqueNameForCameraDefault();
+        const std::string& visualTechniqueNameForCameraInside() const;
+        std::string& visualTechniqueNameForCameraInside();
 
-        const std::string& GbufferTargetName() const;
-        std::string& GbufferTargetName();
-        const std::string& GbufferSurfaceName() const;
-        std::string& GbufferSurfaceName();
-        const std::string& GbufferDepthName() const;
-        std::string& GbufferDepthName();
+        const std::string& gbufferTargetName() const;
+        std::string& gbufferTargetName();
+        const std::string& gbufferSurfaceName() const;
+        std::string& gbufferSurfaceName();
+        const std::string& gbufferDepthName() const;
+        std::string& gbufferDepthName();
 
-        const std::vector<Graphics::RenderTextureUsage>& GbufferUsages() const;
-        std::vector<Graphics::RenderTextureUsage>& GbufferUsages();
-        const std::vector<Graphics::GraphicFormat>& GbufferFormats() const;
-        std::vector<Graphics::GraphicFormat>& GbufferFormats();
+        const std::vector<Graphics::RenderTextureUsage>& gbufferUsages() const;
+        std::vector<Graphics::RenderTextureUsage>& gbufferUsages();
+        const std::vector<Graphics::GraphicFormat>& gbufferFormats() const;
+        std::vector<Graphics::GraphicFormat>& gbufferFormats();
 
-        const std::string& GbufferNormalSemantic() const;
-        std::string& GbufferNormalSemantic();
-        const std::string& GbufferDiffuseSemantic() const;
-        std::string& GbufferDiffuseSemantic();
-        const std::string& GbufferSpecularSemantic() const;
-        std::string& GbufferSpecularSemantic();
-        const std::string& GbufferDepthSemantic() const;
-        std::string& GbufferDepthSemantic();
+        const std::string& gbufferNormalSemantic() const;
+        std::string& gbufferNormalSemantic();
+        const std::string& gbufferDiffuseSemantic() const;
+        std::string& gbufferDiffuseSemantic();
+        const std::string& gbufferSpecularSemantic() const;
+        std::string& gbufferSpecularSemantic();
+        const std::string& gbufferDepthSemantic() const;
+        std::string& gbufferDepthSemantic();
 
-        const SceneGraph::Spatial::SpatialFlags& SunLightSpatialFlags() const;
-        SceneGraph::Spatial::SpatialFlags& SunLightSpatialFlags();
+        const SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags() const;
+        SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags();
 
     protected:
-        std::string m_ambientEffectName;
-        std::string m_sunLightEffectName;
-        std::string m_lightVolumeEffectName;
+        Engine::EffectMaterialId m_ambientEffect;
+        Engine::EffectMaterialId m_sunLightEffect;
+        Engine::EffectMaterialId m_lightVolumeEffect;
 
         std::string m_deferredRendererTechniqueName;
         std::string m_visualTechniqueNameForCameraDefault;

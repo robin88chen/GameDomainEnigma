@@ -4,7 +4,7 @@
 #include "FileSystem/AndroidMountPath.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EngineInstallingPolicy.h"
-#include "GameEngine/PrimitiveRepositoryInstallingPolicy.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
@@ -15,10 +15,8 @@
 #include "MeshPrimitiveMaker.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "Renderer/RenderableCommands.h"
-#include "Renderer/RenderableEvents.h"
-#include "Renderer/MeshPrimitive.h"
-#include "GameEngine/Primitive.h"
+#include "Renderables/MeshPrimitive.h"
+#include "Primitives/Primitive.h"
 #include "CameraMaker.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
@@ -30,15 +28,13 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "SceneGraph/CameraFrustumEvents.h"
 #include "SceneGraph/SceneGraphQueries.h"
-#include "Geometries/GeometryDataQueries.h"
 #include "Frameworks/QueryDispatcher.h"
-#include "Geometries/TriangleList.h"
 #include "SceneGraph/CameraFrustumCommands.h"
-#include "Geometries/GeometryDataEvents.h"
-#include "Geometries/GeometryCommands.h"
-#include "GameEngine/PrimitiveEvents.h"
-#include "GameEngine/PrimitiveCommands.h"
-#include "GameEngine/PrimitiveQueries.h"
+#include "Primitives/PrimitiveEvents.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "Animators/AnimatorInstallingPolicy.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
@@ -50,6 +46,9 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Geometries;
 using namespace Enigma::FileStorage;
 using namespace Enigma::Gateways;
+using namespace Enigma::Primitives;
+using namespace Enigma::Renderables;
+using namespace Enigma::Animators;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -92,15 +91,7 @@ void MeshPrimitiveTest::installEngine()
 {
     m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
     EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
-    m_onGeometryConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onGeometryConstituted(e); });
-    EventPublisher::subscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
-    m_onPrimitiveConstituted = std::make_shared<EventSubscriber>([=](auto e) {this->onPrimitiveConstituted(e); });
-    EventPublisher::subscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
 
-    m_onRenderablePrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderablePrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onBuildRenderablePrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) {this->onBuildRenderablePrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRenderTargetCreated(e); });
@@ -111,17 +102,19 @@ void MeshPrimitiveTest::installEngine()
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
-    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
+    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, scene_graph_policy, effect_material_source_policy, texture_policy });
+    auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy, animator_policy });
 
     makeCamera();
 
-    makeCube();
+    makeMesh();
 }
 
 void MeshPrimitiveTest::shutdownEngine()
@@ -132,15 +125,7 @@ void MeshPrimitiveTest::shutdownEngine()
 
     EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
     m_onCameraConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(GeometryConstituted), m_onGeometryConstituted);
-    m_onGeometryConstituted = nullptr;
-    EventPublisher::unsubscribe(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
-    m_onPrimitiveConstituted = nullptr;
 
-    EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onRenderablePrimitiveBuilt);
-    m_onRenderablePrimitiveBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildRenderablePrimitiveFailed), m_onBuildRenderablePrimitiveFailed);
-    m_onBuildRenderablePrimitiveFailed = nullptr;
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
@@ -184,35 +169,14 @@ void MeshPrimitiveTest::makeCamera()
     }
 }
 
-void MeshPrimitiveTest::makeCube()
-{
-    m_cubeId = GeometryId("test_geometry");
-    auto query = std::make_shared<QueryGeometryData>(m_cubeId);
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        makeMesh();
-    }
-    else
-    {
-        CubeGeometryMaker::makeCube(m_cubeId);
-    }
-}
-
 void MeshPrimitiveTest::makeMesh()
 {
+    m_cubeId = GeometryId("test_geometry");
+    auto cube = CubeGeometryMaker::makeCube(m_cubeId);
     m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    auto query = std::make_shared<QueryPrimitive>(m_meshId);
-    QueryDispatcher::dispatch(query);
-    if (query->getResult())
-    {
-        m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(query->getResult());
-    }
-    else
-    {
-        MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
-    }
+    m_mesh = MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
 }
+
 void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
@@ -223,55 +187,6 @@ void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr&
     m_camera = ev->camera();
     if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
     CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
-}
-
-void MeshPrimitiveTest::onGeometryConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<GeometryConstituted>(e);
-    if (!ev) return;
-    if (ev->id() != m_cubeId) return;
-    if (ev->isPersisted()) return;
-    CommandBus::post(std::make_shared<PutGeometry>(m_cubeId, ev->geometryData()));
-    makeMesh();
-}
-
-void MeshPrimitiveTest::onPrimitiveConstituted(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PrimitiveConstituted>(e);
-    if (!ev) return;
-    if (ev->id() != m_meshId) return;
-    if (ev->isPersisted()) return;
-    m_mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->primitive());
-    CommandBus::post(std::make_shared<PutPrimitive>(m_meshId, ev->primitive()));
-}
-
-void MeshPrimitiveTest::onRenderablePrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(ev->getPrimitive());
-    if (!m_isPrefabBuilt)
-    {
-        //MeshPrimitiveMaker::SaveMeshPrimitiveDto(mesh, "test_mesh.mesh@DataPath");
-        //auto policy = MeshPrimitiveMaker::LoadMeshPrimitivePolicy("test_mesh.mesh@DataPath");
-        //CommandBus::post(std::make_shared<Enigma::Renderer::BuildRenderablePrimitive>(policy));
-        m_isPrefabBuilt = true;
-    }
-    else
-    {
-        m_mesh = mesh;
-    }
-}
-
-void MeshPrimitiveTest::onBuildRenderablePrimitiveFailed(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed, IEvent>(e);
-    if (!ev) return;
-    Enigma::Platforms::Debug::ErrorPrintf("renderable primitive %s build failed : %s\n", ev->getName().c_str(), ev->errorCode().message().c_str());
 }
 
 void MeshPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e)

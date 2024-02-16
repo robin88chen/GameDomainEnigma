@@ -45,6 +45,8 @@ namespace Enigma::Animators
     protected:
         void queryAnimator(const Frameworks::IQueryPtr& q);
         void queryAnimatorNextSequenceNumber(const Frameworks::IQueryPtr& q);
+        void requestAnimatorCreation(const Frameworks::IQueryPtr& r);
+        void requestAnimatorConstitution(const Frameworks::IQueryPtr& r);
         void putAnimator(const Frameworks::ICommandPtr& c);
         void removeAnimator(const Frameworks::ICommandPtr& c);
 
@@ -57,6 +59,8 @@ namespace Enigma::Animators
 
         Frameworks::QuerySubscriberPtr m_queryAnimator;
         Frameworks::QuerySubscriberPtr m_queryAnimatorNextSequenceNumber;
+        Frameworks::QuerySubscriberPtr m_requestAnimatorCreation;
+        Frameworks::QuerySubscriberPtr m_requestAnimatorConstitution;
 
         Frameworks::CommandSubscriberPtr m_putAnimator;
         Frameworks::CommandSubscriberPtr m_removeAnimator;

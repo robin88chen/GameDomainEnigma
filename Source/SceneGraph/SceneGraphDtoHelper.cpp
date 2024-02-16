@@ -5,9 +5,9 @@
 
 using namespace Enigma::SceneGraph;
 
-CameraDtoHelper::CameraDtoHelper(const std::string& name)
+CameraDtoHelper::CameraDtoHelper(const SpatialId& id)
 {
-    m_cameraDto.id() = SpatialId(name, Camera::TYPE_RTTI);
+    m_cameraDto.id() = id;
     m_cameraDto.HandSystem() = GraphicCoordSys::LeftHand;
 }
 
@@ -69,12 +69,12 @@ Enigma::Engine::GenericDto CameraDtoHelper::toGenericDto()
     return m_cameraDto.toGenericDto();
 }
 
-SpatialDtoHelper::SpatialDtoHelper(const std::string& name)
+SpatialDtoHelper::SpatialDtoHelper(const SpatialId& id)
 {
-    m_dto.id() = SpatialId(name, Spatial::TYPE_RTTI);
+    m_dto.id() = id;
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
-    m_dto.name() = name;
+    m_dto.name() = id.name();
     m_dto.isTopLevel() = false;
     m_dto.localTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.worldTransform() = MathLib::Matrix4::IDENTITY;
@@ -142,12 +142,12 @@ Enigma::Engine::GenericDto SpatialDtoHelper::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-PawnDtoHelper::PawnDtoHelper(const std::string& name)
+PawnDtoHelper::PawnDtoHelper(const SpatialId& id)
 {
-    m_dto.id() = SpatialId(name, Pawn::TYPE_RTTI);
+    m_dto.id() = id;
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
-    m_dto.name() = name;
+    m_dto.name() = id.name();
     m_dto.isTopLevel() = false;
     m_dto.localTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.worldTransform() = MathLib::Matrix4::IDENTITY;
@@ -217,9 +217,9 @@ PawnDtoHelper& PawnDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
     return *this;
 }
 
-PawnDtoHelper& PawnDtoHelper::meshPrimitive(const Renderables::MeshPrimitiveDto& mesh_dto)
+PawnDtoHelper& PawnDtoHelper::primitive(const Primitives::PrimitiveId& primitive_id)
 {
-    m_dto.primitiveId() = mesh_dto.id();
+    m_dto.primitiveId() = primitive_id;
     return *this;
 }
 

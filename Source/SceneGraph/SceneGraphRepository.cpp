@@ -55,10 +55,18 @@ ServiceResult SceneGraphRepository::onInit()
 {
     m_queryCamera = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryCamera(q); });
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
+    m_requestCameraCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestCameraCreation(q); });
+    QueryDispatcher::subscribe(typeid(RequestCameraCreation), m_requestCameraCreation);
+    m_requestCameraConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestCameraConstitution(q); });
+    QueryDispatcher::subscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
     m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
     QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
     m_querySpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { querySpatial(q); });
     QueryDispatcher::subscribe(typeid(QuerySpatial), m_querySpatial);
+    m_requestSpatialCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestSpatialCreation(q); });
+    QueryDispatcher::subscribe(typeid(RequestSpatialCreation), m_requestSpatialCreation);
+    m_requestCameraConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestSpatialConstitution(q); });
+    QueryDispatcher::subscribe(typeid(RequestSpatialConstitution), m_requestCameraConstitution);
 
     m_putCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putCamera(c); });
     CommandBus::subscribe(typeid(PutCamera), m_putCamera);
@@ -75,22 +83,28 @@ ServiceResult SceneGraphRepository::onInit()
     CommandBus::subscribe(typeid(CreateNode), m_createNode);
 
     m_storeMapper->connect();
-    m_factory->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
     m_storeMapper->disconnect();
-    m_factory->unregisterHandlers();
 
     m_cameras.clear();
 
     QueryDispatcher::unsubscribe(typeid(QueryCamera), m_queryCamera);
     m_queryCamera = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestCameraCreation), m_requestCameraCreation);
+    m_requestCameraCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
+    m_requestCameraConstitution = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
     m_queryNode = nullptr;
     QueryDispatcher::unsubscribe(typeid(QuerySpatial), m_querySpatial);
     m_querySpatial = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestSpatialCreation), m_requestSpatialCreation);
+    m_requestSpatialCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestSpatialConstitution), m_requestCameraConstitution);
+    m_requestSpatialConstitution = nullptr;
 
     CommandBus::unsubscribe(typeid(PutCamera), m_putCamera);
     m_putCamera = nullptr;
@@ -153,9 +167,9 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     std::lock_guard locker{ m_cameraMapLock };
     auto it = m_cameras.find(id);
     if (it != m_cameras.end()) return it->second;
-    auto dtos = m_storeMapper->queryCamera(id);
-    assert(!dtos.empty());
-    auto camera = m_factory->constituteCamera(id, dtos[0], true);
+    auto dto = m_storeMapper->queryCamera(id);
+    assert(dto.has_value());
+    auto camera = m_factory->constituteCamera(id, dto.value(), true);
     assert(camera);
     m_cameras.insert_or_assign(id, camera);
     return camera;
@@ -287,10 +301,9 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
     std::lock_guard locker{ m_spatialMapLock };
     auto it = m_spatials.find(id);
     if (it != m_spatials.end()) return it->second;
-    auto dtos = m_storeMapper->querySpatial(id);
-    assert(!dtos.empty());
-    //todo : constitute spatial
-    return m_factory->constitutePawn(id, dtos);
+    auto dto = m_storeMapper->querySpatial(id);
+    assert(dto.has_value());
+    return m_factory->constituteSpatial(id, dto.value(), true);
 }
 
 std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name, const LightInfo& info)
@@ -400,6 +413,54 @@ void SceneGraphRepository::queryCamera(const IQueryPtr& q)
     query->setResult(queryCamera(query->id()));
 }
 
+void SceneGraphRepository::requestCameraCreation(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestCameraCreation>(r);
+    if (!request) return;
+    if (hasCamera(request->id()))
+    {
+        EventPublisher::post(std::make_shared<CreateCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        return;
+    }
+    auto camera = m_factory->createCamera(request->id());
+    if (request->persistenceLevel() == RequestCameraCreation::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_cameraMapLock };
+        m_cameras.insert_or_assign(request->id(), camera);
+    }
+    else if (request->persistenceLevel() == RequestCameraCreation::PersistenceLevel::Store)
+    {
+        putCamera(camera);
+    }
+    request->setResult(camera);
+}
+
+void SceneGraphRepository::requestCameraConstitution(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestCameraConstitution>(r);
+    if (!request) return;
+    if (hasCamera(request->id()))
+    {
+        EventPublisher::post(std::make_shared<ConstituteCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        return;
+    }
+    auto camera = m_factory->constituteCamera(request->id(), request->dto(), false);
+    if (request->persistenceLevel() == RequestCameraConstitution::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_cameraMapLock };
+        m_cameras.insert_or_assign(request->id(), camera);
+    }
+    else if (request->persistenceLevel() == RequestCameraConstitution::PersistenceLevel::Store)
+    {
+        putCamera(camera);
+    }
+    request->setResult(camera);
+}
+
 void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
 {
     assert(m_storeMapper);
@@ -482,6 +543,54 @@ void SceneGraphRepository::querySpatial(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QuerySpatial>(q);
     assert(query);
     query->setResult(querySpatial(query->id()));
+}
+
+void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestSpatialCreation>(r);
+    if (!request) return;
+    if (hasSpatial(request->id()))
+    {
+        EventPublisher::post(std::make_shared<CreateSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        return;
+    }
+    auto spatial = m_factory->createSpatial(request->id());
+    if (request->persistenceLevel() == RequestSpatialCreation::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_spatialMapLock };
+        m_spatials.insert_or_assign(request->id(), spatial);
+    }
+    else if (request->persistenceLevel() == RequestSpatialCreation::PersistenceLevel::Store)
+    {
+        putSpatial(spatial);
+    }
+    request->setResult(spatial);
+}
+
+void SceneGraphRepository::requestSpatialConstitution(const Frameworks::IQueryPtr& r)
+{
+    assert(m_factory);
+    if (!r) return;
+    auto request = std::dynamic_pointer_cast<RequestSpatialConstitution>(r);
+    if (!request) return;
+    if (hasSpatial(request->id()))
+    {
+        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        return;
+    }
+    auto spatial = m_factory->constituteSpatial(request->id(), request->dto(), false);
+    if (request->persistenceLevel() == RequestSpatialConstitution::PersistenceLevel::Repository)
+    {
+        std::lock_guard locker{ m_spatialMapLock };
+        m_spatials.insert_or_assign(request->id(), spatial);
+    }
+    else if (request->persistenceLevel() == RequestSpatialConstitution::PersistenceLevel::Store)
+    {
+        putSpatial(spatial);
+    }
+    request->setResult(spatial);
 }
 
 void SceneGraphRepository::putCamera(const Frameworks::ICommandPtr& c)

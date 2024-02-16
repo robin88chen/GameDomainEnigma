@@ -25,10 +25,6 @@ void AnimationAssetFactory::registerHandlers()
     CommandBus::subscribe(typeid(RegisterAnimationAssetFactory), m_registerAnimationAssetFactory);
     m_unregisterAnimationAssetFactory = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { unregisterAnimationAssetFactory(c); });
     CommandBus::subscribe(typeid(UnregisterAnimationAssetFactory), m_unregisterAnimationAssetFactory);
-    m_createAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createAnimationAsset(c); });
-    CommandBus::subscribe(typeid(CreateAnimationAsset), m_createAnimationAsset);
-    m_constituteAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { constituteAnimationAsset(c); });
-    CommandBus::subscribe(typeid(ConstituteAnimationAsset), m_constituteAnimationAsset);
 }
 
 void AnimationAssetFactory::unregisterHandlers()
@@ -37,10 +33,6 @@ void AnimationAssetFactory::unregisterHandlers()
     m_registerAnimationAssetFactory = nullptr;
     CommandBus::unsubscribe(typeid(UnregisterAnimationAssetFactory), m_unregisterAnimationAssetFactory);
     m_unregisterAnimationAssetFactory = nullptr;
-    CommandBus::unsubscribe(typeid(CreateAnimationAsset), m_createAnimationAsset);
-    m_createAnimationAsset = nullptr;
-    CommandBus::unsubscribe(typeid(ConstituteAnimationAsset), m_constituteAnimationAsset);
-    m_constituteAnimationAsset = nullptr;
 }
 
 std::shared_ptr<AnimationAsset> AnimationAssetFactory::create(const AnimationAssetId& id, const Frameworks::Rtti& rtti)
@@ -107,21 +99,5 @@ void AnimationAssetFactory::unregisterAnimationAssetFactory(const Frameworks::IC
     const auto cmd = std::static_pointer_cast<UnregisterAnimationAssetFactory>(c);
     if (!cmd) return;
     unregisterAnimationAssetFactory(cmd->rttiName());
-}
-
-void AnimationAssetFactory::createAnimationAsset(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::static_pointer_cast<CreateAnimationAsset>(c);
-    if (!cmd) return;
-    create(cmd->id(), cmd->rtti());
-}
-
-void AnimationAssetFactory::constituteAnimationAsset(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::static_pointer_cast<ConstituteAnimationAsset>(c);
-    if (!cmd) return;
-    constitute(cmd->id(), cmd->dto(), false);
 }
 

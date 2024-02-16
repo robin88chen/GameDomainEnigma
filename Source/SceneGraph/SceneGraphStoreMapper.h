@@ -23,14 +23,14 @@ namespace Enigma::SceneGraph
         virtual std::error_code disconnect() = 0;
 
         virtual bool hasCamera(const SpatialId& id) = 0;
-        virtual Engine::GenericDtoCollection queryCamera(const SpatialId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryCamera(const SpatialId& id) = 0;
         virtual std::error_code removeCamera(const SpatialId& id) = 0;
-        virtual std::error_code putCamera(const SpatialId& id, const Engine::GenericDtoCollection& dtos) = 0;
+        virtual std::error_code putCamera(const SpatialId& id, const Engine::GenericDto& dto) = 0;
 
         virtual bool hasSpatial(const SpatialId& id) = 0;
-        virtual Engine::GenericDtoCollection querySpatial(const SpatialId& id) = 0;
+        virtual std::optional<Engine::GenericDto> querySpatial(const SpatialId& id) = 0;
         virtual std::error_code removeSpatial(const SpatialId& id) = 0;
-        virtual std::error_code putSpatial(const SpatialId& id, const Engine::GenericDtoCollection& dtos) = 0;
+        virtual std::error_code putSpatial(const SpatialId& id, const Engine::GenericDto& dto) = 0;
     };
 }
 

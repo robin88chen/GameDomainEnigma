@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ViewerAppDelegate.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
@@ -28,40 +28,40 @@ namespace EnigmaViewer
         ViewerAppDelegate();
         ~ViewerAppDelegate();
 
-        void Initialize(Enigma::Graphics::IGraphicAPI::APIVersion api_ver, Enigma::Graphics::IGraphicAPI::AsyncType useAsyncDevice,
+        void initialize(Enigma::Graphics::IGraphicAPI::APIVersion api_ver, Enigma::Graphics::IGraphicAPI::AsyncType useAsyncDevice,
             const std::string& log_filename, HWND hwnd);
-        virtual void InitializeMountPaths();
-        void InstallEngine();
-        void RegisterMediaMountPaths(const std::string& media_path);
-        void ShutdownEngine();
-        void Finalize();
+        virtual void initializeMountPaths();
+        void installEngine();
+        void registerMediaMountPaths(const std::string& media_path);
+        void shutdownEngine();
+        void finalize();
 
-        void FrameUpdate();
-        void PrepareRender();
-        void RenderFrame();
+        void frameUpdate();
+        void prepareRender();
+        void renderFrame();
 
-        void OnTimerElapsed();
+        void onTimerElapsed();
 
-        void LoadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
+        void loadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
 
-        void SavePawnFile(const std::filesystem::path& filepath);
-        void LoadPawnFile(const std::filesystem::path& filepath);
+        void savePawnFile(const std::filesystem::path& filepath);
+        void loadPawnFile(const std::filesystem::path& filepath);
 
-        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> GetInputHandler() const { return m_inputHandler.lock(); }
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
 
     protected:
-        void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void DoChangingMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
-        void DoAddingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void DoDeletingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void DoPlayingAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void DoChangingAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
+        void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        void changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
+        void addAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void playAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
+        void changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
 
-        void OnViewingPawnPrimitiveBuilt();
-        void OnFloorPrimitiveBuilt();
-        void CreateFloorReceiver();
+        void onViewingPawnPrimitiveBuilt();
+        void onFloorPrimitiveBuilt();
+        void createFloorReceiver();
 
     protected:
         HWND m_hwnd;
@@ -79,15 +79,18 @@ namespace EnigmaViewer
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_doChangingMeshTexture;
-        Enigma::Frameworks::CommandSubscriberPtr m_doAddingAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_doDeletingAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_doPlayingAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_doChangingAnimationTimeValue;
+        Enigma::Frameworks::CommandSubscriberPtr m_changeMeshTexture;
+        Enigma::Frameworks::CommandSubscriberPtr m_addAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_deleteAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_playAnimationClip;
+        Enigma::Frameworks::CommandSubscriberPtr m_changeAnimationTimeValue;
 
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
+        Enigma::Geometries::GeometryId m_floorGeometryId;
+        Enigma::Primitives::PrimitiveId m_floorMeshId;
+        Enigma::SceneGraph::SpatialId m_floorPawnId;
     };
 }
 

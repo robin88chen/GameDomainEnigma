@@ -386,7 +386,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
         Geometries::SquareQuadDtoHelper quad_dto_helper(m_ambientLightQuadId);
         quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
             .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-        quad_geo = std::make_shared<Geometries::RequestGeometryConstitution>(m_ambientLightQuadId, quad_dto_helper.toGenericDto(), Geometries::RequestGeometryConstitution::PersistenceLevel::Repository)->dispatch();
+        quad_geo = std::make_shared<Geometries::RequestGeometryConstitution>(m_ambientLightQuadId, quad_dto_helper.toGenericDto(), Geometries::PersistenceLevel::Repository)->dispatch();
     }
     m_ambientLightMeshId = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
     auto lit_mesh = Primitives::Primitive::queryPrimitive(m_ambientLightMeshId);

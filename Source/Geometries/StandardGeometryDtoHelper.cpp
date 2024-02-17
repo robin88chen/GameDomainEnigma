@@ -88,6 +88,12 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::textureCoord(const MathLib::Vector2& l
     return *this;
 }
 
+SquareQuadDtoHelper& SquareQuadDtoHelper::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    return *this;
+}
+
 GenericDto SquareQuadDtoHelper::toGenericDto()
 {
     assert(m_dto.position3s() || m_dto.position4s());
@@ -371,6 +377,12 @@ CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector3& left_bot
     return *this;
 }
 
+CubeDtoHelper& CubeDtoHelper::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    return *this;
+}
+
 GenericDto CubeDtoHelper::toGenericDto()
 {
     assert(m_dto.position3s() || m_dto.position4s());
@@ -592,6 +604,12 @@ SphereDtoHelper& SphereDtoHelper::boxBound()
 
     const auto bb = BoundingVolume{ box };
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
+    return *this;
+}
+
+SphereDtoHelper& SphereDtoHelper::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
     return *this;
 }
 

@@ -24,6 +24,7 @@ namespace Enigma::Geometries
         SquareQuadDtoHelper& xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top);
         SquareQuadDtoHelper& normal();
         SquareQuadDtoHelper& textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
+        SquareQuadDtoHelper& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
 
@@ -45,6 +46,7 @@ namespace Enigma::Geometries
         CubeDtoHelper& facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
         CubeDtoHelper& textureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
         CubeDtoHelper& facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
+        CubeDtoHelper& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
 
@@ -62,6 +64,7 @@ namespace Enigma::Geometries
         SphereDtoHelper& textureCoord();
         SphereDtoHelper& sphereBound();
         SphereDtoHelper& boxBound();
+        SphereDtoHelper& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
 

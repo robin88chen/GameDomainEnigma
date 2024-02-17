@@ -34,8 +34,7 @@
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
-#include "Geometries/StandardGeometryDtoHelper.h"
-#include "Geometries/GeometryDataQueries.h"
+#include "Geometries/StandardGeometryHelper.h"
 #include "Primitives/PrimitiveQueries.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "FileStorage/TextureFileStoreMapper.h"
@@ -234,9 +233,8 @@ void ShadowMapTest::createFloorReceiver()
     auto floor_geo = GeometryData::queryGeometryData(floor_geo_id);
     if (!floor_geo)
     {
-        SquareQuadDtoHelper floor_dto(floor_geo_id);
-        floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
-        floor_geo = std::make_shared<RequestGeometryConstitution>(floor_geo_id, floor_dto.toGenericDto(), RequestGeometryConstitution::PersistenceLevel::Repository)->dispatch();
+        SquareQuadHelper floor_helper(floor_geo_id);
+        floor_geo = floor_helper.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(floor_geo_id.name(), floor_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
     }
     auto floor_mesh_id = PrimitiveId("floor_mesh", Enigma::Renderables::MeshPrimitive::TYPE_RTTI);
     auto floor_mesh = std::make_shared<QueryPrimitive>(floor_mesh_id)->dispatch();

@@ -10,6 +10,7 @@
 
 #include "Frameworks/Query.h"
 #include "GeometryId.h"
+#include "GeometryPersistenceLevel.h"
 #include <memory>
 
 namespace Enigma::Geometries
@@ -29,8 +30,6 @@ namespace Enigma::Geometries
     class RequestGeometryCreation : public Frameworks::Query<std::shared_ptr<GeometryData>>
     {
     public:
-        enum class PersistenceLevel { None, Repository, Store };
-    public:
         RequestGeometryCreation(const GeometryId& id, const Frameworks::Rtti& rtti, PersistenceLevel persistence_level) : m_id(id), m_rtti(rtti.getName()), m_persistence_level(persistence_level) {}
         const GeometryId& id() { return m_id; }
         const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
@@ -43,8 +42,6 @@ namespace Enigma::Geometries
     };
     class RequestGeometryConstitution : public Frameworks::Query<std::shared_ptr<GeometryData>>
     {
-    public:
-        enum class PersistenceLevel { None, Repository, Store };
     public:
         RequestGeometryConstitution(const GeometryId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistence_level(persistence_level) {}
         const GeometryId& id() { return m_id; }

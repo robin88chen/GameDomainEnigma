@@ -2,8 +2,6 @@
 #include "GeometryDataStoreMapper.h"
 #include "TriangleList.h"
 #include "GeometryDataEvents.h"
-#include "GeometryDataPolicy.h"
-#include "GeometryBuilder.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"

@@ -101,6 +101,5 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
   </ItemGroup>
 </Project>

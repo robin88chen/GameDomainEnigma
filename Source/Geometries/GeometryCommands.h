@@ -9,7 +9,6 @@
 #define _GEOMETRY_COMMANDS_H
 
 #include "Frameworks/Command.h"
-#include "GeometryDataPolicy.h"
 #include "GeometryDataFactory.h"
 
 namespace Enigma::Geometries

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ShadowMapTest.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -29,21 +29,21 @@ public:
     ShadowMapTest(const std::string app_name);
     ~ShadowMapTest() override;
 
-    virtual void InitializeMountPaths() override;
+    virtual void initializeMountPaths() override;
 
-    virtual void InstallEngine() override final;
-    virtual void ShutdownEngine() override final;
+    virtual void installEngine() override final;
+    virtual void shutdownEngine() override final;
 
-    virtual void FrameUpdate() override;
-    virtual void RenderFrame() override;
+    virtual void frameUpdate() override;
+    virtual void renderFrame() override;
 
 protected:
-    void CreateFloorReceiver() const;
-    void CreateCubePawn() const;
+    void createFloorReceiver();
+    void createCubePawn();
 
-    void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
     std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
@@ -52,6 +52,7 @@ protected:
     Enigma::SceneGraph::NodePtr m_sceneRoot;
     Enigma::SceneGraph::PawnPtr m_floor;
     Enigma::SceneGraph::PawnPtr m_cube;
+    Enigma::SceneGraph::SpatialId m_floorId;
 
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;

@@ -398,7 +398,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
         mesh_dto.geometryId() = m_ambientLightQuadId;
         mesh_dto.effects().emplace_back(m_configuration->ambientEffect());
         mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::RequestPrimitiveConstitution::PersistenceLevel::Repository)->dispatch();
+        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::PersistenceLevel::Repository)->dispatch();
     }
     m_ambientLightPawnId = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
     auto lit_pawn = std::make_shared<QuerySpatial>(m_ambientLightPawnId)->dispatch();
@@ -410,7 +410,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
         lighting_pawn_dto.id() = m_ambientLightPawnId;
         lighting_pawn_dto.HostLightName() = lit->getSpatialName();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
-        lit_pawn = std::make_shared<RequestSpatialConstitution>(m_ambientLightPawnId, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(m_ambientLightPawnId, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
         if (lit_pawn)
         {
             if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
@@ -458,7 +458,7 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
     //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
     //auto dtos = { pawn_dto };
     //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
@@ -488,7 +488,7 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
     auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
+    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
     //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
     //auto dtos = { pawn_dto };
     //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));

@@ -9,6 +9,7 @@
 #define SCENE_GRAPH_QUERIES_H
 
 #include "Frameworks/Query.h"
+#include "SceneGraphPersistenceLevel.h"
 
 namespace Enigma::SceneGraph
 {
@@ -29,8 +30,6 @@ namespace Enigma::SceneGraph
     class RequestCameraCreation : public Frameworks::Query<std::shared_ptr<Camera>>
     {
     public:
-        enum class PersistenceLevel { None, Repository, Store };
-    public:
         RequestCameraCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
 
         const SpatialId& id() { return m_id; }
@@ -42,8 +41,6 @@ namespace Enigma::SceneGraph
     };
     class RequestCameraConstitution : public Frameworks::Query<std::shared_ptr<Camera>>
     {
-    public:
-        enum class PersistenceLevel { None, Repository, Store };
     public:
         RequestCameraConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
 
@@ -79,8 +76,6 @@ namespace Enigma::SceneGraph
     class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:
-        enum class PersistenceLevel { None, Repository, Store };
-    public:
         RequestSpatialCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
 
         const SpatialId& id() { return m_id; }
@@ -92,8 +87,6 @@ namespace Enigma::SceneGraph
     };
     class RequestSpatialConstitution : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
-    public:
-        enum class PersistenceLevel { None, Repository, Store };
     public:
         RequestSpatialConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
 

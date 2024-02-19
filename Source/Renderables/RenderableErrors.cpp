@@ -14,6 +14,9 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dynamicCastFail: return "dynamic cast fail";
     case ErrorCode::nullAnimator: return "null animator";
     case ErrorCode::animatorMultiListening: return "animator multi listening";
+    case ErrorCode::nullRenderBuffer: return "Null render buffer";
+    case ErrorCode::nullRenderer: return "Null Renderer error";
+    case ErrorCode::emptyRenderElementList: return "Empty render element list";
     }
     return "Unknown";
 }

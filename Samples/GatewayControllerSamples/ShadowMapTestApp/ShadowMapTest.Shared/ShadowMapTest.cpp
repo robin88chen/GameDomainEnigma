@@ -40,6 +40,8 @@
 #include "FileStorage/TextureFileStoreMapper.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"
+#include "Renderables/RenderablePrimitiveHelper.h"
+#include "SceneGraph/SceneGraphHelper.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
@@ -236,68 +238,51 @@ void ShadowMapTest::createFloorReceiver()
         SquareQuadHelper floor_helper(floor_geo_id);
         floor_geo = floor_helper.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(floor_geo_id.name(), floor_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
     }
-    auto floor_mesh_id = PrimitiveId("floor_mesh", Enigma::Renderables::MeshPrimitive::TYPE_RTTI);
+    auto floor_mesh_id = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
     auto floor_mesh = std::make_shared<QueryPrimitive>(floor_mesh_id)->dispatch();
     if (!floor_mesh)
     {
-        Enigma::Renderables::MeshPrimitiveDto floor_mesh_dto;
-        floor_mesh_dto.id() = floor_mesh_id;
-        floor_mesh_dto.geometryId() = floor_geo_id;
-        floor_mesh_dto.factoryDesc() = FactoryDesc(floor_mesh_id.rtti().getName()).ClaimAsNative(floor_mesh_id.name() + ".mesh@DataPath");
-        floor_mesh_dto.effects().emplace_back(EffectMaterialId("fx/default_textured_mesh_effect"));
-        EffectTextureMapDtoHelper texture_helper;
-        texture_helper.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
-        floor_mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
-        floor_mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
-        floor_mesh_dto.visualTechniqueSelection() = "Default";
-        floor_mesh = std::make_shared<RequestPrimitiveConstitution>(floor_mesh_id, floor_mesh_dto.toGenericDto(), RequestPrimitiveConstitution::PersistenceLevel::Repository)->dispatch();
+        MeshPrimitiveHelper mesh_helper(floor_mesh_id);
+        floor_mesh = mesh_helper.geometryId(floor_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap")).visualTechnique("Default").renderListID(Renderer::RenderListID::Scene).asNative(floor_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
     }
     m_floorId = SpatialId("floor_receiver", Pawn::TYPE_RTTI);
     m_floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_floorId)->dispatch());
     if (!m_floor)
     {
-        PawnDtoHelper pawn_dto(m_floorId);
-        pawn_dto.primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
-        m_floor = std::dynamic_pointer_cast<Pawn, Spatial>(std::make_shared<RequestSpatialConstitution>(m_floorId, pawn_dto.toGenericDto(), RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch());
+        PawnHelper pawn_helper(m_floorId);
+        m_floor = pawn_helper.primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_floor)) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
-    m_floor->GetPrimitive()->selectVisualTechnique("ShadowMapReceiver");
-    /*PawnDtoHelper pawn_dto("floor_receiver");
-    MeshPrimitiveDto mesh_dto;
-    SquareQuadDtoHelper floor_dto("floor");
-    floor_dto.XZQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).Normal().TextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
-    mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
-    EffectTextureMapDtoHelper tex_dto;
-    tex_dto.TextureMapping("image/du011.png", "APK_PATH", "du011", std::nullopt, "DiffuseMap");
-    mesh_dto.Name() = "floor_mesh";
-    mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
-    mesh_dto.GeometryName() = "floor";
-    mesh_dto.TheGeometry() = floor_dto.ToGenericDto();
-
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto dtos = { pawn_dto.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("floor_receiver", dtos));*/
+    if (m_floor) m_floor->GetPrimitive()->selectVisualTechnique("ShadowMapReceiver");
 }
 
 void ShadowMapTest::createCubePawn()
 {
-    /*PawnDtoHelper pawn_dto("cube_pawn");
-    MeshPrimitiveDto mesh_dto;
-    CubeDtoHelper cube_dto("cube");
-    cube_dto.FacedCube(Vector3::ZERO, Vector3(1.0f, 1.0f, 1.0f)).FacedNormal().FacedTextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
-    EffectMaterialDtoHelper mat_dto("default_textured_mesh_effect");
-    mat_dto.FilenameAtPath("fx/default_textured_mesh_effect.efx@APK_PATH");
-    EffectTextureMapDtoHelper tex_dto;
-    tex_dto.TextureMapping("image/one.png", "APK_PATH", "one", std::nullopt, "DiffuseMap");
-    mesh_dto.Name() = "cube_mesh";
-    mesh_dto.Effects().emplace_back(mat_dto.ToGenericDto());
-    mesh_dto.TextureMaps().emplace_back(tex_dto.ToGenericDto());
-    mesh_dto.GeometryName() = "cube";
-    mesh_dto.TheGeometry() = cube_dto.ToGenericDto();
-
-    pawn_dto.MeshPrimitive(mesh_dto).LocalTransform(Matrix4::IDENTITY).TopLevel(true).SpatialFlags(Spatial::Spatial_BelongToParent | SpatialShadowFlags::Spatial_ShadowCaster | SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto dtos = { pawn_dto.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("cube_pawn", dtos));*/
+    auto cube_geo_id = GeometryId("cube");
+    auto cube_geo = GeometryData::queryGeometryData(cube_geo_id);
+    if (!cube_geo)
+    {
+        CubeHelper cube_helper(cube_geo_id);
+        cube_geo = cube_helper.facedCube(Vector3::ZERO, Vector3(1.0f, 1.0f, 1.0f)).facedNormal().facedTextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(cube_geo_id.name(), cube_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
+    }
+    auto cube_mesh_id = PrimitiveId("cube_mesh", MeshPrimitive::TYPE_RTTI);
+    auto cube_mesh = std::make_shared<QueryPrimitive>(cube_mesh_id)->dispatch();
+    if (!cube_mesh)
+    {
+        MeshPrimitiveHelper mesh_helper(cube_mesh_id);
+        cube_mesh = mesh_helper.geometryId(cube_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/one"), std::nullopt, "DiffuseMap")).visualTechnique("Default").renderListID(Renderer::RenderListID::Scene).asNative(cube_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
+    }
+    m_cubeId = SpatialId("cube_pawn", Pawn::TYPE_RTTI);
+    m_cube = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_cubeId)->dispatch());
+    if (!m_cube)
+    {
+        PawnHelper pawn_helper(m_cubeId);
+        m_cube = pawn_helper.primitive(cube_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowCaster | SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+    }
+    if ((m_sceneRoot) && (m_cube))
+    {
+        Matrix4 mx = Matrix4::MakeTranslateTransform(0.0f, 1.2f, 0.0f);
+        m_sceneRoot->attachChild(m_cube, mx);
+    }
+    if (m_cube) m_cube->GetPrimitive()->selectVisualTechnique("Default");
 }

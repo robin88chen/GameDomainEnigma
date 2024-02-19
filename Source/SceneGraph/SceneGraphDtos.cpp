@@ -5,9 +5,7 @@
 #include "Spatial.h"
 #include "Light.h"
 #include "Pawn.h"
-#include "SceneGraphPolicies.h"
 #include "VisibilityManagedNode.h"
-#include "GameEngine/DtoDeserializer.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -171,20 +169,6 @@ GenericDto PawnDto::toGenericDto() const
     //dto.addOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
 }
-
-/*std::shared_ptr<PawnPolicy> PawnDto::convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
-{
-    if (m_primitive)
-    {
-        return std::make_shared<PawnPolicy>(m_name, m_primitive.value());
-    }
-    //todo : prefab support
-    /*else
-    {
-        return std::make_shared<PawnPolicy>(m_name, m_primitiveFactory.GetPrefab(), deserializer);
-    }*/
-    /*return nullptr;
-}*/
 
 LazyNodeDto::LazyNodeDto() : NodeDto()
 {

@@ -21,8 +21,6 @@
 
 namespace Enigma::SceneGraph
 {
-    class PawnPolicy;
-
     class SpatialDto
     {
     public:
@@ -124,7 +122,6 @@ namespace Enigma::SceneGraph
         //static PawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
-        //std::shared_ptr<PawnPolicy> convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
         std::optional<Primitives::PrimitiveId> m_primitiveId;
         //todo : prefab support

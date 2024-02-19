@@ -4,13 +4,13 @@
 #include "GameEngine/Texture.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "GameEngine/RenderBuffer.h"
-#include "Renderer/RendererErrors.h"
 #include "Geometries/GeometryData.h"
 #include "GameEngine/IRenderer.h"
 #include "Renderer/RenderElement.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryDataFactory.h"
+#include "RenderableErrors.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -169,7 +169,7 @@ void MeshPrimitive::bindSemanticTextures(const EffectTextureMap::SegmentEffectTe
 error MeshPrimitive::updateRenderBuffer()
 {
     assert(m_geometry);
-    if (!m_renderBuffer) return Renderer::ErrorCode::nullRenderBuffer;
+    if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     const error er = m_renderBuffer->UpdateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
     return er;
 }
@@ -178,7 +178,7 @@ error MeshPrimitive::rangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     std::optional<unsigned> idx_offset, std::optional<unsigned> idx_count)
 {
     assert(m_geometry);
-    if (!m_renderBuffer) return Renderer::ErrorCode::nullRenderBuffer;
+    if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     std::optional<IIndexBuffer::ranged_buffer> idx_memory;
     if (idx_count && idx_offset) idx_memory = m_geometry->getRangedIndexMemory(idx_offset.value(), idx_count.value());
     const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
@@ -188,14 +188,15 @@ error MeshPrimitive::rangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
 error MeshPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lightingState)
 {
+    if (!m_lazyStatus.isReady()) return ErrorCode::ok;
     const auto render = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer);
-    if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
-    if (testPrimitiveFlag(Primitive_UnRenderable)) return Renderer::ErrorCode::ok;
+    if (testPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
 
-    if (FATAL_LOG_EXPR(m_elements.empty())) return Renderer::ErrorCode::emptyRenderElementList;
+    if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
 
-    error er = Renderer::ErrorCode::ok;
+    error er = ErrorCode::ok;
     for (auto& ele : m_elements)
     {
         er = render->InsertRenderElement(ele, mxWorld, lightingState, m_renderListID);
@@ -207,13 +208,13 @@ error MeshPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr
 error MeshPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer>& renderer)
 {
     const auto render = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer);
-    if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
-    if (FATAL_LOG_EXPR(m_elements.empty())) return Renderer::ErrorCode::emptyRenderElementList;
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
+    if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
     for (auto& ele : m_elements)
     {
         render->RemoveRenderElement(ele, m_renderListID);
     }
-    return Renderer::ErrorCode::ok;
+    return ErrorCode::ok;
 }
 
 void MeshPrimitive::calculateBoundingVolume(bool axis_align)

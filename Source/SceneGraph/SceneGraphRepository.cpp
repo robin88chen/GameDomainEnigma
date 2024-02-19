@@ -425,12 +425,12 @@ void SceneGraphRepository::requestCameraCreation(const Frameworks::IQueryPtr& r)
         return;
     }
     auto camera = m_factory->createCamera(request->id());
-    if (request->persistenceLevel() == RequestCameraCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_cameraMapLock };
         m_cameras.insert_or_assign(request->id(), camera);
     }
-    else if (request->persistenceLevel() == RequestCameraCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putCamera(camera);
     }
@@ -449,12 +449,12 @@ void SceneGraphRepository::requestCameraConstitution(const Frameworks::IQueryPtr
         return;
     }
     auto camera = m_factory->constituteCamera(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestCameraConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_cameraMapLock };
         m_cameras.insert_or_assign(request->id(), camera);
     }
-    else if (request->persistenceLevel() == RequestCameraConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putCamera(camera);
     }
@@ -557,12 +557,12 @@ void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r
         return;
     }
     auto spatial = m_factory->createSpatial(request->id());
-    if (request->persistenceLevel() == RequestSpatialCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_spatialMapLock };
         m_spatials.insert_or_assign(request->id(), spatial);
     }
-    else if (request->persistenceLevel() == RequestSpatialCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putSpatial(spatial);
     }
@@ -581,12 +581,12 @@ void SceneGraphRepository::requestSpatialConstitution(const Frameworks::IQueryPt
         return;
     }
     auto spatial = m_factory->constituteSpatial(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestSpatialConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_spatialMapLock };
         m_spatials.insert_or_assign(request->id(), spatial);
     }
-    else if (request->persistenceLevel() == RequestSpatialConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putSpatial(spatial);
     }

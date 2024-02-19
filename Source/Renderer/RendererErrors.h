@@ -31,8 +31,6 @@ namespace Enigma::Renderer
         rendererNotExist,
         rendererFactoryFail,
 
-        nullRenderer = 401,
-        emptyRenderElementList,
 
         invalidPrimitiveDto = 501,
     };

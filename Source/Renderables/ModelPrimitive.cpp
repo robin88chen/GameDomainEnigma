@@ -1,7 +1,7 @@
 ﻿#include "ModelPrimitive.h"
 #include "GameEngine/IRenderer.h"
 #include "Platforms/PlatformLayer.h"
-#include "Renderer/RendererErrors.h"
+#include "RenderableErrors.h"
 #include "MathLib/Matrix4.h"
 #include "RenderablePrimitiveDtos.h"
 #include "ModelPrimitiveAnimator.h"
@@ -105,13 +105,13 @@ error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_pt
     const Matrix4& mxWorld, const RenderLightingState& lightingState)
 {
     const auto render = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(renderer);
-    if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
     m_mxPrimitiveWorld = mxWorld;
-    if (testPrimitiveFlag(Primitive_UnRenderable)) return Renderer::ErrorCode::ok;
+    if (testPrimitiveFlag(Primitive_UnRenderable)) return ErrorCode::ok;
 
-    if (m_nodeTree.getMeshNodeCount() == 0) return Renderer::ErrorCode::ok; // no mesh node
+    if (m_nodeTree.getMeshNodeCount() == 0) return ErrorCode::ok; // no mesh node
     const unsigned int mesh_count = getMeshPrimitiveCount();
-    if (mesh_count == 0) return Renderer::ErrorCode::ok; // no mesh primitive
+    if (mesh_count == 0) return ErrorCode::ok; // no mesh primitive
     if (mesh_count == 1)
     {
         if (auto node = getCachedMeshNode(0))
@@ -131,16 +131,16 @@ error ModelPrimitive::insertToRendererWithTransformUpdating(const std::shared_pt
             }
         }
     }
-    return Renderer::ErrorCode::ok;
+    return ErrorCode::ok;
 }
 
 error ModelPrimitive::removeFromRenderer(const std::shared_ptr<IRenderer>& renderer)
 {
     const auto render = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(renderer);
-    if (FATAL_LOG_EXPR(!render)) return Renderer::ErrorCode::nullRenderer;
-    if (m_nodeTree.getMeshNodeCount() == 0) return Renderer::ErrorCode::ok; // no mesh node
+    if (FATAL_LOG_EXPR(!render)) return ErrorCode::nullRenderer;
+    if (m_nodeTree.getMeshNodeCount() == 0) return ErrorCode::ok; // no mesh node
     const unsigned int mesh_count = getMeshPrimitiveCount();
-    if (mesh_count == 0) return Renderer::ErrorCode::ok; // no mesh primitive
+    if (mesh_count == 0) return ErrorCode::ok; // no mesh primitive
     if (mesh_count == 1)
     {
         if (getMeshPrimitive(0))
@@ -158,7 +158,7 @@ error ModelPrimitive::removeFromRenderer(const std::shared_ptr<IRenderer>& rende
             }
         }
     }
-    return Renderer::ErrorCode::ok;
+    return ErrorCode::ok;
 }
 
 void ModelPrimitive::updateWorldTransform(const Matrix4& mxWorld)

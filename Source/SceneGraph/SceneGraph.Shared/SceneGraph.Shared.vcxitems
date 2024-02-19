@@ -46,8 +46,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphStoreMapper.h" />
@@ -90,8 +91,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />

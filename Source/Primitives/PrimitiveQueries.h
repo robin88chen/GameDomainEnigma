@@ -10,6 +10,7 @@
 
 #include "Frameworks/Query.h"
 #include "PrimitiveId.h"
+#include "PrimitivePersistenceLevel.h"
 #include "GameEngine/GenericDto.h"
 
 namespace Enigma::Primitives
@@ -39,8 +40,6 @@ namespace Enigma::Primitives
     class RequestPrimitiveCreation : public Frameworks::Query<std::shared_ptr<Primitive>>
     {
     public:
-        enum class PersistenceLevel { None, Repository, Store };
-    public:
         RequestPrimitiveCreation(const PrimitiveId& id, const Frameworks::Rtti& rtti, PersistenceLevel persistence_level) : m_id(id), m_rtti(rtti.getName()), m_persistenceLevel(persistence_level) {}
         const PrimitiveId& id() { return m_id; }
         const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
@@ -53,8 +52,6 @@ namespace Enigma::Primitives
     };
     class RequestPrimitiveConstitution : public Frameworks::Query<std::shared_ptr<Primitive>>
     {
-    public:
-        enum class PersistenceLevel { None, Repository, Store };
     public:
         RequestPrimitiveConstitution(const PrimitiveId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
         const PrimitiveId& id() { return m_id; }

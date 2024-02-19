@@ -28,9 +28,6 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DTO &amp; Policies">
-      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Portal System">
       <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="Repository\StoreMapper">
       <UniqueIdentifier>{227981a7-1c6e-4575-af21-6bf16d55db5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTO &amp; Helper">
+      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +97,7 @@
       <Filter>Scene Traveler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
       <Filter>Repository</Filter>
@@ -109,13 +109,10 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
-      <Filter>DTO &amp; Policies</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.h">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
       <Filter>Lazy Node IO</Filter>
@@ -154,7 +151,7 @@
       <Filter>Scene Graph\LightInfo</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.h">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h">
       <Filter>Commands</Filter>
@@ -201,6 +198,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.h">
       <Filter>Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.h">
+      <Filter>DTO &amp; Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -234,7 +237,7 @@
       <Filter>Scene Traveler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
       <Filter>Repository</Filter>
@@ -243,13 +246,10 @@
       <Filter>Repository\Builder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
-      <Filter>DTO &amp; Policies</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphPolicies.cpp">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
       <Filter>Lazy Node IO</Filter>
@@ -279,7 +279,7 @@
       <Filter>Installing</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.cpp">
-      <Filter>DTO &amp; Policies</Filter>
+      <Filter>DTO &amp; Helper</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp">
       <Filter>Scene Traveler</Filter>
@@ -313,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.cpp">
+      <Filter>DTO &amp; Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

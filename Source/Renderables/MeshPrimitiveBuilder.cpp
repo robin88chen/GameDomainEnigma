@@ -65,6 +65,8 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 {
     m_buildingDto = MeshPrimitiveDto(dto);
     m_metaDto = std::make_unique<MeshPrimitiveMetaDto>(m_buildingDto.value());
+    m_builtEffects.clear();
+    m_builtTextures.clear();
     m_buildingId = mesh->id();
     m_builtPrimitive = mesh;
     m_builtGeometry = mesh->getGeometryData();

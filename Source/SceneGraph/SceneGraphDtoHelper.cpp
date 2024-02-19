@@ -57,6 +57,12 @@ CameraDtoHelper& CameraDtoHelper::frustumNearPlaneDimension(float width, float h
     return *this;
 }
 
+CameraDtoHelper& CameraDtoHelper::asNative(const std::string& file_at_path)
+{
+    m_cameraDto.factoryDesc().ClaimAsNative(file_at_path);
+    return *this;
+}
+
 CameraDto CameraDtoHelper::toCameraDto()
 {
     m_cameraDto.Frustum() = m_frustumDto.toGenericDto();
@@ -220,6 +226,12 @@ PawnDtoHelper& PawnDtoHelper::spatialFlags(Spatial::SpatialFlags spatial_flag)
 PawnDtoHelper& PawnDtoHelper::primitive(const Primitives::PrimitiveId& primitive_id)
 {
     m_dto.primitiveId() = primitive_id;
+    return *this;
+}
+
+PawnDtoHelper& PawnDtoHelper::asNative(const std::string& file_at_path)
+{
+    m_dto.factoryDesc().ClaimAsNative(file_at_path);
     return *this;
 }
 

@@ -162,12 +162,12 @@ void PrimitiveRepository::requestPrimitiveCreation(const Frameworks::IQueryPtr& 
         return;
     }
     auto primitive = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == RequestPrimitiveCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_primitiveLock };
         m_primitives.insert_or_assign(request->id(), primitive);
     }
-    else if (request->persistenceLevel() == RequestPrimitiveCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putPrimitive(request->id(), primitive);
     }
@@ -185,12 +185,12 @@ void PrimitiveRepository::requestPrimitiveConstitution(const Frameworks::IQueryP
         return;
     }
     auto primitive = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestPrimitiveConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_primitiveLock };
         m_primitives.insert_or_assign(request->id(), primitive);
     }
-    else if (request->persistenceLevel() == RequestPrimitiveConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putPrimitive(request->id(), primitive);
     }

@@ -30,7 +30,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtoHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
@@ -54,7 +56,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveHydratingPlan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtoHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />

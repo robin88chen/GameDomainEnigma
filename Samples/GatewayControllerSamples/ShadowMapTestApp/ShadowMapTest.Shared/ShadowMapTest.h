@@ -53,6 +53,7 @@ protected:
     Enigma::SceneGraph::PawnPtr m_floor;
     Enigma::SceneGraph::PawnPtr m_cube;
     Enigma::SceneGraph::SpatialId m_floorId;
+    Enigma::SceneGraph::SpatialId m_cubeId;
 
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;

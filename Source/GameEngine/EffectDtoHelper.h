@@ -13,20 +13,6 @@
 
 namespace Enigma::Engine
 {
-    /*class EffectMaterialDtoHelper
-    {
-    public:
-        EffectMaterialDtoHelper(const std::string& name);
-
-        EffectMaterialDtoHelper& FilenameAtPath(const std::string& filename, const std::string& path_id);
-        EffectMaterialDtoHelper& FilenameAtPath(const std::string& filename_at_path);
-
-        GenericDto toGenericDto();
-
-    protected:
-        EffectMaterialDto m_dto;
-    };*/
-
     class EffectTextureMapDtoHelper
     {
     public:

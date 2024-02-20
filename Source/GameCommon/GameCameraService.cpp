@@ -208,8 +208,8 @@ void GameCameraService::onTargetResized(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
     if (!ev) return;
-    if (ev->GetRenderTarget() == nullptr) return;
-    if (!ev->GetRenderTarget()->IsPrimary()) return;
+    if (ev->getRenderTarget() == nullptr) return;
+    if (!ev->getRenderTarget()->IsPrimary()) return;
     changeAspectRatio(static_cast<float>(ev->GetDimension().m_width) / static_cast<float>(ev->GetDimension().m_height));
 }
 

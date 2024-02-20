@@ -162,7 +162,7 @@ void ShadowMapTest::shutdownEngine()
 void ShadowMapTest::frameUpdate()
 {
     AppDelegate::frameUpdate();
-    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->PrepareShadowScene();
+    if (!m_shadowMapService.expired()) m_shadowMapService.lock()->prepareShadowScene();
     if (!m_sceneRendererService.expired()) m_sceneRendererService.lock()->prepareGameScene();
 }
 
@@ -170,7 +170,7 @@ void ShadowMapTest::renderFrame()
 {
     if (!m_shadowMapService.expired())
     {
-        m_shadowMapService.lock()->RenderShadowScene();
+        m_shadowMapService.lock()->renderShadowScene();
     }
     if (!m_sceneRendererService.expired())
     {
@@ -219,13 +219,13 @@ void ShadowMapTest::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->GetPawn() == m_floor)
+    if (ev->pawn() == m_floor)
     {
-        ev->GetPawn()->GetPrimitive()->selectVisualTechnique("ShadowMapReceiver");
+        ev->pawn()->getPrimitive()->selectVisualTechnique("ShadowMapReceiver");
     }
     else
     {
-        ev->GetPawn()->GetPrimitive()->selectVisualTechnique("Default");
+        ev->pawn()->getPrimitive()->selectVisualTechnique("Default");
     }
 }
 
@@ -253,7 +253,7 @@ void ShadowMapTest::createFloorReceiver()
         m_floor = pawn_helper.primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_floor)) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
-    if (m_floor) m_floor->GetPrimitive()->selectVisualTechnique("ShadowMapReceiver");
+    if (m_floor) m_floor->getPrimitive()->selectVisualTechnique("ShadowMapReceiver");
 }
 
 void ShadowMapTest::createCubePawn()
@@ -284,5 +284,5 @@ void ShadowMapTest::createCubePawn()
         Matrix4 mx = Matrix4::MakeTranslateTransform(0.0f, 1.2f, 0.0f);
         m_sceneRoot->attachChild(m_cube, mx);
     }
-    if (m_cube) m_cube->GetPrimitive()->selectVisualTechnique("Default");
+    if (m_cube) m_cube->getPrimitive()->selectVisualTechnique("Default");
 }

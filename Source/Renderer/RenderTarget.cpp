@@ -15,6 +15,7 @@
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
 #include "GameEngine/TextureDto.h"
+#include "GameEngine/TextureQueries.h"
 #include <cassert>
 
 using namespace Enigma::Renderer;
@@ -41,19 +42,6 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary,
         Frameworks::CommandBus::post(std::make_shared<Graphics::CreatePrimarySurface>(
             primary_back_surface_name, primary_depth_surface_name));
     }
-}
-
-RenderTarget::RenderTarget(const std::string& name, const std::vector<Graphics::RenderTextureUsage>& usages)
-    : m_dimension{ 1, 1 }
-{
-    m_isPrimary = false;
-    m_name = name;
-    m_renderTargetTexture = nullptr;
-    m_usages = usages;
-
-    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
-
-    SubscribeHandler();
 }
 
 RenderTarget::~RenderTarget()
@@ -89,34 +77,31 @@ future_error RenderTarget::AsyncInitialize()
         ->PushTask([lifetime = shared_from_this(), this]() -> error { return Initialize(); });
 }
 
-error RenderTarget::InitBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-    const Graphics::GraphicFormat& fmt)
+error RenderTarget::initBackSurface(const Graphics::BackSurfaceSpecification& specification)
 {
-    m_backSurfaceName = back_name;
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateBacksurface>(back_name, dimension, fmt));
+    m_backSurfaceName = specification.name();
+    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateBacksurface>(specification));
 
     return ErrorCode::ok;
 }
 
-error RenderTarget::InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-    unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts)
+error RenderTarget::initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification)
 {
-    m_backSurfaceName = back_name;
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateMultiBacksurface>(back_name, dimension, surface_count, fmts));
+    m_backSurfaceName = specification.name();
+    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateMultiBacksurface>(specification));
 
     return ErrorCode::ok;
 }
 
-error RenderTarget::InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
-    const Graphics::GraphicFormat& fmt)
+error RenderTarget::initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification)
 {
-    m_depthSurfaceName = depth_name;
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateDepthStencilSurface>(depth_name, dimension, fmt));
+    m_depthSurfaceName = specification.name();
+    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateDepthStencilSurface>(specification));
 
     return ErrorCode::ok;
 }
 
-error RenderTarget::ShareDepthStencilSurface(const std::string& depth_name,
+error RenderTarget::shareDepthStencilSurface(const std::string& depth_name,
     const Graphics::IDepthStencilSurfacePtr& surface)
 {
     m_depthSurfaceName = depth_name;
@@ -178,7 +163,7 @@ error RenderTarget::Flip() const
     return ErrorCode::ok;
 }
 
-error RenderTarget::ChangeClearingProperty(const RenderTargetClearChangingProperty& prop)
+error RenderTarget::changeClearingProperty(const RenderTargetClearChangingProperty& prop)
 {
     if (prop.m_color)
     {
@@ -293,7 +278,7 @@ void RenderTarget::CreateRenderTargetTexture()
     dto.dimension() = m_backSurface->GetDimension();
     dto.surfaceCount() = m_backSurface->GetSurfaceCount();
     dto.format() = m_backSurface->GetFormat();
-    Frameworks::CommandBus::post(std::make_shared<Engine::ConstituteTexture>(dto.id(), dto.toGenericDto()));
+    m_renderTargetTexture = std::make_shared<Engine::RequestTextureConstitution>(dto.id(), dto.toGenericDto())->dispatch();
 }
 
 void RenderTarget::InitViewPortSize()
@@ -440,8 +425,8 @@ void RenderTarget::onTextureHydrated(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::TextureHydrated>(e);
     if (!ev) return;
     if (!m_backSurface) return;
-    if (ev->id().name() != m_backSurface->getName()) return;
-    m_renderTargetTexture = ev->texture();
+    if (!m_renderTargetTexture) return;
+    if (ev->id() != m_renderTargetTexture->id()) return;
     m_renderTargetTexture->getDeviceTexture()->asBackSurface(m_backSurface, m_usages);
     Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), ev->id().name()));
 }

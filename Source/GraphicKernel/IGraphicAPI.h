@@ -81,8 +81,8 @@ namespace Enigma::Graphics
 
         APIVersion GetAPIVersion() { return m_apiVersion; }
 
-        virtual void BeginScene();
-        virtual void EndScene();
+        virtual void beginScene();
+        virtual void endScene();
         virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
         virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
@@ -105,7 +105,7 @@ namespace Enigma::Graphics
         /** @name surface format */
         //@{
         const GraphicFormat& GetPrimaryBackSurfaceFormat() const { return m_fmtBackSurface; };
-        const GraphicFormat& GetDepthSurfaceFormat() const { return m_fmtDepthSurface; };
+        const GraphicFormat& getDepthSurfaceFormat() const { return m_fmtDepthSurface; };
         //@}
         virtual const IShaderProgramPtr& CurrentBoundShaderProgram() const { return m_boundShaderProgram; };
         virtual const IVertexBufferPtr& CurrentBoundVertexBuffer() const { return m_boundVertexBuffer; };

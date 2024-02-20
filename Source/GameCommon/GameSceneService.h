@@ -56,7 +56,7 @@ namespace Enigma::GameCommon
         /** destroy culler */
         void DestroySceneCuller();
         /** get scene culler */
-        SceneGraph::Culler* GetSceneCuller() { return m_culler; };
+        SceneGraph::Culler* getSceneCuller() { return m_culler; };
 
     protected:
         void OnGameCameraCreated(const Frameworks::IEventPtr& e);

@@ -21,6 +21,8 @@
 #include "IDeviceAlphaBlendState.h"
 #include "IDeviceRasterizerState.h"
 #include "IDeviceDepthStencilState.h"
+#include "BackSurfaceSpecification.h"
+#include "DepthStencilSurfaceSpecification.h"
 #include "Frameworks/Command.h"
 #include "MathLib/ColorRGBA.h"
 
@@ -119,44 +121,28 @@ namespace Enigma::Graphics
     class CreateBacksurface : public Frameworks::ICommand
     {
     public:
-        CreateBacksurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-            const GraphicFormat& fmt) : m_backName(back_name), m_dimension(dimension), m_fmt(fmt) {};
-        const std::string& GetBacksurfaceName() const { return m_backName; }
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
-        const GraphicFormat& GetFormat() const { return m_fmt; }
+        CreateBacksurface(const BackSurfaceSpecification& specification) : m_specification(specification) {};
+        const BackSurfaceSpecification& specification() const { return m_specification; }
     private:
-        std::string m_backName;
-        MathLib::Dimension<unsigned> m_dimension;
-        GraphicFormat m_fmt;
+        BackSurfaceSpecification m_specification;
     };
     class CreateMultiBacksurface : public Frameworks::ICommand
     {
     public:
-        CreateMultiBacksurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-            unsigned int buff_count, const std::vector<GraphicFormat>& fmts)
-            : m_backName(back_name), m_dimension(dimension), m_buffCount(buff_count), m_fmts(fmts) {};
-        const std::string& GetBacksurfaceName() const { return m_backName; }
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
-        unsigned int GetSurfaceCount() const { return m_buffCount; }
-        const std::vector<GraphicFormat>& GetFormats() const { return m_fmts; }
+        CreateMultiBacksurface(const MultiBackSurfaceSpecification& specification) : m_specification(specification) {}
+        const MultiBackSurfaceSpecification& specification() const { return m_specification; }
+
     private:
-        std::string m_backName;
-        MathLib::Dimension<unsigned> m_dimension;
-        unsigned int m_buffCount;
-        std::vector<GraphicFormat> m_fmts;
+        MultiBackSurfaceSpecification m_specification;
     };
     class CreateDepthStencilSurface : public Frameworks::ICommand
     {
     public:
-        CreateDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
-            const GraphicFormat& fmt) : m_depthName(depth_name), m_dimension(dimension), m_fmt(fmt) {};
-        const std::string& GetDepthStencilSurfaceName() const { return m_depthName; }
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
-        const GraphicFormat& GetFormat() const { return m_fmt; }
+        CreateDepthStencilSurface(const DepthStencilSurfaceSpecification& specification) : m_specification(specification) {}
+        const DepthStencilSurfaceSpecification& specification() const { return m_specification; }
+
     private:
-        std::string m_depthName;
-        MathLib::Dimension<unsigned> m_dimension;
-        GraphicFormat m_fmt;
+        DepthStencilSurfaceSpecification m_specification;
     };
     class ShareDepthStencilSurface : public Frameworks::ICommand
     {

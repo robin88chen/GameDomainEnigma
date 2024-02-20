@@ -47,24 +47,24 @@ namespace Enigma::Renderer
         static void RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn);
 
         /** create renderer */
-        error CreateRenderer(const std::string& name);
+        error createRenderer(const std::string& name);
         /** create custom renderer */
         error CreateCustomRenderer(const std::string& type_name, const std::string& name);
         /** insert renderer */
         error InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer);
 
         /** destroy renderer by name : remove from map, & destroy  */
-        error DestroyRenderer(const std::string& name);
+        error destroyRenderer(const std::string& name);
         /** get renderer */
-        Engine::IRendererPtr GetRenderer(const std::string& name) const;
+        Engine::IRendererPtr getRenderer(const std::string& name) const;
 
         /** create render target */
-        error CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
+        error createRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
 
         /** destroy render target by name : remove from map, & destroy  */
-        error DestroyRenderTarget(const std::string& name);
+        error destroyRenderTarget(const std::string& name);
         /** get render target */
-        RenderTargetPtr GetRenderTarget(const std::string& name) const;
+        RenderTargetPtr getRenderTarget(const std::string& name) const;
         /** get primary render target */
         RenderTargetPtr GetPrimaryRenderTarget() const;
 

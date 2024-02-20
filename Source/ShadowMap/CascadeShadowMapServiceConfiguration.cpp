@@ -1,4 +1,5 @@
 ﻿#include "CascadeShadowMapServiceConfiguration.h"
+#include "CSMSunLightCamera.h"
 #include <cassert>
 
 using namespace Enigma::ShadowMap;
@@ -10,6 +11,7 @@ CascadeShadowMapServiceConfiguration::CascadeShadowMapServiceConfiguration() : S
     m_cascadeDistanceSemantic = "LightFrustaDistance";
     m_cascadeSliceCountSemantic = "ShadowMapSliceCount";
     m_cascadeTextureCoordTransformSemantic = "ShadowMapTexCoordTransform";
+    m_sunLightCameraId = SceneGraph::SpatialId("CSMSunLightCamera", CSMSunLightCamera::TYPE_RTTI);
 }
 
 unsigned CascadeShadowMapServiceConfiguration::FrustaPartitionCount() const

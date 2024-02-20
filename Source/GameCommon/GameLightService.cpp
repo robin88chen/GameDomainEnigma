@@ -84,7 +84,7 @@ void GameLightService::CreateAmbientLight(const std::string& parent_name, const 
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Ambient);
-    info.SetLightColor(colorLight);
+    info.setLightColor(colorLight);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
@@ -98,8 +98,8 @@ void GameLightService::CreateSunLight(const std::string& parent_name, const std:
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::SunLight);
-    info.SetLightColor(colorLight);
-    info.SetLightDirection(dirLight);
+    info.setLightColor(colorLight);
+    info.setLightDirection(dirLight);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
@@ -113,9 +113,9 @@ void GameLightService::CreatePointLight(const std::string& parent_name, const Ma
 {
     assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Point);
-    info.SetLightColor(color);
-    info.SetLightPosition(vecPos);
-    info.SetLightRange(range);
+    info.setLightColor(color);
+    info.setLightPosition(vecPos);
+    info.setLightRange(range);
     auto light = m_sceneGraphRepository.lock()->CreateLight(lightName, info);
     if (!parent_name.empty())
     {
@@ -156,7 +156,7 @@ void GameLightService::DoChangingLightPosition(const Frameworks::ICommandPtr& co
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightPosition(cmd->GetPos());
+    light->setLightPosition(cmd->GetPos());
 }
 
 void GameLightService::DoChangingLightDirection(const Frameworks::ICommandPtr& command) const
@@ -167,7 +167,7 @@ void GameLightService::DoChangingLightDirection(const Frameworks::ICommandPtr& c
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightDirection(cmd->getDir());
+    light->setLightDirection(cmd->getDir());
 }
 
 void GameLightService::DoChangingLightColor(const Frameworks::ICommandPtr& command) const
@@ -178,7 +178,7 @@ void GameLightService::DoChangingLightColor(const Frameworks::ICommandPtr& comma
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightColor(cmd->GetColor());
+    light->setLightColor(cmd->GetColor());
 }
 
 void GameLightService::DoChangingLightAttenuation(const Frameworks::ICommandPtr& command) const
@@ -189,7 +189,7 @@ void GameLightService::DoChangingLightAttenuation(const Frameworks::ICommandPtr&
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightAttenuation(MathLib::Vector3(cmd->GetConstant(), cmd->GetLinear(), cmd->GetQuadratic()));
+    light->setLightAttenuation(MathLib::Vector3(cmd->GetConstant(), cmd->GetLinear(), cmd->GetQuadratic()));
 }
 
 void GameLightService::DoChangingLightRange(const Frameworks::ICommandPtr& command) const
@@ -200,7 +200,7 @@ void GameLightService::DoChangingLightRange(const Frameworks::ICommandPtr& comma
     if (!cmd) return;
     const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd->GetLightName());
     if (!light) return;
-    light->SetLightRange(cmd->GetRange());
+    light->setLightRange(cmd->GetRange());
 }
 
 void GameLightService::DoChangingLightAbility(const Frameworks::ICommandPtr& command) const
@@ -211,13 +211,13 @@ void GameLightService::DoChangingLightAbility(const Frameworks::ICommandPtr& com
     {
         const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd_enable->GetLightName());
         if (!light) return;
-        if (!light->IsEnable()) light->SetEnable(true);
+        if (!light->isEnable()) light->setEnable(true);
     }
     else if (const auto cmd_disable = std::dynamic_pointer_cast<GameCommon::DisableLight, ICommand>(command))
     {
         const auto light = m_sceneGraphRepository.lock()->QueryLight(cmd_disable->GetLightName());
         if (!light) return;
-        if (light->IsEnable()) light->SetEnable(false);
+        if (light->isEnable()) light->setEnable(false);
     }
 }
 

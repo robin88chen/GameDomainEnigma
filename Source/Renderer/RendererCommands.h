@@ -42,7 +42,7 @@ namespace Enigma::Renderer
     public:
         CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary,
             const std::vector<Graphics::RenderTextureUsage>& usages)
-                : m_name(name), m_primary(primary), m_usages(usages) {}
+            : m_name(name), m_primary(primary), m_usages(usages) {}
         const std::string& GetRenderTargetName() { return m_name; }
         RenderTarget::PrimaryType GetPrimaryType() const { return m_primary; }
         const std::vector<Graphics::RenderTextureUsage>& GetUsages() const { return m_usages; }

@@ -218,7 +218,7 @@ void IGraphicAPI::UnsubscribeHandlers()
     m_doBindingIndexBuffer = nullptr;
 }
 
-void IGraphicAPI::BeginScene()
+void IGraphicAPI::beginScene()
 {
     if (UseAsync())
     {
@@ -230,7 +230,7 @@ void IGraphicAPI::BeginScene()
     }
 }
 
-void IGraphicAPI::EndScene()
+void IGraphicAPI::endScene()
 {
     if (UseAsync())
     {
@@ -386,7 +386,7 @@ void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BeginScene, Frameworks::ICommand>(c);
     if (!cmd) return;
-    BeginScene();
+    beginScene();
 }
 
 void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
@@ -394,7 +394,7 @@ void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::EndScene, Frameworks::ICommand>(c);
     if (!cmd) return;
-    EndScene();
+    endScene();
 }
 
 void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
@@ -451,11 +451,11 @@ void IGraphicAPI::DoCreatingBackSurface(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+        AsyncCreateBackSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().format());
     }
     else
     {
-        CreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+        CreateBackSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().format());
     }
 }
 
@@ -466,11 +466,11 @@ void IGraphicAPI::DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetSurfaceCount(), cmd->GetFormats());
+        AsyncCreateBackSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().surfaceCount(), cmd->specification().formats());
     }
     else
     {
-        CreateBackSurface(cmd->GetBacksurfaceName(), cmd->GetDimension(), cmd->GetSurfaceCount(), cmd->GetFormats());
+        CreateBackSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().surfaceCount(), cmd->specification().formats());
     }
 }
 
@@ -481,11 +481,11 @@ void IGraphicAPI::DoCreatingDepthSurface(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+        AsyncCreateDepthStencilSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().format());
     }
     else
     {
-        CreateDepthStencilSurface(cmd->GetDepthStencilSurfaceName(), cmd->GetDimension(), cmd->GetFormat());
+        CreateDepthStencilSurface(cmd->specification().name(), cmd->specification().dimension(), cmd->specification().format());
     }
 }
 

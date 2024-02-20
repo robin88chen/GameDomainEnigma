@@ -30,13 +30,13 @@ SpatialLightInfoQuery::~SpatialLightInfoQuery()
 
 void SpatialLightInfoQuery::test(const LightInfo& info)
 {
-    if (!info.IsEnable()) return;
-    if (info.GetLightType() == LightInfo::LightType::Unknown) return;
+    if (!info.isEnable()) return;
+    if (info.lightType() == LightInfo::LightType::Unknown) return;
 
-    if (info.GetLightType() == LightInfo::LightType::Point)
+    if (info.lightType() == LightInfo::LightType::Point)
     {
-        float length = (info.GetLightPosition() - m_spatialPos).length();
-        if (length > info.GetLightRange()) return;
+        float length = (info.getLightPosition() - m_spatialPos).length();
+        if (length > info.getLightRange()) return;
         m_countPointLight++;
         m_listLightInfo.emplace_back(LightInfoDistance{ info, length });
     }

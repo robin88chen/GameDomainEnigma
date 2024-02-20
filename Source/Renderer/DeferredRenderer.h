@@ -22,12 +22,12 @@ namespace Enigma::Renderer
         DeferredRenderer& operator=(const DeferredRenderer&) = delete;
         DeferredRenderer& operator=(DeferredRenderer&&) = delete;
 
-        virtual error ClearRenderTarget() override;
-        virtual error ChangeClearingProperty(const RenderTargetClearChangingProperty& prop) override;
+        virtual error clearRenderTarget() override;
+        virtual error changeClearingProperty(const RenderTargetClearChangingProperty& prop) override;
 
-        virtual error BeginScene() override;
-        virtual error BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj) override;
-        virtual error DrawScene() override;
+        virtual error beginScene() override;
+        virtual error beginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj) override;
+        virtual error drawScene() override;
 
         error AttachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer);
 

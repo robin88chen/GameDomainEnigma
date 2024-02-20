@@ -32,6 +32,7 @@ namespace Enigma::Engine
         textureSemantic,
 
         targetTextureNotExists = 301,
+        textureAlreadyExists,
         textureAlreadyLoaded,
         textureNotReady,
     };

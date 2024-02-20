@@ -16,26 +16,26 @@ DeferredRenderer::~DeferredRenderer()
 {
 }
 
-error DeferredRenderer::ChangeClearingProperty(const RenderTargetClearChangingProperty& prop)
+error DeferredRenderer::changeClearingProperty(const RenderTargetClearChangingProperty& prop)
 {
     RenderTargetClearChangingProperty primary_prop = prop;
     if (primary_prop.m_clearingBits)
     {
         primary_prop.m_clearingBits.value() &= ~RenderTargetClear::DepthBuffer;  // scene target與 GBuffer共用 depth, 所以不用清depth
     }
-    error er = Renderer::ChangeClearingProperty(primary_prop);
+    error er = Renderer::changeClearingProperty(primary_prop);
     if (er) return er;
 
     RenderTargetClearChangingProperty gbuffer_prop = prop;
     gbuffer_prop.m_color = m_gbufferClearColor;
     if (!m_gbufferTarget.expired())
     {
-        er = m_gbufferTarget.lock()->ChangeClearingProperty(gbuffer_prop);
+        er = m_gbufferTarget.lock()->changeClearingProperty(gbuffer_prop);
     }
     return er;
 }
 
-error DeferredRenderer::ClearRenderTarget()
+error DeferredRenderer::clearRenderTarget()
 {
     if (m_target.expired()) return ErrorCode::nullRenderTarget;
 
@@ -47,7 +47,7 @@ error DeferredRenderer::ClearRenderTarget()
     return m_target.lock()->Clear();
 }
 
-error DeferredRenderer::BeginScene()
+error DeferredRenderer::beginScene()
 {
     if (!m_gbufferTarget.expired())
     {
@@ -66,11 +66,11 @@ error DeferredRenderer::BeginScene()
         Engine::MaterialVariableMap::useCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
-    Graphics::IGraphicAPI::instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->beginScene();
     return ErrorCode::ok;
 }
 
-error DeferredRenderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj)
+error DeferredRenderer::beginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj)
 {
     if (!m_gbufferTarget.expired())
     {
@@ -81,17 +81,17 @@ error DeferredRenderer::BeginScene(const MathLib::Vector3& camera_loc, const Mat
     }
     Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
 
-    Graphics::IGraphicAPI::instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->beginScene();
     return ErrorCode::ok;
 }
 
-error DeferredRenderer::DrawScene()
+error DeferredRenderer::drawScene()
 {
     for (size_t i = 0; i < m_renderPacksArray.size(); i++)
     {
         if (i == static_cast<size_t>(RenderListID::DeferredLighting)) // switch render target for deferred lighting and final blending
         {
-            Graphics::IGraphicAPI::instance()->EndScene();  // end previous stage
+            Graphics::IGraphicAPI::instance()->endScene();  // end previous stage
 
             // in this stage, we need to render to the primary target using g-buffer
             if (!m_target.expired())  // that's the primary target
@@ -104,7 +104,7 @@ error DeferredRenderer::DrawScene()
                 Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
             }
 
-            Graphics::IGraphicAPI::instance()->BeginScene();
+            Graphics::IGraphicAPI::instance()->beginScene();
         }
         if (!m_renderPacksArray[i].HasElements()) continue;
         error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName);
@@ -123,7 +123,7 @@ error DeferredRenderer::AttachGBufferTarget(const std::shared_ptr<RenderTarget>&
     prop.m_color = m_gbufferClearColor;
     if (!m_gbufferTarget.expired())
     {
-        m_gbufferTarget.lock()->ChangeClearingProperty(prop);
+        m_gbufferTarget.lock()->changeClearingProperty(prop);
     }
     return ErrorCode::ok;
 }
@@ -131,7 +131,7 @@ error DeferredRenderer::AttachGBufferTarget(const std::shared_ptr<RenderTarget>&
 void DeferredRenderer::ReShareDepthStencilSurface()
 {
     if (FATAL_LOG_EXPR((m_target.expired()) || (m_gbufferTarget.expired()))) return;
-    if (FATAL_LOG_EXPR(m_target.lock()->GetDepthStencilSurface() == nullptr)) return;
-    m_gbufferTarget.lock()->ShareDepthStencilSurface(gbuffer_depth_stencil_name, m_target.lock()->GetDepthStencilSurface());
+    if (FATAL_LOG_EXPR(m_target.lock()->getDepthStencilSurface() == nullptr)) return;
+    m_gbufferTarget.lock()->shareDepthStencilSurface(gbuffer_depth_stencil_name, m_target.lock()->getDepthStencilSurface());
 }
 

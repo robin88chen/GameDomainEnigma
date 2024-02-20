@@ -49,7 +49,7 @@ namespace Enigma::SceneGraph
         /** set primitive with primitive's rtti & geometry name, 還沒有用到的實作 */
         //void SetPrimitive(const Rtti& type_rtti, const std::string& geo_name);
         /** get primitive */
-        const std::shared_ptr<Primitives::Primitive>& GetPrimitive() const { return m_primitive; };
+        const std::shared_ptr<Primitives::Primitive>& getPrimitive() const { return m_primitive; };
 
         /** calculate model bound */
         virtual void CalculateModelBound(bool axis_align);

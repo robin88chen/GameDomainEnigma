@@ -89,7 +89,7 @@ void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
-    std::shared_ptr<Primitives::Primitive> prim = pawn->GetPrimitive();
+    std::shared_ptr<Primitives::Primitive> prim = pawn->getPrimitive();
     if (!prim) return;
     m_primitive = prim;
     std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive>(prim);
@@ -222,7 +222,7 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
     if (m_meshName.empty()) return;
-    std::shared_ptr<Primitives::Primitive> prim = pawn->GetPrimitive();
+    std::shared_ptr<Primitives::Primitive> prim = pawn->getPrimitive();
     if (!prim) return;
     std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive>(prim);
     if (model)

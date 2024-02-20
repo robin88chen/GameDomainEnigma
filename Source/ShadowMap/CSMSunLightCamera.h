@@ -28,8 +28,8 @@ namespace Enigma::ShadowMap
         unsigned int GetPartitionCount() const { return m_partitionCount; };
         void SetPartitionCount(unsigned int partition);
 
-        void SetSunLightDir(const MathLib::Vector3& sun_dir);
-        void SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
+        void setSunLightDir(const MathLib::Vector3& sun_dir);
+        void setViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
 
         void CalcLightCameraSystemMatrix(SceneGraph::Culler* culler);
 

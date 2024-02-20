@@ -30,7 +30,7 @@ namespace Enigma::ShadowMap
         void SetRenderTargetViewPorts(const std::vector<Graphics::TargetViewPort>& view_ports);
         void SetSunLightCamera(const std::shared_ptr<CSMSunLightCamera>& sun_light_camera);
 
-        virtual error DrawScene() override;
+        virtual error drawScene() override;
 
     protected:
         std::vector<Graphics::TargetViewPort> m_targetViewPorts;

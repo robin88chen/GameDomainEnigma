@@ -39,13 +39,13 @@ void CSMSunLightCamera::SetPartitionCount(unsigned partition)
     m_mxTexCoordTransforms.resize(partition);
 }
 
-void CSMSunLightCamera::SetSunLightDir(const Vector3& sun_dir)
+void CSMSunLightCamera::setSunLightDir(const Vector3& sun_dir)
 {
     m_sunLightDir = sun_dir;
     m_sunLightDir.normalizeSelf();
 }
 
-void CSMSunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
+void CSMSunLightCamera::setViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
 {
     m_viewerCamera = viewer_camera;
 }
@@ -55,7 +55,7 @@ void CSMSunLightCamera::CalcLightCameraSystemMatrix(Culler* culler)
     if (!culler) return;
 
     ShadowCasterBoundFilter filterShadowBound;
-    filterShadowBound.computeMergedBound(culler->GetVisibleSet());
+    filterShadowBound.computeMergedBound(culler->getVisibleSet());
 
     CalcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
 

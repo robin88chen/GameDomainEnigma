@@ -13,6 +13,8 @@
 #include "Frameworks/EventSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "GraphicKernel/RenderTextureUsage.h"
+#include "GraphicKernel/BackSurfaceSpecification.h"
+#include "GraphicKernel/DepthStencilSurfaceSpecification.h"
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/IGraphicAPI.h"
@@ -57,7 +59,6 @@ namespace Enigma::Renderer
         };
     public:
         RenderTarget(const std::string& name, PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
-        RenderTarget(const std::string& name, const std::vector<Graphics::RenderTextureUsage>& usages);
         RenderTarget(const RenderTarget&) = delete;
         RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
@@ -65,23 +66,20 @@ namespace Enigma::Renderer
         RenderTarget& operator=(RenderTarget&&) = delete;
 
         /** init Back-Buffer */
-        error InitBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-            const Graphics::GraphicFormat& fmt);
-        error InitMultiBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
-            unsigned int surface_count, const std::vector<Graphics::GraphicFormat>& fmts);
+        error initBackSurface(const Graphics::BackSurfaceSpecification& specification);
+        error initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification);
 
         /** get back buffer interface */
-        Graphics::IBackSurfacePtr GetBackSurface() { return m_backSurface; };
+        Graphics::IBackSurfacePtr getBackSurface() { return m_backSurface; };
 
         /** init DepthStencil Buffer */
-        error InitDepthStencilSurface(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension,
-            const Graphics::GraphicFormat& fmt);
+        error initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification);
         /** share DepthStencil Buffer */
-        error ShareDepthStencilSurface(const std::string& depth_name,
+        error shareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** get depth stencil buffer */
-        Graphics::IDepthStencilSurfacePtr GetDepthStencilSurface() { return m_depthStencilSurface; };
+        Graphics::IDepthStencilSurfacePtr getDepthStencilSurface() { return m_depthStencilSurface; };
 
         void SetViewPort(const Graphics::TargetViewPort& vp);
         /** get viewport */
@@ -98,7 +96,7 @@ namespace Enigma::Renderer
         /** flip, only primary render target can flip */
         error Flip() const;
 
-        error ChangeClearingProperty(const RenderTargetClearChangingProperty& prop);
+        error changeClearingProperty(const RenderTargetClearChangingProperty& prop);
         /** get name */
         const std::string& getName() { return m_name; };
 

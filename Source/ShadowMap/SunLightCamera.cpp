@@ -22,7 +22,7 @@ SunLightCamera::~SunLightCamera()
 
 }
 
-void SunLightCamera::SetSunLightDir(const Vector3& sun_dir)
+void SunLightCamera::setSunLightDir(const Vector3& sun_dir)
 {
     m_sunDir = sun_dir;
     m_sunDir.normalizeSelf();
@@ -35,17 +35,17 @@ void SunLightCamera::SetSunLightDir(const Vector3& sun_dir)
     changeCameraFrame(std::nullopt, m_sunDir, up);
 }
 
-void SunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
+void SunLightCamera::setViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
 {
     m_viewerCamera = viewer_camera;
 }
 
-void SunLightCamera::CalcLightCameraSystemMatrix(SceneGraph::Culler* culler)
+void SunLightCamera::calcLightCameraSystemMatrix(SceneGraph::Culler* culler)
 {
     if (!culler) return;
 
     ShadowCasterBoundFilter filterShadowBound;
-    filterShadowBound.computeMergedBound(culler->GetVisibleSet());
+    filterShadowBound.computeMergedBound(culler->getVisibleSet());
 
     CalcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
 

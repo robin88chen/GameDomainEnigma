@@ -17,7 +17,7 @@ error ShadowMapInstallingPolicy::install(Frameworks::ServiceManager* service_man
     auto render_manager = service_manager->getSystemServiceAs<Renderer::RendererManager>();
     auto shadowmap_service = std::make_shared<ShadowMapService>(service_manager, scene_service, camera_service, render_manager, m_config);
     service_manager->registerSystemService(shadowmap_service);
-    shadowmap_service->CreateShadowRenderSystem(m_rendererName, m_targetName);
+    shadowmap_service->createShadowRenderSystem(m_rendererName, m_targetName);
     return error();
 }
 
@@ -37,7 +37,7 @@ error CascadeShadowMapInstallingPolicy::install(Frameworks::ServiceManager* serv
     auto shadowmap_service = std::make_shared<CascadeShadowMapService>(service_manager, scene_service, camera_service, render_manager, m_config);
     service_manager->registerSystemService(shadowmap_service);
     service_manager->insertHashAsService(ShadowMapService::TYPE_RTTI, shadowmap_service);
-    shadowmap_service->CreateShadowRenderSystem(m_rendererName, m_targetName);
+    shadowmap_service->createShadowRenderSystem(m_rendererName, m_targetName);
     return error();
 }
 

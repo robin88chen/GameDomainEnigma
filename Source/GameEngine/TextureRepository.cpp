@@ -4,6 +4,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "TextureCommands.h"
 #include "TextureEvents.h"
+#include "EngineErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -37,6 +38,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 
     m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
     Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
+    m_requestTextureConstitution = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { requestTextureConstitution(q); });
+    Frameworks::QueryDispatcher::subscribe(typeid(RequestTextureConstitution), m_requestTextureConstitution);
 
     m_storeMapper->connect();
 
@@ -57,6 +60,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 
     Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTexture), m_queryTexture);
     m_queryTexture = nullptr;
+    Frameworks::QueryDispatcher::unsubscribe(typeid(RequestTextureConstitution), m_requestTextureConstitution);
+    m_requestTextureConstitution = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -134,4 +139,18 @@ void TextureRepository::queryTexture(const Frameworks::IQueryPtr& q)
     if (!query) return;
     auto tex = queryTexture(query->id());
     query->setResult(tex);
+}
+
+void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto request = std::dynamic_pointer_cast<RequestTextureConstitution>(q);
+    if (!request) return;
+    if (hasTexture(request->id()))
+    {
+        Frameworks::EventPublisher::post(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
+        return;
+    }
+    auto tex = m_factory->constitute(request->id(), request->dto(), false);
+    request->setResult(tex);
 }

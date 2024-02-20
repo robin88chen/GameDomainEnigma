@@ -107,7 +107,7 @@ BOOL DeviceRasterizerStateDx11::BackfaceWiseByData(RasterizerStateData::Backface
 
 int DeviceRasterizerStateDx11::PixeledDepthBiasByData(float bias)
 {
-    unsigned bits = Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat().DepthBits();
+    unsigned bits = Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat().DepthBits();
     if ((bits == 16) || (bits == 24)) // D16UNORM, D24UNORM
     {
         return static_cast<int>(bias * static_cast<float>(pow(2, bits)));

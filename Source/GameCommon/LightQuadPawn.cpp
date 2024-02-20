@@ -45,15 +45,15 @@ error LightQuadPawn::_updateSpatialRenderState()
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
-    ColorRGBA colorLight(m_hostLight.lock()->Info().GetLightColor());
+    ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
     RenderLightingState lighting_state;
-    if (m_hostLight.lock()->Info().GetLightType() == LightInfo::LightType::Ambient)
+    if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::Ambient)
     {
         lighting_state.SetAmbientLightColor(colorLight);
     }
-    else if (m_hostLight.lock()->Info().GetLightType() == LightInfo::LightType::SunLight)
+    else if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::SunLight)
     {
-        Vector3 lightDir = m_hostLight.lock()->Info().GetLightDirection();
+        Vector3 lightDir = m_hostLight.lock()->info().getLightDirection();
         lighting_state.SetSunLight(lightDir, colorLight);
     }
     m_spatialRenderState = SpatialRenderState(lighting_state);

@@ -49,7 +49,7 @@ namespace Enigma::SceneGraph
         void SetCamera(const std::shared_ptr<Camera>& camera);
         const std::shared_ptr<Camera>& GetCamera() const { return m_camera; };
 
-        const VisibleSet& GetVisibleSet() const { return m_visibleSet; };
+        const VisibleSet& getVisibleSet() const { return m_visibleSet; };
 
         error ComputeVisibleSet(const std::shared_ptr<Spatial>& scene);
 

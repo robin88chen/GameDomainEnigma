@@ -30,7 +30,7 @@ LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::from
     m_dir = dto.direction();
     m_attenuation = dto.Attenuation();
     m_range = dto.Range();
-    m_isEnable = dto.IsEnable();
+    m_isEnable = dto.isEnable();
 }
 
 LightInfoDto LightInfo::serializeDto()
@@ -42,36 +42,36 @@ LightInfoDto LightInfo::serializeDto()
     dto.direction() = m_dir;
     dto.Attenuation() = m_attenuation;
     dto.Range() = m_range;
-    dto.IsEnable() = m_isEnable;
+    dto.isEnable() = m_isEnable;
     return dto;
 }
 
-void LightInfo::SetLightColor(const MathLib::ColorRGBA& color)
+void LightInfo::setLightColor(const MathLib::ColorRGBA& color)
 {
     m_color = color;
 }
 
-void LightInfo::SetLightPosition(const MathLib::Vector3& vec)
+void LightInfo::setLightPosition(const MathLib::Vector3& vec)
 {
     m_position = vec;
 }
 
-void LightInfo::SetLightDirection(const MathLib::Vector3& vec)
+void LightInfo::setLightDirection(const MathLib::Vector3& vec)
 {
     m_dir = vec.normalize();
 }
 
-void LightInfo::SetLightAttenuation(const MathLib::Vector3& attenuation)
+void LightInfo::setLightAttenuation(const MathLib::Vector3& attenuation)
 {
     m_attenuation = attenuation;
 }
 
-void LightInfo::SetLightRange(float range)
+void LightInfo::setLightRange(float range)
 {
     m_range = range;
 }
 
-void LightInfo::SetEnable(bool flag)
+void LightInfo::setEnable(bool flag)
 {
     m_isEnable = flag;
 }

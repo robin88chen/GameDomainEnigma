@@ -43,26 +43,26 @@ namespace Enigma::SceneGraph
 
         LightInfoDto serializeDto();
 
-        LightType GetLightType() const { return m_type; };
+        LightType lightType() const { return m_type; };
 
-        void SetLightColor(const MathLib::ColorRGBA& color);
-        const MathLib::ColorRGBA& GetLightColor() const { return m_color; };
+        void setLightColor(const MathLib::ColorRGBA& color);
+        const MathLib::ColorRGBA& getLightColor() const { return m_color; };
 
-        void SetLightPosition(const MathLib::Vector3& vec);
-        const MathLib::Vector3& GetLightPosition() const { return m_position; };
+        void setLightPosition(const MathLib::Vector3& vec);
+        const MathLib::Vector3& getLightPosition() const { return m_position; };
 
-        void SetLightDirection(const MathLib::Vector3& vec);
-        const MathLib::Vector3& GetLightDirection() const { return m_dir; };
+        void setLightDirection(const MathLib::Vector3& vec);
+        const MathLib::Vector3& getLightDirection() const { return m_dir; };
 
-        void SetLightRange(float range);
-        float GetLightRange() const { return m_range; };
+        void setLightRange(float range);
+        float getLightRange() const { return m_range; };
 
         /// x,y,z : 0次,1次,2次係數
-        void SetLightAttenuation(const MathLib::Vector3& vecAttenuation);
-        const MathLib::Vector3& GetLightAttenuation() const { return m_attenuation; };
+        void setLightAttenuation(const MathLib::Vector3& vecAttenuation);
+        const MathLib::Vector3& getLightAttenuation() const { return m_attenuation; };
 
-        void SetEnable(bool flag);
-        bool IsEnable() const { return m_isEnable; };
+        void setEnable(bool flag);
+        bool isEnable() const { return m_isEnable; };
 
     protected:
         LightType m_type;

@@ -18,7 +18,7 @@ CascadeShadowMapRenderer::~CascadeShadowMapRenderer()
 {
 }
 
-error CascadeShadowMapRenderer::DrawScene()
+error CascadeShadowMapRenderer::drawScene()
 {
     if (LOG_IF(Warnning, ((m_targetViewPorts.empty()) || (m_sunLightCamera.expired())))) return ErrorCode::ok;
     unsigned pipeline_count = static_cast<unsigned>(m_targetViewPorts.size());

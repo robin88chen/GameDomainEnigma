@@ -30,6 +30,17 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> m_texture;
         bool m_isPersisted;
     };
+    class ConstituteTextureFailed : public Frameworks::IEvent
+    {
+    public:
+        ConstituteTextureFailed(const TextureId& id, std::error_code er) : m_id(id), m_error(er) {}
+
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        TextureId m_id;
+        std::error_code m_error;
+    };
     class TextureHydrated : public Frameworks::IEvent
     {
     public:

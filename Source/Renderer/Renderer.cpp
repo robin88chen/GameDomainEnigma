@@ -19,36 +19,36 @@ Renderer::~Renderer()
     FlushAll();
 }
 
-error Renderer::SetRenderTarget(const std::shared_ptr<RenderTarget>& target)
+error Renderer::setRenderTarget(const std::shared_ptr<RenderTarget>& target)
 {
     m_target = target;
     return ErrorCode::ok;
 }
 
-std::shared_ptr<RenderTarget> Renderer::GetRenderTarget() const
+std::shared_ptr<RenderTarget> Renderer::getRenderTarget() const
 {
     if (!m_target.expired()) return m_target.lock();
     return nullptr;
 }
 
-error Renderer::ChangeClearingProperty(const RenderTargetClearChangingProperty& prop)
+error Renderer::changeClearingProperty(const RenderTargetClearChangingProperty& prop)
 {
-    if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    const error er = GetRenderTarget()->ChangeClearingProperty(prop);
+    if (!getRenderTarget()) return ErrorCode::nullRenderTarget;
+    const error er = getRenderTarget()->changeClearingProperty(prop);
     return er;
 }
 
-error Renderer::ClearRenderTarget()
+error Renderer::clearRenderTarget()
 {
-    if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    const error er = GetRenderTarget()->Clear();
+    if (!getRenderTarget()) return ErrorCode::nullRenderTarget;
+    const error er = getRenderTarget()->Clear();
     return er;
 }
 
 error Renderer::Flip()
 {
-    if (!GetRenderTarget()) return ErrorCode::nullRenderTarget;
-    const error er = GetRenderTarget()->Flip();
+    if (!getRenderTarget()) return ErrorCode::nullRenderTarget;
+    const error er = getRenderTarget()->Flip();
     return er;
 }
 
@@ -75,7 +75,7 @@ error Renderer::RemoveRenderElement(const std::shared_ptr<RenderElement>& elemen
     return m_renderPacksArray[static_cast<size_t>(list_id)].RemoveRenderElement(element, m_stampBitMask);
 }
 
-error Renderer::BeginScene()
+error Renderer::beginScene()
 {
     if (!m_target.expired())
     {
@@ -94,11 +94,11 @@ error Renderer::BeginScene()
         Engine::MaterialVariableMap::useCameraParameter(camera->location(),
             camera->viewTransform(), camera->projectionTransform());
     }
-    Graphics::IGraphicAPI::instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->beginScene();
     return ErrorCode::ok;
 }
 
-error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj)
+error Renderer::beginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj)
 {
     if (!m_target.expired())
     {
@@ -108,11 +108,11 @@ error Renderer::BeginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
         Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
     }
     Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
-    Graphics::IGraphicAPI::instance()->BeginScene();
+    Graphics::IGraphicAPI::instance()->beginScene();
     return ErrorCode::ok;
 }
 
-error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
+error Renderer::prepareScene(const SceneGraph::VisibleSet& visible_set,
     SceneGraph::Spatial::SpatialFlags accept_filter, SceneGraph::Spatial::SpatialFlags reject_filter)
 {
     const size_t count = visible_set.getCount();
@@ -128,7 +128,7 @@ error Renderer::PrepareScene(const SceneGraph::VisibleSet& visible_set,
     return ErrorCode::ok;
 }
 
-error Renderer::DrawScene()
+error Renderer::drawScene()
 {
     for (size_t i = 0; i < m_renderPacksArray.size(); i++)
     {
@@ -142,9 +142,9 @@ error Renderer::DrawScene()
     return ErrorCode::ok;
 }
 
-error Renderer::EndScene()
+error Renderer::endScene()
 {
-    Graphics::IGraphicAPI::instance()->EndScene();
+    Graphics::IGraphicAPI::instance()->endScene();
     return ErrorCode::ok;
 }
 
@@ -156,7 +156,7 @@ void Renderer::FlushAll()
     }
 }
 
-void Renderer::SetAssociatedCamera(const std::shared_ptr<SceneGraph::Camera>& camera)
+void Renderer::setAssociatedCamera(const std::shared_ptr<SceneGraph::Camera>& camera)
 {
     m_associatedCamera = camera;
 }

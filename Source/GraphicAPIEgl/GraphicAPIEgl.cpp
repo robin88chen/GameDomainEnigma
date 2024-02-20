@@ -110,7 +110,7 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
 
     Debug::Printf("create depth surface in thread %d\n", std::this_thread::get_id());
     Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
-        menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, GetDepthSurfaceFormat() } };
+        menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, getDepthSurfaceFormat() } };
     m_stash->Add(depth_name, depth_surface);
 
     Frameworks::EventPublisher::post(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));

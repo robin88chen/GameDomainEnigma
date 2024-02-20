@@ -22,6 +22,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullMaterial: return "Null material";
     case ErrorCode::textureSemantic: return "texture semantic error";
     case ErrorCode::targetTextureNotExists: return "Target texture not exists";
+    case ErrorCode::textureAlreadyExists: return "Texture already exists";
     case ErrorCode::textureAlreadyLoaded: return "Texture already loaded";
     case ErrorCode::textureNotReady: return "Texture not ready";
     }

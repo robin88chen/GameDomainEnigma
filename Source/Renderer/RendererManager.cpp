@@ -92,9 +92,9 @@ void RendererManager::RegisterCustomRendererFactory(const std::string& type_name
     m_customRendererFactoryTable.emplace(type_name, fn);
 }
 
-error RendererManager::CreateRenderer(const std::string& name)
+error RendererManager::createRenderer(const std::string& name)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -119,7 +119,7 @@ error RendererManager::CreateRenderer(const std::string& name)
 
 error RendererManager::CreateCustomRenderer(const std::string& type_name, const std::string& name)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -147,7 +147,7 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
 
 error RendererManager::InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -166,9 +166,9 @@ error RendererManager::InsertRenderer(const std::string& name, const Engine::IRe
     return ErrorCode::ok;
 }
 
-error RendererManager::DestroyRenderer(const std::string& name)
+error RendererManager::destroyRenderer(const std::string& name)
 {
-    const IRendererPtr render = GetRenderer(name);
+    const IRendererPtr render = getRenderer(name);
     if (!render) return ErrorCode::rendererNotExist;
 
     const unsigned int stamp = render->GetStampBitMask();
@@ -180,16 +180,16 @@ error RendererManager::DestroyRenderer(const std::string& name)
     return ErrorCode::ok;
 }
 
-IRendererPtr RendererManager::GetRenderer(const std::string& name) const
+IRendererPtr RendererManager::getRenderer(const std::string& name) const
 {
     const auto it = m_renderers.find(name);
     if (it == m_renderers.end()) return nullptr;
     return it->second;
 }
 
-error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages)
+error RendererManager::createRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
-    if (auto target_check = GetRenderTarget(name))
+    if (auto target_check = getRenderTarget(name))
     {
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
@@ -205,9 +205,9 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
     return ErrorCode::ok;
 }
 
-error RendererManager::DestroyRenderTarget(const std::string& name)
+error RendererManager::destroyRenderTarget(const std::string& name)
 {
-    const auto target = GetRenderTarget(name);
+    const auto target = getRenderTarget(name);
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
 
@@ -216,7 +216,7 @@ error RendererManager::DestroyRenderTarget(const std::string& name)
     return ErrorCode::ok;
 }
 
-RenderTargetPtr RendererManager::GetRenderTarget(const std::string& name) const
+RenderTargetPtr RendererManager::getRenderTarget(const std::string& name) const
 {
     RenderTargetMap::const_iterator iter = m_renderTargets.find(name);
     if (iter == m_renderTargets.end()) return nullptr;
@@ -225,7 +225,7 @@ RenderTargetPtr RendererManager::GetRenderTarget(const std::string& name) const
 
 RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
 {
-    return GetRenderTarget(m_primaryRenderTargetName);
+    return getRenderTarget(m_primaryRenderTargetName);
 }
 
 void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const
@@ -257,7 +257,7 @@ void RendererManager::DoCreatingRenderer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    CreateRenderer(cmd->GetRendererName());
+    createRenderer(cmd->GetRendererName());
 }
 
 void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
@@ -265,7 +265,7 @@ void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    DestroyRenderer(cmd->GetRendererName());
+    destroyRenderer(cmd->GetRendererName());
 }
 
 void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
@@ -273,7 +273,7 @@ void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType(), cmd->GetUsages());
+    createRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType(), cmd->GetUsages());
 }
 
 void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
@@ -281,7 +281,7 @@ void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    DestroyRenderTarget(cmd->GetRenderTargetName());
+    destroyRenderTarget(cmd->GetRenderTargetName());
 }
 
 void RendererManager::DoChangingViewPort(const Frameworks::ICommandPtr& c) const
@@ -289,7 +289,7 @@ void RendererManager::DoChangingViewPort(const Frameworks::ICommandPtr& c) const
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeTargetViewPort, Frameworks::ICommand>(c);
     if (!cmd) return;
-    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    const auto target = getRenderTarget(cmd->GetRenderTargetName());
     if (!target) return;
     target->SetViewPort(cmd->GetViewPort());
 }
@@ -299,7 +299,7 @@ void RendererManager::DoChangingClearingProperty(const Frameworks::ICommandPtr& 
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeTargetClearingProperty, Frameworks::ICommand>(c);
     if (!cmd) return;
-    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    const auto target = getRenderTarget(cmd->GetRenderTargetName());
     if (!target) return;
-    target->ChangeClearingProperty(cmd->GetProperty());
+    target->changeClearingProperty(cmd->GetProperty());
 }

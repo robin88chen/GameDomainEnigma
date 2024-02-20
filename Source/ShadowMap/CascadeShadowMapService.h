@@ -35,13 +35,13 @@ namespace Enigma::ShadowMap
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        virtual void CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
-        virtual void DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
+        virtual void createShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
+        virtual void destroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
     protected:
-        virtual void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit) override;
-        virtual void DeleteSunLightCamera() override;
-        virtual void UpdateSunLightDirection(const MathLib::Vector3& dir) override;
+        virtual void createSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit) override;
+        virtual void deleteSunLightCamera() override;
+        virtual void updateSunLightDirection(const MathLib::Vector3& dir) override;
 
     private:
         static void AssignLightViewProjectionTransforms(Engine::EffectVariable& var);

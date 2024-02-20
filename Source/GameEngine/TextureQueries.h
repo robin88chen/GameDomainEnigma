@@ -25,6 +25,17 @@ namespace Enigma::Engine
     protected:
         TextureId m_id;
     };
+    class RequestTextureConstitution : public Frameworks::Query<std::shared_ptr<Texture>>
+    {
+    public:
+        RequestTextureConstitution(const TextureId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
+        const TextureId& id() { return m_id; }
+        const GenericDto& dto() { return m_dto; }
+
+    private:
+        TextureId m_id;
+        GenericDto m_dto;
+    };
 }
 
 #endif // TEXTURE_QUERIES_H

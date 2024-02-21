@@ -26,7 +26,7 @@ IDeviceDepthStencilState::~IDeviceDepthStencilState()
     }
 }*/
 
-void IDeviceDepthStencilState::Bind()
+void IDeviceDepthStencilState::bind()
 {
     if (IGraphicAPI::instance()->UseAsync())
     {

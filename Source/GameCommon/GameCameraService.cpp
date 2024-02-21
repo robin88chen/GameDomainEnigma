@@ -209,8 +209,8 @@ void GameCameraService::onTargetResized(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
     if (!ev) return;
     if (ev->getRenderTarget() == nullptr) return;
-    if (!ev->getRenderTarget()->IsPrimary()) return;
-    changeAspectRatio(static_cast<float>(ev->GetDimension().m_width) / static_cast<float>(ev->GetDimension().m_height));
+    if (!ev->getRenderTarget()->isPrimary()) return;
+    changeAspectRatio(static_cast<float>(ev->getDimension().m_width) / static_cast<float>(ev->getDimension().m_height));
 }
 
 void GameCameraService::onMouseRightBtnDrag(const Frameworks::IEventPtr& e)

@@ -11,7 +11,7 @@ VisibleSet::~VisibleSet()
     m_visibleObjSet.clear();
 }
 
-void VisibleSet::Clear()
+void VisibleSet::clear()
 {
     m_visibleObjSet.clear();
 }

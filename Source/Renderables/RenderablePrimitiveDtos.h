@@ -22,10 +22,7 @@
 
 namespace Enigma::Renderables
 {
-    class MeshPrimitivePolicy;
-    class ModelPrimitivePolicy;
-    class SkinMeshPrimitivePolicy;
-
+    class MeshPrimitive;
     class MeshPrimitiveDto
     {
     public:
@@ -72,6 +69,8 @@ namespace Enigma::Renderables
     {
     public:
         MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto);
+
+        void replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive);
 
         [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
 

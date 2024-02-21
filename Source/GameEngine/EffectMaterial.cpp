@@ -41,12 +41,13 @@ void EffectMaterial::copyFrom(const std::shared_ptr<EffectMaterial>& other)
     mappingAutoVariables();
 }
 
-void EffectMaterial::instanceLazyContent(const std::vector<EffectTechnique>& techniques)
+void EffectMaterial::hydrateTechniques(const std::vector<EffectTechnique>& techniques)
 {
     m_effectTechniques = techniques;
     m_currentTechnique = m_effectTechniques.end();
     mappingAutoVariables();
     m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
+    selectTechnique();
 }
 
 void EffectMaterial::setSource(const std::shared_ptr<EffectMaterialSource>& mat_source)

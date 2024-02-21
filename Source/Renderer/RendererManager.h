@@ -44,14 +44,14 @@ namespace Enigma::Renderer
         virtual Frameworks::ServiceResult onTerm() override;
 
         /** register renderer factory */
-        static void RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn);
+        static void registerCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn);
 
         /** create renderer */
         error createRenderer(const std::string& name);
         /** create custom renderer */
-        error CreateCustomRenderer(const std::string& type_name, const std::string& name);
+        error createCustomRenderer(const std::string& type_name, const std::string& name);
         /** insert renderer */
-        error InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer);
+        error insertRenderer(const std::string& name, const Engine::IRendererPtr& renderer);
 
         /** destroy renderer by name : remove from map, & destroy  */
         error destroyRenderer(const std::string& name);
@@ -60,34 +60,35 @@ namespace Enigma::Renderer
 
         /** create render target */
         error createRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
+        error createRenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
 
         /** destroy render target by name : remove from map, & destroy  */
         error destroyRenderTarget(const std::string& name);
         /** get render target */
         RenderTargetPtr getRenderTarget(const std::string& name) const;
         /** get primary render target */
-        RenderTargetPtr GetPrimaryRenderTarget() const;
+        RenderTargetPtr getPrimaryRenderTarget() const;
 
     protected:
-        void ClearAllRenderer();
-        void ClearAllRenderTarget();
+        void removeAllRenderer();
+        void removeAllRenderTarget();
 
-        void DoCreatingRenderer(const Frameworks::ICommandPtr& c);
-        void DoDestroyingRenderer(const Frameworks::ICommandPtr& c);
-        void DoCreatingRenderTarget(const Frameworks::ICommandPtr& c);
-        void DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c);
-        void DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const;
-        void DoChangingViewPort(const Frameworks::ICommandPtr& c) const;
-        void DoChangingClearingProperty(const Frameworks::ICommandPtr& c) const;
+        void createRenderer(const Frameworks::ICommandPtr& c);
+        void destroyRenderer(const Frameworks::ICommandPtr& c);
+        void createRenderTarget(const Frameworks::ICommandPtr& c);
+        void destroyRenderTarget(const Frameworks::ICommandPtr& c);
+        void resizePrimaryTarget(const Frameworks::ICommandPtr& c) const;
+        void changeViewPort(const Frameworks::ICommandPtr& c) const;
+        void changeClearingProperty(const Frameworks::ICommandPtr& c) const;
 
     protected:
-        Frameworks::CommandSubscriberPtr m_doCreatingRenderer;
-        Frameworks::CommandSubscriberPtr m_doDestroyingRenderer;
-        Frameworks::CommandSubscriberPtr m_doCreatingRenderTarget;
-        Frameworks::CommandSubscriberPtr m_doDestroyingRenderTarget;
-        Frameworks::CommandSubscriberPtr m_doResizingPrimaryTarget;
-        Frameworks::CommandSubscriberPtr m_doChangingViewPort;
-        Frameworks::CommandSubscriberPtr m_doChangingClearingProperty;
+        Frameworks::CommandSubscriberPtr m_createRenderer;
+        Frameworks::CommandSubscriberPtr m_destroyRenderer;
+        Frameworks::CommandSubscriberPtr m_createRenderTarget;
+        Frameworks::CommandSubscriberPtr m_destroyRenderTarget;
+        Frameworks::CommandSubscriberPtr m_resizePrimaryTarget;
+        Frameworks::CommandSubscriberPtr m_changeViewPort;
+        Frameworks::CommandSubscriberPtr m_changeClearingProperty;
 
         using RendererMap = std::unordered_map<std::string, Engine::IRendererPtr>;
         using RenderTargetMap = std::unordered_map<std::string, RenderTargetPtr>;

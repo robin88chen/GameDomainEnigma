@@ -61,11 +61,11 @@ error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     if (FATAL_LOG_EXPR(!m_vertexBuffer)) return Graphics::ErrorCode::nullVertexBuffer;
     if (m_vertexBuffer)
     {
-        Graphics::IGraphicAPI::instance()->Bind(m_vertexBuffer, m_signature.GetTopology());
+        Graphics::IGraphicAPI::instance()->bind(m_vertexBuffer, m_signature.GetTopology());
     }
     if (m_indexBuffer)
     {
-        Graphics::IGraphicAPI::instance()->Bind(m_indexBuffer);
+        Graphics::IGraphicAPI::instance()->bind(m_indexBuffer);
     }
 
     effectMaterial->applyFirstPass();

@@ -41,14 +41,14 @@ error Renderer::changeClearingProperty(const RenderTargetClearChangingProperty& 
 error Renderer::clearRenderTarget()
 {
     if (!getRenderTarget()) return ErrorCode::nullRenderTarget;
-    const error er = getRenderTarget()->Clear();
+    const error er = getRenderTarget()->clear();
     return er;
 }
 
-error Renderer::Flip()
+error Renderer::flip()
 {
     if (!getRenderTarget()) return ErrorCode::nullRenderTarget;
-    const error er = getRenderTarget()->Flip();
+    const error er = getRenderTarget()->flip();
     return er;
 }
 
@@ -79,10 +79,10 @@ error Renderer::beginScene()
 {
     if (!m_target.expired())
     {
-        m_target.lock()->Bind();
-        m_target.lock()->Clear();
-        m_target.lock()->BindViewPort();
-        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
+        m_target.lock()->bind();
+        m_target.lock()->clear();
+        m_target.lock()->bindViewPort();
+        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->getViewPort());
     }
     std::shared_ptr<SceneGraph::Camera> camera;
     if (!m_associatedCamera.expired())
@@ -102,10 +102,10 @@ error Renderer::beginScene(const MathLib::Vector3& camera_loc, const MathLib::Ma
 {
     if (!m_target.expired())
     {
-        m_target.lock()->Bind();
-        m_target.lock()->Clear();
-        m_target.lock()->BindViewPort();
-        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
+        m_target.lock()->bind();
+        m_target.lock()->clear();
+        m_target.lock()->bindViewPort();
+        Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->getViewPort());
     }
     Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
     Graphics::IGraphicAPI::instance()->beginScene();

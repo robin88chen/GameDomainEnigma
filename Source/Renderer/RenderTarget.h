@@ -59,21 +59,17 @@ namespace Enigma::Renderer
         };
     public:
         RenderTarget(const std::string& name, PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
+        RenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
+        //RenderTarget(const std::string& name, const Graphics::MultiBackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
         RenderTarget(const RenderTarget&) = delete;
         RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
         RenderTarget& operator=(const RenderTarget&) = delete;
         RenderTarget& operator=(RenderTarget&&) = delete;
 
-        /** init Back-Buffer */
-        error initBackSurface(const Graphics::BackSurfaceSpecification& specification);
-        error initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification);
-
         /** get back buffer interface */
         Graphics::IBackSurfacePtr getBackSurface() { return m_backSurface; };
 
-        /** init DepthStencil Buffer */
-        error initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification);
         /** share DepthStencil Buffer */
         error shareDepthStencilSurface(const std::string& depth_name,
             const Graphics::IDepthStencilSurfacePtr& surface);
@@ -81,60 +77,68 @@ namespace Enigma::Renderer
         /** get depth stencil buffer */
         Graphics::IDepthStencilSurfacePtr getDepthStencilSurface() { return m_depthStencilSurface; };
 
-        void SetViewPort(const Graphics::TargetViewPort& vp);
+        void setViewPort(const Graphics::TargetViewPort& vp);
         /** get viewport */
-        const Graphics::TargetViewPort& GetViewPort();
+        const Graphics::TargetViewPort& getViewPort();
 
         /** is primary render target?? */
-        bool IsPrimary() const { return m_isPrimary; };
+        bool isPrimary() const { return m_isPrimary; };
         /** bind to device */
-        error Bind();
+        error bind();
         /** bind viewport */
-        error BindViewPort();
+        error bindViewPort();
         /** clear render target */
-        error Clear();
+        error clear();
         /** flip, only primary render target can flip */
-        error Flip() const;
+        error flip() const;
 
         error changeClearingProperty(const RenderTargetClearChangingProperty& prop);
         /** get name */
         const std::string& getName() { return m_name; };
 
         /** get dimension. */
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; };
+        const MathLib::Dimension<unsigned>& getDimension() const { return m_dimension; };
 
         /** get render target texture */
-        Engine::TexturePtr GetRenderTargetTexture() { return m_renderTargetTexture; };
+        Engine::TexturePtr getRenderTargetTexture() { return m_renderTargetTexture; };
 
         /** resize target */
-        error Resize(const MathLib::Dimension<unsigned>& dimension);
+        error resize(const MathLib::Dimension<unsigned>& dimension);
 
-        std::optional<unsigned> FindRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
+        std::optional<unsigned> findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
 
     protected:
-        void SubscribeHandler();
-        void UnsubscribeHandler();
+        void subscribeHandler();
+        void unsubscribeHandler();
 
-        error Initialize();
-        future_error AsyncInitialize();
+        void createRenderTargetTexture();
+        void initViewPortSize();
 
-        void CreateRenderTargetTexture();
-        void InitViewPortSize();
-
-        error Clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
+        error clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,
             RenderTargetClearingBits flag = RenderTargetClear::BothBuffer) const;
+
+        /** init Back-Buffer */
+        error initBackSurface(const Graphics::BackSurfaceSpecification& specification);
+        error initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification);
+        /** init DepthStencil Buffer */
+        error initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification);
 
         /** @name event handler */
         //@{
-        void OnPrimarySurfaceCreated(const Frameworks::IEventPtr& e);
-        void OnBackSurfaceCreated(const Frameworks::IEventPtr& e);
-        void OnDepthSurfaceCreated(const Frameworks::IEventPtr& e);
-        void OnBackSurfaceResized(const Frameworks::IEventPtr& e);
-        void OnDepthSurfaceResized(const Frameworks::IEventPtr& e);
+        void onPrimarySurfaceCreated(const Frameworks::IEventPtr& e);
+        void onBackSurfaceCreated(const Frameworks::IEventPtr& e);
+        void onDepthSurfaceCreated(const Frameworks::IEventPtr& e);
+        void onBackSurfaceResized(const Frameworks::IEventPtr& e);
+        void onDepthSurfaceResized(const Frameworks::IEventPtr& e);
         //@}
         void onTextureHydrated(const Frameworks::IEventPtr& e);
         void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
+        void completeSurfaceCreation();
+        void completeRenderTextureHydration();
+
+        std::string backSurfaceName() const;
+        std::string depthSurfaceName() const;
     protected:
         bool m_isPrimary;
 
@@ -143,9 +147,10 @@ namespace Enigma::Renderer
         std::vector<Graphics::RenderTextureUsage> m_usages;
 
         Graphics::IBackSurfacePtr m_backSurface;
-        std::string m_backSurfaceName;
+        std::optional<Graphics::BackSurfaceSpecification> m_backSpecification;
+        std::optional<Graphics::MultiBackSurfaceSpecification> m_multiBackSpecification;
         Graphics::IDepthStencilSurfacePtr m_depthStencilSurface;
-        std::string m_depthSurfaceName;
+        std::optional<Graphics::DepthStencilSurfaceSpecification> m_depthSpecification;
         Engine::TexturePtr m_renderTargetTexture;
 
         Graphics::TargetViewPort m_viewPort;

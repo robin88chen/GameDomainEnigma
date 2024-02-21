@@ -41,7 +41,7 @@ namespace Enigma::Engine
         const EffectMaterialId& id() const { return m_id; };
 
         void copyFrom(const std::shared_ptr<EffectMaterial>& other);
-        void instanceLazyContent(const std::vector<EffectTechnique>& techniques);
+        void hydrateTechniques(const std::vector<EffectTechnique>& techniques);
         const std::vector<EffectTechnique>& effectTechniques() const { return m_effectTechniques; }
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }

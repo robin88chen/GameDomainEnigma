@@ -47,6 +47,9 @@ namespace Enigma::Engine
         void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
 
     private:
+        void registerHandlers();
+        void unregisterHandlers();
+
         void removeTexture(const Frameworks::ICommandPtr& c);
         void putTexture(const Frameworks::ICommandPtr& c);
         void queryTexture(const Frameworks::IQueryPtr& q);

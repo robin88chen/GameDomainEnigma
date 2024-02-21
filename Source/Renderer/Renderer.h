@@ -60,7 +60,7 @@ namespace Enigma::Renderer
         /** clear render target */
         virtual error clearRenderTarget();
         /** flip */
-        error Flip();
+        error flip();
 
         /** insert render element, element 會被加上 active frame bit,
                 然後檢查是否已存在序列中, 不在序列中才會加入.

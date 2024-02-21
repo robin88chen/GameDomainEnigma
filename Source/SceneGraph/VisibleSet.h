@@ -35,7 +35,7 @@ namespace Enigma::SceneGraph
         const SpatialVector& GetObjectSet() const;
 
         void Insert(const SpatialPtr& obj);
-        void Clear();
+        void clear();
 
     protected:
         SpatialVector m_visibleObjSet;

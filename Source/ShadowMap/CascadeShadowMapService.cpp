@@ -81,9 +81,9 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
         m_configuration->shadowMapDimension().m_height };
     TargetViewPort fullViewPort(0, 0, fullDimension.m_width, fullDimension.m_height);
     Engine::IRendererPtr renderer = std::make_shared<CascadeShadowMapRenderer>(renderer_name);
-    error er = m_rendererManager.lock()->InsertRenderer(renderer_name, renderer);
+    error er = m_rendererManager.lock()->insertRenderer(renderer_name, renderer);
     if (er) return;
-    m_rendererManager.lock()->createRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
+    m_rendererManager.lock()->createRenderTarget(target_name, Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), fullDimension, Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()), { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
     m_renderer.lock()->selectRendererTechnique(m_configuration->shadowMapTechniqueName());
@@ -91,12 +91,11 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
     rendererCSM->SetRenderTargetViewPorts(viewPorts);
 
     m_shadowMapRenderTarget = m_rendererManager.lock()->getRenderTarget(target_name);
-    m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F));
-    m_shadowMapRenderTarget.lock()->initDepthStencilSurface(Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), fullDimension,
-        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()));
+    //m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F));
+    //m_shadowMapRenderTarget.lock()->initDepthStencilSurface(Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), fullDimension,        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()));
     m_renderer.lock()->setRenderTarget(m_shadowMapRenderTarget.lock());
     m_shadowMapRenderTarget.lock()->changeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
-    m_shadowMapRenderTarget.lock()->SetViewPort(fullViewPort);
+    m_shadowMapRenderTarget.lock()->setViewPort(fullViewPort);
 
     if (m_sunLightCamera)
     {

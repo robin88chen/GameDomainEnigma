@@ -68,10 +68,10 @@ namespace Enigma::Renderables
         void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
         void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
 
-        void onEffectMaterialContented(const Frameworks::IEventPtr& e);
-        void onContentEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void onTextureContented(const Frameworks::IEventPtr& e);
-        void onContentTextureFailed(const Frameworks::IEventPtr& e);
+        void onEffectMaterialHydrated(const Frameworks::IEventPtr& e);
+        void onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        void onTextureHydrated(const Frameworks::IEventPtr& e);
+        void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
 

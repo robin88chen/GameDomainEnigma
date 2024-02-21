@@ -26,7 +26,7 @@ error CascadeShadowMapRenderer::drawScene()
 
     for (unsigned int pipeline = 0; pipeline < pipeline_count; pipeline++)
     {
-        Graphics::IGraphicAPI::instance()->Bind(m_targetViewPorts[pipeline]);
+        Graphics::IGraphicAPI::instance()->bind(m_targetViewPorts[pipeline]);
         MaterialVariableMap::useViewPortDimension(
             m_targetViewPorts[pipeline].Width(), m_targetViewPorts[pipeline].Height(),
             m_targetViewPorts[pipeline].MinZ(), m_targetViewPorts[pipeline].MaxZ());

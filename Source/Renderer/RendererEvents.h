@@ -50,7 +50,7 @@ namespace Enigma::Renderer
         RenderTargetResized(const std::shared_ptr<RenderTarget>& target, const MathLib::Dimension<unsigned>& dimension) :
             m_target(target), m_dimension(dimension) {};
         [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
+        [[nodiscard]] const MathLib::Dimension<unsigned>& getDimension() const { return m_dimension; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -83,7 +83,7 @@ namespace Enigma::Renderer
         TargetViewPortInitialized(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
             m_target{ target }, m_view_port(vp) {}
         [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
+        [[nodiscard]] const Graphics::TargetViewPort& getViewPort() { return m_view_port; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -95,7 +95,7 @@ namespace Enigma::Renderer
         TargetViewPortChanged(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
             m_target{ target }, m_view_port(vp) {}
         [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const Graphics::TargetViewPort& GetViewPort() { return m_view_port; }
+        [[nodiscard]] const Graphics::TargetViewPort& getViewPort() { return m_view_port; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;

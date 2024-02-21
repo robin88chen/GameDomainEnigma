@@ -93,15 +93,15 @@ void ShadowMapService::createShadowRenderSystem(const std::string& renderer_name
 {
     assert(!m_rendererManager.expired());
     m_rendererManager.lock()->createRenderer(renderer_name);
-    m_rendererManager.lock()->createRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
+    m_rendererManager.lock()->createRenderTarget(target_name, Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),
+        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()), { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
     m_renderer.lock()->selectRendererTechnique(m_configuration->shadowMapTechniqueName());
 
     m_shadowMapRenderTarget = m_rendererManager.lock()->getRenderTarget(target_name);
-    m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F));
-    m_shadowMapRenderTarget.lock()->initDepthStencilSurface(Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),
-        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()));
+    //m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F));
+    //m_shadowMapRenderTarget.lock()->initDepthStencilSurface(Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()));
     m_renderer.lock()->setRenderTarget(m_shadowMapRenderTarget.lock());
     m_shadowMapRenderTarget.lock()->changeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
 
@@ -239,7 +239,7 @@ void ShadowMapService::bindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>&
     if (!mesh) return;
     if (m_shadowMapRenderTarget.expired()) return;
 
-    mesh->bindSemanticTexture({ m_configuration->shadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
+    mesh->bindSemanticTexture({ m_configuration->shadowMapSemantic(), m_shadowMapRenderTarget.lock()->getRenderTargetTexture(), std::nullopt });
 }
 
 void ShadowMapService::assignLightViewProjectionTransform(Engine::EffectVariable& var)

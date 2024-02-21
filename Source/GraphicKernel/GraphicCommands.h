@@ -162,7 +162,7 @@ namespace Enigma::Graphics
     public:
         ResizeBackSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
         const std::string& getName() const { return m_name; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension& getDimension() const { return m_dimension; }
     private:
         std::string m_name;
         MathLib::Dimension m_dimension;
@@ -172,7 +172,7 @@ namespace Enigma::Graphics
     public:
         ResizeDepthSurface(const std::string& name, const MathLib::Dimension& dimension) : m_name(name), m_dimension(dimension) {};
         const std::string& getName() const { return m_name; }
-        const MathLib::Dimension& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension& getDimension() const { return m_dimension; }
     private:
         std::string m_name;
         MathLib::Dimension m_dimension;
@@ -330,7 +330,7 @@ namespace Enigma::Graphics
     {
     public:
         BindViewPort(const TargetViewPort& vp) : m_vp(vp) {};
-        const TargetViewPort& GetViewPort() const { return m_vp; }
+        const TargetViewPort& getViewPort() const { return m_vp; }
     private:
         TargetViewPort m_vp;
     };

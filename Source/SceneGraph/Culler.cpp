@@ -220,7 +220,7 @@ void Culler::UpdateFrustumPlanes()
 
 error Culler::ComputeVisibleSet(const std::shared_ptr<Spatial>& scene)
 {
-    m_visibleSet.Clear();
+    m_visibleSet.clear();
 
     m_planeActivations.set();
 

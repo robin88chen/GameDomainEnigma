@@ -79,7 +79,7 @@ namespace Enigma::Graphics
         //virtual void create(const DepthStencilData& data);
         virtual error CreateFromData(const DepthStencilData& data);
         virtual future_error AsyncCreateFromData(const DepthStencilData& data);
-        virtual void Bind();
+        virtual void bind();
 
     protected:
         virtual error BindToDevice() = 0;

@@ -129,14 +129,14 @@ void DeferredRendererService::createSceneRenderSystem(const std::string& rendere
     assert(m_configuration);
     auto rendererManager = m_rendererManager.lock();
     IRendererPtr renderer = std::make_shared<DeferredRenderer>(renderer_name);
-    error er = rendererManager->InsertRenderer(renderer_name, renderer);
+    error er = rendererManager->insertRenderer(renderer_name, renderer);
     if (er) return;
 
-    RenderTargetPtr primaryTarget = rendererManager->GetPrimaryRenderTarget();
+    RenderTargetPtr primaryTarget = rendererManager->getPrimaryRenderTarget();
     if (!primaryTarget)
     {
         rendererManager->createRenderTarget(target_name, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
-        primaryTarget = rendererManager->GetPrimaryRenderTarget();
+        primaryTarget = rendererManager->getPrimaryRenderTarget();
     }
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
 
@@ -169,16 +169,15 @@ void DeferredRendererService::createGBuffer(const RenderTargetPtr& primary_targe
     assert(!m_rendererManager.expired());
     assert(m_configuration);
 
-    auto [width, height] = primary_target->GetDimension();
+    auto [width, height] = primary_target->getDimension();
 
     m_rendererManager.lock()->createRenderTarget(m_configuration->gbufferTargetName(), RenderTarget::PrimaryType::NotPrimary,
         m_configuration->gbufferUsages());
     m_gBuffer = m_rendererManager.lock()->getRenderTarget(m_configuration->gbufferTargetName());
     if (!m_gBuffer.expired())
     {
-        m_gBuffer.lock()->initMultiBackSurface(Graphics::MultiBackSurfaceSpecification(m_configuration->gbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->gbufferFormats().size()),
-            m_configuration->gbufferFormats()));
-        m_gBuffer.lock()->shareDepthStencilSurface(m_configuration->gbufferDepthName(), primary_target->getDepthStencilSurface());
+        //m_gBuffer.lock()->initMultiBackSurface(Graphics::MultiBackSurfaceSpecification(m_configuration->gbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->gbufferFormats().size()), m_configuration->gbufferFormats()));
+        //m_gBuffer.lock()->shareDepthStencilSurface(m_configuration->gbufferDepthName(), primary_target->getDepthStencilSurface());
     }
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
     {
@@ -207,9 +206,9 @@ void DeferredRendererService::onPrimaryRenderTargetResized(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
     if (!ev) return;
     const auto target = ev->getRenderTarget();
-    if ((!target) || (!target->IsPrimary())) return;
+    if ((!target) || (!target->isPrimary())) return;
 
-    if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->GetDimension() != target->GetDimension())) m_gBuffer.lock()->Resize(target->GetDimension());
+    if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->getDimension() != target->getDimension())) m_gBuffer.lock()->resize(target->getDimension());
 }
 
 void DeferredRendererService::onGameCameraUpdated(const IEventPtr& e)
@@ -570,13 +569,13 @@ void DeferredRendererService::bindGBufferToLightingMesh(const std::shared_ptr<Me
     assert(m_configuration);
     if (!mesh) return;
     if (m_gBuffer.expired()) return;
-    if (!m_gBuffer.lock()->GetRenderTargetTexture()) return;
+    if (!m_gBuffer.lock()->getRenderTargetTexture()) return;
 
     EffectTextureMap::SegmentEffectTextures textures = {
-        { m_configuration->gbufferNormalSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
-        { m_configuration->gbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
-        { m_configuration->gbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
-        { m_configuration->gbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
+        { m_configuration->gbufferNormalSemantic(), m_gBuffer.lock()->getRenderTargetTexture(), m_gBuffer.lock()->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
+        { m_configuration->gbufferDiffuseSemantic(), m_gBuffer.lock()->getRenderTargetTexture(), m_gBuffer.lock()->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
+        { m_configuration->gbufferSpecularSemantic(), m_gBuffer.lock()->getRenderTargetTexture(), m_gBuffer.lock()->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
+        { m_configuration->gbufferDepthSemantic(), m_gBuffer.lock()->getRenderTargetTexture(), m_gBuffer.lock()->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
     if (mesh->getTextureMapCount() != 0)
     {
         mesh->bindSemanticTextures(textures);

@@ -266,7 +266,7 @@ void IGraphicAPI::Draw(unsigned indexCount, unsigned vertexCount, unsigned index
     }
 }
 
-void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+void IGraphicAPI::clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
     const MathLib::ColorRGBA& color, float depth_value, unsigned stencil_value)
 {
     if (UseAsync())
@@ -279,7 +279,7 @@ void IGraphicAPI::Clear(const IBackSurfacePtr& back_surface, const IDepthStencil
     }
 }
 
-void IGraphicAPI::Flip()
+void IGraphicAPI::flip()
 {
     if (UseAsync())
     {
@@ -291,7 +291,7 @@ void IGraphicAPI::Flip()
     }
 }
 
-void IGraphicAPI::Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface)
+void IGraphicAPI::bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface)
 {
     if (UseAsync())
     {
@@ -303,7 +303,7 @@ void IGraphicAPI::Bind(const IBackSurfacePtr& back_surface, const IDepthStencilS
     }
 }
 
-void IGraphicAPI::Bind(const TargetViewPort& vp)
+void IGraphicAPI::bind(const TargetViewPort& vp)
 {
     if (UseAsync())
     {
@@ -311,11 +311,11 @@ void IGraphicAPI::Bind(const TargetViewPort& vp)
     }
     else
     {
-        BindViewPort(vp);
+        bindViewPort(vp);
     }
 }
 
-void IGraphicAPI::Bind(const IShaderProgramPtr& shader)
+void IGraphicAPI::bind(const IShaderProgramPtr& shader)
 {
     if (UseAsync())
     {
@@ -327,7 +327,7 @@ void IGraphicAPI::Bind(const IShaderProgramPtr& shader)
     }
 }
 
-void IGraphicAPI::Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
+void IGraphicAPI::bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
 {
     if (UseAsync())
     {
@@ -339,7 +339,7 @@ void IGraphicAPI::Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt)
     }
 }
 
-void IGraphicAPI::Bind(const IIndexBufferPtr& buffer)
+void IGraphicAPI::bind(const IIndexBufferPtr& buffer)
 {
     if (UseAsync())
     {
@@ -417,7 +417,7 @@ void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::ClearSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Clear(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
+    clear(cmd->GetBackSurface(), cmd->GetDepthSurface(), cmd->GetColor(),
         cmd->GetDepthValue(), cmd->GetStencilValue());
 }
 
@@ -426,7 +426,7 @@ void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::FlipBackSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Flip();
+    flip();
 }
 
 void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
@@ -689,7 +689,7 @@ void IGraphicAPI::DoBindingBackSurface(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindBackSurface, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Bind(cmd->GetBackSurface(), cmd->GetDepthSurface());
+    bind(cmd->GetBackSurface(), cmd->GetDepthSurface());
 }
 
 void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
@@ -697,7 +697,7 @@ void IGraphicAPI::DoBindingViewPort(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindViewPort, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Bind(cmd->GetViewPort());
+    bind(cmd->getViewPort());
 }
 
 void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
@@ -705,7 +705,7 @@ void IGraphicAPI::DoBindingShaderProgram(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindShaderProgram, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Bind(cmd->GetShader());
+    bind(cmd->GetShader());
 }
 
 void IGraphicAPI::DoBindingVertexBuffer(const Frameworks::ICommandPtr& c)
@@ -713,7 +713,7 @@ void IGraphicAPI::DoBindingVertexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindVertexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Bind(cmd->GetBuffer(), cmd->GetTopology());
+    bind(cmd->GetBuffer(), cmd->GetTopology());
 }
 
 void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
@@ -721,7 +721,7 @@ void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BindIndexBuffer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Bind(cmd->GetBuffer());
+    bind(cmd->GetBuffer());
 }
 
 future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
@@ -813,7 +813,7 @@ future_error IGraphicAPI::AsyncBindBackSurface(const IBackSurfacePtr& back_surfa
 future_error IGraphicAPI::AsyncBindViewPort(const TargetViewPort& vp)
 {
     return m_workerThread->PushTask([=]() -> error
-        { return this->BindViewPort(vp); });
+        { return this->bindViewPort(vp); });
 }
 
 future_error IGraphicAPI::AsyncCreateVertexShader(const std::string& name)

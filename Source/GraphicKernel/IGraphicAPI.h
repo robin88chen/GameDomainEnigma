@@ -86,15 +86,15 @@ namespace Enigma::Graphics
         virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
         virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
-        virtual void Clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
+        virtual void clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);
-        virtual void Flip();
+        virtual void flip();
 
-        virtual void Bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual void Bind(const TargetViewPort& vp);
-        virtual void Bind(const IShaderProgramPtr& shader);
-        virtual void Bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
-        virtual void Bind(const IIndexBufferPtr& buffer);
+        virtual void bind(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
+        virtual void bind(const TargetViewPort& vp);
+        virtual void bind(const IShaderProgramPtr& shader);
+        virtual void bind(const IVertexBufferPtr& buffer, PrimitiveTopology pt);
+        virtual void bind(const IIndexBufferPtr& buffer);
 
         bool UseAsync() const { return m_async == AsyncType::UseAsyncDevice; }
         virtual const DeviceRequiredBits& GetDeviceRequiredBits() { return m_deviceRequiredBits; };
@@ -306,7 +306,7 @@ namespace Enigma::Graphics
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface) = 0;
         virtual future_error AsyncBindBackSurface(
             const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface);
-        virtual error BindViewPort(const TargetViewPort& vp) = 0;
+        virtual error bindViewPort(const TargetViewPort& vp) = 0;
         virtual future_error AsyncBindViewPort(const TargetViewPort& vp);
 
         /** @name bind shader */

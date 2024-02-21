@@ -243,7 +243,7 @@ void ShadowMapTest::createFloorReceiver()
     if (!floor_mesh)
     {
         MeshPrimitiveHelper mesh_helper(floor_mesh_id);
-        floor_mesh = mesh_helper.geometryId(floor_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap")).visualTechnique("Default").renderListID(Renderer::RenderListID::Scene).asNative(floor_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
+        floor_mesh = mesh_helper.geometryId(floor_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap")).visualTechnique("ShadowMapReceiver").renderListID(Renderer::RenderListID::Scene).asNative(floor_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
     }
     m_floorId = SpatialId("floor_receiver", Pawn::TYPE_RTTI);
     m_floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_floorId)->dispatch());
@@ -253,7 +253,6 @@ void ShadowMapTest::createFloorReceiver()
         m_floor = pawn_helper.primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_floor)) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
-    if (m_floor) m_floor->getPrimitive()->selectVisualTechnique("ShadowMapReceiver");
 }
 
 void ShadowMapTest::createCubePawn()
@@ -284,5 +283,4 @@ void ShadowMapTest::createCubePawn()
         Matrix4 mx = Matrix4::MakeTranslateTransform(0.0f, 1.2f, 0.0f);
         m_sceneRoot->attachChild(m_cube, mx);
     }
-    if (m_cube) m_cube->getPrimitive()->selectVisualTechnique("Default");
 }

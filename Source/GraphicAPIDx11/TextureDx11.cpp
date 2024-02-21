@@ -468,7 +468,7 @@ error TextureDx11::useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface
 
     SAFE_RELEASE(m_d3dTextureResource);
 
-    m_dimension = bbDx11->GetDimension();
+    m_dimension = bbDx11->getDimension();
     m_format = back_surf->GetFormat();
 
     // backbuffer surface不能直接拿來用，要建立一個shader resource view

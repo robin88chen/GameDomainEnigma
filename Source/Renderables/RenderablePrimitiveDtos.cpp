@@ -98,6 +98,16 @@ MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
     }
 }
 
+void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive)
+{
+    if (!mesh_primitive) return;
+    m_effects.clear();
+    for (unsigned i = 0; i < mesh_primitive->getEffectMaterialCount(); ++i)
+    {
+        m_effects.emplace_back(mesh_primitive->getEffectMaterial(i)->id());
+    }
+}
+
 SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() : MeshPrimitiveDto()
 {
     m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());

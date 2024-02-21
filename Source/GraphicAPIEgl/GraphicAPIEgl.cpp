@@ -219,7 +219,7 @@ error GraphicAPIEgl::BindBackSurface(const Graphics::IBackSurfacePtr& back_surfa
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::BindViewPort(const Graphics::TargetViewPort& vp)
+error GraphicAPIEgl::bindViewPort(const Graphics::TargetViewPort& vp)
 {
     if (m_boundViewPort == vp) return ErrorCode::ok;
     m_boundViewPort = vp;

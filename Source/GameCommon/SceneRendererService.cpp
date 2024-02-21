@@ -95,14 +95,14 @@ void SceneRendererService::renderGameScene()
 void SceneRendererService::flip()
 {
     if (m_renderer.expired()) return;
-    m_renderer.lock()->Flip();
+    m_renderer.lock()->flip();
 }
 
 void SceneRendererService::attachCamera()
 {
     if ((m_renderer.expired()) || (m_cameraService.expired())) return;
     m_renderer.lock()->setAssociatedCamera(m_cameraService.lock()->primaryCamera());
-    auto [w, h] = m_renderer.lock()->getRenderTarget()->GetDimension();
+    auto [w, h] = m_renderer.lock()->getRenderTarget()->getDimension();
     if ((w > 0) && (h > 0))
     {
         m_cameraService.lock()->primaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));

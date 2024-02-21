@@ -29,14 +29,14 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder()
     m_onBuildRenderBufferFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onBuildRenderBufferFailed(e); });
     EventPublisher::subscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);
 
-    m_onEffectMaterialHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialContented(e); });
+    m_onEffectMaterialHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialHydrated(e); });
     EventPublisher::subscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
-    m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentEffectMaterialFailed(e); });
+    m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateEffectMaterialFailed(e); });
     EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
 
-    m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureContented(e); });
+    m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
     EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
-    m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onContentTextureFailed(e); });
+    m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
 }
 
@@ -65,6 +65,7 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 {
     m_buildingDto = MeshPrimitiveDto(dto);
     m_metaDto = std::make_unique<MeshPrimitiveMetaDto>(m_buildingDto.value());
+    m_metaDto->replaceDuplicatedEffects(mesh);
     m_builtEffects.clear();
     m_builtTextures.clear();
     m_buildingId = mesh->id();
@@ -145,14 +146,14 @@ void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr
     EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), ev->GetErrorCode()));
 }
 
-void MeshPrimitiveBuilder::onEffectMaterialContented(const Frameworks::IEventPtr& e)
+void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr& e)
 {
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EffectMaterialHydrated>(e);
     if (!ev) return;
-    const std::optional<unsigned> found_idx = findBuildingEffectIndex(ev->sourceId());
+    const std::optional<unsigned> found_idx = findBuildingEffectIndex(ev->id());
     if (!found_idx) return;
     if (m_builtEffects[found_idx.value()]->lazyStatus().isReady())
     {
@@ -160,7 +161,7 @@ void MeshPrimitiveBuilder::onEffectMaterialContented(const Frameworks::IEventPtr
     }
 }
 
-void MeshPrimitiveBuilder::onContentEffectMaterialFailed(const Frameworks::IEventPtr& e)
+void MeshPrimitiveBuilder::onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
@@ -170,7 +171,7 @@ void MeshPrimitiveBuilder::onContentEffectMaterialFailed(const Frameworks::IEven
     EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), ev->error()));
 }
 
-void MeshPrimitiveBuilder::onTextureContented(const Frameworks::IEventPtr& e)
+void MeshPrimitiveBuilder::onTextureHydrated(const Frameworks::IEventPtr& e)
 {
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
@@ -183,7 +184,7 @@ void MeshPrimitiveBuilder::onTextureContented(const Frameworks::IEventPtr& e)
     tryCompletingMesh();
 }
 
-void MeshPrimitiveBuilder::onContentTextureFailed(const Frameworks::IEventPtr& e)
+void MeshPrimitiveBuilder::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
 {
     if (!m_metaDto) return;
     if (!m_buildingDto) return;

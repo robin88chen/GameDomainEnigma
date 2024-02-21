@@ -41,20 +41,20 @@ error DeferredRenderer::clearRenderTarget()
 
     if (!m_gbufferTarget.expired())
     {
-        m_gbufferTarget.lock()->Clear();
+        m_gbufferTarget.lock()->clear();
     }
 
-    return m_target.lock()->Clear();
+    return m_target.lock()->clear();
 }
 
 error DeferredRenderer::beginScene()
 {
     if (!m_gbufferTarget.expired())
     {
-        m_gbufferTarget.lock()->Bind();
-        m_gbufferTarget.lock()->Clear();
-        m_gbufferTarget.lock()->BindViewPort();
-        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
+        m_gbufferTarget.lock()->bind();
+        m_gbufferTarget.lock()->clear();
+        m_gbufferTarget.lock()->bindViewPort();
+        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->getViewPort());
     }
     std::shared_ptr<SceneGraph::Camera> camera;
     if (!m_associatedCamera.expired())
@@ -74,10 +74,10 @@ error DeferredRenderer::beginScene(const MathLib::Vector3& camera_loc, const Mat
 {
     if (!m_gbufferTarget.expired())
     {
-        m_gbufferTarget.lock()->Bind();
-        m_gbufferTarget.lock()->Clear();
-        m_gbufferTarget.lock()->BindViewPort();
-        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->GetViewPort());
+        m_gbufferTarget.lock()->bind();
+        m_gbufferTarget.lock()->clear();
+        m_gbufferTarget.lock()->bindViewPort();
+        Engine::MaterialVariableMap::useViewPortDimension(m_gbufferTarget.lock()->getViewPort());
     }
     Engine::MaterialVariableMap::useCameraParameter(camera_loc, mxView, mxProj);
 
@@ -96,12 +96,12 @@ error DeferredRenderer::drawScene()
             // in this stage, we need to render to the primary target using g-buffer
             if (!m_target.expired())  // that's the primary target
             {
-                error er_bind = m_target.lock()->Bind();
+                error er_bind = m_target.lock()->bind();
                 if (er_bind) return er_bind;
-                m_target.lock()->Clear();
-                er_bind = m_target.lock()->BindViewPort();
+                m_target.lock()->clear();
+                er_bind = m_target.lock()->bindViewPort();
                 if (er_bind) return er_bind;
-                Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->GetViewPort());
+                Engine::MaterialVariableMap::useViewPortDimension(m_target.lock()->getViewPort());
             }
 
             Graphics::IGraphicAPI::instance()->beginScene();

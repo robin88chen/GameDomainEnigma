@@ -75,7 +75,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
 error GraphicAPIDx11::CleanupDevice()
 {
     Platforms::Debug::Printf("cleanup device in thread %d\n", std::this_thread::get_id());
-    m_stash->Clear();
+    m_stash->clear();
     CleanupDeviceObjects();
 
     SAFE_RELEASE(m_d3dDevice);
@@ -142,7 +142,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
 
     if ((m_deviceRequiredBits.m_usesDepthBuffer) && (!depth_name.empty()))
     {
-        auto dimension = back_surface->GetDimension();
+        auto dimension = back_surface->getDimension();
         Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
             menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, m_fmtDepthSurface } };
         SetDepthSurfaceFormat(depth_surface->GetFormat());
@@ -252,7 +252,7 @@ error GraphicAPIDx11::BindBackSurface(const Graphics::IBackSurfacePtr& back_surf
     }
 }
 
-error GraphicAPIDx11::BindViewPort(const Graphics::TargetViewPort& vp)
+error GraphicAPIDx11::bindViewPort(const Graphics::TargetViewPort& vp)
 {
     assert(m_d3dDeviceContext);
     //if (m_kCurrentViewPort==vp) return;
@@ -591,7 +591,7 @@ error GraphicAPIDx11::BindSingleBackSurface(const Graphics::IBackSurfacePtr& bac
     assert(m_d3dDeviceContext);
     if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     // simply check dimensions of back & depth surface
-    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->GetDimension() != depth_surface->GetDimension()))))
+    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->getDimension() != depth_surface->getDimension()))))
         return ErrorCode::surfaceDimensionsNotMatch;
     m_boundBackSurface = back_surface;
     m_boundDepthSurface = depth_surface;
@@ -621,7 +621,7 @@ error GraphicAPIDx11::BindMultiBackSurface(const Graphics::IBackSurfacePtr& back
     assert(m_d3dDeviceContext);
     if ((m_boundBackSurface == back_surface) && (m_boundDepthSurface == depth_surface)) return ErrorCode::ok;
     // simply check dimensions of back & depth surface
-    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->GetDimension() != depth_surface->GetDimension()))))
+    if (LOG_IF(Warnning, ((back_surface) && (depth_surface) && (back_surface->getDimension() != depth_surface->getDimension()))))
         return ErrorCode::surfaceDimensionsNotMatch;
     unsigned int bound_sourface_count = 1;
     if (m_boundBackSurface) bound_sourface_count = m_boundBackSurface->GetSurfaceCount();

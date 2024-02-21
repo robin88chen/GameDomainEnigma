@@ -26,7 +26,7 @@ IDeviceRasterizerState::~IDeviceRasterizerState()
     }
 }*/
 
-void IDeviceRasterizerState::Bind()
+void IDeviceRasterizerState::bind()
 {
     if (IGraphicAPI::instance()->UseAsync())
     {

@@ -42,17 +42,31 @@ std::shared_ptr<EffectMaterial> EffectMaterialSource::duplicateEffectMaterial()
     return effect;
 }
 
-void EffectMaterialSource::contentDuplicatedEffects()
+void EffectMaterialSource::hydrateDuplicatedEffects()
 {
     assert(m_sourceEffectMaterial);
     for (auto& effect : m_duplicatedEffects)
     {
         if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
-            effect.lock()->instanceLazyContent(m_sourceEffectMaterial->effectTechniques());
+            effect.lock()->hydrateTechniques(m_sourceEffectMaterial->effectTechniques());
             Frameworks::EventPublisher::post(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
         }
     }
+}
+
+std::shared_ptr<EffectMaterial> EffectMaterialSource::queryDuplicatedEffect(const EffectMaterialId& id)
+{
+    assert(m_id.isEqualSource(id));
+    assert(m_sourceEffectMaterial);
+    for (auto& effect : m_duplicatedEffects)
+    {
+        if (auto locked = effect.lock())
+        {
+            if (locked->id() == id) return locked;
+        }
+    }
+    return nullptr;
 }
 
 void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)

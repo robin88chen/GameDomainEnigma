@@ -10,6 +10,9 @@
 
 #include "AnimationAssetId.h"
 #include "Frameworks/Query.h"
+#include "AnimatorPersistenceLevel.h"
+#include "Frameworks/Rtti.h"
+
 namespace Enigma::Animators
 {
     class AnimationAsset;
@@ -27,8 +30,6 @@ namespace Enigma::Animators
     class RequestAnimationAssetCreation : public Frameworks::Query<std::shared_ptr<AnimationAsset>>
     {
     public:
-        enum class PersistenceLevel { None, Repository, Store };
-    public:
         RequestAnimationAssetCreation(const AnimationAssetId& id, const Frameworks::Rtti& rtti, PersistenceLevel persistence_level) : m_id(id), m_rtti(rtti.getName()), m_persistenceLevel(persistence_level) {}
         const AnimationAssetId& id() { return m_id; }
         const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
@@ -41,8 +42,6 @@ namespace Enigma::Animators
     };
     class RequestAnimationAssetConstitution : public Frameworks::Query<std::shared_ptr<AnimationAsset>>
     {
-    public:
-        enum class PersistenceLevel { None, Repository, Store };
     public:
         RequestAnimationAssetConstitution(const AnimationAssetId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
         const AnimationAssetId& id() { return m_id; }

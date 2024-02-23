@@ -1,4 +1,6 @@
 ﻿#include "ModelAnimationAssembler.h"
+#include "Animators/AnimationAssetQueries.h"
+#include "ModelAnimationAsset.h"
 #include <algorithm>
 
 using namespace Enigma::Renderables;
@@ -50,6 +52,7 @@ Enigma::Engine::GenericDto AnimationTimeSRTAssembler::toGenericDto()
 
 ModelAnimationAssembler::ModelAnimationAssembler(const Animators::AnimationAssetId& id)
 {
+    m_id = id;
     m_dto.id() = id;
 }
 
@@ -75,5 +78,10 @@ Enigma::Engine::GenericDto ModelAnimationAssembler::toGenericDto()
         m_dto.timeSRTs().emplace_back(std::get<AnimationTimeSRTAssembler>(nodeSRT).toGenericDto());
     }
     return m_dto.toGenericDto();
+}
+
+std::shared_ptr<ModelAnimationAsset> ModelAnimationAssembler::constitute(Animators::PersistenceLevel persistence_level)
+{
+    return std::dynamic_pointer_cast<ModelAnimationAsset>(std::make_shared<Animators::RequestAnimationAssetConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
 }
 

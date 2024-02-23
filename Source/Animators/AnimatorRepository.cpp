@@ -162,12 +162,12 @@ void AnimatorRepository::requestAnimatorCreation(const Frameworks::IQueryPtr& r)
         return;
     }
     auto animator = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == RequestAnimatorCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_animatorLock };
         m_animators.insert_or_assign(request->id(), animator);
     }
-    else if (request->persistenceLevel() == RequestAnimatorCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putAnimator(request->id(), animator);
     }
@@ -185,12 +185,12 @@ void AnimatorRepository::requestAnimatorConstitution(const Frameworks::IQueryPtr
         return;
     }
     auto animator = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestAnimatorConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_animatorLock };
         m_animators.insert_or_assign(request->id(), animator);
     }
-    else if (request->persistenceLevel() == RequestAnimatorConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putAnimator(request->id(), animator);
     }

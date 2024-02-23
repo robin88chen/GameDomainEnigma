@@ -11,9 +11,12 @@
 #include "Animators/AnimationAssetId.h"
 #include "ModelAnimationDtos.h"
 #include "AnimationTimeSRT.h"
+#include "Animators/AnimatorPersistenceLevel.h"
 
 namespace Enigma::Renderables
 {
+    class ModelAnimationAsset;
+
     class AnimationTimeSRTAssembler
     {
     public:
@@ -38,9 +41,13 @@ namespace Enigma::Renderables
         ModelAnimationAssembler& nodeSRT(const std::string& node_name, const AnimationTimeSRTAssembler& assembler);
         ModelAnimationAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
+        std::shared_ptr<ModelAnimationAsset> constitute(Animators::PersistenceLevel persistence_level);
+
+    protected:
         Engine::GenericDto toGenericDto();
 
     protected:
+        Animators::AnimationAssetId m_id;
         std::vector<std::tuple<std::string, AnimationTimeSRTAssembler>> m_nodeSRTs;
         ModelAnimationAssetDto m_dto;
     };

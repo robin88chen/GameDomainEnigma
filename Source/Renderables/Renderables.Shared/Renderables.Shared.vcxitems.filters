@@ -102,6 +102,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveHelper.cpp">
       <Filter>Primitives\Primitive Dtos &amp; Helper</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp">
+      <Filter>Animators\Dtos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveHelper.h">
       <Filter>Primitives\Primitive Dtos &amp; Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h">
+      <Filter>Animators\Dtos</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

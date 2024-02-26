@@ -44,12 +44,12 @@ namespace Enigma::ShadowMap
         virtual void updateSunLightDirection(const MathLib::Vector3& dir) override;
 
     private:
-        static void AssignLightViewProjectionTransforms(Engine::EffectVariable& var);
-        static void AssignCascadeDistances(Engine::EffectVariable& var);
-        static void AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var);
-        static void AssignSliceCount(Engine::EffectVariable& var);
-        static void AssignSliceDimension(Engine::EffectVariable& var);
-        static void AssignFaceLightThreshold(Engine::EffectVariable& var);
+        static void assignLightViewProjectionTransforms(Engine::EffectVariable& var);
+        static void assignCascadeDistances(Engine::EffectVariable& var);
+        static void assignCascadeTextureCoordTransforms(Engine::EffectVariable& var);
+        static void assignSliceCount(Engine::EffectVariable& var);
+        static void assignSliceDimension(Engine::EffectVariable& var);
+        static void assignFaceLightThreshold(Engine::EffectVariable& var);
 
     private:
         std::shared_ptr<CascadeShadowMapServiceConfiguration> m_configuration;

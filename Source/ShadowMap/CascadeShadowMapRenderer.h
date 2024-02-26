@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CascadeShadowMapRenderer.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -27,8 +27,8 @@ namespace Enigma::ShadowMap
         CascadeShadowMapRenderer& operator=(const CascadeShadowMapRenderer& other) = delete;
         CascadeShadowMapRenderer& operator=(CascadeShadowMapRenderer&& other) noexcept = delete;
 
-        void SetRenderTargetViewPorts(const std::vector<Graphics::TargetViewPort>& view_ports);
-        void SetSunLightCamera(const std::shared_ptr<CSMSunLightCamera>& sun_light_camera);
+        void setRenderTargetViewPorts(const std::vector<Graphics::TargetViewPort>& view_ports);
+        void setSunLightCamera(const std::shared_ptr<CSMSunLightCamera>& sun_light_camera);
 
         virtual error drawScene() override;
 

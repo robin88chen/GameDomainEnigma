@@ -14,57 +14,57 @@ CascadeShadowMapServiceConfiguration::CascadeShadowMapServiceConfiguration() : S
     m_sunLightCameraId = SceneGraph::SpatialId("CSMSunLightCamera", CSMSunLightCamera::TYPE_RTTI);
 }
 
-unsigned CascadeShadowMapServiceConfiguration::FrustaPartitionCount() const
+unsigned CascadeShadowMapServiceConfiguration::frustaPartitionCount() const
 {
     assert(m_frustaPartitionCount > 0);
     return m_frustaPartitionCount;
 }
 
-unsigned& CascadeShadowMapServiceConfiguration::FrustaPartitionCount()
+unsigned& CascadeShadowMapServiceConfiguration::frustaPartitionCount()
 {
     return m_frustaPartitionCount;
 }
 
-const std::string& CascadeShadowMapServiceConfiguration::BackfaceCullingStateName() const
+const std::string& CascadeShadowMapServiceConfiguration::backfaceCullingStateName() const
 {
     assert(!m_backfaceCullingStateName.empty());
     return m_backfaceCullingStateName;
 }
 
-std::string& CascadeShadowMapServiceConfiguration::BackfaceCullingStateName()
+std::string& CascadeShadowMapServiceConfiguration::backfaceCullingStateName()
 {
     return m_backfaceCullingStateName;
 }
 
-const std::string& CascadeShadowMapServiceConfiguration::CascadeDistanceSemantic() const
+const std::string& CascadeShadowMapServiceConfiguration::cascadeDistanceSemantic() const
 {
     assert(!m_cascadeDistanceSemantic.empty());
     return m_cascadeDistanceSemantic;
 }
 
-std::string& CascadeShadowMapServiceConfiguration::CascadeDistanceSemantic()
+std::string& CascadeShadowMapServiceConfiguration::cascadeDistanceSemantic()
 {
     return m_cascadeDistanceSemantic;
 }
 
-const std::string& CascadeShadowMapServiceConfiguration::CascadeTextureCoordTransformSemantic() const
+const std::string& CascadeShadowMapServiceConfiguration::cascadeTextureCoordTransformSemantic() const
 {
     assert(!m_cascadeTextureCoordTransformSemantic.empty());
     return m_cascadeTextureCoordTransformSemantic;
 }
 
-std::string& CascadeShadowMapServiceConfiguration::CascadeTextureCoordTransformSemantic()
+std::string& CascadeShadowMapServiceConfiguration::cascadeTextureCoordTransformSemantic()
 {
     return m_cascadeTextureCoordTransformSemantic;
 }
 
-const std::string& CascadeShadowMapServiceConfiguration::CascadeSliceCountSemantic() const
+const std::string& CascadeShadowMapServiceConfiguration::cascadeSliceCountSemantic() const
 {
     assert(!m_cascadeSliceCountSemantic.empty());
     return m_cascadeSliceCountSemantic;
 }
 
-std::string& CascadeShadowMapServiceConfiguration::CascadeSliceCountSemantic()
+std::string& CascadeShadowMapServiceConfiguration::cascadeSliceCountSemantic()
 {
     return m_cascadeSliceCountSemantic;
 }

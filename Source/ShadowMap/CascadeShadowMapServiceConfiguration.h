@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   CascadeShadowMapServiceConfiguration.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   June 2023
  *********************************************************************/
@@ -17,18 +17,18 @@ namespace Enigma::ShadowMap
     public:
         CascadeShadowMapServiceConfiguration();
 
-        unsigned FrustaPartitionCount() const;
-        unsigned& FrustaPartitionCount();
+        unsigned frustaPartitionCount() const;
+        unsigned& frustaPartitionCount();
 
-        const std::string& BackfaceCullingStateName() const;
-        std::string& BackfaceCullingStateName();
+        const std::string& backfaceCullingStateName() const;
+        std::string& backfaceCullingStateName();
 
-        const std::string& CascadeDistanceSemantic() const;
-        std::string& CascadeDistanceSemantic();
-        const std::string& CascadeTextureCoordTransformSemantic() const;
-        std::string& CascadeTextureCoordTransformSemantic();
-        const std::string& CascadeSliceCountSemantic() const;
-        std::string& CascadeSliceCountSemantic();
+        const std::string& cascadeDistanceSemantic() const;
+        std::string& cascadeDistanceSemantic();
+        const std::string& cascadeTextureCoordTransformSemantic() const;
+        std::string& cascadeTextureCoordTransformSemantic();
+        const std::string& cascadeSliceCountSemantic() const;
+        std::string& cascadeSliceCountSemantic();
 
     protected:
         unsigned m_frustaPartitionCount;

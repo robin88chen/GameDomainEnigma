@@ -34,10 +34,10 @@ ServiceResult CascadeShadowMapService::onInit()
 {
     subscribeEvents();
     Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->shadowMapDimensionSemantic(), assignShadowMapDimension);
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->lightViewProjSemantic(), AssignLightViewProjectionTransforms);
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeDistanceSemantic(), AssignCascadeDistances);
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeTextureCoordTransformSemantic(), AssignCascadeTextureCoordTransforms);
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->CascadeSliceCountSemantic(), AssignSliceCount);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->lightViewProjSemantic(), assignLightViewProjectionTransforms);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->cascadeDistanceSemantic(), assignCascadeDistances);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->cascadeTextureCoordTransformSemantic(), assignCascadeTextureCoordTransforms);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->cascadeSliceCountSemantic(), assignSliceCount);
     return ServiceResult::Complete;
 }
 
@@ -45,10 +45,10 @@ ServiceResult CascadeShadowMapService::onTick()
 {
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
-        m_sunLightCamera->CalcLightCameraSystemMatrix(m_sceneService.lock()->getSceneCuller());
-        m_cascadeLightViewProjections = m_sunLightCamera->GetLightViewProjectionTransforms();
-        m_cascadeDistances = m_sunLightCamera->LightFrustaDistanceToVector4();
-        m_cascadeTextureCoordTransforms = m_sunLightCamera->GetTextureCoordTransforms();
+        m_sunLightCamera->calcLightCameraSystemMatrix(m_sceneService.lock()->getSceneCuller());
+        m_cascadeLightViewProjections = m_sunLightCamera->getLightViewProjectionTransforms();
+        m_cascadeDistances = m_sunLightCamera->lightFrustaDistanceToVector4();
+        m_cascadeTextureCoordTransforms = m_sunLightCamera->getTextureCoordTransforms();
     }
     return ServiceResult::Pendding;
 }
@@ -64,8 +64,8 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);
-    std::vector<TargetViewPort> viewPorts(m_configuration->FrustaPartitionCount());
-    for (unsigned int i = 0; i < m_configuration->FrustaPartitionCount(); i++)
+    std::vector<TargetViewPort> viewPorts(m_configuration->frustaPartitionCount());
+    for (unsigned int i = 0; i < m_configuration->frustaPartitionCount(); i++)
     {
         viewPorts[i].Width() = m_configuration->shadowMapDimension().m_width;
         viewPorts[i].Height() = m_configuration->shadowMapDimension().m_height;
@@ -77,7 +77,7 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
     m_shadowMapDimensionBiasDensity[2] = m_configuration->shadowMapDepthBias();
     m_shadowMapDimensionBiasDensity[3] = m_configuration->shadowMapDensity();
 
-    MathLib::Dimension<unsigned> fullDimension{ m_configuration->shadowMapDimension().m_width * m_configuration->FrustaPartitionCount(),
+    MathLib::Dimension<unsigned> fullDimension{ m_configuration->shadowMapDimension().m_width * m_configuration->frustaPartitionCount(),
         m_configuration->shadowMapDimension().m_height };
     TargetViewPort fullViewPort(0, 0, fullDimension.m_width, fullDimension.m_height);
     Engine::IRendererPtr renderer = std::make_shared<CascadeShadowMapRenderer>(renderer_name);
@@ -88,7 +88,7 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
     m_renderer.lock()->selectRendererTechnique(m_configuration->shadowMapTechniqueName());
     auto rendererCSM = std::dynamic_pointer_cast<CascadeShadowMapRenderer, Renderer::Renderer>(m_renderer.lock());
-    rendererCSM->SetRenderTargetViewPorts(viewPorts);
+    rendererCSM->setRenderTargetViewPorts(viewPorts);
 
     m_shadowMapRenderTarget = m_rendererManager.lock()->getRenderTarget(target_name);
     //m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F));
@@ -99,7 +99,7 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
 
     if (m_sunLightCamera)
     {
-        rendererCSM->SetSunLightCamera(m_sunLightCamera);
+        rendererCSM->setSunLightCamera(m_sunLightCamera);
     }
 }
 
@@ -113,7 +113,7 @@ void CascadeShadowMapService::destroyShadowRenderSystem(const std::string& rende
 void CascadeShadowMapService::createSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit)
 {
     assert(!m_cameraService.expired());
-    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(m_configuration->sunLightCameraId(), m_configuration->FrustaPartitionCount());
+    m_sunLightCamera = std::make_shared<CSMSunLightCamera>(m_configuration->sunLightCameraId(), m_configuration->frustaPartitionCount());
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
     if (lit) vecSunDir = lit->getLightDirection();
     m_sunLightCamera->setSunLightDir(vecSunDir);
@@ -126,7 +126,7 @@ void CascadeShadowMapService::createSunLightCamera(const std::shared_ptr<SceneGr
         m_renderer.lock()->setAssociatedCamera(m_sunLightCamera);
         if (const auto rendererCSM = std::dynamic_pointer_cast<CascadeShadowMapRenderer, Renderer::Renderer>(m_renderer.lock()))
         {
-            rendererCSM->SetSunLightCamera(m_sunLightCamera);
+            rendererCSM->setSunLightCamera(m_sunLightCamera);
         }
     }
 }
@@ -138,7 +138,7 @@ void CascadeShadowMapService::deleteSunLightCamera()
         m_renderer.lock()->setAssociatedCamera(nullptr);
         if (const auto rendererCSM = std::dynamic_pointer_cast<CascadeShadowMapRenderer, Renderer::Renderer>(m_renderer.lock()))
         {
-            rendererCSM->SetSunLightCamera(nullptr);
+            rendererCSM->setSunLightCamera(nullptr);
         }
     }
     m_sunLightCamera = nullptr;
@@ -152,32 +152,32 @@ void CascadeShadowMapService::updateSunLightDirection(const MathLib::Vector3& di
     }
 }
 
-void CascadeShadowMapService::AssignLightViewProjectionTransforms(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignLightViewProjectionTransforms(Engine::EffectVariable& var)
 {
     var.assignValues(m_cascadeLightViewProjections, static_cast<unsigned>(m_cascadeLightViewProjections.size()));
 }
 
-void CascadeShadowMapService::AssignCascadeDistances(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignCascadeDistances(Engine::EffectVariable& var)
 {
     var.assignValue(m_cascadeDistances);
 }
 
-void CascadeShadowMapService::AssignCascadeTextureCoordTransforms(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignCascadeTextureCoordTransforms(Engine::EffectVariable& var)
 {
     var.assignValues(m_cascadeTextureCoordTransforms, static_cast<unsigned>(m_cascadeTextureCoordTransforms.size()));
 }
 
-void CascadeShadowMapService::AssignSliceCount(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignSliceCount(Engine::EffectVariable& var)
 {
     var.assignValue(static_cast<int>(m_cascadeLightViewProjections.size()));
 }
 
-void CascadeShadowMapService::AssignSliceDimension(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignSliceDimension(Engine::EffectVariable& var)
 {
 
 }
 
-void CascadeShadowMapService::AssignFaceLightThreshold(Engine::EffectVariable& var)
+void CascadeShadowMapService::assignFaceLightThreshold(Engine::EffectVariable& var)
 {
 
 }

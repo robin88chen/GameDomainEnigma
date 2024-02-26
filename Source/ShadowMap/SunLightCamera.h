@@ -34,11 +34,11 @@ namespace Enigma::ShadowMap
         virtual const MathLib::Matrix4& projectionTransform() override;
 
     protected:
-        void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
-        void CalcLightCameraFrustum();
-        std::array<MathLib::Vector3, 3> CalcLightCameraFrame() const;
-        std::array<MathLib::Vector3, 8> CalcViewerFrustumCorner() const;
-        void CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
+        void calcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
+        void calcLightCameraFrustum();
+        std::array<MathLib::Vector3, 3> calcLightCameraFrame() const;
+        std::array<MathLib::Vector3, 8> calcViewerFrustumCorner() const;
+        void calcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
 
     protected:
         MathLib::Vector3 m_sunDir;

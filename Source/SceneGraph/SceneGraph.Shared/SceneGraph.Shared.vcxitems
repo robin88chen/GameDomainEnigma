@@ -40,13 +40,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
@@ -87,11 +86,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtoHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />

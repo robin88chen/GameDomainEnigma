@@ -11,7 +11,7 @@
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
+#include "SceneGraph/SceneGraphAssemblers.h"
 #include "ShadowMap/ShadowMapService.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
@@ -34,14 +34,13 @@
 #include "Geometries/GeometryInstallingPolicy.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
-#include "Geometries/StandardGeometryHelper.h"
+#include "Geometries/StandardGeometryAssemblers.h"
 #include "Primitives/PrimitiveQueries.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "FileStorage/TextureFileStoreMapper.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"
-#include "Renderables/RenderablePrimitiveHelper.h"
-#include "SceneGraph/SceneGraphHelper.h"
+#include "Renderables/RenderablePrimitiveAssembler.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
@@ -124,7 +123,7 @@ void ShadowMapTest::installEngine()
     auto input_handler_policy = std::make_shared<InputHandlerInstallingPolicy>();
     auto camera_id = SpatialId("camera", Camera::TYPE_RTTI);
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(camera_id,
-        CameraDtoHelper(camera_id).eyePosition(Vector3(-10.0f, 10.0f, -10.0f)).lookAt(Vector3(1.0f, -1.0f, 1.0f)).upDirection(Vector3::UNIT_Y).frustum(Frustum::ProjectionType::Perspective).frustumFov(Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f).frustumNearPlaneDimension(40.0f, 30.0f).toGenericDto());
+        CameraAssembler(camera_id).eyePosition(Vector3(-10.0f, 10.0f, -10.0f)).lookAt(Vector3(1.0f, -1.0f, 1.0f)).upDirection(Vector3::UNIT_Y).frustum(Frustum::ProjectionType::Perspective).frustumFov(Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f).frustumNearPlaneDimension(40.0f, 30.0f).toCameraDto().toGenericDto());
     auto shadow_map_config = std::make_unique<ShadowMapServiceConfiguration>();
     auto shadowmap_policy = std::make_shared<ShadowMapInstallingPolicy>(ShadowMapRendererName, ShadowMapTargetName, std::move(shadow_map_config));
     auto primary_render_config = std::make_unique<SceneRendererServiceConfiguration>();
@@ -235,22 +234,19 @@ void ShadowMapTest::createFloorReceiver()
     auto floor_geo = GeometryData::queryGeometryData(floor_geo_id);
     if (!floor_geo)
     {
-        SquareQuadHelper floor_helper(floor_geo_id);
-        floor_geo = floor_helper.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(floor_geo_id.name(), floor_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
+        floor_geo = SquareQuadAssembler(floor_geo_id).xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(floor_geo_id.name(), floor_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
     }
     auto floor_mesh_id = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
     auto floor_mesh = std::make_shared<QueryPrimitive>(floor_mesh_id)->dispatch();
     if (!floor_mesh)
     {
-        MeshPrimitiveHelper mesh_helper(floor_mesh_id);
-        floor_mesh = mesh_helper.geometryId(floor_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap")).visualTechnique("ShadowMapReceiver").renderListID(Renderer::RenderListID::Scene).asNative(floor_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
+        floor_mesh = MeshPrimitiveAssembler(floor_mesh_id).geometryId(floor_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap")).visualTechnique("ShadowMapReceiver").renderListID(Renderer::RenderListID::Scene).asNative(floor_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
     }
     m_floorId = SpatialId("floor_receiver", Pawn::TYPE_RTTI);
     m_floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_floorId)->dispatch());
     if (!m_floor)
     {
-        PawnHelper pawn_helper(m_floorId);
-        m_floor = pawn_helper.primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+        m_floor = PawnAssembler(m_floorId).primitive(floor_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_floor)) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
 }
@@ -261,22 +257,19 @@ void ShadowMapTest::createCubePawn()
     auto cube_geo = GeometryData::queryGeometryData(cube_geo_id);
     if (!cube_geo)
     {
-        CubeHelper cube_helper(cube_geo_id);
-        cube_geo = cube_helper.facedCube(Vector3::ZERO, Vector3(1.0f, 1.0f, 1.0f)).facedNormal().facedTextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(cube_geo_id.name(), cube_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
+        cube_geo = CubeAssembler(cube_geo_id).facedCube(Vector3::ZERO, Vector3(1.0f, 1.0f, 1.0f)).facedNormal().facedTextureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f)).asAsset(cube_geo_id.name(), cube_geo_id.name() + ".geo", "DataPath").constitute(Enigma::Geometries::PersistenceLevel::Repository);
     }
     auto cube_mesh_id = PrimitiveId("cube_mesh", MeshPrimitive::TYPE_RTTI);
     auto cube_mesh = std::make_shared<QueryPrimitive>(cube_mesh_id)->dispatch();
     if (!cube_mesh)
     {
-        MeshPrimitiveHelper mesh_helper(cube_mesh_id);
-        cube_mesh = mesh_helper.geometryId(cube_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/one"), std::nullopt, "DiffuseMap")).visualTechnique("Default").renderListID(Renderer::RenderListID::Scene).asNative(cube_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
+        cube_mesh = MeshPrimitiveAssembler(cube_mesh_id).geometryId(cube_geo_id).effect(EffectMaterialId("fx/default_textured_mesh_effect")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/one"), std::nullopt, "DiffuseMap")).visualTechnique("Default").renderListID(Renderer::RenderListID::Scene).asNative(cube_mesh_id.name() + ".mesh@DataPath").constitute(Enigma::Primitives::PersistenceLevel::Repository);
     }
     m_cubeId = SpatialId("cube_pawn", Pawn::TYPE_RTTI);
     m_cube = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_cubeId)->dispatch());
     if (!m_cube)
     {
-        PawnHelper pawn_helper(m_cubeId);
-        m_cube = pawn_helper.primitive(cube_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowCaster | SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+        m_cube = PawnAssembler(m_cubeId).primitive(cube_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowCaster | SpatialShadowFlags::Spatial_ShadowReceiver).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_cube))
     {

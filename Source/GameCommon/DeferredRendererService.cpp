@@ -12,15 +12,13 @@
 #include "Renderer/DeferredRenderer.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
-#include "GameEngine/EffectDtoHelper.h"
-#include "Geometries/StandardGeometryDtoHelper.h"
+#include "Geometries/StandardGeometryAssemblers.h"
 #include "Geometries/GeometryDataQueries.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
+#include "Renderables/RenderablePrimitiveAssembler.h"
 #include "Primitives/PrimitiveQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
-#include "SceneGraph/SceneGraphCommands.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
+#include "SceneGraph/SceneGraphAssemblers.h"
 #include "GameCommon/GameCameraService.h"
 #include "LightingPawnDto.h"
 #include "DeferredRenderingCommands.h"
@@ -382,30 +380,28 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
     auto quad_geo = Geometries::GeometryData::queryGeometryData(m_ambientLightQuadId);
     if (!quad_geo)
     {
-        Geometries::SquareQuadDtoHelper quad_dto_helper(m_ambientLightQuadId);
-        quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-            .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-        quad_geo = std::make_shared<Geometries::RequestGeometryConstitution>(m_ambientLightQuadId, quad_dto_helper.toGenericDto(), Geometries::PersistenceLevel::Repository)->dispatch();
+        quad_geo = Geometries::SquareQuadAssembler(m_ambientLightQuadId).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
     }
     m_ambientLightMeshId = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
     auto lit_mesh = Primitives::Primitive::queryPrimitive(m_ambientLightMeshId);
     if (!lit_mesh)
     {
-        MeshPrimitiveDto mesh_dto;
+        lit_mesh = Renderables::MeshPrimitiveAssembler(m_ambientLightMeshId).geometryId(m_ambientLightQuadId).asNative(m_ambientLightMeshId.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+        /*MeshPrimitiveDto mesh_dto;
         mesh_dto.id() = m_ambientLightMeshId;
         mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
         mesh_dto.geometryId() = m_ambientLightQuadId;
         mesh_dto.effects().emplace_back(m_configuration->ambientEffect());
         mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::PersistenceLevel::Repository)->dispatch();
+        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::PersistenceLevel::Repository)->dispatch();*/
     }
     m_ambientLightPawnId = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
     auto lit_pawn = std::make_shared<QuerySpatial>(m_ambientLightPawnId)->dispatch();
     if (!lit_pawn)
     {
-        PawnDtoHelper pawn_helper(m_ambientLightPawnId);
-        pawn_helper.primitive(m_ambientLightMeshId).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
+        PawnAssembler pawn_assembler(m_ambientLightPawnId);
+        pawn_assembler.primitive(m_ambientLightMeshId).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id() = m_ambientLightPawnId;
         lighting_pawn_dto.HostLightName() = lit->getSpatialName();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
@@ -435,24 +431,31 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
 void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
-    quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-        .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
+    m_sunLightQuadId = Geometries::GeometryId(lit->getSpatialName() + "_lit_quad" + ".geo");
+    auto quad_geo = Geometries::GeometryData::queryGeometryData(m_sunLightQuadId);
+    if (!quad_geo)
+    {
+        quad_geo = Geometries::SquareQuadAssembler(m_sunLightQuadId).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
+    }
+    m_sunLightMeshId = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
+    auto lit_mesh = Primitives::Primitive::queryPrimitive(m_sunLightMeshId);
+    if (!lit_mesh)
+    {
+        lit_mesh = Renderables::MeshPrimitiveAssembler(m_sunLightMeshId).geometryId(m_sunLightQuadId).asNative(m_sunLightMeshId.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+        /*MeshPrimitiveDto mesh_dto;
+        mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
+        mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
+        mesh_dto.geometryId() = quad_geo_name;
+        mesh_dto.geometry() = quad_dto_helper.toGenericDto();
+        mesh_dto.effects().emplace_back(m_configuration->sunLightEffect());
+        mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;*/
+    }
 
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
-    mesh_dto.geometryId() = quad_geo_name;
-    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->sunLightEffect());
-    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-
-    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI));
-    pawn_helper.primitive(mesh_dto.id())
+    PawnAssembler pawn_assembler(SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI));
+    pawn_assembler.primitive(m_sunLightMeshId)
         .spatialFlags(m_configuration->sunLightSpatialFlags()).topLevel(true)
         .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
     auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightQuadPawn::TYPE_RTTI);
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();
@@ -467,22 +470,31 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
 void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
-    Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
-    sphere_dto_helper.sphere(MathLib::Vector3::ZERO, lit->getLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound();
+    auto  vol_geo_id = Geometries::GeometryId("deferred_" + lit->getSpatialName() + "_lit_volume.geo");
+    auto vol_geo = Geometries::GeometryData::queryGeometryData(vol_geo_id);
+    if (!vol_geo)
+    {
+        vol_geo = Geometries::SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, lit->getLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute(Geometries::PersistenceLevel::Repository);
+    }
+    auto vol_mesh_id = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_volume", MeshPrimitive::TYPE_RTTI);
+    auto vol_mesh = Primitives::Primitive::queryPrimitive(vol_mesh_id);
+    if (!vol_mesh)
+    {
+        vol_mesh = Renderables::MeshPrimitiveAssembler(vol_mesh_id).geometryId(vol_geo_id).asNative(vol_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+    }
 
-    MeshPrimitiveDto mesh_dto;
+    /*MeshPrimitiveDto mesh_dto;
     mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_volume", MeshPrimitive::TYPE_RTTI);
     mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
     mesh_dto.geometryId() = vol_geo_name;
     mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
     mesh_dto.effects().emplace_back(m_configuration->lightVolumeEffect());
-    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
+    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;*/
 
-    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_volume", LightVolumePawn::TYPE_RTTI));
-    pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(mesh_dto.id())
+    PawnAssembler pawn_assembler(SpatialId(lit->getSpatialName() + "_lit_volume", LightVolumePawn::TYPE_RTTI));
+    pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id)
         .topLevel(true).localTransform(lit->getLocalTransform());
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
+    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
     auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightVolumePawn::TYPE_RTTI);
     lighting_pawn_dto.id() = pawn_id;
     lighting_pawn_dto.HostLightName() = lit->getSpatialName();

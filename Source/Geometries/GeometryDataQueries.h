@@ -11,6 +11,7 @@
 #include "Frameworks/Query.h"
 #include "GeometryId.h"
 #include "GeometryPersistenceLevel.h"
+#include "Frameworks/Rtti.h"
 #include <memory>
 
 namespace Enigma::Geometries

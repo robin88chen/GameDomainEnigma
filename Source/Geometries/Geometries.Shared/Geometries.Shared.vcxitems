@@ -21,8 +21,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,8 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>
 </Project>

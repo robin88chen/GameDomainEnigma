@@ -1,4 +1,5 @@
 ﻿#include "DeferredRendererServiceConfiguration.h"
+#include "GameEngine/TextureId.h"
 #include <cassert>
 
 using namespace Enigma::GameCommon;
@@ -15,6 +16,7 @@ DeferredRendererServiceConfiguration::DeferredRendererServiceConfiguration()
     m_visualTechniqueNameForCameraDefault = "Default";
     m_visualTechniqueNameForCameraInside = "Inside";
     m_gbufferTargetName = "gbuffer_target";
+    m_gbufferTextureId = TextureId("gbuffer_target.rnd_tex");
     m_gbufferSurfaceName = "gbuffer_surface";
     m_gbufferDepthName = "gbuffer_depth";
 
@@ -103,6 +105,17 @@ const std::string& DeferredRendererServiceConfiguration::gbufferTargetName() con
 {
     assert(!m_gbufferTargetName.empty());
     return m_gbufferTargetName;
+}
+
+TextureId& DeferredRendererServiceConfiguration::gbufferTextureId()
+{
+    return m_gbufferTextureId;
+}
+
+const TextureId& DeferredRendererServiceConfiguration::gbufferTextureId() const
+{
+    assert(!m_gbufferTextureId.name().empty());
+    return m_gbufferTextureId;
 }
 
 std::string& DeferredRendererServiceConfiguration::gbufferSurfaceName()
@@ -203,3 +216,11 @@ const Enigma::SceneGraph::Spatial::SpatialFlags& DeferredRendererServiceConfigur
     return m_sunLightSpatialFlags;
 }
 
+std::optional<unsigned> DeferredRendererServiceConfiguration::findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const
+{
+    for (unsigned i = 0; i < m_gbufferUsages.size(); ++i)
+    {
+        if (m_gbufferUsages[i] == usage) return i;
+    }
+    return std::nullopt;
+}

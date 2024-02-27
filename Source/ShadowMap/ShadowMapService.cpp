@@ -93,7 +93,7 @@ void ShadowMapService::createShadowRenderSystem(const std::string& renderer_name
 {
     assert(!m_rendererManager.expired());
     m_rendererManager.lock()->createRenderer(renderer_name);
-    m_rendererManager.lock()->createRenderTarget(target_name, Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),
+    m_rendererManager.lock()->createRenderTarget(target_name, m_configuration->shadowMapTextureId(), Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),
         Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()), { Graphics::RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));

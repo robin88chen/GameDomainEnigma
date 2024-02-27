@@ -43,7 +43,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary,
     }
 }
 
-RenderTarget::RenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification,
+RenderTarget::RenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::BackSurfaceSpecification& back_specification,
     const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages) : m_dimension{ 1, 1 }
 {
     m_isPrimary = false;
@@ -58,9 +58,28 @@ RenderTarget::RenderTarget(const std::string& name, const Graphics::BackSurfaceS
     m_resizingBits.reset();
 
     subscribeHandler();
-    createRenderTargetTexture();
+    createRenderTargetTexture(render_tex_id);
     initBackSurface(m_backSpecification.value());
     initDepthStencilSurface(m_depthSpecification.value());
+}
+
+RenderTarget::RenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::MultiBackSurfaceSpecification& multi_back_specification,
+    const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& depth_surface, const std::vector<Graphics::RenderTextureUsage>& usages) : m_dimension{ 1, 1 }
+{
+    m_isPrimary = false;
+    m_name = name;
+    m_multiBackSpecification = multi_back_specification;
+    m_renderTargetTexture = nullptr;
+    m_usages = usages;
+
+    m_clearingProperty = { MathLib::ColorRGBA(0.25f, 0.25f, 0.25f, 1.0f), 1.0f, 0, RenderTargetClear::BothBuffer };
+
+    m_resizingBits.reset();
+
+    subscribeHandler();
+    createRenderTargetTexture(render_tex_id);
+    initMultiBackSurface(m_multiBackSpecification.value());
+    shareDepthStencilSurface(depth_name, depth_surface);
 }
 
 RenderTarget::~RenderTarget()
@@ -267,21 +286,21 @@ void RenderTarget::unsubscribeHandler()
     m_onHydrateTextureFailed = nullptr;
 }
 
-void RenderTarget::createRenderTargetTexture()
+void RenderTarget::createRenderTargetTexture(const Engine::TextureId& texture_id)
 {
     if (m_isPrimary) return;
     if ((!m_backSpecification) && (!m_multiBackSpecification)) return;
     Engine::TextureDto dto;
     if (m_backSpecification.has_value())
     {
-        dto.id() = m_backSpecification->name() + ".rnd_tex";
+        dto.id() = texture_id;
         dto.dimension() = m_backSpecification->dimension();
         dto.surfaceCount() = 1;
         dto.format() = m_backSpecification->format();
     }
     else if (m_multiBackSpecification.has_value())
     {
-        dto.id() = m_multiBackSpecification->name() + ".rnd_tex";
+        dto.id() = texture_id;
         dto.dimension() = m_multiBackSpecification->dimension();
         dto.surfaceCount() = m_multiBackSpecification->surfaceCount();
         dto.format() = m_multiBackSpecification->formats()[0];
@@ -301,15 +320,6 @@ void RenderTarget::setViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
     Frameworks::EventPublisher::post(std::make_shared<TargetViewPortChanged>(shared_from_this(), m_viewPort));
-}
-
-std::optional<unsigned> RenderTarget::findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const
-{
-    for (unsigned i = 0; i < m_usages.size(); ++i)
-    {
-        if (m_usages[i] == usage) return i;
-    }
-    return std::nullopt;
 }
 
 void RenderTarget::onPrimarySurfaceCreated(const Frameworks::IEventPtr& e)

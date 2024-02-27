@@ -50,7 +50,7 @@ namespace Enigma::Renderer
 
         const Geometries::GeometrySegment& GetGeometrySegment() const { return m_segment; };
 
-        error Draw(const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& state,
+        error draw(const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& state,
             const std::string& rendererTechnique);
         //future_err AsyncDraw(const Matrix4& mxWorld, const SpatialRenderStatePtr& state,
           //  const std::string& rendererTechnique);

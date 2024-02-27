@@ -22,7 +22,7 @@ LightingPawn::~LightingPawn()
 {
 }
 
-void LightingPawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
+void LightingPawn::setHostLight(const std::shared_ptr<SceneGraph::Light>& light)
 {
     m_hostLight = light;
 }
@@ -30,12 +30,12 @@ void LightingPawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
 void LightingPawn::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     LightingPawnDto pawn_dto = LightingPawnDto::fromGenericDto(dto);
-    if (!pawn_dto.HostLightName().empty())
+    if (!pawn_dto.hostLightName().empty())
     {
-        resolver.tryResolveLinkage(pawn_dto.HostLightName(), [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(pawn_dto.hostLightName(), [lifetime = weak_from_this()](auto sp)
             {
                 if (!lifetime.expired())
-                    std::dynamic_pointer_cast<LightingPawn, Spatial>(lifetime.lock())->SetHostLight(std::dynamic_pointer_cast<Light>(sp));
+                    std::dynamic_pointer_cast<LightingPawn, Spatial>(lifetime.lock())->setHostLight(std::dynamic_pointer_cast<Light>(sp));
             });
     }
 }

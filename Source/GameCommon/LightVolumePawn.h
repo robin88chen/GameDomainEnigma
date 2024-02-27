@@ -37,10 +37,10 @@ namespace Enigma::GameCommon
         virtual error _updateSpatialRenderState() override;
 
     public:
-        static void SetDefaultVisualTech(const std::string& token) { m_tokenDefaultVisualTech = token; }
-        static void SetInsideVisualTech(const std::string& token) { m_tokenInsideVisualTech = token; }
-        static const std::string& GetDefaultVisualTech() { return m_tokenDefaultVisualTech; }
-        static const std::string& GetInsideVisualTech() { return m_tokenInsideVisualTech; }
+        static void setDefaultVisualTech(const std::string& token) { m_tokenDefaultVisualTech = token; }
+        static void setInsideVisualTech(const std::string& token) { m_tokenInsideVisualTech = token; }
+        static const std::string& getDefaultVisualTech() { return m_tokenDefaultVisualTech; }
+        static const std::string& getInsideVisualTech() { return m_tokenInsideVisualTech; }
 
     protected:
         bool m_isCameraInside;

@@ -14,6 +14,7 @@ ShadowMapServiceConfiguration::ShadowMapServiceConfiguration()
     m_lightViewProjSemantic = "LightViewProj";
     m_shadowMapSemantic = "ShadowMap";
     m_shadowMapDimensionSemantic = "ShadowMapSliceDimension";
+    m_shadowMapTextureId = Engine::TextureId("ShadowMap.rnd_tex");
     m_shadowMapDepthBias = 0.005f;
     m_shadowMapDensity = 0.75f;
 }
@@ -105,6 +106,16 @@ const std::string& ShadowMapServiceConfiguration::shadowMapDimensionSemantic() c
 std::string& ShadowMapServiceConfiguration::shadowMapDimensionSemantic()
 {
     return m_shadowMapDimensionSemantic;
+}
+
+Enigma::Engine::TextureId& ShadowMapServiceConfiguration::shadowMapTextureId()
+{
+    return m_shadowMapTextureId;
+}
+
+const Enigma::Engine::TextureId& ShadowMapServiceConfiguration::shadowMapTextureId() const
+{
+    return m_shadowMapTextureId;
 }
 
 float ShadowMapServiceConfiguration::shadowMapDepthBias() const

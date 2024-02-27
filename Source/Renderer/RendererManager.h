@@ -60,8 +60,8 @@ namespace Enigma::Renderer
 
         /** create render target */
         error createRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
-        error createRenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
-
+        error createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
+        error createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::MultiBackSurfaceSpecification& back_specification, const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& depth_surface, const std::vector<Graphics::RenderTextureUsage>& usages);
         /** destroy render target by name : remove from map, & destroy  */
         error destroyRenderTarget(const std::string& name);
         /** get render target */

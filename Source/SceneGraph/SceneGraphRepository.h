@@ -69,14 +69,15 @@ namespace Enigma::SceneGraph
         //std::shared_ptr<Camera> createCamera(const SpatialId& id);
         //std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
 
+        std::shared_ptr<Node> createNode(const SpatialId& id);
         std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
 
         //std::shared_ptr<Pawn> CreatePawn(const std::string& name);
 
-        std::shared_ptr<Light> CreateLight(const std::string& name, const LightInfo& info);
-        bool HasLight(const std::string& name);
-        std::shared_ptr<Light> QueryLight(const std::string& name);
+        std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
+        bool hasLight(const SpatialId& id);
+        std::shared_ptr<Light> queryLight(const SpatialId& id);
 
         std::shared_ptr<Portal> createPortal(const std::string& name);
         bool hasPortal(const std::string& name);
@@ -136,7 +137,7 @@ namespace Enigma::SceneGraph
         std::unordered_map<SpatialId, std::shared_ptr<Spatial>, SpatialId::hash> m_spatials;
         std::recursive_mutex m_spatialMapLock;
 
-        std::unordered_map<std::string, std::weak_ptr<Light>> m_lights;
+        std::unordered_map<SpatialId, std::weak_ptr<Light>, SpatialId::hash> m_lights;
         std::recursive_mutex m_lightMapLock;
 
         std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;

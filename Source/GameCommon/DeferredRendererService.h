@@ -16,6 +16,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "GameEngine/EffectDtoHelper.h"
 #include <memory>
 #include <unordered_map>
 
@@ -53,7 +54,7 @@ namespace Enigma::GameCommon
         void createAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void createSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void createPointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
-        void removeLightingPawn(const std::string& name);
+        void removeLightingPawn(const SceneGraph::SpatialId& lit_id);
         void updateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void updateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void updatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
@@ -75,19 +76,21 @@ namespace Enigma::GameCommon
 
         void bindGBuffer(const Frameworks::ICommandPtr& c);
 
-        void onLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
+        void completeLightingPawnBuilt(const SceneGraph::SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn);
 
-        std::shared_ptr<LightingPawn> findLightingPawn(const std::string& name);
+        std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
 
-        void checkLightVolumeBackfaceCulling(const std::string& lit_name);
+        void checkLightVolumeBackfaceCulling(const SceneGraph::SpatialId& lit_id);
         void checkLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
         void insertLightPawnBuildingMeta(const SceneGraph::SpatialId& pawn_id, const std::shared_ptr<SceneGraph::Light>& lit);
 
+        Engine::EffectTextureMapDtoHelper getGBufferTextureSemantics();
+
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
 
-        using LightingPawnMap = std::unordered_map<std::string, std::weak_ptr<LightingPawn>>;
+        using LightingPawnMap = std::unordered_map<SceneGraph::SpatialId, std::weak_ptr<LightingPawn>, SceneGraph::SpatialId::hash>;
         LightingPawnMap m_lightingPawns;
 
         struct SceneGraphLightPawnMeta

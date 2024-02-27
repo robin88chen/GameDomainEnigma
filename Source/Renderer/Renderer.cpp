@@ -8,15 +8,15 @@ using namespace Enigma::Renderer;
 
 Renderer::Renderer(const std::string& name) : IRenderer(name)
 {
-    m_renderPacksArray[static_cast<size_t>(RenderListID::Overlay)].EnableSortBeforeDraw(false);
-    m_renderPacksArray[static_cast<size_t>(RenderListID::DeferredLighting)].EnableSortBeforeDraw(false);
-    m_renderPacksArray[static_cast<size_t>(RenderListID::OffSurface)].SortByDistance();
+    m_renderPacksArray[static_cast<size_t>(RenderListID::Overlay)].enableSortBeforeDraw(false);
+    m_renderPacksArray[static_cast<size_t>(RenderListID::DeferredLighting)].enableSortBeforeDraw(false);
+    m_renderPacksArray[static_cast<size_t>(RenderListID::OffSurface)].sortByDistance();
     m_stampBitMask = 0;
 }
 
 Renderer::~Renderer()
 {
-    FlushAll();
+    flushAll();
 }
 
 error Renderer::setRenderTarget(const std::shared_ptr<RenderTarget>& target)
@@ -52,7 +52,7 @@ error Renderer::flip()
     return er;
 }
 
-error Renderer::InsertRenderElement(const std::shared_ptr<RenderElement>& element,
+error Renderer::insertRenderElement(const std::shared_ptr<RenderElement>& element,
     const MathLib::Matrix4& mxWorld, const Engine::RenderLightingState& lighting, RenderListID list_id)
 {
     assert(element);
@@ -60,19 +60,19 @@ error Renderer::InsertRenderElement(const std::shared_ptr<RenderElement>& elemen
     if ((list_id == RenderListID::OffSurface) && (!m_associatedCamera.expired()))
     {
         er = m_renderPacksArray[static_cast<size_t>(list_id)].
-            InsertRenderElement(element, mxWorld, m_associatedCamera.lock()->location(), lighting, m_stampBitMask);
+            insertRenderElement(element, mxWorld, m_associatedCamera.lock()->location(), lighting, m_stampBitMask);
     }
     else
     {
         er = m_renderPacksArray[static_cast<size_t>(list_id)].
-            InsertRenderElement(element, mxWorld, lighting, m_stampBitMask);
+            insertRenderElement(element, mxWorld, lighting, m_stampBitMask);
     }
     return er;
 }
 
-error Renderer::RemoveRenderElement(const std::shared_ptr<RenderElement>& element, RenderListID list_id)
+error Renderer::removeRenderElement(const std::shared_ptr<RenderElement>& element, RenderListID list_id)
 {
-    return m_renderPacksArray[static_cast<size_t>(list_id)].RemoveRenderElement(element, m_stampBitMask);
+    return m_renderPacksArray[static_cast<size_t>(list_id)].removeRenderElement(element, m_stampBitMask);
 }
 
 error Renderer::beginScene()
@@ -132,11 +132,11 @@ error Renderer::drawScene()
 {
     for (size_t i = 0; i < m_renderPacksArray.size(); i++)
     {
-        if (!m_renderPacksArray[i].HasElements()) continue;
+        if (!m_renderPacksArray[i].hasElements()) continue;
 
-        if (const error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName)) return er;
+        if (const error er = m_renderPacksArray[i].draw(m_stampBitMask, m_rendererTechniqueName)) return er;
         // ui 的 render 跟順序有關，除了不做排序外，element的cache也有可能會破壞順序，所以要多花時間做flush
-        if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].FlushAll(m_stampBitMask);
+        if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].flushAll(m_stampBitMask);
     }
 
     return ErrorCode::ok;
@@ -148,11 +148,11 @@ error Renderer::endScene()
     return ErrorCode::ok;
 }
 
-void Renderer::FlushAll()
+void Renderer::flushAll()
 {
     for (auto& pack : m_renderPacksArray)
     {
-        pack.FlushAll(m_stampBitMask);
+        pack.flushAll(m_stampBitMask);
     }
 }
 
@@ -161,10 +161,10 @@ void Renderer::setAssociatedCamera(const std::shared_ptr<SceneGraph::Camera>& ca
     m_associatedCamera = camera;
 }
 
-void Renderer::EnableSortBeforeDraw(RenderListID list_id, bool flag)
+void Renderer::enableSortBeforeDraw(RenderListID list_id, bool flag)
 {
     if (static_cast<size_t>(list_id) >= static_cast<size_t>(RenderListID::Count)) return;
-    m_renderPacksArray[static_cast<size_t>(list_id)].EnableSortBeforeDraw(flag);
+    m_renderPacksArray[static_cast<size_t>(list_id)].enableSortBeforeDraw(flag);
 }
 
 void Renderer::selectRendererTechnique(const std::string& techniqueName)

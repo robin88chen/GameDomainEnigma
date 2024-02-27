@@ -83,7 +83,7 @@ void CascadeShadowMapService::createShadowRenderSystem(const std::string& render
     Engine::IRendererPtr renderer = std::make_shared<CascadeShadowMapRenderer>(renderer_name);
     error er = m_rendererManager.lock()->insertRenderer(renderer_name, renderer);
     if (er) return;
-    m_rendererManager.lock()->createRenderTarget(target_name, Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), fullDimension, Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()), { Graphics::RenderTextureUsage::ShadowMap });
+    m_rendererManager.lock()->createRenderTarget(target_name, m_configuration->shadowMapTextureId(), BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), fullDimension, GraphicFormat::FMT_R32F), DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), fullDimension, IGraphicAPI::instance()->getDepthSurfaceFormat()), { RenderTextureUsage::ShadowMap });
 
     m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
     m_renderer.lock()->selectRendererTechnique(m_configuration->shadowMapTechniqueName());

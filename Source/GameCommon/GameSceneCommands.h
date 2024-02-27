@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GameSceneCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -42,12 +42,12 @@ namespace Enigma::GameCommon
     class DeleteSceneSpatial : public Frameworks::ICommand
     {
     public:
-        DeleteSceneSpatial(const std::string& name) : m_name(name) {}
+        DeleteSceneSpatial(const SceneGraph::SpatialId& id) : m_id(id) {}
 
-        const std::string& getName() const { return m_name; }
+        const SceneGraph::SpatialId& id() const { return m_id; }
 
     protected:
-        std::string m_name;
+        SceneGraph::SpatialId m_id;
     };
 }
 

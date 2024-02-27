@@ -7,10 +7,11 @@
  *********************************************************************/
 #ifndef _SHADOW_MAP_SERVICE_CONFIGURATION_H
 #define _SHADOW_MAP_SERVICE_CONFIGURATION_H
-#include <string>
 
 #include "MathLib/AlgebraBasicTypes.h"
 #include "SceneGraph/SpatialId.h"
+#include "GameEngine/TextureId.h"
+#include <string>
 
 namespace Enigma::ShadowMap
 {
@@ -42,6 +43,9 @@ namespace Enigma::ShadowMap
         const std::string& shadowMapDimensionSemantic() const;
         std::string& shadowMapDimensionSemantic();
 
+        const Engine::TextureId& shadowMapTextureId() const;
+        Engine::TextureId& shadowMapTextureId();
+
         float shadowMapDepthBias() const;
         float& shadowMapDepthBias();
         float shadowMapDensity() const;
@@ -56,6 +60,7 @@ namespace Enigma::ShadowMap
         std::string m_lightViewProjSemantic;
         std::string m_shadowMapSemantic;
         std::string m_shadowMapDimensionSemantic;
+        Engine::TextureId m_shadowMapTextureId;
         float m_shadowMapDepthBias;
         float m_shadowMapDensity;
     };

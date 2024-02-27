@@ -42,32 +42,32 @@ namespace Enigma::Renderer
         RenderPackList& operator=(const RenderPackList&) = default;
         RenderPackList& operator=(RenderPackList&&) = default;
 
-        error InsertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
+        error insertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
             const Engine::RenderLightingState& lighting_state, unsigned int renderer_bit);
-        error InsertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
+        error insertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
             const MathLib::Vector3& camera_loc, const Engine::RenderLightingState& lighting_state, unsigned int renderer_bit);
-        error RemoveRenderElement(const std::shared_ptr<RenderElement>& element, unsigned int renderer_bit);
+        error removeRenderElement(const std::shared_ptr<RenderElement>& element, unsigned int renderer_bit);
 
         /** @name drawing procedure */
         //@{
         /** 一般正常的程序, 包含 清除舊的element,draw,並做過期記號 */
-        error Draw(unsigned int stamp_mask, const std::string& rendererTechnique);
+        error draw(unsigned int stamp_mask, const std::string& rendererTechnique);
         /** 有清除舊的element, 但不做過期記號的draw程序 */
-        error DrawWithRemoveDated(unsigned int stamp_mask, const std::string& rendererTechnique);
+        error drawWithRemoveDated(unsigned int stamp_mask, const std::string& rendererTechnique);
         /** 不清除也不做記號的draw程序 */
-        error DrawOnlyNative(unsigned int stamp_mask, const std::string& rendererTechnique);
+        error drawOnlyNative(unsigned int stamp_mask, const std::string& rendererTechnique);
         /** 不清除舊 element, 並同時做過期記號的draw程序 */
-        error DrawWithMarkDated(unsigned int stamp_mask, const std::string& rendererTechnique);
+        error drawWithMarkDated(unsigned int stamp_mask, const std::string& rendererTechnique);
         //@}
 
-        inline bool HasElements() const { return (!m_packs.empty()); };
+        inline bool hasElements() const { return (!m_packs.empty()); };
 
-        void FlushAll(unsigned int stamp_mask);
+        void flushAll(unsigned int stamp_mask);
 
-        void EnableSortBeforeDraw(bool flag) { m_isSortBeforeDraw = flag; };
-        void SortByDistance();
+        void enableSortBeforeDraw(bool flag) { m_isSortBeforeDraw = flag; };
+        void sortByDistance();
     private:
-        void ClearList();
+        void clearList();
 
     private:
         typedef std::list<RenderPack> PackList;

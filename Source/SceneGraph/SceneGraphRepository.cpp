@@ -175,6 +175,11 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     return camera;
 }
 
+std::shared_ptr<Node> SceneGraphRepository::createNode(const SpatialId& id)
+{
+    return createNode(id.name(), id.rtti().getName());
+}
+
 std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
 {
     assert(!hasNode(name));
@@ -306,27 +311,27 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
     return m_factory->constituteSpatial(id, dto.value(), true);
 }
 
-std::shared_ptr<Light> SceneGraphRepository::CreateLight(const std::string& name, const LightInfo& info)
+std::shared_ptr<Light> SceneGraphRepository::createLight(const SpatialId& id, const LightInfo& info)
 {
-    assert(!HasLight(name));
-    auto light = std::make_shared<Light>(name, info);
+    assert(!hasLight(id));
+    auto light = std::make_shared<Light>(id, info);
     std::lock_guard locker{ m_lightMapLock };
-    m_lights.insert_or_assign(name, light);
+    m_lights.insert_or_assign(id, light);
     Frameworks::EventPublisher::post(std::make_shared<LightInfoCreated>(light));
     return light;
 }
 
-bool SceneGraphRepository::HasLight(const std::string& name)
+bool SceneGraphRepository::hasLight(const SpatialId& id)
 {
     std::lock_guard locker{ m_lightMapLock };
-    auto it = m_lights.find(name);
+    auto it = m_lights.find(id);
     return ((it != m_lights.end()) && (!it->second.expired()));
 }
 
-std::shared_ptr<Light> SceneGraphRepository::QueryLight(const std::string& name)
+std::shared_ptr<Light> SceneGraphRepository::queryLight(const SpatialId& id)
 {
     std::lock_guard locker{ m_lightMapLock };
-    auto it = m_lights.find(name);
+    auto it = m_lights.find(id);
     if (it == m_lights.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
@@ -361,7 +366,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const std::string& n
 {
     if (auto node = queryNode(name)) return node;
     //if (auto pawn = queryPawn(name)) return pawn;
-    if (auto light = QueryLight(name)) return light;
+    //if (auto light = QueryLight(name)) return light;
     if (auto portal = queryPortal(name)) return portal;
     return nullptr;
 }
@@ -390,14 +395,14 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
         m_portals.insert_or_assign(portal->getSpatialName(), portal);
         return portal;
     }
-    else if (auto light = std::shared_ptr<Light>(dynamic_cast<Light*>(spatial)))
+    /*else if (auto light = std::shared_ptr<Light>(dynamic_cast<Light*>(spatial)))
     {
         assert(!HasLight(light->getSpatialName()));
         std::lock_guard locker{ m_lightMapLock };
         m_lights.insert_or_assign(light->getSpatialName(), light);
         Frameworks::EventPublisher::post(std::make_shared<LightInfoCreated>(light));
         return light;
-    }
+    }*/
     else
     {
         assert(false);

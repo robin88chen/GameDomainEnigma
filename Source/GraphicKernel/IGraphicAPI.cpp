@@ -242,7 +242,7 @@ void IGraphicAPI::endScene()
     }
 }
 
-void IGraphicAPI::Draw(unsigned vertexCount, unsigned vertexOffset)
+void IGraphicAPI::draw(unsigned vertexCount, unsigned vertexOffset)
 {
     if (UseAsync())
     {
@@ -254,7 +254,7 @@ void IGraphicAPI::Draw(unsigned vertexCount, unsigned vertexOffset)
     }
 }
 
-void IGraphicAPI::Draw(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
+void IGraphicAPI::draw(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
 {
     if (UseAsync())
     {
@@ -402,7 +402,7 @@ void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawPrimitive, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Draw(cmd->GetVertexCount(), cmd->GetVertexOffset());
+    draw(cmd->GetVertexCount(), cmd->GetVertexOffset());
 }
 
 void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
@@ -410,7 +410,7 @@ void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawIndexedPrimitive, Frameworks::ICommand>(c);
     if (!cmd) return;
-    Draw(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
+    draw(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
 }
 void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
 {

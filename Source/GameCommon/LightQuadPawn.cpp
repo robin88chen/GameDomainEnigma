@@ -36,7 +36,7 @@ std::shared_ptr<LightQuadPawn> LightQuadPawn::constitute(const SceneGraph::Spati
 GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
-    dto.HostLightName() = GetHostLightName();
+    dto.hostLightName() = getHostLightName();
     return dto.toGenericDto();
 }
 

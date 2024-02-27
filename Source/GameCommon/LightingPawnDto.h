@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   LightingPawnDto.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -18,8 +18,8 @@ namespace Enigma::GameCommon
         LightingPawnDto();
         LightingPawnDto(const SceneGraph::PawnDto& dto);
 
-        [[nodiscard]] const std::string& HostLightName() const { return m_hostLightName; }
-        std::string& HostLightName() { return m_hostLightName; }
+        [[nodiscard]] const std::string& hostLightName() const { return m_hostLightName; }
+        std::string& hostLightName() { return m_hostLightName; }
 
         static LightingPawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;

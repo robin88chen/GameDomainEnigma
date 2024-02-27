@@ -37,8 +37,8 @@ error CascadeShadowMapRenderer::drawScene()
         {
             for (unsigned int i = 0; i < m_renderPacksArray.size(); i++)
             {
-                if (!m_renderPacksArray[i].HasElements()) continue;
-                error er = m_renderPacksArray[i].DrawWithRemoveDated(m_stampBitMask, m_rendererTechniqueName);
+                if (!m_renderPacksArray[i].hasElements()) continue;
+                error er = m_renderPacksArray[i].drawWithRemoveDated(m_stampBitMask, m_rendererTechniqueName);
                 if (er) return er;
             }
             //! render buffer draw 會清除 effect pass, 不用了 GraphicBinder()->EffectCleanupCache();
@@ -47,8 +47,8 @@ error CascadeShadowMapRenderer::drawScene()
         {
             for (unsigned int i = 0; i < m_renderPacksArray.size(); i++)
             {
-                if (!m_renderPacksArray[i].HasElements()) continue;
-                error er = m_renderPacksArray[i].DrawWithMarkDated(m_stampBitMask, m_rendererTechniqueName);
+                if (!m_renderPacksArray[i].hasElements()) continue;
+                error er = m_renderPacksArray[i].drawWithMarkDated(m_stampBitMask, m_rendererTechniqueName);
                 if (er) return er;
             }
             //GraphicBinder()->EffectCleanupCache();
@@ -57,8 +57,8 @@ error CascadeShadowMapRenderer::drawScene()
         {
             for (unsigned int i = 0; i < m_renderPacksArray.size(); i++)
             {
-                if (!m_renderPacksArray[i].HasElements()) continue;
-                error er = m_renderPacksArray[i].DrawOnlyNative(m_stampBitMask, m_rendererTechniqueName);
+                if (!m_renderPacksArray[i].hasElements()) continue;
+                error er = m_renderPacksArray[i].drawOnlyNative(m_stampBitMask, m_rendererTechniqueName);
                 if (er) return er;
             }
             //GraphicBinder()->EffectCleanupCache();

@@ -53,7 +53,7 @@ error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buf
     return ErrorCode::ok;
 }
 
-error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
+error RenderBuffer::draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     const GeometrySegment& segment)
 {
     //if (FATAL_LOG_EXPR(!m_signature.GetVertexDeclaration())) return Graphics::ErrorCode::nullVertexLayout;
@@ -71,12 +71,12 @@ error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     effectMaterial->applyFirstPass();
     if (m_indexBuffer)
     {
-        Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
+        Graphics::IGraphicAPI::instance()->draw(segment.m_idxCount, segment.m_vtxCount,
             segment.m_startIdx, static_cast<int>(segment.m_startVtx));
     }
     else
     {
-        Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
+        Graphics::IGraphicAPI::instance()->draw(segment.m_vtxCount, segment.m_startVtx);
     }
     // if multi-pass effect
     while (effectMaterial->hasNextPass())
@@ -84,12 +84,12 @@ error RenderBuffer::Draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
         effectMaterial->applyNextPass();
         if (m_indexBuffer)
         {
-            Graphics::IGraphicAPI::instance()->Draw(segment.m_idxCount, segment.m_vtxCount,
+            Graphics::IGraphicAPI::instance()->draw(segment.m_idxCount, segment.m_vtxCount,
                 segment.m_startIdx, static_cast<int>(segment.m_startVtx));
         }
         else
         {
-            Graphics::IGraphicAPI::instance()->Draw(segment.m_vtxCount, segment.m_startVtx);
+            Graphics::IGraphicAPI::instance()->draw(segment.m_vtxCount, segment.m_startVtx);
         }
     }
     return ErrorCode::ok;

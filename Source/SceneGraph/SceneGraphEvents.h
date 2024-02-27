@@ -93,13 +93,13 @@ namespace Enigma::SceneGraph
     class LightInfoDeleted : public LightInfoEvent
     {
     public:
-        LightInfoDeleted(const std::string& name, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
-            m_lightName{ name }, m_lightType{ light_type } {}
+        LightInfoDeleted(const SpatialId& id, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
+            m_lightId(id), m_lightType{ light_type } {}
 
-        const std::string& lightName() { return m_lightName; }
+        const SpatialId& lightId() { return m_lightId; }
         LightInfo::LightType lightType() const { return m_lightType; }
     protected:
-        std::string m_lightName;
+        SpatialId m_lightId;
         LightInfo::LightType m_lightType;
     };
     class LightInfoUpdated : public LightInfoEvent

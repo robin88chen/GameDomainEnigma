@@ -106,17 +106,17 @@ error DeferredRenderer::drawScene()
 
             Graphics::IGraphicAPI::instance()->beginScene();
         }
-        if (!m_renderPacksArray[i].HasElements()) continue;
-        error er = m_renderPacksArray[i].Draw(m_stampBitMask, m_rendererTechniqueName);
+        if (!m_renderPacksArray[i].hasElements()) continue;
+        error er = m_renderPacksArray[i].draw(m_stampBitMask, m_rendererTechniqueName);
         if (er) return er;
         // ui 的 render 跟順序有關，除了不做排序外，element的cache也有可能會破壞順序，所以要多花時間做flush
-        if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].FlushAll(m_stampBitMask);
+        if (i == static_cast<size_t>(RenderListID::Overlay)) m_renderPacksArray[i].flushAll(m_stampBitMask);
     }
 
     return ErrorCode::ok;
 }
 
-error DeferredRenderer::AttachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer)
+error DeferredRenderer::attachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer)
 {
     m_gbufferTarget = gbuffer;
     RenderTargetClearChangingProperty prop;
@@ -128,7 +128,7 @@ error DeferredRenderer::AttachGBufferTarget(const std::shared_ptr<RenderTarget>&
     return ErrorCode::ok;
 }
 
-void DeferredRenderer::ReShareDepthStencilSurface()
+void DeferredRenderer::reshareDepthStencilSurface()
 {
     if (FATAL_LOG_EXPR((m_target.expired()) || (m_gbufferTarget.expired()))) return;
     if (FATAL_LOG_EXPR(m_target.lock()->getDepthStencilSurface() == nullptr)) return;

@@ -65,10 +65,10 @@ namespace Enigma::Renderer
         /** insert render element, element 會被加上 active frame bit,
                 然後檢查是否已存在序列中, 不在序列中才會加入.
                 所以不會有重複加入的問題 */
-        virtual error InsertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
+        virtual error insertRenderElement(const std::shared_ptr<RenderElement>& element, const MathLib::Matrix4& mxWorld,
             const Engine::RenderLightingState& lighting, RenderListID list_id);
         /** remove render element */
-        virtual error RemoveRenderElement(const std::shared_ptr<RenderElement>& element, RenderListID list_id);
+        virtual error removeRenderElement(const std::shared_ptr<RenderElement>& element, RenderListID list_id);
 
         /** begin scene */
         virtual error beginScene();
@@ -82,21 +82,21 @@ namespace Enigma::Renderer
         accept filter會接受，而reject filter 會把它排除, 所以最終是排除的
         */
         virtual error prepareScene(const SceneGraph::VisibleSet& visible_set,
-                                   SceneGraph::Spatial::SpatialFlags accept_filter = SceneGraph::Spatial::Spatial_FullOpen,
-                                   SceneGraph::Spatial::SpatialFlags reject_filter = SceneGraph::Spatial::Spatial_None);
+            SceneGraph::Spatial::SpatialFlags accept_filter = SceneGraph::Spatial::Spatial_FullOpen,
+            SceneGraph::Spatial::SpatialFlags reject_filter = SceneGraph::Spatial::Spatial_None);
         /** draw scene */
         virtual error drawScene();
         /** end scene */
         virtual error endScene();
 
         /** flush all group */
-        void FlushAll();
+        void flushAll();
 
         /** associated camera */
         void setAssociatedCamera(const std::shared_ptr<SceneGraph::Camera>& camera);
 
         /** we need change the sorting setting sometime */
-        void EnableSortBeforeDraw(RenderListID list_id, bool flag);
+        void enableSortBeforeDraw(RenderListID list_id, bool flag);
 
         /** select renderer technique */
         void selectRendererTechnique(const std::string& techniqueName);

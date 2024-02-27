@@ -38,14 +38,14 @@ namespace Enigma::GameCommon
     class GameSceneInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        GameSceneInstallingPolicy(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
-            : m_sceneRootName(scene_root_name), m_portalManagedName(portal_managed_name) {}
+        GameSceneInstallingPolicy(const SceneGraph::SpatialId& scene_root_id, const std::optional<std::string>& portal_managed_name)
+            : m_sceneRootId(scene_root_id), m_portalManagedName(portal_managed_name) {}
 
         virtual error install(Frameworks::ServiceManager* service_manager) override;
         virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
-        std::string m_sceneRootName;
+        SceneGraph::SpatialId m_sceneRootId;
         std::optional<std::string> m_portalManagedName;
     };
     class AnimatedPawnInstallingPolicy : public Engine::InstallingPolicy

@@ -47,7 +47,7 @@ namespace Enigma::Engine
         bool IsDataEmpty() { return m_isDataEmpty; };
 
         /** draw */
-        error Draw(const std::shared_ptr<EffectMaterial>& effectMaterial, const Geometries::GeometrySegment& segment);
+        error draw(const std::shared_ptr<EffectMaterial>& effectMaterial, const Geometries::GeometrySegment& segment);
 
     protected:
         // todo: 這些func的 Async 由 Manager 負責以 Async 方式呼叫

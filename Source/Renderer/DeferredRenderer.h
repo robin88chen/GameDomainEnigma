@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DeferredRenderer.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -29,10 +29,10 @@ namespace Enigma::Renderer
         virtual error beginScene(const MathLib::Vector3& camera_loc, const MathLib::Matrix4& mxView, const MathLib::Matrix4& mxProj) override;
         virtual error drawScene() override;
 
-        error AttachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer);
+        error attachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer);
 
         /// GBuffer render target 與 scene render target 共用一個depth buffer, 當 scene render target被改掉後, 需要重新設定分享
-        void ReShareDepthStencilSurface();
+        void reshareDepthStencilSurface();
 
     private:
         std::weak_ptr<RenderTarget> m_gbufferTarget;

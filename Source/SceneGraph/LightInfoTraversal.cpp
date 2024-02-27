@@ -130,7 +130,7 @@ void LightInfoTraversal::OnLightInfoCreated(const IEventPtr& e)
     if (!ev) return;
     if (!ev->light()) return;
     std::lock_guard locker{ m_mapLock };
-    m_lights.insert_or_assign(ev->light()->getSpatialName(), ev->light());
+    m_lights.insert_or_assign(ev->light()->id(), ev->light());
 }
 
 void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
@@ -139,7 +139,7 @@ void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_mapLock };
-    m_lights.erase(ev->lightName());
+    m_lights.erase(ev->lightId());
 }
 
 void LightInfoTraversal::DoQueryingLight(const Frameworks::IRequestPtr& r)

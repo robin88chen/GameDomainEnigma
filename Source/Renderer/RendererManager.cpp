@@ -205,14 +205,27 @@ error RendererManager::createRenderTarget(const std::string& name, RenderTarget:
     return ErrorCode::ok;
 }
 
-error RendererManager::createRenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages)
+error RendererManager::createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
     if (auto target_check = getRenderTarget(name))
     {
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
     }
-    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, back_specification, depth_specification, usages) };
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, render_tex_id, back_specification, depth_specification, usages) };
+    m_renderTargets.emplace(name, target);
+
+    return ErrorCode::ok;
+}
+
+error RendererManager::createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::MultiBackSurfaceSpecification& back_specification, const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& depth_surface, const std::vector<Graphics::RenderTextureUsage>& usages)
+{
+    if (auto target_check = getRenderTarget(name))
+    {
+        // render already exist
+        return ErrorCode::renderTargetAlreadyExisted;
+    }
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, render_tex_id, back_specification, depth_name, depth_surface, usages) };
     m_renderTargets.emplace(name, target);
 
     return ErrorCode::ok;

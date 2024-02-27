@@ -41,9 +41,9 @@ namespace Enigma::GameCommon
 
         /** @name scene root */
         //@{
-        void CreateRootScene(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name);
-        void DestroyRootScene();
-        const std::shared_ptr<SceneGraph::Node>& GetSceneRoot() { return m_sceneRoot; };
+        void createRootScene(const SceneGraph::SpatialId& scene_root_id, const std::optional<std::string>& portal_managed_name);
+        void destroyRootScene();
+        const std::shared_ptr<SceneGraph::Node>& getSceneRoot() { return m_sceneRoot; };
         //@}
 
         const std::shared_ptr<SceneGraph::PortalManagementNode>& GetPortalManagementNode() { return m_portalMgtNode; };

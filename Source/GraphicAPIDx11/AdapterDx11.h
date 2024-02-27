@@ -57,13 +57,13 @@ namespace Enigma::Devices
             AdapterInfo(AdapterInfo&&) = delete;
             ~AdapterInfo()
             {
-                ClearList();
+                clearList();
                 SAFE_DELETE_ARRAY(m_uniqueDescription);
                 SAFE_RELEASE(m_dxgiAdapter);
             }
             AdapterInfo& operator=(const AdapterInfo&) = delete;
             AdapterInfo& operator=(AdapterInfo&&) = delete;
-            void ClearList()
+            void clearList()
             {
                 if (!m_deviceInfoList.empty())
                 {

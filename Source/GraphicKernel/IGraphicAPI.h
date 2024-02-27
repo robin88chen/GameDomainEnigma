@@ -83,8 +83,8 @@ namespace Enigma::Graphics
 
         virtual void beginScene();
         virtual void endScene();
-        virtual void Draw(unsigned int vertexCount, unsigned int vertexOffset);
-        virtual void Draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+        virtual void draw(unsigned int vertexCount, unsigned int vertexOffset);
+        virtual void draw(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
         virtual void clear(const IBackSurfacePtr& back_surface, const IDepthStencilSurfacePtr& depth_surface,
             const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value);

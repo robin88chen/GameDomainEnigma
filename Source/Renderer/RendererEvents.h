@@ -25,8 +25,8 @@ namespace Enigma::Renderer
     public:
         RendererCreated(const std::string& name, const std::shared_ptr<Engine::IRenderer>& renderer) :
             m_name(name), m_renderer(renderer) {};
-        const std::string& GetRendererName() { return m_name; }
-        const std::shared_ptr<Engine::IRenderer>& getRenderer() const { return m_renderer; }
+        const std::string& rendererName() { return m_name; }
+        const std::shared_ptr<Engine::IRenderer>& renderer() const { return m_renderer; }
 
     private:
         std::string m_name;
@@ -37,7 +37,7 @@ namespace Enigma::Renderer
     {
     public:
         RendererDestroyed(const std::string& name) : m_name(name) {};
-        const std::string& GetRendererName() { return m_name; }
+        const std::string& rendererName() { return m_name; }
 
     private:
         std::string m_name;
@@ -49,8 +49,8 @@ namespace Enigma::Renderer
     public:
         RenderTargetResized(const std::shared_ptr<RenderTarget>& target, const MathLib::Dimension<unsigned>& dimension) :
             m_target(target), m_dimension(dimension) {};
-        [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const MathLib::Dimension<unsigned>& getDimension() const { return m_dimension; }
+        [[nodiscard]] std::shared_ptr<RenderTarget> renderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const MathLib::Dimension<unsigned>& dimension() const { return m_dimension; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -61,8 +61,8 @@ namespace Enigma::Renderer
     public:
         PrimaryRenderTargetCreated(const std::string& name, const std::shared_ptr<RenderTarget>& target) :
             m_name(name), m_target(target) {};
-        const std::string& GetRenderTargetName() { return m_name; }
-        const std::shared_ptr<RenderTarget>& getRenderTarget() const { return m_target; }
+        const std::string& renderTargetName() { return m_name; }
+        const std::shared_ptr<RenderTarget>& renderTarget() const { return m_target; }
 
     private:
         std::string m_name;
@@ -72,7 +72,7 @@ namespace Enigma::Renderer
     {
     public:
         RenderTargetDestroyed(const std::string& name) : m_name(name) {};
-        const std::string& GetRenderTargetName() { return m_name; }
+        const std::string& renderTargetName() { return m_name; }
 
     private:
         std::string m_name;
@@ -82,8 +82,8 @@ namespace Enigma::Renderer
     public:
         TargetViewPortInitialized(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
             m_target{ target }, m_view_port(vp) {}
-        [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const Graphics::TargetViewPort& getViewPort() { return m_view_port; }
+        [[nodiscard]] std::shared_ptr<RenderTarget> renderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const Graphics::TargetViewPort& viewPort() { return m_view_port; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -94,8 +94,8 @@ namespace Enigma::Renderer
     public:
         TargetViewPortChanged(const std::shared_ptr<RenderTarget>& target, const Graphics::TargetViewPort& vp) :
             m_target{ target }, m_view_port(vp) {}
-        [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const Graphics::TargetViewPort& getViewPort() { return m_view_port; }
+        [[nodiscard]] std::shared_ptr<RenderTarget> renderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const Graphics::TargetViewPort& viewPort() { return m_view_port; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -106,8 +106,8 @@ namespace Enigma::Renderer
     public:
         TargetClearingPropertyChanged(const std::shared_ptr<RenderTarget>& target, const RenderTargetClearingProperty& prop) :
             m_target{ target }, m_clearing(prop) {}
-        [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const RenderTargetClearingProperty& GetClearingProperty() const { return m_clearing; }
+        [[nodiscard]] std::shared_ptr<RenderTarget> renderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const RenderTargetClearingProperty& clearingProperty() const { return m_clearing; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -118,8 +118,8 @@ namespace Enigma::Renderer
     public:
         RenderTargetTextureCreated(const std::shared_ptr<RenderTarget>& target, const std::string texture_name) :
             m_target{ target }, m_textureName(texture_name) {}
-        [[nodiscard]] std::shared_ptr<RenderTarget> getRenderTarget() const { return m_target.lock(); }
-        [[nodiscard]] const std::string& GetTextureName() const { return m_textureName; }
+        [[nodiscard]] std::shared_ptr<RenderTarget> renderTarget() const { return m_target.lock(); }
+        [[nodiscard]] const std::string& textureName() const { return m_textureName; }
 
     private:
         std::weak_ptr<RenderTarget> m_target;
@@ -130,8 +130,8 @@ namespace Enigma::Renderer
     public:
         CreateRenderTargetTextureFailed(const std::string texture_name, std::error_code err) :
             m_textureName(texture_name), m_err(err) {}
-        [[nodiscard]] const std::string& GetTextureName() const { return m_textureName; }
-        [[nodiscard]] const std::error_code& GetErrorCode() const { return m_err; }
+        [[nodiscard]] const std::string& textureName() const { return m_textureName; }
+        [[nodiscard]] const std::error_code& error() const { return m_err; }
 
     private:
         std::string m_textureName;

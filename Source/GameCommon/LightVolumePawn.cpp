@@ -41,7 +41,7 @@ std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::S
 GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
-    dto.HostLightName() = GetHostLightName();
+    dto.hostLightName() = getHostLightName();
     return dto.toGenericDto();
 }
 

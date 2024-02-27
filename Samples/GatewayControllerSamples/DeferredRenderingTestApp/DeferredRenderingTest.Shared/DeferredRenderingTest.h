@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   DeferredRenderingTest.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
@@ -18,7 +18,7 @@
 #include "Frameworks/Event.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Timer.h"
-#include "Renderer/ModelPrimitive.h"
+#include "Renderables/ModelPrimitive.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
 #include "SceneGraph/Node.h"
@@ -35,28 +35,28 @@ public:
     DeferredRenderingTest(const std::string app_name);
     ~DeferredRenderingTest() override;
 
-    virtual void InitializeMountPaths() override;
+    virtual void initializeMountPaths() override;
 
-    virtual void InstallEngine() override final;
-    virtual void ShutdownEngine() override final;
+    virtual void installEngine() override final;
+    virtual void shutdownEngine() override final;
 
-    virtual void FrameUpdate() override;
-    virtual void RenderFrame() override;
+    virtual void frameUpdate() override;
+    virtual void renderFrame() override;
 
 protected:
-    void OnSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnRendererCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
-    void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void OnBuildPawnPrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
+    void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onBuildPawnPrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
 
 private:
-    void CreateCubePawn();
-    void RetrieveDtoCreatedModel();
-    void InsertDtoCreatedModelToRenderer();
+    void createCubePawn();
+    void retrieveDtoCreatedModel();
+    void insertDtoCreatedModelToRenderer();
 
-    void PrepareRenderScene();
+    void prepareRenderScene();
 
 protected:
     std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
@@ -70,9 +70,11 @@ protected:
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
-    Enigma::Renderer::ModelPrimitivePtr m_model;
+    std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::NodePtr m_sceneRoot;
+    Enigma::SceneGraph::SpatialId m_sceneRootId;
     Enigma::SceneGraph::PawnPtr m_pawn;
+    Enigma::SceneGraph::SpatialId m_cubeId;
 
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;
     Enigma::SceneGraph::Culler* m_culler;

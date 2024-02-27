@@ -18,6 +18,7 @@
 #include "MathLib/AlgebraBasicTypes.h"
 #include "MathLib/ColorRGBA.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include "GameEngine/TextureId.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -59,8 +60,8 @@ namespace Enigma::Renderer
         };
     public:
         RenderTarget(const std::string& name, PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages);
-        RenderTarget(const std::string& name, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
-        //RenderTarget(const std::string& name, const Graphics::MultiBackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
+        RenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages);
+        RenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::MultiBackSurfaceSpecification& back_specification, const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& depth_surface, const std::vector<Graphics::RenderTextureUsage>& usages);
         RenderTarget(const RenderTarget&) = delete;
         RenderTarget(RenderTarget&&) = delete;
         virtual ~RenderTarget();
@@ -105,13 +106,11 @@ namespace Enigma::Renderer
         /** resize target */
         error resize(const MathLib::Dimension<unsigned>& dimension);
 
-        std::optional<unsigned> findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
-
     protected:
         void subscribeHandler();
         void unsubscribeHandler();
 
-        void createRenderTargetTexture();
+        void createRenderTargetTexture(const Engine::TextureId& texture_id);
         void initViewPortSize();
 
         error clear(const MathLib::ColorRGBA& color, float depth_value, unsigned int stencil_value,

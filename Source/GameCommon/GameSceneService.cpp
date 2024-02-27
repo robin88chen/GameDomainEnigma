@@ -52,7 +52,7 @@ ServiceResult GameSceneService::onTick()
 {
     if (m_culler)
     {
-        m_culler->ComputeVisibleSet(GetSceneRoot());
+        m_culler->ComputeVisibleSet(getSceneRoot());
     }
 
     return ServiceResult::Pendding;
@@ -69,16 +69,16 @@ ServiceResult GameSceneService::onTerm()
     CommandBus::unsubscribe(typeid(AttachNodeChild), m_doAttachingNodeChild);
     m_doAttachingNodeChild = nullptr;
 
-    DestroyRootScene();
+    destroyRootScene();
     DestroySceneCuller();
 
     return ServiceResult::Complete;
 }
 
-void GameSceneService::CreateRootScene(const std::string& scene_root_name, const std::optional<std::string>& portal_managed_name)
+void GameSceneService::createRootScene(const SpatialId& scene_root_id, const std::optional<std::string>& portal_managed_name)
 {
     assert(!m_sceneGraphRepository.expired());
-    m_sceneRoot = m_sceneGraphRepository.lock()->createNode(scene_root_name, Engine::FactoryDesc(Node::TYPE_RTTI.getName()).ClaimAsNative(scene_root_name));
+    m_sceneRoot = m_sceneGraphRepository.lock()->createNode(scene_root_id);
     m_sceneRoot->setLocalTransform(Matrix4::IDENTITY);
 
     if (portal_managed_name.has_value())
@@ -96,7 +96,7 @@ void GameSceneService::CreateRootScene(const std::string& scene_root_name, const
     EventPublisher::post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
 }
 
-void GameSceneService::DestroyRootScene()
+void GameSceneService::destroyRootScene()
 {
     m_sceneRoot = nullptr;
     m_portalMgtNode = nullptr;
@@ -111,10 +111,10 @@ error GameSceneService::attachOutsideZone(const std::shared_ptr<SceneGraph::Port
 
 std::shared_ptr<Spatial> GameSceneService::FindSpatialByName(const std::string& spatial_name)
 {
-    if (!GetSceneRoot()) return nullptr;
+    if (!getSceneRoot()) return nullptr;
 
     SceneGraph::FindSpatialByName finder(spatial_name);
-    SceneTraveler::TravelResult res = GetSceneRoot()->visitBy(&finder);
+    SceneTraveler::TravelResult res = getSceneRoot()->visitBy(&finder);
     if (res == SceneTraveler::TravelResult::InterruptTargetFound)
     {
         return finder.GetFoundSpatial();
@@ -204,10 +204,10 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<DeleteSceneSpatial, ICommand>(c);
     if (!cmd) return;
-    auto spatial = FindSpatialByName(cmd->getName());
+    auto spatial = FindSpatialByName(cmd->id().name());
     if (!spatial)
     {
-        EventPublisher::post(std::make_shared<DeleteSceneSpatialFailed>(cmd->getName(), ErrorCode::spatialNotFound));
+        EventPublisher::post(std::make_shared<DeleteSceneSpatialFailed>(cmd->id().name(), ErrorCode::spatialNotFound));
         return;
     }
     if (const auto parent = spatial->getParent())
@@ -218,5 +218,5 @@ void GameSceneService::DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c)
         }
     }
     spatial = nullptr;
-    EventPublisher::post(std::make_shared<SceneSpatialDeleted>(cmd->getName()));
+    EventPublisher::post(std::make_shared<SceneSpatialDeleted>(cmd->id().name()));
 }

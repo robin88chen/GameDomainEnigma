@@ -11,7 +11,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(SceneGraph, Light, Spatial);
 
-Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spatial(spatialName), m_lightInfo(lightInfo)
+Light::Light(const SpatialId& id, const LightInfo& lightInfo) : Spatial(id), m_lightInfo(lightInfo)
 {
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
@@ -24,7 +24,7 @@ Light::Light(const Engine::GenericDto& o) : Spatial(o)
 
 Light::~Light()
 {
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.lightType()));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
 }
 
 Enigma::Engine::GenericDto Light::serializeDto()

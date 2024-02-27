@@ -199,7 +199,7 @@ error MeshPrimitive::insertToRendererWithTransformUpdating(const std::shared_ptr
     error er = ErrorCode::ok;
     for (auto& ele : m_elements)
     {
-        er = render->InsertRenderElement(ele, mxWorld, lightingState, m_renderListID);
+        er = render->insertRenderElement(ele, mxWorld, lightingState, m_renderListID);
         if (er) return er;
     }
     return er;
@@ -212,7 +212,7 @@ error MeshPrimitive::removeFromRenderer(const std::shared_ptr<Engine::IRenderer>
     if (FATAL_LOG_EXPR(m_elements.empty())) return ErrorCode::emptyRenderElementList;
     for (auto& ele : m_elements)
     {
-        render->RemoveRenderElement(ele, m_renderListID);
+        render->removeRenderElement(ele, m_renderListID);
     }
     return ErrorCode::ok;
 }

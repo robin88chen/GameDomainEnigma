@@ -1,7 +1,4 @@
 ﻿#include "DeferredRenderingTest.h"
-
-#include <SceneGraph/CameraFrustumDtos.h>
-
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "FileSystem/AndroidMountPath.h"
@@ -49,6 +46,7 @@
 #include "Renderables/RenderablePrimitiveAssembler.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/Light.h"
+#include "SceneGraph/CameraFrustumDtos.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
@@ -156,15 +154,6 @@ void DeferredRenderingTest::installEngine()
     ApplicationBridge::InitInputHandler(input_handler_policy->GetInputHandler());
 #endif
     m_sceneRendererService = m_graphicMain->getSystemServiceAs<SceneRendererService>();
-
-    /*PrimitiveMeshMaker::MakeSavedFloorGeometry("floor");
-    PrimitiveMeshMaker::MakeSavedDoorGeometry("door");
-    PrimitiveMeshMaker::MakeSavedBoardGeometry("board");
-    auto outside_dto = SceneGraphMaker::MakeOutsideRegion("outside_region", Matrix4::IDENTITY);
-    outside_dto.TheFactoryDesc().ClaimAsDeferred(outside_dto.Name() + ".node", "DataPath");
-    outside_dto.ChildNames() = {};
-    auto dtos = { outside_dto.ToGenericDto() };
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("outside_region", dtos));*/
 }
 
 void DeferredRenderingTest::shutdownEngine()

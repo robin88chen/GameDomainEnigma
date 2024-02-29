@@ -71,10 +71,6 @@ namespace Enigma::Renderer
         /** get back buffer interface */
         Graphics::IBackSurfacePtr getBackSurface() { return m_backSurface; };
 
-        /** share DepthStencil Buffer */
-        error shareDepthStencilSurface(const std::string& depth_name,
-            const Graphics::IDepthStencilSurfacePtr& surface);
-
         /** get depth stencil buffer */
         Graphics::IDepthStencilSurfacePtr getDepthStencilSurface() { return m_depthStencilSurface; };
 
@@ -121,6 +117,8 @@ namespace Enigma::Renderer
         error initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification);
         /** init DepthStencil Buffer */
         error initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification);
+        /** share DepthStencil Buffer */
+        error shareDepthStencilSurface(const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& surface);
 
         /** @name event handler */
         //@{

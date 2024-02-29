@@ -160,4 +160,5 @@ void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& 
     }
     auto tex = m_factory->constitute(request->id(), request->dto(), false);
     request->setResult(tex);
+    m_textures.insert_or_assign(request->id(), tex);
 }

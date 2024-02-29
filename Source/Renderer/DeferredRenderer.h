@@ -31,9 +31,6 @@ namespace Enigma::Renderer
 
         error attachGBufferTarget(const std::shared_ptr<RenderTarget>& gbuffer);
 
-        /// GBuffer render target 與 scene render target 共用一個depth buffer, 當 scene render target被改掉後, 需要重新設定分享
-        void reshareDepthStencilSurface();
-
     private:
         std::weak_ptr<RenderTarget> m_gbufferTarget;
         MathLib::ColorRGBA m_gbufferClearColor;

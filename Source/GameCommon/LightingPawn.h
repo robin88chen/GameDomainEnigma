@@ -29,7 +29,7 @@ namespace Enigma::GameCommon
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void setHostLight(const std::shared_ptr<SceneGraph::Light>& light);
-        std::string getHostLightName() const { return m_hostLight.expired() ? "" : m_hostLight.lock()->getSpatialName(); }
+        std::shared_ptr<SceneGraph::Light> getHostLight() const { return m_hostLight.expired() ? nullptr : m_hostLight.lock(); }
 
     protected:
         std::weak_ptr<SceneGraph::Light> m_hostLight;

@@ -18,14 +18,14 @@ namespace Enigma::GameCommon
         LightingPawnDto();
         LightingPawnDto(const SceneGraph::PawnDto& dto);
 
-        [[nodiscard]] const std::string& hostLightName() const { return m_hostLightName; }
-        std::string& hostLightName() { return m_hostLightName; }
+        [[nodiscard]] const SceneGraph::SpatialId& hostLightId() const { return m_hostLightId; }
+        SceneGraph::SpatialId& hostLightId() { return m_hostLightId; }
 
         static LightingPawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     private:
-        std::string m_hostLightName;
+        SceneGraph::SpatialId m_hostLightId;
     };
 }
 

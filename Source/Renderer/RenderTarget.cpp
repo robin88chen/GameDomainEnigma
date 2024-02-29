@@ -11,7 +11,6 @@
 #include "Platforms/PlatformLayer.h"
 #include "GameEngine/Texture.h"
 #include "GraphicKernel/ITexture.h"
-#include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
 #include "GameEngine/TextureDto.h"
 #include "GameEngine/TextureQueries.h"

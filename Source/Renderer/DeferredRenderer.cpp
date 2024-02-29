@@ -128,10 +128,3 @@ error DeferredRenderer::attachGBufferTarget(const std::shared_ptr<RenderTarget>&
     return ErrorCode::ok;
 }
 
-void DeferredRenderer::reshareDepthStencilSurface()
-{
-    if (FATAL_LOG_EXPR((m_target.expired()) || (m_gbufferTarget.expired()))) return;
-    if (FATAL_LOG_EXPR(m_target.lock()->getDepthStencilSurface() == nullptr)) return;
-    m_gbufferTarget.lock()->shareDepthStencilSurface(gbuffer_depth_stencil_name, m_target.lock()->getDepthStencilSurface());
-}
-

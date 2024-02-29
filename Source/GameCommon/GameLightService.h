@@ -21,7 +21,7 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        GameLightService(Frameworks::ServiceManager* mngr, const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository);
+        GameLightService(Frameworks::ServiceManager* mngr);
         GameLightService(const GameLightService&) = delete;
         GameLightService(GameLightService&&) = delete;
         virtual ~GameLightService() override = default;
@@ -53,8 +53,6 @@ namespace Enigma::GameCommon
         void onAttachSceneNodeChildFailed(const Frameworks::IEventPtr& event);
 
     protected:
-        std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
-
         std::unordered_set<std::string> m_pendingLightNames;
 
         Frameworks::CommandSubscriberPtr m_createAmbientLight;

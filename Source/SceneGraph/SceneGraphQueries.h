@@ -10,6 +10,7 @@
 
 #include "Frameworks/Query.h"
 #include "SceneGraphPersistenceLevel.h"
+#include "LightInfo.h"
 
 namespace Enigma::SceneGraph
 {
@@ -17,6 +18,7 @@ namespace Enigma::SceneGraph
     class Node;
     class Pawn;
     class SceneQuadTreeRoot;
+    class Light;
     class QueryCamera : public Frameworks::Query<std::shared_ptr<Camera>>
     {
     public:
@@ -97,6 +99,20 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
         Engine::GenericDto m_dto;
+        PersistenceLevel m_persistenceLevel;
+    };
+    class RequestLightCreation : public Frameworks::Query<std::shared_ptr<Light>>
+    {
+    public:
+        RequestLightCreation(const SpatialId& id, const LightInfo& info, PersistenceLevel persistence_level) : m_id(id), m_info(info), m_persistenceLevel(persistence_level) {}
+
+        const SpatialId& id() { return m_id; }
+        const LightInfo& info() { return m_info; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+
+    protected:
+        SpatialId m_id;
+        LightInfo m_info;
         PersistenceLevel m_persistenceLevel;
     };
 }

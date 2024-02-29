@@ -18,8 +18,11 @@ namespace Enigma::SceneGraph
 {
     class Camera;
     class Spatial;
+    class Light;
+    class LightInfo;
     using SpatialCreator = std::function<std::shared_ptr<Spatial>(const SpatialId& id)>;
     using SpatialConstitutor = std::function<std::shared_ptr<Spatial>(const SpatialId& id, const Engine::GenericDto& dto)>;
+    using LightCreator = std::function<std::shared_ptr<Light>(const SpatialId& id, const LightInfo& info)>;
 
     class SceneGraphFactory
     {
@@ -34,6 +37,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted);
         std::shared_ptr<Spatial> createSpatial(const SpatialId& id);
         std::shared_ptr<Spatial> constituteSpatial(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted);
+        std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
 
         void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor);
         void unregisterSpatialFactory(const std::string& rtti);

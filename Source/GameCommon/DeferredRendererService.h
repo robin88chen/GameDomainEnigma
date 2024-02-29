@@ -59,6 +59,7 @@ namespace Enigma::GameCommon
         void updateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void updatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
+        void bindGBufferToPendingLights();
         void bindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
         void bindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
 
@@ -102,6 +103,8 @@ namespace Enigma::GameCommon
         SceneGraphLightPawnMetaMap m_buildingLightPawns;
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
+
+        std::vector<std::weak_ptr<SceneGraph::Light>> m_pendingLightsOfGBufferBind;
 
         Geometries::GeometryId m_ambientLightQuadId;
         Geometries::GeometryId m_sunLightQuadId;

@@ -31,8 +31,7 @@ error GameCameraInstallingPolicy::shutdown(Frameworks::ServiceManager* service_m
 error GameLightInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    auto light_service = std::make_shared<GameLightService>(service_manager,
-        service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>());
+    auto light_service = std::make_shared<GameLightService>(service_manager);
     service_manager->registerSystemService(light_service);
     return error();
 }

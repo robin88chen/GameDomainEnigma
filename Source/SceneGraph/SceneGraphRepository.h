@@ -16,6 +16,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "GameEngine/FactoryDesc.h"
 #include "SpatialId.h"
+#include "SceneGraphPersistenceLevel.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -75,9 +76,9 @@ namespace Enigma::SceneGraph
 
         //std::shared_ptr<Pawn> CreatePawn(const std::string& name);
 
-        std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
-        bool hasLight(const SpatialId& id);
-        std::shared_ptr<Light> queryLight(const SpatialId& id);
+        //std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
+        //bool hasLight(const SpatialId& id);
+        //std::shared_ptr<Light> queryLight(const SpatialId& id);
 
         std::shared_ptr<Portal> createPortal(const std::string& name);
         bool hasPortal(const std::string& name);
@@ -97,7 +98,7 @@ namespace Enigma::SceneGraph
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
-        void putSpatial(const std::shared_ptr<Spatial>& spatial);
+        void putSpatial(const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level);
 
         /** remove entities */
         void removeCamera(const SpatialId& id);
@@ -115,6 +116,7 @@ namespace Enigma::SceneGraph
         void querySpatial(const Frameworks::IQueryPtr& q);
         void requestSpatialCreation(const Frameworks::IQueryPtr& r);
         void requestSpatialConstitution(const Frameworks::IQueryPtr& r);
+        void requestLightCreation(const Frameworks::IQueryPtr& r);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -152,6 +154,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_querySpatial;
         Frameworks::QuerySubscriberPtr m_requestSpatialCreation;
         Frameworks::QuerySubscriberPtr m_requestSpatialConstitution;
+        Frameworks::QuerySubscriberPtr m_requestLightCreation;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;

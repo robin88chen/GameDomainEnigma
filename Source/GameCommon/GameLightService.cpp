@@ -7,6 +7,7 @@
 #include "SceneGraph/Light.h"
 #include "GameSceneCommands.h"
 #include "GameSceneEvents.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -14,10 +15,8 @@ using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(GameCommon, GameLightService, ISystemService);
 
-GameLightService::GameLightService(ServiceManager* mngr,
-    const std::shared_ptr<SceneGraphRepository>& scene_graph_repository) : ISystemService(mngr)
+GameLightService::GameLightService(ServiceManager* mngr) : ISystemService(mngr)
 {
-    m_sceneGraphRepository = scene_graph_repository;
     m_needTick = false;
 }
 
@@ -82,10 +81,9 @@ ServiceResult GameLightService::onTerm()
 void GameLightService::createAmbientLight(const SpatialId& parent_id, const SpatialId& light_id,
     const MathLib::ColorRGBA& colorLight)
 {
-    assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Ambient);
     info.setLightColor(colorLight);
-    auto light = m_sceneGraphRepository.lock()->createLight(light_id, info);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
     if (!parent_id.name().empty())
     {
         m_pendingLightNames.insert(light_id.name());
@@ -96,11 +94,10 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
 void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialId& light_id,
     const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight)
 {
-    assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::SunLight);
     info.setLightColor(colorLight);
     info.setLightDirection(dirLight);
-    auto light = m_sceneGraphRepository.lock()->createLight(light_id, info);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
     if (!parent_id.name().empty())
     {
         m_pendingLightNames.insert(light_id.name());
@@ -111,12 +108,11 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
 void GameLightService::createPointLight(const SpatialId& parent_id, const MathLib::Matrix4& mxLocal,
     const SpatialId& light_id, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range)
 {
-    assert(!m_sceneGraphRepository.expired());
     LightInfo info(LightInfo::LightType::Point);
     info.setLightColor(color);
     info.setLightPosition(vecPos);
     info.setLightRange(range);
-    auto light = m_sceneGraphRepository.lock()->createLight(light_id, info);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
     if (!parent_id.name().empty())
     {
         m_pendingLightNames.insert(light_id.name());
@@ -150,72 +146,66 @@ void GameLightService::createPointLight(const ICommandPtr& command)
 
 void GameLightService::changeLightPosition(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeLightPos, ICommand>(command);
     if (!cmd) return;
-    const auto light = m_sceneGraphRepository.lock()->queryLight(cmd->lightId());
+    const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd->lightId())->dispatch());
     if (!light) return;
     light->setLightPosition(cmd->position());
 }
 
 void GameLightService::changeLightDirection(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeLightDirection, ICommand>(command);
     if (!cmd) return;
-    const auto light = m_sceneGraphRepository.lock()->queryLight(cmd->lightId());
+    const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd->lightId())->dispatch());
     if (!light) return;
     light->setLightDirection(cmd->direction());
 }
 
 void GameLightService::changeLightColor(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeLightColor, ICommand>(command);
     if (!cmd) return;
-    const auto light = m_sceneGraphRepository.lock()->queryLight(cmd->lightId());
+    const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd->lightId())->dispatch());
     if (!light) return;
     light->setLightColor(cmd->color());
 }
 
 void GameLightService::changeLightAttenuation(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeLightAttenuation, ICommand>(command);
     if (!cmd) return;
-    const auto light = m_sceneGraphRepository.lock()->queryLight(cmd->lightId());
+    const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd->lightId())->dispatch());
     if (!light) return;
     light->setLightAttenuation(MathLib::Vector3(cmd->constantFactor(), cmd->linearFactor(), cmd->quadraticFactor()));
 }
 
 void GameLightService::changeLightRange(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeLightRange, ICommand>(command);
     if (!cmd) return;
-    const auto light = m_sceneGraphRepository.lock()->queryLight(cmd->lightId());
+    const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd->lightId())->dispatch());
     if (!light) return;
     light->setLightRange(cmd->range());
 }
 
 void GameLightService::changeLightAbility(const ICommandPtr& command) const
 {
-    assert(!m_sceneGraphRepository.expired());
     if (!command) return;
     if (const auto cmd_enable = std::dynamic_pointer_cast<EnableLight, ICommand>(command))
     {
-        const auto light = m_sceneGraphRepository.lock()->queryLight(cmd_enable->lightId());
+        const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd_enable->lightId())->dispatch());
         if (!light) return;
         if (!light->isEnable()) light->setEnable(true);
     }
     else if (const auto cmd_disable = std::dynamic_pointer_cast<DisableLight, ICommand>(command))
     {
-        const auto light = m_sceneGraphRepository.lock()->queryLight(cmd_disable->lightId());
+        const auto light = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(cmd_disable->lightId())->dispatch());
         if (!light) return;
         if (light->isEnable()) light->setEnable(false);
     }

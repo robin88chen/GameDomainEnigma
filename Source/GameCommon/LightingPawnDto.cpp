@@ -4,7 +4,7 @@
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 
-static std::string TOKEN_HOST_LIGHT_NAME = "HostLightName";
+static std::string TOKEN_HOST_LIGHT_ID = "HostLightId";
 
 LightingPawnDto::LightingPawnDto() : PawnDto()
 {
@@ -19,14 +19,14 @@ LightingPawnDto::LightingPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 LightingPawnDto LightingPawnDto::fromGenericDto(const Engine::GenericDto& dto)
 {
     LightingPawnDto pawn_dto{ PawnDto(dto) };
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_HOST_LIGHT_NAME)) pawn_dto.hostLightName() = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_HOST_LIGHT_ID)) pawn_dto.hostLightId() = v.value();
     return pawn_dto;
 }
 
 Enigma::Engine::GenericDto LightingPawnDto::toGenericDto() const
 {
     Engine::GenericDto dto = PawnDto::toGenericDto();
-    if (!m_hostLightName.empty()) dto.addOrUpdate(TOKEN_HOST_LIGHT_NAME, m_hostLightName);
+    if (!m_hostLightId.tokens().empty()) dto.addOrUpdate(TOKEN_HOST_LIGHT_ID, m_hostLightId.tokens());
     return dto;
 }
 

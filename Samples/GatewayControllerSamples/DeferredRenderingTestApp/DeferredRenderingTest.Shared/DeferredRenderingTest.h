@@ -47,9 +47,6 @@ protected:
     void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
-    void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
-    void onBuildPawnPrimitiveFailed(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     void createCubePawn();
@@ -64,9 +61,6 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
-    Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
-    Enigma::Frameworks::EventSubscriberPtr m_onBuildPawnPrimitiveFailed;
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;

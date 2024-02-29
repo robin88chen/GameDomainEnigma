@@ -107,12 +107,8 @@ void DeferredRenderingTest::initializeMountPaths()
 
 void DeferredRenderingTest::installEngine()
 {
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphBuilt(e); });
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphRootCreated(e); });
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onPawnPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     assert(m_graphicMain);
 
@@ -161,12 +157,8 @@ void DeferredRenderingTest::shutdownEngine()
     m_sceneRoot = nullptr;
     m_pawn = nullptr;
 
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
-    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-    m_onPawnPrimitiveBuilt = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -197,26 +189,6 @@ void DeferredRenderingTest::onSceneGraphRootCreated(const Enigma::Frameworks::IE
     auto mx = Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
     CommandBus::post(std::make_shared<CreatePointLight>(m_sceneRootId, mx, SpatialId("point_lit", Light::TYPE_RTTI), Vector3(2.0f, 2.0f, 2.0f), ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
     createCubePawn();
-}
-
-void DeferredRenderingTest::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
-    if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    if (ev->GetSceneGraphId() != "cube_pawn") return;
-    m_pawn = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
-    if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, Matrix4::IDENTITY);
-}
-
-void DeferredRenderingTest::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    ev->pawn()->getPrimitive()->selectVisualTechnique("Default");
 }
 
 void DeferredRenderingTest::createCubePawn()

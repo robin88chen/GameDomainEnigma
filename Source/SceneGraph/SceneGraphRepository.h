@@ -109,6 +109,9 @@ namespace Enigma::SceneGraph
         std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
 
     private:
+        void registerHandlers();
+        void unregisterHandlers();
+
         void queryCamera(const Frameworks::IQueryPtr& q);
         void requestCameraCreation(const Frameworks::IQueryPtr& r);
         void requestCameraConstitution(const Frameworks::IQueryPtr& r);
@@ -124,7 +127,7 @@ namespace Enigma::SceneGraph
         void removeSpatial(const Frameworks::ICommandPtr& c);
 
         //void createCamera(const Frameworks::ICommandPtr& c);
-        void createNode(const Frameworks::ICommandPtr& c);
+        //void createNode(const Frameworks::ICommandPtr& c);
 
     private:
         SceneGraphFactory* m_factory;
@@ -162,7 +165,7 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_removeSpatial;
 
         //Frameworks::CommandSubscriberPtr m_createCamera;
-        Frameworks::CommandSubscriberPtr m_createNode;
+        //Frameworks::CommandSubscriberPtr m_createNode;
     };
 }
 

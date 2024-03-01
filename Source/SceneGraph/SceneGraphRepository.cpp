@@ -43,15 +43,31 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     m_factory = menew SceneGraphFactory();
     m_needTick = false;
     m_builder = menew SceneGraphBuilder(this, dto_deserializer);
+    registerHandlers();
 }
 
 SceneGraphRepository::~SceneGraphRepository()
 {
+    unregisterHandlers();
     SAFE_DELETE(m_builder);
     SAFE_DELETE(m_factory);
 }
 
 ServiceResult SceneGraphRepository::onInit()
+{
+    m_storeMapper->connect();
+    return ServiceResult::Complete;
+}
+ServiceResult SceneGraphRepository::onTerm()
+{
+    m_storeMapper->disconnect();
+
+    m_cameras.clear();
+
+    return ServiceResult::Complete;
+}
+
+void SceneGraphRepository::registerHandlers()
 {
     m_queryCamera = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryCamera(q); });
     QueryDispatcher::subscribe(typeid(QueryCamera), m_queryCamera);
@@ -81,18 +97,12 @@ ServiceResult SceneGraphRepository::onInit()
 
     //m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
     //CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
-    m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
-    CommandBus::subscribe(typeid(CreateNode), m_createNode);
-
-    m_storeMapper->connect();
-    return ServiceResult::Complete;
+    //m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
+    //CommandBus::subscribe(typeid(CreateNode), m_createNode);
 }
-ServiceResult SceneGraphRepository::onTerm()
+
+void SceneGraphRepository::unregisterHandlers()
 {
-    m_storeMapper->disconnect();
-
-    m_cameras.clear();
-
     QueryDispatcher::unsubscribe(typeid(QueryCamera), m_queryCamera);
     m_queryCamera = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestCameraCreation), m_requestCameraCreation);
@@ -121,10 +131,8 @@ ServiceResult SceneGraphRepository::onTerm()
 
     //CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
     //m_createCamera = nullptr;
-    CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
-    m_createNode = nullptr;
-
-    return ServiceResult::Complete;
+    //CommandBus::unsubscribe(typeid(CreateNode), m_createNode);
+    //m_createNode = nullptr;
 }
 
 void SceneGraphRepository::setCoordinateSystem(GraphicCoordSys hand)
@@ -670,7 +678,7 @@ void SceneGraphRepository::removeSpatial(const Frameworks::ICommandPtr& c)
     }
 }*/
 
-void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
+/*void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateNode>(c);
@@ -691,4 +699,4 @@ void SceneGraphRepository::createNode(const Frameworks::ICommandPtr& c)
             EventPublisher::post(std::make_shared<CreateNodeFailed>(cmd->getRuid(), ErrorCode::sceneRepositoryFailed));
         }
     }
-}
+}*/

@@ -15,7 +15,7 @@ EnumDerivedSpatials::~EnumDerivedSpatials()
     m_spatials.clear();
 }
 
-SceneTraveler::TravelResult EnumDerivedSpatials::TravelTo(const SpatialPtr& spatial)
+SceneTraveler::TravelResult EnumDerivedSpatials::travelTo(const SpatialPtr& spatial)
 {
     if (!spatial) return SceneTraveler::TravelResult::InterruptError;
     if (spatial->typeInfo().isDerived(*m_baseRtti))

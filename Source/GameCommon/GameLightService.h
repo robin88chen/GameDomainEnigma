@@ -53,7 +53,7 @@ namespace Enigma::GameCommon
         void onAttachSceneNodeChildFailed(const Frameworks::IEventPtr& event);
 
     protected:
-        std::unordered_set<std::string> m_pendingLightNames;
+        std::unordered_set<SceneGraph::SpatialId, SceneGraph::SpatialId::hash> m_pendingLightIds;
 
         Frameworks::CommandSubscriberPtr m_createAmbientLight;
         Frameworks::CommandSubscriberPtr m_createSunLight;

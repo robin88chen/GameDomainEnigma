@@ -41,29 +41,29 @@ namespace Enigma::GameCommon
 
         /** @name scene root */
         //@{
-        void createRootScene(const SceneGraph::SpatialId& scene_root_id, const std::optional<std::string>& portal_managed_name);
+        void createRootScene(const SceneGraph::SpatialId& scene_root_id, SceneGraph::PersistenceLevel persistence_level, const std::optional<std::string>& portal_managed_name);
         void destroyRootScene();
         const std::shared_ptr<SceneGraph::Node>& getSceneRoot() { return m_sceneRoot; };
         //@}
 
-        const std::shared_ptr<SceneGraph::PortalManagementNode>& GetPortalManagementNode() { return m_portalMgtNode; };
+        const std::shared_ptr<SceneGraph::PortalManagementNode>& getPortalManagementNode() { return m_portalMgtNode; };
         error attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
 
-        std::shared_ptr<SceneGraph::Spatial> FindSpatialByName(const std::string& spatial_name);
+        std::shared_ptr<SceneGraph::Spatial> findSpatial(const SceneGraph::SpatialId& spatial_id);
 
         /** create culler */
-        void CreateSceneCuller(const std::shared_ptr<SceneGraph::Camera>& camera);
+        void createSceneCuller(const std::shared_ptr<SceneGraph::Camera>& camera);
         /** destroy culler */
-        void DestroySceneCuller();
+        void destroySceneCuller();
         /** get scene culler */
         SceneGraph::Culler* getSceneCuller() { return m_culler; };
 
     protected:
-        void OnGameCameraCreated(const Frameworks::IEventPtr& e);
-        void OnGameCameraUpdated(const Frameworks::IEventPtr& e);
-        void DoAttachingSceneRootChild(const Frameworks::ICommandPtr& c);
-        void DoAttachingNodeChild(const Frameworks::ICommandPtr& c);
-        void DoDeletingSceneSpatial(const Frameworks::ICommandPtr& c);
+        void onGameCameraCreated(const Frameworks::IEventPtr& e);
+        void onGameCameraUpdated(const Frameworks::IEventPtr& e);
+        void attachSceneRootChild(const Frameworks::ICommandPtr& c);
+        void attachNodeChild(const Frameworks::ICommandPtr& c);
+        void deleteSceneSpatial(const Frameworks::ICommandPtr& c);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
@@ -74,9 +74,9 @@ namespace Enigma::GameCommon
 
         Frameworks::EventSubscriberPtr m_onCameraCreated;
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
-        Frameworks::CommandSubscriberPtr m_doAttachingSceneRootChild;
-        Frameworks::CommandSubscriberPtr m_doAttachingNodeChild;
-        Frameworks::CommandSubscriberPtr m_doDeletingSceneSpatial;
+        Frameworks::CommandSubscriberPtr m_attachSceneRootChild;
+        Frameworks::CommandSubscriberPtr m_attachNodeChild;
+        Frameworks::CommandSubscriberPtr m_deleteSceneSpatial;
     };
 }
 

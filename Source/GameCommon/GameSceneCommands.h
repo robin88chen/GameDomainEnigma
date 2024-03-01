@@ -18,8 +18,8 @@ namespace Enigma::GameCommon
     public:
         AttachSceneRootChild(const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_child(child), m_localTransform(local_transform) {}
 
-        const std::shared_ptr<SceneGraph::Spatial>& GetChild() const { return m_child; }
-        const MathLib::Matrix4& getLocalTransform() const { return m_localTransform; }
+        const std::shared_ptr<SceneGraph::Spatial>& child() const { return m_child; }
+        const MathLib::Matrix4& localTransform() const { return m_localTransform; }
 
     protected:
         std::shared_ptr<SceneGraph::Spatial> m_child;
@@ -28,14 +28,14 @@ namespace Enigma::GameCommon
     class AttachNodeChild : public Frameworks::ICommand
     {
     public:
-        AttachNodeChild(const std::string& node_name, const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_nodeName(node_name), m_child(child), m_localTransform(local_transform) {}
+        AttachNodeChild(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_nodeId(node_id), m_child(child), m_localTransform(local_transform) {}
 
-        const std::string& GetNodeName() const { return m_nodeName; }
-        const std::shared_ptr<SceneGraph::Spatial>& GetChild() const { return m_child; }
-        const MathLib::Matrix4& getLocalTransform() const { return m_localTransform; }
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        const std::shared_ptr<SceneGraph::Spatial>& child() const { return m_child; }
+        const MathLib::Matrix4& localTransform() const { return m_localTransform; }
 
     protected:
-        std::string m_nodeName;
+        SceneGraph::SpatialId m_nodeId;
         std::shared_ptr<SceneGraph::Spatial> m_child;
         MathLib::Matrix4 m_localTransform;
     };

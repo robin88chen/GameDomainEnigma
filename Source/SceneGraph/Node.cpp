@@ -8,6 +8,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
 
@@ -18,8 +19,23 @@ Node::Node(const std::string& name) : Spatial(name)
     m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
 }
 
+Node::Node(const SpatialId& id) : Spatial(id)
+{
+    m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
+}
+
 Node::Node(const Engine::GenericDto& o) : Spatial(o)
 {
+}
+
+Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
+{
+    NodeDto nodeDto{ dto };
+    for (auto& id : nodeDto.childIds())
+    {
+        auto child = std::make_shared<QuerySpatial>(id)->dispatch();
+        if (child) attachChild(child, child->getLocalTransform());
+    }
 }
 
 Node::~Node()
@@ -34,6 +50,16 @@ Node::~Node()
     m_childList.clear();
 }
 
+std::shared_ptr<Node> Node::create(const SpatialId& id)
+{
+    return std::make_shared<Node>(id);
+}
+
+std::shared_ptr<Node> Node::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<Node>(id, dto);
+}
+
 Enigma::Engine::GenericDto Node::serializeDto()
 {
     return serializeNodeDto().toGenericDto();
@@ -44,7 +70,7 @@ NodeDto Node::serializeNodeDto()
     NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.childNames().emplace_back(child->getSpatialName());
+        if (child) dto.childIds().emplace_back(child->id());
     }
     return dto;
 }
@@ -52,9 +78,9 @@ NodeDto Node::serializeNodeDto()
 void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     NodeDto nodeDto{ dto };
-    for (auto& name : nodeDto.childNames())
+    for (auto& id : nodeDto.childIds())
     {
-        resolver.tryResolveLinkage(name, [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(id.name(), [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
             std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
     }
@@ -95,7 +121,7 @@ SceneTraveler::TravelResult Node::visitBy(SceneTraveler* traveler)
 {
     if (!traveler) return SceneTraveler::TravelResult::InterruptError;
 
-    SceneTraveler::TravelResult res = traveler->TravelTo(thisSpatial());
+    SceneTraveler::TravelResult res = traveler->travelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
     if (m_childList.size() == 0) return res;

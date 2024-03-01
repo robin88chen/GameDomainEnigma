@@ -22,7 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumNonDerivedSpatials.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialById.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h" />
@@ -70,7 +70,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumNonDerivedSpatials.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\FindSpatialByName.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FindSpatialById.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />

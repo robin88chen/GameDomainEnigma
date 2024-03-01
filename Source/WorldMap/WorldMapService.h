@@ -94,7 +94,9 @@ namespace Enigma::WorldMap
         Frameworks::QuerySubscriberPtr m_queryFittingNode;
 
         Frameworks::Ruid m_createFittingNodeRuid;
-        std::string m_fittingParentName;
+        //todo : use scene graph id
+        //std::string m_fittingParentName;
+        SceneGraph::SpatialId m_fittingParentId;
     };
 }
 

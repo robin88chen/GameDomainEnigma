@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GameLightEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2023
  *********************************************************************/
@@ -13,14 +13,12 @@
 
 namespace Enigma::GameCommon
 {
-    using error = std::error_code;
-
     class GameLightCreated : public Frameworks::IEvent
     {
     public:
         GameLightCreated(const std::shared_ptr<SceneGraph::Light>& light) : m_light(light) {}
 
-        std::shared_ptr<SceneGraph::Light> GetLight() const { return m_light.lock(); }
+        std::shared_ptr<SceneGraph::Light> light() const { return m_light.lock(); }
 
     protected:
         std::weak_ptr<SceneGraph::Light> m_light;
@@ -29,14 +27,14 @@ namespace Enigma::GameCommon
     class CreateGameLightFailed : public Frameworks::IEvent
     {
     public:
-        CreateGameLightFailed(const std::string& name, error err) : m_name(name), m_err(err) {}
+        CreateGameLightFailed(const SceneGraph::SpatialId& id, std::error_code err) : m_id(id), m_err(err) {}
 
-        const std::string& getName() const { return m_name; }
-        error GetError() const { return m_err; }
+        const SceneGraph::SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
 
     protected:
-        std::string m_name;
-        error m_err;
+        SceneGraph::SpatialId m_id;
+        std::error_code m_err;
     };
 }
 

@@ -140,7 +140,7 @@ void DeferredRenderingTest::installEngine()
     deferred_config->gbufferDepthSemantic() = "GBufferDepthMap";
     auto deferred_renderer_policy = stdext::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, std::move(deferred_config));
     m_sceneRootId = SpatialId(SceneRootName, Node::TYPE_RTTI);
-    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_sceneRootId, PortalManagementName);
+    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_sceneRootId, Enigma::SceneGraph::PersistenceLevel::Repository, PortalManagementName);
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -183,7 +183,7 @@ void DeferredRenderingTest::onSceneGraphRootCreated(const Enigma::Frameworks::IE
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
     if (!ev) return;
-    m_sceneRoot = ev->GetSceneRoot();
+    m_sceneRoot = ev->sceneRoot();
     CommandBus::post(std::make_shared<CreateAmbientLight>(m_sceneRootId, SpatialId("amb_lit", Light::TYPE_RTTI), Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
     CommandBus::post(std::make_shared<CreateSunLight>(m_sceneRootId, SpatialId("sun_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f), Enigma::MathLib::ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f)));
     auto mx = Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);

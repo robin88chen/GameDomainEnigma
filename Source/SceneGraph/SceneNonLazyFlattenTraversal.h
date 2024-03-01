@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
         SceneNonLazyFlattenTraversal& operator=(const SceneNonLazyFlattenTraversal&) = default;
         SceneNonLazyFlattenTraversal& operator=(SceneNonLazyFlattenTraversal&&) = default;
 
-        virtual TravelResult TravelTo(const SpatialPtr&) override;
+        virtual TravelResult travelTo(const SpatialPtr&) override;
 
         const std::vector<std::shared_ptr<Spatial>>& GetSpatials() { return m_spatials; }
 

@@ -84,10 +84,10 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     LightInfo info(LightInfo::LightType::Ambient);
     info.setLightColor(colorLight);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (!parent_id.name().empty())
+    if (parent_id.isValid())
     {
-        m_pendingLightNames.insert(light_id.name());
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id.name(), light, MathLib::Matrix4::IDENTITY));
+        m_pendingLightIds.insert(light_id);
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -98,10 +98,10 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     info.setLightColor(colorLight);
     info.setLightDirection(dirLight);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (!parent_id.name().empty())
+    if (parent_id.isValid())
     {
-        m_pendingLightNames.insert(light_id.name());
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id.name(), light, MathLib::Matrix4::IDENTITY));
+        m_pendingLightIds.insert(light_id);
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -113,10 +113,10 @@ void GameLightService::createPointLight(const SpatialId& parent_id, const MathLi
     info.setLightPosition(vecPos);
     info.setLightRange(range);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (!parent_id.name().empty())
+    if (parent_id.isValid())
     {
-        m_pendingLightNames.insert(light_id.name());
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id.name(), light, mxLocal));
+        m_pendingLightIds.insert(light_id);
+        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, mxLocal));
     }
 }
 
@@ -223,14 +223,13 @@ void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneNodeChildAttached, IEvent>(e);
-    if ((!ev) || (!ev->GetChild())) return;
-    auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
+    if ((!ev) || (!ev->child())) return;
+    auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->child());
     if (!light) return;
-    auto light_name = light->getSpatialName();
-    if (const auto it = m_pendingLightNames.find(light_name); it != m_pendingLightNames.end())
+    if (const auto it = m_pendingLightIds.find(light->id()); it != m_pendingLightIds.end())
     {
         EventPublisher::post(std::make_shared<GameLightCreated>(light));
-        m_pendingLightNames.erase(it);
+        m_pendingLightIds.erase(it);
     }
 }
 
@@ -239,10 +238,10 @@ void GameLightService::onAttachSceneNodeChildFailed(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<AttachSceneNodeChildFailed, IEvent>(e);
     if (!ev) return;
-    auto child_name = ev->GetChildName();
-    if (auto it = m_pendingLightNames.find(child_name); it != m_pendingLightNames.end())
+    auto child_id = ev->childId();
+    if (auto it = m_pendingLightIds.find(child_id); it != m_pendingLightIds.end())
     {
-        EventPublisher::post(std::make_shared<CreateGameLightFailed>(child_name, ev->GetError()));
-        m_pendingLightNames.erase(it);
+        EventPublisher::post(std::make_shared<CreateGameLightFailed>(child_id, ev->error()));
+        m_pendingLightIds.erase(it);
     }
 }

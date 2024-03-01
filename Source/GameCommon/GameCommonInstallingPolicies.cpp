@@ -50,7 +50,7 @@ error GameSceneInstallingPolicy::install(Frameworks::ServiceManager* service_man
     auto camera_service = service_manager->getSystemServiceAs<GameCameraService>();
     auto scene_service = std::make_shared<GameSceneService>(service_manager, scene_graph_repository, camera_service);
     service_manager->registerSystemService(scene_service);
-    scene_service->createRootScene(m_sceneRootId, m_portalManagedName);
+    scene_service->createRootScene(m_sceneRootId, m_persistenceLevel, m_portalManagedName);
     return error();
 }
 

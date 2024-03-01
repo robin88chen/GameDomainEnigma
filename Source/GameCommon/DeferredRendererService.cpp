@@ -214,23 +214,23 @@ void DeferredRendererService::onGameLightCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GameLightCreated, IEvent>(e);
-    if ((!ev) || (!ev->GetLight())) return;
+    if ((!ev) || (!ev->light())) return;
     if (m_gBuffer.expired())
     {
-        m_pendingLightsOfGBufferBind.push_back(ev->GetLight());
+        m_pendingLightsOfGBufferBind.push_back(ev->light());
         return;
     }
-    if (ev->GetLight()->info().lightType() == LightInfo::LightType::Ambient)
+    if (ev->light()->info().lightType() == LightInfo::LightType::Ambient)
     {
-        createAmbientLightQuad(ev->GetLight());
+        createAmbientLightQuad(ev->light());
     }
-    else if (ev->GetLight()->info().lightType() == LightInfo::LightType::SunLight)
+    else if (ev->light()->info().lightType() == LightInfo::LightType::SunLight)
     {
-        createSunLightQuad(ev->GetLight());
+        createSunLightQuad(ev->light());
     }
-    else if (ev->GetLight()->info().lightType() == LightInfo::LightType::Point)
+    else if (ev->light()->info().lightType() == LightInfo::LightType::Point)
     {
-        createPointLightVolume(ev->GetLight());
+        createPointLightVolume(ev->light());
     }
 }
 

@@ -10,6 +10,7 @@
 
 #include "GameEngine/InstallingPolicy.h"
 #include "SceneGraph/CameraFrustumDtos.h"
+#include "SceneGraph/SceneGraphPersistenceLevel.h"
 
 namespace Enigma::GameCommon
 {
@@ -38,14 +39,15 @@ namespace Enigma::GameCommon
     class GameSceneInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        GameSceneInstallingPolicy(const SceneGraph::SpatialId& scene_root_id, const std::optional<std::string>& portal_managed_name)
-            : m_sceneRootId(scene_root_id), m_portalManagedName(portal_managed_name) {}
+        GameSceneInstallingPolicy(const SceneGraph::SpatialId& scene_root_id, SceneGraph::PersistenceLevel persistence_level, const std::optional<std::string>& portal_managed_name)
+            : m_sceneRootId(scene_root_id), m_persistenceLevel(persistence_level), m_portalManagedName(portal_managed_name) {}
 
         virtual error install(Frameworks::ServiceManager* service_manager) override;
         virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
 
     protected:
         SceneGraph::SpatialId m_sceneRootId;
+        SceneGraph::PersistenceLevel m_persistenceLevel;
         std::optional<std::string> m_portalManagedName;
     };
     class AnimatedPawnInstallingPolicy : public Engine::InstallingPolicy

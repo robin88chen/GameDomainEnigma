@@ -26,7 +26,7 @@ namespace Enigma::SceneGraph
         EnumDerivedSpatials& operator=(const EnumDerivedSpatials&) = default;
         EnumDerivedSpatials& operator=(EnumDerivedSpatials&&) = default;
 
-        virtual TravelResult TravelTo(const SpatialPtr&) override;
+        virtual TravelResult travelTo(const SpatialPtr&) override;
 
         const std::vector<SpatialPtr>& GetSpatials() { return m_spatials; }
 

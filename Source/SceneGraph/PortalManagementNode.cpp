@@ -82,7 +82,7 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
         else
         {
             ContainingPortalZoneFinder zone_finder(camPos);
-            //CSceneTraveler::TravelResult result=region_finder.TravelTo(this);
+            //CSceneTraveler::TravelResult result=region_finder.travelTo(this);
             SceneTraveler::TravelResult result = visitBy(&zone_finder);
             if (result == SceneTraveler::TravelResult::InterruptError) return ErrorCode::ok;
 

@@ -33,6 +33,8 @@ namespace Enigma::SceneGraph
 
     public:
         Node(const std::string& name);
+        Node(const SpatialId& id);
+        Node(const SpatialId& id, const Engine::GenericDto& dto);
         Node(const Engine::GenericDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
@@ -42,6 +44,9 @@ namespace Enigma::SceneGraph
 
         virtual Engine::GenericDto serializeDto() override;
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+
+        static std::shared_ptr<Node> create(const SpatialId& id);
+        static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
         virtual Engine::GenericDtoCollection serializeFlattenedTree();
 

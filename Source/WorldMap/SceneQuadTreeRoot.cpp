@@ -1,6 +1,6 @@
 ﻿#include "SceneQuadTreeRoot.h"
 #include "QuadTreeRootDto.h"
-#include "SceneGraph/FindSpatialByName.h"
+#include "SceneGraph/FindSpatialById.h"
 #include "SceneGraph/EnumDerivedSpatials.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include "MathLib/Matrix4.h"
@@ -190,11 +190,13 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findTargetSubtree(const std::shared_ptr
 {
     std::shared_ptr<Node> found_node = nullptr;
     std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
-    FindSpatialByName find_spatial(target_node_name);
+    auto target_node_id = SpatialId(target_node_name, VisibilityManagedNode::TYPE_RTTI);
+    //todo: find node by id
+    FindSpatialById find_spatial(target_node_id);
     SceneTraveler::TravelResult result_find_node = any_level_parent->visitBy(&find_spatial);
     if (result_find_node == SceneTraveler::TravelResult::InterruptTargetFound)
     {
-        found_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
+        found_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.getFoundSpatial());
     }
     return found_node;
 }

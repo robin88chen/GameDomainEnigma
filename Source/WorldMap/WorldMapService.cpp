@@ -19,7 +19,7 @@
 #include "SceneGraph/Spatial.h"
 #include "Frameworks/StringFormat.h"
 #include "GameCommon/GameSceneCommands.h"
-#include "SceneGraph/FindSpatialByName.h"
+#include "SceneGraph/FindSpatialById.h"
 #include "MathLib/Box2.h"
 #include "MathLib/ContainmentBox2.h"
 #include "SceneGraph/SceneGraphDtos.h"
@@ -297,7 +297,8 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             if (sub_quad_dtos.empty())
             {
                 dto.isTopLevel() = true;
-                m_fittingParentName = parent_node_name;
+                //m_fittingParentName = parent_node_name;
+                m_fittingParentId = SpatialId(parent_node_name, VisibilityManagedNode::TYPE_RTTI);
             }
             linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.name());
             parent_node_name = dto.name();
@@ -338,7 +339,8 @@ void WorldMapService::linkQuadTreeChild(std::vector<SceneGraph::VisibilityManage
     {
         if (dto.name() == parent_name)
         {
-            dto.childNames().push_back(child_name);
+            //todo : use child id
+            dto.childIds().push_back(SpatialId(child_name, VisibilityManagedNode::TYPE_RTTI));
             return;
         }
     }
@@ -438,18 +440,21 @@ std::shared_ptr<Node> WorldMapService::findTargetSubtree(const std::shared_ptr<S
 {
     std::shared_ptr<Node> found_node = nullptr;
     std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
-    FindSpatialByName find_spatial(target_node_name);
+    //todo : find spatial by id
+    auto target_node_id = SpatialId(target_node_name, VisibilityManagedNode::TYPE_RTTI);
+    FindSpatialById find_spatial(target_node_id);
     SceneTraveler::TravelResult result_find_node = any_level_parent->visitBy(&find_spatial);
     if (result_find_node == SceneTraveler::TravelResult::InterruptTargetFound)
     {
-        found_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.GetFoundSpatial());
+        found_node = std::dynamic_pointer_cast<Node, Spatial>(find_spatial.getFoundSpatial());
     }
     return found_node;
 }
 
 void WorldMapService::completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node)
 {
-    CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentName, node, node->getLocalTransform()));
+    CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentId, node, node->getLocalTransform()));
+    //CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentName, node, node->getLocalTransform()));
     EventPublisher::post(std::make_shared<FittingNodeCreated>(m_createFittingNodeRuid, node));
 }
 

@@ -11,7 +11,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(SceneGraph, Light, Spatial);
 
-Light::Light(const std::string& spatialName, const LightInfo& lightInfo) : Spatial(spatialName), m_lightInfo(lightInfo)
+Light::Light(const SpatialId& id, const LightInfo& lightInfo) : Spatial(id), m_lightInfo(lightInfo)
 {
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
@@ -24,7 +24,7 @@ Light::Light(const Engine::GenericDto& o) : Spatial(o)
 
 Light::~Light()
 {
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_name, m_lightInfo.GetLightType()));
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
 }
 
 Enigma::Engine::GenericDto Light::serializeDto()
@@ -43,44 +43,44 @@ error Light::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
     error er = Spatial::_updateWorldData(mxParentWorld);
     if (er) return er;
-    m_lightInfo.SetLightPosition(m_vecWorldPosition);
+    m_lightInfo.setLightPosition(m_vecWorldPosition);
 
     _propagateSpatialRenderState();
 
     return er;
 }
-void Light::SetLightColor(const MathLib::ColorRGBA& color)
+void Light::setLightColor(const MathLib::ColorRGBA& color)
 {
-    Info().SetLightColor(color);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Color));
+    info().setLightColor(color);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Color));
 }
 
-void Light::SetLightPosition(const MathLib::Vector3& vec)
+void Light::setLightPosition(const MathLib::Vector3& vec)
 {
-    Info().SetLightPosition(vec);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Position));
+    info().setLightPosition(vec);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Position));
 }
 
-void Light::SetLightDirection(const MathLib::Vector3& vec)
+void Light::setLightDirection(const MathLib::Vector3& vec)
 {
-    Info().SetLightDirection(vec);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Direction));
+    info().setLightDirection(vec);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Direction));
 }
 
-void Light::SetLightAttenuation(const MathLib::Vector3& attenuation)
+void Light::setLightAttenuation(const MathLib::Vector3& attenuation)
 {
-    Info().SetLightAttenuation(attenuation);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Attenuation));
+    info().setLightAttenuation(attenuation);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Attenuation));
 }
 
-void Light::SetLightRange(float range)
+void Light::setLightRange(float range)
 {
-    Info().SetLightRange(range);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Range));
+    info().setLightRange(range);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Range));
 }
 
-void Light::SetEnable(bool flag)
+void Light::setEnable(bool flag)
 {
-    Info().SetEnable(flag);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(ThisLight(), LightInfoUpdated::NotifyCode::Enable));
+    info().setEnable(flag);
+    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Enable));
 }

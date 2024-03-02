@@ -82,21 +82,21 @@ void LightInfoTraversal::QueryNextRequest()
     for (SpatialLightInfoQuery::LightInfoList::const_iterator iter = query.GetResultList().begin();
         iter != query.GetResultList().end(); ++iter)
     {
-        switch ((*iter).m_lightInfo.GetLightType())
+        switch ((*iter).m_lightInfo.lightType())
         {
         case LightInfo::LightType::Ambient:
-            lighting_state.SetAmbientLightColor((*iter).m_lightInfo.GetLightColor());
+            lighting_state.SetAmbientLightColor((*iter).m_lightInfo.getLightColor());
             break;
         case LightInfo::LightType::SunLight:
         case LightInfo::LightType::Directional:  //todo : if we want directional light, separate it from sun light
-            lighting_state.SetSunLight((*iter).m_lightInfo.GetLightDirection(), (*iter).m_lightInfo.GetLightColor());
+            lighting_state.SetSunLight((*iter).m_lightInfo.getLightDirection(), (*iter).m_lightInfo.getLightColor());
             break;
         case LightInfo::LightType::Point:
         {
-            MathLib::Vector3 pos = (*iter).m_lightInfo.GetLightPosition();
-            light_positions.emplace_back(MathLib::Vector4(pos.x(), pos.y(), pos.z(), (*iter).m_lightInfo.GetLightRange()));
-            light_colors.emplace_back((*iter).m_lightInfo.GetLightColor());
-            MathLib::Vector3 attn = (*iter).m_lightInfo.GetLightAttenuation();
+            MathLib::Vector3 pos = (*iter).m_lightInfo.getLightPosition();
+            light_positions.emplace_back(MathLib::Vector4(pos.x(), pos.y(), pos.z(), (*iter).m_lightInfo.getLightRange()));
+            light_colors.emplace_back((*iter).m_lightInfo.getLightColor());
+            MathLib::Vector3 attn = (*iter).m_lightInfo.getLightAttenuation();
             light_attenuations.emplace_back(MathLib::Vector4(attn.x(), attn.y(), attn.z(), 1.0f));
         }
         break;
@@ -118,7 +118,7 @@ void LightInfoTraversal::QuerySpatialLightInfo(SpatialLightInfoQuery& query)
     {
         if (!kv.second.expired())
         {
-            query.test(kv.second.lock()->Info());
+            query.test(kv.second.lock()->info());
         }
     }
 }
@@ -128,9 +128,9 @@ void LightInfoTraversal::OnLightInfoCreated(const IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LightInfoCreated, IEvent>(e);
     if (!ev) return;
-    if (!ev->GetLight()) return;
+    if (!ev->light()) return;
     std::lock_guard locker{ m_mapLock };
-    m_lights.insert_or_assign(ev->GetLight()->getSpatialName(), ev->GetLight());
+    m_lights.insert_or_assign(ev->light()->id(), ev->light());
 }
 
 void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
@@ -139,7 +139,7 @@ void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
     std::lock_guard locker{ m_mapLock };
-    m_lights.erase(ev->GetLightName());
+    m_lights.erase(ev->lightId());
 }
 
 void LightInfoTraversal::DoQueryingLight(const Frameworks::IRequestPtr& r)

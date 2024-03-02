@@ -111,7 +111,7 @@ SceneTraveler::TravelResult Portal::visitBy(SceneTraveler* traveler)
 {
     if (!traveler) return SceneTraveler::TravelResult::InterruptError;
 
-    SceneTraveler::TravelResult res = traveler->TravelTo(thisSpatial());
+    SceneTraveler::TravelResult res = traveler->travelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
     if (!m_adjacentPortalZone.expired())

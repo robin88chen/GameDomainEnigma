@@ -25,32 +25,32 @@ namespace Enigma::ShadowMap
         CSMSunLightCamera& operator=(const CSMSunLightCamera& other) = delete;
         CSMSunLightCamera& operator=(CSMSunLightCamera&& other) noexcept = delete;
 
-        unsigned int GetPartitionCount() const { return m_partitionCount; };
-        void SetPartitionCount(unsigned int partition);
+        unsigned int getPartitionCount() const { return m_partitionCount; };
+        void setPartitionCount(unsigned int partition);
 
-        void SetSunLightDir(const MathLib::Vector3& sun_dir);
-        void SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
+        void setSunLightDir(const MathLib::Vector3& sun_dir);
+        void setViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
 
-        void CalcLightCameraSystemMatrix(SceneGraph::Culler* culler);
+        void calcLightCameraSystemMatrix(SceneGraph::Culler* culler);
 
-        const MathLib::Matrix4& GetLightViewTransform(unsigned int index) const;
-        const MathLib::Matrix4& GetLightProjectionTransform(unsigned int index) const;
-        const MathLib::Vector3& GetLightCameraLocation(unsigned int index) const;
+        const MathLib::Matrix4& getLightViewTransform(unsigned int index) const;
+        const MathLib::Matrix4& getLightProjectionTransform(unsigned int index) const;
+        const MathLib::Vector3& getLightCameraLocation(unsigned int index) const;
 
-        const std::vector<MathLib::Matrix4>& GetLightViewProjectionTransforms() const { return m_mxLightViewProjs; };
-        const std::vector<float>& GetLightFrustaDistances() const { return m_lightFrustaDistances; };
-        const std::vector<MathLib::Matrix4>& GetTextureCoordTransforms() const { return m_mxTexCoordTransforms; };
-        MathLib::Vector4 LightFrustaDistanceToVector4() const;
+        const std::vector<MathLib::Matrix4>& getLightViewProjectionTransforms() const { return m_mxLightViewProjs; };
+        const std::vector<float>& getLightFrustaDistances() const { return m_lightFrustaDistances; };
+        const std::vector<MathLib::Matrix4>& getTextureCoordTransforms() const { return m_mxTexCoordTransforms; };
+        MathLib::Vector4 lightFrustaDistanceToVector4() const;
 
     protected:
-        void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
-        void CalcLightCameraFrustum();
-        std::array<MathLib::Vector3, 3> CalcLightCameraFrame() const;
-        std::array<MathLib::Vector3, 8> CalcViewerFrustumCorner(unsigned frustaIndex);
-        void SetLightCameraViewTransform(unsigned frustaIndex, const MathLib::Vector3& eye, const MathLib::Vector3& dir,
+        void calcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
+        void calcLightCameraFrustum();
+        std::array<MathLib::Vector3, 3> calcLightCameraFrame() const;
+        std::array<MathLib::Vector3, 8> calcViewerFrustumCorner(unsigned frustaIndex);
+        void setLightCameraViewTransform(unsigned frustaIndex, const MathLib::Vector3& eye, const MathLib::Vector3& dir,
             const MathLib::Vector3& up, const MathLib::Vector3& right);
-        void RefreshTextureCoordTransform();
-        void CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
+        void refreshTextureCoordTransform();
+        void calcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
 
     private:
         unsigned m_partitionCount;

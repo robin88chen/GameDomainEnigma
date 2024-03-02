@@ -32,7 +32,7 @@ namespace Enigma::Graphics
 
         const std::string& getName() { return m_name; }
         virtual const GraphicFormat& GetFormat() { return m_format; };
-        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; };
+        virtual const MathLib::Dimension<unsigned>& getDimension() { return m_dimension; };
 
         virtual bool IsPrimary() { return m_isPrimary; }
 

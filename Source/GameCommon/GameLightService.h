@@ -21,7 +21,7 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        GameLightService(Frameworks::ServiceManager* mngr, const std::shared_ptr<SceneGraph::SceneGraphRepository>& scene_graph_repository);
+        GameLightService(Frameworks::ServiceManager* mngr);
         GameLightService(const GameLightService&) = delete;
         GameLightService(GameLightService&&) = delete;
         virtual ~GameLightService() override = default;
@@ -31,43 +31,41 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void CreateAmbientLight(const std::string& parent_name, const std::string& lightName, const MathLib::ColorRGBA& colorLight);
-        void CreateSunLight(const std::string& parent_name, const std::string& lightName, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight);
+        void createAmbientLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const MathLib::ColorRGBA& colorLight);
+        void createSunLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight);
 
-        void CreatePointLight(const std::string& parent_name, const MathLib::Matrix4& mxLocal, const std::string& lightName,
+        void createPointLight(const SceneGraph::SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SceneGraph::SpatialId& light_id,
             const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range);
 
     protected:
-        void DoCreatingAmbientLight(const Frameworks::ICommandPtr& command);
-        void DoCreatingSunLight(const Frameworks::ICommandPtr& command);
-        void DoCreatingPointLight(const Frameworks::ICommandPtr& command);
-        void DoChangingLightColor(const Frameworks::ICommandPtr& command) const;
-        void DoChangingLightDirection(const Frameworks::ICommandPtr& command) const;
-        void DoChangingLightPosition(const Frameworks::ICommandPtr& command) const;
-        void DoChangingLightAttenuation(const Frameworks::ICommandPtr& command) const;
-        void DoChangingLightRange(const Frameworks::ICommandPtr& command) const;
-        void DoChangingLightAbility(const Frameworks::ICommandPtr& command) const;
-        void DoDeletingLight(const Frameworks::ICommandPtr& command) const;
+        void createAmbientLight(const Frameworks::ICommandPtr& command);
+        void createSunLight(const Frameworks::ICommandPtr& command);
+        void createPointLight(const Frameworks::ICommandPtr& command);
+        void changeLightColor(const Frameworks::ICommandPtr& command) const;
+        void changeLightDirection(const Frameworks::ICommandPtr& command) const;
+        void changeLightPosition(const Frameworks::ICommandPtr& command) const;
+        void changeLightAttenuation(const Frameworks::ICommandPtr& command) const;
+        void changeLightRange(const Frameworks::ICommandPtr& command) const;
+        void changeLightAbility(const Frameworks::ICommandPtr& command) const;
+        void deleteLight(const Frameworks::ICommandPtr& command) const;
 
-        void OnSceneNodeChildAttached(const Frameworks::IEventPtr& event);
-        void OnAttachSceneNodeChildFailed(const Frameworks::IEventPtr& event);
+        void onSceneNodeChildAttached(const Frameworks::IEventPtr& event);
+        void onAttachSceneNodeChildFailed(const Frameworks::IEventPtr& event);
 
     protected:
-        std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
+        std::unordered_set<SceneGraph::SpatialId, SceneGraph::SpatialId::hash> m_pendingLightIds;
 
-        std::unordered_set<std::string> m_pendingLightNames;
-
-        Frameworks::CommandSubscriberPtr m_doCreatingAmbientLight;
-        Frameworks::CommandSubscriberPtr m_doCreatingSunLight;
-        Frameworks::CommandSubscriberPtr m_doCreatingPointLight;
-        Frameworks::CommandSubscriberPtr m_doChangingLightColor;
-        Frameworks::CommandSubscriberPtr m_doChangingLightDirection;
-        Frameworks::CommandSubscriberPtr m_doChangingLightPosition;
-        Frameworks::CommandSubscriberPtr m_doChangingLightAttenuation;
-        Frameworks::CommandSubscriberPtr m_doChangingLightRange;
-        Frameworks::CommandSubscriberPtr m_doChangingLightEnable;
-        Frameworks::CommandSubscriberPtr m_doChangingLightDisable;
-        Frameworks::CommandSubscriberPtr m_doDeletingLight;
+        Frameworks::CommandSubscriberPtr m_createAmbientLight;
+        Frameworks::CommandSubscriberPtr m_createSunLight;
+        Frameworks::CommandSubscriberPtr m_createPointLight;
+        Frameworks::CommandSubscriberPtr m_changeLightColor;
+        Frameworks::CommandSubscriberPtr m_changeLightDirection;
+        Frameworks::CommandSubscriberPtr m_changeLightPosition;
+        Frameworks::CommandSubscriberPtr m_changeLightAttenuation;
+        Frameworks::CommandSubscriberPtr m_changeLightRange;
+        Frameworks::CommandSubscriberPtr m_changeLightEnable;
+        Frameworks::CommandSubscriberPtr m_changeLightDisable;
+        Frameworks::CommandSubscriberPtr m_deleteLight;
 
         Frameworks::EventSubscriberPtr m_onSceneNodeChildAttached;
         Frameworks::EventSubscriberPtr m_onAttachSceneNodeChildFailed;

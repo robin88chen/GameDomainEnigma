@@ -134,10 +134,10 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     {
         PortalFactory(dto);
     }
-    else if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
+    /*else if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
     {
         LightFactory(dto);
-    }
+    }*/
     else
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.getRtti().GetRttiName().c_str());
@@ -176,7 +176,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, node));
 }
 
-void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
+/*void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Light::TYPE_RTTI.getName()))
     {
@@ -189,7 +189,7 @@ void SceneGraphBuilder::LightFactory(const Engine::GenericDto& dto)
     auto light = std::dynamic_pointer_cast<Light, Spatial>(m_host->AddNewSpatial(m_factories[dto.getRtti().GetRttiName()](dto)));
     light->resolveFactoryLinkage(dto, *m_resolver);
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, light));
-}
+}*/
 
 /*void SceneGraphBuilder::PawnFactory(const Engine::GenericDto& dto)
 {

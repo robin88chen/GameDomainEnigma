@@ -35,7 +35,7 @@ namespace Enigma::SceneGraph
         SceneTraveler& operator=(const SceneTraveler&) = default;
         SceneTraveler& operator=(SceneTraveler&&) = default;
 
-        virtual TravelResult TravelTo(const SpatialPtr&) = 0;
+        virtual TravelResult travelTo(const SpatialPtr&) = 0;
     };
 };
 

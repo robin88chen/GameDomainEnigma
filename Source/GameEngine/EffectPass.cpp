@@ -119,20 +119,20 @@ void EffectPass::apply()
     // 每個 api call 會自行處理 async
     if (m_shader)
     {
-        IGraphicAPI::instance()->Bind(m_shader);
+        IGraphicAPI::instance()->bind(m_shader);
         m_shader->ApplyVariables();
     }
     if (m_blendState)
     {
-        m_blendState->Bind();
+        m_blendState->bind();
     }
     if (m_depthState)
     {
-        m_depthState->Bind();
+        m_depthState->bind();
     }
     if (m_rasterizerState)
     {
-        m_rasterizerState->Bind();
+        m_rasterizerState->bind();
     }
 }
 

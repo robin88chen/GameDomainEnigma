@@ -78,7 +78,7 @@ void EffectCompilingQueue::onCompilerEffectMaterialCompiled(const Frameworks::IE
 
     if (m_currentCompilingEffect->getEffectMaterialSource())
     {
-        m_currentCompilingEffect->getEffectMaterialSource()->contentDuplicatedEffects();
+        m_currentCompilingEffect->getEffectMaterialSource()->hydrateDuplicatedEffects();
     }
     Frameworks::EventPublisher::post(std::make_shared<EffectMaterialSourceCompiled>(m_currentCompilingEffect->id()));
     m_currentCompilingEffect = nullptr;

@@ -104,7 +104,7 @@ error MultiTextureEgl::useAsBackSurface(const Graphics::IBackSurfacePtr& back_su
 {
     MultiBackSurfaceEgl* bb = dynamic_cast<MultiBackSurfaceEgl*>(back_surf.get());
     assert(bb);
-    m_dimension = bb->GetDimension();
+    m_dimension = bb->getDimension();
     unsigned int surf_count = bb->GetSurfaceCount();
     if (!m_textures.empty())
     {

@@ -52,7 +52,7 @@ namespace Enigma::Graphics
         BackSurfaceResized(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension) :
             m_backSurfaceName(back_name), m_dimension(dimension) {};
         const std::string& GetSurfaceName() const { return m_backSurfaceName; }
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& getDimension() const { return m_dimension; }
     private:
         std::string m_backSurfaceName;
         MathLib::Dimension<unsigned> m_dimension;
@@ -81,7 +81,7 @@ namespace Enigma::Graphics
         DepthSurfaceResized(const std::string& depth_name, const MathLib::Dimension<unsigned>& dimension) :
             m_depthSurfaceName(depth_name), m_dimension(dimension) {};
         const std::string& GetSurfaceName() const { return m_depthSurfaceName; }
-        const MathLib::Dimension<unsigned>& GetDimension() const { return m_dimension; }
+        const MathLib::Dimension<unsigned>& getDimension() const { return m_dimension; }
     private:
         std::string m_depthSurfaceName;
         MathLib::Dimension<unsigned> m_dimension;

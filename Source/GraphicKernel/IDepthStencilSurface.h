@@ -36,7 +36,7 @@ namespace Enigma::Graphics
         /** get buffer format */
         virtual const GraphicFormat& GetFormat() { return m_format; };
         /** get dimension */
-        virtual const MathLib::Dimension<unsigned>& GetDimension() { return m_dimension; }
+        virtual const MathLib::Dimension<unsigned>& getDimension() { return m_dimension; }
         
         /// Graphic API Egl need this to bind surfaces together
         virtual void MakeBackSurfaceRelated(const IBackSurfacePtr&) {};

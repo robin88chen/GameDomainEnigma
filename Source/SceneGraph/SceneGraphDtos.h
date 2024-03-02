@@ -21,8 +21,6 @@
 
 namespace Enigma::SceneGraph
 {
-    class PawnPolicy;
-
     class SpatialDto
     {
     public:
@@ -82,14 +80,17 @@ namespace Enigma::SceneGraph
         NodeDto(const SpatialDto& spatial_dto);
         NodeDto(const Engine::GenericDto& dto);
 
-        const std::vector<std::string>& childNames() const { return m_childNames; }
-        std::vector<std::string>& childNames() { return m_childNames; }
+        const std::vector<SpatialId>& childIds() const { return m_childIds; }
+        std::vector<SpatialId>& childIds() { return m_childIds; }
 
-        //static NodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
-        std::vector<std::string> m_childNames;
+        std::vector<SpatialId> tokensToIds(const std::vector<std::string>& child_tokens);
+        std::vector<std::string> idsToTokens(const std::vector<SpatialId> child_ids) const;
+
+    protected:
+        std::vector<SpatialId> m_childIds;
     };
 
     class LightDto : public SpatialDto
@@ -124,7 +125,6 @@ namespace Enigma::SceneGraph
         //static PawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
-        //std::shared_ptr<PawnPolicy> convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer);
     protected:
         std::optional<Primitives::PrimitiveId> m_primitiveId;
         //todo : prefab support

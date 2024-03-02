@@ -24,9 +24,9 @@ error DefaultRendererInstallingPolicy::install(Frameworks::ServiceManager* servi
 {
     const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);
-    error er = manager->CreateRenderer(m_rendererName);
+    error er = manager->createRenderer(m_rendererName);
     if (er) return er;
-    er = manager->CreateRenderTarget(m_primaryTargetName, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
+    er = manager->createRenderTarget(m_primaryTargetName, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
     return er;
 }
 
@@ -34,8 +34,8 @@ error DefaultRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* serv
 {
     const auto manager = service_manager->getSystemServiceAs<RendererManager>();
     assert(manager);
-    error er = manager->DestroyRenderer(m_rendererName);
+    error er = manager->destroyRenderer(m_rendererName);
     if (er) return er;
-    er = manager->DestroyRenderTarget(m_primaryTargetName);
+    er = manager->destroyRenderTarget(m_primaryTargetName);
     return er;
 }

@@ -2,7 +2,6 @@
 #include "Texture.h"
 #include "TextureFactory.h"
 #include "TextureResourceProcessor.h"
-#include "Frameworks/CommandBus.h"
 #include "TextureCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "TextureEvents.h"
@@ -25,14 +24,10 @@ TextureFactory::~TextureFactory()
 
 void TextureFactory::registerHandlers()
 {
-    m_constituteTexture = std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { constituteTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(ConstituteTexture), m_constituteTexture);
 }
 
 void TextureFactory::unregisterHandlers()
 {
-    Frameworks::CommandBus::unsubscribe(typeid(ConstituteTexture), m_constituteTexture);
-    m_constituteTexture = nullptr;
 }
 
 std::shared_ptr<Texture> TextureFactory::create(const TextureId& id)
@@ -50,12 +45,3 @@ std::shared_ptr<Texture> TextureFactory::constitute(const TextureId& id, const G
     Frameworks::EventPublisher::post(std::make_shared<TextureConstituted>(id, texture, is_persisted));
     return texture;
 }
-
-void TextureFactory::constituteTexture(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ConstituteTexture>(c);
-    if (!cmd) return;
-    constitute(cmd->id(), cmd->dto(), false);
-}
-

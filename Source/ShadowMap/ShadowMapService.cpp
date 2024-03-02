@@ -41,9 +41,9 @@ ShadowMapService::~ShadowMapService()
 
 ServiceResult ShadowMapService::onInit()
 {
-    SubscribeEvents();
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->LightViewProjSemantic(), AssignLightViewProjectionTransform);
-    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->ShadowMapDimensionSemantic(), AssignShadowMapDimension);
+    subscribeEvents();
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->lightViewProjSemantic(), assignLightViewProjectionTransform);
+    Engine::MaterialVariableMap::insertAutoVariableFunctionToMap(m_configuration->shadowMapDimensionSemantic(), assignShadowMapDimension);
     return ServiceResult::Complete;
 }
 
@@ -51,8 +51,8 @@ ServiceResult ShadowMapService::onTick()
 {
     if ((!m_sceneService.expired()) && (m_sunLightCamera))
     {
-        m_sunLightCamera->CalcLightCameraSystemMatrix(m_sceneService.lock()->GetSceneCuller());
-        m_lightViewProjectionTransform = m_sunLightCamera->GetLightViewProjMatrix();
+        m_sunLightCamera->calcLightCameraSystemMatrix(m_sceneService.lock()->getSceneCuller());
+        m_lightViewProjectionTransform = m_sunLightCamera->getLightViewProjMatrix();
     }
     return ServiceResult::Pendding;
 }
@@ -61,23 +61,23 @@ ServiceResult ShadowMapService::onTerm()
 {
     m_sunLightCamera = nullptr;
 
-    UnsubscribeEvents();
+    unsubscribeEvents();
     return ServiceResult::Complete;
 }
 
-void ShadowMapService::SubscribeEvents()
+void ShadowMapService::subscribeEvents()
 {
-    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoCreated(e); });
+    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoCreated(e); });
     EventPublisher::subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
-    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoDeleted(e); });
+    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoDeleted(e); });
     EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
-    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { OnLightInfoUpdated(e); });
+    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoUpdated(e); });
     EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnPawnPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    m_onPawnConstituted = std::make_shared<EventSubscriber>([=](auto e) { onPawnConstituted(e); });
+    EventPublisher::subscribe(typeid(SpatialConstituted), m_onPawnConstituted);
 }
 
-void ShadowMapService::UnsubscribeEvents()
+void ShadowMapService::unsubscribeEvents()
 {
     EventPublisher::unsubscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
     m_onLightInfoCreated = nullptr;
@@ -85,167 +85,169 @@ void ShadowMapService::UnsubscribeEvents()
     m_onLightInfoDeleted = nullptr;
     EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
-    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-    m_onPawnPrimitiveBuilt = nullptr;
+    EventPublisher::unsubscribe(typeid(SpatialConstituted), m_onPawnConstituted);
+    m_onPawnConstituted = nullptr;
 }
 
-void ShadowMapService::CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void ShadowMapService::createShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
-    m_rendererManager.lock()->CreateRenderer(renderer_name);
-    m_rendererManager.lock()->CreateRenderTarget(target_name, RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::ShadowMap });
+    m_rendererManager.lock()->createRenderer(renderer_name);
+    m_rendererManager.lock()->createRenderTarget(target_name, m_configuration->shadowMapTextureId(), Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F), Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),
+        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()), { Graphics::RenderTextureUsage::ShadowMap });
 
-    m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
-    m_renderer.lock()->selectRendererTechnique(m_configuration->ShadowMapTechniqueName());
+    m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
+    m_renderer.lock()->selectRendererTechnique(m_configuration->shadowMapTechniqueName());
 
-    m_shadowMapRenderTarget = m_rendererManager.lock()->GetRenderTarget(target_name);
-    m_shadowMapRenderTarget.lock()->InitBackSurface(m_configuration->ShadowMapSurfaceName(), m_configuration->ShadowMapDimension(), Graphics::GraphicFormat::FMT_R32F);
-    m_shadowMapRenderTarget.lock()->InitDepthStencilSurface(m_configuration->ShadowMapDepthName(), m_configuration->ShadowMapDimension(),
-        Graphics::IGraphicAPI::instance()->GetDepthSurfaceFormat());
-    m_renderer.lock()->SetRenderTarget(m_shadowMapRenderTarget.lock());
-    m_shadowMapRenderTarget.lock()->ChangeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
+    m_shadowMapRenderTarget = m_rendererManager.lock()->getRenderTarget(target_name);
+    //m_shadowMapRenderTarget.lock()->initBackSurface(Graphics::BackSurfaceSpecification(m_configuration->shadowMapSurfaceName(), m_configuration->shadowMapDimension(), Graphics::GraphicFormat::FMT_R32F));
+    //m_shadowMapRenderTarget.lock()->initDepthStencilSurface(Graphics::DepthStencilSurfaceSpecification(m_configuration->shadowMapDepthName(), m_configuration->shadowMapDimension(),        Graphics::IGraphicAPI::instance()->getDepthSurfaceFormat()));
+    m_renderer.lock()->setRenderTarget(m_shadowMapRenderTarget.lock());
+    m_shadowMapRenderTarget.lock()->changeClearingProperty(RenderTargetClearChangingProperty{ MathLib::ColorRGBA(1.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0, std::nullopt });
 
     if (m_sunLightCamera)
     {
-        m_renderer.lock()->SetAssociatedCamera(m_sunLightCamera);
+        m_renderer.lock()->setAssociatedCamera(m_sunLightCamera);
     }
 
-    m_shadowMapDimensionBiasDensity[0] = static_cast<float>(m_configuration->ShadowMapDimension().m_width);
-    m_shadowMapDimensionBiasDensity[1] = static_cast<float>(m_configuration->ShadowMapDimension().m_height);
-    m_shadowMapDimensionBiasDensity[2] = m_configuration->ShadowMapDepthBias();
-    m_shadowMapDimensionBiasDensity[3] = m_configuration->ShadowMapDensity();
+    m_shadowMapDimensionBiasDensity[0] = static_cast<float>(m_configuration->shadowMapDimension().m_width);
+    m_shadowMapDimensionBiasDensity[1] = static_cast<float>(m_configuration->shadowMapDimension().m_height);
+    m_shadowMapDimensionBiasDensity[2] = m_configuration->shadowMapDepthBias();
+    m_shadowMapDimensionBiasDensity[3] = m_configuration->shadowMapDensity();
 }
 
-void ShadowMapService::DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void ShadowMapService::destroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
-    m_rendererManager.lock()->DestroyRenderTarget(target_name);
-    m_rendererManager.lock()->DestroyRenderer(renderer_name);
+    m_rendererManager.lock()->destroyRenderTarget(target_name);
+    m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
-void ShadowMapService::PrepareShadowScene()
+void ShadowMapService::prepareShadowScene()
 {
-    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneCuller()))
+    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->getSceneCuller()))
     {
-        m_renderer.lock()->PrepareScene(m_sceneService.lock()->GetSceneCuller()->GetVisibleSet(),
+        m_renderer.lock()->prepareScene(m_sceneService.lock()->getSceneCuller()->getVisibleSet(),
             SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster);
     }
 }
 
-void ShadowMapService::RenderShadowScene()
+void ShadowMapService::renderShadowScene()
 {
     if (m_renderer.expired()) return;
-    m_renderer.lock()->ClearRenderTarget();
-    m_renderer.lock()->BeginScene();
-    m_renderer.lock()->DrawScene();
-    m_renderer.lock()->EndScene();
+    m_renderer.lock()->clearRenderTarget();
+    m_renderer.lock()->beginScene();
+    m_renderer.lock()->drawScene();
+    m_renderer.lock()->endScene();
 }
 
-void ShadowMapService::OnLightInfoCreated(const IEventPtr& e)
+void ShadowMapService::onLightInfoCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoCreated, IEvent>(e);
-    if ((!ev) || (!ev->GetLight())) return;
-    if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
-    CreateSunLightCamera(ev->GetLight());
+    if ((!ev) || (!ev->light())) return;
+    if (ev->light()->info().lightType() != LightInfo::LightType::SunLight) return;
+    createSunLightCamera(ev->light());
 }
 
-void ShadowMapService::OnLightInfoDeleted(const IEventPtr& e)
+void ShadowMapService::onLightInfoDeleted(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
-    if (ev->GetLightType() != LightInfo::LightType::SunLight) return;
-    DeleteSunLightCamera();
+    if (ev->lightType() != LightInfo::LightType::SunLight) return;
+    deleteSunLightCamera();
 }
 
-void ShadowMapService::OnLightInfoUpdated(const IEventPtr& e)
+void ShadowMapService::onLightInfoUpdated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoUpdated, IEvent>(e);
-    if ((!ev) || (!ev->GetLight())) return;
-    if (ev->GetLight()->Info().GetLightType() != LightInfo::LightType::SunLight) return;
-    UpdateSunLightDirection(ev->GetLight()->GetLightDirection());
+    if ((!ev) || (!ev->light())) return;
+    if (ev->light()->info().lightType() != LightInfo::LightType::SunLight) return;
+    updateSunLightDirection(ev->light()->getLightDirection());
 }
 
-void ShadowMapService::OnPawnPrimitiveBuilt(const IEventPtr& e)
+void ShadowMapService::onPawnConstituted(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
-    if ((!ev) || (!ev->GetPawn())) return;
-    if ((ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
-        || (ev->GetPawn()->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
+    const auto ev = std::dynamic_pointer_cast<SpatialConstituted, IEvent>(e);
+    if (!ev) return;
+    const auto pawn = std::dynamic_pointer_cast<Pawn>(ev->spatial());
+    if (!pawn) return;
+    if ((pawn->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowCaster))
+        || (pawn->testSpatialFlag(SpatialShadowFlags::SpatialBit::Spatial_ShadowReceiver)))
     {
-        BindShadowMapToPawn(ev->GetPawn());
+        bindShadowMapToPawn(pawn);
     }
 }
 
-void ShadowMapService::CreateSunLightCamera(const std::shared_ptr<Light>& lit)
+void ShadowMapService::createSunLightCamera(const std::shared_ptr<Light>& lit)
 {
     assert(!m_cameraService.expired());
-    m_sunLightCamera = std::make_shared<SunLightCamera>(SpatialId(m_configuration->SunLightCameraName(), SunLightCamera::TYPE_RTTI));
+    m_sunLightCamera = std::make_shared<SunLightCamera>(m_configuration->sunLightCameraId());
     MathLib::Vector3 vecSunDir = MathLib::Vector3(-1.0f, -1.0f, 0.0f);
-    if (lit) vecSunDir = lit->GetLightDirection();
-    m_sunLightCamera->SetSunLightDir(vecSunDir);
+    if (lit) vecSunDir = lit->getLightDirection();
+    m_sunLightCamera->setSunLightDir(vecSunDir);
     if (auto cam = m_cameraService.lock()->primaryCamera())
     {
-        m_sunLightCamera->SetViewerCamera(cam);
+        m_sunLightCamera->setViewerCamera(cam);
     }
     if (!m_renderer.expired())
     {
-        m_renderer.lock()->SetAssociatedCamera(m_sunLightCamera);
+        m_renderer.lock()->setAssociatedCamera(m_sunLightCamera);
     }
 }
 
-void ShadowMapService::DeleteSunLightCamera()
+void ShadowMapService::deleteSunLightCamera()
 {
     if (!m_renderer.expired())
     {
-        m_renderer.lock()->SetAssociatedCamera(nullptr);
+        m_renderer.lock()->setAssociatedCamera(nullptr);
     }
     m_sunLightCamera = nullptr;
 }
 
-void ShadowMapService::UpdateSunLightDirection(const MathLib::Vector3& dir)
+void ShadowMapService::updateSunLightDirection(const MathLib::Vector3& dir)
 {
     if (m_sunLightCamera)
     {
-        m_sunLightCamera->SetSunLightDir(dir);
+        m_sunLightCamera->setSunLightDir(dir);
     }
 }
 
-void ShadowMapService::BindShadowMapToPawn(const std::shared_ptr<Pawn>& pawn)
+void ShadowMapService::bindShadowMapToPawn(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
-    if (!pawn->GetPrimitive()) return;
-    if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(pawn->GetPrimitive()))
+    if (!pawn->getPrimitive()) return;
+    if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(pawn->getPrimitive()))
     {
         const auto mesh_count = model->getMeshPrimitiveCount();
         for (unsigned i = 0; i < mesh_count; i++)
         {
-            BindShadowMapToMesh(model->getMeshPrimitive(i));
+            bindShadowMapToMesh(model->getMeshPrimitive(i));
         }
     }
-    else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(pawn->GetPrimitive()))
+    else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(pawn->getPrimitive()))
     {
-        BindShadowMapToMesh(mesh);
+        bindShadowMapToMesh(mesh);
     }
 }
 
-void ShadowMapService::BindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>& mesh)
+void ShadowMapService::bindShadowMapToMesh(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
     if (m_shadowMapRenderTarget.expired()) return;
 
-    mesh->bindSemanticTexture({ m_configuration->ShadowMapSemantic(), m_shadowMapRenderTarget.lock()->GetRenderTargetTexture(), std::nullopt });
+    mesh->bindSemanticTexture({ m_configuration->shadowMapSemantic(), m_shadowMapRenderTarget.lock()->getRenderTargetTexture(), std::nullopt });
 }
 
-void ShadowMapService::AssignLightViewProjectionTransform(Engine::EffectVariable& var)
+void ShadowMapService::assignLightViewProjectionTransform(Engine::EffectVariable& var)
 {
     var.assignValue(m_lightViewProjectionTransform);
 }
 
-void ShadowMapService::AssignShadowMapDimension(Engine::EffectVariable& var)
+void ShadowMapService::assignShadowMapDimension(Engine::EffectVariable& var)
 {
     var.assignValue(m_shadowMapDimensionBiasDensity);
 }

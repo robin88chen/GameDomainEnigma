@@ -26,7 +26,7 @@ IDeviceAlphaBlendState::~IDeviceAlphaBlendState()
     }
 }*/
 
-void IDeviceAlphaBlendState::Bind()
+void IDeviceAlphaBlendState::bind()
 {
     if (IGraphicAPI::instance()->UseAsync())
     {

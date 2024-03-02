@@ -34,67 +34,67 @@ Enigma::Frameworks::ServiceResult RendererManager::onInit()
 {
     m_accumulateRendererStamp = 0;
 
-    m_doCreatingRenderer =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderer(c); });
-    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
-    m_doDestroyingRenderer =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderer(c); });
-    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
+    m_createRenderer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->createRenderer(c); });
+    Frameworks::CommandBus::subscribe(typeid(CreateRenderer), m_createRenderer);
+    m_destroyRenderer =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->destroyRenderer(c); });
+    Frameworks::CommandBus::subscribe(typeid(DestroyRenderer), m_destroyRenderer);
 
-    m_doCreatingRenderTarget =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingRenderTarget(c); });
-    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
-    m_doDestroyingRenderTarget =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDestroyingRenderTarget(c); });
-    Frameworks::CommandBus::subscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
+    m_createRenderTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->createRenderTarget(c); });
+    Frameworks::CommandBus::subscribe(typeid(CreateRenderTarget), m_createRenderTarget);
+    m_destroyRenderTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->destroyRenderTarget(c); });
+    Frameworks::CommandBus::subscribe(typeid(DestroyRenderTarget), m_destroyRenderTarget);
 
-    m_doResizingPrimaryTarget =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoResizingPrimaryTarget(c); });
-    Frameworks::CommandBus::subscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
+    m_resizePrimaryTarget =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->resizePrimaryTarget(c); });
+    Frameworks::CommandBus::subscribe(typeid(ResizePrimaryRenderTarget), m_resizePrimaryTarget);
 
-    m_doChangingViewPort =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingViewPort(c); });
-    Frameworks::CommandBus::subscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
-    m_doChangingClearingProperty =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoChangingClearingProperty(c); });
-    Frameworks::CommandBus::subscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
+    m_changeViewPort =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->changeViewPort(c); });
+    Frameworks::CommandBus::subscribe(typeid(ChangeTargetViewPort), m_changeViewPort);
+    m_changeClearingProperty =
+        std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { this->changeClearingProperty(c); });
+    Frameworks::CommandBus::subscribe(typeid(ChangeTargetClearingProperty), m_changeClearingProperty);
 
     return Frameworks::ServiceResult::Complete;
 }
 
 Enigma::Frameworks::ServiceResult RendererManager::onTerm()
 {
-    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::CreateRenderer), m_doCreatingRenderer);
-    m_doCreatingRenderer = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::DestroyRenderer), m_doDestroyingRenderer);
-    m_doDestroyingRenderer = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(CreateRenderer), m_createRenderer);
+    m_createRenderer = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(DestroyRenderer), m_destroyRenderer);
+    m_destroyRenderer = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::CreateRenderTarget), m_doCreatingRenderTarget);
-    m_doCreatingRenderTarget = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Enigma::Renderer::DestroyRenderTarget), m_doDestroyingRenderTarget);
-    m_doDestroyingRenderTarget = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(CreateRenderTarget), m_createRenderTarget);
+    m_createRenderTarget = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(DestroyRenderTarget), m_destroyRenderTarget);
+    m_destroyRenderTarget = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(ResizePrimaryRenderTarget), m_doResizingPrimaryTarget);
-    m_doResizingPrimaryTarget = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(ResizePrimaryRenderTarget), m_resizePrimaryTarget);
+    m_resizePrimaryTarget = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetViewPort), m_doChangingViewPort);
-    m_doChangingViewPort = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetClearingProperty), m_doChangingClearingProperty);
-    m_doChangingClearingProperty = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetViewPort), m_changeViewPort);
+    m_changeViewPort = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(ChangeTargetClearingProperty), m_changeClearingProperty);
+    m_changeClearingProperty = nullptr;
 
-    ClearAllRenderer();
-    ClearAllRenderTarget();
+    removeAllRenderer();
+    removeAllRenderTarget();
     m_accumulateRendererStamp = 0;
     return Frameworks::ServiceResult::Complete;
 }
-void RendererManager::RegisterCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn)
+void RendererManager::registerCustomRendererFactory(const std::string& type_name, const CustomRendererFactoryFunc& fn)
 {
     m_customRendererFactoryTable.emplace(type_name, fn);
 }
 
-error RendererManager::CreateRenderer(const std::string& name)
+error RendererManager::createRenderer(const std::string& name)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -117,9 +117,9 @@ error RendererManager::CreateRenderer(const std::string& name)
     return ErrorCode::ok;
 }
 
-error RendererManager::CreateCustomRenderer(const std::string& type_name, const std::string& name)
+error RendererManager::createCustomRenderer(const std::string& type_name, const std::string& name)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -145,9 +145,9 @@ error RendererManager::CreateCustomRenderer(const std::string& type_name, const 
     return ErrorCode::ok;
 }
 
-error RendererManager::InsertRenderer(const std::string& name, const Engine::IRendererPtr& renderer)
+error RendererManager::insertRenderer(const std::string& name, const IRendererPtr& renderer)
 {
-    IRendererPtr render = GetRenderer(name);
+    IRendererPtr render = getRenderer(name);
     if (render)
     {
         // render already exist
@@ -166,9 +166,9 @@ error RendererManager::InsertRenderer(const std::string& name, const Engine::IRe
     return ErrorCode::ok;
 }
 
-error RendererManager::DestroyRenderer(const std::string& name)
+error RendererManager::destroyRenderer(const std::string& name)
 {
-    const IRendererPtr render = GetRenderer(name);
+    const IRendererPtr render = getRenderer(name);
     if (!render) return ErrorCode::rendererNotExist;
 
     const unsigned int stamp = render->GetStampBitMask();
@@ -180,16 +180,16 @@ error RendererManager::DestroyRenderer(const std::string& name)
     return ErrorCode::ok;
 }
 
-IRendererPtr RendererManager::GetRenderer(const std::string& name) const
+IRendererPtr RendererManager::getRenderer(const std::string& name) const
 {
     const auto it = m_renderers.find(name);
     if (it == m_renderers.end()) return nullptr;
     return it->second;
 }
 
-error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages)
+error RendererManager::createRenderTarget(const std::string& name, RenderTarget::PrimaryType primary, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
-    if (auto target_check = GetRenderTarget(name))
+    if (auto target_check = getRenderTarget(name))
     {
         // render already exist
         return ErrorCode::renderTargetAlreadyExisted;
@@ -205,9 +205,35 @@ error RendererManager::CreateRenderTarget(const std::string& name, RenderTarget:
     return ErrorCode::ok;
 }
 
-error RendererManager::DestroyRenderTarget(const std::string& name)
+error RendererManager::createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::BackSurfaceSpecification& back_specification, const Graphics::DepthStencilSurfaceSpecification& depth_specification, const std::vector<Graphics::RenderTextureUsage>& usages)
 {
-    const auto target = GetRenderTarget(name);
+    if (auto target_check = getRenderTarget(name))
+    {
+        // render already exist
+        return ErrorCode::renderTargetAlreadyExisted;
+    }
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, render_tex_id, back_specification, depth_specification, usages) };
+    m_renderTargets.emplace(name, target);
+
+    return ErrorCode::ok;
+}
+
+error RendererManager::createRenderTarget(const std::string& name, const Engine::TextureId& render_tex_id, const Graphics::MultiBackSurfaceSpecification& back_specification, const std::string& depth_name, const Graphics::IDepthStencilSurfacePtr& depth_surface, const std::vector<Graphics::RenderTextureUsage>& usages)
+{
+    if (auto target_check = getRenderTarget(name))
+    {
+        // render already exist
+        return ErrorCode::renderTargetAlreadyExisted;
+    }
+    RenderTargetPtr target = RenderTargetPtr{ menew RenderTarget(name, render_tex_id, back_specification, depth_name, depth_surface, usages) };
+    m_renderTargets.emplace(name, target);
+
+    return ErrorCode::ok;
+}
+
+error RendererManager::destroyRenderTarget(const std::string& name)
+{
+    const auto target = getRenderTarget(name);
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
 
@@ -216,29 +242,29 @@ error RendererManager::DestroyRenderTarget(const std::string& name)
     return ErrorCode::ok;
 }
 
-RenderTargetPtr RendererManager::GetRenderTarget(const std::string& name) const
+RenderTargetPtr RendererManager::getRenderTarget(const std::string& name) const
 {
     RenderTargetMap::const_iterator iter = m_renderTargets.find(name);
     if (iter == m_renderTargets.end()) return nullptr;
     return iter->second;
 }
 
-RenderTargetPtr RendererManager::GetPrimaryRenderTarget() const
+RenderTargetPtr RendererManager::getPrimaryRenderTarget() const
 {
-    return GetRenderTarget(m_primaryRenderTargetName);
+    return getRenderTarget(m_primaryRenderTargetName);
 }
 
-void RendererManager::DoResizingPrimaryTarget(const Frameworks::ICommandPtr& c) const
+void RendererManager::resizePrimaryTarget(const Frameworks::ICommandPtr& c) const
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ResizePrimaryRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    const auto target = GetPrimaryRenderTarget();
+    const auto target = getPrimaryRenderTarget();
     if (!target) return;
-    target->Resize(cmd->GetDimension());
+    target->resize(cmd->dimension());
 }
 
-void RendererManager::ClearAllRenderer()
+void RendererManager::removeAllRenderer()
 {
     if (m_renderers.size() == 0) return;
     m_renderers.clear();
@@ -246,60 +272,60 @@ void RendererManager::ClearAllRenderer()
     m_accumulateRendererStamp = 0;
 }
 
-void RendererManager::ClearAllRenderTarget()
+void RendererManager::removeAllRenderTarget()
 {
     if (m_renderTargets.size() == 0) return;
     m_renderTargets.clear();
 }
 
-void RendererManager::DoCreatingRenderer(const Frameworks::ICommandPtr& c)
+void RendererManager::createRenderer(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderer, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<CreateRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    CreateRenderer(cmd->GetRendererName());
+    createRenderer(cmd->rendererName());
 }
 
-void RendererManager::DoDestroyingRenderer(const Frameworks::ICommandPtr& c)
+void RendererManager::destroyRenderer(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderer, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<DestroyRenderer, Frameworks::ICommand>(c);
     if (!cmd) return;
-    DestroyRenderer(cmd->GetRendererName());
+    destroyRenderer(cmd->rendererName());
 }
 
-void RendererManager::DoCreatingRenderTarget(const Frameworks::ICommandPtr& c)
+void RendererManager::createRenderTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::CreateRenderTarget, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<CreateRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    CreateRenderTarget(cmd->GetRenderTargetName(), cmd->GetPrimaryType(), cmd->GetUsages());
+    createRenderTarget(cmd->renderTargetName(), cmd->primaryType(), cmd->usages());
 }
 
-void RendererManager::DoDestroyingRenderTarget(const Frameworks::ICommandPtr& c)
+void RendererManager::destroyRenderTarget(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<Enigma::Renderer::DestroyRenderTarget, Frameworks::ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<DestroyRenderTarget, Frameworks::ICommand>(c);
     if (!cmd) return;
-    DestroyRenderTarget(cmd->GetRenderTargetName());
+    destroyRenderTarget(cmd->renderTargetName());
 }
 
-void RendererManager::DoChangingViewPort(const Frameworks::ICommandPtr& c) const
+void RendererManager::changeViewPort(const Frameworks::ICommandPtr& c) const
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeTargetViewPort, Frameworks::ICommand>(c);
     if (!cmd) return;
-    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    const auto target = getRenderTarget(cmd->renderTargetName());
     if (!target) return;
-    target->SetViewPort(cmd->GetViewPort());
+    target->setViewPort(cmd->viewPort());
 }
 
-void RendererManager::DoChangingClearingProperty(const Frameworks::ICommandPtr& c) const
+void RendererManager::changeClearingProperty(const Frameworks::ICommandPtr& c) const
 {
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<ChangeTargetClearingProperty, Frameworks::ICommand>(c);
     if (!cmd) return;
-    const auto target = GetRenderTarget(cmd->GetRenderTargetName());
+    const auto target = getRenderTarget(cmd->renderTargetName());
     if (!target) return;
-    target->ChangeClearingProperty(cmd->GetProperty());
+    target->changeClearingProperty(cmd->property());
 }

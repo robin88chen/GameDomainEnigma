@@ -32,17 +32,17 @@ namespace Enigma::Renderer
         bool operator==(const RenderPack& p) const;
         bool operator!=(const RenderPack& p) const;
 
-        const std::shared_ptr<RenderElement>& GetRenderElement();
-        const std::shared_ptr<RenderElement>& GetRenderElement() const;
+        const std::shared_ptr<RenderElement>& getRenderElement();
+        const std::shared_ptr<RenderElement>& getRenderElement() const;
         MathLib::Matrix4 getWorldTransform();
         const MathLib::Matrix4& getWorldTransform() const;
-        void SetWorldTransform(const MathLib::Matrix4& mxWorld);
-        const Engine::RenderLightingState& GetRenderLightingState() const;
-        void SetRenderLightingState(const Engine::RenderLightingState& state);
+        void setWorldTransform(const MathLib::Matrix4& mxWorld);
+        const Engine::RenderLightingState& getRenderLightingState() const;
+        void setRenderLightingState(const Engine::RenderLightingState& state);
 
-        float GetSquareCameraDistance() { return m_squareCameraDistance; }
-        float GetSquareCameraDistance() const { return m_squareCameraDistance; }
-        void CalcSquareCameraDistance(const MathLib::Vector3& camera_loc);
+        float getSquareCameraDistance() { return m_squareCameraDistance; }
+        float getSquareCameraDistance() const { return m_squareCameraDistance; }
+        void calcSquareCameraDistance(const MathLib::Vector3& camera_loc);
 
     protected:
         std::shared_ptr<RenderElement> m_element;

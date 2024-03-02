@@ -44,6 +44,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h" />

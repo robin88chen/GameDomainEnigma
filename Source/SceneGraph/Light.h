@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI
     public:
-        Light(const std::string& spatialName, const LightInfo& lightInfo);
+        Light(const SpatialId& id, const LightInfo& lightInfo);
         Light(const Engine::GenericDto& dto);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
@@ -34,38 +34,38 @@ namespace Enigma::SceneGraph
 
         virtual Engine::GenericDto serializeDto() override;
 
-        const LightInfo& Info() const { return m_lightInfo; };
-        LightInfo& Info() { return m_lightInfo; }
+        const LightInfo& info() const { return m_lightInfo; };
+        LightInfo& info() { return m_lightInfo; }
 
         virtual error onCullingVisible(Culler*, bool) override;
         virtual bool canVisited() override { return true; };
         virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
-        void SetLightColor(const MathLib::ColorRGBA& color);
-        const MathLib::ColorRGBA& GetLightColor() { return Info().GetLightColor(); };
+        void setLightColor(const MathLib::ColorRGBA& color);
+        const MathLib::ColorRGBA& getLightColor() { return info().getLightColor(); };
 
-        void SetLightPosition(const MathLib::Vector3& vec);
-        const MathLib::Vector3& GetLightPosition() { return Info().GetLightPosition(); };
+        void setLightPosition(const MathLib::Vector3& vec);
+        const MathLib::Vector3& getLightPosition() { return info().getLightPosition(); };
 
-        void SetLightDirection(const MathLib::Vector3& vec);
-        const MathLib::Vector3& GetLightDirection() { return Info().GetLightDirection(); };
+        void setLightDirection(const MathLib::Vector3& vec);
+        const MathLib::Vector3& getLightDirection() { return info().getLightDirection(); };
 
-        void SetLightRange(float range);
-        float GetLightRange() { return Info().GetLightRange(); };
+        void setLightRange(float range);
+        float getLightRange() { return info().getLightRange(); };
 
         /// x,y,z : 0次,1次,2次係數
-        void SetLightAttenuation(const MathLib::Vector3& vecAttenuation);
-        const MathLib::Vector3& GetLightAttenuation() { return Info().GetLightAttenuation(); };
+        void setLightAttenuation(const MathLib::Vector3& vecAttenuation);
+        const MathLib::Vector3& getLightAttenuation() { return info().getLightAttenuation(); };
 
-        void SetEnable(bool flag);
-        bool IsEnable() { return Info().IsEnable(); };
+        void setEnable(bool flag);
+        bool isEnable() { return info().isEnable(); };
 
     protected:
-        std::shared_ptr<Light> ThisLight()
+        std::shared_ptr<Light> thisLight()
         {
             return std::dynamic_pointer_cast<Light, Spatial>(shared_from_this());
         }
-        std::shared_ptr<const Light> ThisLight() const
+        std::shared_ptr<const Light> thisLight() const
         {
             return std::dynamic_pointer_cast<const Light, const Spatial>(shared_from_this());
         }

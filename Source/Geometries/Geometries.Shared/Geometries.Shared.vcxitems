@@ -21,7 +21,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,17 +30,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleList.h" />
   </ItemGroup>
 </Project>

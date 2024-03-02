@@ -41,7 +41,7 @@ std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::S
 GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
-    dto.HostLightName() = GetHostLightName();
+    if (getHostLight()) dto.hostLightId() = getHostLight()->id();
     return dto.toGenericDto();
 }
 
@@ -49,7 +49,7 @@ void LightVolumePawn::ToggleCameraInside(bool is_inside)
 {
     if (is_inside != m_isCameraInside)
     {
-        std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive>(GetPrimitive());
+        std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive>(getPrimitive());
         if (mesh)
         {
             if (is_inside)
@@ -70,9 +70,9 @@ error LightVolumePawn::_updateSpatialRenderState()
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
-    Vector4 vecLightPosRange(m_hostLight.lock()->Info().GetLightPosition(), m_hostLight.lock()->Info().GetLightRange());
-    ColorRGBA colorLight(m_hostLight.lock()->Info().GetLightColor());
-    Vector4 vecLightAtten(m_hostLight.lock()->Info().GetLightAttenuation(), 1.0f);
+    Vector4 vecLightPosRange(m_hostLight.lock()->info().getLightPosition(), m_hostLight.lock()->info().getLightRange());
+    ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
+    Vector4 vecLightAtten(m_hostLight.lock()->info().getLightAttenuation(), 1.0f);
     RenderLightingState lighting_state;
     lighting_state.SetPointLightArray({ vecLightPosRange }, { colorLight }, { vecLightAtten });
     m_spatialRenderState = SpatialRenderState(lighting_state);

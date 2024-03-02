@@ -132,6 +132,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTextureUsage.h">
       <Filter>Texture</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BackSurfaceSpecification.h">
+      <Filter>BackSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DepthStencilSurfaceSpecification.h">
+      <Filter>Depth Surface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">

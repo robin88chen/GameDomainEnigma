@@ -31,12 +31,7 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> constitute(const TextureId& id, const GenericDto& dto, bool is_persisted);
 
     private:
-        void constituteTexture(const Frameworks::ICommandPtr& c);
-
-    private:
         TextureResourceProcessor* m_processor;
-
-        Frameworks::CommandSubscriberPtr m_constituteTexture;
     };
 }
 

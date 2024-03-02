@@ -38,8 +38,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] float Range() const { return m_range; }
         MathLib::Vector3& Attenuation() { return m_attenuation; }
         [[nodiscard]] MathLib::Vector3 Attenuation() const { return m_attenuation; }
-        bool& IsEnable() { return m_isEnable; }
-        [[nodiscard]] bool IsEnable() const { return m_isEnable; }
+        bool& isEnable() { return m_isEnable; }
+        [[nodiscard]] bool isEnable() const { return m_isEnable; }
 
         static LightInfoDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();

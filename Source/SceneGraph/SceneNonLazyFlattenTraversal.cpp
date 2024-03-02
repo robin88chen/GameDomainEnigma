@@ -14,7 +14,7 @@ SceneNonLazyFlattenTraversal::~SceneNonLazyFlattenTraversal()
     m_spatials.clear();
 }
 
-SceneTraveler::TravelResult SceneNonLazyFlattenTraversal::TravelTo(const SpatialPtr& spatial)
+SceneTraveler::TravelResult SceneNonLazyFlattenTraversal::travelTo(const SpatialPtr& spatial)
 {
     if (!spatial) return TravelResult::InterruptError;
     if (spatial) m_spatials.emplace_back(spatial);

@@ -38,32 +38,32 @@ namespace Enigma::ShadowMap
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        virtual void CreateShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);
-        virtual void DestroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);
+        virtual void createShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);
+        virtual void destroyShadowRenderSystem(const std::string& renderer_name, const std::string& target_name);
 
-        virtual void PrepareShadowScene();
-        virtual void RenderShadowScene();
+        virtual void prepareShadowScene();
+        virtual void renderShadowScene();
 
     protected:
-        void SubscribeEvents();
-        void UnsubscribeEvents();
+        void subscribeEvents();
+        void unsubscribeEvents();
 
-        void OnLightInfoCreated(const Frameworks::IEventPtr& e);
-        void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
-        void OnLightInfoUpdated(const Frameworks::IEventPtr& e);
-        void OnPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
+        void onLightInfoCreated(const Frameworks::IEventPtr& e);
+        void onLightInfoDeleted(const Frameworks::IEventPtr& e);
+        void onLightInfoUpdated(const Frameworks::IEventPtr& e);
+        void onPawnConstituted(const Frameworks::IEventPtr& e);
 
-        virtual void CreateSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit);
-        virtual void DeleteSunLightCamera();
-        virtual void UpdateSunLightDirection(const MathLib::Vector3& dir);
+        virtual void createSunLightCamera(const std::shared_ptr<SceneGraph::Light>& lit);
+        virtual void deleteSunLightCamera();
+        virtual void updateSunLightDirection(const MathLib::Vector3& dir);
 
-        void BindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
-        void BindShadowMapToMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
+        void bindShadowMapToPawn(const std::shared_ptr<SceneGraph::Pawn>& pawn);
+        void bindShadowMapToMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
 
-        static void AssignShadowMapDimension(Engine::EffectVariable& var);
+        static void assignShadowMapDimension(Engine::EffectVariable& var);
 
     private:
-        static void AssignLightViewProjectionTransform(Engine::EffectVariable& var);
+        static void assignLightViewProjectionTransform(Engine::EffectVariable& var);
 
     private:
         std::shared_ptr<ShadowMapServiceConfiguration> m_configuration;
@@ -83,7 +83,7 @@ namespace Enigma::ShadowMap
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
-        Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+        Frameworks::EventSubscriberPtr m_onPawnConstituted;
     };
 }
 

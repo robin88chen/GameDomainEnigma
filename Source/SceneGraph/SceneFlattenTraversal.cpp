@@ -12,7 +12,7 @@ SceneFlattenTraversal::~SceneFlattenTraversal()
     m_spatials.clear();
 }
 
-SceneTraveler::TravelResult SceneFlattenTraversal::TravelTo(const SpatialPtr& spatial)
+SceneTraveler::TravelResult SceneFlattenTraversal::travelTo(const SpatialPtr& spatial)
 {
     if (!spatial) return TravelResult::InterruptError;
     if (spatial) m_spatials.emplace_back(spatial);

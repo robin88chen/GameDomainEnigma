@@ -2,8 +2,6 @@
 #include "GeometryDataStoreMapper.h"
 #include "TriangleList.h"
 #include "GeometryDataEvents.h"
-#include "GeometryDataPolicy.h"
-#include "GeometryBuilder.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
@@ -120,12 +118,12 @@ void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)
         return;
     }
     auto geometry = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == RequestGeometryCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_geometryLock };
         m_geometries.insert_or_assign(request->id(), geometry);
     }
-    else if (request->persistenceLevel() == RequestGeometryCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putGeometryData(request->id(), geometry);
     }
@@ -143,12 +141,12 @@ void GeometryRepository::requestGeometryConstitution(const IQueryPtr& r)
         return;
     }
     auto geometry = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestGeometryConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_geometryLock };
         m_geometries.insert_or_assign(request->id(), geometry);
     }
-    else if (request->persistenceLevel() == RequestGeometryConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putGeometryData(request->id(), geometry);
     }

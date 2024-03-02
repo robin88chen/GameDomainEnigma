@@ -33,7 +33,9 @@ namespace Enigma::Engine
 
         std::shared_ptr<EffectMaterial> duplicateEffectMaterial();
 
-        void contentDuplicatedEffects();
+        void hydrateDuplicatedEffects();
+
+        std::shared_ptr<EffectMaterial> queryDuplicatedEffect(const EffectMaterialId& id);
 
     private:
         void duplicatedEffectDeleter(EffectMaterial* effect);

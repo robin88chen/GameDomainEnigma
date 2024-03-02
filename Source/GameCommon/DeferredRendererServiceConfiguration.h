@@ -14,6 +14,7 @@
 #include "SceneRendererServiceConfiguration.h"
 #include "SceneGraph/Spatial.h"
 #include "GameEngine/EffectMaterialId.h"
+#include "GameEngine/TextureId.h"
 
 namespace Enigma::GameCommon
 {
@@ -38,6 +39,8 @@ namespace Enigma::GameCommon
 
         const std::string& gbufferTargetName() const;
         std::string& gbufferTargetName();
+        const Engine::TextureId& gbufferTextureId() const;
+        Engine::TextureId& gbufferTextureId();
         const std::string& gbufferSurfaceName() const;
         std::string& gbufferSurfaceName();
         const std::string& gbufferDepthName() const;
@@ -60,6 +63,8 @@ namespace Enigma::GameCommon
         const SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags() const;
         SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags();
 
+        std::optional<unsigned> findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
+
     protected:
         Engine::EffectMaterialId m_ambientEffect;
         Engine::EffectMaterialId m_sunLightEffect;
@@ -69,6 +74,7 @@ namespace Enigma::GameCommon
         std::string m_visualTechniqueNameForCameraDefault;
         std::string m_visualTechniqueNameForCameraInside;
         std::string m_gbufferTargetName;
+        Engine::TextureId m_gbufferTextureId;
         std::string m_gbufferSurfaceName;
         std::string m_gbufferDepthName;
 

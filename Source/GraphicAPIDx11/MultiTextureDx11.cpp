@@ -176,7 +176,7 @@ error MultiTextureDx11::useAsBackSurface(const Graphics::IBackSurfacePtr& back_s
     m_d3dTextureResources = new ID3D11ShaderResourceView * [m_resourceViewCount];
     memset(m_d3dTextureResources, 0, m_resourceViewCount * sizeof(ID3D11ShaderResourceView*));
 
-    m_dimension = bbDx11->GetDimension();
+    m_dimension = bbDx11->getDimension();
     m_format = back_surf->GetFormat();
 
     for (unsigned int i = 0; i < m_resourceViewCount; i++)

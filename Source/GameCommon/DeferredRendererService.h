@@ -16,6 +16,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "GameEngine/EffectDtoHelper.h"
 #include <memory>
 #include <unordered_map>
 
@@ -53,73 +54,49 @@ namespace Enigma::GameCommon
         void createAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void createSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
         void createPointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
-        void removeLightingPawn(const std::string& name);
+        void removeLightingPawn(const SceneGraph::SpatialId& lit_id);
         void updateAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void updateSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
         void updatePointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit, SceneGraph::LightInfoUpdated::NotifyCode notify);
 
-        void bindGBufferToLightingMesh(const std::shared_ptr<Renderables::MeshPrimitive>& mesh);
-        void bindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& volume);
+        void bindGBufferToPendingLights();
 
         void onPrimaryRenderTargetCreated(const Frameworks::IEventPtr& e);
         void onPrimaryRenderTargetResized(const Frameworks::IEventPtr& e);
         void onGameCameraUpdated(const Frameworks::IEventPtr& e);
         void onSceneGraphChanged(const Frameworks::IEventPtr& e);
-        void onGBufferTextureCreated(const Frameworks::IEventPtr& e);
+
         void onGameLightCreated(const Frameworks::IEventPtr& e);
         void onLightInfoDeleted(const Frameworks::IEventPtr& e);
         void onLightInfoUpdated(const Frameworks::IEventPtr& e);
-        void onSceneGraphBuilt(const Frameworks::IEventPtr& e);
-        void onLightingPawnCreated(const Frameworks::IEventPtr& e);
-        void onPawnPrimitiveBuilt(const Frameworks::IEventPtr& e);
 
-        void bindGBuffer(const Frameworks::ICommandPtr& c);
+        void completeLightingPawnBuilt(const SceneGraph::SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn);
 
-        void onLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn);
+        std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
 
-        std::shared_ptr<LightingPawn> findLightingPawn(const std::string& name);
-
-        void checkLightVolumeBackfaceCulling(const std::string& lit_name);
+        void checkLightVolumeBackfaceCulling(const SceneGraph::SpatialId& lit_id);
         void checkLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
-        void insertLightPawnBuildingMeta(const SceneGraph::SpatialId& pawn_id, const std::shared_ptr<SceneGraph::Light>& lit);
+        Engine::EffectTextureMapDtoHelper getGBufferTextureSemantics();
 
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
 
-        using LightingPawnMap = std::unordered_map<std::string, std::weak_ptr<LightingPawn>>;
+        using LightingPawnMap = std::unordered_map<SceneGraph::SpatialId, std::weak_ptr<LightingPawn>, SceneGraph::SpatialId::hash>;
         LightingPawnMap m_lightingPawns;
-
-        struct SceneGraphLightPawnMeta
-        {
-            std::string m_parentNodeName;
-            MathLib::Matrix4 m_localTransform;
-        };
-        using SceneGraphLightPawnMetaMap = std::unordered_map<SceneGraph::SpatialId, SceneGraphLightPawnMeta, SceneGraph::SpatialId::hash>;
-        SceneGraphLightPawnMetaMap m_buildingLightPawns;
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
 
-        Geometries::GeometryId m_ambientLightQuadId;
-        Geometries::GeometryId m_sunLightQuadId;
-        Primitives::PrimitiveId m_ambientLightMeshId;
-        Primitives::PrimitiveId m_sunLightMeshId;
-        SceneGraph::SpatialId m_ambientLightPawnId;
-        SceneGraph::SpatialId m_sunLightPawnId;
+        std::vector<std::weak_ptr<SceneGraph::Light>> m_pendingLightsOfGBufferBind;
 
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetResized;
         Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
-        Frameworks::EventSubscriberPtr m_onGBufferTextureCreated;
+
         Frameworks::EventSubscriberPtr m_onGameLightCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
-        Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
-        Frameworks::EventSubscriberPtr m_onLightingPawnCreated;
-        Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
-
-        Frameworks::CommandSubscriberPtr m_bindGBuffer;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

@@ -4,6 +4,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "TextureCommands.h"
 #include "TextureEvents.h"
+#include "EngineErrors.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -19,25 +20,18 @@ TextureRepository::TextureRepository(Frameworks::ServiceManager* srv_manager, co
 {
     m_factory = menew TextureFactory();
     m_needTick = false;
+    registerHandlers();
 }
 
 TextureRepository::~TextureRepository()
 {
+    unregisterHandlers();
     SAFE_DELETE(m_factory);
 }
 
 Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 {
     assert(m_storeMapper);
-
-    m_removeTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { removeTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(RemoveTexture), m_removeTexture);
-    m_putTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { putTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(PutTexture), m_putTexture);
-
-    m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
-    Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
-
     m_storeMapper->connect();
 
     return Frameworks::ServiceResult::Complete;
@@ -50,6 +44,24 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 
     m_textures.clear();
 
+    return Frameworks::ServiceResult::Complete;
+}
+
+void TextureRepository::registerHandlers()
+{
+    m_removeTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { removeTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(RemoveTexture), m_removeTexture);
+    m_putTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { putTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(PutTexture), m_putTexture);
+
+    m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
+    Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
+    m_requestTextureConstitution = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { requestTextureConstitution(q); });
+    Frameworks::QueryDispatcher::subscribe(typeid(RequestTextureConstitution), m_requestTextureConstitution);
+}
+
+void TextureRepository::unregisterHandlers()
+{
     Frameworks::CommandBus::unsubscribe(typeid(RemoveTexture), m_removeTexture);
     m_removeTexture = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(PutTexture), m_putTexture);
@@ -57,8 +69,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 
     Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTexture), m_queryTexture);
     m_queryTexture = nullptr;
-
-    return Frameworks::ServiceResult::Complete;
+    Frameworks::QueryDispatcher::unsubscribe(typeid(RequestTextureConstitution), m_requestTextureConstitution);
+    m_requestTextureConstitution = nullptr;
 }
 
 bool TextureRepository::hasTexture(const TextureId& id)
@@ -134,4 +146,19 @@ void TextureRepository::queryTexture(const Frameworks::IQueryPtr& q)
     if (!query) return;
     auto tex = queryTexture(query->id());
     query->setResult(tex);
+}
+
+void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto request = std::dynamic_pointer_cast<RequestTextureConstitution>(q);
+    if (!request) return;
+    if (hasTexture(request->id()))
+    {
+        Frameworks::EventPublisher::post(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
+        return;
+    }
+    auto tex = m_factory->constitute(request->id(), request->dto(), false);
+    request->setResult(tex);
+    m_textures.insert_or_assign(request->id(), tex);
 }

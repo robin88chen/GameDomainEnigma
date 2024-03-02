@@ -22,7 +22,7 @@ SunLightCamera::~SunLightCamera()
 
 }
 
-void SunLightCamera::SetSunLightDir(const Vector3& sun_dir)
+void SunLightCamera::setSunLightDir(const Vector3& sun_dir)
 {
     m_sunDir = sun_dir;
     m_sunDir.normalizeSelf();
@@ -35,27 +35,27 @@ void SunLightCamera::SetSunLightDir(const Vector3& sun_dir)
     changeCameraFrame(std::nullopt, m_sunDir, up);
 }
 
-void SunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
+void SunLightCamera::setViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
 {
     m_viewerCamera = viewer_camera;
 }
 
-void SunLightCamera::CalcLightCameraSystemMatrix(SceneGraph::Culler* culler)
+void SunLightCamera::calcLightCameraSystemMatrix(SceneGraph::Culler* culler)
 {
     if (!culler) return;
 
     ShadowCasterBoundFilter filterShadowBound;
-    filterShadowBound.computeMergedBound(culler->GetVisibleSet());
+    filterShadowBound.computeMergedBound(culler->getVisibleSet());
 
-    CalcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
+    calcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
 
-    CalcLightCameraFrustum();
+    calcLightCameraFrustum();
 
-    CalcSceneCropMatrix(filterShadowBound.getMergedBound());
+    calcSceneCropMatrix(filterShadowBound.getMergedBound());
     m_mxLightViewProj = m_mxProjSceneCrop * viewTransform();
 }
 
-void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound)
+void SunLightCamera::calcSceneBoundFrustumPlane(Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound)
 {
     /*
     這裡在算有效範圍的遠近平面，只有當Frustum完全在scene BB內時，才能直接使用Viewer的遠近平面，
@@ -116,11 +116,11 @@ void SunLightCamera::CalcSceneBoundFrustumPlane(Culler* sceneCuller, const Engin
     if (m_effectiveViewerFarZ > vecMax.z()) m_effectiveViewerFarZ = vecMax.z();
 }
 
-void SunLightCamera::CalcLightCameraFrustum()
+void SunLightCamera::calcLightCameraFrustum()
 {
-    std::array<Vector3, 3> vecLightFrustumAxis = CalcLightCameraFrame();
+    std::array<Vector3, 3> vecLightFrustumAxis = calcLightCameraFrame();
 
-    std::array<Vector3, 8> vecViewerFrustumCorner = CalcViewerFrustumCorner();
+    std::array<Vector3, 8> vecViewerFrustumCorner = calcViewerFrustumCorner();
     // light camera's look target is viewer frustum's center
     Vector3 vecViewerFrustumCenter = vecViewerFrustumCorner[0];
     for (unsigned int i = 1; i < 8; i++)
@@ -152,7 +152,7 @@ void SunLightCamera::CalcLightCameraFrustum()
     // move light camera back from dir axis and set light camera frame
     Vector3 vecLightCameraPos = vecViewerFrustumCenter - lightCameraMoveBack * m_sunDir;
     changeCameraFrame(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1]);
-    //SetLightCameraViewTransform(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
+    //setLightCameraViewTransform(vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
     // frustum plane w
     float planeW = -vecMinLightBox.x();
     if (planeW < vecMaxLightBox.x()) planeW = vecMaxLightBox.x();
@@ -165,7 +165,7 @@ void SunLightCamera::CalcLightCameraFrustum()
     m_mxProjSceneCrop = m_mxSceneCrop * m_cullingFrustum.projectionTransform();
 }
 
-std::array<Vector3, 3> SunLightCamera::CalcLightCameraFrame() const
+std::array<Vector3, 3> SunLightCamera::calcLightCameraFrame() const
 {
     std::array<Vector3, 3> vecLightCameraFrame;
     vecLightCameraFrame[2] = m_sunDir;
@@ -183,7 +183,7 @@ std::array<Vector3, 3> SunLightCamera::CalcLightCameraFrame() const
     return vecLightCameraFrame;
 }
 
-std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
+std::array<Vector3, 8> SunLightCamera::calcViewerFrustumCorner() const
 {
     std::array<Vector3, 8> vecFrustumCorner;
     if (m_viewerCamera.expired()) return vecFrustumCorner;
@@ -216,7 +216,7 @@ std::array<Vector3, 8> SunLightCamera::CalcViewerFrustumCorner() const
     return vecFrustumCorner;
 }
 
-void SunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
+void SunLightCamera::calcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
 {
     if (sceneWorldBound.isEmpty()) return;
     Matrix4 mxLightViewProj = m_cullingFrustum.projectionTransform() * viewTransform();

@@ -47,9 +47,13 @@ namespace Enigma::Engine
         void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
 
     private:
+        void registerHandlers();
+        void unregisterHandlers();
+
         void removeTexture(const Frameworks::ICommandPtr& c);
         void putTexture(const Frameworks::ICommandPtr& c);
         void queryTexture(const Frameworks::IQueryPtr& q);
+        void requestTextureConstitution(const Frameworks::IQueryPtr& q);
 
     private:
         std::shared_ptr<TextureStoreMapper> m_storeMapper;
@@ -59,6 +63,7 @@ namespace Enigma::Engine
         Frameworks::CommandSubscriberPtr m_putTexture;
 
         Frameworks::QuerySubscriberPtr m_queryTexture;
+        Frameworks::QuerySubscriberPtr m_requestTextureConstitution;
 
         using TextureMap = std::unordered_map<TextureId, std::shared_ptr<Texture>, TextureId::hash>;
         TextureMap m_textures;

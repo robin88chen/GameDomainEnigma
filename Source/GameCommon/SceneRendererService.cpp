@@ -56,14 +56,14 @@ void SceneRendererService::createSceneRenderSystem(const std::string& renderer_n
 {
     assert(m_config);
     assert(!m_rendererManager.expired());
-    error er = m_rendererManager.lock()->CreateRenderer(renderer_name);
+    error er = m_rendererManager.lock()->createRenderer(renderer_name);
     if (er) return;
-    er = m_rendererManager.lock()->CreateRenderTarget(target_name, m_config->IsPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
+    er = m_rendererManager.lock()->createRenderTarget(target_name, m_config->IsPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
     if (er) return;
-    auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->GetRenderer(renderer_name));
+    auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
     renderer->selectRendererTechnique(m_config->PrimaryRendererTechniqueName());
-    auto target = m_rendererManager.lock()->GetRenderTarget(target_name);
-    std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->SetRenderTarget(target);
+    auto target = m_rendererManager.lock()->getRenderTarget(target_name);
+    std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->setRenderTarget(target);
     m_renderer = renderer;
     attachCamera();
 }
@@ -71,38 +71,38 @@ void SceneRendererService::createSceneRenderSystem(const std::string& renderer_n
 void SceneRendererService::destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
-    m_rendererManager.lock()->DestroyRenderTarget(target_name);
-    m_rendererManager.lock()->DestroyRenderer(renderer_name);
+    m_rendererManager.lock()->destroyRenderTarget(target_name);
+    m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
 void SceneRendererService::prepareGameScene()
 {
-    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->GetSceneCuller()))
+    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->getSceneCuller()))
     {
-        m_renderer.lock()->PrepareScene(m_sceneService.lock()->GetSceneCuller()->GetVisibleSet());
+        m_renderer.lock()->prepareScene(m_sceneService.lock()->getSceneCuller()->getVisibleSet());
     }
 }
 
 void SceneRendererService::renderGameScene()
 {
     if (m_renderer.expired()) return;
-    m_renderer.lock()->ClearRenderTarget();
-    m_renderer.lock()->BeginScene();
-    m_renderer.lock()->DrawScene();
-    m_renderer.lock()->EndScene();
+    m_renderer.lock()->clearRenderTarget();
+    m_renderer.lock()->beginScene();
+    m_renderer.lock()->drawScene();
+    m_renderer.lock()->endScene();
 }
 
 void SceneRendererService::flip()
 {
     if (m_renderer.expired()) return;
-    m_renderer.lock()->Flip();
+    m_renderer.lock()->flip();
 }
 
 void SceneRendererService::attachCamera()
 {
     if ((m_renderer.expired()) || (m_cameraService.expired())) return;
-    m_renderer.lock()->SetAssociatedCamera(m_cameraService.lock()->primaryCamera());
-    auto [w, h] = m_renderer.lock()->GetRenderTarget()->GetDimension();
+    m_renderer.lock()->setAssociatedCamera(m_cameraService.lock()->primaryCamera());
+    auto [w, h] = m_renderer.lock()->getRenderTarget()->getDimension();
     if ((w > 0) && (h > 0))
     {
         m_cameraService.lock()->primaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));

@@ -71,12 +71,12 @@ bool RenderPack::operator!=(const RenderPack& p) const
     return m_element != p.m_element;
 }
 
-const std::shared_ptr<RenderElement>& RenderPack::GetRenderElement()
+const std::shared_ptr<RenderElement>& RenderPack::getRenderElement()
 {
     return m_element;
 }
 
-const std::shared_ptr<RenderElement>& RenderPack::GetRenderElement() const
+const std::shared_ptr<RenderElement>& RenderPack::getRenderElement() const
 {
     return m_element;
 }
@@ -91,22 +91,22 @@ const Matrix4& RenderPack::getWorldTransform() const
     return m_worldTransform;
 }
 
-const Enigma::Engine::RenderLightingState& RenderPack::GetRenderLightingState() const
+const Enigma::Engine::RenderLightingState& RenderPack::getRenderLightingState() const
 {
     return m_renderLightingState;
 }
 
-void RenderPack::SetWorldTransform(const MathLib::Matrix4& mxWorld)
+void RenderPack::setWorldTransform(const MathLib::Matrix4& mxWorld)
 {
     m_worldTransform = mxWorld;
 }
 
-void RenderPack::SetRenderLightingState(const Engine::RenderLightingState& state)
+void RenderPack::setRenderLightingState(const Engine::RenderLightingState& state)
 {
     m_renderLightingState = state;
 }
 
-void RenderPack::CalcSquareCameraDistance(const MathLib::Vector3& camera_loc)
+void RenderPack::calcSquareCameraDistance(const MathLib::Vector3& camera_loc)
 {
     const Vector3 dist = m_worldTransform.UnMatrixTranslate() - camera_loc;
     m_squareCameraDistance = dist.squaredLength();

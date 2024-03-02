@@ -71,7 +71,7 @@ namespace Enigma::Devices
 
         virtual error BindBackSurface(
             const Graphics::IBackSurfacePtr& back_surface, const Graphics::IDepthStencilSurfacePtr& depth_surface) override;
-        virtual error BindViewPort(const Graphics::TargetViewPort& vp) override;
+        virtual error bindViewPort(const Graphics::TargetViewPort& vp) override;
         virtual error BindVertexDeclaration(const Graphics::IVertexDeclarationPtr& vertexDecl) override;
         virtual error BindVertexShader(const Graphics::IVertexShaderPtr& shader) override;
         virtual error BindPixelShader(const Graphics::IPixelShaderPtr& shader) override;

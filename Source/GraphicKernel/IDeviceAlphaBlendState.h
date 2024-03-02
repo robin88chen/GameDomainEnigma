@@ -51,7 +51,7 @@ namespace Enigma::Graphics
         //virtual void create(const BlendStateData& data);
         virtual error CreateFromData(const BlendStateData& data);
         virtual future_error AsyncCreateFromData(const BlendStateData& data);
-        virtual void Bind();
+        virtual void bind();
 
     protected:
         virtual error BindToDevice() = 0;

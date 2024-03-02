@@ -300,7 +300,7 @@ void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
 SceneTraveler::TravelResult Spatial::visitBy(SceneTraveler* traveler)
 {
     if (!traveler) return SceneTraveler::TravelResult::InterruptError;
-    return traveler->TravelTo(thisSpatial());
+    return traveler->travelTo(thisSpatial());
 }
 
 void Spatial::setCullingMode(CullingMode mode)

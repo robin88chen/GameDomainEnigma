@@ -12,15 +12,13 @@
 #include "Renderer/DeferredRenderer.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
-#include "GameEngine/EffectDtoHelper.h"
-#include "Geometries/StandardGeometryDtoHelper.h"
+#include "Geometries/StandardGeometryAssemblers.h"
 #include "Geometries/GeometryDataQueries.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
+#include "Renderables/RenderablePrimitiveAssembler.h"
 #include "Primitives/PrimitiveQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
-#include "SceneGraph/SceneGraphCommands.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
+#include "SceneGraph/SceneGraphAssemblers.h"
 #include "GameCommon/GameCameraService.h"
 #include "LightingPawnDto.h"
 #include "DeferredRenderingCommands.h"
@@ -49,8 +47,8 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
 {
     m_configuration = configuration;
-    LightVolumePawn::SetDefaultVisualTech(m_configuration->visualTechniqueNameForCameraDefault());
-    LightVolumePawn::SetInsideVisualTech(m_configuration->visualTechniqueNameForCameraInside());
+    LightVolumePawn::setDefaultVisualTech(m_configuration->visualTechniqueNameForCameraDefault());
+    LightVolumePawn::setInsideVisualTech(m_configuration->visualTechniqueNameForCameraInside());
 }
 
 DeferredRendererService::~DeferredRendererService()
@@ -69,23 +67,13 @@ ServiceResult DeferredRendererService::onInit()
     EventPublisher::subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
     EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
-    m_onGBufferTextureCreated = std::make_shared<EventSubscriber>([=](auto e) { onGBufferTextureCreated(e); });
-    EventPublisher::subscribe(typeid(RenderTargetTextureCreated), m_onGBufferTextureCreated);
+
     m_onGameLightCreated = std::make_shared<EventSubscriber>([=](auto e) { onGameLightCreated(e); });
     EventPublisher::subscribe(typeid(GameLightCreated), m_onGameLightCreated);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoDeleted(e); });
     EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoUpdated(e); });
     EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onLightingPawnCreated = std::make_shared<EventSubscriber>([=](auto e) { onLightingPawnCreated(e); });
-    EventPublisher::subscribe(typeid(FactorySpatialCreated), m_onLightingPawnCreated);
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onPawnPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-
-    m_bindGBuffer = std::make_shared<CommandSubscriber>([=](auto c) { bindGBuffer(c); });
-    CommandBus::subscribe(typeid(BindGBuffer), m_bindGBuffer);
 
     return SceneRendererService::onInit();
 }
@@ -100,24 +88,13 @@ ServiceResult DeferredRendererService::onTerm()
     m_onGameCameraUpdated = nullptr;
     EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
-    EventPublisher::unsubscribe(typeid(RenderTargetTextureCreated), m_onGBufferTextureCreated);
-    m_onGBufferTextureCreated = nullptr;
+
     EventPublisher::unsubscribe(typeid(GameLightCreated), m_onGameLightCreated);
     m_onGameLightCreated = nullptr;
     EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
     EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
     m_onLightInfoUpdated = nullptr;
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(FactorySpatialCreated), m_onLightingPawnCreated);
-    m_onLightingPawnCreated = nullptr;
-    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-    m_onPawnPrimitiveBuilt = nullptr;
-
-    CommandBus::unsubscribe(typeid(BindGBuffer), m_bindGBuffer);
-    m_bindGBuffer = nullptr;
-
     m_lightingPawns.clear();
 
     return SceneRendererService::onTerm();
@@ -129,21 +106,21 @@ void DeferredRendererService::createSceneRenderSystem(const std::string& rendere
     assert(m_configuration);
     auto rendererManager = m_rendererManager.lock();
     IRendererPtr renderer = std::make_shared<DeferredRenderer>(renderer_name);
-    error er = rendererManager->InsertRenderer(renderer_name, renderer);
+    error er = rendererManager->insertRenderer(renderer_name, renderer);
     if (er) return;
 
-    RenderTargetPtr primaryTarget = rendererManager->GetPrimaryRenderTarget();
+    RenderTargetPtr primaryTarget = rendererManager->getPrimaryRenderTarget();
     if (!primaryTarget)
     {
-        rendererManager->CreateRenderTarget(target_name, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
-        primaryTarget = rendererManager->GetPrimaryRenderTarget();
+        rendererManager->createRenderTarget(target_name, RenderTarget::PrimaryType::IsPrimary, { Graphics::RenderTextureUsage::Default });
+        primaryTarget = rendererManager->getPrimaryRenderTarget();
     }
     if (FATAL_LOG_EXPR(!primaryTarget)) return;
 
-    m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(rendererManager->GetRenderer(renderer_name));
+    m_renderer = std::dynamic_pointer_cast<Renderer::Renderer, IRenderer>(rendererManager->getRenderer(renderer_name));
     m_renderer.lock()->selectRendererTechnique(m_configuration->deferredRendererTechniqueName());
-    m_renderer.lock()->SetRenderTarget(primaryTarget);
-    if (primaryTarget->GetBackSurface() && primaryTarget->GetDepthStencilSurface())
+    m_renderer.lock()->setRenderTarget(primaryTarget);
+    if (primaryTarget->getBackSurface() && primaryTarget->getDepthStencilSurface())
     {
         createGBuffer(primaryTarget);
     }
@@ -153,9 +130,9 @@ void DeferredRendererService::destroySceneRenderSystem(const std::string& render
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);
-    m_rendererManager.lock()->DestroyRenderTarget(target_name);
-    m_rendererManager.lock()->DestroyRenderTarget(m_configuration->gbufferTargetName());
-    m_rendererManager.lock()->DestroyRenderer(renderer_name);
+    m_rendererManager.lock()->destroyRenderTarget(target_name);
+    m_rendererManager.lock()->destroyRenderTarget(m_configuration->gbufferTargetName());
+    m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
 void DeferredRendererService::prepareGameScene()
@@ -169,25 +146,15 @@ void DeferredRendererService::createGBuffer(const RenderTargetPtr& primary_targe
     assert(!m_rendererManager.expired());
     assert(m_configuration);
 
-    auto [width, height] = primary_target->GetDimension();
+    auto [width, height] = primary_target->getDimension();
 
-    m_rendererManager.lock()->CreateRenderTarget(m_configuration->gbufferTargetName(), RenderTarget::PrimaryType::NotPrimary,
-        m_configuration->gbufferUsages());
-    m_gBuffer = m_rendererManager.lock()->GetRenderTarget(m_configuration->gbufferTargetName());
-    if (!m_gBuffer.expired())
-    {
-        m_gBuffer.lock()->InitMultiBackSurface(m_configuration->gbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->gbufferFormats().size()),
-            m_configuration->gbufferFormats());
-        m_gBuffer.lock()->ShareDepthStencilSurface(m_configuration->gbufferDepthName(), primary_target->GetDepthStencilSurface());
-    }
+    m_rendererManager.lock()->createRenderTarget(m_configuration->gbufferTargetName(), m_configuration->gbufferTextureId(), Graphics::MultiBackSurfaceSpecification(m_configuration->gbufferSurfaceName(), MathLib::Dimension<unsigned>{ width, height }, static_cast<unsigned>(m_configuration->gbufferFormats().size()), m_configuration->gbufferFormats()), m_configuration->gbufferDepthName(), primary_target->getDepthStencilSurface(), m_configuration->gbufferUsages());
+    m_gBuffer = m_rendererManager.lock()->getRenderTarget(m_configuration->gbufferTargetName());
     if (const auto deferRender = std::dynamic_pointer_cast<DeferredRenderer, Renderer::Renderer>(m_renderer.lock()))
     {
-        deferRender->AttachGBufferTarget(m_gBuffer.lock());
+        deferRender->attachGBufferTarget(m_gBuffer.lock());
     }
-    for (auto& light : m_lightingPawns)
-    {
-        if (!light.second.expired()) bindGBufferToLightingPawn(light.second.lock());
-    }
+    bindGBufferToPendingLights();
 }
 
 void DeferredRendererService::onPrimaryRenderTargetCreated(const IEventPtr& e)
@@ -195,7 +162,7 @@ void DeferredRendererService::onPrimaryRenderTargetCreated(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    auto primaryTarget = ev->GetRenderTarget();
+    auto primaryTarget = ev->renderTarget();
     if (!primaryTarget) return;
 
     createGBuffer(primaryTarget);
@@ -206,10 +173,10 @@ void DeferredRendererService::onPrimaryRenderTargetResized(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
     if (!ev) return;
-    const auto target = ev->GetRenderTarget();
-    if ((!target) || (!target->IsPrimary())) return;
+    const auto target = ev->renderTarget();
+    if ((!target) || (!target->isPrimary())) return;
 
-    if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->GetDimension() != target->GetDimension())) m_gBuffer.lock()->Resize(target->GetDimension());
+    if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->getDimension() != target->getDimension())) m_gBuffer.lock()->resize(target->getDimension());
 }
 
 void DeferredRendererService::onGameCameraUpdated(const IEventPtr& e)
@@ -238,40 +205,32 @@ void DeferredRendererService::onSceneGraphChanged(const IEventPtr& e)
     if (ev->GetNotifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
     const auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
     if (!light) return;
-    const auto lightPawn = findLightingPawn(light->getSpatialName());
+    const auto lightPawn = findLightingPawn(light->id());
     auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetParentNode());
     if (lightPawn) lightPawn->changeWorldPosition(lightPawn->getWorldPosition(), parent_node);
-}
-
-void DeferredRendererService::onGBufferTextureCreated(const IEventPtr& e)
-{
-    assert(!m_gBuffer.expired());
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RenderTargetTextureCreated, IEvent>(e);
-    if (!ev) return;
-    if (ev->GetRenderTarget() != m_gBuffer.lock()) return;
-    for (auto& light : m_lightingPawns)
-    {
-        if (!light.second.expired()) bindGBufferToLightingPawn(light.second.lock());
-    }
 }
 
 void DeferredRendererService::onGameLightCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GameLightCreated, IEvent>(e);
-    if ((!ev) || (!ev->GetLight())) return;
-    if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::Ambient)
+    if ((!ev) || (!ev->light())) return;
+    if (m_gBuffer.expired())
     {
-        createAmbientLightQuad(ev->GetLight());
+        m_pendingLightsOfGBufferBind.push_back(ev->light());
+        return;
     }
-    else if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::SunLight)
+    if (ev->light()->info().lightType() == LightInfo::LightType::Ambient)
     {
-        createSunLightQuad(ev->GetLight());
+        createAmbientLightQuad(ev->light());
     }
-    else if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::Point)
+    else if (ev->light()->info().lightType() == LightInfo::LightType::SunLight)
     {
-        createPointLightVolume(ev->GetLight());
+        createSunLightQuad(ev->light());
+    }
+    else if (ev->light()->info().lightType() == LightInfo::LightType::Point)
+    {
+        createPointLightVolume(ev->light());
     }
 }
 
@@ -280,233 +239,156 @@ void DeferredRendererService::onLightInfoDeleted(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
-    removeLightingPawn(ev->GetLightName());
-    CommandBus::post(std::make_shared<DeleteSceneSpatial>(ev->GetLightName()));
+    SpatialId pawn_id;
+    if (auto pawn = findLightingPawn(ev->lightId())) pawn_id = pawn->id();
+
+    removeLightingPawn(ev->lightId());
+    CommandBus::post(std::make_shared<DeleteSceneSpatial>(pawn_id));
 }
 
 void DeferredRendererService::onLightInfoUpdated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoUpdated, IEvent>(e);
-    if ((!ev) || (!ev->GetLight())) return;
-    if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::Ambient)
+    if ((!ev) || (!ev->light())) return;
+    if (ev->light()->info().lightType() == LightInfo::LightType::Ambient)
     {
-        updateAmbientLightQuad(ev->GetLight(), ev->GetNotifyCode());
+        updateAmbientLightQuad(ev->light(), ev->notifyCode());
     }
-    else if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::SunLight)
+    else if (ev->light()->info().lightType() == LightInfo::LightType::SunLight)
     {
-        updateSunLightQuad(ev->GetLight(), ev->GetNotifyCode());
+        updateSunLightQuad(ev->light(), ev->notifyCode());
     }
-    else if (ev->GetLight()->Info().GetLightType() == LightInfo::LightType::Point)
+    else if (ev->light()->info().lightType() == LightInfo::LightType::Point)
     {
-        updatePointLightVolume(ev->GetLight(), ev->GetNotifyCode());
-    }
-}
-
-void DeferredRendererService::onSceneGraphBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
-    if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    if (!top_spatials[0]) return;
-    auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(top_spatials[0]);
-    if (!lighting_pawn) return;
-    if (const auto lit = m_buildingLightPawns.find(top_spatials[0]->id()); lit != m_buildingLightPawns.end())
-    {
-        if (!lit->second.m_parentNodeName.empty())
-        {
-            CommandBus::post(std::make_shared<AttachNodeChild>(lit->second.m_parentNodeName, top_spatials[0], lit->second.m_localTransform));
-        }
-        m_buildingLightPawns.erase(lit);
+        updatePointLightVolume(ev->light(), ev->notifyCode());
     }
 }
 
-void DeferredRendererService::onLightingPawnCreated(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
-    if (!ev) return;
-    auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Spatial>(ev->GetSpatial());
-    if (!lighting_pawn) return;
-    onLightingPawnBuilt(lighting_pawn->GetHostLightName(), lighting_pawn);
-}
-
-void DeferredRendererService::onLightingPawnBuilt(const std::string& lit_name, const std::shared_ptr<LightingPawn>& lighting_pawn)
+void DeferredRendererService::completeLightingPawnBuilt(const SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
     if (!lighting_pawn) return;
-    m_lightingPawns.insert_or_assign(lit_name, lighting_pawn);
-    bindGBufferToLightingPawn(lighting_pawn);
-    checkLightVolumeBackfaceCulling(lit_name);
-}
-
-void DeferredRendererService::onPawnPrimitiveBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
-    if ((!ev) || (!ev->GetPawn())) return;
-    auto lighting_pawn = std::dynamic_pointer_cast<LightingPawn, Pawn>(ev->GetPawn());
-    if (!lighting_pawn) return;
-    bindGBufferToLightingPawn(lighting_pawn);
+    m_lightingPawns.insert_or_assign(lit_id, lighting_pawn);
+    checkLightVolumeBackfaceCulling(lit_id);
     lighting_pawn->notifySpatialRenderStateChanged();
-    checkLightVolumeBackfaceCulling(lighting_pawn->GetHostLightName());
-}
-
-void DeferredRendererService::bindGBuffer(const ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<BindGBuffer>(c);
-    if (!cmd) return;
-    if ((!cmd->GetPawn()) || (!cmd->GetPawn()->GetPrimitive())) return;
-    if (const auto model = std::dynamic_pointer_cast<ModelPrimitive>(cmd->GetPawn()->GetPrimitive()))
-    {
-        const auto mesh_count = model->getMeshPrimitiveCount();
-        for (unsigned i = 0; i < mesh_count; i++)
-        {
-            if (auto mesh = model->getMeshPrimitive(i))
-            {
-                bindGBufferToLightingMesh(mesh);
-            }
-        }
-    }
-    else if (const auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(cmd->GetPawn()->GetPrimitive()))
-    {
-        bindGBufferToLightingMesh(mesh);
-    }
 }
 
 void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    m_ambientLightQuadId = Geometries::GeometryId(lit->getSpatialName() + "_lit_quad" + ".geo");
-    auto quad_geo = Geometries::GeometryData::queryGeometryData(m_ambientLightQuadId);
+    const auto amb_quad_id = Geometries::GeometryId(lit->getSpatialName() + "_lit_quad" + ".geo");
+    auto quad_geo = Geometries::GeometryData::queryGeometryData(amb_quad_id);
     if (!quad_geo)
     {
-        Geometries::SquareQuadDtoHelper quad_dto_helper(m_ambientLightQuadId);
-        quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-            .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-        quad_geo = std::make_shared<Geometries::RequestGeometryConstitution>(m_ambientLightQuadId, quad_dto_helper.toGenericDto(), Geometries::RequestGeometryConstitution::PersistenceLevel::Repository)->dispatch();
+        quad_geo = Geometries::SquareQuadAssembler(amb_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
     }
-    m_ambientLightMeshId = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
-    auto lit_mesh = Primitives::Primitive::queryPrimitive(m_ambientLightMeshId);
+    const auto amb_mesh_id = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
+    auto lit_mesh = Primitives::Primitive::queryPrimitive(amb_mesh_id);
     if (!lit_mesh)
     {
-        MeshPrimitiveDto mesh_dto;
-        mesh_dto.id() = m_ambientLightMeshId;
-        mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
-        mesh_dto.geometryId() = m_ambientLightQuadId;
-        mesh_dto.effects().emplace_back(m_configuration->ambientEffect());
-        mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-        lit_mesh = std::make_shared<Primitives::RequestPrimitiveConstitution>(m_ambientLightMeshId, mesh_dto.toGenericDto(), Primitives::RequestPrimitiveConstitution::PersistenceLevel::Repository)->dispatch();
+        lit_mesh = Renderables::MeshPrimitiveAssembler(amb_mesh_id).geometryId(amb_quad_id).asNative(amb_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
     }
-    m_ambientLightPawnId = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
-    auto lit_pawn = std::make_shared<QuerySpatial>(m_ambientLightPawnId)->dispatch();
+    const auto amb_pawn_id = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
+    auto lit_pawn = std::make_shared<QuerySpatial>(amb_pawn_id)->dispatch();
     if (!lit_pawn)
     {
-        PawnDtoHelper pawn_helper(m_ambientLightPawnId);
-        pawn_helper.primitive(m_ambientLightMeshId).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
-        lighting_pawn_dto.id() = m_ambientLightPawnId;
-        lighting_pawn_dto.HostLightName() = lit->getSpatialName();
+        PawnAssembler pawn_assembler(amb_pawn_id);
+        pawn_assembler.primitive(amb_mesh_id).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
+        lighting_pawn_dto.id() = amb_pawn_id;
+        lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
-        lit_pawn = std::make_shared<RequestSpatialConstitution>(m_ambientLightPawnId, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
-        if (lit_pawn)
-        {
-            if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
-            {
-                parent->attachChild(lit_pawn, lit->getLocalTransform());
-            }
-        }
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
     }
-    /*PawnDtoHelper pawn_helper(lit->getSpatialName() + "_lit_quad");
-    pawn_helper.primitive(mesh_dto.id())
-        .topLevel(true)
-        .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
-    auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightQuadPawn::TYPE_RTTI);
-    lighting_pawn_dto.id() = pawn_id;
-    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
-    auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    auto dtos = { pawn_dto };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
-    insertLightPawnBuildingMeta(pawn_id, lit);*/
+    if (lit_pawn)
+    {
+        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+        {
+            parent->attachChild(lit_pawn, lit->getLocalTransform());
+        }
+        completeLightingPawnBuilt(lit->id(), std::dynamic_pointer_cast<LightingPawn>(lit_pawn));
+    }
 }
 
 void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    std::string quad_geo_name = lit->getSpatialName() + "_lit_quad" + ".geo";
-    Geometries::SquareQuadDtoHelper quad_dto_helper(quad_geo_name);
-    quad_dto_helper.xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f))
-        .textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f));
-
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
-    mesh_dto.geometryId() = quad_geo_name;
-    mesh_dto.geometry() = quad_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->sunLightEffect());
-    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-
-    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI));
-    pawn_helper.primitive(mesh_dto.id())
-        .spatialFlags(m_configuration->sunLightSpatialFlags()).topLevel(true)
-        .factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
-    auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightQuadPawn::TYPE_RTTI);
-    lighting_pawn_dto.id() = pawn_id;
-    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
-    auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
-    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
-    //auto dtos = { pawn_dto };
-    //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
-    insertLightPawnBuildingMeta(pawn_id, lit);
+    const auto sun_quad_id = Geometries::GeometryId(lit->getSpatialName() + "_lit_quad" + ".geo");
+    auto quad_geo = Geometries::GeometryData::queryGeometryData(sun_quad_id);
+    if (!quad_geo)
+    {
+        quad_geo = Geometries::SquareQuadAssembler(sun_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
+    }
+    const auto sun_mesh_id = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
+    auto lit_mesh = Primitives::Primitive::queryPrimitive(sun_mesh_id);
+    if (!lit_mesh)
+    {
+        lit_mesh = Renderables::MeshPrimitiveAssembler(sun_mesh_id).geometryId(sun_quad_id).asNative(sun_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+    }
+    const auto sun_pawn_id = SpatialId(lit->getSpatialName() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
+    auto lit_pawn = std::make_shared<QuerySpatial>(sun_pawn_id)->dispatch();
+    if (!lit_pawn)
+    {
+        PawnAssembler pawn_assembler(sun_pawn_id);
+        pawn_assembler.primitive(sun_mesh_id)/*.spatialFlags(m_configuration->sunLightSpatialFlags())*/.topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
+        lighting_pawn_dto.id() = sun_pawn_id;
+        lighting_pawn_dto.hostLightId() = lit->id();
+        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
+    }
+    if (lit_pawn)
+    {
+        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+        {
+            parent->attachChild(lit_pawn, lit->getLocalTransform());
+        }
+        completeLightingPawnBuilt(lit->id(), std::dynamic_pointer_cast<LightingPawn>(lit_pawn));
+    }
 }
 
 void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
-    std::string vol_geo_name = "deferred_" + lit->getSpatialName() + "_lit_volume.geo";
-    Geometries::SphereDtoHelper sphere_dto_helper(vol_geo_name);
-    sphere_dto_helper.sphere(MathLib::Vector3::ZERO, lit->GetLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound();
+    const auto vol_geo_id = Geometries::GeometryId("deferred_" + lit->getSpatialName() + "_lit_volume.geo");
+    auto vol_geo = Geometries::GeometryData::queryGeometryData(vol_geo_id);
+    if (!vol_geo)
+    {
+        vol_geo = Geometries::SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, lit->getLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute(Geometries::PersistenceLevel::Repository);
+    }
+    const auto vol_mesh_id = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_volume", MeshPrimitive::TYPE_RTTI);
+    auto vol_mesh = Primitives::Primitive::queryPrimitive(vol_mesh_id);
+    if (!vol_mesh)
+    {
+        vol_mesh = Renderables::MeshPrimitiveAssembler(vol_mesh_id).geometryId(vol_geo_id).asNative(vol_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+    }
 
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = Primitives::PrimitiveId(lit->getSpatialName() + "_lit_volume", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_dto.id().name() + ".mesh@DataPath");
-    mesh_dto.geometryId() = vol_geo_name;
-    mesh_dto.geometry() = sphere_dto_helper.toGenericDto();
-    mesh_dto.effects().emplace_back(m_configuration->lightVolumeEffect());
-    mesh_dto.renderListID() = Renderer::Renderer::RenderListID::DeferredLighting;
-
-    PawnDtoHelper pawn_helper(SpatialId(lit->getSpatialName() + "_lit_volume", LightVolumePawn::TYPE_RTTI));
-    pawn_helper.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(mesh_dto.id())
-        .topLevel(true).localTransform(lit->getLocalTransform());
-    LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_helper.toPawnDto());
-    auto pawn_id = SpatialId(lighting_pawn_dto.name(), LightVolumePawn::TYPE_RTTI);
-    lighting_pawn_dto.id() = pawn_id;
-    lighting_pawn_dto.HostLightName() = lit->getSpatialName();
-    auto pawn_dto = lighting_pawn_dto.toGenericDto();
-    auto lit_pawn = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_dto, RequestSpatialConstitution::PersistenceLevel::Repository)->dispatch();
-    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_id, pawn_dto));
-    //auto dtos = { pawn_dto };
-    //CommandBus::post(std::make_shared<BuildSceneGraph>(lit->getSpatialName(), dtos));
-    insertLightPawnBuildingMeta(pawn_id, lit);
+    auto vol_pawn_id = SpatialId(lit->getSpatialName() + "_lit_volume", LightVolumePawn::TYPE_RTTI);
+    auto lit_pawn = std::make_shared<QuerySpatial>(vol_pawn_id)->dispatch();
+    if (!lit_pawn)
+    {
+        PawnAssembler pawn_assembler(vol_pawn_id);
+        pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id)
+            .topLevel(true).localTransform(lit->getLocalTransform());
+        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
+        lighting_pawn_dto.id() = vol_pawn_id;
+        lighting_pawn_dto.hostLightId() = lit->id();
+        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
+    }
+    if (lit_pawn)
+    {
+        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+        {
+            parent->attachChild(lit_pawn, lit->getLocalTransform());
+        }
+        completeLightingPawnBuilt(lit->id(), std::dynamic_pointer_cast<LightingPawn>(lit_pawn));
+    }
 }
 
-void DeferredRendererService::insertLightPawnBuildingMeta(const SceneGraph::SpatialId& pawn_id, const std::shared_ptr<Light>& lit)
+void DeferredRendererService::removeLightingPawn(const SpatialId& lit_id)
 {
-    if (!lit) return;
-    SceneGraphLightPawnMeta meta;
-    if (lit->getParent()) meta.m_parentNodeName = lit->getParent()->getSpatialName();
-    meta.m_localTransform = lit->getLocalTransform();
-    m_buildingLightPawns.insert({ pawn_id, meta });
-}
-
-void DeferredRendererService::removeLightingPawn(const std::string& name)
-{
-    if (const auto it = m_lightingPawns.find(name); it != m_lightingPawns.end())
+    if (const auto it = m_lightingPawns.find(lit_id); it != m_lightingPawns.end())
     {
         m_lightingPawns.erase(it);
     }
@@ -516,7 +398,7 @@ void DeferredRendererService::updateAmbientLightQuad(const std::shared_ptr<Light
 {
     assert(lit);
     if (notify != LightInfoUpdated::NotifyCode::Color) return;
-    const auto& pawn = findLightingPawn(lit->getSpatialName());
+    const auto& pawn = findLightingPawn(lit->id());
     if (!pawn) return;
     pawn->notifySpatialRenderStateChanged();
 }
@@ -524,20 +406,20 @@ void DeferredRendererService::updateAmbientLightQuad(const std::shared_ptr<Light
 void DeferredRendererService::updatePointLightVolume(const std::shared_ptr<Light>& lit, LightInfoUpdated::NotifyCode notify)
 {
     assert(lit);
-    if (lit->Info().GetLightType() != LightInfo::LightType::Point) return;
-    const auto& pawn = findLightingPawn(lit->getSpatialName());
+    if (lit->info().lightType() != LightInfo::LightType::Point) return;
+    const auto& pawn = findLightingPawn(lit->id());
     if (!pawn) return;
     if (notify == LightInfoUpdated::NotifyCode::Position)
     {
-        pawn->changeWorldPosition(lit->GetLightPosition(), std::nullopt);
+        pawn->changeWorldPosition(lit->getLightPosition(), std::nullopt);
     }
     else if (notify == LightInfoUpdated::NotifyCode::Range)
     {
-        pawn->setLocalUniformScale(lit->GetLightRange());
+        pawn->setLocalUniformScale(lit->getLightRange());
     }
     else if (notify == LightInfoUpdated::NotifyCode::Enable)
     {
-        if (lit->Info().IsEnable())
+        if (lit->info().isEnable())
         {
             pawn->removeSpatialFlag(Spatial::Spatial_Hide);
         }
@@ -551,13 +433,13 @@ void DeferredRendererService::updatePointLightVolume(const std::shared_ptr<Light
         pawn->notifySpatialRenderStateChanged();
     }
 
-    checkLightVolumeBackfaceCulling(lit->getSpatialName());
+    checkLightVolumeBackfaceCulling(lit->id());
 }
 
 void DeferredRendererService::updateSunLightQuad(const std::shared_ptr<Light>& lit, LightInfoUpdated::NotifyCode notify)
 {
     assert(lit);
-    const auto& pawn = findLightingPawn(lit->getSpatialName());
+    const auto& pawn = findLightingPawn(lit->id());
     if (!pawn) return;
     if ((notify == LightInfoUpdated::NotifyCode::Color) || (notify == LightInfoUpdated::NotifyCode::Direction))
     {
@@ -565,47 +447,40 @@ void DeferredRendererService::updateSunLightQuad(const std::shared_ptr<Light>& l
     }
 }
 
-void DeferredRendererService::bindGBufferToLightingMesh(const std::shared_ptr<MeshPrimitive>& mesh)
+void DeferredRendererService::bindGBufferToPendingLights()
 {
-    assert(m_configuration);
-    if (!mesh) return;
-    if (m_gBuffer.expired()) return;
-    if (!m_gBuffer.lock()->GetRenderTargetTexture()) return;
-
-    EffectTextureMap::SegmentEffectTextures textures = {
-        { m_configuration->gbufferNormalSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal) },
-        { m_configuration->gbufferDiffuseSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo) },
-        { m_configuration->gbufferSpecularSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular) },
-        { m_configuration->gbufferDepthSemantic(), m_gBuffer.lock()->GetRenderTargetTexture(), m_gBuffer.lock()->FindRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth) } };
-    if (mesh->getTextureMapCount() != 0)
+    if (m_pendingLightsOfGBufferBind.empty()) return;
+    for (const auto& light : m_pendingLightsOfGBufferBind)
     {
-        mesh->bindSemanticTextures(textures);
+        if (light.expired()) continue;
+        if (light.lock()->info().lightType() == LightInfo::LightType::Ambient)
+        {
+            createAmbientLightQuad(light.lock());
+        }
+        else if (light.lock()->info().lightType() == LightInfo::LightType::SunLight)
+        {
+            createSunLightQuad(light.lock());
+        }
+        else if (light.lock()->info().lightType() == LightInfo::LightType::Point)
+        {
+            createPointLightVolume(light.lock());
+        }
     }
-    else
-    {
-        mesh->changeTextureMaps({ textures });
-    }
+    m_pendingLightsOfGBufferBind.clear();
 }
 
-void DeferredRendererService::bindGBufferToLightingPawn(const std::shared_ptr<LightingPawn>& lighting_pawn)
+std::shared_ptr<LightingPawn> DeferredRendererService::findLightingPawn(const SpatialId& lit_id)
 {
-    if (!lighting_pawn) return;
-    auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(lighting_pawn->GetPrimitive());
-    if (mesh) bindGBufferToLightingMesh(mesh);
-}
-
-std::shared_ptr<LightingPawn> DeferredRendererService::findLightingPawn(const std::string& name)
-{
-    if (const auto it = m_lightingPawns.find(name); it != m_lightingPawns.end())
+    if (const auto it = m_lightingPawns.find(lit_id); it != m_lightingPawns.end())
     {
         return it->second.lock();
     }
     return nullptr;
 }
 
-void DeferredRendererService::checkLightVolumeBackfaceCulling(const std::string& lit_name)
+void DeferredRendererService::checkLightVolumeBackfaceCulling(const SpatialId& lit_id)
 {
-    auto lit_vol = std::dynamic_pointer_cast<LightVolumePawn, LightingPawn>(findLightingPawn(lit_name));
+    auto lit_vol = std::dynamic_pointer_cast<LightVolumePawn, LightingPawn>(findLightingPawn(lit_id));
     if (!lit_vol) return;
     if (m_cameraService.expired()) return;
     auto camera = m_cameraService.lock()->primaryCamera();
@@ -628,4 +503,16 @@ void DeferredRendererService::checkLightVolumeBackfaceCulling(const std::shared_
     {
         lit_vol->ToggleCameraInside(false);
     }
+}
+
+EffectTextureMapDtoHelper DeferredRendererService::getGBufferTextureSemantics()
+{
+    assert(m_configuration);
+    EffectTextureMapDtoHelper gbuffer_textures;
+
+    gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic());
+    gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic());
+    gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic());
+    gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic());
+    return gbuffer_textures;
 }

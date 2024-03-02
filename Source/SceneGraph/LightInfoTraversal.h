@@ -13,6 +13,7 @@
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/Request.h"
 #include "Frameworks/RequestSubscriber.h"
+#include "SpatialId.h"
 #include <system_error>
 #include <unordered_map>
 #include <mutex>
@@ -52,7 +53,7 @@ namespace Enigma::SceneGraph
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
 
-        typedef std::unordered_map<std::string, std::weak_ptr<Light>> LightNodeMap;
+        typedef std::unordered_map<SpatialId, std::weak_ptr<Light>, SpatialId::hash> LightNodeMap;
         LightNodeMap m_lights;
         std::recursive_mutex m_mapLock;
 

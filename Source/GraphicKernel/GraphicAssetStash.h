@@ -27,7 +27,7 @@ namespace Enigma::Graphics
         AssetStash& operator=(const AssetStash&) = delete;
         AssetStash& operator=(AssetStash&&) = delete;
 
-        void Clear();
+        void clear();
 
         /** Add key value data */
         template <class T> void Add(const std::string& key, const T& value)

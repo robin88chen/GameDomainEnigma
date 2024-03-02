@@ -146,12 +146,12 @@ void AnimationAssetRepository::requestAnimationAssetCreation(const Frameworks::I
         return;
     }
     auto animation = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == RequestAnimationAssetCreation::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_animationAssetLock };
         m_animationAssets.insert_or_assign(request->id(), animation);
     }
-    else if (request->persistenceLevel() == RequestAnimationAssetCreation::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putAnimationAsset(request->id(), animation);
     }
@@ -169,12 +169,12 @@ void AnimationAssetRepository::requestAnimationAssetConstitution(const Framework
         return;
     }
     auto animation = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == RequestAnimationAssetConstitution::PersistenceLevel::Repository)
+    if (request->persistenceLevel() == PersistenceLevel::Repository)
     {
         std::lock_guard locker{ m_animationAssetLock };
         m_animationAssets.insert_or_assign(request->id(), animation);
     }
-    else if (request->persistenceLevel() == RequestAnimationAssetConstitution::PersistenceLevel::Store)
+    else if (request->persistenceLevel() == PersistenceLevel::Store)
     {
         putAnimationAsset(request->id(), animation);
     }

@@ -18,14 +18,14 @@ CSMSunLightCamera::CSMSunLightCamera(const SpatialId& id, unsigned partition) : 
     m_adjustedViewerNearPlane = 0.1f;
     m_adjustedViewerFarPlane = 10.0f;
     m_partitionCount = 0;
-    SetPartitionCount(partition);
+    setPartitionCount(partition);
 }
 
 CSMSunLightCamera::~CSMSunLightCamera()
 {
 }
 
-void CSMSunLightCamera::SetPartitionCount(unsigned partition)
+void CSMSunLightCamera::setPartitionCount(unsigned partition)
 {
     if (partition == m_partitionCount) return;
     m_partitionCount = partition;
@@ -39,34 +39,34 @@ void CSMSunLightCamera::SetPartitionCount(unsigned partition)
     m_mxTexCoordTransforms.resize(partition);
 }
 
-void CSMSunLightCamera::SetSunLightDir(const Vector3& sun_dir)
+void CSMSunLightCamera::setSunLightDir(const Vector3& sun_dir)
 {
     m_sunLightDir = sun_dir;
     m_sunLightDir.normalizeSelf();
 }
 
-void CSMSunLightCamera::SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
+void CSMSunLightCamera::setViewerCamera(const std::shared_ptr<Camera>& viewer_camera)
 {
     m_viewerCamera = viewer_camera;
 }
 
-void CSMSunLightCamera::CalcLightCameraSystemMatrix(Culler* culler)
+void CSMSunLightCamera::calcLightCameraSystemMatrix(Culler* culler)
 {
     if (!culler) return;
 
     ShadowCasterBoundFilter filterShadowBound;
-    filterShadowBound.computeMergedBound(culler->GetVisibleSet());
+    filterShadowBound.computeMergedBound(culler->getVisibleSet());
 
-    CalcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
+    calcSceneBoundFrustumPlane(culler, filterShadowBound.getMergedBound());
 
-    CalcLightCameraFrustum();
+    calcLightCameraFrustum();
 
-    CalcSceneCropMatrix(filterShadowBound.getMergedBound());
+    calcSceneCropMatrix(filterShadowBound.getMergedBound());
 
-    RefreshTextureCoordTransform();
+    refreshTextureCoordTransform();
 }
 
-void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound)
+void CSMSunLightCamera::calcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound)
 {
     /*
     這裡在算有效範圍的遠近平面，只有當Frustum完全在scene BB內時，才能直接使用Viewer的遠近平面，
@@ -127,13 +127,13 @@ void CSMSunLightCamera::CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCull
     if (m_adjustedViewerFarPlane > vecMax.z()) m_adjustedViewerFarPlane = vecMax.z();
 }
 
-void CSMSunLightCamera::CalcLightCameraFrustum()
+void CSMSunLightCamera::calcLightCameraFrustum()
 {
-    std::array<Vector3, 3> vecLightFrustumAxis = CalcLightCameraFrame();
+    std::array<Vector3, 3> vecLightFrustumAxis = calcLightCameraFrame();
 
     for (unsigned frusta = 0; frusta < m_partitionCount; frusta++)
     {
-        std::array<Vector3, 8> vecViewerFrustumCorner = CalcViewerFrustumCorner(frusta);
+        std::array<Vector3, 8> vecViewerFrustumCorner = calcViewerFrustumCorner(frusta);
         // light camera's look target is viewer frustum's center
         Vector3 vecViewerFrustumCenter = vecViewerFrustumCorner[0];
         for (unsigned int i = 1; i < 8; i++)
@@ -166,7 +166,7 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         // move light camera back from dir axis
         Vector3 vecLightCameraPos = vecViewerFrustumCenter - lightCameraMoveBack * m_sunLightDir;
         // and set light camera frame
-        SetLightCameraViewTransform(frusta, vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
+        setLightCameraViewTransform(frusta, vecLightCameraPos, vecLightFrustumAxis[2], vecLightFrustumAxis[1], vecLightFrustumAxis[0]);
         // frustum plane w
         float fPlaneW = -vecMinLightBox.x();
         if (fPlaneW < vecMaxLightBox.x()) fPlaneW = vecMaxLightBox.x();
@@ -179,10 +179,10 @@ void CSMSunLightCamera::CalcLightCameraFrustum()
         m_mxProjSceneCrops[frusta] = m_mxSceneCrops[frusta] * m_lightFrustums[frusta].projectionTransform();
     }
 
-    RefreshTextureCoordTransform();
+    refreshTextureCoordTransform();
 }
 
-std::array<Vector3, 3> CSMSunLightCamera::CalcLightCameraFrame() const
+std::array<Vector3, 3> CSMSunLightCamera::calcLightCameraFrame() const
 {
     std::array<Vector3, 3> vecLightCameraFrame;
     vecLightCameraFrame[2] = m_sunLightDir;
@@ -200,7 +200,7 @@ std::array<Vector3, 3> CSMSunLightCamera::CalcLightCameraFrame() const
     return vecLightCameraFrame;
 }
 
-std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frustaIndex)
+std::array<Vector3, 8> CSMSunLightCamera::calcViewerFrustumCorner(unsigned frustaIndex)
 {
     std::array<Vector3, 8> viewerFrustumCorners;
 
@@ -254,7 +254,7 @@ std::array<Vector3, 8> CSMSunLightCamera::CalcViewerFrustumCorner(unsigned frust
     return viewerFrustumCorners;
 }
 
-void CSMSunLightCamera::SetLightCameraViewTransform(unsigned frustaIndex,
+void CSMSunLightCamera::setLightCameraViewTransform(unsigned frustaIndex,
     const MathLib::Vector3& eye, const MathLib::Vector3& dir, const MathLib::Vector3& up, const MathLib::Vector3& right)
 {
     assert(frustaIndex < m_partitionCount);
@@ -269,7 +269,7 @@ void CSMSunLightCamera::SetLightCameraViewTransform(unsigned frustaIndex,
     m_vecLightCameraLocations[frustaIndex] = eye;
 }
 
-void CSMSunLightCamera::RefreshTextureCoordTransform()
+void CSMSunLightCamera::refreshTextureCoordTransform()
 {
     assert(m_partitionCount > 0);
     if (m_partitionCount <= 0) return;
@@ -287,7 +287,7 @@ void CSMSunLightCamera::RefreshTextureCoordTransform()
     }
 }
 
-void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
+void CSMSunLightCamera::calcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound)
 {
     // https://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf
     // https://github.com/GKR/NvidiaCascadedShadowMapsGLM
@@ -329,25 +329,25 @@ void CSMSunLightCamera::CalcSceneCropMatrix(const Engine::BoundingVolume& sceneW
     }
 }
 
-const Matrix4& CSMSunLightCamera::GetLightViewTransform(unsigned int index) const
+const Matrix4& CSMSunLightCamera::getLightViewTransform(unsigned int index) const
 {
     assert(index < m_partitionCount);
     return m_mxLightViewTransforms[index];
 }
 
-const Matrix4& CSMSunLightCamera::GetLightProjectionTransform(unsigned int index) const
+const Matrix4& CSMSunLightCamera::getLightProjectionTransform(unsigned int index) const
 {
     assert(index < m_partitionCount);
     return m_mxProjSceneCrops[index];
 }
 
-const Vector3& CSMSunLightCamera::GetLightCameraLocation(unsigned int index) const
+const Vector3& CSMSunLightCamera::getLightCameraLocation(unsigned int index) const
 {
     assert(index < m_partitionCount);
     return m_vecLightCameraLocations[index];
 }
 
-Vector4 CSMSunLightCamera::LightFrustaDistanceToVector4() const
+Vector4 CSMSunLightCamera::lightFrustaDistanceToVector4() const
 {
     Vector4 vecLightFrustaDistance = Vector4::ZERO;
     unsigned count = m_partitionCount;

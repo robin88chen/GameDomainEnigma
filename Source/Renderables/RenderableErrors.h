@@ -22,6 +22,11 @@ namespace Enigma::Renderables
 
         nullAnimator = 201,
         animatorMultiListening,
+
+        nullRenderBuffer = 301,
+
+        nullRenderer = 401,
+        emptyRenderElementList,
     };
     class ErrorCategory : public std::error_category
     {

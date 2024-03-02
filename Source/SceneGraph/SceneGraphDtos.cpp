@@ -5,9 +5,7 @@
 #include "Spatial.h"
 #include "Light.h"
 #include "Pawn.h"
-#include "SceneGraphPolicies.h"
 #include "VisibilityManagedNode.h"
-#include "GameEngine/DtoDeserializer.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -25,7 +23,7 @@ static std::string TOKEN_MODEL_BOUND = "ModelBound";
 static std::string TOKEN_CULLING_MODE = "CullingMode";
 static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
-static std::string TOKEN_CHILD_NAMES = "ChildNames";
+static std::string TOKEN_CHILD_IDS = "ChildIds";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
@@ -88,7 +86,7 @@ NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.getName()));
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CHILD_NAMES)) m_childNames = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CHILD_IDS)) m_childIds = tokensToIds(v.value());
 }
 
 /*NodeDto NodeDto::fromGenericDto(const GenericDto& dto)
@@ -100,9 +98,30 @@ NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 GenericDto NodeDto::toGenericDto() const
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_CHILD_NAMES, m_childNames);
+    dto.addOrUpdate(TOKEN_CHILD_IDS, idsToTokens(m_childIds));
 
     return dto;
+}
+
+std::vector<SpatialId> NodeDto::tokensToIds(const std::vector<std::string>& child_tokens)
+{
+    std::vector<SpatialId> child_ids;
+    for (unsigned i = 0; i < child_tokens.size(); i += 2)
+    {
+        child_ids.push_back(SpatialId({ child_tokens[i], child_tokens[i + 1] }));
+    };
+    return child_ids;
+}
+
+std::vector<std::string> NodeDto::idsToTokens(const std::vector<SpatialId> child_ids) const
+{
+    std::vector<std::string> child_tokens;
+    for (const SpatialId& id : child_ids)
+    {
+        auto tokens = id.tokens();
+        child_tokens.insert(child_tokens.end(), tokens.begin(), tokens.end());
+    }
+    return child_tokens;
 }
 
 LightDto::LightDto() : SpatialDto()
@@ -171,20 +190,6 @@ GenericDto PawnDto::toGenericDto() const
     //dto.addOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
 }
-
-/*std::shared_ptr<PawnPolicy> PawnDto::convertToPolicy(const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
-{
-    if (m_primitive)
-    {
-        return std::make_shared<PawnPolicy>(m_name, m_primitive.value());
-    }
-    //todo : prefab support
-    /*else
-    {
-        return std::make_shared<PawnPolicy>(m_name, m_primitiveFactory.GetPrefab(), deserializer);
-    }*/
-    /*return nullptr;
-}*/
 
 LazyNodeDto::LazyNodeDto() : NodeDto()
 {

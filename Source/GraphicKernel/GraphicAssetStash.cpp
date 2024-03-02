@@ -11,7 +11,7 @@ AssetStash::~AssetStash()
     m_dataValues.clear();
 }
 
-void AssetStash::Clear()
+void AssetStash::clear()
 {
     std::lock_guard locker{ m_lock };
     m_dataValues.clear();

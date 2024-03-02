@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
         ContainingPortalZoneFinder& operator=(ContainingPortalZoneFinder&&) = default;
         virtual ~ContainingPortalZoneFinder() override;
 
-        virtual TravelResult TravelTo(const SpatialPtr& spatial) override;
+        virtual TravelResult travelTo(const SpatialPtr& spatial) override;
 
         std::shared_ptr<PortalZoneNode> GetContainingZone() { return m_containingPortalZone; };
 

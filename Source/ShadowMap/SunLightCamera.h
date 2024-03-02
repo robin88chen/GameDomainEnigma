@@ -25,20 +25,20 @@ namespace Enigma::ShadowMap
         SunLightCamera& operator=(const SunLightCamera& other) = delete;
         SunLightCamera& operator=(SunLightCamera&& other) noexcept = delete;
 
-        void SetSunLightDir(const MathLib::Vector3& sun_dir);
-        void SetViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
+        void setSunLightDir(const MathLib::Vector3& sun_dir);
+        void setViewerCamera(const std::shared_ptr<Camera>& viewer_camera);
 
-        void CalcLightCameraSystemMatrix(SceneGraph::Culler* culler);
+        void calcLightCameraSystemMatrix(SceneGraph::Culler* culler);
 
-        const MathLib::Matrix4& GetLightViewProjMatrix() const { return m_mxLightViewProj; };
+        const MathLib::Matrix4& getLightViewProjMatrix() const { return m_mxLightViewProj; };
         virtual const MathLib::Matrix4& projectionTransform() override;
 
     protected:
-        void CalcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
-        void CalcLightCameraFrustum();
-        std::array<MathLib::Vector3, 3> CalcLightCameraFrame() const;
-        std::array<MathLib::Vector3, 8> CalcViewerFrustumCorner() const;
-        void CalcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
+        void calcSceneBoundFrustumPlane(SceneGraph::Culler* sceneCuller, const Engine::BoundingVolume& sceneWorldBound);
+        void calcLightCameraFrustum();
+        std::array<MathLib::Vector3, 3> calcLightCameraFrame() const;
+        std::array<MathLib::Vector3, 8> calcViewerFrustumCorner() const;
+        void calcSceneCropMatrix(const Engine::BoundingVolume& sceneWorldBound);
 
     protected:
         MathLib::Vector3 m_sunDir;

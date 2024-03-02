@@ -2,6 +2,7 @@
 #include "GameCommonErrors.h"
 #include "SceneGraph/Light.h"
 #include "LightingPawnDto.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
@@ -16,13 +17,15 @@ LightingPawn::LightingPawn(const SpatialId& id) : Pawn(id)
 
 LightingPawn::LightingPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
 {
+    LightingPawnDto dto = LightingPawnDto::fromGenericDto(o);
+    m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(dto.hostLightId())->dispatch());
 }
 
 LightingPawn::~LightingPawn()
 {
 }
 
-void LightingPawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
+void LightingPawn::setHostLight(const std::shared_ptr<SceneGraph::Light>& light)
 {
     m_hostLight = light;
 }
@@ -30,12 +33,12 @@ void LightingPawn::SetHostLight(const std::shared_ptr<SceneGraph::Light>& light)
 void LightingPawn::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     LightingPawnDto pawn_dto = LightingPawnDto::fromGenericDto(dto);
-    if (!pawn_dto.HostLightName().empty())
+    if (!pawn_dto.hostLightId().name().empty())
     {
-        resolver.tryResolveLinkage(pawn_dto.HostLightName(), [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(pawn_dto.hostLightId().name(), [lifetime = weak_from_this()](auto sp)
             {
                 if (!lifetime.expired())
-                    std::dynamic_pointer_cast<LightingPawn, Spatial>(lifetime.lock())->SetHostLight(std::dynamic_pointer_cast<Light>(sp));
+                    std::dynamic_pointer_cast<LightingPawn, Spatial>(lifetime.lock())->setHostLight(std::dynamic_pointer_cast<Light>(sp));
             });
     }
 }

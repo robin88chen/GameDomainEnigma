@@ -81,7 +81,7 @@ namespace Enigma::SceneGraph
     public:
         LightInfoEvent(const std::shared_ptr<Light>& lit) : m_light(lit) {};
 
-        std::shared_ptr<Light> GetLight() { return m_light.lock(); }
+        std::shared_ptr<Light> light() { return m_light.lock(); }
     protected:
         std::weak_ptr<Light> m_light;
     };
@@ -93,13 +93,13 @@ namespace Enigma::SceneGraph
     class LightInfoDeleted : public LightInfoEvent
     {
     public:
-        LightInfoDeleted(const std::string& name, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
-            m_lightName{ name }, m_lightType{ light_type } {}
+        LightInfoDeleted(const SpatialId& id, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
+            m_lightId(id), m_lightType{ light_type } {}
 
-        const std::string& GetLightName() { return m_lightName; }
-        LightInfo::LightType GetLightType() const { return m_lightType; }
+        const SpatialId& lightId() { return m_lightId; }
+        LightInfo::LightType lightType() const { return m_lightType; }
     protected:
-        std::string m_lightName;
+        SpatialId m_lightId;
         LightInfo::LightType m_lightType;
     };
     class LightInfoUpdated : public LightInfoEvent
@@ -118,7 +118,7 @@ namespace Enigma::SceneGraph
         LightInfoUpdated(const std::shared_ptr<Light>& lit, NotifyCode code) : LightInfoEvent(lit),
             m_notifyCode{ code } {}
 
-        NotifyCode GetNotifyCode() const { return m_notifyCode; }
+        NotifyCode notifyCode() const { return m_notifyCode; }
     protected:
         NotifyCode m_notifyCode;
     };
@@ -224,7 +224,7 @@ namespace Enigma::SceneGraph
     public:
         PawnPrimitiveBuilt(const std::shared_ptr<Pawn>& pawn) : m_pawn(pawn) {};
 
-        const std::shared_ptr<Pawn>& GetPawn() { return m_pawn; }
+        const std::shared_ptr<Pawn>& pawn() { return m_pawn; }
     protected:
         std::shared_ptr<Pawn> m_pawn;
     };
@@ -235,8 +235,8 @@ namespace Enigma::SceneGraph
         BuildPawnPrimitiveFailed(const std::shared_ptr<Pawn>& pawn, std::error_code er)
             : m_pawn(pawn), m_error(er) {}
 
-        std::shared_ptr<Pawn> GetPawn() { return m_pawn.lock(); }
-        std::error_code GetErrorCode() const { return m_error; }
+        std::shared_ptr<Pawn> pawn() { return m_pawn.lock(); }
+        std::error_code error() const { return m_error; }
     protected:
         std::weak_ptr<Pawn> m_pawn;
         std::error_code m_error;

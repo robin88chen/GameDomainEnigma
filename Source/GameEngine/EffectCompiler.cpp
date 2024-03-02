@@ -252,7 +252,7 @@ void EffectCompiler::tryBuildEffectMaterial()
         if (!built_tech.m_technique) return;
         effect_techniques.emplace_back(built_tech.m_technique.value());
     }
-    m_compilingEffect->instanceLazyContent(effect_techniques);
+    m_compilingEffect->hydrateTechniques(effect_techniques);
     EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_compilingEffect->id(), m_compilingEffect));
     m_hasMaterialProduced = true;
 }

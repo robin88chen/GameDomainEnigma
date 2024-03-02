@@ -15,17 +15,6 @@
 
 namespace Enigma::Engine
 {
-    class ConstituteTexture : public Frameworks::ICommand
-    {
-    public:
-        ConstituteTexture(const TextureId& id, const GenericDto& dto) : m_id(id), m_dto(dto) {}
-        const TextureId& id() { return m_id; }
-        const GenericDto& dto() { return m_dto; }
-
-    private:
-        TextureId m_id;
-        GenericDto m_dto;
-    };
     class PutTexture : public Frameworks::ICommand
     {
     public:

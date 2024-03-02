@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GameSceneEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -14,13 +14,12 @@
 
 namespace Enigma::GameCommon
 {
-    using error = std::error_code;
     class SceneRootCreated : public Frameworks::IEvent
     {
     public:
         SceneRootCreated(const std::shared_ptr<SceneGraph::Node>& scene_root) : m_sceneRoot(scene_root) {}
 
-        std::shared_ptr<SceneGraph::Node> GetSceneRoot() const { return m_sceneRoot.lock(); }
+        std::shared_ptr<SceneGraph::Node> sceneRoot() const { return m_sceneRoot.lock(); }
 
     protected:
         std::weak_ptr<SceneGraph::Node> m_sceneRoot;
@@ -30,7 +29,7 @@ namespace Enigma::GameCommon
     public:
         PortalManagementNodeCreated(const std::shared_ptr<SceneGraph::PortalManagementNode>& management_node) : m_managementNode(management_node) {}
 
-        std::shared_ptr<SceneGraph::PortalManagementNode> GetManagementNode() const { return m_managementNode.lock(); }
+        std::shared_ptr<SceneGraph::PortalManagementNode> managementNode() const { return m_managementNode.lock(); }
 
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_managementNode;
@@ -41,69 +40,69 @@ namespace Enigma::GameCommon
     public:
         SceneRootChildAttached(const std::shared_ptr<SceneGraph::Spatial>& child) : m_child(child) {}
 
-        std::shared_ptr<SceneGraph::Spatial> GetChild() const { return m_child.lock(); }
+        std::shared_ptr<SceneGraph::Spatial> child() const { return m_child.lock(); }
     protected:
         std::weak_ptr<SceneGraph::Spatial> m_child;
     };
     class AttachSceneRootChildFailed : public Frameworks::IEvent
     {
     public:
-        AttachSceneRootChildFailed(const std::string& child_name, error er) : m_childName(child_name), m_error(er) {}
+        AttachSceneRootChildFailed(const SceneGraph::SpatialId& child_id, std::error_code er) : m_childId(child_id), m_error(er) {}
 
-        const std::string& GetChildName() const { return m_childName; }
-        error GetError() const { return m_error; }
+        const SceneGraph::SpatialId& childId() const { return m_childId; }
+        std::error_code error() const { return m_error; }
 
     protected:
-        std::string m_childName;
-        error m_error;
+        SceneGraph::SpatialId m_childId;
+        std::error_code m_error;
     };
     class SceneNodeChildAttached : public Frameworks::IEvent
     {
     public:
-        SceneNodeChildAttached(const std::string& node_name, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeName(node_name), m_child(child) {}
+        SceneNodeChildAttached(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeId(node_id), m_child(child) {}
 
-        const std::string& GetNodeName() const { return m_nodeName; }
-        std::shared_ptr<SceneGraph::Spatial> GetChild() const { return m_child.lock(); }
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        std::shared_ptr<SceneGraph::Spatial> child() const { return m_child.lock(); }
 
     protected:
-        std::string m_nodeName;
+        SceneGraph::SpatialId m_nodeId;
         std::weak_ptr<SceneGraph::Spatial> m_child;
     };
     class AttachSceneNodeChildFailed : public Frameworks::IEvent
     {
     public:
-        AttachSceneNodeChildFailed(const std::string& node_name, const std::string& child_name, error er) : m_nodeName(node_name), m_childName(child_name), m_error(er) {}
+        AttachSceneNodeChildFailed(const SceneGraph::SpatialId& node_id, const SceneGraph::SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
-        const std::string& GetNodeName() const { return m_nodeName; }
-        const std::string& GetChildName() const { return m_childName; }
-        error GetError() const { return m_error; }
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        const SceneGraph::SpatialId& childId() const { return m_childId; }
+        std::error_code error() const { return m_error; }
 
     protected:
-        std::string m_nodeName;
-        std::string m_childName;
-        error m_error;
+        SceneGraph::SpatialId m_nodeId;
+        SceneGraph::SpatialId m_childId;
+        std::error_code m_error;
     };
     //--------------------------------------------------------------------------
     class SceneSpatialDeleted : public Frameworks::IEvent
     {
     public:
-        SceneSpatialDeleted(const std::string& spatial_name) : m_spatialName(spatial_name) {}
+        SceneSpatialDeleted(const SceneGraph::SpatialId& id) : m_id(id) {}
 
-        const std::string& getSpatialName() const { return m_spatialName; }
+        const SceneGraph::SpatialId& id() const { return m_id; }
     protected:
-        std::string m_spatialName;
+        SceneGraph::SpatialId m_id;
     };
     class DeleteSceneSpatialFailed : public Frameworks::IEvent
     {
     public:
-        DeleteSceneSpatialFailed(const std::string& spatial_name, error er) : m_spatialName(spatial_name), m_error(er) {}
+        DeleteSceneSpatialFailed(const SceneGraph::SpatialId& id, std::error_code er) : m_id(id), m_error(er) {}
 
-        const std::string& getSpatialName() const { return m_spatialName; }
-        error GetError() const { return m_error; }
+        const SceneGraph::SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
 
     protected:
-        std::string m_spatialName;
-        error m_error;
+        SceneGraph::SpatialId m_id;
+        std::error_code m_error;
     };
 }
 

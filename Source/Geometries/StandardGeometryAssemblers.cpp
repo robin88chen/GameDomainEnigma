@@ -1,19 +1,21 @@
-﻿#include "StandardGeometryDtoHelper.h"
+﻿#include "StandardGeometryAssemblers.h"
 #include "GameEngine/BoundingVolume.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "MathLib/ContainmentBox3.h"
 #include "MathLib/MathGlobal.h"
+#include "GeometryDataQueries.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;
 
-SquareQuadDtoHelper::SquareQuadDtoHelper(const GeometryId& id)
+SquareQuadAssembler::SquareQuadAssembler(const GeometryId& id)
 {
+    m_id = id;
     m_dto.id() = id;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
+SquareQuadAssembler& SquareQuadAssembler::xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
@@ -36,7 +38,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::xyQuad(const MathLib::Vector3& left_bo
     return *this;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
+SquareQuadAssembler& SquareQuadAssembler::xzQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
 {
     std::vector<MathLib::Vector3> positions;
     positions.emplace_back(left_bottom);
@@ -60,7 +62,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::xzQuad(const MathLib::Vector3& left_bo
 
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::normal()
+SquareQuadAssembler& SquareQuadAssembler::normal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(m_normal);
@@ -72,7 +74,7 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::normal()
     return *this;
 }
 
-SquareQuadDtoHelper& SquareQuadDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+SquareQuadAssembler& SquareQuadAssembler::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
@@ -88,7 +90,13 @@ SquareQuadDtoHelper& SquareQuadDtoHelper::textureCoord(const MathLib::Vector2& l
     return *this;
 }
 
-GenericDto SquareQuadDtoHelper::toGenericDto()
+SquareQuadAssembler& SquareQuadAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    return *this;
+}
+
+GenericDto SquareQuadAssembler::toGenericDto()
 {
     assert(m_dto.position3s() || m_dto.position4s());
     m_dto.vertexFormat() = m_format.ToString();
@@ -108,12 +116,18 @@ GenericDto SquareQuadDtoHelper::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-CubeDtoHelper::CubeDtoHelper(const GeometryId& id)
+std::shared_ptr<GeometryData> SquareQuadAssembler::constitute(PersistenceLevel persistence_level)
 {
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+}
+
+CubeAssembler::CubeAssembler(const GeometryId& id)
+{
+    m_id = id;
     m_dto.id() = id;
 }
 
-CubeDtoHelper& CubeDtoHelper::cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
+CubeAssembler& CubeAssembler::cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
 {
     std::vector<MathLib::Vector3> positions;
     MathLib::Vector3 xyz0 = center - axis_extent;
@@ -148,7 +162,7 @@ CubeDtoHelper& CubeDtoHelper::cube(const MathLib::Vector3& center, const MathLib
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::facedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
+CubeAssembler& CubeAssembler::facedCube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
 {
     std::vector<MathLib::Vector3> positions;
     MathLib::Vector3 xyz0 = center - axis_extent;
@@ -203,7 +217,7 @@ CubeDtoHelper& CubeDtoHelper::facedCube(const MathLib::Vector3& center, const Ma
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::normal()
+CubeAssembler& CubeAssembler::normal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(MathLib::Vector3(-1, -1, -1).normalize());
@@ -219,7 +233,7 @@ CubeDtoHelper& CubeDtoHelper::normal()
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::facedNormal()
+CubeAssembler& CubeAssembler::facedNormal()
 {
     std::vector<MathLib::Vector3> normals;
     normals.emplace_back(-MathLib::Vector3::UNIT_Y);
@@ -251,7 +265,7 @@ CubeDtoHelper& CubeDtoHelper::facedNormal()
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+CubeAssembler& CubeAssembler::textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(left_bottom);
@@ -271,7 +285,7 @@ CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector2& left_bottom, 
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
+CubeAssembler& CubeAssembler::facedTextureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top)
 {
     std::vector<MathLib::Vector2> texcoords;
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
@@ -307,7 +321,7 @@ CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector2& left_bot
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
+CubeAssembler& CubeAssembler::textureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
 {
     std::vector<MathLib::Vector3> texcoords;
     texcoords.emplace_back(left_bottom_front);
@@ -327,7 +341,7 @@ CubeDtoHelper& CubeDtoHelper::textureCoord(const MathLib::Vector3& left_bottom_f
     return *this;
 }
 
-CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
+CubeAssembler& CubeAssembler::facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back)
 {
     std::vector<MathLib::Vector3> texcoords;
     MathLib::Vector3 xyz0 = left_bottom_front;
@@ -371,7 +385,13 @@ CubeDtoHelper& CubeDtoHelper::facedTextureCoord(const MathLib::Vector3& left_bot
     return *this;
 }
 
-GenericDto CubeDtoHelper::toGenericDto()
+CubeAssembler& CubeAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    return *this;
+}
+
+GenericDto CubeAssembler::toGenericDto()
 {
     assert(m_dto.position3s() || m_dto.position4s());
     m_dto.vertexFormat() = m_format.ToString();
@@ -391,15 +411,21 @@ GenericDto CubeDtoHelper::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-SphereDtoHelper::SphereDtoHelper(const GeometryId& id)
+std::shared_ptr<GeometryData> CubeAssembler::constitute(PersistenceLevel persistence_level)
 {
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+}
+
+SphereAssembler::SphereAssembler(const GeometryId& id)
+{
+    m_id = id;
     m_radius = 1.0f;
     m_dto.id() = id;
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
 }
 
-SphereDtoHelper& SphereDtoHelper::sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
+SphereAssembler& SphereAssembler::sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
 {
     m_center = center;
     m_radius = radius;
@@ -557,14 +583,14 @@ SphereDtoHelper& SphereDtoHelper::sphere(const MathLib::Vector3& center, float r
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::normal()
+SphereAssembler& SphereAssembler::normal()
 {
     m_dto.normals() = m_normals;
     m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::textureCoord()
+SphereAssembler& SphereAssembler::textureCoord()
 {
     size_t tex_stage_count = m_dto.textureCoords().size();
     TextureCoordDto tex_dto;
@@ -575,14 +601,14 @@ SphereDtoHelper& SphereDtoHelper::textureCoord()
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::sphereBound()
+SphereAssembler& SphereAssembler::sphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
     m_dto.geometryBound() = bb.serializeDto().toGenericDto();
     return *this;
 }
 
-SphereDtoHelper& SphereDtoHelper::boxBound()
+SphereAssembler& SphereAssembler::boxBound()
 {
     MathLib::Box3 box;
     box.Center() = m_center;
@@ -595,10 +621,20 @@ SphereDtoHelper& SphereDtoHelper::boxBound()
     return *this;
 }
 
-GenericDto SphereDtoHelper::toGenericDto()
+SphereAssembler& SphereAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    return *this;
+}
+
+GenericDto SphereAssembler::toGenericDto()
 {
     m_dto.vertexFormat() = m_format.ToString();
     m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
     return m_dto.toGenericDto();
+}
+std::shared_ptr<GeometryData> SphereAssembler::constitute(PersistenceLevel persistence_level)
+{
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
 }
 

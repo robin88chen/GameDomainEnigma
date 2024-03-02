@@ -15,7 +15,7 @@ ContainingPortalZoneFinder::~ContainingPortalZoneFinder()
     m_containingPortalZone = nullptr;
 }
 
-SceneTraveler::TravelResult ContainingPortalZoneFinder::TravelTo(const SpatialPtr& spatial)
+SceneTraveler::TravelResult ContainingPortalZoneFinder::travelTo(const SpatialPtr& spatial)
 {
     if ((!spatial) || (spatial->getWorldBound().isEmpty())) return SceneTraveler::TravelResult::InterruptError;
     if (spatial->getWorldBound().PointInside(m_targetWorldPos) == false) return SceneTraveler::TravelResult::TestFail;

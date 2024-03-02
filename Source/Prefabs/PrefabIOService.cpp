@@ -153,7 +153,7 @@ void PrefabIOService::onSceneGraphBuilt(const Frameworks::IEventPtr& e)
     if ((ev->GetTopLevelSpatial().empty()) || (!ev->GetTopLevelSpatial()[0])) return failPrefabLoading(ErrorCode::emptyPrefabs);
     auto pawn = std::dynamic_pointer_cast<Pawn>(ev->GetTopLevelSpatial()[0]);
     if (!pawn) return failPrefabLoading(ErrorCode::invalidPrefab);
-    if (pawn->GetPrimitive())
+    if (pawn->getPrimitive())
     {
         completePawnPrefabLoading(pawn);
     }
@@ -170,7 +170,7 @@ void PrefabIOService::onPawnPrimitiveBuilt(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
     if (!ev) return;
     if (!m_loadedPawn) return; // no pending pawn
-    if (ev->GetPawn() == m_loadedPawn)
+    if (ev->pawn() == m_loadedPawn)
     {
         completePawnPrefabLoading(m_loadedPawn);
     }
@@ -183,9 +183,9 @@ void PrefabIOService::onBuildPawnPrimitiveFailed(const Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<BuildPawnPrimitiveFailed>(e);
     if (!ev) return;
     if (!m_loadedPawn) return; // no pending pawn
-    if (ev->GetPawn() == m_loadedPawn)
+    if (ev->pawn() == m_loadedPawn)
     {
-        failPrefabLoading(ev->GetErrorCode());
+        failPrefabLoading(ev->error());
     }
 }
 

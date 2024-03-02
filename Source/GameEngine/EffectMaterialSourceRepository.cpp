@@ -66,17 +66,21 @@ std::shared_ptr<EffectMaterial> EffectMaterialSourceRepository::queryEffectMater
 {
     assert(m_storeMapper);
     std::lock_guard locker{ m_sourceMapLock };
-    const auto it = m_sourceMaterials.find(id);
-    if (it != m_sourceMaterials.end()) return it->second->duplicateEffectMaterial();
-    auto profile = m_storeMapper->queryEffectMaterial(id);
+    const auto it = m_sourceMaterials.find(id.source());
+    if (it != m_sourceMaterials.end())
+    {
+        if (auto eff = it->second->queryDuplicatedEffect(id)) return eff;
+        return it->second->duplicateEffectMaterial();
+    }
+    auto profile = m_storeMapper->queryEffectMaterial(id.source());
     assert(profile);
-    auto source = std::make_shared<EffectMaterialSource>(id);
+    auto source = std::make_shared<EffectMaterialSource>(id.source());
     source->linkSourceSelf();
     auto er = m_compilingQueue->enqueue(source->self(), profile.value());
     if (er) return nullptr;
     er = m_compilingQueue->compileNextEffect();
     if (er) return nullptr;
-    m_sourceMaterials.emplace(id, source);
+    m_sourceMaterials.emplace(id.source(), source);
     return source->duplicateEffectMaterial();
 }
 

@@ -1,6 +1,7 @@
 ﻿#include "SceneGraphFactory.h"
 #include "Camera.h"
 #include "Pawn.h"
+#include "Light.h"
 #include "CameraFrustumCommands.h"
 #include "SceneGraphCommands.h"
 #include "CameraFrustumEvents.h"
@@ -81,6 +82,13 @@ std::shared_ptr <Spatial> SceneGraphFactory::constituteSpatial(const SpatialId& 
     auto spatial = constitutor->second(id, dto);
     EventPublisher::post(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
     return spatial;
+}
+
+std::shared_ptr<Light> SceneGraphFactory::createLight(const SpatialId& id, const LightInfo& info)
+{
+    auto light = std::make_shared<Light>(id, info);
+    EventPublisher::post(std::make_shared<SpatialCreated>(id, light));
+    return light;
 }
 
 void SceneGraphFactory::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)

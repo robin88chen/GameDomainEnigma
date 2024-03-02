@@ -7,9 +7,6 @@
     <Filter Include="GeometryData">
       <UniqueIdentifier>{a4bb3172-9728-4153-97f9-00543bf3a600}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dtos">
-      <UniqueIdentifier>{ee7a8880-8c00-4039-be13-f70db68e6032}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Communications">
       <UniqueIdentifier>{c7aaba72-23d5-4777-9b06-42df6052b561}</UniqueIdentifier>
     </Filter>
@@ -21,6 +18,9 @@
     </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{c4405ef7-6abf-48c9-8697-0fc1e3db307e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dto &amp; Assemblers">
+      <UniqueIdentifier>{ee7a8880-8c00-4039-be13-f70db68e6032}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,10 +37,10 @@
       <Filter>GeometryRepository</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
-      <Filter>Dtos</Filter>
+      <Filter>Dto &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.cpp">
-      <Filter>Dtos</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.cpp">
+      <Filter>Dto &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
       <Filter>Intersection</Filter>
@@ -75,10 +75,10 @@
       <Filter>GeometryData</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
-      <Filter>Dtos</Filter>
+      <Filter>Dto &amp; Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryDtoHelper.h">
-      <Filter>Dtos</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.h">
+      <Filter>Dto &amp; Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
       <Filter>Communications</Filter>
@@ -101,6 +101,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryPersistenceLevel.h">
+      <Filter>GeometryRepository</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

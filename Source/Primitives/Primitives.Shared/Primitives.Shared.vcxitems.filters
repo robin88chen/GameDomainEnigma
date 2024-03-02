@@ -83,5 +83,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitivePersistenceLevel.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -154,7 +154,7 @@ error TextureEgl::useAsBackSurface(const std::shared_ptr<Graphics::IBackSurface>
     BackSurfaceEgl* bb = dynamic_cast<BackSurfaceEgl*>(back_surf.get());
     assert(bb);
     m_format = bb->GetFormat();
-    MathLib::Dimension dimension = bb->GetDimension();
+    MathLib::Dimension dimension = bb->getDimension();
     glBindTexture(GL_TEXTURE_2D, m_texture);
     unsigned int data_size = dimension.m_width * dimension.m_height * 4;
     byte_buffer data;

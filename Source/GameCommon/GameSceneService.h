@@ -62,7 +62,6 @@ namespace Enigma::GameCommon
         void onGameCameraCreated(const Frameworks::IEventPtr& e);
         void onGameCameraUpdated(const Frameworks::IEventPtr& e);
         void attachSceneRootChild(const Frameworks::ICommandPtr& c);
-        void attachNodeChild(const Frameworks::ICommandPtr& c);
         void deleteSceneSpatial(const Frameworks::ICommandPtr& c);
 
     protected:
@@ -75,7 +74,6 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onCameraCreated;
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
         Frameworks::CommandSubscriberPtr m_attachSceneRootChild;
-        Frameworks::CommandSubscriberPtr m_attachNodeChild;
         Frameworks::CommandSubscriberPtr m_deleteSceneSpatial;
     };
 }

@@ -9,6 +9,8 @@
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::SceneGraph;
 
@@ -31,10 +33,17 @@ Node::Node(const Engine::GenericDto& o) : Spatial(o)
 Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
     NodeDto nodeDto{ dto };
-    for (auto& id : nodeDto.childIds())
+    for (auto& child : nodeDto.children())
     {
-        auto child = std::make_shared<QuerySpatial>(id)->dispatch();
-        if (child) attachChild(child, child->getLocalTransform());
+        auto child_spatial = std::make_shared<QuerySpatial>(child.id)->dispatch();
+        if (!child_spatial)
+        {
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id, child.dto, PersistenceLevel::Repository)->dispatch();
+        }
+        if (child_spatial)
+        {
+            auto er = Node::attachChild(child_spatial, child_spatial->getLocalTransform());
+        }
     }
 }
 
@@ -44,10 +53,15 @@ Node::~Node()
     {
         SpatialPtr child = m_childList.front();
         m_childList.pop_front();
-        if (child) child->linkParent(nullptr);
+        if (child) child->linkParent(std::nullopt);
         child = nullptr;
     }
     m_childList.clear();
+}
+
+std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
+{
+    return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
 std::shared_ptr<Node> Node::create(const SpatialId& id)
@@ -70,7 +84,7 @@ NodeDto Node::serializeNodeDto()
     NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.childIds().emplace_back(child->id());
+        if (child) dto.children().emplace_back(NodeDto::ChildDto{ child->id(), child->serializeDto() });
     }
     return dto;
 }
@@ -78,9 +92,9 @@ NodeDto Node::serializeNodeDto()
 void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
     NodeDto nodeDto{ dto };
-    for (auto& id : nodeDto.childIds())
+    for (auto& child : nodeDto.children())
     {
-        resolver.tryResolveLinkage(id.name(), [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(child.id.name(), [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
             std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
     }
@@ -144,7 +158,7 @@ error Node::attachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
     if (FATAL_LOG_EXPR(child->getParent() != nullptr)) return ErrorCode::parentNode; // must not have parent, must detach first!!
 
     m_childList.push_back(child);
-    child->linkParent(thisSpatial());
+    child->linkParent(m_id);
 
     Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
 
@@ -160,7 +174,7 @@ error Node::detachChild(const SpatialPtr& child)
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
     if (FATAL_LOG_EXPR(child->getParent() != thisSpatial())) return ErrorCode::parentNode;
 
-    child->linkParent(nullptr);
+    child->linkParent(std::nullopt);
 
     Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
 

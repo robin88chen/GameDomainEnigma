@@ -256,6 +256,33 @@ namespace Enigma::SceneGraph
         std::weak_ptr<LazyNode> m_node;
         bool m_isVisible;
     };
+    //------------ node operation ------------
+    class NodeChildAttached : public Frameworks::IEvent
+    {
+    public:
+        NodeChildAttached(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeId(node_id), m_child(child) {}
+
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        std::shared_ptr<SceneGraph::Spatial> child() const { return m_child.lock(); }
+
+    protected:
+        SceneGraph::SpatialId m_nodeId;
+        std::weak_ptr<SceneGraph::Spatial> m_child;
+    };
+    class AttachNodeChildFailed : public Frameworks::IEvent
+    {
+    public:
+        AttachNodeChildFailed(const SceneGraph::SpatialId& node_id, const SceneGraph::SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        const SceneGraph::SpatialId& childId() const { return m_childId; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SceneGraph::SpatialId m_nodeId;
+        SceneGraph::SpatialId m_childId;
+        std::error_code m_error;
+    };
     //------------ creator response ------------
     class NodeCreated : public Frameworks::IResponseEvent
     {

@@ -45,6 +45,7 @@ namespace Enigma::SceneGraph
         virtual Engine::GenericDto serializeDto() override;
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
+        static std::shared_ptr<Node> queryNode(const SpatialId& id);
         static std::shared_ptr<Node> create(const SpatialId& id);
         static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 

@@ -10,6 +10,8 @@
 #include <cassert>
 #include <tuple>
 
+#include "SceneGraphQueries.h"
+
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
@@ -139,7 +141,7 @@ SpatialDto Spatial::serializeSpatialDto()
     dto.factoryDesc() = m_factoryDesc;
     dto.name() = m_name;
     dto.id() = m_id;
-    if (!m_parent.expired()) dto.parentName() = m_parent.lock()->getSpatialName();
+    if (m_parent) dto.parentName() = m_parent.value().name();
     dto.graphDepth() = m_graphDepth;
     dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);
     dto.spatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
@@ -151,23 +153,22 @@ SpatialDto Spatial::serializeSpatialDto()
     return dto;
 }
 
-void Spatial::linkParent(const std::shared_ptr<Spatial>& parent)
+void Spatial::linkParent(const std::optional<SpatialId>& parent)
 {
     m_parent = parent;
-    if ((!m_parent.expired()) && (m_parent.lock()))
-        m_graphDepth = m_parent.lock()->getGraphDepth() + 1;
+    if (auto p = getParent()) m_graphDepth = p->getGraphDepth() + 1;
 }
 
 std::shared_ptr<Spatial> Spatial::getParent() const
 {
-    if (!m_parent.expired()) return m_parent.lock();
-    return nullptr;
+    if (!m_parent.has_value()) return nullptr;
+    return std::make_shared<QuerySpatial>(m_parent.value())->dispatch();
 }
 
 void Spatial::detachFromParent()
 {
-    if (m_parent.expired()) return;
-    const NodePtr parent_node = std::dynamic_pointer_cast<Node, Spatial>(m_parent.lock());
+    if (!m_parent.has_value()) return;
+    const NodePtr parent_node = Node::queryNode(m_parent.value());
     if (!parent_node) return;
     parent_node->detachChild(thisSpatial());
 }
@@ -199,7 +200,7 @@ error Spatial::cullVisibleSet(Culler* culler, bool noCull)
 
 Matrix4 Spatial::getParentWorldTransform() const
 {
-    if (!m_parent.expired()) return m_parent.lock()->getWorldTransform();
+    if (auto parent = getParent()) return parent->getWorldTransform();
     return Matrix4::IDENTITY;
 }
 
@@ -324,7 +325,7 @@ void Spatial::notifySpatialRenderStateChanged()
 
 error Spatial::_propagateSpatialRenderState()
 {
-    if (!m_parent.expired()) return m_parent.lock()->_propagateSpatialRenderState();
+    if (auto parent = getParent()) return getParent()->_propagateSpatialRenderState();
     return ErrorCode::ok;
 }
 
@@ -339,7 +340,7 @@ error Spatial::_updateBoundData()
     }
 
     error er = ErrorCode::ok;
-    if (!m_parent.expired()) er = m_parent.lock()->_updateBoundData();
+    if (auto parent = getParent()) er = parent->_updateBoundData();
 
     return er;
 }
@@ -349,9 +350,9 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
     m_mxLocalTransform = mxLocal;
 
     Matrix4 mxParent = Matrix4::IDENTITY;
-    if (!m_parent.expired())
+    if (auto parent = getParent())
     {
-        mxParent = m_parent.lock()->getWorldTransform();
+        mxParent = parent->getWorldTransform();
     }
     error er = _updateWorldData(mxParent);
     if (er) return er;

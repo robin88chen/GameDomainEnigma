@@ -25,20 +25,6 @@ namespace Enigma::GameCommon
         std::shared_ptr<SceneGraph::Spatial> m_child;
         MathLib::Matrix4 m_localTransform;
     };
-    class AttachNodeChild : public Frameworks::ICommand
-    {
-    public:
-        AttachNodeChild(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_nodeId(node_id), m_child(child), m_localTransform(local_transform) {}
-
-        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
-        const std::shared_ptr<SceneGraph::Spatial>& child() const { return m_child; }
-        const MathLib::Matrix4& localTransform() const { return m_localTransform; }
-
-    protected:
-        SceneGraph::SpatialId m_nodeId;
-        std::shared_ptr<SceneGraph::Spatial> m_child;
-        MathLib::Matrix4 m_localTransform;
-    };
     class DeleteSceneSpatial : public Frameworks::ICommand
     {
     public:

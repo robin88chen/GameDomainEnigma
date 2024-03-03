@@ -1,4 +1,5 @@
 ﻿#include "SceneGraphDtos.h"
+#include "SceneGraphDtos.h"
 #include "LazyNode.h"
 #include "Node.h"
 #include "GameEngine/BoundingVolumeDto.h"
@@ -24,6 +25,7 @@ static std::string TOKEN_CULLING_MODE = "CullingMode";
 static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_CHILD_IDS = "ChildIds";
+static std::string TOKEN_CHILD_DTOS = "ChildDtos";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
@@ -86,7 +88,14 @@ NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.getName()));
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CHILD_IDS)) m_childIds = tokensToIds(v.value());
+    std::vector<SpatialId> child_ids;
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CHILD_IDS)) child_ids = tokensToIds(v.value());
+    Engine::GenericDtoCollection dtos;
+    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_CHILD_DTOS)) dtos = v.value();
+    for (unsigned i = 0; i < child_ids.size() && i < dtos.size(); i++)
+    {
+        m_children.emplace_back(ChildDto{ child_ids[i], dtos[i] });
+    };
 }
 
 /*NodeDto NodeDto::fromGenericDto(const GenericDto& dto)
@@ -98,7 +107,15 @@ NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 GenericDto NodeDto::toGenericDto() const
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_CHILD_IDS, idsToTokens(m_childIds));
+    std::vector<SpatialId> child_ids;
+    Engine::GenericDtoCollection dtos;
+    for (const ChildDto& child : m_children)
+    {
+        child_ids.push_back(child.id);
+        dtos.push_back(child.dto);
+    }
+    dto.addOrUpdate(TOKEN_CHILD_IDS, idsToTokens(child_ids));
+    dto.addOrUpdate(TOKEN_CHILD_DTOS, dtos);
 
     return dto;
 }

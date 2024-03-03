@@ -3,51 +3,47 @@
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/Pawn.h"
 #include "SkinMeshModelMaker.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
 #include "CubeGeometryMaker.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "FileSystem/FileSystem.h"
 #include "Platforms/PlatformLayer.h"
+#include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphAssemblers.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
-using namespace Enigma::Renderer;
+using namespace Enigma::Renderables;
 using namespace Enigma::Gateways;
 using namespace Enigma::FileSystem;
 
-void SceneGraphMaker::MakeSavedLazyNode(const std::string& name)
+void SceneGraphMaker::makePawm(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id)
+{
+    auto pawn = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(id)->dispatch());
+    if (!pawn)
+    {
+        pawn = PawnAssembler(id).primitive(primitive_id).localTransform(Matrix4::IDENTITY).modelBound(CubeGeometryMaker::getGeometryBound()).topLevel(true).constitute(Enigma::SceneGraph::PersistenceLevel::Store);
+    }
+}
+
+void SceneGraphMaker::makeStoredLazyNode(const SpatialId& id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
     LazyNodeDto lazy_dto;
-    lazy_dto.IsTopLevel() = true;
-    lazy_dto.TheFactoryDesc() = FactoryDesc(LazyNode::TYPE_RTTI.GetName());
-    lazy_dto.Name() = name;
-    lazy_dto.LocalTransform() = Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f));
-    lazy_dto.WorldTransform() = lazy_dto.LocalTransform();
-    lazy_dto.ModelBound() = unit_bv.SerializeDto().ToGenericDto();
-    lazy_dto.WorldBound() = BoundingVolume::CreateFromTransform(unit_bv, lazy_dto.WorldTransform()).SerializeDto().ToGenericDto();
-    lazy_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
-    lazy_dto.ChildNames() = { "pawn" };
-    PawnDto pawn_dto;
-    ModelPrimitiveDto model_dto = SkinMeshModelMaker::MakeModelPrimitiveDto("test_model", "test_geometry");
-    pawn_dto.TheFactoryDesc() = FactoryDesc(Pawn::TYPE_RTTI.GetName());
-    pawn_dto.Name() = "pawn";
-    pawn_dto.LocalTransform() = Matrix4::IDENTITY;
-    pawn_dto.WorldTransform() = lazy_dto.WorldTransform() * pawn_dto.LocalTransform();
-    pawn_dto.ModelBound() = CubeGeometryMaker::GetGeometryBound().SerializeDto().ToGenericDto();
-    pawn_dto.WorldBound() = BoundingVolume::CreateFromTransform(CubeGeometryMaker::GetGeometryBound(), pawn_dto.WorldTransform()).SerializeDto().ToGenericDto();
-    pawn_dto.ThePrimitive() = model_dto.ToGenericDto();
-    pawn_dto.SpatialFlag() = static_cast<unsigned>(Spatial::SpatialBit::Spatial_BelongToParent | Spatial::Spatial_Unlit);
-
-    std::vector<GenericDto> dtos = { lazy_dto.ToGenericDto(), pawn_dto.ToGenericDto() };
-    std::string json = DtoJsonGateway::Serialize(dtos);
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(name + ".node@DataPath"), "w+b");
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    lazy_dto.id() = id;
+    lazy_dto.isTopLevel() = true;
+    lazy_dto.factoryDesc() = FactoryDesc(LazyNode::TYPE_RTTI.getName());
+    lazy_dto.name() = id.name();
+    lazy_dto.localTransform() = Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f));
+    lazy_dto.worldTransform() = lazy_dto.localTransform();
+    lazy_dto.modelBound() = unit_bv.serializeDto().toGenericDto();
+    lazy_dto.worldBound() = BoundingVolume::CreateFromTransform(unit_bv, lazy_dto.worldTransform()).serializeDto().toGenericDto();
+    lazy_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
+    lazy_dto.childIds() = children;
+    std::make_shared<RequestSpatialConstitution>(id, lazy_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
 }
+
 std::vector<GenericDto> SceneGraphMaker::MakeSceneGraphDtos(const std::string& lazy_node_name)
 {
     BoundingVolume root_bv(Box3::UNIT_BOX);

@@ -95,6 +95,9 @@ void SceneGraphRepository::registerHandlers()
     m_removeSpatial = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeSpatial(c); });
     CommandBus::subscribe(typeid(RemoveSpatial), m_removeSpatial);
 
+    m_attachNodeChild = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { attachNodeChild(c); });
+    CommandBus::subscribe(typeid(AttachNodeChild), m_attachNodeChild);
+
     //m_createCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createCamera(c); });
     //CommandBus::subscribe(typeid(CreateCamera), m_createCamera);
     //m_createNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { createNode(c); });
@@ -128,6 +131,9 @@ void SceneGraphRepository::unregisterHandlers()
     m_putSpatial = nullptr;
     CommandBus::unsubscribe(typeid(RemoveSpatial), m_removeSpatial);
     m_removeSpatial = nullptr;
+
+    CommandBus::unsubscribe(typeid(AttachNodeChild), m_attachNodeChild);
+    m_attachNodeChild = nullptr;
 
     //CommandBus::unsubscribe(typeid(CreateCamera), m_createCamera);
     //m_createCamera = nullptr;
@@ -646,6 +652,27 @@ void SceneGraphRepository::removeSpatial(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<RemoveSpatial>(c);
     assert(cmd);
     removeSpatial(cmd->id());
+}
+
+void SceneGraphRepository::attachNodeChild(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<AttachNodeChild>(c);
+    assert(cmd);
+    auto node = std::dynamic_pointer_cast<Node>(querySpatial(cmd->nodeId()));
+    if (!node)
+    {
+        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), ErrorCode::nodeNotFound));
+        return;
+    }
+    if (error er = node->attachChild(cmd->child(), cmd->localTransform()))
+    {
+        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), er));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<NodeChildAttached>(cmd->nodeId(), cmd->child()));
+    }
 }
 
 /*void SceneGraphRepository::createCamera(const Frameworks::ICommandPtr& c)

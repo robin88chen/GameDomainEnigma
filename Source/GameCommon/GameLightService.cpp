@@ -8,6 +8,8 @@
 #include "GameSceneCommands.h"
 #include "GameSceneEvents.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -44,7 +46,7 @@ ServiceResult GameLightService::onInit()
     CommandBus::subscribe(typeid(DisableLight), m_changeLightDisable);
 
     m_onSceneNodeChildAttached = std::make_shared<EventSubscriber>([=](auto e) { onSceneNodeChildAttached(e); });
-    EventPublisher::subscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+    EventPublisher::subscribe(typeid(NodeChildAttached), m_onSceneNodeChildAttached);
 
     return ServiceResult::Complete;
 }
@@ -72,7 +74,7 @@ ServiceResult GameLightService::onTerm()
     CommandBus::unsubscribe(typeid(DisableLight), m_changeLightDisable);
     m_changeLightDisable = nullptr;
 
-    EventPublisher::unsubscribe(typeid(SceneNodeChildAttached), m_onSceneNodeChildAttached);
+    EventPublisher::unsubscribe(typeid(NodeChildAttached), m_onSceneNodeChildAttached);
     m_onSceneNodeChildAttached = nullptr;
 
     return ServiceResult::Complete;
@@ -222,7 +224,7 @@ void GameLightService::deleteLight(const ICommandPtr& command) const
 void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<SceneNodeChildAttached, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<NodeChildAttached, IEvent>(e);
     if ((!ev) || (!ev->child())) return;
     auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->child());
     if (!light) return;
@@ -236,7 +238,7 @@ void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
 void GameLightService::onAttachSceneNodeChildFailed(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<AttachSceneNodeChildFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<AttachNodeChildFailed, IEvent>(e);
     if (!ev) return;
     auto child_id = ev->childId();
     if (auto it = m_pendingLightIds.find(child_id); it != m_pendingLightIds.end())

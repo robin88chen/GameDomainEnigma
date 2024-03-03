@@ -43,8 +43,6 @@ ServiceResult GameSceneService::onInit()
 
     m_attachSceneRootChild = std::make_shared<CommandSubscriber>([=](auto c) { attachSceneRootChild(c); });
     CommandBus::subscribe(typeid(AttachSceneRootChild), m_attachSceneRootChild);
-    m_attachNodeChild = std::make_shared<CommandSubscriber>([=](auto c) { attachNodeChild(c); });
-    CommandBus::subscribe(typeid(AttachNodeChild), m_attachNodeChild);
 
     return ServiceResult::Complete;
 }
@@ -67,8 +65,6 @@ ServiceResult GameSceneService::onTerm()
     m_onCameraUpdated = nullptr;
     CommandBus::unsubscribe(typeid(AttachSceneRootChild), m_attachSceneRootChild);
     m_attachSceneRootChild = nullptr;
-    CommandBus::unsubscribe(typeid(AttachNodeChild), m_attachNodeChild);
-    m_attachNodeChild = nullptr;
 
     destroyRootScene();
     destroySceneCuller();
@@ -182,28 +178,6 @@ void GameSceneService::attachSceneRootChild(const Frameworks::ICommandPtr& c)
     else
     {
         EventPublisher::post(std::make_shared<SceneRootChildAttached>(cmd->child()));
-    }
-}
-
-void GameSceneService::attachNodeChild(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<AttachNodeChild, ICommand>(c);
-    if (!cmd) return;
-    if (!cmd->child()) return;
-    auto node = std::dynamic_pointer_cast<Node, Spatial>(findSpatial(cmd->nodeId()));
-    if (!node)
-    {
-        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), ErrorCode::nodeNotFound));
-        return;
-    }
-    if (error er = node->attachChild(cmd->child(), cmd->localTransform()))
-    {
-        EventPublisher::post(std::make_shared<AttachSceneNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), er));
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<SceneNodeChildAttached>(cmd->nodeId(), cmd->child()));
     }
 }
 

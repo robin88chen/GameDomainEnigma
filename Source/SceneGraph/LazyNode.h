@@ -20,6 +20,8 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
+        LazyNode(const SpatialId& id);
+        LazyNode(const SpatialId& id, const Engine::GenericDto& o);
         LazyNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         LazyNode(const Engine::GenericDto& dto);
         LazyNode(const LazyNode&) = delete;
@@ -27,6 +29,9 @@ namespace Enigma::SceneGraph
         virtual ~LazyNode() override;
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
+
+        static std::shared_ptr<LazyNode> create(const SpatialId& id);
+        static std::shared_ptr<LazyNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
         //virtual Engine::GenericDto serializeDto() override;  // use node's implementation
         virtual Engine::GenericDto serializeAsLaziness();

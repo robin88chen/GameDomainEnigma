@@ -126,6 +126,8 @@ namespace Enigma::SceneGraph
         void putSpatial(const Frameworks::ICommandPtr& c);
         void removeSpatial(const Frameworks::ICommandPtr& c);
 
+        void attachNodeChild(const Frameworks::ICommandPtr& c);
+
         //void createCamera(const Frameworks::ICommandPtr& c);
         //void createNode(const Frameworks::ICommandPtr& c);
 
@@ -163,6 +165,8 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_removeCamera;
         Frameworks::CommandSubscriberPtr m_putSpatial;
         Frameworks::CommandSubscriberPtr m_removeSpatial;
+
+        Frameworks::CommandSubscriberPtr m_attachNodeChild;
 
         //Frameworks::CommandSubscriberPtr m_createCamera;
         //Frameworks::CommandSubscriberPtr m_createNode;

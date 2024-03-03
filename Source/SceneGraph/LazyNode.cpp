@@ -9,6 +9,23 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, LazyNode, Node);
 
+LazyNode::LazyNode(const SpatialId& id) : Node(id)
+{
+    m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
+    m_factoryDesc.ClaimAsDeferred();
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
+}
+
+LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
+{
+    LazyNodeDto lazy_node_dto{ o };
+    m_factoryDesc = lazy_node_dto.factoryDesc();
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    }
+}
+
 LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
@@ -30,6 +47,16 @@ LazyNode::LazyNode(const GenericDto& o) : Node(o)
 
 LazyNode::~LazyNode()
 {
+}
+
+std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
+{
+    return std::make_shared<LazyNode>(id);
+}
+
+std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<LazyNode>(id, dto);
 }
 
 GenericDto LazyNode::serializeAsLaziness()

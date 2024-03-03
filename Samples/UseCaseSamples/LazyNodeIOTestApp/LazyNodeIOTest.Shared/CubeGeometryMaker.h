@@ -8,16 +8,15 @@
 #ifndef _CUBE_GEOMETRY_MAKER_H
 #define _CUBE_GEOMETRY_MAKER_H
 
-#include "GameEngine/GeometryDataPolicy.h"
-#include "GameEngine/BoundingVolume.h"
+#include "Geometries/GeometryId.h"
+#include "Geometries/GeometryData.h"
 
 class CubeGeometryMaker
 {
 public:
-    static void MakeSavedCube(const std::string& name);
-    static Enigma::Engine::GeometryDataPolicy MakeGeometryPolicy(const std::string& name);
+    static std::shared_ptr<Enigma::Geometries::GeometryData> makeCube(const Enigma::Geometries::GeometryId& id);
 
-    static const Enigma::Engine::BoundingVolume& GetGeometryBound() { return m_geometryBounding; }
+    static const Enigma::Engine::BoundingVolume& getGeometryBound() { return m_geometryBounding; }
 private:
     static Enigma::Engine::BoundingVolume m_geometryBounding;
 };

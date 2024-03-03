@@ -76,12 +76,18 @@ namespace Enigma::SceneGraph
     class NodeDto : public SpatialDto
     {
     public:
+        struct ChildDto
+        {
+            SpatialId id;
+            Engine::GenericDto dto;
+        };
+    public:
         NodeDto();
         NodeDto(const SpatialDto& spatial_dto);
         NodeDto(const Engine::GenericDto& dto);
 
-        const std::vector<SpatialId>& childIds() const { return m_childIds; }
-        std::vector<SpatialId>& childIds() { return m_childIds; }
+        const std::vector<ChildDto>& children() const { return m_children; }
+        std::vector<ChildDto>& children() { return m_children; }
 
         Engine::GenericDto toGenericDto() const;
 
@@ -90,7 +96,7 @@ namespace Enigma::SceneGraph
         std::vector<std::string> idsToTokens(const std::vector<SpatialId> child_ids) const;
 
     protected:
-        std::vector<SpatialId> m_childIds;
+        std::vector<ChildDto> m_children;
     };
 
     class LightDto : public SpatialDto

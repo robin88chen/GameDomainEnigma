@@ -340,7 +340,7 @@ void WorldMapService::linkQuadTreeChild(std::vector<SceneGraph::VisibilityManage
         if (dto.name() == parent_name)
         {
             //todo : use child id
-            dto.childIds().push_back(SpatialId(child_name, VisibilityManagedNode::TYPE_RTTI));
+            dto.children().push_back(NodeDto::ChildDto{ SpatialId(child_name, VisibilityManagedNode::TYPE_RTTI), dto.toGenericDto() });
             return;
         }
     }
@@ -453,7 +453,7 @@ std::shared_ptr<Node> WorldMapService::findTargetSubtree(const std::shared_ptr<S
 
 void WorldMapService::completeCreateFittingNode(const std::shared_ptr<SceneGraph::Node>& node)
 {
-    CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentId, node, node->getLocalTransform()));
+    CommandBus::post(std::make_shared<SceneGraph::AttachNodeChild>(m_fittingParentId, node, node->getLocalTransform()));
     //CommandBus::post(std::make_shared<GameCommon::AttachNodeChild>(m_fittingParentName, node, node->getLocalTransform()));
     EventPublisher::post(std::make_shared<FittingNodeCreated>(m_createFittingNodeRuid, node));
 }

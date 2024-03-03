@@ -20,6 +20,7 @@ namespace Enigma::SceneGraph
         nullSceneGraph,
         dataNotReady,
         parentNode,
+        nodeNotFound,
         nullPrimitive,
         nullCullerCamera,
         unsupportPawnPrimitive,

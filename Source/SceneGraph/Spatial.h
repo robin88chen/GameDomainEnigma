@@ -91,7 +91,7 @@ namespace Enigma::SceneGraph
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         /** @name scene graph relation */
         //@{
-        void linkParent(const std::shared_ptr<Spatial>& parent);
+        void linkParent(const std::optional<SpatialId>& parent);
         std::shared_ptr<Spatial> getParent() const;
         unsigned int getGraphDepth() { return m_graphDepth; }
         void detachFromParent();  ///< parent should not call this function, it will be recursive forever!!
@@ -257,7 +257,7 @@ namespace Enigma::SceneGraph
 
         MathLib::Vector3 m_vecWorldPosition;
 
-        std::weak_ptr<Spatial> m_parent;
+        std::optional<SpatialId> m_parent;
         unsigned int m_graphDepth;
 
         CullingMode m_cullingMode;

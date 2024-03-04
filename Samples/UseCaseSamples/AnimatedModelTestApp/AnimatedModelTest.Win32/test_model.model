@@ -49,7 +49,7 @@
                             },
                             "MeshId": {
                                 "Type": "StringArray",
-                                "Value": ["test_mesh", "2", "En.Renderables.MeshPrimitive"]
+                                "Value": ["test_mesh", "0", "En.Renderables.MeshPrimitive"]
                             }
                         }, {
                             "Rtti": {
@@ -122,7 +122,7 @@
                             },
                             "MeshId": {
                                 "Type": "StringArray",
-                                "Value": ["test_mesh", "3", "En.Renderables.MeshPrimitive"]
+                                "Value": ["test_mesh", "0", "En.Renderables.MeshPrimitive"]
                             }
                         }]
                 }

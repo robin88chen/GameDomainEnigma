@@ -32,7 +32,7 @@ std::shared_ptr<ModelPrimitive> ModelPrimitiveMaker::makeModelPrimitive(const En
         }
         if ((i == 0) || (i == 3))
         {
-            node.meshPrimitiveId() = mesh_id.next();
+            node.meshPrimitiveId() = mesh_id;
         }
         tree.meshNodes().emplace_back(node.toGenericDto());
     }
@@ -40,7 +40,7 @@ std::shared_ptr<ModelPrimitive> ModelPrimitiveMaker::makeModelPrimitive(const En
     model_dto.id() = model_id;
     model_dto.factoryDesc() = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName()).ClaimAsNative(model_id.name() + ".model@DataPath");
     model_dto.nodeTree() = tree.toGenericDto();
-    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<RequestPrimitiveConstitution>(model_id, model_dto.toGenericDto(), RequestPrimitiveConstitution::PersistenceLevel::Store)->dispatch());
+    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<RequestPrimitiveConstitution>(model_id, model_dto.toGenericDto(), PersistenceLevel::Store)->dispatch());
 }
 
 std::shared_ptr<MeshPrimitive> ModelPrimitiveMaker::makeCubeMeshPrimitive(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id)
@@ -60,5 +60,5 @@ std::shared_ptr<MeshPrimitive> ModelPrimitiveMaker::makeCubeMeshPrimitive(const 
     mesh_dto.renderListID() = Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";
 
-    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, mesh_dto.toGenericDto(), RequestPrimitiveConstitution::PersistenceLevel::Store)->dispatch());
+    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, mesh_dto.toGenericDto(), PersistenceLevel::Store)->dispatch());
 }

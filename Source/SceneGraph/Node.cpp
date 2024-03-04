@@ -40,10 +40,7 @@ Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto
         {
             child_spatial = std::make_shared<RequestSpatialConstitution>(child.id, child.dto, PersistenceLevel::Repository)->dispatch();
         }
-        if (child_spatial)
-        {
-            auto er = Node::attachChild(child_spatial, child_spatial->getLocalTransform());
-        }
+        if (child_spatial) m_childList.push_back(child_spatial);
     }
 }
 
@@ -61,6 +58,7 @@ Node::~Node()
 
 std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
 {
+    assert(id.rtti().isDerived(Node::TYPE_RTTI));
     return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
@@ -160,7 +158,7 @@ error Node::attachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
     m_childList.push_back(child);
     child->linkParent(m_id);
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(m_id, child->id(), SceneGraphChanged::NotifyCode::AttachChild));
 
     error er = child->setLocalTransform(mxChildLocal);
 
@@ -176,7 +174,7 @@ error Node::detachChild(const SpatialPtr& child)
 
     child->linkParent(std::nullopt);
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(m_id, child->id(), SceneGraphChanged::NotifyCode::DetachChild));
 
     error er = child->setLocalTransform(MathLib::Matrix4::IDENTITY);
 
@@ -202,7 +200,7 @@ error Node::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(m_id));
     }
 
     // propagate up
@@ -253,7 +251,7 @@ error Node::_updateBoundData()
 
     if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(m_id));
     }
 
     error er = ErrorCode::ok;
@@ -282,7 +280,7 @@ error Node::_updateSpatialRenderState()
     }
     if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));
     }
     return er;
 }

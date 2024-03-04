@@ -1,5 +1,4 @@
 ﻿#include "SceneGraphDtos.h"
-#include "SceneGraphDtos.h"
 #include "LazyNode.h"
 #include "Node.h"
 #include "GameEngine/BoundingVolumeDto.h"
@@ -24,6 +23,7 @@ static std::string TOKEN_MODEL_BOUND = "ModelBound";
 static std::string TOKEN_CULLING_MODE = "CullingMode";
 static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
+static std::string TOKEN_PARENT_ID = "ParentId";
 static std::string TOKEN_CHILD_IDS = "ChildIds";
 static std::string TOKEN_CHILD_DTOS = "ChildDtos";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
@@ -54,6 +54,7 @@ SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::T
     if (auto v = dto.tryGetValue<unsigned int>(TOKEN_CULLING_MODE)) cullingMode() = v.value();
     if (auto v = dto.tryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) spatialFlag() = v.value();
     if (auto v = dto.tryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) notifyFlag() = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PARENT_ID)) parentId() = SpatialId(v.value());
 }
 
 GenericDto SpatialDto::toGenericDto() const
@@ -72,6 +73,7 @@ GenericDto SpatialDto::toGenericDto() const
     dto.addOrUpdate(TOKEN_CULLING_MODE, m_cullingMode);
     dto.addOrUpdate(TOKEN_SPATIAL_FLAG, m_spatialFlag);
     dto.addOrUpdate(TOKEN_NOTIFY_FLAG, m_notifyFlag);
+    if (m_parentId.has_value()) dto.addOrUpdate(TOKEN_PARENT_ID, m_parentId.value().tokens());
     return dto;
 }
 

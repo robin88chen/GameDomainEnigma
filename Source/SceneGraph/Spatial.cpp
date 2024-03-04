@@ -7,10 +7,9 @@
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraphQueries.h"
 #include <cassert>
 #include <tuple>
-
-#include "SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -135,6 +134,12 @@ Enigma::Engine::GenericDto Spatial::serializeDto()
     return serializeSpatialDto().toGenericDto();
 }
 
+std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Spatial::TYPE_RTTI));
+    return std::make_shared<QuerySpatial>(id)->dispatch();
+}
+
 SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
@@ -142,7 +147,7 @@ SpatialDto Spatial::serializeSpatialDto()
     dto.name() = m_name;
     dto.id() = m_id;
     if (m_parent) dto.parentName() = m_parent.value().name();
-    dto.graphDepth() = m_graphDepth;
+    //dto.graphDepth() = m_graphDepth;
     dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);
     dto.spatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
     dto.notifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
@@ -314,7 +319,7 @@ void Spatial::setCullingMode(CullingMode mode)
     }
     if ((testNotifyFlag(Notify_CullMode)) && (has_changed))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(m_id));
     }
 }
 
@@ -336,7 +341,7 @@ error Spatial::_updateBoundData()
 
     if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(m_id));
     }
 
     error er = ErrorCode::ok;
@@ -359,7 +364,7 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(m_id));
     }
     // propagate up
     er = _updateBoundData();
@@ -374,7 +379,7 @@ error Spatial::_updateSpatialRenderState()
 
     if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));
     }
     return ErrorCode::ok;
 }
@@ -396,7 +401,7 @@ void Spatial::addSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }
 
@@ -407,6 +412,6 @@ void Spatial::removeSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }

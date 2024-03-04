@@ -50,7 +50,7 @@ MeshNode::MeshNode(const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
     //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
     if (mesh_node_dto.meshPrimitiveId())
     {
-        m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(mesh_node_dto.meshPrimitiveId().value()));
+        m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(mesh_node_dto.meshPrimitiveId().value().next()));
     }
     if (mesh_node_dto.parentIndexInArray())
     {
@@ -121,7 +121,7 @@ GenericDto MeshNode::serializeDto() const
     //dto.RootRefTransform() = m_mxRootRefTransform;
     if (m_meshPrimitive)
     {
-        dto.meshPrimitiveId() = m_meshPrimitive->id();
+        dto.meshPrimitiveId() = m_meshPrimitive->id().origin();
     }
     if (m_parentIndexInArray)
     {

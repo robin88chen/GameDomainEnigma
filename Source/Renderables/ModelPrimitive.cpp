@@ -42,7 +42,7 @@ ModelPrimitive::~ModelPrimitive()
 GenericDto ModelPrimitive::serializeDto() const
 {
     ModelPrimitiveDto dto;
-    dto.id() = m_id;
+    dto.id() = m_id.origin();
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
     if (m_animatorId.isValid()) dto.animatorId() = m_animatorId.origin();

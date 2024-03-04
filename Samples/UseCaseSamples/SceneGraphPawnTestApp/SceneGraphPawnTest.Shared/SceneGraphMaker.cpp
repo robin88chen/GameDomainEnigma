@@ -13,7 +13,7 @@ using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::Primitives;
 
-Enigma::Engine::GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& id, const PrimitiveId& primitive_id)
+Enigma::Engine::GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& id, const PrimitiveId& primitive_id, const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::SceneGraph::SpatialId& stillpawn_id)
 {
     BoundingVolume root_bv(Box3::UNIT_BOX);
     NodeDto root_dto;
@@ -35,8 +35,8 @@ Enigma::Engine::GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& id, 
     child1_dto.modelBound() = child_bv.serializeDto().toGenericDto();
     child1_dto.worldBound() = BoundingVolume::CreateFromTransform(child_bv, child1_dto.worldTransform()).serializeDto().toGenericDto();
     child1_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
+    child1_dto.parentId() = root_dto.id();
     //child1_dto.ChildNames() = { "still_pawn" };
-    root_dto.children().emplace_back(NodeDto::ChildDto{ child1_dto.id(), child1_dto.toGenericDto() });
     NodeDto child2_dto;
     child2_dto.id() = SpatialId("child2", Node::TYPE_RTTI);
     child2_dto.name() = "child2";
@@ -45,12 +45,16 @@ Enigma::Engine::GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& id, 
     child2_dto.modelBound() = child_bv.serializeDto().toGenericDto();
     child2_dto.worldBound() = BoundingVolume::CreateFromTransform(child_bv, child2_dto.worldTransform()).serializeDto().toGenericDto();
     child2_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
+    child2_dto.parentId() = root_dto.id();
     //child2_dto.ChildNames() = { "pawn" };
-    PawnDto pawn_dto = PawnAssembler(SpatialId("pawn", Pawn::TYPE_RTTI)).primitive(primitive_id).localTransform(Matrix4::IDENTITY).worldTransform(child2_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound()).toPawnDto();
-    PawnDto stillpawn_dto = PawnAssembler(SpatialId("still_pawn", Pawn::TYPE_RTTI)).primitive(primitive_id).localTransform(Matrix4::IDENTITY).worldTransform(child1_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound()).toPawnDto();
+    PawnDto pawn_dto = PawnAssembler(pawn_id).primitive(primitive_id).localTransform(Matrix4::IDENTITY).worldTransform(child2_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound()).toPawnDto();
+    pawn_dto.parentId() = child2_dto.id();
+    PawnDto stillpawn_dto = PawnAssembler(stillpawn_id).primitive(primitive_id.next()).localTransform(Matrix4::IDENTITY).worldTransform(child1_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound()).toPawnDto();
+    stillpawn_dto.parentId() = child1_dto.id();
     //ModelPrimitiveDto model_dto = SkinMeshModelMaker::MakeModelPrimitiveDto("test_model", "test_geometry");
     child1_dto.children().emplace_back(NodeDto::ChildDto{ stillpawn_dto.id(), stillpawn_dto.toGenericDto() });
     child2_dto.children().emplace_back(NodeDto::ChildDto{ pawn_dto.id(), pawn_dto.toGenericDto() });
+    root_dto.children().emplace_back(NodeDto::ChildDto{ child1_dto.id(), child1_dto.toGenericDto() });
     root_dto.children().emplace_back(NodeDto::ChildDto{ child2_dto.id(), child2_dto.toGenericDto() });
 
     return root_dto.toGenericDto();

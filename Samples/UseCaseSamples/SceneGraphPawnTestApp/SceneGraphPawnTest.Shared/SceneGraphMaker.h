@@ -16,7 +16,7 @@
 class SceneGraphMaker
 {
 public:
-    static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id);
+    static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id, const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::SceneGraph::SpatialId& stillpawn_id);
 };
 
 #endif // _SCENE_GRAPH_MAKER_H

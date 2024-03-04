@@ -43,20 +43,16 @@ public:
 protected:
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
-    void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     void makeCamera();
     void makeModel();
-    // void RetrieveDtoCreatedModel();
-     //void InsertDtoCreatedModelToRenderer();
 
     void prepareRenderScene();
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
-    Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;

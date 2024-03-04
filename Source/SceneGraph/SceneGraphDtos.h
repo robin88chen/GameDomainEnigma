@@ -10,7 +10,6 @@
 
 #include "MathLib/Matrix4.h"
 #include "GameEngine/FactoryDesc.h"
-#include "GameEngine/DtoDeserializer.h"
 #include "GameEngine/GenericDto.h"
 #include "Primitives/PrimitiveId.h"
 #include "SpatialId.h"
@@ -53,6 +52,8 @@ namespace Enigma::SceneGraph
         unsigned int& spatialFlag() { return m_spatialFlag; }
         [[nodiscard]] unsigned int notifyFlag() const { return m_notifyFlag; }
         unsigned int& notifyFlag() { return m_notifyFlag; }
+        [[nodiscard]] const std::optional<SpatialId>& parentId() const { return m_parentId; }
+        std::optional<SpatialId>& parentId() { return m_parentId; }
 
         //static SpatialDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
@@ -71,6 +72,7 @@ namespace Enigma::SceneGraph
         unsigned int m_cullingMode;
         unsigned int m_spatialFlag;
         unsigned int m_notifyFlag;
+        std::optional<SpatialId> m_parentId;
     };
 
     class NodeDto : public SpatialDto

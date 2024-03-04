@@ -95,10 +95,8 @@ void SceneGraphPawnTest::installEngine()
 {
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphBuilt(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
 
     assert(m_graphicMain);
 
@@ -131,10 +129,8 @@ void SceneGraphPawnTest::shutdownEngine()
 
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
-    m_onSceneGraphBuilt = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -142,11 +138,7 @@ void SceneGraphPawnTest::shutdownEngine()
 void SceneGraphPawnTest::frameUpdate()
 {
     AppDelegate::frameUpdate();
-    //RetrieveDtoCreatedModel();
-    //InsertDtoCreatedModelToRenderer();
-
-    //RetrieveDtoCreatedModel();
-    //PrepareRenderScene();
+    prepareRenderScene();
 }
 
 void SceneGraphPawnTest::makeCamera()
@@ -170,54 +162,32 @@ void SceneGraphPawnTest::makeModel()
     std::vector<std::string> meshNodeNames = { "bone_root", "bone_one" };
     auto cubeId = GeometryId("test_geometry");
     auto meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    auto modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI).next();
+    auto modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
     auto animationId = AnimationAssetId("test_animation");
     auto animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
+    auto pawn_id = SpatialId("pawn", Pawn::TYPE_RTTI);
+    auto stillpawn_id = SpatialId("still_pawn", Pawn::TYPE_RTTI);
     auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(animationId, meshNodeNames);
     auto animator = SkinAnimationMaker::makeModelAnimator(animatorId, animationId, modelId.origin(), meshId, meshNodeNames);
     auto cube = CubeGeometryMaker::makeCube(cubeId);
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
-    m_model = SkinMeshModelMaker::makeModelPrimitive(modelId.origin(), meshId, animatorId, meshNodeNames);
+    m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
     m_rootId = SpatialId("root", Node::TYPE_RTTI);
-    auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, modelId);
-    m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
-    /*animatorId = m_model->animatorId();
+    m_sceneRoot = Node::queryNode(m_rootId);
+    if (!m_sceneRoot)
+    {
+        auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, modelId, pawn_id, stillpawn_id);
+        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
+    }
+    auto pawn = Pawn::queryPawn(pawn_id);
+    if (!pawn) return;
+    animatorId = pawn->getPrimitive()->animatorId();
     if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animatorId)))
     {
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
     CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
-    m_model->updateWorldTransform(Matrix4::IDENTITY);*/
-
 }
-
-/*void SceneGraphPawnTest::RetrieveDtoCreatedModel()
-{
-    if ((m_pawn) && (!m_model))
-    {
-        auto prim = m_pawn->GetPrimitive();
-        if (prim)
-        {
-            m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
-            if (auto ani = m_model->GetAnimator())
-            {
-                CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
-                if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
-                {
-                    model_ani->PlayAnimation(AnimationClip{ 0.0f, 2.0f, AnimationClip::WarpMode::Loop, 0 });
-                }
-            }
-        }
-    }
-}
-
-void SceneGraphPawnTest::InsertDtoCreatedModelToRenderer()
-{
-    if ((m_renderer) && (m_model))
-    {
-        m_model->InsertToRendererWithTransformUpdating(m_renderer, Enigma::MathLib::Matrix4::IDENTITY, RenderLightingState{});
-    }
-}*/
 
 void SceneGraphPawnTest::prepareRenderScene()
 {
@@ -258,22 +228,4 @@ void SceneGraphPawnTest::onRenderTargetCreated(const IEventPtr& e)
     if (!ev) return;
     m_renderTarget = ev->renderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
-}
-
-void SceneGraphPawnTest::onSceneGraphBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
-    if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
-    if (!m_sceneRoot) return;
-    for (auto child : m_sceneRoot->getChildList())
-    {
-        if (child->getSpatialName() == "child2")
-        {
-            m_pawn = std::dynamic_pointer_cast<Pawn, Spatial>(std::dynamic_pointer_cast<Node, Spatial>(child)->getChildList().front());
-        }
-    }
 }

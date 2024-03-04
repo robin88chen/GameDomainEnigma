@@ -24,36 +24,36 @@ namespace Enigma::SceneGraph
     class SceneGraphEvent : public Frameworks::IEvent
     {
     public:
-        SceneGraphEvent(const std::shared_ptr<Spatial>& spatial) : m_spatial(spatial) {};
-        std::shared_ptr<Spatial> GetSpatial() { return m_spatial.lock(); }
+        SceneGraphEvent(const SpatialId& id) : m_id(id) {};
+        const SpatialId& id() { return m_id; }
 
     protected:
-        std::weak_ptr<Spatial> m_spatial;
+        SpatialId m_id;
     };
     class SpatialCullModeChanged : public SceneGraphEvent
     {
     public:
-        SpatialCullModeChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialCullModeChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialBoundChanged : public SceneGraphEvent
     {
     public:
-        SpatialBoundChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialBoundChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialLocationChanged : public SceneGraphEvent
     {
     public:
-        SpatialLocationChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialLocationChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialRenderStateChanged : public SceneGraphEvent
     {
     public:
-        SpatialRenderStateChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialRenderStateChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialVisibilityChanged : public SceneGraphEvent
     {
     public:
-        SpatialVisibilityChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialVisibilityChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SceneGraphChanged : public SceneGraphEvent
     {
@@ -66,13 +66,13 @@ namespace Enigma::SceneGraph
             DeferredInstanced,
         };
     public:
-        SceneGraphChanged(const std::shared_ptr<Spatial>& parent, const std::shared_ptr<Spatial> child, NotifyCode code)
-            : SceneGraphEvent(parent), m_child(child), m_code(code) {};
-        std::shared_ptr<Spatial> GetParentNode() { return m_spatial.lock(); }
-        std::shared_ptr<Spatial> GetChild() { return m_child.lock(); }
-        const NotifyCode GetNotifyCode() const { return m_code; }
+        SceneGraphChanged(const SpatialId& parent_id, const SpatialId& child_id, NotifyCode code)
+            : SceneGraphEvent(parent_id), m_childId(child_id), m_code(code) {};
+        const SpatialId& parentId() { return m_id; }
+        const SpatialId& childId() { return m_childId; }
+        const NotifyCode notifyCode() const { return m_code; }
     protected:
-        std::weak_ptr<Spatial> m_child;
+        SpatialId m_childId;
         NotifyCode m_code;
     };
     //------------------------- Light Info Events --------------------------

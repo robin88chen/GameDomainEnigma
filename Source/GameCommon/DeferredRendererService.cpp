@@ -199,14 +199,14 @@ void DeferredRendererService::onSceneGraphChanged(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
-    if ((!ev) || (ev->GetChild())) return;
+    if (!ev) return;
     // 抓light entity 被 attach 的訊息來改變 light volume 的 parent
-    if (!ev->GetChild()->typeInfo().isDerived(Light::TYPE_RTTI)) return;
-    if (ev->GetNotifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
-    const auto light = std::dynamic_pointer_cast<Light, Spatial>(ev->GetChild());
+    if (!ev->childId().rtti().isDerived(Light::TYPE_RTTI)) return;
+    if (ev->notifyCode() != SceneGraphChanged::NotifyCode::AttachChild) return;
+    const auto light = std::dynamic_pointer_cast<Light, Spatial>(Spatial::querySpatial(ev->childId()));
     if (!light) return;
     const auto lightPawn = findLightingPawn(light->id());
-    auto parent_node = std::dynamic_pointer_cast<Node, Spatial>(ev->GetParentNode());
+    auto parent_node = Node::queryNode(ev->parentId());
     if (lightPawn) lightPawn->changeWorldPosition(lightPawn->getWorldPosition(), parent_node);
 }
 

@@ -34,7 +34,7 @@ std::shared_ptr<ModelPrimitive> SkinMeshModelMaker::makeModelPrimitive(const Eni
         }
         if (i == 0)
         {
-            node.meshPrimitive(mesh_id.next());
+            node.meshPrimitive(mesh_id);
         }
         tree.addNode(node);
     }

@@ -3,15 +3,15 @@
             "Type": "FactoryDesc",
             "Value": {
                 "InstanceType": 5,
-                "ResourceName": "test_model_anim",
-                "ResourceFilename": "test_model_anim.ani@DataPath",
-                "RttiName": "En.Animators.ModelAnimationAsset",
+                "ResourceName": "test_animation",
+                "ResourceFilename": "test_animation.ani@DataPath",
+                "RttiName": "En.Renderables.ModelAnimationAsset",
                 "PrefabFilename": ""
             }
         },
-        "Name": {
+        "Id": {
             "Type": "String",
-            "Value": "test_model_anim"
+            "Value": "test_animation"
         },
         "MeshNodeNames": {
             "Type": "StringArray",

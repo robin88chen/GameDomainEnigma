@@ -1,0 +1,4 @@
+root,En.SceneGraph.Node,root.node@DataPath
+camera,En.SceneGraph.Camera,camera.cam@DataPath
+pawn,En.SceneGraph.Pawn,pawn.En.SceneGraph.Pawn.json
+lazy_node,En.SceneGraph.LazyNode,lazy_node.node@DataPath

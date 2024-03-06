@@ -58,7 +58,8 @@ GenericDto SceneQuadTreeRoot::serializeDto()
     dto.factoryDesc() = m_factory_desc;
     dto.name() = m_name;
     assert(!m_root.expired());
-    dto.root() = m_root.lock()->serializeAsLaziness();
+    dto.root() = m_root.lock()->serializeDto();
+    //dto.root() = m_root.lock()->serializeAsLaziness();
     return dto.toGenericDto();
 }
 

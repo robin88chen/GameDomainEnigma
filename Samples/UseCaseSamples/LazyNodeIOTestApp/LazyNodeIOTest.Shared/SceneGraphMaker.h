@@ -17,9 +17,9 @@ class SceneGraphMaker
 {
 public:
     static void makePawm(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id);
-    static void makeStoredLazyNode(const Enigma::SceneGraph::SpatialId& id, const std::vector<Enigma::SceneGraph::SpatialId>& children);
+    static void makeStoredLazyNode(const Enigma::SceneGraph::SpatialId& id, const Enigma::SceneGraph::SpatialId& parent_id, const std::vector<Enigma::SceneGraph::SpatialId>& children);
 
-    static std::vector<Enigma::Engine::GenericDto> MakeSceneGraphDtos(const std::string& lazy_node_name);
+    static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& root_id, const Enigma::SceneGraph::SpatialId& lazy_node_id);
 };
 
 #endif // _SCENE_GRAPH_MAKER_H

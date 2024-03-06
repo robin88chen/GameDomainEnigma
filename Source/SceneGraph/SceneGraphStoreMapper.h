@@ -31,6 +31,11 @@ namespace Enigma::SceneGraph
         virtual std::optional<Engine::GenericDto> querySpatial(const SpatialId& id) = 0;
         virtual std::error_code removeSpatial(const SpatialId& id) = 0;
         virtual std::error_code putSpatial(const SpatialId& id, const Engine::GenericDto& dto) = 0;
+
+        virtual bool hasLaziedContent(const SpatialId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryLaziedContent(const SpatialId& id) = 0;
+        virtual std::error_code removeLaziedContent(const SpatialId& id) = 0;
+        virtual std::error_code putLaziedContent(const SpatialId& id, const Engine::GenericDto& dto) = 0;
     };
 }
 

@@ -1,0 +1,85 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.ModelPrimitive",
+                "PrefabFilename": "test_model.model@DataPath"
+            }
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["test_model", "0", "En.Renderables.ModelPrimitive"]
+        },
+        "MeshNodeTree": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.Renderables.MeshNodeTree",
+                        "PrefabFilename": ""
+                    }
+                },
+                "MeshNodes": {
+                    "Type": "DataObjectArray",
+                    "Value": [{
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderables.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "bone_root"
+                            },
+                            "LocalT_PosTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "MeshId": {
+                                "Type": "StringArray",
+                                "Value": ["test_mesh", "0", "En.Renderables.MeshPrimitive"]
+                            }
+                        }, {
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.Renderables.MeshNode",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "bone_one"
+                            },
+                            "LocalT_PosTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "ParentNodeIndex": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            }
+                        }]
+                }
+            }
+        },
+        "ModelAnimatorId": {
+            "Type": "StringArray",
+            "Value": ["test_animator", "0", "En.Renderables.ModelPrimitiveAnimator"]
+        }
+    }]

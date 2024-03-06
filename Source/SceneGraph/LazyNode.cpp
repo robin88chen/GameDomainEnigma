@@ -59,6 +59,15 @@ std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine
     return std::make_shared<LazyNode>(id, dto);
 }
 
+GenericDto LazyNode::serializeDto()
+{
+    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
+    {
+        return serializeAsLaziness();
+    }
+    return Node::serializeDto();
+}
+
 GenericDto LazyNode::serializeAsLaziness()
 {
     return serializeLazyNodeAsLaziness().toGenericDto();

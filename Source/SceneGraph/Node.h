@@ -43,12 +43,14 @@ namespace Enigma::SceneGraph
         Node& operator=(Node&&) = delete;
 
         virtual Engine::GenericDto serializeDto() override;
+        //todo : remove
         virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         static std::shared_ptr<Node> queryNode(const SpatialId& id);
         static std::shared_ptr<Node> create(const SpatialId& id);
         static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
+        //todo: remove
         virtual Engine::GenericDtoCollection serializeFlattenedTree();
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
